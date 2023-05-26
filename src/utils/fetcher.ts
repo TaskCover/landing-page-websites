@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const API_PATH = process.env.NEXT_PUBLIC_API_PATH;
 
@@ -10,9 +10,9 @@ const axiosTemplate = axios.create({
 });
 
 export function get<Q, R>(url: string, config?: AxiosRequestConfig) {
-  return extractAxiosResponse(
+  return extractAxiosResponse<R>(
     axiosTemplate
-      .get<Q, R>(url, config)
+      .get<Q, AxiosResponse<R>>(url, config)
       .then((data) => data)
       .catch((e) => {
         return { ...e };
@@ -21,20 +21,21 @@ export function get<Q, R>(url: string, config?: AxiosRequestConfig) {
 }
 
 export function post<Q, R>(url: string, data?: Q, config?: AxiosRequestConfig) {
-  return extractAxiosResponse(
+  return extractAxiosResponse<R>(
     axiosTemplate
-      .post<Q, R>(url, data, config)
-      .then((data) => data)
+      .post<Q, AxiosResponse<R>>(url, data, config)
+      .then((data) => data.data)
       .catch((e) => {
         return { ...e };
       })
   );
 }
 
-const extractAxiosResponse = async (calling: Promise<any>) => {
+export async function extractAxiosResponse<R>(calling: Promise<any>) {
   const res = await calling;
   if (res?.response?.status >= 400) {
     throw res;
   }
-  return res;
-};
+  console.log(res);
+  return res as R;
+}

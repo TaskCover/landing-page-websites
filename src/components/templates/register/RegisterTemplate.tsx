@@ -9,7 +9,8 @@ import { apiAuthRegisterPost } from "../../../utils/apis";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { useRouter } from "next/router";
 import { InputCenterAtom } from "../../atoms/InputAtom/InputCenterAtom";
-import { VerifyCodeComponent } from "./verifycode";
+import { VerifyCodeComponent } from "./VerifyCode";
+import { UploadAvatar } from "./UploadAvatar";
 
 export const RegisterTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthRegisterPost["requestBody"]>();
@@ -48,12 +49,10 @@ export const RegisterTemplate: FunctionComponent = () => {
                 <InputAtom label={"Email"} {...register("email")} />
                 <InputSecretAtom label={"Mật khẩu"} {...register("password")} />
                 <InputSecretAtom label={"Nhập lại mật khẩu"} />
-                <div className={styles["input__forget"]}>
-                  <Link href={"#"}>{"Quên mật khẩu?"}</Link>
-                </div>
+                <UploadAvatar />
                 {/* Create atom for button */}
                 <button className={styles["form__submitbutton"]} type="submit">
-                  {"Đăng nhập"}
+                  {"Đăng ký"}
                 </button>
               </form>
             </div>

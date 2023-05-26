@@ -61,15 +61,6 @@
   margin-top: 16px;
 }
 
-.input__forget {
-  margin-top: 8px;
-  font-size: 1.4rem;
-  line-height: 18px;
-  color: #666666;
-  display: flex;
-  justify-content: flex-end;
-}
-
 .form__submitbutton {
   width: 340px;
   height: 48px;

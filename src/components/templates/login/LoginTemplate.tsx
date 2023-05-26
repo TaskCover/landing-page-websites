@@ -15,7 +15,11 @@ export const LoginTemplate: FunctionComponent = () => {
 
   const onSubmit = async (data: AuthLoginPost["requestBody"]) => {
     try {
-      await apiAuthLoginPost(data);
+      const response: AuthLoginPost["responseBody"] = await apiAuthLoginPost(
+        data
+      );
+      localStorage.setItem("jwt", response.accessToken);
+      localStorage.setItem("refresh-token", response.refreshToken);
       router.push("https://google.com");
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
@@ -32,7 +36,7 @@ export const LoginTemplate: FunctionComponent = () => {
             <div className={styles["form__suggest"]}>
               <span>{"hoặc bạn chưa có tài khoản?"}</span>
               <span>
-                <Link href={"#"}>{"Đăng ký ngay"}</Link>
+                <Link href={"/register"}>{"Đăng ký ngay"}</Link>
               </span>
             </div>
             <form
