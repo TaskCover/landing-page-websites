@@ -6,15 +6,19 @@ import { InputSecretAtom } from "../../atoms/InputAtom/InputSecretAtom";
 import { useForm } from "react-hook-form";
 import { AuthLoginPost } from "../../../utils/model";
 import { apiAuthLoginPost } from "../../../utils/apis";
+import { showErrorNotify } from "../../molecules/NotificationMolecule";
+import { useRouter } from "next/router";
 
 export const LoginTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthLoginPost["requestBody"]>();
+  const router = useRouter();
 
   const onSubmit = async (data: AuthLoginPost["requestBody"]) => {
     try {
       await apiAuthLoginPost(data);
+      router.push("https://google.com");
     } catch (e: any) {
-      console.log(e?.response);
+      showErrorNotify(e?.response?.data?.description);
     }
   };
 

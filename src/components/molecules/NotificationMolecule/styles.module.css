@@ -1,0 +1,28 @@
+.notification__container {
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+  max-width: 714px;
+  opacity: unset;
+}
+.notification__success {
+  background-color: #0bb78314;
+  color: #0bb783;
+}
+.notification__error {
+  background-color: #ea161814;
+  color: #f64e60;
+}
+
+.notification__content {
+  display: flex;
+  align-items: flex-start;
+}
+
+.notification__content p {
+  margin-left: 16px;
+}
+
+.notification__content img {
+  width: 24px;
+  height: 24px;
+}
