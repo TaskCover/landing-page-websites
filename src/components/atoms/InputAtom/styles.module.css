@@ -1,0 +1,47 @@
+.input {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.input input {
+  width: 340px;
+  height: 58px;
+  padding: 8px 20px;
+  padding-top: 26px;
+  font-size: 1.6rem;
+  line-height: 24px;
+  background: #f7f7fd;
+  border-radius: 4px;
+}
+
+.input label {
+  position: absolute;
+  margin-top: 8px;
+  margin-left: 20px;
+  color: #999999;
+  font-size: 1.2rem;
+  line-height: 18px;
+}
+
+.input input:focus {
+  outline: none;
+}
+
+.toggle_button {
+  position: absolute;
+  right: 0;
+  margin: 17px 20px;
+  width: 24px;
+  height: 24px;
+  background-position: center;
+  background-size: contain;
+}
+
+.toggle_button.toggle_on {
+  background-image: url("/images/toggle_hidden_button.png");
+}
+
+.toggle_button.toggle_off {
+  background-image: url("/images/toggle_hidden_button_off.png");
+}
