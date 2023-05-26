@@ -24,6 +24,22 @@
   line-height: 18px;
 }
 
+.input input.input--center {
+  text-align: center;
+}
+
+.input label.label--center {
+  position: absolute;
+  margin-top: 8px;
+  margin-left: 0px;
+  width: 100%;
+  color: #999999;
+  font-size: 1.2rem;
+  line-height: 18px;
+  display: flex;
+  justify-content: center;
+}
+
 .input input:focus {
   outline: none;
 }

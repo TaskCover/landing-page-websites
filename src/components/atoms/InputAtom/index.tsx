@@ -9,6 +9,7 @@ export type Props = DetailedHTMLProps<
 > & {
   label: string;
   inputClass?: string;
+  require?: boolean;
 };
 
 export const InputAtom = forwardRef<HTMLInputElement, Props>((props, ref) => {

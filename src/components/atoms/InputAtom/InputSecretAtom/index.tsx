@@ -37,6 +37,7 @@ export const InputSecretAtom = forwardRef<HTMLInputElement, Props>(
           onClick={() => {
             setIsHidden(!isHidden);
           }}
+          type="button"
         />
       </div>
     );

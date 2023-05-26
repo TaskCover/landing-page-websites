@@ -8,3 +8,13 @@ export type AuthLoginPost = {
     refreshToken: string;
   };
 };
+
+export type AuthRegisterPost = {
+  requestBody: {
+    phone: string;
+    email: string;
+    password: string;
+    fullname: string;
+  };
+  responseBody: {};
+};

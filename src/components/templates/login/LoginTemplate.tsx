@@ -26,7 +26,7 @@ export const LoginTemplate: FunctionComponent = () => {
     <div className={styles["login"]}>
       <div className={styles["login__container"]}>
         <div className={styles["container__form_area"]}>
-          <img src={"/images/login_logo.png"} width={"152px"} height={"39px"} />
+          <img src={"/images/logo.png"} width={"152px"} height={"39px"} />
           <div className={styles["form_area__form"]}>
             <h3>{"Đăng nhập"}</h3>
             <div className={styles["form__suggest"]}>
