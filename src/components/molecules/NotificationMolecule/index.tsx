@@ -15,6 +15,7 @@ export const showSuccessNotify = (message: string) => {
       icon: false,
       autoClose: 5000,
       hideProgressBar: true,
+      draggable: false,
       className: clsx(
         styles["notification__container"],
         styles["notification__success"]
@@ -35,6 +36,7 @@ export const showErrorNotify = (message: string) => {
       icon: false,
       autoClose: 5000,
       hideProgressBar: true,
+      draggable: false,
       className: clsx(
         styles["notification__container"],
         styles["notification__error"]

@@ -8,7 +8,7 @@ import { AuthLoginPost } from "../../../utils/model";
 import { apiAuthLoginPost } from "../../../utils/apis";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { useRouter } from "next/router";
-import { LoginLayoutAtom } from "../../atoms/LayoutAtom/LoginLayoutAtom";
+import { SingleLayoutAtom } from "../../atoms/LayoutAtom/SingleLayoutAtom";
 import { ButtonAtom } from "../../atoms/ButtonAtom";
 
 export const LoginTemplate: FunctionComponent = () => {
@@ -29,7 +29,7 @@ export const LoginTemplate: FunctionComponent = () => {
   };
 
   return (
-    <LoginLayoutAtom>
+    <SingleLayoutAtom>
       <div className={styles["container__form_area"]}>
         <img src={"/images/logo.png"} width={"152px"} height={"39px"} />
         <div className={styles["form_area__form"]}>
@@ -54,6 +54,6 @@ export const LoginTemplate: FunctionComponent = () => {
         </div>
       </div>
       <img src={"/images/login_welcome.png"} width={"616px"} height={"687px"} />
-    </LoginLayoutAtom>
+    </SingleLayoutAtom>
   );
 };

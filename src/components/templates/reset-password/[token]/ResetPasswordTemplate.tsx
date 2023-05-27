@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from "react";
 import styles from "./styles.module.css";
-import { LoginLayoutAtom } from "../../../atoms/LayoutAtom/LoginLayoutAtom";
+import { SingleLayoutAtom } from "../../../atoms/LayoutAtom/SingleLayoutAtom";
 import { VerifyLayoutAtom } from "../../../atoms/LayoutAtom/VerifyLayoutAtom";
 import { useForm } from "react-hook-form";
 import { AuthSetPasswordPost } from "../../../../utils/model";
@@ -37,7 +37,7 @@ export const ResetPasswordTemplate: FunctionComponent<Props> = (props) => {
   };
 
   return (
-    <LoginLayoutAtom>
+    <SingleLayoutAtom>
       <VerifyLayoutAtom title={"Đặt lại mật khẩu mới"}>
         <form
           className={styles["setpass__formarea"]}
@@ -60,6 +60,6 @@ export const ResetPasswordTemplate: FunctionComponent<Props> = (props) => {
           />
         </form>
       </VerifyLayoutAtom>
-    </LoginLayoutAtom>
+    </SingleLayoutAtom>
   );
 };

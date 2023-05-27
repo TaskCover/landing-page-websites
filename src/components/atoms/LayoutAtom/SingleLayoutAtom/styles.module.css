@@ -1,4 +1,4 @@
-.loginlayout {
+.singlelayout {
   background-color: #f7f7fd;
   width: 100%;
   min-height: 100vh;
@@ -7,7 +7,7 @@
   justify-content: center;
 }
 
-.loginlayout__container {
+.singlelayout__container {
   display: flex;
   justify-content: center;
   height: 100%;

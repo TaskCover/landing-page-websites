@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from "react";
 import { VerifyLayoutAtom } from "../../../atoms/LayoutAtom/VerifyLayoutAtom";
-import { LoginLayoutAtom } from "../../../atoms/LayoutAtom/LoginLayoutAtom";
+import { SingleLayoutAtom } from "../../../atoms/LayoutAtom/SingleLayoutAtom";
 import styles from "./styles.module.css";
 import { useForm } from "react-hook-form";
 import { AuthForgotPasswordPost } from "../../../../utils/model";
@@ -26,7 +26,7 @@ export const ForgotPasswordTemplate: FunctionComponent = () => {
   };
 
   return (
-    <LoginLayoutAtom>
+    <SingleLayoutAtom>
       {step === 1 && (
         <VerifyLayoutAtom
           title={"Quên mật khẩu"}
@@ -45,6 +45,6 @@ export const ForgotPasswordTemplate: FunctionComponent = () => {
         </VerifyLayoutAtom>
       )}
       {step === 2 && <ResetPasswordSuccessComponent />}
-    </LoginLayoutAtom>
+    </SingleLayoutAtom>
   );
 };

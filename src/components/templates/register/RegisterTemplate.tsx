@@ -9,7 +9,7 @@ import { apiAuthRegisterPost } from "../../../utils/apis";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { VerifyCodeComponent } from "./VerifyCode";
 import { UploadAvatar } from "./UploadAvatar";
-import { LoginLayoutAtom } from "../../atoms/LayoutAtom/LoginLayoutAtom";
+import { SingleLayoutAtom } from "../../atoms/LayoutAtom/SingleLayoutAtom";
 import { ButtonAtom } from "../../atoms/ButtonAtom";
 
 export const RegisterTemplate: FunctionComponent = () => {
@@ -30,7 +30,7 @@ export const RegisterTemplate: FunctionComponent = () => {
   };
 
   return (
-    <LoginLayoutAtom>
+    <SingleLayoutAtom>
       {step === 1 && (
         <>
           <div className={styles["container__form_area"]}>
@@ -69,6 +69,6 @@ export const RegisterTemplate: FunctionComponent = () => {
         </>
       )}
       {step === 2 && <VerifyCodeComponent registerToken={registerToken} />}
-    </LoginLayoutAtom>
+    </SingleLayoutAtom>
   );
 };
