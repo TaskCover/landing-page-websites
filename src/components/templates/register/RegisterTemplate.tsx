@@ -58,7 +58,7 @@ export const RegisterTemplate: FunctionComponent = () => {
             </div>
           </div>
           <img
-            src={"/images/login_welcome.png"}
+            src={"/images/register_welcome.png"}
             width={"616px"}
             height={"687px"}
           />

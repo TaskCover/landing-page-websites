@@ -1,0 +1,54 @@
+.register__upload {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+}
+
+.register__upload__label {
+  font-size: 1.2rem;
+  line-height: 18px;
+  color: #999999;
+}
+
+.register__upload__uploadavatar {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.uploadavatar__img {
+  border-radius: 32px;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.uploadavatar__button {
+  margin-left: 16px;
+  width: 145px;
+  height: 32px;
+  background-color: #e1f0ff;
+}
+
+.uploadavatar__button__content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploadavatar__button__icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 3px;
+}
+
+.uploadavatar__button__label {
+  color: #3699ff;
+  font-size: 1.4rem;
+  line-height: 16px;
+  margin-left: 3px;
+}
