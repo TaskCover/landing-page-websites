@@ -13,14 +13,15 @@ export type Props = DetailedHTMLProps<
 
 export const InputCenterAtom = forwardRef<HTMLInputElement, Props>(
   (props, ref) => {
+    const { label, inputClass, className, ...inputProps } = props;
     return (
-      <div className={clsx(styles["input"], props.className)} ref={ref}>
+      <div className={clsx(styles["input"], className)} ref={ref}>
         <input
           type="text"
-          {...props}
-          className={clsx(styles["input--center"], props.inputClass)}
+          {...inputProps}
+          className={clsx(styles["input--center"], inputClass)}
         />
-        <label className={styles["label--center"]}>{props.label}</label>
+        <label className={styles["label--center"]}>{label}</label>
       </div>
     );
   }

@@ -46,12 +46,12 @@ export const ResetPasswordTemplate: FunctionComponent<Props> = (props) => {
           <InputSecretAtom
             label={"Mật khẩu"}
             {...register("password")}
-            isrequired
+            isRequired
           />
           <InputSecretAtom
             className={styles["setpass__formarea__input2"]}
             label={"Nhập lại mật khẩu"}
-            isrequired
+            isRequired
           />
           <ButtonAtom
             className={styles["setpass__formarea__button"]}

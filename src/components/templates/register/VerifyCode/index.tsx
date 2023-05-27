@@ -4,12 +4,26 @@ import { InputCenterAtom } from "../../../atoms/InputAtom/InputCenterAtom";
 import { useForm } from "react-hook-form";
 import { VerifyLayoutAtom } from "../../../atoms/LayoutAtom/VerifyLayoutAtom";
 import { ButtonAtom } from "../../../atoms/ButtonAtom";
+import { AuthCheckOtp } from "../../../../utils/model";
+import { apiAuthCheckOtp } from "../../../../utils/apis";
+import { showErrorNotify } from "../../../molecules/NotificationMolecule";
+import { useRouter } from "next/router";
 
-export const VerifyCodeComponent: FunctionComponent = () => {
-  const { register, handleSubmit } = useForm<any>();
+export type Props = {
+  registerToken: string;
+};
+
+export const VerifyCodeComponent: FunctionComponent<Props> = (props) => {
+  const { register, handleSubmit } = useForm<AuthCheckOtp["requestBody"]>();
+  const router = useRouter();
 
   const onSubmit = async (data: any) => {
-    console.log(data);
+    try {
+      await apiAuthCheckOtp(data, { token2FA: props.registerToken });
+      router.push("https://google.com");
+    } catch (e: any) {
+      showErrorNotify(e?.response?.data?.description);
+    }
   };
 
   return (
@@ -23,7 +37,7 @@ export const VerifyCodeComponent: FunctionComponent = () => {
         className={styles["verify__formarea"]}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <InputCenterAtom label={"Mã code"} {...register("code")} />
+        <InputCenterAtom label={"Mã code"} {...register("otp")} />
         <ButtonAtom label={"Xác thực"} type={"submit"} />
       </form>
     </VerifyLayoutAtom>

@@ -15,10 +15,14 @@ import { ButtonAtom } from "../../atoms/ButtonAtom";
 export const RegisterTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthRegisterPost["requestBody"]>();
   const [step, setStep] = useState<1 | 2>(1);
+  const [registerToken, setRegisterToken] = useState<string>("");
 
   const onSubmit = async (data: AuthRegisterPost["requestBody"]) => {
     try {
-      await apiAuthRegisterPost(data);
+      const registerResponse: AuthRegisterPost["responseBody"] =
+        await apiAuthRegisterPost(data);
+      console.log(registerResponse.id + " 123123123");
+      setRegisterToken(registerResponse.id);
       setStep(2);
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
@@ -45,13 +49,13 @@ export const RegisterTemplate: FunctionComponent = () => {
               >
                 <InputAtom label={"Họ tên"} {...register("fullname")} />
                 <InputAtom label={"Số điện thoại"} {...register("phone")} />
-                <InputAtom label={"Email"} {...register("email")} isrequired />
+                <InputAtom label={"Email"} {...register("email")} isRequired />
                 <InputSecretAtom
                   label={"Mật khẩu"}
                   {...register("password")}
-                  isrequired
+                  isRequired
                 />
-                <InputSecretAtom label={"Nhập lại mật khẩu"} isrequired />
+                <InputSecretAtom label={"Nhập lại mật khẩu"} isRequired />
                 <UploadAvatar />
                 <ButtonAtom type={"submit"} label={"Đăng ký"} />
               </form>
@@ -64,7 +68,7 @@ export const RegisterTemplate: FunctionComponent = () => {
           />
         </>
       )}
-      {step === 2 && <VerifyCodeComponent />}
+      {step === 2 && <VerifyCodeComponent registerToken={registerToken} />}
     </LoginLayoutAtom>
   );
 };

@@ -16,7 +16,17 @@ export type AuthRegisterPost = {
     password: string;
     fullname: string;
   };
-  responseBody: {};
+  responseBody: { id: string };
+};
+
+export type AuthCheckOtp = {
+  requestHeader: {
+    token2FA: string;
+  };
+  requestBody: {
+    otp: string;
+  };
+  responseBody: { message: string };
 };
 
 export type AuthForgotPasswordPost = {
