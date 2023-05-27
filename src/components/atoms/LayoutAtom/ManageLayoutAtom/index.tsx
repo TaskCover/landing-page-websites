@@ -16,8 +16,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
   sidebarItems,
   isSidebarItemSelected,
@@ -174,14 +173,17 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
                 selected={isSelectedItem(index)}
                 onClick={() => onSidebarItemClick(sidebarItem.url, index)}
               >
-                <img
-                  src={sidebarItem.iconSrc}
-                  className={styles["manage__sidebar_icon"]}
-                />
-                <ListItemTextSidebar
-                  primary={sidebarItem.label}
-                  disableTypography={true}
-                />
+                <div className={styles["manage__sidebar__item"]}>
+                  <img
+                    src={sidebarItem.iconSrc}
+                    className={styles["manage__sidebar_icon"]}
+                  />
+                  <ListItemTextSidebar
+                    primary={sidebarItem.label}
+                    disableTypography={true}
+                  />
+                </div>
+                <KeyboardArrowDownIcon />
               </ListItemButton>
             </ListItemSidebar>
           ))}
