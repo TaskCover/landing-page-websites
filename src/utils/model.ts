@@ -16,15 +16,15 @@ export type AuthRegisterPost = {
     password: string;
     fullname: string;
   };
-  responseBody: { id: string };
+  responseBody: { message: string; registerToken: string };
 };
 
-export type AuthCheckOtp = {
+export type AuthCode = {
   requestHeader: {
-    token2FA: string;
+    tokenRegister: string;
   };
   requestBody: {
-    otp: string;
+    code: string;
   };
   responseBody: { message: string };
 };

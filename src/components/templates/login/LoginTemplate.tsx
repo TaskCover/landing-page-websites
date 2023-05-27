@@ -23,8 +23,7 @@ export const LoginTemplate: FunctionComponent = () => {
       );
       localStorage.setItem("jwt", response.accessToken);
       localStorage.setItem("refresh-token", response.refreshToken);
-      // router.push("https://google.com");
-      showErrorNotify("loi roi");
+      router.push("https://google.com");
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
     }
@@ -59,11 +58,7 @@ export const LoginTemplate: FunctionComponent = () => {
             <div className={styles["input__forget"]}>
               <Link href={"/login/forgot-password"}>{"Quên mật khẩu?"}</Link>
             </div>
-            <ButtonAtom
-              className={styles["form__input__button"]}
-              label={"Đăng nhập"}
-              type={"submit"}
-            />
+            <ButtonAtom label={"Đăng nhập"} type={"submit"} />
           </form>
         </div>
       </div>

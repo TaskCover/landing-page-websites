@@ -1,6 +1,6 @@
 import { post } from "./fetcher";
 import {
-  AuthCheckOtp,
+  AuthCode,
   AuthForgotPasswordPost,
   AuthLoginPost,
   AuthRegisterPost,
@@ -19,15 +19,13 @@ export const apiAuthRegisterPost = (body: AuthRegisterPost["requestBody"]) =>
     body
   );
 
-export const apiAuthCheckOtp = (
-  body: AuthCheckOtp["requestBody"],
-  header: AuthCheckOtp["requestHeader"]
+export const apiAuthCode = (
+  body: AuthCode["requestBody"],
+  header: AuthCode["requestHeader"]
 ) =>
-  post<AuthCheckOtp["requestBody"], AuthCheckOtp["responseBody"]>(
-    "/auth/checkotp",
-    body,
-    { headers: header }
-  );
+  post<AuthCode["requestBody"], AuthCode["responseBody"]>("/auth/code", body, {
+    headers: header,
+  });
 
 export const apiAuthForgotPasswordPost = (
   body: AuthForgotPasswordPost["requestBody"]

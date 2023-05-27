@@ -68,3 +68,12 @@
 .toggle_button.toggle_off {
   background-image: url("/images/toggle_hidden_button_off.png");
 }
+
+@media screen and (max-width: 600px) {
+  .input {
+    width: 318px;
+    height: 58px;
+    background: #ffffff;
+    border-radius: 4px;
+  }
+}

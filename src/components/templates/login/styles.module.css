@@ -50,7 +50,7 @@
   margin-top: 25px;
 }
 
-.form__input > * + * {
+.form__input__input + .form__input__input {
   margin-top: 16px;
 }
 
@@ -83,16 +83,7 @@
     margin-top: 24px;
   }
 
-  div.form__input__input {
-    width: 318px;
-    height: 58px;
-    background: #ffffff;
-    border-radius: 4px;
+  .form__input__input + .form__input__input {
     margin-top: 12px;
-  }
-
-  button.form__input__button {
-    margin-top: 22px;
-    width: 100%;
   }
 }
