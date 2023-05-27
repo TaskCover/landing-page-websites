@@ -1,18 +1,3 @@
-.login {
-  background-color: #f7f7fd;
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.login__container {
-  display: flex;
-  justify-content: center;
-  height: 100%;
-}
-
 .container__form_area {
   display: flex;
   flex-direction: column;

@@ -1,0 +1,14 @@
+.loginlayout {
+  background-color: #f7f7fd;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginlayout__container {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}

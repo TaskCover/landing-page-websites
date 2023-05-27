@@ -14,6 +14,7 @@ export type Props = DetailedHTMLProps<
 > & {
   label: string;
   inputClass?: string;
+  isRequired?: boolean;
 };
 
 export const InputSecretAtom = forwardRef<HTMLInputElement, Props>(
@@ -28,7 +29,14 @@ export const InputSecretAtom = forwardRef<HTMLInputElement, Props>(
           className={props.inputClass}
           ref={ref}
         />
-        <label>{props.label}</label>
+        <label>
+          {props.label}
+          {props.isRequired !== undefined ? (
+            <span className={styles["input__required"]}>&nbsp;{"(*)"}</span>
+          ) : (
+            <></>
+          )}
+        </label>
         <button
           className={clsx(
             styles["toggle_button"],

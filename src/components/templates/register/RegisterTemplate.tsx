@@ -8,14 +8,14 @@ import { AuthRegisterPost } from "../../../utils/model";
 import { apiAuthRegisterPost } from "../../../utils/apis";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { useRouter } from "next/router";
-import { InputCenterAtom } from "../../atoms/InputAtom/InputCenterAtom";
 import { VerifyCodeComponent } from "./VerifyCode";
 import { UploadAvatar } from "./UploadAvatar";
+import { LoginLayoutAtom } from "../../atoms/LayoutAtom/LoginLayoutAtom";
 
 export const RegisterTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthRegisterPost["requestBody"]>();
   const router = useRouter();
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2>(2);
 
   const onSubmit = async (data: AuthRegisterPost["requestBody"]) => {
     try {
@@ -27,9 +27,9 @@ export const RegisterTemplate: FunctionComponent = () => {
   };
 
   return (
-    <div className={styles["register"]}>
+    <LoginLayoutAtom>
       {step === 1 && (
-        <div className={styles["register__container"]}>
+        <>
           <div className={styles["container__form_area"]}>
             <img src={"/images/logo.png"} width={"152px"} height={"39px"} />
             <div className={styles["form_area__form"]}>
@@ -46,9 +46,13 @@ export const RegisterTemplate: FunctionComponent = () => {
               >
                 <InputAtom label={"Họ tên"} {...register("fullname")} />
                 <InputAtom label={"Số điện thoại"} {...register("phone")} />
-                <InputAtom label={"Email"} {...register("email")} />
-                <InputSecretAtom label={"Mật khẩu"} {...register("password")} />
-                <InputSecretAtom label={"Nhập lại mật khẩu"} />
+                <InputAtom label={"Email"} {...register("email")} isRequired />
+                <InputSecretAtom
+                  label={"Mật khẩu"}
+                  {...register("password")}
+                  isRequired
+                />
+                <InputSecretAtom label={"Nhập lại mật khẩu"} isRequired />
                 <UploadAvatar />
                 {/* Create atom for button */}
                 <button className={styles["form__submitbutton"]} type="submit">
@@ -62,13 +66,9 @@ export const RegisterTemplate: FunctionComponent = () => {
             width={"616px"}
             height={"687px"}
           />
-        </div>
+        </>
       )}
-      {step === 2 && (
-        <div className={styles["register__container"]}>
-          <VerifyCodeComponent />
-        </div>
-      )}
-    </div>
+      {step === 2 && <VerifyCodeComponent />}
+    </LoginLayoutAtom>
   );
 };

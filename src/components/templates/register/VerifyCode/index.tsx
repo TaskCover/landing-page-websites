@@ -2,6 +2,7 @@ import { FunctionComponent } from "react";
 import styles from "./styles.module.css";
 import { InputCenterAtom } from "../../../atoms/InputAtom/InputCenterAtom";
 import { useForm } from "react-hook-form";
+import { VerifyLayoutAtom } from "../../../atoms/LayoutAtom/VerifyLayoutAtom";
 
 export const VerifyCodeComponent: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<any>();
@@ -11,11 +12,12 @@ export const VerifyCodeComponent: FunctionComponent = () => {
   };
 
   return (
-    <div className={styles["container__verify"]}>
-      <img src={"/images/logo.png"} width={"187px"} height={"48px"} />
-      <h3>{"Xác thực tài khoản"}</h3>
-      <p>{"Một mã code đã được gửi đến email đăng ký của bạn"}</p>
-      <p>{"Vui lòng kiểm tra mail và điền mã code để hoàn thành đăng ký"}</p>
+    <VerifyLayoutAtom
+      title={"Xác thực tài khoản"}
+      description={
+        "Một mã code đã được gửi đến email đăng ký của bạn\nVui lòng kiểm tra mail và điền mã code để hoàn thành đăng ký"
+      }
+    >
       <form
         className={styles["verify__formarea"]}
         onSubmit={handleSubmit(onSubmit)}
@@ -25,6 +27,6 @@ export const VerifyCodeComponent: FunctionComponent = () => {
           {"Xác thực"}
         </button>
       </form>
-    </div>
+    </VerifyLayoutAtom>
   );
 };

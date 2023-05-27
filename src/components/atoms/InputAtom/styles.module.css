@@ -15,6 +15,10 @@
   border-radius: 4px;
 }
 
+.input__required {
+  color: #f64e60;
+}
+
 .input label {
   position: absolute;
   margin-top: 8px;
