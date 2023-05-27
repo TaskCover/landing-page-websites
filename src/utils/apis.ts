@@ -3,6 +3,7 @@ import {
   AuthForgotPasswordPost,
   AuthLoginPost,
   AuthRegisterPost,
+  AuthSetPasswordPost,
 } from "./model";
 
 export const apiAuthLoginPost = (body: AuthLoginPost["requestBody"]) =>
@@ -24,3 +25,13 @@ export const apiAuthForgotPasswordPost = (
     AuthForgotPasswordPost["requestBody"],
     AuthForgotPasswordPost["responseBody"]
   >("/auth/forgot-password", body);
+
+export const apiAuthSetPasswordPostPost = (
+  body: AuthSetPasswordPost["requestBody"],
+  header: AuthSetPasswordPost["requestHeader"]
+) =>
+  post<AuthSetPasswordPost["requestBody"], AuthSetPasswordPost["responseBody"]>(
+    "/auth/set-password",
+    body,
+    { headers: header }
+  );

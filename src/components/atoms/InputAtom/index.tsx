@@ -9,7 +9,7 @@ export type Props = DetailedHTMLProps<
 > & {
   label: string;
   inputClass?: string;
-  isRequired?: boolean;
+  isrequired?: boolean;
 };
 
 export const InputAtom = forwardRef<HTMLInputElement, Props>((props, ref) => {
@@ -18,7 +18,7 @@ export const InputAtom = forwardRef<HTMLInputElement, Props>((props, ref) => {
       <input type="text" {...props} className={props.inputClass} />
       <label>
         {props.label}
-        {props.isRequired !== undefined ? (
+        {props.isrequired !== undefined ? (
           <span className={styles["input__required"]}>&nbsp;{"(*)"}</span>
         ) : (
           <></>

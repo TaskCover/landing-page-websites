@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { AuthRegisterPost } from "../../../utils/model";
 import { apiAuthRegisterPost } from "../../../utils/apis";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
-import { useRouter } from "next/router";
 import { VerifyCodeComponent } from "./VerifyCode";
 import { UploadAvatar } from "./UploadAvatar";
 import { LoginLayoutAtom } from "../../atoms/LayoutAtom/LoginLayoutAtom";
@@ -15,7 +14,6 @@ import { ButtonAtom } from "../../atoms/ButtonAtom";
 
 export const RegisterTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthRegisterPost["requestBody"]>();
-  const router = useRouter();
   const [step, setStep] = useState<1 | 2>(1);
 
   const onSubmit = async (data: AuthRegisterPost["requestBody"]) => {
@@ -47,13 +45,13 @@ export const RegisterTemplate: FunctionComponent = () => {
               >
                 <InputAtom label={"Họ tên"} {...register("fullname")} />
                 <InputAtom label={"Số điện thoại"} {...register("phone")} />
-                <InputAtom label={"Email"} {...register("email")} isRequired />
+                <InputAtom label={"Email"} {...register("email")} isrequired />
                 <InputSecretAtom
                   label={"Mật khẩu"}
                   {...register("password")}
-                  isRequired
+                  isrequired
                 />
-                <InputSecretAtom label={"Nhập lại mật khẩu"} isRequired />
+                <InputSecretAtom label={"Nhập lại mật khẩu"} isrequired />
                 <UploadAvatar />
                 <ButtonAtom type={"submit"} label={"Đăng ký"} />
               </form>
