@@ -11,11 +11,12 @@ import { useRouter } from "next/router";
 import { VerifyCodeComponent } from "./VerifyCode";
 import { UploadAvatar } from "./UploadAvatar";
 import { LoginLayoutAtom } from "../../atoms/LayoutAtom/LoginLayoutAtom";
+import { ButtonAtom } from "../../atoms/ButtonAtom";
 
 export const RegisterTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthRegisterPost["requestBody"]>();
   const router = useRouter();
-  const [step, setStep] = useState<1 | 2>(2);
+  const [step, setStep] = useState<1 | 2>(1);
 
   const onSubmit = async (data: AuthRegisterPost["requestBody"]) => {
     try {
@@ -54,10 +55,7 @@ export const RegisterTemplate: FunctionComponent = () => {
                 />
                 <InputSecretAtom label={"Nhập lại mật khẩu"} isRequired />
                 <UploadAvatar />
-                {/* Create atom for button */}
-                <button className={styles["form__submitbutton"]} type="submit">
-                  {"Đăng ký"}
-                </button>
+                <ButtonAtom type={"submit"} label={"Đăng ký"} />
               </form>
             </div>
           </div>

@@ -18,3 +18,10 @@ export type AuthRegisterPost = {
   };
   responseBody: {};
 };
+
+export type AuthForgotPasswordPost = {
+  requestBody: {
+    email: string;
+  };
+  responseBody: { message: string };
+};

@@ -1,5 +1,6 @@
 import { ChangeEvent, FunctionComponent, useRef, useState } from "react";
 import styles from "./styles.module.css";
+import { ButtonIconAtom } from "../../../atoms/ButtonAtom/ButtonIconAtom";
 
 export const UploadAvatar: FunctionComponent = () => {
   const imgRef = useRef<HTMLInputElement | null>(null);
@@ -25,23 +26,15 @@ export const UploadAvatar: FunctionComponent = () => {
           ref={imgRef}
           onChange={onFileUpload}
         />
-        <button
-          type="button"
+
+        <ButtonIconAtom
+          iconImgSrc={"/images/icon_upload.png"}
+          label={"Tải ảnh lên"}
           onClick={() => {
             imgRef.current?.click();
           }}
           className={styles["uploadavatar__button"]}
-        >
-          <div className={styles["uploadavatar__button__content"]}>
-            <img
-              src="/images/icon_upload.png"
-              className={styles["uploadavatar__button__icon"]}
-            />
-            <label className={styles["uploadavatar__button__label"]}>
-              {"Tải ảnh lên"}
-            </label>
-          </div>
-        </button>
+        />
       </div>
     </div>
   );

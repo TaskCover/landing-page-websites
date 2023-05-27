@@ -1,5 +1,9 @@
 import { post } from "./fetcher";
-import { AuthLoginPost, AuthRegisterPost } from "./model";
+import {
+  AuthForgotPasswordPost,
+  AuthLoginPost,
+  AuthRegisterPost,
+} from "./model";
 
 export const apiAuthLoginPost = (body: AuthLoginPost["requestBody"]) =>
   post<AuthLoginPost["requestBody"], AuthLoginPost["responseBody"]>(
@@ -12,3 +16,11 @@ export const apiAuthRegisterPost = (body: AuthRegisterPost["requestBody"]) =>
     "/auth/register",
     body
   );
+
+export const apiAuthForgotPasswordPost = (
+  body: AuthForgotPasswordPost["requestBody"]
+) =>
+  post<
+    AuthForgotPasswordPost["requestBody"],
+    AuthForgotPasswordPost["responseBody"]
+  >("/auth/forgot-password", body);

@@ -45,16 +45,3 @@
 .form__input > * + * {
   margin-top: 16px;
 }
-
-.form__submitbutton {
-  width: 340px;
-  height: 48px;
-  padding: 14px 32px;
-  background: #3699ff;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 20px;
-  color: #ffffff;
-  margin-top: 30px;
-}

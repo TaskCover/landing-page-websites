@@ -9,6 +9,7 @@ import { apiAuthLoginPost } from "../../../utils/apis";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { useRouter } from "next/router";
 import { LoginLayoutAtom } from "../../atoms/LayoutAtom/LoginLayoutAtom";
+import { ButtonAtom } from "../../atoms/ButtonAtom";
 
 export const LoginTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthLoginPost["requestBody"]>();
@@ -46,12 +47,9 @@ export const LoginTemplate: FunctionComponent = () => {
             <InputAtom label={"Tên đăng nhập"} {...register("email")} />
             <InputSecretAtom label={"Mật khẩu"} {...register("password")} />
             <div className={styles["input__forget"]}>
-              <Link href={"#"}>{"Quên mật khẩu?"}</Link>
+              <Link href={"/login/forgot-password"}>{"Quên mật khẩu?"}</Link>
             </div>
-
-            <button className={styles["form__submitbutton"]} type="submit">
-              {"Đăng nhập"}
-            </button>
+            <ButtonAtom label={"Đăng nhập"} type={"submit"} />
           </form>
         </div>
       </div>
