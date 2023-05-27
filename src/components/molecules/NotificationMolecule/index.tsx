@@ -5,7 +5,12 @@ import clsx from "clsx";
 
 export const showSuccessNotify = (message: string) => {
   toast.success(
-    <div className={styles["notification__content"]}>
+    <div
+      className={clsx(
+        styles["notification__content"],
+        styles["notification__content__success"]
+      )}
+    >
       <img src="/images/icon_success.png" />
       <p>{message}</p>
     </div>,
@@ -26,7 +31,12 @@ export const showSuccessNotify = (message: string) => {
 
 export const showErrorNotify = (message: string) => {
   toast.error(
-    <div className={styles["notification__content"]}>
+    <div
+      className={clsx(
+        styles["notification__content"],
+        styles["notification__content__error"]
+      )}
+    >
       <img src="/images/icon_error.png" />
       <p>{message}</p>
     </div>,

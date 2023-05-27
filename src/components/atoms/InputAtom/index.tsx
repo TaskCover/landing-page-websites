@@ -16,7 +16,7 @@ export const InputAtom = forwardRef<HTMLInputElement, Props>((props, ref) => {
   const { label, inputClass, isRequired, className, ...inputProps } = props;
 
   return (
-    <div className={clsx(styles["input"], className)} ref={ref}>
+    <div className={clsx(className, styles["input"])} ref={ref}>
       <input type="text" {...inputProps} className={inputClass} />
       <label>
         {label}

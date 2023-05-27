@@ -10,6 +10,7 @@ import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { useRouter } from "next/router";
 import { SingleLayoutAtom } from "../../atoms/LayoutAtom/SingleLayoutAtom";
 import { ButtonAtom } from "../../atoms/ButtonAtom";
+import { LoginLayoutAtom } from "../../atoms/LayoutAtom/SingleLayoutAtom/LoginLayoutAtom";
 
 export const LoginTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthLoginPost["requestBody"]>();
@@ -22,14 +23,15 @@ export const LoginTemplate: FunctionComponent = () => {
       );
       localStorage.setItem("jwt", response.accessToken);
       localStorage.setItem("refresh-token", response.refreshToken);
-      router.push("https://google.com");
+      // router.push("https://google.com");
+      showErrorNotify("loi roi");
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
     }
   };
 
   return (
-    <SingleLayoutAtom>
+    <LoginLayoutAtom>
       <div className={styles["container__form_area"]}>
         <img src={"/images/logo.png"} width={"152px"} height={"39px"} />
         <div className={styles["form_area__form"]}>
@@ -44,16 +46,31 @@ export const LoginTemplate: FunctionComponent = () => {
             className={styles["form__input"]}
             onSubmit={handleSubmit(onSubmit)}
           >
-            <InputAtom label={"Tên đăng nhập"} {...register("email")} />
-            <InputSecretAtom label={"Mật khẩu"} {...register("password")} />
+            <InputAtom
+              className={styles["form__input__input"]}
+              label={"Tên đăng nhập"}
+              {...register("email")}
+            />
+            <InputSecretAtom
+              className={styles["form__input__input"]}
+              label={"Mật khẩu"}
+              {...register("password")}
+            />
             <div className={styles["input__forget"]}>
               <Link href={"/login/forgot-password"}>{"Quên mật khẩu?"}</Link>
             </div>
-            <ButtonAtom label={"Đăng nhập"} type={"submit"} />
+            <ButtonAtom
+              className={styles["form__input__button"]}
+              label={"Đăng nhập"}
+              type={"submit"}
+            />
           </form>
         </div>
       </div>
-      <img src={"/images/login_welcome.png"} width={"616px"} height={"687px"} />
-    </SingleLayoutAtom>
+      <img
+        src={"/images/login_welcome.png"}
+        className={styles["container__img"]}
+      />
+    </LoginLayoutAtom>
   );
 };

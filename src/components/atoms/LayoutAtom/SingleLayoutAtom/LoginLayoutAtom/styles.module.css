@@ -1,0 +1,9 @@
+@media screen and (max-width: 600px) {
+  .singlelayout {
+    background-color: unset;
+    background-image: url("/images/login_welcome_mobile.png");
+    background-position: center;
+    height: auto;
+    background-size: cover;
+  }
+}
