@@ -133,7 +133,7 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
             edge="start"
             sx={{ mr: 2, ...(open && { display: "none" }) }}
           >
-            <MenuIcon />
+            <MenuIcon color="primary" />
           </IconButton>
           <Typography variant="h5" noWrap component="div">
             {getSidebarItemSelected(router.pathname).title}
