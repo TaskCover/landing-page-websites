@@ -1,0 +1,26 @@
+.project__container {
+  padding-top: 12px;
+}
+
+.project__container__header {
+  padding-left: 24px;
+  padding-right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.project__container__header__filter {
+  display: flex;
+  justify-content: space-between;
+}
+
+.project__container__header__filter__item {
+  display: flex;
+  align-items: center;
+}
+
+.project__container__header__filter__item
+  + .project__container__header__filter__item {
+  margin-left: 20px;
+}

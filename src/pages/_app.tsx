@@ -10,6 +10,9 @@ const theme = createTheme({
       main: "#3699FF",
       contrastText: "#FFFFFF",
     },
+    info: {
+      main: "#666666",
+    },
   },
   typography: {
     fontFamily: "Open Sans",
@@ -22,6 +25,7 @@ const theme = createTheme({
       fontWeight: 600,
       fontSize: "1.6rem",
       lineHeight: "20px",
+      color: "#212121",
     },
   },
 });

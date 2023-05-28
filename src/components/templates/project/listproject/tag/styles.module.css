@@ -1,0 +1,24 @@
+.tag {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  width: 81px;
+  height: 26px;
+  border-radius: 6px;
+}
+
+.active {
+  background-color: #e8f2ef;
+  color: #0bb783;
+}
+.pending {
+  background-color: #fff4de;
+  color: #ffa800;
+}
+
+.finish {
+  background-color: #ffe2e5;
+  color: #f64e60;
+}
