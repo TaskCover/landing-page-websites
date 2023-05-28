@@ -29,3 +29,5 @@ export const InputAtom = forwardRef<HTMLInputElement, Props>((props, ref) => {
     </div>
   );
 });
+
+InputAtom.displayName = "InputAtom";
