@@ -26,16 +26,17 @@ export function post<Q, R>(url: string, data?: Q, config?: AxiosRequestConfig) {
       .post<Q, AxiosResponse<R>>(url, data, config)
       .then((data) => data.data)
       .catch((e) => {
-        return { ...e };
+        return e;
       })
   );
 }
 
 export async function extractAxiosResponse<R>(calling: Promise<any>) {
   const res = await calling;
-  if (res?.response?.status >= 400) {
+  if (res?.response?.status >= 400 || res instanceof AxiosError) {
     throw res;
   }
+
   console.log(res);
   return res as R;
 }
