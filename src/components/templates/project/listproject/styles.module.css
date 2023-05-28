@@ -1,0 +1,24 @@
+.listproject__container {
+  padding: 24px;
+}
+
+.listproject__container * {
+  font-size: 1.4rem;
+}
+
+.listproject__tablerow h6 {
+  color: #212121;
+}
+
+.listproject__tablerow img {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.listproject__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 16px;
+}
