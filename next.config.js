@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-const apiPath = process.env.apiPath || "http://4.194.5.90:6801/api/v1";
+const apiPath = process.env.apiPath || "https://103.196.145.232/api/v1";
 
 const nextConfig = {
   reactStrictMode: true,
