@@ -1,11 +1,11 @@
 import type { NextPage } from "next";
-import LoginTemplate from "../../components/templates/login";
 import { ManageLayoutAtom } from "../../components/atoms/LayoutAtom/ManageLayoutAtom";
+import { ProjectTemplate } from "../../components/templates/project";
 
 const Project: NextPage = () => {
   return (
     <ManageLayoutAtom>
-      <h1>abaa</h1>
+      <ProjectTemplate />
     </ManageLayoutAtom>
   );
 };
