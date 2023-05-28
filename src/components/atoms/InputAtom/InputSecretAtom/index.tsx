@@ -53,3 +53,5 @@ export const InputSecretAtom = forwardRef<HTMLInputElement, Props>(
     );
   }
 );
+
+InputSecretAtom.displayName = "InputSecretAtom";

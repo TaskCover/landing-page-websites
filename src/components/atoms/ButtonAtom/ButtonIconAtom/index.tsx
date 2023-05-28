@@ -33,3 +33,5 @@ export const ButtonIconAtom = forwardRef<HTMLButtonElement, Props>(
     );
   }
 );
+
+ButtonIconAtom.displayName = "ButtonIconAtom";
