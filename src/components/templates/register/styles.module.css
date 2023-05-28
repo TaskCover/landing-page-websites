@@ -1,0 +1,47 @@
+.container__form_area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 847px;
+  width: 616px;
+  background-color: #ffffff;
+}
+
+.form_area__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form_area__form h3 {
+  font-weight: 700;
+  font-size: 2.4rem;
+  line-height: 30px;
+  margin-top: 50px;
+}
+
+.form__suggest {
+  margin-top: 8px;
+}
+
+.form__suggest span:nth-child(1) {
+  font-size: 1.4rem;
+  line-height: 22px;
+  margin-left: 2px;
+}
+
+.form__suggest span:nth-child(2) {
+  font-size: 1.6rem;
+  line-height: 20px;
+  margin-left: 2px;
+  color: #3699ff;
+}
+
+.form__input {
+  margin-top: 25px;
+}
+
+.form__input__input + .form__input__input {
+  margin-top: 16px;
+}

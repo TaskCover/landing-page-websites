@@ -1,0 +1,22 @@
+.manage__logo {
+  width: 156px;
+  height: 67px;
+}
+
+.manage__sidebar_icon {
+  width: 24px;
+  height: 24px;
+}
+
+.manage__container {
+  background: #ffffff;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+  padding: 12px 24px;
+}
+
+.manage__sidebar__item {
+  width: 100%;
+  display: flex;
+}
