@@ -9,6 +9,7 @@ import { Paper, TableFooter, styled } from "@mui/material";
 import styles from "./styles.module.css";
 import { TagComponent } from "./tag";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import { useRouter } from "next/router";
 
 const TableCellHeader = styled(TableCell)(({ theme }) => ({
   border: "none",
@@ -20,21 +21,25 @@ const TableCellBody = styled(TableCell)(({ theme }) => ({
 
 const tableData = [
   {
+    id: "1",
     name: "Chiến dịch marketing",
     pic: "Nguyễn Ngọc Khánh",
     status: "active",
   },
   {
+    id: "1",
     name: "Chiến dịch marketing",
     pic: "Nguyễn Ngọc Khánh",
     status: "pending",
   },
   {
+    id: "1",
     name: "Chiến dịch marketing",
     pic: "Nguyễn Ngọc Khánh",
     status: "finish",
   },
   {
+    id: "1",
     name: "Chiến dịch marketing",
     pic: "Nguyễn Ngọc Khánh",
     status: "finish",
@@ -42,6 +47,16 @@ const tableData = [
 ];
 
 export const ListProjectComponent: FunctionComponent = () => {
+  const router = useRouter();
+
+  const openDetail = (id: string) => {
+    router.push(`/project/${id}`);
+  };
+
+  const openEdit = (id: string) => {
+    console.log("edit");
+  };
+
   return (
     <div className={styles["listproject__container"]}>
       <Table sx={{ minWidth: 600 }}>
@@ -71,6 +86,7 @@ export const ListProjectComponent: FunctionComponent = () => {
                 hover
                 className={styles["listproject__tablerow"]}
                 key={index}
+                onClick={() => openDetail(item.id)}
               >
                 <TableCellBody align="center">
                   <h6>{index + 1}</h6>
@@ -86,13 +102,13 @@ export const ListProjectComponent: FunctionComponent = () => {
                   <BookmarkBorderIcon sx={{ width: "20px", height: "20px" }} />
                 </TableCellBody>
                 <TableCellBody>
-                  <button
-                    onClick={() => {
-                      console.log("1221313");
+                  <img
+                    src="/images/icon_edit.png"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openEdit(item.id);
                     }}
-                  >
-                    <img src="/images/icon_edit.png" />
-                  </button>
+                  />
                 </TableCellBody>
               </TableRow>
             ))}
