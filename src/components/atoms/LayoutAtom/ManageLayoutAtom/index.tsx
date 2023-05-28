@@ -33,7 +33,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
 }>(({ theme, open }) => ({
   flexGrow: 1,
   backgroundColor: "#F5F5F5",
-  height: "100vh",
+  minHeight: "100vh",
   padding: theme.spacing(3),
   paddingTop: "74px",
   transition: theme.transitions.create("margin", {
