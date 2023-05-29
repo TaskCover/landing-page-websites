@@ -20,7 +20,7 @@ export const VerifyCodeComponent: FunctionComponent<Props> = (props) => {
   const onSubmit = async (data: AuthCode["requestBody"]) => {
     try {
       await apiAuthCode(data, { tokenRegister: props.tokenRegister });
-      router.push("https://google.com");
+      router.push("/login");
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
     }

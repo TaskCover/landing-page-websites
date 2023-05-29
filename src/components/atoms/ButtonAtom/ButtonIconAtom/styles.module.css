@@ -2,6 +2,7 @@
   width: 145px;
   height: 32px;
   background-color: #e1f0ff;
+  cursor: pointer;
 }
 
 .button_atom-icon__content {
