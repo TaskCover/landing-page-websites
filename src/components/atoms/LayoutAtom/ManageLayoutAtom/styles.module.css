@@ -3,6 +3,12 @@
   height: 67px;
 }
 
+.manage__logo-mini {
+  width: 31px;
+  height: 31px;
+  cursor: pointer;
+}
+
 .manage__sidebar_icon {
   width: 24px;
   height: 24px;
@@ -18,4 +24,5 @@
 .manage__sidebar__item {
   width: 100%;
   display: flex;
+  justify-content: center;
 }
