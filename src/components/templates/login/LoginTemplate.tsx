@@ -23,7 +23,7 @@ export const LoginTemplate: FunctionComponent = () => {
       );
       localStorage.setItem("jwt", response.accessToken);
       localStorage.setItem("refresh-token", response.refreshToken);
-      router.push("https://google.com");
+      router.push("/dashboard");
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
     }
