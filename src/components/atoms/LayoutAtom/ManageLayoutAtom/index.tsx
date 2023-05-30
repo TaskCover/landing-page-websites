@@ -24,6 +24,7 @@ import { useRouter } from "next/router";
 
 export type Props = {
   children: ReactNode;
+  appbarContent?: ReactNode;
 };
 
 const drawerWidth = 340;
@@ -177,10 +178,13 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar sx={{ minHeight: { sm: `${appBarHeigh}px` } }}>
-          <Typography variant="h5" noWrap component="div">
-            {getSidebarItemSelected(router.pathname).title}
-          </Typography>
+        <Toolbar
+          sx={{
+            minHeight: { sm: `${appBarHeigh}px` },
+            maxHeight: { sm: `${appBarHeigh}px` },
+          }}
+        >
+          {props.appbarContent}
         </Toolbar>
       </AppBar>
       <Drawer variant="persistent" open={open}>

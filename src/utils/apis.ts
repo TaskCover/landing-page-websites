@@ -14,7 +14,7 @@ export const PUBLIC_API = [
   "/auth/forgot-password",
   "/auth/refresh-token",
 ];
-
+//AUTH==================================================================================
 export const apiAuthLoginPost = (body: AuthLoginPost["requestBody"]) =>
   post<AuthLoginPost["requestBody"], AuthLoginPost["responseBody"]>(
     "/auth/login",
@@ -51,3 +51,4 @@ export const apiAuthRefreshTokenPost = (
     {},
     { headers: header }
   );
+//=======================================================================================
