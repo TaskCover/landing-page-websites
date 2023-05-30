@@ -47,5 +47,14 @@ export type AuthRefreshTokenPost = {
     refreshToken: string;
   };
 };
+export type AuthSetPasswordPost = {
+  requestHeader: {
+    "reset-password-token": string;
+  };
+  requestBody: {
+    password: string;
+  };
+  responseBody: { message: string };
+};
 
 //==================================================================================

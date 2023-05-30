@@ -5,6 +5,7 @@ import {
   AuthLoginPost,
   AuthRefreshTokenPost,
   AuthRegisterPost,
+  AuthSetPasswordPost,
 } from "./model";
 
 export const PUBLIC_API = [
@@ -49,6 +50,16 @@ export const apiAuthRefreshTokenPost = (
   post<{}, AuthRefreshTokenPost["responseBody"]>(
     "/auth/refresh-token",
     {},
+    { headers: header }
+  );
+
+export const apiAuthSetPasswordPostPost = (
+  body: AuthSetPasswordPost["requestBody"],
+  header: AuthSetPasswordPost["requestHeader"]
+) =>
+  post<AuthSetPasswordPost["requestBody"], AuthSetPasswordPost["responseBody"]>(
+    "/auth/set-password",
+    body,
     { headers: header }
   );
 //=======================================================================================
