@@ -8,6 +8,9 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_PATH: apiPath,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig;
