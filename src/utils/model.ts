@@ -1,4 +1,7 @@
 //AUTH==================================================================================
+export type ValidationListError = {
+  message: string;
+}[];
 
 export type AuthLoginPost = {
   requestBody: {

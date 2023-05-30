@@ -3,7 +3,10 @@ import { VerifyLayoutAtom } from "../../../atoms/LayoutAtom/VerifyLayoutAtom";
 import { SingleLayoutAtom } from "../../../atoms/LayoutAtom/SingleLayoutAtom";
 import styles from "./styles.module.css";
 import { useForm } from "react-hook-form";
-import { AuthForgotPasswordPost } from "../../../../utils/model";
+import {
+  AuthForgotPasswordPost,
+  ValidationListError,
+} from "../../../../utils/model";
 import { InputAtom } from "../../../atoms/InputAtom";
 import { ButtonAtom } from "../../../atoms/ButtonAtom";
 import { apiAuthForgotPasswordPost } from "../../../../utils/apis";
@@ -22,6 +25,12 @@ export const ForgotPasswordTemplate: FunctionComponent = () => {
       setStep(2);
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
+      const errors = e?.response?.data?.errors as ValidationListError;
+      if (errors && errors.length > 0) {
+        errors.forEach((error) => {
+          showErrorNotify(error?.message);
+        });
+      }
     }
   };
 
