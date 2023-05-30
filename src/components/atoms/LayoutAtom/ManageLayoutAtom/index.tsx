@@ -184,9 +184,7 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
             maxHeight: { sm: `${appBarHeigh}px` },
           }}
         >
-          <Typography noWrap component="div">
-            {props.appbarContent}
-          </Typography>
+          {props.appbarContent}
         </Toolbar>
       </AppBar>
       <Drawer variant="persistent" open={open}>

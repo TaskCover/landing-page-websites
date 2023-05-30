@@ -3,11 +3,7 @@ import { ManageLayoutAtom } from "../../components/atoms/LayoutAtom/ManageLayout
 import { ProjectTemplate } from "../../components/templates/project";
 
 const Dashboard: NextPage = () => {
-  return (
-    <ManageLayoutAtom>
-      <ProjectTemplate />
-    </ManageLayoutAtom>
-  );
+  return <ProjectTemplate />;
 };
 
 export default Dashboard;
