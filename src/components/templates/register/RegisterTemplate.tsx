@@ -4,7 +4,7 @@ import Link from "next/link";
 import { InputAtom } from "../../atoms/InputAtom";
 import { InputSecretAtom } from "../../atoms/InputAtom/InputSecretAtom";
 import { useForm } from "react-hook-form";
-import { AuthRegisterPost } from "../../../utils/model";
+import { AuthRegisterPost, ValidationListError } from "../../../utils/model";
 import { apiAuthRegisterPost } from "../../../utils/apis";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { VerifyCodeComponent } from "./VerifyCode";
@@ -25,6 +25,12 @@ export const RegisterTemplate: FunctionComponent = () => {
       setStep(2);
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
+      const errors = e?.response?.data?.errors as ValidationListError;
+      if (errors && errors.length > 0) {
+        errors.forEach((error) => {
+          showErrorNotify(error?.message);
+        });
+      }
     }
   };
 

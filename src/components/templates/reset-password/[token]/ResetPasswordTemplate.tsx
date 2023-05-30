@@ -3,7 +3,10 @@ import styles from "./styles.module.css";
 import { SingleLayoutAtom } from "../../../atoms/LayoutAtom/SingleLayoutAtom";
 import { VerifyLayoutAtom } from "../../../atoms/LayoutAtom/VerifyLayoutAtom";
 import { useForm } from "react-hook-form";
-import { AuthSetPasswordPost } from "../../../../utils/model";
+import {
+  AuthSetPasswordPost,
+  ValidationListError,
+} from "../../../../utils/model";
 import { InputAtom } from "../../../atoms/InputAtom";
 import { ButtonAtom } from "../../../atoms/ButtonAtom";
 import { apiAuthSetPasswordPostPost } from "../../../../utils/apis";
@@ -33,6 +36,12 @@ export const ResetPasswordTemplate: FunctionComponent<Props> = (props) => {
       router.push("/login");
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
+      const errors = e?.response?.data?.errors as ValidationListError;
+      if (errors && errors.length > 0) {
+        errors.forEach((error) => {
+          showErrorNotify(error?.message);
+        });
+      }
     }
   };
 
