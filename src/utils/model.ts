@@ -1,3 +1,5 @@
+//AUTH==================================================================================
+
 export type AuthLoginPost = {
   requestBody: {
     email: string;
@@ -45,3 +47,5 @@ export type AuthRefreshTokenPost = {
     refreshToken: string;
   };
 };
+
+//==================================================================================

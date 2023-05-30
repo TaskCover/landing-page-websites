@@ -5,18 +5,19 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Paper, TableFooter, styled } from "@mui/material";
+import { Pagination, Paper, Stack, TableFooter, styled } from "@mui/material";
 import styles from "./styles.module.css";
 import { TagComponent } from "./tag";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { useRouter } from "next/router";
+import { SimpleSelectAtom } from "../../../atoms/SelectAtom/SimpleSelectAtom";
 
 const TableCellHeader = styled(TableCell)(({ theme }) => ({
   border: "none",
 }));
 const TableCellBody = styled(TableCell)(({ theme }) => ({
-  paddingTop: 0,
-  paddingBottom: 0,
+  paddingTop: "10px",
+  paddingBottom: "10px",
 }));
 
 const tableData = [
@@ -115,8 +116,19 @@ export const ListProjectComponent: FunctionComponent = () => {
         </TableBody>
       </Table>
       <div className={styles["listproject__pagination"]}>
-        <div>Hiển thị</div>
-        <div>Hiển thị</div>
+        <div className={styles["listproject__pagination__count"]}>
+          Hiển thị <SimpleSelectAtom /> trên tổng 1694
+        </div>
+        <Stack spacing={2}>
+          <Pagination
+            count={10}
+            variant="outlined"
+            siblingCount={1}
+            shape="rounded"
+            showFirstButton={true}
+            showLastButton={true}
+          />
+        </Stack>
       </div>
     </div>
   );
