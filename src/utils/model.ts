@@ -36,12 +36,12 @@ export type AuthForgotPasswordPost = {
   responseBody: { message: string };
 };
 
-export type AuthSetPasswordPost = {
+export type AuthRefreshTokenPost = {
   requestHeader: {
-    "reset-password-token": string;
+    "refresh-token": string;
   };
-  requestBody: {
-    password: string;
+  responseBody: {
+    accessToken: string;
+    refreshToken: string;
   };
-  responseBody: { message: string };
 };
