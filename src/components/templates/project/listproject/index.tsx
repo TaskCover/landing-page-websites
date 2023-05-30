@@ -62,7 +62,7 @@ export const ListProjectComponent: FunctionComponent<Props> = (props) => {
                 key={index}
                 onClick={() => handle.openDetail(item.id)}
               >
-                <TableCellBody align="center">
+                <TableCellBody align="center" >
                   <h6>{index + 1}</h6>
                 </TableCellBody>
                 <TableCellBody>
