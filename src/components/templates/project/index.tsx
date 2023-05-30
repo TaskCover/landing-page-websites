@@ -5,7 +5,7 @@ import { Button, Divider } from "@mui/material";
 import styles from "./styles.module.css";
 import { SwitchAtom } from "../../atoms/SwitchAtom";
 import { MenuAtom } from "../../atoms/MenuAtom";
-import { ListProjectComponent } from "./listproject/insex";
+import { ListProjectComponent } from "./listproject";
 
 export const ProjectTemplate: FunctionComponent = () => {
   return (
