@@ -6,10 +6,6 @@
   font-size: 1.4rem;
 }
 
-.listproject__tablerow {
-  cursor: pointer;
-}
-
 .listproject__tablerow h6 {
   color: #212121;
 }

@@ -9,7 +9,6 @@ import { Paper, TableFooter, styled } from "@mui/material";
 import styles from "./styles.module.css";
 import { TagComponent } from "./tag";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import { useRouter } from "next/router";
 
 const TableCellHeader = styled(TableCell)(({ theme }) => ({
   border: "none",
@@ -43,9 +42,6 @@ const tableData = [
 ];
 
 export const ListProjectComponent: FunctionComponent = () => {
-
-const router = useRouter();
-
   return (
     <div className={styles["listproject__container"]}>
       <Table sx={{ minWidth: 600 }}>
@@ -75,9 +71,8 @@ const router = useRouter();
                 hover
                 className={styles["listproject__tablerow"]}
                 key={index}
-                onClick = {(e) => {router.push("/project/2"); e.stopPropagation(); e.preventDefault(); }}
               >
-                <TableCellBody align="center" >
+                <TableCellBody align="center">
                   <h6>{index + 1}</h6>
                 </TableCellBody>
                 <TableCellBody>
@@ -92,7 +87,9 @@ const router = useRouter();
                 </TableCellBody>
                 <TableCellBody>
                   <button
-                    onClick= {(e) => {e.stopPropagation(); e.preventDefault(); console.log(123)}}
+                    onClick={() => {
+                      console.log("1221313");
+                    }}
                   >
                     <img src="/images/icon_edit.png" />
                   </button>
