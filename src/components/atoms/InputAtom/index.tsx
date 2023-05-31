@@ -10,14 +10,20 @@ export type Props = DetailedHTMLProps<
   label: string;
   inputClass?: string;
   isRequired?: boolean;
+  isError?: boolean;
 };
 
 export const InputAtom = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { label, inputClass, isRequired, className, ...inputProps } = props;
+  const { label, inputClass, isRequired, className, isError, ...inputProps } =
+    props;
 
   return (
     <div className={clsx(className, styles["input"])} ref={ref}>
-      <input type="text" {...inputProps} className={inputClass} />
+      <input
+        type="text"
+        {...inputProps}
+        className={clsx(inputClass, { [styles["error"]]: isError })}
+      />
       <label>
         {label}
         {isRequired !== undefined ? (

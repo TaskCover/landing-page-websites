@@ -15,20 +15,22 @@ export type Props = DetailedHTMLProps<
   label: string;
   inputClass?: string;
   isRequired?: boolean;
+  isError?: boolean;
 };
 
 export const InputSecretAtom = forwardRef<HTMLInputElement, Props>(
   (props, ref) => {
     const [isHidden, setIsHidden] = useState(true);
 
-    const { label, inputClass, isRequired, className, ...inputProps } = props;
+    const { label, inputClass, isRequired, className, isError, ...inputProps } =
+      props;
 
     return (
       <div className={clsx(styles["input"], className)}>
         <input
           type={isHidden ? "password" : "text"}
           {...inputProps}
-          className={inputClass}
+          className={clsx(inputClass, { [styles["error"]]: isError })}
           ref={ref}
         />
         <label>

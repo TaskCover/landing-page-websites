@@ -6,6 +6,10 @@
   font-size: 1.4rem;
 }
 
+.listproject__tablerow {
+  cursor: pointer;
+}
+
 .listproject__tablerow h6 {
   color: #212121;
 }
@@ -21,4 +25,20 @@
   align-items: center;
   justify-content: space-between;
   padding: 7px 16px;
+}
+
+.listproject__pagination__count {
+  font-weight: 600;
+  color: #212121;
+}
+
+.pagination {
+  border-radius: 8px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.pagination-selected {
+  background: #3699ff !important;
+  color: #ffffff !important;
 }

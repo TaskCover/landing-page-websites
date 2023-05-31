@@ -1,7 +1,8 @@
 import React, { FunctionComponent, ReactNode, useEffect } from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { CSSObject, Theme, styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
+// import Drawer from "@mui/material/Drawer";
+import MuiDrawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,7 +10,7 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ListItem from "@mui/material/ListItem";
+import ListItem, { ListItemProps } from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -23,10 +24,12 @@ import { useRouter } from "next/router";
 
 export type Props = {
   children: ReactNode;
+  appbarContent?: ReactNode;
 };
 
 const drawerWidth = 340;
 const appBarHeigh = 50;
+const collapseSidebar = 60;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
@@ -40,7 +43,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  marginLeft: `-${drawerWidth}px`,
+  marginLeft: `- ${drawerWidth - collapseSidebar}px`,
   ...(open && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
@@ -63,6 +66,10 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  ...(!open && {
+    width: `calc(100% - ${collapseSidebar}px)`,
+    marginLeft: `${collapseSidebar}px`,
+  }),
   ...(open && {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: `${drawerWidth}px`,
@@ -82,14 +89,60 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "space-between",
 }));
 
-const ListItemSidebar = styled(ListItem)(({ theme }) => ({
-  padding: theme.spacing(0, 3),
+interface ListItemSidebarProps extends ListItemProps {
+  open?: boolean;
+}
+
+const ListItemSidebar = styled(ListItem, {
+  shouldForwardProp: (prop) => prop !== "open",
+})<ListItemSidebarProps>(({ theme, open }) => ({
+  padding: open ? theme.spacing(0, 3) : 0,
 }));
 
 const ListItemTextSidebar = styled(ListItemText)(({ theme }) => ({
   fontSize: "1.6rem",
   color: "#666666",
   marginLeft: "16px",
+}));
+
+const openedMixin = (theme: Theme): CSSObject => ({
+  visibility: "visible !important" as "visible",
+  transform: "none  !important" as "none",
+  width: `${drawerWidth}px`,
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+});
+
+const closedMixin = (theme: Theme): CSSObject => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  visibility: "visible !important" as "visible",
+  transform: "none  !important" as "none",
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: "hidden !important" as "hidden",
+  width: `${collapseSidebar}px`,
+});
+
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  // flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
 }));
 
 export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
@@ -125,61 +178,61 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar sx={{ minHeight: { sm: `${appBarHeigh}px` } }}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h5" noWrap component="div">
-            {getSidebarItemSelected(router.pathname).title}
-          </Typography>
+        <Toolbar
+          sx={{
+            minHeight: { sm: `${appBarHeigh}px` },
+            maxHeight: { sm: `${appBarHeigh}px` },
+          }}
+        >
+          {props.appbarContent}
         </Toolbar>
       </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
+      <Drawer variant="persistent" open={open}>
+        <DrawerHeader
+          sx={{
+            padding: open ? "0 24px" : "0 0",
+          }}
+        >
           <img
-            src={"/images/logo_sidebar.png"}
-            className={styles["manage__logo"]}
+            src={
+              open
+                ? "/images/logo_sidebar.png"
+                : "/images/logo_sidebar_mini.png"
+            }
+            className={
+              open ? styles["manage__logo"] : styles["manage__logo-mini"]
+            }
+            onClick={() => {
+              !open && handleDrawerOpen();
+            }}
           />
-          <IconButton onClick={handleDrawerClose} sx={{ padding: 0 }}>
-            <img src={"/images/icon_collapse.png"} />
-          </IconButton>
+          {open && (
+            <IconButton onClick={handleDrawerClose} sx={{ padding: 0 }}>
+              <img src={"/images/icon_collapse.png"} />
+            </IconButton>
+          )}
         </DrawerHeader>
-        <List sx={{ marginTop: "40px", padding: 0 }}>
+        <List sx={{ marginTop: "40px", padding: 0, width: "100%" }}>
           {sidebarItems.map((sidebarItem, index) => (
-            <ListItemSidebar key={index} disablePadding>
+            <ListItemSidebar key={index} disablePadding open={open}>
               <ListItemButton
                 selected={isSelectedItem(index)}
                 onClick={() => onSidebarItemClick(sidebarItem.url, index)}
+                sx={{ p: open ? "8px 16px" : "11px 0px" }}
               >
                 <div className={styles["manage__sidebar__item"]}>
                   <img
                     src={sidebarItem.iconSrc}
                     className={styles["manage__sidebar_icon"]}
                   />
-                  <ListItemTextSidebar
-                    primary={sidebarItem.label}
-                    disableTypography={true}
-                  />
+                  {open && (
+                    <ListItemTextSidebar
+                      primary={sidebarItem.label}
+                      disableTypography={true}
+                    />
+                  )}
                 </div>
-                <KeyboardArrowDownIcon />
+                {open && <KeyboardArrowDownIcon />}
               </ListItemButton>
             </ListItemSidebar>
           ))}

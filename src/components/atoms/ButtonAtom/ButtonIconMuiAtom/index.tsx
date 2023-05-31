@@ -36,3 +36,5 @@ export const ButtonIconMuiAtom = forwardRef<HTMLButtonElement, Props>(
     );
   }
 );
+
+ButtonIconMuiAtom.displayName = "ButtonIconMuiAtom";

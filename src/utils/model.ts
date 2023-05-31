@@ -1,3 +1,9 @@
+//AUTH==================================================================================
+export type ValidationListError = {
+  param: string;
+  message: string;
+}[];
+
 export type AuthLoginPost = {
   requestBody: {
     email: string;
@@ -36,6 +42,15 @@ export type AuthForgotPasswordPost = {
   responseBody: { message: string };
 };
 
+export type AuthRefreshTokenPost = {
+  requestHeader: {
+    "refresh-token": string;
+  };
+  responseBody: {
+    accessToken: string;
+    refreshToken: string;
+  };
+};
 export type AuthSetPasswordPost = {
   requestHeader: {
     "reset-password-token": string;
@@ -45,3 +60,5 @@ export type AuthSetPasswordPost = {
   };
   responseBody: { message: string };
 };
+
+//==================================================================================

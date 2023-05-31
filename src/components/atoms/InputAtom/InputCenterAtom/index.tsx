@@ -9,17 +9,22 @@ export type Props = DetailedHTMLProps<
 > & {
   label: string;
   inputClass?: string;
+  isError?: boolean;
 };
 
 export const InputCenterAtom = forwardRef<HTMLInputElement, Props>(
   (props, ref) => {
-    const { label, inputClass, className, ...inputProps } = props;
+    const { label, inputClass, className, isError, ...inputProps } = props;
     return (
       <div className={clsx(styles["input"], className)} ref={ref}>
         <input
           type="text"
           {...inputProps}
-          className={clsx(styles["input--center"], inputClass)}
+          className={clsx(
+            styles["input--center"],
+            { [styles["error"]]: isError },
+            inputClass
+          )}
         />
         <label className={styles["label--center"]}>{label}</label>
       </div>

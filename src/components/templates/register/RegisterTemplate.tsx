@@ -4,16 +4,19 @@ import Link from "next/link";
 import { InputAtom } from "../../atoms/InputAtom";
 import { InputSecretAtom } from "../../atoms/InputAtom/InputSecretAtom";
 import { useForm } from "react-hook-form";
-import { AuthRegisterPost } from "../../../utils/model";
+import { AuthRegisterPost, ValidationListError } from "../../../utils/model";
 import { apiAuthRegisterPost } from "../../../utils/apis";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { VerifyCodeComponent } from "./VerifyCode";
 import { UploadAvatar } from "./UploadAvatar";
 import { SingleLayoutAtom } from "../../atoms/LayoutAtom/SingleLayoutAtom";
 import { ButtonAtom } from "../../atoms/ButtonAtom";
+import { useHandleError } from "../../../utils/useHandleError";
+import { ErrorTextAtom } from "../../atoms/ErrorTextAtom";
 
 export const RegisterTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthRegisterPost["requestBody"]>();
+  const { getErrorMessage, handleError } = useHandleError();
   const [step, setStep] = useState<1 | 2>(1);
   const [tokenRegister, setTokenRegister] = useState<string>("");
 
@@ -25,6 +28,7 @@ export const RegisterTemplate: FunctionComponent = () => {
       setStep(2);
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
+      handleError(e);
     }
   };
 
@@ -50,24 +54,40 @@ export const RegisterTemplate: FunctionComponent = () => {
                   className={styles["form__input__input"]}
                   label={"Họ tên"}
                   {...register("fullname")}
+                  isError={!!getErrorMessage("fullname")}
                 />
+                {getErrorMessage("fullname") && (
+                  <ErrorTextAtom error={getErrorMessage("fullname")!} />
+                )}
                 <InputAtom
                   className={styles["form__input__input"]}
                   label={"Số điện thoại"}
                   {...register("phone")}
+                  isError={!!getErrorMessage("phone")}
                 />
+                {getErrorMessage("phone") && (
+                  <ErrorTextAtom error={getErrorMessage("phone")!} />
+                )}
                 <InputAtom
                   className={styles["form__input__input"]}
                   label={"Email"}
                   {...register("email")}
                   isRequired
+                  isError={!!getErrorMessage("email")}
                 />
+                {getErrorMessage("email") && (
+                  <ErrorTextAtom error={getErrorMessage("email")!} />
+                )}
                 <InputSecretAtom
                   className={styles["form__input__input"]}
                   label={"Mật khẩu"}
                   {...register("password")}
                   isRequired
+                  isError={!!getErrorMessage("password")}
                 />
+                {getErrorMessage("password") && (
+                  <ErrorTextAtom error={getErrorMessage("password")!} />
+                )}
                 <InputSecretAtom
                   className={styles["form__input__input"]}
                   label={"Nhập lại mật khẩu"}

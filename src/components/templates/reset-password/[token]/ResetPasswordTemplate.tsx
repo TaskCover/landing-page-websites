@@ -3,7 +3,10 @@ import styles from "./styles.module.css";
 import { SingleLayoutAtom } from "../../../atoms/LayoutAtom/SingleLayoutAtom";
 import { VerifyLayoutAtom } from "../../../atoms/LayoutAtom/VerifyLayoutAtom";
 import { useForm } from "react-hook-form";
-import { AuthSetPasswordPost } from "../../../../utils/model";
+import {
+  AuthSetPasswordPost,
+  ValidationListError,
+} from "../../../../utils/model";
 import { InputAtom } from "../../../atoms/InputAtom";
 import { ButtonAtom } from "../../../atoms/ButtonAtom";
 import { apiAuthSetPasswordPostPost } from "../../../../utils/apis";
@@ -13,6 +16,8 @@ import {
 } from "../../../molecules/NotificationMolecule";
 import { InputSecretAtom } from "../../../atoms/InputAtom/InputSecretAtom";
 import { useRouter } from "next/router";
+import { useHandleError } from "../../../../utils/useHandleError";
+import { ErrorTextAtom } from "../../../atoms/ErrorTextAtom";
 
 export type Props = {
   token: string;
@@ -22,6 +27,7 @@ export const ResetPasswordTemplate: FunctionComponent<Props> = (props) => {
   const router = useRouter();
   const { register, handleSubmit } =
     useForm<AuthSetPasswordPost["requestBody"]>();
+  const { getErrorMessage, handleError } = useHandleError();
 
   const onSubmit = async (data: AuthSetPasswordPost["requestBody"]) => {
     console.log(data);
@@ -33,6 +39,7 @@ export const ResetPasswordTemplate: FunctionComponent<Props> = (props) => {
       router.push("/login");
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
+      handleError(e);
     }
   };
 
@@ -47,7 +54,11 @@ export const ResetPasswordTemplate: FunctionComponent<Props> = (props) => {
             label={"Mật khẩu"}
             {...register("password")}
             isRequired
+            isError={!!getErrorMessage("password")}
           />
+          {getErrorMessage("password") && (
+            <ErrorTextAtom error={getErrorMessage("password")!} />
+          )}
           <InputSecretAtom
             className={styles["setpass__formarea__input2"]}
             label={"Nhập lại mật khẩu"}

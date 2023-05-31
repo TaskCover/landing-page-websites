@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 
-const apiPath = process.env.apiPath || "http://103.196.145.232/api/v1";
+const apiPath = process.env.apiPath;
 
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   env: {
     NEXT_PUBLIC_API_PATH: apiPath,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 

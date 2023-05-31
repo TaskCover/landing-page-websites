@@ -3,10 +3,19 @@ import {
   AuthCode,
   AuthForgotPasswordPost,
   AuthLoginPost,
+  AuthRefreshTokenPost,
   AuthRegisterPost,
   AuthSetPasswordPost,
 } from "./model";
 
+export const PUBLIC_API = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/code",
+  "/auth/forgot-password",
+  "/auth/refresh-token",
+];
+//AUTH==================================================================================
 export const apiAuthLoginPost = (body: AuthLoginPost["requestBody"]) =>
   post<AuthLoginPost["requestBody"], AuthLoginPost["responseBody"]>(
     "/auth/login",
@@ -35,6 +44,15 @@ export const apiAuthForgotPasswordPost = (
     AuthForgotPasswordPost["responseBody"]
   >("/auth/forgot-password", body);
 
+export const apiAuthRefreshTokenPost = (
+  header: AuthRefreshTokenPost["requestHeader"]
+) =>
+  post<{}, AuthRefreshTokenPost["responseBody"]>(
+    "/auth/refresh-token",
+    {},
+    { headers: header }
+  );
+
 export const apiAuthSetPasswordPostPost = (
   body: AuthSetPasswordPost["requestBody"],
   header: AuthSetPasswordPost["requestHeader"]
@@ -44,3 +62,4 @@ export const apiAuthSetPasswordPostPost = (
     body,
     { headers: header }
   );
+//=======================================================================================
