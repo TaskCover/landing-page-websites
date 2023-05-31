@@ -31,3 +31,14 @@
   font-weight: 600;
   color: #212121;
 }
+
+.pagination {
+  border-radius: 8px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.pagination-selected {
+  background: #3699ff !important;
+  color: #ffffff !important;
+}

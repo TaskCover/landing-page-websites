@@ -1,16 +1,24 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Pagination, Paper, Stack, TableFooter, styled } from "@mui/material";
+import {
+  Pagination,
+  PaginationItem,
+  Paper,
+  Stack,
+  TableFooter,
+  styled,
+} from "@mui/material";
 import styles from "./styles.module.css";
 import { TagComponent } from "./tag";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { useRouter } from "next/router";
 import { SimpleSelectAtom } from "../../../atoms/SelectAtom/SimpleSelectAtom";
+import clsx from "clsx";
 
 const TableCellHeader = styled(TableCell)(({ theme }) => ({
   border: "none",
@@ -57,6 +65,11 @@ export const ListProjectComponent: FunctionComponent = () => {
   const openEdit = (id: string) => {
     console.log("edit");
   };
+
+  const [state, setState] = useState<{
+    currentPage: number;
+    totalCount: number;
+  }>({ currentPage: 1, totalCount: 10 });
 
   return (
     <div className={styles["listproject__container"]}>
@@ -123,10 +136,33 @@ export const ListProjectComponent: FunctionComponent = () => {
           <Pagination
             count={10}
             variant="outlined"
+            color="primary"
             siblingCount={1}
+            onChange={(_, page) => {
+              setState({ ...state, currentPage: page });
+            }}
             shape="rounded"
             showFirstButton={true}
             showLastButton={true}
+            renderItem={(item) => {
+              if (
+                item.page &&
+                (item.page - state.currentPage > 2 ||
+                  state.currentPage - item.page > 2) &&
+                item.page !== state.totalCount &&
+                item.page !== 1
+              ) {
+                return null;
+              }
+              return (
+                <PaginationItem
+                  {...item}
+                  className={clsx(styles["pagination"], {
+                    [styles["pagination-selected"]]: item.selected,
+                  })}
+                />
+              );
+            }}
           />
         </Stack>
       </div>
