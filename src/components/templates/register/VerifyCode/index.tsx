@@ -4,7 +4,7 @@ import { InputCenterAtom } from "../../../atoms/InputAtom/InputCenterAtom";
 import { useForm } from "react-hook-form";
 import { VerifyLayoutAtom } from "../../../atoms/LayoutAtom/VerifyLayoutAtom";
 import { ButtonAtom } from "../../../atoms/ButtonAtom";
-import { AuthCode } from "../../../../utils/model";
+import { AuthCode, ValidationListError } from "../../../../utils/model";
 import { apiAuthCode } from "../../../../utils/apis";
 import { showErrorNotify } from "../../../molecules/NotificationMolecule";
 import { useRouter } from "next/router";

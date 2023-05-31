@@ -4,7 +4,7 @@ import Link from "next/link";
 import { InputAtom } from "../../atoms/InputAtom";
 import { InputSecretAtom } from "../../atoms/InputAtom/InputSecretAtom";
 import { useForm } from "react-hook-form";
-import { AuthRegisterPost } from "../../../utils/model";
+import { AuthRegisterPost, ValidationListError } from "../../../utils/model";
 import { apiAuthRegisterPost } from "../../../utils/apis";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { VerifyCodeComponent } from "./VerifyCode";
