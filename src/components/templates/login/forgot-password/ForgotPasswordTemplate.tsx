@@ -12,10 +12,13 @@ import { ButtonAtom } from "../../../atoms/ButtonAtom";
 import { apiAuthForgotPasswordPost } from "../../../../utils/apis";
 import { showErrorNotify } from "../../../molecules/NotificationMolecule";
 import { ResetPasswordSuccessComponent } from "./ResetPasswordSuccess";
+import { useHandleError } from "../../../../utils/useHandleError";
+import { ErrorTextAtom } from "../../../atoms/ErrorTextAtom";
 
 export const ForgotPasswordTemplate: FunctionComponent = () => {
   const { register, handleSubmit } =
     useForm<AuthForgotPasswordPost["requestBody"]>();
+  const { getErrorMessage, handleError } = useHandleError();
 
   const [step, setStep] = useState<1 | 2>(1);
 
@@ -25,12 +28,7 @@ export const ForgotPasswordTemplate: FunctionComponent = () => {
       setStep(2);
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
-      const errors = e?.response?.data?.errors as ValidationListError;
-      if (errors && errors.length > 0) {
-        errors.forEach((error) => {
-          showErrorNotify(error?.message);
-        });
-      }
+      handleError(e);
     }
   };
 
@@ -48,7 +46,15 @@ export const ForgotPasswordTemplate: FunctionComponent = () => {
             className={styles["forget_pass__form"]}
             onSubmit={handleSubmit(onSubmit)}
           >
-            <InputAtom label={"Email"} {...register("email")} />
+            <InputAtom
+              label={"Email"}
+              {...register("email")}
+              isError={!!getErrorMessage("email")}
+            />
+
+            {getErrorMessage("email") && (
+              <ErrorTextAtom error={getErrorMessage("email")!} />
+            )}
             <ButtonAtom label={"Xác nhận"} type={"submit"} />
           </form>
         </VerifyLayoutAtom>

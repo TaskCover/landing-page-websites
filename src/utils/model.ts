@@ -1,5 +1,6 @@
 //AUTH==================================================================================
 export type ValidationListError = {
+  param: string;
   message: string;
 }[];
 

@@ -81,8 +81,6 @@ export async function extractAxiosResponse<R>(calling: Promise<any>) {
   if (res?.response?.status >= 400 || res instanceof AxiosError) {
     throw res;
   }
-
-  console.log(res);
   return res as R;
 }
 //==================================================================================

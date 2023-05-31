@@ -42,6 +42,6 @@
   margin-top: 25px;
 }
 
-.form__input__input + .form__input__input {
+.form__input__input {
   margin-top: 16px;
 }

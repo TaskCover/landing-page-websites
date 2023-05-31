@@ -4,16 +4,19 @@ import Link from "next/link";
 import { InputAtom } from "../../atoms/InputAtom";
 import { InputSecretAtom } from "../../atoms/InputAtom/InputSecretAtom";
 import { useForm } from "react-hook-form";
-import { AuthLoginPost, ValidationListError } from "../../../utils/model";
+import { AuthLoginPost } from "../../../utils/model";
 import { apiAuthLoginPost } from "../../../utils/apis";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { useRouter } from "next/router";
 import { SingleLayoutAtom } from "../../atoms/LayoutAtom/SingleLayoutAtom";
 import { ButtonAtom } from "../../atoms/ButtonAtom";
 import { LoginLayoutAtom } from "../../atoms/LayoutAtom/SingleLayoutAtom/LoginLayoutAtom";
+import { ErrorTextAtom } from "../../atoms/ErrorTextAtom";
+import { useHandleError } from "../../../utils/useHandleError";
 
 export const LoginTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthLoginPost["requestBody"]>();
+  const { getErrorMessage, handleError } = useHandleError();
   const router = useRouter();
 
   const onSubmit = async (data: AuthLoginPost["requestBody"]) => {
@@ -26,12 +29,7 @@ export const LoginTemplate: FunctionComponent = () => {
       router.push("/dashboard");
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
-      const errors = e?.response?.data?.errors as ValidationListError;
-      if (errors && errors.length > 0) {
-        errors.forEach((error) => {
-          showErrorNotify(error?.message);
-        });
-      }
+      handleError(e);
     }
   };
 
@@ -52,15 +50,22 @@ export const LoginTemplate: FunctionComponent = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <InputAtom
-              className={styles["form__input__input"]}
               label={"Tên đăng nhập"}
               {...register("email")}
+              isError={!!getErrorMessage("email")}
             />
+            {getErrorMessage("email") && (
+              <ErrorTextAtom error={getErrorMessage("email")!} />
+            )}
             <InputSecretAtom
               className={styles["form__input__input"]}
               label={"Mật khẩu"}
               {...register("password")}
+              isError={!!getErrorMessage("password")}
             />
+            {getErrorMessage("password") && (
+              <ErrorTextAtom error={getErrorMessage("password")!} />
+            )}
             <div className={styles["input__forget"]}>
               <Link href={"/login/forgot-password"}>{"Quên mật khẩu?"}</Link>
             </div>
