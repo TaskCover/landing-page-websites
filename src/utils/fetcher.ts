@@ -50,7 +50,7 @@ export function get<Q, R>(url: string, config?: AxiosRequestConfig) {
   return extractAxiosResponse<R>(
     axiosTemplate
       .get<Q, AxiosResponse<R>>(url, config)
-      .then((data) => data)
+      .then((data) => data.data)
       .catch((e) => {
         return { ...e };
       })
@@ -62,6 +62,17 @@ export function post<Q, R>(url: string, data?: Q, config?: AxiosRequestConfig) {
     axiosTemplate
       .post<Q, AxiosResponse<R>>(url, data, config)
       .then((data) => data)
+      .catch((e) => {
+        return { ...e };
+      })
+  );
+}
+
+export function put<Q, R>(url: string, data?: Q, config?: AxiosRequestConfig) {
+  return extractAxiosResponse<R>(
+    axiosTemplate
+      .put<Q, AxiosResponse<R>>(url, data, config)
+      .then((data) => data.data)
       .catch((e) => {
         return { ...e };
       })

@@ -1,4 +1,4 @@
-import { get, post } from "./fetcher";
+import { get, post, put } from "./fetcher";
 import {
   AuthCode,
   AuthForgotPasswordPost,
@@ -63,6 +63,23 @@ export const apiAuthSetPasswordPostPost = (
     body,
     { headers: header }
   );
+
+export const apiAuthUpdatePasswordPostPost = (body: any, header: any) =>
+  post<any, any>("/auth/update-password", body, { headers: header });
+//=======================================================================================
 //Project=======================================================================================
 export const apiProjectGet = (requestParam?: ProjectGet["requestParam"]) =>
   get<{}, ProjectGet["responseBody"]>("/projects", { params: requestParam });
+
+//PROFILE==================================================================================
+export const apiUsersProfileDetailGet = (
+  userId: string | null,
+  header: any,
+  params: any
+) => get<any, any>(`/users/${userId}`, { headers: header, params });
+
+export const apiUsersProfileEditPut = (
+  body: any,
+  userId: string | null,
+  header: any
+) => put<any, any>(`/users/${userId}`, body, { headers: header });

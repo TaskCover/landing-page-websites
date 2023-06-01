@@ -11,7 +11,11 @@ const ProjectDetail: NextPage = () => {
 
   console.log(id);
 
-  return <React.Fragment>Helllo {id}</React.Fragment>;
+  return (
+    <ManageLayoutAtom>
+      <p>Heloooooooooooo G</p>
+    </ManageLayoutAtom>
+  );
 };
 
 export default ProjectDetail;

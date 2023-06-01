@@ -12,6 +12,7 @@ export type AuthLoginPost = {
   responseBody: {
     accessToken: string;
     refreshToken: string;
+    id: string;
   };
 };
 
