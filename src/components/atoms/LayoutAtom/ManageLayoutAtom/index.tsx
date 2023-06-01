@@ -21,6 +21,8 @@ import {
 } from "./SidebarItems";
 import styles from "./styles.module.css";
 import { useRouter } from "next/router";
+import { Grid } from "@mui/material";
+import ProfileModalTemplate from "../../../templates/profile";
 
 export type Props = {
   children: ReactNode;
@@ -184,7 +186,20 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
             maxHeight: { sm: `${appBarHeigh}px` },
           }}
         >
-          {props.appbarContent}
+          {/* {props.appbarContent} */}
+
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h5" noWrap component="div">
+              {props.appbarContent}
+            </Typography>
+
+            <ProfileModalTemplate />
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer variant="persistent" open={open}>

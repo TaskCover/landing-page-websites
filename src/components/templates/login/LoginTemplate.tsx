@@ -26,6 +26,8 @@ export const LoginTemplate: FunctionComponent = () => {
       );
       localStorage.setItem("jwt", response.accessToken);
       localStorage.setItem("refresh-token", response.refreshToken);
+      localStorage.setItem("userId", response.id);
+
       router.push("/dashboard");
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
