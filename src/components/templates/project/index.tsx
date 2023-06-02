@@ -14,18 +14,14 @@ import { InputSearchAtom } from "../../atoms/InputAtom/InputSearchAtom";
 
 export const ProjectTemplate: FunctionComponent = () => {
   const [projectList, setProjectList] = useState<ProjectGet["responseBody"]>();
-  const getListProject = (page?: number, size?: number) => {
+  const getListProject = async (page?: number, size?: number) => {
     try {
-      apiProjectGet({ page: page, size: size }).then((data) =>
-        setProjectList(data)
-      );
+      const data = await apiProjectGet({ page: page, size: size });
+      setProjectList(data);
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
     }
   };
-  useEffect(() => {
-    getListProject();
-  }, []);
 
   return (
     <ManageLayoutAtom
