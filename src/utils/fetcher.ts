@@ -69,7 +69,7 @@ export function post<Q, R>(url: string, data?: Q, config?: AxiosRequestConfig) {
   return extractAxiosResponse<R>(
     axiosTemplate
       .post<Q, AxiosResponse<R>>(url, data, config)
-      .then((data) => data.data)
+      .then((data) => data)
       .catch((e) => {
         return { ...e };
       })
@@ -78,9 +78,14 @@ export function post<Q, R>(url: string, data?: Q, config?: AxiosRequestConfig) {
 
 export async function extractAxiosResponse<R>(calling: Promise<any>) {
   const res = await calling;
-  if (res?.response?.status >= 400 || res instanceof AxiosError) {
+  if (
+    (!res?.data && !res?.status) ||
+    res?.response?.status >= 400 ||
+    res instanceof AxiosError
+  ) {
     throw res;
   }
-  return res as R;
+
+  return res.data as R;
 }
 //==================================================================================

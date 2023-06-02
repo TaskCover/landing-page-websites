@@ -1,24 +1,18 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import {
-  Pagination,
-  PaginationItem,
-  Paper,
-  Stack,
-  TableFooter,
-  styled,
-} from "@mui/material";
+import { styled } from "@mui/material";
 import styles from "./styles.module.css";
-import { TagComponent } from "./tag";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import { useRouter } from "next/router";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { SimpleSelectAtom } from "../../../atoms/SelectAtom/SimpleSelectAtom";
-import clsx from "clsx";
+import { ProjectGet } from "../../../../utils/model";
+import { useProject } from "./useProject";
+import { TableHeadAtom } from "../../../atoms/TableAtom/TableHeadAtom";
+import { PaginationAtom } from "../../../atoms/PaginationAtom";
+import { SnackStatusAtom } from "../../../atoms/SnackAtom/SnackStatusAtom";
 
 const TableCellHeader = styled(TableCell)(({ theme }) => ({
   border: "none",
@@ -28,53 +22,18 @@ const TableCellBody = styled(TableCell)(({ theme }) => ({
   paddingBottom: "10px",
 }));
 
-const tableData = [
-  {
-    id: "1",
-    name: "Chiến dịch marketing",
-    pic: "Nguyễn Ngọc Khánh",
-    status: "active",
-  },
-  {
-    id: "1",
-    name: "Chiến dịch marketing",
-    pic: "Nguyễn Ngọc Khánh",
-    status: "pending",
-  },
-  {
-    id: "1",
-    name: "Chiến dịch marketing",
-    pic: "Nguyễn Ngọc Khánh",
-    status: "finish",
-  },
-  {
-    id: "1",
-    name: "Chiến dịch marketing",
-    pic: "Nguyễn Ngọc Khánh",
-    status: "finish",
-  },
-];
+export type Props = {
+  projectList?: ProjectGet["responseBody"];
+  getListProject: (page?: number, size?: number) => void;
+};
 
-export const ListProjectComponent: FunctionComponent = () => {
-  const router = useRouter();
-
-  const openDetail = (id: string) => {
-    router.push(`/project/${id}`);
-  };
-
-  const openEdit = (id: string) => {
-    console.log("edit");
-  };
-
-  const [state, setState] = useState<{
-    currentPage: number;
-    totalCount: number;
-  }>({ currentPage: 1, totalCount: 10 });
+export const ListProjectComponent: FunctionComponent<Props> = (props) => {
+  const [value, handle] = useProject(props);
 
   return (
     <div className={styles["listproject__container"]}>
       <Table sx={{ minWidth: 600 }}>
-        <TableHead sx={{ bgcolor: "#F7F7FD" }}>
+        <TableHeadAtom>
           <TableRow>
             <TableCellHeader align="center">
               <h6>STT</h6>
@@ -91,16 +50,17 @@ export const ListProjectComponent: FunctionComponent = () => {
             <TableCellHeader></TableCellHeader>
             <TableCellHeader></TableCellHeader>
           </TableRow>
-        </TableHead>
+        </TableHeadAtom>
         <TableBody>
-          {tableData &&
-            tableData.length > 0 &&
-            tableData.map((item, index) => (
+          {props.projectList &&
+            props.projectList.data &&
+            props.projectList.data.length > 0 &&
+            props.projectList.data.map((item, index) => (
               <TableRow
                 hover
                 className={styles["listproject__tablerow"]}
                 key={index}
-                onClick={() => openDetail(item.id)}
+                onClick={() => handle.openDetail(item.id)}
               >
                 <TableCellBody align="center">
                   <h6>{index + 1}</h6>
@@ -108,19 +68,30 @@ export const ListProjectComponent: FunctionComponent = () => {
                 <TableCellBody>
                   <h6>{item.name}</h6>
                 </TableCellBody>
-                <TableCellBody>{item.pic}</TableCellBody>
+                <TableCellBody>{item.owner.fullname}</TableCellBody>
                 <TableCellBody>
-                  <TagComponent status={item.status} />
+                  <SnackStatusAtom
+                    status={item.is_active ? "active" : "finish"}
+                  />
                 </TableCellBody>
                 <TableCellBody>
-                  <BookmarkBorderIcon sx={{ width: "20px", height: "20px" }} />
+                  {item.saved ? (
+                    <BookmarkIcon
+                      sx={{ width: "20px", height: "20px" }}
+                      color="primary"
+                    />
+                  ) : (
+                    <BookmarkBorderIcon
+                      sx={{ width: "20px", height: "20px" }}
+                    />
+                  )}
                 </TableCellBody>
                 <TableCellBody>
                   <img
                     src="/images/icon_edit.png"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openEdit(item.id);
+                      handle.openEdit(item.id);
                     }}
                   />
                 </TableCellBody>
@@ -128,44 +99,24 @@ export const ListProjectComponent: FunctionComponent = () => {
             ))}
         </TableBody>
       </Table>
-      <div className={styles["listproject__pagination"]}>
-        <div className={styles["listproject__pagination__count"]}>
-          Hiển thị <SimpleSelectAtom /> trên tổng 1694
-        </div>
-        <Stack spacing={2}>
-          <Pagination
-            count={10}
-            variant="outlined"
-            color="primary"
-            siblingCount={1}
-            onChange={(_, page) => {
-              setState({ ...state, currentPage: page });
-            }}
-            shape="rounded"
-            showFirstButton={true}
-            showLastButton={true}
-            renderItem={(item) => {
-              if (
-                item.page &&
-                (item.page - state.currentPage > 2 ||
-                  state.currentPage - item.page > 2) &&
-                item.page !== state.totalCount &&
-                item.page !== 1
-              ) {
-                return null;
-              }
-              return (
-                <PaginationItem
-                  {...item}
-                  className={clsx(styles["pagination"], {
-                    [styles["pagination-selected"]]: item.selected,
-                  })}
-                />
-              );
-            }}
+      {props.projectList && (
+        <div className={styles["listproject__pagination"]}>
+          <div className={styles["listproject__pagination__count"]}>
+            Hiển thị{" "}
+            <SimpleSelectAtom
+              items={value.pageSize}
+              defaultValue={"10"}
+              onItemChange={handle.onPageSizeChange}
+            />
+            &nbsp;trên tổng {props.projectList.total}
+          </div>
+          <PaginationAtom
+            currentPage={value.state.currentPage}
+            totalPage={props.projectList.total_page}
+            onPageChange={handle.onPageChange}
           />
-        </Stack>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

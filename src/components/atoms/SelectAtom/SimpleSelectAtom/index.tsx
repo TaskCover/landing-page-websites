@@ -1,4 +1,9 @@
-import { forwardRef, useState } from "react";
+import {
+  DetailedHTMLProps,
+  SelectHTMLAttributes,
+  forwardRef,
+  useState,
+} from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import styles from "./styles.module.css";
@@ -21,7 +26,14 @@ import {
 //   isRequired?: boolean;
 //   onChange?: (e: ChangeEventHandler<HTMLSelectElement>)
 // };
-export type Props = {};
+export type Props = DetailedHTMLProps<
+  SelectHTMLAttributes<HTMLSelectElement>,
+  HTMLSelectElement
+> & {
+  items: { label: string; value: string }[];
+  defaultValue: string;
+  onItemChange: (value: string) => void;
+};
 const ITEM_HEIGHT = 42;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -33,30 +45,20 @@ const MenuProps = {
   },
 };
 
-const names = ["10", "20", "50", "100"];
-
 export const SimpleSelectAtom = forwardRef<HTMLSelectElement, Props>(
   (props, ref) => {
-    // const {
-    //   label,
-    //   inputClass,
-    //   isRequired,
-    //   className,
-    //   onChange,
-    //   ...inputProps
-    // } = props;
-    const [personName, setPersonName] = useState<string>("10");
-    const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-      const {
-        target: { value },
-      } = event;
-      setPersonName(value);
+    const { items, defaultValue, onItemChange } = props;
+    const [data, setData] = useState<string>(defaultValue);
+    const handleChange = (event: SelectChangeEvent<string>) => {
+      console.log(event.target);
+      setData(event.target.value);
+      onItemChange(String(event.target.value));
     };
 
     return (
       <Select
         displayEmpty
-        value={personName}
+        value={data}
         onChange={handleChange}
         input={<OutlinedInput />}
         MenuProps={MenuProps}
@@ -67,13 +69,13 @@ export const SimpleSelectAtom = forwardRef<HTMLSelectElement, Props>(
           fontWeight: 600,
         }}
       >
-        {names.map((name) => (
+        {items.map((item, index) => (
           <MenuItem
-            key={name}
-            value={name}
+            key={index}
+            value={item.value}
             sx={{ fontSize: "1.4rem", color: "#212121" }}
           >
-            {name}
+            {item.label}
           </MenuItem>
         ))}
       </Select>

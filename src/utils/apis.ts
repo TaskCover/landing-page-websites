@@ -1,4 +1,4 @@
-import { post } from "./fetcher";
+import { get, post } from "./fetcher";
 import {
   AuthCode,
   AuthForgotPasswordPost,
@@ -6,6 +6,7 @@ import {
   AuthRefreshTokenPost,
   AuthRegisterPost,
   AuthSetPasswordPost,
+  ProjectGet,
 } from "./model";
 
 export const PUBLIC_API = [
@@ -62,4 +63,6 @@ export const apiAuthSetPasswordPostPost = (
     body,
     { headers: header }
   );
-//=======================================================================================
+//Project=======================================================================================
+export const apiProjectGet = (requestParam?: ProjectGet["requestParam"]) =>
+  get<{}, ProjectGet["responseBody"]>("/projects", { params: requestParam });

@@ -61,4 +61,21 @@ export type AuthSetPasswordPost = {
   responseBody: { message: string };
 };
 
-//==================================================================================
+//Project==================================================================================
+export type ProjectGet = {
+  requestParam: {
+    page?: number;
+    size?: number;
+  };
+  responseBody: {
+    total: number;
+    total_page: number;
+    data: {
+      id: string;
+      name: string;
+      owner: { fullname: string };
+      is_active: boolean;
+      saved: boolean;
+    }[];
+  };
+};
