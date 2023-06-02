@@ -46,14 +46,6 @@ axiosTemplate.interceptors.request.use(async (config) => {
   }
 });
 
-// axiosTemplate.interceptors.response.use(
-//   (r) => r,
-//   (e) => {
-//     console.log(e.config);
-//     return axiosTemplate(e.config);
-//   }
-// );
-
 export function get<Q, R>(url: string, config?: AxiosRequestConfig) {
   return extractAxiosResponse<R>(
     axiosTemplate
