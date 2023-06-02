@@ -10,6 +10,7 @@ import { ManageLayoutAtom } from "../../atoms/LayoutAtom/ManageLayoutAtom";
 import { apiProjectGet } from "../../../utils/apis";
 import { ProjectGet } from "../../../utils/model";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
+import { InputSearchAtom } from "../../atoms/InputAtom/InputSearchAtom";
 
 export const ProjectTemplate: FunctionComponent = () => {
   const [projectList, setProjectList] = useState<ProjectGet["responseBody"]>();
@@ -29,9 +30,15 @@ export const ProjectTemplate: FunctionComponent = () => {
   return (
     <ManageLayoutAtom
       appbarContent={
-        <Typography variant="h5" noWrap component="div">
-          {"Quản lý dự án"}
-        </Typography>
+        <div className={styles["project__appbar"]}>
+          <h5>{"Quản lý dự án"}</h5>
+          <InputSearchAtom
+            placeholder="Tìm kiếm dự án"
+            onSubmitInput={(value: string) => {
+              console.log(value);
+            }}
+          />
+        </div>
       }
     >
       <div className={styles["project__container"]}>
