@@ -3,10 +3,10 @@ import styles from "./styles.module.css";
 import clsx from "clsx";
 
 export type Props = {
-  status: string;
+  status: "active" | "pending" | "finish";
 };
 
-export const TagComponent: FunctionComponent<Props> = ({ status }) => {
+export const SnackStatusAtom: FunctionComponent<Props> = ({ status }) => {
   const getLabelFromStatus = () => {
     switch (status) {
       case "active":
@@ -23,3 +23,5 @@ export const TagComponent: FunctionComponent<Props> = ({ status }) => {
     </span>
   );
 };
+
+SnackStatusAtom.displayName = "SnackStatusAtom";
