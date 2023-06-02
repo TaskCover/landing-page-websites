@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { ButtonIconMuiAtom } from "../../atoms/ButtonAtom/ButtonIconMuiAtom";
 import AddIcon from "@mui/icons-material/Add";
 import { Button, Divider, Typography } from "@mui/material";
@@ -7,8 +7,25 @@ import { SwitchAtom } from "../../atoms/SwitchAtom";
 import { MenuAtom } from "../../atoms/MenuAtom";
 import { ListProjectComponent } from "./listproject/";
 import { ManageLayoutAtom } from "../../atoms/LayoutAtom/ManageLayoutAtom";
+import { apiProjectGet } from "../../../utils/apis";
+import { ProjectGet } from "../../../utils/model";
+import { showErrorNotify } from "../../molecules/NotificationMolecule";
 
 export const ProjectTemplate: FunctionComponent = () => {
+  const [projectList, setProjectList] = useState<ProjectGet["responseBody"]>();
+  const getListProject = (page?: number, size?: number) => {
+    try {
+      apiProjectGet({ page: page, size: size }).then((data) =>
+        setProjectList(data)
+      );
+    } catch (e: any) {
+      showErrorNotify(e?.response?.data?.description);
+    }
+  };
+  useEffect(() => {
+    getListProject();
+  }, []);
+
   return (
     <ManageLayoutAtom
       appbarContent={
@@ -45,7 +62,10 @@ export const ProjectTemplate: FunctionComponent = () => {
           </div>
         </div>
         <Divider sx={{ mt: 1.5 }} />
-        <ListProjectComponent />
+        <ListProjectComponent
+          projectList={projectList}
+          getListProject={getListProject}
+        />
       </div>
     </ManageLayoutAtom>
   );
