@@ -30,7 +30,6 @@ export const ResetPasswordTemplate: FunctionComponent<Props> = (props) => {
   const { getErrorMessage, handleError } = useHandleError();
 
   const onSubmit = async (data: AuthSetPasswordPost["requestBody"]) => {
-    console.log(data);
     try {
       await apiAuthSetPasswordPostPost(data, {
         "reset-password-token": props.token,

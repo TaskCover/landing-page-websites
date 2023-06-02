@@ -50,7 +50,6 @@ export const SimpleSelectAtom = forwardRef<HTMLSelectElement, Props>(
     const { items, defaultValue, onItemChange } = props;
     const [data, setData] = useState<string>(defaultValue);
     const handleChange = (event: SelectChangeEvent<string>) => {
-      console.log(event.target);
       setData(event.target.value);
       onItemChange(String(event.target.value));
     };
