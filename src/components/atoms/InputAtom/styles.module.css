@@ -3,7 +3,6 @@
   display: flex;
   width: 340px;
   height: 58px;
-  background: #f7f7fd;
   border-radius: 4px;
 }
 
@@ -14,7 +13,7 @@
   padding-top: 26px;
   font-size: 1.6rem;
   line-height: 24px;
-  background: inherit;
+  background: #f7f7fd;
   border-radius: inherit;
 }
 
