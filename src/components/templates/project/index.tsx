@@ -25,16 +25,14 @@ export const ProjectTemplate: FunctionComponent = () => {
 
   return (
     <ManageLayoutAtom
-      appbarContent={
-        <div className={styles["project__appbar"]}>
-          <h5>{"Quản lý dự án"}</h5>
-          <InputSearchAtom
-            placeholder="Tìm kiếm dự án"
-            onSubmitInput={(value: string) => {
-              console.log(value);
-            }}
-          />
-        </div>
+      appbarContentLeft={<h5>{"Quản lý dự án"}</h5>}
+      appbarContentRight={
+        <InputSearchAtom
+          placeholder="Tìm kiếm dự án"
+          onSubmitInput={(value: string) => {
+            console.log(value);
+          }}
+        />
       }
     >
       <div className={styles["project__container"]}>

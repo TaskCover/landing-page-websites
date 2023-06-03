@@ -26,7 +26,8 @@ import ProfileModalTemplate from "../../../templates/profile";
 
 export type Props = {
   children: ReactNode;
-  appbarContent?: ReactNode;
+  appbarContentLeft?: ReactNode;
+  appbarContentRight?: ReactNode;
 };
 
 const drawerWidth = 340;
@@ -184,22 +185,18 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
           sx={{
             minHeight: { sm: `${appBarHeigh}px` },
             maxHeight: { sm: `${appBarHeigh}px` },
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {/* {props.appbarContent} */}
-
-          <Grid
-            container
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography variant="h5" noWrap component="div">
-              {props.appbarContent}
-            </Typography>
-
+          <div className={styles["manage__appbar-left"]}>
+            {props.appbarContentLeft}
+          </div>
+          <div className={styles["manage__appbar-right"]}>
+            {props.appbarContentRight}
             <ProfileModalTemplate />
-          </Grid>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer variant="persistent" open={open}>
