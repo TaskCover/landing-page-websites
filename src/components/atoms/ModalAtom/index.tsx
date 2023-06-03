@@ -14,22 +14,20 @@ const style = {
 };
 
 export type Props = {
-  width?: string;
+  width?: number;
   children: ReactNode;
+  handleClose: () => void;
+  open: boolean;
 };
 
 export const ModalAtom: FunctionComponent<Props> = (props) => {
   const { width, children } = props;
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={props.open}
+        onClose={props.handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
