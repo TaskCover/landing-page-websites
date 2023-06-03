@@ -32,6 +32,7 @@ export const ProjectTemplate: FunctionComponent = () => {
           onSubmitInput={(value: string) => {
             console.log(value);
           }}
+          className={styles["project__container__appbar__search"]}
         />
       }
     >
