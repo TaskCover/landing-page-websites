@@ -2,6 +2,10 @@
   padding-top: 12px;
 }
 
+.project__container__appbar__search {
+  margin-right: 60px;
+}
+
 .project__container__header {
   padding-left: 24px;
   padding-right: 24px;
