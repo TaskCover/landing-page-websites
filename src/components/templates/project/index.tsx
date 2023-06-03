@@ -11,7 +11,11 @@ import { apiProjectGet } from "../../../utils/apis";
 import { ProjectGet } from "../../../utils/model";
 import { showErrorNotify } from "../../molecules/NotificationMolecule";
 import { InputSearchAtom } from "../../atoms/InputAtom/InputSearchAtom";
-import { useModalContextMolecule } from "../../molecules/ModalContextMolecule";
+import {
+  useModalContextMolecule,
+  useModalLv2ContextMolecule,
+} from "../../molecules/ModalContextMolecule";
+import { CreateProjectTemplate } from "./createproject";
 
 export const ProjectTemplate: FunctionComponent = () => {
   const [projectList, setProjectList] = useState<ProjectGet["responseBody"]>();
@@ -45,7 +49,10 @@ export const ProjectTemplate: FunctionComponent = () => {
             label="Thêm mới"
             icon={<AddIcon sx={{ width: "16px", height: "16px" }} />}
             onClick={() => {
-              openModal(<h1>asdjasldaslkdlkasd</h1>, 700);
+              openModal(
+                <CreateProjectTemplate handleClose={closeModal} />,
+                700
+              );
             }}
           />
           <div className={styles["project__container__header__filter"]}>

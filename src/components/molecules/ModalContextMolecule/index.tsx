@@ -1,5 +1,8 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 import { ModalAtom } from "../../atoms/ModalAtom";
+import { ModalLv2Consumer, ModalLv2Provider } from "./ModalLv2";
+
+export { useModalLv2ContextMolecule } from "./ModalLv2";
 
 export type Props = {
   children: ReactNode;
@@ -33,7 +36,11 @@ export const ModalContextMoleculeProvider = (props: Props) => {
         },
       }}
     >
-      {props.children}
+      <ModalLv2Provider>
+        {props.children}
+        <ModalLv2Consumer />
+        <ModalContextMoleculeConsumer />
+      </ModalLv2Provider>
     </ModalContextMolecule.Provider>
   );
 };

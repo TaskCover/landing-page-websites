@@ -18,10 +18,11 @@ export type Props = {
   children: ReactNode;
   handleClose: () => void;
   open: boolean;
+  zIndex?: number;
 };
 
 export const ModalAtom: FunctionComponent<Props> = (props) => {
-  const { width, children } = props;
+  const { width, children, zIndex } = props;
 
   return (
     <div>
@@ -34,6 +35,7 @@ export const ModalAtom: FunctionComponent<Props> = (props) => {
             borderRadius: "8px",
             border: "none",
           },
+          zIndex: zIndex ? zIndex : 1300,
         }}
       >
         <Box sx={{ ...style, width: width ? width : 400 }}>{children}</Box>
