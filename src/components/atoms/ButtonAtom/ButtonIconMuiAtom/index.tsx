@@ -26,7 +26,12 @@ export const ButtonIconMuiAtom = forwardRef<HTMLButtonElement, Props>(
         startIcon={isEndIcon ? undefined : icon}
         variant="contained"
         color="primary"
-        sx={{ fontSize: "1.4rem", padding: "12px 14px" }}
+        sx={{
+          fontSize: "1.4rem",
+          padding: "12px 14px",
+          fontWeight: 600,
+          lineHeight: "16px",
+        }}
         onClick={onClick}
       >
         {label}
