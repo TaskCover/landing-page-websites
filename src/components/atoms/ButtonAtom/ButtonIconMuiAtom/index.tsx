@@ -17,19 +17,17 @@ export type Props = DetailedHTMLProps<
   isEndIcon?: boolean;
 };
 
-// const ButtonIcon = styled(Button)(({ theme }) => ({
-//   theme.palette.primary,
-// }));
-
 export const ButtonIconMuiAtom = forwardRef<HTMLButtonElement, Props>(
   (props, ref) => {
-    const { className, type, icon, isEndIcon, label, ...otherProp } = props;
+    const { className, type, icon, isEndIcon, label, onClick, ...otherProp } =
+      props;
     return (
       <Button
         startIcon={isEndIcon ? undefined : icon}
         variant="contained"
         color="primary"
         sx={{ fontSize: "1.4rem", padding: "12px 14px" }}
+        onClick={onClick}
       >
         {label}
       </Button>
