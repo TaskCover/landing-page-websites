@@ -28,8 +28,13 @@ export const ModalAtom: FunctionComponent<Props> = (props) => {
       <Modal
         open={props.open}
         onClose={props.handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        sx={{
+          "& .MuiBox-root": {
+            boxShadow: "0px 4px 20px rgba(33, 33, 33, 0.04)",
+            borderRadius: "8px",
+            border: "none",
+          },
+        }}
       >
         <Box sx={{ ...style, width: width ? width : 400 }}>{children}</Box>
       </Modal>
