@@ -80,3 +80,23 @@ export type ProjectGet = {
     }[];
   };
 };
+
+export type UsersGet = {
+  responseBody: {
+    data: {
+      id: string;
+      fullname: string;
+      position: {
+        id: string;
+        name: string;
+      };
+    }[];
+  };
+};
+
+export type TypeProjectGet = {
+  responseBody: {
+    id: string;
+    name: string;
+  }[];
+};

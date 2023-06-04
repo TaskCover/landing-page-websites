@@ -7,6 +7,8 @@ import {
   AuthRegisterPost,
   AuthSetPasswordPost,
   ProjectGet,
+  TypeProjectGet,
+  UsersGet,
 } from "./model";
 
 export const PUBLIC_API = [
@@ -68,8 +70,14 @@ export const apiAuthUpdatePasswordPostPost = (body: any, header: any) =>
   post<any, any>("/auth/update-password", body, { headers: header });
 //=======================================================================================
 //Project=======================================================================================
+
 export const apiProjectGet = (requestParam?: ProjectGet["requestParam"]) =>
   get<{}, ProjectGet["responseBody"]>("/projects", { params: requestParam });
+
+export const apiUsersGet = () => get<{}, UsersGet["responseBody"]>("/users");
+
+export const apiTypeProjectGet = () =>
+  get<{}, TypeProjectGet["responseBody"]>("/type-project");
 
 //PROFILE==================================================================================
 export const apiUsersProfileDetailGet = (
