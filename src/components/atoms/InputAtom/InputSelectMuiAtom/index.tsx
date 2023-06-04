@@ -24,7 +24,7 @@ export const InputSelectMuiAtom = (props: Props) => {
           boxShadow: "none",
           ".MuiOutlinedInput-notchedOutline": { border: 0 },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            border: "1px solid rgba(54, 153, 255, 0.5)",
+            border: 0,
           },
         }}
         inputProps={{ className: styles2["select_input"] }}
