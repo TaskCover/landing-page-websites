@@ -1,3 +1,8 @@
+.input {
+  min-height: 58px;
+  height: auto;
+}
+
 .select {
   width: 100%;
   height: 100%;
@@ -19,4 +24,9 @@
 .select input:focus {
   outline: none;
   border: 1px solid rgba(54, 153, 255, 0.5);
+}
+
+.input-multi {
+  overflow-x: auto;
+  max-width: 100%;
 }
