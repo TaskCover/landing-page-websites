@@ -14,7 +14,7 @@ export const useCreateProject = () => {
   const [users, setUsers] = useState<UsersGet["responseBody"]["data"]>([]);
   const [positions, setPositions] = useState<Props["options"]>([]);
   const [listPartnerValue, setListParterValue] = useState<
-    string[] | undefined
+    { userId: string; positionId: string }[] | undefined
   >();
 
   const getUsers = async () => {

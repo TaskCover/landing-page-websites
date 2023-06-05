@@ -14,6 +14,7 @@ export type Props = {
   className?: string;
   defaultValue?: string;
   value?: string;
+  onChange?: (value: string) => {};
 };
 
 export const InputSelectMuiAtom = (props: Props) => {
@@ -31,6 +32,7 @@ export const InputSelectMuiAtom = (props: Props) => {
         defaultValue={props.defaultValue}
         value={data ? data : ""}
         onChange={(e) => {
+          props.onChange && props.onChange(e.target.value);
           setData(e.target.value);
         }}
         sx={{

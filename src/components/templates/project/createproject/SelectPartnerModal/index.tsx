@@ -12,8 +12,10 @@ import { useEffect, useState } from "react";
 export type Props = {
   users: UsersGet["responseBody"]["data"];
   positions: OptionsProps["options"];
-  handleUpdateListPartner: (value?: string[]) => void;
-  oldSelected?: string[];
+  handleUpdateListPartner: (
+    value?: { userId: string; positionId: string }[]
+  ) => void;
+  oldSelected?: { userId: string; positionId: string }[];
 };
 
 export type DataSelect = {
@@ -30,12 +32,20 @@ export const SelectPartnerModal = (props: Props) => {
     if (!props.positions || props.positions.length <= 0) {
       return;
     }
+    console.log(oldSelected);
     setData(
       users.map((user) => {
         return {
           userId: user.id,
-          selected: !!(oldSelected && oldSelected.indexOf(user.id) >= 0),
-          positionId: positions[0].value,
+          selected: !!(
+            oldSelected &&
+            oldSelected.filter((old) => old.userId === user.id).length > 0
+          ),
+          positionId:
+            (oldSelected &&
+              oldSelected.filter((old) => old.userId === user.id)[0]
+                ?.positionId) ||
+            positions[0].value,
         };
       })
     );
@@ -47,7 +57,9 @@ export const SelectPartnerModal = (props: Props) => {
     }
     const listSelectedPartner = data
       .filter((r) => r.selected)
-      .map((r) => r.userId);
+      .map((r) => {
+        return { userId: r.userId, positionId: r.positionId! };
+      });
     handleUpdateListPartner(
       listSelectedPartner && listSelectedPartner.length > 0
         ? listSelectedPartner
@@ -63,6 +75,21 @@ export const SelectPartnerModal = (props: Props) => {
           selected: !r.selected,
           userId: r.userId,
           positionId: r.positionId,
+        };
+      }
+      return r;
+    });
+    setData(targetChange);
+  };
+
+  const handleChangePosition = (userId: string, positionId: string) => {
+    let newData = [...data];
+    const targetChange = newData.map((r) => {
+      if (r.userId === userId) {
+        return {
+          selected: r.selected,
+          userId: r.userId,
+          positionId: positionId,
         };
       }
       return r;
@@ -103,14 +130,15 @@ export const SelectPartnerModal = (props: Props) => {
                       <div>{user.email}</div>
                     </div>
                   </div>
-                  {/* {getDataFromUserId(user.id) && ( */}
                   <InputSelectMuiAtom
                     label="Vị trí"
                     options={positions}
                     className={styles["positioninput"]}
                     value={getDataFromUserId(user.id)?.positionId}
+                    onChange={(value: string) =>
+                      handleChangePosition(user.id, value)
+                    }
                   />
-                  {/* )} */}
                 </td>
               </tr>
             ))}

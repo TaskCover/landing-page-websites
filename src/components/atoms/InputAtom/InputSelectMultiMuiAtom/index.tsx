@@ -14,7 +14,7 @@ export type Props = {
   }[];
   className?: string;
   openDialog?: () => void;
-  defaultValues?: string[];
+  values?: string[];
 };
 
 export const InputSelectMultiMuiAtom = (props: Props) => {
@@ -36,10 +36,10 @@ export const InputSelectMultiMuiAtom = (props: Props) => {
   };
 
   useEffect(() => {
-    if (props.defaultValues) {
-      setData(props.defaultValues);
+    if (props.values) {
+      setData(props.values);
     }
-  }, [props.defaultValues]);
+  }, [props.values]);
 
   return (
     <div

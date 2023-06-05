@@ -45,7 +45,10 @@ export const CreateProjectTemplate = (props: Props) => {
               className={styles["input"]}
               label="Danh sách thành viên"
               options={value.picOptions}
-              defaultValues={value.listPartnerValue}
+              values={
+                value.listPartnerValue &&
+                value.listPartnerValue.map((r) => r.userId)
+              }
               openDialog={() => {
                 openModalLv2(
                   <SelectPartnerModal
