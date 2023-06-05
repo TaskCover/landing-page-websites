@@ -13,6 +13,7 @@ export type Props = {
   users: UsersGet["responseBody"]["data"];
   positions: OptionsProps["options"];
   handleUpdateListPartner: (value?: string[]) => void;
+  oldSelected?: string[];
 };
 
 export type DataSelect = {
@@ -22,7 +23,7 @@ export type DataSelect = {
 }[];
 
 export const SelectPartnerModal = (props: Props) => {
-  const { users, positions, handleUpdateListPartner } = props;
+  const { users, positions, handleUpdateListPartner, oldSelected } = props;
   const [data, setData] = useState<DataSelect>([]);
 
   useEffect(() => {
@@ -33,12 +34,12 @@ export const SelectPartnerModal = (props: Props) => {
       users.map((user) => {
         return {
           userId: user.id,
-          selected: false,
+          selected: !!(oldSelected && oldSelected.indexOf(user.id) >= 0),
           positionId: positions[0].value,
         };
       })
     );
-  }, [props.users, props.positions]);
+  }, [users, positions, oldSelected]);
 
   useEffect(() => {
     if (!data || data.length <= 0) {
@@ -90,6 +91,7 @@ export const SelectPartnerModal = (props: Props) => {
                         color: "#1BC5BD",
                       },
                     }}
+                    checked={!!getDataFromUserId(user.id)?.selected}
                     onClick={() => handleCheck(user.id)}
                   />
                 </td>

@@ -52,6 +52,7 @@ export const CreateProjectTemplate = (props: Props) => {
                     users={value.users}
                     positions={value.positions}
                     handleUpdateListPartner={handle.setListParterValue}
+                    oldSelected={value.listPartnerValue}
                   />,
                   652
                 );
