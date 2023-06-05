@@ -7,6 +7,8 @@ import { InputSelectMuiAtom } from "../../../atoms/InputAtom/InputSelectMuiAtom"
 import { useCreateProject } from "./useCreateProject";
 import { Grid } from "@mui/material";
 import { useModalLv2ContextMolecule } from "../../../molecules/ModalContextMolecule";
+import { InputSelectMultiMuiAtom } from "../../../atoms/InputAtom/InputSelectMultiMuiAtom";
+import { SelectPartnerModal } from "./SelectPartnerModal";
 
 export type Props = {
   handleClose: () => void;
@@ -39,13 +41,20 @@ export const CreateProjectTemplate = (props: Props) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputSelectMuiAtom
+            <InputSelectMultiMuiAtom
               className={styles["input"]}
               label="Danh sách thành viên"
               options={value.picOptions}
-              multiple={true}
+              defaultValues={value.listPartnerValue}
               openDialog={() => {
-                openModalLv2(<h2>lkasjdlkasdjklas</h2>);
+                openModalLv2(
+                  <SelectPartnerModal
+                    users={value.users}
+                    positions={value.positions}
+                    handleUpdateListPartner={handle.setListParterValue}
+                  />,
+                  652
+                );
               }}
             />
           </Grid>

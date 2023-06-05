@@ -86,15 +86,19 @@ export type UsersGet = {
     data: {
       id: string;
       fullname: string;
-      position: {
-        id: string;
-        name: string;
-      };
+      email: string;
     }[];
   };
 };
 
 export type TypeProjectGet = {
+  responseBody: {
+    id: string;
+    name: string;
+  }[];
+};
+
+export type PositionsGet = {
   responseBody: {
     id: string;
     name: string;

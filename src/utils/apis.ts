@@ -6,6 +6,7 @@ import {
   AuthRefreshTokenPost,
   AuthRegisterPost,
   AuthSetPasswordPost,
+  PositionsGet,
   ProjectGet,
   TypeProjectGet,
   UsersGet,
@@ -78,6 +79,9 @@ export const apiUsersGet = () => get<{}, UsersGet["responseBody"]>("/users");
 
 export const apiTypeProjectGet = () =>
   get<{}, TypeProjectGet["responseBody"]>("/type-project");
+
+export const apiPositionsGet = () =>
+  get<{}, PositionsGet["responseBody"]>("/positions");
 
 //PROFILE==================================================================================
 export const apiUsersProfileDetailGet = (

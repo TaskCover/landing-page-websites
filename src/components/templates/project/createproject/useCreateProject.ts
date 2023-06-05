@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { apiTypeProjectGet, apiUsersGet } from "../../../../utils/apis";
+import {
+  apiPositionsGet,
+  apiTypeProjectGet,
+  apiUsersGet,
+} from "../../../../utils/apis";
 import { showErrorNotify } from "../../../molecules/NotificationMolecule";
 import { Props } from "../../../atoms/InputAtom/InputSelectMuiAtom";
 import { UsersGet } from "../../../../utils/model";
@@ -8,6 +12,10 @@ export const useCreateProject = () => {
   const [picOptions, setPicOptions] = useState<Props["options"]>([]);
   const [projectTypes, setProjectTypes] = useState<Props["options"]>([]);
   const [users, setUsers] = useState<UsersGet["responseBody"]["data"]>([]);
+  const [positions, setPositions] = useState<Props["options"]>([]);
+  const [listPartnerValue, setListParterValue] = useState<
+    string[] | undefined
+  >();
 
   const getUsers = async () => {
     try {
@@ -34,10 +42,26 @@ export const useCreateProject = () => {
     }
   };
 
+  const getPostions = async () => {
+    try {
+      const postions = await apiPositionsGet();
+      const positionsOptions = postions.map((postion) => {
+        return { text: postion.name, value: postion.id };
+      });
+      setPositions(positionsOptions);
+    } catch (err: any) {
+      showErrorNotify(err?.response?.data?.description);
+    }
+  };
+
   useEffect(() => {
     getUsers();
     getProjectTypes();
+    getPostions();
   }, []);
 
-  return [{ picOptions, projectTypes, users }, {}] as const;
+  return [
+    { picOptions, projectTypes, positions, users, listPartnerValue },
+    { setListParterValue },
+  ] as const;
 };
