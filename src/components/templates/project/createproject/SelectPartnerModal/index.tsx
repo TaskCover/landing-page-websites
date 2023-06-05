@@ -103,14 +103,14 @@ export const SelectPartnerModal = (props: Props) => {
                       <div>{user.email}</div>
                     </div>
                   </div>
-                  {getDataFromUserId(user.id) && (
-                    <InputSelectMuiAtom
-                      label="Vị trí"
-                      options={positions}
-                      className={styles["positioninput"]}
-                      defaultValue={getDataFromUserId(user.id)?.positionId}
-                    />
-                  )}
+                  {/* {getDataFromUserId(user.id) && ( */}
+                  <InputSelectMuiAtom
+                    label="Vị trí"
+                    options={positions}
+                    className={styles["positioninput"]}
+                    value={getDataFromUserId(user.id)?.positionId}
+                  />
+                  {/* )} */}
                 </td>
               </tr>
             ))}

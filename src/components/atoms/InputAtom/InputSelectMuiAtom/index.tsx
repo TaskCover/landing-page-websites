@@ -3,7 +3,7 @@ import styles from "../styles.module.css";
 import styles2 from "./styles.module.css";
 import clsx from "clsx";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export type Props = {
   label: string;
@@ -13,15 +13,26 @@ export type Props = {
   }[];
   className?: string;
   defaultValue?: string;
+  value?: string;
 };
 
 export const InputSelectMuiAtom = (props: Props) => {
+  const [data, setData] = useState<string | undefined>();
+
+  useEffect(() => {
+    setData(props.value);
+  }, [props.value]);
+
   return (
     <div className={clsx(props.className, styles["input"])}>
       <label className={styles2["input__label"]}>{props.label}</label>
       <Select
         className={styles2["select"]}
         defaultValue={props.defaultValue}
+        value={data ? data : ""}
+        onChange={(e) => {
+          setData(e.target.value);
+        }}
         sx={{
           boxShadow: "none",
           ".MuiOutlinedInput-notchedOutline": { border: 0 },
