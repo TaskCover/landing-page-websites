@@ -5,7 +5,7 @@ import { Button, Divider, Typography } from "@mui/material";
 import styles from "./styles.module.css";
 import { SwitchAtom } from "../../atoms/SwitchAtom";
 import { MenuAtom } from "../../atoms/MenuAtom";
-import { ListProjectComponent } from "./listproject/";
+import { ListProjectComponent } from "./ListProjectComponent";
 import { ManageLayoutAtom } from "../../atoms/LayoutAtom/ManageLayoutAtom";
 import { apiProjectGet } from "../../../utils/apis";
 import { ProjectGet } from "../../../utils/model";
@@ -50,7 +50,12 @@ export const ProjectTemplate: FunctionComponent = () => {
             icon={<AddIcon sx={{ width: "16px", height: "16px" }} />}
             onClick={() => {
               openModal(
-                <CreateProjectTemplate handleClose={closeModal} />,
+                <CreateProjectTemplate
+                  handleClose={() => {
+                    closeModal();
+                    getListProject();
+                  }}
+                />,
                 700
               );
             }}

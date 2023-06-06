@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import {
   apiPositionsGet,
+  apiProjectPost,
   apiTypeProjectGet,
   apiUsersGet,
 } from "../../../../utils/apis";
 import { showErrorNotify } from "../../../molecules/NotificationMolecule";
 import { Props } from "../../../atoms/InputAtom/InputSelectMuiAtom";
-import { UsersGet } from "../../../../utils/model";
+import { Props as ComponentProps } from "./";
+import { ProjectPost, UsersGet } from "../../../../utils/model";
+import { useForm } from "react-hook-form";
+import { useHandleError } from "../../../../utils/useHandleError";
 
-export const useCreateProject = () => {
+export const useCreateProject = (props: ComponentProps) => {
   const [picOptions, setPicOptions] = useState<Props["options"]>([]);
   const [projectTypes, setProjectTypes] = useState<Props["options"]>([]);
   const [users, setUsers] = useState<UsersGet["responseBody"]["data"]>([]);
@@ -60,8 +64,59 @@ export const useCreateProject = () => {
     getPostions();
   }, []);
 
+  const [formData, setFormData] = useState<ProjectPost["requestBody"]>({});
+  const { register, handleSubmit: submit } = useForm();
+  const { getErrorMessage, handleError } = useHandleError();
+
+  const onSubmit = async (data: ProjectPost["requestBody"]) => {
+    try {
+      await apiProjectPost({
+        ...data,
+        ...formData,
+        member: listPartnerValue?.map((partner) => {
+          return { id: partner.userId, position: partner.positionId };
+        }),
+      });
+      await props.handleClose();
+    } catch (e: any) {
+      showErrorNotify(e?.response?.data?.description);
+      handleError(e);
+    }
+  };
+  const handleSubmit = submit(onSubmit);
+
+  const handleOwnerChange = (value: string) => {
+    setFormData({ ...formData, owner: value });
+  };
+
+  const handleTypeProjectChange = (value: string) => {
+    setFormData({ ...formData, type_project: value });
+  };
+
+  const handleStartDateChange = (value: string) => {
+    setFormData({ ...formData, start_date: value });
+  };
+
+  const handleEndDateChange = (value: string) => {
+    setFormData({ ...formData, end_date: value });
+  };
+
+  const handleDescriptionChange = (value: string) => {
+    setFormData({ ...formData, description: value });
+  };
+
   return [
     { picOptions, projectTypes, positions, users, listPartnerValue },
-    { setListParterValue },
+    {
+      setListParterValue,
+      handleSubmit,
+      handleOwnerChange,
+      handleTypeProjectChange,
+      handleStartDateChange,
+      handleEndDateChange,
+      handleDescriptionChange,
+      register,
+      getErrorMessage,
+    },
   ] as const;
 };

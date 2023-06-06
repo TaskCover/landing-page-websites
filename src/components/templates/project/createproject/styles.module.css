@@ -1,3 +1,12 @@
 .input {
   width: 100%;
 }
+
+.description {
+  height: 138px;
+}
+
+div.logo {
+  margin-top: 0px;
+  margin-left: 20px;
+}

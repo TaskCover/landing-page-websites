@@ -15,6 +15,7 @@ export type Props = {
   className?: string;
   openDialog?: () => void;
   values?: string[];
+  isError?: boolean;
 };
 
 export const InputSelectMultiMuiAtom = (props: Props) => {
@@ -50,7 +51,9 @@ export const InputSelectMultiMuiAtom = (props: Props) => {
     >
       <label className={styles2["input__label"]}>{props.label}</label>
       <Select
-        className={styles2["select"]}
+        className={clsx(styles2["select"], {
+          [styles2["error"]]: props.isError,
+        })}
         multiple
         value={data as any as string}
         onChange={handleChange}

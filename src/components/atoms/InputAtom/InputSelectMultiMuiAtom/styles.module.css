@@ -11,6 +11,10 @@
   line-height: 24px;
   border: none;
 }
+.error {
+  background: #feeded;
+  border: 1px solid rgba(246, 78, 96, 0.3);
+}
 
 .input__label {
   z-index: 1;

@@ -32,7 +32,6 @@ export const SelectPartnerModal = (props: Props) => {
     if (!props.positions || props.positions.length <= 0) {
       return;
     }
-    console.log(oldSelected);
     setData(
       users.map((user) => {
         return {

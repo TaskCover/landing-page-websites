@@ -104,3 +104,20 @@ export type PositionsGet = {
     name: string;
   }[];
 };
+
+export type ProjectPost = {
+  requestBody: {
+    name?: string;
+    owner?: string;
+    start_date?: string;
+    end_date?: string;
+    expected_cost?: number;
+    working_hours?: number;
+    description?: string;
+    member?: { id: string; position: string }[];
+    type_project?: string;
+  };
+  responseBody: {
+    nessage: string;
+  };
+};
