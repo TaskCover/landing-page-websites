@@ -63,7 +63,11 @@ export const ListProjectComponent: FunctionComponent<Props> = (props) => {
                 onClick={() => handle.openDetail(item.id)}
               >
                 <TableCellBody align="center">
-                  <h6>{index + 1}</h6>
+                  <h6>
+                    {(value.state.currentPage - 1) * value.state.sizePage +
+                      index +
+                      1}
+                  </h6>
                 </TableCellBody>
                 <TableCellBody>
                   <h6>{item.name}</h6>
