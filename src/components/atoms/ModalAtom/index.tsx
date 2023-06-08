@@ -38,7 +38,9 @@ export const ModalAtom: FunctionComponent<Props> = (props) => {
           zIndex: zIndex ? zIndex : 1300,
         }}
       >
-        <Box sx={{ ...style, width: width ? width : 400 }}>{children}</Box>
+        <Box sx={{ ...style, width: { xs: "343px", sm: width ? width : 400 } }}>
+          {children}
+        </Box>
       </Modal>
     </div>
   );

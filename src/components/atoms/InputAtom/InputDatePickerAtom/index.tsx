@@ -40,7 +40,7 @@ export const InputDatePickerAtom = forwardRef<HTMLInputElement, Props>(
 
     const convertFormat = (date?: Date) => {
       if (!date) return "";
-      const val = moment(date).format("YYYY-MM-DD");
+      const val = moment(date).format("DD/MM/YYYY");
       return val;
     };
 
@@ -53,7 +53,7 @@ export const InputDatePickerAtom = forwardRef<HTMLInputElement, Props>(
             setStartDate(date);
             onChange && onChange(convertFormat(date));
           }}
-          dateFormat="yyyy-MM-dd"
+          dateFormat="dd/MM/yyyy"
           customInput={
             <input
               type="text"

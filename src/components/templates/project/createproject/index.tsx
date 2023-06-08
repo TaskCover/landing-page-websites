@@ -29,7 +29,7 @@ export const CreateProjectTemplate = (props: Props) => {
       <ModalBodyAtom>
         <form onSubmit={handle.handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={12}>
               <InputAtom
                 label="Tên dự án"
                 className={styles["input"]}
@@ -40,7 +40,7 @@ export const CreateProjectTemplate = (props: Props) => {
                 <ErrorTextAtom error={handle.getErrorMessage("name")!} />
               )}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <InputSelectMuiAtom
                 label="Người phụ trách"
                 options={value.picOptions}
@@ -52,7 +52,7 @@ export const CreateProjectTemplate = (props: Props) => {
                 <ErrorTextAtom error={handle.getErrorMessage("owner")!} />
               )}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <InputSelectMuiAtom
                 className={styles["input"]}
                 label="Loại dự án"

@@ -32,7 +32,7 @@ export const ListProjectComponent: FunctionComponent<Props> = (props) => {
 
   return (
     <div className={styles["listproject__container"]}>
-      <Table sx={{ minWidth: 600 }}>
+      <Table>
         <TableHeadAtom>
           <TableRow>
             <TableCellHeader align="center">
@@ -62,7 +62,7 @@ export const ListProjectComponent: FunctionComponent<Props> = (props) => {
                 key={index}
                 onClick={() => handle.openDetail(item.id)}
               >
-                <TableCellBody align="center" >
+                <TableCellBody align="center">
                   <h6>{index + 1}</h6>
                 </TableCellBody>
                 <TableCellBody>
