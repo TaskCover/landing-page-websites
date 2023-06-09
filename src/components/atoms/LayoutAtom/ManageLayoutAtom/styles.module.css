@@ -38,3 +38,18 @@
   align-items: center;
   justify-content: flex-end;
 }
+
+@media screen and (max-width: 600px) {
+  .sidebar-res {
+    display: none;
+  }
+
+  .appbar {
+    display: none;
+  }
+
+  .manage__container {
+    max-width: 100vw;
+    overflow: auto;
+  }
+}

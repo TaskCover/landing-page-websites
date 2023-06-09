@@ -40,8 +40,14 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   flexGrow: 1,
   backgroundColor: "#F5F5F5",
   minHeight: "100vh",
-  padding: theme.spacing(3),
-  paddingTop: "74px",
+  [theme.breakpoints.up("sm")]: {
+    padding: theme.spacing(3),
+    paddingTop: "74px",
+  },
+  [theme.breakpoints.down("sm")]: {
+    padding: 0,
+    paddingTop: 0,
+  },
   transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -180,7 +186,7 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={open} className={styles["appbar"]}>
         <Toolbar
           sx={{
             minHeight: { sm: `${appBarHeigh}px` },
@@ -199,7 +205,11 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
           </div>
         </Toolbar>
       </AppBar>
-      <Drawer variant="persistent" open={open}>
+      <Drawer
+        variant="persistent"
+        open={open}
+        className={styles["sidebar-res"]}
+      >
         <DrawerHeader
           sx={{
             padding: open ? "0 24px" : "0 0",
