@@ -35,7 +35,7 @@ export const InputTextAreaAtom = forwardRef<HTMLInputElement, Props>(
     const [data, setData] = useState("");
 
     return (
-      <div>
+      <div style={{ width: "100%" }}>
         <div className={clsx(className, styles["input"])} ref={ref}>
           <textarea
             className={clsx(inputClass, { [styles["error"]]: isError })}

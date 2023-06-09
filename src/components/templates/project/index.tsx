@@ -81,6 +81,59 @@ export const ProjectTemplate: FunctionComponent = () => {
             </div>
           </div>
         </div>
+        <div className={styles["project__container__header-res"]}>
+          <div className={styles["project__container__header__head-res"]}>
+            <h3>Quản lý dự án</h3>
+            <Button
+              variant="contained"
+              endIcon={<AddIcon sx={{ width: "16px", height: "16px" }} />}
+              sx={{
+                textTransform: "none",
+                fontSize: "1.4rem",
+              }}
+              onClick={() => {
+                openModal(
+                  <CreateProjectTemplate
+                    handleClose={() => {
+                      closeModal();
+                      getListProject();
+                    }}
+                  />,
+                  700
+                );
+              }}
+            >
+              Thêm dự án
+            </Button>
+          </div>
+          <InputSearchAtom
+            placeholder="Tìm kiếm dự án"
+            onSubmitInput={(value: string) => {
+              console.log(value);
+            }}
+            className={styles["project__container__appbar__search"]}
+          />
+          <div className={styles["project__container__header__filter"]}>
+            <div className={styles["project__container__header__filter__item"]}>
+              <h6>{"Dự án gần đây"}</h6>
+              <SwitchAtom />
+            </div>
+            <div className={styles["project__container__header__filter__item"]}>
+              <h6>{"Dự án đã lưu"}</h6>
+              <SwitchAtom />
+            </div>
+            <div className={styles["project__container__header__filter__item"]}>
+              <MenuAtom
+                label={"Trạng thái"}
+                items={[
+                  { label: "Hoạt động", value: "Hoạt động" },
+                  { label: "Tạm dừng", value: "Tạm dừng" },
+                  { label: "Kết thúc", value: "Kết thúc" },
+                ]}
+              />
+            </div>
+          </div>
+        </div>
         <Divider sx={{ mt: 1.5, display: { xs: "none", sm: "block" } }} />
         <ListProjectComponent
           projectList={projectList}

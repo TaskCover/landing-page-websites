@@ -29,8 +29,49 @@
   margin-left: 20px;
 }
 
+.project__container__header-res {
+  display: none;
+}
+
 @media screen and (max-width: 600px) {
   .project__container__header {
     display: none;
+  }
+  .project__container__header-res {
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px;
+  }
+  .project__container__header__head-res {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .project__container__header__head-res h3 {
+    margin: 0;
+  }
+
+  .project__container__appbar__search {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    width: calc(100vw - 32px) !important;
+  }
+
+  .project__container__appbar__search img {
+    margin-top: 11px !important;
+    margin-left: 20px !important;
+  }
+
+  .project__container__appbar__search input {
+    padding: 12px 24px 12px 54px !important;
+    height: 46px !important;
+    width: calc(100vw - 32px) !important;
+  }
+
+  .project__container__header__filter {
+    max-width: calc(100vh - 32px);
+    overflow-x: auto;
+    white-space: nowrap;
   }
 }

@@ -141,14 +141,14 @@ export const CreateProjectTemplate = (props: Props) => {
                 />
               )}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} sx={{ display: { xs: "none", sm: "flex" } }}>
               <UploadImgMolecule
                 placeholderImgSrc="/images/unknown_image.png"
                 label="Logo dự án"
                 className={styles["logo"]}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} sx={{ display: { xs: "none", sm: "flex" } }}>
               <InputTextAreaAtom
                 className={clsx(styles["input"], styles["description"])}
                 label="Mô tả dự án"
@@ -161,6 +161,28 @@ export const CreateProjectTemplate = (props: Props) => {
                 <ErrorTextAtom error={handle.getErrorMessage("description")!} />
               )}
             </Grid>
+            {/* Responsive */}
+            <Grid item xs={12} sx={{ display: { xs: "flex", sm: "none" } }}>
+              <InputTextAreaAtom
+                className={clsx(styles["input"], styles["description"])}
+                label="Mô tả dự án"
+                onChange={(val) => {
+                  handle.handleDescriptionChange(val);
+                }}
+                isError={!!handle.getErrorMessage("description")}
+              />
+              {handle.getErrorMessage("description") && (
+                <ErrorTextAtom error={handle.getErrorMessage("description")!} />
+              )}
+            </Grid>
+            <Grid item xs={12} sx={{ display: { xs: "flex", sm: "none" } }}>
+              <UploadImgMolecule
+                placeholderImgSrc="/images/unknown_image.png"
+                label="Logo dự án"
+                className={styles["logo"]}
+              />
+            </Grid>
+            {/*  */}
             <Grid item xs={6} justifyContent={"flex-end"}>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
