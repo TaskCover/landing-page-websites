@@ -25,6 +25,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 7px 16px;
+  flex-wrap: wrap-reverse;
 }
 
 .listproject__pagination__count {

@@ -7,21 +7,16 @@ import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ListItem, { ListItemProps } from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import {
-  sidebarItems,
-  isSidebarItemSelected,
-  getSidebarItemSelected,
-} from "./SidebarItems";
+import CloseIcon from "@mui/icons-material/Close";
+import { sidebarItems, isSidebarItemSelected } from "./SidebarItems";
 import styles from "./styles.module.css";
 import { useRouter } from "next/router";
-import { Grid } from "@mui/material";
 import ProfileModalTemplate from "../../../templates/profile";
 
 export type Props = {
@@ -93,7 +88,12 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   padding: theme.spacing(0, 3),
-  marginTop: "40px",
+  [theme.breakpoints.up("sm")]: {
+    marginTop: "40px",
+  },
+  [theme.breakpoints.down("sm")]: {
+    marginTop: "24px",
+  },
   ...theme.mixins.toolbar,
   justifyContent: "space-between",
 }));
@@ -142,13 +142,27 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   // flexShrink: 0,
+  // [theme.breakpoints.up("sm")]: {
+  //   display: "flex",
+  // },
   whiteSpace: "nowrap",
   boxSizing: "border-box",
   ...(open && {
+    [theme.breakpoints.down("sm")]: {
+      position: "absolute",
+    },
     ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
+    "& .MuiDrawer-paper": {
+      ...openedMixin(theme),
+      [theme.breakpoints.down("sm")]: {
+        width: "100vw",
+      },
+    },
   }),
   ...(!open && {
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
     ...closedMixin(theme),
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
@@ -161,6 +175,11 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
 
   const handleDrawerOpen = () => {
     localStorage.setItem("sidebar", "open");
+    setOpen(true);
+  };
+
+  const handleDrawerOpenNotKeep = () => {
+    localStorage.setItem("sidebar", "close");
     setOpen(true);
   };
 
@@ -205,11 +224,7 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
           </div>
         </Toolbar>
       </AppBar>
-      <Drawer
-        variant="persistent"
-        open={open}
-        className={styles["sidebar-res"]}
-      >
+      <Drawer variant="persistent" open={open}>
         <DrawerHeader
           sx={{
             padding: open ? "0 24px" : "0 0",
@@ -230,10 +245,17 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
           />
           {open && (
             <IconButton onClick={handleDrawerClose} sx={{ padding: 0 }}>
-              <img src={"/images/icon_collapse.png"} />
+              <img
+                src={"/images/icon_collapse.png"}
+                className={styles["close-img-res"]}
+              />
+              <CloseIcon className={styles["close-icon-res"]} />
             </IconButton>
           )}
         </DrawerHeader>
+        <div className={styles["profile-res"]}>
+          <ProfileModalTemplate />
+        </div>
         <List sx={{ marginTop: "40px", padding: 0, width: "100%" }}>
           {sidebarItems.map((sidebarItem, index) => (
             <ListItemSidebar key={index} disablePadding open={open}>
@@ -261,6 +283,12 @@ export const ManageLayoutAtom: FunctionComponent<Props> = (props) => {
         </List>
       </Drawer>
       <Main open={open}>
+        <div className={styles["appbar-sm"]}>
+          <img src="/images/logo_sidebar_2.png" />
+          <IconButton onClick={() => handleDrawerOpenNotKeep()}>
+            <MenuIcon color="primary" sx={{ width: "40px", height: "40px" }} />
+          </IconButton>
+        </div>
         <div className={styles["manage__container"]}>{props.children}</div>
       </Main>
     </Box>

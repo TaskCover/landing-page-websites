@@ -28,3 +28,9 @@
   + .project__container__header__filter__item {
   margin-left: 20px;
 }
+
+@media screen and (max-width: 600px) {
+  .project__container__header {
+    display: none;
+  }
+}

@@ -81,7 +81,7 @@ export const ProjectTemplate: FunctionComponent = () => {
             </div>
           </div>
         </div>
-        <Divider sx={{ mt: 1.5 }} />
+        <Divider sx={{ mt: 1.5, display: { xs: "none", sm: "block" } }} />
         <ListProjectComponent
           projectList={projectList}
           getListProject={getListProject}

@@ -18,8 +18,15 @@ const TableCellHeader = styled(TableCell)(({ theme }) => ({
   border: "none",
 }));
 const TableCellBody = styled(TableCell)(({ theme }) => ({
-  paddingTop: "10px",
-  paddingBottom: "10px",
+  [theme.breakpoints.up("sm")]: {
+    paddingTop: "10px",
+    paddingBottom: "10px",
+  },
+  [theme.breakpoints.down("sm")]: {
+    padding: 0,
+    paddingTop: "10px",
+    paddingBottom: "10px",
+  },
 }));
 
 export type Props = {
