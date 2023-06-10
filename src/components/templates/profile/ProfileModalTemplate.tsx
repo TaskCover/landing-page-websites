@@ -73,7 +73,7 @@ export const TypographyMenu: FunctionComponent = () => {
     try {
       const response = await apiUsersProfileDetailGet(userId, header, params);
 
-      console.log("show ", response);
+      // console.log("show ", response);
 
       setFullname(response.fullname);
       setPhone(response.phone);

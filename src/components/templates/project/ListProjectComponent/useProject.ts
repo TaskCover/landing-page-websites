@@ -4,39 +4,13 @@ import { useRouter } from "next/router";
 import { ProjectGet } from "../../../../utils/model";
 
 export const useProject = (props: Props) => {
-  const pageSize = [
-    {
-      label: "5",
-      value: "5",
-    },
-    {
-      label: "10",
-      value: "10",
-    },
-    {
-      label: "20",
-      value: "20",
-    },
-    {
-      label: "50",
-      value: "50",
-    },
-    {
-      label: "100",
-      value: "100",
-    },
-  ];
+  const { filterState, setFilterState, pageSizeOptions } = props;
 
   const router = useRouter();
 
-  const [state, setState] = useState<{
-    currentPage: number;
-    sizePage: number;
-  }>({ currentPage: 1, sizePage: 10 });
-
   useEffect(() => {
-    props.getListProject(state.currentPage - 1, state.sizePage);
-  }, [state]);
+    props.getListProject(filterState.page - 1, filterState.pageSize);
+  }, [filterState]);
 
   const openDetail = (id: string) => {
     router.push(`/project/${id}`);
@@ -47,15 +21,15 @@ export const useProject = (props: Props) => {
   };
 
   const onPageSizeChange = (value: string) => {
-    setState({ ...state, sizePage: Number(value) });
+    setFilterState({ ...filterState, pageSize: Number(value) });
   };
 
   const onPageChange = (page: number) => {
-    setState({ ...state, currentPage: page });
+    setFilterState({ ...filterState, page: page });
   };
 
   return [
-    { pageSize, state },
-    { setState, openDetail, openEdit, onPageSizeChange, onPageChange },
+    { pageSizeOptions, filterState },
+    { openDetail, openEdit, onPageSizeChange, onPageChange },
   ] as const;
 };

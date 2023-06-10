@@ -1,6 +1,7 @@
 import { Pagination, PaginationItem, Stack } from "@mui/material";
 import clsx from "clsx";
 import styles from "./styles.module.css";
+import { useEffect } from "react";
 
 export type Props = {
   currentPage: number;
@@ -23,6 +24,7 @@ export const PaginationAtom = (props: Props) => {
         shape="rounded"
         showFirstButton={true}
         showLastButton={true}
+        page={currentPage}
         renderItem={(item) => {
           if (
             item.page &&

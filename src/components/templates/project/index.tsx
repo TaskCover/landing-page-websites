@@ -16,8 +16,15 @@ import {
   useModalLv2ContextMolecule,
 } from "../../molecules/ModalContextMolecule";
 import { CreateProjectTemplate } from "./createproject";
+import { useProject } from "./useProject";
 
-export const ProjectTemplate: FunctionComponent = () => {
+export type Props = {
+  page?: number;
+  pageSize?: number;
+};
+
+export const ProjectTemplate: FunctionComponent<Props> = (props) => {
+  const [values, handlers] = useProject(props);
   const [projectList, setProjectList] = useState<ProjectGet["responseBody"]>();
   const { openModal, closeModal } = useModalContextMolecule();
 
@@ -136,6 +143,9 @@ export const ProjectTemplate: FunctionComponent = () => {
         </div>
         <Divider sx={{ mt: 1.5, display: { xs: "none", sm: "block" } }} />
         <ListProjectComponent
+          pageSizeOptions={values.pageSizeOptions}
+          filterState={values.filterState}
+          setFilterState={handlers.setFilterState}
           projectList={projectList}
           getListProject={getListProject}
           openEditModal={(
