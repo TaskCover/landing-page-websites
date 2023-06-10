@@ -10,16 +10,16 @@
   font-size: 1.2rem !important;
 }
 
-.active {
+.green {
   background-color: #e8f2ef;
   color: #0bb783;
 }
-.pending {
+.yellow {
   background-color: #fff4de;
   color: #ffa800;
 }
 
-.finish {
+.pink {
   background-color: #ffe2e5;
   color: #f64e60;
 }

@@ -48,3 +48,15 @@
   background: #3699ff !important;
   color: #ffffff !important;
 }
+
+.project_name {
+  display: flex;
+  align-items: center;
+}
+
+.project_name img {
+  margin-left: 8px;
+  margin-right: 8px;
+  width: 32px;
+  height: 32px;
+}

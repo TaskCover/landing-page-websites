@@ -12,10 +12,11 @@ export type Props = {
     label: string;
   }[];
   onItemClick?: (value: string) => void;
+  onOutsiteClick?: () => void;
 };
 
 export const MenuAtom: FunctionComponent<Props> = (props) => {
-  const { label, onClick, items, onItemClick } = props;
+  const { label, onClick, items, onItemClick, onOutsiteClick } = props;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -24,7 +25,12 @@ export const MenuAtom: FunctionComponent<Props> = (props) => {
   };
   const handleClose = (label: string) => {
     setAnchorEl(null);
-    onItemClick && onItemClick(label);
+    onOutsiteClick && onOutsiteClick();
+  };
+  const handleSelect = (value: string) => {
+    console.log(value);
+    setAnchorEl(null);
+    onItemClick && onItemClick(value);
   };
 
   return (
@@ -64,7 +70,9 @@ export const MenuAtom: FunctionComponent<Props> = (props) => {
           items.length > 0 &&
           items.map((item, index) => (
             <MenuItem
-              onClick={() => handleClose(item.value)}
+              onClick={() => {
+                handleSelect(item.value);
+              }}
               key={index}
               sx={{ fontSize: "1.4rem", color: "#212121" }}
             >

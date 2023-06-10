@@ -79,6 +79,7 @@ export type ProjectGet = {
       owner: { id: string; fullname: string };
       is_active: boolean;
       saved: boolean;
+      status: "ACTIVE" | "PAUSE" | "CLOSE";
       start_date: string;
       end_date: string;
       description: string;
@@ -146,6 +147,7 @@ export type ProjectPut = {
     member?: { id: string; position: string }[];
     type_project?: string;
     saved?: boolean;
+    status?: string;
   };
   responseBody: {
     nessage: string;

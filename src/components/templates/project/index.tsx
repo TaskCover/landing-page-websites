@@ -39,9 +39,16 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
     others?: { name?: string; status?: string; saved?: boolean }
   ) => {
     try {
-      const querySearch = `like(name,"${others?.name}")`;
+      const querySearch = `like(name,"${others?.name ? others.name : ""}")`;
       const querySaved = others?.saved ? `,eq(saved,true)` : "";
-      const query = "and(" + querySearch + querySaved + ")";
+      const queryStatus =
+        others?.status ||
+        others?.status === "ACTIVE" ||
+        others?.status === "PAUSE" ||
+        others?.status === "CLOSE"
+          ? `,eq(status,"${others?.status}")`
+          : "";
+      const query = "and(" + querySearch + querySaved + queryStatus + ")";
       const data = await apiProjectGet({
         page: page,
         size: size,
@@ -69,6 +76,13 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
     handlers.setFilterState({
       ...values.filterState,
       saved: value,
+    });
+  };
+
+  const submitFilterStatusProject = (value?: string) => {
+    handlers.setFilterState({
+      ...values.filterState,
+      status: value ? value : "",
     });
   };
 
@@ -123,6 +137,8 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
                   { label: "Tạm dừng", value: "PAUSE" },
                   { label: "Kết thúc", value: "CLOSE" },
                 ]}
+                onItemClick={submitFilterStatusProject}
+                onOutsiteClick={submitFilterStatusProject}
               />
             </div>
           </div>
@@ -179,10 +195,12 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
               <MenuAtom
                 label={"Trạng thái"}
                 items={[
-                  { label: "Hoạt động", value: "Hoạt động" },
-                  { label: "Tạm dừng", value: "Tạm dừng" },
-                  { label: "Kết thúc", value: "Kết thúc" },
+                  { label: "Hoạt động", value: "ACTIVE" },
+                  { label: "Tạm dừng", value: "PAUSE" },
+                  { label: "Kết thúc", value: "CLOSE" },
                 ]}
+                onItemClick={submitFilterStatusProject}
+                onOutsiteClick={submitFilterStatusProject}
               />
             </div>
           </div>
