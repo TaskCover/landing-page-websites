@@ -15,9 +15,14 @@ export const VerifyLayoutAtom: FunctionComponent<Props> = (props) => {
       <img className={styles["verifylayout__logo"]} src={"/images/logo.png"} />
       <h3 className={styles["verifylayout__title"]}>{props.title}</h3>
       {props.description && (
-        <p className={styles["verifylayout__description"]}>
-          {props.description}
-        </p>
+        <>
+          <p className={styles["verifylayout__description"]}>
+            {props.description}
+          </p>
+          <p className={styles["verifylayout__description-res"]}>
+            {props.description?.replace("\n", ". ")}
+          </p>
+        </>
       )}
       {props.children}
     </div>

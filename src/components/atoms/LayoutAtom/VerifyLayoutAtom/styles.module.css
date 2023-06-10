@@ -20,3 +20,27 @@
   line-height: 22px;
   text-align: center;
 }
+
+.verifylayout__description-res {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .verifylayout {
+    height: 100%;
+    width: 342px;
+
+    padding: 24px 12px;
+  }
+  .verifylayout__description {
+    display: none;
+  }
+
+  .verifylayout__description-res {
+    display: flex;
+    white-space: break-spaces;
+    font-size: 1.4rem;
+    line-height: 22px;
+    text-align: center;
+  }
+}

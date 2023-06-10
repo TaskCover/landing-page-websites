@@ -45,3 +45,27 @@
 .form__input__input {
   margin-top: 16px;
 }
+
+@media screen and (max-width: 600px) {
+  .container__img {
+    display: none;
+  }
+
+  div.container__form_area {
+    display: flex;
+    width: 342px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 24px 12px;
+  }
+
+  .form_area__form h3 {
+    margin-top: 24px;
+  }
+
+  .form__input__input {
+    margin-top: 12px;
+  }
+}

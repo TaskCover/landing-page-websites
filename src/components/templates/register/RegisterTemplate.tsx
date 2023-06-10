@@ -13,6 +13,7 @@ import { SingleLayoutAtom } from "../../atoms/LayoutAtom/SingleLayoutAtom";
 import { ButtonAtom } from "../../atoms/ButtonAtom";
 import { useHandleError } from "../../../utils/useHandleError";
 import { ErrorTextAtom } from "../../atoms/ErrorTextAtom";
+import { LoginLayoutAtom } from "../../atoms/LayoutAtom/SingleLayoutAtom/LoginLayoutAtom";
 
 export const RegisterTemplate: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<AuthRegisterPost["requestBody"]>();
@@ -33,7 +34,7 @@ export const RegisterTemplate: FunctionComponent = () => {
   };
 
   return (
-    <SingleLayoutAtom>
+    <LoginLayoutAtom>
       {step === 1 && (
         <>
           <div className={styles["container__form_area"]}>
@@ -102,10 +103,11 @@ export const RegisterTemplate: FunctionComponent = () => {
             src={"/images/register_welcome.png"}
             width={"616px"}
             height={"847px"}
+            className={styles["container__img"]}
           />
         </>
       )}
       {step === 2 && <VerifyCodeComponent tokenRegister={tokenRegister} />}
-    </SingleLayoutAtom>
+    </LoginLayoutAtom>
   );
 };

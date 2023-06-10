@@ -5,5 +5,7 @@
     background-position: center;
     height: auto;
     background-size: cover;
+    padding-top: 36px;
+    padding-bottom: 36px;
   }
 }

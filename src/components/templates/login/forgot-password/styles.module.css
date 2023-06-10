@@ -6,3 +6,11 @@
 .forget_pass__form {
   margin-top: 24px;
 }
+
+@media screen and (max-width: 600px) {
+  .forget_pass__container {
+    height: 100%;
+    width: 342px;
+    padding: 24px 12px;
+  }
+}
