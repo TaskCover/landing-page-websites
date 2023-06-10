@@ -7,7 +7,7 @@ import { Props } from "../../components/templates/project/";
 
 const Project: NextPage = () => {
   const router = useRouter();
-  const { page, pageSize } = router.query;
+  const { page, pageSize, update_date } = router.query;
   const { isReady } = router;
   const [projectProp, setProjectProp] = useState<Props & { isReady: boolean }>({
     isReady: false,
@@ -24,6 +24,7 @@ const Project: NextPage = () => {
       setProjectProp({
         page: Number(page),
         pageSize: Number(pageSize),
+        update_date: update_date && update_date === "true" ? true : false,
         isReady: true,
       });
     } else {

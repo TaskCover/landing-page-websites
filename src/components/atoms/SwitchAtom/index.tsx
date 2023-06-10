@@ -1,5 +1,5 @@
 import { Switch, styled } from "@mui/material";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 
 const SwitchCustom = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -24,12 +24,18 @@ const SwitchCustom = styled(Switch)(({ theme }) => ({
 
 export type Props = {
   getChecked?: (checked: boolean) => void;
+  checked?: boolean;
 };
 
 export const SwitchAtom: FunctionComponent<Props> = (props) => {
-  const { getChecked } = props;
+  const { getChecked, checked: initChecked } = props;
+  const [checked, setChecked] = useState(false);
+  useEffect(() => {
+    setChecked(!!initChecked);
+  }, [initChecked]);
   return (
     <SwitchCustom
+      checked={!!checked}
       onChange={(e, checked) => {
         getChecked && getChecked(checked);
       }}

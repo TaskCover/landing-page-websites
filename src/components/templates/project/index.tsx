@@ -24,6 +24,7 @@ export type Props = {
   name?: string;
   status?: string;
   update_date?: boolean;
+  saved?: boolean;
 };
 
 export const ProjectTemplate: FunctionComponent<Props> = (props) => {
@@ -34,17 +35,17 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
   const getListProject = async (
     page?: number,
     size?: number,
-    others?: { name?: string; status?: string; update_date?: boolean }
+    sort?: string,
+    others?: { name?: string; status?: string; saved?: boolean }
   ) => {
     try {
       const querySearch = `like(name,"${others?.name}")`;
-      const queryUpdateDate = others?.update_date
-        ? `or(eq(update_date,true))`
-        : "";
-      const query = querySearch + queryUpdateDate;
+      const querySaved = others?.saved ? `,eq(saved,true)` : "";
+      const query = "and(" + querySearch + querySaved + ")";
       const data = await apiProjectGet({
         page: page,
         size: size,
+        sort: sort,
         query: query,
       });
       setProjectList(data);
@@ -57,10 +58,17 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
     handlers.setFilterState({ ...values.filterState, name: value });
   };
 
-  const submitOnUpdateRecentProject = (value: boolean) => {
+  const submitFilterUpdateRecentProject = (value: boolean) => {
     handlers.setFilterState({
       ...values.filterState,
       update_date: value,
+    });
+  };
+
+  const submitFilterSavedProject = (value: boolean) => {
+    handlers.setFilterState({
+      ...values.filterState,
+      saved: value,
     });
   };
 
@@ -95,19 +103,25 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
           <div className={styles["project__container__header__filter"]}>
             <div className={styles["project__container__header__filter__item"]}>
               <h6>{"Dự án gần đây"}</h6>
-              <SwitchAtom getChecked={submitOnUpdateRecentProject} />
+              <SwitchAtom
+                getChecked={submitFilterUpdateRecentProject}
+                checked={values.filterState.update_date}
+              />
             </div>
             <div className={styles["project__container__header__filter__item"]}>
               <h6>{"Dự án đã lưu"}</h6>
-              <SwitchAtom />
+              <SwitchAtom
+                getChecked={submitFilterSavedProject}
+                checked={values.filterState.saved}
+              />
             </div>
             <div className={styles["project__container__header__filter__item"]}>
               <MenuAtom
                 label={"Trạng thái"}
                 items={[
-                  { label: "Hoạt động", value: "Hoạt động" },
-                  { label: "Tạm dừng", value: "Tạm dừng" },
-                  { label: "Kết thúc", value: "Kết thúc" },
+                  { label: "Hoạt động", value: "ACTIVE" },
+                  { label: "Tạm dừng", value: "PAUSE" },
+                  { label: "Kết thúc", value: "CLOSE" },
                 ]}
               />
             </div>
@@ -149,11 +163,17 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
           <div className={styles["project__container__header__filter"]}>
             <div className={styles["project__container__header__filter__item"]}>
               <h6>{"Dự án gần đây"}</h6>
-              <SwitchAtom getChecked={submitOnUpdateRecentProject} />
+              <SwitchAtom
+                getChecked={submitFilterUpdateRecentProject}
+                checked={values.filterState.update_date}
+              />
             </div>
             <div className={styles["project__container__header__filter__item"]}>
               <h6>{"Dự án đã lưu"}</h6>
-              <SwitchAtom />
+              <SwitchAtom
+                getChecked={submitFilterSavedProject}
+                checked={values.filterState.saved}
+              />
             </div>
             <div className={styles["project__container__header__filter__item"]}>
               <MenuAtom

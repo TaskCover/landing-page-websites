@@ -10,10 +10,15 @@ export const useProject = (props: Props) => {
   const router = useRouter();
 
   const reloadProjectList = async () => {
-    props.getListProject(filterState.page - 1, filterState.pageSize, {
-      name: filterState.name ? filterState.name : "",
-      update_date: filterState.update_date,
-    });
+    props.getListProject(
+      filterState.page - 1,
+      filterState.pageSize,
+      filterState.update_date ? "updated_time=-1" : undefined,
+      {
+        name: filterState.name ? filterState.name : "",
+        saved: filterState.saved ? true : undefined,
+      }
+    );
   };
 
   useEffect(() => {
