@@ -21,6 +21,8 @@ import { useProject } from "./useProject";
 export type Props = {
   page?: number;
   pageSize?: number;
+  name?: string;
+  status?: string;
 };
 
 export const ProjectTemplate: FunctionComponent<Props> = (props) => {
@@ -28,13 +30,26 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
   const [projectList, setProjectList] = useState<ProjectGet["responseBody"]>();
   const { openModal, closeModal } = useModalContextMolecule();
 
-  const getListProject = async (page?: number, size?: number) => {
+  const getListProject = async (
+    page?: number,
+    size?: number,
+    others?: { name?: string; status?: string }
+  ) => {
     try {
-      const data = await apiProjectGet({ page: page, size: size });
+      const query = `like(name,"${others?.name}")`;
+      const data = await apiProjectGet({
+        page: page,
+        size: size,
+        query: query,
+      });
       setProjectList(data);
     } catch (e: any) {
       showErrorNotify(e?.response?.data?.description);
     }
+  };
+
+  const submitSearch = (value: string) => {
+    handlers.setFilterState({ ...values.filterState, name: value });
   };
 
   return (
@@ -43,9 +58,7 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
       appbarContentRight={
         <InputSearchAtom
           placeholder="Tìm kiếm dự án"
-          onSubmitInput={(value: string) => {
-            console.log(value);
-          }}
+          onSubmitInput={submitSearch}
           className={styles["project__container__appbar__search"]}
         />
       }
@@ -118,9 +131,7 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
           </div>
           <InputSearchAtom
             placeholder="Tìm kiếm dự án"
-            onSubmitInput={(value: string) => {
-              console.log(value);
-            }}
+            onSubmitInput={submitSearch}
             className={styles["project__container__appbar__search"]}
           />
           <div className={styles["project__container__header__filter"]}>

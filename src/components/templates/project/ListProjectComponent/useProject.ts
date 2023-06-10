@@ -9,7 +9,9 @@ export const useProject = (props: Props) => {
   const router = useRouter();
 
   useEffect(() => {
-    props.getListProject(filterState.page - 1, filterState.pageSize);
+    props.getListProject(filterState.page - 1, filterState.pageSize, {
+      name: filterState.name ? filterState.name : "",
+    });
   }, [filterState]);
 
   const openDetail = (id: string) => {

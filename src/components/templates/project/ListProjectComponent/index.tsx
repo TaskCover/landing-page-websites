@@ -32,7 +32,11 @@ const TableCellBody = styled(TableCell)(({ theme }) => ({
 
 export type Props = {
   projectList?: ProjectGet["responseBody"];
-  getListProject: (page?: number, size?: number) => void;
+  getListProject: (
+    page?: number,
+    size?: number,
+    others?: { name?: string; status?: string }
+  ) => void;
   openEditModal: (projectUpdate: ProjectGet["responseBody"]["data"][0]) => void;
   filterState: Required<ProjectFilterProps>;
   setFilterState: (filterState: Required<ProjectFilterProps>) => void;

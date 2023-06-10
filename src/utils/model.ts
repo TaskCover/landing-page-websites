@@ -67,6 +67,7 @@ export type ProjectGet = {
   requestParam: {
     page?: number;
     size?: number;
+    query?: string;
   };
   responseBody: {
     total: number;

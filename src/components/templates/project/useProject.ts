@@ -34,6 +34,8 @@ export const useProject = (props: Props) => {
   const [filterState, setFilterState] = useState<Required<Props>>({
     page: props.page || 1,
     pageSize: getPageSize(props.pageSize),
+    name: props.name ? props.name : "",
+    status: props.status ? props.status : "",
   });
 
   useEffect(() => {
