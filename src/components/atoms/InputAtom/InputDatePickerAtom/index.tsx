@@ -9,6 +9,7 @@ import {
   DetailedHTMLProps,
   InputHTMLAttributes,
   forwardRef,
+  useEffect,
   useState,
 } from "react";
 import clsx from "clsx";
@@ -16,13 +17,14 @@ import moment from "moment";
 
 export type Props = Omit<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
-  "onChange"
+  "onChange" | "value"
 > & {
   label: string;
   inputClass?: string;
   isRequired?: boolean;
   isError?: boolean;
   onChange?: (value: string) => void;
+  value?: string;
 };
 
 export const InputDatePickerAtom = forwardRef<HTMLInputElement, Props>(
@@ -33,27 +35,36 @@ export const InputDatePickerAtom = forwardRef<HTMLInputElement, Props>(
       isRequired,
       className,
       isError,
+      value,
       onChange,
       ...inputProps
     } = props;
-    const [startDate, setStartDate] = useState<Date>();
+    const [selectedDate, setSelectedDate] = useState<Date>();
 
     const convertFormat = (date?: Date) => {
       if (!date) return "";
-      const val = moment(date).format("DD/MM/YYYY");
+      // const val = moment(date).format("DD/MM/YYYY");
+      const val = moment(date).format("YYYY-MM-DD");
       return val;
     };
-
+    useEffect(() => {
+      try {
+        value && setSelectedDate(new Date(value));
+        value && onChange && onChange(convertFormat(new Date(value)));
+      } catch (e: any) {
+        return;
+      }
+    }, [value]);
     return (
       <div className={clsx(className, styles["input"])} ref={ref}>
         <DatePicker
-          selected={startDate}
+          selected={selectedDate}
           onChange={(date) => {
             if (!date) return;
-            setStartDate(date);
+            setSelectedDate(date);
             onChange && onChange(convertFormat(date));
           }}
-          dateFormat="dd/MM/yyyy"
+          dateFormat="yyyy-MM-dd"
           customInput={
             <input
               type="text"

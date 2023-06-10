@@ -74,9 +74,19 @@ export type ProjectGet = {
     data: {
       id: string;
       name: string;
-      owner: { fullname: string };
+      owner: { id: string; fullname: string };
       is_active: boolean;
       saved: boolean;
+      start_date: string;
+      end_date: string;
+      description: string;
+      type_project: {
+        id: string;
+        name: string;
+      };
+      working_hours: number;
+      expected_cost: string;
+      members: { id: string; position: string }[];
     }[];
   };
 };
@@ -106,6 +116,23 @@ export type PositionsGet = {
 };
 
 export type ProjectPost = {
+  requestBody: {
+    name?: string;
+    owner?: string;
+    start_date?: string;
+    end_date?: string;
+    expected_cost?: number;
+    working_hours?: number;
+    description?: string;
+    member?: { id: string; position: string }[];
+    type_project?: string;
+  };
+  responseBody: {
+    nessage: string;
+  };
+};
+
+export type ProjectPut = {
   requestBody: {
     name?: string;
     owner?: string;

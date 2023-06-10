@@ -24,6 +24,7 @@ export const InputSelectMuiAtom = forwardRef<HTMLInputElement, Props>(
 
     useEffect(() => {
       setData(props.value);
+      props.value && props.onChange && props.onChange(props.value);
     }, [props.value]);
 
     return (

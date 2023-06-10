@@ -9,6 +9,7 @@ import {
   PositionsGet,
   ProjectGet,
   ProjectPost,
+  ProjectPut,
   TypeProjectGet,
   UsersGet,
 } from "./model";
@@ -87,6 +88,14 @@ export const apiPositionsGet = () =>
 export const apiProjectPost = (requestBody: ProjectPost["requestBody"]) =>
   post<ProjectPost["requestBody"], ProjectPost["responseBody"]>(
     "/projects",
+    requestBody
+  );
+export const apiProjectPut = (
+  id: string,
+  requestBody: ProjectPut["requestBody"]
+) =>
+  put<ProjectPut["requestBody"], ProjectPut["responseBody"]>(
+    `/projects/${id}`,
     requestBody
   );
 

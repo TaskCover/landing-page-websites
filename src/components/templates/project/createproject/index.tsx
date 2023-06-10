@@ -14,9 +14,11 @@ import { UploadImgMolecule } from "../../../molecules/UploadImgMolecule";
 import { InputTextAreaAtom } from "../../../atoms/InputAtom/InputTextAreaAtom";
 import clsx from "clsx";
 import { ErrorTextAtom } from "../../../atoms/ErrorTextAtom";
+import { ProjectGet } from "../../../../utils/model";
 
 export type Props = {
   handleClose: () => void;
+  projectUpdate?: ProjectGet["responseBody"]["data"][0];
 };
 
 export const CreateProjectTemplate = (props: Props) => {
@@ -34,6 +36,7 @@ export const CreateProjectTemplate = (props: Props) => {
                 label="Tên dự án"
                 className={styles["input"]}
                 isError={!!handle.getErrorMessage("name")}
+                defaultValue={value.projectUpdate?.name}
                 {...handle.register("name")}
               />
               {handle.getErrorMessage("name") && (
@@ -45,6 +48,7 @@ export const CreateProjectTemplate = (props: Props) => {
                 label="Người phụ trách"
                 options={value.picOptions}
                 className={styles["input"]}
+                value={value.projectUpdate?.owner.id}
                 onChange={handle.handleOwnerChange}
                 isError={!!handle.getErrorMessage("owner")}
               />
@@ -57,6 +61,7 @@ export const CreateProjectTemplate = (props: Props) => {
                 className={styles["input"]}
                 label="Loại dự án"
                 options={value.projectTypes}
+                value={value.projectUpdate?.type_project.id}
                 onChange={handle.handleTypeProjectChange}
                 isError={!!handle.getErrorMessage("type_project")}
               />
@@ -96,6 +101,7 @@ export const CreateProjectTemplate = (props: Props) => {
               <InputDatePickerAtom
                 className={styles["input"]}
                 label="Ngày bắt đầu"
+                value={value.projectUpdate?.start_date}
                 onChange={handle.handleStartDateChange}
                 isError={!!handle.getErrorMessage("start_date")}
               />
@@ -107,6 +113,7 @@ export const CreateProjectTemplate = (props: Props) => {
               <InputDatePickerAtom
                 className={styles["input"]}
                 label="Ngày kết thúc"
+                value={value.projectUpdate?.end_date}
                 onChange={handle.handleEndDateChange}
                 isError={!!handle.getErrorMessage("end_date")}
               />
@@ -114,10 +121,11 @@ export const CreateProjectTemplate = (props: Props) => {
                 <ErrorTextAtom error={handle.getErrorMessage("end_date")!} />
               )}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <InputAtom
                 className={styles["input"]}
                 label="Chi phí dự kiến"
+                defaultValue={value.projectUpdate?.expected_cost}
                 {...handle.register("expected_cost")}
                 isError={!!handle.getErrorMessage("expected_cost")}
               />
@@ -127,11 +135,12 @@ export const CreateProjectTemplate = (props: Props) => {
                 />
               )}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <InputAtom
                 className={styles["input"]}
                 label="Số giờ làm việc dự kiến"
                 type="number"
+                defaultValue={value.projectUpdate?.working_hours}
                 {...handle.register("working_hours")}
                 isError={!!handle.getErrorMessage("working_hours")}
               />
@@ -152,6 +161,7 @@ export const CreateProjectTemplate = (props: Props) => {
               <InputTextAreaAtom
                 className={clsx(styles["input"], styles["description"])}
                 label="Mô tả dự án"
+                value={value.projectUpdate?.description}
                 onChange={(val) => {
                   handle.handleDescriptionChange(val);
                 }}
@@ -162,10 +172,18 @@ export const CreateProjectTemplate = (props: Props) => {
               )}
             </Grid>
             {/* Responsive */}
-            <Grid item xs={12} sx={{ display: { xs: "flex", sm: "none" } }}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: { xs: "flex", sm: "none" },
+                flexDirection: "column",
+              }}
+            >
               <InputTextAreaAtom
                 className={clsx(styles["input"], styles["description"])}
                 label="Mô tả dự án"
+                value={value.projectUpdate?.description}
                 onChange={(val) => {
                   handle.handleDescriptionChange(val);
                 }}

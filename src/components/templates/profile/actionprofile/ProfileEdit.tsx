@@ -74,8 +74,6 @@ const ProfileEditTemplate: FunctionComponent = () => {
     try {
       const response = await apiUsersProfileDetailGet(userId, header, params);
 
-      console.log("show ", response);
-
       setValue("fullname", response.fullname);
       setValue("phone", response.phone);
       setValue("email", response.email);

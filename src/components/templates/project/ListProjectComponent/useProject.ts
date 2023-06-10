@@ -1,6 +1,7 @@
 import react, { useEffect, useState } from "react";
 import { Props } from ".";
 import { useRouter } from "next/router";
+import { ProjectGet } from "../../../../utils/model";
 
 export const useProject = (props: Props) => {
   const pageSize = [
@@ -41,8 +42,8 @@ export const useProject = (props: Props) => {
     router.push(`/project/${id}`);
   };
 
-  const openEdit = (id: string) => {
-    console.log("edit");
+  const openEdit = (projectUpdate: ProjectGet["responseBody"]["data"][0]) => {
+    props.openEditModal(projectUpdate);
   };
 
   const onPageSizeChange = (value: string) => {

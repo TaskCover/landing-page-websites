@@ -2,6 +2,7 @@ import {
   DetailedHTMLProps,
   InputHTMLAttributes,
   forwardRef,
+  useEffect,
   useState,
 } from "react";
 
@@ -11,13 +12,14 @@ import clsx from "clsx";
 
 export type Props = Omit<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
-  "onChange"
+  "onChange" | "value"
 > & {
   label: string;
   inputClass?: string;
   isRequired?: boolean;
   isError?: boolean;
   onChange?: (value: string) => void;
+  value?: string;
 };
 
 export const InputTextAreaAtom = forwardRef<HTMLInputElement, Props>(
@@ -28,11 +30,18 @@ export const InputTextAreaAtom = forwardRef<HTMLInputElement, Props>(
       isRequired,
       className,
       isError,
+      value,
       onChange,
       ...inputProps
     } = props;
 
-    const [data, setData] = useState("");
+    const [data, setData] = useState<string>("");
+
+    useEffect(() => {
+      if (!value) return;
+      setData(value);
+      onChange && onChange(value);
+    }, [value]);
 
     return (
       <div style={{ width: "100%" }}>

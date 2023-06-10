@@ -32,6 +32,7 @@ const TableCellBody = styled(TableCell)(({ theme }) => ({
 export type Props = {
   projectList?: ProjectGet["responseBody"];
   getListProject: (page?: number, size?: number) => void;
+  openEditModal: (projectUpdate: ProjectGet["responseBody"]["data"][0]) => void;
 };
 
 export const ListProjectComponent: FunctionComponent<Props> = (props) => {
@@ -102,7 +103,7 @@ export const ListProjectComponent: FunctionComponent<Props> = (props) => {
                     src="/images/icon_edit.png"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handle.openEdit(item.id);
+                      handle.openEdit(item);
                     }}
                   />
                 </TableCellBody>

@@ -138,6 +138,20 @@ export const ProjectTemplate: FunctionComponent = () => {
         <ListProjectComponent
           projectList={projectList}
           getListProject={getListProject}
+          openEditModal={(
+            projectUpdate: ProjectGet["responseBody"]["data"][0]
+          ) => {
+            openModal(
+              <CreateProjectTemplate
+                handleClose={() => {
+                  closeModal();
+                  getListProject();
+                }}
+                projectUpdate={projectUpdate}
+              />,
+              700
+            );
+          }}
         />
       </div>
     </ManageLayoutAtom>

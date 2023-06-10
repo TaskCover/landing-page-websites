@@ -24,7 +24,6 @@ export const InputSelectMultiMuiAtom = (props: Props) => {
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     setData(event.target.value as any as string[]);
-    console.log(event.target.value);
   };
 
   const handleDelete = (value: string) => {
