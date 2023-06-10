@@ -23,6 +23,7 @@ export type Props = {
   pageSize?: number;
   name?: string;
   status?: string;
+  update_date?: boolean;
 };
 
 export const ProjectTemplate: FunctionComponent<Props> = (props) => {
@@ -33,10 +34,14 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
   const getListProject = async (
     page?: number,
     size?: number,
-    others?: { name?: string; status?: string }
+    others?: { name?: string; status?: string; update_date?: boolean }
   ) => {
     try {
-      const query = `like(name,"${others?.name}")`;
+      const querySearch = `like(name,"${others?.name}")`;
+      const queryUpdateDate = others?.update_date
+        ? `or(eq(update_date,true))`
+        : "";
+      const query = querySearch + queryUpdateDate;
       const data = await apiProjectGet({
         page: page,
         size: size,
@@ -50,6 +55,13 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
 
   const submitSearch = (value: string) => {
     handlers.setFilterState({ ...values.filterState, name: value });
+  };
+
+  const submitOnUpdateRecentProject = (value: boolean) => {
+    handlers.setFilterState({
+      ...values.filterState,
+      update_date: value,
+    });
   };
 
   return (
@@ -83,7 +95,7 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
           <div className={styles["project__container__header__filter"]}>
             <div className={styles["project__container__header__filter__item"]}>
               <h6>{"Dự án gần đây"}</h6>
-              <SwitchAtom />
+              <SwitchAtom getChecked={submitOnUpdateRecentProject} />
             </div>
             <div className={styles["project__container__header__filter__item"]}>
               <h6>{"Dự án đã lưu"}</h6>
@@ -137,7 +149,7 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
           <div className={styles["project__container__header__filter"]}>
             <div className={styles["project__container__header__filter__item"]}>
               <h6>{"Dự án gần đây"}</h6>
-              <SwitchAtom />
+              <SwitchAtom getChecked={submitOnUpdateRecentProject} />
             </div>
             <div className={styles["project__container__header__filter__item"]}>
               <h6>{"Dự án đã lưu"}</h6>

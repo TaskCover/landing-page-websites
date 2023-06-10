@@ -35,7 +35,7 @@ export type Props = {
   getListProject: (
     page?: number,
     size?: number,
-    others?: { name?: string; status?: string }
+    others?: { name?: string; status?: string; update_date?: boolean }
   ) => void;
   openEditModal: (projectUpdate: ProjectGet["responseBody"]["data"][0]) => void;
   filterState: Required<ProjectFilterProps>;

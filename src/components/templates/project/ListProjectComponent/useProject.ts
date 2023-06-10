@@ -12,6 +12,7 @@ export const useProject = (props: Props) => {
   const reloadProjectList = async () => {
     props.getListProject(filterState.page - 1, filterState.pageSize, {
       name: filterState.name ? filterState.name : "",
+      update_date: filterState.update_date,
     });
   };
 
