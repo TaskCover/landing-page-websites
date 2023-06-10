@@ -3,7 +3,7 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { styled } from "@mui/material";
+import { IconButton, styled } from "@mui/material";
 import styles from "./styles.module.css";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -98,16 +98,23 @@ export const ListProjectComponent: FunctionComponent<Props> = (props) => {
                   />
                 </TableCellBody>
                 <TableCellBody>
-                  {item.saved ? (
-                    <BookmarkIcon
-                      sx={{ width: "20px", height: "20px" }}
-                      color="primary"
-                    />
-                  ) : (
-                    <BookmarkBorderIcon
-                      sx={{ width: "20px", height: "20px" }}
-                    />
-                  )}
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handle.handleSaveProject(item.id, item.saved);
+                    }}
+                  >
+                    {item.saved ? (
+                      <BookmarkIcon
+                        sx={{ width: "20px", height: "20px" }}
+                        color="primary"
+                      />
+                    ) : (
+                      <BookmarkBorderIcon
+                        sx={{ width: "20px", height: "20px" }}
+                      />
+                    )}
+                  </IconButton>
                 </TableCellBody>
                 <TableCellBody>
                   <img

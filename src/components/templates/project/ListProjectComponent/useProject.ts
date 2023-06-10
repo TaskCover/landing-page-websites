@@ -2,16 +2,21 @@ import react, { useEffect, useState } from "react";
 import { Props } from ".";
 import { useRouter } from "next/router";
 import { ProjectGet } from "../../../../utils/model";
+import { apiProjectPut } from "../../../../utils/apis";
 
 export const useProject = (props: Props) => {
   const { filterState, setFilterState, pageSizeOptions } = props;
 
   const router = useRouter();
 
-  useEffect(() => {
+  const reloadProjectList = async () => {
     props.getListProject(filterState.page - 1, filterState.pageSize, {
       name: filterState.name ? filterState.name : "",
     });
+  };
+
+  useEffect(() => {
+    reloadProjectList();
   }, [filterState]);
 
   const openDetail = (id: string) => {
@@ -20,6 +25,11 @@ export const useProject = (props: Props) => {
 
   const openEdit = (projectUpdate: ProjectGet["responseBody"]["data"][0]) => {
     props.openEditModal(projectUpdate);
+  };
+
+  const handleSaveProject = async (id: string, isSaved: boolean) => {
+    await apiProjectPut(id, { saved: !isSaved });
+    await reloadProjectList();
   };
 
   const onPageSizeChange = (value: string) => {
@@ -32,6 +42,6 @@ export const useProject = (props: Props) => {
 
   return [
     { pageSizeOptions, filterState },
-    { openDetail, openEdit, onPageSizeChange, onPageChange },
+    { openDetail, openEdit, onPageSizeChange, onPageChange, handleSaveProject },
   ] as const;
 };

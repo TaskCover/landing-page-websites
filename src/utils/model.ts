@@ -144,6 +144,7 @@ export type ProjectPut = {
     description?: string;
     member?: { id: string; position: string }[];
     type_project?: string;
+    saved?: boolean;
   };
   responseBody: {
     nessage: string;
