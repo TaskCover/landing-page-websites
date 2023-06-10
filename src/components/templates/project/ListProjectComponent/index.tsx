@@ -55,7 +55,10 @@ export const ListProjectComponent: FunctionComponent<Props> = (props) => {
       <Table>
         <TableHeadAtom>
           <TableRow>
-            <TableCellHeader align="center">
+            <TableCellHeader
+              align="center"
+              sx={{ display: { xs: "none", sm: "table-cell" } }}
+            >
               <h6>STT</h6>
             </TableCellHeader>
             <TableCellHeader>
@@ -82,7 +85,10 @@ export const ListProjectComponent: FunctionComponent<Props> = (props) => {
                 key={index}
                 onClick={() => handle.openDetail(item.id)}
               >
-                <TableCellBody align="center">
+                <TableCellBody
+                  align="center"
+                  sx={{ display: { xs: "none", sm: "table-cell" } }}
+                >
                   <h6>
                     {(value.filterState.page - 1) * value.filterState.pageSize +
                       index +
@@ -90,13 +96,16 @@ export const ListProjectComponent: FunctionComponent<Props> = (props) => {
                   </h6>
                 </TableCellBody>
                 <TableCellBody>
-                  <h6>{item.name}</h6>
+                  <div className={styles["project_name"]}>
+                    <img src="/images/unknown_image.png" />
+                    <h6>{item.name}</h6>
+                  </div>
                 </TableCellBody>
-                <TableCellBody>{item.owner.fullname}</TableCellBody>
+                <TableCellBody sx={{ textAlign: { xs: "center", sm: "left" } }}>
+                  {item.owner.fullname}
+                </TableCellBody>
                 <TableCellBody>
-                  <SnackStatusAtom
-                    status={item.is_active ? "active" : "finish"}
-                  />
+                  {handle.getStatusSnack(item.status, item.id)}
                 </TableCellBody>
                 <TableCellBody>
                   <IconButton

@@ -3,23 +3,25 @@ import styles from "./styles.module.css";
 import clsx from "clsx";
 
 export type Props = {
-  status: "active" | "pending" | "finish";
+  label: string;
+  color: "green" | "yellow" | "pink";
+  onClick?: () => void;
 };
 
-export const SnackStatusAtom: FunctionComponent<Props> = ({ status }) => {
-  const getLabelFromStatus = () => {
-    switch (status) {
-      case "active":
-        return "Hoạt động";
-      case "pending":
-        return "Tạm dừng";
-      case "finish":
-        return "Kết thúc";
-    }
-  };
+export const SnackStatusAtom: FunctionComponent<Props> = ({
+  color,
+  label,
+  onClick,
+}) => {
   return (
-    <span className={clsx(styles["tag"], styles[status])}>
-      {getLabelFromStatus()}
+    <span
+      className={clsx(styles["tag"], styles[color])}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick && onClick();
+      }}
+    >
+      {label}
     </span>
   );
 };

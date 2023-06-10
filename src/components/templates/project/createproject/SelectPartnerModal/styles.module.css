@@ -43,3 +43,16 @@
 .column2__user h6 {
   color: #212121;
 }
+
+@media screen and (max-width: 600px) {
+  .column2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .column2__user {
+    margin-bottom: 16px;
+  }
+}
