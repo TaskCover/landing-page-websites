@@ -37,6 +37,7 @@ export const useProject = (props: Props) => {
     name: props.name ? props.name : "",
     status: props.status ? props.status : "",
     update_date: props.update_date ? true : false,
+    saved: props.saved ? true : false,
   });
 
   useEffect(() => {
