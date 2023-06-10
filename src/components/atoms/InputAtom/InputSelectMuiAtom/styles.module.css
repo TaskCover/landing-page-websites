@@ -6,7 +6,7 @@
 .select {
   width: 100%;
   height: 100%;
-  font-size: 1.6rem;
+  font-size: 1.6rem !important;
   background-color: #f7f7fd;
   line-height: 24px;
   border: none;
@@ -22,8 +22,8 @@
 }
 
 .select_input {
-  padding: 8px 20px;
-  padding-top: 26px;
+  padding: 8px 20px !important;
+  padding-top: 26px !important;
 }
 
 .select input:focus {

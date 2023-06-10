@@ -214,6 +214,7 @@ export const CreateProjectTemplate = (props: Props) => {
                     fontWeight: "600",
                     mr: 1,
                     mt: "5px",
+                    textTransform: "none",
                   }}
                   onClick={() => {
                     props.handleClose();
@@ -236,9 +237,10 @@ export const CreateProjectTemplate = (props: Props) => {
                     fontWeight: "600",
                     ml: 1,
                     mt: "5px",
+                    textTransform: "none",
                   }}
                 >
-                  Thêm mới
+                  {value.projectUpdate ? "Lưu chỉnh sửa" : "Thêm mới"}
                 </Button>
               </div>
             </Grid>

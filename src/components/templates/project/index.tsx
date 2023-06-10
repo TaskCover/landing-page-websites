@@ -103,7 +103,10 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
                   <CreateProjectTemplate
                     handleClose={() => {
                       closeModal();
-                      getListProject();
+                      getListProject(
+                        values.filterState.page - 1,
+                        values.filterState.pageSize
+                      );
                     }}
                   />,
                   700
