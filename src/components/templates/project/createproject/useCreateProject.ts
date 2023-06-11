@@ -70,7 +70,7 @@ export const useCreateProject = (props: ComponentProps) => {
     if (!projectUpdate) return;
     setListParterValue(
       projectUpdate.members.map((member) => {
-        return { userId: member.id, positionId: member.position };
+        return { userId: member.id, positionId: member.position_project?.id };
       })
     );
   }, [projectUpdate]);
@@ -92,7 +92,7 @@ export const useCreateProject = (props: ComponentProps) => {
         start_date: startDate,
         end_date: endDate,
         description: description,
-        member: listPartnerValue?.map((partner) => {
+        members: listPartnerValue?.map((partner) => {
           return { id: partner.userId, position: partner.positionId };
         }),
       };

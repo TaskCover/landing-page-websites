@@ -1,19 +1,19 @@
 import type { NextPage } from "next";
 import { ManageLayoutAtom } from "../../../components/atoms/LayoutAtom/ManageLayoutAtom";
-import { ProjectTemplate } from "../../../components/templates/project";
 import { useRouter } from "next/router";
 import React from "react";
+import { ProjectTabOrganism } from "../../../components/organism/ProjectTabOrganism";
 
 const ProjectDetail: NextPage = () => {
   const router = useRouter();
 
   const { id } = router.query;
 
-  console.log(id);
+  if (typeof id !== "string") return null;
 
   return (
     <ManageLayoutAtom>
-      <p>Heloooooooooooo G</p>
+      <ProjectTabOrganism tabIndex={0} projectId={id} />
     </ManageLayoutAtom>
   );
 };

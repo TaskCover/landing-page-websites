@@ -89,7 +89,12 @@ export type ProjectGet = {
       };
       working_hours: number;
       expected_cost: string;
-      members: { id: string; position: string }[];
+      members: {
+        id: string;
+        position_project: {
+          id: string;
+        };
+      }[];
     }[];
   };
 };
@@ -144,12 +149,28 @@ export type ProjectPut = {
     expected_cost?: number;
     working_hours?: number;
     description?: string;
-    member?: { id: string; position: string }[];
+    members?: { id: string; position: string }[];
     type_project?: string;
     saved?: boolean;
     status?: string;
   };
   responseBody: {
     nessage: string;
+  };
+};
+
+export type ProjectIdGet = {
+  responseBody: {
+    name?: string;
+    owner?: string;
+    start_date?: string;
+    end_date?: string;
+    expected_cost?: number;
+    working_hours?: number;
+    description?: string;
+    members?: { id: string; position: string }[];
+    type_project?: string;
+    saved?: boolean;
+    status?: string;
   };
 };

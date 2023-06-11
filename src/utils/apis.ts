@@ -8,6 +8,7 @@ import {
   AuthSetPasswordPost,
   PositionsGet,
   ProjectGet,
+  ProjectIdGet,
   ProjectPost,
   ProjectPut,
   TypeProjectGet,
@@ -98,6 +99,9 @@ export const apiProjectPut = (
     `/projects/${id}`,
     requestBody
   );
+
+export const apiProjectIdGet = (id: string) =>
+  get<{}, ProjectIdGet["responseBody"]>(`/projects/${id}`);
 
 //PROFILE==================================================================================
 export const apiUsersProfileDetailGet = (

@@ -32,7 +32,7 @@ export const InputSelectMultiMuiAtom = (props: Props) => {
   };
 
   const getTextFromValue = (value: string): string => {
-    return props.options.filter((option) => option.value === value)[0].text;
+    return props.options.filter((option) => option.value === value)[0]?.text;
   };
 
   useEffect(() => {
