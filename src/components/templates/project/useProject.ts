@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Props } from ".";
-import queryString from "query-string";
+import { apiProjectGet } from "../../../utils/apis";
+import { showErrorNotify } from "../../molecules/NotificationMolecule";
+import { ProjectGet } from "../../../utils/model";
 
 export const useProject = (props: Props) => {
   const pageSizeOptions = [
@@ -40,9 +42,51 @@ export const useProject = (props: Props) => {
     saved: props.saved ? true : false,
   });
 
-  useEffect(() => {
-    console.log(queryString.stringify(filterState));
-  }, [filterState]);
+  const [projectList, setProjectList] = useState<ProjectGet["responseBody"]>();
+  const getListProject = async (
+    page?: number,
+    size?: number,
+    sort?: string,
+    others?: { name?: string; status?: string; saved?: boolean }
+  ) => {
+    try {
+      const querySearch = `like(name,"${others?.name ? others.name : ""}")`;
+      const querySaved = others?.saved ? `,eq(saved,true)` : "";
+      const queryStatus =
+        others?.status ||
+        others?.status === "ACTIVE" ||
+        others?.status === "PAUSE" ||
+        others?.status === "CLOSE"
+          ? `,eq(status,"${others?.status}")`
+          : "";
+      const query = "and(" + querySearch + querySaved + queryStatus + ")";
+      const data = await apiProjectGet({
+        page: page,
+        size: size,
+        sort: sort,
+        query: query,
+      });
+      setProjectList(data);
+    } catch (e: any) {
+      showErrorNotify(e?.response?.data?.description);
+    }
+  };
 
-  return [{ filterState, pageSizeOptions }, { setFilterState }] as const;
+  const reloadProjectList = async () => {
+    getListProject(
+      filterState.page - 1,
+      filterState.pageSize,
+      filterState.update_date ? "updated_time=-1" : undefined,
+      {
+        name: filterState.name ? filterState.name : "",
+        saved: filterState.saved ? true : undefined,
+        status: filterState.status,
+      }
+    );
+  };
+
+  return [
+    { filterState, pageSizeOptions, projectList },
+    { setFilterState, reloadProjectList },
+  ] as const;
 };

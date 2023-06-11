@@ -129,6 +129,13 @@ export const useCreateProject = (props: ComponentProps) => {
     setDescription(value);
   };
 
+  const onDeleteMembers = (value: string) => {
+    listPartnerValue &&
+      setListParterValue(
+        listPartnerValue.filter((partner) => partner.userId !== value)
+      );
+  };
+
   return [
     {
       picOptions,
@@ -148,6 +155,7 @@ export const useCreateProject = (props: ComponentProps) => {
       handleDescriptionChange,
       register,
       getErrorMessage,
+      onDeleteMembers,
     },
   ] as const;
 };

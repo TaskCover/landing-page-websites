@@ -16,6 +16,7 @@ export type Props = {
   openDialog?: () => void;
   values?: string[];
   isError?: boolean;
+  onDeleteValue?: (value: string) => void;
 };
 
 export const InputSelectMultiMuiAtom = (props: Props) => {
@@ -29,6 +30,7 @@ export const InputSelectMultiMuiAtom = (props: Props) => {
   const handleDelete = (value: string) => {
     const newData = data.filter((item) => item !== value);
     setData(newData);
+    props.onDeleteValue && props.onDeleteValue(value);
   };
 
   const getTextFromValue = (value: string): string => {

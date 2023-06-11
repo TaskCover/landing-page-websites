@@ -13,21 +13,8 @@ export const useProject = (props: Props) => {
   const router = useRouter();
   const { openModal, closeModal } = useModalContextMolecule();
 
-  const reloadProjectList = async () => {
-    props.getListProject(
-      filterState.page - 1,
-      filterState.pageSize,
-      filterState.update_date ? "updated_time=-1" : undefined,
-      {
-        name: filterState.name ? filterState.name : "",
-        saved: filterState.saved ? true : undefined,
-        status: filterState.status,
-      }
-    );
-  };
-
   useEffect(() => {
-    reloadProjectList();
+    props.getListProject();
   }, [filterState]);
 
   const openDetail = (id: string) => {
@@ -40,7 +27,7 @@ export const useProject = (props: Props) => {
 
   const handleSaveProject = async (id: string, isSaved: boolean) => {
     await apiProjectPut(id, { saved: !isSaved });
-    await reloadProjectList();
+    await props.getListProject();
   };
 
   const onPageSizeChange = (value: string) => {
@@ -57,7 +44,7 @@ export const useProject = (props: Props) => {
         currentStatus={status}
         closeModal={() => {
           closeModal();
-          reloadProjectList();
+          props.getListProject();
         }}
         projectId={projectId}
       />,

@@ -29,37 +29,7 @@ export type Props = {
 
 export const ProjectTemplate: FunctionComponent<Props> = (props) => {
   const [values, handlers] = useProject(props);
-  const [projectList, setProjectList] = useState<ProjectGet["responseBody"]>();
   const { openModal, closeModal } = useModalContextMolecule();
-
-  const getListProject = async (
-    page?: number,
-    size?: number,
-    sort?: string,
-    others?: { name?: string; status?: string; saved?: boolean }
-  ) => {
-    try {
-      const querySearch = `like(name,"${others?.name ? others.name : ""}")`;
-      const querySaved = others?.saved ? `,eq(saved,true)` : "";
-      const queryStatus =
-        others?.status ||
-        others?.status === "ACTIVE" ||
-        others?.status === "PAUSE" ||
-        others?.status === "CLOSE"
-          ? `,eq(status,"${others?.status}")`
-          : "";
-      const query = "and(" + querySearch + querySaved + queryStatus + ")";
-      const data = await apiProjectGet({
-        page: page,
-        size: size,
-        sort: sort,
-        query: query,
-      });
-      setProjectList(data);
-    } catch (e: any) {
-      showErrorNotify(e?.response?.data?.description);
-    }
-  };
 
   const submitSearch = (value: string) => {
     handlers.setFilterState({ ...values.filterState, name: value });
@@ -107,7 +77,7 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
                 <CreateProjectTemplate
                   handleClose={() => {
                     closeModal();
-                    getListProject();
+                    handlers.reloadProjectList();
                   }}
                 />,
                 700
@@ -158,10 +128,7 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
                   <CreateProjectTemplate
                     handleClose={() => {
                       closeModal();
-                      getListProject(
-                        values.filterState.page - 1,
-                        values.filterState.pageSize
-                      );
+                      handlers.reloadProjectList();
                     }}
                   />,
                   700
@@ -210,8 +177,8 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
           pageSizeOptions={values.pageSizeOptions}
           filterState={values.filterState}
           setFilterState={handlers.setFilterState}
-          projectList={projectList}
-          getListProject={getListProject}
+          projectList={values.projectList}
+          getListProject={handlers.reloadProjectList}
           openEditModal={(
             projectUpdate: ProjectGet["responseBody"]["data"][0]
           ) => {
@@ -219,7 +186,7 @@ export const ProjectTemplate: FunctionComponent<Props> = (props) => {
               <CreateProjectTemplate
                 handleClose={() => {
                   closeModal();
-                  getListProject();
+                  handlers.reloadProjectList();
                 }}
                 projectUpdate={projectUpdate}
               />,

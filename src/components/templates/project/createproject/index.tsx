@@ -81,6 +81,7 @@ export const CreateProjectTemplate = (props: Props) => {
                   value.listPartnerValue &&
                   value.listPartnerValue.map((r) => r.userId)
                 }
+                onDeleteValue={handle.onDeleteMembers}
                 openDialog={() => {
                   openModalLv2(
                     <SelectPartnerModal
