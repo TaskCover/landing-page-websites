@@ -5,7 +5,6 @@ import { ProjectGet } from "../../../../utils/model";
 import { apiProjectPut } from "../../../../utils/apis";
 import { SnackStatusAtom } from "../../../atoms/SnackAtom/SnackStatusAtom";
 import { useModalContextMolecule } from "../../../molecules/ModalContextMolecule";
-import { UpdateStatusProjectComponent } from "./UpdateStatusProjectComponent";
 
 export const useProject = (props: Props) => {
   const { filterState, setFilterState, pageSizeOptions } = props;
@@ -38,52 +37,14 @@ export const useProject = (props: Props) => {
     setFilterState({ ...filterState, page: page });
   };
 
-  const onStatusSnackClick = (status: string, projectId: string) => {
-    openModal(
-      <UpdateStatusProjectComponent
-        currentStatus={status}
-        closeModal={() => {
-          closeModal();
-          props.getListProject();
-        }}
-        projectId={projectId}
-      />,
-      450
-    );
-  };
-
   const getStatusSnack = (status: string, projectId: string) => {
     switch (status) {
       case "ACTIVE":
-        return (
-          <SnackStatusAtom
-            label="Hoạt động"
-            color="green"
-            onClick={() => {
-              onStatusSnackClick("ACTIVE", projectId);
-            }}
-          />
-        );
+        return <SnackStatusAtom label="Hoạt động" color="green" />;
       case "PAUSE":
-        return (
-          <SnackStatusAtom
-            label="Tạm dừng"
-            color="yellow"
-            onClick={() => {
-              onStatusSnackClick("PAUSE", projectId);
-            }}
-          />
-        );
+        return <SnackStatusAtom label="Tạm dừng" color="yellow" />;
       case "CLOSE":
-        return (
-          <SnackStatusAtom
-            label="Kết thúc"
-            color="pink"
-            onClick={() => {
-              onStatusSnackClick("CLOSE", projectId);
-            }}
-          />
-        );
+        return <SnackStatusAtom label="Kết thúc" color="pink" />;
       default:
         return <></>;
     }
