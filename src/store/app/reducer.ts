@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { uuid } from "utils";
-import { signin, signup, signupVerify } from "./actions";
+import { resetPassword, signin, signup, signupVerify } from "./actions";
 import { clientStorage } from "utils/storage";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
