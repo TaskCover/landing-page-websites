@@ -55,7 +55,6 @@ a {
   .only-mobile {
     display: initial !important;
   }
-
 }
 
 @supports (font: -apple-system-body) and (-webkit-appearance: none) {

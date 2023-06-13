@@ -1,4 +1,4 @@
-import { Wrapper, MainSection, Banner } from "components/sn-signin/Home";
+import { Wrapper, MainSection, Banner } from "components/sn-signin";
 
 export const metadata = {
   title: "Signin | TaskCover",
