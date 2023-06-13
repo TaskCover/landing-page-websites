@@ -7,7 +7,16 @@ import {
   Snackbar,
   toggleAppReady,
 } from "./reducer";
-import { SigninData, signin } from "./actions";
+import {
+  ResetPasswordData,
+  SigninData,
+  SignupData,
+  forgot,
+  resetPassword,
+  signin,
+  signup,
+  signupVerify,
+} from "./actions";
 import { shallowEqual } from "react-redux";
 
 export const useSnackbar = () => {
@@ -58,7 +67,10 @@ export const useAppReady = () => {
 export const useAuth = () => {
   const dispatch = useAppDispatch();
 
-  const { token, user } = useAppSelector((state) => state.app, shallowEqual);
+  const { token, user, signupStep } = useAppSelector(
+    (state) => state.app,
+    shallowEqual,
+  );
 
   const isLoggedIn = useMemo(() => !!token, [token]);
 
@@ -66,6 +78,50 @@ export const useAuth = () => {
     async (data: SigninData) => {
       try {
         return await dispatch(signin(data)).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const onSignup = useCallback(
+    async (data: SignupData) => {
+      try {
+        return await dispatch(signup(data)).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const onVerify = useCallback(
+    async (code: string) => {
+      try {
+        return await dispatch(signupVerify(code)).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const onForgot = useCallback(
+    async (email: string) => {
+      try {
+        return await dispatch(forgot(email)).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const onResetPassword = useCallback(
+    async (data: ResetPasswordData) => {
+      try {
+        return await dispatch(resetPassword(data)).unwrap();
       } catch (error) {
         throw error;
       }
@@ -82,6 +138,11 @@ export const useAuth = () => {
     user,
     isLoggedIn,
     onSignin,
+    onSignup,
     onSignOut,
+    signupStep,
+    onVerify,
+    onForgot,
+    onResetPassword,
   };
 };

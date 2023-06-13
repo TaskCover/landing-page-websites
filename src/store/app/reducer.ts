@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { uuid } from "utils";
-import { signin } from "./actions";
+import { signin, signup, signupVerify } from "./actions";
 import { clientStorage } from "utils/storage";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
@@ -38,16 +38,27 @@ export interface UserInfo {
   roles: string[];
 }
 
+export enum SignupStep {
+  SIGNUP = 1,
+  VERIFY,
+  JOIN_WORKSPACE,
+}
+
 export interface AppState {
   appReady: boolean;
   snackbarList: SnackbarItem[];
   token?: string;
   user?: UserInfo;
+
+  signupStep: SignupStep;
+  tokenRegister?: string;
 }
 
 const initialState: AppState = {
   appReady: false,
   snackbarList: [],
+
+  signupStep: SignupStep.SIGNUP,
 };
 
 const appSlice = createSlice({
@@ -92,24 +103,36 @@ const appSlice = createSlice({
     },
   },
   extraReducers: (builder) =>
-    builder.addCase(
-      signin.fulfilled,
-      (
-        state,
-        action: PayloadAction<
-          UserInfo & { accessToken: string; refreshToken: string }
-        >,
-      ) => {
-        const { accessToken, refreshToken, ...userInfo } = action.payload;
+    builder
+      .addCase(
+        signin.fulfilled,
+        (
+          state,
+          action: PayloadAction<
+            UserInfo & { accessToken: string; refreshToken: string }
+          >,
+        ) => {
+          const { accessToken, refreshToken, ...userInfo } = action.payload;
 
-        clientStorage.set(ACCESS_TOKEN_STORAGE_KEY, accessToken);
-        clientStorage.set(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
-        clientStorage.set(USER_INFO_STORAGE_KEY, userInfo);
+          clientStorage.set(ACCESS_TOKEN_STORAGE_KEY, accessToken);
+          clientStorage.set(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
+          clientStorage.set(USER_INFO_STORAGE_KEY, userInfo);
 
-        state.token = accessToken;
-        state.user = userInfo;
-      },
-    ),
+          state.token = accessToken;
+          state.user = userInfo;
+        },
+      )
+      .addCase(
+        signup.fulfilled,
+        (state, action: PayloadAction<{ registerToken: string }>) => {
+          state.signupStep = SignupStep.VERIFY;
+          state.tokenRegister = action.payload.registerToken;
+        },
+      )
+      .addCase(signupVerify.fulfilled, (state) => {
+        state.signupStep = SignupStep.SIGNUP;
+        state.tokenRegister = undefined;
+      }),
 });
 
 export const {

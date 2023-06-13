@@ -6,7 +6,7 @@ import Image from "next/image";
 import AppLogo from "public/images/img-app-logo.webp";
 import { Text } from "components/shared";
 import Link from "components/Link";
-import { SIGNUP_PATH } from "constant/paths";
+import { SIGNIN_PATH } from "constant/paths";
 import Form from "./Form";
 
 const MainSection = () => {
@@ -15,6 +15,10 @@ const MainSection = () => {
       overflow="hidden"
       flex={{ sm: 1 }}
       width="100%"
+      maxHeight={({ spacing }) => ({
+        xs: `calc(100vh - ${spacing(2 * 2)})`,
+        sm: "100%",
+      })}
       alignItems="center"
       m={{ xs: 2, sm: 0 }}
       justifyContent="center"
@@ -31,13 +35,13 @@ const MainSection = () => {
         alignItems="center"
         maxWidth={340}
         width="100%"
-        overflow="auto"
+        overflow="hidden"
       >
-        <Text variant="h3">Đăng nhập</Text>
+        <Text variant="h3">Đăng ký</Text>
         <Stack mt={1} direction="row" alignItems="center" spacing={0.5}>
-          <Text variant="body2">hoặc bạn chưa có tài khoản?</Text>
+          <Text variant="body2">hoặc bạn đã có tài khoản?</Text>
           <Link
-            href={SIGNUP_PATH}
+            href={SIGNIN_PATH}
             fontWeight={600}
             sx={{
               fontSize: 14,
@@ -48,7 +52,7 @@ const MainSection = () => {
             color="primary.main"
             underline="none"
           >
-            Đăng ký ngay
+            Đăng nhập ngay
           </Link>
         </Stack>
 

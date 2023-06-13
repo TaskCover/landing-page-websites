@@ -7,17 +7,20 @@ import { memo, useEffect, useMemo } from "react";
 import { Sidebar } from "./components";
 import { useAppSelector } from "store/hooks";
 import { shallowEqual } from "react-redux";
-import { useRouter } from "next/navigation";
-import { SIGNIN_PATH } from "constant/paths";
+import { usePathname, useRouter } from "next/navigation";
+import { FORGOT_PASSWORD_PATH, SIGNIN_PATH, SIGNUP_PATH } from "constant/paths";
 
 type MainLayoutProps = {
   children: React.ReactNode;
 };
 
+const AUTH_PATHS = [SIGNUP_PATH, FORGOT_PASSWORD_PATH];
+
 const MainLayout = (props: MainLayoutProps) => {
   const { children } = props;
 
   const { push } = useRouter();
+  const pathname = usePathname();
 
   const { appReady, token, user } = useAppSelector(
     (state) => state.app,
@@ -27,9 +30,10 @@ const MainLayout = (props: MainLayoutProps) => {
   const isLoggedIn = useMemo(() => !!token, [token]);
 
   useEffect(() => {
-    if (isLoggedIn) return;
+    if (isLoggedIn || AUTH_PATHS.includes(pathname)) return;
+
     push(SIGNIN_PATH);
-  }, [isLoggedIn, push]);
+  }, [isLoggedIn, push, pathname]);
 
   if (!appReady || !token || !user) return <AppLoading />;
 

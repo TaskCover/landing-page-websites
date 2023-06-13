@@ -106,6 +106,7 @@ const Form = () => {
         sx={{ mt: 4 }}
         variant="primary"
         fullWidth
+        pending={formik.isSubmitting}
       >
         Đăng nhập
       </Button>
@@ -123,9 +124,9 @@ const INITIAL_VALUES = {
 export const validationSchema = Yup.object().shape({
   email: Yup.string()
     .trim()
-    .required("Email is required.")
-    .matches(EMAIL_REGEX, "Email is invalid!"),
-  password: Yup.string().trim().required("Password is required."),
+    .required("Email là bắt buộc.")
+    .matches(EMAIL_REGEX, "Email không hợp lệ!"),
+  password: Yup.string().trim().required("Mật khẩu là bắt buộc."),
 });
 
 const sxConfig = {
