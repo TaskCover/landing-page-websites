@@ -6,30 +6,28 @@ import { Button, Input } from "components/shared";
 import Link from "components/Link";
 import { FORGOT_PASSWORD_PATH } from "constant/paths";
 import * as Yup from "yup";
-import { Endpoint, client } from "api";
-import { useAuth } from "store/app";
 import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import { useFormik, FormikErrors } from "formik";
 import { SigninData } from "store/app/actions";
 import { EMAIL_REGEX } from "constant/regex";
+import { getMessageErrorByAPI } from "utils/index";
+import { useSnackbar, useAuth } from "store/app/selectors";
 
 const Form = () => {
   const { onSignin } = useAuth();
+  const { onAddSnackbar } = useSnackbar();
 
   const onSubmit = async (values: SigninData) => {
     try {
       const newData = await onSignin(values);
 
       if (newData) {
-        // onAddSnackbar(`${label} tournament successfully!`, "success");
-        // props.onClose();
-        console.info("Logged in");
+        onAddSnackbar("Đăng nhập thành công!", "success");
       } else {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
-      // onAddSnackbar(getMessageErrorByAPI(error), "error");
-      console.error(error);
+      onAddSnackbar(getMessageErrorByAPI(error), "error");
     }
   };
 
@@ -79,7 +77,7 @@ const Form = () => {
         rootSx={sxConfig.input}
         sx={{ mt: 3 }}
         fullWidth
-        title="Password"
+        title="Mật khẩu"
         name="password"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
@@ -92,7 +90,7 @@ const Form = () => {
         color="grey.400"
         underline="none"
       >
-        Forgot password?
+        Quên mật khẩu?
       </Link>
       <Button
         type="submit"
@@ -101,7 +99,7 @@ const Form = () => {
         variant="primary"
         fullWidth
       >
-        Signin
+        Đăng nhập
       </Button>
     </Stack>
   );

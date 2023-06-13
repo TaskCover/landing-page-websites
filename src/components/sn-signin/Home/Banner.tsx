@@ -2,12 +2,8 @@
 
 import { memo } from "react";
 import { Stack } from "@mui/material";
-import AuthBgImage from "public/images/img-auth-banner.webp";
-import Image from "next/image";
 
-type BannerProps = {};
-
-const Banner = (props: BannerProps) => {
+const Banner = () => {
   return (
     <Stack
       flex={1}

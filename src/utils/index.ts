@@ -1,3 +1,5 @@
+import { AN_ERROR_TRY_AGAIN } from "constant/index";
+
 export const parseHashURL = (value: string) => `#${value}`;
 
 export const cleanObject = (
@@ -55,3 +57,9 @@ export const uuid = () => {
 
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
+
+export const getMessageErrorByAPI = (error) => {
+  return typeof error === "string"
+    ? error
+    : error["message"] ?? AN_ERROR_TRY_AGAIN;
+};

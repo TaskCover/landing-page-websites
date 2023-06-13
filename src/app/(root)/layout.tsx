@@ -1,13 +1,11 @@
-"use client";
-
-import { Stack } from "@mui/material";
+import MainLayout from "layouts/MainLayout";
 
 type RootLayoutProps = {
   children: React.ReactNode;
 };
 
 const RootLayout = (props: RootLayoutProps) => {
-  return <Stack></Stack>;
+  return <MainLayout>{props.children}</MainLayout>;
 };
 
 export default RootLayout;

@@ -1,10 +1,17 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { API_TIMEOUT, API_URL } from "constant";
+import {
+  ACCESS_TOKEN_STORAGE_KEY,
+  API_TIMEOUT,
+  API_URL,
+  REFRESH_TOKEN_STORAGE_KEY,
+} from "constant";
 import { HttpStatusCode } from "constant/enums";
 import { ErrorResponse } from "constant/types";
 import { store } from "store/configureStore";
 import { sleep } from "utils/index";
-import { ErrorCode } from "./errorCode";
+import { clientStorage } from "utils/storage";
+import { Endpoint } from "./endpoint";
+import { clearAuth } from "store/app/reducer";
 
 const requestAbortCode = "ECONNABORTED";
 
@@ -14,10 +21,10 @@ axios.defaults.timeout = API_TIMEOUT;
 
 axios.interceptors.request.use(
   (config) => {
-    // const token = getAuthData()?.["token"];
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+    if (accessToken) {
+      config.headers.token = accessToken;
+    }
     return config;
   },
   (error) => {
@@ -28,12 +35,39 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (
       error.response &&
       error.response.status === HttpStatusCode.UNAUTHORIZED
     ) {
-      // store.dispatch(updateAuth());
+      const refreshToken = clientStorage.get(REFRESH_TOKEN_STORAGE_KEY);
+      if (!refreshToken) {
+        store.dispatch(clearAuth());
+      } else {
+        try {
+          const rTResponse = await axios.post(
+            Endpoint.REFRESH_TOKEN,
+            {},
+            { headers: { "refresh-token": refreshToken } },
+          );
+          if (rTResponse?.status === HttpStatusCode.OK) {
+            clientStorage.set(
+              ACCESS_TOKEN_STORAGE_KEY,
+              rTResponse.data.accessToken,
+            );
+            clientStorage.set(
+              REFRESH_TOKEN_STORAGE_KEY,
+              rTResponse.data.refreshToken,
+            );
+          }
+          error.config.headers = {
+            token: rTResponse.data.accessToken,
+          };
+          return axios(error.config);
+        } catch (error) {
+          store.dispatch(clearAuth());
+        }
+      }
     }
     if (
       (error as AxiosError)?.config &&
@@ -51,7 +85,7 @@ axios.interceptors.response.use(
       ?.data as ErrorResponse;
 
     const messageError: string | undefined =
-      ErrorCode[errorResponse.code] ?? errorResponse.description;
+      errorResponse?.description ?? errorResponse.code;
 
     return Promise.reject(messageError ?? error);
   },

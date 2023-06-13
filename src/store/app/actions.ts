@@ -14,8 +14,8 @@ export const signin = createAsyncThunk(
     try {
       const response = await client.post(Endpoint.SIGNIN, data);
 
-      if (response?.status === HttpStatusCode.CREATED) {
-        return response?.data;
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
