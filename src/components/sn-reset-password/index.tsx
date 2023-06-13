@@ -6,15 +6,17 @@ import AppLogo from "components/AppLogo";
 import { Button, Input, Text } from "components/shared";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import * as Yup from "yup";
 import { useFormik, FormikErrors } from "formik";
 import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
+import { SIGNIN_PATH } from "constant/paths";
 
 const Reset = () => {
-  const { onResetPassword } = useAuth();
+  const { onResetPassword, onSignOut } = useAuth();
   const { onAddSnackbar } = useSnackbar();
+  const { push } = useRouter();
 
   const params = useParams();
   const token = useMemo(() => params.token, [params.token]);
@@ -22,6 +24,12 @@ const Reset = () => {
   const onSubmit = async (values: typeof INITIAL_VALUES) => {
     try {
       await onResetPassword({ password: values.password, token });
+      onSignOut();
+      onAddSnackbar(
+        "Đổi mật khẩu thành công, vui lòng đăng nhập lại.",
+        "success",
+      );
+      push(SIGNIN_PATH);
     } catch (error) {
       let msg = "";
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
