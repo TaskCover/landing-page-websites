@@ -11,6 +11,10 @@ import { matchClass } from "./helpers";
 import Tooltip from "./Tooltip";
 import WarningIcon from "icons/WarningIcon";
 import ErrorIcon from "icons/ErrorIcon";
+import useToggle from "hooks/useToggle";
+import IconButton from "./IconButton";
+import UnEyeIcon from "icons/UnEyeIcon";
+import EyeIcon from "icons/EyeIcon";
 
 type CoreInputProps = Omit<TextFieldProps, "error"> & {
   title?: string;
@@ -54,14 +58,31 @@ const CoreInput = forwardRef(
       maxRows = 8,
       minRows = 4,
       startNode,
-      endNode,
+      endNode: endNodeProps,
       InputLabelProps,
       InputProps,
       rootSx,
       onChange: onChangeInput,
       onChangeValue,
+      type: typeProps,
       ...rest
     } = props;
+
+    const [isShow, , , onToggle] = useToggle(false);
+
+    const type = useMemo(() => {
+      if (!typeProps || typeProps !== "password" || !isShow) return typeProps;
+      return "text";
+    }, [typeProps, isShow]);
+
+    const endNode = useMemo(() => {
+      if (endNodeProps || typeProps !== "password") return endNodeProps;
+      return (
+        <IconButton noPadding onClick={onToggle}>
+          {isShow ? <UnEyeIcon /> : <EyeIcon />}
+        </IconButton>
+      );
+    }, [endNodeProps, typeProps, isShow, onToggle]);
 
     const hasError = useMemo(() => !!error, [error]);
 
@@ -117,6 +138,7 @@ const CoreInput = forwardRef(
         size={size}
         minRows={minRows}
         maxRows={maxRows}
+        type={type}
         {...rest}
         variant="outlined"
         label={title}

@@ -1,6 +1,6 @@
 "use client";
 
-import { typography, palette } from "public/material";
+import { typography, palette, breakpoints } from "public/material";
 import {
   ThemeProvider as MuiThemeProvider,
   createTheme,
@@ -14,6 +14,7 @@ type ThemeProviderProps = {
 const theme = createTheme({
   palette,
   typography,
+  breakpoints,
 });
 
 const ThemeProvider = (props: ThemeProviderProps) => {

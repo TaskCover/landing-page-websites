@@ -79,13 +79,21 @@ const Form = () => {
         fullWidth
         title="Mật khẩu"
         name="password"
+        type="password"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values?.password}
         error={touchedErrors?.password}
       />
       <Link
-        sx={{ mt: 1, fontSize: 14, alignSelf: "flex-end" }}
+        sx={{
+          mt: 1,
+          fontSize: 14,
+          alignSelf: "flex-end",
+          "&:hover": {
+            color: "grey.900",
+          },
+        }}
         href={FORGOT_PASSWORD_PATH}
         color="grey.400"
         underline="none"

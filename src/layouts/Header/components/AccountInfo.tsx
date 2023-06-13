@@ -43,6 +43,8 @@ const AccountInfo = () => {
           cursor: "pointer",
         }}
         onClick={onOpen}
+        ml="auto"
+        display={{ xs: "none", sm: "flex" }}
       >
         <Image
           src={LogoImage}

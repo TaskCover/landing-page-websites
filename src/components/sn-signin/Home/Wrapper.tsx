@@ -26,10 +26,24 @@ const Wrapper = (props: WrapperProps) => {
   return (
     <Stack
       flex={1}
-      height={({ spacing }) => `calc(100vh - ${spacing(8 * 2)})`}
-      m={8}
+      m={{ sm: 6, lg: 8 }}
       direction="row"
-      bgcolor="common.white"
+      sx={{
+        background: {
+          xs: "url('/images/img-auth-banner.webp') no-repeat center center",
+          sm: "none",
+        },
+
+        backgroundSize: { xs: "cover", sm: undefined },
+      }}
+      height={({ spacing }) => ({
+        xs: "100vh",
+        sm: `calc(100vh - ${spacing(6 * 2)})`,
+        lg: `calc(100vh - ${spacing(8 * 2)})`,
+      })}
+      bgcolor={{ sm: "common.white" }}
+      justifyContent={{ xs: "center", sm: "initial" }}
+      alignItems={{ xs: "center", sm: "initial" }}
     >
       {props.children}
     </Stack>

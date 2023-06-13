@@ -35,17 +35,18 @@ const MainLayout = (props: MainLayoutProps) => {
 
   return (
     <>
-      <Header />
       <Stack
         direction="row"
-        height={`calc(100vh - ${HEADER_HEIGHT}px)`}
+        width="100vw"
+        height="100vh"
         flex={1}
         overflow="hidden"
-        position="relative"
-        spacing={2}
       >
         <Sidebar />
-        {children}
+        <Stack flex={1} width="100%" height="100%" overflow="hidden">
+          <Header />
+          {children}
+        </Stack>
       </Stack>
       <Snackbar />
     </>

@@ -16,7 +16,16 @@ import CalendarIcon from "icons/CalendarIcon";
 
 export default function Page() {
   return (
-    <Stack spacing={2} my={2} p={3} overflow="auto" bgcolor="common.white">
+    <Stack
+      spacing={2}
+      mt={2}
+      ml={2}
+      p={3}
+      bgcolor="common.white"
+      maxWidth="100%"
+      overflow="auto"
+      flex={1}
+    >
       <Stack direction="row" alignItems="center" spacing={2}>
         <Button variant="primary">Button Default</Button>
         <Button variant="primary" disabled>

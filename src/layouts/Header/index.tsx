@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Stack } from "@mui/material";
-import { AccountInfo } from "./components";
+import { AccountInfo, Drawer } from "./components";
+import AppLogo from "components/AppLogo";
 
 const Header = () => {
   return (
@@ -10,11 +11,14 @@ const Header = () => {
       borderColor="grey.100"
       bgcolor="common.white"
       direction="row"
-      justifyContent="flex-end"
-      py={1.125}
+      justifyContent="space-between"
+      py={{ sm: 1.125 }}
       px={3}
+      width="100%"
     >
+      <AppLogo height={48} className="only-mobile" />
       <AccountInfo />
+      <Drawer />
     </Stack>
   );
 };
