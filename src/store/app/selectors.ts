@@ -8,14 +8,18 @@ import {
   toggleAppReady,
 } from "./reducer";
 import {
+  ChangePasswordData,
   ResetPasswordData,
   SigninData,
   SignupData,
+  UpdateUserInfoData,
+  changePassword,
   forgot,
   resetPassword,
   signin,
   signup,
   signupVerify,
+  updateUserInfo,
 } from "./actions";
 import { shallowEqual } from "react-redux";
 
@@ -144,5 +148,36 @@ export const useAuth = () => {
     onVerify,
     onForgot,
     onResetPassword,
+  };
+};
+
+export const useUserInfo = () => {
+  const dispatch = useAppDispatch();
+
+  const onUpdateUserInfo = useCallback(
+    async (data: UpdateUserInfoData) => {
+      try {
+        return await dispatch(updateUserInfo(data)).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const onChangePassword = useCallback(
+    async (data: ChangePasswordData) => {
+      try {
+        return await dispatch(changePassword(data)).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  return {
+    onUpdateUserInfo,
+    onChangePassword,
   };
 };

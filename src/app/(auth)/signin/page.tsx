@@ -1,7 +1,7 @@
 import { Wrapper, MainSection, Banner } from "components/sn-signin";
 
 export const metadata = {
-  title: "Signin | TaskCover",
+  title: "Đăng nhập | Taskcover",
 };
 
 export default function Page() {

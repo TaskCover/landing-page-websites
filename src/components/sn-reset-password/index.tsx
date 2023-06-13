@@ -111,7 +111,7 @@ const Reset = () => {
           <Input
             rootSx={sxConfig.input}
             fullWidth
-            title="Mật khẩu"
+            title="Mật khẩu mới"
             name="password"
             type="password"
             onChange={formik.handleChange}
@@ -158,7 +158,7 @@ const INITIAL_VALUES = {
 };
 
 export const validationSchema = Yup.object().shape({
-  password: Yup.string().trim().required("Mật khẩu là bắt buộc."),
+  password: Yup.string().trim().required("Mật khẩu mới là bắt buộc."),
   rePassword: Yup.string()
     .oneOf([Yup.ref("password"), ""], "Nhập lại mật khẩu không khớp.")
     .required("Nhập lại mật khẩu là bắt buộc."),

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { uuid } from "utils";
-import { resetPassword, signin, signup, signupVerify } from "./actions";
+import { signin, signup, signupVerify, updateUserInfo } from "./actions";
 import { clientStorage } from "utils/storage";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
@@ -132,7 +132,13 @@ const appSlice = createSlice({
       .addCase(signupVerify.fulfilled, (state) => {
         state.signupStep = SignupStep.SIGNUP;
         state.tokenRegister = undefined;
-      }),
+      })
+      .addCase(
+        updateUserInfo.fulfilled,
+        (state, action: PayloadAction<UserInfo>) => {
+          state.user = action.payload;
+        },
+      ),
 });
 
 export const {

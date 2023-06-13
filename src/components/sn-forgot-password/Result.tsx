@@ -52,15 +52,9 @@ const Result = () => {
 
         <Link href={SIGNIN_PATH} underline="none">
           <Button
-            variant="text"
+            variant="secondary"
             sx={{
               mt: 2,
-              backgroundColor: "primary.light",
-              color: "primary.main",
-              "&:hover": {
-                color: "primary.dark",
-                backgroundColor: "primary.light",
-              },
             }}
             startIcon={<ArrowIcon color="primary" sx={{ fontSize: 24 }} />}
           >

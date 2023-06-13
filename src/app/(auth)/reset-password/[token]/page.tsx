@@ -1,7 +1,7 @@
 import ResetPage from "components/sn-reset-password";
 
 export const metadata = {
-  title: "Reset password | TaskCover",
+  title: "Khôi phục mật khẩu | Taskcover",
 };
 
 export default function Page() {

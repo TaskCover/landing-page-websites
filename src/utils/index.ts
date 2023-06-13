@@ -63,3 +63,10 @@ export const getMessageErrorByAPI = (error) => {
     ? error
     : error["message"] ?? AN_ERROR_TRY_AGAIN;
 };
+
+export const getDataFromKeys = (data, keys: string[]) => {
+  return keys.reduce((outData, key) => {
+    outData[key] = data[key];
+    return outData;
+  }, {});
+};

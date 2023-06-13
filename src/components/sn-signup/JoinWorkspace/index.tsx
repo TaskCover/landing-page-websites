@@ -113,15 +113,7 @@ const Verify = () => {
             </Text>
 
             <Button
-              variant="text"
-              sx={{
-                backgroundColor: "primary.light",
-                color: "primary.main",
-                "&:hover": {
-                  color: "primary.dark",
-                  backgroundColor: "primary.light",
-                },
-              }}
+              variant="secondary"
               startIcon={<CrownIcon color="primary" sx={{ fontSize: 24 }} />}
               fullWidth
             >
