@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  overflow-x: hidden;
+  background-color: #f7f7fd !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s !important;
+  box-shadow: none !important;
+}
+
+a {
+  text-decoration: none;
+}
+
+.row-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.row-center-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-1 {
+  display: flex;
+  flex: 1;
+}
+
+.w-screen {
+  width: 100vw;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.rounded {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.only-mobile {
+  display: none !important;
+}
+
+@media screen and (max-width: 600px) {
+  .only-mobile {
+    display: initial !important;
+  }
+}
+
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+  img[loading="lazy"] {
+    clip-path: inset(0.6px);
+  }
+}
