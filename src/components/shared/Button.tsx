@@ -1,5 +1,6 @@
-import { ForwardedRef, forwardRef, memo } from "react";
+import { ForwardedRef, forwardRef, memo, useMemo } from "react";
 import {
+  CircularProgress,
   Button as MuiButton,
   ButtonProps as MuiButtonProps,
   buttonClasses,
@@ -25,7 +26,9 @@ declare module "@mui/material/Button/Button" {
   }
 }
 
-type CoreButtonProps = MuiButtonProps & {};
+type CoreButtonProps = MuiButtonProps & {
+  pending?: boolean;
+};
 type ButtonProps = CoreButtonProps & {
   tooltip?: string;
 };
@@ -47,11 +50,22 @@ const Button = (props: ButtonProps) => {
 const CoreButton = forwardRef(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (props: CoreButtonProps, ref: ForwardedRef<any>) => {
-    const { sx, ...rest } = props;
+    const { sx, pending, startIcon: startIconProps, ...rest } = props;
+
+    const startIcon = useMemo(
+      () =>
+        pending ? (
+          <CircularProgress size={24} color="primary" />
+        ) : (
+          startIconProps
+        ),
+      [pending, startIconProps],
+    );
 
     return (
       <MuiButton
         ref={ref}
+        startIcon={startIcon}
         sx={{ ...defaultSx, ...sx } as CoreButtonProps["sx"]}
         {...rest}
       />
@@ -71,7 +85,7 @@ const defaultSx = {
   minWidth: "fit-content",
   color: "common.white",
   textTransform: "initial",
-  overflowX: "hidden",
+  overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
   display: "inline-block",

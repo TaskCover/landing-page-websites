@@ -1,5 +1,6 @@
 import { ChangeEvent, ForwardedRef, forwardRef, memo, useMemo } from "react";
 import {
+  InputLabelProps,
   SxProps,
   TextField,
   TextFieldProps,
@@ -24,6 +25,7 @@ type CoreInputProps = Omit<TextFieldProps, "error"> & {
   rootSx?: SxProps;
   value?: string | number;
   onChangeValue?: (newValue?: string | number) => void;
+  titleSx?: SxProps;
 };
 export type InputProps = CoreInputProps & {
   tooltip?: string;
@@ -65,6 +67,7 @@ const CoreInput = forwardRef(
       onChange: onChangeInput,
       onChangeValue,
       type: typeProps,
+      titleSx,
       ...rest
     } = props;
 
@@ -103,7 +106,7 @@ const CoreInput = forwardRef(
     }, [color]);
 
     const defaultSx = useMemo(
-      () => getDefaultSx(!!title, size === "small", rootSx),
+      () => getDefaultSx(!!title, size === "small", rootSx, titleSx),
       [title, size, rootSx],
     );
 
@@ -157,6 +160,7 @@ const getDefaultSx = (
   hasTitle?: boolean,
   smallSize?: boolean,
   rootSx?: SxProps,
+  titleSx?: SxProps,
 ) => {
   return {
     [`& .${inputLabelClasses.root}`]: {
@@ -168,6 +172,7 @@ const getDefaultSx = (
       [`&.${inputBaseClasses.focused}`]: {
         color: "grey.300",
       },
+      ...titleSx,
     },
     [`& .${inputBaseClasses.root}`]: {
       backgroundColor: "grey.50",

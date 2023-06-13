@@ -12,6 +12,7 @@ import { sleep } from "utils/index";
 import { clientStorage } from "utils/storage";
 import { Endpoint } from "./endpoint";
 import { clearAuth } from "store/app/reducer";
+import { LIST_FORM_ERROR_CODE } from "./formErrorCode";
 
 const requestAbortCode = "ECONNABORTED";
 
@@ -86,8 +87,10 @@ axios.interceptors.response.use(
 
     const messageError: string | undefined =
       errorResponse?.description ?? errorResponse.code;
-
-    return Promise.reject(messageError ?? error);
+    const isFormErrorCode = LIST_FORM_ERROR_CODE.includes(errorResponse.code);
+    return Promise.reject(
+      isFormErrorCode ? errorResponse : messageError ?? error,
+    );
   },
 );
 
