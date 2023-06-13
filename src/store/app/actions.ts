@@ -21,6 +21,16 @@ export type ResetPasswordData = {
   password: string;
 };
 
+export type UpdateUserInfoData = {
+  phone: string;
+  fullname: string;
+};
+
+export type ChangePasswordData = {
+  old_password: string;
+  new_password: string;
+};
+
 export const signin = createAsyncThunk(
   "app/signin",
   async (data: SigninData) => {
@@ -108,6 +118,38 @@ export const resetPassword = createAsyncThunk(
           },
         },
       );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const updateUserInfo = createAsyncThunk(
+  "app/updateUserInfo",
+  async (data: UpdateUserInfoData) => {
+    try {
+      const response = await client.post(Endpoint.PROFILE, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const changePassword = createAsyncThunk(
+  "app/changePassword",
+  async (data: ChangePasswordData) => {
+    try {
+      const response = await client.post(Endpoint.CHANGE_PASSWORD, data);
 
       if (response?.status === HttpStatusCode.OK) {
         return response.data;

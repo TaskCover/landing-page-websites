@@ -133,14 +133,15 @@ const defaultSx = {
   },
 
   [`&.${matchClass(PREFIX_BUTTON_CLASS, SECONDARY)}`]: {
-    backgroundColor: "secondary.main",
+    backgroundColor: "primary.light",
+    color: "primary.main",
+
     "&:hover": {
-      background:
-        "linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), #1BC5BD",
+      color: "primary.dark",
+      backgroundColor: "primary.light",
     },
     [`&.${buttonClasses.disabled}`]: {
-      background:
-        "linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), #1BC5BD",
+      opacity: 0.6,
     },
   },
 

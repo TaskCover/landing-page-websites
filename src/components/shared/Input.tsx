@@ -240,6 +240,7 @@ const getDefaultSx = (
         height: "auto",
         "&.Mui-disabled": {
           color: "grey.300",
+          WebkitTextFillColor: "unset",
         },
       },
       "& fieldset": {

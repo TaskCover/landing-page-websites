@@ -38,17 +38,11 @@ const AvatarUpload = () => {
           className="rounded"
         />
         <Button
-          variant="text"
+          variant="secondary"
           sx={{
-            backgroundColor: "primary.light",
-            color: "primary.main",
             height: 32,
             fontSize: 14,
             lineHeight: 18,
-            "&:hover": {
-              color: "primary.dark",
-              backgroundColor: "primary.light",
-            },
           }}
           onClick={onChooseFile}
           size="extraSmall"

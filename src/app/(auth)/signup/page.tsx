@@ -1,7 +1,7 @@
 import SignupPage from "components/sn-signup";
 
 export const metadata = {
-  title: "Signup | TaskCover",
+  title: "Đăng ký | Taskcover",
 };
 
 export default function Page() {

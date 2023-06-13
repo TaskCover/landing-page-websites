@@ -3,8 +3,8 @@ import AppProvider from "contexts/AppProvider";
 import { openSans } from "public/material/typography";
 
 export const metadata = {
-  title: "Task Cover",
-  description: "Description for Task Cover",
+  title: "Taskcover",
+  description: "Description for Taskcover",
 };
 
 export default function RootLayout({

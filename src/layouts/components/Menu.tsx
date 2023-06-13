@@ -21,7 +21,7 @@ const Menu = () => {
   return (
     <Stack width="100%" spacing={1.5}>
       {DATA.map((item) => (
-        <MenuItem key={item.href} {...item} />
+        <MenuItem key={item.label} {...item} />
       ))}
     </Stack>
   );

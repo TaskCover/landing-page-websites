@@ -3,6 +3,8 @@ import { Stack, StackProps } from "@mui/material";
 import DoubleArrowIcon from "icons/DoubleArrowIcon";
 import Menu from "./Menu";
 import AppLogo from "components/AppLogo";
+import Link from "components/Link";
+import { HOME_PATH } from "constant/paths";
 
 const Sidebar = (props: StackProps) => {
   return (
@@ -31,7 +33,10 @@ const Sidebar = (props: StackProps) => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <AppLogo width={156} />
+        <Link href={HOME_PATH} underline="none">
+          <AppLogo width={156} />
+        </Link>
+
         <DoubleArrowIcon fontSize="medium" color="success" />
       </Stack>
       <Menu />

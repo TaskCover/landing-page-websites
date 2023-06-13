@@ -49,7 +49,16 @@ const MainLayout = (props: MainLayoutProps) => {
         <Sidebar />
         <Stack flex={1} width="100%" height="100%" overflow="hidden">
           <Header />
-          {children}
+          <Stack p={{ xs: 2, sm: 3 }} overflow="auto" flex={1}>
+            <Stack
+              bgcolor="common.white"
+              flex={1}
+              height="fit-content"
+              spacing={3}
+            >
+              {children}
+            </Stack>
+          </Stack>
         </Stack>
       </Stack>
       <Snackbar />

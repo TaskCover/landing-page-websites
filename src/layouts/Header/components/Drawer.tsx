@@ -10,10 +10,9 @@ import useToggle from "hooks/useToggle";
 import BarsIcon from "icons/BarsIcon";
 import CloseIcon from "icons/CloseIcon";
 import AppLogo from "components/AppLogo";
-import Image from "next/image";
-import LogoImage from "public/images/img-logo.webp";
 import { useAuth } from "store/app/selectors";
 import { Text } from "components/shared";
+import Avatar from "components/Avatar";
 
 const Drawer = () => {
   const [isShow, onShow, onHide] = useToggle(false);
@@ -62,15 +61,9 @@ const UserInfo = () => {
   if (!user) return null;
   return (
     <Stack direction="row" alignItems="center" spacing={1.5} py={2}>
-      <Image
-        src={LogoImage}
-        width={64}
-        height={64}
-        className="rounded"
-        alt={user?.fullname ?? user.email}
-      />
+      <Avatar size={64} alt={user.fullname} />
       <Stack>
-        <Text fontWeight={600}>{user?.fullname ?? "--"}</Text>
+        <Text fontWeight={600}>{user.fullname}</Text>
         <Text variant="body2">{user.email}</Text>
       </Stack>
     </Stack>

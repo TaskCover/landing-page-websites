@@ -1,4 +1,4 @@
-import { memo, useState, MouseEvent, useId, useEffect, useMemo } from "react";
+import { memo, useState, MouseEvent, useId } from "react";
 import {
   Box,
   ButtonBase,
@@ -10,9 +10,13 @@ import {
 } from "@mui/material";
 import { Text } from "components/shared";
 import ChevronIcon from "icons/ChevronIcon";
-import Image from "next/image";
-import LogoImage from "public/images/img-logo.webp";
 import { useAuth } from "store/app/selectors";
+import Link from "components/Link";
+import UserIcon from "icons/UserIcon";
+import { ACCOUNT_INFO_PATH, CHANGE_PASSWORD_PATH } from "constant/paths";
+import SignOutIcon from "icons/SignOutIcon";
+import Avatar from "components/Avatar";
+import KeyIcon from "icons/KeyIcon";
 
 const AccountInfo = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -46,13 +50,7 @@ const AccountInfo = () => {
         ml="auto"
         display={{ xs: "none", sm: "flex" }}
       >
-        <Image
-          src={LogoImage}
-          height={32}
-          width={32}
-          className="rounded"
-          alt={user?.fullname ?? "Logo"}
-        />
+        <Avatar size={32} alt={user.fullname} />
 
         <ChevronIcon fontSize="medium" sx={{ color: "grey.900" }} />
       </Stack>
@@ -73,7 +71,7 @@ const AccountInfo = () => {
         sx={{
           [`& .${popoverClasses.paper}`]: {
             backgroundImage: "none",
-            width: 280,
+            width: 200,
           },
         }}
         slotProps={{
@@ -97,11 +95,35 @@ const AccountInfo = () => {
             Xin chào {user?.fullname ?? user.email}
           </Text>
           <MenuList component={Box}>
+            {OPTIONS.map((item) => (
+              <MenuItem
+                className="row-center"
+                component={Link}
+                onClick={onClose}
+                href={item.href}
+                sx={{
+                  px: 2,
+                  py: 1.5,
+
+                  "& svg:not(:last-child)": {
+                    color: "grey.900",
+                  },
+                }}
+                key={item.href}
+                underline="none"
+              >
+                {item.icon}
+                <Text ml={1.5} variant="body2">
+                  {item.label}
+                </Text>
+              </MenuItem>
+            ))}
             <MenuItem
               component={ButtonBase}
               onClick={onSignOut}
               sx={{
                 width: "100%",
+                py: 1.5,
                 "&:hover": {
                   "& svg": {
                     color: "grey.900",
@@ -109,7 +131,8 @@ const AccountInfo = () => {
                 },
               }}
             >
-              <Text ml={1.5} variant="body2" fontWeight={600}>
+              <SignOutIcon color="error" />
+              <Text ml={1.5} variant="body2" color="error.main">
                 Sign out
               </Text>
             </MenuItem>
@@ -121,3 +144,12 @@ const AccountInfo = () => {
 };
 
 export default memo(AccountInfo);
+
+export const OPTIONS = [
+  { label: "Thông tin tài khoản", icon: <UserIcon />, href: ACCOUNT_INFO_PATH },
+  {
+    label: "Thay đổi mật khẩu",
+    icon: <KeyIcon />,
+    href: CHANGE_PASSWORD_PATH,
+  },
+];
