@@ -6,10 +6,20 @@ export type BodyCellProps = {
   children?: string | React.ReactNode;
   textProps?: TextProps;
   fallback?: string | React.ReactNode;
+  noWrap?: boolean;
+  tooltip?: string;
 } & TableCellProps;
 
 const BodyCell = (props: BodyCellProps) => {
-  const { children, textProps = {}, sx, fallback = "--", ...rest } = props;
+  const {
+    children,
+    textProps = {},
+    sx,
+    fallback = "--",
+    noWrap,
+    tooltip,
+    ...rest
+  } = props;
 
   return (
     <TableCell
@@ -20,11 +30,26 @@ const BodyCell = (props: BodyCellProps) => {
         fontSize: 14,
         ...sx,
       }}
+      align="center"
       {...rest}
     >
-      <Text variant="body2" color="grey.400" {...textProps}>
-        {children}
-      </Text>
+      {!children || typeof children === "string" ? (
+        <Text
+          variant="body2"
+          color="grey.400"
+          noWrap={noWrap}
+          tooltip={
+            (noWrap && children) || tooltip
+              ? ((tooltip ?? children) as string)
+              : undefined
+          }
+          {...textProps}
+        >
+          {children ?? fallback}
+        </Text>
+      ) : (
+        children
+      )}
     </TableCell>
   );
 };

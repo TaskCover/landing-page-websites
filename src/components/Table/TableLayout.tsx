@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { AN_ERROR_TRY_RELOAD_PAGE } from "constant";
 import { createRef, forwardRef, memo, useMemo } from "react";
-import CellBody from "./BodyCell";
+import CellBody, { HEIGHT_ROW } from "./BodyCell";
 import CellHeader, { HEIGHT_HEADER } from "./HeaderCell";
 
 export type CellProps = TableCellProps & {
@@ -56,6 +56,13 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     [headerList],
   );
 
+  const bodySx = refs?.reduce((out, item, index) => {
+    out[`& td:nth-of-type(${index + 1})`] = {
+      maxWidth: item?.current?.offsetWidth,
+    };
+    return out;
+  }, {});
+
   const nOfColumnsNotWidthFixed = useMemo(
     () =>
       headerList.reduce((out: number, item) => (out += !item.width ? 1 : 0), 0),
@@ -70,7 +77,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
   return (
     <Stack
       flex={1}
-      // maxHeight={HEIGHT_ROW * numberOfRows + HEIGHT_HEADER}
+      maxHeight={HEIGHT_ROW * (numberOfRows + 1) + HEIGHT_HEADER + 10}
       overflow="hidden"
       {...rest}
     >
@@ -86,7 +93,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
             <TableRow>
               {headerList.map(({ sx: sxItem, ...item }, index) => (
                 <CellHeader
-                  key={typeof item.value === "string" ? item.value : index}
+                  key={index}
                   {...item}
                   width={item.width ?? `${100 / nOfColumnsNotWidthFixed}%`}
                   sx={
@@ -110,7 +117,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
       </Box>
 
       <Box
-        // maxHeight={HEIGHT_ROW * numberOfRows}
+        maxHeight={HEIGHT_ROW * numberOfRows + 1}
         sx={{
           overflow: "auto",
         }}
@@ -121,16 +128,23 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
             <TableRow>
               {headerList?.map((item, index) => (
                 <TableCell
-                  key={typeof item.value === "string" ? item.value : index}
+                  key={index}
                   width={item.width ?? refs[index]?.current?.offsetWidth}
                   height={0}
-                  sx={{ p: 0, maxHeight: 0, border: "none" }}
+                  sx={{
+                    p: 0,
+                    maxHeight: 0,
+                    border: "none",
+                    minWidth: refs[index]?.current?.offsetWidth,
+                    maxWidth: refs[index]?.current?.offsetWidth,
+                    overflow: "hidden",
+                  }}
                 />
               ))}
             </TableRow>
           </TableHead>
 
-          <TableBody>
+          <TableBody sx={bodySx}>
             {hasAdditionalRow ? (
               <TableRow>
                 <CellBody colSpan={headerList.length} align="center">

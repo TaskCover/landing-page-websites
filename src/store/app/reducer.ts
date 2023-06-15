@@ -7,6 +7,7 @@ import {
   REFRESH_TOKEN_STORAGE_KEY,
   USER_INFO_STORAGE_KEY,
 } from "constant/index";
+import { User } from "constant/types";
 
 export interface Snackbar {
   message: string;
@@ -18,25 +19,22 @@ export type SnackbarItem = Snackbar & {
   id: string;
 };
 
-export interface UserInfo {
+export interface UserInfo extends User {
   company: string;
   created_time: string;
   department: string;
-  email: string;
-  fullname: string;
-  id: string;
   is_active: boolean;
-  phone: string;
-  position: {
-    id: string;
-    name: string;
-  };
   updated_time: string;
   date_end_using: string;
   date_start_using: string;
   is_pay_user: boolean;
-  roles: string[];
 }
+
+export type HeaderConfig = {
+  prevPath?: string;
+  title?: string;
+  searchPlaceholder?: string;
+};
 
 export enum SignupStep {
   SIGNUP = 1,
@@ -52,6 +50,8 @@ export interface AppState {
 
   signupStep: SignupStep;
   tokenRegister?: string;
+
+  headerConfig: HeaderConfig;
 }
 
 const initialState: AppState = {
@@ -59,6 +59,8 @@ const initialState: AppState = {
   snackbarList: [],
 
   signupStep: SignupStep.SIGNUP,
+
+  headerConfig: {},
 };
 
 const appSlice = createSlice({
@@ -100,6 +102,9 @@ const appSlice = createSlice({
       clientStorage.remove(ACCESS_TOKEN_STORAGE_KEY);
       clientStorage.remove(REFRESH_TOKEN_STORAGE_KEY);
       clientStorage.remove(USER_INFO_STORAGE_KEY);
+    },
+    updateHeaderConfig: (state, action: PayloadAction<HeaderConfig>) => {
+      state.headerConfig = Object.assign(state.headerConfig, action.payload);
     },
   },
   extraReducers: (builder) =>
@@ -147,6 +152,7 @@ export const {
   toggleAppReady,
   clearAuth,
   updateAuth,
+  updateHeaderConfig,
 } = appSlice.actions;
 
 export default appSlice.reducer;

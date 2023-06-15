@@ -13,3 +13,18 @@ export enum HttpStatusCode {
   TOO_MANY_REQUEST = 429,
   INTERNAL_SERVER = 500,
 }
+
+export enum DataStatus {
+  IDLE,
+  LOADING,
+  SUCCEEDED,
+  FAILED,
+}
+
+export enum DataAction {
+  DETAIL = 1,
+  CREATE,
+  UPDATE,
+  DELETE,
+  OTHER,
+}

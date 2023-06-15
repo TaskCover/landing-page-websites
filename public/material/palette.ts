@@ -32,9 +32,9 @@ const palette: PaletteOptions = {
     contrastText: "#FFFFFF",
   },
   info: {
-    main: "#3699FF",
-    light: "#E1F0FF",
-    dark: "#187DE4",
+    main: "#666666", // OK
+    light: "#ECECF3", // OK
+    dark: "#80808F", // OK
     contrastText: "#FFFFFF",
   },
   success: {

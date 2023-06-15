@@ -85,7 +85,7 @@ const Collapse = (props: CollapseProps) => {
           }}
         >
           {icon}
-          <Text color="grey.400" noWrap>
+          <Text color="grey.400" variant={{ xs: "body2", sm: "body1" }} noWrap>
             {label}
           </Text>
         </Stack>

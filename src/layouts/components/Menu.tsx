@@ -4,7 +4,12 @@ import Link from "components/Link";
 import { Text } from "components/shared";
 import { usePathname } from "next/navigation";
 import MenuDashboardIcon from "icons/MenuDashboardIcon";
-import { COST_HISTORY_PATH, EMPLOYEES_PATH, HOME_PATH } from "constant/paths";
+import {
+  COST_HISTORY_PATH,
+  EMPLOYEES_PATH,
+  HOME_PATH,
+  PROJECTS_PATH,
+} from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
 import MenuCompanyIcon from "icons/MenuCompanyIcon";
@@ -91,7 +96,12 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
         }}
       >
         {icon}
-        <Text color="grey.400" ml={icon ? undefined : 4.5} noWrap>
+        <Text
+          color="grey.400"
+          variant={{ xs: "body2", sm: "body1" }}
+          ml={icon ? undefined : 4.5}
+          noWrap
+        >
           {label}
         </Text>
       </Stack>
@@ -104,10 +114,7 @@ const DATA: MenuItemProps[] = [
   {
     label: "Project",
     icon: <MenuProjectIcon />,
-    subs: [
-      { label: "Employees", href: EMPLOYEES_PATH },
-      { label: "Cost History", href: COST_HISTORY_PATH },
-    ],
+    href: PROJECTS_PATH,
   },
   {
     label: "Task",

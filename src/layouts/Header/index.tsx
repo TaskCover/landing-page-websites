@@ -1,9 +1,15 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Stack } from "@mui/material";
 import { AccountInfo, Drawer } from "./components";
 import AppLogo from "components/AppLogo";
+import { Search } from "components/Filters";
+import { Text } from "components/shared";
+import { useHeaderConfig } from "store/app/selectors";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
+  const { title, searchPlaceholder } = useHeaderConfig();
+
   return (
     <Stack
       height={HEADER_HEIGHT}
@@ -11,13 +17,17 @@ const Header = () => {
       borderColor="grey.100"
       bgcolor="common.white"
       direction="row"
+      alignItems="center"
       justifyContent="space-between"
-      py={{ sm: 1.125 }}
       px={3}
       width="100%"
     >
       <AppLogo height={48} className="only-mobile" />
-      <AccountInfo />
+      <Text variant="h5">{title ?? ""}</Text>
+      <Stack direction="row" alignItems="center" spacing={8}>
+        {!!searchPlaceholder && <Search name="search" sx={{ pt: 0.75 }} />}
+        <AccountInfo />
+      </Stack>
       <Drawer />
     </Stack>
   );

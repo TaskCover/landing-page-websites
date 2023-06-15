@@ -29,6 +29,11 @@ const typography = {
     fontSize: 16,
     lineHeight: 1.25,
   },
+  h6: {
+    fontSize: 14,
+    lineHeight: "18px",
+    fontWeight: 600,
+  },
   body1: {
     fontSize: 16,
   },

@@ -3,9 +3,11 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   addSnackbar,
   clearAuth,
+  HeaderConfig,
   removeSnackbar,
   Snackbar,
   toggleAppReady,
+  updateHeaderConfig,
 } from "./reducer";
 import {
   ChangePasswordData,
@@ -179,5 +181,24 @@ export const useUserInfo = () => {
   return {
     onUpdateUserInfo,
     onChangePassword,
+  };
+};
+
+export const useHeaderConfig = () => {
+  const dispatch = useAppDispatch();
+
+  const { headerConfig } = useAppSelector((state) => state.app, shallowEqual);
+
+  const onUpdateHeaderConfig = useCallback(
+    (data: HeaderConfig) => {
+      dispatch(updateHeaderConfig(data));
+    },
+    [dispatch],
+  );
+
+  return {
+    headerConfig,
+    ...headerConfig,
+    onUpdateHeaderConfig,
   };
 };

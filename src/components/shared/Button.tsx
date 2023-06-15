@@ -55,7 +55,7 @@ const CoreButton = forwardRef(
     const startIcon = useMemo(
       () =>
         pending ? (
-          <CircularProgress size={24} color="primary" />
+          <CircularProgress size={20} color="primary" />
         ) : (
           startIconProps
         ),

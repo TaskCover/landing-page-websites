@@ -150,7 +150,9 @@ const UserInformation = () => {
 
       <Stack direction="row" alignItems="center" spacing={0.5}>
         <BagIcon sx={{ color: "grey.400" }} fontSize="medium" />
-        <Text color="grey.400">{`Chức vụ: ${user.position.name}`}</Text>
+        <Text color="grey.400">{`Chức vụ: ${
+          user?.position?.name ?? "--"
+        }`}</Text>
       </Stack>
       {!isEdit && (
         <Button onClick={onEditTrue} variant="secondary" size="small">

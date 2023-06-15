@@ -1,18 +1,50 @@
 import {
   Switch as MuiSwitch,
   SwitchProps as MuiSwitchProps,
+  Stack,
+  StackProps,
   switchClasses,
   SxProps,
 } from "@mui/material";
 import { ChangeEvent, memo } from "react";
+import Text, { TextProps } from "./Text";
 
-export type SwitchProps = MuiSwitchProps & {
+type CoreSwitchProps = Omit<MuiSwitchProps, "onChange"> & {
   value?: boolean;
   onChange?: (value: boolean) => void;
   disabled?: boolean;
 };
 
+export type SwitchProps = CoreSwitchProps & {
+  label?: string;
+  containerProps?: StackProps;
+  labelProps?: TextProps;
+
+  reverse?: boolean;
+};
+
 const Switch = (props: SwitchProps) => {
+  const { label, labelProps, containerProps, reverse, ...rest } = props;
+
+  if (label) {
+    return (
+      <Stack
+        direction={reverse ? "row-reverse" : "row"}
+        alignItems="center"
+        spacing={1}
+        {...containerProps}
+      >
+        <CoreSwitch {...rest} />
+        <Text variant="h6" color="grey.400" {...labelProps}>
+          {label}
+        </Text>
+      </Stack>
+    );
+  }
+  return <CoreSwitch {...rest} />;
+};
+
+const CoreSwitch = (props: CoreSwitchProps) => {
   const { onChange, value = false, ...rest } = props;
 
   const onChangeValue = (event: ChangeEvent<HTMLInputElement>) => {
@@ -39,6 +71,19 @@ const defaultSx = {
   p: 0,
   borderRadius: 4,
   boxSizing: "border-box",
+  [`&.${switchClasses.sizeSmall}`]: {
+    height: 24,
+    width: 48,
+    [`& .${switchClasses.thumb}`]: {
+      width: 20,
+      height: 20,
+    },
+    [`& .${switchClasses.switchBase}`]: {
+      [`&.${switchClasses.checked}`]: {
+        left: 10,
+      },
+    },
+  },
   [`& .${switchClasses.switchBase}`]: {
     p: 0,
     top: 2,
@@ -77,7 +122,7 @@ const defaultSx = {
     backgroundColor: "grey.300",
     border: "1px solid",
     borderColor: "grey.300",
-    borderRadius: 4,
+    borderRadius: "50%",
     boxSizing: "border-box",
   },
 };

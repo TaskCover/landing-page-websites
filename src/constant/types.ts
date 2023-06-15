@@ -1,3 +1,4 @@
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { ThemeMode } from "./enums";
 
 export interface Option {
@@ -14,4 +15,37 @@ export type ErrorResponse = {
   errors: {
     [key: string]: string;
   }[];
+};
+
+export interface BaseQueries {
+  pageIndex: number;
+  pageSize: number;
+}
+
+export interface User {
+  id: string;
+  fullname: string;
+  email: string;
+  phone?: string;
+  company: string;
+  position?: {
+    name: string;
+    id: string;
+  };
+  roles: string[];
+}
+
+export interface Paging {
+  pageIndex: number;
+  pageSize: number;
+  totalPages?: number;
+  totalItems?: number;
+}
+
+export type ItemListResponse = {
+  totalPages: number;
+  totalItems: number;
+  items: unknown[];
+  filters?: Params;
+  concat?: boolean;
 };

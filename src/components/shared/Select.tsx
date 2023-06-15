@@ -1,17 +1,20 @@
 import { memo, useId, useMemo } from "react";
 import Input, { InputProps } from "./Input";
-import { MenuItem, inputBaseClasses } from "@mui/material";
+import { CircularProgress, MenuItem, inputBaseClasses } from "@mui/material";
 import { Option } from "constant/types";
 import ChevronIcon from "icons/ChevronIcon";
 
-type SelectProps = InputProps & {
+export type SelectProps = InputProps & {
   options: Option[];
   hasAll?: boolean;
+  pending?: boolean;
 };
 
 const Select = (props: SelectProps) => {
-  const { options, hasAll, placeholder, value, ...rest } = props;
+  const { options, hasAll, placeholder, value, pending, error, ...rest } =
+    props;
   const id = useId();
+  const id2 = useId();
 
   const hasValue = useMemo(
     () => value && value !== placeholder,
@@ -37,6 +40,7 @@ const Select = (props: SelectProps) => {
       rootSx={defaultSx.input}
       defaultValue={id}
       value={value}
+      error={error}
       {...rest}
     >
       {optionList.map((option) => (
@@ -51,6 +55,15 @@ const Select = (props: SelectProps) => {
           {option.label}
         </MenuItem>
       ))}
+      {(pending || !!error) && (
+        <MenuItem sx={defaultSx.item} value={id2}>
+          {pending ? (
+            <CircularProgress size={20} sx={{ mx: "auto" }} color="primary" />
+          ) : (
+            error
+          )}
+        </MenuItem>
+      )}
     </Input>
   );
 };
@@ -79,6 +92,9 @@ const defaultSx = {
     backgroundColor: "grey.50",
     "&:hover": {
       backgroundColor: "primary.main",
+      "& svg": {
+        color: "common.white",
+      },
     },
   },
 };

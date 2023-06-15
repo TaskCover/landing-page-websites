@@ -1,4 +1,6 @@
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, DATE_FORMAT_SLASH } from "constant/index";
+import { ItemListResponse } from "constant/types";
+import { ReadonlyURLSearchParams } from "next/navigation";
 
 export const parseHashURL = (value: string) => `#${value}`;
 
@@ -32,7 +34,9 @@ export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
   };
 };
 
-export const parseURLSearchParams = (searchParams: URLSearchParams) => {
+export const parseURLSearchParams = (
+  searchParams: URLSearchParams | ReadonlyURLSearchParams,
+) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const params: any = {};
   searchParams.forEach((value, key) => {
@@ -43,6 +47,24 @@ export const parseURLSearchParams = (searchParams: URLSearchParams) => {
       : value;
   });
   return params;
+};
+
+export const stringifyURLSearchParams = (data) => {
+  data = cleanObject(data);
+  if (!Object.keys(data).length) return "";
+  return (
+    "?" +
+    Object.entries(data)
+      .reduce((out: string[], [key, value]) => {
+        if (Array.isArray(value)) {
+          out = [...out, ...value.map((valueItem) => `${key}=${valueItem}`)];
+        } else {
+          out.push(`${key}=${value}`);
+        }
+        return out;
+      }, [])
+      .join("&")
+  );
 };
 
 export const uuid = () => {
@@ -69,4 +91,72 @@ export const getDataFromKeys = (data, keys: string[]) => {
     outData[key] = data[key];
     return outData;
   }, {});
+};
+
+export const getFiltersFromQueries = (
+  queries,
+  skipValue = [undefined, null, ""],
+) => {
+  return Object.entries(queries).reduce((out, [key, value]) => {
+    if (
+      !["page", "size", "concat"].includes(key) &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      !skipValue.includes(value as any)
+    ) {
+      out[key] = value;
+    }
+    return out;
+  }, {});
+};
+
+export const refactorRawItemListResponse = (rawData: {
+  page: number;
+  total: number;
+  total_page: number;
+  data: unknown[];
+}) => {
+  return {
+    pageIndex: rawData.page + 1,
+    totalItems: rawData.total,
+    totalPages: rawData.total_page,
+    items: rawData.data,
+  } as ItemListResponse;
+};
+
+export const serverQueries = ({
+  pageIndex,
+  pageSize,
+  ...rest
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}) => {
+  return cleanObject({
+    ...rest,
+    page: pageIndex ? (pageIndex as number) - 1 : undefined,
+    size: pageSize,
+  });
+};
+
+export const formatDate = (date?: number | string, format?: string) => {
+  if (!date) return "";
+  if (!format) format = DATE_FORMAT_SLASH;
+  const dateObj = new Date(date);
+
+  const year = dateObj.getFullYear();
+
+  if (year === 1 || year === 1970) return "";
+  const day = `0${dateObj.getDate()}`.substr(-2);
+  const month = `0${dateObj.getMonth() + 1}`.substr(-2);
+  const hours = `0${dateObj.getHours()}`.substr(-2);
+  const minutes = `0${dateObj.getMinutes()}`.substr(-2);
+  const seconds = `0${dateObj.getSeconds()}`.substr(-2);
+  let dateFormat = format.replace("yyyy", year.toString());
+  dateFormat = dateFormat.replace("MM", month);
+  dateFormat = dateFormat.replace("dd", day);
+  dateFormat = dateFormat.replace("HH", hours);
+  dateFormat = dateFormat.replace("mm", minutes);
+  dateFormat = dateFormat.replace("ss", seconds);
+
+  return dateFormat;
 };

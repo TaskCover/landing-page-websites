@@ -14,8 +14,8 @@ type FormLayoutProps = {
 const FormLayout = (props: FormLayoutProps) => {
   const {
     label,
-    submitText = "Submit",
-    cancelText = "Cancel",
+    submitText = "Xác nhận",
+    cancelText = "Hủy bỏ",
     children,
     disabled,
     isLoading,
@@ -87,6 +87,11 @@ const defaultSx = {
     borderBottom: "1px solid",
     borderColor: "grey.100",
     pb: 3,
+
+    "& > button": {
+      top: 0,
+      transform: "unset",
+    },
   },
   button: {
     minWidth: 120,

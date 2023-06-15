@@ -7,6 +7,7 @@ import {
   formHelperTextClasses,
   inputBaseClasses,
   inputLabelClasses,
+  selectClasses,
 } from "@mui/material";
 import { matchClass } from "./helpers";
 import Tooltip from "./Tooltip";
@@ -17,8 +18,8 @@ import IconButton from "./IconButton";
 import UnEyeIcon from "icons/UnEyeIcon";
 import EyeIcon from "icons/EyeIcon";
 
-type CoreInputProps = Omit<TextFieldProps, "error"> & {
-  title?: string;
+type CoreInputProps = Omit<TextFieldProps, "error" | "title"> & {
+  label?: string;
   error?: string;
   startNode?: React.ReactNode;
   endNode?: React.ReactNode;
@@ -26,23 +27,25 @@ type CoreInputProps = Omit<TextFieldProps, "error"> & {
   value?: string | number;
   onChangeValue?: (newValue?: string | number) => void;
   titleSx?: SxProps;
+  onlyContent?: boolean;
 };
-export type InputProps = CoreInputProps & {
+export type InputProps = Omit<CoreInputProps, "label"> & {
   tooltip?: string;
+  title?: string;
 };
 
 const Input = forwardRef((props: InputProps, ref) => {
-  const { tooltip, ...rest } = props;
+  const { tooltip, title, ...rest } = props;
 
   if (tooltip) {
     return (
       <Tooltip title={tooltip}>
-        <CoreInput ref={ref} {...rest} />
+        <CoreInput ref={ref} label={title} {...rest} />
       </Tooltip>
     );
   }
 
-  return <CoreInput {...rest} />;
+  return <CoreInput label={title} {...rest} />;
 });
 
 Input.displayName = "Input";
@@ -55,7 +58,7 @@ const CoreInput = forwardRef(
       error,
       color: colorProps,
       helperText,
-      title,
+      label: title,
       size,
       maxRows = 8,
       minRows = 4,
@@ -68,6 +71,7 @@ const CoreInput = forwardRef(
       onChangeValue,
       type: typeProps,
       titleSx,
+      onlyContent,
       ...rest
     } = props;
 
@@ -106,8 +110,9 @@ const CoreInput = forwardRef(
     }, [color]);
 
     const defaultSx = useMemo(
-      () => getDefaultSx(!!title, size === "small", rootSx, titleSx),
-      [title, size, rootSx],
+      () =>
+        getDefaultSx(!!title, size === "small", rootSx, titleSx, onlyContent),
+      [title, size, rootSx, titleSx, onlyContent],
     );
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -161,6 +166,7 @@ const getDefaultSx = (
   smallSize?: boolean,
   rootSx?: SxProps,
   titleSx?: SxProps,
+  onlyContent?: boolean,
 ) => {
   return {
     [`& .${inputLabelClasses.root}`]: {
@@ -175,8 +181,8 @@ const getDefaultSx = (
       ...titleSx,
     },
     [`& .${inputBaseClasses.root}`]: {
-      backgroundColor: "grey.50",
-      border: "1px solid",
+      backgroundColor: onlyContent ? "transparent" : "grey.50",
+      border: onlyContent ? "none" : "1px solid",
       borderColor: "grey.50",
       boxSizing: "border-box",
       borderRadius: 1,
@@ -190,6 +196,11 @@ const getDefaultSx = (
 
       "&:hover": {
         borderColor: "grey.100",
+        color: onlyContent ? "primary.main" : undefined,
+      },
+
+      [`& .${selectClasses.outlined}`]: {
+        pr: ({ spacing }) => `${spacing(2)}!important`,
       },
 
       [`&.${inputBaseClasses.focused}`]: {

@@ -14,8 +14,8 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
   const {
     title,
     content,
-    cancelText = "Cancel",
-    submitText = "Submit",
+    cancelText = "Hủy bỏ",
+    submitText = "Xác nhận",
     onClose,
     onSubmit,
     pending,

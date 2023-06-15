@@ -2,6 +2,7 @@ import { memo, useState, MouseEvent, useId } from "react";
 import {
   Box,
   ButtonBase,
+  Divider,
   MenuItem,
   MenuList,
   Popover,
@@ -47,7 +48,6 @@ const AccountInfo = () => {
           cursor: "pointer",
         }}
         onClick={onOpen}
-        ml="auto"
         display={{ xs: "none", sm: "flex" }}
       >
         <Avatar size={32} alt={user.fullname} />
@@ -71,7 +71,8 @@ const AccountInfo = () => {
         sx={{
           [`& .${popoverClasses.paper}`]: {
             backgroundImage: "none",
-            width: 200,
+            minWidth: 216,
+            maxWidth: 300,
           },
         }}
         slotProps={{
@@ -84,17 +85,31 @@ const AccountInfo = () => {
         }}
       >
         <Stack
-          pt={2}
-          borderRadius={2}
+          p={2}
           sx={{
+            boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.1)",
             border: "1px solid",
             borderColor: "grey.100",
+            borderBottomLeftRadius: 1,
+            borderBottomRightRadius: 1,
           }}
         >
-          <Text px={2} variant="body2" fontWeight={600}>
-            Xin chào {user?.fullname ?? user.email}
-          </Text>
-          <MenuList component={Box}>
+          <Stack direction="row" alignItems="center" spacing={1.5} py={2}>
+            <Avatar size={60} alt={user.fullname} />
+            <Stack>
+              <Text variant="h6" color="grey.400">
+                {user.fullname}
+              </Text>
+              <Text variant="caption" color="grey.400">
+                {user?.position?.name ?? "--"}
+              </Text>
+              <Text variant="body2" color="grey.400">
+                {user.email}
+              </Text>
+            </Stack>
+          </Stack>
+          <Divider sx={{ backgroundColor: "grey.100" }} />
+          <MenuList component={Box} sx={{ pb: 0 }}>
             {OPTIONS.map((item) => (
               <MenuItem
                 className="row-center"
@@ -102,18 +117,23 @@ const AccountInfo = () => {
                 onClick={onClose}
                 href={item.href}
                 sx={{
-                  px: 2,
-                  py: 1.5,
+                  py: 1,
+                  px: 0,
 
-                  "& svg:not(:last-child)": {
-                    color: "grey.900",
+                  color: "grey.400",
+                  "& svg": {
+                    color: "grey.400",
+                  },
+                  "&:hover": {
+                    color: "primary.main",
+                    backgroundColor: "transparent",
                   },
                 }}
                 key={item.href}
                 underline="none"
               >
                 {item.icon}
-                <Text ml={1.5} variant="body2">
+                <Text ml={1.5} variant="body2" color="inherit">
                   {item.label}
                 </Text>
               </MenuItem>
@@ -123,16 +143,19 @@ const AccountInfo = () => {
               onClick={onSignOut}
               sx={{
                 width: "100%",
-                py: 1.5,
+                py: 1,
+                px: 0,
                 "&:hover": {
+                  color: "error.main",
+                  backgroundColor: "transparent",
                   "& svg": {
                     color: "grey.900",
                   },
                 },
               }}
             >
-              <SignOutIcon color="error" />
-              <Text ml={1.5} variant="body2" color="error.main">
+              <SignOutIcon />
+              <Text ml={1.5} variant="body2" color="inherit">
                 Sign out
               </Text>
             </MenuItem>

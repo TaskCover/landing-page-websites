@@ -1,13 +1,22 @@
 import { configureStore } from "@reduxjs/toolkit";
 import appReducer, { AppState } from "store/app/reducer";
+import projectReducer, { ProjectState } from "store/project/reducer";
+import companyReducer, { CompanyState } from "store/company/reducer";
+import globalReducer, { GlobalState } from "store/global/reducer";
 
 export interface State {
   app: AppState;
+  project: ProjectState;
+  company: CompanyState;
+  global: GlobalState;
 }
 
 export const store = configureStore({
   reducer: {
     app: appReducer,
+    project: projectReducer,
+    company: companyReducer,
+    global: globalReducer,
   },
 });
 

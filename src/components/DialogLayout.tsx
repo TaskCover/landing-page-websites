@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { IconButton, Text } from "./shared";
 import CloseIcon from "icons/CloseIcon";
+import { SlotComponentProps } from "@mui/base";
 
 export type DialogLayoutProps = Omit<DialogProps, "onSubmit"> & {
   children: React.ReactNode;
@@ -63,6 +64,12 @@ const DialogLayout = forwardRef(
         slots={{
           root: "form",
         }}
+        slotProps={{
+          root: {
+            noValidate: true,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any,
+        }}
         onSubmit={onSubmit}
         sx={{
           [`& .${backdropClasses.root}`]: {
@@ -99,7 +106,7 @@ const DialogLayout = forwardRef(
             <IconButton
               size="normal"
               noPadding
-              tooltip="Close"
+              tooltip="Đóng lại"
               onClick={onCloseProps}
               sx={{
                 color: "grey.400",
