@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo, useMemo, useState, MouseEvent } from "react";
 import { Stack } from "@mui/material";
 import Link from "components/Link";
 import { Text } from "components/shared";
@@ -15,13 +15,9 @@ import MenuTaskIcon from "icons/MenuTaskIcon";
 import MenuCompanyIcon from "icons/MenuCompanyIcon";
 import Collapse from "./Collapse";
 import { useSidebar } from "store/app/selectors";
-
-type MenuItemProps = {
-  label: string;
-  href?: string;
-  icon?: React.ReactNode;
-  subs?: MenuItemProps[];
-};
+import useBreakpoint from "hooks/useBreakpoint";
+import SubMenu from "./SubMenu";
+import { MenuItemProps } from "./helpers";
 
 const Menu = () => {
   return (
@@ -39,13 +35,15 @@ const MenuItem = (props: MenuItemProps) => {
   const { icon, href, label, subs } = props;
 
   const pathname = usePathname();
+  const { isExpandedSidebar } = useSidebar();
+  const { isLgSmaller, isSmSmaller } = useBreakpoint();
 
-  const isActiveLink = useMemo(
-    () => checkIsActiveLink(pathname, href),
-    [pathname, href],
+  const isShowLarge = useMemo(
+    () => isExpandedSidebar && !isLgSmaller,
+    [isExpandedSidebar, isLgSmaller],
   );
 
-  if (subs) {
+  if (subs && (isShowLarge || isSmSmaller)) {
     return (
       <Collapse label={label} icon={icon}>
         {subs.map((subItem) => (
@@ -59,9 +57,17 @@ const MenuItem = (props: MenuItemProps) => {
 };
 
 const LinkItem = (props: Omit<MenuItemProps, "children">) => {
-  const { icon, href, label } = props;
+  const { icon, href, label, subs } = props;
+
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const { isExpandedSidebar } = useSidebar();
+  const { isLgSmaller, isSmSmaller } = useBreakpoint();
+
+  const isShowLarge = useMemo(
+    () => isExpandedSidebar && !isLgSmaller,
+    [isExpandedSidebar, isLgSmaller],
+  );
 
   const pathname = usePathname();
 
@@ -69,6 +75,16 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
     () => checkIsActiveLink(pathname, href),
     [pathname, href],
   );
+
+  const onMouseOver = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (!subs) return;
+    setAnchorEl(event.currentTarget);
+  };
+
+  const onClose = () => {
+    if (!subs) return;
+    setAnchorEl(null);
+  };
 
   return (
     <Link
@@ -87,6 +103,10 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
         },
         display: "inline-flex",
       }}
+      tooltip={isShowLarge || isSmSmaller || !!subs ? undefined : label}
+      placement="right"
+      onMouseOver={onMouseOver}
+      onMouseOut={onClose}
     >
       <Stack
         direction="row"
@@ -99,7 +119,7 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
         }}
       >
         {icon}
-        {isExpandedSidebar && (
+        {(isShowLarge || isSmSmaller) && (
           <Text
             color="grey.400"
             variant={{ xs: "body2", sm: "body1" }}
@@ -108,6 +128,13 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
           >
             {label}
           </Text>
+        )}
+        {!!subs && (
+          <SubMenu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            options={subs}
+          />
         )}
       </Stack>
     </Link>

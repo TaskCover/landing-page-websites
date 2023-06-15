@@ -80,8 +80,8 @@ const Form = (props: FormProps) => {
   return (
     <FormLayout
       sx={{
-        minWidth: { xs: "100%", lg: 500 },
-        maxWidth: 500,
+        minWidth: { xs: "calc(100vw - 24px)", lg: 500 },
+        maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
       label={`${label} nhân viên`}

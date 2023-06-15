@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { Stack, StackProps } from "@mui/material";
 import DoubleArrowIcon from "icons/DoubleArrowIcon";
 import Menu from "./Menu";
@@ -8,9 +8,16 @@ import { HOME_PATH, UPGRADE_ACCOUNT_PATH } from "constant/paths";
 import CrownIcon from "icons/CrownIcon";
 import { Button, IconButton } from "components/shared";
 import { useSidebar } from "store/app/selectors";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const Sidebar = (props: StackProps) => {
   const { isExpandedSidebar, onToggleExpandSidebar } = useSidebar();
+  const { isLgSmaller } = useBreakpoint();
+
+  const isShowLarge = useMemo(
+    () => isExpandedSidebar && !isLgSmaller,
+    [isExpandedSidebar, isLgSmaller],
+  );
 
   const onToggle = () => {
     onToggleExpandSidebar();
@@ -19,7 +26,7 @@ const Sidebar = (props: StackProps) => {
   return (
     <Stack
       height="100%"
-      p={isExpandedSidebar ? { lg: 2.5, xl: 3 } : 1.25}
+      p={isShowLarge ? { lg: 2.5, xl: 3 } : 1.25}
       sx={{
         transition: "width .3s",
         backgroundColor: "common.white",
@@ -29,7 +36,7 @@ const Sidebar = (props: StackProps) => {
         },
       }}
       alignItems="center"
-      width={isExpandedSidebar ? LARGE_SIZE : SMALL_SIZE}
+      width={isShowLarge ? LARGE_SIZE : SMALL_SIZE}
       maxWidth={340}
       overflow="auto"
       spacing={3}
@@ -37,40 +44,41 @@ const Sidebar = (props: StackProps) => {
       {...props}
     >
       <Stack
-        width="100%"
+        width={{ lg: "100%" }}
         direction="row"
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent={isShowLarge ? "space-between" : "center"}
       >
         <Link href={HOME_PATH} underline="none">
           <AppLogo
-            width={isExpandedSidebar ? 156 : 32}
-            height={isExpandedSidebar ? undefined : 32}
-            icon={!isExpandedSidebar}
+            width={isShowLarge ? 156 : 32}
+            height={isShowLarge ? undefined : 32}
+            icon={!isShowLarge}
           />
         </Link>
-
-        <IconButton
-          onClick={onToggle}
-          noPadding
-          tooltip={isExpandedSidebar ? "Thu lại" : "Mở rộng"}
-        >
-          <DoubleArrowIcon
-            fontSize="medium"
-            color="success"
-            sx={{
-              transform: isExpandedSidebar ? undefined : "rotate(-180deg)",
-            }}
-          />
-        </IconButton>
+        {!isLgSmaller && (
+          <IconButton
+            onClick={onToggle}
+            noPadding
+            tooltip={isExpandedSidebar ? "Thu lại" : "Mở rộng"}
+          >
+            <DoubleArrowIcon
+              fontSize="medium"
+              color="success"
+              sx={{
+                transform: isExpandedSidebar ? undefined : "rotate(-180deg)",
+              }}
+            />
+          </IconButton>
+        )}
       </Stack>
 
       <Link
         href={UPGRADE_ACCOUNT_PATH}
         underline="none"
-        sx={{ width: isExpandedSidebar ? "100%" : undefined }}
+        sx={{ width: isShowLarge ? "100%" : undefined }}
       >
-        {isExpandedSidebar ? (
+        {isShowLarge ? (
           <Button
             variant="primary"
             startIcon={

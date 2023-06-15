@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import {
   Box,
   Accordion,
@@ -10,6 +10,7 @@ import {
 import { Text } from "components/shared";
 import ChevronIcon from "icons/ChevronIcon";
 import { useSidebar } from "store/app/selectors";
+import useBreakpoint from "hooks/useBreakpoint";
 
 type CollapseProps = {
   label: string;
@@ -22,6 +23,12 @@ const Collapse = (props: CollapseProps) => {
   const { label, icon, children, initCollapse = false } = props;
 
   const { isExpandedSidebar } = useSidebar();
+  const { isLgSmaller, isSmSmaller } = useBreakpoint();
+
+  const isShowLarge = useMemo(
+    () => isExpandedSidebar && !isLgSmaller,
+    [isExpandedSidebar, isLgSmaller],
+  );
 
   return (
     <Accordion
@@ -88,7 +95,7 @@ const Collapse = (props: CollapseProps) => {
           }}
         >
           {icon}
-          {isExpandedSidebar && (
+          {(isShowLarge || isSmSmaller) && (
             <Text
               color="grey.400"
               variant={{ xs: "body2", sm: "body1" }}

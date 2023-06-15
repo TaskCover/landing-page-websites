@@ -2,7 +2,7 @@
 
 import React, { memo } from "react";
 import { Stack } from "@mui/material";
-import { Button } from "components/shared";
+import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import { Dropdown, Switch } from "components/Filters";
 import { ProjectStatus, TEXT_STATUS } from "./helpers";
@@ -38,7 +38,7 @@ const Actions = () => {
   return (
     <>
       <Stack
-        direction="row"
+        direction={{ md: "row" }}
         alignItems="center"
         justifyContent="space-between"
         borderBottom="1px solid"
@@ -47,31 +47,58 @@ const Actions = () => {
         px={3}
         py={1.5}
       >
-        <Button
-          onClick={onShow}
-          startIcon={<PlusIcon />}
-          size="small"
-          variant="primary"
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          width="100%"
+          spacing={2}
         >
-          Thêm mới
-        </Button>
-        <Stack direction="row" alignItems="center" spacing={3}>
-          <Switch
-            name="latest"
-            onChange={onChangeData}
+          <Text variant="h4" display={{ md: "none" }}>
+            Quản lý dự án
+          </Text>
+          <Button
+            onClick={onShow}
+            startIcon={<PlusIcon />}
             size="small"
-            reverse
-            label="Dự án gần đây"
-            value={filters?.latest}
-          />
-          <Switch
-            name="saved"
-            onChange={onChangeData}
-            size="small"
-            reverse
-            label="Dự án đã lưu"
-            value={filters?.saved}
-          />
+            variant="primary"
+          >
+            Thêm mới
+          </Button>
+        </Stack>
+
+        <Stack
+          pt={{ xs: 2, md: 0 }}
+          direction={{ sm: "row" }}
+          alignItems="center"
+          justifyContent={{ xs: "space-between", sm: undefined }}
+          width={{ xs: "100%", sm: undefined }}
+          spacing={3}
+        >
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={3}
+            pb={{ xs: 2, sm: 0 }}
+          >
+            <Switch
+              name="latest"
+              onChange={onChangeData}
+              size="small"
+              reverse
+              label="Dự án gần đây"
+              value={filters?.latest}
+            />
+            <Switch
+              name="saved"
+              onChange={onChangeData}
+              size="small"
+              reverse
+              label="Dự án đã lưu"
+              value={filters?.saved}
+            />
+          </Stack>
+
           <Dropdown
             placeholder="Trạng thái"
             options={OPTIONS}

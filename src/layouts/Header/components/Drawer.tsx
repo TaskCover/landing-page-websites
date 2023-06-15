@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import {
   IconButton,
   Drawer as MuiDrawer,
@@ -13,9 +13,18 @@ import AppLogo from "components/AppLogo";
 import { useAuth } from "store/app/selectors";
 import { Text } from "components/shared";
 import Avatar from "components/Avatar";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const Drawer = () => {
   const [isShow, onShow, onHide] = useToggle(false);
+
+  const { isSmSmaller } = useBreakpoint();
+
+  useEffect(() => {
+    if (isSmSmaller) return;
+    onHide();
+  }, [isSmSmaller, onHide]);
+
   return (
     <>
       <IconButton onClick={onShow} className="only-mobile">

@@ -2,7 +2,7 @@
 
 import React, { memo, useCallback, useEffect, useRef } from "react";
 import { Stack } from "@mui/material";
-import { Button } from "components/shared";
+import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import { Dropdown, Search } from "components/Filters";
 import { TEXT_STATUS } from "./helpers";
@@ -53,33 +53,44 @@ const Actions = () => {
   return (
     <>
       <Stack
-        direction={{ xs: "column", sm: "row" }}
+        direction={{ xs: "column", md: "row" }}
         alignItems="center"
         justifyContent="space-between"
         borderBottom="1px solid"
         borderColor="grey.100"
         spacing={3}
-        px={{ xs: 1, sm: 3 }}
+        px={{ xs: 1, md: 3 }}
         py={1.5}
       >
-        <Button
-          onClick={onShow}
-          startIcon={<PlusIcon />}
-          size="small"
-          variant="primary"
-        >
-          Thêm mới nhân viên
-        </Button>
         <Stack
-          direction={{ xs: "column", sm: "row" }}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          width="100%"
+          spacing={2}
+        >
+          <Text variant="h4">Danh sách nhân viên</Text>
+          <Button
+            onClick={onShow}
+            startIcon={<PlusIcon />}
+            size="small"
+            variant="primary"
+          >
+            Thêm mới
+          </Button>
+        </Stack>
+
+        <Stack
+          direction={{ xs: "column", md: "row" }}
           alignItems="center"
           spacing={3}
           py={1.25}
           px={2}
           borderRadius={1}
-          flex={{ xs: 1, sm: undefined }}
+          width={{ xs: "100%", md: undefined }}
           border="1px solid"
           borderColor="grey.100"
+          justifyContent="flex-end"
         >
           <Search
             placeholder="Tìm kiếm theo email"

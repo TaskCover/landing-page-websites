@@ -1,18 +1,18 @@
 "use client";
 
-import { memo, useEffect } from "react";
+import { memo, useEffect, useMemo } from "react";
 import { TableRow } from "@mui/material";
-import { TableLayout, BodyCell, CellProps, StatusCell } from "components/Table";
+import { TableLayout, BodyCell, CellProps } from "components/Table";
 import { useProjects } from "store/project/selectors";
 import { DEFAULT_PAGING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
-import { TEXT_STATUS, COLOR_STATUS } from "./helpers";
-import BookmarkIcon from "icons/BookmarkIcon";
 import { usePathname, useRouter } from "next/navigation";
 import { cleanObject, stringifyURLSearchParams } from "utils/index";
 import { IconButton } from "components/shared";
 import PencilIcon from "icons/PencilIcon";
+import useBreakpoint from "hooks/useBreakpoint";
+import { MobileContentCell, DesktopCells } from "./components";
 
 const ItemList = () => {
   const {
@@ -30,6 +30,17 @@ const ItemList = () => {
   const { initQuery, isReady, query } = useQueryParams();
   const pathname = usePathname();
   const { push } = useRouter();
+  const { isMdSmaller } = useBreakpoint();
+
+  const headerList = useMemo(() => {
+    const additionalHeaderList = isMdSmaller
+      ? MOBILE_HEADER_LIST
+      : DESKTOP_HEADER_LIST;
+    return [
+      ...additionalHeaderList,
+      { value: "", width: isMdSmaller ? "25%" : "10%" },
+    ] as CellProps[];
+  }, [isMdSmaller]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (queries: { [key: string]: any }) => {
@@ -57,37 +68,24 @@ const ItemList = () => {
   return (
     <>
       <TableLayout
-        headerList={HEADER_LIST}
+        headerList={headerList}
         pending={isFetching}
         error={error as string}
         noData={!isIdle && totalItems === 0}
-        p={3}
+        py={3}
+        px={{ xs: 1, md: 3 }}
       >
         {items.map((item, index) => {
           return (
             <TableRow key={item.id}>
-              <BodyCell align="center">
-                {(pageIndex - 1) * pageSize + (index + 1)}
-              </BodyCell>
-              <BodyCell align="left">{item.name}</BodyCell>
-              <BodyCell align="left">{item?.owner?.fullname}</BodyCell>
-              {item.status ? (
-                <StatusCell
-                  text={TEXT_STATUS[item.status]}
-                  color={COLOR_STATUS[item.status]}
-                  width={93}
-                />
+              {isMdSmaller ? (
+                <MobileContentCell item={item} />
               ) : (
-                <BodyCell />
-              )}
-
-              <BodyCell align="center">
-                <BookmarkIcon
-                  color="primary"
-                  fontSize="medium"
-                  active={item.saved}
+                <DesktopCells
+                  item={item}
+                  order={(pageIndex - 1) * pageSize + (index + 1)}
                 />
-              </BodyCell>
+              )}
               <BodyCell align="left">
                 <IconButton tooltip="Sửa" variant="contained" size="small">
                   <PencilIcon />
@@ -113,11 +111,20 @@ const ItemList = () => {
 
 export default memo(ItemList);
 
-const HEADER_LIST: CellProps[] = [
+const DESKTOP_HEADER_LIST = [
   { value: "STT", width: "5%", align: "center" },
-  { value: "Tên dự án", width: "32.5%", align: "left" },
-  { value: "Người phụ trách", width: "30%", align: "left" },
+  {
+    value: "Tên dự án",
+    width: "30%",
+    align: "left",
+  },
+  {
+    value: "Người phụ trách",
+    width: "30%",
+    align: "left",
+  },
   { value: "Trạng thái", width: "20%" },
   { value: "", width: "5%" },
-  { value: "", width: "7.5%" },
 ];
+
+const MOBILE_HEADER_LIST = [{ value: "Dự án", width: "75%", align: "left" }];

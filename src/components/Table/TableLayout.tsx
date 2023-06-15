@@ -23,6 +23,7 @@ import {
 import CellBody, { HEIGHT_ROW } from "./BodyCell";
 import CellHeader, { HEIGHT_HEADER } from "./HeaderCell";
 import useWindowSize from "hooks/useWindowSize";
+import { useSidebar } from "store/app/selectors";
 
 export type CellProps = TableCellProps & {
   value: string | React.ReactNode;
@@ -62,6 +63,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
 
   const [bodySx, setBodySx] = useState<SxProps>({});
   const size = useWindowSize();
+  const { isExpandedSidebar } = useSidebar();
 
   const refs = useMemo(
     () => headerList?.map(() => createRef<HTMLTableCellElement>()),
@@ -90,7 +92,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
       return out;
     }, {});
     setBodySx(newBodySx);
-  }, [headerList, refs, children, size]);
+  }, [headerList, refs, children, size, isExpandedSidebar]);
 
   return (
     <Stack
@@ -116,9 +118,9 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                   width={item.width ?? `${100 / nOfColumnsNotWidthFixed}%`}
                   sx={
                     {
-                      minWidth: item?.minWidth,
                       maxWidth:
                         item.width ?? `${100 / nOfColumnsNotWidthFixed}%`,
+                      minWidth: item?.minWidth,
                       ...sxItem,
                       ...sxHeaderProps,
                     } as CellProps["sx"]

@@ -29,7 +29,6 @@ const HeaderCell = forwardRef(
             color="grey.400"
             variant="body2"
             fontWeight={600}
-            whiteSpace="nowrap"
             {...textProps}
           >
             {children}

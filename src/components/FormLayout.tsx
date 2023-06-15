@@ -68,7 +68,7 @@ export default memo(FormLayout);
 
 const defaultSx = {
   root: {
-    minWidth: 850,
+    minWidth: { xs: "calc(100vw - 24px)", sm: 850 },
     minHeight: 500,
     px: 0,
   },

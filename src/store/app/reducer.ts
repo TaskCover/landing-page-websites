@@ -152,6 +152,7 @@ const appSlice = createSlice({
         updateUserInfo.fulfilled,
         (state, action: PayloadAction<UserInfo>) => {
           state.user = action.payload;
+          clientStorage.set(USER_INFO_STORAGE_KEY, action.payload);
         },
       ),
 });

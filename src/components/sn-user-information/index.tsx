@@ -29,6 +29,7 @@ const UserInformation = () => {
     try {
       await onUpdateUserInfo(values);
       onEditFalse();
+      onAddSnackbar("Cập nhật thông tin cá nhân thành công!", "success");
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error), "error");
     }
