@@ -51,6 +51,8 @@ a {
   display: none !important;
 }
 
+
+
 @media screen and (max-width: 600px) {
   .only-mobile {
     display: initial !important;

@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { Text } from "components/shared";
 import ChevronIcon from "icons/ChevronIcon";
+import { useSidebar } from "store/app/selectors";
 
 type CollapseProps = {
   label: string;
@@ -19,6 +20,8 @@ type CollapseProps = {
 
 const Collapse = (props: CollapseProps) => {
   const { label, icon, children, initCollapse = false } = props;
+
+  const { isExpandedSidebar } = useSidebar();
 
   return (
     <Accordion
@@ -85,9 +88,15 @@ const Collapse = (props: CollapseProps) => {
           }}
         >
           {icon}
-          <Text color="grey.400" variant={{ xs: "body2", sm: "body1" }} noWrap>
-            {label}
-          </Text>
+          {isExpandedSidebar && (
+            <Text
+              color="grey.400"
+              variant={{ xs: "body2", sm: "body1" }}
+              noWrap
+            >
+              {label}
+            </Text>
+          )}
         </Stack>
       </AccordionSummary>
       {children}

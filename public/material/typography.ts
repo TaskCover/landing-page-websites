@@ -24,6 +24,11 @@ const typography = {
     fontSize: 24,
     lineHeight: 1.25,
   },
+  h4: {
+    fontWeight: 600,
+    fontSize: 20,
+    lineHeight: 1.2,
+  },
   h5: {
     fontWeight: 600,
     fontSize: 16,

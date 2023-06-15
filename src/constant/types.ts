@@ -7,6 +7,11 @@ export interface Option {
   icon?: React.ReactNode;
 }
 
+export interface Size {
+  width?: number;
+  height?: number;
+}
+
 export type Mode = ThemeMode.LIGHT | ThemeMode.DARK | "system";
 
 export type ErrorResponse = {

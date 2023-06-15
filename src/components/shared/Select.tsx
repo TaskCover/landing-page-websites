@@ -8,11 +8,19 @@ export type SelectProps = InputProps & {
   options: Option[];
   hasAll?: boolean;
   pending?: boolean;
+  showPlaceholder?: boolean;
 };
 
 const Select = (props: SelectProps) => {
-  const { options, hasAll, placeholder, value, pending, error, ...rest } =
-    props;
+  const {
+    options,
+    hasAll,
+    placeholder,
+    value,
+    pending,
+    showPlaceholder,
+    ...rest
+  } = props;
   const id = useId();
   const id2 = useId();
 
@@ -38,9 +46,7 @@ const Select = (props: SelectProps) => {
         IconComponent: ChevronIcon,
       }}
       rootSx={defaultSx.input}
-      defaultValue={id}
-      value={value}
-      error={error}
+      value={value || (showPlaceholder ? id : "")}
       {...rest}
     >
       {optionList.map((option) => (
@@ -55,13 +61,9 @@ const Select = (props: SelectProps) => {
           {option.label}
         </MenuItem>
       ))}
-      {(pending || !!error) && (
+      {pending && (
         <MenuItem sx={defaultSx.item} value={id2}>
-          {pending ? (
-            <CircularProgress size={20} sx={{ mx: "auto" }} color="primary" />
-          ) : (
-            error
-          )}
+          <CircularProgress size={20} sx={{ mx: "auto" }} color="primary" />
         </MenuItem>
       )}
     </Input>

@@ -52,6 +52,8 @@ export interface AppState {
   tokenRegister?: string;
 
   headerConfig: HeaderConfig;
+
+  isExpandedSidebar: boolean;
 }
 
 const initialState: AppState = {
@@ -61,6 +63,8 @@ const initialState: AppState = {
   signupStep: SignupStep.SIGNUP,
 
   headerConfig: {},
+
+  isExpandedSidebar: true,
 };
 
 const appSlice = createSlice({
@@ -105,6 +109,12 @@ const appSlice = createSlice({
     },
     updateHeaderConfig: (state, action: PayloadAction<HeaderConfig>) => {
       state.headerConfig = Object.assign(state.headerConfig, action.payload);
+    },
+    toggleExpandSidebar: (
+      state,
+      action: PayloadAction<boolean | undefined>,
+    ) => {
+      state.isExpandedSidebar = action?.payload ?? !state.isExpandedSidebar;
     },
   },
   extraReducers: (builder) =>
@@ -153,6 +163,7 @@ export const {
   clearAuth,
   updateAuth,
   updateHeaderConfig,
+  toggleExpandSidebar,
 } = appSlice.actions;
 
 export default appSlice.reducer;

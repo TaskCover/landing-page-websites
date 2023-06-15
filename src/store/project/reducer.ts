@@ -9,6 +9,7 @@ import { ItemListResponse, Option, Paging, User } from "constant/types";
 import { DataStatus } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { getFiltersFromQueries } from "utils/index";
+import { Position } from "store/global/reducer";
 
 export interface Member {
   id: string;
@@ -16,10 +17,7 @@ export interface Member {
   email: string;
   phone: string;
   company: string;
-  position: {
-    name: string;
-    id: string;
-  };
+  position: Position;
   roles: string[];
   position_project: {
     name: string;
@@ -31,9 +29,7 @@ export interface Member {
 export interface Project {
   id: string;
   name: string;
-  owner: {
-    roles: string[];
-  };
+  owner: User & { position: Position };
   members: Member[];
   is_active: boolean;
   saved: boolean;

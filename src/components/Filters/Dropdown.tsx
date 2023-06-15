@@ -8,7 +8,7 @@ type DropdownProps = Omit<SelectProps, "name" | "onChange"> & {
 };
 
 const Dropdown = (props: DropdownProps) => {
-  const { rootSx, name, onChange, value, ...rest } = props;
+  const { rootSx, name, onChange, value, sx, ...rest } = props;
 
   const onChangeSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -23,12 +23,18 @@ const Dropdown = (props: DropdownProps) => {
       rootSx={{
         color: value ? "primary.main" : "grey.400",
         fontWeight: 600,
+        height: 32,
         "& >svg": { fontSize: 20 },
         ...rootSx,
       }}
       name={name}
       onChange={onChangeSelect}
       value={value}
+      showPlaceholder
+      sx={{
+        height: 32,
+        ...sx,
+      }}
       {...rest}
     />
   );

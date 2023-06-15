@@ -7,6 +7,7 @@ import {
   removeSnackbar,
   Snackbar,
   toggleAppReady,
+  toggleExpandSidebar,
   updateHeaderConfig,
 } from "./reducer";
 import {
@@ -68,6 +69,23 @@ export const useAppReady = () => {
   );
 
   return { appReady, onToggleAppReady };
+};
+
+export const useSidebar = () => {
+  const dispatch = useAppDispatch();
+
+  const isExpandedSidebar = useAppSelector(
+    (state) => state.app.isExpandedSidebar,
+  );
+
+  const onToggleExpandSidebar = useCallback(
+    (newStatus?: boolean) => {
+      dispatch(toggleExpandSidebar(newStatus));
+    },
+    [dispatch],
+  );
+
+  return { isExpandedSidebar, onToggleExpandSidebar };
 };
 
 export const useAuth = () => {

@@ -7,6 +7,7 @@ import Select, { SelectProps } from "./Select";
 import InputNumber from "./InputNumber";
 import DatePicker from "./DatePicker";
 import Switch, { SwitchProps } from "./Switch";
+import Checkbox from "./Checkbox";
 
 export {
   Button,
@@ -18,6 +19,7 @@ export {
   InputNumber,
   DatePicker,
   Switch,
+  Checkbox,
 };
 
 export type { TextProps, InputProps, SelectProps, SwitchProps };

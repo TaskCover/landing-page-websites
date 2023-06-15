@@ -1,7 +1,14 @@
 "use client";
 
-import { memo, useEffect, useState, useMemo } from "react";
-import { Checkbox, TableRow } from "@mui/material";
+import {
+  memo,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+  ChangeEvent,
+} from "react";
+import { Stack, TableRow } from "@mui/material";
 import {
   TableLayout,
   BodyCell,
@@ -20,8 +27,7 @@ import {
   getDataFromKeys,
   stringifyURLSearchParams,
 } from "utils/index";
-import { IconButton, Text } from "components/shared";
-import PencilIcon from "icons/PencilIcon";
+import { IconButton, Text, Checkbox } from "components/shared";
 import { useEmployees } from "store/company/selectors";
 import CardSendIcon from "icons/CardSendIcon";
 import ConfirmDialog from "components/ConfirmDialog";
@@ -29,6 +35,9 @@ import { Employee } from "store/company/reducer";
 import { DataAction } from "constant/enums";
 import { EmployeeData } from "store/company/actions";
 import Form from "./Form";
+import TrashIcon from "icons/TrashIcon";
+import { MobileContentCell, DesktopCells } from "./components";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const ItemList = () => {
   const {
@@ -47,25 +56,57 @@ const ItemList = () => {
   const { initQuery, isReady, query } = useQueryParams();
   const pathname = usePathname();
   const { push } = useRouter();
+  const { isMdSmaller } = useBreakpoint();
 
   const [item, setItem] = useState<Employee | undefined>();
+  const [ids, setIds] = useState<string[]>([]);
   const [action, setAction] = useState<DataAction | undefined>();
 
-  const headerList: CellProps[] = useMemo(() => {
+  const isCheckedAll = useMemo(
+    () => Boolean(ids.length && ids.length === items.length),
+    [ids.length, items.length],
+  );
+
+  const onChangeAll = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const isChecked = event.target.checked;
+      if (isChecked) {
+        setIds(items.map((item) => item.id));
+      } else {
+        setIds([]);
+      }
+    },
+    [items],
+  );
+
+  const headerList = useMemo(() => {
+    const additionalHeaderList = isMdSmaller
+      ? MOBILE_HEADER_LIST
+      : DESKTOP_HEADER_LIST;
+
     return [
       {
-        value: <Checkbox />,
-        width: "3%",
+        value: <Checkbox checked={isCheckedAll} onChange={onChangeAll} />,
+        width: isMdSmaller ? "10%" : "3%",
       },
-      { value: "Họ tên", width: "15%" },
-      { value: "Email", width: "15%" },
-      { value: "Chức vụ", width: "15%" },
-      { value: "Ngày tạo", width: "13.5%" },
-      { value: "Ngày hết hạn", width: "13.5%" },
-      { value: "Trạng thái", width: "17%" },
-      { value: "", width: "8%" },
-    ];
-  }, []);
+      ...additionalHeaderList,
+      { value: "", width: isMdSmaller ? "20%" : "8%" },
+    ] as CellProps[];
+  }, [isMdSmaller, isCheckedAll, onChangeAll]);
+
+  const onToggleSelect = (id: string, indexSelected: number) => {
+    return () => {
+      if (indexSelected === -1) {
+        setIds((prevIds) => [...prevIds, id]);
+      } else {
+        setIds((prevIds) => {
+          const newIds = [...prevIds];
+          newIds.splice(indexSelected, 1);
+          return newIds;
+        });
+      }
+    };
+  };
 
   const onActionToItem = (action: DataAction, item?: Employee) => {
     return () => {
@@ -108,57 +149,114 @@ const ItemList = () => {
     };
   };
 
+  const onPay = () => {
+    //
+  };
+  const onDelete = () => {
+    //
+  };
+
   useEffect(() => {
     if (!isIdle || !isReady) return;
     onGetEmployees({ ...DEFAULT_PAGING, ...initQuery });
   }, [initQuery, isIdle, isReady, onGetEmployees]);
 
+  useEffect(() => {
+    setIds([]);
+  }, [pageIndex]);
+
   return (
     <>
-      <TableLayout
-        headerList={headerList}
-        pending={isFetching}
-        error={error as string}
-        noData={!isIdle && totalItems === 0}
-        p={3}
-      >
-        {items.map((item) => (
-          <TableRow key={item.id}>
-            <BodyCell>
-              <Checkbox />
-            </BodyCell>
-            <BodyCell>{item.fullname}</BodyCell>
-            <BodyCell noWrap>{item.email}</BodyCell>
-            <BodyCell>{item.position?.name}</BodyCell>
-            <BodyCell
-              tooltip={formatDate(item.created_time, DATE_TIME_FORMAT_SLASH)}
+      <Stack flex={1} px={{ xs: 1, md: 3 }}>
+        {!!ids.length && (
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={3}
+            p={3}
+            pb={0.25}
+          >
+            <IconButton
+              size="small"
+              onClick={onPay}
+              tooltip="Thanh toán"
+              sx={{
+                backgroundColor: "primary.light",
+                color: "text.primary",
+                p: 1,
+                "&:hover svg": {
+                  color: "common.white",
+                },
+              }}
+              variant="contained"
             >
-              {formatDate(item.created_time)}
-            </BodyCell>
-            <BodyCell
-              tooltip={formatDate(item.date_end_using, DATE_TIME_FORMAT_SLASH)}
+              <CardSendIcon fontSize="small" />
+            </IconButton>
+            <IconButton
+              size="small"
+              onClick={onDelete}
+              tooltip="Xóa bỏ"
+              sx={{
+                backgroundColor: "primary.light",
+                color: "text.primary",
+                p: 1,
+                "&:hover svg": {
+                  color: "common.white",
+                },
+              }}
+              variant="contained"
             >
-              {formatDate(item.date_end_using)}
-            </BodyCell>
-            <StatusCell
-              text={TEXT_STATUS[Number(item.is_pay_user)]}
-              color={COLOR_STATUS[Number(item.is_pay_user)]}
-              width={93}
-            />
+              <TrashIcon fontSize="small" />
+            </IconButton>
+          </Stack>
+        )}
+        <TableLayout
+          headerList={headerList}
+          pending={isFetching}
+          error={error as string}
+          noData={!isIdle && totalItems === 0}
+          pb={3}
+        >
+          {items.map((item) => {
+            const indexSelected = ids.findIndex(
+              (idValue) => idValue === item.id,
+            );
+            return (
+              <TableRow key={item.id}>
+                <BodyCell>
+                  <Checkbox
+                    checked={indexSelected !== -1}
+                    onChange={onToggleSelect(item.id, indexSelected)}
+                  />
+                </BodyCell>
+                {isMdSmaller ? (
+                  <MobileContentCell item={item} />
+                ) : (
+                  <DesktopCells item={item} />
+                )}
 
-            <ActionsCell
-              onEdit={onActionToItem(DataAction.UPDATE, item)}
-              onDelete={onDeleteEmployee(item.id)}
-              onChildClick={onActionToItem(DataAction.OTHER, item)}
-            >
-              <CardSendIcon sx={{ color: "grey.400" }} fontSize="medium" />
-              <Text ml={2} variant="body2" color="grey.400">
-                Thanh toán
-              </Text>
-            </ActionsCell>
-          </TableRow>
-        ))}
-      </TableLayout>
+                <ActionsCell
+                  onEdit={onActionToItem(DataAction.UPDATE, item)}
+                  onDelete={onDeleteEmployee(item.id)}
+                  onChildClick={onActionToItem(DataAction.OTHER, item)}
+                >
+                  {!item.is_pay_user && (
+                    <>
+                      <CardSendIcon
+                        sx={{ color: "grey.400" }}
+                        fontSize="medium"
+                      />
+                      <Text ml={2} variant="body2" color="grey.400">
+                        Thanh toán
+                      </Text>
+                    </>
+                  )}
+                </ActionsCell>
+              </TableRow>
+            );
+          })}
+        </TableLayout>
+      </Stack>
 
       <Pagination
         totalItems={totalItems}
@@ -193,3 +291,16 @@ const ItemList = () => {
 };
 
 export default memo(ItemList);
+
+const DESKTOP_HEADER_LIST = [
+  { value: "Họ tên", width: "15%", align: "left" },
+  { value: "Email", width: "15%", align: "left" },
+  { value: "Chức vụ", width: "15%" },
+  { value: "Ngày tạo", width: "13.5%" },
+  { value: "Ngày hết hạn", width: "13.5%" },
+  { value: "Trạng thái", width: "17%" },
+];
+
+const MOBILE_HEADER_LIST = [
+  { value: "Nhân viên", width: "70%", align: "left" },
+];

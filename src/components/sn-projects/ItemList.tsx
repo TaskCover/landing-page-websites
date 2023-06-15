@@ -69,8 +69,8 @@ const ItemList = () => {
               <BodyCell align="center">
                 {(pageIndex - 1) * pageSize + (index + 1)}
               </BodyCell>
-              <BodyCell>{item.name}</BodyCell>
-              <BodyCell>{item.name}</BodyCell>
+              <BodyCell align="left">{item.name}</BodyCell>
+              <BodyCell align="left">{item?.owner?.fullname}</BodyCell>
               {item.status ? (
                 <StatusCell
                   text={TEXT_STATUS[item.status]}
@@ -88,7 +88,7 @@ const ItemList = () => {
                   active={item.saved}
                 />
               </BodyCell>
-              <BodyCell>
+              <BodyCell align="left">
                 <IconButton tooltip="Sửa" variant="contained" size="small">
                   <PencilIcon />
                 </IconButton>
@@ -115,9 +115,9 @@ export default memo(ItemList);
 
 const HEADER_LIST: CellProps[] = [
   { value: "STT", width: "5%", align: "center" },
-  { value: "Tên dự án", width: "35%" },
-  { value: "Người phụ trách", width: "30%" },
+  { value: "Tên dự án", width: "32.5%", align: "left" },
+  { value: "Người phụ trách", width: "30%", align: "left" },
   { value: "Trạng thái", width: "20%" },
   { value: "", width: "5%" },
-  { value: "", width: "5%" },
+  { value: "", width: "7.5%" },
 ];

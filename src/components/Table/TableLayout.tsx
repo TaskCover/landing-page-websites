@@ -3,6 +3,7 @@ import {
   CircularProgress,
   Stack,
   StackProps,
+  SxProps,
   Table,
   TableBody,
   TableCell,
@@ -11,9 +12,17 @@ import {
   TableRow,
 } from "@mui/material";
 import { AN_ERROR_TRY_RELOAD_PAGE } from "constant";
-import { createRef, forwardRef, memo, useMemo } from "react";
+import {
+  createRef,
+  forwardRef,
+  memo,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import CellBody, { HEIGHT_ROW } from "./BodyCell";
 import CellHeader, { HEIGHT_HEADER } from "./HeaderCell";
+import useWindowSize from "hooks/useWindowSize";
 
 export type CellProps = TableCellProps & {
   value: string | React.ReactNode;
@@ -51,17 +60,13 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
 
   const { sx: sxHeaderProps, ...restHeaderProps } = headerProps;
 
+  const [bodySx, setBodySx] = useState<SxProps>({});
+  const size = useWindowSize();
+
   const refs = useMemo(
     () => headerList?.map(() => createRef<HTMLTableCellElement>()),
     [headerList],
   );
-
-  const bodySx = refs?.reduce((out, item, index) => {
-    out[`& td:nth-of-type(${index + 1})`] = {
-      maxWidth: item?.current?.offsetWidth,
-    };
-    return out;
-  }, {});
 
   const nOfColumnsNotWidthFixed = useMemo(
     () =>
@@ -73,6 +78,19 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     () => Boolean(error || pending || noData),
     [error, noData, pending],
   );
+
+  useEffect(() => {
+    const newBodySx = refs?.reduce((out, item, index) => {
+      out[`& td:nth-of-type(${index + 1}), & th:nth-of-type(${index + 1})`] = {
+        minWidth: item?.current?.offsetWidth,
+        width: item?.current?.offsetWidth,
+        maxWidth: item?.current?.offsetWidth,
+        overflowX: "hidden",
+      };
+      return out;
+    }, {});
+    setBodySx(newBodySx);
+  }, [headerList, refs, children, size]);
 
   return (
     <Stack
@@ -117,42 +135,19 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
       </Box>
 
       <Box
-        maxHeight={HEIGHT_ROW * numberOfRows + 1}
+        maxHeight={HEIGHT_ROW * numberOfRows}
         sx={{
           overflow: "auto",
         }}
         ref={ref}
       >
         <Table>
-          <TableHead>
-            <TableRow>
-              {headerList?.map((item, index) => (
-                <TableCell
-                  key={index}
-                  width={item.width ?? refs[index]?.current?.offsetWidth}
-                  height={0}
-                  sx={{
-                    p: 0,
-                    maxHeight: 0,
-                    border: "none",
-                    minWidth: refs[index]?.current?.offsetWidth,
-                    maxWidth: refs[index]?.current?.offsetWidth,
-                    overflow: "hidden",
-                  }}
-                />
-              ))}
-            </TableRow>
-          </TableHead>
-
           <TableBody sx={bodySx}>
             {hasAdditionalRow ? (
               <TableRow>
                 <CellBody colSpan={headerList.length} align="center">
                   {pending ? (
-                    <CircularProgress
-                      size={20}
-                      sx={{ color: "common.white" }}
-                    />
+                    <CircularProgress size={20} color="primary" />
                   ) : Boolean(error) ? (
                     error ?? AN_ERROR_TRY_RELOAD_PAGE
                   ) : noData ? (

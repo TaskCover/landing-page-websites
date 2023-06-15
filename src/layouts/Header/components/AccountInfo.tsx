@@ -9,15 +9,20 @@ import {
   popoverClasses,
   Stack,
 } from "@mui/material";
-import { Text } from "components/shared";
+import { Button, Text } from "components/shared";
 import ChevronIcon from "icons/ChevronIcon";
 import { useAuth } from "store/app/selectors";
 import Link from "components/Link";
 import UserIcon from "icons/UserIcon";
-import { ACCOUNT_INFO_PATH, CHANGE_PASSWORD_PATH } from "constant/paths";
+import {
+  ACCOUNT_INFO_PATH,
+  CHANGE_PASSWORD_PATH,
+  UPGRADE_ACCOUNT_PATH,
+} from "constant/paths";
 import SignOutIcon from "icons/SignOutIcon";
 import Avatar from "components/Avatar";
 import KeyIcon from "icons/KeyIcon";
+import CrownIcon from "icons/CrownIcon";
 
 const AccountInfo = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -109,6 +114,17 @@ const AccountInfo = () => {
             </Stack>
           </Stack>
           <Divider sx={{ backgroundColor: "grey.100" }} />
+          <Link href={UPGRADE_ACCOUNT_PATH} underline="none">
+            <Button
+              variant="secondary"
+              startIcon={<CrownIcon sx={{ fontSize: 20 }} />}
+              size="extraSmall"
+              sx={{ mt: 1 }}
+            >
+              Upgrade account
+            </Button>
+          </Link>
+
           <MenuList component={Box} sx={{ pb: 0 }}>
             {OPTIONS.map((item) => (
               <MenuItem

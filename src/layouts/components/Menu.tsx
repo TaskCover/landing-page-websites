@@ -14,6 +14,7 @@ import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
 import MenuCompanyIcon from "icons/MenuCompanyIcon";
 import Collapse from "./Collapse";
+import { useSidebar } from "store/app/selectors";
 
 type MenuItemProps = {
   label: string;
@@ -60,6 +61,8 @@ const MenuItem = (props: MenuItemProps) => {
 const LinkItem = (props: Omit<MenuItemProps, "children">) => {
   const { icon, href, label } = props;
 
+  const { isExpandedSidebar } = useSidebar();
+
   const pathname = usePathname();
 
   const isActiveLink = useMemo(
@@ -96,14 +99,16 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
         }}
       >
         {icon}
-        <Text
-          color="grey.400"
-          variant={{ xs: "body2", sm: "body1" }}
-          ml={icon ? undefined : 4.5}
-          noWrap
-        >
-          {label}
-        </Text>
+        {isExpandedSidebar && (
+          <Text
+            color="grey.400"
+            variant={{ xs: "body2", sm: "body1" }}
+            ml={icon ? undefined : 4.5}
+            noWrap
+          >
+            {label}
+          </Text>
+        )}
       </Stack>
     </Link>
   );

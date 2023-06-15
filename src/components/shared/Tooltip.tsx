@@ -18,11 +18,11 @@ const Tooltip = (props: TooltipProps) => {
         sx: {
           [`& .${tooltipClasses.tooltip}`]: {
             backgroundColor: "grey.900",
-            fontSize: 14,
+            fontSize: 12,
             lineHeight: 1.25,
             color: "grey.A200",
-            px: 2.625,
-            py: 1,
+            px: 1.5,
+            py: 0.75,
             borderRadius: 0.5,
             ...sx,
           },
