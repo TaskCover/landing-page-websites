@@ -1,6 +1,8 @@
 import { AN_ERROR_TRY_AGAIN, DATE_FORMAT_SLASH } from "constant/index";
 import { ItemListResponse, OptionFormatNumber } from "constant/types";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { ReadonlyURLSearchParams } from "next/navigation";
+import StringFormat from "string-format";
 
 export const parseHashURL = (value: string) => `#${value}`;
 
@@ -186,4 +188,14 @@ export const formatNumber = (
     }) +
     suffixParsed
   );
+};
+
+export const getPath = (
+  basePath: string,
+  queries?: Params,
+  data?: { [key: string]: string },
+) => {
+  const queryString = stringifyURLSearchParams(queries);
+  const path = data ? StringFormat(basePath, data) : basePath;
+  return path + queryString;
 };

@@ -28,10 +28,14 @@ const InformationProjectPage = () => {
           <Text variant="caption" color="grey.400">
             Trạng thái
           </Text>
-          <TextStatus
-            color={COLOR_STATUS[item.status]}
-            text={TEXT_STATUS[item.status]}
-          />
+          {item.status ? (
+            <TextStatus
+              color={COLOR_STATUS[item.status]}
+              text={TEXT_STATUS[item.status]}
+            />
+          ) : (
+            <Text variant="body2">{"--"}</Text>
+          )}
         </Stack>
       </Stack>
       <Text variant="h6" color="grey.400">{`#${item.id}`}</Text>

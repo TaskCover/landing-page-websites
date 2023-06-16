@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { TableCell, TableCellProps } from "@mui/material";
 import { Text, TextProps } from "components/shared";
+import Link from "components/Link";
 
 export type BodyCellProps = {
   children?: string | React.ReactNode;
@@ -8,6 +9,7 @@ export type BodyCellProps = {
   fallback?: string | React.ReactNode;
   noWrap?: boolean;
   tooltip?: string;
+  href?: string;
 } & TableCellProps;
 
 const BodyCell = (props: BodyCellProps) => {
@@ -18,8 +20,33 @@ const BodyCell = (props: BodyCellProps) => {
     fallback = "--",
     noWrap,
     tooltip,
+    href,
     ...rest
   } = props;
+
+  const renderContent = () => {
+    return (
+      <>
+        {!children || typeof children === "string" ? (
+          <Text
+            variant="body2"
+            color={href ? "inherit" : "grey.400"}
+            noWrap={noWrap}
+            tooltip={
+              (noWrap && children) || tooltip
+                ? ((tooltip ?? children) as string)
+                : undefined
+            }
+            {...textProps}
+          >
+            {children ?? fallback}
+          </Text>
+        ) : (
+          children
+        )}
+      </>
+    );
+  };
 
   return (
     <TableCell
@@ -33,22 +60,21 @@ const BodyCell = (props: BodyCellProps) => {
       align="center"
       {...rest}
     >
-      {!children || typeof children === "string" ? (
-        <Text
-          variant="body2"
-          color="grey.400"
-          noWrap={noWrap}
-          tooltip={
-            (noWrap && children) || tooltip
-              ? ((tooltip ?? children) as string)
-              : undefined
-          }
-          {...textProps}
+      {href ? (
+        <Link
+          href={href}
+          sx={{
+            color: "grey.400",
+            "&:hover": {
+              color: "primary.main",
+            },
+          }}
+          underline="none"
         >
-          {children ?? fallback}
-        </Text>
+          {renderContent()}
+        </Link>
       ) : (
-        children
+        renderContent()
       )}
     </TableCell>
   );

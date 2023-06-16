@@ -3,6 +3,8 @@ import { BodyCell, StatusCell } from "components/Table";
 import { TEXT_STATUS, COLOR_STATUS } from "../helpers";
 import BookmarkIcon from "icons/BookmarkIcon";
 import { Project } from "store/project/reducer";
+import { getPath } from "utils/index";
+import { PROJECT_INFORMATION_PATH } from "constant/paths";
 
 type DesktopCellsProps = {
   item: Project;
@@ -14,7 +16,12 @@ const DesktopCells = (props: DesktopCellsProps) => {
   return (
     <>
       <BodyCell align="center">{order}</BodyCell>
-      <BodyCell align="left">{item.name}</BodyCell>
+      <BodyCell
+        href={getPath(PROJECT_INFORMATION_PATH, undefined, { id: item.id })}
+        align="left"
+      >
+        {item.name}
+      </BodyCell>
       <BodyCell align="left">{item?.owner?.fullname}</BodyCell>
       {item.status ? (
         <StatusCell
