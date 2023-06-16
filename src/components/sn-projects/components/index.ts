@@ -1,4 +1,5 @@
 import MobileContentCell from "./MobileContentCell";
 import DesktopCells from "./DesktopCells";
+import SelectMembers from "./SelectMembers";
 
-export { MobileContentCell, DesktopCells };
+export { MobileContentCell, DesktopCells, SelectMembers };

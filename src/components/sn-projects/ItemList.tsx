@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useEffect, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { TableRow } from "@mui/material";
 import { TableLayout, BodyCell, CellProps } from "components/Table";
 import { useProjects } from "store/project/selectors";
@@ -13,6 +13,12 @@ import { IconButton } from "components/shared";
 import PencilIcon from "icons/PencilIcon";
 import useBreakpoint from "hooks/useBreakpoint";
 import { MobileContentCell, DesktopCells } from "./components";
+import Form, { ProjectDataForm } from "./Form";
+import { Member, Project } from "store/project/reducer";
+import { ProjectData, getMembersOfProject } from "store/project/actions";
+import { DataAction } from "constant/enums";
+import { INITIAL_VALUES } from "./helpers";
+import { useAppDispatch } from "store/hooks";
 
 const ItemList = () => {
   const {
@@ -25,12 +31,17 @@ const ItemList = () => {
     pageIndex,
     totalPages,
     onGetProjects,
+    onUpdateProject: onUpdateProjectAction,
   } = useProjects();
+  const dispatch = useAppDispatch();
 
   const { initQuery, isReady, query } = useQueryParams();
   const pathname = usePathname();
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
+
+  const [item, setItem] = useState<Project | undefined>();
+  const [action, setAction] = useState<DataAction | undefined>();
 
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
@@ -41,6 +52,40 @@ const ItemList = () => {
       { value: "", width: isMdSmaller ? "25%" : "10%" },
     ] as CellProps[];
   }, [isMdSmaller]);
+
+  const initValues = useMemo(
+    () =>
+      item
+        ? {
+            name: item.name,
+            description: item.description,
+            owner: item.owner.id,
+            type_project: item.type_project.id,
+            start_date: item.start_date,
+            end_date: item.end_date,
+            expected_cost: item.expected_cost,
+            working_hours: item.working_hours,
+            members: item.members.map(({ id, fullname, ...rest }) => ({
+              id,
+              fullname,
+              position: rest.position_project.id,
+            })),
+          }
+        : INITIAL_VALUES,
+    [item],
+  );
+
+  const onActionToItem = (action: DataAction, item?: Project) => {
+    return () => {
+      item && setItem(item);
+      setAction(action);
+    };
+  };
+
+  const onResetAction = () => {
+    setItem(undefined);
+    setAction(undefined);
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (queries: { [key: string]: any }) => {
@@ -58,6 +103,11 @@ const ItemList = () => {
 
   const onChangeSize = (newPageSize: number) => {
     onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
+  };
+
+  const onUpdateProject = async (data: ProjectData) => {
+    if (!item) return;
+    return await onUpdateProjectAction(item.id, data);
   };
 
   useEffect(() => {
@@ -87,7 +137,12 @@ const ItemList = () => {
                 />
               )}
               <BodyCell align="left">
-                <IconButton tooltip="Sửa" variant="contained" size="small">
+                <IconButton
+                  onClick={onActionToItem(DataAction.UPDATE, item)}
+                  tooltip="Sửa"
+                  variant="contained"
+                  size="small"
+                >
                   <PencilIcon />
                 </IconButton>
               </BodyCell>
@@ -105,6 +160,16 @@ const ItemList = () => {
         onChangePage={onChangePage}
         onChangeSize={onChangeSize}
       />
+
+      {action === DataAction.UPDATE && (
+        <Form
+          open
+          onClose={onResetAction}
+          type={DataAction.UPDATE}
+          initialValues={initValues as unknown as ProjectDataForm}
+          onSubmit={onUpdateProject}
+        />
+      )}
     </>
   );
 };

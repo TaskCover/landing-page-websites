@@ -85,7 +85,7 @@ const Form = (props: FormProps) => {
         minHeight: "auto",
       }}
       label={`${label} nhân viên`}
-      isLoading={formik.isSubmitting}
+      submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
       {...rest}

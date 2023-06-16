@@ -3,22 +3,26 @@ import Input, { InputProps } from "./Input";
 import { InputAdornment } from "@mui/material";
 import ChevronIcon from "icons/ChevronIcon";
 
-type InputNumberProps = InputProps & {
+type InputNumberProps = Omit<InputProps, "name" | "onChange"> & {
   numberType?: "integer" | "float";
   negative?: boolean;
+  name: string;
+  onChange: (name: string, newValue?: string | number) => void;
 };
 
 const InputNumber = (props: InputNumberProps) => {
   const {
     value,
     inputProps,
-    onChangeValue,
+    onChange,
     numberType = "float",
     negative,
+    name,
+    onBlur: onBlurProps,
     ...rest
   } = props;
 
-  const onChange = (newValue?: string | number) => {
+  const onChangeValue = (newValue?: string | number) => {
     let parsedValue = newValue ? newValue.toString() : "";
     if (
       parsedValue &&
@@ -37,14 +41,14 @@ const InputNumber = (props: InputNumberProps) => {
         if (Number(parsedValue) === Infinity) {
           parsedValue = "";
         }
-        onChangeValue && onChangeValue(parsedValue);
+        onChange(name, parsedValue);
       }
       // Handle negative
       if (negative && parsedValue === "-") {
-        onChangeValue && onChangeValue(parsedValue);
+        onChange(name, parsedValue);
       }
     } else {
-      onChangeValue && onChangeValue(value);
+      onChange(name, value);
     }
   };
 
@@ -71,14 +75,15 @@ const InputNumber = (props: InputNumberProps) => {
         isNaN(typeof value === "string" ? Number(value) : value)
           ? 1
           : Number(value) + num;
-      onChangeValue && onChangeValue(newValue);
+      onChange(name, newValue);
     };
   };
 
-  const onBlur = () => {
+  const onBlur = (event) => {
     const numberable = Boolean(value || (value !== "" && value == 0));
     const newValue = numberable ? Number(value) : undefined;
-    onChangeValue && onChangeValue(newValue);
+    onChange(name, newValue);
+    onBlurProps && onBlurProps(event);
   };
 
   return (
@@ -88,7 +93,8 @@ const InputNumber = (props: InputNumberProps) => {
         onBlur,
         ...inputProps,
       }}
-      onChangeValue={onChange}
+      onChangeValue={onChangeValue}
+      name={name}
       {...rest}
       endNode={
         <InputAdornment sx={sxConfigs.adornment} position="end">

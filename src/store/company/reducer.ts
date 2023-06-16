@@ -33,7 +33,7 @@ export interface CompanyState {
   employeesError?: string;
   employeesFilters: Omit<GetEmployeeListQueries, "pageIndex" | "pageSize">;
 
-  employeeOptions: Option[];
+  employeeOptions: Employee[];
   employeeOptionsStatus: DataStatus;
   employeeOptionsPaging: Paging;
   employeeOptionsError?: string;
@@ -83,11 +83,9 @@ const companySlice = createSlice({
           const { items, concat, ...paging } = action.payload;
 
           if (concat) {
-            const newOptions = (items as Employee[]).map((item) => ({
-              label: item.fullname,
-              value: item.id,
-            }));
-            state.employeeOptions = state.employeeOptions.concat(newOptions);
+            state.employeeOptions = state.employeeOptions.concat(
+              items as Employee[],
+            );
           } else {
             state.employees = items as Employee[];
           }

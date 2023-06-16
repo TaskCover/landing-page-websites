@@ -17,3 +17,21 @@ export const COLOR_STATUS: { [key in ProjectStatus]: AlertColor } = {
   [ProjectStatus.PAUSE]: "warning",
   [ProjectStatus.CLOSE]: "error",
 };
+
+export type Member = {
+  id: string;
+  position: string;
+  fullname: string;
+};
+
+export const INITIAL_VALUES = {
+  name: "",
+  owner: "",
+  start_date: "",
+  end_date: "",
+  expected_cost: "",
+  working_hours: "",
+  description: "",
+  members: [],
+  type_project: "",
+};

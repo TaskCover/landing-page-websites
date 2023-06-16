@@ -72,7 +72,7 @@ export const useEmployeeOptions = () => {
   const dispatch = useAppDispatch();
 
   const {
-    employeeOptions: options,
+    employeeOptions: items,
     employeeOptionsStatus: status,
     employeeOptionsError: error,
     employeeOptionsFilters: filters = {},
@@ -80,6 +80,15 @@ export const useEmployeeOptions = () => {
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.company.employeeOptionsPaging,
     shallowEqual,
+  );
+
+  const options = useMemo(
+    () =>
+      items.map((item) => ({
+        label: item.fullname,
+        value: item.id,
+      })),
+    [items],
   );
 
   const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
@@ -93,6 +102,7 @@ export const useEmployeeOptions = () => {
   );
 
   return {
+    items,
     options,
     status,
     error,

@@ -18,6 +18,10 @@ const Avatar = (props: AvatarProps) => {
       alt={alt}
       width={size}
       height={size}
+      style={{
+        minWidth: size,
+        maxWidth: size,
+      }}
       {...rest}
     />
   );

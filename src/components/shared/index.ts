@@ -8,6 +8,7 @@ import InputNumber from "./InputNumber";
 import DatePicker from "./DatePicker";
 import Switch, { SwitchProps } from "./Switch";
 import Checkbox from "./Checkbox";
+import Upload from "./Upload";
 
 export {
   Button,
@@ -20,6 +21,7 @@ export {
   DatePicker,
   Switch,
   Checkbox,
+  Upload,
 };
 
 export type { TextProps, InputProps, SelectProps, SwitchProps };

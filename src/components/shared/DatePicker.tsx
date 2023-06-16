@@ -4,9 +4,10 @@ import Input, { InputProps } from "./Input";
 import CalendarIcon from "icons/CalendarIcon";
 import "react-datepicker/dist/react-datepicker.css";
 
-type DatePickerProps = InputProps & {
+type DatePickerProps = Omit<InputProps, "name" | "onChange"> & {
   pickerProps?: Omit<ReactDatePickerProps, "onChange">;
-  onChange?: (newDate?: Date) => void;
+  onChange: (name: string, newDate?: Date) => void;
+  name: string;
 };
 
 const DatePicker = (props: DatePickerProps) => {
@@ -18,11 +19,12 @@ const DatePicker = (props: DatePickerProps) => {
     pickerProps,
     onChange,
     value,
+    name,
     ...rest
   } = props;
 
   const onChangeDate = (date: Date | null) => {
-    onChange && onChange(date || undefined);
+    onChange(name, date || undefined);
   };
   return (
     <LibDatePicker
@@ -32,6 +34,7 @@ const DatePicker = (props: DatePickerProps) => {
       onChange={onChangeDate}
       required={required}
       disabled={disabled}
+      name={name}
       {...pickerProps}
       customInput={<DatePickerInput {...rest} />}
     />

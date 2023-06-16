@@ -1,14 +1,24 @@
-import { memo, useId, useMemo } from "react";
+import { memo, useId, useMemo, useRef } from "react";
 import Input, { InputProps } from "./Input";
 import { CircularProgress, MenuItem, inputBaseClasses } from "@mui/material";
 import { Option } from "constant/types";
 import ChevronIcon from "icons/ChevronIcon";
+import { Search } from "components/Filters";
+import useEventListener from "hooks/useEventListener";
+import { debounce, uuid } from "utils/index";
 
 export type SelectProps = InputProps & {
   options: Option[];
   hasAll?: boolean;
   pending?: boolean;
   showPlaceholder?: boolean;
+  onEndReached?: () => void;
+  onChangeSearch?: (name: string, newValue?: string | number) => void;
+  searchProps?: {
+    name: string;
+    placeholder?: string;
+    value?: string | number;
+  };
 };
 
 const Select = (props: SelectProps) => {
@@ -19,10 +29,13 @@ const Select = (props: SelectProps) => {
     value,
     pending,
     showPlaceholder,
+    onEndReached,
+    onChangeSearch,
+    searchProps,
     ...rest
   } = props;
-  const id = useId();
-  const id2 = useId();
+  const idPlaceholder = useId();
+  const idPending = useId();
 
   const hasValue = useMemo(
     () => value && value !== placeholder,
@@ -32,28 +45,59 @@ const Select = (props: SelectProps) => {
   const optionList = useMemo(() => {
     if (hasAll || placeholder) {
       return [
-        { label: hasAll && hasValue ? "All" : placeholder, value: id },
+        {
+          label: hasAll && hasValue ? "All" : placeholder,
+          value: idPlaceholder,
+        },
         ...options,
       ];
     }
     return options;
-  }, [hasAll, placeholder, options, hasValue, id]);
+  }, [hasAll, placeholder, options, hasValue, idPlaceholder]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onScroll = debounce((event: any) => {
+    const { scrollTop, clientHeight, scrollHeight } = event.target;
+
+    if (scrollTop + clientHeight >= scrollHeight - WRONG_NUMBER) {
+      onEndReached && onEndReached();
+    }
+  }, 250);
 
   return (
     <Input
       select
       SelectProps={{
         IconComponent: ChevronIcon,
+        MenuProps: {
+          PaperProps: {
+            onScroll,
+          },
+          MenuListProps: {
+            sx: {
+              maxHeight: 300,
+            },
+          },
+        },
       }}
       rootSx={defaultSx.input}
-      value={value || (showPlaceholder ? id : "")}
+      value={value || (showPlaceholder ? idPlaceholder : "")}
       {...rest}
     >
+      {!!onChangeSearch && (
+        <Search
+          fullWidth
+          sx={{ px: 2, mb: 0.75 }}
+          name="email"
+          onChange={onChangeSearch}
+          {...searchProps}
+        />
+      )}
       {optionList.map((option) => (
         <MenuItem
           sx={{
             ...defaultSx.item,
-            display: option.value === id ? "none" : undefined,
+            display: option.value === idPlaceholder ? "none" : undefined,
           }}
           key={option.value}
           value={option.value}
@@ -61,8 +105,9 @@ const Select = (props: SelectProps) => {
           {option.label}
         </MenuItem>
       ))}
+
       {pending && (
-        <MenuItem sx={defaultSx.item} value={id2}>
+        <MenuItem sx={defaultSx.item} value={idPending}>
           <CircularProgress size={20} sx={{ mx: "auto" }} color="primary" />
         </MenuItem>
       )}
@@ -100,3 +145,5 @@ const defaultSx = {
     },
   },
 };
+
+const WRONG_NUMBER = 10;

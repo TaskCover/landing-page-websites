@@ -177,21 +177,74 @@ export default function Page() {
         />
       </Stack>
       <Stack direction="row" alignItems="center" spacing={2}>
-        <InputNumber placeholder="Number" />
-        <InputNumber placeholder="Number" title="Title" />
-        <InputNumber placeholder="Number" size="small" />
-        <InputNumber placeholder="Number" size="small" title="Title" />
+        <InputNumber
+          placeholder="Number"
+          name="a"
+          onChange={() => {
+            //
+          }}
+        />
+        <InputNumber
+          placeholder="Number"
+          title="Title"
+          name="a"
+          onChange={() => {
+            //
+          }}
+        />
+        <InputNumber
+          placeholder="Number"
+          size="small"
+          name="a"
+          onChange={() => {
+            //
+          }}
+        />
+        <InputNumber
+          placeholder="Number"
+          size="small"
+          title="Title"
+          name="a"
+          onChange={() => {
+            //
+          }}
+        />
       </Stack>
       <Stack direction="row" alignItems="center" spacing={2}>
-        <DatePicker placeholder="Text" />
-        <DatePicker placeholder="Text" size="medium" />
-        <DatePicker placeholder="Text" size="small" title="Title" />
+        <DatePicker
+          placeholder="Text"
+          name="a"
+          onChange={() => {
+            //
+          }}
+        />
+        <DatePicker
+          placeholder="Text"
+          size="medium"
+          name="a"
+          onChange={() => {
+            //
+          }}
+        />
+        <DatePicker
+          placeholder="Text"
+          size="small"
+          title="Title"
+          name="a"
+          onChange={() => {
+            //
+          }}
+        />
         <DatePicker
           placeholder="Text"
           size="small"
           color="error"
           helperText="Error"
           title="Title"
+          name="a"
+          onChange={() => {
+            //
+          }}
         />
         <DatePicker
           placeholder="Text"
@@ -199,6 +252,10 @@ export default function Page() {
           color="warning"
           helperText="Warning"
           title="Title"
+          name="a"
+          onChange={() => {
+            //
+          }}
         />
         <Switch />
         <Switch disabled />

@@ -4,6 +4,7 @@ import {
   ProjectData,
   createProject,
   getProjectList,
+  getProjectTypeList,
   updateProject,
 } from "./actions";
 import { DataStatus } from "constant/enums";
@@ -74,5 +75,37 @@ export const useProjects = () => {
     onGetProjects,
     onCreateProject,
     onUpdateProject,
+  };
+};
+
+export const useProjectTypes = () => {
+  const dispatch = useAppDispatch();
+  const {
+    projectTypes: items,
+    projectTypesStatus: status,
+    projectTypesError: error,
+  } = useAppSelector((state) => state.project, shallowEqual);
+
+  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
+  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
+
+  const options = useMemo(
+    () =>
+      items.map((item) => ({ label: item.name ?? "Unknown", value: item.id })),
+    [items],
+  );
+
+  const onGetProjectTypes = useCallback(async () => {
+    await dispatch(getProjectTypeList());
+  }, [dispatch]);
+
+  return {
+    items,
+    status,
+    isIdle,
+    isFetching,
+    error,
+    options,
+    onGetProjectTypes,
   };
 };

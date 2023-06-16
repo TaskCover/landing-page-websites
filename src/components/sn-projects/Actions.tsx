@@ -5,17 +5,16 @@ import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import { Dropdown, Switch } from "components/Filters";
-import { ProjectStatus, TEXT_STATUS } from "./helpers";
+import { INITIAL_VALUES, ProjectStatus, TEXT_STATUS } from "./helpers";
 import { useProjects } from "store/project/selectors";
 import { cleanObject, stringifyURLSearchParams } from "utils/index";
 import { usePathname, useRouter } from "next/navigation";
 import useToggle from "hooks/useToggle";
 import { DataAction } from "constant/enums";
-import Form from "./Form";
-import { ProjectData } from "store/project/actions";
+import Form, { ProjectDataForm } from "./Form";
 
 const Actions = () => {
-  const { filters, onGetProjects, pageSize } = useProjects();
+  const { filters, onGetProjects, pageSize, onCreateProject } = useProjects();
 
   const [isShow, onShow, onHide] = useToggle();
 
@@ -108,15 +107,15 @@ const Actions = () => {
           />
         </Stack>
       </Stack>
-      <Form
-        open={isShow}
-        onClose={onHide}
-        type={DataAction.CREATE}
-        initialValues={INITIAL_VALUES}
-        onSubmit={async () => {
-          //
-        }}
-      />
+      {isShow && (
+        <Form
+          open={isShow}
+          onClose={onHide}
+          type={DataAction.CREATE}
+          initialValues={INITIAL_VALUES as unknown as ProjectDataForm}
+          onSubmit={onCreateProject}
+        />
+      )}
     </>
   );
 };
@@ -128,15 +127,3 @@ const OPTIONS = [
   { label: TEXT_STATUS.PAUSE, value: ProjectStatus.PAUSE },
   { label: TEXT_STATUS.CLOSE, value: ProjectStatus.CLOSE },
 ];
-
-const INITIAL_VALUES = {
-  name: "",
-  owner: "",
-  start_date: "",
-  end_date: "",
-  expected_cost: "",
-  working_hours: "",
-  description: "",
-  members: [],
-  type_project: "",
-} as unknown as ProjectData;

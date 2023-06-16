@@ -3,6 +3,7 @@ import {
   createProject,
   getProjectList,
   GetProjectListQueries,
+  getProjectTypeList,
   updateProject,
 } from "./actions";
 import { ItemListResponse, Option, Paging, User } from "constant/types";
@@ -34,9 +35,23 @@ export interface Project {
   is_active: boolean;
   saved: boolean;
   company: string;
-  status: "PAUSE";
+  status: "PAUSE" | "ACTIVE" | "CLOSE";
   updated_by: User;
   updated_time: string;
+  type_project: {
+    id: string;
+    name: string;
+  };
+  description: string;
+  expected_cost: number;
+  working_hours: number;
+  start_date: string;
+  end_date: string;
+}
+
+export interface ProjectType {
+  id: string;
+  name: string;
 }
 
 export interface ProjectState {
@@ -45,6 +60,10 @@ export interface ProjectState {
   paging: Paging;
   error?: string;
   filters: Omit<GetProjectListQueries, "pageIndex" | "pageSize">;
+
+  projectTypes: ProjectType[];
+  projectTypesStatus: DataStatus;
+  projectTypesError?: string;
 }
 
 const initialState: ProjectState = {
@@ -52,6 +71,9 @@ const initialState: ProjectState = {
   status: DataStatus.IDLE,
   paging: DEFAULT_PAGING,
   filters: {},
+
+  projectTypes: [],
+  projectTypesStatus: DataStatus.IDLE,
 };
 
 const projectSlice = createSlice({
@@ -106,7 +128,23 @@ const projectSlice = createSlice({
             );
           }
         },
-      ),
+      )
+      .addCase(getProjectTypeList.pending, (state) => {
+        state.projectTypesStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        getProjectTypeList.fulfilled,
+        (state, action: PayloadAction<ProjectType[]>) => {
+          state.projectTypes = action.payload;
+          state.projectTypesStatus = DataStatus.SUCCEEDED;
+          state.projectTypesError = undefined;
+        },
+      )
+      .addCase(getProjectTypeList.rejected, (state, action) => {
+        state.projectTypes = [];
+        state.projectTypesStatus = DataStatus.FAILED;
+        state.projectTypesError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      }),
 });
 
 export default projectSlice.reducer;

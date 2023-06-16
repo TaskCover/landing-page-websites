@@ -7,6 +7,8 @@ export const COMPANY_API_URL = process.env.COMPANY_API_URL as string;
 
 export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
 
+export const DATE_FORMAT_FORM = "yyyy-MM-dd";
+
 export const DATE_FORMAT_SLASH = "dd/MM/yyyy";
 export const DATE_FORMAT_HYPHEN = "dd-MM-yyyy";
 export const LONG_TIME_FORMAT = "HH:mm:ss";

@@ -8,7 +8,7 @@ type FormLayoutProps = {
   submitText?: string;
   cancelText?: string;
   disabled?: boolean;
-  isLoading?: boolean;
+  submitting?: boolean;
 } & DialogLayoutProps;
 
 const FormLayout = (props: FormLayoutProps) => {
@@ -18,8 +18,9 @@ const FormLayout = (props: FormLayoutProps) => {
     cancelText = "Hủy bỏ",
     children,
     disabled,
-    isLoading,
+    submitting,
     sx,
+    onClose,
     ...rest
   } = props;
   return (
@@ -37,6 +38,7 @@ const FormLayout = (props: FormLayoutProps) => {
         <>
           <Button
             type="button"
+            onClick={onClose}
             variant="primaryOutlined"
             size="small"
             disabled={disabled}
@@ -50,11 +52,13 @@ const FormLayout = (props: FormLayoutProps) => {
             sx={defaultSx.button}
             type="submit"
             size="small"
+            pending={submitting}
           >
             {submitText}
           </Button>
         </>
       }
+      onClose={onClose}
       {...rest}
     >
       <Stack flex={1} overflow="auto">

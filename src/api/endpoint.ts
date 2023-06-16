@@ -12,6 +12,7 @@ export const Endpoint = {
   PROJECTS: "/projects",
   PROJECT_ITEM: "/projects/{id}",
   PROJECT_MEMBERS: "/projects/{id}/members",
+  PROJECT_TYPES: "type-project",
 
   POSITIONS: "/positions",
 };
