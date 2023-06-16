@@ -8,23 +8,19 @@ import { useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
 import { getMessageErrorByAPI } from "utils/index";
 import { DataAction } from "constant/enums";
-import { Input, Select } from "components/shared";
-import { EmployeeData } from "store/company/actions";
-import { EMAIL_REGEX } from "constant/regex";
-import { usePositions } from "store/company/selectors";
+import { Input } from "components/shared";
+import { PositionData } from "store/company/actions";
 
 type FormProps = {
-  initialValues: EmployeeData;
+  initialValues: PositionData;
   type: DataAction;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit: (values: EmployeeData) => Promise<any>;
+  onSubmit: (values: PositionData) => Promise<any>;
 } & Omit<DialogLayoutProps, "children" | "onSubmit">;
 
 const Form = (props: FormProps) => {
   const { initialValues, type, onSubmit: onSubmitProps, ...rest } = props;
   const { onAddSnackbar } = useSnackbar();
-
-  const { options } = usePositions();
 
   const label = useMemo(() => {
     switch (type) {
@@ -37,7 +33,7 @@ const Form = (props: FormProps) => {
     }
   }, [type]);
 
-  const onSubmit = async (values: EmployeeData) => {
+  const onSubmit = async (values: PositionData) => {
     try {
       const newItem = await onSubmitProps(values);
 
@@ -61,7 +57,7 @@ const Form = (props: FormProps) => {
 
   const touchedErrors = useMemo(() => {
     return Object.entries(formik.errors).reduce(
-      (out: FormikErrors<EmployeeData>, [key, error]) => {
+      (out: FormikErrors<PositionData>, [key, error]) => {
         if (formik.touched[key]) {
           out[key] = error;
         }
@@ -91,26 +87,14 @@ const Form = (props: FormProps) => {
     >
       <Stack spacing={2} py={3}>
         <Input
-          title="Email"
-          name="email"
+          title="Tên chức vụ"
+          name="name"
           required
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values?.email}
-          error={touchedErrors?.email}
+          value={formik.values?.name}
+          error={touchedErrors?.name}
           rootSx={sxConfig.input}
-        />
-        <Select
-          options={options}
-          title="Chức vụ"
-          name="position"
-          required
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values?.position}
-          error={touchedErrors?.position}
-          rootSx={sxConfig.input}
-          fullWidth
         />
       </Stack>
     </FormLayout>
@@ -120,11 +104,7 @@ const Form = (props: FormProps) => {
 export default memo(Form);
 
 export const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .trim()
-    .required("Email là bắt buộc.")
-    .matches(EMAIL_REGEX, "Email không hợp lệ!"),
-  position: Yup.string().trim().required("Chức vụ là bắt buộc."),
+  name: Yup.string().trim().required("Tên chức vụ là bắt buộc."),
 });
 
 const sxConfig = {

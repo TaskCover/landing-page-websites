@@ -10,12 +10,12 @@ import { MenuList, Popover, Stack, popoverClasses } from "@mui/material";
 import { Checkbox, IconButton, Select, Text } from "components/shared";
 import CircleCloseIcon from "icons/CircleCloseIcon";
 import ChevronIcon from "icons/ChevronIcon";
-import { useEmployeeOptions } from "store/company/selectors";
+import { useEmployeeOptions, usePositions } from "store/company/selectors";
 import Avatar from "components/Avatar";
 import { Employee } from "store/company/reducer";
-import { usePositions } from "store/global/selectors";
 import { useSnackbar } from "store/app/selectors";
 import { Member } from "../helpers";
+import MemberItem from "./MemberItem";
 
 type SelectMembersProps = {
   value?: Member[];
@@ -166,66 +166,6 @@ const SelectMembers = (props: SelectMembersProps) => {
 };
 
 export default memo(SelectMembers);
-
-const MemberItem = (
-  props: Employee & {
-    onChange: (id: string, position: string, fullname: string) => void;
-    checked: boolean;
-    positionOfProject?: string;
-  },
-) => {
-  const { id, fullname, email, onChange, checked, positionOfProject } = props;
-
-  const { options } = usePositions();
-  const { onAddSnackbar } = useSnackbar();
-
-  const [position, setPosition] = useState<string | undefined>(
-    positionOfProject,
-  );
-
-  const onChangePosition = (event: ChangeEvent<HTMLInputElement>) => {
-    setPosition(event.target.value);
-  };
-
-  const onSelect = (event: ChangeEvent<HTMLInputElement>) => {
-    if (!position) {
-      onAddSnackbar("Bạn cần chọn vị trí cho thành viên này trước", "warning");
-      return;
-    }
-    onChange(id, position, fullname);
-  };
-
-  useEffect(() => {
-    setPosition(positionOfProject);
-  }, [positionOfProject]);
-
-  return (
-    <Stack
-      direction="row"
-      spacing={2}
-      alignItems="center"
-      justifyContent="space-between"
-    >
-      <Checkbox onChange={onSelect} checked={checked} />
-      <Stack direction="row" spacing={1.5} width="40%">
-        <Avatar size={40} />
-        <Stack>
-          <Text variant="h6">{fullname}</Text>
-          <Text variant="body2">{email}</Text>
-        </Stack>
-      </Stack>
-      <Stack width="40%">
-        <Select
-          title="Vị trí"
-          name="position"
-          options={options}
-          value={position}
-          onChange={onChangePosition}
-        />
-      </Stack>
-    </Stack>
-  );
-};
 
 const DisplayItem = (
   props: Member & {

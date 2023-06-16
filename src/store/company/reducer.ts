@@ -4,6 +4,9 @@ import {
   GetEmployeeListQueries,
   createEmployee,
   updateEmployee,
+  getPositions,
+  createPosition,
+  updatePosition,
 } from "./actions";
 import {
   BaseQueries,
@@ -26,6 +29,11 @@ export interface Employee extends User {
   is_pay_user: boolean;
 }
 
+export interface Position {
+  id: string;
+  name?: string;
+}
+
 export interface CompanyState {
   employees: Employee[];
   employeesStatus: DataStatus;
@@ -41,6 +49,10 @@ export interface CompanyState {
     GetEmployeeListQueries,
     "pageIndex" | "pageSize"
   >;
+
+  positions: Position[];
+  positionsStatus: DataStatus;
+  positionsError?: string;
 }
 
 const initialState: CompanyState = {
@@ -53,6 +65,9 @@ const initialState: CompanyState = {
   employeeOptionsStatus: DataStatus.IDLE,
   employeeOptionsPaging: DEFAULT_PAGING,
   employeeOptionsFilters: {},
+
+  positions: [],
+  positionsStatus: DataStatus.IDLE,
 };
 
 const companySlice = createSlice({
@@ -131,6 +146,43 @@ const companySlice = createSlice({
           if (indexUpdated !== -1) {
             state.employees[indexUpdated] = Object.assign(
               state.employees[indexUpdated],
+              action.payload,
+            );
+          }
+        },
+      )
+
+      .addCase(getPositions.pending, (state) => {
+        state.positionsStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        getPositions.fulfilled,
+        (state, action: PayloadAction<Position[]>) => {
+          state.positions = action.payload;
+          state.positionsStatus = DataStatus.SUCCEEDED;
+          state.positionsError = undefined;
+        },
+      )
+      .addCase(getPositions.rejected, (state, action) => {
+        state.positions = [];
+        state.positionsStatus = DataStatus.FAILED;
+        state.positionsError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(
+        createPosition.fulfilled,
+        (state, action: PayloadAction<Position>) => {
+          state.positions.unshift(action.payload);
+        },
+      )
+      .addCase(
+        updatePosition.fulfilled,
+        (state, action: PayloadAction<Position>) => {
+          const indexUpdated = state.positions.findIndex(
+            (item) => item.id === action.payload.id,
+          );
+          if (indexUpdated !== -1) {
+            state.positions[indexUpdated] = Object.assign(
+              state.positions[indexUpdated],
               action.payload,
             );
           }

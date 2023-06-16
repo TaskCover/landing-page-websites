@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { IconButton } from "components/shared";
 import BookmarkIcon from "icons/BookmarkIcon";
 import { useProject, useProjects } from "store/project/selectors";

@@ -1,11 +1,7 @@
-import {
-  Wrapper,
-  ItemList,
-  Actions,
-} from "components/sn-project-detail/Members";
+import { Actions, ItemList, Wrapper } from "components/sn-positions";
 
 export const metadata = {
-  title: "Danh sách thành viên | Taskcover",
+  title: "Quản lý chức vụ | Taskcover",
 };
 
 export default function Page() {

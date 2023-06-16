@@ -7,6 +7,7 @@ export const CHANGE_PASSWORD_PATH = "/change-password";
 export const PROJECTS_PATH = "/projects";
 export const EMPLOYEES_PATH = "/employees";
 export const COST_HISTORY_PATH = "/cost-history";
+export const POSITIONS_PATH = "/positions";
 export const ACCOUNT_INFO_PATH = "/user-information";
 export const UPGRADE_ACCOUNT_PATH = "/upgrade-account";
 export const PROJECT_TASKS_PATH = "/projects/{id}/tasks/";

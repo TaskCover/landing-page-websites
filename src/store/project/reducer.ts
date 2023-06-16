@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   createProject,
+  getMembersOfProject,
+  GetMembersOfProjectQueries,
   getProject,
   getProjectList,
   GetProjectListQueries,
@@ -8,11 +10,17 @@ import {
   ProjectStatus,
   updateProject,
 } from "./actions";
-import { ItemListResponse, Option, Paging, User } from "constant/types";
+import {
+  BaseQueries,
+  ItemListResponse,
+  Option,
+  Paging,
+  User,
+} from "constant/types";
 import { DataStatus } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { getFiltersFromQueries } from "utils/index";
-import { Position } from "store/global/reducer";
+import { Position } from "store/company/reducer";
 
 export interface Member {
   id: string;
@@ -70,6 +78,12 @@ export interface ProjectState {
   projectTypes: ProjectType[];
   projectTypesStatus: DataStatus;
   projectTypesError?: string;
+
+  members: Member[];
+  membersStatus: DataStatus;
+  membersPaging: Paging;
+  membersError?: string;
+  membersFilters: Omit<GetMembersOfProjectQueries, "pageIndex" | "pageSize">;
 }
 
 const initialState: ProjectState = {
@@ -82,12 +96,27 @@ const initialState: ProjectState = {
 
   projectTypes: [],
   projectTypesStatus: DataStatus.IDLE,
+
+  members: [],
+  membersStatus: DataStatus.IDLE,
+  membersPaging: DEFAULT_PAGING,
+  membersFilters: {},
 };
 
 const projectSlice = createSlice({
   name: "project",
   initialState,
-  reducers: {},
+  reducers: {
+    removeMember: (state, action: PayloadAction<string>) => {
+      const indexSelected = state.members.findIndex(
+        (member) => member.id === action.payload,
+      );
+
+      if (indexSelected !== -1) {
+        state.members.splice(indexSelected, 1);
+      }
+    },
+  },
   extraReducers: (builder) =>
     builder
       .addCase(getProjectList.pending, (state, action) => {
@@ -172,7 +201,32 @@ const projectSlice = createSlice({
         state.item = undefined;
         state.itemStatus = DataStatus.FAILED;
         state.itemError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(getMembersOfProject.pending, (state, action) => {
+        state.membersStatus = DataStatus.LOADING;
+        state.membersFilters = getFiltersFromQueries(action.meta.arg);
+        state.membersPaging.pageIndex =
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
+        state.membersPaging.pageSize =
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
+      })
+      .addCase(
+        getMembersOfProject.fulfilled,
+        (state, action: PayloadAction<ItemListResponse>) => {
+          const { items, ...paging } = action.payload;
+          state.members = items as Member[];
+          state.membersStatus = DataStatus.SUCCEEDED;
+          state.membersError = undefined;
+          state.membersPaging = Object.assign(state.membersPaging, paging);
+        },
+      )
+      .addCase(getMembersOfProject.rejected, (state, action) => {
+        state.members = [];
+        state.membersStatus = DataStatus.FAILED;
+        state.membersError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
       }),
 });
+
+export const { removeMember } = projectSlice.actions;
 
 export default projectSlice.reducer;

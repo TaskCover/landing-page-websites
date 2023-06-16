@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { Employee } from "store/company/reducer";
 import { BodyCell, StatusCell } from "components/Table";
 import { DATE_TIME_FORMAT_SLASH } from "constant/index";

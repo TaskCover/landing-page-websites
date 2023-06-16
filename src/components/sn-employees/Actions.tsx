@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
@@ -11,8 +11,7 @@ import { usePathname, useRouter } from "next/navigation";
 import useToggle from "hooks/useToggle";
 import { DataAction } from "constant/enums";
 import Form from "./Form";
-import { useEmployees } from "store/company/selectors";
-import { usePositions } from "store/global/selectors";
+import { useEmployees, usePositions } from "store/company/selectors";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 const Actions = () => {
@@ -46,6 +45,7 @@ const Actions = () => {
   useEffect(() => {
     onGetPositions();
   }, [onGetPositions]);
+
   useEffect(() => {
     filtersRef.current = filters;
   }, [filters]);
@@ -117,13 +117,15 @@ const Actions = () => {
           </Stack>
         </Stack>
       </Stack>
-      <Form
-        open={isShow}
-        onClose={onHide}
-        type={DataAction.CREATE}
-        initialValues={INITIAL_VALUES}
-        onSubmit={onCreateEmployee}
-      />
+      {isShow && (
+        <Form
+          open={isShow}
+          onClose={onHide}
+          type={DataAction.CREATE}
+          initialValues={INITIAL_VALUES}
+          onSubmit={onCreateEmployee}
+        />
+      )}
     </>
   );
 };

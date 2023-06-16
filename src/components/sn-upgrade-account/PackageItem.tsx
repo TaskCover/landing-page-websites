@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import { memo, useState } from "react";
 import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import CircleTickIcon from "icons/CircleTickIcon";

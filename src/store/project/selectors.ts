@@ -3,6 +3,7 @@ import {
   GetProjectListQueries,
   ProjectData,
   createProject,
+  getMembersOfProject,
   getProject,
   getProjectList,
   getProjectTypeList,
@@ -11,6 +12,9 @@ import {
 import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
+import { BaseQueries } from "constant/types";
+import { getFiltersIgnoreId } from "utils/index";
+import { removeMember } from "./reducer";
 
 export const useProjects = () => {
   const dispatch = useAppDispatch();
@@ -125,5 +129,71 @@ export const useProjectTypes = () => {
     error,
     options,
     onGetProjectTypes,
+  };
+};
+
+export const useMembersOfProject = () => {
+  const dispatch = useAppDispatch();
+  const {
+    members: items,
+    membersStatus: status,
+    membersError: error,
+    membersFilters: storeFilters,
+  } = useAppSelector((state) => state.project, shallowEqual);
+  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+    (state) => state.project.membersPaging,
+    shallowEqual,
+  );
+
+  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
+  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
+  const filters = useMemo(
+    () => getFiltersIgnoreId(storeFilters),
+    [storeFilters],
+  );
+
+  const onGetMembersOfProject = useCallback(
+    async (id: string, queries: BaseQueries) => {
+      await dispatch(getMembersOfProject({ ...queries, id }));
+    },
+    [dispatch],
+  );
+
+  // const onCreateProject = useCallback(
+  //   async (data: ProjectData) => {
+  //     return await dispatch(createProject(data)).unwrap();
+  //   },
+  //   [dispatch],
+  // );
+
+  // const onUpdateProject = useCallback(
+  //   async (id: string, data: Partial<ProjectData>) => {
+  //     try {
+  //       return await dispatch(updateProject({ id, ...data })).unwrap();
+  //     } catch (error) {
+  //       throw error;
+  //     }
+  //   },
+  //   [dispatch],
+  // );
+
+  const onDeleteMember = (id: string) => {
+    dispatch(removeMember(id));
+  };
+
+  return {
+    items,
+    status,
+    error,
+    filters,
+    isIdle,
+    isFetching,
+    pageIndex,
+    pageSize,
+    totalItems,
+    totalPages,
+    id: storeFilters?.id,
+    onGetMembersOfProject,
+    onDeleteMember,
   };
 };

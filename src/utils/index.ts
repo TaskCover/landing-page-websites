@@ -199,3 +199,9 @@ export const getPath = (
   const path = data ? StringFormat(basePath, data) : basePath;
   return path + queryString;
 };
+
+export const getFiltersIgnoreId = (filters) => {
+  const _filters = { ...filters };
+  delete _filters["id"];
+  return _filters;
+};

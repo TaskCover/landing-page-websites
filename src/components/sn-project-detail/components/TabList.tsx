@@ -1,5 +1,5 @@
-import React, { memo, useMemo } from "react";
-import { Stack } from "@mui/material";
+import { memo, useMemo } from "react";
+import { Stack, StackProps } from "@mui/material";
 import Link from "components/Link";
 import { Text } from "components/shared";
 import {
@@ -9,12 +9,13 @@ import {
   PROJECT_MEMBERS_PATH,
   PROJECT_INFORMATION_PATH,
 } from "constant/paths";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import {
   EditProject,
   SavedProject,
   StatusProject,
 } from "components/sn-project-detail/Information/components";
+import { getPath } from "utils/index";
 
 type TabItemProps = {
   href: string;
@@ -22,37 +23,28 @@ type TabItemProps = {
 };
 
 const TabList = () => {
-  const pathname = usePathname();
-
-  const isDetailPath = useMemo(() => {
-    const suffixPath = getSuffixPath(pathname);
-    const suffixDetail = getSuffixPath(PROJECT_INFORMATION_PATH);
-    return suffixPath === suffixDetail;
-  }, [pathname]);
-
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      borderBottom="1px solid"
-      justifyContent="space-between"
-      borderColor="grey.100"
-      width="100%"
-    >
-      <Stack direction="row" alignItems="center">
-        {TABS.map((tab) => (
-          <TabItem key={tab.label} {...tab} />
-        ))}
-      </Stack>
-
-      {isDetailPath && (
-        <Stack direction="row" alignItems="center" spacing={3} pr={3}>
-          <StatusProject />
-          <SavedProject />
-          <EditProject />
+    <>
+      <Stack
+        direction={{ md: "row" }}
+        alignItems="center"
+        borderBottom="1px solid"
+        justifyContent="space-between"
+        borderColor="grey.100"
+        width="100%"
+        overflow="auto"
+        spacing={4}
+      >
+        <Stack direction="row" alignItems="center">
+          {TABS.map((tab) => (
+            <TabItem key={tab.label} {...tab} />
+          ))}
         </Stack>
-      )}
-    </Stack>
+
+        <TabActions display={{ xs: "none", md: "flex" }} />
+      </Stack>
+      <TabActions display={{ md: "none" }} justifyContent="center" />
+    </>
   );
 };
 
@@ -62,6 +54,7 @@ const TabItem = (props: TabItemProps) => {
   const { href, label } = props;
 
   const pathname = usePathname();
+  const params = useParams();
 
   const isActiveLink = useMemo(() => {
     const suffixPath = getSuffixPath(pathname);
@@ -71,7 +64,7 @@ const TabItem = (props: TabItemProps) => {
 
   return (
     <Link
-      href={href}
+      href={getPath(href, undefined, { id: params.id })}
       underline="none"
       sx={{
         minWidth: 120,
@@ -79,15 +72,35 @@ const TabItem = (props: TabItemProps) => {
         "&:hover": {
           bgcolor: "primary.light",
         },
-        py: 2.5,
-        px: 3.5,
+        py: { xs: 2, sm: 2.5 },
+        px: { xs: 2, sm: 3.5 },
         borderRadius: 1,
       }}
     >
-      <Text variant="body2" fontWeight={600}>
+      <Text variant="body2" fontWeight={600} whiteSpace="nowrap">
         {label}
       </Text>
     </Link>
+  );
+};
+
+const TabActions = (props: StackProps) => {
+  const pathname = usePathname();
+
+  const isDetailPath = useMemo(() => {
+    const suffixPath = getSuffixPath(pathname);
+    const suffixDetail = getSuffixPath(PROJECT_INFORMATION_PATH);
+    return suffixPath === suffixDetail;
+  }, [pathname]);
+
+  if (!isDetailPath) return null;
+
+  return (
+    <Stack direction="row" alignItems="center" spacing={3} pr={3} {...props}>
+      <StatusProject />
+      <SavedProject />
+      <EditProject />
+    </Stack>
   );
 };
 

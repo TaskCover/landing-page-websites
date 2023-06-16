@@ -2,9 +2,13 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   EmployeeData,
   GetEmployeeListQueries,
+  PositionData,
   createEmployee,
+  createPosition,
   getEmployees,
+  getPositions,
   updateEmployee,
+  updatePosition,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -114,5 +118,57 @@ export const useEmployeeOptions = () => {
     totalPages,
     filters,
     onGetOptions,
+  };
+};
+
+export const usePositions = () => {
+  const dispatch = useAppDispatch();
+  const {
+    positions: items,
+    positionsStatus: status,
+    positionsError: error,
+  } = useAppSelector((state) => state.company, shallowEqual);
+
+  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
+  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
+
+  const options = useMemo(
+    () =>
+      items.map((item) => ({ label: item.name ?? "Unknown", value: item.id })),
+    [items],
+  );
+
+  const onGetPositions = useCallback(async () => {
+    await dispatch(getPositions());
+  }, [dispatch]);
+
+  const onCreatePosition = useCallback(
+    async (data: PositionData) => {
+      return await dispatch(createPosition(data)).unwrap();
+    },
+    [dispatch],
+  );
+
+  const onUpdatePosition = useCallback(
+    async (id: string, name: string) => {
+      try {
+        return await dispatch(updatePosition({ id, name })).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  return {
+    items,
+    status,
+    isIdle,
+    isFetching,
+    error,
+    options,
+    onGetPositions,
+    onCreatePosition,
+    onUpdatePosition,
   };
 };

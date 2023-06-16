@@ -15,4 +15,5 @@ export const Endpoint = {
   PROJECT_TYPES: "type-project",
 
   POSITIONS: "/positions",
+  POSITION_ITEM: "/positions/{id}",
 };

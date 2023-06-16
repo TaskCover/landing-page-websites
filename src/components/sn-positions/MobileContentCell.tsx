@@ -2,14 +2,12 @@ import { memo } from "react";
 import { Stack } from "@mui/material";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
-import { formatDate } from "utils/index";
-import TextStatus from "components/TextStatus";
-import { COLOR_STATUS, TEXT_STATUS } from "../helpers";
+import { formatDate, formatNumber } from "utils/index";
 import { BodyCell } from "components/Table";
-import { Employee } from "store/company/reducer";
+import { Position } from "store/company/reducer";
 
 type MobileContentCellProps = {
-  item: Employee;
+  item: Position;
 };
 
 type InformationItemProps = {
@@ -22,22 +20,16 @@ const MobileContentCell = (props: MobileContentCellProps) => {
   return (
     <BodyCell align="left">
       <Stack spacing={2} py={1.5}>
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar size={32} />
-          <Text variant="h6">{item.fullname}</Text>
-        </Stack>
-        <InformationItem label="Email">{item.email}</InformationItem>
-        <InformationItem label="Chức vụ">
-          {item?.position?.name}
+        <InformationItem label="Tên chức vụ">{item?.name}</InformationItem>
+        <InformationItem label="Người tạo">
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Avatar size={32} />
+            <Text variant="h6"></Text>
+          </Stack>
         </InformationItem>
-        <InformationItem label="Ngày tạo">
-          {formatDate(item.created_time)}
-        </InformationItem>
-        <InformationItem label="Trạng thái">
-          <TextStatus
-            color={COLOR_STATUS[Number(item.is_pay_user)]}
-            text={TEXT_STATUS[Number(item.is_pay_user)]}
-          />
+        <InformationItem label="Ngày tạo">{formatDate()}</InformationItem>
+        <InformationItem label="Số người giữ chức vụ">
+          {formatNumber()}
         </InformationItem>
       </Stack>
     </BodyCell>
@@ -51,7 +43,7 @@ const InformationItem = (props: InformationItemProps) => {
 
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
-      <Text variant="caption" color="grey.400" width={57}>
+      <Text variant="caption" color="grey.400">
         {label}
       </Text>
 

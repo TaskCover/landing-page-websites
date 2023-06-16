@@ -8,6 +8,7 @@ import {
   COST_HISTORY_PATH,
   EMPLOYEES_PATH,
   HOME_PATH,
+  POSITIONS_PATH,
   PROJECTS_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
@@ -158,6 +159,7 @@ const DATA: MenuItemProps[] = [
     subs: [
       { label: "Employees", href: EMPLOYEES_PATH },
       { label: "Cost History", href: COST_HISTORY_PATH },
+      { label: "List of positions", href: POSITIONS_PATH },
     ],
   },
 ];

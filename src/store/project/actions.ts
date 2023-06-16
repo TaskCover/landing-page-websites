@@ -13,6 +13,11 @@ export type GetProjectListQueries = BaseQueries & {
   status?: string;
 };
 
+export type GetMembersOfProjectQueries = BaseQueries & {
+  email?: string;
+  id?: string;
+};
+
 export enum ProjectStatus {
   ACTIVE = "ACTIVE",
   PAUSE = "PAUSE",
@@ -109,7 +114,7 @@ export const updateProject = createAsyncThunk(
 
 export const getMembersOfProject = createAsyncThunk(
   "project/getMembersOfProject",
-  async ({ id, ...queries }: BaseQueries & { id: string }) => {
+  async ({ id, ...queries }: GetMembersOfProjectQueries & { id: string }) => {
     queries = serverQueries(queries) as BaseQueries;
 
     try {

@@ -21,7 +21,7 @@ const InformationProjectPage = () => {
   if (!item) return null;
 
   return (
-    <Stack p={3} spacing={3}>
+    <Stack p={{ xs: 1, sm: 3 }} spacing={3}>
       <Stack direction="row" spacing={2} justifyContent="space-between">
         <Text variant="h4">{item.name}</Text>
         <Stack direction="row" alignItems="center" spacing={1}>
