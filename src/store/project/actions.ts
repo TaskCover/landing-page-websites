@@ -13,6 +13,12 @@ export type GetProjectListQueries = BaseQueries & {
   status?: string;
 };
 
+export enum ProjectStatus {
+  ACTIVE = "ACTIVE",
+  PAUSE = "PAUSE",
+  CLOSE = "CLOSE",
+}
+
 export type ProjectData = {
   name: string;
   owner: string;
@@ -26,6 +32,8 @@ export type ProjectData = {
     position: string;
   }[];
   type_project: string;
+  status?: ProjectStatus;
+  saved?: boolean;
 };
 
 export const getProjectList = createAsyncThunk(
@@ -38,6 +46,24 @@ export const getProjectList = createAsyncThunk(
 
       if (response?.status === HttpStatusCode.OK) {
         return refactorRawItemListResponse(response.data);
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getProject = createAsyncThunk(
+  "project/getProject",
+  async (id: string) => {
+    try {
+      const response = await client.get(
+        StringFormat(Endpoint.PROJECT_ITEM, { id }),
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
@@ -64,7 +90,7 @@ export const createProject = createAsyncThunk(
 
 export const updateProject = createAsyncThunk(
   "project/updateProject",
-  async ({ id, ...data }: ProjectData & { id: string }) => {
+  async ({ id, ...data }: Partial<ProjectData> & { id: string }) => {
     try {
       const response = await client.put(
         StringFormat(Endpoint.PROJECT_ITEM, { id }),

@@ -3,6 +3,7 @@ import {
   GetProjectListQueries,
   ProjectData,
   createProject,
+  getProject,
   getProjectList,
   getProjectTypeList,
   updateProject,
@@ -40,7 +41,7 @@ export const useProjects = () => {
   );
 
   const onUpdateProject = useCallback(
-    async (id: string, data: ProjectData) => {
+    async (id: string, data: Partial<ProjectData>) => {
       try {
         return await dispatch(updateProject({ id, ...data })).unwrap();
       } catch (error) {
@@ -49,17 +50,6 @@ export const useProjects = () => {
     },
     [dispatch],
   );
-
-  // const onToggleActiveSeason = useCallback(
-  //   async (id: string, status: Status) => {
-  //     try {
-  //       return await dispatch(toggleActiveSeason({ id, status })).unwrap();
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   },
-  //   [dispatch],
-  // );
 
   return {
     items,
@@ -75,6 +65,34 @@ export const useProjects = () => {
     onGetProjects,
     onCreateProject,
     onUpdateProject,
+  };
+};
+
+export const useProject = () => {
+  const dispatch = useAppDispatch();
+  const {
+    item,
+    itemStatus: status,
+    itemError: error,
+  } = useAppSelector((state) => state.project, shallowEqual);
+
+  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
+  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
+
+  const onGetProject = useCallback(
+    async (id: string) => {
+      await dispatch(getProject(id));
+    },
+    [dispatch],
+  );
+
+  return {
+    item,
+    status,
+    error,
+    isIdle,
+    isFetching,
+    onGetProject,
   };
 };
 

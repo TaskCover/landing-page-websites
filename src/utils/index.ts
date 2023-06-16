@@ -1,5 +1,5 @@
 import { AN_ERROR_TRY_AGAIN, DATE_FORMAT_SLASH } from "constant/index";
-import { ItemListResponse } from "constant/types";
+import { ItemListResponse, OptionFormatNumber } from "constant/types";
 import { ReadonlyURLSearchParams } from "next/navigation";
 
 export const parseHashURL = (value: string) => `#${value}`;
@@ -159,4 +159,31 @@ export const formatDate = (date?: number | string, format?: string) => {
   dateFormat = dateFormat.replace("ss", seconds);
 
   return dateFormat;
+};
+
+export const formatNumber = (
+  number?: number | null | string,
+  options: OptionFormatNumber = {},
+) => {
+  if (typeof number === "string") return number;
+  const {
+    numberOfFixed = 4,
+    emptyText = "--",
+    suffix,
+    prefix = "",
+    space = true,
+    ...localeOption
+  } = options;
+  const suffixParsed = suffix ? `${space ? " " : ""}${suffix}` : "";
+  if (!number && number !== 0) return emptyText + suffixParsed;
+  const num = Number(number || 0);
+  const maximumFractionDigits = Number.isInteger(num) ? 0 : numberOfFixed;
+  return (
+    prefix +
+    num.toLocaleString("en-US", {
+      maximumFractionDigits,
+      ...localeOption,
+    }) +
+    suffixParsed
+  );
 };

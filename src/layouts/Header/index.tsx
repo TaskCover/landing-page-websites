@@ -7,9 +7,11 @@ import { Text } from "components/shared";
 import { useHeaderConfig } from "store/app/selectors";
 import useBreakpoint from "hooks/useBreakpoint";
 import useWindowSize from "hooks/useWindowSize";
+import Link from "components/Link";
+import ChevronIcon from "icons/ChevronIcon";
 
 const Header = () => {
-  const { title, searchPlaceholder } = useHeaderConfig();
+  const { title, searchPlaceholder, prevPath } = useHeaderConfig();
   const { breakpoint } = useBreakpoint();
   const { width } = useWindowSize();
 
@@ -26,9 +28,23 @@ const Header = () => {
       width="100%"
     >
       <AppLogo height={48} className="only-mobile" />
-      <Text variant="h5" display={{ xs: "none", sm: "initial" }}>
-        {title ?? ""}
-      </Text>
+      <Stack direction="row" alignItems="center" spacing={0.5}>
+        {!!prevPath && (
+          <Link
+            href={prevPath}
+            sx={{ height: 24 }}
+            tooltip="Quay lại danh sách dự án"
+          >
+            <ChevronIcon
+              sx={{ color: "text.primary", transform: "rotate(90deg)" }}
+              fontSize="medium"
+            />
+          </Link>
+        )}
+        <Text variant="h5" display={{ xs: "none", sm: "initial" }}>
+          {title ?? ""}
+        </Text>
+      </Stack>
       {breakpoint}-{width}
       <Stack direction="row" alignItems="center" spacing={8}>
         {!!searchPlaceholder && (

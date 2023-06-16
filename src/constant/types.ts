@@ -54,3 +54,12 @@ export type ItemListResponse = {
   filters?: Params;
   concat?: boolean;
 };
+
+export type OptionFormatNumber = {
+  numberOfFixed?: number;
+  emptyText?: string;
+  localeOption?: Intl.NumberFormatOptions;
+  prefix?: string;
+  suffix?: string;
+  space?: boolean;
+} & Intl.NumberFormatOptions;

@@ -65,6 +65,9 @@ const Verify = () => {
             xs: "fit-content",
             sm: `calc(100vh - ${spacing(8 * 2)})`,
           })}
+          sx={{
+            overflowX: "hidden",
+          }}
           maxHeight={{ xs: "fit-content", sm: "100%" }}
           borderRadius={2}
           overflow="auto"

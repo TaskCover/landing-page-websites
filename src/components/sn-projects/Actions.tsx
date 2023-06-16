@@ -5,7 +5,7 @@ import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import { Dropdown, Switch } from "components/Filters";
-import { INITIAL_VALUES, ProjectStatus, TEXT_STATUS } from "./helpers";
+import { INITIAL_VALUES, STATUS_OPTIONS, TEXT_STATUS } from "./helpers";
 import { useProjects } from "store/project/selectors";
 import { cleanObject, stringifyURLSearchParams } from "utils/index";
 import { usePathname, useRouter } from "next/navigation";
@@ -100,7 +100,7 @@ const Actions = () => {
 
           <Dropdown
             placeholder="Trạng thái"
-            options={OPTIONS}
+            options={STATUS_OPTIONS}
             name="status"
             onChange={onChangeData}
             value={filters?.status}
@@ -121,9 +121,3 @@ const Actions = () => {
 };
 
 export default memo(Actions);
-
-const OPTIONS = [
-  { label: TEXT_STATUS.ACTIVE, value: ProjectStatus.ACTIVE },
-  { label: TEXT_STATUS.PAUSE, value: ProjectStatus.PAUSE },
-  { label: TEXT_STATUS.CLOSE, value: ProjectStatus.CLOSE },
-];

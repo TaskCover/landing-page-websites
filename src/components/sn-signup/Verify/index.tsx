@@ -71,6 +71,9 @@ const Verify = () => {
           xs: "fit-content",
           sm: `calc(100vh - ${spacing(8 * 2)})`,
         })}
+        sx={{
+          overflowX: "hidden",
+        }}
         maxHeight={{ xs: "fit-content", sm: "100%" }}
         borderRadius={2}
         overflow="auto"
@@ -107,7 +110,7 @@ const Verify = () => {
             mail và điền mã code để hoàn thành đăng ký
           </Text>
           <Input
-            titleSx={{ left: "33%" }}
+            titleSx={{ left: "39%" }}
             rootSx={{
               backgroundColor: "grey.50",
               height: 58,

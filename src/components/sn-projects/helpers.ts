@@ -1,10 +1,5 @@
 import { AlertColor } from "@mui/material";
-
-export enum ProjectStatus {
-  ACTIVE = "ACTIVE",
-  PAUSE = "PAUSE",
-  CLOSE = "CLOSE",
-}
+import { ProjectStatus } from "store/project/actions";
 
 export const TEXT_STATUS: { [key in ProjectStatus]: string } = {
   [ProjectStatus.ACTIVE]: "Hoạt động",
@@ -35,3 +30,9 @@ export const INITIAL_VALUES = {
   members: [],
   type_project: "",
 };
+
+export const STATUS_OPTIONS = [
+  { label: TEXT_STATUS.ACTIVE, value: ProjectStatus.ACTIVE },
+  { label: TEXT_STATUS.PAUSE, value: ProjectStatus.PAUSE },
+  { label: TEXT_STATUS.CLOSE, value: ProjectStatus.CLOSE },
+];
