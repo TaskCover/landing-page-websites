@@ -45,7 +45,7 @@ const Header = () => {
           {title ?? ""}
         </Text>
       </Stack>
-      {breakpoint}-{width}
+      {/* {breakpoint}-{width} */}
       <Stack direction="row" alignItems="center" spacing={8}>
         {!!searchPlaceholder && (
           <Search

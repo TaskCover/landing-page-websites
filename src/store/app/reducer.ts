@@ -60,7 +60,7 @@ const initialState: AppState = {
   appReady: false,
   snackbarList: [],
 
-  signupStep: SignupStep.VERIFY,
+  signupStep: SignupStep.SIGNUP,
 
   headerConfig: {},
 
