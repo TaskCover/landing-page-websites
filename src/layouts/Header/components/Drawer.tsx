@@ -14,6 +14,8 @@ import { useAuth } from "store/app/selectors";
 import { Text } from "components/shared";
 import Avatar from "components/Avatar";
 import useBreakpoint from "hooks/useBreakpoint";
+import Link from "components/Link";
+import { HOME_PATH } from "constant/paths";
 
 const Drawer = () => {
   const [isShow, onShow, onHide] = useToggle(false);
@@ -49,7 +51,10 @@ const Drawer = () => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <AppLogo width={156} />
+          <Link href={HOME_PATH} underline="none">
+            <AppLogo width={156} />
+          </Link>
+
           <IconButton onClick={onHide} sx={{ color: "grey.900" }}>
             <CloseIcon />
           </IconButton>
