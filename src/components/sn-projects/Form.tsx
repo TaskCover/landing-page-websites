@@ -16,9 +16,10 @@ import {
   Select,
   Upload,
 } from "components/shared";
-import { useEmployeeOptions, useProjectTypes } from "store/company/selectors";
+import { useEmployeeOptions } from "store/company/selectors";
 import { SelectMembers } from "./components";
 import { Member } from "./helpers";
+import { useProjectTypeOptions } from "store/global/selectors";
 
 export type ProjectDataForm = Omit<ProjectData, "members"> & {
   members?: Member[];
@@ -34,7 +35,14 @@ type FormProps = {
 const Form = (props: FormProps) => {
   const { initialValues, type, onSubmit: onSubmitProps, ...rest } = props;
   const { onAddSnackbar } = useSnackbar();
-  const { options: projectTypeOptions, onGetProjectTypes } = useProjectTypes();
+  const {
+    isFetching: projectTypeOptionsIsFetching,
+    totalPages: projectTypeOptionsTotalPages,
+    pageIndex: projectTypeOptionsPageIndex,
+    options: projectTypeOptions,
+    onGetOptions: onGetProjectTypeOptions,
+    pageSize: projectTypeOptionsPageSize,
+  } = useProjectTypeOptions();
   const {
     options: employeeOptions,
     onGetOptions,
@@ -141,10 +149,22 @@ const Form = (props: FormProps) => {
     formik.setFieldValue(name, newValue);
   };
 
+  const onProjectTypeOptionsEndReached = () => {
+    if (
+      projectTypeOptionsIsFetching ||
+      (projectTypeOptionsTotalPages &&
+        projectTypeOptionsPageIndex >= projectTypeOptionsTotalPages)
+    )
+      return;
+    onGetOptions({
+      pageSize: projectTypeOptionsPageSize,
+      pageIndex: projectTypeOptionsPageIndex + 1,
+    });
+  };
+
   useEffect(() => {
-    if (projectTypeOptions.length) return;
-    onGetProjectTypes();
-  }, [onGetProjectTypes, projectTypeOptions.length]);
+    onGetProjectTypeOptions({ pageIndex: 1, pageSize: 20 });
+  }, [onGetProjectTypeOptions]);
 
   useEffect(() => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
@@ -199,6 +219,7 @@ const Form = (props: FormProps) => {
             error={touchedErrors?.type_project}
             rootSx={sxConfig.input}
             fullWidth
+            onEndReached={onProjectTypeOptionsEndReached}
             sx={{
               mt: { xs: 2, sm: 0 },
             }}

@@ -15,9 +15,11 @@ const DesktopCells = (props: DesktopCellsProps) => {
     <>
       <BodyCell>{order}</BodyCell>
       <BodyCell align="left">{item?.name}</BodyCell>
-      <BodyCell align="left" noWrap></BodyCell>
-      <BodyCell tooltip={formatDate(undefined, DATE_TIME_FORMAT_SLASH)}>
-        {formatDate()}
+      <BodyCell align="left" noWrap>
+        {item.created_by?.fullname}
+      </BodyCell>
+      <BodyCell tooltip={formatDate(item.created_time, DATE_TIME_FORMAT_SLASH)}>
+        {formatDate(item.created_time)}
       </BodyCell>
       <BodyCell></BodyCell>
     </>

@@ -1,4 +1,4 @@
-import { ChangeEvent, memo } from "react";
+import { ChangeEvent, memo, useMemo } from "react";
 import { Select, SelectProps } from "components/shared";
 
 export type DropdownProps = Omit<SelectProps, "name" | "onChange"> & {
@@ -8,7 +8,12 @@ export type DropdownProps = Omit<SelectProps, "name" | "onChange"> & {
 };
 
 const Dropdown = (props: DropdownProps) => {
-  const { rootSx, name, onChange, value, sx, ...rest } = props;
+  const { rootSx, name, onChange, value, sx, options, ...rest } = props;
+
+  const hasValue = useMemo(
+    () => options.some((option) => option.value === value),
+    [options, value],
+  );
 
   const onChangeSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -21,7 +26,7 @@ const Dropdown = (props: DropdownProps) => {
       hasAll
       onlyContent
       rootSx={{
-        color: value ? "primary.main" : "grey.400",
+        color: hasValue ? "primary.main" : "grey.400",
         fontWeight: 600,
         height: 32,
         "& >svg": { fontSize: 20 },
@@ -35,6 +40,7 @@ const Dropdown = (props: DropdownProps) => {
         height: 32,
         ...sx,
       }}
+      options={options}
       {...rest}
     />
   );

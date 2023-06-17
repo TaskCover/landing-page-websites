@@ -9,11 +9,12 @@ import PlusIcon from "icons/PlusIcon";
 import { Search } from "components/Filters";
 import { MenuList, Stack } from "@mui/material";
 import MemberItem from "components/sn-projects/components/MemberItem";
-import { useEmployeeOptions, usePositions } from "store/company/selectors";
+import { useEmployeeOptions } from "store/company/selectors";
 import { useMembersOfProject, useProjects } from "store/project/selectors";
 import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
+import { usePositionOptions } from "store/global/selectors";
 
 type MemberData = {
   id: string;
@@ -47,7 +48,7 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
   const { items: members, id } = useMembersOfProject();
   const { onUpdateProject } = useProjects();
   const { onAddSnackbar } = useSnackbar();
-  const { options, onGetPositions } = usePositions();
+  const { options, onGetOptions: onGetPositionOptions } = usePositionOptions();
 
   const [newMembers, setNewMembers] = useState<MemberData[]>([]);
 
@@ -85,9 +86,8 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
   }, [onGetOptions]);
 
   useEffect(() => {
-    if (options.length) return;
-    onGetPositions();
-  }, [onGetPositions, options.length]);
+    onGetPositionOptions({ pageIndex: 1, pageSize: 200000 });
+  }, [onGetPositionOptions]);
 
   useEffect(() => {
     setNewMembers(

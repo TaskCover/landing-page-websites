@@ -4,7 +4,7 @@ import { CircularProgress, MenuItem, inputBaseClasses } from "@mui/material";
 import { Option } from "constant/types";
 import ChevronIcon from "icons/ChevronIcon";
 import { Search } from "components/Filters";
-import { debounce } from "utils/index";
+import { debounce, uuid } from "utils/index";
 
 export type SelectProps = InputProps & {
   options: Option[];
@@ -20,6 +20,9 @@ export type SelectProps = InputProps & {
   };
 };
 
+const ID_PLACEHOLDER = uuid();
+const ID_PENDING = uuid();
+
 const Select = (props: SelectProps) => {
   const {
     options,
@@ -31,28 +34,36 @@ const Select = (props: SelectProps) => {
     onEndReached,
     onChangeSearch,
     searchProps,
+    onChange: onChangeProp,
     ...rest
   } = props;
-  const idPlaceholder = useId();
-  const idPending = useId();
 
   const hasValue = useMemo(
-    () => value && value !== placeholder,
-    [placeholder, value],
+    () => options.some((option) => option.value === value),
+    [options, value],
   );
 
   const optionList = useMemo(() => {
     if (hasAll || placeholder) {
       return [
         {
-          label: hasAll && hasValue ? "All" : placeholder,
-          value: idPlaceholder,
+          label: hasAll && hasValue ? "Tất cả" : placeholder,
+          value: ID_PLACEHOLDER,
         },
         ...options,
       ];
     }
     return options;
-  }, [hasAll, placeholder, options, hasValue, idPlaceholder]);
+  }, [hasAll, placeholder, options, hasValue]);
+
+  const onChange = (event) => {
+    if (event.target.value === ID_PLACEHOLDER) {
+      event.target.value = undefined;
+      onChangeProp && onChangeProp(event);
+    } else {
+      onChangeProp && onChangeProp(event);
+    }
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onScroll = debounce((event: any) => {
@@ -80,7 +91,8 @@ const Select = (props: SelectProps) => {
         },
       }}
       rootSx={defaultSx.input}
-      value={value || (showPlaceholder ? idPlaceholder : "")}
+      value={hasValue ? value : showPlaceholder ? ID_PLACEHOLDER : ""}
+      onChange={onChange}
       {...rest}
     >
       {!!onChangeSearch && (
@@ -96,7 +108,11 @@ const Select = (props: SelectProps) => {
         <MenuItem
           sx={{
             ...defaultSx.item,
-            display: option.value === idPlaceholder ? "none" : undefined,
+            display:
+              (!hasValue && option.value === ID_PLACEHOLDER) ||
+              value === ID_PLACEHOLDER
+                ? "none"
+                : undefined,
           }}
           key={option.value}
           value={option.value}
@@ -106,7 +122,7 @@ const Select = (props: SelectProps) => {
       ))}
 
       {pending && (
-        <MenuItem sx={defaultSx.item} value={idPending}>
+        <MenuItem sx={defaultSx.item} value={ID_PENDING}>
           <CircularProgress size={20} sx={{ mx: "auto" }} color="primary" />
         </MenuItem>
       )}

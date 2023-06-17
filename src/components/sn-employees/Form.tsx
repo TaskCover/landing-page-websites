@@ -11,7 +11,7 @@ import { DataAction } from "constant/enums";
 import { Input, Select } from "components/shared";
 import { EmployeeData } from "store/company/actions";
 import { EMAIL_REGEX } from "constant/regex";
-import { usePositions } from "store/company/selectors";
+import { usePositionOptions } from "store/global/selectors";
 
 type FormProps = {
   initialValues: EmployeeData;
@@ -24,7 +24,8 @@ const Form = (props: FormProps) => {
   const { initialValues, type, onSubmit: onSubmitProps, ...rest } = props;
   const { onAddSnackbar } = useSnackbar();
 
-  const { options } = usePositions();
+  const { options, onGetOptions, isFetching, totalPages, pageIndex, pageSize } =
+    usePositionOptions();
 
   const label = useMemo(() => {
     switch (type) {
@@ -76,6 +77,11 @@ const Form = (props: FormProps) => {
     [touchedErrors, formik.isSubmitting],
   );
 
+  const onEndReached = () => {
+    if (isFetching || (totalPages && pageIndex >= totalPages)) return;
+    onGetOptions({ pageSize, pageIndex: pageIndex + 1 });
+  };
+
   return (
     <FormLayout
       sx={{
@@ -111,6 +117,7 @@ const Form = (props: FormProps) => {
           error={touchedErrors?.position}
           rootSx={sxConfig.input}
           fullWidth
+          onEndReached={onEndReached}
         />
       </Stack>
     </FormLayout>

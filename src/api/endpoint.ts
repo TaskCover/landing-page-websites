@@ -14,11 +14,15 @@ export const Endpoint = {
   PROJECTS: "/projects",
   PROJECT_ITEM: "/projects/{id}",
   PROJECT_MEMBERS: "/projects/{id}/members",
+  PROJECT_TYPES_ALL: "type-project/all",
   PROJECT_TYPES: "type-project",
   PROJECT_TYPE_ITEM: "type-project/{id}",
+  PROJECT_TYPES_INACTIVE: "type-project/inactive",
 
   COST_HISTORY: "/cost-history",
 
+  POSITIONS_ALL: "/positions/all",
   POSITIONS: "/positions",
   POSITION_ITEM: "/positions/{id}",
+  POSITIONS_INACTIVE: "/positions/inactive",
 };

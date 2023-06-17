@@ -24,10 +24,12 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         <InformationItem label="Người tạo">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Avatar size={32} />
-            <Text variant="h6"></Text>
+            <Text variant="h6">{item.created_by?.fullname}</Text>
           </Stack>
         </InformationItem>
-        <InformationItem label="Ngày tạo">{formatDate()}</InformationItem>
+        <InformationItem label="Ngày tạo">
+          {formatDate(item.created_time)}
+        </InformationItem>
         <InformationItem label="Số người giữ chức vụ">
           {formatNumber()}
         </InformationItem>

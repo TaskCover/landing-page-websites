@@ -7,22 +7,22 @@ import { BaseQueries } from "constant/types";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
 
+export enum ProjectStatus {
+  ACTIVE = "ACTIVE",
+  PAUSE = "PAUSE",
+  CLOSE = "CLOSE",
+}
+
 export type GetProjectListQueries = BaseQueries & {
   saved?: boolean;
-  latest?: boolean;
-  status?: string;
+  sort?: string;
+  status?: ProjectStatus;
 };
 
 export type GetMembersOfProjectQueries = BaseQueries & {
   email?: string;
   id?: string;
 };
-
-export enum ProjectStatus {
-  ACTIVE = "ACTIVE",
-  PAUSE = "PAUSE",
-  CLOSE = "CLOSE",
-}
 
 export type ProjectData = {
   name: string;
@@ -44,7 +44,9 @@ export type ProjectData = {
 export const getProjectList = createAsyncThunk(
   "project/getProjectList",
   async (queries: GetProjectListQueries) => {
-    queries = serverQueries(queries) as GetProjectListQueries;
+    queries = serverQueries(queries, undefined, [
+      "saved",
+    ]) as GetProjectListQueries;
 
     try {
       const response = await client.get(Endpoint.PROJECTS, queries);

@@ -12,7 +12,10 @@ import { ProjectType } from "store/company/reducer";
 import { useProjectTypes } from "store/company/selectors";
 import { ProjectTypeData } from "store/company/actions";
 import Form from "./Form";
-import { getDataFromKeys } from "utils/index";
+import { getDataFromKeys, getPath } from "utils/index";
+import { DEFAULT_PAGING } from "constant/index";
+import { usePathname, useRouter } from "next/navigation";
+import Pagination from "components/Pagination";
 
 const ItemList = () => {
   const {
@@ -20,12 +23,18 @@ const ItemList = () => {
     isFetching,
     isIdle,
     error,
+    pageIndex,
+    pageSize,
+    totalItems,
+    totalPages,
     onGetProjectTypes,
     onUpdateProjectType,
     onDeleteProjectType,
   } = useProjectTypes();
 
-  const { isReady } = useQueryParams();
+  const pathname = usePathname();
+  const { push } = useRouter();
+  const { initQuery, isReady, query } = useQueryParams();
   const { isMdSmaller } = useBreakpoint();
 
   const [item, setItem] = useState<ProjectType | undefined>();
@@ -54,6 +63,23 @@ const ItemList = () => {
     setAction(undefined);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onChangeQueries = (queries: { [key: string]: any }) => {
+    const newQueries = { ...query, ...queries };
+    const path = getPath(pathname, newQueries);
+    push(path);
+
+    onGetProjectTypes(newQueries);
+  };
+
+  const onChangePage = (newPage: number) => {
+    onChangeQueries({ pageIndex: newPage, pageSize });
+  };
+
+  const onChangeSize = (newPageSize: number) => {
+    onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
+  };
+
   const onUpdate = async (data: ProjectTypeData) => {
     if (!item) return;
     return await onUpdateProjectType(item.id, data.name);
@@ -67,8 +93,8 @@ const ItemList = () => {
 
   useEffect(() => {
     if (!isIdle || !isReady) return;
-    onGetProjectTypes();
-  }, [isIdle, isReady, onGetProjectTypes]);
+    onGetProjectTypes({ ...DEFAULT_PAGING, ...initQuery });
+  }, [isIdle, isReady, onGetProjectTypes, initQuery]);
 
   return (
     <>
@@ -97,6 +123,16 @@ const ItemList = () => {
           );
         })}
       </TableLayout>
+
+      <Pagination
+        totalItems={totalItems}
+        totalPages={totalPages}
+        page={pageIndex}
+        pageSize={pageSize}
+        containerProps={{ px: 3, pb: 3 }}
+        onChangePage={onChangePage}
+        onChangeSize={onChangeSize}
+      />
       {action === DataAction.UPDATE && (
         <Form
           open

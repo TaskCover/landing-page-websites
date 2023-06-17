@@ -4,7 +4,7 @@ import { useSnackbar } from "store/app/selectors";
 import { Employee } from "store/company/reducer";
 import { Text, Checkbox, Select } from "components/shared";
 import Avatar from "components/Avatar";
-import { usePositions } from "store/company/selectors";
+import { usePositionOptions } from "store/global/selectors";
 
 type MemberItemProps = Employee & {
   onChange: (id: string, position: string, fullname: string) => void;
@@ -15,7 +15,7 @@ type MemberItemProps = Employee & {
 const MemberItem = (props: MemberItemProps) => {
   const { id, fullname, email, onChange, checked, positionOfProject } = props;
 
-  const { options } = usePositions();
+  const { options } = usePositionOptions();
   const { onAddSnackbar } = useSnackbar();
 
   const [position, setPosition] = useState<string | undefined>(

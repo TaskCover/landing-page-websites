@@ -101,7 +101,7 @@ export const getFiltersFromQueries = (
 ) => {
   return Object.entries(queries).reduce((out, [key, value]) => {
     if (
-      !["page", "size", "concat"].includes(key) &&
+      !["pageIndex", "pageSize", "concat"].includes(key) &&
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       !skipValue.includes(value as any)
     ) {
@@ -125,19 +125,57 @@ export const refactorRawItemListResponse = (rawData: {
   } as ItemListResponse;
 };
 
-export const serverQueries = ({
-  pageIndex,
-  pageSize,
-  ...rest
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}) => {
-  return cleanObject({
+const KEYS = ["page", "size", "sort"];
+
+export const serverQueries = (
+  {
+    pageIndex,
+    pageSize,
+    ...rest
+  }: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  },
+  likeKeys?: string[],
+  booleanKeys?: string[],
+) => {
+  const queries = cleanObject({
     ...rest,
     page: pageIndex ? (pageIndex as number) - 1 : undefined,
-    size: pageSize,
+    size: isNaN(pageSize) ? pageSize : Number(pageSize),
   });
+
+  const data = Object.entries(queries).reduce(
+    (out: { [key: string]: string[] }, [key, value]) => {
+      if (KEYS.includes(key)) {
+        out[key] = value;
+      } else {
+        if (likeKeys?.includes(key)) {
+          out.query.push(`like(${key},"${value}")`);
+        } else if (typeof value === "boolean" || booleanKeys?.includes(key)) {
+          const boolValue =
+            typeof value === "boolean"
+              ? value
+              : value === "true" || Number(value) === 1;
+          out.query.push(`eq(${key},${boolValue})`);
+        } else {
+          out.query.push(`eq(${key},"${value}")`);
+        }
+      }
+      return out;
+    },
+    { query: [] },
+  );
+
+  const cleanData = cleanObject(data);
+
+  if (cleanData["query"].length) {
+    cleanData["query"] = `and(${cleanData["query"].join(",")})`;
+  } else {
+    delete cleanData["query"];
+  }
+
+  return cleanData;
 };
 
 export const formatDate = (

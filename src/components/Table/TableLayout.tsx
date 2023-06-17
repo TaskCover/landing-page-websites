@@ -160,7 +160,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                   ) : Boolean(error) ? (
                     error ?? AN_ERROR_TRY_RELOAD_PAGE
                   ) : noData ? (
-                    "No data."
+                    "Không có dữ liệu."
                   ) : null}
                 </CellBody>
               </TableRow>

@@ -4,20 +4,29 @@ import { memo, useCallback, useEffect, useRef } from "react";
 import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
-import { Dropdown, Search } from "components/Filters";
-import { TEXT_STATUS } from "./helpers";
-import { cleanObject, stringifyURLSearchParams } from "utils/index";
+import { Clear, Dropdown, Refresh, Search } from "components/Filters";
+import { PaymentStatus, TEXT_STATUS } from "./helpers";
+import { getPath } from "utils/index";
 import { usePathname, useRouter } from "next/navigation";
 import useToggle from "hooks/useToggle";
 import { DataAction } from "constant/enums";
 import Form from "./Form";
-import { useEmployees, usePositions } from "store/company/selectors";
+import { useEmployees } from "store/company/selectors";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { GetEmployeeListQueries } from "store/company/actions";
+import { usePositionOptions } from "store/global/selectors";
 
 const Actions = () => {
-  const { filters, onGetEmployees, pageSize, onCreateEmployee } =
+  const { filters, onGetEmployees, pageSize, pageIndex, onCreateEmployee } =
     useEmployees();
-  const { options, onGetPositions, isFetching } = usePositions();
+  const {
+    options,
+    onGetOptions,
+    isFetching: positionOptionsIsFetching,
+    totalPages: positionOptionsTotalPages,
+    pageSize: positionOptionsPageSize,
+    pageIndex: positionOptionsPageIndex,
+  } = usePositionOptions();
 
   const filtersRef = useRef<Params>(filters);
 
@@ -26,25 +35,58 @@ const Actions = () => {
   const pathname = usePathname();
   const { push } = useRouter();
 
+  const onEmit = useCallback(
+    (newQueries?: Params) => {
+      const path = getPath(pathname, newQueries);
+      push(path);
+      onGetEmployees(newQueries as GetEmployeeListQueries);
+    },
+    [onGetEmployees, pathname, push],
+  );
+
   const onChangeData = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (name: string, value: any) => {
-      let newQueries = {
+      const newQueries = {
         ...filtersRef.current,
         [name]: value,
+        pageIndex: 1,
+        pageSize,
       };
-      newQueries = cleanObject(newQueries);
-      const queryString = stringifyURLSearchParams(newQueries);
-      push(`${pathname}${queryString}`);
 
-      onGetEmployees({ ...newQueries, pageIndex: 1, pageSize });
+      onEmit(newQueries);
     },
-    [onGetEmployees, pageSize, pathname, push],
+    [onEmit, pageSize],
   );
 
+  const onRefresh = () => {
+    onGetEmployees({
+      ...filters,
+      pageIndex,
+      pageSize,
+    } as GetEmployeeListQueries);
+  };
+
+  const onClear = () => {
+    onEmit({ pageIndex: 1, pageSize });
+  };
+
+  const onEndReached = () => {
+    if (
+      positionOptionsIsFetching ||
+      (positionOptionsTotalPages &&
+        positionOptionsPageIndex >= positionOptionsTotalPages)
+    )
+      return;
+    onGetOptions({
+      pageSize: positionOptionsPageSize,
+      pageIndex: positionOptionsPageIndex + 1,
+    });
+  };
+
   useEffect(() => {
-    onGetPositions();
-  }, [onGetPositions]);
+    onGetOptions({ pageIndex: 1, pageSize: 20 });
+  }, [onGetOptions]);
 
   useEffect(() => {
     filtersRef.current = filters;
@@ -67,9 +109,11 @@ const Actions = () => {
           alignItems="center"
           justifyContent="space-between"
           width="100%"
-          spacing={2}
+          spacing={{ xs: 2, md: 0 }}
         >
-          <Text variant="h4">Danh sách nhân viên</Text>
+          <Text variant="h4" display={{ md: "none" }}>
+            Danh sách nhân viên
+          </Text>
           <Button
             onClick={onShow}
             startIcon={<PlusIcon />}
@@ -81,7 +125,7 @@ const Actions = () => {
         </Stack>
 
         <Stack
-          direction={{ xs: "column", md: "row" }}
+          direction={{ md: "row" }}
           alignItems="center"
           spacing={3}
           py={1.25}
@@ -94,9 +138,10 @@ const Actions = () => {
         >
           <Search
             placeholder="Tìm kiếm theo email"
-            name="search"
+            name="email"
             onChange={onChangeData}
-            value={filters?.search}
+            value={filters?.email}
+            sx={{ width: 200 }}
           />
           <Stack direction="row" alignItems="center" spacing={3}>
             <Dropdown
@@ -105,15 +150,18 @@ const Actions = () => {
               name="position"
               onChange={onChangeData}
               value={filters?.position}
-              pending={isFetching}
+              pending={positionOptionsIsFetching}
+              onEndReached={onEndReached}
             />
             <Dropdown
               placeholder="Trạng thái"
               options={PAYMENT_OPTIONS}
               name="status"
               onChange={onChangeData}
-              value={filters?.status}
+              value={Number(filters?.status)}
             />
+            <Refresh onClick={onRefresh} />
+            {!!Object.keys(filters).length && <Clear onClick={onClear} />}
           </Stack>
         </Stack>
       </Stack>
@@ -133,8 +181,8 @@ const Actions = () => {
 export default memo(Actions);
 
 const PAYMENT_OPTIONS = [
-  { label: TEXT_STATUS[1], value: "true" },
-  { label: TEXT_STATUS[0], value: "false" },
+  { label: TEXT_STATUS[1], value: PaymentStatus.PAID },
+  { label: TEXT_STATUS[0], value: PaymentStatus.UNPAID },
 ];
 
 const INITIAL_VALUES = {

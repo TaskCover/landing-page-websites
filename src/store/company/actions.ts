@@ -10,6 +10,7 @@ import {
 import { BaseQueries } from "constant/types";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
+import { getPositions, getProjectTypes } from "store/global/actions";
 
 export enum CompanyStatus {
   APPROVE = 1,
@@ -17,9 +18,9 @@ export enum CompanyStatus {
 }
 
 export type GetEmployeeListQueries = BaseQueries & {
-  search?: string;
+  email?: string;
   position?: string;
-  status?: "true" | "false";
+  status?: boolean;
   company?: string;
   date?: string;
 };
@@ -27,7 +28,7 @@ export type GetEmployeeListQueries = BaseQueries & {
 export type GetCompanyListQueries = BaseQueries & {
   search?: string;
   status?: CompanyStatus;
-  date?: "true" | "false";
+  date?: string;
 };
 
 export type EmployeeData = {
@@ -56,7 +57,11 @@ export const getEmployees = createAsyncThunk(
     concat,
     ...queries
   }: GetEmployeeListQueries & { concat?: boolean }) => {
-    queries = serverQueries(queries) as GetEmployeeListQueries;
+    queries = serverQueries(
+      { ...queries, sort: "created_time=-1" },
+      ["email"],
+      ["status"],
+    ) as GetEmployeeListQueries;
 
     try {
       const response = await client.get(Endpoint.USERS, queries, {
@@ -113,22 +118,9 @@ export const updateEmployee = createAsyncThunk(
   },
 );
 
-export const getPositions = createAsyncThunk(
-  "company/getPositions",
-  async () => {
-    try {
-      const response = await client.get(Endpoint.POSITIONS, undefined, {
-        baseURL: COMPANY_API_URL,
-      });
-
-      if (response?.status === HttpStatusCode.OK) {
-        return response.data;
-      }
-      throw AN_ERROR_TRY_AGAIN;
-    } catch (error) {
-      throw error;
-    }
-  },
+export const getPositionList = createAsyncThunk(
+  "company/getPositionList",
+  getPositions,
 );
 
 export const createPosition = createAsyncThunk(
@@ -175,8 +167,9 @@ export const deletePosition = createAsyncThunk(
   "company/deletePosition",
   async (id: string) => {
     try {
-      const response = await client.delete(
-        StringFormat(Endpoint.POSITION_ITEM, { id }),
+      const response = await client.put(
+        Endpoint.POSITIONS_INACTIVE,
+        { ids: [id] },
         {
           baseURL: COMPANY_API_URL,
         },
@@ -193,21 +186,8 @@ export const deletePosition = createAsyncThunk(
 );
 
 export const getProjectTypeList = createAsyncThunk(
-  "project/getProjectTypeList",
-  async () => {
-    try {
-      const response = await client.get(Endpoint.PROJECT_TYPES, undefined, {
-        baseURL: COMPANY_API_URL,
-      });
-
-      if (response?.status === HttpStatusCode.OK) {
-        return response.data;
-      }
-      throw AN_ERROR_TRY_AGAIN;
-    } catch (error) {
-      throw error;
-    }
-  },
+  "company/getProjectTypeList",
+  getProjectTypes,
 );
 
 export const createProjectType = createAsyncThunk(
@@ -254,8 +234,9 @@ export const deleteProjectType = createAsyncThunk(
   "company/deleteProjectType",
   async (id: string) => {
     try {
-      const response = await client.delete(
-        StringFormat(Endpoint.PROJECT_TYPE_ITEM, { id }),
+      const response = await client.put(
+        Endpoint.PROJECT_TYPES_INACTIVE,
+        { ids: [id] },
         {
           baseURL: COMPANY_API_URL,
         },

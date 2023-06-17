@@ -4,7 +4,6 @@ import {
   GetEmployeeListQueries,
   createEmployee,
   updateEmployee,
-  getPositions,
   createPosition,
   updatePosition,
   getProjectTypeList,
@@ -17,6 +16,7 @@ import {
   getCostHistory,
   getCompanyList,
   GetCompanyListQueries,
+  getPositionList,
 } from "./actions";
 import {
   BaseQueries,
@@ -41,7 +41,9 @@ export interface Employee extends User {
 
 export interface Position {
   id: string;
-  name?: string;
+  name: string;
+  created_time: string;
+  created_by: User;
 }
 
 export interface CostHistory {
@@ -54,6 +56,8 @@ export interface CostHistory {
 export interface ProjectType {
   id: string;
   name: string;
+  created_time: string;
+  created_by: User;
 }
 
 export interface Company {
@@ -94,10 +98,12 @@ export interface CompanyState {
   positions: Position[];
   positionsStatus: DataStatus;
   positionsError?: string;
+  positionsPaging: Paging;
 
   projectTypes: ProjectType[];
   projectTypesStatus: DataStatus;
   projectTypesError?: string;
+  projectTypesPaging: Paging;
 
   item?: Company;
   itemStatus: DataStatus;
@@ -109,10 +115,10 @@ export interface CompanyState {
   costHistoriesError?: string;
 
   items: Company[];
-  status: DataStatus;
-  paging: Paging;
-  error?: string;
-  filters: Omit<GetCompanyListQueries, "pageIndex" | "pageSize">;
+  itemsStatus: DataStatus;
+  itemsPaging: Paging;
+  itemsError?: string;
+  itemsFilters: Omit<GetCompanyListQueries, "pageIndex" | "pageSize">;
 
   itemOptions: Option[];
   itemOptionsStatus: DataStatus;
@@ -134,9 +140,11 @@ const initialState: CompanyState = {
 
   positions: [],
   positionsStatus: DataStatus.IDLE,
+  positionsPaging: DEFAULT_PAGING,
 
   projectTypes: [],
   projectTypesStatus: DataStatus.IDLE,
+  projectTypesPaging: DEFAULT_PAGING,
 
   itemStatus: DataStatus.IDLE,
 
@@ -145,9 +153,9 @@ const initialState: CompanyState = {
   costHistoriesPaging: DEFAULT_PAGING,
 
   items: [],
-  status: DataStatus.IDLE,
-  paging: DEFAULT_PAGING,
-  filters: {},
+  itemsStatus: DataStatus.IDLE,
+  itemsPaging: DEFAULT_PAGING,
+  itemsFilters: {},
 
   itemOptions: [],
   itemOptionsStatus: DataStatus.IDLE,
@@ -208,10 +216,6 @@ const companySlice = createSlice({
         state[`${prefixKey}Status`] = DataStatus.FAILED;
         state[`${prefixKey}Error`] =
           action.error?.message ?? AN_ERROR_TRY_AGAIN;
-        if (!action.meta.arg["concat"]) {
-          state.employeesPaging.totalItems = undefined;
-          state.employeesPaging.totalPages = undefined;
-        }
       })
       .addCase(
         createEmployee.fulfilled,
@@ -237,18 +241,25 @@ const companySlice = createSlice({
         },
       )
 
-      .addCase(getPositions.pending, (state) => {
+      .addCase(getPositionList.pending, (state, action) => {
         state.positionsStatus = DataStatus.LOADING;
+        state.positionsPaging.pageIndex =
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
+        state.positionsPaging.pageSize =
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
       })
       .addCase(
-        getPositions.fulfilled,
-        (state, action: PayloadAction<Position[]>) => {
-          state.positions = action.payload;
+        getPositionList.fulfilled,
+        (state, action: PayloadAction<ItemListResponse>) => {
+          const { items, ...paging } = action.payload;
+
+          state.positions = items as Position[];
+          state.positionsPaging = Object.assign(state.positionsPaging, paging);
           state.positionsStatus = DataStatus.SUCCEEDED;
           state.positionsError = undefined;
         },
       )
-      .addCase(getPositions.rejected, (state, action) => {
+      .addCase(getPositionList.rejected, (state, action) => {
         state.positions = [];
         state.positionsStatus = DataStatus.FAILED;
         state.positionsError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
@@ -284,13 +295,24 @@ const companySlice = createSlice({
           }
         },
       )
-      .addCase(getProjectTypeList.pending, (state) => {
+
+      .addCase(getProjectTypeList.pending, (state, action) => {
         state.projectTypesStatus = DataStatus.LOADING;
+        state.projectTypesPaging.pageIndex =
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
+        state.projectTypesPaging.pageSize =
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
       })
       .addCase(
         getProjectTypeList.fulfilled,
-        (state, action: PayloadAction<ProjectType[]>) => {
-          state.projectTypes = action.payload;
+        (state, action: PayloadAction<ItemListResponse>) => {
+          const { items, ...paging } = action.payload;
+
+          state.projectTypes = items as ProjectType[];
+          state.projectTypesPaging = Object.assign(
+            state.projectTypesPaging,
+            paging,
+          );
           state.projectTypesStatus = DataStatus.SUCCEEDED;
           state.projectTypesError = undefined;
         },
@@ -383,7 +405,6 @@ const companySlice = createSlice({
         state.costHistoriesStatus = DataStatus.FAILED;
         state.costHistoriesError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
       })
-
       .addCase(getCompanyList.pending, (state, action) => {
         const prefixKey = action.meta.arg["concat"] ? "itemOptions" : "items";
 
@@ -429,10 +450,6 @@ const companySlice = createSlice({
         state[`${prefixKey}Status`] = DataStatus.FAILED;
         state[`${prefixKey}Error`] =
           action.error?.message ?? AN_ERROR_TRY_AGAIN;
-        if (!action.meta.arg["concat"]) {
-          state.paging.totalItems = undefined;
-          state.paging.totalPages = undefined;
-        }
       }),
 });
 

@@ -14,7 +14,7 @@ import {
   getCompanyList,
   getCostHistory,
   getEmployees,
-  getPositions,
+  getPositionList,
   getProjectTypeList,
   updateCompany,
   updateEmployee,
@@ -141,18 +141,20 @@ export const usePositions = () => {
     positionsError: error,
   } = useAppSelector((state) => state.company, shallowEqual);
 
+  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+    (state) => state.company.positionsPaging,
+    shallowEqual,
+  );
+
   const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
   const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
 
-  const options = useMemo(
-    () =>
-      items.map((item) => ({ label: item.name ?? "Unknown", value: item.id })),
-    [items],
+  const onGetPositions = useCallback(
+    async (queries: BaseQueries) => {
+      await dispatch(getPositionList(queries));
+    },
+    [dispatch],
   );
-
-  const onGetPositions = useCallback(async () => {
-    await dispatch(getPositions());
-  }, [dispatch]);
 
   const onCreatePosition = useCallback(
     async (data: PositionData) => {
@@ -189,7 +191,10 @@ export const usePositions = () => {
     isIdle,
     isFetching,
     error,
-    options,
+    pageIndex,
+    pageSize,
+    totalItems,
+    totalPages,
     onGetPositions,
     onCreatePosition,
     onUpdatePosition,
@@ -207,16 +212,17 @@ export const useProjectTypes = () => {
 
   const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
   const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
-
-  const options = useMemo(
-    () =>
-      items.map((item) => ({ label: item.name ?? "Unknown", value: item.id })),
-    [items],
+  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+    (state) => state.company.positionsPaging,
+    shallowEqual,
   );
 
-  const onGetProjectTypes = useCallback(async () => {
-    await dispatch(getProjectTypeList());
-  }, [dispatch]);
+  const onGetProjectTypes = useCallback(
+    async (queries: BaseQueries) => {
+      await dispatch(getProjectTypeList(queries));
+    },
+    [dispatch],
+  );
 
   const onCreateProjectType = useCallback(
     async (data: PositionData) => {
@@ -253,7 +259,10 @@ export const useProjectTypes = () => {
     isIdle,
     isFetching,
     error,
-    options,
+    pageIndex,
+    pageSize,
+    totalItems,
+    totalPages,
     onGetProjectTypes,
     onCreateProjectType,
     onUpdateProjectType,
@@ -339,12 +348,14 @@ export const useCostHistory = () => {
 
 export const useCompanies = () => {
   const dispatch = useAppDispatch();
-  const { items, status, error, filters } = useAppSelector(
-    (state) => state.company,
-    shallowEqual,
-  );
+  const {
+    items,
+    itemsStatus: status,
+    itemsError: error,
+    itemsFilters: filters,
+  } = useAppSelector((state) => state.company, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
-    (state) => state.company.paging,
+    (state) => state.company.itemsPaging,
     shallowEqual,
   );
 

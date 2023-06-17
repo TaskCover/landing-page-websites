@@ -4,7 +4,7 @@ import { memo, useEffect, useMemo, useState } from "react";
 import { TableRow } from "@mui/material";
 import { TableLayout, CellProps, ActionsCell } from "components/Table";
 import useQueryParams from "hooks/useQueryParams";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import useBreakpoint from "hooks/useBreakpoint";
 import { DataAction } from "constant/enums";
 import MobileContentCell from "./MobileContentCell";
@@ -13,7 +13,9 @@ import { Position } from "store/company/reducer";
 import { usePositions } from "store/company/selectors";
 import { PositionData } from "store/company/actions";
 import Form from "./Form";
-import { getDataFromKeys } from "utils/index";
+import { getDataFromKeys, getPath } from "utils/index";
+import { DEFAULT_PAGING } from "constant/index";
+import Pagination from "components/Pagination";
 
 const ItemList = () => {
   const {
@@ -21,16 +23,20 @@ const ItemList = () => {
     isFetching,
     isIdle,
     error,
+    pageIndex,
+    pageSize,
+    totalItems,
+    totalPages,
     onGetPositions,
     onUpdatePosition,
     onDeletePosition,
   } = usePositions();
 
-  const { isReady } = useQueryParams();
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
 
-  const params = useParams();
+  const pathname = usePathname();
+  const { initQuery, isReady, query } = useQueryParams();
 
   const [item, setItem] = useState<Position | undefined>();
   const [action, setAction] = useState<DataAction | undefined>();
@@ -58,6 +64,23 @@ const ItemList = () => {
     setAction(undefined);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onChangeQueries = (queries: { [key: string]: any }) => {
+    const newQueries = { ...query, ...queries };
+    const path = getPath(pathname, newQueries);
+    push(path);
+
+    onGetPositions(newQueries);
+  };
+
+  const onChangePage = (newPage: number) => {
+    onChangeQueries({ pageIndex: newPage, pageSize });
+  };
+
+  const onChangeSize = (newPageSize: number) => {
+    onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
+  };
+
   const onUpdate = async (data: PositionData) => {
     if (!item) return;
     return await onUpdatePosition(item.id, data.name);
@@ -71,8 +94,8 @@ const ItemList = () => {
 
   useEffect(() => {
     if (!isIdle || !isReady) return;
-    onGetPositions();
-  }, [isIdle, isReady, onGetPositions]);
+    onGetPositions({ ...DEFAULT_PAGING, ...initQuery });
+  }, [initQuery, isIdle, isReady, onGetPositions]);
 
   return (
     <>
@@ -101,6 +124,16 @@ const ItemList = () => {
           );
         })}
       </TableLayout>
+
+      <Pagination
+        totalItems={totalItems}
+        totalPages={totalPages}
+        page={pageIndex}
+        pageSize={pageSize}
+        containerProps={{ px: 3, pb: 3 }}
+        onChangePage={onChangePage}
+        onChangeSize={onChangeSize}
+      />
       {action === DataAction.UPDATE && (
         <Form
           open

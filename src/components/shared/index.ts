@@ -1,5 +1,5 @@
 import Button from "./Button";
-import IconButton from "./IconButton";
+import IconButton, { IconButtonProps } from "./IconButton";
 import Tooltip from "./Tooltip";
 import Text, { TextProps } from "./Text";
 import Input, { InputProps } from "./Input";
@@ -30,4 +30,5 @@ export type {
   SelectProps,
   SwitchProps,
   DatePickerProps,
+  IconButtonProps,
 };

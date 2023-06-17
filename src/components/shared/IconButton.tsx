@@ -23,7 +23,7 @@ type CoreIconButtonProps = MuiIconButtonProps & {
   noPadding?: boolean;
 };
 
-type IconButtonProps = CoreIconButtonProps & {
+export type IconButtonProps = CoreIconButtonProps & {
   tooltip?: string;
 };
 

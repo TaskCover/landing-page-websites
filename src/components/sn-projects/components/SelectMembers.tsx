@@ -1,21 +1,12 @@
-import {
-  ChangeEvent,
-  MouseEvent,
-  memo,
-  useEffect,
-  useId,
-  useState,
-} from "react";
+import { MouseEvent, memo, useEffect, useId, useState } from "react";
 import { MenuList, Popover, Stack, popoverClasses } from "@mui/material";
-import { Checkbox, IconButton, Select, Text } from "components/shared";
+import { IconButton, Text } from "components/shared";
 import CircleCloseIcon from "icons/CircleCloseIcon";
 import ChevronIcon from "icons/ChevronIcon";
-import { useEmployeeOptions, usePositions } from "store/company/selectors";
-import Avatar from "components/Avatar";
-import { Employee } from "store/company/reducer";
-import { useSnackbar } from "store/app/selectors";
+import { useEmployeeOptions } from "store/company/selectors";
 import { Member } from "../helpers";
 import MemberItem from "./MemberItem";
+import { usePositionOptions } from "store/global/selectors";
 
 type SelectMembersProps = {
   value?: Member[];
@@ -29,7 +20,7 @@ const SelectMembers = (props: SelectMembersProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
   const { items } = useEmployeeOptions();
-  const { options, onGetPositions } = usePositions();
+  const { onGetOptions } = usePositionOptions();
 
   const onOpen = (event: MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
@@ -61,9 +52,8 @@ const SelectMembers = (props: SelectMembersProps) => {
   };
 
   useEffect(() => {
-    if (options.length) return;
-    onGetPositions();
-  }, [onGetPositions, options.length]);
+    onGetOptions({ pageIndex: 1, pageSize: 200000 });
+  }, [onGetOptions]);
 
   return (
     <>

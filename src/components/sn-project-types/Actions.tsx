@@ -8,10 +8,17 @@ import useToggle from "hooks/useToggle";
 import { DataAction } from "constant/enums";
 import { useProjectTypes } from "store/company/selectors";
 import Form from "./Form";
+import { Refresh } from "components/Filters";
 
 const Actions = () => {
   const [isShow, onShow, onHide] = useToggle();
-  const { onCreateProjectType } = useProjectTypes();
+  const { onCreateProjectType, onGetProjectTypes, pageSize, pageIndex } =
+    useProjectTypes();
+
+  const onRefresh = () => {
+    onGetProjectTypes({ pageSize, pageIndex });
+  };
+
   return (
     <>
       <Stack
@@ -29,7 +36,7 @@ const Actions = () => {
           alignItems="center"
           justifyContent="space-between"
           width="100%"
-          spacing={2}
+          spacing={{ xs: 2, md: 0 }}
         >
           <Text variant="h4" display={{ md: "none" }}>
             Danh sách chức vụ
@@ -43,6 +50,7 @@ const Actions = () => {
             Thêm mới
           </Button>
         </Stack>
+        <Refresh onClick={onRefresh} />
       </Stack>
       {isShow && (
         <Form

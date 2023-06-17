@@ -38,6 +38,11 @@ const Search = (props: SearchProps) => {
     }
   };
 
+  useEffect(() => {
+    setText(value ?? "");
+    prevTextRef.current = value ?? "";
+  }, [value]);
+
   return (
     <Input
       size="small"

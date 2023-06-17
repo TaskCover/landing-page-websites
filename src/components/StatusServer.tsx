@@ -13,7 +13,13 @@ type StatusServerProps = {
 const StatusServer = (props: StatusServerProps) => {
   const { isFetching, error, children, noData, isIdle = true } = props;
   if (isFetching) {
-    return <CircularProgress color="primary" size={24} sx={{ mx: "auto" }} />;
+    return (
+      <CircularProgress
+        color="primary"
+        size={24}
+        sx={{ mx: "auto", alignSelf: "center" }}
+      />
+    );
   }
 
   if (error) {

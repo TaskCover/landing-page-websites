@@ -91,7 +91,7 @@ const Actions = () => {
           placeholder="Tìm kiếm theo email"
           name="search"
           onChange={onChangeData}
-          value={filters?.search}
+          value={filters?.email}
         />
         <Stack direction="row" alignItems="center" spacing={3}>
           <CompanyFilter onChange={onChangeData} value={filters?.company} />
@@ -100,7 +100,7 @@ const Actions = () => {
             options={PAYMENT_OPTIONS}
             name="status"
             onChange={onChangeData}
-            value={filters?.status}
+            value={Number(filters?.status)}
           />
           <Date
             label="Creation date"
