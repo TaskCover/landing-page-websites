@@ -5,7 +5,7 @@ import Text, { TextProps } from "./Text";
 import Input, { InputProps } from "./Input";
 import Select, { SelectProps } from "./Select";
 import InputNumber from "./InputNumber";
-import DatePicker from "./DatePicker";
+import DatePicker, { DatePickerProps } from "./DatePicker";
 import Switch, { SwitchProps } from "./Switch";
 import Checkbox from "./Checkbox";
 import Upload from "./Upload";
@@ -24,4 +24,10 @@ export {
   Upload,
 };
 
-export type { TextProps, InputProps, SelectProps, SwitchProps };
+export type {
+  TextProps,
+  InputProps,
+  SelectProps,
+  SwitchProps,
+  DatePickerProps,
+};

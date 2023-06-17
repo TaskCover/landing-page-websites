@@ -38,7 +38,7 @@ const Form = (props: FormProps) => {
       const newItem = await onSubmitProps(values);
 
       if (newItem) {
-        onAddSnackbar(`${label} nhân viên thành công!`, "success");
+        onAddSnackbar(`${label} chức vụ thành công!`, "success");
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -79,7 +79,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
-      label={`${label} nhân viên`}
+      label={`${label} chức vụ`}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}

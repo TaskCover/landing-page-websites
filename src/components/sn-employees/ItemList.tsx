@@ -25,6 +25,7 @@ import {
   cleanObject,
   formatDate,
   getDataFromKeys,
+  getPath,
   stringifyURLSearchParams,
 } from "utils/index";
 import { IconButton, Text, Checkbox } from "components/shared";
@@ -122,10 +123,9 @@ const ItemList = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (queries: { [key: string]: any }) => {
-    let newQueries = { ...query, ...queries };
-    newQueries = cleanObject(newQueries);
-    const queryString = stringifyURLSearchParams(newQueries);
-    push(`${pathname}${queryString}`);
+    const newQueries = { ...query, ...queries };
+    const path = getPath(pathname, newQueries);
+    push(path);
 
     onGetEmployees(newQueries);
   };

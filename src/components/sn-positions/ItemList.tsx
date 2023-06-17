@@ -22,7 +22,8 @@ const ItemList = () => {
     isIdle,
     error,
     onGetPositions,
-    onUpdatePosition: onUpdatePositionAction,
+    onUpdatePosition,
+    onDeletePosition,
   } = usePositions();
 
   const { isReady } = useQueryParams();
@@ -57,14 +58,14 @@ const ItemList = () => {
     setAction(undefined);
   };
 
-  const onUpdatePosition = async (data: PositionData) => {
+  const onUpdate = async (data: PositionData) => {
     if (!item) return;
-    return await onUpdatePositionAction(item.id, data.name);
+    return await onUpdatePosition(item.id, data.name);
   };
 
-  const onDeletePosition = (id: string) => {
+  const onDelete = (id: string) => {
     return async () => {
-      return await "Pending";
+      return await onDeletePosition(id);
     };
   };
 
@@ -93,7 +94,7 @@ const ItemList = () => {
               )}
               <ActionsCell
                 onEdit={onActionToItem(DataAction.UPDATE, item)}
-                onDelete={onDeletePosition(item.id)}
+                onDelete={onDelete(item.id)}
                 onChildClick={onActionToItem(DataAction.OTHER, item)}
               />
             </TableRow>
@@ -106,7 +107,7 @@ const ItemList = () => {
           onClose={onResetAction}
           type={DataAction.UPDATE}
           initialValues={getDataFromKeys(item, ["name"]) as PositionData}
-          onSubmit={onUpdatePosition}
+          onSubmit={onUpdate}
         />
       )}
     </>

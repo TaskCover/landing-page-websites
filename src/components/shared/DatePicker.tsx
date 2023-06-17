@@ -4,7 +4,7 @@ import Input, { InputProps } from "./Input";
 import CalendarIcon from "icons/CalendarIcon";
 import "react-datepicker/dist/react-datepicker.css";
 
-type DatePickerProps = Omit<InputProps, "name" | "onChange"> & {
+export type DatePickerProps = Omit<InputProps, "name" | "onChange"> & {
   pickerProps?: Omit<ReactDatePickerProps, "onChange">;
   onChange: (name: string, newDate?: Date) => void;
   name: string;

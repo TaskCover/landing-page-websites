@@ -6,7 +6,6 @@ import {
   getProject,
   getProjectList,
   GetProjectListQueries,
-  getProjectTypeList,
   ProjectStatus,
   updateProject,
 } from "./actions";
@@ -59,11 +58,6 @@ export interface Project {
   end_date: string;
 }
 
-export interface ProjectType {
-  id: string;
-  name: string;
-}
-
 export interface ProjectState {
   items: Project[];
   status: DataStatus;
@@ -74,10 +68,6 @@ export interface ProjectState {
   item?: Project;
   itemStatus: DataStatus;
   itemError?: string;
-
-  projectTypes: ProjectType[];
-  projectTypesStatus: DataStatus;
-  projectTypesError?: string;
 
   members: Member[];
   membersStatus: DataStatus;
@@ -93,9 +83,6 @@ const initialState: ProjectState = {
   filters: {},
 
   itemStatus: DataStatus.IDLE,
-
-  projectTypes: [],
-  projectTypesStatus: DataStatus.IDLE,
 
   members: [],
   membersStatus: DataStatus.IDLE,
@@ -170,22 +157,6 @@ const projectSlice = createSlice({
           }
         },
       )
-      .addCase(getProjectTypeList.pending, (state) => {
-        state.projectTypesStatus = DataStatus.LOADING;
-      })
-      .addCase(
-        getProjectTypeList.fulfilled,
-        (state, action: PayloadAction<ProjectType[]>) => {
-          state.projectTypes = action.payload;
-          state.projectTypesStatus = DataStatus.SUCCEEDED;
-          state.projectTypesError = undefined;
-        },
-      )
-      .addCase(getProjectTypeList.rejected, (state, action) => {
-        state.projectTypes = [];
-        state.projectTypesStatus = DataStatus.FAILED;
-        state.projectTypesError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
-      })
       .addCase(getProject.pending, (state) => {
         state.itemStatus = DataStatus.LOADING;
       })

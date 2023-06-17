@@ -1,11 +1,10 @@
-import { memo, useId, useMemo, useRef } from "react";
+import { memo, useId, useMemo } from "react";
 import Input, { InputProps } from "./Input";
 import { CircularProgress, MenuItem, inputBaseClasses } from "@mui/material";
 import { Option } from "constant/types";
 import ChevronIcon from "icons/ChevronIcon";
 import { Search } from "components/Filters";
-import useEventListener from "hooks/useEventListener";
-import { debounce, uuid } from "utils/index";
+import { debounce } from "utils/index";
 
 export type SelectProps = InputProps & {
   options: Option[];

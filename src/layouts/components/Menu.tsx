@@ -5,11 +5,15 @@ import { Text } from "components/shared";
 import { usePathname } from "next/navigation";
 import MenuDashboardIcon from "icons/MenuDashboardIcon";
 import {
+  COMPANIES_PATH,
   COST_HISTORY_PATH,
   EMPLOYEES_PATH,
   HOME_PATH,
+  MY_COMPANY_PATH,
   POSITIONS_PATH,
   PROJECTS_PATH,
+  PROJECT_TYPES_PATH,
+  STATEMENT_HISTORY_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -126,6 +130,7 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
             variant={{ xs: "body2", sm: "body1" }}
             ml={icon ? undefined : 4.5}
             noWrap
+            textTransform="capitalize"
           >
             {label}
           </Text>
@@ -160,6 +165,16 @@ const DATA: MenuItemProps[] = [
       { label: "Employees", href: EMPLOYEES_PATH },
       { label: "Cost History", href: COST_HISTORY_PATH },
       { label: "List of positions", href: POSITIONS_PATH },
+      { label: "project type list", href: PROJECT_TYPES_PATH },
+      { label: "company information", href: MY_COMPANY_PATH },
+    ],
+  },
+  {
+    label: "Manager",
+    icon: <MenuCompanyIcon />,
+    subs: [
+      { label: "Company List", href: COMPANIES_PATH },
+      { label: "Statement history", href: STATEMENT_HISTORY_PATH },
     ],
   },
 ];

@@ -7,6 +7,16 @@ import {
   getPositions,
   createPosition,
   updatePosition,
+  getProjectTypeList,
+  createProjectType,
+  updateProjectType,
+  deleteProjectType,
+  deletePosition,
+  getCompany,
+  updateCompany,
+  getCostHistory,
+  getCompanyList,
+  GetCompanyListQueries,
 } from "./actions";
 import {
   BaseQueries,
@@ -34,6 +44,37 @@ export interface Position {
   name?: string;
 }
 
+export interface CostHistory {
+  id: string;
+  time: string;
+  payer: string;
+  receiver: string;
+  value: number;
+}
+export interface ProjectType {
+  id: string;
+  name: string;
+}
+
+export interface Company {
+  id: string;
+  code: string;
+  name: string;
+  address: string;
+  description: string;
+  phone: string;
+  email: string;
+  is_active: boolean;
+
+  created_time: string;
+  number_of_user: number;
+  date_end_using: string;
+  date_start_using: string;
+  is_approve: boolean;
+  is_pay_company: boolean;
+  tax_code: string;
+}
+
 export interface CompanyState {
   employees: Employee[];
   employeesStatus: DataStatus;
@@ -53,6 +94,31 @@ export interface CompanyState {
   positions: Position[];
   positionsStatus: DataStatus;
   positionsError?: string;
+
+  projectTypes: ProjectType[];
+  projectTypesStatus: DataStatus;
+  projectTypesError?: string;
+
+  item?: Company;
+  itemStatus: DataStatus;
+  itemError?: string;
+
+  costHistories: CostHistory[];
+  costHistoriesStatus: DataStatus;
+  costHistoriesPaging: Paging;
+  costHistoriesError?: string;
+
+  items: Company[];
+  status: DataStatus;
+  paging: Paging;
+  error?: string;
+  filters: Omit<GetCompanyListQueries, "pageIndex" | "pageSize">;
+
+  itemOptions: Option[];
+  itemOptionsStatus: DataStatus;
+  itemOptionsPaging: Paging;
+  itemOptionsError?: string;
+  itemOptionsFilters: Omit<BaseQueries, "pageIndex" | "pageSize">;
 }
 
 const initialState: CompanyState = {
@@ -68,6 +134,25 @@ const initialState: CompanyState = {
 
   positions: [],
   positionsStatus: DataStatus.IDLE,
+
+  projectTypes: [],
+  projectTypesStatus: DataStatus.IDLE,
+
+  itemStatus: DataStatus.IDLE,
+
+  costHistories: [],
+  costHistoriesStatus: DataStatus.IDLE,
+  costHistoriesPaging: DEFAULT_PAGING,
+
+  items: [],
+  status: DataStatus.IDLE,
+  paging: DEFAULT_PAGING,
+  filters: {},
+
+  itemOptions: [],
+  itemOptionsStatus: DataStatus.IDLE,
+  itemOptionsPaging: DEFAULT_PAGING,
+  itemOptionsFilters: {},
 };
 
 const companySlice = createSlice({
@@ -187,7 +272,168 @@ const companySlice = createSlice({
             );
           }
         },
-      ),
+      )
+      .addCase(
+        deletePosition.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          const indexDeleted = state.positions.findIndex(
+            (item) => item.id === action.payload,
+          );
+          if (indexDeleted !== -1) {
+            state.positions.splice(indexDeleted, 1);
+          }
+        },
+      )
+      .addCase(getProjectTypeList.pending, (state) => {
+        state.projectTypesStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        getProjectTypeList.fulfilled,
+        (state, action: PayloadAction<ProjectType[]>) => {
+          state.projectTypes = action.payload;
+          state.projectTypesStatus = DataStatus.SUCCEEDED;
+          state.projectTypesError = undefined;
+        },
+      )
+      .addCase(getProjectTypeList.rejected, (state, action) => {
+        state.projectTypes = [];
+        state.projectTypesStatus = DataStatus.FAILED;
+        state.projectTypesError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(
+        createProjectType.fulfilled,
+        (state, action: PayloadAction<ProjectType>) => {
+          state.projectTypes.unshift(action.payload);
+        },
+      )
+      .addCase(
+        updateProjectType.fulfilled,
+        (state, action: PayloadAction<ProjectType>) => {
+          const indexUpdated = state.projectTypes.findIndex(
+            (item) => item.id === action.payload.id,
+          );
+          if (indexUpdated !== -1) {
+            state.projectTypes[indexUpdated] = Object.assign(
+              state.projectTypes[indexUpdated],
+              action.payload,
+            );
+          }
+        },
+      )
+      .addCase(
+        deleteProjectType.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          const indexDeleted = state.projectTypes.findIndex(
+            (item) => item.id === action.payload,
+          );
+          if (indexDeleted !== -1) {
+            state.projectTypes.splice(indexDeleted, 1);
+          }
+        },
+      )
+
+      .addCase(getCompany.pending, (state) => {
+        state.itemStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        getCompany.fulfilled,
+        (state, action: PayloadAction<Company>) => {
+          state.item = action.payload;
+          state.itemStatus = DataStatus.SUCCEEDED;
+          state.itemError = undefined;
+        },
+      )
+      .addCase(getCompany.rejected, (state, action) => {
+        state.item = undefined;
+        state.itemStatus = DataStatus.FAILED;
+        state.itemError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(
+        updateCompany.fulfilled,
+        (state, action: PayloadAction<Company>) => {
+          if (state?.item?.id === action.payload.id) {
+            state.item = action.payload;
+          }
+        },
+      )
+
+      .addCase(getCostHistory.pending, (state, action) => {
+        state.costHistoriesStatus = DataStatus.LOADING;
+
+        state.costHistoriesPaging.pageIndex =
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
+        state.costHistoriesPaging.pageSize =
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
+      })
+      .addCase(
+        getCostHistory.fulfilled,
+        (state, action: PayloadAction<ItemListResponse>) => {
+          const { items, ...paging } = action.payload;
+          state.costHistories = items as CostHistory[];
+          state.costHistoriesStatus = DataStatus.SUCCEEDED;
+          state.costHistoriesError = undefined;
+          state.costHistoriesPaging = Object.assign(
+            state.costHistoriesPaging,
+            paging,
+          );
+        },
+      )
+      .addCase(getCostHistory.rejected, (state, action) => {
+        state.item = undefined;
+        state.costHistoriesStatus = DataStatus.FAILED;
+        state.costHistoriesError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+
+      .addCase(getCompanyList.pending, (state, action) => {
+        const prefixKey = action.meta.arg["concat"] ? "itemOptions" : "items";
+
+        state[`${prefixKey}Status`] = DataStatus.LOADING;
+        state[`${prefixKey}Filters`] = getFiltersFromQueries(action.meta.arg);
+
+        if (action.meta.arg?.concat && action.meta.arg.pageIndex === 1) {
+          state.itemOptions = [];
+        }
+        state[`${prefixKey}Paging`].pageIndex =
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
+        state[`${prefixKey}Paging`].pageSize =
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
+      })
+      .addCase(
+        getCompanyList.fulfilled,
+        (state, action: PayloadAction<ItemListResponse>) => {
+          const { items, concat, ...paging } = action.payload;
+
+          if (concat) {
+            const newOptions = (items as Company[]).map((item) => ({
+              label: item.name,
+              value: item.id,
+            }));
+            state.itemOptions = state.itemOptions.concat(newOptions);
+          } else {
+            state.items = items as Company[];
+          }
+
+          const prefixKey = concat ? "itemOptions" : "items";
+
+          state[`${prefixKey}Status`] = DataStatus.SUCCEEDED;
+          state[`${prefixKey}Error`] = undefined;
+          state[`${prefixKey}Paging`] = Object.assign(
+            state[`${prefixKey}Paging`],
+            paging,
+          );
+        },
+      )
+      .addCase(getCompanyList.rejected, (state, action) => {
+        const prefixKey = action.meta.arg["concat"] ? "itemOptions" : "items";
+
+        state[`${prefixKey}Status`] = DataStatus.FAILED;
+        state[`${prefixKey}Error`] =
+          action.error?.message ?? AN_ERROR_TRY_AGAIN;
+        if (!action.meta.arg["concat"]) {
+          state.paging.totalItems = undefined;
+          state.paging.totalPages = undefined;
+        }
+      }),
 });
 
 export default companySlice.reducer;

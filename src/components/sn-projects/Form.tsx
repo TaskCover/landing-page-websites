@@ -16,8 +16,7 @@ import {
   Select,
   Upload,
 } from "components/shared";
-import { useProjectTypes } from "store/project/selectors";
-import { useEmployeeOptions } from "store/company/selectors";
+import { useEmployeeOptions, useProjectTypes } from "store/company/selectors";
 import { SelectMembers } from "./components";
 import { Member } from "./helpers";
 

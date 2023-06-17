@@ -140,14 +140,18 @@ export const serverQueries = ({
   });
 };
 
-export const formatDate = (date?: number | string, format?: string) => {
-  if (!date) return "";
+export const formatDate = (
+  date?: number | string,
+  format?: string,
+  fallback?: string,
+) => {
+  if (!date) return fallback ?? "";
   if (!format) format = DATE_FORMAT_SLASH;
   const dateObj = new Date(date);
 
   const year = dateObj.getFullYear();
 
-  if (year === 1 || year === 1970) return "";
+  if (year === 1 || year === 1970) return fallback ?? "";
   const day = `0${dateObj.getDate()}`.substr(-2);
   const month = `0${dateObj.getMonth() + 1}`.substr(-2);
   const hours = `0${dateObj.getHours()}`.substr(-2);
@@ -195,6 +199,7 @@ export const getPath = (
   queries?: Params,
   data?: { [key: string]: string },
 ) => {
+  queries = cleanObject(queries ?? {});
   const queryString = stringifyURLSearchParams(queries);
   const path = data ? StringFormat(basePath, data) : basePath;
   return path + queryString;

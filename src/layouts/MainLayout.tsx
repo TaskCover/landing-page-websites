@@ -8,7 +8,12 @@ import { Sidebar } from "./components";
 import { useAppSelector } from "store/hooks";
 import { shallowEqual } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
-import { FORGOT_PASSWORD_PATH, SIGNIN_PATH, SIGNUP_PATH } from "constant/paths";
+import {
+  FORGOT_PASSWORD_PATH,
+  HOME_PATH,
+  SIGNIN_PATH,
+  SIGNUP_PATH,
+} from "constant/paths";
 
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -51,7 +56,7 @@ const MainLayout = (props: MainLayoutProps) => {
           <Header />
           <Stack p={{ xs: 1, sm: 3 }} overflow="auto" flex={1}>
             <Stack
-              bgcolor="common.white"
+              bgcolor={pathname === HOME_PATH ? "transparent" : "common.white"}
               flex={1}
               height="fit-content"
               spacing={3}

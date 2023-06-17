@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import FormLayout from "components/FormLayout";
 import { Button, Text } from "components/shared";
 import { DialogLayoutProps } from "components/DialogLayout";

@@ -22,11 +22,10 @@ const Actions = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (name: string, value: any) => {
       if (!id) return;
-      let newQueries = {
+      const newQueries = {
         ...filtersRef.current,
         [name]: value,
       };
-      newQueries = cleanObject(newQueries);
       const path = getPath(pathname, newQueries);
       push(path);
 

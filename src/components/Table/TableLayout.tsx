@@ -1,5 +1,6 @@
 import {
   Box,
+  BoxProps,
   CircularProgress,
   Stack,
   StackProps,
@@ -41,6 +42,7 @@ type TableLayoutProps = {
   onCreate?: () => void;
   onEdit?: () => void;
   headerProps?: TableCellProps;
+  containerHeaderProps?: BoxProps;
   accessKey?: string;
 } & StackProps;
 
@@ -56,10 +58,13 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     onEdit,
     headerProps = {},
     accessKey,
+    containerHeaderProps = {},
     ...rest
   } = props;
 
   const { sx: sxHeaderProps, ...restHeaderProps } = headerProps;
+  const { sx: sxContainerHeaderProps, ...restContainerHeaderProps } =
+    containerHeaderProps;
 
   const [bodySx, setBodySx] = useState<SxProps>({});
   const size = useWindowSize();
@@ -106,7 +111,9 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
           overflowX: "auto",
           overflowY: "hidden",
           minHeight: HEIGHT_HEADER,
+          ...sxContainerHeaderProps,
         }}
+        {...restContainerHeaderProps}
       >
         <Table>
           <TableHead>

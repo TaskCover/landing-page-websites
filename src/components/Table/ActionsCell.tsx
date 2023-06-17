@@ -17,17 +17,28 @@ import PencilIcon from "icons/PencilIcon";
 import TrashIcon from "icons/TrashIcon";
 import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
+import { useSnackbar } from "store/app/selectors";
+import { getMessageErrorByAPI } from "utils/index";
+import { AN_ERROR_TRY_AGAIN } from "constant/index";
 
 type ActionsCellProps = {
   onChildClick?: () => void;
   onEdit?: () => void;
-  onDelete?: () => void;
+  onDelete?: () => Promise<unknown>;
 } & TableCellProps;
 
 const ActionsCell = (props: ActionsCellProps) => {
-  const { children, onChildClick, onEdit, onDelete, ...rest } = props;
+  const {
+    children,
+    onChildClick,
+    onEdit,
+    onDelete: onDeleteProps,
+    ...rest
+  } = props;
+  const { onAddSnackbar } = useSnackbar();
 
   const [isShow, onShow, onHide] = useToggle();
+  const [isSubmitting, onSubmittingTrue, onSubmittingFalse] = useToggle(false);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
@@ -47,6 +58,24 @@ const ActionsCell = (props: ActionsCellProps) => {
   const onCloseDialogDelete = () => {
     onClose();
     onHide();
+  };
+
+  const onDelete = async () => {
+    if (!onDeleteProps) return;
+    try {
+      onSubmittingTrue();
+      const response = await onDeleteProps();
+      if (response) {
+        onAddSnackbar("Xóa thành công!", "success");
+        onHide();
+      } else {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error), "error");
+    } finally {
+      onSubmittingFalse();
+    }
   };
 
   return (

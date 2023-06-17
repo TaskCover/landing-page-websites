@@ -33,10 +33,9 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
   }, [filters, pageIndex, pageSize]);
 
   useEffect(() => {
-    let parsedQueries = dataStringifyRef.current
+    const parsedQueries = dataStringifyRef.current
       ? JSON.parse(dataStringifyRef.current)
       : {};
-    parsedQueries = cleanObject(parsedQueries);
 
     const prevPath = getPath(PROJECTS_PATH, parsedQueries);
 

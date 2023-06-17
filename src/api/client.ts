@@ -145,9 +145,9 @@ const RequestClient = class {
     }
   }
 
-  async delete(endpoint: string, data?: {}) {
+  async delete(endpoint: string, configs = {}) {
     try {
-      const response = await axios.delete(endpoint, { data });
+      const response = await axios.delete(endpoint, configs);
       return response;
     } catch (error) {
       throw error;

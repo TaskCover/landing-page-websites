@@ -6,7 +6,8 @@ import useBreakpoint from "hooks/useBreakpoint";
 
 type CoreTextProps = Omit<TypographyProps, "variant"> & {
   // variant?: Variant | { [key in Breakpoint]: Variant };
-  variant?: Variant | { [key: string]: Variant };
+  variant?: Variant | { [key: string]: Variant } | "inherit";
+  component?: string;
 };
 
 export type TextProps = CoreTextProps & {

@@ -1,7 +1,7 @@
 import { ChangeEvent, memo } from "react";
 import { Select, SelectProps } from "components/shared";
 
-type DropdownProps = Omit<SelectProps, "name" | "onChange"> & {
+export type DropdownProps = Omit<SelectProps, "name" | "onChange"> & {
   name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (name: string, value: any) => void;

@@ -60,9 +60,7 @@ const ItemList = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (queries: { [key: string]: any }) => {
-    let newQueries = { ...query, ...queries };
-    newQueries = cleanObject(newQueries);
-    const queryString = stringifyURLSearchParams(newQueries);
+    const newQueries = { ...query, ...queries };
     const path = getPath(pathname, newQueries, { id: projectId });
     push(path);
 
