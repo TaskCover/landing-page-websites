@@ -94,7 +94,9 @@ axios.interceptors.response.use(
 
     const isFormErrorCode = LIST_FORM_ERROR_CODE.includes(errorResponse?.code);
     return Promise.reject(
-      isFormErrorCode ? errorResponse : messageError ?? error,
+      isFormErrorCode
+        ? { ...errorResponse, message: errorResponse["description"] }
+        : messageError ?? error,
     );
   },
 );
