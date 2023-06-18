@@ -1,11 +1,12 @@
 "use client";
 
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 import { Stack } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { HOME_PATH } from "constant/paths";
 import { useAppReady, useAuth } from "store/app/selectors";
 import AppLoading from "components/AppLoading";
+import useWindowSize from "hooks/useWindowSize";
 
 type WrapperProps = {
   children: React.ReactNode;
@@ -15,6 +16,10 @@ const Wrapper = (props: WrapperProps) => {
   const { isLoggedIn } = useAuth();
   const { appReady } = useAppReady();
   const { replace } = useRouter();
+
+  const { height } = useWindowSize();
+
+  const isSmallHeight = useMemo(() => height && height < 768, [height]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -26,7 +31,8 @@ const Wrapper = (props: WrapperProps) => {
   return (
     <Stack
       flex={1}
-      m={{ sm: 6, lg: 8 }}
+      mx={{ sm: 6, lg: 8 }}
+      my={{ sm: isSmallHeight ? 3 : 6, lg: isSmallHeight ? 3 : 8 }}
       direction="row"
       sx={{
         background: {
@@ -38,8 +44,8 @@ const Wrapper = (props: WrapperProps) => {
       }}
       height={({ spacing }) => ({
         xs: "100vh",
-        sm: `calc(100vh - ${spacing(6 * 2)})`,
-        lg: `calc(100vh - ${spacing(8 * 2)})`,
+        sm: `calc(100vh - ${spacing((isSmallHeight ? 3 : 6) * 2)})`,
+        lg: `calc(100vh - ${spacing((isSmallHeight ? 3 : 8) * 2)})`,
       })}
       bgcolor={{ sm: "common.white" }}
       justifyContent={{ xs: "center", sm: "initial" }}

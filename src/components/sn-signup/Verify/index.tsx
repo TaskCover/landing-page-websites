@@ -32,14 +32,14 @@ const Verify = () => {
     try {
       const newData = await onVerify(code);
       if (newData) {
-        onAddSnackbar("Đăng ký thành công, vui lòng đăng nhập!", "success");
+        onAddSnackbar("Sign up successfully, please sign in!", "success");
         push(SIGNIN_PATH);
       } else {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_CODE) {
-        setError("Mã code không chính xác.");
+        setError("Code is incorrect.");
       } else {
         onAddSnackbar(getMessageErrorByAPI(error), "error");
       }
@@ -86,7 +86,7 @@ const Verify = () => {
         >
           <AppLogo width={188} />
           <Text variant="h3" textAlign="center" mt={3}>
-            Xác thực tài khoản
+            Verify account
           </Text>
           <Text
             variant="body2"
@@ -95,9 +95,10 @@ const Verify = () => {
             mt={1}
             mb={2}
           >
-            Một mã code đã được gửi đến email đăng ký của bạn
+            A code has been sent to your registered email
             <br />
-            Vui lòng kiểm tra mail và điền mã code để hoàn thành đăng ký
+            Please check your email and enter the code to complete the
+            registration
           </Text>
           <Text
             variant="body2"
@@ -106,8 +107,8 @@ const Verify = () => {
             mt={1}
             mb={2}
           >
-            Một mã code đã được gửi đến email đăng ký của bạn. Vui lòng kiểm tra
-            mail và điền mã code để hoàn thành đăng ký
+            A code has been sent to your registered email. Please check your
+            email and enter the code to complete the registration.
           </Text>
           <Input
             titleSx={{ left: "39%" }}
@@ -116,7 +117,7 @@ const Verify = () => {
               height: 58,
               "& input": { textAlign: "center" },
             }}
-            title="Mã code"
+            title="Code"
             value={code}
             onChangeValue={onChange}
             error={error}
@@ -130,7 +131,7 @@ const Verify = () => {
             fullWidth
             pending={isSubmitting}
           >
-            Xác thực
+            Verify
           </Button>
         </Stack>
       </Stack>

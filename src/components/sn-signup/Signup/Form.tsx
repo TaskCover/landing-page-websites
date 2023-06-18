@@ -23,7 +23,10 @@ const Form = () => {
       await onSignup(values);
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.REGISTERED_EMAIL) {
-        formik.setFieldError("email", "Tên địa chỉ email đã được sử dụng.");
+        formik.setFieldError(
+          "email",
+          "The email address name is already in use for another account.",
+        );
       } else {
         onAddSnackbar(getMessageErrorByAPI(error), "error");
       }
@@ -73,7 +76,7 @@ const Form = () => {
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Họ tên"
+          title="Full name"
           name="fullname"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -84,7 +87,7 @@ const Form = () => {
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Số điện thoại"
+          title="Phone number"
           name="phone"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -105,7 +108,7 @@ const Form = () => {
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Mật khẩu"
+          title="Password"
           name="password"
           type="password"
           onChange={formik.handleChange}
@@ -117,7 +120,7 @@ const Form = () => {
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Nhập lại mật khẩu"
+          title="Confirm password"
           name="rePassword"
           type="password"
           onChange={formik.handleChange}
@@ -136,7 +139,7 @@ const Form = () => {
         fullWidth
         pending={formik.isSubmitting}
       >
-        Đăng ký
+        Sign up
       </Button>
     </Stack>
   );
@@ -153,18 +156,22 @@ const INITIAL_VALUES = {
 };
 
 export const validationSchema = Yup.object().shape({
-  fullname: Yup.string().trim().required("Họ tên là bắt buộc."),
+  fullname: Yup.string().trim().required("Full name is required."),
   phone: Yup.string()
     .trim()
-    .matches(VN_PHONE_REGEX, "Số điện thoại không hợp lệ!"),
+    .matches(VN_PHONE_REGEX, "Phone number is invalid."),
   email: Yup.string()
     .trim()
-    .required("Email là bắt buộc.")
-    .matches(EMAIL_REGEX, "Email không hợp lệ!"),
-  password: Yup.string().trim().required("Mật khẩu là bắt buộc."),
+    .required("Email is required.")
+    .matches(EMAIL_REGEX, "Email is invalid."),
+  password: Yup.string()
+    .trim()
+    .required("Password is required.")
+    .min(6, "Password must be between 6 and 30 characters.")
+    .max(30, "Password must be between 6 and 30 characters."),
   rePassword: Yup.string()
-    .oneOf([Yup.ref("password"), ""], "Nhập lại mật khẩu không khớp.")
-    .required("Nhập lại mật khẩu là bắt buộc."),
+    .oneOf([Yup.ref("password"), ""], "Confirm password does not match.")
+    .required("Confirm password is required."),
 });
 
 const sxConfig = {

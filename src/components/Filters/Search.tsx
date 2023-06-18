@@ -56,7 +56,7 @@ const Search = (props: SearchProps) => {
         onBlur,
       }}
       startNode={<SearchIcon />}
-      placeholder="Tìm kiếm"
+      placeholder="Search..."
       onChangeValue={onChangeValue}
       value={text}
       {...rest}

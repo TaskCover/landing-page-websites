@@ -31,6 +31,11 @@ export type GetCompanyListQueries = BaseQueries & {
   date?: string;
 };
 
+export type GetStatementHistoryQueries = BaseQueries & {
+  start?: string;
+  end?: string;
+};
+
 export type EmployeeData = {
   email: string;
   position: string;
@@ -323,6 +328,26 @@ export const getCostHistory = createAsyncThunk(
   "company/getCostHistory",
   async (queries: BaseQueries) => {
     queries = serverQueries(queries) as BaseQueries;
+
+    try {
+      const response = await client.get(Endpoint.COST_HISTORY, queries, {
+        baseURL: COMPANY_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return refactorRawItemListResponse(response.data);
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getStatementHistory = createAsyncThunk(
+  "company/getStatementHistory",
+  async (queries: GetStatementHistoryQueries) => {
+    queries = serverQueries(queries) as GetStatementHistoryQueries;
 
     try {
       const response = await client.get(Endpoint.COST_HISTORY, queries, {

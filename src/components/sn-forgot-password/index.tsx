@@ -39,7 +39,7 @@ const Forgot = () => {
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
         setError(
-          "Địa chỉ email không tồn tại trong hệ thống, vui lòng kiểm tra lại.",
+          "The email address does not exist in the system, please check again.",
         );
       } else {
         onAddSnackbar(getMessageErrorByAPI(error), "error");
@@ -88,12 +88,12 @@ const Forgot = () => {
         >
           <AppLogo width={188} />
           <Text variant="h3" textAlign="center" mt={3}>
-            Quên mật khẩu
+            Forgot password
           </Text>
           <Text variant="body2" textAlign="center" mt={1} mb={2}>
-            Đường link đặt lại mật khẩu sẽ được gửi đến email
+            Password reset link will be sent to your email
             <br />
-            Vui lòng nhập email đăng ký của bạn
+            Please enter your registered email
           </Text>
 
           <Input
@@ -115,7 +115,7 @@ const Forgot = () => {
             fullWidth
             pending={isSubmitting}
           >
-            Xác nhận
+            Confirm
           </Button>
         </Stack>
       </Stack>

@@ -185,9 +185,9 @@ const AccountInfo = () => {
 export default memo(AccountInfo);
 
 export const OPTIONS = [
-  { label: "Thông tin tài khoản", icon: <UserIcon />, href: ACCOUNT_INFO_PATH },
+  { label: "Account information", icon: <UserIcon />, href: ACCOUNT_INFO_PATH },
   {
-    label: "Thay đổi mật khẩu",
+    label: "Change password",
     icon: <KeyIcon />,
     href: CHANGE_PASSWORD_PATH,
   },

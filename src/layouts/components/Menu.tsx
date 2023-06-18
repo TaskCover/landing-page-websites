@@ -164,9 +164,9 @@ const DATA: MenuItemProps[] = [
     subs: [
       { label: "Employees", href: EMPLOYEES_PATH },
       { label: "Cost History", href: COST_HISTORY_PATH },
-      { label: "List of positions", href: POSITIONS_PATH },
-      { label: "project type list", href: PROJECT_TYPES_PATH },
-      { label: "company information", href: MY_COMPANY_PATH },
+      { label: "List Of Positions", href: POSITIONS_PATH },
+      { label: "Project Type List", href: PROJECT_TYPES_PATH },
+      { label: "Company Information", href: MY_COMPANY_PATH },
     ],
   },
   {

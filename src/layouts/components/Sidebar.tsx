@@ -60,7 +60,7 @@ const Sidebar = (props: StackProps) => {
           <IconButton
             onClick={onToggle}
             noPadding
-            tooltip={isExpandedSidebar ? "Thu lại" : "Mở rộng"}
+            tooltip={isExpandedSidebar ? "Shrink" : "Expand"}
           >
             <DoubleArrowIcon
               fontSize="medium"

@@ -20,12 +20,7 @@ const Refresh = (props: RefreshProps) => {
   };
 
   return (
-    <IconButton
-      tooltip="Làm mới dữ liệu"
-      noPadding
-      onClick={onRefresh}
-      {...rest}
-    >
+    <IconButton tooltip="Refresh data" noPadding onClick={onRefresh} {...rest}>
       <RefreshIcon
         sx={{
           fontSize: 20,

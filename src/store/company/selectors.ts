@@ -4,6 +4,7 @@ import {
   EmployeeData,
   GetCompanyListQueries,
   GetEmployeeListQueries,
+  GetStatementHistoryQueries,
   PositionData,
   createEmployee,
   createPosition,
@@ -16,6 +17,7 @@ import {
   getEmployees,
   getPositionList,
   getProjectTypeList,
+  getStatementHistory,
   updateCompany,
   updateEmployee,
   updatePosition,
@@ -420,5 +422,43 @@ export const useCompanyOptions = () => {
     totalPages,
     filters,
     onGetOptions,
+  };
+};
+
+export const useStatementHistory = () => {
+  const dispatch = useAppDispatch();
+  const {
+    statementHistories: items,
+    statementHistoriesStatus: status,
+    statementHistoriesError: error,
+    statementHistoriesFilters: filters,
+  } = useAppSelector((state) => state.company, shallowEqual);
+  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+    (state) => state.company.statementHistoriesPaging,
+    shallowEqual,
+  );
+
+  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
+  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
+
+  const onGetStatementHistory = useCallback(
+    async (queries: GetStatementHistoryQueries) => {
+      await dispatch(getStatementHistory(queries));
+    },
+    [dispatch],
+  );
+
+  return {
+    items,
+    status,
+    error,
+    isIdle,
+    isFetching,
+    pageIndex,
+    pageSize,
+    totalItems,
+    totalPages,
+    filters,
+    onGetStatementHistory,
   };
 };

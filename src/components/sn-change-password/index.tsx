@@ -19,11 +19,11 @@ const ChangePassword = () => {
   const onSubmit = async (values: ChangePasswordData) => {
     try {
       await onChangePassword(values);
-      onAddSnackbar("Thay đổi mật khẩu thành công.", "success");
+      onAddSnackbar("Change password successfully!", "success");
       formik.resetForm();
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
-        formik.setFieldError("old_password", "Mật khẩu cũ không chính xác.");
+        formik.setFieldError("old_password", "Old password is incorrect.");
       } else {
         onAddSnackbar(getMessageErrorByAPI(error), "error");
       }
@@ -76,12 +76,12 @@ const ChangePassword = () => {
       onSubmit={formik.handleSubmit}
     >
       <Text variant="subtitle1" fontWeight={700}>
-        Thay đổi mật khẩu
+        Change password
       </Text>
       <Input
         rootSx={sxConfig.input}
         fullWidth
-        title="Mật khẩu cũ"
+        title="Old password"
         name="old_password"
         type="password"
         onChange={formik.handleChange}
@@ -93,7 +93,7 @@ const ChangePassword = () => {
       <Input
         rootSx={sxConfig.input}
         fullWidth
-        title="Mật khẩu mới"
+        title="New password"
         name="new_password"
         type="password"
         onChange={formik.handleChange}
@@ -105,7 +105,7 @@ const ChangePassword = () => {
       <Input
         rootSx={sxConfig.input}
         fullWidth
-        title="Nhập lại mật khẩu mới"
+        title="Confirm new password"
         name="renew_password"
         type="password"
         onChange={formik.handleChange}
@@ -129,7 +129,7 @@ const ChangePassword = () => {
           size="small"
           fullWidth
         >
-          Hủy
+          Cancel
         </Button>
         <Button
           disabled={disabled}
@@ -140,7 +140,7 @@ const ChangePassword = () => {
           type="submit"
           fullWidth
         >
-          Thay đổi
+          Confirm
         </Button>
       </Stack>
     </Stack>
@@ -156,13 +156,13 @@ const INITIAL_VALUES = {
 };
 
 export const validationSchema = Yup.object().shape({
-  old_password: Yup.string().trim().required("Mật khẩu cũ là bắt buộc."),
+  old_password: Yup.string().trim().required("Old password is required."),
   new_password: Yup.string()
     .trim()
-    .required("Mật khẩu mới là bắt buộc.")
+    .required("New password is required.")
     .test(
       "is-diff-old-pass",
-      "Mật khẩu mới không thể trùng với mật khẩu cũ",
+      "The new password cannot be the same as the old password.",
       (value, { parent }) => {
         if (value && parent["old_password"] && value === parent["old_password"])
           return false;
@@ -170,8 +170,11 @@ export const validationSchema = Yup.object().shape({
       },
     ),
   renew_password: Yup.string()
-    .oneOf([Yup.ref("new_password"), ""], "Nhập lại mật khẩu mới không khớp.")
-    .required("Nhập lại mật khẩu mới là bắt buộc."),
+    .oneOf(
+      [Yup.ref("new_password"), ""],
+      "Confirm new password does not match.",
+    )
+    .required("Confirm new password is required."),
 });
 
 const sxConfig = {

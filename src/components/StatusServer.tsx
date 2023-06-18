@@ -35,7 +35,7 @@ const StatusServer = (props: StatusServerProps) => {
   if (noData && !isIdle)
     return (
       <Text variant="body2" textAlign="center" p={3} fontWeight={600}>
-        Không có dữ liệu
+        No data
       </Text>
     );
 

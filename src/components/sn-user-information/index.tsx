@@ -116,7 +116,7 @@ const UserInformation = () => {
       onSubmit={formik.handleSubmit}
     >
       <Text variant="subtitle1" fontWeight={700}>
-        Thông tin tài khoản
+        Account Information
       </Text>
       <Stack width={90} height={90} borderRadius="50%" position="relative">
         <Avatar size={90} src={previewImage} alt={user.fullname} />
@@ -151,19 +151,19 @@ const UserInformation = () => {
 
       <Stack direction="row" alignItems="center" spacing={0.5}>
         <BagIcon sx={{ color: "grey.400" }} fontSize="medium" />
-        <Text color="grey.400">{`Chức vụ: ${
+        <Text color="grey.400">{`Position: ${
           user?.position?.name ?? "--"
         }`}</Text>
       </Stack>
       {!isEdit && (
         <Button onClick={onEditTrue} variant="secondary" size="small">
-          Chỉnh sửa tài khoản
+          Update account
         </Button>
       )}
 
       <Input
         rootSx={sxConfig.input}
-        title="Họ tên"
+        title="Full name"
         fullWidth
         name="fullname"
         disabled={!isEdit}
@@ -175,7 +175,7 @@ const UserInformation = () => {
       />
       <Input
         rootSx={sxConfig.input}
-        title="Số điện thoại"
+        title="Phone number"
         fullWidth
         name="phone"
         disabled={!isEdit}
@@ -191,7 +191,7 @@ const UserInformation = () => {
         name="email"
         disabled
         value={user.email}
-        tooltip="Email không được phép cập nhật."
+        tooltip={isEdit ? "Email is not allowed to be updated." : undefined}
       />
 
       {isEdit && (
@@ -209,7 +209,7 @@ const UserInformation = () => {
             size="small"
             fullWidth
           >
-            Hủy
+            Cancel
           </Button>
           <Button
             disabled={disabled}
@@ -220,7 +220,7 @@ const UserInformation = () => {
             type="submit"
             fullWidth
           >
-            Cập nhật
+            Confirm
           </Button>
         </Stack>
       )}
@@ -237,10 +237,10 @@ const INITIAL_VALUES = {
 };
 
 export const validationSchema = Yup.object().shape({
-  fullname: Yup.string().trim().required("Họ tên là bắt buộc."),
+  fullname: Yup.string().trim().required("Full name is required."),
   phone: Yup.string()
     .trim()
-    .matches(VN_PHONE_REGEX, "Số điện thoại không hợp lệ!"),
+    .matches(VN_PHONE_REGEX, "Phone number is invalid!"),
 });
 
 const sxConfig = {

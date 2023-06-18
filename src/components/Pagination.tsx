@@ -50,7 +50,7 @@ const Pagination = (props: PaginationProps) => {
     >
       <Stack direction="row" alignItems="center" spacing={1}>
         <Text variant="body2" fontWeight={600}>
-          Hiển thị
+          Show
         </Text>
         <Select
           rootSx={{ borderColor: "#DDDDDD", borderRadius: 2, height: 40 }}
@@ -59,10 +59,7 @@ const Pagination = (props: PaginationProps) => {
           value={pageSize}
           size="small"
         />
-        <Text
-          variant="body2"
-          fontWeight={600}
-        >{`trên tổng ${totalItems}`}</Text>
+        <Text variant="body2" fontWeight={600}>{`out of ${totalItems}`}</Text>
       </Stack>
 
       <MuiPagination

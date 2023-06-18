@@ -14,8 +14,8 @@ type FormLayoutProps = {
 const FormLayout = (props: FormLayoutProps) => {
   const {
     label,
-    submitText = "Xác nhận",
-    cancelText = "Hủy bỏ",
+    submitText = "Confirm",
+    cancelText = "Cancel",
     children,
     disabled,
     submitting,

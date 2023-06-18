@@ -22,7 +22,7 @@ const Form = () => {
       const newData = await onSignin(values);
 
       if (newData) {
-        onAddSnackbar("Đăng nhập thành công!", "success");
+        onAddSnackbar("Sign in successfully!", "success");
       } else {
         throw AN_ERROR_TRY_AGAIN;
       }
@@ -62,44 +62,50 @@ const Form = () => {
       width="100%"
       mt={3}
       onSubmit={formik.handleSubmit}
+      overflow="hidden"
+      noValidate
     >
-      <Input
-        rootSx={sxConfig.input}
-        fullWidth
-        title="Email"
-        name="email"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values?.email}
-        error={touchedErrors?.email}
-      />
-      <Input
-        rootSx={sxConfig.input}
-        sx={{ mt: 3 }}
-        fullWidth
-        title="Mật khẩu"
-        name="password"
-        type="password"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values?.password}
-        error={touchedErrors?.password}
-      />
-      <Link
-        sx={{
-          mt: 1,
-          fontSize: 14,
-          alignSelf: "flex-end",
-          "&:hover": {
-            color: "grey.900",
-          },
-        }}
-        href={FORGOT_PASSWORD_PATH}
-        color="grey.400"
-        underline="none"
-      >
-        Quên mật khẩu?
-      </Link>
+      <Stack overflow="auto" spacing={3}>
+        <Input
+          rootSx={sxConfig.input}
+          fullWidth
+          title="Email"
+          name="email"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values?.email}
+          error={touchedErrors?.email}
+        />
+        <Input
+          rootSx={sxConfig.input}
+          sx={{ mt: 3 }}
+          fullWidth
+          title="Password"
+          name="password"
+          type="password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values?.password}
+          error={touchedErrors?.password}
+        />
+
+        <Link
+          sx={{
+            mt: 1,
+            fontSize: 14,
+            alignSelf: "flex-end",
+            "&:hover": {
+              color: "grey.900",
+            },
+          }}
+          href={FORGOT_PASSWORD_PATH}
+          color="grey.400"
+          underline="none"
+        >
+          Forgot password?
+        </Link>
+      </Stack>
+
       <Button
         type="submit"
         disabled={disabled}
@@ -108,7 +114,7 @@ const Form = () => {
         fullWidth
         pending={formik.isSubmitting}
       >
-        Đăng nhập
+        Sign in
       </Button>
     </Stack>
   );
@@ -124,9 +130,13 @@ const INITIAL_VALUES = {
 export const validationSchema = Yup.object().shape({
   email: Yup.string()
     .trim()
-    .required("Email là bắt buộc.")
-    .matches(EMAIL_REGEX, "Email không hợp lệ!"),
-  password: Yup.string().trim().required("Mật khẩu là bắt buộc."),
+    .required("Email is required.")
+    .matches(EMAIL_REGEX, "Email is invalid."),
+  password: Yup.string()
+    .trim()
+    .required("Password is required.")
+    .min(6, "Password must be between 6 and 30 characters.")
+    .max(30, "Password must be between 6 and 30 characters."),
 });
 
 const sxConfig = {

@@ -23,9 +23,9 @@ const Banner = () => {
         variant={{ sm: "subtitle1", lg: "h3" }}
         color="common.white"
       >
-        Bắt đầu dự án
+        Start a project
         <br />
-        với những tiện ích của Taskcover
+        with the utilities of Taskcover
       </Text>
     </Stack>
   );

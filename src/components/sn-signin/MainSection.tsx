@@ -31,11 +31,11 @@ const MainSection = () => {
         alignItems="center"
         maxWidth={340}
         width="100%"
-        overflow="auto"
+        overflow="hidden"
       >
-        <Text variant="h3">Đăng nhập</Text>
+        <Text variant="h3">Sign in</Text>
         <Stack mt={1} direction="row" alignItems="center" spacing={0.5}>
-          <Text variant="body2">hoặc bạn chưa có tài khoản?</Text>
+          <Text variant="body2">or do not have an account yet?</Text>
           <Link
             href={SIGNUP_PATH}
             fontWeight={600}
@@ -48,7 +48,7 @@ const MainSection = () => {
             color="primary.main"
             underline="none"
           >
-            Đăng ký ngay
+            Sign up now
           </Link>
         </Stack>
 

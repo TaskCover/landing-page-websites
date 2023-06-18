@@ -10,7 +10,7 @@ const Clear = (props: ClearProps) => {
   const { onClear, sx, ...rest } = props;
   return (
     <IconButton
-      tooltip="Xóa bộ lọc"
+      tooltip="Clear filters"
       sx={{ color: "grey.300", ...sx }}
       noPadding
       onClick={onClear}

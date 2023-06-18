@@ -108,13 +108,13 @@ const Reset = () => {
         >
           <AppLogo width={188} />
           <Text variant="h3" textAlign="center" mt={3} mb={5}>
-            Đặt lại mật khẩu mới
+            Reset new password
           </Text>
 
           <Input
             rootSx={sxConfig.input}
             fullWidth
-            title="Mật khẩu mới"
+            title="New password"
             name="password"
             type="password"
             onChange={formik.handleChange}
@@ -127,7 +127,7 @@ const Reset = () => {
             rootSx={sxConfig.input}
             sx={{ mt: 3 }}
             fullWidth
-            title="Nhập lại mật khẩu"
+            title="Confirm password"
             name="rePassword"
             type="password"
             onChange={formik.handleChange}
@@ -145,7 +145,7 @@ const Reset = () => {
             fullWidth
             pending={formik.isSubmitting}
           >
-            Xác nhận
+            Confirm
           </Button>
         </Stack>
       </Stack>
@@ -161,10 +161,14 @@ const INITIAL_VALUES = {
 };
 
 export const validationSchema = Yup.object().shape({
-  password: Yup.string().trim().required("Mật khẩu mới là bắt buộc."),
+  password: Yup.string()
+    .trim()
+    .required("New password is required.")
+    .min(6, "Password must be between 6 and 30 characters.")
+    .max(30, "Password must be between 6 and 30 characters."),
   rePassword: Yup.string()
-    .oneOf([Yup.ref("password"), ""], "Nhập lại mật khẩu không khớp.")
-    .required("Nhập lại mật khẩu là bắt buộc."),
+    .oneOf([Yup.ref("password"), ""], "Confirm password does not match..")
+    .required("Confirm password is required."),
 });
 
 const sxConfig = {

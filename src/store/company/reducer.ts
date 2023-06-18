@@ -17,6 +17,8 @@ import {
   getCompanyList,
   GetCompanyListQueries,
   getPositionList,
+  GetStatementHistoryQueries,
+  getStatementHistory,
 } from "./actions";
 import {
   BaseQueries,
@@ -52,6 +54,16 @@ export interface CostHistory {
   payer: string;
   receiver: string;
   value: number;
+}
+export interface StatementHistory {
+  id: string;
+  date_of_payment: string;
+  expired_date: string;
+  name: string;
+  number_of_paid: number;
+  number_of_unpaid: number;
+  total_account: number;
+  amount_of_money: number;
 }
 export interface ProjectType {
   id: string;
@@ -125,6 +137,15 @@ export interface CompanyState {
   itemOptionsPaging: Paging;
   itemOptionsError?: string;
   itemOptionsFilters: Omit<BaseQueries, "pageIndex" | "pageSize">;
+
+  statementHistories: StatementHistory[];
+  statementHistoriesStatus: DataStatus;
+  statementHistoriesPaging: Paging;
+  statementHistoriesError?: string;
+  statementHistoriesFilters: Omit<
+    GetStatementHistoryQueries,
+    "pageIndex" | "pageSize"
+  >;
 }
 
 const initialState: CompanyState = {
@@ -161,6 +182,11 @@ const initialState: CompanyState = {
   itemOptionsStatus: DataStatus.IDLE,
   itemOptionsPaging: DEFAULT_PAGING,
   itemOptionsFilters: {},
+
+  statementHistories: [],
+  statementHistoriesStatus: DataStatus.IDLE,
+  statementHistoriesPaging: DEFAULT_PAGING,
+  statementHistoriesFilters: {},
 };
 
 const companySlice = createSlice({
@@ -401,7 +427,7 @@ const companySlice = createSlice({
         },
       )
       .addCase(getCostHistory.rejected, (state, action) => {
-        state.item = undefined;
+        state.costHistories = [];
         state.costHistoriesStatus = DataStatus.FAILED;
         state.costHistoriesError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
       })
@@ -449,6 +475,38 @@ const companySlice = createSlice({
 
         state[`${prefixKey}Status`] = DataStatus.FAILED;
         state[`${prefixKey}Error`] =
+          action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+
+      .addCase(getStatementHistory.pending, (state, action) => {
+        state.statementHistoriesStatus = DataStatus.LOADING;
+
+        state.statementHistoriesFilters = getFiltersFromQueries(
+          action.meta.arg,
+        );
+
+        state.statementHistoriesPaging.pageIndex =
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
+        state.statementHistoriesPaging.pageSize =
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
+      })
+      .addCase(
+        getStatementHistory.fulfilled,
+        (state, action: PayloadAction<ItemListResponse>) => {
+          const { items, ...paging } = action.payload;
+          state.statementHistories = items as StatementHistory[];
+          state.statementHistoriesStatus = DataStatus.SUCCEEDED;
+          state.statementHistoriesError = undefined;
+          state.statementHistoriesPaging = Object.assign(
+            state.statementHistoriesPaging,
+            paging,
+          );
+        },
+      )
+      .addCase(getStatementHistory.rejected, (state, action) => {
+        state.statementHistories = [];
+        state.statementHistoriesStatus = DataStatus.FAILED;
+        state.statementHistoriesError =
           action.error?.message ?? AN_ERROR_TRY_AGAIN;
       }),
 });
