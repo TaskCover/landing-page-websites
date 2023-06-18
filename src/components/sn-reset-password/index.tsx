@@ -26,20 +26,12 @@ const Reset = () => {
       await onResetPassword({ password: values.password, token });
       onSignOut();
       onAddSnackbar(
-        "Đổi mật khẩu thành công, vui lòng đăng nhập lại.",
+        "Change password successfully, please signin again.",
         "success",
       );
       push(SIGNIN_PATH);
     } catch (error) {
-      let msg = "";
-      if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
-        msg = "Link không chính xác hoặc đã hết hạn sử dụng.";
-      }
-      onAddSnackbar(
-        msg ?? getMessageErrorByAPI(error),
-        "error",
-        msg ? 10000 : undefined,
-      );
+      onAddSnackbar(getMessageErrorByAPI(error), "error");
     }
   };
 
