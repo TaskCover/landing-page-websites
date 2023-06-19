@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import {
   getEmployees,
   GetEmployeeListQueries,
@@ -19,6 +19,9 @@ import {
   getPositionList,
   GetStatementHistoryQueries,
   getStatementHistory,
+  getMyCompany,
+  approveOrReject,
+  CompanyStatus,
 } from "./actions";
 import {
   BaseQueries,
@@ -46,6 +49,7 @@ export interface Position {
   name: string;
   created_time: string;
   created_by: User;
+  total_member_of_position?: number;
 }
 
 export interface CostHistory {
@@ -84,12 +88,26 @@ export interface Company {
 
   created_time: string;
   number_of_user: number;
+  total_member?: number;
+  total_project?: number;
+  total_position?: number;
   date_end_using: string;
   date_start_using: string;
-  is_approve: boolean;
+  is_approve?: boolean;
   is_pay_company: boolean;
   tax_code: string;
+
+  account_paid?: {
+    total_paid: number;
+    total_un_paid: number;
+    total_account: number;
+  };
 }
+
+type CompaniesStatistic = {
+  total_company?: number;
+  total_company_paid?: number;
+};
 
 export interface CompanyState {
   employees: Employee[];
@@ -121,6 +139,10 @@ export interface CompanyState {
   itemStatus: DataStatus;
   itemError?: string;
 
+  myItem?: Company;
+  myItemStatus: DataStatus;
+  myItemError?: string;
+
   costHistories: CostHistory[];
   costHistoriesStatus: DataStatus;
   costHistoriesPaging: Paging;
@@ -131,6 +153,7 @@ export interface CompanyState {
   itemsPaging: Paging;
   itemsError?: string;
   itemsFilters: Omit<GetCompanyListQueries, "pageIndex" | "pageSize">;
+  itemsStatistic?: CompaniesStatistic;
 
   itemOptions: Option[];
   itemOptionsStatus: DataStatus;
@@ -168,6 +191,8 @@ const initialState: CompanyState = {
   projectTypesPaging: DEFAULT_PAGING,
 
   itemStatus: DataStatus.IDLE,
+
+  myItemStatus: DataStatus.IDLE,
 
   costHistories: [],
   costHistoriesStatus: DataStatus.IDLE,
@@ -396,6 +421,24 @@ const companySlice = createSlice({
         state.itemStatus = DataStatus.FAILED;
         state.itemError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
       })
+
+      .addCase(getMyCompany.pending, (state) => {
+        state.myItemStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        getMyCompany.fulfilled,
+        (state, action: PayloadAction<Company>) => {
+          state.myItem = action.payload;
+          state.myItemStatus = DataStatus.SUCCEEDED;
+          state.myItemError = undefined;
+        },
+      )
+      .addCase(getMyCompany.rejected, (state, action) => {
+        state.myItem = undefined;
+        state.myItemStatus = DataStatus.FAILED;
+        state.myItemError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+
       .addCase(
         updateCompany.fulfilled,
         (state, action: PayloadAction<Company>) => {
@@ -447,8 +490,17 @@ const companySlice = createSlice({
       })
       .addCase(
         getCompanyList.fulfilled,
-        (state, action: PayloadAction<ItemListResponse>) => {
-          const { items, concat, ...paging } = action.payload;
+        (
+          state,
+          action: PayloadAction<ItemListResponse & CompaniesStatistic>,
+        ) => {
+          const {
+            items,
+            concat,
+            total_company_paid,
+            total_company,
+            ...paging
+          } = action.payload;
 
           if (concat) {
             const newOptions = (items as Company[]).map((item) => ({
@@ -458,6 +510,10 @@ const companySlice = createSlice({
             state.itemOptions = state.itemOptions.concat(newOptions);
           } else {
             state.items = items as Company[];
+            state.itemsStatistic = {
+              total_company_paid,
+              total_company,
+            };
           }
 
           const prefixKey = concat ? "itemOptions" : "items";
@@ -472,6 +528,9 @@ const companySlice = createSlice({
       )
       .addCase(getCompanyList.rejected, (state, action) => {
         const prefixKey = action.meta.arg["concat"] ? "itemOptions" : "items";
+        if (!action.meta.arg["concat"]) {
+          state.itemsStatistic = undefined;
+        }
 
         state[`${prefixKey}Status`] = DataStatus.FAILED;
         state[`${prefixKey}Error`] =
@@ -508,6 +567,14 @@ const companySlice = createSlice({
         state.statementHistoriesStatus = DataStatus.FAILED;
         state.statementHistoriesError =
           action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(approveOrReject.fulfilled, (state, action) => {
+        state.items = state.items.map((item) => {
+          if (action.payload.includes(item.id)) {
+            return { ...item, is_approve: Boolean(action.meta.arg.type) };
+          }
+          return item;
+        });
       }),
 });
 

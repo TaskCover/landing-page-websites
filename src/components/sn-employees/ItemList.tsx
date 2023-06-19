@@ -238,20 +238,23 @@ const ItemList = () => {
                 <ActionsCell
                   onEdit={onActionToItem(DataAction.UPDATE, item)}
                   onDelete={onDeleteEmployee(item.id)}
-                  onChildClick={onActionToItem(DataAction.OTHER, item)}
-                >
-                  {!item.is_pay_user && (
-                    <>
-                      <CardSendIcon
-                        sx={{ color: "grey.400" }}
-                        fontSize="medium"
-                      />
-                      <Text ml={2} variant="body2" color="grey.400">
-                        Thanh toán
-                      </Text>
-                    </>
-                  )}
-                </ActionsCell>
+                  options={
+                    !item.is_pay_user
+                      ? [
+                          {
+                            content: "Pay",
+                            onClick: onActionToItem(DataAction.OTHER, item),
+                            icon: (
+                              <CardSendIcon
+                                sx={{ color: "grey.400" }}
+                                fontSize="medium"
+                              />
+                            ),
+                          },
+                        ]
+                      : undefined
+                  }
+                />
               </TableRow>
             );
           })}

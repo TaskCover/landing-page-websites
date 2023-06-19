@@ -1,11 +1,13 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   CompanyData,
+  CompanyStatus,
   EmployeeData,
   GetCompanyListQueries,
   GetEmployeeListQueries,
   GetStatementHistoryQueries,
   PositionData,
+  approveOrReject,
   createEmployee,
   createPosition,
   createProjectType,
@@ -15,6 +17,7 @@ import {
   getCompanyList,
   getCostHistory,
   getEmployees,
+  getMyCompany,
   getPositionList,
   getProjectTypeList,
   getStatementHistory,
@@ -312,6 +315,33 @@ export const useCompany = () => {
   };
 };
 
+export const useMyCompany = () => {
+  const dispatch = useAppDispatch();
+  const {
+    myItem: item,
+    myItemStatus: status,
+    myItemError: error,
+  } = useAppSelector((state) => state.company, shallowEqual);
+
+  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
+  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
+  const id = useMemo(() => item?.id, [item?.id]);
+
+  const onGetCompany = useCallback(async () => {
+    await dispatch(getMyCompany());
+  }, [dispatch]);
+
+  return {
+    id,
+    item,
+    status,
+    isIdle,
+    isFetching,
+    error,
+    onGetCompany,
+  };
+};
+
 export const useCostHistory = () => {
   const dispatch = useAppDispatch();
   const {
@@ -355,6 +385,7 @@ export const useCompanies = () => {
     itemsStatus: status,
     itemsError: error,
     itemsFilters: filters,
+    itemsStatistic: statistic,
   } = useAppSelector((state) => state.company, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.company.itemsPaging,
@@ -371,6 +402,14 @@ export const useCompanies = () => {
     [dispatch],
   );
 
+  const onApproveOrReject = async (ids, type: CompanyStatus) => {
+    try {
+      return await dispatch(approveOrReject({ ids, type })).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return {
     items,
     status,
@@ -382,7 +421,9 @@ export const useCompanies = () => {
     pageSize,
     totalItems,
     totalPages,
+    statistic,
     onGetCompanies,
+    onApproveOrReject,
   };
 };
 

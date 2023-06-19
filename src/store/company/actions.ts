@@ -13,14 +13,14 @@ import StringFormat from "string-format";
 import { getPositions, getProjectTypes } from "store/global/actions";
 
 export enum CompanyStatus {
-  APPROVE = 1,
   REJECT,
+  APPROVE,
 }
 
 export type GetEmployeeListQueries = BaseQueries & {
   email?: string;
   position?: string;
-  status?: boolean;
+  is_pay_user?: boolean;
   company?: string;
   date?: string;
 };
@@ -65,7 +65,7 @@ export const getEmployees = createAsyncThunk(
     queries = serverQueries(
       { ...queries, sort: "created_time=-1" },
       ["email"],
-      ["status"],
+      ["is_pay_user"],
     ) as GetEmployeeListQueries;
 
     try {
@@ -302,6 +302,24 @@ export const getCompany = createAsyncThunk(
   },
 );
 
+export const getMyCompany = createAsyncThunk(
+  "company/getMyCompany",
+  async () => {
+    try {
+      const response = await client.get(Endpoint.MY_COMPANY, undefined, {
+        baseURL: COMPANY_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
 export const updateCompany = createAsyncThunk(
   "company/updateCompany",
   async ({ id, ...data }: CompanyData & { id: string }) => {
@@ -356,6 +374,33 @@ export const getStatementHistory = createAsyncThunk(
 
       if (response?.status === HttpStatusCode.OK) {
         return refactorRawItemListResponse(response.data);
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const approveOrReject = createAsyncThunk(
+  "company/approveOrReject",
+  async ({ type, ids }: { type: CompanyStatus; ids: string[] }) => {
+    const url =
+      type === CompanyStatus.APPROVE
+        ? Endpoint.COMPANIES_APPROVE
+        : Endpoint.COMPANIES_REJECT;
+
+    try {
+      const response = await client.put(
+        url,
+        { ids },
+        {
+          baseURL: COMPANY_API_URL,
+        },
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return ids;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

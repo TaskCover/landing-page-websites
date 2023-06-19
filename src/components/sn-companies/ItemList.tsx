@@ -22,13 +22,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { getPath } from "utils/index";
 import { IconButton, Text, Checkbox } from "components/shared";
 import { useCompanies } from "store/company/selectors";
-import ConfirmDialog from "components/ConfirmDialog";
 import { Company } from "store/company/reducer";
-import { DataAction } from "constant/enums";
-import { MobileContentCell, DesktopCells } from "./components";
 import useBreakpoint from "hooks/useBreakpoint";
 import CircleTickIcon from "icons/CircleTickIcon";
 import CloseSquareIcon from "icons/CloseSquareIcon";
+import DesktopCells from "./DesktopCells";
+import MobileContentCell from "./MobileContentCell";
+import { ApproveOrRejectConfirm } from "./components";
+import { CompanyStatus } from "store/company/actions";
 
 const ItemList = () => {
   const {
@@ -41,6 +42,7 @@ const ItemList = () => {
     pageIndex,
     totalPages,
     onGetCompanies,
+    onApproveOrReject: onApproveOrRejectAction,
   } = useCompanies();
 
   const { initQuery, isReady, query } = useQueryParams();
@@ -48,22 +50,27 @@ const ItemList = () => {
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
 
-  const [item, setItem] = useState<Company | undefined>();
-  const [ids, setIds] = useState<string[]>([]);
-  const [action, setAction] = useState<DataAction | undefined>();
+  const [selectedList, setSelectedList] = useState<Company[]>([]);
+  const [action, setAction] = useState<CompanyStatus | undefined>();
+  const [id, setId] = useState<string | undefined>();
 
   const isCheckedAll = useMemo(
-    () => Boolean(ids.length && ids.length === items.length),
-    [ids.length, items.length],
+    () => Boolean(selectedList.length && selectedList.length === items.length),
+    [selectedList.length, items.length],
+  );
+
+  const textAction = useMemo(
+    () => (action !== undefined ? TEXT_ACTION[action] : ""),
+    [action],
   );
 
   const onChangeAll = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const isChecked = event.target.checked;
       if (isChecked) {
-        setIds(items.map((item) => item.id));
+        setSelectedList(items);
       } else {
-        setIds([]);
+        setSelectedList([]);
       }
     },
     [items],
@@ -84,30 +91,24 @@ const ItemList = () => {
     ] as CellProps[];
   }, [isMdSmaller, isCheckedAll, onChangeAll]);
 
-  const onToggleSelect = (id: string, indexSelected: number) => {
+  const onToggleSelect = (item: Company, indexSelected: number) => {
     return () => {
       if (indexSelected === -1) {
-        setIds((prevIds) => [...prevIds, id]);
+        setSelectedList((prevList) => [...prevList, item]);
       } else {
-        setIds((prevIds) => {
-          const newIds = [...prevIds];
-          newIds.splice(indexSelected, 1);
-          return newIds;
+        setSelectedList((prevList) => {
+          const newList = [...prevList];
+          newList.splice(indexSelected, 1);
+          return newList;
         });
       }
     };
   };
 
-  const onActionToItem = (action: DataAction, item?: Company) => {
-    return () => {
-      item && setItem(item);
-      setAction(action);
-    };
-  };
-
   const onResetAction = () => {
-    setItem(undefined);
+    setSelectedList([]);
     setAction(undefined);
+    setId(undefined);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -127,8 +128,21 @@ const ItemList = () => {
     onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
   };
 
-  const onApproveOrReject = () => {
-    //
+  const onApproveOrReject = (type: CompanyStatus, id?: string) => {
+    return () => {
+      setAction(type);
+      setId(id);
+    };
+  };
+
+  const onSubmitApproveOrReject = async () => {
+    if (action === undefined) return;
+    const ids = id ? [id] : selectedList.map((item) => item.id);
+    try {
+      return await onApproveOrRejectAction(ids, action);
+    } catch (error) {
+      throw error;
+    }
   };
 
   useEffect(() => {
@@ -137,24 +151,29 @@ const ItemList = () => {
   }, [initQuery, isIdle, isReady, onGetCompanies]);
 
   useEffect(() => {
-    setIds([]);
+    setSelectedList([]);
   }, [pageIndex]);
 
   return (
     <>
       <Stack flex={1} px={{ xs: 1, md: 3 }}>
-        {!!ids.length && (
+        {!!selectedList.length && (
           <Stack
             direction="row"
             alignItems="center"
-            spacing={3}
-            p={3}
+            spacing={2}
             pb={0.25}
+            border="1px solid"
+            borderColor="grey.100"
+            borderBottom="none"
+            sx={{ borderTopLeftRadius: 1, borderTopRightRadius: 1 }}
+            py={1.125}
+            px={1}
           >
             <IconButton
               size="small"
-              onClick={onApproveOrReject}
-              tooltip="Thanh toán"
+              onClick={onApproveOrReject(CompanyStatus.APPROVE)}
+              tooltip="Approve"
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -169,8 +188,8 @@ const ItemList = () => {
             </IconButton>
             <IconButton
               size="small"
-              onClick={onApproveOrReject}
-              tooltip="Xóa bỏ"
+              onClick={onApproveOrReject(CompanyStatus.REJECT)}
+              tooltip="Reject"
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -193,15 +212,15 @@ const ItemList = () => {
           pb={3}
         >
           {items.map((item) => {
-            const indexSelected = ids.findIndex(
-              (idValue) => idValue === item.id,
+            const indexSelected = selectedList.findIndex(
+              (selected) => selected.id === item.id,
             );
             return (
               <TableRow key={item.id}>
                 <BodyCell>
                   <Checkbox
                     checked={indexSelected !== -1}
-                    onChange={onToggleSelect(item.id, indexSelected)}
+                    onChange={onToggleSelect(item, indexSelected)}
                   />
                 </BodyCell>
                 {isMdSmaller ? (
@@ -211,19 +230,22 @@ const ItemList = () => {
                 )}
 
                 <ActionsCell
-                  onChildClick={onActionToItem(DataAction.OTHER, item)}
-                >
-                  <>
-                    <CircleTickIcon
-                      filled={false}
-                      sx={{ color: "grey.400" }}
-                      fontSize="medium"
-                    />
-                    <Text ml={2} variant="body2" color="grey.400">
-                      Approve
-                    </Text>
-                  </>
-                </ActionsCell>
+                  options={[
+                    {
+                      content: "Approve",
+                      onClick: onApproveOrReject(
+                        CompanyStatus.APPROVE,
+                        item.id,
+                      ),
+                      icon: <CircleTickIcon filled={false} fontSize="small" />,
+                    },
+                    {
+                      content: "Reject",
+                      onClick: onApproveOrReject(CompanyStatus.REJECT, item.id),
+                      icon: <CloseSquareIcon fontSize="small" />,
+                    },
+                  ]}
+                />
               </TableRow>
             );
           })}
@@ -239,14 +261,16 @@ const ItemList = () => {
         onChangePage={onChangePage}
         onChangeSize={onChangeSize}
       />
-      {action === DataAction.OTHER && (
-        <ConfirmDialog
-          open
-          onClose={onResetAction}
-          title="Xác nhận thanh toán"
-          content="Bạn có chắc chắn thanh toán tất cả sự lựa chọn?"
-        />
-      )}
+      <ApproveOrRejectConfirm
+        open={action !== undefined}
+        onClose={onResetAction}
+        title={`Confirm to ${textAction}`}
+        content={`Are you sure to ${textAction} ${
+          id ? "this" : "these"
+        } account?`}
+        items={id ? undefined : selectedList}
+        onSubmit={onSubmitApproveOrReject}
+      />
     </>
   );
 };
@@ -254,14 +278,17 @@ const ItemList = () => {
 export default memo(ItemList);
 
 const DESKTOP_HEADER_LIST = [
-  { value: "Họ tên", width: "15%", align: "left" },
-  { value: "Email", width: "15%", align: "left" },
-  { value: "Chức vụ", width: "15%" },
-  { value: "Ngày tạo", width: "13.5%" },
-  { value: "Ngày hết hạn", width: "13.5%" },
-  { value: "Trạng thái", width: "17%" },
+  { value: "Họ tên", width: "25%", align: "left" },
+  { value: "Email", width: "25%", align: "left" },
+  { value: "Ngày tạo", width: "19%" },
+  { value: "Trạng thái", width: "20%" },
 ];
 
 const MOBILE_HEADER_LIST = [
   { value: "Nhân viên", width: "70%", align: "left" },
 ];
+
+const TEXT_ACTION: { [key in CompanyStatus]: string } = {
+  [CompanyStatus.APPROVE]: "approve",
+  [CompanyStatus.REJECT]: "reject",
+};

@@ -1,4 +1,5 @@
-import MobileContentCell from "./MobileContentCell";
-import DesktopCells from "./DesktopCells";
+import ApproveOrRejectConfirm from "./ApproveOrRejectConfirm";
 
-export { MobileContentCell, DesktopCells };
+export { ApproveOrRejectConfirm };
+
+export * from "./helpers";

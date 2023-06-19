@@ -1,9 +1,11 @@
-import { memo, useId, MouseEvent, useState } from "react";
+import React, { memo, useId, MouseEvent, useState } from "react";
 import {
   AlertColor,
   Box,
   ButtonBase,
+  ButtonBaseProps,
   MenuItem,
+  MenuItemProps,
   MenuList,
   Popover,
   Stack,
@@ -21,20 +23,20 @@ import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
 import { AN_ERROR_TRY_AGAIN } from "constant/index";
 
+type ActionOption = {
+  icon: React.ReactNode;
+  content: string;
+  onClick?: ButtonBaseProps["onClick"];
+};
+
 type ActionsCellProps = {
-  onChildClick?: () => void;
   onEdit?: () => void;
   onDelete?: () => Promise<unknown>;
-} & TableCellProps;
+  options?: ActionOption[];
+} & Omit<TableCellProps, "children">;
 
 const ActionsCell = (props: ActionsCellProps) => {
-  const {
-    children,
-    onChildClick,
-    onEdit,
-    onDelete: onDeleteProps,
-    ...rest
-  } = props;
+  const { options = [], onEdit, onDelete: onDeleteProps, ...rest } = props;
   const { onAddSnackbar } = useSnackbar();
 
   const [isShow, onShow, onHide] = useToggle();
@@ -128,15 +130,20 @@ const ActionsCell = (props: ActionsCellProps) => {
           }}
         >
           <MenuList component={Box} sx={{ py: 0 }}>
-            {!!children && (
+            {options.map((option) => (
               <MenuItem
+                key={option.content}
                 component={ButtonBase}
+                onClick={option?.onClick}
                 sx={sxConfig.item}
-                onClick={onChildClick}
               >
-                {children}
+                {option.icon}
+                <Text ml={2} variant="body2" color="grey.400">
+                  {option.content}
+                </Text>
               </MenuItem>
-            )}
+            ))}
+
             {!!onEdit && (
               <MenuItem
                 component={ButtonBase}
@@ -149,7 +156,7 @@ const ActionsCell = (props: ActionsCellProps) => {
                 </Text>
               </MenuItem>
             )}
-            {!!onDelete && (
+            {!!onDeleteProps && (
               <MenuItem
                 component={ButtonBase}
                 onClick={onShowDialogConfirm}

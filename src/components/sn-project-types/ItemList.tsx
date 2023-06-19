@@ -117,7 +117,6 @@ const ItemList = () => {
               <ActionsCell
                 onEdit={onActionToItem(DataAction.UPDATE, item)}
                 onDelete={onDelete(item.id)}
-                onChildClick={onActionToItem(DataAction.OTHER, item)}
               />
             </TableRow>
           );

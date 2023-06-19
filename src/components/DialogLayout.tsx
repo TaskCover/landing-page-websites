@@ -25,7 +25,7 @@ export type DialogLayoutProps = Omit<DialogProps, "onSubmit"> & {
   bottomProps?: DialogActionsProps;
   onClose: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit?: (event?: React.FormEvent<any> | undefined) => void;
+  onSubmit?: (event?: React.FormEvent<any> | undefined) => void | Promise<any>;
   hasCloseButton?: boolean;
   hasDialogClose?: boolean;
   zIndex?: number;

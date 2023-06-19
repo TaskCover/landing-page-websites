@@ -1,17 +1,14 @@
 "use client";
 
 import { memo, useEffect } from "react";
-import { useAuth } from "store/app/selectors";
-import { useCompany } from "store/company/selectors";
+import { useMyCompany } from "store/company/selectors";
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
-  const { item, onGetCompany, error, isFetching } = useCompany();
+  const { onGetCompany } = useMyCompany();
 
   useEffect(() => {
-    if (!user?.id) return;
-    onGetCompany(user.id);
-  }, [onGetCompany, user?.id]);
+    onGetCompany();
+  }, [onGetCompany]);
 
   return children;
 };

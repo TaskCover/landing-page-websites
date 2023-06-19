@@ -118,6 +118,7 @@ export const refactorRawItemListResponse = (rawData: {
   data: unknown[];
 }) => {
   return {
+    ...rawData,
     pageIndex: rawData.page + 1,
     totalItems: rawData.total,
     totalPages: rawData.total_page,

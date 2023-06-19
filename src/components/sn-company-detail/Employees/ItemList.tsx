@@ -210,18 +210,21 @@ const ItemList = () => {
                   <DesktopCells item={item} />
                 )}
 
-                <ActionsCell onChildClick={onActionToItem(DataAction.OTHER)}>
-                  <>
-                    <CircleTickIcon
-                      filled={false}
-                      sx={{ color: "grey.400" }}
-                      fontSize="medium"
-                    />
-                    <Text ml={2} variant="body2" color="grey.400">
-                      Approve
-                    </Text>
-                  </>
-                </ActionsCell>
+                <ActionsCell
+                  options={[
+                    {
+                      content: "Approve",
+                      onClick: onActionToItem(DataAction.OTHER),
+                      icon: (
+                        <CircleTickIcon
+                          filled={false}
+                          sx={{ color: "grey.400" }}
+                          fontSize="medium"
+                        />
+                      ),
+                    },
+                  ]}
+                />
               </TableRow>
             );
           })}

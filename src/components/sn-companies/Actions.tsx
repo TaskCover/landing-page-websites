@@ -3,7 +3,7 @@
 import { memo, useCallback, useEffect, useRef } from "react";
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
-import { Date, Dropdown, Search } from "components/Filters";
+import { Clear, Date, Dropdown, Refresh, Search } from "components/Filters";
 import { formatNumber, getPath } from "utils/index";
 import { usePathname, useRouter } from "next/navigation";
 import { useCompanies } from "store/company/selectors";
@@ -12,7 +12,7 @@ import { CompanyStatus } from "store/company/actions";
 import { TEXT_STATUS } from "./components/helpers";
 
 const Actions = () => {
-  const { filters, onGetCompanies, pageSize } = useCompanies();
+  const { filters, onGetCompanies, pageSize, statistic } = useCompanies();
 
   const filtersRef = useRef<Params>(filters);
 
@@ -34,6 +34,14 @@ const Actions = () => {
     [onGetCompanies, pageSize, pathname, push],
   );
 
+  const onClear = () => {
+    onGetCompanies({ pageIndex: 1, pageSize });
+  };
+
+  const onRefresh = () => {
+    onGetCompanies({ ...filters, pageIndex: 1, pageSize });
+  };
+
   useEffect(() => {
     filtersRef.current = filters;
   }, [filters]);
@@ -43,8 +51,6 @@ const Actions = () => {
       direction={{ xs: "column", md: "row" }}
       alignItems="center"
       justifyContent="space-between"
-      borderBottom="1px solid"
-      borderColor="grey.100"
       spacing={3}
       px={{ xs: 1, md: 3 }}
       py={1.5}
@@ -58,7 +64,7 @@ const Actions = () => {
             color="success.main"
             ml={0.5}
           >
-            {formatNumber(13523)}
+            {formatNumber(statistic?.total_company_paid)}
           </Text>
         </Text>
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
@@ -69,7 +75,7 @@ const Actions = () => {
             color="text.primary"
             ml={0.5}
           >
-            {formatNumber(13523)}
+            {formatNumber(statistic?.total_company)}
           </Text>
         </Text>
       </Stack>
@@ -106,6 +112,8 @@ const Actions = () => {
             onChange={onChangeData}
             value={filters?.status}
           />
+          <Refresh onClick={onRefresh} />
+          {!!Object.keys(filters).length && <Clear onClick={onClear} />}
         </Stack>
       </Stack>
     </Stack>

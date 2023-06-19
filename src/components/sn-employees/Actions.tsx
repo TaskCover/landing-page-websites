@@ -156,9 +156,9 @@ const Actions = () => {
             <Dropdown
               placeholder="Trạng thái"
               options={PAYMENT_OPTIONS}
-              name="status"
+              name="is_pay_user"
               onChange={onChangeData}
-              value={Number(filters?.status)}
+              value={Number(filters?.is_pay_user)}
             />
             <Refresh onClick={onRefresh} />
             {!!Object.keys(filters).length && <Clear onClick={onClear} />}

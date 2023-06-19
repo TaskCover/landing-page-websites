@@ -1,12 +1,11 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { Divider, Stack, StackProps } from "@mui/material";
 import { Text } from "components/shared";
 import { formatDate, formatNumber } from "utils/index";
 import EditCompany from "./EditCompany";
-import { useCompany } from "store/company/selectors";
-import { useAuth } from "store/app/selectors";
+import { useCompany, useMyCompany } from "store/company/selectors";
 import StatusServer from "components/StatusServer";
 import { useParams } from "next/navigation";
 
@@ -16,9 +15,32 @@ type InformationItemProps = StackProps & {
 };
 
 const InformationProjectPage = () => {
-  const { user } = useAuth();
-  const { item, error, isFetching } = useCompany();
+  const {
+    item: detailItem,
+    error: detailItemError,
+    isFetching: detailItemIsFetching,
+  } = useCompany();
+  const {
+    item: myItem,
+    error: myItemError,
+    isFetching: myItemIsFetching,
+  } = useMyCompany();
   const { id } = useParams();
+
+  const [item, error, isFetching] = useMemo(() => {
+    if (id) {
+      return [detailItem, detailItemError, detailItemIsFetching];
+    }
+    return [myItem, myItemError, myItemIsFetching];
+  }, [
+    detailItem,
+    detailItemError,
+    detailItemIsFetching,
+    id,
+    myItem,
+    myItemError,
+    myItemIsFetching,
+  ]);
 
   return (
     <StatusServer isFetching={isFetching} error={error} noData={!item}>
@@ -26,7 +48,7 @@ const InformationProjectPage = () => {
         <Stack>
           <Stack direction="row" spacing={2} justifyContent="space-between">
             <Text variant="h4">{item?.name ?? "--"}</Text>
-            <EditCompany id={id ?? user?.id} />
+            <EditCompany />
           </Stack>
           <Text
             variant="h6"
@@ -50,9 +72,11 @@ const InformationProjectPage = () => {
             alignItems="center"
             spacing={{ xs: 2, sm: 5, lg: 10 }}
           >
-            <InformationItem label="Phone number"></InformationItem>
+            <InformationItem label="Phone number">
+              {item?.phone}
+            </InformationItem>
 
-            <InformationItem label="Address"></InformationItem>
+            <InformationItem label="Address">{item?.address}</InformationItem>
           </Stack>
           <Divider sx={{ borderColor: "grey.100" }} />
           <Text variant="h5">Detail Information</Text>
@@ -66,7 +90,7 @@ const InformationProjectPage = () => {
             </InformationItem>
 
             <InformationItem label="Number of positions">
-              {formatNumber()}
+              {formatNumber(item?.total_position)}
             </InformationItem>
           </Stack>
           <Stack
@@ -75,7 +99,7 @@ const InformationProjectPage = () => {
             spacing={{ xs: 2, sm: 5, lg: 10 }}
           >
             <InformationItem label="Number of projects">
-              {formatNumber()}
+              {formatNumber(item?.total_project)}
             </InformationItem>
 
             <InformationItem label="Time create">

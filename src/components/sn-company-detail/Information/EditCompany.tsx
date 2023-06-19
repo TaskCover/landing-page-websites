@@ -1,14 +1,26 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import PencilIcon from "icons/PencilIcon";
 import { IconButton } from "components/shared";
 import useToggle from "hooks/useToggle";
 import { CompanyData } from "store/company/actions";
 import { getDataFromKeys } from "utils/index";
 import Form from "./Form";
-import { useCompany } from "store/company/selectors";
+import { useCompany, useMyCompany } from "store/company/selectors";
+import { useParams } from "next/navigation";
 
-const EditCompany = ({ id }: { id?: string }) => {
-  const { item = {} } = useCompany();
+const EditCompany = () => {
+  const { item: detailItem } = useCompany();
+  const { item: myItem } = useMyCompany();
+  const { id: paramId } = useParams();
+
+  const item = useMemo(() => {
+    if (paramId) {
+      return detailItem ?? {};
+    }
+    return myItem ?? {};
+  }, [detailItem, paramId, myItem]);
+
+  const id = useMemo(() => paramId ?? myItem?.id, [myItem?.id, paramId]);
 
   const { onUpdateCompany } = useCompany();
 
@@ -36,9 +48,9 @@ const EditCompany = ({ id }: { id?: string }) => {
           initialValues={
             getDataFromKeys(item, [
               "name",
-              "code",
               "address",
               "phone",
+              "tax_code",
             ]) as CompanyData
           }
           onSubmit={onUpdate}

@@ -50,22 +50,26 @@ const Button = (props: ButtonProps) => {
 const CoreButton = forwardRef(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (props: CoreButtonProps, ref: ForwardedRef<any>) => {
-    const { sx, pending, startIcon: startIconProps, ...rest } = props;
+    const { sx, pending, startIcon: startIconProps, variant, ...rest } = props;
 
     const startIcon = useMemo(
       () =>
         pending ? (
-          <CircularProgress size={20} color="primary" />
+          <CircularProgress
+            size={20}
+            sx={{ color: variant === "primary" ? "common.white" : "primary" }}
+          />
         ) : (
           startIconProps
         ),
-      [pending, startIconProps],
+      [pending, startIconProps, variant],
     );
 
     return (
       <MuiButton
         ref={ref}
         startIcon={startIcon}
+        variant={variant}
         sx={{ ...defaultSx, ...sx } as CoreButtonProps["sx"]}
         {...rest}
       />

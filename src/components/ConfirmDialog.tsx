@@ -2,24 +2,26 @@ import { memo } from "react";
 import DialogLayout, { DialogLayoutProps } from "./DialogLayout";
 import { Button, Text } from "./shared";
 
-type ConfirmDialogProps = Omit<DialogLayoutProps, "children"> & {
+export type ConfirmDialogProps = Omit<DialogLayoutProps, "children"> & {
   title: string;
   content: string;
   cancelText?: string;
   submitText?: string;
   pending?: boolean;
+  children?: React.ReactNode;
 };
 
 const ConfirmDialog = (props: ConfirmDialogProps) => {
   const {
     title,
     content,
-    cancelText = "Hủy bỏ",
-    submitText = "Xác nhận",
+    cancelText = "Cancel",
+    submitText = "Confirm",
     onClose,
     onSubmit,
     pending,
     sx,
+    children,
     ...rest
   } = props;
   return (
@@ -63,6 +65,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
       <Text variant="body2" textAlign="center">
         {content}
       </Text>
+      {children}
     </DialogLayout>
   );
 };

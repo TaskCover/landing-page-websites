@@ -6,7 +6,9 @@ export const TEXT_STATUS: { [key in CompanyStatus]: string } = {
   [CompanyStatus.REJECT]: "Rejected",
 };
 
-export const COLOR_STATUS: { [key in CompanyStatus]: AlertColor } = {
+export const COLOR_STATUS: {
+  [key in CompanyStatus]: AlertColor;
+} = {
   [CompanyStatus.APPROVE]: "success",
   [CompanyStatus.REJECT]: "error",
 };

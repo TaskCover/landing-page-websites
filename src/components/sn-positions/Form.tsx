@@ -10,6 +10,8 @@ import { getMessageErrorByAPI } from "utils/index";
 import { DataAction } from "constant/enums";
 import { Input } from "components/shared";
 import { PositionData } from "store/company/actions";
+import { formErrorCode } from "api/formErrorCode";
+import { ErrorResponse } from "constant/types";
 
 type FormProps = {
   initialValues: PositionData;
@@ -44,7 +46,14 @@ const Form = (props: FormProps) => {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      if (
+        (error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA &&
+        (error as ErrorResponse)["message"]
+      ) {
+        formik.setFieldError("name", (error as ErrorResponse)["message"]);
+      } else {
+        onAddSnackbar(getMessageErrorByAPI(error), "error");
+      }
     }
   };
 

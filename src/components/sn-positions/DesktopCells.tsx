@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { BodyCell } from "components/Table";
 import { DATE_TIME_FORMAT_SLASH } from "constant/index";
-import { formatDate } from "utils/index";
+import { formatDate, formatNumber } from "utils/index";
 import { Position } from "store/company/reducer";
 
 type DesktopCellsProps = {
@@ -21,7 +21,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
       <BodyCell tooltip={formatDate(item.created_time, DATE_TIME_FORMAT_SLASH)}>
         {formatDate(item.created_time)}
       </BodyCell>
-      <BodyCell></BodyCell>
+      <BodyCell>{formatNumber(item?.total_member_of_position)}</BodyCell>
     </>
   );
 };
