@@ -21,6 +21,7 @@ export type GetEmployeeListQueries = BaseQueries & {
   email?: string;
   position?: string;
   is_pay_user?: boolean;
+  status?: boolean;
   company?: string;
   date?: string;
 };
