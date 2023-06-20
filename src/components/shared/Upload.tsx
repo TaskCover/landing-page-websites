@@ -4,31 +4,44 @@ import { ChangeEvent, memo, useMemo, useRef, useState } from "react";
 import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
 import Image from "next/image";
 import UploadIcon from "icons/UploadIcon";
+import { IMAGES_ACCEPT } from "constant/index";
+import { useSnackbar } from "store/app/selectors";
 
 export type UploadProps = {
   title: string;
   name: string;
   required?: boolean;
+  onChange: (name: string, file?: File) => void;
+  value?: File | string;
 };
 
 const Upload = (props: UploadProps) => {
-  const { title, name, required } = props;
+  const { title, name, required, onChange, value } = props;
   const inputFileRef = useRef<HTMLInputElement | null>(null);
-  const [file, setFile] = useState<File | undefined>();
+  const { onAddSnackbar } = useSnackbar();
 
-  const previewImage = useMemo(
-    () => (file ? URL.createObjectURL(file) : UserPlaceholderImage),
-    [file],
-  );
+  const previewImage = useMemo(() => {
+    if (typeof value === "object") {
+      return URL.createObjectURL(value);
+    }
+    return (value as string | undefined) ?? UserPlaceholderImage;
+  }, [value]);
 
   const onChooseFile = () => {
     inputFileRef?.current?.click();
   };
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files) return;
-    setFile(files[0]);
+    if (IMAGES_ACCEPT.includes(files[0].type)) {
+      onChange(name, files[0]);
+    } else {
+      onAddSnackbar(
+        "File type is invalid. Currently the system only support PNG, JPEG, JPG",
+        "error",
+      );
+    }
   };
 
   return (
@@ -54,18 +67,18 @@ const Upload = (props: UploadProps) => {
           }}
           onClick={onChooseFile}
           size="extraSmall"
-          startIcon={<UploadIcon color="primary" sx={{ fontSize: 16 }} />}
+          startIcon={<UploadIcon color="inherit" sx={{ fontSize: 16 }} />}
         >
-          Tải ảnh lên
+          Upload
         </Button>
       </Stack>
 
       <Box
         type="file"
-        accept="image/*"
+        accept={IMAGES_ACCEPT.join(", ")}
         component="input"
         display="none"
-        onChange={onChange}
+        onChange={onChangeFile}
         ref={inputFileRef}
       />
     </Stack>

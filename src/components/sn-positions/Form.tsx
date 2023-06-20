@@ -27,9 +27,9 @@ const Form = (props: FormProps) => {
   const label = useMemo(() => {
     switch (type) {
       case DataAction.CREATE:
-        return "Thêm mới";
+        return "Create new";
       case DataAction.UPDATE:
-        return "Cập nhật";
+        return "Update";
       default:
         return "";
     }
@@ -40,7 +40,7 @@ const Form = (props: FormProps) => {
       const newItem = await onSubmitProps(values);
 
       if (newItem) {
-        onAddSnackbar(`${label} chức vụ thành công!`, "success");
+        onAddSnackbar(`${label} position successfully!`, "success");
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -88,7 +88,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
-      label={`${label} chức vụ`}
+      label={`${label} position`}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
@@ -96,7 +96,7 @@ const Form = (props: FormProps) => {
     >
       <Stack spacing={2} py={3}>
         <Input
-          title="Tên chức vụ"
+          title="Name"
           name="name"
           required
           onChange={formik.handleChange}
@@ -113,7 +113,7 @@ const Form = (props: FormProps) => {
 export default memo(Form);
 
 export const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Tên chức vụ là bắt buộc."),
+  name: Yup.string().trim().required("Position name is required."),
 });
 
 const sxConfig = {

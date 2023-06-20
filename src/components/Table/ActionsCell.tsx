@@ -31,12 +31,19 @@ type ActionOption = {
 
 type ActionsCellProps = {
   onEdit?: () => void;
-  onDelete?: () => Promise<unknown>;
+  onDelete?: () => Promise<unknown> | void;
   options?: ActionOption[];
+  hasPopup?: boolean;
 } & Omit<TableCellProps, "children">;
 
 const ActionsCell = (props: ActionsCellProps) => {
-  const { options = [], onEdit, onDelete: onDeleteProps, ...rest } = props;
+  const {
+    options = [],
+    onEdit,
+    onDelete: onDeleteProps,
+    hasPopup = true,
+    ...rest
+  } = props;
   const { onAddSnackbar } = useSnackbar();
 
   const [isShow, onShow, onHide] = useToggle();
@@ -51,6 +58,15 @@ const ActionsCell = (props: ActionsCellProps) => {
 
   const onClose = () => {
     setAnchorEl(null);
+  };
+
+  const onEditClicked = () => {
+    onEdit && onEdit();
+    onClose();
+  };
+  const onDeleteClicked = () => {
+    onDeleteProps && onDeleteProps();
+    onClose();
   };
 
   const onShowDialogConfirm = () => {
@@ -68,7 +84,7 @@ const ActionsCell = (props: ActionsCellProps) => {
       onSubmittingTrue();
       const response = await onDeleteProps();
       if (response) {
-        onAddSnackbar("Xóa thành công!", "success");
+        onAddSnackbar("Delete successfully!", "success");
         onHide();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -79,6 +95,10 @@ const ActionsCell = (props: ActionsCellProps) => {
       onSubmittingFalse();
     }
   };
+
+  if (!options.length && !onEdit && !onDeleteProps) {
+    return <BodyCell align="left" fallback={null} {...rest}></BodyCell>;
+  }
 
   return (
     <BodyCell align="left" {...rest}>
@@ -147,24 +167,24 @@ const ActionsCell = (props: ActionsCellProps) => {
             {!!onEdit && (
               <MenuItem
                 component={ButtonBase}
-                onClick={onEdit}
+                onClick={onEditClicked}
                 sx={sxConfig.item}
               >
                 <PencilIcon sx={{ color: "grey.400" }} fontSize="medium" />
                 <Text ml={2} variant="body2" color="grey.400">
-                  Sửa
+                  Edit
                 </Text>
               </MenuItem>
             )}
             {!!onDeleteProps && (
               <MenuItem
                 component={ButtonBase}
-                onClick={onShowDialogConfirm}
+                onClick={hasPopup ? onShowDialogConfirm : onDeleteClicked}
                 sx={sxConfig.item}
               >
                 <TrashIcon color="error" fontSize="medium" />
                 <Text ml={2} variant="body2" color="grey.400">
-                  Xóa bỏ
+                  Delete
                 </Text>
               </MenuItem>
             )}
@@ -175,8 +195,8 @@ const ActionsCell = (props: ActionsCellProps) => {
         onSubmit={onDelete}
         open={isShow}
         onClose={onCloseDialogDelete}
-        title="Xác nhận xóa"
-        content="Bạn có chắc chắn muốn xóa?"
+        title="Confirm delete"
+        content="Are you sure to delete?"
       />
     </BodyCell>
   );

@@ -38,7 +38,7 @@ const Sidebar = (props: StackProps) => {
       alignItems="center"
       width={isShowLarge ? LARGE_SIZE : SMALL_SIZE}
       maxWidth={340}
-      overflow="auto"
+      overflow="hidden"
       spacing={3}
       display={{ xs: "none", sm: "flex" }}
       {...props}

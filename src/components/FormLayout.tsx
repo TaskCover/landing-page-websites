@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import { memo } from "react";
 import DialogLayout, { DialogLayoutProps } from "./DialogLayout";
 import { Button, Text } from "./shared";
@@ -9,6 +9,7 @@ type FormLayoutProps = {
   cancelText?: string;
   disabled?: boolean;
   submitting?: boolean;
+  pending?: boolean;
 } & DialogLayoutProps;
 
 const FormLayout = (props: FormLayoutProps) => {
@@ -21,6 +22,7 @@ const FormLayout = (props: FormLayoutProps) => {
     submitting,
     sx,
     onClose,
+    pending,
     ...rest
   } = props;
   return (
@@ -62,7 +64,15 @@ const FormLayout = (props: FormLayoutProps) => {
       {...rest}
     >
       <Stack flex={1} overflow="auto">
-        {children}
+        {pending ? (
+          <CircularProgress
+            size={24}
+            color="primary"
+            sx={{ mx: "auto", my: 3 }}
+          />
+        ) : (
+          children
+        )}
       </Stack>
     </DialogLayout>
   );

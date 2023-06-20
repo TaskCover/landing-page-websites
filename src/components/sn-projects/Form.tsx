@@ -1,7 +1,11 @@
 import { Stack } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
-import { AN_ERROR_TRY_AGAIN, DATE_FORMAT_FORM } from "constant/index";
+import {
+  AN_ERROR_TRY_AGAIN,
+  DATE_FORMAT_FORM,
+  IMAGES_ACCEPT,
+} from "constant/index";
 import { FormikErrors, useFormik } from "formik";
 import { memo, useEffect, useMemo } from "react";
 import { useSnackbar } from "store/app/selectors";
@@ -18,11 +22,16 @@ import {
 } from "components/shared";
 import { useEmployeeOptions } from "store/company/selectors";
 import { SelectMembers } from "./components";
-import { Member } from "./helpers";
-import { useProjectTypeOptions } from "store/global/selectors";
+import { Member } from "./components/helpers";
+import {
+  usePositionOptions,
+  useProjectTypeOptions,
+} from "store/global/selectors";
+import { Endpoint, client } from "api";
 
-export type ProjectDataForm = Omit<ProjectData, "members"> & {
+export type ProjectDataForm = Omit<ProjectData, "members" | "avatar"> & {
   members?: Member[];
+  avatar?: string | File;
 };
 
 type FormProps = {
@@ -43,6 +52,7 @@ const Form = (props: FormProps) => {
     onGetOptions: onGetProjectTypeOptions,
     pageSize: projectTypeOptionsPageSize,
   } = useProjectTypeOptions();
+  const { options: positionOptions } = usePositionOptions();
   const {
     options: employeeOptions,
     onGetOptions,
@@ -56,9 +66,9 @@ const Form = (props: FormProps) => {
   const label = useMemo(() => {
     switch (type) {
       case DataAction.CREATE:
-        return "Thêm mới";
+        return "Create new";
       case DataAction.UPDATE:
-        return "Cập nhật";
+        return "Update";
       default:
         return "";
     }
@@ -80,25 +90,41 @@ const Form = (props: FormProps) => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let dataParsed: any = { ...values };
-      if (typeof dataParsed.start_date === "number") {
+      if (dataParsed.start_date) {
         dataParsed.start_date = formatDate(
           dataParsed.start_date,
           DATE_FORMAT_FORM,
         );
       }
-      if (typeof values.end_date === "number") {
+      if (values.end_date) {
         dataParsed.end_date = formatDate(dataParsed.end_date, DATE_FORMAT_FORM);
       }
       if (dataParsed?.members?.length) {
         dataParsed.members = dataParsed.members.map(
           ({ fullname, ...rest }) => rest,
         );
+
+        const positionIds = positionOptions.map((posItem) => posItem.value);
+        const isMissingPosition = dataParsed.members.some(
+          (member: Member) => !positionIds.includes(member.position),
+        );
+
+        if (isMissingPosition) {
+          throw "The member list has one or more members with invalid positions.";
+        }
       }
+      if (typeof values["avatar"] === "object") {
+        const logoUrl = await client.upload(Endpoint.UPLOAD, values["avatar"]);
+        dataParsed["avatar"] = [logoUrl];
+      } else {
+        delete dataParsed["avatar"];
+      }
+
       dataParsed = cleanObject(dataParsed) as ProjectData;
       const newItem = await onSubmitProps(dataParsed);
 
       if (newItem) {
-        onAddSnackbar(`${label} dự án thành công!`, "success");
+        onAddSnackbar(`${label} project successfully!`, "success");
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -177,7 +203,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw -24px)", sm: 700 },
         maxHeight: "calc(100vh - 24px)",
       }}
-      label={`${label} dự án`}
+      label={`${label} project`}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
@@ -185,7 +211,7 @@ const Form = (props: FormProps) => {
     >
       <Stack spacing={2} py={3}>
         <Input
-          title="Tên dự án"
+          title="Name"
           name="name"
           required
           onChange={formik.handleChange}
@@ -197,7 +223,7 @@ const Form = (props: FormProps) => {
         <Stack direction={{ sm: "row" }} spacing={2}>
           <Select
             options={employeeOptions}
-            title="Người phụ trách"
+            title="Assigner"
             name="owner"
             required
             onChange={formik.handleChange}
@@ -210,7 +236,7 @@ const Form = (props: FormProps) => {
           />
           <Select
             options={projectTypeOptions}
-            title="Loại dự án"
+            title="Project type"
             name="type_project"
             required
             onChange={formik.handleChange}
@@ -232,7 +258,7 @@ const Form = (props: FormProps) => {
         />
         <Stack direction={{ sm: "row" }} spacing={2}>
           <DatePicker
-            title="Ngày bắt đầu"
+            title="Start date"
             name="start_date"
             required
             onChange={onChangeDate}
@@ -243,7 +269,7 @@ const Form = (props: FormProps) => {
             fullWidth
           />
           <DatePicker
-            title="Ngày kết thúc"
+            title="End date"
             name="end_date"
             required
             onChange={onChangeDate}
@@ -259,7 +285,7 @@ const Form = (props: FormProps) => {
         </Stack>
         <Stack direction={{ sm: "row" }} spacing={2}>
           <InputNumber
-            title="Chi phí dự kiến"
+            title="Estimated cost"
             name="expected_cost"
             onChange={onChangeField}
             onBlur={formik.handleBlur}
@@ -270,7 +296,7 @@ const Form = (props: FormProps) => {
             numberType="integer"
           />
           <InputNumber
-            title="Số giờ làm việc dự kiến"
+            title="Estimated working hours"
             name="working_hours"
             onChange={onChangeField}
             onBlur={formik.handleBlur}
@@ -285,9 +311,14 @@ const Form = (props: FormProps) => {
           />
         </Stack>
         <Stack direction={{ sm: "row" }} spacing={2}>
-          <Upload title="Logo dự án" name="logo" />
+          <Upload
+            title="Logo"
+            name="avatar"
+            value={formik.values?.avatar}
+            onChange={onChangeField}
+          />
           <Input
-            title="Mô tả dự án"
+            title="Description"
             name="description"
             required
             onChange={formik.handleChange}
@@ -311,20 +342,23 @@ const NOW = new Date().setHours(0, 0, 0, 0);
 const baseValidationSchema = Yup.object().shape({
   name: Yup.string()
     .trim()
-    .required("Tên dự án là bắt buộc")
-    .max(50, "Tên dự án quá dài, tối đa là 50 kí tự."),
-  description: Yup.string().trim().required("Mô tả dự án là bắt buộc"),
-  owner: Yup.string().required("Người phụ trách là bắt buộc"),
-  type_project: Yup.string().required("Loại dự án là bắt buộc"),
+    .required("Project name is required.")
+    .max(50, "Project name is too long, maximum 50 characters."),
+  description: Yup.string().trim().required("Description is required."),
+  owner: Yup.string().required("Assigner is required."),
+  type_project: Yup.string().required("Project type is required."),
 });
 
 const createValidationSchema = baseValidationSchema.shape({
   start_date: Yup.number()
-    .required("Ngày bắt đầu là bắt buộc")
-    .min(NOW, "Ngày bắt đầu không thể là ngày trong quá khứ."),
+    .required("Start date is required.")
+    .min(NOW, "The start date cannot be a date in the past."),
   end_date: Yup.number()
-    .required("Ngày kết thúc là bắt buộc.")
-    .min(Yup.ref("start_date"), "Ngày kết thúc phải lớn hơn ngày bắt đầu."),
+    .required("End date is required.")
+    .min(
+      Yup.ref("start_date"),
+      "End date must be greater than or equal to start date.",
+    ),
 });
 
 const sxConfig = {

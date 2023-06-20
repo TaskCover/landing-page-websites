@@ -41,11 +41,15 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
 
     onUpdateHeaderConfig({
       title: item?.name,
-      searchPlaceholder: "Tìm kiếm dự án",
+      searchPlaceholder: "Search project by name",
       prevPath,
     });
     return () => {
-      onUpdateHeaderConfig({ title: undefined, searchPlaceholder: undefined });
+      onUpdateHeaderConfig({
+        title: undefined,
+        searchPlaceholder: undefined,
+        prevPath: undefined,
+      });
     };
   }, [item?.name, onUpdateHeaderConfig]);
 

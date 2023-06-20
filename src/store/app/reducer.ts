@@ -64,7 +64,7 @@ const initialState: AppState = {
 
   headerConfig: {},
 
-  isExpandedSidebar: true,
+  isExpandedSidebar: false,
 };
 
 const appSlice = createSlice({
@@ -116,6 +116,7 @@ const appSlice = createSlice({
     ) => {
       state.isExpandedSidebar = action?.payload ?? !state.isExpandedSidebar;
     },
+    reset: () => ({ ...initialState, appReady: true }),
   },
   extraReducers: (builder) =>
     builder
@@ -165,6 +166,7 @@ export const {
   updateAuth,
   updateHeaderConfig,
   toggleExpandSidebar,
+  reset,
 } = appSlice.actions;
 
 export default appSlice.reducer;

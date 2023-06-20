@@ -21,7 +21,7 @@ import Pagination from "components/Pagination";
 import { usePathname, useRouter } from "next/navigation";
 import { getPath } from "utils/index";
 import { IconButton, Text, Checkbox } from "components/shared";
-import { useCompanies } from "store/company/selectors";
+import { useCompanies } from "store/manager/selectors";
 import { Company } from "store/company/reducer";
 import useBreakpoint from "hooks/useBreakpoint";
 import CircleTickIcon from "icons/CircleTickIcon";
@@ -54,9 +54,14 @@ const ItemList = () => {
   const [action, setAction] = useState<CompanyStatus | undefined>();
   const [id, setId] = useState<string | undefined>();
 
+  const nOfWaitings = useMemo(
+    () => items.filter((item) => item?.is_approve === null).length,
+    [items],
+  );
+
   const isCheckedAll = useMemo(
-    () => Boolean(selectedList.length && selectedList.length === items.length),
-    [selectedList.length, items.length],
+    () => Boolean(selectedList.length && selectedList.length === nOfWaitings),
+    [selectedList.length, nOfWaitings],
   );
 
   const textAction = useMemo(
@@ -68,7 +73,7 @@ const ItemList = () => {
     (event: ChangeEvent<HTMLInputElement>) => {
       const isChecked = event.target.checked;
       if (isChecked) {
-        setSelectedList(items);
+        setSelectedList(items.filter((item) => item?.is_approve === null));
       } else {
         setSelectedList([]);
       }
@@ -106,7 +111,6 @@ const ItemList = () => {
   };
 
   const onResetAction = () => {
-    setSelectedList([]);
     setAction(undefined);
     setId(undefined);
   };
@@ -139,7 +143,13 @@ const ItemList = () => {
     if (action === undefined) return;
     const ids = id ? [id] : selectedList.map((item) => item.id);
     try {
-      return await onApproveOrRejectAction(ids, action);
+      const idsResponse = await onApproveOrRejectAction(ids, action);
+      if (idsResponse.length) {
+        setAction(undefined);
+        setSelectedList([]);
+        setId(undefined);
+      }
+      return idsResponse;
     } catch (error) {
       throw error;
     }
@@ -218,10 +228,12 @@ const ItemList = () => {
             return (
               <TableRow key={item.id}>
                 <BodyCell>
-                  <Checkbox
-                    checked={indexSelected !== -1}
-                    onChange={onToggleSelect(item, indexSelected)}
-                  />
+                  {item.is_approve === null && (
+                    <Checkbox
+                      checked={indexSelected !== -1}
+                      onChange={onToggleSelect(item, indexSelected)}
+                    />
+                  )}
                 </BodyCell>
                 {isMdSmaller ? (
                   <MobileContentCell item={item} />
@@ -230,21 +242,30 @@ const ItemList = () => {
                 )}
 
                 <ActionsCell
-                  options={[
-                    {
-                      content: "Approve",
-                      onClick: onApproveOrReject(
-                        CompanyStatus.APPROVE,
-                        item.id,
-                      ),
-                      icon: <CircleTickIcon filled={false} fontSize="small" />,
-                    },
-                    {
-                      content: "Reject",
-                      onClick: onApproveOrReject(CompanyStatus.REJECT, item.id),
-                      icon: <CloseSquareIcon fontSize="small" />,
-                    },
-                  ]}
+                  options={
+                    item.is_approve === null
+                      ? [
+                          {
+                            content: "Approve",
+                            onClick: onApproveOrReject(
+                              CompanyStatus.APPROVE,
+                              item.id,
+                            ),
+                            icon: (
+                              <CircleTickIcon filled={false} fontSize="small" />
+                            ),
+                          },
+                          {
+                            content: "Reject",
+                            onClick: onApproveOrReject(
+                              CompanyStatus.REJECT,
+                              item.id,
+                            ),
+                            icon: <CloseSquareIcon fontSize="small" />,
+                          },
+                        ]
+                      : undefined
+                  }
                 />
               </TableRow>
             );
@@ -267,7 +288,7 @@ const ItemList = () => {
         title={`Confirm to ${textAction}`}
         content={`Are you sure to ${textAction} ${
           id ? "this" : "these"
-        } account?`}
+        } company?`}
         items={id ? undefined : selectedList}
         onSubmit={onSubmitApproveOrReject}
       />
@@ -278,15 +299,13 @@ const ItemList = () => {
 export default memo(ItemList);
 
 const DESKTOP_HEADER_LIST = [
-  { value: "Họ tên", width: "25%", align: "left" },
+  { value: "Name", width: "25%", align: "left" },
   { value: "Email", width: "25%", align: "left" },
-  { value: "Ngày tạo", width: "19%" },
-  { value: "Trạng thái", width: "20%" },
+  { value: "Creation date", width: "19%" },
+  { value: "Status", width: "20%" },
 ];
 
-const MOBILE_HEADER_LIST = [
-  { value: "Nhân viên", width: "70%", align: "left" },
-];
+const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];
 
 const TEXT_ACTION: { [key in CompanyStatus]: string } = {
   [CompanyStatus.APPROVE]: "approve",

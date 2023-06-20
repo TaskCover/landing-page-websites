@@ -5,6 +5,9 @@ import { Text } from "components/shared";
 import { COMPANY_DETAIL_PATH, COMPANY_EMPLOYEES_PATH } from "constant/paths";
 import { useParams, usePathname } from "next/navigation";
 import { getPath } from "utils/index";
+import { useHeaderConfig } from "store/app/selectors";
+import ChevronIcon from "icons/ChevronIcon";
+import useBreakpoint from "hooks/useBreakpoint";
 
 type TabItemProps = {
   href: string;
@@ -12,6 +15,9 @@ type TabItemProps = {
 };
 
 const TabList = () => {
+  const { prevPath, title } = useHeaderConfig();
+  const { isSmSmaller } = useBreakpoint();
+
   return (
     <Stack
       direction={{ md: "row" }}
@@ -21,7 +27,24 @@ const TabList = () => {
       width="100%"
       overflow="auto"
       spacing={4}
+      position="sticky"
+      top={0}
+      bgcolor="common.white"
+      zIndex={1}
     >
+      {!!isSmSmaller && (
+        <Stack direction="row" alignItems="center" spacing={0.5} py={2}>
+          {!!prevPath && (
+            <Link href={prevPath} sx={{ height: 24 }}>
+              <ChevronIcon
+                sx={{ color: "text.primary", transform: "rotate(90deg)" }}
+                fontSize="medium"
+              />
+            </Link>
+          )}
+          <Text variant="h5">{title ?? ""}</Text>
+        </Stack>
+      )}
       <Stack direction="row" alignItems="center">
         {TABS.map((tab) => (
           <TabItem key={tab.label} {...tab} />

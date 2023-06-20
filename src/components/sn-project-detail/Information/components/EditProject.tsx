@@ -3,7 +3,7 @@ import PencilIcon from "icons/PencilIcon";
 import { IconButton } from "components/shared";
 import { useProject, useProjects } from "store/project/selectors";
 import Form, { ProjectDataForm } from "components/sn-projects/Form";
-import { INITIAL_VALUES } from "components/sn-projects/helpers";
+import { INITIAL_VALUES } from "components/sn-projects/components/helpers";
 import { DataAction } from "constant/enums";
 import useToggle from "hooks/useToggle";
 import { ProjectData } from "store/project/actions";

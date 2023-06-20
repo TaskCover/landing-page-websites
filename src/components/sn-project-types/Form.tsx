@@ -25,9 +25,9 @@ const Form = (props: FormProps) => {
   const label = useMemo(() => {
     switch (type) {
       case DataAction.CREATE:
-        return "Thêm mới";
+        return "Create new";
       case DataAction.UPDATE:
-        return "Cập nhật";
+        return "Update";
       default:
         return "";
     }
@@ -38,7 +38,7 @@ const Form = (props: FormProps) => {
       const newItem = await onSubmitProps(values);
 
       if (newItem) {
-        onAddSnackbar(`${label} loại dự án thành công!`, "success");
+        onAddSnackbar(`${label} project type successfully!`, "success");
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -79,7 +79,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
-      label={`${label} loại dự án`}
+      label={`${label} project type`}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
@@ -87,7 +87,7 @@ const Form = (props: FormProps) => {
     >
       <Stack spacing={2} py={3}>
         <Input
-          title="Tên loại dự án"
+          title="Name"
           name="name"
           required
           onChange={formik.handleChange}
@@ -104,7 +104,7 @@ const Form = (props: FormProps) => {
 export default memo(Form);
 
 export const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Tên loại dự án là bắt buộc."),
+  name: Yup.string().trim().required("Project type name is required."),
 });
 
 const sxConfig = {

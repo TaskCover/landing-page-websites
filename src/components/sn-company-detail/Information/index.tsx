@@ -5,9 +5,11 @@ import { Divider, Stack, StackProps } from "@mui/material";
 import { Text } from "components/shared";
 import { formatDate, formatNumber } from "utils/index";
 import EditCompany from "./EditCompany";
-import { useCompany, useMyCompany } from "store/company/selectors";
+import { useMyCompany } from "store/company/selectors";
 import StatusServer from "components/StatusServer";
 import { useParams } from "next/navigation";
+import { useHeaderConfig } from "store/app/selectors";
+import { useCompany } from "store/manager/selectors";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -27,6 +29,8 @@ const InformationProjectPage = () => {
   } = useMyCompany();
   const { id } = useParams();
 
+  const { prevPath, title } = useHeaderConfig();
+
   const [item, error, isFetching] = useMemo(() => {
     if (id) {
       return [detailItem, detailItemError, detailItemIsFetching];
@@ -44,18 +48,19 @@ const InformationProjectPage = () => {
 
   return (
     <StatusServer isFetching={isFetching} error={error} noData={!item}>
-      <Stack p={{ xs: 1, sm: 3 }} spacing={3}>
-        <Stack>
-          <Stack direction="row" spacing={2} justifyContent="space-between">
+      <Stack px={{ xs: 1, sm: 3 }} pb={3} pt={id ? 0 : 3} spacing={3}>
+        <Stack direction="row" spacing={2} justifyContent="space-between">
+          <Stack>
             <Text variant="h4">{item?.name ?? "--"}</Text>
-            <EditCompany />
+            <Text
+              variant="h6"
+              color="grey.400"
+            >{`Tax code: ${item?.tax_code}`}</Text>
           </Stack>
-          <Text
-            variant="h6"
-            color="grey.400"
-          >{`Tax code: ${item?.tax_code}`}</Text>
+
+          <EditCompany />
         </Stack>
-        <Stack spacing={3} width="fit-content">
+        <Stack spacing={3} width={{ xs: "fit-content", md: 600 }}>
           <Divider sx={{ borderColor: "grey.100" }} />
           <Text variant="h5">General information</Text>
           <Stack
@@ -63,9 +68,13 @@ const InformationProjectPage = () => {
             alignItems="center"
             spacing={{ xs: 2, sm: 5, lg: 10 }}
           >
-            <InformationItem label="Owner of Company"></InformationItem>
+            <InformationItem label="Owner of Company">
+              {item?.owner?.fullname}
+            </InformationItem>
 
-            <InformationItem label="Owner email"></InformationItem>
+            <InformationItem label="Owner email">
+              {item?.owner?.email}
+            </InformationItem>
           </Stack>
           <Stack
             direction="row"
@@ -86,7 +95,7 @@ const InformationProjectPage = () => {
             spacing={{ xs: 2, sm: 5, lg: 10 }}
           >
             <InformationItem label="Number of employees">
-              {formatNumber(item?.number_of_user)}
+              {formatNumber(item?.total_member)}
             </InformationItem>
 
             <InformationItem label="Number of positions">

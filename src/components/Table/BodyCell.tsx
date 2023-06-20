@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { TableCell, TableCellProps } from "@mui/material";
 import { Text, TextProps } from "components/shared";
-import Link from "components/Link";
+import Link, { LinkProps } from "components/Link";
 
 export type BodyCellProps = {
   children?: string | React.ReactNode;
@@ -10,6 +10,7 @@ export type BodyCellProps = {
   noWrap?: boolean;
   tooltip?: string;
   href?: string;
+  linkProps?: Omit<LinkProps, "href">;
 } & TableCellProps;
 
 const BodyCell = (props: BodyCellProps) => {
@@ -21,8 +22,11 @@ const BodyCell = (props: BodyCellProps) => {
     noWrap,
     tooltip,
     href,
+    linkProps = {},
     ...rest
   } = props;
+
+  const { sx: sxLink, ...restLinkProps } = linkProps;
 
   const renderContent = () => {
     return (
@@ -65,11 +69,14 @@ const BodyCell = (props: BodyCellProps) => {
           href={href}
           sx={{
             color: "grey.400",
+            display: "inline-flex",
             "&:hover": {
               color: "primary.main",
             },
+            ...sxLink,
           }}
           underline="none"
+          {...restLinkProps}
         >
           {renderContent()}
         </Link>

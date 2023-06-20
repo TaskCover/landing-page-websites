@@ -2,7 +2,7 @@
 
 import { Box, Stack } from "@mui/material";
 import { Button, IconButton, Input, Text } from "components/shared";
-import { AN_ERROR_TRY_RELOAD_PAGE } from "constant/index";
+import { AN_ERROR_TRY_RELOAD_PAGE, IMAGES_ACCEPT } from "constant/index";
 import { ChangeEvent, memo, useMemo, useRef } from "react";
 import { useAuth, useSnackbar, useUserInfo } from "store/app/selectors";
 import Avatar from "components/Avatar";
@@ -14,6 +14,7 @@ import { VN_PHONE_REGEX } from "constant/regex";
 import { useFormik, FormikErrors } from "formik";
 import { getDataFromKeys, getMessageErrorByAPI } from "utils/index";
 import { UpdateUserInfoData } from "store/app/actions";
+import { client, Endpoint } from "api";
 
 const UserInformation = () => {
   const { user } = useAuth();
@@ -27,9 +28,20 @@ const UserInformation = () => {
 
   const onSubmit = async (values: UpdateUserInfoData) => {
     try {
-      await onUpdateUserInfo(values);
+      const newData = { ...values };
+      if (typeof values["avatar"] === "object") {
+        const avatarUrl: string = await client.upload(
+          Endpoint.UPLOAD,
+          values["avatar"] as unknown as File,
+        );
+        newData["avatar"] = [avatarUrl];
+      } else {
+        delete newData["avatar"];
+      }
+
+      await onUpdateUserInfo(newData);
       onEditFalse();
-      onAddSnackbar("Account information updated successfully!!", "success");
+      onAddSnackbar("Account information updated successfully!", "success");
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error), "error");
     }
@@ -47,11 +59,21 @@ const UserInformation = () => {
   const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files) return;
-    formik.setFieldValue("file", files[0]);
+    if (IMAGES_ACCEPT.includes(files[0].type)) {
+      formik.setFieldValue("avatar", files[0]);
+    } else {
+      onAddSnackbar(
+        "File type is invalid. Currently the system only support PNG, JPEG, JPG",
+        "error",
+      );
+    }
   };
 
   const initialValues = useMemo(
-    () => getDataFromKeys(user, Object.keys(INITIAL_VALUES)),
+    () => ({
+      ...getDataFromKeys(user, Object.keys(INITIAL_VALUES)),
+      avatar: user?.avatar?.link,
+    }),
     [user],
   ) as UpdateUserInfoData;
 
@@ -62,13 +84,12 @@ const UserInformation = () => {
     onSubmit,
   });
 
-  const previewImage = useMemo(
-    () =>
-      formik.values["file"]
-        ? URL.createObjectURL(formik.values["file"] as unknown as File)
-        : undefined,
-    [formik.values],
-  );
+  const previewImage = useMemo(() => {
+    if (typeof formik.values?.avatar === "object") {
+      return URL.createObjectURL(formik.values.avatar as unknown as File);
+    }
+    return formik.values?.avatar as string | undefined;
+  }, [formik.values?.avatar]);
 
   const touchedErrors = useMemo(() => {
     return Object.entries(formik.errors).reduce(
@@ -140,7 +161,7 @@ const UserInformation = () => {
             <Box
               component="input"
               type="file"
-              accept="image/*"
+              accept={IMAGES_ACCEPT.join(", ")}
               display="none"
               ref={inputFileRef}
               onChange={onChangeFile}
@@ -233,14 +254,15 @@ export default memo(UserInformation);
 const INITIAL_VALUES = {
   fullname: "",
   phone: "",
-  file: "",
+  avatar: "",
 };
 
 export const validationSchema = Yup.object().shape({
   fullname: Yup.string().trim().required("Full name is required."),
   phone: Yup.string()
     .trim()
-    .matches(VN_PHONE_REGEX, "Phone number is invalid!"),
+    .matches(VN_PHONE_REGEX, "Phone number is invalid!")
+    .required("Phone is required."),
 });
 
 const sxConfig = {

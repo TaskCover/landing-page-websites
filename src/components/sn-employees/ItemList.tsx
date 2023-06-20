@@ -13,22 +13,14 @@ import {
   TableLayout,
   BodyCell,
   CellProps,
-  StatusCell,
   ActionsCell,
 } from "components/Table";
-import { DATE_TIME_FORMAT_SLASH, DEFAULT_PAGING } from "constant/index";
+import { DEFAULT_PAGING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
-import { TEXT_STATUS, COLOR_STATUS } from "./helpers";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  cleanObject,
-  formatDate,
-  getDataFromKeys,
-  getPath,
-  stringifyURLSearchParams,
-} from "utils/index";
-import { IconButton, Text, Checkbox } from "components/shared";
+import { getDataFromKeys, getPath } from "utils/index";
+import { IconButton, Checkbox } from "components/shared";
 import { useEmployees } from "store/company/selectors";
 import CardSendIcon from "icons/CardSendIcon";
 import ConfirmDialog from "components/ConfirmDialog";
@@ -39,6 +31,7 @@ import Form from "./Form";
 import TrashIcon from "icons/TrashIcon";
 import { MobileContentCell, DesktopCells } from "./components";
 import useBreakpoint from "hooks/useBreakpoint";
+import DeleteConfirm from "./components/DeleteConfirm";
 
 const ItemList = () => {
   const {
@@ -52,6 +45,7 @@ const ItemList = () => {
     totalPages,
     onGetEmployees,
     onUpdateEmployee: onUpdateEmployeeAction,
+    onDeleteEmployees,
   } = useEmployees();
 
   const { initQuery, isReady, query } = useQueryParams();
@@ -60,21 +54,20 @@ const ItemList = () => {
   const { isMdSmaller } = useBreakpoint();
 
   const [item, setItem] = useState<Employee | undefined>();
-  const [ids, setIds] = useState<string[]>([]);
+  const [selectedList, setSelectedList] = useState<Employee[]>([]);
   const [action, setAction] = useState<DataAction | undefined>();
 
   const isCheckedAll = useMemo(
-    () => Boolean(ids.length && ids.length === items.length),
-    [ids.length, items.length],
+    () => Boolean(selectedList.length && selectedList.length === items.length),
+    [selectedList.length, items.length],
   );
-
   const onChangeAll = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const isChecked = event.target.checked;
       if (isChecked) {
-        setIds(items.map((item) => item.id));
+        setSelectedList(items);
       } else {
-        setIds([]);
+        setSelectedList([]);
       }
     },
     [items],
@@ -95,15 +88,15 @@ const ItemList = () => {
     ] as CellProps[];
   }, [isMdSmaller, isCheckedAll, onChangeAll]);
 
-  const onToggleSelect = (id: string, indexSelected: number) => {
+  const onToggleSelect = (item: Employee, indexSelected: number) => {
     return () => {
       if (indexSelected === -1) {
-        setIds((prevIds) => [...prevIds, id]);
+        setSelectedList((prevList) => [...prevList, item]);
       } else {
-        setIds((prevIds) => {
-          const newIds = [...prevIds];
-          newIds.splice(indexSelected, 1);
-          return newIds;
+        setSelectedList((prevList) => {
+          const newList = [...prevList];
+          newList.splice(indexSelected, 1);
+          return newList;
         });
       }
     };
@@ -111,7 +104,11 @@ const ItemList = () => {
 
   const onActionToItem = (action: DataAction, item?: Employee) => {
     return () => {
-      item && setItem(item);
+      if (action === DataAction.DELETE) {
+        item && setSelectedList([item]);
+      } else {
+        item && setItem(item);
+      }
       setAction(action);
     };
   };
@@ -143,17 +140,26 @@ const ItemList = () => {
     return await onUpdateEmployeeAction(item.id, data.position);
   };
 
-  const onDeleteEmployee = (id: string) => {
-    return async () => {
-      return await "Pending";
-    };
-  };
-
   const onPay = () => {
-    //
+    setAction(DataAction.OTHER);
   };
   const onDelete = () => {
-    //
+    setAction(DataAction.DELETE);
+  };
+
+  const onSubmitDelete = async () => {
+    const ids = selectedList.map((item) => item.id);
+    try {
+      const idsResponse = await onDeleteEmployees(ids);
+      if (idsResponse.length) {
+        setAction(undefined);
+        setSelectedList([]);
+        // setId(undefined);
+      }
+      return idsResponse;
+    } catch (error) {
+      throw error;
+    }
   };
 
   useEffect(() => {
@@ -162,24 +168,29 @@ const ItemList = () => {
   }, [initQuery, isIdle, isReady, onGetEmployees]);
 
   useEffect(() => {
-    setIds([]);
+    setSelectedList([]);
   }, [pageIndex]);
 
   return (
     <>
       <Stack flex={1} px={{ xs: 1, md: 3 }}>
-        {!!ids.length && (
+        {!!selectedList.length && (
           <Stack
             direction="row"
             alignItems="center"
-            spacing={3}
-            p={3}
+            spacing={2}
             pb={0.25}
+            border="1px solid"
+            borderColor="grey.100"
+            borderBottom="none"
+            sx={{ borderTopLeftRadius: 1, borderTopRightRadius: 1 }}
+            py={1.125}
+            px={1}
           >
             <IconButton
               size="small"
               onClick={onPay}
-              tooltip="Thanh toán"
+              tooltip="Pay"
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -195,7 +206,7 @@ const ItemList = () => {
             <IconButton
               size="small"
               onClick={onDelete}
-              tooltip="Xóa bỏ"
+              tooltip="Delete"
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -218,15 +229,15 @@ const ItemList = () => {
           pb={3}
         >
           {items.map((item) => {
-            const indexSelected = ids.findIndex(
-              (idValue) => idValue === item.id,
+            const indexSelected = selectedList.findIndex(
+              (selected) => selected.id === item.id,
             );
             return (
               <TableRow key={item.id}>
                 <BodyCell>
                   <Checkbox
                     checked={indexSelected !== -1}
-                    onChange={onToggleSelect(item.id, indexSelected)}
+                    onChange={onToggleSelect(item, indexSelected)}
                   />
                 </BodyCell>
                 {isMdSmaller ? (
@@ -237,7 +248,8 @@ const ItemList = () => {
 
                 <ActionsCell
                   onEdit={onActionToItem(DataAction.UPDATE, item)}
-                  onDelete={onDeleteEmployee(item.id)}
+                  onDelete={onActionToItem(DataAction.DELETE, item)}
+                  hasPopup={false}
                   options={
                     !item.is_pay_user
                       ? [
@@ -274,8 +286,8 @@ const ItemList = () => {
         <ConfirmDialog
           open
           onClose={onResetAction}
-          title="Xác nhận thanh toán"
-          content="Bạn có chắc chắn thanh toán tất cả sự lựa chọn?"
+          title="Confirm payment"
+          content="Are you sure to pay all these items??"
         />
       )}
       {action === DataAction.UPDATE && (
@@ -289,6 +301,17 @@ const ItemList = () => {
           onSubmit={onUpdateEmployee}
         />
       )}
+
+      <DeleteConfirm
+        open={action === DataAction.DELETE}
+        onClose={onResetAction}
+        title="Confirm remove employee"
+        content={`Are you sure to remove ${
+          selectedList.length === 1 ? "this" : "these"
+        } employee?`}
+        items={selectedList}
+        onSubmit={onSubmitDelete}
+      />
     </>
   );
 };
@@ -296,14 +319,12 @@ const ItemList = () => {
 export default memo(ItemList);
 
 const DESKTOP_HEADER_LIST = [
-  { value: "Họ tên", width: "15%", align: "left" },
+  { value: "Name", width: "15%", align: "left" },
   { value: "Email", width: "15%", align: "left" },
-  { value: "Chức vụ", width: "15%" },
-  { value: "Ngày tạo", width: "13.5%" },
-  { value: "Ngày hết hạn", width: "13.5%" },
-  { value: "Trạng thái", width: "17%" },
+  { value: "Position", width: "15%" },
+  { value: "Creation date", width: "13.5%" },
+  { value: "Expiration date", width: "13.5%" },
+  { value: "Status", width: "17%" },
 ];
 
-const MOBILE_HEADER_LIST = [
-  { value: "Nhân viên", width: "70%", align: "left" },
-];
+const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];

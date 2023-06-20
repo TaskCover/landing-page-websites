@@ -5,12 +5,13 @@ import useToggle from "hooks/useToggle";
 import { CompanyData } from "store/company/actions";
 import { getDataFromKeys } from "utils/index";
 import Form from "./Form";
-import { useCompany, useMyCompany } from "store/company/selectors";
+import { useMyCompany } from "store/company/selectors";
 import { useParams } from "next/navigation";
+import { useCompany } from "store/manager/selectors";
 
 const EditCompany = () => {
   const { item: detailItem } = useCompany();
-  const { item: myItem } = useMyCompany();
+  const { item: myItem, onUpdateMyCompany } = useMyCompany();
   const { id: paramId } = useParams();
 
   const item = useMemo(() => {
@@ -28,7 +29,23 @@ const EditCompany = () => {
 
   const onUpdate = async (data: CompanyData) => {
     if (!id) return;
-    return await onUpdateCompany(id, data);
+
+    let dataOnlyUpdated = { ...data };
+
+    dataOnlyUpdated = Object.entries(dataOnlyUpdated).reduce(
+      (out, [key, value]) => {
+        if (item[key] !== value) {
+          out[key] = value;
+        }
+        return out;
+      },
+      {},
+    ) as CompanyData;
+
+    if (paramId) {
+      return await onUpdateCompany(id, dataOnlyUpdated);
+    }
+    return await onUpdateMyCompany(dataOnlyUpdated);
   };
 
   if (!item) return null;

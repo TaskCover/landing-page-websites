@@ -1,6 +1,6 @@
 import { memo, useEffect } from "react";
 import { Dropdown, DropdownProps } from "components/Filters";
-import { useCompanyOptions } from "store/company/selectors";
+import { useCompanyOptions } from "store/manager/selectors";
 
 const CompanyFilter = (props: Omit<DropdownProps, "options" | "name">) => {
   const {

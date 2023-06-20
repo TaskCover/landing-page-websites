@@ -1,56 +1,75 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { Stack } from "@mui/material";
-import { Text } from "components/shared";
-import { Date, Dropdown, Search } from "components/Filters";
+import { Button, Text } from "components/shared";
+import { Clear, Date, Dropdown, Refresh, Search } from "components/Filters";
 import { formatNumber, getPath } from "utils/index";
-import { usePathname, useRouter } from "next/navigation";
-import { useCompanies, useEmployees } from "store/company/selectors";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import { CompanyStatus } from "store/company/actions";
 import { TEXT_STATUS } from "./components/helpers";
 import { CompanyFilter } from "./components";
+import { PaymentStatus } from "components/sn-employees/helpers";
+import { useCompany, useEmployeesOfCompany } from "store/manager/selectors";
 
 const Actions = () => {
-  const { filters, onGetEmployees, pageSize } = useEmployees();
-
-  const filtersRef = useRef<Params>(filters);
+  const { filters, onGetEmployees, pageSize, statistic } =
+    useEmployeesOfCompany();
 
   const pathname = usePathname();
   const { push } = useRouter();
+  const { id } = useParams();
 
-  const onChangeData = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (name: string, value: any) => {
-      const newQueries = {
-        ...filtersRef.current,
-        [name]: value,
-      };
-      const path = getPath(pathname, newQueries);
-      push(path);
+  const [queries, setQueries] = useState<Params>({});
 
-      onGetEmployees({ ...newQueries, pageIndex: 1, pageSize });
-    },
-    [onGetEmployees, pageSize, pathname, push],
-  );
+  const hasQueries = useMemo(() => {
+    const queriesIgnoreCompany = { ...queries };
+    delete queriesIgnoreCompany["company"];
+    return !!Object.keys(queriesIgnoreCompany).length;
+  }, [queries]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onChangeQueries = (name: string, value: any) => {
+    setQueries((prevQueries) => ({ ...prevQueries, [name]: value }));
+  };
+
+  const onSearch = () => {
+    const path = getPath(pathname, queries);
+    push(path);
+
+    onGetEmployees(id, { ...queries, pageIndex: 1, pageSize });
+  };
+
+  const onClear = () => {
+    const newQueries = { pageIndex: 1, pageSize };
+    const path = getPath(pathname, newQueries);
+    push(path);
+    onGetEmployees(id, newQueries);
+  };
+
+  const onRefresh = () => {
+    onGetEmployees(id, { ...filters, pageIndex: 1, pageSize });
+  };
 
   useEffect(() => {
-    filtersRef.current = filters;
-  }, [filters]);
+    if (!id) return;
+    setQueries(filters);
+  }, [filters, id]);
 
   return (
     <Stack
-      direction={{ xs: "column", md: "row" }}
-      alignItems="center"
+      direction={{ xs: "column-reverse", md: "row" }}
+      alignItems={{ md: "center" }}
       justifyContent="space-between"
-      borderBottom="1px solid"
-      borderColor="grey.100"
       spacing={3}
       px={{ xs: 1, md: 3 }}
-      py={1.5}
+      pb={3}
     >
-      <Stack spacing={1} width="fit-content">
+      <Stack
+        direction={{ xs: "row", md: "column" }}
+        spacing={1}
+        width="fit-content"
+      >
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
           Staff paid:
           <Text
@@ -59,7 +78,7 @@ const Actions = () => {
             color="success.main"
             ml={0.5}
           >
-            {formatNumber(13523)}
+            {formatNumber(statistic?.total_user_paid)}
           </Text>
         </Text>
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
@@ -70,7 +89,7 @@ const Actions = () => {
             color="text.primary"
             ml={0.5}
           >
-            {formatNumber(13523)}
+            {formatNumber(statistic?.total_user_un_paid)}
           </Text>
         </Text>
       </Stack>
@@ -88,26 +107,32 @@ const Actions = () => {
         justifyContent="flex-end"
       >
         <Search
-          placeholder="Tìm kiếm theo email"
-          name="search"
-          onChange={onChangeData}
-          value={filters?.email}
+          placeholder="Search by email..."
+          name="email"
+          onChange={onChangeQueries}
+          value={queries?.email}
         />
         <Stack direction="row" alignItems="center" spacing={3}>
-          <CompanyFilter onChange={onChangeData} value={filters?.company} />
-          <Dropdown
-            placeholder="Trạng thái"
-            options={PAYMENT_OPTIONS}
-            name="status"
-            onChange={onChangeData}
-            value={Number(filters?.status)}
-          />
           <Date
             label="Creation date"
             name="date"
-            onChange={onChangeData}
-            value={filters?.date}
+            onChange={onChangeQueries}
+            value={queries?.date}
           />
+          <Dropdown
+            placeholder="Status"
+            options={PAYMENT_OPTIONS}
+            name="is_pay_user"
+            onChange={onChangeQueries}
+            value={Number(queries?.is_pay_user)}
+          />
+        </Stack>
+        <Stack direction="row" alignItems="center" spacing={3}>
+          <Button size="small" onClick={onSearch} variant="secondary">
+            Search
+          </Button>
+          <Refresh onClick={onRefresh} />
+          {hasQueries && <Clear onClick={onClear} />}
         </Stack>
       </Stack>
     </Stack>
@@ -117,6 +142,6 @@ const Actions = () => {
 export default memo(Actions);
 
 const PAYMENT_OPTIONS = [
-  { label: TEXT_STATUS[CompanyStatus.APPROVE], value: CompanyStatus.APPROVE },
-  { label: TEXT_STATUS[CompanyStatus.REJECT], value: CompanyStatus.REJECT },
+  { label: TEXT_STATUS[PaymentStatus.PAID], value: PaymentStatus.PAID },
+  { label: TEXT_STATUS[PaymentStatus.UNPAID], value: PaymentStatus.UNPAID },
 ];

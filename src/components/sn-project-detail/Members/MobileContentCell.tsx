@@ -22,11 +22,11 @@ const MobileContentCell = (props: MobileContentCellProps) => {
     <BodyCell align="left" sx={{ px: 0 }}>
       <Collapse label={<Label item={item} />}>
         <Stack px={2}>
-          <InformationItem label="Chức vụ">
+          <InformationItem label="Position">
             {item.position_project?.name}
           </InformationItem>
-          <InformationItem label="Số giờ đã làm việc"></InformationItem>
-          <InformationItem label="Ngày được thêm vào dự án" borderBottom="none">
+          <InformationItem label="Hours worked"></InformationItem>
+          <InformationItem label="Date added project" borderBottom="none">
             {formatDate(item.date_in)}
           </InformationItem>
         </Stack>
@@ -49,7 +49,7 @@ const Label = ({ item }: { item: Member }) => {
       pr={3}
     >
       <Stack direction="row" py={1.5} alignItems="center" spacing={1}>
-        <Avatar size={32} />
+        <Avatar size={32} src={item?.avatar?.link} />
         <Stack>
           <Text variant="h6">{item.fullname}</Text>
           <Text variant="caption"></Text>

@@ -8,19 +8,32 @@ import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import { useFormik, FormikErrors } from "formik";
 import { SignupData } from "store/app/actions";
 import { EMAIL_REGEX, VN_PHONE_REGEX } from "constant/regex";
-import { getMessageErrorByAPI } from "utils/index";
+import { cleanObject, getMessageErrorByAPI } from "utils/index";
 import { useSnackbar, useAuth } from "store/app/selectors";
 import { AvatarUpload } from "./components";
 import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
+import { Endpoint, client } from "api";
 
 const Form = () => {
   const { onSignup } = useAuth();
   const { onAddSnackbar } = useSnackbar();
 
-  const onSubmit = async (values: SignupData) => {
+  const onSubmit = async (values: FormTypes) => {
     try {
-      await onSignup(values);
+      const newData = { ...values } as SignupData;
+      if (values?.avatar) {
+        const avatarUrl = await client.upload(
+          Endpoint.SIGNUP_UPLOAD,
+          values.avatar,
+        );
+        newData["avatar"] = [avatarUrl];
+      }
+      if (newData["rePassword"]) {
+        delete newData["rePassword"];
+      }
+
+      await onSignup(newData);
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.REGISTERED_EMAIL) {
         formik.setFieldError(
@@ -33,12 +46,16 @@ const Form = () => {
     }
   };
 
-  const formik = useFormik({
+  const formik = useFormik<FormTypes>({
     initialValues: INITIAL_VALUES,
     validationSchema,
     enableReinitialize: true,
     onSubmit,
   });
+
+  const onChangeAvatar = (newFile?: File) => {
+    formik.setFieldValue("avatar", newFile);
+  };
 
   const touchedErrors = useMemo(() => {
     return Object.entries(formik.errors).reduce(
@@ -129,7 +146,7 @@ const Form = () => {
           error={touchedErrors?.rePassword}
           required
         />
-        <AvatarUpload />
+        <AvatarUpload value={formik.values?.avatar} onChange={onChangeAvatar} />
       </Stack>
 
       <Button
@@ -154,6 +171,8 @@ const INITIAL_VALUES = {
   password: "",
   rePassword: "",
 };
+
+type FormTypes = typeof INITIAL_VALUES & { avatar?: File };
 
 export const validationSchema = Yup.object().shape({
   fullname: Yup.string().trim().required("Full name is required."),

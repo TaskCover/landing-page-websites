@@ -4,7 +4,7 @@ import { IconButton, Text } from "components/shared";
 import CircleCloseIcon from "icons/CircleCloseIcon";
 import ChevronIcon from "icons/ChevronIcon";
 import { useEmployeeOptions } from "store/company/selectors";
-import { Member } from "../helpers";
+import { Member } from "./helpers";
 import MemberItem from "./MemberItem";
 import { usePositionOptions } from "store/global/selectors";
 
@@ -39,12 +39,22 @@ const SelectMembers = (props: SelectMembersProps) => {
     onChange(name, newData);
   };
 
-  const onChangeMembers = (id: string, position: string, fullname: string) => {
+  const onChangeMembers = (
+    id: string,
+    position: string,
+    fullname: string,
+    isUpdatePosition?: boolean,
+  ) => {
     const indexSelected = members.findIndex((item) => item.id === id);
 
     const newData = [...members];
     if (indexSelected === -1) {
       newData.push({ id, position, fullname });
+    } else if (isUpdatePosition) {
+      newData[indexSelected] = {
+        ...newData[indexSelected],
+        position,
+      };
     } else {
       newData.splice(indexSelected, 1);
     }
@@ -70,7 +80,7 @@ const SelectMembers = (props: SelectMembersProps) => {
       >
         <Stack flex={1} spacing={0.5}>
           <Text variant="caption" color="grey.300">
-            Danh sách thành viên
+            Members
           </Text>
           <Stack
             direction="row"
@@ -110,6 +120,12 @@ const SelectMembers = (props: SelectMembersProps) => {
           [`& .${popoverClasses.paper}`]: {
             backgroundImage: "none",
             width: anchorEl?.offsetWidth ?? 200,
+            maxHeight: 350,
+            boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.1)",
+            border: "1px solid",
+            borderColor: "grey.100",
+            borderBottomLeftRadius: 1,
+            borderBottomRightRadius: 1,
           },
         }}
         slotProps={{
@@ -121,17 +137,7 @@ const SelectMembers = (props: SelectMembersProps) => {
           },
         }}
       >
-        <Stack
-          p={2}
-          sx={{
-            boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.1)",
-            border: "1px solid",
-            borderColor: "grey.100",
-            borderBottomLeftRadius: 1,
-            borderBottomRightRadius: 1,
-          }}
-          maxHeight={400}
-        >
+        <Stack p={2}>
           <MenuList component={Stack} spacing={2}>
             {items.map((item) => {
               const isChecked = members.some((member) => item.id === member.id);

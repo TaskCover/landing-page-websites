@@ -26,7 +26,7 @@ const Form = (props: FormProps) => {
       const newItem = await onSubmitProps(values);
 
       if (newItem) {
-        onAddSnackbar("Cập nhật thông tin công ty thành công!", "success");
+        onAddSnackbar("Company information updated successfully!", "success");
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -119,12 +119,12 @@ const Form = (props: FormProps) => {
 export default memo(Form);
 
 export const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Tên công ty là bắt buộc."),
+  name: Yup.string().trim().required("Company name is required."),
   address: Yup.string().trim(),
   // .required("Chức vụ là bắt buộc."),
   phone: Yup.string()
     .trim()
-    .matches(VN_PHONE_REGEX, "Số điện thoại không hợp lệ!"),
+    .matches(VN_PHONE_REGEX, "Phone number is invalid!"),
   tax_code: Yup.string().trim(),
   // .required("Tax code là bắt buộc."),
 });

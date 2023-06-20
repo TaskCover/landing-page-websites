@@ -1,28 +1,22 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   CompanyData,
-  CompanyStatus,
   EmployeeData,
-  GetCompanyListQueries,
   GetEmployeeListQueries,
-  GetStatementHistoryQueries,
   PositionData,
-  approveOrReject,
   createEmployee,
   createPosition,
   createProjectType,
+  deleteEmployees,
   deletePosition,
   deleteProjectType,
-  getCompany,
-  getCompanyList,
   getCostHistory,
   getEmployees,
   getMyCompany,
   getPositionList,
   getProjectTypeList,
-  getStatementHistory,
-  updateCompany,
   updateEmployee,
+  updateMyCompany,
   updatePosition,
   updateProjectType,
 } from "./actions";
@@ -30,6 +24,7 @@ import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
 import { BaseQueries } from "constant/types";
+import { PaymentStatus } from "components/sn-employees/helpers";
 
 export const useEmployees = () => {
   const dispatch = useAppDispatch();
@@ -72,6 +67,17 @@ export const useEmployees = () => {
     [dispatch],
   );
 
+  const onDeleteEmployees = useCallback(
+    async (ids: string[]) => {
+      try {
+        return await dispatch(deleteEmployees(ids)).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   return {
     items,
     status,
@@ -86,6 +92,7 @@ export const useEmployees = () => {
     onGetEmployees,
     onCreateEmployee,
     onUpdateEmployee,
+    onDeleteEmployees,
   };
 };
 
@@ -275,46 +282,6 @@ export const useProjectTypes = () => {
   };
 };
 
-export const useCompany = () => {
-  const dispatch = useAppDispatch();
-  const {
-    item,
-    itemStatus: status,
-    itemError: error,
-  } = useAppSelector((state) => state.company, shallowEqual);
-
-  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
-  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
-
-  const onGetCompany = useCallback(
-    async (id: string) => {
-      await dispatch(getCompany(id));
-    },
-    [dispatch],
-  );
-
-  const onUpdateCompany = useCallback(
-    async (id: string, data: CompanyData) => {
-      try {
-        return await dispatch(updateCompany({ id, ...data })).unwrap();
-      } catch (error) {
-        throw error;
-      }
-    },
-    [dispatch],
-  );
-
-  return {
-    item,
-    status,
-    isIdle,
-    isFetching,
-    error,
-    onGetCompany,
-    onUpdateCompany,
-  };
-};
-
 export const useMyCompany = () => {
   const dispatch = useAppDispatch();
   const {
@@ -331,6 +298,17 @@ export const useMyCompany = () => {
     await dispatch(getMyCompany());
   }, [dispatch]);
 
+  const onUpdateMyCompany = useCallback(
+    async (data: CompanyData) => {
+      try {
+        return await dispatch(updateMyCompany(data)).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   return {
     id,
     item,
@@ -339,6 +317,7 @@ export const useMyCompany = () => {
     isFetching,
     error,
     onGetCompany,
+    onUpdateMyCompany,
   };
 };
 
@@ -375,131 +354,5 @@ export const useCostHistory = () => {
     totalItems,
     totalPages,
     onGetCostHistory,
-  };
-};
-
-export const useCompanies = () => {
-  const dispatch = useAppDispatch();
-  const {
-    items,
-    itemsStatus: status,
-    itemsError: error,
-    itemsFilters: filters,
-    itemsStatistic: statistic,
-  } = useAppSelector((state) => state.company, shallowEqual);
-  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
-    (state) => state.company.itemsPaging,
-    shallowEqual,
-  );
-
-  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
-  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
-
-  const onGetCompanies = useCallback(
-    async (queries: GetCompanyListQueries) => {
-      await dispatch(getCompanyList(queries));
-    },
-    [dispatch],
-  );
-
-  const onApproveOrReject = async (ids, type: CompanyStatus) => {
-    try {
-      return await dispatch(approveOrReject({ ids, type })).unwrap();
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  return {
-    items,
-    status,
-    error,
-    filters,
-    isIdle,
-    isFetching,
-    pageIndex,
-    pageSize,
-    totalItems,
-    totalPages,
-    statistic,
-    onGetCompanies,
-    onApproveOrReject,
-  };
-};
-
-export const useCompanyOptions = () => {
-  const dispatch = useAppDispatch();
-
-  const {
-    itemOptions: options,
-    itemOptionsStatus: status,
-    itemOptionsError: error,
-    itemOptionsFilters: filters = {},
-  } = useAppSelector((state) => state.company, shallowEqual);
-  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
-    (state) => state.company.itemOptionsPaging,
-    shallowEqual,
-  );
-
-  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
-  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
-
-  const onGetOptions = useCallback(
-    (queries: GetCompanyListQueries) => {
-      dispatch(getCompanyList({ concat: true, ...queries }));
-    },
-    [dispatch],
-  );
-
-  return {
-    options,
-    status,
-    error,
-    isIdle,
-    isFetching,
-    pageIndex,
-    pageSize,
-    totalItems,
-    totalPages,
-    filters,
-    onGetOptions,
-  };
-};
-
-export const useStatementHistory = () => {
-  const dispatch = useAppDispatch();
-  const {
-    statementHistories: items,
-    statementHistoriesStatus: status,
-    statementHistoriesError: error,
-    statementHistoriesFilters: filters,
-  } = useAppSelector((state) => state.company, shallowEqual);
-  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
-    (state) => state.company.statementHistoriesPaging,
-    shallowEqual,
-  );
-
-  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
-  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
-
-  const onGetStatementHistory = useCallback(
-    async (queries: GetStatementHistoryQueries) => {
-      await dispatch(getStatementHistory(queries));
-    },
-    [dispatch],
-  );
-
-  return {
-    items,
-    status,
-    error,
-    isIdle,
-    isFetching,
-    pageIndex,
-    pageSize,
-    totalItems,
-    totalPages,
-    filters,
-    onGetStatementHistory,
   };
 };

@@ -30,9 +30,9 @@ const Form = (props: FormProps) => {
   const label = useMemo(() => {
     switch (type) {
       case DataAction.CREATE:
-        return "Thêm mới";
+        return "Create new";
       case DataAction.UPDATE:
-        return "Cập nhật";
+        return "Update";
       default:
         return "";
     }
@@ -43,7 +43,7 @@ const Form = (props: FormProps) => {
       const newItem = await onSubmitProps(values);
 
       if (newItem) {
-        onAddSnackbar(`${label} nhân viên thành công!`, "success");
+        onAddSnackbar(`${label} employee successfully!`, "success");
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -89,7 +89,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
-      label={`${label} nhân viên`}
+      label={`${label} employee`}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
@@ -104,11 +104,12 @@ const Form = (props: FormProps) => {
           onBlur={formik.handleBlur}
           value={formik.values?.email}
           error={touchedErrors?.email}
+          disabled={type === DataAction.UPDATE}
           rootSx={sxConfig.input}
         />
         <Select
           options={options}
-          title="Chức vụ"
+          title="Position"
           name="position"
           required
           onChange={formik.handleChange}
@@ -129,9 +130,9 @@ export default memo(Form);
 export const validationSchema = Yup.object().shape({
   email: Yup.string()
     .trim()
-    .required("Email là bắt buộc.")
-    .matches(EMAIL_REGEX, "Email không hợp lệ!"),
-  position: Yup.string().trim().required("Chức vụ là bắt buộc."),
+    .required("Email is required.")
+    .matches(EMAIL_REGEX, "Email is invalid!"),
+  position: Yup.string().trim().required("Position is required."),
 });
 
 const sxConfig = {

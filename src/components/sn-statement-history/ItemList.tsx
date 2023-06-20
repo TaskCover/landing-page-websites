@@ -8,7 +8,7 @@ import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
 import { usePathname, useRouter } from "next/navigation";
 import { getPath } from "utils/index";
-import { useStatementHistory } from "store/company/selectors";
+import { useStatementHistory } from "store/manager/selectors";
 import { MobileContentCell, DesktopCells } from "./components";
 import useBreakpoint from "hooks/useBreakpoint";
 

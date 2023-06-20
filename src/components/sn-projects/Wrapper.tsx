@@ -9,11 +9,15 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     onUpdateHeaderConfig({
-      title: "Quản lý dự án",
-      searchPlaceholder: "Tìm kiếm dự án",
+      title: "Projects management",
+      searchPlaceholder: "Search project by name",
     });
     return () => {
-      onUpdateHeaderConfig({ title: undefined, searchPlaceholder: undefined });
+      onUpdateHeaderConfig({
+        title: undefined,
+        searchPlaceholder: undefined,
+        prevPath: undefined,
+      });
     };
   }, [onUpdateHeaderConfig]);
 

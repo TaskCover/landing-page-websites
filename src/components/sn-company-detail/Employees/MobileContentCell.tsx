@@ -4,12 +4,16 @@ import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { formatDate } from "utils/index";
 import TextStatus from "components/TextStatus";
-import { COLOR_STATUS, TEXT_STATUS } from "./helpers";
 import { BodyCell } from "components/Table";
-import { Company } from "store/company/reducer";
+import { Employee } from "store/company/reducer";
+import {
+  COLOR_STATUS,
+  TEXT_STATUS,
+  WAITING_STATUS,
+} from "./components/helpers";
 
 type MobileContentCellProps = {
-  item: Company;
+  item: Employee;
 };
 
 type InformationItemProps = {
@@ -22,18 +26,27 @@ const MobileContentCell = (props: MobileContentCellProps) => {
   return (
     <BodyCell align="left">
       <Stack spacing={2} py={1.5}>
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar size={32} />
-          <Text variant="h6">{item.name}</Text>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Avatar size={32} src={item?.avatar?.link} />
+          <Text variant="h6">{item.fullname}</Text>
         </Stack>
         <InformationItem label="Email">{item.email}</InformationItem>
-        <InformationItem label="Ngày tạo">
+        <InformationItem label="Creator">{item.fullname}</InformationItem>
+        <InformationItem label="Creation date">
           {formatDate(item.created_time)}
         </InformationItem>
-        <InformationItem label="Trạng thái">
+        <InformationItem label="Status">
           <TextStatus
-            color={COLOR_STATUS[Number(item.is_approve)]}
-            text={TEXT_STATUS[Number(item.is_approve)]}
+            color={
+              item.is_pay_user === null
+                ? WAITING_STATUS.COLOR
+                : COLOR_STATUS[Number(item.is_pay_user)]
+            }
+            text={
+              item.is_pay_user === null
+                ? WAITING_STATUS.TEXT
+                : TEXT_STATUS[Number(item.is_pay_user)]
+            }
           />
         </InformationItem>
       </Stack>

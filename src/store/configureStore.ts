@@ -3,12 +3,14 @@ import appReducer, { AppState } from "store/app/reducer";
 import globalReducer, { GlobalState } from "store/global/reducer";
 import projectReducer, { ProjectState } from "store/project/reducer";
 import companyReducer, { CompanyState } from "store/company/reducer";
+import managerReducer, { ManagerState } from "store/manager/reducer";
 
 export interface State {
   app: AppState;
   global: GlobalState;
   project: ProjectState;
   company: CompanyState;
+  manager: ManagerState;
 }
 
 export const store = configureStore({
@@ -17,6 +19,7 @@ export const store = configureStore({
     global: globalReducer,
     project: projectReducer,
     company: companyReducer,
+    manager: managerReducer,
   },
 });
 

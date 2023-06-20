@@ -32,8 +32,7 @@ const Header = () => {
         {!!prevPath && (
           <Link
             href={prevPath}
-            sx={{ height: 24 }}
-            tooltip="Quay lại danh sách dự án"
+            sx={{ height: 24, display: { xs: "none", sm: "initial" } }}
           >
             <ChevronIcon
               sx={{ color: "text.primary", transform: "rotate(90deg)" }}
@@ -50,7 +49,7 @@ const Header = () => {
         {!!searchPlaceholder && (
           <Search
             name="search"
-            sx={{ pt: 0.75, display: { xs: "none", sm: "initial" } }}
+            sx={{ display: { xs: "none", sm: "initial" } }}
           />
         )}
         <AccountInfo />

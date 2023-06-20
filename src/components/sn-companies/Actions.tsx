@@ -1,41 +1,41 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useEffect, useState } from "react";
 import { Stack } from "@mui/material";
-import { Text } from "components/shared";
+import { Button, Text } from "components/shared";
 import { Clear, Date, Dropdown, Refresh, Search } from "components/Filters";
 import { formatNumber, getPath } from "utils/index";
 import { usePathname, useRouter } from "next/navigation";
-import { useCompanies } from "store/company/selectors";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { CompanyStatus } from "store/company/actions";
 import { TEXT_STATUS } from "./components/helpers";
+import { useCompanies } from "store/manager/selectors";
 
 const Actions = () => {
   const { filters, onGetCompanies, pageSize, statistic } = useCompanies();
 
-  const filtersRef = useRef<Params>(filters);
-
   const pathname = usePathname();
   const { push } = useRouter();
 
-  const onChangeData = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (name: string, value: any) => {
-      const newQueries = {
-        ...filtersRef.current,
-        [name]: value,
-      };
-      const path = getPath(pathname, newQueries);
-      push(path);
+  const [queries, setQueries] = useState<Params>({});
 
-      onGetCompanies({ ...newQueries, pageIndex: 1, pageSize });
-    },
-    [onGetCompanies, pageSize, pathname, push],
-  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onChangeQueries = (name: string, value: any) => {
+    setQueries((prevQueries) => ({ ...prevQueries, [name]: value }));
+  };
+
+  const onSearch = () => {
+    const path = getPath(pathname, queries);
+    push(path);
+
+    onGetCompanies({ ...queries, pageIndex: 1, pageSize });
+  };
 
   const onClear = () => {
-    onGetCompanies({ pageIndex: 1, pageSize });
+    const newQueries = { pageIndex: 1, pageSize };
+    const path = getPath(pathname, newQueries);
+    push(path);
+    onGetCompanies(newQueries);
   };
 
   const onRefresh = () => {
@@ -43,19 +43,23 @@ const Actions = () => {
   };
 
   useEffect(() => {
-    filtersRef.current = filters;
+    setQueries(filters);
   }, [filters]);
 
   return (
     <Stack
-      direction={{ xs: "column", md: "row" }}
-      alignItems="center"
+      direction={{ xs: "column-reverse", md: "row" }}
+      alignItems={{ md: "center" }}
       justifyContent="space-between"
       spacing={3}
       px={{ xs: 1, md: 3 }}
       py={1.5}
     >
-      <Stack spacing={1} width="fit-content">
+      <Stack
+        direction={{ xs: "row", md: "column" }}
+        spacing={1}
+        width="fit-content"
+      >
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
           Staff paid:
           <Text
@@ -93,27 +97,32 @@ const Actions = () => {
         justifyContent="flex-end"
       >
         <Search
-          placeholder="Tìm kiếm theo email"
-          name="search"
-          onChange={onChangeData}
-          value={filters?.search}
+          placeholder="Search by email..."
+          name="email"
+          onChange={onChangeQueries}
+          value={queries?.email}
         />
         <Stack direction="row" alignItems="center" spacing={3}>
           <Date
             label="Creation date"
             name="date"
-            onChange={onChangeData}
-            value={filters?.date}
+            onChange={onChangeQueries}
+            value={queries?.date}
           />
           <Dropdown
-            placeholder="Trạng thái"
+            placeholder="Status"
             options={PAYMENT_OPTIONS}
-            name="status"
-            onChange={onChangeData}
-            value={filters?.status}
+            name="is_pay_company"
+            onChange={onChangeQueries}
+            value={Number(queries?.is_pay_company)}
           />
+        </Stack>
+        <Stack direction="row" alignItems="center" spacing={3}>
+          <Button size="small" onClick={onSearch} variant="secondary">
+            Search
+          </Button>
           <Refresh onClick={onRefresh} />
-          {!!Object.keys(filters).length && <Clear onClick={onClear} />}
+          {!!Object.keys(queries).length && <Clear onClick={onClear} />}
         </Stack>
       </Stack>
     </Stack>

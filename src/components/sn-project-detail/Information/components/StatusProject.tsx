@@ -3,7 +3,7 @@ import { Button, Text } from "components/shared";
 import { useProject, useProjects } from "store/project/selectors";
 import FormLayout from "components/FormLayout";
 import useToggle from "hooks/useToggle";
-import { STATUS_OPTIONS } from "components/sn-projects/helpers";
+import { STATUS_OPTIONS } from "components/sn-projects/components/helpers";
 import { Radio, Stack } from "@mui/material";
 import CircleTickIcon from "icons/CircleTickIcon";
 import { useSnackbar } from "store/app/selectors";
@@ -30,7 +30,7 @@ const StatusProject = () => {
     try {
       const newData = await onUpdateProject(item.id, { status });
       if (newData) {
-        onAddSnackbar("Cập nhật trạng thái thành công!", "success");
+        onAddSnackbar("Update status successfully!", "success");
         onHide();
       }
     } catch (error) {
@@ -47,13 +47,13 @@ const StatusProject = () => {
   return (
     <>
       <Button onClick={onShow} variant="secondary" size="small">
-        Đổi trạng thái
+        Change status
       </Button>
 
       <FormLayout
         open={isShow}
         onClose={onHide}
-        label="Thay đổi trạng thái dự án"
+        label="Change project status"
         onSubmit={onSubmit}
         disabled={!status}
         sx={{

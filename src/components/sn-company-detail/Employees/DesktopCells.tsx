@@ -3,7 +3,11 @@ import { Employee } from "store/company/reducer";
 import { BodyCell, StatusCell } from "components/Table";
 import { DATE_TIME_FORMAT_SLASH } from "constant/index";
 import { formatDate } from "utils/index";
-import { TEXT_STATUS, COLOR_STATUS } from "./helpers";
+import {
+  TEXT_STATUS,
+  COLOR_STATUS,
+  WAITING_STATUS,
+} from "./components/helpers";
 import { Text } from "components/shared";
 import Avatar from "components/Avatar";
 import { Stack } from "@mui/material";
@@ -17,8 +21,8 @@ const DesktopCells = (props: DesktopCellsProps) => {
   return (
     <>
       <BodyCell align="left">
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar size={32} />
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Avatar size={32} src={item?.avatar?.link} />
           <Text variant="h6">{item.fullname}</Text>
         </Stack>
       </BodyCell>
@@ -32,8 +36,16 @@ const DesktopCells = (props: DesktopCellsProps) => {
         {formatDate(item.created_time)}
       </BodyCell>
       <StatusCell
-        text={TEXT_STATUS[Number(item.is_active)]}
-        color={COLOR_STATUS[Number(item.is_active)]}
+        text={
+          item.is_pay_user === null
+            ? WAITING_STATUS.TEXT
+            : TEXT_STATUS[Number(item.is_pay_user)]
+        }
+        color={
+          item.is_pay_user === null
+            ? WAITING_STATUS.TEXT
+            : COLOR_STATUS[Number(item.is_pay_user)]
+        }
         width={93}
       />
     </>

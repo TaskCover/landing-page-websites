@@ -4,6 +4,7 @@ import { Mode, Paging } from "./types";
 export const AUTH_API_URL = "/auth-app/";
 export const API_URL = "/app/";
 export const COMPANY_API_URL = process.env.COMPANY_API_URL as string;
+export const UPLOAD_API_URL = process.env.UPLOAD_API_URL as string;
 
 export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
 
@@ -23,6 +24,8 @@ export const DEFAULT_PAGING: Paging = {
   pageIndex: DEFAULT_PAGE_INDEX,
   pageSize: DEFAULT_PAGE_SIZE,
 };
+
+export const IMAGES_ACCEPT = ["image/png", "image/jpeg"];
 
 export const ACCESS_TOKEN_STORAGE_KEY = "aT";
 export const REFRESH_TOKEN_STORAGE_KEY = "rT";

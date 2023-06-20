@@ -23,14 +23,28 @@ import SignOutIcon from "icons/SignOutIcon";
 import Avatar from "components/Avatar";
 import KeyIcon from "icons/KeyIcon";
 import CrownIcon from "icons/CrownIcon";
+import { useAppDispatch } from "store/hooks";
+import { reset as appReset } from "store/app/reducer";
+import { reset as projectReset } from "store/project/reducer";
+import { reset as managerReset } from "store/manager/reducer";
+import { reset as companyReset } from "store/company/reducer";
 
 const AccountInfo = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
-  const { user, onSignOut } = useAuth();
+  const { user, onSignOut: onSignOutAuth } = useAuth();
+  const dispatch = useAppDispatch();
 
   const onOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const onSignOut = () => {
+    onSignOutAuth();
+    dispatch(appReset());
+    dispatch(projectReset());
+    dispatch(managerReset());
+    dispatch(companyReset());
   };
 
   const onClose = () => {
@@ -55,7 +69,7 @@ const AccountInfo = () => {
         onClick={onOpen}
         display={{ xs: "none", sm: "flex" }}
       >
-        <Avatar size={32} alt={user.fullname} />
+        <Avatar size={32} alt={user.fullname} src={user?.avatar?.link} />
 
         <ChevronIcon fontSize="medium" sx={{ color: "grey.900" }} />
       </Stack>
@@ -100,7 +114,7 @@ const AccountInfo = () => {
           }}
         >
           <Stack direction="row" alignItems="center" spacing={1.5} py={2}>
-            <Avatar size={60} alt={user.fullname} />
+            <Avatar size={60} alt={user.fullname} src={user?.avatar?.link} />
             <Stack>
               <Text variant="h6" color="grey.400">
                 {user.fullname}

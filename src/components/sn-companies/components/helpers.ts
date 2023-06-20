@@ -12,3 +12,8 @@ export const COLOR_STATUS: {
   [CompanyStatus.APPROVE]: "success",
   [CompanyStatus.REJECT]: "error",
 };
+
+export const WAITING_STATUS = {
+  TEXT: "Waiting",
+  COLOR: "warning",
+};

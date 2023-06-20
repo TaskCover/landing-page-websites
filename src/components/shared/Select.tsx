@@ -47,7 +47,7 @@ const Select = (props: SelectProps) => {
     if (hasAll || placeholder) {
       return [
         {
-          label: hasAll && hasValue ? "Tất cả" : placeholder,
+          label: hasAll && hasValue ? "All" : placeholder,
           value: ID_PLACEHOLDER,
         },
         ...options,

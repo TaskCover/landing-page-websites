@@ -141,8 +141,11 @@ const defaultSx = {
     color: "primary.main",
 
     "&:hover": {
-      color: "primary.dark",
-      backgroundColor: "primary.light",
+      color: "common.white",
+      backgroundColor: "primary.main",
+      "&:svg": {
+        color: "common.white",
+      },
     },
     [`&.${buttonClasses.disabled}`]: {
       opacity: 0.6,

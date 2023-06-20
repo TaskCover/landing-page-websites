@@ -2,14 +2,13 @@
 
 import { memo, useEffect, useMemo, useState } from "react";
 import { TableRow } from "@mui/material";
-import { TableLayout, BodyCell, CellProps } from "components/Table";
+import { TableLayout, CellProps } from "components/Table";
 import { useMembersOfProject } from "store/project/selectors";
 import { DEFAULT_PAGING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { cleanObject, getPath, stringifyURLSearchParams } from "utils/index";
-import { IconButton } from "components/shared";
+import { getPath } from "utils/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import { DataAction } from "constant/enums";
 import { Member } from "store/project/reducer";
@@ -122,23 +121,21 @@ const ItemList = () => {
 export default memo(ItemList);
 
 const DESKTOP_HEADER_LIST = [
-  { value: "STT", width: "5%", align: "center" },
+  { value: "#", width: "5%", align: "center" },
   {
-    value: "Thành viên",
+    value: "Member",
     width: "20%",
     align: "left",
   },
   {
-    value: "Tên tài khoản",
+    value: "Email",
     width: "15%",
     align: "left",
   },
-  { value: "Chức vụ", width: "20%" },
-  { value: "Số giờ đã làm việc", width: "15%" },
-  { value: "Ngày được thêm vào dự án", width: "15%" },
+  { value: "Position", width: "20%" },
+  { value: "Hours worked", width: "15%" },
+  { value: "Date added project", width: "15%" },
   { value: "", width: "10%" },
 ];
 
-const MOBILE_HEADER_LIST = [
-  { value: "Thành viên", width: "75%", align: "left" },
-];
+const MOBILE_HEADER_LIST = [{ value: "#", width: "75%", align: "left" }];

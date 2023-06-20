@@ -2,13 +2,14 @@ import { memo } from "react";
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
 import TextStatus from "components/TextStatus";
-import { COLOR_STATUS, TEXT_STATUS } from "../helpers";
+import { COLOR_STATUS, TEXT_STATUS } from "./components/helpers";
 import { BodyCell } from "components/Table";
 import BookmarkIcon from "icons/BookmarkIcon";
 import { Project } from "store/project/reducer";
 import { PROJECT_INFORMATION_PATH } from "constant/paths";
 import { getPath } from "utils/index";
 import Link from "components/Link";
+import Avatar from "components/Avatar";
 
 type MobileContentCellProps = {
   item: Project;
@@ -26,16 +27,21 @@ const MobileContentCell = (props: MobileContentCellProps) => {
     <BodyCell align="left">
       <Stack spacing={2} py={1.5}>
         <InformationItem
-          label="Tên dự án"
+          label="Name"
           href={getPath(PROJECT_INFORMATION_PATH, undefined, { id: item.id })}
         >
-          {item.name}
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar size={32} src={item.avatar?.link} />
+            <Text variant="body2" color="text.primary">
+              {item.name}
+            </Text>
+          </Stack>
         </InformationItem>
-        <InformationItem label="Người phụ trách">
+        <InformationItem label="Assigner">
           {item?.owner?.fullname}
         </InformationItem>
 
-        <InformationItem label="Trạng thái">
+        <InformationItem label="Status">
           {!!item?.status && (
             <TextStatus
               text={TEXT_STATUS[item.status]}

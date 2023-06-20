@@ -5,9 +5,9 @@ import { Stack } from "@mui/material";
 import { Clear, Date, Refresh } from "components/Filters";
 import { getPath } from "utils/index";
 import { usePathname, useRouter } from "next/navigation";
-import { useStatementHistory } from "store/company/selectors";
+import { useStatementHistory } from "store/manager/selectors";
 import { Button } from "components/shared";
-import { GetStatementHistoryQueries } from "store/company/actions";
+import { GetStatementHistoryQueries } from "store/manager/actions";
 
 const Actions = () => {
   const { filters, onGetStatementHistory, pageSize, pageIndex } =

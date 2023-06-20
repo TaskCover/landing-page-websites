@@ -26,17 +26,6 @@ export type GetEmployeeListQueries = BaseQueries & {
   date?: string;
 };
 
-export type GetCompanyListQueries = BaseQueries & {
-  search?: string;
-  status?: CompanyStatus;
-  date?: string;
-};
-
-export type GetStatementHistoryQueries = BaseQueries & {
-  start?: string;
-  end?: string;
-};
-
 export type EmployeeData = {
   email: string;
   position: string;
@@ -116,6 +105,28 @@ export const updateEmployee = createAsyncThunk(
 
       if (response?.status === HttpStatusCode.OK) {
         return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const deleteEmployees = createAsyncThunk(
+  "company/deleteEmployees",
+  async (ids: string[]) => {
+    try {
+      const response = await client.put(
+        Endpoint.USERS_INACTIVE,
+        { ids },
+        {
+          baseURL: AUTH_API_URL,
+        },
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return ids;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
@@ -258,51 +269,6 @@ export const deleteProjectType = createAsyncThunk(
   },
 );
 
-export const getCompanyList = createAsyncThunk(
-  "company/getCompanyList",
-  async ({
-    concat,
-    ...queries
-  }: GetCompanyListQueries & { concat?: boolean }) => {
-    queries = serverQueries(queries) as GetCompanyListQueries;
-
-    try {
-      const response = await client.get(Endpoint.COMPANIES, queries, {
-        baseURL: COMPANY_API_URL,
-      });
-
-      if (response?.status === HttpStatusCode.OK) {
-        return { ...refactorRawItemListResponse(response.data), concat };
-      }
-      throw AN_ERROR_TRY_AGAIN;
-    } catch (error) {
-      throw error;
-    }
-  },
-);
-
-export const getCompany = createAsyncThunk(
-  "company/getCompany",
-  async (id: string) => {
-    try {
-      const response = await client.get(
-        StringFormat(Endpoint.COMPANY_ITEM, { id }),
-        undefined,
-        {
-          baseURL: COMPANY_API_URL,
-        },
-      );
-
-      if (response?.status === HttpStatusCode.OK) {
-        return response.data;
-      }
-      throw AN_ERROR_TRY_AGAIN;
-    } catch (error) {
-      throw error;
-    }
-  },
-);
-
 export const getMyCompany = createAsyncThunk(
   "company/getMyCompany",
   async () => {
@@ -321,17 +287,16 @@ export const getMyCompany = createAsyncThunk(
   },
 );
 
-export const updateCompany = createAsyncThunk(
-  "company/updateCompany",
-  async ({ id, ...data }: CompanyData & { id: string }) => {
+export const updateMyCompany = createAsyncThunk(
+  "company/updateMyCompany",
+  async (data: CompanyData) => {
     try {
-      const response = await client.put(
-        StringFormat(Endpoint.COMPANY_ITEM, { id }),
-        data,
-        {
-          baseURL: COMPANY_API_URL,
+      const response = await client.put(Endpoint.COMPANIES, data, {
+        baseURL: COMPANY_API_URL,
+        params: {
+          type: "code",
         },
-      );
+      });
 
       if (response?.status === HttpStatusCode.OK) {
         return response.data;
@@ -355,53 +320,6 @@ export const getCostHistory = createAsyncThunk(
 
       if (response?.status === HttpStatusCode.OK) {
         return refactorRawItemListResponse(response.data);
-      }
-      throw AN_ERROR_TRY_AGAIN;
-    } catch (error) {
-      throw error;
-    }
-  },
-);
-
-export const getStatementHistory = createAsyncThunk(
-  "company/getStatementHistory",
-  async (queries: GetStatementHistoryQueries) => {
-    queries = serverQueries(queries) as GetStatementHistoryQueries;
-
-    try {
-      const response = await client.get(Endpoint.COST_HISTORY, queries, {
-        baseURL: COMPANY_API_URL,
-      });
-
-      if (response?.status === HttpStatusCode.OK) {
-        return refactorRawItemListResponse(response.data);
-      }
-      throw AN_ERROR_TRY_AGAIN;
-    } catch (error) {
-      throw error;
-    }
-  },
-);
-
-export const approveOrReject = createAsyncThunk(
-  "company/approveOrReject",
-  async ({ type, ids }: { type: CompanyStatus; ids: string[] }) => {
-    const url =
-      type === CompanyStatus.APPROVE
-        ? Endpoint.COMPANIES_APPROVE
-        : Endpoint.COMPANIES_REJECT;
-
-    try {
-      const response = await client.put(
-        url,
-        { ids },
-        {
-          baseURL: COMPANY_API_URL,
-        },
-      );
-
-      if (response?.status === HttpStatusCode.OK) {
-        return ids;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

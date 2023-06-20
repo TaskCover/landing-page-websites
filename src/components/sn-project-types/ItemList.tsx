@@ -148,18 +148,18 @@ const ItemList = () => {
 export default memo(ItemList);
 
 const DESKTOP_HEADER_LIST = [
-  { value: "STT", width: "10%", align: "center" },
+  { value: "#", width: "10%", align: "center" },
   {
-    value: "Tên loại dự án",
+    value: "Name",
     width: "30%",
     align: "left",
   },
   {
-    value: "Người tạo",
+    value: "Creator",
     width: "30%",
     align: "left",
   },
-  { value: "Ngày tạo", width: "20%" },
+  { value: "Creation date", width: "20%" },
 ];
 
-const MOBILE_HEADER_LIST = [{ value: "Chức vụ", width: "75%", align: "left" }];
+const MOBILE_HEADER_LIST = [{ value: "#", width: "75%", align: "left" }];

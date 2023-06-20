@@ -2,11 +2,12 @@ import { memo } from "react";
 import { Company } from "store/company/reducer";
 import { BodyCell, StatusCell } from "components/Table";
 import { DATE_TIME_FORMAT_SLASH } from "constant/index";
-import { formatDate } from "utils/index";
-import { TEXT_STATUS, COLOR_STATUS } from "./components";
+import { formatDate, getPath } from "utils/index";
+import { TEXT_STATUS, COLOR_STATUS, WAITING_STATUS } from "./components";
 import { Text } from "components/shared";
 import Avatar from "components/Avatar";
 import { Stack } from "@mui/material";
+import { COMPANY_DETAIL_PATH } from "constant/paths";
 
 type DesktopCellsProps = {
   item: Company;
@@ -16,10 +17,24 @@ const DesktopCells = (props: DesktopCellsProps) => {
   const { item } = props;
   return (
     <>
-      <BodyCell align="left">
-        <Stack direction="row" alignItems="center" spacing={1.25}>
+      <BodyCell
+        align="left"
+        href={getPath(COMPANY_DETAIL_PATH, undefined, { id: item.id })}
+        linkProps={{
+          sx: { color: "text.primary" },
+          tooltip: "Click to go to detail company",
+        }}
+      >
+        <Stack
+          width="fit-content"
+          direction="row"
+          alignItems="center"
+          spacing={1.25}
+        >
           <Avatar size={32} />
-          <Text variant="h6">{item.name}</Text>
+          <Text variant="h6" color="inherit">
+            {item.name}
+          </Text>
         </Stack>
       </BodyCell>
       <BodyCell align="left" noWrap>
@@ -30,8 +45,16 @@ const DesktopCells = (props: DesktopCellsProps) => {
         {formatDate(item.created_time)}
       </BodyCell>
       <StatusCell
-        text={TEXT_STATUS[Number(item.is_approve)]}
-        color={COLOR_STATUS[Number(item.is_approve)]}
+        text={
+          item.is_approve === null
+            ? WAITING_STATUS.TEXT
+            : TEXT_STATUS[Number(item.is_approve)]
+        }
+        color={
+          item.is_approve === null
+            ? WAITING_STATUS.COLOR
+            : COLOR_STATUS[Number(item.is_approve)]
+        }
         width={93}
       />
     </>

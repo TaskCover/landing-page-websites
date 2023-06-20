@@ -105,11 +105,11 @@ const TabActions = (props: StackProps) => {
 };
 
 const TABS = [
-  { label: "Công việc", href: PROJECT_TASKS_PATH },
-  { label: "Hoạt dộng", href: PROJECT_ACTIVITIES_PATH },
-  { label: "Chi phí", href: PROJECT_COST_HISTORY_PATH },
-  { label: "Thành viên", href: PROJECT_MEMBERS_PATH },
-  { label: "Thông tin", href: PROJECT_INFORMATION_PATH },
+  { label: "Tasks", href: PROJECT_TASKS_PATH },
+  { label: "Activities", href: PROJECT_ACTIVITIES_PATH },
+  { label: "Cost history", href: PROJECT_COST_HISTORY_PATH },
+  { label: "Members", href: PROJECT_MEMBERS_PATH },
+  { label: "Information", href: PROJECT_INFORMATION_PATH },
 ];
 
 const getSuffixPath = (path: string) => {

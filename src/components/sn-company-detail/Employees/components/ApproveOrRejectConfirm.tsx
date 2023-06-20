@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import { Stack } from "@mui/material";
 import ConfirmDialog, { ConfirmDialogProps } from "components/ConfirmDialog";
-import { Company } from "store/company/reducer";
+import { Employee } from "store/company/reducer";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { useSnackbar } from "store/app/selectors";
@@ -9,7 +9,7 @@ import { getMessageErrorByAPI } from "utils/index";
 import { AN_ERROR_TRY_AGAIN } from "constant/index";
 
 type ApproveOrRejectConfirmProps = ConfirmDialogProps & {
-  items?: Company[];
+  items?: Employee[];
 };
 
 const ApproveOrRejectConfirm = (props: ApproveOrRejectConfirmProps) => {
@@ -44,7 +44,7 @@ const ApproveOrRejectConfirm = (props: ApproveOrRejectConfirmProps) => {
           <Stack direction="row" width={275} key={item.id} spacing={1.5}>
             <Avatar size={40} />
             <Stack>
-              <Text variant="h6">{item.name}</Text>
+              <Text variant="h6">{item.fullname}</Text>
               <Text variant="body2">{item.email}</Text>
             </Stack>
           </Stack>

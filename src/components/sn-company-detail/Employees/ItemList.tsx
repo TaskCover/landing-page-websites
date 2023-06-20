@@ -18,17 +18,18 @@ import {
 import { DEFAULT_PAGING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { getPath } from "utils/index";
-import { IconButton, Text, Checkbox } from "components/shared";
-import { useEmployees } from "store/company/selectors";
-import ConfirmDialog from "components/ConfirmDialog";
+import { IconButton, Checkbox } from "components/shared";
+import { useEmployeesOfCompany } from "store/manager/selectors";
 import { Employee } from "store/company/reducer";
-import { DataAction } from "constant/enums";
-import { MobileContentCell, DesktopCells } from "./components";
+import DesktopCells from "./DesktopCells";
+import MobileContentCell from "./MobileContentCell";
+import { ApproveOrRejectConfirm } from "./components";
 import useBreakpoint from "hooks/useBreakpoint";
 import CircleTickIcon from "icons/CircleTickIcon";
 import CloseSquareIcon from "icons/CloseSquareIcon";
+import { PaymentStatus } from "components/sn-employees/helpers";
 
 const ItemList = () => {
   const {
@@ -41,29 +42,41 @@ const ItemList = () => {
     pageIndex,
     totalPages,
     onGetEmployees,
-  } = useEmployees();
+    onApproveOrReject: onApproveOrRejectAction,
+  } = useEmployeesOfCompany();
 
   const { initQuery, isReady, query } = useQueryParams();
   const pathname = usePathname();
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
+  const { id: companyId } = useParams();
 
-  const [item, setItem] = useState<Employee | undefined>();
-  const [ids, setIds] = useState<string[]>([]);
-  const [action, setAction] = useState<DataAction | undefined>();
+  const [selectedList, setSelectedList] = useState<Employee[]>([]);
+  const [action, setAction] = useState<PaymentStatus | undefined>();
+  const [id, setId] = useState<string | undefined>();
+
+  const nOfWaitings = useMemo(
+    () => items.filter((item) => item?.is_pay_user === null).length,
+    [items],
+  );
 
   const isCheckedAll = useMemo(
-    () => Boolean(ids.length && ids.length === items.length),
-    [ids.length, items.length],
+    () => Boolean(selectedList.length && selectedList.length === nOfWaitings),
+    [selectedList.length, nOfWaitings],
+  );
+
+  const textAction = useMemo(
+    () => (action !== undefined ? TEXT_ACTION[action] : ""),
+    [action],
   );
 
   const onChangeAll = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const isChecked = event.target.checked;
       if (isChecked) {
-        setIds(items.map((item) => item.id));
+        setSelectedList(items);
       } else {
-        setIds([]);
+        setSelectedList([]);
       }
     },
     [items],
@@ -84,30 +97,23 @@ const ItemList = () => {
     ] as CellProps[];
   }, [isMdSmaller, isCheckedAll, onChangeAll]);
 
-  const onToggleSelect = (id: string, indexSelected: number) => {
+  const onToggleSelect = (item: Employee, indexSelected: number) => {
     return () => {
       if (indexSelected === -1) {
-        setIds((prevIds) => [...prevIds, id]);
+        setSelectedList((prevList) => [...prevList, item]);
       } else {
-        setIds((prevIds) => {
-          const newIds = [...prevIds];
-          newIds.splice(indexSelected, 1);
-          return newIds;
+        setSelectedList((prevList) => {
+          const newList = [...prevList];
+          newList.splice(indexSelected, 1);
+          return newList;
         });
       }
     };
   };
 
-  const onActionToItem = (action: DataAction, item?: Employee) => {
-    return () => {
-      item && setItem(item);
-      setAction(action);
-    };
-  };
-
   const onResetAction = () => {
-    setItem(undefined);
     setAction(undefined);
+    setId(undefined);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -115,8 +121,8 @@ const ItemList = () => {
     const newQueries = { ...query, ...queries };
     const path = getPath(pathname, newQueries);
     push(path);
-
-    onGetEmployees(newQueries);
+    if (!companyId) return;
+    onGetEmployees(companyId, newQueries);
   };
 
   const onChangePage = (newPage: number) => {
@@ -127,23 +133,41 @@ const ItemList = () => {
     onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
   };
 
-  const onApproveOrReject = () => {
-    //
+  const onApproveOrReject = (type: PaymentStatus, id?: string) => {
+    return () => {
+      setAction(type);
+      setId(id);
+    };
+  };
+
+  const onSubmitApproveOrReject = async () => {
+    if (action === undefined) return;
+    const ids = id ? [id] : selectedList.map((item) => item.id);
+    try {
+      const idsResponse = await onApproveOrRejectAction(ids, action);
+      if (idsResponse.length) {
+        setAction(undefined);
+        setSelectedList([]);
+        setId(undefined);
+      }
+    } catch (error) {
+      throw error;
+    }
   };
 
   useEffect(() => {
-    if (!isIdle || !isReady) return;
-    onGetEmployees({ ...DEFAULT_PAGING, ...initQuery });
-  }, [initQuery, isIdle, isReady, onGetEmployees]);
+    if (!isIdle || !isReady || !companyId) return;
+    onGetEmployees(companyId, { ...DEFAULT_PAGING, ...initQuery });
+  }, [initQuery, isIdle, isReady, companyId, onGetEmployees]);
 
   useEffect(() => {
-    setIds([]);
+    setSelectedList([]);
   }, [pageIndex]);
 
   return (
     <>
       <Stack flex={1} px={{ xs: 1, md: 3 }}>
-        {!!ids.length && (
+        {!!selectedList.length && (
           <Stack
             direction="row"
             alignItems="center"
@@ -153,8 +177,8 @@ const ItemList = () => {
           >
             <IconButton
               size="small"
-              onClick={onApproveOrReject}
-              tooltip="Thanh toán"
+              onClick={onApproveOrReject(PaymentStatus.PAID)}
+              tooltip="Approve"
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -169,8 +193,8 @@ const ItemList = () => {
             </IconButton>
             <IconButton
               size="small"
-              onClick={onApproveOrReject}
-              tooltip="Xóa bỏ"
+              onClick={onApproveOrReject(PaymentStatus.UNPAID)}
+              tooltip="Reject"
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -193,16 +217,18 @@ const ItemList = () => {
           pb={3}
         >
           {items.map((item) => {
-            const indexSelected = ids.findIndex(
-              (idValue) => idValue === item.id,
+            const indexSelected = selectedList.findIndex(
+              (selected) => selected.id === item.id,
             );
             return (
               <TableRow key={item.id}>
                 <BodyCell>
-                  <Checkbox
-                    checked={indexSelected !== -1}
-                    onChange={onToggleSelect(item.id, indexSelected)}
-                  />
+                  {item.is_pay_user === null && (
+                    <Checkbox
+                      checked={indexSelected !== -1}
+                      onChange={onToggleSelect(item, indexSelected)}
+                    />
+                  )}
                 </BodyCell>
                 {isMdSmaller ? (
                   <MobileContentCell item={item} />
@@ -211,19 +237,30 @@ const ItemList = () => {
                 )}
 
                 <ActionsCell
-                  options={[
-                    {
-                      content: "Approve",
-                      onClick: onActionToItem(DataAction.OTHER),
-                      icon: (
-                        <CircleTickIcon
-                          filled={false}
-                          sx={{ color: "grey.400" }}
-                          fontSize="medium"
-                        />
-                      ),
-                    },
-                  ]}
+                  options={
+                    item.is_pay_user === null
+                      ? [
+                          {
+                            content: "Approve",
+                            onClick: onApproveOrReject(
+                              PaymentStatus.PAID,
+                              item.id,
+                            ),
+                            icon: (
+                              <CircleTickIcon filled={false} fontSize="small" />
+                            ),
+                          },
+                          {
+                            content: "Reject",
+                            onClick: onApproveOrReject(
+                              PaymentStatus.UNPAID,
+                              item.id,
+                            ),
+                            icon: <CloseSquareIcon fontSize="small" />,
+                          },
+                        ]
+                      : undefined
+                  }
                 />
               </TableRow>
             );
@@ -240,14 +277,16 @@ const ItemList = () => {
         onChangePage={onChangePage}
         onChangeSize={onChangeSize}
       />
-      {action === DataAction.OTHER && (
-        <ConfirmDialog
-          open
-          onClose={onResetAction}
-          title="Xác nhận thanh toán"
-          content="Bạn có chắc chắn thanh toán tất cả sự lựa chọn?"
-        />
-      )}
+      <ApproveOrRejectConfirm
+        open={action !== undefined}
+        onClose={onResetAction}
+        title={`Confirm to ${textAction}`}
+        content={`Are you sure to ${textAction} ${
+          id ? "this" : "these"
+        } account?`}
+        items={id ? undefined : selectedList}
+        onSubmit={onSubmitApproveOrReject}
+      />
     </>
   );
 };
@@ -255,13 +294,16 @@ const ItemList = () => {
 export default memo(ItemList);
 
 const DESKTOP_HEADER_LIST = [
-  { value: "Họ tên", width: "20%", align: "left" },
+  { value: "Name", width: "20%", align: "left" },
   { value: "Email", width: "20%", align: "left" },
-  { value: "Người tạo", width: "17%", align: "left" },
-  { value: "Ngày tạo", width: "15%" },
-  { value: "Trạng thái", width: "17%" },
+  { value: "Creator", width: "17%", align: "left" },
+  { value: "Creation date", width: "15%" },
+  { value: "Status", width: "17%" },
 ];
 
-const MOBILE_HEADER_LIST = [
-  { value: "Nhân viên", width: "70%", align: "left" },
-];
+const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];
+
+const TEXT_ACTION: { [key in PaymentStatus]: string } = {
+  [PaymentStatus.PAID]: "approve",
+  [PaymentStatus.UNPAID]: "reject",
+};

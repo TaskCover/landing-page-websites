@@ -1,10 +1,12 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
+  AN_ERROR_TRY_AGAIN,
   API_TIMEOUT,
   API_URL,
   AUTH_API_URL,
   REFRESH_TOKEN_STORAGE_KEY,
+  UPLOAD_API_URL,
   USER_INFO_STORAGE_KEY,
 } from "constant";
 import { HttpStatusCode } from "constant/enums";
@@ -151,6 +153,31 @@ const RequestClient = class {
     try {
       const response = await axios.delete(endpoint, configs);
       return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async upload(endpoint: string, file: File) {
+    try {
+      let response = await this.get(
+        `${endpoint}/${file.name}`,
+        { type: file.type },
+        {
+          baseURL: UPLOAD_API_URL,
+        },
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        const urlUpload = response.data.object;
+        response = await this.put(response.data.upload, file);
+        if (response?.status === HttpStatusCode.OK) {
+          return urlUpload;
+        }
+        throw AN_ERROR_TRY_AGAIN;
+      } else {
+        throw AN_ERROR_TRY_AGAIN;
+      }
     } catch (error) {
       throw error;
     }

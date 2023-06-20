@@ -19,7 +19,7 @@ const SavedProject = () => {
     try {
       const newData = await onUpdateProject(item.id, { saved: !item.saved });
       if (newData) {
-        onAddSnackbar("Cập nhật trạng thái lưu thành công!", "success");
+        onAddSnackbar("Update saved status successfully!", "success");
         onHide();
       }
     } catch (error) {
@@ -44,8 +44,8 @@ const SavedProject = () => {
       <ConfirmDialog
         open={isShow}
         onClose={onHide}
-        title="Xác nhận đổi trạng thái lưu"
-        content={`Bạn muốn ${item.saved ? "bỏ" : ""} lưu?`}
+        title="Confirm save status change"
+        content={`Are you sure to ${item.saved ? "un" : ""} save?`}
         onSubmit={onSubmit}
       />
     </>

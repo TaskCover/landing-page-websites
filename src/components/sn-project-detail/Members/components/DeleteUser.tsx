@@ -46,7 +46,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
       }));
       const newData = await onUpdateProject(item.id, { members });
       if (newData) {
-        onAddSnackbar("Xóa thành viên thành công!", "success");
+        onAddSnackbar("Remove member successfully!", "success");
         onDeleteMember(id);
       }
     } catch (error) {
@@ -58,7 +58,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
     <>
       <IconButton
         onClick={onClick}
-        tooltip="Xóa khỏi dự án"
+        tooltip="Remove from project"
         variant="contained"
         size="small"
         sx={{ bgcolor: "error.light" }}
@@ -68,13 +68,13 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
 
       <ConfirmDialog
         sx={{
-          maxWidth: { xs: "calc(100vw - 24px)", sm: 320 },
-          minWidth: { xs: "calc(100vw - 24px)", sm: 320 },
+          maxWidth: { xs: "calc(100vw - 24px)", sm: 420 },
+          minWidth: { xs: "calc(100vw - 24px)", sm: 420 },
         }}
         open={isShow}
         onClose={onHide}
-        title="Xác nhận loại bỏ thành viên"
-        content="Bạn có chắc chắn muốn loại bỏ thành viên này ra khỏi dự án?"
+        title="Confirm remove member"
+        content="Are you sure you want to remove this member from the project?"
         onSubmit={onSubmit}
       />
     </>

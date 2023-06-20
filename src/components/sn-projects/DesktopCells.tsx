@@ -1,10 +1,13 @@
 import { memo } from "react";
 import { BodyCell, StatusCell } from "components/Table";
-import { TEXT_STATUS, COLOR_STATUS } from "../helpers";
 import BookmarkIcon from "icons/BookmarkIcon";
 import { Project } from "store/project/reducer";
 import { getPath } from "utils/index";
 import { PROJECT_INFORMATION_PATH } from "constant/paths";
+import Avatar from "components/Avatar";
+import { Stack } from "@mui/material";
+import { Text } from "components/shared";
+import { TEXT_STATUS, COLOR_STATUS } from "./components/helpers";
 
 type DesktopCellsProps = {
   item: Project;
@@ -20,7 +23,12 @@ const DesktopCells = (props: DesktopCellsProps) => {
         href={getPath(PROJECT_INFORMATION_PATH, undefined, { id: item.id })}
         align="left"
       >
-        {item.name}
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Avatar size={32} src={item.avatar?.link} />
+          <Text variant="body2" color="text.primary">
+            {item.name}
+          </Text>
+        </Stack>
       </BodyCell>
       <BodyCell align="left">{item?.owner?.fullname}</BodyCell>
       {item.status ? (

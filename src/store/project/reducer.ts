@@ -34,6 +34,9 @@ export interface Member {
     id: string;
   };
   date_in: string;
+  avatar?: {
+    link: string;
+  };
 }
 
 export interface Project {
@@ -56,6 +59,9 @@ export interface Project {
   working_hours: number;
   start_date: string;
   end_date: string;
+  avatar?: {
+    link?: string;
+  };
 }
 
 export interface ProjectState {
@@ -101,8 +107,12 @@ const projectSlice = createSlice({
 
       if (indexSelected !== -1) {
         state.members.splice(indexSelected, 1);
+        if (state.membersPaging.totalItems !== undefined) {
+          state.membersPaging.totalItems -= 1;
+        }
       }
     },
+    reset: () => initialState,
   },
   extraReducers: (builder) =>
     builder
@@ -134,6 +144,12 @@ const projectSlice = createSlice({
         createProject.fulfilled,
         (state, action: PayloadAction<Project>) => {
           state.items.unshift(action.payload);
+          if (state.items.length > state.paging.pageSize) {
+            state.items.pop();
+            if (state.paging.totalPages !== undefined) {
+              state.paging.totalPages += 1;
+            }
+          }
           if (state.paging.totalItems !== undefined) {
             state.paging.totalItems += 1;
           }
@@ -176,10 +192,12 @@ const projectSlice = createSlice({
       .addCase(getMembersOfProject.pending, (state, action) => {
         state.membersStatus = DataStatus.LOADING;
         state.membersFilters = getFiltersFromQueries(action.meta.arg);
-        state.membersPaging.pageIndex =
-          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
-        state.membersPaging.pageSize =
-          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
+        state.membersPaging.pageIndex = Number(
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        );
+        state.membersPaging.pageSize = Number(
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        );
       })
       .addCase(
         getMembersOfProject.fulfilled,
@@ -198,6 +216,6 @@ const projectSlice = createSlice({
       }),
 });
 
-export const { removeMember } = projectSlice.actions;
+export const { removeMember, reset } = projectSlice.actions;
 
 export default projectSlice.reducer;

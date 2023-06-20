@@ -5,7 +5,10 @@ import { Divider, Stack, StackProps } from "@mui/material";
 import { Text } from "components/shared";
 import { useProject } from "store/project/selectors";
 import TextStatus from "components/TextStatus";
-import { COLOR_STATUS, TEXT_STATUS } from "components/sn-projects/helpers";
+import {
+  COLOR_STATUS,
+  TEXT_STATUS,
+} from "components/sn-projects/components/helpers";
 import { formatDate, formatNumber } from "utils/index";
 import Avatar from "components/Avatar";
 import StatusServer from "components/StatusServer";
@@ -26,7 +29,7 @@ const InformationProjectPage = () => {
             <Text variant="h4">{item?.name}</Text>
             <Stack direction="row" alignItems="center" spacing={1}>
               <Text variant="caption" color="grey.400">
-                Trạng thái
+                Status
               </Text>
               {item?.status ? (
                 <TextStatus
@@ -41,20 +44,20 @@ const InformationProjectPage = () => {
           <Text variant="h6" color="grey.400">{`#${item?.id}`}</Text>
         </Stack>
 
-        <InformationItem label="Người phụ trách">
+        <InformationItem label="Assigner">
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar size={32} />
+            <Avatar size={32} src={item?.owner?.avatar?.link} />
             <Text variant="body2">{item?.owner?.fullname ?? "--"}</Text>
           </Stack>
         </InformationItem>
         <Stack direction="row" alignItems="center" spacing={2}>
-          <InformationItem label="Ngày bắt đầu">
+          <InformationItem label="Start date">
             {formatDate(item?.start_date)}
           </InformationItem>
           <Divider sx={{ width: 100, borderColor: "grey.300" }} />
           {">"}
-          <InformationItem label="Ngày kết thúc">
-            {formatDate(item?.start_date)}
+          <InformationItem label="End date">
+            {formatDate(item?.end_date)}
           </InformationItem>
         </Stack>
         <Stack
@@ -62,10 +65,10 @@ const InformationProjectPage = () => {
           alignItems="center"
           spacing={{ xs: 2, sm: 5, lg: 10 }}
         >
-          <InformationItem label="Số giờ làm việc (dự kiến)" width={135}>
+          <InformationItem label="Working hours (expected)" width={135}>
             {formatNumber(item?.working_hours)}
           </InformationItem>
-          <InformationItem label="Số giờ làm việc (thực tế)">
+          <InformationItem label="Working hours (actual)">
             {formatNumber()}
           </InformationItem>
         </Stack>
@@ -74,14 +77,12 @@ const InformationProjectPage = () => {
           alignItems="center"
           spacing={{ xs: 2, sm: 5, lg: 10 }}
         >
-          <InformationItem label="Chi phí dự kiến" width={135}>
+          <InformationItem label="Expected cost" width={135}>
             {formatNumber(item?.expected_cost)}
           </InformationItem>
-          <InformationItem label="Chi phí đã chi trả">
-            {formatNumber()}
-          </InformationItem>
+          <InformationItem label="Cost spent">{formatNumber()}</InformationItem>
         </Stack>
-        <InformationItem label="Mô tả" maxWidth={700}>
+        <InformationItem label="Description" maxWidth={700}>
           {item?.description}
         </InformationItem>
       </Stack>

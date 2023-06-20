@@ -20,11 +20,13 @@ const DesktopCells = (props: DesktopCellsProps) => {
       <BodyCell align="center">{order}</BodyCell>
       <BodyCell align="left">
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} />
+          <Avatar size={32} src={item?.avatar?.link} />
           <Text variant="h6">{item.fullname}</Text>
         </Stack>
       </BodyCell>
-      <BodyCell align="left"></BodyCell>
+      <BodyCell align="left" textProps={{ noWrap: true }} tooltip={item.email}>
+        {item.email}
+      </BodyCell>
       <BodyCell>{item.position_project?.name}</BodyCell>
       <BodyCell></BodyCell>
       <BodyCell tooltip={formatDate(item.date_in, DATE_TIME_FORMAT_SLASH)}>

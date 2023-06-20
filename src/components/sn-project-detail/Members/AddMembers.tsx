@@ -13,8 +13,9 @@ import { useEmployeeOptions } from "store/company/selectors";
 import { useMembersOfProject, useProjects } from "store/project/selectors";
 import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import { useSnackbar } from "store/app/selectors";
-import { getMessageErrorByAPI } from "utils/index";
+import { getMessageErrorByAPI, getPath } from "utils/index";
 import { usePositionOptions } from "store/global/selectors";
+import { usePathname, useRouter } from "next/navigation";
 
 type MemberData = {
   id: string;
@@ -33,7 +34,7 @@ const AddMembers = () => {
         size="small"
         variant="primary"
       >
-        Thêm mới
+        Add member
       </Button>
       {isShow && <Form open onClose={onHide} />}
     </>
@@ -44,21 +45,37 @@ export default memo(AddMembers);
 
 const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
   const { ...rest } = props;
-  const { items, onGetOptions } = useEmployeeOptions();
-  const { items: members, id } = useMembersOfProject();
+  const { items, onGetOptions, isFetching } = useEmployeeOptions();
+  const {
+    items: members,
+    id,
+    onGetMembersOfProject,
+    pageSize,
+  } = useMembersOfProject();
   const { onUpdateProject } = useProjects();
   const { onAddSnackbar } = useSnackbar();
   const { options, onGetOptions: onGetPositionOptions } = usePositionOptions();
-
+  const pathname = usePathname();
+  const { push } = useRouter();
   const [newMembers, setNewMembers] = useState<MemberData[]>([]);
 
-  const onChangeMembers = (id: string, position: string, fullname: string) => {
-    const indexSelected = members.findIndex((item) => item.id === id);
+  const onChangeMembers = (
+    id: string,
+    position: string,
+    fullname: string,
+    isUpdatePosition?: boolean,
+  ) => {
+    const indexSelected = newMembers.findIndex((item) => item.id === id);
 
     const newData = [...newMembers];
 
     if (indexSelected === -1) {
       newData.push({ id, position, fullname });
+    } else if (isUpdatePosition) {
+      newData[indexSelected] = {
+        ...newData[indexSelected],
+        position,
+      };
     } else {
       newData.splice(indexSelected, 1);
     }
@@ -74,7 +91,13 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
       }
       const newData = await onUpdateProject(id, { members: newMembers });
       if (newData) {
-        onAddSnackbar("Cập nhật thành viên thành công!", "success");
+        onAddSnackbar("Update members successfully!", "success");
+        props?.onClose();
+
+        const newQueries = { pageIndex: 1, pageSize };
+        const path = getPath(pathname, newQueries);
+        push(path);
+        onGetMembersOfProject(id, newQueries);
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error), "error");
@@ -104,6 +127,7 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
       label=""
       renderHeader={<HeaderForm />}
       onSubmit={onSubmit}
+      pending={isFetching}
       {...rest}
     >
       <MenuList component={Stack} spacing={2}>
@@ -131,11 +155,11 @@ const HeaderForm = () => {
   return (
     <Stack spacing={2}>
       <Text textTransform="capitalize" fontWeight={600}>
-        Thêm thành viên vào dự án
+        Add members to project
       </Text>
       <Search
         name="email"
-        placeholder="Tìm kiếm theo email"
+        placeholder="Search by email"
         sx={{ maxWidth: 300 }}
       />
     </Stack>

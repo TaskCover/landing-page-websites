@@ -1,5 +1,4 @@
-import MobileContentCell from "./MobileContentCell";
-import DesktopCells from "./DesktopCells";
+import ApproveOrRejectConfirm from "./ApproveOrRejectConfirm";
 import CompanyFilter from "./CompanyFilter";
 
-export { MobileContentCell, DesktopCells, CompanyFilter };
+export { ApproveOrRejectConfirm, CompanyFilter };

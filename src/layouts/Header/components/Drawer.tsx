@@ -75,7 +75,7 @@ const UserInfo = () => {
   if (!user) return null;
   return (
     <Stack direction="row" alignItems="center" spacing={1.5} py={2}>
-      <Avatar size={64} alt={user.fullname} />
+      <Avatar size={64} alt={user.fullname} src={user?.avatar?.link} />
       <Stack>
         <Text fontWeight={600}>{user.fullname}</Text>
         <Text variant="body2">{user.email}</Text>

@@ -12,13 +12,14 @@ import { cleanObject, stringifyURLSearchParams } from "utils/index";
 import { IconButton } from "components/shared";
 import PencilIcon from "icons/PencilIcon";
 import useBreakpoint from "hooks/useBreakpoint";
-import { MobileContentCell, DesktopCells } from "./components";
 import Form, { ProjectDataForm } from "./Form";
 import { Member, Project } from "store/project/reducer";
 import { ProjectData, getMembersOfProject } from "store/project/actions";
 import { DataAction } from "constant/enums";
-import { INITIAL_VALUES } from "./helpers";
+import { INITIAL_VALUES } from "./components/helpers";
 import { useAppDispatch } from "store/hooks";
+import DesktopCells from "./DesktopCells";
+import MobileContentCell from "./MobileContentCell";
 
 const ItemList = () => {
   const {
@@ -139,7 +140,7 @@ const ItemList = () => {
               <BodyCell align="left">
                 <IconButton
                   onClick={onActionToItem(DataAction.UPDATE, item)}
-                  tooltip="Sửa"
+                  tooltip="Edit"
                   variant="contained"
                   size="small"
                 >
@@ -177,19 +178,19 @@ const ItemList = () => {
 export default memo(ItemList);
 
 const DESKTOP_HEADER_LIST = [
-  { value: "STT", width: "5%", align: "center" },
+  { value: "#", width: "5%", align: "center" },
   {
-    value: "Tên dự án",
+    value: "Name",
     width: "30%",
     align: "left",
   },
   {
-    value: "Người phụ trách",
+    value: "Assigner",
     width: "30%",
     align: "left",
   },
-  { value: "Trạng thái", width: "20%" },
+  { value: "Status", width: "20%" },
   { value: "", width: "5%" },
 ];
 
-const MOBILE_HEADER_LIST = [{ value: "Dự án", width: "75%", align: "left" }];
+const MOBILE_HEADER_LIST = [{ value: "#", width: "75%", align: "left" }];

@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
@@ -17,8 +17,6 @@ import { GetEmployeeListQueries } from "store/company/actions";
 import { usePositionOptions } from "store/global/selectors";
 
 const Actions = () => {
-  const { filters, onGetEmployees, pageSize, pageIndex, onCreateEmployee } =
-    useEmployees();
   const {
     options,
     onGetOptions,
@@ -28,47 +26,37 @@ const Actions = () => {
     pageIndex: positionOptionsPageIndex,
   } = usePositionOptions();
 
-  const filtersRef = useRef<Params>(filters);
+  const { filters, onGetEmployees, pageSize, onCreateEmployee } =
+    useEmployees();
 
   const [isShow, onShow, onHide] = useToggle();
 
   const pathname = usePathname();
   const { push } = useRouter();
 
-  const onEmit = useCallback(
-    (newQueries?: Params) => {
-      const path = getPath(pathname, newQueries);
-      push(path);
-      onGetEmployees(newQueries as GetEmployeeListQueries);
-    },
-    [onGetEmployees, pathname, push],
-  );
+  const [queries, setQueries] = useState<Params>({});
 
-  const onChangeData = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (name: string, value: any) => {
-      const newQueries = {
-        ...filtersRef.current,
-        [name]: value,
-        pageIndex: 1,
-        pageSize,
-      };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onChangeQueries = (name: string, value: any) => {
+    setQueries((prevQueries) => ({ ...prevQueries, [name]: value }));
+  };
 
-      onEmit(newQueries);
-    },
-    [onEmit, pageSize],
-  );
+  const onSearch = () => {
+    const path = getPath(pathname, queries);
+    push(path);
 
-  const onRefresh = () => {
-    onGetEmployees({
-      ...filters,
-      pageIndex,
-      pageSize,
-    } as GetEmployeeListQueries);
+    onGetEmployees({ ...queries, pageIndex: 1, pageSize });
   };
 
   const onClear = () => {
-    onEmit({ pageIndex: 1, pageSize });
+    const newQueries = { pageIndex: 1, pageSize };
+    const path = getPath(pathname, newQueries);
+    push(path);
+    onGetEmployees(newQueries);
+  };
+
+  const onRefresh = () => {
+    onGetEmployees({ ...filters, pageIndex: 1, pageSize });
   };
 
   const onEndReached = () => {
@@ -89,17 +77,15 @@ const Actions = () => {
   }, [onGetOptions]);
 
   useEffect(() => {
-    filtersRef.current = filters;
+    setQueries(filters);
   }, [filters]);
 
   return (
     <>
       <Stack
-        direction={{ xs: "column", md: "row" }}
-        alignItems="center"
+        direction={{ xs: "column-reverse", md: "row" }}
+        alignItems={{ md: "center" }}
         justifyContent="space-between"
-        borderBottom="1px solid"
-        borderColor="grey.100"
         spacing={3}
         px={{ xs: 1, md: 3 }}
         py={1.5}
@@ -112,7 +98,7 @@ const Actions = () => {
           spacing={{ xs: 2, md: 0 }}
         >
           <Text variant="h4" display={{ md: "none" }}>
-            Danh sách nhân viên
+            Employees Management
           </Text>
           <Button
             onClick={onShow}
@@ -120,7 +106,7 @@ const Actions = () => {
             size="small"
             variant="primary"
           >
-            Thêm mới
+            Create new
           </Button>
         </Stack>
 
@@ -137,31 +123,31 @@ const Actions = () => {
           justifyContent="flex-end"
         >
           <Search
-            placeholder="Tìm kiếm theo email"
+            placeholder="Search by email"
             name="email"
-            onChange={onChangeData}
-            value={filters?.email}
+            onChange={onChangeQueries}
+            value={queries?.email}
             sx={{ width: 200 }}
           />
           <Stack direction="row" alignItems="center" spacing={3}>
             <Dropdown
-              placeholder="Chức vụ"
+              placeholder="Position"
               options={options}
               name="position"
-              onChange={onChangeData}
-              value={filters?.position}
+              onChange={onChangeQueries}
+              value={queries?.position}
               pending={positionOptionsIsFetching}
               onEndReached={onEndReached}
             />
             <Dropdown
-              placeholder="Trạng thái"
+              placeholder="Status"
               options={PAYMENT_OPTIONS}
               name="is_pay_user"
-              onChange={onChangeData}
-              value={Number(filters?.is_pay_user)}
+              onChange={onChangeQueries}
+              value={Number(queries?.is_pay_user)}
             />
             <Refresh onClick={onRefresh} />
-            {!!Object.keys(filters).length && <Clear onClick={onClear} />}
+            {!!Object.keys(queries).length && <Clear onClick={onClear} />}
           </Stack>
         </Stack>
       </Stack>

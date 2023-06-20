@@ -62,3 +62,32 @@ a {
     clip-path: inset(0.6px);
   }
 }
+
+@media screen and (min-width: 768px) {
+
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #B5B5C3;
+    border-radius: 2px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgba(134, 138, 166, 0.9);
+    border-radius: 2px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(134, 138, 166, 0.9);
+    cursor: pointer;
+  }
+
+}

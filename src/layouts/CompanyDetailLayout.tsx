@@ -4,7 +4,7 @@ import { TabList } from "components/sn-company-detail/components";
 import { COMPANIES_PATH } from "constant/paths";
 import { useEffect, useRef } from "react";
 import { useHeaderConfig } from "store/app/selectors";
-import { useCompanies, useCompany } from "store/company/selectors";
+import { useCompany, useCompanies } from "store/manager/selectors";
 import { getPath } from "utils/index";
 
 type CompanyDetailLayoutProps = {
@@ -45,7 +45,11 @@ const CompanyDetailLayout = ({ children, id }: CompanyDetailLayoutProps) => {
       prevPath,
     });
     return () => {
-      onUpdateHeaderConfig({ title: undefined, searchPlaceholder: undefined });
+      onUpdateHeaderConfig({
+        title: undefined,
+        searchPlaceholder: undefined,
+        prevPath: undefined,
+      });
     };
   }, [item?.name, onUpdateHeaderConfig]);
 

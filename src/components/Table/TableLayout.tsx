@@ -87,16 +87,23 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
   );
 
   useEffect(() => {
-    const newBodySx = refs?.reduce((out, item, index) => {
-      out[`& td:nth-of-type(${index + 1}), & th:nth-of-type(${index + 1})`] = {
-        minWidth: item?.current?.offsetWidth,
-        width: item?.current?.offsetWidth,
-        maxWidth: item?.current?.offsetWidth,
-        overflowX: "hidden",
-      };
-      return out;
-    }, {});
-    setBodySx(newBodySx);
+    let timeout: NodeJS.Timeout | null = null;
+
+    if (timeout) clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      const newBodySx = refs?.reduce((out, item, index) => {
+        out[`& td:nth-of-type(${index + 1}), & th:nth-of-type(${index + 1})`] =
+          {
+            minWidth: item?.current?.offsetWidth,
+            width: item?.current?.offsetWidth,
+            maxWidth: item?.current?.offsetWidth,
+            overflowX: "hidden",
+          };
+        return out;
+      }, {});
+      setBodySx(newBodySx);
+    }, 250);
   }, [headerList, refs, children, size, isExpandedSidebar]);
 
   return (
@@ -146,7 +153,8 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
       <Box
         maxHeight={HEIGHT_ROW * numberOfRows}
         sx={{
-          overflow: "auto",
+          overflowY: "auto",
+          overflowX: "hidden",
         }}
         ref={ref}
       >
@@ -160,7 +168,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                   ) : Boolean(error) ? (
                     error ?? AN_ERROR_TRY_RELOAD_PAGE
                   ) : noData ? (
-                    "Không có dữ liệu."
+                    "No data."
                   ) : null}
                 </CellBody>
               </TableRow>

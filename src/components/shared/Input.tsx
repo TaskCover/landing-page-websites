@@ -207,7 +207,7 @@ const getDefaultSx = (
         borderColor: "primary.main",
       },
       [`&.${inputBaseClasses.disabled}`]: {
-        color: "grey.300",
+        color: "grey.400",
       },
 
       [`&.${inputBaseClasses.sizeSmall}`]: {
@@ -250,7 +250,7 @@ const getDefaultSx = (
         lineHeight: "22px",
         height: "auto",
         "&.Mui-disabled": {
-          color: "grey.300",
+          color: "grey.400",
           WebkitTextFillColor: "unset",
         },
       },

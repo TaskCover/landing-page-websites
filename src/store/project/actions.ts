@@ -39,6 +39,7 @@ export type ProjectData = {
   type_project: string;
   status?: ProjectStatus;
   saved?: boolean;
+  avatar?: string[];
 };
 
 export const getProjectList = createAsyncThunk(
@@ -117,7 +118,7 @@ export const updateProject = createAsyncThunk(
 export const getMembersOfProject = createAsyncThunk(
   "project/getMembersOfProject",
   async ({ id, ...queries }: GetMembersOfProjectQueries & { id: string }) => {
-    queries = serverQueries(queries) as BaseQueries;
+    queries = serverQueries(queries, ["email"]) as BaseQueries;
 
     try {
       const response = await client.get(

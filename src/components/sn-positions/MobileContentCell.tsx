@@ -20,14 +20,14 @@ const MobileContentCell = (props: MobileContentCellProps) => {
   return (
     <BodyCell align="left">
       <Stack spacing={2} py={1.5}>
-        <InformationItem label="Tên chức vụ">{item?.name}</InformationItem>
-        <InformationItem label="Người tạo">
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar size={32} />
+        <InformationItem label="Name">{item?.name}</InformationItem>
+        <InformationItem label="Creator">
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar size={32} src={item.created_by?.avatar?.link} />
             <Text variant="h6">{item.created_by?.fullname}</Text>
           </Stack>
         </InformationItem>
-        <InformationItem label="Ngày tạo">
+        <InformationItem label="Creation date">
           {formatDate(item.created_time)}
         </InformationItem>
         <InformationItem label="Số người giữ chức vụ">

@@ -1,11 +1,11 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import { Clear, Dropdown, Refresh, Switch } from "components/Filters";
-import { INITIAL_VALUES, STATUS_OPTIONS } from "./helpers";
+import { INITIAL_VALUES, STATUS_OPTIONS } from "./components/helpers";
 import { useProjects } from "store/project/selectors";
 import { getPath } from "utils/index";
 import { usePathname, useRouter } from "next/navigation";
@@ -16,54 +16,47 @@ import { GetProjectListQueries } from "store/project/actions";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 const Actions = () => {
-  const { filters, onGetProjects, pageSize, pageIndex, onCreateProject } =
-    useProjects();
-
-  const [isShow, onShow, onHide] = useToggle();
-
-  const filtersRef = useRef<Params>(filters);
+  const { filters, onGetProjects, pageSize, onCreateProject } = useProjects();
 
   const pathname = usePathname();
   const { push } = useRouter();
+  const [isShow, onShow, onHide] = useToggle();
 
-  const onEmit = useCallback(
-    (newQueries?: Params) => {
-      const path = getPath(pathname, newQueries);
-      push(path);
-      onGetProjects(newQueries as GetProjectListQueries);
-    },
-    [onGetProjects, pathname, push],
-  );
+  const [queries, setQueries] = useState<Params>({});
 
-  const onChangeData = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (name: string, value: any) => {
-      const newQueries = {
-        ...filtersRef.current,
-        [name]: name === "sort" && value ? LATEST_VALUE : value,
-        pageIndex: 1,
-        pageSize,
-      };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onChangeQueries = (name: string, value: any) => {
+    setQueries((prevQueries) => ({
+      ...prevQueries,
+      [name]:
+        name === "sort" && value
+          ? LATEST_VALUE
+          : name === "sort"
+          ? undefined
+          : value,
+    }));
+  };
 
-      onEmit(newQueries);
-    },
-    [onEmit, pageSize],
-  );
+  const onSearch = () => {
+    const path = getPath(pathname, queries);
+    push(path);
 
-  const onRefresh = () => {
-    onGetProjects({
-      ...filters,
-      pageIndex,
-      pageSize,
-    } as GetProjectListQueries);
+    onGetProjects({ ...queries, pageIndex: 1, pageSize });
   };
 
   const onClear = () => {
-    onEmit({ pageIndex: 1, pageSize });
+    const newQueries = { pageIndex: 1, pageSize };
+    const path = getPath(pathname, newQueries);
+    push(path);
+    onGetProjects(newQueries);
+  };
+
+  const onRefresh = () => {
+    onGetProjects({ ...filters, pageIndex: 1, pageSize });
   };
 
   useEffect(() => {
-    filtersRef.current = filters;
+    setQueries(filters);
   }, [filters]);
 
   return (
@@ -85,7 +78,7 @@ const Actions = () => {
           spacing={{ xs: 2, md: 0 }}
         >
           <Text variant="h4" display={{ md: "none" }}>
-            Quản lý dự án
+            Project management
           </Text>
           <Button
             onClick={onShow}
@@ -93,19 +86,18 @@ const Actions = () => {
             size="small"
             variant="primary"
           >
-            Thêm mới
+            Create new
           </Button>
         </Stack>
 
         <Stack
-          pt={{ xs: 2, md: 1.25 }}
-          direction={{ sm: "row" }}
+          direction={{ xs: "column", md: "row" }}
           alignItems="center"
-          width={{ xs: "100%", sm: "initial" }}
           spacing={3}
           py={1.25}
           px={2}
           borderRadius={1}
+          width={{ xs: "100%", md: "fit-content" }}
           border="1px solid"
           borderColor="grey.100"
           justifyContent="flex-end"
@@ -118,32 +110,36 @@ const Actions = () => {
           >
             <Switch
               name="sort"
-              onChange={onChangeData}
+              onChange={onChangeQueries}
               size="small"
               reverse
-              label="Dự án gần đây"
-              value={filters?.sort === LATEST_VALUE}
+              label="Recent project"
+              value={queries?.sort === LATEST_VALUE}
             />
             <Switch
               name="saved"
-              onChange={onChangeData}
+              onChange={onChangeQueries}
               size="small"
               reverse
-              label="Dự án đã lưu"
-              value={filters?.saved}
+              label="Saved project"
+              value={queries?.saved}
+            />
+            <Dropdown
+              placeholder="Trạng thái"
+              options={STATUS_OPTIONS}
+              name="status"
+              onChange={onChangeQueries}
+              value={queries?.status}
             />
           </Stack>
 
-          <Dropdown
-            placeholder="Trạng thái"
-            options={STATUS_OPTIONS}
-            name="status"
-            onChange={onChangeData}
-            value={filters?.status}
-          />
-
-          <Refresh onClick={onRefresh} />
-          {!!Object.keys(filters).length && <Clear onClick={onClear} />}
+          <Stack direction="row" alignItems="center" spacing={3}>
+            <Button size="small" onClick={onSearch} variant="secondary">
+              Search
+            </Button>
+            <Refresh onClick={onRefresh} />
+            {!!Object.keys(queries).length && <Clear onClick={onClear} />}
+          </Stack>
         </Stack>
       </Stack>
       {isShow && (

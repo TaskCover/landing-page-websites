@@ -26,7 +26,7 @@ import { MenuItemProps } from "./helpers";
 
 const Menu = () => {
   return (
-    <Stack width="100%" spacing={1.5}>
+    <Stack width="100%" spacing={1.5} overflow="auto">
       {DATA.map((item) => (
         <MenuItem key={item.label} {...item} />
       ))}

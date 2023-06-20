@@ -2,8 +2,8 @@
 
 import { memo, useCallback, useEffect, useRef } from "react";
 import { Stack } from "@mui/material";
-import { Search } from "components/Filters";
-import { cleanObject, getPath } from "utils/index";
+import { Clear, Search, Refresh } from "components/Filters";
+import { getPath } from "utils/index";
 import { usePathname, useRouter } from "next/navigation";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import AddMembers from "./AddMembers";
@@ -34,6 +34,21 @@ const Actions = () => {
     [id, onGetMembersOfProject, pageSize, pathname, push],
   );
 
+  const onClear = () => {
+    if (!id) return;
+
+    const newQueries = { pageIndex: 1, pageSize };
+    const path = getPath(pathname, newQueries);
+    push(path);
+    onGetMembersOfProject(id, newQueries);
+  };
+
+  const onRefresh = () => {
+    if (!id) return;
+
+    onGetMembersOfProject(id, { ...filters, pageIndex: 1, pageSize });
+  };
+
   useEffect(() => {
     filtersRef.current = filters;
   }, [filters]);
@@ -50,13 +65,17 @@ const Actions = () => {
       pb={1.5}
     >
       <AddMembers />
-
-      <Search
-        placeholder="Tìm kiếm theo email"
-        name="search"
-        onChange={onChangeData}
-        value={filters?.search}
-      />
+      <Stack direction="row" alignItems="center" spacing={3}>
+        <Search
+          placeholder="Search by email"
+          name="email"
+          onChange={onChangeData}
+          value={filters?.email}
+          emitWhenEnter
+        />
+        <Refresh onClick={onRefresh} />
+        {!!Object.keys(filters).length && <Clear onClick={onClear} />}
+      </Stack>
     </Stack>
   );
 };

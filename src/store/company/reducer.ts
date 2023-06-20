@@ -1,4 +1,4 @@
-import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   getEmployees,
   GetEmployeeListQueries,
@@ -11,25 +11,13 @@ import {
   updateProjectType,
   deleteProjectType,
   deletePosition,
-  getCompany,
-  updateCompany,
+  updateMyCompany,
   getCostHistory,
-  getCompanyList,
-  GetCompanyListQueries,
   getPositionList,
-  GetStatementHistoryQueries,
-  getStatementHistory,
   getMyCompany,
-  approveOrReject,
-  CompanyStatus,
+  deleteEmployees,
 } from "./actions";
-import {
-  BaseQueries,
-  ItemListResponse,
-  Option,
-  Paging,
-  User,
-} from "constant/types";
+import { ItemListResponse, Paging, User } from "constant/types";
 import { DataStatus } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { getFiltersFromQueries } from "utils/index";
@@ -59,16 +47,7 @@ export interface CostHistory {
   receiver: string;
   value: number;
 }
-export interface StatementHistory {
-  id: string;
-  date_of_payment: string;
-  expired_date: string;
-  name: string;
-  number_of_paid: number;
-  number_of_unpaid: number;
-  total_account: number;
-  amount_of_money: number;
-}
+
 export interface ProjectType {
   id: string;
   name: string;
@@ -93,9 +72,11 @@ export interface Company {
   total_position?: number;
   date_end_using: string;
   date_start_using: string;
-  is_approve?: boolean;
-  is_pay_company: boolean;
+  is_approve?: boolean | null;
+  is_pay_company: boolean | null;
   tax_code: string;
+
+  owner?: User;
 
   account_paid?: {
     total_paid: number;
@@ -103,11 +84,6 @@ export interface Company {
     total_account: number;
   };
 }
-
-type CompaniesStatistic = {
-  total_company?: number;
-  total_company_paid?: number;
-};
 
 export interface CompanyState {
   employees: Employee[];
@@ -135,10 +111,6 @@ export interface CompanyState {
   projectTypesError?: string;
   projectTypesPaging: Paging;
 
-  item?: Company;
-  itemStatus: DataStatus;
-  itemError?: string;
-
   myItem?: Company;
   myItemStatus: DataStatus;
   myItemError?: string;
@@ -147,28 +119,6 @@ export interface CompanyState {
   costHistoriesStatus: DataStatus;
   costHistoriesPaging: Paging;
   costHistoriesError?: string;
-
-  items: Company[];
-  itemsStatus: DataStatus;
-  itemsPaging: Paging;
-  itemsError?: string;
-  itemsFilters: Omit<GetCompanyListQueries, "pageIndex" | "pageSize">;
-  itemsStatistic?: CompaniesStatistic;
-
-  itemOptions: Option[];
-  itemOptionsStatus: DataStatus;
-  itemOptionsPaging: Paging;
-  itemOptionsError?: string;
-  itemOptionsFilters: Omit<BaseQueries, "pageIndex" | "pageSize">;
-
-  statementHistories: StatementHistory[];
-  statementHistoriesStatus: DataStatus;
-  statementHistoriesPaging: Paging;
-  statementHistoriesError?: string;
-  statementHistoriesFilters: Omit<
-    GetStatementHistoryQueries,
-    "pageIndex" | "pageSize"
-  >;
 }
 
 const initialState: CompanyState = {
@@ -190,34 +140,19 @@ const initialState: CompanyState = {
   projectTypesStatus: DataStatus.IDLE,
   projectTypesPaging: DEFAULT_PAGING,
 
-  itemStatus: DataStatus.IDLE,
-
   myItemStatus: DataStatus.IDLE,
 
   costHistories: [],
   costHistoriesStatus: DataStatus.IDLE,
   costHistoriesPaging: DEFAULT_PAGING,
-
-  items: [],
-  itemsStatus: DataStatus.IDLE,
-  itemsPaging: DEFAULT_PAGING,
-  itemsFilters: {},
-
-  itemOptions: [],
-  itemOptionsStatus: DataStatus.IDLE,
-  itemOptionsPaging: DEFAULT_PAGING,
-  itemOptionsFilters: {},
-
-  statementHistories: [],
-  statementHistoriesStatus: DataStatus.IDLE,
-  statementHistoriesPaging: DEFAULT_PAGING,
-  statementHistoriesFilters: {},
 };
 
 const companySlice = createSlice({
   name: "company",
   initialState,
-  reducers: {},
+  reducers: {
+    reset: () => initialState,
+  },
   extraReducers: (builder) =>
     builder
       .addCase(getEmployees.pending, (state, action) => {
@@ -231,10 +166,12 @@ const companySlice = createSlice({
         if (action.meta.arg?.concat && action.meta.arg.pageIndex === 1) {
           state.employeeOptions = [];
         }
-        state[`${prefixKey}Paging`].pageIndex =
-          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
-        state[`${prefixKey}Paging`].pageSize =
-          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
+        state[`${prefixKey}Paging`].pageIndex = Number(
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        );
+        state[`${prefixKey}Paging`].pageSize = Number(
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        );
       })
       .addCase(
         getEmployees.fulfilled,
@@ -272,6 +209,14 @@ const companySlice = createSlice({
         createEmployee.fulfilled,
         (state, action: PayloadAction<Employee>) => {
           state.employees.unshift(action.payload);
+
+          if (state.employees.length > state.employeesPaging.pageSize) {
+            state.employees.pop();
+            if (state.employeesPaging.totalPages !== undefined) {
+              state.employeesPaging.totalPages += 1;
+            }
+          }
+
           if (state.employeesPaging.totalItems !== undefined) {
             state.employeesPaging.totalItems += 1;
           }
@@ -291,13 +236,27 @@ const companySlice = createSlice({
           }
         },
       )
+      .addCase(
+        deleteEmployees.fulfilled,
+        (state, action: PayloadAction<string[]>) => {
+          state.employees = state.employees.filter(
+            (item) => !action.payload.includes(item.id),
+          );
 
+          if (state.employeesPaging.totalItems !== undefined) {
+            state.employeesPaging.totalItems -= action.payload.length;
+          }
+        },
+      )
+      // POSITIONS
       .addCase(getPositionList.pending, (state, action) => {
         state.positionsStatus = DataStatus.LOADING;
-        state.positionsPaging.pageIndex =
-          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
-        state.positionsPaging.pageSize =
-          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
+        state.positionsPaging.pageIndex = Number(
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        );
+        state.positionsPaging.pageSize = Number(
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        );
       })
       .addCase(
         getPositionList.fulfilled,
@@ -318,7 +277,20 @@ const companySlice = createSlice({
       .addCase(
         createPosition.fulfilled,
         (state, action: PayloadAction<Position>) => {
-          state.positions.unshift(action.payload);
+          state.positions.unshift({
+            ...action.payload,
+            total_member_of_position: 0,
+          });
+          if (state.positions.length > state.positionsPaging.pageSize) {
+            state.positions.pop();
+            if (state.positionsPaging.totalPages !== undefined) {
+              state.positionsPaging.totalPages += 1;
+            }
+          }
+
+          if (state.positionsPaging.totalItems !== undefined) {
+            state.positionsPaging.totalItems += 1;
+          }
         },
       )
       .addCase(
@@ -349,10 +321,12 @@ const companySlice = createSlice({
 
       .addCase(getProjectTypeList.pending, (state, action) => {
         state.projectTypesStatus = DataStatus.LOADING;
-        state.projectTypesPaging.pageIndex =
-          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
-        state.projectTypesPaging.pageSize =
-          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
+        state.projectTypesPaging.pageIndex = Number(
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        );
+        state.projectTypesPaging.pageSize = Number(
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        );
       })
       .addCase(
         getProjectTypeList.fulfilled,
@@ -377,6 +351,16 @@ const companySlice = createSlice({
         createProjectType.fulfilled,
         (state, action: PayloadAction<ProjectType>) => {
           state.projectTypes.unshift(action.payload);
+          if (state.projectTypes.length > state.projectTypesPaging.pageSize) {
+            state.projectTypes.pop();
+            if (state.projectTypesPaging.totalPages !== undefined) {
+              state.projectTypesPaging.totalPages += 1;
+            }
+          }
+
+          if (state.projectTypesPaging.totalItems !== undefined) {
+            state.projectTypesPaging.totalItems += 1;
+          }
         },
       )
       .addCase(
@@ -405,23 +389,6 @@ const companySlice = createSlice({
         },
       )
 
-      .addCase(getCompany.pending, (state) => {
-        state.itemStatus = DataStatus.LOADING;
-      })
-      .addCase(
-        getCompany.fulfilled,
-        (state, action: PayloadAction<Company>) => {
-          state.item = action.payload;
-          state.itemStatus = DataStatus.SUCCEEDED;
-          state.itemError = undefined;
-        },
-      )
-      .addCase(getCompany.rejected, (state, action) => {
-        state.item = undefined;
-        state.itemStatus = DataStatus.FAILED;
-        state.itemError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
-      })
-
       .addCase(getMyCompany.pending, (state) => {
         state.myItemStatus = DataStatus.LOADING;
       })
@@ -440,10 +407,10 @@ const companySlice = createSlice({
       })
 
       .addCase(
-        updateCompany.fulfilled,
+        updateMyCompany.fulfilled,
         (state, action: PayloadAction<Company>) => {
-          if (state?.item?.id === action.payload.id) {
-            state.item = action.payload;
+          if (state?.myItem?.id === action.payload.id) {
+            state.myItem = Object.assign(state.myItem, action.payload);
           }
         },
       )
@@ -451,10 +418,12 @@ const companySlice = createSlice({
       .addCase(getCostHistory.pending, (state, action) => {
         state.costHistoriesStatus = DataStatus.LOADING;
 
-        state.costHistoriesPaging.pageIndex =
-          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
-        state.costHistoriesPaging.pageSize =
-          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
+        state.costHistoriesPaging.pageIndex = Number(
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        );
+        state.costHistoriesPaging.pageSize = Number(
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        );
       })
       .addCase(
         getCostHistory.fulfilled,
@@ -473,109 +442,9 @@ const companySlice = createSlice({
         state.costHistories = [];
         state.costHistoriesStatus = DataStatus.FAILED;
         state.costHistoriesError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
-      })
-      .addCase(getCompanyList.pending, (state, action) => {
-        const prefixKey = action.meta.arg["concat"] ? "itemOptions" : "items";
-
-        state[`${prefixKey}Status`] = DataStatus.LOADING;
-        state[`${prefixKey}Filters`] = getFiltersFromQueries(action.meta.arg);
-
-        if (action.meta.arg?.concat && action.meta.arg.pageIndex === 1) {
-          state.itemOptions = [];
-        }
-        state[`${prefixKey}Paging`].pageIndex =
-          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
-        state[`${prefixKey}Paging`].pageSize =
-          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
-      })
-      .addCase(
-        getCompanyList.fulfilled,
-        (
-          state,
-          action: PayloadAction<ItemListResponse & CompaniesStatistic>,
-        ) => {
-          const {
-            items,
-            concat,
-            total_company_paid,
-            total_company,
-            ...paging
-          } = action.payload;
-
-          if (concat) {
-            const newOptions = (items as Company[]).map((item) => ({
-              label: item.name,
-              value: item.id,
-            }));
-            state.itemOptions = state.itemOptions.concat(newOptions);
-          } else {
-            state.items = items as Company[];
-            state.itemsStatistic = {
-              total_company_paid,
-              total_company,
-            };
-          }
-
-          const prefixKey = concat ? "itemOptions" : "items";
-
-          state[`${prefixKey}Status`] = DataStatus.SUCCEEDED;
-          state[`${prefixKey}Error`] = undefined;
-          state[`${prefixKey}Paging`] = Object.assign(
-            state[`${prefixKey}Paging`],
-            paging,
-          );
-        },
-      )
-      .addCase(getCompanyList.rejected, (state, action) => {
-        const prefixKey = action.meta.arg["concat"] ? "itemOptions" : "items";
-        if (!action.meta.arg["concat"]) {
-          state.itemsStatistic = undefined;
-        }
-
-        state[`${prefixKey}Status`] = DataStatus.FAILED;
-        state[`${prefixKey}Error`] =
-          action.error?.message ?? AN_ERROR_TRY_AGAIN;
-      })
-
-      .addCase(getStatementHistory.pending, (state, action) => {
-        state.statementHistoriesStatus = DataStatus.LOADING;
-
-        state.statementHistoriesFilters = getFiltersFromQueries(
-          action.meta.arg,
-        );
-
-        state.statementHistoriesPaging.pageIndex =
-          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
-        state.statementHistoriesPaging.pageSize =
-          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
-      })
-      .addCase(
-        getStatementHistory.fulfilled,
-        (state, action: PayloadAction<ItemListResponse>) => {
-          const { items, ...paging } = action.payload;
-          state.statementHistories = items as StatementHistory[];
-          state.statementHistoriesStatus = DataStatus.SUCCEEDED;
-          state.statementHistoriesError = undefined;
-          state.statementHistoriesPaging = Object.assign(
-            state.statementHistoriesPaging,
-            paging,
-          );
-        },
-      )
-      .addCase(getStatementHistory.rejected, (state, action) => {
-        state.statementHistories = [];
-        state.statementHistoriesStatus = DataStatus.FAILED;
-        state.statementHistoriesError =
-          action.error?.message ?? AN_ERROR_TRY_AGAIN;
-      })
-      .addCase(approveOrReject.fulfilled, (state, action) => {
-        state.items = state.items.map((item) => {
-          if (action.payload.includes(item.id)) {
-            return { ...item, is_approve: Boolean(action.meta.arg.type) };
-          }
-          return item;
-        });
       }),
 });
+
+export const { reset } = companySlice.actions;
 
 export default companySlice.reducer;

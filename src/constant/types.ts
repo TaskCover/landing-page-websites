@@ -38,6 +38,9 @@ export interface User {
     id: string;
   };
   roles: string[];
+  avatar?: {
+    link: string;
+  };
 }
 
 export interface Paging {

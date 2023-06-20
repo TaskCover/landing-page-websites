@@ -39,7 +39,7 @@ const Actions = () => {
           spacing={{ xs: 2, md: 0 }}
         >
           <Text variant="h4" display={{ md: "none" }}>
-            Danh sách chức vụ
+            Project types management
           </Text>
           <Button
             onClick={onShow}
@@ -47,7 +47,7 @@ const Actions = () => {
             size="small"
             variant="primary"
           >
-            Thêm mới
+            Create new
           </Button>
         </Stack>
         <Refresh onClick={onRefresh} />
