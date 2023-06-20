@@ -3,7 +3,7 @@ import { Stack } from "@mui/material";
 import { Text } from "components/shared";
 import { formatDate, formatNumber } from "utils/index";
 import { BodyCell } from "components/Table";
-import { StatementHistory } from "store/company/reducer";
+import { StatementHistory } from "store/manager/reducer";
 
 type MobileContentCellProps = {
   item: StatementHistory;

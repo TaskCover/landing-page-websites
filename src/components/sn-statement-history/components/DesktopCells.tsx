@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { StatementHistory } from "store/company/reducer";
+import { StatementHistory } from "store/manager/reducer";
 import { BodyCell } from "components/Table";
 import { DATE_TIME_FORMAT_SLASH } from "constant/index";
 import { formatDate, formatNumber } from "utils/index";
