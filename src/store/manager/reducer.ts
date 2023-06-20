@@ -11,23 +11,12 @@ import {
   GetStatementHistoryQueries,
   updateCompany,
 } from "./actions";
-import {
-  BaseQueries,
-  ItemListResponse,
-  Option,
-  Paging,
-  User,
-} from "constant/types";
+import { BaseQueries, ItemListResponse, Option, Paging } from "constant/types";
 import { DataStatus } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { getFiltersFromQueries } from "utils/index";
-import { Position } from "react-beautiful-dnd";
-import {
-  Employee,
-  ProjectType,
-  CostHistory,
-  Company,
-} from "store/company/reducer";
+
+import { Employee, Company } from "store/company/reducer";
 
 export interface StatementHistory {
   id: string;
