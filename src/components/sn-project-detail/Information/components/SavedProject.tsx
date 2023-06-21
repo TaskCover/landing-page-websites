@@ -6,11 +6,15 @@ import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
+import { NS_COMMON, NS_PROJECT } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const SavedProject = () => {
   const { item } = useProject();
   const { onUpdateProject } = useProjects();
   const { onAddSnackbar } = useSnackbar();
+  const commonT = useTranslations(NS_COMMON);
+  const projectT = useTranslations(NS_PROJECT);
 
   const [isShow, onShow, onHide] = useToggle();
 
@@ -19,7 +23,10 @@ const SavedProject = () => {
     try {
       const newData = await onUpdateProject(item.id, { saved: !item.saved });
       if (newData) {
-        onAddSnackbar("Update saved status successfully!", "success");
+        onAddSnackbar(
+          projectT("detail.notification.changeStatusSuccess"),
+          "success",
+        );
         onHide();
       }
     } catch (error) {
@@ -44,8 +51,10 @@ const SavedProject = () => {
       <ConfirmDialog
         open={isShow}
         onClose={onHide}
-        title="Confirm save status change"
-        content={`Are you sure to ${item.saved ? "un" : ""} save?`}
+        title={projectT("detail.confirmChangeSaveStatus.title")}
+        content={projectT("detail.confirmChangeSaveStatus.content", {
+          value: projectT(item.saved ? "detail.unSave" : "detail.save"),
+        })}
         onSubmit={onSubmit}
       />
     </>

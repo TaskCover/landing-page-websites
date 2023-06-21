@@ -25,4 +25,49 @@ export type ProjectDictionary = {
       choosePositionFirst: string;
     };
   };
+  tabList: {
+    tasks: string;
+    activities: string;
+    costHistory: string;
+    members: string;
+    information: string;
+  };
+  detail: {
+    head: {
+      title: string;
+    };
+    changeStatus: string;
+    changeStatusProject: string;
+    save: string;
+    unSave: string;
+    confirmChangeSaveStatus: {
+      title: string;
+      content: string;
+    };
+    notification: {
+      changeStatusSuccess: string;
+      changeSaveStatusSuccess: string;
+    };
+    workingHoursActual: string;
+    costSpent: string;
+  };
+  detailMembers: {
+    head: {
+      title: string;
+    };
+    member: string;
+    hoursWorked: string;
+    dateAddedProject: string;
+    addMember: string;
+    addMembersToProject: string;
+    removeFromProject: string;
+    confirmRemove: {
+      title: string;
+      content: string;
+    };
+    notification: {
+      updateSuccess: string;
+      removeSuccess: string;
+    };
+  };
 };

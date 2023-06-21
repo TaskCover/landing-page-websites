@@ -9,11 +9,15 @@ import CircleTickIcon from "icons/CircleTickIcon";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
 import { ProjectStatus } from "store/project/actions";
+import { useTranslations } from "next-intl";
+import { NS_COMMON, NS_PROJECT } from "constant/index";
 
 const StatusProject = () => {
   const { onUpdateProject } = useProjects();
   const { onAddSnackbar } = useSnackbar();
   const { item } = useProject();
+  const commonT = useTranslations(NS_COMMON);
+  const projectT = useTranslations(NS_PROJECT);
 
   const [isShow, onShow, onHide] = useToggle();
   const [status, setStatus] = useState<ProjectStatus | undefined>();
@@ -30,7 +34,10 @@ const StatusProject = () => {
     try {
       const newData = await onUpdateProject(item.id, { status });
       if (newData) {
-        onAddSnackbar("Update status successfully!", "success");
+        onAddSnackbar(
+          projectT("detail.notification.changeStatusSuccess"),
+          "success",
+        );
         onHide();
       }
     } catch (error) {
@@ -47,13 +54,13 @@ const StatusProject = () => {
   return (
     <>
       <Button onClick={onShow} variant="secondary" size="small">
-        Change status
+        {projectT("detail.changeStatus")}
       </Button>
 
       <FormLayout
         open={isShow}
         onClose={onHide}
-        label="Change project status"
+        label={projectT("detail.changeStatusProject")}
         onSubmit={onSubmit}
         disabled={!status}
         sx={{
@@ -78,7 +85,7 @@ const StatusProject = () => {
                 checkedIcon={<CircleTickIcon color="success" />}
                 sx={{ color: "grey.300" }}
               />
-              <Text variant="body2">{item.label}</Text>
+              <Text variant="body2">{commonT(item.label)}</Text>
             </Stack>
           ))}
         </Stack>

@@ -52,6 +52,7 @@ export type CommonDictionary = {
   createNew: string;
   update: string;
   edit: string;
+  close: string;
   search: string;
   assigner: string;
   name: string;
@@ -64,4 +65,5 @@ export type CommonDictionary = {
     close: string;
     pause: string;
   };
+  searchBy: string;
 };

@@ -55,6 +55,7 @@ export const CommonLang: CommonDictionary = {
   createNew: "Thêm mới",
   update: "Cập nhật",
   edit: "Sửa",
+  close: "Đóng",
   search: "Tìm kiếm",
   assigner: "Người phụ trách",
   name: "Tên",
@@ -67,4 +68,5 @@ export const CommonLang: CommonDictionary = {
     close: "Kết thúc",
     pause: "Tạm dừng",
   },
+  searchBy: "Tìm kiếm theo {name}",
 };
