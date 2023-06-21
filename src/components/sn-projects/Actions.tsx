@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState, useEffect, useRef } from "react";
+import { memo, useState, useEffect, useRef, use, useMemo } from "react";
 import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
@@ -12,17 +12,26 @@ import { usePathname, useRouter } from "next-intl/client";
 import useToggle from "hooks/useToggle";
 import { DataAction } from "constant/enums";
 import Form, { ProjectDataForm } from "./Form";
-import { GetProjectListQueries } from "store/project/actions";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { useTranslations } from "next-intl";
+import { NS_COMMON, NS_PROJECT } from "constant/index";
 
 const Actions = () => {
   const { filters, onGetProjects, pageSize, onCreateProject } = useProjects();
+  const commonT = useTranslations(NS_COMMON);
+  const projectT = useTranslations(NS_PROJECT);
 
   const pathname = usePathname();
   const { push } = useRouter();
   const [isShow, onShow, onHide] = useToggle();
 
   const [queries, setQueries] = useState<Params>({});
+
+  const statusOptions = useMemo(
+    () =>
+      STATUS_OPTIONS.map((item) => ({ ...item, label: commonT(item.label) })),
+    [commonT],
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (name: string, value: any) => {
@@ -78,7 +87,7 @@ const Actions = () => {
           spacing={{ xs: 2, md: 0 }}
         >
           <Text variant="h4" display={{ md: "none" }}>
-            Project management
+            {projectT("list.title")}
           </Text>
           <Button
             onClick={onShow}
@@ -86,7 +95,7 @@ const Actions = () => {
             size="small"
             variant="primary"
           >
-            Create new
+            {commonT("createNew")}
           </Button>
         </Stack>
 
@@ -113,7 +122,7 @@ const Actions = () => {
               onChange={onChangeQueries}
               size="small"
               reverse
-              label="Recent project"
+              label={projectT("list.filter.recent")}
               value={queries?.sort === LATEST_VALUE}
             />
             <Switch
@@ -121,12 +130,12 @@ const Actions = () => {
               onChange={onChangeQueries}
               size="small"
               reverse
-              label="Saved project"
+              label={projectT("list.filter.saved")}
               value={queries?.saved}
             />
             <Dropdown
-              placeholder="Trạng thái"
-              options={STATUS_OPTIONS}
+              placeholder={commonT("status")}
+              options={statusOptions}
               name="status"
               onChange={onChangeQueries}
               value={queries?.status}
@@ -135,7 +144,7 @@ const Actions = () => {
 
           <Stack direction="row" alignItems="center" spacing={3}>
             <Button size="small" onClick={onSearch} variant="secondary">
-              Search
+              {commonT("search")}
             </Button>
             <Refresh onClick={onRefresh} />
             {!!Object.keys(queries).length && <Clear onClick={onClear} />}

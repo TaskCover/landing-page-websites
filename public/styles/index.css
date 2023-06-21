@@ -64,8 +64,6 @@ a {
 }
 
 @media screen and (min-width: 768px) {
-
-
   /* width */
   ::-webkit-scrollbar {
     width: 6px;
@@ -74,7 +72,7 @@ a {
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: #B5B5C3;
+    background: #b5b5c3;
     border-radius: 2px;
   }
 
@@ -89,5 +87,4 @@ a {
     background: rgba(134, 138, 166, 0.9);
     cursor: pointer;
   }
-
 }

@@ -15,10 +15,18 @@ export const CommonLang: CommonDictionary = {
       existed: "{name} already exists in the system.",
       notExist: "{name} does not exist in the system.",
       incorrect: "{name} is incorrect.",
+      overMax:
+        "{name} is too long, maximum {max, plural, =0 {no characters} =1 {one character} other {# characters}}",
+      datePast: "{name} cannot be a date in the past.",
+      gte: "{name} must be greater than or equal to {name2}",
     },
     title: {
       upload: "Upload",
       uploadImage: "Upload",
+      assigner: "Assigner",
+      startDate: "Start date",
+      endDate: "End date",
+      description: "Description",
     },
     confirm: "Confirm",
     cancel: "Cancel",
@@ -35,4 +43,29 @@ export const CommonLang: CommonDictionary = {
   position: "Position",
   fullName: "Full name",
   phone: "Phone number",
+  status: "Status",
+  filter: {
+    refresh: "Refresh data",
+    clear: "Clear filters",
+    status: {
+      active: "Activated",
+      close: "Closed",
+      pause: "Paused",
+    },
+  },
+  createNew: "Create new",
+  update: "Update",
+  edit: "Edit",
+  search: "Search",
+  assigner: "Assigner",
+  name: "Name",
+  paging: {
+    show: "Showing",
+    outOf: "per page out of {count}",
+  },
+  statusEnum: {
+    active: "Activated",
+    close: "Closed",
+    pause: "Paused",
+  },
 };

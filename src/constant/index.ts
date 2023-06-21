@@ -37,6 +37,7 @@ export const NS_COMMON = "common";
 export const NS_AUTH = "auth";
 export const NS_LAYOUT = "layout";
 export const NS_ACCOUNT = "account";
+export const NS_PROJECT = "project";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg"];
 

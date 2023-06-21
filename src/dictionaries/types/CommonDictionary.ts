@@ -13,10 +13,17 @@ export type CommonDictionary = {
       existed: string;
       notExist: string;
       incorrect: string;
+      overMax: string;
+      datePast: string;
+      gte: string;
     };
     title: {
       upload: string;
       uploadImage: string;
+      assigner: string;
+      startDate: string;
+      endDate: string;
+      description: string;
     };
     confirm: string;
     cancel: string;
@@ -32,4 +39,29 @@ export type CommonDictionary = {
   position: string;
   fullName: string;
   phone: string;
+  status: string;
+  filter: {
+    refresh: string;
+    clear: string;
+    status: {
+      active: string;
+      close: string;
+      pause: string;
+    };
+  };
+  createNew: string;
+  update: string;
+  edit: string;
+  search: string;
+  assigner: string;
+  name: string;
+  paging: {
+    show: string;
+    outOf: string;
+  };
+  statusEnum: {
+    active: string;
+    close: string;
+    pause: string;
+  };
 };

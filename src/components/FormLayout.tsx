@@ -2,6 +2,8 @@ import { CircularProgress, Stack } from "@mui/material";
 import { memo } from "react";
 import DialogLayout, { DialogLayoutProps } from "./DialogLayout";
 import { Button, Text } from "./shared";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 type FormLayoutProps = {
   label: string;
@@ -13,10 +15,11 @@ type FormLayoutProps = {
 } & DialogLayoutProps;
 
 const FormLayout = (props: FormLayoutProps) => {
+  const commonT = useTranslations(NS_COMMON);
   const {
     label,
-    submitText = "Confirm",
-    cancelText = "Cancel",
+    submitText = commonT("form.confirm"),
+    cancelText = commonT("form.cancel"),
     children,
     disabled,
     submitting,

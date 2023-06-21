@@ -7,6 +7,8 @@ import { useEmployeeOptions } from "store/company/selectors";
 import { Member } from "./helpers";
 import MemberItem from "./MemberItem";
 import { usePositionOptions } from "store/global/selectors";
+import { NS_PROJECT, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type SelectMembersProps = {
   value?: Member[];
@@ -21,6 +23,7 @@ const SelectMembers = (props: SelectMembersProps) => {
   const popoverId = useId();
   const { items } = useEmployeeOptions();
   const { onGetOptions } = usePositionOptions();
+  const projectT = useTranslations(NS_PROJECT);
 
   const onOpen = (event: MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
@@ -80,7 +83,7 @@ const SelectMembers = (props: SelectMembersProps) => {
       >
         <Stack flex={1} spacing={0.5}>
           <Text variant="caption" color="grey.300">
-            Members
+            {projectT("list.form.title.members")}
           </Text>
           <Stack
             direction="row"
