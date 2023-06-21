@@ -2,7 +2,12 @@
 
 import { Box, Stack } from "@mui/material";
 import { Button, IconButton, Input, Text } from "components/shared";
-import { AN_ERROR_TRY_RELOAD_PAGE, IMAGES_ACCEPT } from "constant/index";
+import {
+  AN_ERROR_TRY_RELOAD_PAGE,
+  IMAGES_ACCEPT,
+  NS_ACCOUNT,
+  NS_COMMON,
+} from "constant/index";
 import { ChangeEvent, memo, useMemo, useRef } from "react";
 import { useAuth, useSnackbar, useUserInfo } from "store/app/selectors";
 import Avatar from "components/Avatar";
@@ -15,10 +20,13 @@ import { useFormik, FormikErrors } from "formik";
 import { getDataFromKeys, getMessageErrorByAPI } from "utils/index";
 import { UpdateUserInfoData } from "store/app/actions";
 import { client, Endpoint } from "api";
+import { useTranslations } from "next-intl";
 
 const UserInformation = () => {
   const { user } = useAuth();
   const { onUpdateUserInfo } = useUserInfo();
+  const commonT = useTranslations(NS_COMMON);
+  const accountT = useTranslations(NS_ACCOUNT);
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
@@ -41,7 +49,10 @@ const UserInformation = () => {
 
       await onUpdateUserInfo(newData);
       onEditFalse();
-      onAddSnackbar("Account information updated successfully!", "success");
+      onAddSnackbar(
+        accountT("accountInformation.notification.updateSuccess"),
+        "success",
+      );
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error), "error");
     }
@@ -62,10 +73,7 @@ const UserInformation = () => {
     if (IMAGES_ACCEPT.includes(files[0].type)) {
       formik.setFieldValue("avatar", files[0]);
     } else {
-      onAddSnackbar(
-        "File type is invalid. Currently the system only support PNG, JPEG, JPG",
-        "error",
-      );
+      onAddSnackbar(commonT("form.notification.imageTypeInvalid"), "error");
     }
   };
 
@@ -114,7 +122,7 @@ const UserInformation = () => {
   if (!user) {
     return (
       <Text variant="body2" textAlign="center" fontWeight={600}>
-        {AN_ERROR_TRY_RELOAD_PAGE}
+        {commonT(AN_ERROR_TRY_RELOAD_PAGE)}
       </Text>
     );
   }
@@ -137,7 +145,7 @@ const UserInformation = () => {
       onSubmit={formik.handleSubmit}
     >
       <Text variant="subtitle1" fontWeight={700}>
-        Account Information
+        {accountT("accountInformation.title")}
       </Text>
       <Stack width={90} height={90} borderRadius="50%" position="relative">
         <Avatar size={90} src={previewImage} alt={user.fullname} />
@@ -172,38 +180,43 @@ const UserInformation = () => {
 
       <Stack direction="row" alignItems="center" spacing={0.5}>
         <BagIcon sx={{ color: "grey.400" }} fontSize="medium" />
-        <Text color="grey.400">{`Position: ${
+        <Text color="grey.400">{`${commonT("position")}: ${
           user?.position?.name ?? "--"
         }`}</Text>
       </Stack>
       {!isEdit && (
         <Button onClick={onEditTrue} variant="secondary" size="small">
-          Update account
+          {accountT("accountInformation.updateAccount")}
         </Button>
       )}
 
       <Input
         rootSx={sxConfig.input}
-        title="Full name"
+        title={commonT("fullName")}
         fullWidth
         name="fullname"
         disabled={!isEdit}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values?.fullname}
-        error={touchedErrors?.fullname}
+        error={commonT(touchedErrors?.fullname, {
+          name: commonT("fullName"),
+        })}
         required={isEdit}
       />
       <Input
         rootSx={sxConfig.input}
-        title="Phone number"
+        title={commonT("phone")}
         fullWidth
         name="phone"
         disabled={!isEdit}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values?.phone}
-        error={touchedErrors?.phone}
+        error={commonT(touchedErrors?.phone, {
+          name: commonT("phone"),
+        })}
+        required={isEdit}
       />
       <Input
         rootSx={sxConfig.input}
@@ -212,9 +225,12 @@ const UserInformation = () => {
         name="email"
         disabled
         value={user.email}
-        tooltip={isEdit ? "Email is not allowed to be updated." : undefined}
+        tooltip={
+          isEdit
+            ? accountT("accountInformation.notAllowUpdate", { name: "Email" })
+            : undefined
+        }
       />
-
       {isEdit && (
         <Stack
           direction={{ xs: "column-reverse", sm: "row" }}
@@ -230,7 +246,7 @@ const UserInformation = () => {
             size="small"
             fullWidth
           >
-            Cancel
+            {commonT("form.cancel")}
           </Button>
           <Button
             disabled={disabled}
@@ -241,7 +257,7 @@ const UserInformation = () => {
             type="submit"
             fullWidth
           >
-            Confirm
+            {commonT("form.confirm")}
           </Button>
         </Stack>
       )}
@@ -258,11 +274,11 @@ const INITIAL_VALUES = {
 };
 
 export const validationSchema = Yup.object().shape({
-  fullname: Yup.string().trim().required("Full name is required."),
+  fullname: Yup.string().trim().required("form.error.required"),
   phone: Yup.string()
     .trim()
-    .matches(VN_PHONE_REGEX, "Phone number is invalid!")
-    .required("Phone is required."),
+    .matches(VN_PHONE_REGEX, "form.error.invalid")
+    .required("form.error.required"),
 });
 
 const sxConfig = {

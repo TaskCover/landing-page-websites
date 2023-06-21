@@ -8,7 +8,7 @@ import { Clear, Dropdown, Refresh, Switch } from "components/Filters";
 import { INITIAL_VALUES, STATUS_OPTIONS } from "./components/helpers";
 import { useProjects } from "store/project/selectors";
 import { getPath } from "utils/index";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import useToggle from "hooks/useToggle";
 import { DataAction } from "constant/enums";
 import Form, { ProjectDataForm } from "./Form";

@@ -6,18 +6,19 @@ import AppLogo from "components/AppLogo";
 import { Button, Input, Text } from "components/shared";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
-import { useRouter } from "next/navigation";
-import { SIGNIN_PATH } from "constant/paths";
+import { NS_AUTH, NS_COMMON } from "constant/index";
 import { EMAIL_REGEX } from "constant/regex";
 import Result from "./Result";
 import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
+import { useTranslations } from "next-intl";
+import SwitchLanguage from "components/SwitchLanguage";
 
 const Forgot = () => {
   const { onForgot } = useAuth();
   const { onAddSnackbar } = useSnackbar();
-  const { push } = useRouter();
+  const authT = useTranslations(NS_AUTH);
+  const commonT = useTranslations(NS_COMMON);
 
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
@@ -27,7 +28,11 @@ const Forgot = () => {
   const onChange = (newValue?: string | number) => {
     const newText = `${newValue ?? ""}`;
     setEmail(newText);
-    setError(EMAIL_REGEX.test(newText) ? undefined : "Email is invalid.");
+    setError(
+      EMAIL_REGEX.test(newText)
+        ? undefined
+        : commonT("form.error.invalid", { name: "Email" }),
+    );
   };
 
   const onSubmit = async () => {
@@ -38,9 +43,7 @@ const Forgot = () => {
       setIsSuccess(true);
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
-        setError(
-          "The email address does not exist in the system, please check again.",
-        );
+        setError(commonT("form.error.notExist", { name: "Email" }));
       } else {
         onAddSnackbar(getMessageErrorByAPI(error), "error");
       }
@@ -79,21 +82,29 @@ const Forgot = () => {
         maxHeight={{ xs: "fit-content", sm: "100%" }}
         borderRadius={2}
         overflow="auto"
+        position="relative"
       >
+        <SwitchLanguage position="absolute" top={16} right={16} />
+
         <Stack
-          minWidth={340}
-          maxWidth={340}
+          minWidth={{ sm: 380 }}
+          maxWidth={380}
           justifyContent="center"
           alignItems="center"
         >
           <AppLogo width={188} />
           <Text variant="h3" textAlign="center" mt={3}>
-            Forgot password
+            {authT("forgot.title")}
           </Text>
           <Text variant="body2" textAlign="center" mt={1} mb={2}>
-            Password reset link will be sent to your email
-            <br />
-            Please enter your registered email
+            {authT.rich("forgot.description", {
+              br: (chunks) => (
+                <>
+                  <br />
+                  {chunks}
+                </>
+              ),
+            })}
           </Text>
 
           <Input
@@ -115,7 +126,7 @@ const Forgot = () => {
             fullWidth
             pending={isSubmitting}
           >
-            Confirm
+            {commonT("form.confirm")}
           </Button>
         </Stack>
       </Stack>

@@ -18,7 +18,7 @@ import {
 import { DEFAULT_PAGING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
 import { IconButton, Checkbox } from "components/shared";
 import { useEmployeesOfCompany } from "store/manager/selectors";
@@ -30,6 +30,7 @@ import useBreakpoint from "hooks/useBreakpoint";
 import CircleTickIcon from "icons/CircleTickIcon";
 import CloseSquareIcon from "icons/CloseSquareIcon";
 import { PaymentStatus } from "components/sn-employees/helpers";
+import { useParams } from "next/navigation";
 
 const ItemList = () => {
   const {

@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { parseURLSearchParams, stringifyURLSearchParams } from "utils/index";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { OPTIONS } from "components/Pagination";
+import { useSearchParams } from "next/navigation";
 
 const useQueryParams = () => {
   const searchParams = useSearchParams();

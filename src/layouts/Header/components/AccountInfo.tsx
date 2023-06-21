@@ -28,12 +28,15 @@ import { reset as appReset } from "store/app/reducer";
 import { reset as projectReset } from "store/project/reducer";
 import { reset as managerReset } from "store/manager/reducer";
 import { reset as companyReset } from "store/company/reducer";
+import { useTranslations } from "next-intl";
+import { NS_LAYOUT } from "constant/index";
 
 const AccountInfo = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
   const { user, onSignOut: onSignOutAuth } = useAuth();
   const dispatch = useAppDispatch();
+  const t = useTranslations(NS_LAYOUT);
 
   const onOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -164,7 +167,7 @@ const AccountInfo = () => {
               >
                 {item.icon}
                 <Text ml={1.5} variant="body2" color="inherit">
-                  {item.label}
+                  {t(item.label)}
                 </Text>
               </MenuItem>
             ))}
@@ -186,7 +189,7 @@ const AccountInfo = () => {
             >
               <SignOutIcon />
               <Text ml={1.5} variant="body2" color="inherit">
-                Sign out
+                {t("header.account.signOut")}
               </Text>
             </MenuItem>
           </MenuList>
@@ -199,9 +202,13 @@ const AccountInfo = () => {
 export default memo(AccountInfo);
 
 export const OPTIONS = [
-  { label: "Account information", icon: <UserIcon />, href: ACCOUNT_INFO_PATH },
   {
-    label: "Change password",
+    label: "header.account.accountInformation",
+    icon: <UserIcon />,
+    href: ACCOUNT_INFO_PATH,
+  },
+  {
+    label: "header.account.changePassword",
     icon: <KeyIcon />,
     href: CHANGE_PASSWORD_PATH,
   },

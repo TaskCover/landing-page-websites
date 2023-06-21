@@ -6,7 +6,7 @@ import { TableLayout, CellProps } from "components/Table";
 import { DEFAULT_PAGING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
 import { useStatementHistory } from "store/manager/selectors";
 import { MobileContentCell, DesktopCells } from "./components";

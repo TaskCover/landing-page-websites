@@ -18,7 +18,7 @@ import {
 import { DEFAULT_PAGING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
 import { IconButton, Text, Checkbox } from "components/shared";
 import { useCompanies } from "store/manager/selectors";

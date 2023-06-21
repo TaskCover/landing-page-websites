@@ -5,7 +5,7 @@ import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import { Clear, Date, Dropdown, Refresh, Search } from "components/Filters";
 import { formatNumber, getPath } from "utils/index";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { CompanyStatus } from "store/company/actions";
 import { TEXT_STATUS } from "./components/helpers";

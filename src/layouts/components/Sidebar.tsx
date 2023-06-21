@@ -9,10 +9,13 @@ import CrownIcon from "icons/CrownIcon";
 import { Button, IconButton } from "components/shared";
 import { useSidebar } from "store/app/selectors";
 import useBreakpoint from "hooks/useBreakpoint";
+import { useTranslations } from "next-intl";
+import { NS_LAYOUT } from "constant/index";
 
 const Sidebar = (props: StackProps) => {
   const { isExpandedSidebar, onToggleExpandSidebar } = useSidebar();
   const { isLgSmaller } = useBreakpoint();
+  const t = useTranslations(NS_LAYOUT);
 
   const isShowLarge = useMemo(
     () => isExpandedSidebar && !isLgSmaller,
@@ -60,7 +63,9 @@ const Sidebar = (props: StackProps) => {
           <IconButton
             onClick={onToggle}
             noPadding
-            tooltip={isExpandedSidebar ? "Shrink" : "Expand"}
+            tooltip={
+              isExpandedSidebar ? t("sidebar.shrink") : t("sidebar.expand")
+            }
           >
             <DoubleArrowIcon
               fontSize="medium"

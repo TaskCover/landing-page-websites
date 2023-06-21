@@ -7,7 +7,7 @@ import { memo, useEffect, useMemo } from "react";
 import { Sidebar } from "./components";
 import { useAppSelector } from "store/hooks";
 import { shallowEqual } from "react-redux";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import {
   FORGOT_PASSWORD_PATH,
   HOME_PATH,

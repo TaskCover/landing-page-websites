@@ -7,7 +7,7 @@ import PlusIcon from "icons/PlusIcon";
 import { Clear, Dropdown, Refresh, Search } from "components/Filters";
 import { PaymentStatus, TEXT_STATUS } from "./helpers";
 import { getPath } from "utils/index";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import useToggle from "hooks/useToggle";
 import { DataAction } from "constant/enums";
 import Form from "./Form";

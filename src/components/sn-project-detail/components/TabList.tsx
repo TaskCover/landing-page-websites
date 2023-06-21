@@ -9,13 +9,14 @@ import {
   PROJECT_MEMBERS_PATH,
   PROJECT_INFORMATION_PATH,
 } from "constant/paths";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next-intl/client";
 import {
   EditProject,
   SavedProject,
   StatusProject,
 } from "components/sn-project-detail/Information/components";
 import { getPath } from "utils/index";
+import { useParams } from "next/navigation";
 
 type TabItemProps = {
   href: string;

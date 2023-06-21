@@ -2,7 +2,7 @@
 
 import { memo, useEffect, useMemo, useRef } from "react";
 import { Stack } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-intl/client";
 import { HOME_PATH } from "constant/paths";
 import { useAppReady, useAuth } from "store/app/selectors";
 import AppLoading from "components/AppLoading";

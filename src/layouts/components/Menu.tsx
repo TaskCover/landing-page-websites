@@ -2,7 +2,7 @@ import { memo, useMemo, useState, MouseEvent } from "react";
 import { Stack } from "@mui/material";
 import Link from "components/Link";
 import { Text } from "components/shared";
-import { usePathname } from "next/navigation";
+import { usePathname } from "next-intl/client";
 import MenuDashboardIcon from "icons/MenuDashboardIcon";
 import {
   COMPANIES_PATH,
@@ -23,6 +23,8 @@ import { useSidebar } from "store/app/selectors";
 import useBreakpoint from "hooks/useBreakpoint";
 import SubMenu from "./SubMenu";
 import { MenuItemProps } from "./helpers";
+import { useTranslations } from "next-intl";
+import { NS_LAYOUT } from "constant/index";
 
 const Menu = () => {
   return (
@@ -63,6 +65,8 @@ const MenuItem = (props: MenuItemProps) => {
 
 const LinkItem = (props: Omit<MenuItemProps, "children">) => {
   const { icon, href, label, subs } = props;
+
+  const t = useTranslations(NS_LAYOUT);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -132,7 +136,7 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
             noWrap
             textTransform="capitalize"
           >
-            {label}
+            {t(label)}
           </Text>
         )}
         {!!subs && (
@@ -148,33 +152,33 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
 };
 
 const DATA: MenuItemProps[] = [
-  { label: "Dashboard", href: HOME_PATH, icon: <MenuDashboardIcon /> },
+  { label: "menu.dashboard", href: HOME_PATH, icon: <MenuDashboardIcon /> },
   {
-    label: "Project",
+    label: "menu.project",
     icon: <MenuProjectIcon />,
     href: PROJECTS_PATH,
   },
   {
-    label: "Task",
+    label: "menu.task",
     icon: <MenuTaskIcon />,
   },
   {
-    label: "Company",
+    label: "menu.company",
     icon: <MenuCompanyIcon />,
     subs: [
-      { label: "Employees", href: EMPLOYEES_PATH },
-      { label: "Cost History", href: COST_HISTORY_PATH },
-      { label: "List Of Positions", href: POSITIONS_PATH },
-      { label: "Project Type List", href: PROJECT_TYPES_PATH },
-      { label: "Company Information", href: MY_COMPANY_PATH },
+      { label: "menu.employees", href: EMPLOYEES_PATH },
+      { label: "menu.costHistory", href: COST_HISTORY_PATH },
+      { label: "menu.listOfPositions", href: POSITIONS_PATH },
+      { label: "menu.projectTypeList", href: PROJECT_TYPES_PATH },
+      { label: "menu.companyInformation", href: MY_COMPANY_PATH },
     ],
   },
   {
-    label: "Manager",
+    label: "menu.manager",
     icon: <MenuCompanyIcon />,
     subs: [
-      { label: "Company List", href: COMPANIES_PATH },
-      { label: "Statement history", href: STATEMENT_HISTORY_PATH },
+      { label: "menu.companyList", href: COMPANIES_PATH },
+      { label: "menu.statementHistory", href: STATEMENT_HISTORY_PATH },
     ],
   },
 ];

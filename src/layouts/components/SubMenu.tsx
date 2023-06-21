@@ -3,12 +3,15 @@ import Link, { LinkProps } from "components/Link";
 import { Text } from "components/shared";
 import { useId } from "react";
 import { MenuItemProps } from "./helpers";
+import { useTranslations } from "next-intl";
+import { NS_LAYOUT } from "constant/index";
 
 const SubMenu = (
   props: Omit<PopperProps, "children"> & { options: MenuItemProps[] },
 ) => {
   const { options, ...rest } = props;
   const popoverId = useId();
+  const t = useTranslations(NS_LAYOUT);
 
   return (
     <Popper
@@ -48,7 +51,7 @@ const SubMenu = (
           >
             {item.icon}
             <Text ml={1.5} variant="body2" color="inherit">
-              {item.label}
+              {t(item.label)}
             </Text>
           </MenuItem>
         ))}

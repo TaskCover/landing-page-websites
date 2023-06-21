@@ -3,11 +3,12 @@ import { Stack, StackProps } from "@mui/material";
 import Link from "components/Link";
 import { Text } from "components/shared";
 import { COMPANY_DETAIL_PATH, COMPANY_EMPLOYEES_PATH } from "constant/paths";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next-intl/client";
 import { getPath } from "utils/index";
 import { useHeaderConfig } from "store/app/selectors";
 import ChevronIcon from "icons/ChevronIcon";
 import useBreakpoint from "hooks/useBreakpoint";
+import { useParams } from "next/navigation";
 
 type TabItemProps = {
   href: string;

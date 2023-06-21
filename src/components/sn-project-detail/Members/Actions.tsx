@@ -4,7 +4,7 @@ import { memo, useCallback, useEffect, useRef } from "react";
 import { Stack } from "@mui/material";
 import { Clear, Search, Refresh } from "components/Filters";
 import { getPath } from "utils/index";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import AddMembers from "./AddMembers";
 import { useMembersOfProject } from "store/project/selectors";

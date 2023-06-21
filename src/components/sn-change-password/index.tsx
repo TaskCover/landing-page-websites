@@ -10,20 +10,32 @@ import { getMessageErrorByAPI } from "utils/index";
 import { ChangePasswordData } from "store/app/actions";
 import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
+import { NS_ACCOUNT, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const ChangePassword = () => {
   const { onChangePassword } = useUserInfo();
+  const commonT = useTranslations(NS_COMMON);
+  const accountT = useTranslations(NS_ACCOUNT);
 
   const { onAddSnackbar } = useSnackbar();
 
   const onSubmit = async (values: ChangePasswordData) => {
     try {
       await onChangePassword(values);
-      onAddSnackbar("Change password successfully!", "success");
+      onAddSnackbar(
+        accountT("changePassword.notification.changeSuccess"),
+        "success",
+      );
       formik.resetForm();
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
-        formik.setFieldError("old_password", "Old password is incorrect.");
+        formik.setFieldError(
+          "old_password",
+          commonT("form.error.incorrect", {
+            name: accountT("changePassword.form.title.oldPassword"),
+          }),
+        );
       } else {
         onAddSnackbar(getMessageErrorByAPI(error), "error");
       }
@@ -76,42 +88,53 @@ const ChangePassword = () => {
       onSubmit={formik.handleSubmit}
     >
       <Text variant="subtitle1" fontWeight={700}>
-        Change password
+        {accountT("changePassword.title")}
       </Text>
       <Input
         rootSx={sxConfig.input}
         fullWidth
-        title="Old password"
+        title={accountT("changePassword.form.title.oldPassword")}
         name="old_password"
         type="password"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values?.old_password}
-        error={touchedErrors?.old_password}
+        error={commonT(touchedErrors?.old_password, {
+          name: accountT("changePassword.form.title.oldPassword"),
+        })}
         required
       />
       <Input
         rootSx={sxConfig.input}
         fullWidth
-        title="New password"
+        title={accountT("changePassword.form.title.newPassword")}
         name="new_password"
         type="password"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values?.new_password}
-        error={touchedErrors?.new_password}
+        error={commonT(touchedErrors?.new_password, {
+          name: accountT("changePassword.form.title.newPassword"),
+          name2: accountT("changePassword.form.title.oldPassword"),
+          min: 6,
+          max: 30,
+        })}
         required
       />
       <Input
         rootSx={sxConfig.input}
         fullWidth
-        title="Confirm new password"
+        title={accountT("changePassword.form.title.confirmNewPassword")}
         name="renew_password"
         type="password"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values?.renew_password}
-        error={touchedErrors?.renew_password}
+        error={commonT(touchedErrors?.renew_password, {
+          name: accountT("changePassword.form.title.confirmNewPassword"),
+          min: 6,
+          max: 30,
+        })}
         required
       />
 
@@ -129,7 +152,7 @@ const ChangePassword = () => {
           size="small"
           fullWidth
         >
-          Cancel
+          {commonT("form.cancel")}
         </Button>
         <Button
           disabled={disabled}
@@ -140,7 +163,7 @@ const ChangePassword = () => {
           type="submit"
           fullWidth
         >
-          Confirm
+          {commonT("form.confirm")}
         </Button>
       </Stack>
     </Stack>
@@ -156,25 +179,20 @@ const INITIAL_VALUES = {
 };
 
 export const validationSchema = Yup.object().shape({
-  old_password: Yup.string().trim().required("Old password is required."),
+  old_password: Yup.string().trim().required("form.error.required"),
   new_password: Yup.string()
     .trim()
-    .required("New password is required.")
-    .test(
-      "is-diff-old-pass",
-      "The new password cannot be the same as the old password.",
-      (value, { parent }) => {
-        if (value && parent["old_password"] && value === parent["old_password"])
-          return false;
-        return true;
-      },
-    ),
+    .required("form.error.required")
+    .min(6, "form.error.minAndMax")
+    .max(30, "form.error.minAndMax")
+    .test("is-diff-old-pass", "form.error.notSame", (value, { parent }) => {
+      if (value && parent["old_password"] && value === parent["old_password"])
+        return false;
+      return true;
+    }),
   renew_password: Yup.string()
-    .oneOf(
-      [Yup.ref("new_password"), ""],
-      "Confirm new password does not match.",
-    )
-    .required("Confirm new password is required."),
+    .oneOf([Yup.ref("new_password"), ""], "form.error.confirmNotMatch")
+    .required("form.error.required"),
 });
 
 const sxConfig = {
