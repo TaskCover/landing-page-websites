@@ -9,7 +9,7 @@ import StatusServer from "components/StatusServer";
 import { DEFAULT_PAGING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
 
 const CostHistoryPage = () => {

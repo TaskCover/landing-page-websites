@@ -1,9 +1,10 @@
 import * as React from "react";
 import clsx from "clsx";
-import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import { LinkProps as NextLinkProps } from "next/link";
+import NextLink from "next-intl/link";
 import MuiLink, { LinkProps as MuiLinkProps } from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
-import { usePathname } from "next/navigation";
+import { usePathname } from "next-intl/client";
 import { Tooltip } from "./shared";
 import { TooltipProps } from "@mui/material";
 
@@ -45,7 +46,7 @@ export const NextLinkComposed = React.forwardRef<
       scroll={scroll}
       shallow={shallow}
       passHref
-      locale={locale}
+      locale={locale as string | undefined}
       legacyBehavior={legacyBehavior}
     >
       <Anchor ref={ref} {...other} />
@@ -154,7 +155,7 @@ const Link = React.forwardRef(
         </Tooltip>
       );
     }
-    return <CoreLink {...rest} />;
+    return <CoreLink ref={ref} {...rest} />;
   },
 );
 

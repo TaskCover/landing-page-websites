@@ -7,7 +7,7 @@ import { useProjects } from "store/project/selectors";
 import { DEFAULT_PAGING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import { cleanObject, stringifyURLSearchParams } from "utils/index";
 import { IconButton } from "components/shared";
 import PencilIcon from "icons/PencilIcon";

@@ -6,17 +6,23 @@ import AppLogo from "components/AppLogo";
 import { Button, Input, Text } from "components/shared";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next-intl/client";
 import * as Yup from "yup";
 import { useFormik, FormikErrors } from "formik";
 import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
 import { SIGNIN_PATH } from "constant/paths";
+import { useParams } from "next/navigation";
+import { NS_AUTH, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
+import SwitchLanguage from "components/SwitchLanguage";
 
 const Reset = () => {
   const { onResetPassword, onSignOut } = useAuth();
   const { onAddSnackbar } = useSnackbar();
   const { push } = useRouter();
+  const authT = useTranslations(NS_AUTH);
+  const commonT = useTranslations(NS_COMMON);
 
   const params = useParams();
   const token = useMemo(() => params.token, [params.token]);
@@ -25,10 +31,7 @@ const Reset = () => {
     try {
       await onResetPassword({ password: values.password, token });
       onSignOut();
-      onAddSnackbar(
-        "Change password successfully, please signin again.",
-        "success",
-      );
+      onAddSnackbar(authT("reset.notification.resetSuccess"), "success");
       push(SIGNIN_PATH);
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error), "error");
@@ -88,7 +91,10 @@ const Reset = () => {
         maxHeight={{ xs: "fit-content", sm: "100%" }}
         borderRadius={2}
         overflow="auto"
+        position="relative"
       >
+        <SwitchLanguage position="absolute" top={16} right={16} />
+
         <Stack
           minWidth={340}
           maxWidth={340}
@@ -101,31 +107,38 @@ const Reset = () => {
           <AppLogo width={188} />
           <Text variant="h3" textAlign="center" mt={3} mb={5}>
             Reset new password
+            {authT("reset.title")}
           </Text>
 
           <Input
             rootSx={sxConfig.input}
             fullWidth
-            title="New password"
+            title={authT("reset.form.title.newPassword")}
             name="password"
             type="password"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.password}
-            error={touchedErrors?.password}
+            error={commonT(touchedErrors?.password, {
+              name: authT("common.form.title.password"),
+              min: 6,
+              max: 30,
+            })}
             required
           />
           <Input
             rootSx={sxConfig.input}
             sx={{ mt: 3 }}
             fullWidth
-            title="Confirm password"
+            title={authT("common.form.title.confirmPassword")}
             name="rePassword"
             type="password"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.rePassword}
-            error={touchedErrors?.rePassword}
+            error={commonT(touchedErrors?.rePassword, {
+              name: authT("common.form.title.confirmPassword"),
+            })}
             required
           />
 
@@ -137,7 +150,7 @@ const Reset = () => {
             fullWidth
             pending={formik.isSubmitting}
           >
-            Confirm
+            {commonT("form.confirm")}
           </Button>
         </Stack>
       </Stack>
@@ -155,12 +168,12 @@ const INITIAL_VALUES = {
 export const validationSchema = Yup.object().shape({
   password: Yup.string()
     .trim()
-    .required("New password is required.")
-    .min(6, "Password must be between 6 and 30 characters.")
-    .max(30, "Password must be between 6 and 30 characters."),
+    .required("form.error.required")
+    .min(6, "form.error.minAndMax")
+    .max(30, "form.error.minAndMax"),
   rePassword: Yup.string()
-    .oneOf([Yup.ref("password"), ""], "Confirm password does not match..")
-    .required("Confirm password is required."),
+    .oneOf([Yup.ref("password"), ""], "form.error.confirmNotMatch")
+    .required("form.error.required"),
 });
 
 const sxConfig = {

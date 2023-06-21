@@ -6,23 +6,26 @@ import { Button, Input } from "components/shared";
 import Link from "components/Link";
 import { FORGOT_PASSWORD_PATH } from "constant/paths";
 import * as Yup from "yup";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_AUTH, NS_COMMON } from "constant/index";
 import { useFormik, FormikErrors } from "formik";
 import { SigninData } from "store/app/actions";
 import { EMAIL_REGEX } from "constant/regex";
 import { getMessageErrorByAPI } from "utils/index";
 import { useSnackbar, useAuth } from "store/app/selectors";
+import { useTranslations } from "next-intl";
 
 const Form = () => {
   const { onSignin } = useAuth();
   const { onAddSnackbar } = useSnackbar();
+  const authT = useTranslations(NS_AUTH);
+  const commonT = useTranslations(NS_COMMON);
 
   const onSubmit = async (values: SigninData) => {
     try {
       const newData = await onSignin(values);
 
       if (newData) {
-        onAddSnackbar("Sign in successfully!", "success");
+        onAddSnackbar(authT("signin.notification.signinSuccess"), "success");
       } else {
         throw AN_ERROR_TRY_AGAIN;
       }
@@ -74,21 +77,24 @@ const Form = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.email}
-          error={touchedErrors?.email}
+          error={commonT(touchedErrors?.email, { name: "Email" })}
         />
         <Input
           rootSx={sxConfig.input}
           sx={{ mt: 3 }}
           fullWidth
-          title="Password"
+          title={authT("common.form.title.password")}
           name="password"
           type="password"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.password}
-          error={touchedErrors?.password}
+          error={commonT(touchedErrors?.password, {
+            name: authT("common.form.title.password"),
+            min: 6,
+            max: 30,
+          })}
         />
-
         <Link
           sx={{
             mt: 1,
@@ -102,7 +108,7 @@ const Form = () => {
           color="grey.400"
           underline="none"
         >
-          Forgot password?
+          {authT("signin.forgotPassword")}
         </Link>
       </Stack>
 
@@ -114,7 +120,7 @@ const Form = () => {
         fullWidth
         pending={formik.isSubmitting}
       >
-        Sign in
+        {authT("signin.key")}
       </Button>
     </Stack>
   );
@@ -130,13 +136,13 @@ const INITIAL_VALUES = {
 export const validationSchema = Yup.object().shape({
   email: Yup.string()
     .trim()
-    .required("Email is required.")
-    .matches(EMAIL_REGEX, "Email is invalid."),
+    .required("form.error.required")
+    .matches(EMAIL_REGEX, "form.error.invalid"),
   password: Yup.string()
     .trim()
-    .required("Password is required.")
-    .min(6, "Password must be between 6 and 30 characters.")
-    .max(30, "Password must be between 6 and 30 characters."),
+    .required("form.error.required")
+    .min(6, "form.error.minAndMax")
+    .max(30, "form.error.minAndMax"),
 });
 
 const sxConfig = {

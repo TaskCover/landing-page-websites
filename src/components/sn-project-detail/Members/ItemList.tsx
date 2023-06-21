@@ -7,13 +7,14 @@ import { useMembersOfProject } from "store/project/selectors";
 import { DEFAULT_PAGING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import { DataAction } from "constant/enums";
 import { Member } from "store/project/reducer";
 import MobileContentCell from "./MobileContentCell";
 import DesktopCells from "./DesktopCells";
+import { useParams } from "next/navigation";
 
 const ItemList = () => {
   const {

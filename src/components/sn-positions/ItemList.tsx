@@ -4,7 +4,7 @@ import { memo, useEffect, useMemo, useState } from "react";
 import { TableRow } from "@mui/material";
 import { TableLayout, CellProps, ActionsCell } from "components/Table";
 import useQueryParams from "hooks/useQueryParams";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import useBreakpoint from "hooks/useBreakpoint";
 import { DataAction } from "constant/enums";
 import MobileContentCell from "./MobileContentCell";

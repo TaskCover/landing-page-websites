@@ -1,5 +1,6 @@
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { ThemeMode } from "./enums";
+import { i18n } from ".";
 
 export interface Option {
   label: string;
@@ -66,3 +67,5 @@ export type OptionFormatNumber = {
   suffix?: string;
   space?: boolean;
 } & Intl.NumberFormatOptions;
+
+export type Locale = (typeof i18n)["locales"][number];

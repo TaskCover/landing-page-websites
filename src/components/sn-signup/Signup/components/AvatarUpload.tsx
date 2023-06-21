@@ -5,7 +5,8 @@ import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
 import Image from "next/image";
 import UploadIcon from "icons/UploadIcon";
 import { useSnackbar } from "store/app/selectors";
-import { IMAGES_ACCEPT } from "constant/index";
+import { IMAGES_ACCEPT, NS_AUTH, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type AvatarUploadProps = {
   value?: File;
@@ -14,7 +15,8 @@ type AvatarUploadProps = {
 
 const AvatarUpload = (props: AvatarUploadProps) => {
   const { value, onChange } = props;
-
+  const authT = useTranslations(NS_AUTH);
+  const commonT = useTranslations(NS_COMMON);
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
   const { onAddSnackbar } = useSnackbar();
@@ -34,17 +36,14 @@ const AvatarUpload = (props: AvatarUploadProps) => {
     if (IMAGES_ACCEPT.includes(files[0].type)) {
       onChange && onChange(files[0]);
     } else {
-      onAddSnackbar(
-        "File type is invalid. Currently the system only support PNG, JPEG, JPG",
-        "error",
-      );
+      onAddSnackbar(commonT("notification.imageTypeInvalid"), "error");
     }
   };
 
   return (
     <Stack spacing={1}>
       <Text variant="caption" color="grey.300">
-        Avatar
+        {authT("signup.form.title.avatar")}
       </Text>
       <Stack direction="row" alignItems="center" spacing={2}>
         <Image
@@ -65,7 +64,7 @@ const AvatarUpload = (props: AvatarUploadProps) => {
           size="extraSmall"
           startIcon={<UploadIcon color="primary" sx={{ fontSize: 16 }} />}
         >
-          Upload
+          {commonT("form.title.uploadImage")}
         </Button>
       </Stack>
 

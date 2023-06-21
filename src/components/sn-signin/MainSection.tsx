@@ -8,8 +8,13 @@ import { Text } from "components/shared";
 import Link from "components/Link";
 import { SIGNUP_PATH } from "constant/paths";
 import Form from "./Form";
+import { NS_AUTH } from "constant/index";
+import { useTranslations } from "next-intl";
+import SwitchLanguage from "components/SwitchLanguage";
 
 const MainSection = () => {
+  const t = useTranslations(NS_AUTH);
+
   return (
     <Stack
       overflow="hidden"
@@ -22,7 +27,10 @@ const MainSection = () => {
       boxShadow={{ xs: "0px 4px 12px rgba(0, 0, 0, 0.15)", sm: undefined }}
       borderRadius={{ xs: 2, sm: undefined }}
       py={{ xs: 2, sm: undefined }}
+      position="relative"
     >
+      <SwitchLanguage position="absolute" top={16} left={16} />
+
       <Image src={AppLogo} alt="App logo" width={152} />
 
       <Stack
@@ -33,9 +41,9 @@ const MainSection = () => {
         width="100%"
         overflow="hidden"
       >
-        <Text variant="h3">Sign in</Text>
+        <Text variant="h3">{t("signin.title")}</Text>
         <Stack mt={1} direction="row" alignItems="center" spacing={0.5}>
-          <Text variant="body2">or do not have an account yet?</Text>
+          <Text variant="body2">{t("signin.notSignup")}</Text>
           <Link
             href={SIGNUP_PATH}
             fontWeight={600}
@@ -48,7 +56,7 @@ const MainSection = () => {
             color="primary.main"
             underline="none"
           >
-            Sign up now
+            {t("signin.signupNow")}
           </Link>
         </Stack>
 

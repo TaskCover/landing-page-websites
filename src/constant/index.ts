@@ -1,8 +1,8 @@
 import { ThemeMode } from "./enums";
 import { Mode, Paging } from "./types";
 
-export const AUTH_API_URL = "/auth-app/";
-export const API_URL = "/app/";
+export const AUTH_API_URL = process.env.AUTH_API_URL as string;
+export const API_URL = process.env.API_URL as string;
 export const COMPANY_API_URL = process.env.COMPANY_API_URL as string;
 export const UPLOAD_API_URL = process.env.UPLOAD_API_URL as string;
 
@@ -25,6 +25,19 @@ export const DEFAULT_PAGING: Paging = {
   pageSize: DEFAULT_PAGE_SIZE,
 };
 
+export const i18n = {
+  // A list of all locales that are supported
+  locales: ["en", "vi"],
+
+  // If this locale is matched, pathnames work without a prefix (e.g. `/about`)
+  defaultLocale: "en",
+} as const;
+
+export const NS_COMMON = "common";
+export const NS_AUTH = "auth";
+export const NS_LAYOUT = "layout";
+export const NS_ACCOUNT = "account";
+
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg"];
 
 export const ACCESS_TOKEN_STORAGE_KEY = "aT";
@@ -33,6 +46,5 @@ export const USER_INFO_STORAGE_KEY = "user";
 
 export const API_TIMEOUT = 30_000; //s
 
-export const AN_ERROR_TRY_RELOAD_PAGE =
-  "Có lỗi xảy ra. Vui lòng tải lại trang.";
-export const AN_ERROR_TRY_AGAIN = "Có lỗi xảy ra. Vui lòng thử lại.";
+export const AN_ERROR_TRY_RELOAD_PAGE = "error.anErrorTryReload";
+export const AN_ERROR_TRY_AGAIN = "error.anErrorTryAgain";

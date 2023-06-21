@@ -4,7 +4,7 @@ import { memo, useMemo } from "react";
 import { Stack } from "@mui/material";
 import { Button, Input } from "components/shared";
 import * as Yup from "yup";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_AUTH, NS_COMMON } from "constant/index";
 import { useFormik, FormikErrors } from "formik";
 import { SignupData } from "store/app/actions";
 import { EMAIL_REGEX, VN_PHONE_REGEX } from "constant/regex";
@@ -14,10 +14,13 @@ import { AvatarUpload } from "./components";
 import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
 import { Endpoint, client } from "api";
+import { useTranslations } from "next-intl";
 
 const Form = () => {
   const { onSignup } = useAuth();
   const { onAddSnackbar } = useSnackbar();
+  const authT = useTranslations(NS_AUTH);
+  const commonT = useTranslations(NS_COMMON);
 
   const onSubmit = async (values: FormTypes) => {
     try {
@@ -36,10 +39,7 @@ const Form = () => {
       await onSignup(newData);
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.REGISTERED_EMAIL) {
-        formik.setFieldError(
-          "email",
-          "The email address name is already in use for another account.",
-        );
+        formik.setFieldError("email", "form.error.existed");
       } else {
         onAddSnackbar(getMessageErrorByAPI(error), "error");
       }
@@ -93,23 +93,27 @@ const Form = () => {
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Full name"
+          title={authT("signup.form.title.fullName")}
           name="fullname"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.fullname}
-          error={touchedErrors?.fullname}
+          error={commonT(touchedErrors?.fullname, {
+            name: authT("signup.form.title.fullName"),
+          })}
           required
         />
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Phone number"
+          title={authT("signup.form.title.phone")}
           name="phone"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.phone}
-          error={touchedErrors?.phone}
+          error={commonT(touchedErrors?.phone, {
+            name: authT("signup.form.title.phone"),
+          })}
         />
         <Input
           rootSx={sxConfig.input}
@@ -119,31 +123,37 @@ const Form = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.email}
-          error={touchedErrors?.email}
+          error={commonT(touchedErrors?.email, { name: "Email" })}
           required
         />
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Password"
+          title={authT("common.form.title.password")}
           name="password"
           type="password"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.password}
-          error={touchedErrors?.password}
+          error={commonT(touchedErrors?.password, {
+            name: authT("common.form.title.password"),
+            min: 6,
+            max: 30,
+          })}
           required
         />
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Confirm password"
+          title={authT("common.form.title.confirmPassword")}
           name="rePassword"
           type="password"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.rePassword}
-          error={touchedErrors?.rePassword}
+          error={commonT(touchedErrors?.rePassword, {
+            name: authT("common.form.title.confirmPassword"),
+          })}
           required
         />
         <AvatarUpload value={formik.values?.avatar} onChange={onChangeAvatar} />
@@ -156,7 +166,7 @@ const Form = () => {
         fullWidth
         pending={formik.isSubmitting}
       >
-        Sign up
+        {authT("signup.key")}
       </Button>
     </Stack>
   );
@@ -175,22 +185,20 @@ const INITIAL_VALUES = {
 type FormTypes = typeof INITIAL_VALUES & { avatar?: File };
 
 export const validationSchema = Yup.object().shape({
-  fullname: Yup.string().trim().required("Full name is required."),
-  phone: Yup.string()
-    .trim()
-    .matches(VN_PHONE_REGEX, "Phone number is invalid."),
+  fullname: Yup.string().trim().required("form.error.required"),
+  phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
   email: Yup.string()
     .trim()
-    .required("Email is required.")
-    .matches(EMAIL_REGEX, "Email is invalid."),
+    .required("form.error.required")
+    .matches(EMAIL_REGEX, "form.error.invalid"),
   password: Yup.string()
     .trim()
-    .required("Password is required.")
-    .min(6, "Password must be between 6 and 30 characters.")
-    .max(30, "Password must be between 6 and 30 characters."),
+    .required("form.error.required")
+    .min(6, "form.error.minAndMax")
+    .max(30, "form.error.minAndMax"),
   rePassword: Yup.string()
-    .oneOf([Yup.ref("password"), ""], "Confirm password does not match.")
-    .required("Confirm password is required."),
+    .oneOf([Yup.ref("password"), ""], "form.error.confirmNotMatch")
+    .required("form.error.required"),
 });
 
 const sxConfig = {

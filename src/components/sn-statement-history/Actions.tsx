@@ -4,7 +4,7 @@ import { memo, useEffect, useMemo, useState } from "react";
 import { Stack } from "@mui/material";
 import { Clear, Date, Refresh } from "components/Filters";
 import { getPath } from "utils/index";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import { useStatementHistory } from "store/manager/selectors";
 import { Button } from "components/shared";
 import { GetStatementHistoryQueries } from "store/manager/actions";

@@ -14,7 +14,7 @@ import { ProjectTypeData } from "store/company/actions";
 import Form from "./Form";
 import { getDataFromKeys, getPath } from "utils/index";
 import { DEFAULT_PAGING } from "constant/index";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 import Pagination from "components/Pagination";
 
 const ItemList = () => {

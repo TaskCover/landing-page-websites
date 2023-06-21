@@ -8,14 +8,19 @@ import { useAuth, useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
 import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
-import { useRouter } from "next/navigation";
+import { AN_ERROR_TRY_AGAIN, NS_AUTH, NS_COMMON } from "constant/index";
+import { useRouter } from "next-intl/client";
 import { SIGNIN_PATH } from "constant/paths";
+import { useTranslations } from "next-intl";
+import SwitchLanguage from "components/SwitchLanguage";
 
 const Verify = () => {
   const { onVerify } = useAuth();
   const { onAddSnackbar } = useSnackbar();
   const { push } = useRouter();
+
+  const authT = useTranslations(NS_AUTH);
+  const commonT = useTranslations(NS_COMMON);
 
   const [code, setCode] = useState<string>("");
   const [error, setError] = useState<string | undefined>();
@@ -32,14 +37,18 @@ const Verify = () => {
     try {
       const newData = await onVerify(code);
       if (newData) {
-        onAddSnackbar("Sign up successfully, please sign in!", "success");
+        onAddSnackbar(authT("signup.notification.signupSuccess"), "success");
         push(SIGNIN_PATH);
       } else {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_CODE) {
-        setError("Code is incorrect.");
+        setError(
+          commonT("form.error.incorrect", {
+            name: authT("verify.form.title.code"),
+          }),
+        );
       } else {
         onAddSnackbar(getMessageErrorByAPI(error), "error");
       }
@@ -77,7 +86,10 @@ const Verify = () => {
         maxHeight={{ xs: "fit-content", sm: "100%" }}
         borderRadius={2}
         overflow="auto"
+        position="relative"
       >
+        <SwitchLanguage position="absolute" top={16} right={16} />
+
         <Stack
           minWidth={340}
           maxWidth={340}
@@ -86,7 +98,7 @@ const Verify = () => {
         >
           <AppLogo width={188} />
           <Text variant="h3" textAlign="center" mt={3}>
-            Verify account
+            {authT("verify.title")}
           </Text>
           <Text
             variant="body2"
@@ -95,10 +107,14 @@ const Verify = () => {
             mt={1}
             mb={2}
           >
-            A code has been sent to your registered email
-            <br />
-            Please check your email and enter the code to complete the
-            registration
+            {authT.rich("verify.description", {
+              br: (chunks) => (
+                <>
+                  {chunks}
+                  <br />
+                </>
+              ),
+            })}
           </Text>
           <Text
             variant="body2"
@@ -107,8 +123,9 @@ const Verify = () => {
             mt={1}
             mb={2}
           >
-            A code has been sent to your registered email. Please check your
-            email and enter the code to complete the registration.
+            {authT.rich("verify.description", {
+              br: (chunks) => <>{chunks}.</>,
+            })}
           </Text>
           <Input
             titleSx={{ left: "39%" }}
@@ -117,7 +134,7 @@ const Verify = () => {
               height: 58,
               "& input": { textAlign: "center" },
             }}
-            title="Code"
+            title={authT("verify.form.title.code")}
             value={code}
             onChangeValue={onChange}
             error={error}
@@ -131,7 +148,7 @@ const Verify = () => {
             fullWidth
             pending={isSubmitting}
           >
-            Verify
+            {authT("verify.key")}
           </Button>
         </Stack>
       </Stack>

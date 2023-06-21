@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withNextIntl = require("next-intl/plugin")(
+  // This is the default (also the `src` folder is supported out of the box)
+  "./src/utils/i18n.ts",
+);
+
 const nextConfig = {
   reactStrictMode: false,
   env: {
@@ -10,18 +17,6 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  async rewrites() {
-    return [
-      {
-        source: `/app/:path*`,
-        destination: `${process.env.API_URL}/:path*`,
-      },
-      {
-        source: `/auth-app/:path*`,
-        destination: `${process.env.AUTH_API_URL}/:path*`,
-      },
-    ];
-  },
   images: {
     remotePatterns: [
       {
@@ -32,4 +27,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

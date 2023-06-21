@@ -15,7 +15,7 @@ import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI, getPath } from "utils/index";
 import { usePositionOptions } from "store/global/selectors";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next-intl/client";
 
 type MemberData = {
   id: string;
