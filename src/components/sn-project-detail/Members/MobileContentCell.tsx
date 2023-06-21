@@ -6,6 +6,8 @@ import { BodyCell } from "components/Table";
 import { Member } from "store/project/reducer";
 import { Collapse, DeleteUser } from "./components";
 import { formatDate } from "utils/index";
+import { NS_COMMON, NS_PROJECT } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type MobileContentCellProps = {
   item: Member;
@@ -18,15 +20,23 @@ type InformationItemProps = StackProps & {
 
 const MobileContentCell = (props: MobileContentCellProps) => {
   const { item } = props;
+  const commonT = useTranslations(NS_COMMON);
+  const projectT = useTranslations(NS_PROJECT);
+
   return (
     <BodyCell align="left" sx={{ px: 0 }}>
       <Collapse label={<Label item={item} />}>
         <Stack px={2}>
-          <InformationItem label="Position">
+          <InformationItem label={commonT("position")}>
             {item.position_project?.name}
           </InformationItem>
-          <InformationItem label="Hours worked"></InformationItem>
-          <InformationItem label="Date added project" borderBottom="none">
+          <InformationItem
+            label={projectT("detailMembers.hoursWorked")}
+          ></InformationItem>
+          <InformationItem
+            label={projectT("detailMembers.dateAddedProject")}
+            borderBottom="none"
+          >
             {formatDate(item.date_in)}
           </InformationItem>
         </Stack>

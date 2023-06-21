@@ -1,6 +1,8 @@
 import { memo } from "react";
 import DialogLayout, { DialogLayoutProps } from "./DialogLayout";
 import { Button, Text } from "./shared";
+import { NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 export type ConfirmDialogProps = Omit<DialogLayoutProps, "children"> & {
   title: string;
@@ -12,11 +14,13 @@ export type ConfirmDialogProps = Omit<DialogLayoutProps, "children"> & {
 };
 
 const ConfirmDialog = (props: ConfirmDialogProps) => {
+  const t = useTranslations(NS_COMMON);
+
   const {
     title,
     content,
-    cancelText = "Cancel",
-    submitText = "Confirm",
+    cancelText = t("form.cancel"),
+    submitText = t("form.confirm"),
     onClose,
     onSubmit,
     pending,

@@ -12,6 +12,8 @@ import {
 import { formatDate, formatNumber } from "utils/index";
 import Avatar from "components/Avatar";
 import StatusServer from "components/StatusServer";
+import { NS_COMMON, NS_PROJECT } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -20,6 +22,8 @@ type InformationItemProps = StackProps & {
 
 const InformationProjectPage = () => {
   const { item, isFetching, error } = useProject();
+  const commonT = useTranslations(NS_COMMON);
+  const projectT = useTranslations(NS_PROJECT);
 
   return (
     <StatusServer isFetching={isFetching} error={error} noData={!item}>
@@ -29,7 +33,7 @@ const InformationProjectPage = () => {
             <Text variant="h4">{item?.name}</Text>
             <Stack direction="row" alignItems="center" spacing={1}>
               <Text variant="caption" color="grey.400">
-                Status
+                {commonT("status")}
               </Text>
               {item?.status ? (
                 <TextStatus
@@ -44,19 +48,19 @@ const InformationProjectPage = () => {
           <Text variant="h6" color="grey.400">{`#${item?.id}`}</Text>
         </Stack>
 
-        <InformationItem label="Assigner">
+        <InformationItem label={commonT("assigner")}>
           <Stack direction="row" alignItems="center" spacing={1}>
             <Avatar size={32} src={item?.owner?.avatar?.link} />
             <Text variant="body2">{item?.owner?.fullname ?? "--"}</Text>
           </Stack>
         </InformationItem>
         <Stack direction="row" alignItems="center" spacing={2}>
-          <InformationItem label="Start date">
+          <InformationItem label={commonT("form.title.startDate")}>
             {formatDate(item?.start_date)}
           </InformationItem>
           <Divider sx={{ width: 100, borderColor: "grey.300" }} />
           {">"}
-          <InformationItem label="End date">
+          <InformationItem label={commonT("form.title.endDate")}>
             {formatDate(item?.end_date)}
           </InformationItem>
         </Stack>
@@ -65,10 +69,13 @@ const InformationProjectPage = () => {
           alignItems="center"
           spacing={{ xs: 2, sm: 5, lg: 10 }}
         >
-          <InformationItem label="Working hours (expected)" width={135}>
+          <InformationItem
+            label={projectT("list.form.title.estimatedWorkingHours")}
+            width={135}
+          >
             {formatNumber(item?.working_hours)}
           </InformationItem>
-          <InformationItem label="Working hours (actual)">
+          <InformationItem label={projectT("detail.workingHoursActual")}>
             {formatNumber()}
           </InformationItem>
         </Stack>
@@ -77,12 +84,20 @@ const InformationProjectPage = () => {
           alignItems="center"
           spacing={{ xs: 2, sm: 5, lg: 10 }}
         >
-          <InformationItem label="Expected cost" width={135}>
+          <InformationItem
+            label={projectT("list.form.title.estimatedCost")}
+            width={135}
+          >
             {formatNumber(item?.expected_cost)}
           </InformationItem>
-          <InformationItem label="Cost spent">{formatNumber()}</InformationItem>
+          <InformationItem label={projectT("detail.costSpent")}>
+            {formatNumber()}
+          </InformationItem>
         </Stack>
-        <InformationItem label="Description" maxWidth={700}>
+        <InformationItem
+          label={commonT("form.title.description")}
+          maxWidth={700}
+        >
           {item?.description}
         </InformationItem>
       </Stack>

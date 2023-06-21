@@ -15,6 +15,8 @@ import {
 import { IconButton, Text } from "./shared";
 import CloseIcon from "icons/CloseIcon";
 import { SlotComponentProps } from "@mui/base";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 export type DialogLayoutProps = Omit<DialogProps, "onSubmit"> & {
   children: React.ReactNode;
@@ -48,6 +50,7 @@ const DialogLayout = forwardRef(
       zIndex = 1,
       ...rest
     } = props;
+    const t = useTranslations(NS_COMMON);
 
     const { sx: sxContentProps, ...restContentProps } = contentProps;
     const { sx: sxHeaderProps, ...restHeaderProps } = headerProps;
@@ -106,7 +109,7 @@ const DialogLayout = forwardRef(
             <IconButton
               size="normal"
               noPadding
-              tooltip="Close"
+              tooltip={t("close")}
               onClick={onCloseProps}
               sx={{
                 color: "grey.400",

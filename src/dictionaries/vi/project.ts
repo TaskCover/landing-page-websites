@@ -28,4 +28,50 @@ export const ProjectLang: ProjectDictionary = {
       choosePositionFirst: "Bạn cần chọn chức vụ cho thành viên này trước!",
     },
   },
+
+  tabList: {
+    tasks: "Công việc",
+    activities: "Hoạt động",
+    costHistory: "Lịch sử chi phí",
+    members: "Thành viên",
+    information: "Thông tin",
+  },
+  detail: {
+    head: {
+      title: "Thông tin dự án",
+    },
+    changeStatus: "Đổi trạng thái",
+    changeStatusProject: "Đổi trang thái dự án",
+    save: "lưu",
+    unSave: "bỏ lưu",
+    confirmChangeSaveStatus: {
+      title: "Xác nhận thay đổi trạng thái lưu",
+      content: "Ban có chắc chắn muốn {value}?",
+    },
+    notification: {
+      changeStatusSuccess: "Cập nhật trạng thái thành công!",
+      changeSaveStatusSuccess: "Cập nhật trạng thái lưu thành công!",
+    },
+    workingHoursActual: "Số giờ làm việc thực tế",
+    costSpent: "Chi phí chi trả thực tế",
+  },
+  detailMembers: {
+    head: {
+      title: "Thành viên dự án | Taskcover",
+    },
+    member: "Thành viên",
+    hoursWorked: "Số giờ đã làm",
+    dateAddedProject: "Ngày thêm vào dự án",
+    addMember: "Thêm thành viên",
+    addMembersToProject: "Thêm thành viên vào dự án",
+    removeFromProject: "Loại bỏ thành viên",
+    confirmRemove: {
+      title: "Xác nhận loại bỏ thành viên",
+      content: "Bạn có chắc chắn muốn loại bỏ thành viên này khỏi dự án?",
+    },
+    notification: {
+      updateSuccess: "Cập nhật danh sách thành viên thành công!",
+      removeSuccess: "Loại bỏ thành viên thành công!",
+    },
+  },
 };

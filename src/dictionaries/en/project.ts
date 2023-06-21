@@ -29,4 +29,49 @@ export const ProjectLang: ProjectDictionary = {
         "You need to choose an position for this member first!",
     },
   },
+  tabList: {
+    tasks: "Tasks",
+    activities: "Activities",
+    costHistory: "Cost History",
+    members: "Members",
+    information: "Information",
+  },
+  detail: {
+    head: {
+      title: "Project Information | Taskcover",
+    },
+    changeStatus: "Change status",
+    changeStatusProject: "Change project status",
+    save: "save",
+    unSave: "un save",
+    confirmChangeSaveStatus: {
+      title: "Confirm save status change",
+      content: "Are you sure to {value}?",
+    },
+    notification: {
+      changeStatusSuccess: "Update status successfully!",
+      changeSaveStatusSuccess: "Update saved status successfully!",
+    },
+    workingHoursActual: "Working hours (actual)",
+    costSpent: "Cost spent",
+  },
+  detailMembers: {
+    head: {
+      title: "Project Members | Taskcover",
+    },
+    member: "Member",
+    hoursWorked: "Hours worked",
+    dateAddedProject: "Date added to project",
+    addMember: "Add member",
+    addMembersToProject: "Add members to project",
+    removeFromProject: "Remove from project",
+    confirmRemove: {
+      title: "Confirm remove member",
+      content: "Are you sure you want to remove this member from the project?",
+    },
+    notification: {
+      updateSuccess: "Update members successfully!",
+      removeSuccess: "Remove member successfully!",
+    },
+  },
 };

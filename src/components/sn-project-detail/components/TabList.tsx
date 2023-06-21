@@ -17,6 +17,8 @@ import {
 } from "components/sn-project-detail/Information/components";
 import { getPath } from "utils/index";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { NS_PROJECT } from "constant/index";
 
 type TabItemProps = {
   href: string;
@@ -54,6 +56,8 @@ export default memo(TabList);
 const TabItem = (props: TabItemProps) => {
   const { href, label } = props;
 
+  const projectT = useTranslations(NS_PROJECT);
+
   const pathname = usePathname();
   const params = useParams();
 
@@ -79,7 +83,7 @@ const TabItem = (props: TabItemProps) => {
       }}
     >
       <Text variant="body2" fontWeight={600} whiteSpace="nowrap">
-        {label}
+        {projectT(label)}
       </Text>
     </Link>
   );
@@ -106,11 +110,11 @@ const TabActions = (props: StackProps) => {
 };
 
 const TABS = [
-  { label: "Tasks", href: PROJECT_TASKS_PATH },
-  { label: "Activities", href: PROJECT_ACTIVITIES_PATH },
-  { label: "Cost history", href: PROJECT_COST_HISTORY_PATH },
-  { label: "Members", href: PROJECT_MEMBERS_PATH },
-  { label: "Information", href: PROJECT_INFORMATION_PATH },
+  { label: "tabList.tasks", href: PROJECT_TASKS_PATH },
+  { label: "tabList.activities", href: PROJECT_ACTIVITIES_PATH },
+  { label: "tabList.costHistory", href: PROJECT_COST_HISTORY_PATH },
+  { label: "tabList.members", href: PROJECT_MEMBERS_PATH },
+  { label: "tabList.information", href: PROJECT_INFORMATION_PATH },
 ];
 
 const getSuffixPath = (path: string) => {

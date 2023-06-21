@@ -8,11 +8,13 @@ import { usePathname, useRouter } from "next-intl/client";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import AddMembers from "./AddMembers";
 import { useMembersOfProject } from "store/project/selectors";
+import { NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const Actions = () => {
   const { filters, onGetMembersOfProject, pageSize, id } =
     useMembersOfProject();
-
+  const commonT = useTranslations(NS_COMMON);
   const filtersRef = useRef<Params>(filters);
 
   const pathname = usePathname();
@@ -67,7 +69,7 @@ const Actions = () => {
       <AddMembers />
       <Stack direction="row" alignItems="center" spacing={3}>
         <Search
-          placeholder="Search by email"
+          placeholder={commonT("searchBy", { name: "email" })}
           name="email"
           onChange={onChangeData}
           value={filters?.email}

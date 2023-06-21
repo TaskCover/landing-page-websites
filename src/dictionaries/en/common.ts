@@ -56,6 +56,7 @@ export const CommonLang: CommonDictionary = {
   createNew: "Create new",
   update: "Update",
   edit: "Edit",
+  close: "Close",
   search: "Search",
   assigner: "Assigner",
   name: "Name",
@@ -68,4 +69,5 @@ export const CommonLang: CommonDictionary = {
     close: "Closed",
     pause: "Paused",
   },
+  searchBy: "Search by {name}",
 };

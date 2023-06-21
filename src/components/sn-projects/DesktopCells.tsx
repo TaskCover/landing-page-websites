@@ -25,7 +25,11 @@ const DesktopCells = (props: DesktopCellsProps) => {
       >
         <Stack direction="row" alignItems="center" spacing={1}>
           <Avatar size={32} src={item.avatar?.link} />
-          <Text variant="body2" color="text.primary">
+          <Text
+            variant="body2"
+            color="text.primary"
+            sx={{ "&:hover": { color: "primary.main" } }}
+          >
             {item.name}
           </Text>
         </Stack>

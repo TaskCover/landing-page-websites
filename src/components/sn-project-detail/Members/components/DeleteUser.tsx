@@ -10,7 +10,8 @@ import {
 } from "store/project/selectors";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type DeleteUserProps = {
   id: string;
@@ -23,6 +24,8 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
   const { item } = useProject();
   const { onAddSnackbar } = useSnackbar();
   const { onDeleteMember } = useMembersOfProject();
+  const commonT = useTranslations(NS_COMMON);
+  const projectT = useTranslations(NS_PROJECT);
 
   const onClick = (event) => {
     event.stopPropagation();
@@ -46,7 +49,10 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
       }));
       const newData = await onUpdateProject(item.id, { members });
       if (newData) {
-        onAddSnackbar("Remove member successfully!", "success");
+        onAddSnackbar(
+          projectT("detailMembers.notification.removeSuccess"),
+          "success",
+        );
         onDeleteMember(id);
       }
     } catch (error) {
@@ -58,7 +64,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
     <>
       <IconButton
         onClick={onClick}
-        tooltip="Remove from project"
+        tooltip={projectT("detailMembers.removeFromProject")}
         variant="contained"
         size="small"
         sx={{ bgcolor: "error.light" }}
@@ -73,8 +79,8 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
         }}
         open={isShow}
         onClose={onHide}
-        title="Confirm remove member"
-        content="Are you sure you want to remove this member from the project?"
+        title={projectT("detailMembers.confirmRemove.title")}
+        content={projectT("detailMembers.confirmRemove.content")}
         onSubmit={onSubmit}
       />
     </>

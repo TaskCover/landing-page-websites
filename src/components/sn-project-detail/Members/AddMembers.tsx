@@ -11,11 +11,12 @@ import { MenuList, Stack } from "@mui/material";
 import MemberItem from "components/sn-projects/components/MemberItem";
 import { useEmployeeOptions } from "store/company/selectors";
 import { useMembersOfProject, useProjects } from "store/project/selectors";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI, getPath } from "utils/index";
 import { usePositionOptions } from "store/global/selectors";
 import { usePathname, useRouter } from "next-intl/client";
+import { useTranslations } from "next-intl";
 
 type MemberData = {
   id: string;
@@ -25,6 +26,7 @@ type MemberData = {
 
 const AddMembers = () => {
   const [isShow, onShow, onHide] = useToggle();
+  const projectT = useTranslations(NS_PROJECT);
 
   return (
     <>
@@ -34,7 +36,7 @@ const AddMembers = () => {
         size="small"
         variant="primary"
       >
-        Add member
+        {projectT("detailMembers.addMember")}
       </Button>
       {isShow && <Form open onClose={onHide} />}
     </>
@@ -54,6 +56,9 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
   } = useMembersOfProject();
   const { onUpdateProject } = useProjects();
   const { onAddSnackbar } = useSnackbar();
+  const commonT = useTranslations(NS_COMMON);
+  const projectT = useTranslations(NS_PROJECT);
+
   const { options, onGetOptions: onGetPositionOptions } = usePositionOptions();
   const pathname = usePathname();
   const { push } = useRouter();
@@ -91,7 +96,10 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
       }
       const newData = await onUpdateProject(id, { members: newMembers });
       if (newData) {
-        onAddSnackbar("Update members successfully!", "success");
+        onAddSnackbar(
+          projectT("detailMembers.notification.updateSuccess"),
+          "success",
+        );
         props?.onClose();
 
         const newQueries = { pageIndex: 1, pageSize };
@@ -152,14 +160,17 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
 };
 
 const HeaderForm = () => {
+  const projectT = useTranslations(NS_PROJECT);
+  const commonT = useTranslations(NS_COMMON);
+
   return (
     <Stack spacing={2}>
       <Text textTransform="capitalize" fontWeight={600}>
-        Add members to project
+        {projectT("detailMembers.addMembersToProject")}
       </Text>
       <Search
         name="email"
-        placeholder="Search by email"
+        placeholder={commonT("searchBy", { name: "email" })}
         sx={{ maxWidth: 300 }}
       />
     </Stack>
