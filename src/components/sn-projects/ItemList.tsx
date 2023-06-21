@@ -4,7 +4,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { TableRow } from "@mui/material";
 import { TableLayout, BodyCell, CellProps } from "components/Table";
 import { useProjects } from "store/project/selectors";
-import { DEFAULT_PAGING } from "constant/index";
+import { DEFAULT_PAGING, NS_COMMON } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
 import { usePathname, useRouter } from "next-intl/client";
@@ -20,6 +20,7 @@ import { INITIAL_VALUES } from "./components/helpers";
 import { useAppDispatch } from "store/hooks";
 import DesktopCells from "./DesktopCells";
 import MobileContentCell from "./MobileContentCell";
+import { useTranslations } from "next-intl";
 
 const ItemList = () => {
   const {
@@ -34,7 +35,7 @@ const ItemList = () => {
     onGetProjects,
     onUpdateProject: onUpdateProjectAction,
   } = useProjects();
-  const dispatch = useAppDispatch();
+  const commonT = useTranslations(NS_COMMON);
 
   const { initQuery, isReady, query } = useQueryParams();
   const pathname = usePathname();
@@ -44,15 +45,34 @@ const ItemList = () => {
   const [item, setItem] = useState<Project | undefined>();
   const [action, setAction] = useState<DataAction | undefined>();
 
+  const desktopHeaderList: CellProps[] = useMemo(
+    () => [
+      { value: "#", width: "5%", align: "center" },
+      {
+        value: commonT("name"),
+        width: "30%",
+        align: "left",
+      },
+      {
+        value: commonT("assigner"),
+        width: "30%",
+        align: "left",
+      },
+      { value: commonT("status"), width: "20%" },
+      { value: "", width: "5%" },
+    ],
+    [commonT],
+  );
+
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
       ? MOBILE_HEADER_LIST
-      : DESKTOP_HEADER_LIST;
+      : desktopHeaderList;
     return [
       ...additionalHeaderList,
       { value: "", width: isMdSmaller ? "25%" : "10%" },
     ] as CellProps[];
-  }, [isMdSmaller]);
+  }, [desktopHeaderList, isMdSmaller]);
 
   const initValues = useMemo(
     () =>
@@ -140,7 +160,7 @@ const ItemList = () => {
               <BodyCell align="left">
                 <IconButton
                   onClick={onActionToItem(DataAction.UPDATE, item)}
-                  tooltip="Edit"
+                  tooltip={commonT("edit")}
                   variant="contained"
                   size="small"
                 >
@@ -176,21 +196,5 @@ const ItemList = () => {
 };
 
 export default memo(ItemList);
-
-const DESKTOP_HEADER_LIST = [
-  { value: "#", width: "5%", align: "center" },
-  {
-    value: "Name",
-    width: "30%",
-    align: "left",
-  },
-  {
-    value: "Assigner",
-    width: "30%",
-    align: "left",
-  },
-  { value: "Status", width: "20%" },
-  { value: "", width: "5%" },
-];
 
 const MOBILE_HEADER_LIST = [{ value: "#", width: "75%", align: "left" }];

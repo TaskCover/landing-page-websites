@@ -1,6 +1,8 @@
 import { memo } from "react";
 import { AlertColor } from "@mui/material";
 import { Text, TextProps } from "components/shared";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 type TextStatusProps = {
   text: string;
@@ -10,6 +12,8 @@ type TextStatusProps = {
 
 const TextStatus = (props: TextStatusProps) => {
   const { text, color, width, ...rest } = props;
+
+  const t = useTranslations(NS_COMMON);
 
   return (
     <Text
@@ -25,7 +29,7 @@ const TextStatus = (props: TextStatusProps) => {
       minWidth={width}
       {...rest}
     >
-      {text}
+      {t(text)}
     </Text>
   );
 };

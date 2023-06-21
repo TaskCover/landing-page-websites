@@ -5,6 +5,8 @@ import {
   AN_ERROR_TRY_AGAIN,
   DATE_FORMAT_FORM,
   IMAGES_ACCEPT,
+  NS_COMMON,
+  NS_PROJECT,
 } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
 import { memo, useEffect, useMemo } from "react";
@@ -28,6 +30,7 @@ import {
   useProjectTypeOptions,
 } from "store/global/selectors";
 import { Endpoint, client } from "api";
+import { useTranslations } from "next-intl";
 
 export type ProjectDataForm = Omit<ProjectData, "members" | "avatar"> & {
   members?: Member[];
@@ -62,17 +65,19 @@ const Form = (props: FormProps) => {
     pageIndex,
     totalPages,
   } = useEmployeeOptions();
+  const commonT = useTranslations(NS_COMMON);
+  const projectT = useTranslations(NS_PROJECT);
 
   const label = useMemo(() => {
     switch (type) {
       case DataAction.CREATE:
-        return "Create new";
+        return commonT("createNew");
       case DataAction.UPDATE:
-        return "Update";
+        return commonT("update");
       default:
         return "";
     }
-  }, [type]);
+  }, [commonT, type]);
 
   const validationSchema = useMemo(() => {
     if (type === DataAction.CREATE) {
@@ -110,7 +115,7 @@ const Form = (props: FormProps) => {
         );
 
         if (isMissingPosition) {
-          throw "The member list has one or more members with invalid positions.";
+          throw projectT("list.notification.invalidPositions");
         }
       }
       if (typeof values["avatar"] === "object") {
@@ -124,7 +129,10 @@ const Form = (props: FormProps) => {
       const newItem = await onSubmitProps(dataParsed);
 
       if (newItem) {
-        onAddSnackbar(`${label} project successfully!`, "success");
+        onAddSnackbar(
+          projectT("list.notification.success", { label }),
+          "success",
+        );
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -203,7 +211,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw -24px)", sm: 700 },
         maxHeight: "calc(100vh - 24px)",
       }}
-      label={`${label} project`}
+      label={`${label} ${projectT("list.key")}`}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
@@ -211,38 +219,43 @@ const Form = (props: FormProps) => {
     >
       <Stack spacing={2} py={3}>
         <Input
-          title="Name"
+          title={projectT("list.form.title.name")}
           name="name"
           required
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.name}
-          error={touchedErrors?.name}
+          error={commonT(touchedErrors?.name, {
+            name: projectT("list.form.title.name"),
+            max: MAX_NAME_CHARACTERS,
+          })}
           rootSx={sxConfig.input}
         />
         <Stack direction={{ sm: "row" }} spacing={2}>
           <Select
             options={employeeOptions}
-            title="Assigner"
+            title={commonT("assigner")}
             name="owner"
             required
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.owner}
-            error={touchedErrors?.owner}
+            error={commonT(touchedErrors?.owner, { name: commonT("assigner") })}
             rootSx={sxConfig.input}
             fullWidth
             onEndReached={onEndReached}
           />
           <Select
             options={projectTypeOptions}
-            title="Project type"
+            title={projectT("list.form.title.projectType")}
             name="type_project"
             required
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.type_project}
-            error={touchedErrors?.type_project}
+            error={commonT(touchedErrors?.type_project, {
+              name: projectT("list.form.title.projectType"),
+            })}
             rootSx={sxConfig.input}
             fullWidth
             onEndReached={onProjectTypeOptionsEndReached}
@@ -258,24 +271,29 @@ const Form = (props: FormProps) => {
         />
         <Stack direction={{ sm: "row" }} spacing={2}>
           <DatePicker
-            title="Start date"
+            title={commonT("form.title.startDate")}
             name="start_date"
             required
             onChange={onChangeDate}
             onBlur={formik.handleBlur}
             value={formik.values?.start_date}
-            error={touchedErrors?.start_date}
+            error={commonT(touchedErrors?.start_date, {
+              name: commonT("form.title.startDate"),
+            })}
             rootSx={sxConfig.input}
             fullWidth
           />
           <DatePicker
-            title="End date"
+            title={commonT("form.title.endDate")}
             name="end_date"
             required
             onChange={onChangeDate}
             onBlur={formik.handleBlur}
             value={formik.values?.end_date}
-            error={touchedErrors?.end_date}
+            error={commonT(touchedErrors?.end_date, {
+              name: commonT("form.title.endDate"),
+              name2: commonT("form.title.startDate"),
+            })}
             rootSx={sxConfig.input}
             fullWidth
             sx={{
@@ -285,23 +303,27 @@ const Form = (props: FormProps) => {
         </Stack>
         <Stack direction={{ sm: "row" }} spacing={2}>
           <InputNumber
-            title="Estimated cost"
+            title={projectT("list.form.title.estimatedCost")}
             name="expected_cost"
             onChange={onChangeField}
             onBlur={formik.handleBlur}
             value={formik.values?.expected_cost}
-            error={touchedErrors?.expected_cost}
+            error={commonT(touchedErrors?.expected_cost, {
+              name: projectT("list.form.title.estimatedCost"),
+            })}
             rootSx={sxConfig.input}
             fullWidth
             numberType="integer"
           />
           <InputNumber
-            title="Estimated working hours"
+            title={projectT("list.form.title.estimatedWorkingHours")}
             name="working_hours"
             onChange={onChangeField}
             onBlur={formik.handleBlur}
             value={formik.values?.working_hours}
-            error={touchedErrors?.working_hours}
+            error={commonT(touchedErrors?.working_hours, {
+              name: projectT("list.form.title.estimatedWorkingHours"),
+            })}
             rootSx={sxConfig.input}
             fullWidth
             numberType="integer"
@@ -318,13 +340,15 @@ const Form = (props: FormProps) => {
             onChange={onChangeField}
           />
           <Input
-            title="Description"
+            title={commonT("form.title.description")}
             name="description"
             required
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.description}
-            error={touchedErrors?.description}
+            error={commonT(touchedErrors?.description, {
+              name: commonT("form.title.description"),
+            })}
             fullWidth
             multiline
             sx={{ flex: 1, mt: { xs: 2, sm: 0 } }}
@@ -339,26 +363,25 @@ export default memo(Form);
 
 const NOW = new Date().setHours(0, 0, 0, 0);
 
+const MAX_NAME_CHARACTERS = 50;
+
 const baseValidationSchema = Yup.object().shape({
   name: Yup.string()
     .trim()
-    .required("Project name is required.")
-    .max(50, "Project name is too long, maximum 50 characters."),
-  description: Yup.string().trim().required("Description is required."),
-  owner: Yup.string().required("Assigner is required."),
-  type_project: Yup.string().required("Project type is required."),
+    .required("form.error.required")
+    .max(MAX_NAME_CHARACTERS, "form.error.overMax"),
+  description: Yup.string().trim().required("form.error.required"),
+  owner: Yup.string().required("form.error.required"),
+  type_project: Yup.string().required("form.error.required"),
 });
 
 const createValidationSchema = baseValidationSchema.shape({
   start_date: Yup.number()
-    .required("Start date is required.")
-    .min(NOW, "The start date cannot be a date in the past."),
+    .required("form.error.required")
+    .min(NOW, "form.error.datePast"),
   end_date: Yup.number()
-    .required("End date is required.")
-    .min(
-      Yup.ref("start_date"),
-      "End date must be greater than or equal to start date.",
-    ),
+    .required("form.error.required")
+    .min(Yup.ref("start_date"), "form.error.gte"),
 });
 
 const sxConfig = {

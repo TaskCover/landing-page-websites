@@ -1,6 +1,8 @@
 import { memo } from "react";
 import { IconButton, IconButtonProps } from "components/shared";
 import CloseIcon from "icons/CloseIcon";
+import { NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type ClearProps = IconButtonProps & {
   onClear?: () => void;
@@ -8,9 +10,11 @@ type ClearProps = IconButtonProps & {
 
 const Clear = (props: ClearProps) => {
   const { onClear, sx, ...rest } = props;
+  const t = useTranslations(NS_COMMON);
+
   return (
     <IconButton
-      tooltip="Clear filters"
+      tooltip={t("filter.clear")}
       sx={{ color: "grey.300", ...sx }}
       noPadding
       onClick={onClear}

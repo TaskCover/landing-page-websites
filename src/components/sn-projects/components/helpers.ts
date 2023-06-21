@@ -2,9 +2,9 @@ import { AlertColor } from "@mui/material";
 import { ProjectStatus } from "store/project/actions";
 
 export const TEXT_STATUS: { [key in ProjectStatus]: string } = {
-  [ProjectStatus.ACTIVE]: "Activate",
-  [ProjectStatus.PAUSE]: "Paused",
-  [ProjectStatus.CLOSE]: "Closed",
+  [ProjectStatus.ACTIVE]: "statusEnum.active",
+  [ProjectStatus.PAUSE]: "statusEnum.pause",
+  [ProjectStatus.CLOSE]: "statusEnum.close",
 };
 
 export const COLOR_STATUS: { [key in ProjectStatus]: AlertColor } = {

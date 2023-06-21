@@ -112,7 +112,7 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
         },
         display: "inline-flex",
       }}
-      tooltip={isShowLarge || isSmSmaller || !!subs ? undefined : label}
+      tooltip={isShowLarge || isSmSmaller || !!subs ? undefined : t(label)}
       placement="right"
       onMouseOver={onMouseOver}
       onMouseOut={onClose}

@@ -3,13 +3,16 @@
 import { memo, useEffect } from "react";
 import { Stack } from "@mui/material";
 import { useHeaderConfig } from "store/app/selectors";
+import { useTranslations } from "next-intl";
+import { NS_PROJECT } from "constant/index";
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   const { onUpdateHeaderConfig } = useHeaderConfig();
+  const projectT = useTranslations(NS_PROJECT);
 
   useEffect(() => {
     onUpdateHeaderConfig({
-      title: "Projects management",
+      title: projectT("list.title"),
       searchPlaceholder: "Search project by name",
     });
     return () => {
@@ -19,7 +22,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
         prevPath: undefined,
       });
     };
-  }, [onUpdateHeaderConfig]);
+  }, [onUpdateHeaderConfig, projectT]);
 
   return <Stack flex={1}>{children}</Stack>;
 };

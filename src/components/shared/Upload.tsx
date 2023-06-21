@@ -4,8 +4,9 @@ import { ChangeEvent, memo, useMemo, useRef, useState } from "react";
 import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
 import Image from "next/image";
 import UploadIcon from "icons/UploadIcon";
-import { IMAGES_ACCEPT } from "constant/index";
+import { IMAGES_ACCEPT, NS_COMMON } from "constant/index";
 import { useSnackbar } from "store/app/selectors";
+import { useTranslations } from "next-intl";
 
 export type UploadProps = {
   title: string;
@@ -19,6 +20,7 @@ const Upload = (props: UploadProps) => {
   const { title, name, required, onChange, value } = props;
   const inputFileRef = useRef<HTMLInputElement | null>(null);
   const { onAddSnackbar } = useSnackbar();
+  const t = useTranslations(NS_COMMON);
 
   const previewImage = useMemo(() => {
     if (typeof value === "object") {
@@ -37,10 +39,7 @@ const Upload = (props: UploadProps) => {
     if (IMAGES_ACCEPT.includes(files[0].type)) {
       onChange(name, files[0]);
     } else {
-      onAddSnackbar(
-        "File type is invalid. Currently the system only support PNG, JPEG, JPG",
-        "error",
-      );
+      onAddSnackbar(t("notification.imageTypeInvalid"), "error");
     }
   };
 
@@ -69,7 +68,7 @@ const Upload = (props: UploadProps) => {
           size="extraSmall"
           startIcon={<UploadIcon color="inherit" sx={{ fontSize: 16 }} />}
         >
-          Upload
+          {t("form.title.uploadImage")}
         </Button>
       </Stack>
 

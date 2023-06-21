@@ -10,6 +10,8 @@ import { PROJECT_INFORMATION_PATH } from "constant/paths";
 import { getPath } from "utils/index";
 import Link from "components/Link";
 import Avatar from "components/Avatar";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 type MobileContentCellProps = {
   item: Project;
@@ -23,11 +25,12 @@ type InformationItemProps = {
 
 const MobileContentCell = (props: MobileContentCellProps) => {
   const { item } = props;
+  const t = useTranslations(NS_COMMON);
   return (
     <BodyCell align="left">
       <Stack spacing={2} py={1.5}>
         <InformationItem
-          label="Name"
+          label={t("name")}
           href={getPath(PROJECT_INFORMATION_PATH, undefined, { id: item.id })}
         >
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -37,11 +40,11 @@ const MobileContentCell = (props: MobileContentCellProps) => {
             </Text>
           </Stack>
         </InformationItem>
-        <InformationItem label="Assigner">
+        <InformationItem label={t("assigner")}>
           {item?.owner?.fullname}
         </InformationItem>
 
-        <InformationItem label="Status">
+        <InformationItem label={t("status")}>
           {!!item?.status && (
             <TextStatus
               text={TEXT_STATUS[item.status]}

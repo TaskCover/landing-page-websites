@@ -7,6 +7,9 @@ import {
   paginationItemClasses,
 } from "@mui/material";
 import { Select, Text } from "./shared";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
+import { formatNumber } from "utils/index";
 
 type PaginationProps = Omit<MuiPaginationProps, "count"> & {
   totalPages?: number;
@@ -29,6 +32,8 @@ const Pagination = (props: PaginationProps) => {
     ...rest
   } = props;
 
+  const t = useTranslations(NS_COMMON);
+
   const onChange = (_, newPage: number) => {
     onChangePage(newPage);
   };
@@ -50,7 +55,7 @@ const Pagination = (props: PaginationProps) => {
     >
       <Stack direction="row" alignItems="center" spacing={1}>
         <Text variant="body2" fontWeight={600}>
-          Showing
+          {t("paging.show")}
         </Text>
         <Select
           rootSx={{ borderColor: "#DDDDDD", borderRadius: 2, height: 40 }}
@@ -59,10 +64,9 @@ const Pagination = (props: PaginationProps) => {
           value={pageSize}
           size="small"
         />
-        <Text
-          variant="body2"
-          fontWeight={600}
-        >{`per page out of ${totalItems}`}</Text>
+        <Text variant="body2" fontWeight={600}>
+          {t("paging.outOf", { count: formatNumber(totalItems) })}
+        </Text>
       </Stack>
 
       <MuiPagination

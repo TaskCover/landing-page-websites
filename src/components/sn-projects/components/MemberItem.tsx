@@ -5,6 +5,8 @@ import { Employee } from "store/company/reducer";
 import { Text, Checkbox, Select } from "components/shared";
 import Avatar from "components/Avatar";
 import { usePositionOptions } from "store/global/selectors";
+import { useTranslations } from "next-intl";
+import { NS_COMMON, NS_PROJECT } from "constant/index";
 
 type MemberItemProps = Employee & {
   onChange: (
@@ -23,6 +25,8 @@ const MemberItem = (props: MemberItemProps) => {
 
   const { options } = usePositionOptions();
   const { onAddSnackbar } = useSnackbar();
+  const projectT = useTranslations(NS_PROJECT);
+  const commonT = useTranslations(NS_COMMON);
 
   const [position, setPosition] = useState<string | undefined>(
     positionOfProject,
@@ -38,7 +42,7 @@ const MemberItem = (props: MemberItemProps) => {
   const onSelect = () => {
     if (!position) {
       onAddSnackbar(
-        "You need to choose an position for this member first",
+        projectT("list.notification.choosePositionFirst"),
         "warning",
       );
       return;
@@ -68,7 +72,7 @@ const MemberItem = (props: MemberItemProps) => {
         </Stack>
         <Stack flex={1} maxWidth={{ sm: "50%" }} py={{ xs: 2, sm: 0 }}>
           <Select
-            title="Position"
+            title={commonT("position")}
             name="position"
             options={options}
             value={position}
