@@ -3,28 +3,38 @@
 import { memo, useEffect, useMemo, useRef } from "react";
 import { Stack } from "@mui/material";
 import { useRouter } from "next-intl/client";
-import { HOME_PATH } from "constant/paths";
+import { HOME_PATH, UPGRADE_ACCOUNT_PATH } from "constant/paths";
 import { useAppReady, useAuth } from "store/app/selectors";
 import AppLoading from "components/AppLoading";
 import useWindowSize from "hooks/useWindowSize";
+import { Permission } from "constant/enums";
 
 type WrapperProps = {
   children: React.ReactNode;
 };
 
 const Wrapper = (props: WrapperProps) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const { appReady } = useAppReady();
   const { replace } = useRouter();
 
   const { height } = useWindowSize();
 
+  const isNeedUpgrade = useMemo(
+    () =>
+      isLoggedIn &&
+      user?.roles?.includes(Permission.EU) &&
+      !user.is_pay_user &&
+      !user.approve,
+    [isLoggedIn, user?.approve, user?.is_pay_user, user?.roles],
+  );
+
   const isSmallHeight = useMemo(() => height && height < 768, [height]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
-    replace(HOME_PATH);
-  }, [isLoggedIn, replace]);
+    replace(isNeedUpgrade ? UPGRADE_ACCOUNT_PATH : HOME_PATH);
+  }, [isLoggedIn, isNeedUpgrade, replace]);
 
   if (!appReady || isLoggedIn) return <AppLoading />;
 

@@ -24,6 +24,7 @@ export interface UserInfo extends User {
   created_time: string;
   department: string;
   is_active: boolean;
+  approve?: boolean;
   updated_time: string;
   date_end_using: string;
   date_start_using: string;

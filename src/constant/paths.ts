@@ -64,5 +64,5 @@ export const AUTHORIZED_PATHS = {
     MY_COMPANY_PATH,
     HOME_PATH,
   ],
-  [Permission.EU]: [UPGRADE_ACCOUNT_PATH],
+  [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };
