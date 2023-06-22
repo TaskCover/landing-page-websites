@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_COMPANY } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
 import { memo, useMemo } from "react";
 import { useSnackbar } from "store/app/selectors";
@@ -10,6 +10,7 @@ import { getMessageErrorByAPI } from "utils/index";
 import { Input } from "components/shared";
 import { VN_PHONE_REGEX } from "constant/regex";
 import { CompanyData } from "store/company/actions";
+import { useTranslations } from "next-intl";
 
 type FormProps = {
   initialValues: CompanyData;
@@ -20,13 +21,15 @@ type FormProps = {
 const Form = (props: FormProps) => {
   const { initialValues, onSubmit: onSubmitProps, ...rest } = props;
   const { onAddSnackbar } = useSnackbar();
+  const commonT = useTranslations(NS_COMMON);
+  const companyT = useTranslations(NS_COMPANY);
 
   const onSubmit = async (values: CompanyData) => {
     try {
       const newItem = await onSubmitProps(values);
 
       if (newItem) {
-        onAddSnackbar("Company information updated successfully!", "success");
+        onAddSnackbar(companyT("information.notification.success"), "success");
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -67,7 +70,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
-      label="Edit Company Information"
+      label={`${commonT("edit")} ${companyT("information.key")}`}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
@@ -75,35 +78,41 @@ const Form = (props: FormProps) => {
     >
       <Stack spacing={2} py={3}>
         <Input
-          title="Company name"
+          title={companyT("information.form.title.name")}
           name="name"
           required
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.name}
-          error={touchedErrors?.name}
+          error={commonT(touchedErrors?.name, {
+            name: companyT("information.form.title.name"),
+          })}
           rootSx={sxConfig.input}
         />
         <Input
-          title="Address"
+          title={companyT("information.form.title.address")}
           name="address"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.address}
-          error={touchedErrors?.address}
+          error={commonT(touchedErrors?.address, {
+            name: companyT("information.form.title.address"),
+          })}
           rootSx={sxConfig.input}
         />
         <Input
-          title="Phone number"
+          title={commonT("phone")}
           name="phone"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.phone}
-          error={touchedErrors?.phone}
           rootSx={sxConfig.input}
+          error={commonT(touchedErrors?.phone, {
+            name: commonT("phone"),
+          })}
         />
         <Input
-          title="Tax code"
+          title={companyT("information.form.title.taxCode")}
           name="tax_code"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -119,12 +128,10 @@ const Form = (props: FormProps) => {
 export default memo(Form);
 
 export const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Company name is required."),
+  name: Yup.string().trim().required("form.error.required"),
   address: Yup.string().trim(),
   // .required("Chức vụ là bắt buộc."),
-  phone: Yup.string()
-    .trim()
-    .matches(VN_PHONE_REGEX, "Phone number is invalid!"),
+  phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
   tax_code: Yup.string().trim(),
   // .required("Tax code là bắt buộc."),
 });

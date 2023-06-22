@@ -10,6 +10,8 @@ import StatusServer from "components/StatusServer";
 import { useParams } from "next/navigation";
 import { useHeaderConfig } from "store/app/selectors";
 import { useCompany } from "store/manager/selectors";
+import { NS_COMMON, NS_COMPANY } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -28,6 +30,8 @@ const InformationProjectPage = () => {
     isFetching: myItemIsFetching,
   } = useMyCompany();
   const { id } = useParams();
+  const commonT = useTranslations(NS_COMMON);
+  const companyT = useTranslations(NS_COMPANY);
 
   const { prevPath, title } = useHeaderConfig();
 
@@ -52,27 +56,26 @@ const InformationProjectPage = () => {
         <Stack direction="row" spacing={2} justifyContent="space-between">
           <Stack>
             <Text variant="h4">{item?.name ?? "--"}</Text>
-            <Text
-              variant="h6"
-              color="grey.400"
-            >{`Tax code: ${item?.tax_code}`}</Text>
+            <Text variant="h6" color="grey.400">{`${companyT(
+              "information.form.title.taxCode",
+            )}: ${item?.tax_code}`}</Text>
           </Stack>
 
           <EditCompany />
         </Stack>
         <Stack spacing={3} width={{ xs: "fit-content", md: 600 }}>
           <Divider sx={{ borderColor: "grey.100" }} />
-          <Text variant="h5">General information</Text>
+          <Text variant="h5">{companyT("information.generalInformation")}</Text>
           <Stack
             direction="row"
             alignItems="center"
             spacing={{ xs: 2, sm: 5, lg: 10 }}
           >
-            <InformationItem label="Owner of Company">
+            <InformationItem label={companyT("information.ownerOfCompany")}>
               {item?.owner?.fullname}
             </InformationItem>
 
-            <InformationItem label="Owner email">
+            <InformationItem label={companyT("information.ownerEmail")}>
               {item?.owner?.email}
             </InformationItem>
           </Stack>
@@ -81,24 +84,26 @@ const InformationProjectPage = () => {
             alignItems="center"
             spacing={{ xs: 2, sm: 5, lg: 10 }}
           >
-            <InformationItem label="Phone number">
+            <InformationItem label={commonT("phone")}>
               {item?.phone}
             </InformationItem>
 
-            <InformationItem label="Address">{item?.address}</InformationItem>
+            <InformationItem label={companyT("information.form.title.address")}>
+              {item?.address}
+            </InformationItem>
           </Stack>
           <Divider sx={{ borderColor: "grey.100" }} />
-          <Text variant="h5">Detail Information</Text>
+          <Text variant="h5">{companyT("information.detailInformation")}</Text>
           <Stack
             direction="row"
             alignItems="center"
             spacing={{ xs: 2, sm: 5, lg: 10 }}
           >
-            <InformationItem label="Number of employees">
+            <InformationItem label={companyT("information.numberOfEmployees")}>
               {formatNumber(item?.total_member)}
             </InformationItem>
 
-            <InformationItem label="Number of positions">
+            <InformationItem label={companyT("information.numberOfPositions")}>
               {formatNumber(item?.total_position)}
             </InformationItem>
           </Stack>
@@ -107,11 +112,11 @@ const InformationProjectPage = () => {
             alignItems="center"
             spacing={{ xs: 2, sm: 5, lg: 10 }}
           >
-            <InformationItem label="Number of projects">
+            <InformationItem label={companyT("information.numberOfProjects")}>
               {formatNumber(item?.total_project)}
             </InformationItem>
 
-            <InformationItem label="Time create">
+            <InformationItem label={commonT("creationDate")}>
               {formatDate(item?.created_time, undefined, "--")}
             </InformationItem>
           </Stack>

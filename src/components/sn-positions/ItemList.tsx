@@ -14,8 +14,9 @@ import { usePositions } from "store/company/selectors";
 import { PositionData } from "store/company/actions";
 import Form from "./Form";
 import { getDataFromKeys, getPath } from "utils/index";
-import { DEFAULT_PAGING } from "constant/index";
+import { DEFAULT_PAGING, NS_COMMON, NS_COMPANY } from "constant/index";
 import Pagination from "components/Pagination";
+import { useTranslations } from "next-intl";
 
 const ItemList = () => {
   const {
@@ -31,6 +32,8 @@ const ItemList = () => {
     onUpdatePosition,
     onDeletePosition,
   } = usePositions();
+  const commonT = useTranslations(NS_COMMON);
+  const companyT = useTranslations(NS_COMPANY);
 
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
@@ -41,16 +44,36 @@ const ItemList = () => {
   const [item, setItem] = useState<Position | undefined>();
   const [action, setAction] = useState<DataAction | undefined>();
 
+  const desktopHeaderList: CellProps[] = useMemo(
+    () => [
+      { value: "#", width: "5%", align: "center" },
+      {
+        value: commonT("name"),
+        width: "25%",
+        align: "left",
+      },
+      {
+        value: commonT("creator"),
+        width: "20%",
+        align: "left",
+      },
+      { value: commonT("creationDate"), width: "20%" },
+      { value: companyT("positions.numberOfEmployees"), width: "20%" },
+      { value: "", width: "10%" },
+    ],
+    [commonT, companyT],
+  );
+
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
       ? MOBILE_HEADER_LIST
-      : DESKTOP_HEADER_LIST;
+      : desktopHeaderList;
 
     return [
       ...additionalHeaderList,
       { value: "", width: isMdSmaller ? "25%" : "10%" },
     ] as CellProps[];
-  }, [isMdSmaller]);
+  }, [desktopHeaderList, isMdSmaller]);
 
   const onActionToItem = (action: DataAction, item?: Position) => {
     return () => {
@@ -147,22 +170,5 @@ const ItemList = () => {
 };
 
 export default memo(ItemList);
-
-const DESKTOP_HEADER_LIST = [
-  { value: "#", width: "5%", align: "center" },
-  {
-    value: "Name",
-    width: "25%",
-    align: "left",
-  },
-  {
-    value: "Creator",
-    width: "20%",
-    align: "left",
-  },
-  { value: "Creation date", width: "20%" },
-  { value: "Number of employees", width: "20%" },
-  { value: "", width: "10%" },
-];
 
 const MOBILE_HEADER_LIST = [{ value: "#", width: "75%", align: "left" }];

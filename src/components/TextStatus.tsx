@@ -8,12 +8,13 @@ type TextStatusProps = {
   text: string;
   color: AlertColor;
   width?: number;
+  namespace?: string;
 } & Omit<TextProps, "color">;
 
 const TextStatus = (props: TextStatusProps) => {
-  const { text, color, width, ...rest } = props;
+  const { text, color, width, namespace = NS_COMMON, ...rest } = props;
 
-  const t = useTranslations(NS_COMMON);
+  const t = useTranslations(namespace);
 
   return (
     <Text

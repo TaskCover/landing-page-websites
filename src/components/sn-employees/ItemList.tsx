@@ -15,7 +15,7 @@ import {
   CellProps,
   ActionsCell,
 } from "components/Table";
-import { DEFAULT_PAGING } from "constant/index";
+import { DEFAULT_PAGING, NS_COMMON, NS_COMPANY } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
 import { usePathname, useRouter } from "next-intl/client";
@@ -32,6 +32,7 @@ import TrashIcon from "icons/TrashIcon";
 import { MobileContentCell, DesktopCells } from "./components";
 import useBreakpoint from "hooks/useBreakpoint";
 import DeleteConfirm from "./components/DeleteConfirm";
+import { useTranslations } from "next-intl";
 
 const ItemList = () => {
   const {
@@ -47,6 +48,8 @@ const ItemList = () => {
     onUpdateEmployee: onUpdateEmployeeAction,
     onDeleteEmployees,
   } = useEmployees();
+  const companyT = useTranslations(NS_COMPANY);
+  const commonT = useTranslations(NS_COMMON);
 
   const { initQuery, isReady, query } = useQueryParams();
   const pathname = usePathname();
@@ -73,10 +76,22 @@ const ItemList = () => {
     [items],
   );
 
+  const desktopHeaderList: CellProps[] = useMemo(
+    () => [
+      { value: commonT("fullName"), width: "15%", align: "left" },
+      { value: "Email", width: "15%", align: "left" },
+      { value: commonT("position"), width: "15%" },
+      { value: commonT("creationDate"), width: "13.5%" },
+      { value: companyT("employees.expirationDate"), width: "13.5%" },
+      { value: commonT("status"), width: "17%" },
+    ],
+    [commonT, companyT],
+  );
+
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
       ? MOBILE_HEADER_LIST
-      : DESKTOP_HEADER_LIST;
+      : desktopHeaderList;
 
     return [
       {
@@ -86,7 +101,7 @@ const ItemList = () => {
       ...additionalHeaderList,
       { value: "", width: isMdSmaller ? "20%" : "8%" },
     ] as CellProps[];
-  }, [isMdSmaller, isCheckedAll, onChangeAll]);
+  }, [isMdSmaller, desktopHeaderList, isCheckedAll, onChangeAll]);
 
   const onToggleSelect = (item: Employee, indexSelected: number) => {
     return () => {
@@ -190,7 +205,7 @@ const ItemList = () => {
             <IconButton
               size="small"
               onClick={onPay}
-              tooltip="Pay"
+              tooltip={companyT("employees.pay")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -206,7 +221,7 @@ const ItemList = () => {
             <IconButton
               size="small"
               onClick={onDelete}
-              tooltip="Delete"
+              tooltip={commonT("delete")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -254,7 +269,7 @@ const ItemList = () => {
                     !item.is_pay_user
                       ? [
                           {
-                            content: "Pay",
+                            content: companyT("employees.pay"),
                             onClick: onActionToItem(DataAction.OTHER, item),
                             icon: (
                               <CardSendIcon
@@ -286,8 +301,8 @@ const ItemList = () => {
         <ConfirmDialog
           open
           onClose={onResetAction}
-          title="Confirm payment"
-          content="Are you sure to pay all these items??"
+          title={companyT("employees.confirmPayment.title")}
+          content={companyT("employees.confirmPayment.content", { count: 1 })}
         />
       )}
       {action === DataAction.UPDATE && (
@@ -305,10 +320,10 @@ const ItemList = () => {
       <DeleteConfirm
         open={action === DataAction.DELETE}
         onClose={onResetAction}
-        title="Confirm remove employee"
-        content={`Are you sure to remove ${
-          selectedList.length === 1 ? "this" : "these"
-        } employee?`}
+        title={companyT("employees.confirmRemove.title")}
+        content={companyT("employees.confirmRemove.content", {
+          count: selectedList.length,
+        })}
         items={selectedList}
         onSubmit={onSubmitDelete}
       />
@@ -317,14 +332,5 @@ const ItemList = () => {
 };
 
 export default memo(ItemList);
-
-const DESKTOP_HEADER_LIST = [
-  { value: "Name", width: "15%", align: "left" },
-  { value: "Email", width: "15%", align: "left" },
-  { value: "Position", width: "15%" },
-  { value: "Creation date", width: "13.5%" },
-  { value: "Expiration date", width: "13.5%" },
-  { value: "Status", width: "17%" },
-];
 
 const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];

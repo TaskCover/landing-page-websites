@@ -7,6 +7,8 @@ import TextStatus from "components/TextStatus";
 import { COLOR_STATUS, TEXT_STATUS } from "../helpers";
 import { BodyCell } from "components/Table";
 import { Employee } from "store/company/reducer";
+import { NS_COMPANY, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type MobileContentCellProps = {
   item: Employee;
@@ -19,6 +21,9 @@ type InformationItemProps = {
 
 const MobileContentCell = (props: MobileContentCellProps) => {
   const { item } = props;
+  const companyT = useTranslations(NS_COMPANY);
+  const commonT = useTranslations(NS_COMMON);
+
   return (
     <BodyCell align="left">
       <Stack spacing={2} py={1.5}>
@@ -27,14 +32,15 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           <Text variant="h6">{item.fullname}</Text>
         </Stack>
         <InformationItem label="Email">{item.email}</InformationItem>
-        <InformationItem label="Chức vụ">
+        <InformationItem label={commonT("position")}>
           {item?.position?.name}
         </InformationItem>
-        <InformationItem label="Ngày tạo">
+        <InformationItem label={commonT("creationDate")}>
           {formatDate(item.created_time)}
         </InformationItem>
-        <InformationItem label="Trạng thái">
+        <InformationItem label={commonT("status")}>
           <TextStatus
+            namespace={NS_COMPANY}
             color={COLOR_STATUS[Number(item.is_pay_user)]}
             text={TEXT_STATUS[Number(item.is_pay_user)]}
           />

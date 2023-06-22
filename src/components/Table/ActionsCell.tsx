@@ -17,11 +17,12 @@ import { IconButton, Text } from "components/shared";
 import MoreSquareIcon from "icons/MoreSquareIcon";
 import PencilIcon from "icons/PencilIcon";
 import TrashIcon from "icons/TrashIcon";
-import ConfirmDialog from "components/ConfirmDialog";
+import ConfirmDialog, { ConfirmDialogProps } from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type ActionOption = {
   icon: React.ReactNode;
@@ -34,6 +35,7 @@ type ActionsCellProps = {
   onDelete?: () => Promise<unknown> | void;
   options?: ActionOption[];
   hasPopup?: boolean;
+  deleteProps?: Omit<ConfirmDialogProps, "open" | "onClose" | "onSubmit">;
 } & Omit<TableCellProps, "children">;
 
 const ActionsCell = (props: ActionsCellProps) => {
@@ -42,9 +44,11 @@ const ActionsCell = (props: ActionsCellProps) => {
     onEdit,
     onDelete: onDeleteProps,
     hasPopup = true,
+    deleteProps,
     ...rest
   } = props;
   const { onAddSnackbar } = useSnackbar();
+  const t = useTranslations(NS_COMMON);
 
   const [isShow, onShow, onHide] = useToggle();
   const [isSubmitting, onSubmittingTrue, onSubmittingFalse] = useToggle(false);
@@ -172,7 +176,7 @@ const ActionsCell = (props: ActionsCellProps) => {
               >
                 <PencilIcon sx={{ color: "grey.400" }} fontSize="medium" />
                 <Text ml={2} variant="body2" color="grey.400">
-                  Edit
+                  {t("edit")}
                 </Text>
               </MenuItem>
             )}
@@ -184,7 +188,7 @@ const ActionsCell = (props: ActionsCellProps) => {
               >
                 <TrashIcon color="error" fontSize="medium" />
                 <Text ml={2} variant="body2" color="grey.400">
-                  Delete
+                  {t("delete")}
                 </Text>
               </MenuItem>
             )}
@@ -195,8 +199,9 @@ const ActionsCell = (props: ActionsCellProps) => {
         onSubmit={onDelete}
         open={isShow}
         onClose={onCloseDialogDelete}
-        title="Confirm delete"
-        content="Are you sure to delete?"
+        title={t("confirmDelete.title")}
+        content={t("confirmDelete.content")}
+        {...deleteProps}
       />
     </BodyCell>
   );

@@ -52,6 +52,7 @@ export type CommonDictionary = {
   createNew: string;
   update: string;
   edit: string;
+  delete: string;
   close: string;
   search: string;
   assigner: string;
@@ -66,4 +67,11 @@ export type CommonDictionary = {
     pause: string;
   };
   searchBy: string;
+  creationDate: string;
+  creator: string;
+  confirmDelete: {
+    title: string;
+    content: string;
+  };
+  upgradeAccount: string;
 };

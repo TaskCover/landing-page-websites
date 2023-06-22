@@ -6,8 +6,8 @@ export enum PaymentStatus {
 }
 
 export const TEXT_STATUS: { [key in PaymentStatus]: string } = {
-  [PaymentStatus.PAID]: "Paid",
-  [PaymentStatus.UNPAID]: "Unpaid",
+  [PaymentStatus.PAID]: "employees.paid",
+  [PaymentStatus.UNPAID]: "employees.unPaid",
 };
 
 export const COLOR_STATUS: { [key in PaymentStatus]: AlertColor } = {

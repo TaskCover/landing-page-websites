@@ -29,13 +29,14 @@ import { reset as projectReset } from "store/project/reducer";
 import { reset as managerReset } from "store/manager/reducer";
 import { reset as companyReset } from "store/company/reducer";
 import { useTranslations } from "next-intl";
-import { NS_LAYOUT } from "constant/index";
+import { NS_COMMON, NS_LAYOUT } from "constant/index";
 
 const AccountInfo = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
   const { user, onSignOut: onSignOutAuth } = useAuth();
   const dispatch = useAppDispatch();
+  const commonT = useTranslations(NS_COMMON);
   const t = useTranslations(NS_LAYOUT);
 
   const onOpen = (event: MouseEvent<HTMLButtonElement>) => {
@@ -138,7 +139,7 @@ const AccountInfo = () => {
               size="extraSmall"
               sx={{ mt: 1 }}
             >
-              Upgrade account
+              {commonT("upgradeAccount")}
             </Button>
           </Link>
 

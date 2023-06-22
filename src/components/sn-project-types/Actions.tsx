@@ -9,8 +9,13 @@ import { DataAction } from "constant/enums";
 import { useProjectTypes } from "store/company/selectors";
 import Form from "./Form";
 import { Refresh } from "components/Filters";
+import { NS_COMMON, NS_COMPANY } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const Actions = () => {
+  const commonT = useTranslations(NS_COMMON);
+  const companyT = useTranslations(NS_COMPANY);
+
   const [isShow, onShow, onHide] = useToggle();
   const { onCreateProjectType, onGetProjectTypes, pageSize, pageIndex } =
     useProjectTypes();
@@ -39,7 +44,7 @@ const Actions = () => {
           spacing={{ xs: 2, md: 0 }}
         >
           <Text variant="h4" display={{ md: "none" }}>
-            Project types management
+            {companyT("projectTypes.title")}
           </Text>
           <Button
             onClick={onShow}
@@ -47,7 +52,7 @@ const Actions = () => {
             size="small"
             variant="primary"
           >
-            Create new
+            {commonT("createNew")}
           </Button>
         </Stack>
         <Refresh onClick={onRefresh} />

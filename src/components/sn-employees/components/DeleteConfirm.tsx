@@ -6,7 +6,8 @@ import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_COMPANY } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type DeleteConfirmProps = ConfirmDialogProps & {
   items?: Employee[];
@@ -14,6 +15,8 @@ type DeleteConfirmProps = ConfirmDialogProps & {
 
 const DeleteConfirm = (props: DeleteConfirmProps) => {
   const { items = [], onSubmit: onSubmitProps, ...rest } = props;
+  const companyT = useTranslations(NS_COMPANY);
+  const commonT = useTranslations(NS_COMMON);
 
   const { onAddSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -25,7 +28,12 @@ const DeleteConfirm = (props: DeleteConfirmProps) => {
       const ids = onSubmitProps && (await onSubmitProps());
 
       if (ids?.length) {
-        onAddSnackbar("Delete employees successfully!", "success");
+        onAddSnackbar(
+          companyT("employees.notification.success", {
+            label: commonT("delete"),
+          }),
+          "success",
+        );
         props?.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;

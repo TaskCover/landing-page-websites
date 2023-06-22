@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useMemo, useEffect, useRef, useState } from "react";
 import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
@@ -15,6 +15,8 @@ import { useEmployees } from "store/company/selectors";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { GetEmployeeListQueries } from "store/company/actions";
 import { usePositionOptions } from "store/global/selectors";
+import { NS_COMPANY, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const Actions = () => {
   const {
@@ -25,6 +27,8 @@ const Actions = () => {
     pageSize: positionOptionsPageSize,
     pageIndex: positionOptionsPageIndex,
   } = usePositionOptions();
+  const companyT = useTranslations(NS_COMPANY);
+  const commonT = useTranslations(NS_COMMON);
 
   const { filters, onGetEmployees, pageSize, onCreateEmployee } =
     useEmployees();
@@ -35,6 +39,12 @@ const Actions = () => {
   const { push } = useRouter();
 
   const [queries, setQueries] = useState<Params>({});
+
+  const paymentOptions = useMemo(
+    () =>
+      PAYMENT_OPTIONS.map((item) => ({ ...item, label: companyT(item.label) })),
+    [companyT],
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (name: string, value: any) => {
@@ -98,7 +108,7 @@ const Actions = () => {
           spacing={{ xs: 2, md: 0 }}
         >
           <Text variant="h4" display={{ md: "none" }}>
-            Employees Management
+            {companyT("employees.title")}
           </Text>
           <Button
             onClick={onShow}
@@ -106,7 +116,7 @@ const Actions = () => {
             size="small"
             variant="primary"
           >
-            Create new
+            {commonT("createNew")}
           </Button>
         </Stack>
 
@@ -123,7 +133,7 @@ const Actions = () => {
           justifyContent="flex-end"
         >
           <Search
-            placeholder="Search by email"
+            placeholder={commonT("searchBy", { name: "email" })}
             name="email"
             onChange={onChangeQueries}
             value={queries?.email}
@@ -131,7 +141,7 @@ const Actions = () => {
           />
           <Stack direction="row" alignItems="center" spacing={3}>
             <Dropdown
-              placeholder="Position"
+              placeholder={commonT("position")}
               options={options}
               name="position"
               onChange={onChangeQueries}
@@ -140,14 +150,19 @@ const Actions = () => {
               onEndReached={onEndReached}
             />
             <Dropdown
-              placeholder="Status"
-              options={PAYMENT_OPTIONS}
+              placeholder={commonT("status")}
+              options={paymentOptions}
               name="is_pay_user"
               onChange={onChangeQueries}
               value={Number(queries?.is_pay_user)}
             />
-            <Refresh onClick={onRefresh} />
-            {!!Object.keys(queries).length && <Clear onClick={onClear} />}
+            <Stack direction="row" alignItems="center" spacing={3}>
+              <Button size="small" onClick={onSearch} variant="secondary">
+                {commonT("search")}
+              </Button>
+              <Refresh onClick={onRefresh} />
+              {!!Object.keys(queries).length && <Clear onClick={onClear} />}
+            </Stack>
           </Stack>
         </Stack>
       </Stack>

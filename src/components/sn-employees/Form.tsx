@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_COMPANY } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
 import { memo, useMemo } from "react";
 import { useSnackbar } from "store/app/selectors";
@@ -12,6 +12,7 @@ import { Input, Select } from "components/shared";
 import { EmployeeData } from "store/company/actions";
 import { EMAIL_REGEX } from "constant/regex";
 import { usePositionOptions } from "store/global/selectors";
+import { useTranslations } from "next-intl";
 
 type FormProps = {
   initialValues: EmployeeData;
@@ -23,6 +24,8 @@ type FormProps = {
 const Form = (props: FormProps) => {
   const { initialValues, type, onSubmit: onSubmitProps, ...rest } = props;
   const { onAddSnackbar } = useSnackbar();
+  const companyT = useTranslations(NS_COMPANY);
+  const commonT = useTranslations(NS_COMMON);
 
   const { options, onGetOptions, isFetching, totalPages, pageIndex, pageSize } =
     usePositionOptions();
@@ -30,20 +33,23 @@ const Form = (props: FormProps) => {
   const label = useMemo(() => {
     switch (type) {
       case DataAction.CREATE:
-        return "Create new";
+        return commonT("createNew");
       case DataAction.UPDATE:
-        return "Update";
+        return commonT("update");
       default:
         return "";
     }
-  }, [type]);
+  }, [commonT, type]);
 
   const onSubmit = async (values: EmployeeData) => {
     try {
       const newItem = await onSubmitProps(values);
 
       if (newItem) {
-        onAddSnackbar(`${label} employee successfully!`, "success");
+        onAddSnackbar(
+          companyT("employees.notification.success", { label }),
+          "success",
+        );
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -89,7 +95,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
-      label={`${label} employee`}
+      label={`${label} ${companyT("employees.key")}`}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
@@ -103,19 +109,23 @@ const Form = (props: FormProps) => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.email}
-          error={touchedErrors?.email}
+          error={commonT(touchedErrors?.email, {
+            name: "Email",
+          })}
           disabled={type === DataAction.UPDATE}
           rootSx={sxConfig.input}
         />
         <Select
           options={options}
-          title="Position"
+          title={commonT("position")}
           name="position"
           required
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.position}
-          error={touchedErrors?.position}
+          error={commonT(touchedErrors?.position, {
+            name: commonT("position"),
+          })}
           rootSx={sxConfig.input}
           fullWidth
           onEndReached={onEndReached}
@@ -130,9 +140,9 @@ export default memo(Form);
 export const validationSchema = Yup.object().shape({
   email: Yup.string()
     .trim()
-    .required("Email is required.")
-    .matches(EMAIL_REGEX, "Email is invalid!"),
-  position: Yup.string().trim().required("Position is required."),
+    .required("form.error.required")
+    .matches(EMAIL_REGEX, "form.error.invalid"),
+  position: Yup.string().required("form.error.required"),
 });
 
 const sxConfig = {

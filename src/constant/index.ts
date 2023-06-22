@@ -38,6 +38,8 @@ export const NS_AUTH = "auth";
 export const NS_LAYOUT = "layout";
 export const NS_ACCOUNT = "account";
 export const NS_PROJECT = "project";
+export const NS_COMPANY = "company";
+export const NS_MANAGER = "manager";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg"];
 

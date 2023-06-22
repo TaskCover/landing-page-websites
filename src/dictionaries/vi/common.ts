@@ -55,6 +55,7 @@ export const CommonLang: CommonDictionary = {
   createNew: "Thêm mới",
   update: "Cập nhật",
   edit: "Sửa",
+  delete: "Xóa",
   close: "Đóng",
   search: "Tìm kiếm",
   assigner: "Người phụ trách",
@@ -69,4 +70,11 @@ export const CommonLang: CommonDictionary = {
     pause: "Tạm dừng",
   },
   searchBy: "Tìm kiếm theo {name}",
+  creationDate: "Ngày tạo",
+  creator: "Người tạo",
+  confirmDelete: {
+    title: "Xác nhận xóa",
+    content: "Bạn có chắc chắn muốn xóa?",
+  },
+  upgradeAccount: "Nâng cấp tài khoản",
 };
