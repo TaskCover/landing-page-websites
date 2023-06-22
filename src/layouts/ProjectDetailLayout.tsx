@@ -1,7 +1,9 @@
 "use client";
 
 import { TabList } from "components/sn-project-detail/components";
+import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { PROJECTS_PATH } from "constant/paths";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 import { useHeaderConfig } from "store/app/selectors";
 import { useProject, useProjects } from "store/project/selectors";
@@ -16,6 +18,8 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
   const { onGetProject, item } = useProject();
   const { filters, pageIndex, pageSize } = useProjects();
   const { onUpdateHeaderConfig } = useHeaderConfig();
+  const commonT = useTranslations(NS_COMMON);
+  const projectT = useTranslations(NS_PROJECT);
 
   const dataStringifyRef = useRef<string | undefined>();
 
@@ -41,7 +45,7 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
 
     onUpdateHeaderConfig({
       title: item?.name,
-      searchPlaceholder: "Search project by name",
+      searchPlaceholder: commonT("searchBy", { name: projectT("list.key") }),
       prevPath,
     });
     return () => {
@@ -51,7 +55,7 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
         prevPath: undefined,
       });
     };
-  }, [item?.name, onUpdateHeaderConfig]);
+  }, [commonT, item?.name, onUpdateHeaderConfig, projectT]);
 
   return (
     <>
