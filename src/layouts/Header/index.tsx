@@ -9,6 +9,7 @@ import useBreakpoint from "hooks/useBreakpoint";
 import useWindowSize from "hooks/useWindowSize";
 import Link from "components/Link";
 import ChevronIcon from "icons/ChevronIcon";
+import SwitchLanguage from "components/SwitchLanguage";
 
 const Header = () => {
   const { title, searchPlaceholder, prevPath } = useHeaderConfig();
@@ -53,6 +54,7 @@ const Header = () => {
             placeholder={searchPlaceholder}
           />
         )}
+        <SwitchLanguage />
         <AccountInfo />
       </Stack>
       <Drawer />

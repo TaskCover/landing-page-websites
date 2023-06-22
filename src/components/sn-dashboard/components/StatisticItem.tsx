@@ -34,8 +34,8 @@ const StatisticItem = (props: StatisticItemProps) => {
           width: 90,
           height: 84,
           borderRadius: "50%",
-          bgcolor: ({ palette }) => palette[color].light,
-          color: ({ palette }) => palette[color].main,
+          bgcolor: ({ palette }) => palette?.[color]?.light,
+          color: ({ palette }) => palette?.[color]?.main,
           "& svg": {
             fontSize: 42,
           },
@@ -55,7 +55,7 @@ const StatisticItem = (props: StatisticItemProps) => {
           />
           <Text
             variant="body2"
-            color={({ palette }) => palette[colorValue].main}
+            color={({ palette }) => palette?.[colorValue]?.main}
           >
             {formatNumber(percent, { suffix: "%", space: false })}
           </Text>
