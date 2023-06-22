@@ -80,7 +80,7 @@ const Sidebar = (props: StackProps) => {
           </IconButton>
         )}
       </Stack>
-      {user?.roles.includes(Permission.EU) && (
+      {user?.roles?.includes(Permission.EU) && (
         <Link
           href={UPGRADE_ACCOUNT_PATH}
           underline="none"

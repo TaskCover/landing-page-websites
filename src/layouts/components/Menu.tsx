@@ -35,7 +35,7 @@ const Menu = () => {
     <Stack width="100%" spacing={1.5} overflow="auto">
       {DATA.map((item) => {
         const isAuthorized = user?.roles.some((role) =>
-          item.roles.includes(role),
+          item?.roles?.includes(role),
         );
         if (isAuthorized) {
           return <MenuItem key={item.label} {...item} />;

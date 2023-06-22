@@ -133,7 +133,7 @@ const AccountInfo = () => {
             </Stack>
           </Stack>
           <Divider sx={{ backgroundColor: "grey.100" }} />
-          {user?.roles.includes(Permission.EU) && (
+          {user?.roles?.includes(Permission.EU) && (
             <Link href={UPGRADE_ACCOUNT_PATH} underline="none">
               <Button
                 variant="secondary"
