@@ -6,11 +6,12 @@ import { memo, useEffect } from "react";
 import { useCostHistory } from "store/company/selectors";
 import Item from "./Item";
 import StatusServer from "components/StatusServer";
-import { DEFAULT_PAGING } from "constant/index";
+import { DEFAULT_PAGING, NS_COMPANY } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
 import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
+import { useTranslations } from "next-intl";
 
 const CostHistoryPage = () => {
   const {
@@ -24,6 +25,8 @@ const CostHistoryPage = () => {
     pageSize,
     onGetCostHistory,
   } = useCostHistory();
+
+  const companyT = useTranslations(NS_COMPANY);
 
   const { initQuery, isReady, query } = useQueryParams();
   const pathname = usePathname();
@@ -53,7 +56,7 @@ const CostHistoryPage = () => {
 
   return (
     <Stack p={{ xs: 1, sm: 3 }} spacing={2}>
-      <Text variant="h5">Cost history</Text>
+      <Text variant="h5">{companyT("costHistory.title")}</Text>
       <StatusServer isFetching={isFetching} error={error}>
         <Stack width="100%">
           {items.map((item) => (

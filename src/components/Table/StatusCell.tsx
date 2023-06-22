@@ -7,14 +7,20 @@ type StatusCellProps = {
   text: string;
   color: AlertColor;
   width?: number;
+  namespace?: string;
 } & TableCellProps;
 
 const StatusCell = (props: StatusCellProps) => {
-  const { text, color, width, ...rest } = props;
+  const { text, color, width, namespace, ...rest } = props;
 
   return (
     <BodyCell {...rest}>
-      <TextStatus text={text} color={color} width={width} />
+      <TextStatus
+        text={text}
+        color={color}
+        width={width}
+        namespace={namespace}
+      />
     </BodyCell>
   );
 };

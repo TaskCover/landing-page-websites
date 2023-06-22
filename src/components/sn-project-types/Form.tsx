@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_COMPANY } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
 import { memo, useMemo } from "react";
 import { useSnackbar } from "store/app/selectors";
@@ -10,6 +10,7 @@ import { getMessageErrorByAPI } from "utils/index";
 import { DataAction } from "constant/enums";
 import { Input } from "components/shared";
 import { PositionData } from "store/company/actions";
+import { useTranslations } from "next-intl";
 
 type FormProps = {
   initialValues: PositionData;
@@ -21,24 +22,29 @@ type FormProps = {
 const Form = (props: FormProps) => {
   const { initialValues, type, onSubmit: onSubmitProps, ...rest } = props;
   const { onAddSnackbar } = useSnackbar();
+  const commonT = useTranslations(NS_COMMON);
+  const companyT = useTranslations(NS_COMPANY);
 
   const label = useMemo(() => {
     switch (type) {
       case DataAction.CREATE:
-        return "Create new";
+        return commonT("createNew");
       case DataAction.UPDATE:
-        return "Update";
+        return commonT("update");
       default:
         return "";
     }
-  }, [type]);
+  }, [commonT, type]);
 
   const onSubmit = async (values: PositionData) => {
     try {
       const newItem = await onSubmitProps(values);
 
       if (newItem) {
-        onAddSnackbar(`${label} project type successfully!`, "success");
+        onAddSnackbar(
+          companyT("projectTypes.notification.success", { label }),
+          "success",
+        );
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
@@ -79,7 +85,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
-      label={`${label} project type`}
+      label={`${label} ${companyT("projectTypes.key")}`}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
@@ -87,13 +93,15 @@ const Form = (props: FormProps) => {
     >
       <Stack spacing={2} py={3}>
         <Input
-          title="Name"
+          title={companyT("projectTypes.form.title.name")}
           name="name"
           required
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.name}
-          error={touchedErrors?.name}
+          error={commonT(touchedErrors?.name, {
+            name: companyT("projectTypes.form.title.name"),
+          })}
           rootSx={sxConfig.input}
         />
       </Stack>
@@ -104,7 +112,7 @@ const Form = (props: FormProps) => {
 export default memo(Form);
 
 export const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Project type name is required."),
+  name: Yup.string().trim().required("form.error.required"),
 });
 
 const sxConfig = {

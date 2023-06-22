@@ -10,12 +10,13 @@ import { Button, IconButton } from "components/shared";
 import { useSidebar } from "store/app/selectors";
 import useBreakpoint from "hooks/useBreakpoint";
 import { useTranslations } from "next-intl";
-import { NS_LAYOUT } from "constant/index";
+import { NS_LAYOUT, NS_COMMON } from "constant/index";
 
 const Sidebar = (props: StackProps) => {
   const { isExpandedSidebar, onToggleExpandSidebar } = useSidebar();
   const { isLgSmaller } = useBreakpoint();
   const t = useTranslations(NS_LAYOUT);
+  const commonT = useTranslations(NS_COMMON);
 
   const isShowLarge = useMemo(
     () => isExpandedSidebar && !isLgSmaller,
@@ -95,10 +96,11 @@ const Sidebar = (props: StackProps) => {
             size="small"
             fullWidth
           >
-            Upgrade account
+            {commonT("upgradeAccount")}
           </Button>
         ) : (
           <IconButton
+            tooltip={commonT("upgradeAccount")}
             variant="contained"
             size="small"
             sx={{ backgroundColor: "primary.light" }}

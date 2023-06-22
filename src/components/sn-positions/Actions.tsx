@@ -9,8 +9,13 @@ import { DataAction } from "constant/enums";
 import { usePositions } from "store/company/selectors";
 import Form from "./Form";
 import { Refresh } from "components/Filters";
+import { NS_COMMON, NS_COMPANY } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const Actions = () => {
+  const commonT = useTranslations(NS_COMMON);
+  const companyT = useTranslations(NS_COMPANY);
+
   const [isShow, onShow, onHide] = useToggle();
   const { onCreatePosition, onGetPositions, pageSize, pageIndex } =
     usePositions();
@@ -39,7 +44,7 @@ const Actions = () => {
           spacing={{ xs: 2, md: 0 }}
         >
           <Text variant="h4" display={{ md: "none" }}>
-            Danh sách chức vụ
+            {companyT("positions.title")}
           </Text>
           <Button
             onClick={onShow}
@@ -47,7 +52,7 @@ const Actions = () => {
             size="small"
             variant="primary"
           >
-            Thêm mới
+            {commonT("createNew")}
           </Button>
         </Stack>
 
