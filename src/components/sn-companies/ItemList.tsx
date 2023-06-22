@@ -15,7 +15,7 @@ import {
   CellProps,
   ActionsCell,
 } from "components/Table";
-import { DEFAULT_PAGING } from "constant/index";
+import { DEFAULT_PAGING, NS_COMMON, NS_MANAGER } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
 import { usePathname, useRouter } from "next-intl/client";
@@ -30,6 +30,7 @@ import DesktopCells from "./DesktopCells";
 import MobileContentCell from "./MobileContentCell";
 import { ApproveOrRejectConfirm } from "./components";
 import { CompanyStatus } from "store/company/actions";
+import { useTranslations } from "next-intl";
 
 const ItemList = () => {
   const {
@@ -44,6 +45,9 @@ const ItemList = () => {
     onGetCompanies,
     onApproveOrReject: onApproveOrRejectAction,
   } = useCompanies();
+
+  const commonT = useTranslations(NS_COMMON);
+  const managerT = useTranslations(NS_MANAGER);
 
   const { initQuery, isReady, query } = useQueryParams();
   const pathname = usePathname();
@@ -65,8 +69,8 @@ const ItemList = () => {
   );
 
   const textAction = useMemo(
-    () => (action !== undefined ? TEXT_ACTION[action] : ""),
-    [action],
+    () => (action !== undefined ? managerT(TEXT_ACTION[action]) : ""),
+    [action, managerT],
   );
 
   const onChangeAll = useCallback(
@@ -81,10 +85,20 @@ const ItemList = () => {
     [items],
   );
 
+  const desktopHeaderList: CellProps[] = useMemo(
+    () => [
+      { value: commonT("name"), width: "25%", align: "left" },
+      { value: "Email", width: "25%", align: "left" },
+      { value: commonT("creationDate"), width: "19%" },
+      { value: commonT("status"), width: "20%" },
+    ],
+    [commonT],
+  );
+
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
       ? MOBILE_HEADER_LIST
-      : DESKTOP_HEADER_LIST;
+      : desktopHeaderList;
 
     return [
       {
@@ -94,7 +108,7 @@ const ItemList = () => {
       ...additionalHeaderList,
       { value: "", width: isMdSmaller ? "20%" : "8%" },
     ] as CellProps[];
-  }, [isMdSmaller, isCheckedAll, onChangeAll]);
+  }, [isMdSmaller, desktopHeaderList, isCheckedAll, onChangeAll]);
 
   const onToggleSelect = (item: Company, indexSelected: number) => {
     return () => {
@@ -183,7 +197,7 @@ const ItemList = () => {
             <IconButton
               size="small"
               onClick={onApproveOrReject(CompanyStatus.APPROVE)}
-              tooltip="Approve"
+              tooltip={managerT("companyList.approve")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -199,7 +213,7 @@ const ItemList = () => {
             <IconButton
               size="small"
               onClick={onApproveOrReject(CompanyStatus.REJECT)}
-              tooltip="Reject"
+              tooltip={managerT("companyList.reject")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -246,7 +260,7 @@ const ItemList = () => {
                     item.is_approve === null
                       ? [
                           {
-                            content: "Approve",
+                            content: managerT("companyList.approve"),
                             onClick: onApproveOrReject(
                               CompanyStatus.APPROVE,
                               item.id,
@@ -256,7 +270,7 @@ const ItemList = () => {
                             ),
                           },
                           {
-                            content: "Reject",
+                            content: managerT("companyList.reject"),
                             onClick: onApproveOrReject(
                               CompanyStatus.REJECT,
                               item.id,
@@ -285,12 +299,14 @@ const ItemList = () => {
       <ApproveOrRejectConfirm
         open={action !== undefined}
         onClose={onResetAction}
-        title={`Confirm to ${textAction}`}
-        content={`Are you sure to ${textAction} ${
-          id ? "this" : "these"
-        } company?`}
+        title={managerT("companyList.confirm.title", { label: textAction })}
+        content={managerT("companyList.confirm.content", {
+          label: textAction,
+          count: id ? 1 : selectedList.length,
+        })}
         items={id ? undefined : selectedList}
         onSubmit={onSubmitApproveOrReject}
+        action={textAction}
       />
     </>
   );
@@ -298,16 +314,9 @@ const ItemList = () => {
 
 export default memo(ItemList);
 
-const DESKTOP_HEADER_LIST = [
-  { value: "Name", width: "25%", align: "left" },
-  { value: "Email", width: "25%", align: "left" },
-  { value: "Creation date", width: "19%" },
-  { value: "Status", width: "20%" },
-];
-
 const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];
 
 const TEXT_ACTION: { [key in CompanyStatus]: string } = {
-  [CompanyStatus.APPROVE]: "approve",
-  [CompanyStatus.REJECT]: "reject",
+  [CompanyStatus.APPROVE]: "companyList.approve",
+  [CompanyStatus.REJECT]: "companyList.reject",
 };

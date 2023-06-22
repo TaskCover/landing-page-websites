@@ -1,6 +1,8 @@
 import { memo, useEffect } from "react";
 import { Dropdown, DropdownProps } from "components/Filters";
 import { useCompanyOptions } from "store/manager/selectors";
+import { NS_COMMON, NS_MANAGER } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const CompanyFilter = (props: Omit<DropdownProps, "options" | "name">) => {
   const {
@@ -12,6 +14,8 @@ const CompanyFilter = (props: Omit<DropdownProps, "options" | "name">) => {
     pageSize,
     filters,
   } = useCompanyOptions();
+  const commonT = useTranslations(NS_COMMON);
+  const managerT = useTranslations(NS_MANAGER);
 
   const onEndReached = () => {
     if (isFetching || (totalPages && pageIndex >= totalPages)) return;
@@ -28,7 +32,7 @@ const CompanyFilter = (props: Omit<DropdownProps, "options" | "name">) => {
 
   return (
     <Dropdown
-      placeholder="Company"
+      placeholder={managerT("employeeList.company")}
       options={options}
       name="status"
       onEndReached={onEndReached}

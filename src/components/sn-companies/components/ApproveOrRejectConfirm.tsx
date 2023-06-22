@@ -6,14 +6,17 @@ import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type ApproveOrRejectConfirmProps = ConfirmDialogProps & {
   items?: Company[];
+  action: string;
 };
 
 const ApproveOrRejectConfirm = (props: ApproveOrRejectConfirmProps) => {
-  const { items = [], onSubmit: onSubmitProps, ...rest } = props;
+  const { items = [], onSubmit: onSubmitProps, action, ...rest } = props;
+  const commonT = useTranslations(NS_COMMON);
 
   const { onAddSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -25,7 +28,10 @@ const ApproveOrRejectConfirm = (props: ApproveOrRejectConfirmProps) => {
       const ids = onSubmitProps && (await onSubmitProps());
 
       if (ids?.length) {
-        onAddSnackbar("Action successfully!", "success");
+        onAddSnackbar(
+          commonT("notification.success", { label: action }),
+          "success",
+        );
         props?.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;

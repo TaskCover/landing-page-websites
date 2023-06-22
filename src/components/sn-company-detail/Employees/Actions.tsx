@@ -12,16 +12,26 @@ import { CompanyFilter } from "./components";
 import { PaymentStatus } from "components/sn-employees/helpers";
 import { useCompany, useEmployeesOfCompany } from "store/manager/selectors";
 import { useParams } from "next/navigation";
+import { NS_COMMON, NS_MANAGER } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const Actions = () => {
   const { filters, onGetEmployees, pageSize, statistic } =
     useEmployeesOfCompany();
+  const commonT = useTranslations(NS_COMMON);
+  const managerT = useTranslations(NS_MANAGER);
 
   const pathname = usePathname();
   const { push } = useRouter();
   const { id } = useParams();
 
   const [queries, setQueries] = useState<Params>({});
+
+  const paymentOptions = useMemo(
+    () =>
+      PAYMENT_OPTIONS.map((item) => ({ ...item, label: commonT(item.label) })),
+    [commonT],
+  );
 
   const hasQueries = useMemo(() => {
     const queriesIgnoreCompany = { ...queries };
@@ -72,7 +82,7 @@ const Actions = () => {
         width="fit-content"
       >
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
-          Staff paid:
+          {managerT("employeeList.staffPaid")}:
           <Text
             component="span"
             variant="inherit"
@@ -83,7 +93,7 @@ const Actions = () => {
           </Text>
         </Text>
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
-          Staff unpaid:
+          {managerT("employeeList.staffUnpaid")}:
           <Text
             component="span"
             variant="inherit"
@@ -108,21 +118,21 @@ const Actions = () => {
         justifyContent="flex-end"
       >
         <Search
-          placeholder="Search by email..."
+          placeholder={commonT("searchBy", { name: "email" })}
           name="email"
           onChange={onChangeQueries}
           value={queries?.email}
         />
         <Stack direction="row" alignItems="center" spacing={3}>
           <Date
-            label="Creation date"
+            label={commonT("creationDate")}
             name="date"
             onChange={onChangeQueries}
             value={queries?.date}
           />
           <Dropdown
-            placeholder="Status"
-            options={PAYMENT_OPTIONS}
+            placeholder={commonT("status")}
+            options={paymentOptions}
             name="is_pay_user"
             onChange={onChangeQueries}
             value={Number(queries?.is_pay_user)}
@@ -130,7 +140,7 @@ const Actions = () => {
         </Stack>
         <Stack direction="row" alignItems="center" spacing={3}>
           <Button size="small" onClick={onSearch} variant="secondary">
-            Search
+            {commonT("search")}
           </Button>
           <Refresh onClick={onRefresh} />
           {hasQueries && <Clear onClick={onClear} />}

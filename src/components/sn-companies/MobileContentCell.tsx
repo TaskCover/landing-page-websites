@@ -9,6 +9,8 @@ import { BodyCell } from "components/Table";
 import { Company } from "store/company/reducer";
 import Link from "components/Link";
 import { COMPANY_DETAIL_PATH } from "constant/paths";
+import { NS_COMMON, NS_MANAGER } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type MobileContentCellProps = {
   item: Company;
@@ -21,12 +23,17 @@ type InformationItemProps = {
 
 const MobileContentCell = (props: MobileContentCellProps) => {
   const { item } = props;
+  const commonT = useTranslations(NS_COMMON);
+  const managerT = useTranslations(NS_MANAGER);
+
   return (
     <BodyCell align="left">
       <Stack spacing={2} py={1.5}>
         <Link
           sx={{ color: "text.primary" }}
-          tooltip="Click to go to detail company"
+          tooltip={commonT("clickGoDetail", {
+            name: managerT("companyList.company"),
+          })}
           href={getPath(COMPANY_DETAIL_PATH, undefined, { id: item.id })}
           underline="none"
         >
@@ -39,10 +46,10 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         </Link>
 
         <InformationItem label="Email">{item.email}</InformationItem>
-        <InformationItem label="Creation date">
+        <InformationItem label={commonT("creationDate")}>
           {formatDate(item.created_time)}
         </InformationItem>
-        <InformationItem label="Status">
+        <InformationItem label={commonT("status")}>
           <TextStatus
             color={
               item.is_approve === null

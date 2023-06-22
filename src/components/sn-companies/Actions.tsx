@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useMemo } from "react";
 import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import { Clear, Date, Dropdown, Refresh, Search } from "components/Filters";
@@ -10,14 +10,23 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { CompanyStatus } from "store/company/actions";
 import { TEXT_STATUS } from "./components/helpers";
 import { useCompanies } from "store/manager/selectors";
+import { useTranslations } from "next-intl";
+import { NS_COMMON, NS_MANAGER } from "constant/index";
 
 const Actions = () => {
   const { filters, onGetCompanies, pageSize, statistic } = useCompanies();
-
+  const commonT = useTranslations(NS_COMMON);
+  const managerT = useTranslations(NS_MANAGER);
   const pathname = usePathname();
   const { push } = useRouter();
 
   const [queries, setQueries] = useState<Params>({});
+
+  const paymentOptions = useMemo(
+    () =>
+      PAYMENT_OPTIONS.map((item) => ({ ...item, label: commonT(item.label) })),
+    [commonT],
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (name: string, value: any) => {
@@ -61,7 +70,7 @@ const Actions = () => {
         width="fit-content"
       >
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
-          Staff paid:
+          {managerT("companyList.staffPaid")}:
           <Text
             component="span"
             variant="inherit"
@@ -72,7 +81,7 @@ const Actions = () => {
           </Text>
         </Text>
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
-          Total staff:
+          {managerT("companyList.totalStaff")}:
           <Text
             component="span"
             variant="inherit"
@@ -97,21 +106,21 @@ const Actions = () => {
         justifyContent="flex-end"
       >
         <Search
-          placeholder="Search by email..."
+          placeholder={commonT("searchBy", { name: "email" })}
           name="email"
           onChange={onChangeQueries}
           value={queries?.email}
         />
         <Stack direction="row" alignItems="center" spacing={3}>
           <Date
-            label="Creation date"
+            label={commonT("creationDate")}
             name="date"
             onChange={onChangeQueries}
             value={queries?.date}
           />
           <Dropdown
-            placeholder="Status"
-            options={PAYMENT_OPTIONS}
+            placeholder={commonT("status")}
+            options={paymentOptions}
             name="is_pay_company"
             onChange={onChangeQueries}
             value={Number(queries?.is_pay_company)}
@@ -119,7 +128,7 @@ const Actions = () => {
         </Stack>
         <Stack direction="row" alignItems="center" spacing={3}>
           <Button size="small" onClick={onSearch} variant="secondary">
-            Search
+            {commonT("search")}
           </Button>
           <Refresh onClick={onRefresh} />
           {!!Object.keys(queries).length && <Clear onClick={onClear} />}
