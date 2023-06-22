@@ -78,6 +78,7 @@ const ItemList = () => {
     () =>
       item
         ? {
+            avatar: item?.avatar?.link,
             name: item.name,
             description: item.description,
             owner: item.owner.id,

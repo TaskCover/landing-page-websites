@@ -30,12 +30,7 @@ const ChangePassword = () => {
       formik.resetForm();
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
-        formik.setFieldError(
-          "old_password",
-          commonT("form.error.incorrect", {
-            name: accountT("changePassword.form.title.oldPassword"),
-          }),
-        );
+        formik.setFieldError("old_password", "form.error.incorrect");
       } else {
         onAddSnackbar(getMessageErrorByAPI(error), "error");
       }
