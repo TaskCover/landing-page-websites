@@ -38,7 +38,6 @@ export const CommonLang: CommonDictionary = {
   error: {
     anErrorTryAgain: "Có lỗi xảy ra. Vui lòng thử lại.",
     anErrorTryReload: "Đã xảy ra lỗi. Vui lòng thử tải lại trang.",
-    noData: "Không có dữ liệu.",
   },
   position: "Chức vụ",
   fullName: "Họ tên",
@@ -82,4 +81,5 @@ export const CommonLang: CommonDictionary = {
   waiting: "Đang chờ",
   approved: "Đã chấp nhận",
   rejected: "Đã từ chối",
+  noData: "Không có dữ liệu.",
 };

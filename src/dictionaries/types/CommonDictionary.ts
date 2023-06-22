@@ -35,7 +35,6 @@ export type CommonDictionary = {
   error: {
     anErrorTryAgain: string;
     anErrorTryReload: string;
-    noData: string;
   };
   position: string;
   fullName: string;
@@ -79,4 +78,5 @@ export type CommonDictionary = {
   waiting: string;
   approved: string;
   rejected: string;
+  noData: string;
 };

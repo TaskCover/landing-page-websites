@@ -39,7 +39,6 @@ export const CommonLang: CommonDictionary = {
   error: {
     anErrorTryAgain: "An error occurred. Please try again.",
     anErrorTryReload: "An error occurred. Please try reload page.",
-    noData: "No data.",
   },
   position: "Position",
   fullName: "Full name",
@@ -83,4 +82,5 @@ export const CommonLang: CommonDictionary = {
   waiting: "Waiting",
   approved: "Approved",
   rejected: "Rejected",
+  noData: "No data.",
 };

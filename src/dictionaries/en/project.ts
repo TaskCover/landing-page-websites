@@ -22,7 +22,7 @@ export const ProjectLang: ProjectDictionary = {
     title: "Projects Management",
     key: "project",
     notification: {
-      success: "{prefix} project successfully!",
+      success: "{label} project successfully!",
       invalidPositions:
         "The member list has one or more members with invalid positions!",
       choosePositionFirst:

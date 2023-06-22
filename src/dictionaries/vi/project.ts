@@ -22,7 +22,7 @@ export const ProjectLang: ProjectDictionary = {
     title: "Quản lý dự án",
     key: "dự án",
     notification: {
-      success: "{prefix} dự án thành công!",
+      success: "{label} dự án thành công!",
       invalidPositions:
         "Danh sách thành viên có một hoặc nhiều thành viên có vị trí không hợp lệ!",
       choosePositionFirst: "Bạn cần chọn chức vụ cho thành viên này trước!",

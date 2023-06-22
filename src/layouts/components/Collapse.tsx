@@ -103,6 +103,7 @@ const Collapse = (props: CollapseProps) => {
               color="grey.400"
               variant={{ xs: "body2", sm: "body1" }}
               noWrap
+              textTransform="capitalize"
             >
               {t(label)}
             </Text>

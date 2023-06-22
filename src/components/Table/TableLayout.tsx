@@ -12,7 +12,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { AN_ERROR_TRY_RELOAD_PAGE } from "constant";
+import { AN_ERROR_TRY_RELOAD_PAGE, NS_COMMON } from "constant";
 import {
   createRef,
   forwardRef,
@@ -25,6 +25,7 @@ import CellBody, { HEIGHT_ROW } from "./BodyCell";
 import CellHeader, { HEIGHT_HEADER } from "./HeaderCell";
 import useWindowSize from "hooks/useWindowSize";
 import { useSidebar } from "store/app/selectors";
+import { useTranslations } from "next-intl";
 
 export type CellProps = TableCellProps & {
   value: string | React.ReactNode;
@@ -61,6 +62,8 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     containerHeaderProps = {},
     ...rest
   } = props;
+
+  const commonT = useTranslations(NS_COMMON);
 
   const { sx: sxHeaderProps, ...restHeaderProps } = headerProps;
   const { sx: sxContainerHeaderProps, ...restContainerHeaderProps } =
@@ -168,7 +171,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                   ) : Boolean(error) ? (
                     error ?? AN_ERROR_TRY_RELOAD_PAGE
                   ) : noData ? (
-                    "No data."
+                    commonT("noData")
                   ) : null}
                 </CellBody>
               </TableRow>
