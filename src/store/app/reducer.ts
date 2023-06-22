@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { uuid } from "utils";
 import { signin, signup, signupVerify, updateUserInfo } from "./actions";
 import { clientStorage } from "utils/storage";
@@ -155,8 +155,8 @@ const appSlice = createSlice({
       .addCase(
         updateUserInfo.fulfilled,
         (state, action: PayloadAction<UserInfo>) => {
-          state.user = action.payload;
-          clientStorage.set(USER_INFO_STORAGE_KEY, action.payload);
+          state.user = Object.assign(state?.user ?? {}, action.payload);
+          clientStorage.set(USER_INFO_STORAGE_KEY, current(state).user);
         },
       ),
 });
