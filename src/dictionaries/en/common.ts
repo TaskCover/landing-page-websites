@@ -83,4 +83,5 @@ export const CommonLang: CommonDictionary = {
   approved: "Approved",
   rejected: "Rejected",
   noData: "No data.",
+  unauthorized: "Your account does not have permission to access this page!",
 };

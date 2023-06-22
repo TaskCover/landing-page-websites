@@ -79,4 +79,5 @@ export type CommonDictionary = {
   approved: string;
   rejected: string;
   noData: string;
+  unauthorized: string;
 };

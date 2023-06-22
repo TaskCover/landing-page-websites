@@ -82,4 +82,5 @@ export const CommonLang: CommonDictionary = {
   approved: "Đã chấp nhận",
   rejected: "Đã từ chối",
   noData: "Không có dữ liệu.",
+  unauthorized: "Tài khoản của bạn không có quyền truy cập trang này!",
 };
