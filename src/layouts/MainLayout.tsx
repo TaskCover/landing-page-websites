@@ -40,7 +40,7 @@ const MainLayout = (props: MainLayoutProps) => {
 
   const isAuthorized = useMemo(() => {
     if (!user?.roles?.length) return false;
-    return user.roles.some((role) => {
+    return user?.roles?.some((role) => {
       const basePath = id ? pathname.replace(id, "{id}") : pathname;
       return AUTHORIZED_PATHS[role].includes(basePath);
     });
