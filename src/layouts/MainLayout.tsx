@@ -17,6 +17,8 @@ import {
 } from "constant/paths";
 import { Text } from "components/shared";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -30,6 +32,7 @@ const MainLayout = (props: MainLayoutProps) => {
   const { push } = useRouter();
   const pathname = usePathname();
   const { id } = useParams();
+  const commonT = useTranslations(NS_COMMON);
 
   const { appReady, token, user } = useAppSelector(
     (state) => state.app,
@@ -79,7 +82,7 @@ const MainLayout = (props: MainLayoutProps) => {
                 children
               ) : (
                 <Text variant="body2" fontWeight={600}>
-                  Unauthorized
+                  {commonT("unauthorized")}
                 </Text>
               )}
             </Stack>

@@ -70,6 +70,7 @@ const Upload = (props: UploadProps) => {
           <Image
             src={previewImage}
             width={value ? 64 : 40}
+            height={value ? 64 : 40}
             alt="Image"
             className="rounded"
           />
