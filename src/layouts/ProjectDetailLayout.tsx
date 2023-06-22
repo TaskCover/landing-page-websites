@@ -1,5 +1,6 @@
 "use client";
 
+import { Endpoint } from "api";
 import { TabList } from "components/sn-project-detail/components";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { PROJECTS_PATH } from "constant/paths";
@@ -47,12 +48,16 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
       title: item?.name,
       searchPlaceholder: commonT("searchBy", { name: projectT("list.key") }),
       prevPath,
+      endpoint: Endpoint.PROJECTS,
+      key: "name",
     });
     return () => {
       onUpdateHeaderConfig({
         title: undefined,
         searchPlaceholder: undefined,
         prevPath: undefined,
+        endpoint: undefined,
+        key: undefined,
       });
     };
   }, [commonT, item?.name, onUpdateHeaderConfig, projectT]);

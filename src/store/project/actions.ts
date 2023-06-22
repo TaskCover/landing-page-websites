@@ -45,9 +45,11 @@ export type ProjectData = {
 export const getProjectList = createAsyncThunk(
   "project/getProjectList",
   async (queries: GetProjectListQueries) => {
-    queries = serverQueries(queries, undefined, [
-      "saved",
-    ]) as GetProjectListQueries;
+    queries = serverQueries(
+      queries,
+      ["name"],
+      ["saved"],
+    ) as GetProjectListQueries;
 
     try {
       const response = await client.get(Endpoint.PROJECTS, queries);

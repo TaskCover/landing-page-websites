@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import { Stack } from "@mui/material";
 import { AccountInfo, Drawer } from "./components";
 import AppLogo from "components/AppLogo";
@@ -10,11 +10,31 @@ import useWindowSize from "hooks/useWindowSize";
 import Link from "components/Link";
 import ChevronIcon from "icons/ChevronIcon";
 import SwitchLanguage from "components/SwitchLanguage";
+import { useProjects } from "store/project/selectors";
+import { useRouter } from "next-intl/client";
+import { getPath } from "utils/index";
+import { PROJECTS_PATH } from "constant/paths";
+import { DataStatus } from "constant/enums";
 
 const Header = () => {
-  const { title, searchPlaceholder, prevPath } = useHeaderConfig();
+  const { title, searchPlaceholder, prevPath, key } = useHeaderConfig();
   const { breakpoint } = useBreakpoint();
-  const { width } = useWindowSize();
+  const { push } = useRouter();
+  const { pageSize, filters, status, onGetProjects } = useProjects();
+
+  const onSearch = (name: string, newValue?: string) => {
+    const isFirstFetchedSuccess = status === DataStatus.SUCCEEDED;
+    const queries = {
+      pageIndex: 1,
+      pageSize,
+      [name]: newValue,
+    };
+    if (isFirstFetchedSuccess) {
+      onGetProjects(queries);
+    }
+    const path = getPath(PROJECTS_PATH, queries);
+    push(path);
+  };
 
   return (
     <Stack
@@ -47,11 +67,14 @@ const Header = () => {
       </Stack>
       {/* {breakpoint}-{width} */}
       <Stack direction="row" alignItems="center" spacing={8}>
-        {!!searchPlaceholder && (
+        {Boolean(searchPlaceholder && key) && (
           <Search
-            name="search"
             sx={{ display: { xs: "none", sm: "initial" } }}
             placeholder={searchPlaceholder}
+            name={key as string}
+            onChange={onSearch}
+            emitWhenEnter
+            value={filters?.[key as string]}
           />
         )}
         <SwitchLanguage />

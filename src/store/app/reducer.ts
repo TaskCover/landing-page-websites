@@ -34,6 +34,8 @@ export type HeaderConfig = {
   prevPath?: string;
   title?: string;
   searchPlaceholder?: string;
+  endpoint?: string;
+  key?: string;
 };
 
 export enum SignupStep {
