@@ -1,8 +1,8 @@
 import { Stack, Box } from "@mui/material";
 import { Button, Text } from "components/shared";
 import { ChangeEvent, memo, useMemo, useRef, useState } from "react";
-import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
-import Image from "next/image";
+import LogoPlaceholderImage from "public/images/img-logo-placeholder.webp";
+import Image, { StaticImageData } from "next/image";
 import UploadIcon from "icons/UploadIcon";
 import { IMAGES_ACCEPT, NS_COMMON } from "constant/index";
 import { useSnackbar } from "store/app/selectors";
@@ -14,10 +14,18 @@ export type UploadProps = {
   required?: boolean;
   onChange: (name: string, file?: File) => void;
   value?: File | string;
+  placeholder?: StaticImageData;
 };
 
 const Upload = (props: UploadProps) => {
-  const { title, name, required, onChange, value } = props;
+  const {
+    title,
+    name,
+    required,
+    onChange,
+    value,
+    placeholder = LogoPlaceholderImage,
+  } = props;
   const inputFileRef = useRef<HTMLInputElement | null>(null);
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
@@ -26,8 +34,8 @@ const Upload = (props: UploadProps) => {
     if (typeof value === "object") {
       return URL.createObjectURL(value);
     }
-    return (value as string | undefined) ?? UserPlaceholderImage;
-  }, [value]);
+    return (value as string | undefined) ?? placeholder;
+  }, [placeholder, value]);
 
   const onChooseFile = () => {
     inputFileRef?.current?.click();
@@ -50,13 +58,23 @@ const Upload = (props: UploadProps) => {
         {required ? "*" : ""}
       </Text>
       <Stack direction="row" alignItems="center" spacing={2}>
-        <Image
-          src={previewImage}
-          alt="Avatar"
+        <Stack
           width={64}
           height={64}
+          justifyContent="center"
+          alignItems="center"
           className="rounded"
-        />
+          border="1px solid"
+          borderColor="grey.50"
+        >
+          <Image
+            src={previewImage}
+            width={value ? 64 : 40}
+            alt="Image"
+            className="rounded"
+          />
+        </Stack>
+
         <Button
           variant="secondary"
           sx={{

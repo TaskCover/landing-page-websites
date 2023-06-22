@@ -16,7 +16,7 @@ import {
   Paging,
   User,
 } from "constant/types";
-import { DataStatus } from "constant/enums";
+import { DataStatus, Permission } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { getFiltersFromQueries } from "utils/index";
 import { Position } from "store/company/reducer";
@@ -28,7 +28,7 @@ export interface Member {
   phone: string;
   company: string;
   position: Position;
-  roles: string[];
+  roles: Permission[];
   position_project: {
     name: string;
     id: string;

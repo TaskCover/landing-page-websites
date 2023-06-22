@@ -30,6 +30,7 @@ import { reset as managerReset } from "store/manager/reducer";
 import { reset as companyReset } from "store/company/reducer";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_LAYOUT } from "constant/index";
+import { Permission } from "constant/enums";
 
 const AccountInfo = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -132,17 +133,18 @@ const AccountInfo = () => {
             </Stack>
           </Stack>
           <Divider sx={{ backgroundColor: "grey.100" }} />
-          <Link href={UPGRADE_ACCOUNT_PATH} underline="none">
-            <Button
-              variant="secondary"
-              startIcon={<CrownIcon sx={{ fontSize: 20 }} />}
-              size="extraSmall"
-              sx={{ mt: 1 }}
-            >
-              {commonT("upgradeAccount")}
-            </Button>
-          </Link>
-
+          {user?.roles.includes(Permission.EU) && (
+            <Link href={UPGRADE_ACCOUNT_PATH} underline="none">
+              <Button
+                variant="secondary"
+                startIcon={<CrownIcon sx={{ fontSize: 20 }} />}
+                size="extraSmall"
+                sx={{ mt: 1 }}
+              >
+                {commonT("upgradeAccount")}
+              </Button>
+            </Link>
+          )}
           <MenuList component={Box} sx={{ pb: 0 }}>
             {OPTIONS.map((item) => (
               <MenuItem

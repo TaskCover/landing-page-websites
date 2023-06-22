@@ -93,10 +93,10 @@ const Actions = () => {
   return (
     <>
       <Stack
-        direction={{ xs: "column-reverse", md: "row" }}
+        direction={{ md: "row" }}
         alignItems={{ md: "center" }}
         justifyContent="space-between"
-        spacing={3}
+        spacing={{ xs: 1, md: 3 }}
         px={{ xs: 1, md: 3 }}
         py={1.5}
       >
@@ -123,7 +123,7 @@ const Actions = () => {
         <Stack
           direction={{ md: "row" }}
           alignItems="center"
-          spacing={3}
+          spacing={{ xs: 1.5, md: 3 }}
           py={1.25}
           px={2}
           borderRadius={1}
@@ -156,13 +156,14 @@ const Actions = () => {
               onChange={onChangeQueries}
               value={Number(queries?.is_pay_user)}
             />
-            <Stack direction="row" alignItems="center" spacing={3}>
-              <Button size="small" onClick={onSearch} variant="secondary">
-                {commonT("search")}
-              </Button>
-              <Refresh onClick={onRefresh} />
-              {!!Object.keys(queries).length && <Clear onClick={onClear} />}
-            </Stack>
+          </Stack>
+
+          <Stack direction="row" alignItems="center" spacing={3}>
+            <Button size="small" onClick={onSearch} variant="secondary">
+              {commonT("search")}
+            </Button>
+            <Refresh onClick={onRefresh} />
+            {!!Object.keys(queries).length && <Clear onClick={onClear} />}
           </Stack>
         </Stack>
       </Stack>

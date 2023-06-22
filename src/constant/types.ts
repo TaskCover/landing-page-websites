@@ -1,5 +1,5 @@
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import { ThemeMode } from "./enums";
+import { Permission, ThemeMode } from "./enums";
 import { i18n } from ".";
 
 export interface Option {
@@ -38,7 +38,7 @@ export interface User {
     name: string;
     id: string;
   };
-  roles: string[];
+  roles: Permission[];
   avatar?: {
     link: string;
   };

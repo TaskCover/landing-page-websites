@@ -28,3 +28,10 @@ export enum DataAction {
   DELETE,
   OTHER,
 }
+
+export enum Permission {
+  SA = "SA",
+  AM = "AM",
+  ST = "ST",
+  EU = "EU",
+}

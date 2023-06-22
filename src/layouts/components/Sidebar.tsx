@@ -7,14 +7,16 @@ import Link from "components/Link";
 import { HOME_PATH, UPGRADE_ACCOUNT_PATH } from "constant/paths";
 import CrownIcon from "icons/CrownIcon";
 import { Button, IconButton } from "components/shared";
-import { useSidebar } from "store/app/selectors";
+import { useAuth, useSidebar } from "store/app/selectors";
 import useBreakpoint from "hooks/useBreakpoint";
 import { useTranslations } from "next-intl";
 import { NS_LAYOUT, NS_COMMON } from "constant/index";
+import { Permission } from "constant/enums";
 
 const Sidebar = (props: StackProps) => {
   const { isExpandedSidebar, onToggleExpandSidebar } = useSidebar();
   const { isLgSmaller } = useBreakpoint();
+  const { user } = useAuth();
   const t = useTranslations(NS_LAYOUT);
   const commonT = useTranslations(NS_COMMON);
 
@@ -78,38 +80,38 @@ const Sidebar = (props: StackProps) => {
           </IconButton>
         )}
       </Stack>
-
-      <Link
-        href={UPGRADE_ACCOUNT_PATH}
-        underline="none"
-        sx={{ width: isShowLarge ? "100%" : undefined }}
-      >
-        {isShowLarge ? (
-          <Button
-            variant="primary"
-            startIcon={
-              <CrownIcon
-                sx={{ fontSize: "24px!important", color: "common.white" }}
-                filled
-              />
-            }
-            size="small"
-            fullWidth
-          >
-            {commonT("upgradeAccount")}
-          </Button>
-        ) : (
-          <IconButton
-            tooltip={commonT("upgradeAccount")}
-            variant="contained"
-            size="small"
-            sx={{ backgroundColor: "primary.light" }}
-          >
-            <CrownIcon color="primary" />
-          </IconButton>
-        )}
-      </Link>
-
+      {user?.roles.includes(Permission.EU) && (
+        <Link
+          href={UPGRADE_ACCOUNT_PATH}
+          underline="none"
+          sx={{ width: isShowLarge ? "100%" : undefined }}
+        >
+          {isShowLarge ? (
+            <Button
+              variant="primary"
+              startIcon={
+                <CrownIcon
+                  sx={{ fontSize: "24px!important", color: "common.white" }}
+                  filled
+                />
+              }
+              size="small"
+              fullWidth
+            >
+              {commonT("upgradeAccount")}
+            </Button>
+          ) : (
+            <IconButton
+              tooltip={commonT("upgradeAccount")}
+              variant="contained"
+              size="small"
+              sx={{ backgroundColor: "primary.light" }}
+            >
+              <CrownIcon color="primary" />
+            </IconButton>
+          )}
+        </Link>
+      )}
       <Menu />
     </Stack>
   );

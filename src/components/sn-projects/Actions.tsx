@@ -76,8 +76,8 @@ const Actions = () => {
         justifyContent="space-between"
         borderBottom="1px solid"
         borderColor="grey.100"
-        spacing={3}
-        px={3}
+        spacing={{ xs: 1, md: 3 }}
+        px={{ xs: 1, md: 3 }}
         py={1.5}
       >
         <Stack
@@ -85,6 +85,7 @@ const Actions = () => {
           alignItems="center"
           justifyContent="space-between"
           spacing={{ xs: 2, md: 0 }}
+          width={{ xs: "100%", md: "fit-content" }}
         >
           <Text variant="h4" display={{ md: "none" }}>
             {projectT("list.title")}
@@ -102,7 +103,7 @@ const Actions = () => {
         <Stack
           direction={{ xs: "column", md: "row" }}
           alignItems="center"
-          spacing={3}
+          spacing={{ xs: 1, md: 3 }}
           py={1.25}
           px={2}
           borderRadius={1}
@@ -112,10 +113,9 @@ const Actions = () => {
           justifyContent="flex-end"
         >
           <Stack
-            direction="row"
+            direction={{ xs: "column", md: "row" }}
             alignItems="center"
-            spacing={3}
-            pb={{ xs: 2, sm: 0 }}
+            spacing={{ xs: 1.5, md: 3 }}
           >
             <Switch
               name="sort"

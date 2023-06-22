@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { parseURLSearchParams, stringifyURLSearchParams } from "utils/index";
+import {
+  getPath,
+  parseURLSearchParams,
+  stringifyURLSearchParams,
+} from "utils/index";
 import { usePathname, useRouter } from "next-intl/client";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { OPTIONS } from "components/Pagination";
@@ -18,6 +22,10 @@ const useQueryParams = () => {
     () => parseURLSearchParams(searchParams),
     [searchParams],
   );
+
+  const fullPath = useMemo(() => {
+    return getPath(pathname, query);
+  }, [pathname, query]);
 
   useEffect(() => {
     if (hasInitQueryRef.current) return;
@@ -43,6 +51,7 @@ const useQueryParams = () => {
     isReady,
     query,
     initQuery,
+    fullPath,
   };
 };
 

@@ -1,3 +1,5 @@
+import { Permission } from "./enums";
+
 export const HOME_PATH = "/";
 export const SIGNIN_PATH = "/signin";
 export const SIGNUP_PATH = "/signup";
@@ -21,3 +23,44 @@ export const PROJECT_ACTIVITIES_PATH = "/projects/{id}/activities";
 export const PROJECT_COST_HISTORY_PATH = "/projects/{id}/cost-history";
 export const PROJECT_MEMBERS_PATH = "/projects/{id}/members";
 export const PROJECT_INFORMATION_PATH = "/projects/{id}";
+
+const AUTHORIZED_LOGGED_IN_PATHS = [
+  SIGNIN_PATH,
+  SIGNUP_PATH,
+  FORGOT_PASSWORD_PATH,
+  RESET_PASSWORD_PATH,
+  CHANGE_PASSWORD_PATH,
+  ACCOUNT_INFO_PATH,
+];
+
+export const AUTHORIZED_PATHS = {
+  [Permission.AM]: [
+    ...AUTHORIZED_LOGGED_IN_PATHS,
+    PROJECTS_PATH,
+    POSITIONS_PATH,
+    EMPLOYEES_PATH,
+    COST_HISTORY_PATH,
+    PROJECT_TYPES_PATH,
+    PROJECT_TASKS_PATH,
+    COMPANY_DETAIL_PATH,
+    PROJECT_INFORMATION_PATH,
+    MY_COMPANY_PATH,
+    HOME_PATH,
+  ],
+  [Permission.SA]: [
+    ...AUTHORIZED_LOGGED_IN_PATHS,
+    HOME_PATH,
+    COMPANIES_PATH,
+    COMPANY_EMPLOYEES_PATH,
+    STATEMENT_HISTORY_PATH,
+  ],
+  [Permission.ST]: [
+    ...AUTHORIZED_LOGGED_IN_PATHS,
+    PROJECT_TYPES_PATH,
+    PROJECT_TASKS_PATH,
+    PROJECT_INFORMATION_PATH,
+    MY_COMPANY_PATH,
+    HOME_PATH,
+  ],
+  [Permission.EU]: [UPGRADE_ACCOUNT_PATH],
+};

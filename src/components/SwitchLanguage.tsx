@@ -7,13 +7,14 @@ import {
 } from "@mui/material";
 import { Locale } from "constant/types";
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "next-intl/client";
+import { useRouter } from "next-intl/client";
 import { memo, useRef } from "react";
 import Link from "./Link";
+import useQueryParams from "hooks/useQueryParams";
 
 const SwitchLanguage = (props: StackProps) => {
   const { replace } = useRouter();
-  const pathname = usePathname();
+  const { fullPath } = useQueryParams();
   const locale = useLocale() as Locale;
   const linkRef = useRef<HTMLLinkElement | null>(null);
 
@@ -33,7 +34,7 @@ const SwitchLanguage = (props: StackProps) => {
       />
       <Link
         ref={linkRef}
-        href={pathname}
+        href={fullPath}
         locale={locale === "vi" ? "en" : "vi"}
         sx={{ display: "none" }}
       />

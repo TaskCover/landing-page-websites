@@ -5,6 +5,7 @@ import { Text } from "components/shared";
 import { usePathname } from "next-intl/client";
 import MenuDashboardIcon from "icons/MenuDashboardIcon";
 import {
+  AUTHORIZED_PATHS,
   COMPANIES_PATH,
   COST_HISTORY_PATH,
   EMPLOYEES_PATH,
@@ -19,19 +20,28 @@ import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
 import MenuCompanyIcon from "icons/MenuCompanyIcon";
 import Collapse from "./Collapse";
-import { useSidebar } from "store/app/selectors";
+import { useAuth, useSidebar } from "store/app/selectors";
 import useBreakpoint from "hooks/useBreakpoint";
 import SubMenu from "./SubMenu";
 import { MenuItemProps } from "./helpers";
 import { useTranslations } from "next-intl";
 import { NS_LAYOUT } from "constant/index";
+import { Permission } from "constant/enums";
 
 const Menu = () => {
+  const { user } = useAuth();
+
   return (
     <Stack width="100%" spacing={1.5} overflow="auto">
-      {DATA.map((item) => (
-        <MenuItem key={item.label} {...item} />
-      ))}
+      {DATA.map((item) => {
+        const isAuthorized = user?.roles.some((role) =>
+          item.roles.includes(role),
+        );
+        if (isAuthorized) {
+          return <MenuItem key={item.label} {...item} />;
+        }
+        return null;
+      })}
     </Stack>
   );
 };
@@ -152,34 +162,67 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
 };
 
 const DATA: MenuItemProps[] = [
-  { label: "menu.dashboard", href: HOME_PATH, icon: <MenuDashboardIcon /> },
+  {
+    label: "menu.dashboard",
+    href: HOME_PATH,
+    icon: <MenuDashboardIcon />,
+    roles: [Permission.AM, Permission.ST],
+  },
   {
     label: "menu.project",
     icon: <MenuProjectIcon />,
     href: PROJECTS_PATH,
+    roles: [Permission.AM, Permission.ST],
   },
   {
     label: "menu.task",
     icon: <MenuTaskIcon />,
+    roles: [Permission.AM, Permission.ST],
   },
   {
     label: "menu.company",
     icon: <MenuCompanyIcon />,
     subs: [
-      { label: "menu.employees", href: EMPLOYEES_PATH },
-      { label: "menu.costHistory", href: COST_HISTORY_PATH },
-      { label: "menu.listOfPositions", href: POSITIONS_PATH },
-      { label: "menu.projectTypeList", href: PROJECT_TYPES_PATH },
-      { label: "menu.companyInformation", href: MY_COMPANY_PATH },
+      { label: "menu.employees", href: EMPLOYEES_PATH, roles: [Permission.AM] },
+      {
+        label: "menu.costHistory",
+        href: COST_HISTORY_PATH,
+        roles: [Permission.AM],
+      },
+      {
+        label: "menu.listOfPositions",
+        href: POSITIONS_PATH,
+        roles: [Permission.AM],
+      },
+      {
+        label: "menu.projectTypeList",
+        href: PROJECT_TYPES_PATH,
+        roles: [Permission.AM],
+      },
+      {
+        label: "menu.companyInformation",
+        href: MY_COMPANY_PATH,
+        roles: [Permission.AM],
+      },
     ],
+    roles: [Permission.AM],
   },
   {
     label: "menu.manager",
     icon: <MenuCompanyIcon />,
     subs: [
-      { label: "menu.companyList", href: COMPANIES_PATH },
-      { label: "menu.statementHistory", href: STATEMENT_HISTORY_PATH },
+      {
+        label: "menu.companyList",
+        href: COMPANIES_PATH,
+        roles: [Permission.SA],
+      },
+      {
+        label: "menu.statementHistory",
+        href: STATEMENT_HISTORY_PATH,
+        roles: [Permission.SA],
+      },
     ],
+    roles: [Permission.SA],
   },
 ];
 
