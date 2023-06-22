@@ -18,8 +18,8 @@ const TextStatus = (props: TextStatusProps) => {
 
   return (
     <Text
-      color={({ palette }) => palette[color].main}
-      bgcolor={({ palette }) => palette[color].light}
+      color={({ palette }) => palette?.[color]?.main}
+      bgcolor={({ palette }) => palette?.[color]?.light}
       variant="caption"
       fontWeight={600}
       py={0.5}
