@@ -34,6 +34,7 @@ export const CommonLang: CommonDictionary = {
   notification: {
     imageTypeInvalid:
       "File type is invalid. Currently the system only support PNG, JPEG, JPG",
+    success: "{label} successfully!",
   },
   error: {
     anErrorTryAgain: "An error occurred. Please try again.",
@@ -78,4 +79,8 @@ export const CommonLang: CommonDictionary = {
     content: "Are you sure to delete?",
   },
   upgradeAccount: "Upgrade account",
+  clickGoDetail: "Click to go to detail {name}",
+  waiting: "Waiting",
+  approved: "Approved",
+  rejected: "Rejected",
 };

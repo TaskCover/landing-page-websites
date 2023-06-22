@@ -33,6 +33,7 @@ export const CommonLang: CommonDictionary = {
   notification: {
     imageTypeInvalid:
       "Tệp tin không hợp lệ. Hiện tại hệ thống chỉ hỗ trợ PNG, JPEG, JPG",
+    success: "{label} thành công!",
   },
   error: {
     anErrorTryAgain: "Có lỗi xảy ra. Vui lòng thử lại.",
@@ -77,4 +78,8 @@ export const CommonLang: CommonDictionary = {
     content: "Bạn có chắc chắn muốn xóa?",
   },
   upgradeAccount: "Nâng cấp tài khoản",
+  clickGoDetail: "Nhấn để tới trang chi tiết {name}",
+  waiting: "Đang chờ",
+  approved: "Đã chấp nhận",
+  rejected: "Đã từ chối",
 };

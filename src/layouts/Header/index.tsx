@@ -47,12 +47,13 @@ const Header = () => {
       </Stack>
       {/* {breakpoint}-{width} */}
       <Stack direction="row" alignItems="center" spacing={8}>
-        {!!searchPlaceholder && (
+        {/* {!!searchPlaceholder && (
           <Search
             name="search"
             sx={{ display: { xs: "none", sm: "initial" } }}
+            // onChange={onChange}
           />
-        )}
+        )} */}
         <SwitchLanguage />
         <AccountInfo />
       </Stack>

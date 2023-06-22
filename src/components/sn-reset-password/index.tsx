@@ -106,7 +106,6 @@ const Reset = () => {
         >
           <AppLogo width={188} />
           <Text variant="h3" textAlign="center" mt={3} mb={5}>
-            Reset new password
             {authT("reset.title")}
           </Text>
 

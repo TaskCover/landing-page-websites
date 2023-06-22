@@ -30,6 +30,7 @@ export type CommonDictionary = {
   };
   notification: {
     imageTypeInvalid: string;
+    success: string;
   };
   error: {
     anErrorTryAgain: string;
@@ -74,4 +75,8 @@ export type CommonDictionary = {
     content: string;
   };
   upgradeAccount: string;
+  clickGoDetail: string;
+  waiting: string;
+  approved: string;
+  rejected: string;
 };

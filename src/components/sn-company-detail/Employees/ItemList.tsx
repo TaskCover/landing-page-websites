@@ -15,7 +15,7 @@ import {
   CellProps,
   ActionsCell,
 } from "components/Table";
-import { DEFAULT_PAGING } from "constant/index";
+import { DEFAULT_PAGING, NS_COMMON, NS_MANAGER } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import Pagination from "components/Pagination";
 import { usePathname, useRouter } from "next-intl/client";
@@ -31,6 +31,7 @@ import CircleTickIcon from "icons/CircleTickIcon";
 import CloseSquareIcon from "icons/CloseSquareIcon";
 import { PaymentStatus } from "components/sn-employees/helpers";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const ItemList = () => {
   const {
@@ -45,6 +46,8 @@ const ItemList = () => {
     onGetEmployees,
     onApproveOrReject: onApproveOrRejectAction,
   } = useEmployeesOfCompany();
+  const commonT = useTranslations(NS_COMMON);
+  const managerT = useTranslations(NS_MANAGER);
 
   const { initQuery, isReady, query } = useQueryParams();
   const pathname = usePathname();
@@ -83,10 +86,21 @@ const ItemList = () => {
     [items],
   );
 
+  const desktopHeaderList: CellProps[] = useMemo(
+    () => [
+      { value: commonT("name"), width: "20%", align: "left" },
+      { value: "Email", width: "20%", align: "left" },
+      { value: commonT("creator"), width: "17%", align: "left" },
+      { value: commonT("creationDate"), width: "15%" },
+      { value: commonT("status"), width: "17%" },
+    ],
+    [commonT],
+  );
+
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
       ? MOBILE_HEADER_LIST
-      : DESKTOP_HEADER_LIST;
+      : desktopHeaderList;
 
     return [
       {
@@ -96,7 +110,7 @@ const ItemList = () => {
       ...additionalHeaderList,
       { value: "", width: isMdSmaller ? "20%" : "8%" },
     ] as CellProps[];
-  }, [isMdSmaller, isCheckedAll, onChangeAll]);
+  }, [isMdSmaller, desktopHeaderList, isCheckedAll, onChangeAll]);
 
   const onToggleSelect = (item: Employee, indexSelected: number) => {
     return () => {
@@ -179,7 +193,7 @@ const ItemList = () => {
             <IconButton
               size="small"
               onClick={onApproveOrReject(PaymentStatus.PAID)}
-              tooltip="Approve"
+              tooltip={managerT("companyList.approve")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -195,7 +209,7 @@ const ItemList = () => {
             <IconButton
               size="small"
               onClick={onApproveOrReject(PaymentStatus.UNPAID)}
-              tooltip="Reject"
+              tooltip={managerT("companyList.reject")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -242,7 +256,7 @@ const ItemList = () => {
                     item.is_pay_user === null
                       ? [
                           {
-                            content: "Approve",
+                            content: managerT("companyList.approve"),
                             onClick: onApproveOrReject(
                               PaymentStatus.PAID,
                               item.id,
@@ -252,7 +266,7 @@ const ItemList = () => {
                             ),
                           },
                           {
-                            content: "Reject",
+                            content: managerT("companyList.reject"),
                             onClick: onApproveOrReject(
                               PaymentStatus.UNPAID,
                               item.id,
@@ -281,12 +295,14 @@ const ItemList = () => {
       <ApproveOrRejectConfirm
         open={action !== undefined}
         onClose={onResetAction}
-        title={`Confirm to ${textAction}`}
-        content={`Are you sure to ${textAction} ${
-          id ? "this" : "these"
-        } account?`}
+        title={managerT("employeeList.confirm.title", { label: textAction })}
+        content={managerT("employeeList.confirm.content", {
+          label: textAction,
+          count: id ? 1 : selectedList.length,
+        })}
         items={id ? undefined : selectedList}
         onSubmit={onSubmitApproveOrReject}
+        action={textAction}
       />
     </>
   );
@@ -294,17 +310,9 @@ const ItemList = () => {
 
 export default memo(ItemList);
 
-const DESKTOP_HEADER_LIST = [
-  { value: "Name", width: "20%", align: "left" },
-  { value: "Email", width: "20%", align: "left" },
-  { value: "Creator", width: "17%", align: "left" },
-  { value: "Creation date", width: "15%" },
-  { value: "Status", width: "17%" },
-];
-
 const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];
 
 const TEXT_ACTION: { [key in PaymentStatus]: string } = {
-  [PaymentStatus.PAID]: "approve",
-  [PaymentStatus.UNPAID]: "reject",
+  [PaymentStatus.PAID]: "companyList.approve",
+  [PaymentStatus.UNPAID]: "companyList.reject",
 };

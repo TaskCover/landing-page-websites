@@ -1,13 +1,14 @@
 import { memo } from "react";
 import { Company } from "store/company/reducer";
 import { BodyCell, StatusCell } from "components/Table";
-import { DATE_TIME_FORMAT_SLASH } from "constant/index";
+import { DATE_TIME_FORMAT_SLASH, NS_COMMON, NS_MANAGER } from "constant/index";
 import { formatDate, getPath } from "utils/index";
 import { TEXT_STATUS, COLOR_STATUS, WAITING_STATUS } from "./components";
 import { Text } from "components/shared";
 import Avatar from "components/Avatar";
 import { Stack } from "@mui/material";
 import { COMPANY_DETAIL_PATH } from "constant/paths";
+import { useTranslations } from "next-intl";
 
 type DesktopCellsProps = {
   item: Company;
@@ -15,6 +16,10 @@ type DesktopCellsProps = {
 
 const DesktopCells = (props: DesktopCellsProps) => {
   const { item } = props;
+
+  const commonT = useTranslations(NS_COMMON);
+  const managerT = useTranslations(NS_MANAGER);
+
   return (
     <>
       <BodyCell
@@ -22,7 +27,9 @@ const DesktopCells = (props: DesktopCellsProps) => {
         href={getPath(COMPANY_DETAIL_PATH, undefined, { id: item.id })}
         linkProps={{
           sx: { color: "text.primary" },
-          tooltip: "Click to go to detail company",
+          tooltip: commonT("clickGoDetail", {
+            name: managerT("companyList.company"),
+          }),
         }}
       >
         <Stack

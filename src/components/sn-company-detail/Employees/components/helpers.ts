@@ -2,8 +2,8 @@ import { AlertColor } from "@mui/material";
 import { PaymentStatus } from "components/sn-employees/helpers";
 
 export const TEXT_STATUS: { [key in PaymentStatus]: string } = {
-  [PaymentStatus.PAID]: "Approved",
-  [PaymentStatus.UNPAID]: "Rejected",
+  [PaymentStatus.PAID]: "approved",
+  [PaymentStatus.UNPAID]: "rejected",
 };
 
 export const COLOR_STATUS: { [key in PaymentStatus]: AlertColor } = {

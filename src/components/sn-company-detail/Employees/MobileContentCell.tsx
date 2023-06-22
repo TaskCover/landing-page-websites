@@ -11,6 +11,8 @@ import {
   TEXT_STATUS,
   WAITING_STATUS,
 } from "./components/helpers";
+import { NS_COMMON, NS_MANAGER } from "constant/index";
+import { useTranslations } from "next-intl";
 
 type MobileContentCellProps = {
   item: Employee;
@@ -23,6 +25,8 @@ type InformationItemProps = {
 
 const MobileContentCell = (props: MobileContentCellProps) => {
   const { item } = props;
+  const commonT = useTranslations(NS_COMMON);
+  const managerT = useTranslations(NS_MANAGER);
   return (
     <BodyCell align="left">
       <Stack spacing={2} py={1.5}>
@@ -31,11 +35,13 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           <Text variant="h6">{item.fullname}</Text>
         </Stack>
         <InformationItem label="Email">{item.email}</InformationItem>
-        <InformationItem label="Creator">{item.fullname}</InformationItem>
-        <InformationItem label="Creation date">
+        <InformationItem label={commonT("creator")}>
+          {item.fullname}
+        </InformationItem>
+        <InformationItem label={commonT("creationDate")}>
           {formatDate(item.created_time)}
         </InformationItem>
-        <InformationItem label="Status">
+        <InformationItem label={commonT("status")}>
           <TextStatus
             color={
               item.is_pay_user === null
