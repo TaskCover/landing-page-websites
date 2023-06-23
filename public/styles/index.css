@@ -64,6 +64,7 @@ a {
 }
 
 @media screen and (min-width: 768px) {
+
   /* width */
   ::-webkit-scrollbar {
     width: 6px;
@@ -87,4 +88,21 @@ a {
     background: rgba(134, 138, 166, 0.9);
     cursor: pointer;
   }
+}
+
+
+.draggable-taskList {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.draggable {
+  display: flex;
+}
+
+.draggable-category {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
 }

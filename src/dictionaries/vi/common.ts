@@ -26,6 +26,7 @@ export const CommonLang: CommonDictionary = {
       startDate: "Ngày bắt đầu",
       endDate: "Ngày kết thúc",
       description: "Mô tả",
+      note: "Ghi chú",
     },
     confirm: "Xác nhận",
     cancel: "Hủy bỏ",
@@ -83,4 +84,8 @@ export const CommonLang: CommonDictionary = {
   rejected: "Đã từ chối",
   noData: "Không có dữ liệu.",
   unauthorized: "Tài khoản của bạn không có quyền truy cập trang này!",
+  duplicate: "Tạo bản sao",
+  move: "Di chuyển",
+  rename: "Đổi tên",
+  all: "Tất cả",
 };

@@ -1,11 +1,18 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   GetProjectListQueries,
+  GetTasksOfProjectQueries,
   ProjectData,
+  TaskData,
+  TaskListData,
   createProject,
+  createTask,
+  createTaskList,
   getMembersOfProject,
   getProject,
   getProjectList,
+  getTasksOfProject,
+  moveTask,
   updateProject,
 } from "./actions";
 import { DataStatus } from "constant/enums";
@@ -14,6 +21,7 @@ import { shallowEqual } from "react-redux";
 import { BaseQueries } from "constant/types";
 import { getFiltersIgnoreId } from "utils/index";
 import { removeMember } from "./reducer";
+import { string } from "yup";
 
 export const useProjects = () => {
   const dispatch = useAppDispatch();
@@ -144,5 +152,169 @@ export const useMembersOfProject = () => {
     id: storeFilters?.id,
     onGetMembersOfProject,
     onDeleteMember,
+  };
+};
+
+export const useTasksOfProject = () => {
+  const dispatch = useAppDispatch();
+  const {
+    tasks: items,
+    tasksStatus: status,
+    tasksError: error,
+    tasksFilters: storeFilters,
+  } = useAppSelector((state) => state.project, shallowEqual);
+  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+    (state) => state.project.tasksPaging,
+    shallowEqual,
+  );
+
+  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
+  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
+  const filters = useMemo(
+    () => getFiltersIgnoreId(storeFilters, "project"),
+    [storeFilters],
+  );
+
+  const onGetTasksOfProject = useCallback(
+    async (id: string, queries: GetTasksOfProjectQueries) => {
+      await dispatch(getTasksOfProject({ ...queries, project: id }));
+    },
+    [dispatch],
+  );
+
+  const onCreateTaskList = useCallback(
+    async (id: string, data: TaskListData) => {
+      try {
+        return await dispatch(
+          createTaskList({ ...data, project: id }),
+        ).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const onCreateTask = useCallback(
+    async (data: TaskData, taskList: string, taskId?: string) => {
+      try {
+        return await dispatch(
+          createTask({ ...data, task_list: taskList, task: taskId }),
+        ).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const onMoveTask = async (
+    oldTaskListId: string,
+    taskListId: string,
+    taskId: string,
+  ) => {
+    try {
+      return await dispatch(
+        moveTask({
+          task_list_current: oldTaskListId,
+          task_list_move: taskListId,
+          task_current: taskId,
+        }),
+      ).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  // const onUpdateEmployee = useCallback(
+  //   async (id: string, position: string) => {
+  //     try {
+  //       return await dispatch(updateEmployee({ id, position })).unwrap();
+  //     } catch (error) {
+  //       throw error;
+  //     }
+  //   },
+  //   [dispatch],
+  // );
+
+  // const onDeleteEmployees = useCallback(
+  //   async (ids: string[]) => {
+  //     try {
+  //       return await dispatch(deleteEmployees(ids)).unwrap();
+  //     } catch (error) {
+  //       throw error;
+  //     }
+  //   },
+  //   [dispatch],
+  // );
+
+  return {
+    items,
+    status,
+    error,
+    filters,
+    isIdle,
+    isFetching,
+    pageIndex,
+    pageSize,
+    totalItems,
+    totalPages,
+    id: storeFilters?.project,
+    onGetTasksOfProject,
+    onCreateTaskList,
+    onCreateTask,
+    onMoveTask,
+    // onCreateEmployee,
+    // onUpdateEmployee,
+    // onDeleteEmployees,
+  };
+};
+
+export const useTaskOptions = () => {
+  const dispatch = useAppDispatch();
+
+  const {
+    taskOptions: items,
+    taskOptionsStatus: status,
+    taskOptionsError: error,
+    taskOptionsFilters: filters = {},
+  } = useAppSelector((state) => state.project, shallowEqual);
+  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+    (state) => state.project.taskOptionsPaging,
+    shallowEqual,
+  );
+
+  const options = useMemo(
+    () =>
+      items.map((item) => ({
+        label: item.name,
+        value: item.id,
+      })),
+    [items],
+  );
+
+  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
+  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
+
+  const onGetOptions = useCallback(
+    (queries: GetTasksOfProjectQueries) => {
+      dispatch(getTasksOfProject({ concat: true, ...queries }));
+    },
+    [dispatch],
+  );
+
+  return {
+    items,
+    options,
+    status,
+    error,
+    isIdle,
+    isFetching,
+    pageIndex,
+    pageSize,
+    totalItems,
+    totalPages,
+    filters,
+    onGetOptions,
   };
 };

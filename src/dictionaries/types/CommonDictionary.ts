@@ -24,6 +24,7 @@ export type CommonDictionary = {
       startDate: string;
       endDate: string;
       description: string;
+      note: string;
     };
     confirm: string;
     cancel: string;
@@ -80,4 +81,8 @@ export type CommonDictionary = {
   rejected: string;
   noData: string;
   unauthorized: string;
+  duplicate: string;
+  move: string;
+  rename: string;
+  all: string;
 };

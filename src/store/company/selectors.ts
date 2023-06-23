@@ -23,8 +23,9 @@ import {
 import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
-import { BaseQueries } from "constant/types";
+import { BaseQueries, Option } from "constant/types";
 import { PaymentStatus } from "components/sn-employees/helpers";
+import Avatar from "components/Avatar";
 
 export const useEmployees = () => {
   const dispatch = useAppDispatch();
@@ -110,11 +111,12 @@ export const useEmployeeOptions = () => {
     shallowEqual,
   );
 
-  const options = useMemo(
+  const options: Option[] = useMemo(
     () =>
       items.map((item) => ({
         label: item.fullname,
         value: item.id,
+        avatar: item?.avatar?.link,
       })),
     [items],
   );

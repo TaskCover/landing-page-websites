@@ -74,4 +74,22 @@ export const ProjectLang: ProjectDictionary = {
       removeSuccess: "Loại bỏ thành viên thành công!",
     },
   },
+  detailTasks: {
+    head: {
+      title: "Công việc dự án | Taskcover",
+    },
+    form: {
+      title: {
+        expectCompletionTime: "Thời gian dự kiến hoàn thành",
+        timeTaken: "Thời gian đã thực hiện",
+        name: "Tên công việc",
+      },
+    },
+    addNewTask: "Thêm công việc mới",
+    taskList: "Danh mục công việc",
+    notification: {
+      taskListSuccess: "{label} danh mục công việc thành công!",
+      taskSuccess: "{label} công việc thành công!",
+    },
+  },
 };

@@ -110,6 +110,16 @@ const defaultSx = {
     color: "#F2F2F2",
   },
 
+  [`&.${buttonClasses.textSecondary}`]: {
+    backgroundColor: "transparent",
+    width: "fit-content",
+    color: "success.main",
+    p: "0!important",
+    [`&.${buttonClasses.focusVisible}`]: {
+      backgroundColor: "transparent",
+    },
+  },
+
   [`&.${matchClass(PREFIX_BUTTON_CLASS, PRIMARY)}`]: {
     backgroundColor: "primary.main",
     "&:hover": {

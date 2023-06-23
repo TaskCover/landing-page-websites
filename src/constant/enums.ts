@@ -35,3 +35,9 @@ export enum Permission {
   ST = "ST",
   EU = "EU",
 }
+
+export enum Status {
+  PAUSE = "PAUSE",
+  ACTIVE = "ACTIVE",
+  CLOSE = "CLOSE",
+}

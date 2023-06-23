@@ -2,15 +2,28 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Input, InputProps } from "components/shared";
 import SearchIcon from "icons/SearchIcon";
 import useEventListener from "hooks/useEventListener";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 type SearchProps = Omit<InputProps, "name" | "onChange"> & {
   name: string;
   onChange?: (name: string, value?: string) => void;
   emitWhenEnter?: boolean;
+  search?: string | number;
 };
 
 const Search = (props: SearchProps) => {
-  const { onChange, name, sx, value = "", emitWhenEnter, ...rest } = props;
+  const {
+    onChange,
+    name,
+    sx,
+    value = "",
+    emitWhenEnter,
+    search,
+    ...rest
+  } = props;
+
+  const commonT = useTranslations(NS_COMMON);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const prevTextRef = useRef<string | number>(value);
@@ -43,10 +56,10 @@ const Search = (props: SearchProps) => {
   };
 
   useEffect(() => {
-    setText(value ?? "");
+    setText(value || search || "");
     if (!emitWhenEnter) return;
-    prevTextRef.current = value ?? "";
-  }, [value, emitWhenEnter]);
+    prevTextRef.current = value || search || "";
+  }, [value, emitWhenEnter, search]);
 
   return (
     <Input
@@ -61,7 +74,7 @@ const Search = (props: SearchProps) => {
         onBlur,
       }}
       startNode={<SearchIcon />}
-      placeholder="Search..."
+      placeholder={commonT("search")}
       onChangeValue={onChangeValue}
       value={text}
       {...rest}

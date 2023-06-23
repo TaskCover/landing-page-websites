@@ -5,6 +5,11 @@ import { Option } from "constant/types";
 import ChevronIcon from "icons/ChevronIcon";
 import { Search } from "components/Filters";
 import { debounce, uuid } from "utils/index";
+import Avatar from "components/Avatar";
+import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
+import useToggle from "hooks/useToggle";
 
 export type SelectProps = InputProps & {
   options: Option[];
@@ -14,10 +19,11 @@ export type SelectProps = InputProps & {
   onEndReached?: () => void;
   onChangeSearch?: (name: string, newValue?: string | number) => void;
   searchProps?: {
-    name: string;
+    name?: string;
     placeholder?: string;
     value?: string | number;
   };
+  hasAvatar?: boolean;
 };
 
 const ID_PLACEHOLDER = uuid();
@@ -35,8 +41,13 @@ const Select = (props: SelectProps) => {
     onChangeSearch,
     searchProps,
     onChange: onChangeProp,
+    hasAvatar,
     ...rest
   } = props;
+
+  const commonT = useTranslations(NS_COMMON);
+
+  const [isShow, onOpen, onClose] = useToggle(false);
 
   const hasValue = useMemo(
     () => options.some((option) => option.value === value),
@@ -47,14 +58,14 @@ const Select = (props: SelectProps) => {
     if (hasAll || placeholder) {
       return [
         {
-          label: hasAll && hasValue ? "All" : placeholder,
+          label: hasAll && hasValue ? commonT("all") : placeholder,
           value: ID_PLACEHOLDER,
         },
         ...options,
       ];
     }
     return options;
-  }, [hasAll, placeholder, options, hasValue]);
+  }, [hasAll, placeholder, options, hasValue, commonT]) as unknown as Option[];
 
   const onChange = (event) => {
     if (event.target.value === ID_PLACEHOLDER) {
@@ -79,6 +90,8 @@ const Select = (props: SelectProps) => {
       select
       SelectProps={{
         IconComponent: ChevronIcon,
+        onOpen,
+        onClose,
         MenuProps: {
           PaperProps: {
             onScroll,
@@ -95,12 +108,14 @@ const Select = (props: SelectProps) => {
       onChange={onChange}
       {...rest}
     >
-      {!!onChangeSearch && (
+      {!!onChangeSearch && isShow && (
         <Search
           fullWidth
           sx={{ px: 2, mb: 0.75 }}
           name="email"
           onChange={onChangeSearch}
+          emitWhenEnter
+          search={searchProps?.value}
           {...searchProps}
         />
       )}
@@ -117,6 +132,9 @@ const Select = (props: SelectProps) => {
           key={option.value}
           value={option.value}
         >
+          {hasAvatar && (
+            <Avatar src={option?.avatar ?? UserPlaceholderImage} size={24} />
+          )}
           {option.label}
         </MenuItem>
       ))}
@@ -152,6 +170,9 @@ const defaultSx = {
     color: "text.primary",
     lineHeight: "22px",
     backgroundColor: "grey.50",
+    "& > img": {
+      mr: 1,
+    },
     "&:hover": {
       backgroundColor: "primary.main",
       "& svg": {

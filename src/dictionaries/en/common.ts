@@ -27,6 +27,7 @@ export const CommonLang: CommonDictionary = {
       startDate: "Start date",
       endDate: "End date",
       description: "Description",
+      note: "Note",
     },
     confirm: "Confirm",
     cancel: "Cancel",
@@ -84,4 +85,8 @@ export const CommonLang: CommonDictionary = {
   rejected: "Rejected",
   noData: "No data.",
   unauthorized: "Your account does not have permission to access this page!",
+  duplicate: "Duplicate",
+  move: "Move",
+  rename: "Rename",
+  all: "All",
 };

@@ -19,6 +19,7 @@ import {
   memo,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import CellBody, { HEIGHT_ROW } from "./BodyCell";
@@ -45,6 +46,7 @@ type TableLayoutProps = {
   headerProps?: TableCellProps;
   containerHeaderProps?: BoxProps;
   accessKey?: string;
+  onLayout?: (refs) => void;
 } & StackProps;
 
 const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
@@ -60,9 +62,9 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     headerProps = {},
     accessKey,
     containerHeaderProps = {},
+    onLayout,
     ...rest
   } = props;
-
   const commonT = useTranslations(NS_COMMON);
 
   const { sx: sxHeaderProps, ...restHeaderProps } = headerProps;
@@ -108,6 +110,16 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
       setBodySx(newBodySx);
     }, 250);
   }, [headerList, refs, children, size, isExpandedSidebar]);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout | null = null;
+
+    if (timeout) clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      onLayout && onLayout(refs.map((ref) => ref.current?.offsetWidth));
+    }, 250);
+  }, [onLayout, headerList, refs, size, isExpandedSidebar]);
 
   return (
     <Stack

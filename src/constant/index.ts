@@ -1,4 +1,5 @@
-import { ThemeMode } from "./enums";
+import { AlertColor } from "@mui/material";
+import { Status, ThemeMode } from "./enums";
 import { Mode, Paging } from "./types";
 
 export const AUTH_API_URL = process.env.AUTH_API_URL as string;
@@ -32,6 +33,24 @@ export const i18n = {
   // If this locale is matched, pathnames work without a prefix (e.g. `/about`)
   defaultLocale: "en",
 } as const;
+
+export const TEXT_STATUS: { [key in Status]: string } = {
+  [Status.ACTIVE]: "statusEnum.active",
+  [Status.CLOSE]: "statusEnum.close",
+  [Status.PAUSE]: "statusEnum.pause",
+};
+
+export const COLOR_STATUS: { [key in Status]: AlertColor } = {
+  [Status.ACTIVE]: "success",
+  [Status.CLOSE]: "error",
+  [Status.PAUSE]: "warning",
+};
+
+export const STATUS_OPTIONS = [
+  { label: TEXT_STATUS.ACTIVE, value: Status.ACTIVE },
+  { label: TEXT_STATUS.PAUSE, value: Status.PAUSE },
+  { label: TEXT_STATUS.CLOSE, value: Status.CLOSE },
+];
 
 export const NS_COMMON = "common";
 export const NS_AUTH = "auth";

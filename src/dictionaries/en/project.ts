@@ -74,4 +74,22 @@ export const ProjectLang: ProjectDictionary = {
       removeSuccess: "Remove member successfully!",
     },
   },
+  detailTasks: {
+    head: {
+      title: "Project Tasks | Taskcover",
+    },
+    form: {
+      title: {
+        expectCompletionTime: "Expect completion time",
+        timeTaken: "Time taken",
+        name: "Task name",
+      },
+    },
+    addNewTask: "Add new task",
+    taskList: "Task list",
+    notification: {
+      taskListSuccess: "{label} task list successfully!",
+      taskSuccess: "{label} task successfully!",
+    },
+  },
 };

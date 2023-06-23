@@ -236,6 +236,7 @@ const Form = (props: FormProps) => {
             options={employeeOptions}
             title={commonT("assigner")}
             name="owner"
+            hasAvatar
             required
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}

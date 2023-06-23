@@ -70,4 +70,22 @@ export type ProjectDictionary = {
       removeSuccess: string;
     };
   };
+  detailTasks: {
+    head: {
+      title: string;
+    };
+    form: {
+      title: {
+        expectCompletionTime: string;
+        timeTaken: string;
+        name: string;
+      };
+    };
+    addNewTask: string;
+    taskList: string;
+    notification: {
+      taskListSuccess: string;
+      taskSuccess: string;
+    };
+  };
 };

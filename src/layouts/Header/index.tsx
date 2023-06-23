@@ -73,7 +73,7 @@ const Header = () => {
             placeholder={searchPlaceholder}
             name={key as string}
             onChange={onSearch}
-            emitWhenEnter
+            // emitWhenEnter
             value={filters?.[key as string]}
           />
         )}

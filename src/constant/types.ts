@@ -6,6 +6,7 @@ export interface Option {
   label: string;
   value: string | number;
   icon?: React.ReactNode;
+  avatar?: string;
 }
 
 export interface Size {

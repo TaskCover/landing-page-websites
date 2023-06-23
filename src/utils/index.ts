@@ -244,8 +244,8 @@ export const getPath = (
   return path + queryString;
 };
 
-export const getFiltersIgnoreId = (filters) => {
+export const getFiltersIgnoreId = (filters, key = "id") => {
   const _filters = { ...filters };
-  delete _filters["id"];
+  delete _filters[key];
   return _filters;
 };

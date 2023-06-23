@@ -1,11 +1,15 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import {
   createProject,
+  createTask,
+  createTaskList,
   getMembersOfProject,
   GetMembersOfProjectQueries,
   getProject,
   getProjectList,
   GetProjectListQueries,
+  getTasksOfProject,
+  GetTasksOfProjectQueries,
   ProjectStatus,
   updateProject,
 } from "./actions";
@@ -16,7 +20,7 @@ import {
   Paging,
   User,
 } from "constant/types";
-import { DataStatus, Permission } from "constant/enums";
+import { DataStatus, Permission, Status } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { getFiltersFromQueries } from "utils/index";
 import { Position } from "store/company/reducer";
@@ -64,6 +68,24 @@ export interface Project {
   };
 }
 
+export interface Task {
+  id: string;
+  name: string;
+
+  owner: User;
+  estimated_hours: number;
+  working_hours?: number;
+  status: Status;
+  description?: string;
+  sub_tasks?: Task[];
+}
+
+export type TaskList = {
+  id: string;
+  name: string;
+  tasks: Task[];
+};
+
 export interface ProjectState {
   items: Project[];
   status: DataStatus;
@@ -80,6 +102,18 @@ export interface ProjectState {
   membersPaging: Paging;
   membersError?: string;
   membersFilters: Omit<GetMembersOfProjectQueries, "pageIndex" | "pageSize">;
+
+  tasks: TaskList[];
+  tasksStatus: DataStatus;
+  tasksPaging: Paging;
+  tasksError?: string;
+  tasksFilters: Omit<GetTasksOfProjectQueries, "pageIndex" | "pageSize">;
+
+  taskOptions: TaskList[];
+  taskOptionsStatus: DataStatus;
+  taskOptionsPaging: Paging;
+  taskOptionsError?: string;
+  taskOptionsFilters: Omit<GetTasksOfProjectQueries, "pageIndex" | "pageSize">;
 }
 
 const initialState: ProjectState = {
@@ -94,6 +128,16 @@ const initialState: ProjectState = {
   membersStatus: DataStatus.IDLE,
   membersPaging: DEFAULT_PAGING,
   membersFilters: {},
+
+  tasks: [],
+  tasksStatus: DataStatus.IDLE,
+  tasksPaging: DEFAULT_PAGING,
+  tasksFilters: {},
+
+  taskOptions: [],
+  taskOptionsStatus: DataStatus.IDLE,
+  taskOptionsPaging: DEFAULT_PAGING,
+  taskOptionsFilters: {},
 };
 
 const projectSlice = createSlice({
@@ -101,7 +145,7 @@ const projectSlice = createSlice({
   initialState,
   reducers: {
     removeMember: (state, action: PayloadAction<string>) => {
-      const indexSelected = state.members.findIndex(
+      const indexSelected = state.tasks.findIndex(
         (member) => member.id === action.payload,
       );
 
@@ -213,7 +257,99 @@ const projectSlice = createSlice({
         state.members = [];
         state.membersStatus = DataStatus.FAILED;
         state.membersError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
-      }),
+      })
+      // TASKS
+      .addCase(getTasksOfProject.pending, (state, action) => {
+        const prefixKey = action.meta.arg["concat"] ? "taskOptions" : "tasks";
+
+        state[`${prefixKey}Status`] = DataStatus.LOADING;
+        state[`${prefixKey}Filters`] = getFiltersFromQueries(action.meta.arg);
+
+        if (action.meta.arg?.concat && action.meta.arg.pageIndex === 1) {
+          state.taskOptions = [];
+        }
+        state[`${prefixKey}Paging`].pageIndex = Number(
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        );
+        state[`${prefixKey}Paging`].pageSize = Number(
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        );
+      })
+      .addCase(
+        getTasksOfProject.fulfilled,
+        (state, action: PayloadAction<ItemListResponse>) => {
+          const { items, concat, ...paging } = action.payload;
+
+          if (concat) {
+            state.taskOptions = state.taskOptions.concat(items as TaskList[]);
+          } else {
+            state.tasks = items as TaskList[];
+          }
+
+          const prefixKey = concat ? "taskOptions" : "tasks";
+
+          state[`${prefixKey}Status`] = DataStatus.SUCCEEDED;
+          state[`${prefixKey}Error`] = undefined;
+          state[`${prefixKey}Paging`] = Object.assign(
+            state[`${prefixKey}Paging`],
+            paging,
+          );
+        },
+      )
+      .addCase(getTasksOfProject.rejected, (state, action) => {
+        const prefixKey = action.meta.arg["concat"] ? "taskOptions" : "tasks";
+
+        state[`${prefixKey}Status`] = DataStatus.FAILED;
+        state[`${prefixKey}Error`] =
+          action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(
+        createTaskList.fulfilled,
+        (state, action: PayloadAction<TaskList>) => {
+          state.tasks.unshift(action.payload);
+          if (state.tasksPaging.totalItems !== undefined) {
+            state.tasksPaging.totalItems += 1;
+
+            const newPages = Math.ceil(
+              (current(state).tasksPaging.totalItems as number) /
+                current(state).tasksPaging.pageSize,
+            );
+            state.tasksPaging.totalPages = newPages;
+          }
+        },
+      )
+      .addCase(
+        createTask.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            task: Task;
+            taskId?: string;
+            taskListId: string;
+          }>,
+        ) => {
+          const { task, taskId, taskListId } = action.payload;
+          const indexTaskList = state.tasks.findIndex(
+            (taskListItem) => taskListItem.id === taskListId,
+          );
+          if (indexTaskList !== -1) {
+            if (taskId) {
+              // Sub task
+              const indexTask = state.tasks[indexTaskList].tasks.findIndex(
+                (taskItem) => taskItem.id === taskId,
+              );
+
+              if (indexTask !== -1) {
+                state.tasks[indexTaskList].tasks[indexTask].sub_tasks?.push(
+                  task,
+                );
+              }
+            } else {
+              state.tasks[indexTaskList].tasks.push(task);
+            }
+          }
+        },
+      ),
 });
 
 export const { removeMember, reset } = projectSlice.actions;
