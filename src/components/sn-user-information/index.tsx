@@ -216,7 +216,6 @@ const UserInformation = () => {
         error={commonT(touchedErrors?.phone, {
           name: commonT("phone"),
         })}
-        required={isEdit}
       />
       <Input
         rootSx={sxConfig.input}
@@ -275,10 +274,7 @@ const INITIAL_VALUES = {
 
 export const validationSchema = Yup.object().shape({
   fullname: Yup.string().trim().required("form.error.required"),
-  phone: Yup.string()
-    .trim()
-    .matches(VN_PHONE_REGEX, "form.error.invalid")
-    .required("form.error.required"),
+  phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
 });
 
 const sxConfig = {

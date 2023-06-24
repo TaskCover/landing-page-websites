@@ -50,7 +50,7 @@ const CostHistoryPage = () => {
   };
 
   useEffect(() => {
-    if (!isIdle || !isReady) return;
+    if (!isReady) return;
     onGetCostHistory({ ...DEFAULT_PAGING, ...initQuery });
   }, [initQuery, isIdle, isReady, onGetCostHistory]);
 

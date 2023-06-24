@@ -178,9 +178,9 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    if (!isIdle || !isReady) return;
+    if (!isReady) return;
     onGetEmployees({ ...DEFAULT_PAGING, ...initQuery });
-  }, [initQuery, isIdle, isReady, onGetEmployees]);
+  }, [initQuery, isReady, onGetEmployees]);
 
   useEffect(() => {
     setSelectedList([]);
@@ -311,7 +311,10 @@ const ItemList = () => {
           onClose={onResetAction}
           type={DataAction.UPDATE}
           initialValues={
-            getDataFromKeys(item, ["email", "position"]) as EmployeeData
+            {
+              email: item?.email,
+              position: item?.position?.id,
+            } as EmployeeData
           }
           onSubmit={onUpdateEmployee}
         />

@@ -170,9 +170,9 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    if (!isIdle || !isReady) return;
+    if (!isReady) return;
     onGetCompanies({ ...DEFAULT_PAGING, ...initQuery });
-  }, [initQuery, isIdle, isReady, onGetCompanies]);
+  }, [initQuery, isReady, onGetCompanies]);
 
   useEffect(() => {
     setSelectedList([]);

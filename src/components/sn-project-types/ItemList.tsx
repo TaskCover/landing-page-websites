@@ -113,9 +113,9 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    if (!isIdle || !isReady) return;
+    if (!isReady) return;
     onGetProjectTypes({ ...DEFAULT_PAGING, ...initQuery });
-  }, [isIdle, isReady, onGetProjectTypes, initQuery]);
+  }, [isReady, onGetProjectTypes, initQuery]);
 
   return (
     <>

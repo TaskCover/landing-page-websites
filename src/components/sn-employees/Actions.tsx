@@ -45,6 +45,10 @@ const Actions = () => {
       PAYMENT_OPTIONS.map((item) => ({ ...item, label: companyT(item.label) })),
     [companyT],
   );
+  const positionOptions = useMemo(
+    () => options.map((item) => ({ value: item.label, label: item.label })),
+    [options],
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (name: string, value: any) => {
@@ -142,10 +146,10 @@ const Actions = () => {
           <Stack direction="row" alignItems="center" spacing={3}>
             <Dropdown
               placeholder={commonT("position")}
-              options={options}
-              name="position"
+              options={positionOptions}
+              name="position.name"
               onChange={onChangeQueries}
-              value={queries?.position}
+              value={queries?.["position.name"]}
               pending={positionOptionsIsFetching}
               onEndReached={onEndReached}
             />

@@ -12,13 +12,16 @@ import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
 import { NS_ACCOUNT, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next-intl/client";
+import { HOME_PATH } from "constant/paths";
 
-const ChangePassword = () => {
+const ChangePassword = ({ prevPath }: { prevPath?: string }) => {
   const { onChangePassword } = useUserInfo();
   const commonT = useTranslations(NS_COMMON);
   const accountT = useTranslations(NS_ACCOUNT);
 
   const { onAddSnackbar } = useSnackbar();
+  const { back, push } = useRouter();
 
   const onSubmit = async (values: ChangePasswordData) => {
     try {
@@ -39,6 +42,11 @@ const ChangePassword = () => {
 
   const onCancel = () => {
     formik.resetForm();
+    if (prevPath) {
+      back();
+    } else {
+      push(HOME_PATH);
+    }
   };
 
   const formik = useFormik({

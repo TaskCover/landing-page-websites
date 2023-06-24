@@ -116,9 +116,9 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    if (!isIdle || !isReady) return;
+    if (!isReady) return;
     onGetPositions({ ...DEFAULT_PAGING, ...initQuery });
-  }, [initQuery, isIdle, isReady, onGetPositions]);
+  }, [initQuery, isReady, onGetPositions]);
 
   return (
     <>

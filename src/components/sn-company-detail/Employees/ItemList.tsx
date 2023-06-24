@@ -171,9 +171,9 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    if (!isIdle || !isReady || !companyId) return;
+    if (!isReady || !companyId) return;
     onGetEmployees(companyId, { ...DEFAULT_PAGING, ...initQuery });
-  }, [initQuery, isIdle, isReady, companyId, onGetEmployees]);
+  }, [initQuery, isReady, companyId, onGetEmployees]);
 
   useEffect(() => {
     setSelectedList([]);

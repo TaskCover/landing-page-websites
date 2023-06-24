@@ -52,9 +52,9 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    if (!isIdle || !isReady) return;
+    if (!isReady) return;
     onGetStatementHistory({ ...DEFAULT_PAGING, ...initQuery });
-  }, [initQuery, isIdle, isReady, onGetStatementHistory]);
+  }, [initQuery, isReady, onGetStatementHistory]);
 
   return (
     <>
