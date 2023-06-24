@@ -12,8 +12,10 @@ import {
   GetTasksOfProjectQueries,
   ProjectStatus,
   updateProject,
+  updateTaskList,
 } from "./actions";
 import {
+  Attachment,
   BaseQueries,
   ItemListResponse,
   Option,
@@ -72,12 +74,16 @@ export interface Task {
   id: string;
   name: string;
 
-  owner: User;
-  estimated_hours: number;
+  owner?: User;
+  estimated_hours?: number;
   working_hours?: number;
   status: Status;
   description?: string;
   sub_tasks?: Task[];
+  start_date?: string;
+  end_date?: string;
+  created_time: string;
+  comments?: Comment[];
 }
 
 export type TaskList = {
@@ -85,6 +91,22 @@ export type TaskList = {
   name: string;
   tasks: Task[];
 };
+
+export interface Activity {
+  action: string;
+  time: string;
+  new: string;
+}
+
+export interface Comment {
+  id: string;
+  attachments: string[];
+  content: string;
+  created_time: string;
+  creator: User;
+  activities: Activity[];
+  attachments_down: Attachment[];
+}
 
 export interface ProjectState {
   items: Project[];
@@ -306,7 +328,7 @@ const projectSlice = createSlice({
       .addCase(
         createTaskList.fulfilled,
         (state, action: PayloadAction<TaskList>) => {
-          state.tasks.unshift(action.payload);
+          state.tasks.push(action.payload);
           if (state.tasksPaging.totalItems !== undefined) {
             state.tasksPaging.totalItems += 1;
 
@@ -315,6 +337,20 @@ const projectSlice = createSlice({
                 current(state).tasksPaging.pageSize,
             );
             state.tasksPaging.totalPages = newPages;
+          }
+        },
+      )
+      .addCase(
+        updateTaskList.fulfilled,
+        (state, action: PayloadAction<TaskList>) => {
+          const indexUpdated = state.tasks.findIndex(
+            (item) => item.id === action.payload.id,
+          );
+          if (indexUpdated !== -1) {
+            state.tasks[indexUpdated] = Object.assign(
+              state.tasks[indexUpdated],
+              action.payload,
+            );
           }
         },
       )

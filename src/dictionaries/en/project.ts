@@ -83,13 +83,25 @@ export const ProjectLang: ProjectDictionary = {
         expectCompletionTime: "Expect completion time",
         timeTaken: "Time taken",
         name: "Task name",
+        oldTaskList: "Current task list",
+        newTaskList: "New task list",
       },
     },
     addNewTask: "Add new task",
     taskList: "Task list",
+    key: "task",
+    moveTaskList: "Move task list",
     notification: {
       taskListSuccess: "{label} task list successfully!",
       taskSuccess: "{label} task successfully!",
+      moveSuccess: "Move task list successfully!",
+    },
+  },
+  taskDetail: {
+    title: "Task Detail Information",
+    tabList: {
+      detail: "Detail",
+      history: "History",
     },
   },
 };

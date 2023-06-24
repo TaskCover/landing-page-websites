@@ -15,10 +15,10 @@ import { TaskListData } from "store/project/actions";
 import { useParams } from "next/navigation";
 
 type FormProps = {
-  initialValues: TaskListData;
+  initialValues: Omit<TaskListData, "project">;
   type: DataAction;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit: (id: string, values: TaskListData) => Promise<any>;
+  onSubmit: (values: Omit<TaskListData, "project">) => Promise<any>;
 } & Omit<DialogLayoutProps, "children" | "onSubmit">;
 
 const TaskListForm = (props: FormProps) => {
@@ -40,15 +40,13 @@ const TaskListForm = (props: FormProps) => {
 
   const params = useParams();
 
-  const projectId = useMemo(() => params.id, [params.id]);
-
-  const onSubmit = async (values: TaskListData) => {
+  const onSubmit = async (values: Omit<TaskListData, "project">) => {
     try {
-      const newItem = await onSubmitProps(projectId, values);
+      const newItem = await onSubmitProps(values);
 
       if (newItem) {
         onAddSnackbar(
-          projectT("detailTask.notification.taskListSuccess", { label }),
+          projectT("detailTasks.notification.taskListSuccess", { label }),
           "success",
         );
         props.onClose();

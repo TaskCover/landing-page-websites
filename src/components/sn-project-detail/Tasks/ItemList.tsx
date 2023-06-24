@@ -1,20 +1,13 @@
 "use client";
 
-import {
-  Fragment,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { reorder, DragAndDrop, Drop, Drag } from "./components";
 import { Button, Checkbox, Text, TextProps } from "components/shared";
-import { Stack, StackProps, TableRow } from "@mui/material";
+import { Stack, StackProps } from "@mui/material";
 import Avatar from "components/Avatar";
-import { formatNumber } from "utils/index";
+import { formatNumber, getMessageErrorByAPI } from "utils/index";
 import TextStatus from "components/TextStatus";
-import { BodyCell, CellProps, TableLayout } from "components/Table";
+import { CellProps, TableLayout } from "components/Table";
 import React from "react";
 import DragParent from "./components/DragParent";
 import PlusIcon from "icons/PlusIcon";
@@ -28,72 +21,30 @@ import {
 } from "constant/index";
 import { useTasksOfProject } from "store/project/selectors";
 import useQueryParams from "hooks/useQueryParams";
-import { usePathname, useRouter } from "next-intl/client";
+import { useRouter } from "next-intl/client";
 import useBreakpoint from "hooks/useBreakpoint";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import Form from "./Form";
-import useToggle from "hooks/useToggle";
 import { DataAction } from "constant/enums";
-import { TaskList } from "store/project/reducer";
+import { Task, TaskList } from "store/project/reducer";
+import { useSnackbar } from "store/app/selectors";
+import Detail from "./Detail";
 
 const ItemList = () => {
-  const [categories, setCategories] = useState([
-    // [
-    {
-      id: "ID01",
-      name: "Category 1",
-      items: [
-        { id: "Sub 01", name: "First" },
-        { id: "Sub 02", name: "Second" },
-      ],
-    },
-    {
-      id: "ID02",
-      name: "Category 2",
-      items: [
-        { id: "Sub 03", name: "Third" },
-        { id: "Sub 04", name: "Fourth" },
-      ],
-    },
-    // ],
-    // [
-    //   {
-    //     id: "ID03",
-    //     name: "Category 3",
-    //     items: [
-    //       { id: "Sub 05", name: "First" },
-    //       { id: "Sub 06", name: "Second" },
-    //     ],
-    //   },
-    //   {
-    //     id: "ID04",
-    //     name: "Category 4",
-    //     items: [
-    //       { id: "Sub 07", name: "Third" },
-    //       { id: "Sub 08", name: "Fourth" },
-    //     ],
-    //   },
-    // ],
-  ]);
-
   const {
     items,
     isFetching,
     isIdle,
     error,
     totalItems,
-    pageSize,
-    pageIndex,
-    totalPages,
     onCreateTask,
     id,
     onGetTasksOfProject,
     onMoveTask,
   } = useTasksOfProject();
 
-  const { initQuery, isReady, query } = useQueryParams();
-  const pathname = usePathname();
+  const { initQuery, isReady } = useQueryParams();
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
   const commonT = useTranslations(NS_COMMON);
@@ -101,9 +52,33 @@ const ItemList = () => {
 
   const params = useParams();
 
+  const { onAddSnackbar } = useSnackbar();
+
   const projectId = useMemo(() => params.id, [params.id]);
 
   const [dataList, setDataList] = useState<TaskList[]>([]);
+  const [selectedList, setSelectedList] = useState<
+    {
+      taskId?: string;
+      subTaskId?: string;
+      taskListId?: string;
+    }[]
+  >([]);
+  const [sx, setSx] = useState({
+    task: {},
+    subTask: {},
+  });
+
+  const [dataIds, setDataIds] = useState<{
+    taskId?: string;
+    taskListId?: string;
+  }>({});
+  const [task, setTask] = useState<Task | undefined>();
+
+  const isShow = useMemo(
+    () => Boolean(dataIds?.taskId && dataIds?.taskListId),
+    [dataIds?.taskId, dataIds?.taskListId],
+  );
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -119,7 +94,7 @@ const ItemList = () => {
       },
       { value: projectT("detailTasks.form.title.timeTaken"), width: "12.5%" },
       { value: commonT("status"), width: "15%" },
-      { value: projectT("detailTasks.note"), width: "15%" },
+      { value: commonT("form.title.note"), width: "15%" },
     ],
     [commonT, projectT],
   );
@@ -128,10 +103,121 @@ const ItemList = () => {
     return isMdSmaller ? [] : desktopHeaderList;
   }, [desktopHeaderList, isMdSmaller]) as CellProps[];
 
-  useEffect(() => {
-    if (!isReady || !projectId || id === projectId) return;
-    onGetTasksOfProject(projectId, { ...DEFAULT_PAGING, ...initQuery });
-  }, [id, initQuery, isReady, onGetTasksOfProject, projectId]);
+  const onSetTask = (task?: Task) => {
+    return () => {
+      setTask(task);
+    };
+  };
+
+  const onToggleTaskList = (
+    newChecked: boolean,
+    taskListId: string,
+    tasks: Task[],
+  ) => {
+    return () => {
+      let newSelectedList = [...selectedList];
+
+      if (newChecked) {
+        const additionalSelectedList = [];
+        tasks.forEach((task) => {
+          if (task?.sub_tasks?.length) {
+            task?.sub_tasks?.forEach((subTask) => {
+              newSelectedList.push({
+                taskListId,
+                taskId: task.id,
+                subTaskId: subTask.id,
+              });
+            });
+          } else {
+            newSelectedList.push({
+              taskListId,
+              taskId: task.id,
+            });
+          }
+        });
+        newSelectedList = [...newSelectedList, ...additionalSelectedList];
+      } else if (tasks?.length) {
+        const taskIds = tasks.map((task) => task.id);
+        newSelectedList = newSelectedList.filter(
+          (selected) => !selected?.taskId || !taskIds.includes(selected.taskId),
+        );
+      }
+      setSelectedList(newSelectedList);
+    };
+  };
+  const onToggleTask = (
+    newChecked: boolean,
+    taskListId: string,
+    taskId: string,
+    subTasks?: Task[],
+  ) => {
+    return () => {
+      let newSelectedList = [...selectedList];
+
+      if (newChecked) {
+        const additionalSelectedList =
+          subTasks?.map((subTask) => ({
+            taskListId,
+            taskId,
+            subTaskId: subTask.id,
+          })) ?? [];
+        newSelectedList = [...newSelectedList, ...additionalSelectedList];
+      } else if (subTasks?.length) {
+        const subTaskIds = subTasks.map((subTask) => subTask.id);
+        newSelectedList = newSelectedList.filter(
+          (selected) =>
+            !selected?.subTaskId || !subTaskIds.includes(selected.subTaskId),
+        );
+      }
+      setSelectedList(newSelectedList);
+    };
+  };
+  const onToggleSubTask = (
+    taskListId: string,
+    taskId: string,
+    subTaskId: string,
+  ) => {
+    return () => {
+      const newSelectedList = [...selectedList];
+      const indexSelected = selectedList.findIndex(
+        (item) =>
+          item?.taskListId === taskListId &&
+          item?.taskId === taskId &&
+          item?.subTaskId === subTaskId,
+      );
+
+      if (indexSelected === -1) {
+        newSelectedList.push({ taskListId, taskId, subTaskId });
+      } else {
+        newSelectedList.splice(indexSelected, 1);
+      }
+      setSelectedList(newSelectedList);
+    };
+  };
+
+  const onMoveTaskList = async (
+    sourceTaskListId: string,
+    destinationTaskListId: string,
+    taskId: string,
+    updatedDataList: TaskList[],
+  ) => {
+    try {
+      const isSuccess = await onMoveTask(
+        sourceTaskListId,
+        destinationTaskListId,
+        taskId,
+      );
+      if (isSuccess === true) {
+        setDataList(updatedDataList);
+        onAddSnackbar(
+          projectT("detailTasks.notification.moveSuccess"),
+          "success",
+        );
+      }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error), "error");
+    }
+  };
 
   const onDragEnd = async (result: DropResult) => {
     const { type, source, destination } = result;
@@ -139,21 +225,16 @@ const ItemList = () => {
 
     const sourceTaskListId = source.droppableId;
     const destinationTaskListId = destination.droppableId;
-    console.log(
-      type,
-      destination,
-      sourceTaskListId,
-      destinationTaskListId,
-      source,
-      dataList?.[destination.index]?.tasks?.[source.index]?.name,
-    );
+
+    if (sourceTaskListId === destinationTaskListId) return;
+
     const indexSourceTaskList = dataList.findIndex(
       (taskListItem) => taskListItem.id === sourceTaskListId,
     );
     const taskId = dataList?.[indexSourceTaskList]?.tasks?.[source.index]?.id;
 
     // Reordering items
-    if (type === "droppable-task") {
+    if (type === DROPPABLE_TASK) {
       // If drag and dropping within the same category
       if (sourceTaskListId === destinationTaskListId) {
         const updatedOrder = reorder(
@@ -167,18 +248,12 @@ const ItemList = () => {
             ? taskListItem
             : { ...taskListItem, tasks: updatedOrder },
         );
-
-        setDataList(updatedDataList);
-        try {
-          const a = await onMoveTask(
-            sourceTaskListId,
-            destinationTaskListId,
-            taskId,
-          );
-          console.log("a", a);
-        } catch (error) {
-          console.log("Error", error);
-        }
+        onMoveTaskList(
+          sourceTaskListId,
+          destinationTaskListId,
+          taskId,
+          updatedDataList,
+        );
       } else {
         const sourceOrder = [
           ...(dataList.find(
@@ -207,36 +282,15 @@ const ItemList = () => {
             : taskListItem,
         );
 
-        setDataList(updatedDataList);
-
-        try {
-          const a = await onMoveTask(
-            sourceTaskListId,
-            destinationTaskListId,
-            taskId,
-          );
-          console.log("a", a);
-        } catch (error) {
-          console.log("Error", error);
-        }
+        onMoveTaskList(
+          sourceTaskListId,
+          destinationTaskListId,
+          taskId,
+          updatedDataList,
+        );
       }
     }
   };
-
-  const [sx, setSx] = useState({
-    task: {},
-    subTask: {},
-  });
-
-  const [dataIds, setDataIds] = useState<{
-    taskId?: string;
-    taskListId?: string;
-  }>({});
-
-  const isShowCreate = useMemo(
-    () => Boolean(dataIds?.taskId && dataIds?.taskListId),
-    [dataIds?.taskId, dataIds?.taskListId],
-  );
 
   const onSetDataIds = (taskListId?: string, taskId?: string) => {
     return () => {
@@ -272,133 +326,198 @@ const ItemList = () => {
     setDataList(items);
   }, [items]);
 
+  useEffect(() => {
+    if (!isReady || !projectId || id === projectId) return;
+    onGetTasksOfProject(projectId, { ...DEFAULT_PAGING, ...initQuery });
+  }, [id, initQuery, isReady, onGetTasksOfProject, projectId]);
+
   return (
     <Stack flex={1} pb={3}>
-      <TableLayout onLayout={onLayout} headerList={headerList} flex="unset">
+      <TableLayout
+        onLayout={onLayout}
+        headerList={headerList}
+        flex="unset"
+        pending={isFetching}
+        error={error as string}
+        noData={!isIdle && totalItems === 0}
+        display={{ xs: "none", md: "flex" }}
+      >
         <></>
       </TableLayout>
 
       <DragAndDrop onDragEnd={onDragEnd}>
         <Drop id="droppable" type="droppable-taskList">
-          {dataList.map((taskListItem, taskListIndex) => (
-            <DragParent
-              className="draggable-taskList"
-              key={taskListItem.id}
-              id={taskListItem.id}
-              index={taskListIndex}
-              name={taskListItem.name}
-              count={taskListItem.tasks.length}
-            >
-              <Drop
+          {dataList.map((taskListItem, taskListIndex) => {
+            const taskIds = selectedList.map((selected) => selected?.taskId);
+            const isChecked = Boolean(
+              taskListItem.tasks?.length &&
+                taskListItem.tasks?.every((task) => taskIds.includes(task.id)),
+            );
+            return (
+              <DragParent
+                className="draggable-taskList"
                 key={taskListItem.id}
                 id={taskListItem.id}
-                type="droppable-task"
+                index={taskListIndex}
+                name={taskListItem.name}
+                count={taskListItem.tasks.length}
+                checked={isChecked}
+                onChange={onToggleTaskList(
+                  !isChecked,
+                  taskListItem.id,
+                  taskListItem.tasks,
+                )}
               >
-                {taskListItem.tasks.map((task, taskIndex) => (
-                  <Drag
-                    className="draggable"
-                    key={task.id}
-                    id={task.id}
-                    index={taskIndex}
-                  >
-                    <Stack width="100%">
-                      <Stack
-                        direction="row"
-                        alignItems="center"
-                        height={48}
-                        width="100%"
-                        sx={sx.task}
+                <Drop
+                  key={taskListItem.id}
+                  id={taskListItem.id}
+                  type={DROPPABLE_TASK}
+                >
+                  {taskListItem.tasks.map((task, taskIndex) => {
+                    const subTaskIds = selectedList.map(
+                      (selected) => selected?.subTaskId,
+                    );
+                    const isChecked = Boolean(
+                      task.sub_tasks?.length &&
+                        task.sub_tasks?.every((subTask) =>
+                          subTaskIds.includes(subTask.id),
+                        ),
+                    );
+                    return (
+                      <Drag
+                        className="draggable"
+                        key={task.id}
+                        id={task.id}
+                        index={taskIndex}
+                        checked={isChecked}
+                        onChange={onToggleTask(
+                          !isChecked,
+                          taskListItem.id,
+                          task.id,
+                          task?.sub_tasks,
+                        )}
                       >
-                        <Content
-                          color="text.primary"
-                          fontWeight={600}
-                          textAlign="left"
-                          noWrap
-                          tooltip={task.name}
-                        >
-                          {task.name}
-                        </Content>
-                        <Assigner>{task?.owner?.fullname}</Assigner>
-                        <Content>{formatNumber(task.estimated_hours)}</Content>
-                        <Content>{formatNumber(task?.working_hours)}</Content>
-                        <TextStatus
-                          color={COLOR_STATUS[task.status]}
-                          text={TEXT_STATUS[task.status]}
-                          component="p"
-                        />
-                        <Content
-                          textAlign="left"
-                          noWrap
-                          tooltip={task.description}
-                        >
-                          {task.description}
-                        </Content>
-                      </Stack>
-                      {task?.sub_tasks?.map((subTask) => (
-                        <Stack
-                          key={subTask.id}
-                          direction="row"
-                          alignItems="center"
-                          height={48}
-                        >
-                          <Checkbox />
+                        <Stack width="100%">
                           <Stack
-                            direction="row"
-                            alignItems="center"
-                            sx={sx.subTask}
+                            direction={{ md: "row" }}
+                            alignItems={{ xs: "flex-start", md: "center" }}
+                            minHeight={48}
+                            width="100%"
+                            sx={sx.task}
                           >
                             <Content
                               color="text.primary"
                               fontWeight={600}
                               textAlign="left"
                               noWrap
-                              tooltip={subTask.name}
+                              tooltip={task.name}
+                              onClick={onSetTask(task)}
                             >
-                              {subTask.name}
+                              {task.name}
                             </Content>
-                            <Assigner src={subTask?.owner?.avatar?.link}>
-                              {subTask?.owner?.fullname}
-                            </Assigner>
+                            <Assigner>{task?.owner?.fullname}</Assigner>
                             <Content>
-                              {formatNumber(subTask.estimated_hours)}
+                              {formatNumber(task.estimated_hours)}
                             </Content>
                             <Content>
-                              {formatNumber(subTask?.working_hours)}
+                              {formatNumber(task?.working_hours)}
                             </Content>
                             <TextStatus
-                              color={COLOR_STATUS[subTask.status]}
-                              text={TEXT_STATUS[subTask.status]}
+                              color={COLOR_STATUS[task.status]}
+                              text={TEXT_STATUS[task.status]}
                               component="p"
                             />
                             <Content
                               textAlign="left"
                               noWrap
-                              tooltip={subTask.description}
+                              tooltip={task.description}
                             >
-                              {subTask.description}
+                              {task.description}
                             </Content>
                           </Stack>
+                          {task?.sub_tasks?.map((subTask) => {
+                            const isChecked = selectedList.some(
+                              (item) => item?.subTaskId === subTask.id,
+                            );
+                            return (
+                              <Stack
+                                key={subTask.id}
+                                direction="row"
+                                alignItems="center"
+                                minHeight={48}
+                              >
+                                <Checkbox
+                                  checked={isChecked}
+                                  onChange={onToggleSubTask(
+                                    taskListItem.id,
+                                    task.id,
+                                    subTask.id,
+                                  )}
+                                />
+                                <Stack
+                                  direction={{ md: "row" }}
+                                  alignItems={{
+                                    xs: "flex-start",
+                                    md: "center",
+                                  }}
+                                  sx={sx.subTask}
+                                >
+                                  <Content
+                                    color="text.primary"
+                                    fontWeight={600}
+                                    textAlign="left"
+                                    noWrap
+                                    tooltip={subTask.name}
+                                    onClick={onSetTask(subTask)}
+                                  >
+                                    {subTask.name}
+                                  </Content>
+                                  <Assigner src={subTask?.owner?.avatar?.link}>
+                                    {subTask?.owner?.fullname}
+                                  </Assigner>
+                                  <Content>
+                                    {formatNumber(subTask.estimated_hours)}
+                                  </Content>
+                                  <Content>
+                                    {formatNumber(subTask?.working_hours)}
+                                  </Content>
+                                  <TextStatus
+                                    color={COLOR_STATUS[subTask.status]}
+                                    text={TEXT_STATUS[subTask.status]}
+                                    component="p"
+                                  />
+                                  <Content
+                                    textAlign="left"
+                                    noWrap
+                                    tooltip={subTask.description}
+                                  >
+                                    {subTask.description}
+                                  </Content>
+                                </Stack>
+                              </Stack>
+                            );
+                          })}
+                          <Button
+                            onClick={onSetDataIds(taskListItem.id, task.id)}
+                            startIcon={<PlusIcon />}
+                            variant="text"
+                            size="small"
+                            color="secondary"
+                            sx={{ mr: 4 }}
+                          >
+                            {projectT("detailTasks.addNewTask")}
+                          </Button>
                         </Stack>
-                      ))}
-                      <Button
-                        onClick={onSetDataIds(taskListItem.id, task.id)}
-                        startIcon={<PlusIcon />}
-                        variant="text"
-                        size="small"
-                        color="secondary"
-                        sx={{ mr: 4 }}
-                      >
-                        {projectT("detailTasks.addNewTask")}
-                      </Button>
-                    </Stack>
-                  </Drag>
-                ))}
-              </Drop>
-            </DragParent>
-          ))}
+                      </Drag>
+                    );
+                  })}
+                </Drop>
+              </DragParent>
+            );
+          })}
         </Drop>
       </DragAndDrop>
-      {isShowCreate && (
+      {isShow && (
         <Form
           open
           onClose={onSetDataIds()}
@@ -408,20 +527,14 @@ const ItemList = () => {
           taskId={dataIds?.taskId}
         />
       )}
+      {!!task && <Detail open onClose={onSetTask()} item={task} />}
     </Stack>
   );
 };
 
 export default memo(ItemList);
 
-const HEADER_LIST: CellProps[] = [
-  { value: "Name", width: "30%", align: "left" },
-  { value: "Assigner", width: "15%", align: "left" },
-  { value: "Expect completion time", width: "12.5%" },
-  { value: "Time taken", width: "12.5%" },
-  { value: "Status", width: "15%" },
-  { value: "Note", width: "15%" },
-];
+const DROPPABLE_TASK = "droppable-task";
 
 const Assigner = ({
   children,
@@ -447,17 +560,30 @@ const Assigner = ({
 };
 
 const Content = (props: TextProps) => {
-  const { children = "--", ...rest } = props;
+  const { children = "--", sx, onClick, ...rest } = props;
+
+  const additionalSx = useMemo(() => (onClick ? sxLink : {}), [onClick]);
+
   return (
     <Text
       px={2}
+      onClick={onClick}
       variant="body2"
       color="grey.400"
       textAlign="center"
       overflow="hidden"
+      sx={{ ...additionalSx, ...sx }}
       {...rest}
     >
       {typeof children === "number" ? formatNumber(children) : children}
     </Text>
   );
+};
+
+const sxLink = {
+  cursor: "pointer",
+  color: "text.primary",
+  "&:hover": {
+    color: "primary.main",
+  },
 };

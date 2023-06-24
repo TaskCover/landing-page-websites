@@ -29,6 +29,7 @@ const Dropdown = (props: DropdownProps) => {
         color: hasValue ? "primary.main" : "grey.400",
         fontWeight: 600,
         height: 32,
+        minWidth: 150,
         "& >svg": { fontSize: 20 },
         ...rootSx,
       }}

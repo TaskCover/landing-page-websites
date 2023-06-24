@@ -21,6 +21,7 @@ export const Endpoint = {
   PROJECT_ITEM: "/projects/{id}",
   PROJECT_MEMBERS: "/projects/{id}/members",
   PROJECT_TASKS: "/tasks",
+  PROJECT_TASK_ITEM: "/tasks/{id}",
   TASKS: "/tasks/add",
   SUB_TASKS: "/tasks/sub",
   TASK_ITEM: "/tasks/task",

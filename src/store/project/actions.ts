@@ -204,6 +204,25 @@ export const createTaskList = createAsyncThunk(
   },
 );
 
+export const updateTaskList = createAsyncThunk(
+  "project/updateTaskList",
+  async ({ id, name }: { id: string; name: string }) => {
+    try {
+      const response = await client.put(
+        StringFormat(Endpoint.PROJECT_TASK_ITEM, { id }),
+        { name },
+      );
+
+      if (response?.status === HttpStatusCode.CREATED) {
+        return response.data.task;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
 export const createTask = createAsyncThunk(
   "project/createTask",
   async (data: TaskData) => {
@@ -232,7 +251,7 @@ export const moveTask = createAsyncThunk(
       const response = await client.post(Endpoint.TASK_MOVE, data);
 
       if (response?.status === HttpStatusCode.OK) {
-        return response.data;
+        return true;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

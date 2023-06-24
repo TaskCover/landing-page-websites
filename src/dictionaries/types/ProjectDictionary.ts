@@ -79,13 +79,25 @@ export type ProjectDictionary = {
         expectCompletionTime: string;
         timeTaken: string;
         name: string;
+        oldTaskList: string;
+        newTaskList: string;
       };
     };
     addNewTask: string;
     taskList: string;
+    key: string;
+    moveTaskList: string;
     notification: {
       taskListSuccess: string;
       taskSuccess: string;
+      moveSuccess: string;
+    };
+  };
+  taskDetail: {
+    title: string;
+    tabList: {
+      detail: string;
+      history: string;
     };
   };
 };

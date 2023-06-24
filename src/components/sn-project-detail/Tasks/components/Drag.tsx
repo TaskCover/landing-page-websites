@@ -5,7 +5,7 @@ import PlusIcon from "icons/PlusIcon";
 import { memo } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
-const Drag = ({ id, index, ...props }) => {
+const Drag = ({ id, index, checked, onChange, ...props }) => {
   return (
     <Draggable draggableId={id} index={index}>
       {(provided, snapshot) => {
@@ -18,7 +18,7 @@ const Drag = ({ id, index, ...props }) => {
               pl={2}
               spacing={1}
             >
-              <Checkbox />
+              <Checkbox checked={checked} onChange={onChange} />
               <IconButton noPadding {...provided.dragHandleProps}>
                 <MoveDotIcon fontSize="medium" sx={{ color: "grey.A200" }} />
               </IconButton>

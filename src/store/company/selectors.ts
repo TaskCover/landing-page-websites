@@ -117,6 +117,7 @@ export const useEmployeeOptions = () => {
         label: item.fullname,
         value: item.id,
         avatar: item?.avatar?.link,
+        subText: item.email,
       })),
     [items],
   );

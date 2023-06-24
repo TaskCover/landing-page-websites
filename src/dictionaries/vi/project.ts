@@ -83,13 +83,25 @@ export const ProjectLang: ProjectDictionary = {
         expectCompletionTime: "Thời gian dự kiến hoàn thành",
         timeTaken: "Thời gian đã thực hiện",
         name: "Tên công việc",
+        oldTaskList: "Danh mục công việc hiện tại",
+        newTaskList: "Danh mục công việc chuyển tới",
       },
     },
     addNewTask: "Thêm công việc mới",
     taskList: "Danh mục công việc",
+    key: "công việc",
+    moveTaskList: "Di chuyển danh mục công việc",
     notification: {
       taskListSuccess: "{label} danh mục công việc thành công!",
       taskSuccess: "{label} công việc thành công!",
+      moveSuccess: "Di chuyển danh sách công việc thành công!",
+    },
+  },
+  taskDetail: {
+    title: "Thông tin chi tiết công việc",
+    tabList: {
+      detail: "Chi tiết",
+      history: "Lịch sử thay đổi",
     },
   },
 };

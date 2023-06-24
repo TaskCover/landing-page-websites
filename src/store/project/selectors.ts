@@ -14,6 +14,7 @@ import {
   getTasksOfProject,
   moveTask,
   updateProject,
+  updateTaskList,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -183,11 +184,9 @@ export const useTasksOfProject = () => {
   );
 
   const onCreateTaskList = useCallback(
-    async (id: string, data: TaskListData) => {
+    async (data: TaskListData) => {
       try {
-        return await dispatch(
-          createTaskList({ ...data, project: id }),
-        ).unwrap();
+        return await dispatch(createTaskList(data)).unwrap();
       } catch (error) {
         throw error;
       }
@@ -201,6 +200,17 @@ export const useTasksOfProject = () => {
         return await dispatch(
           createTask({ ...data, task_list: taskList, task: taskId }),
         ).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const onUpdateTaskList = useCallback(
+    async (id: string, name: string) => {
+      try {
+        return await dispatch(updateTaskList({ name, id })).unwrap();
       } catch (error) {
         throw error;
       }
@@ -262,6 +272,7 @@ export const useTasksOfProject = () => {
     id: storeFilters?.project,
     onGetTasksOfProject,
     onCreateTaskList,
+    onUpdateTaskList,
     onCreateTask,
     onMoveTask,
     // onCreateEmployee,

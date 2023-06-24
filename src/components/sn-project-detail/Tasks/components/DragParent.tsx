@@ -22,22 +22,31 @@ import { HTMLAttributes, memo, MouseEvent, useId, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import Form from "../Form";
 import { DataAction } from "constant/enums";
-import { TaskData } from "store/project/actions";
+import { TaskData, TaskListData } from "store/project/actions";
 import { useTasksOfProject } from "store/project/selectors";
+import TaskListForm from "../TaskListForm";
+import MoveTaskList from "../MoveTaskList";
 
 type DragParentProps = {
   id: string;
   index: number;
   count: number;
   name: string;
+  checked: boolean;
+  onChange: () => void;
 } & HTMLAttributes<HTMLDivElement>;
 
+type MoreListProps = {
+  id: string;
+  name: string;
+};
+
 const DragParent = (props: DragParentProps) => {
-  const { id, index, count, name, ...rest } = props;
+  const { id, index, count, name, checked, onChange, ...rest } = props;
   const projectT = useTranslations(NS_PROJECT);
   const { onCreateTask } = useTasksOfProject();
 
-  const [isShow, , , onToggle] = useToggle(index === 0);
+  const [isShow, , , onToggle] = useToggle(count < 4);
   const [isShowCreate, onShowCreate, onHideCreate] = useToggle();
 
   return (
@@ -55,7 +64,7 @@ const DragParent = (props: DragParentProps) => {
                 justifyContent="space-between"
               >
                 <Stack direction="row" alignItems="center">
-                  <Checkbox />
+                  <Checkbox checked={checked} onChange={onChange} />
                   <IconButton
                     noPadding
                     sx={{
@@ -74,7 +83,7 @@ const DragParent = (props: DragParentProps) => {
                   >
                     {`${name} (${count})`}
                   </Text>
-                  <MoreList />
+                  <MoreList id={id} name={name} />
                 </Stack>
                 <Button
                   onClick={onShowCreate}
@@ -108,10 +117,23 @@ const DragParent = (props: DragParentProps) => {
 
 export default memo(DragParent);
 
-const MoreList = () => {
+enum Action {
+  RENAME = 1,
+  DUPLICATE,
+  MOVE,
+  DELETE,
+}
+
+const MoreList = (props: MoreListProps) => {
+  const { id, name } = props;
+
+  const { onUpdateTaskList: onUpdateTaskListAction } = useTasksOfProject();
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
   const commonT = useTranslations(NS_COMMON);
+
+  const [type, setType] = useState<Action | undefined>();
 
   const onOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -119,6 +141,17 @@ const MoreList = () => {
 
   const onClose = () => {
     setAnchorEl(null);
+  };
+
+  const onSetTType = (action?: Action) => {
+    return () => {
+      onClose();
+      setType(action);
+    };
+  };
+
+  const onUpdateTaskList = async (values: Omit<TaskListData, "project">) => {
+    return await onUpdateTaskListAction(id, values.name);
   };
 
   return (
@@ -166,22 +199,30 @@ const MoreList = () => {
           }}
         >
           <MenuList component={Box} sx={{ py: 0 }}>
-            <MenuItem component={ButtonBase} sx={sxConfig.item}>
+            <MenuItem
+              onClick={onSetTType(Action.RENAME)}
+              component={ButtonBase}
+              sx={sxConfig.item}
+            >
               <PencilIcon sx={{ color: "grey.400" }} fontSize="medium" />
               <Text ml={2} variant="body2" color="grey.400">
-                Rename
+                {commonT("rename")}
               </Text>
             </MenuItem>
             <MenuItem component={ButtonBase} sx={sxConfig.item}>
               <DuplicateIcon sx={{ color: "grey.400" }} fontSize="medium" />
               <Text ml={2} variant="body2" color="grey.400">
-                Duplicate
+                {commonT("duplicate")}
               </Text>
             </MenuItem>
-            <MenuItem component={ButtonBase} sx={sxConfig.item}>
+            <MenuItem
+              onClick={onSetTType(Action.MOVE)}
+              component={ButtonBase}
+              sx={sxConfig.item}
+            >
               <MoveArrowIcon sx={{ color: "grey.400" }} fontSize="medium" />
               <Text ml={2} variant="body2" color="grey.400">
-                Move
+                {commonT("move")}
               </Text>
             </MenuItem>
             <MenuItem component={ButtonBase} sx={sxConfig.item}>
@@ -193,6 +234,24 @@ const MoreList = () => {
           </MenuList>
         </Stack>
       </Popover>
+
+      {type === Action.RENAME && (
+        <TaskListForm
+          open
+          onClose={onSetTType()}
+          type={DataAction.UPDATE}
+          initialValues={{ name }}
+          onSubmit={onUpdateTaskList}
+        />
+      )}
+      {type === Action.MOVE && (
+        <MoveTaskList
+          oldTaskListId={id}
+          taskId={id}
+          open
+          onClose={onSetTType()}
+        />
+      )}
     </>
   );
 };

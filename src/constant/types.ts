@@ -7,6 +7,7 @@ export interface Option {
   value: string | number;
   icon?: React.ReactNode;
   avatar?: string;
+  subText?: string;
 }
 
 export interface Size {
@@ -70,3 +71,9 @@ export type OptionFormatNumber = {
 } & Intl.NumberFormatOptions;
 
 export type Locale = (typeof i18n)["locales"][number];
+
+export type Attachment = {
+  object: string;
+  name: string;
+  link: string;
+};

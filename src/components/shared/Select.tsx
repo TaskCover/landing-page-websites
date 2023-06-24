@@ -1,6 +1,12 @@
 import { memo, useId, useMemo } from "react";
 import Input, { InputProps } from "./Input";
-import { CircularProgress, MenuItem, inputBaseClasses } from "@mui/material";
+import {
+  CircularProgress,
+  MenuItem,
+  Stack,
+  inputBaseClasses,
+  selectClasses,
+} from "@mui/material";
 import { Option } from "constant/types";
 import ChevronIcon from "icons/ChevronIcon";
 import { Search } from "components/Filters";
@@ -10,6 +16,7 @@ import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import useToggle from "hooks/useToggle";
+import Text from "./Text";
 
 export type SelectProps = InputProps & {
   options: Option[];
@@ -60,6 +67,7 @@ const Select = (props: SelectProps) => {
         {
           label: hasAll && hasValue ? commonT("all") : placeholder,
           value: ID_PLACEHOLDER,
+          hasAvatar: false,
         },
         ...options,
       ];
@@ -132,10 +140,17 @@ const Select = (props: SelectProps) => {
           key={option.value}
           value={option.value}
         >
-          {hasAvatar && (
-            <Avatar src={option?.avatar ?? UserPlaceholderImage} size={24} />
-          )}
-          {option.label}
+          <Stack direction="row" alignItems="center" spacing={1}>
+            {option.value !== ID_PLACEHOLDER && hasAvatar && (
+              <Avatar src={option?.avatar ?? UserPlaceholderImage} size={24} />
+            )}
+            <Stack>
+              <Text variant="body2">{option.label}</Text>
+              <Text variant="body2" className="sub">
+                {option.subText}
+              </Text>
+            </Stack>
+          </Stack>
         </MenuItem>
       ))}
 
