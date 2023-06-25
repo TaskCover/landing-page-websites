@@ -65,7 +65,7 @@ const DialogLayout = forwardRef(
       <Dialog
         scroll="paper"
         slots={{
-          root: "form",
+          root: onSubmit ? "form" : undefined,
         }}
         slotProps={{
           root: {

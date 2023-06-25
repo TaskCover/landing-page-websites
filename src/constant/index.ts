@@ -60,7 +60,7 @@ export const NS_PROJECT = "project";
 export const NS_COMPANY = "company";
 export const NS_MANAGER = "manager";
 
-export const IMAGES_ACCEPT = ["image/png", "image/jpeg"];
+export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 
 export const ACCESS_TOKEN_STORAGE_KEY = "aT";
 export const REFRESH_TOKEN_STORAGE_KEY = "rT";

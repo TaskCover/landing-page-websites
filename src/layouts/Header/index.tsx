@@ -15,12 +15,15 @@ import { useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
 import { PROJECTS_PATH } from "constant/paths";
 import { DataStatus } from "constant/enums";
+import useToggle from "hooks/useToggle";
 
 const Header = () => {
   const { title, searchPlaceholder, prevPath, key } = useHeaderConfig();
   const { breakpoint } = useBreakpoint();
   const { push } = useRouter();
   const { pageSize, filters, status, onGetProjects } = useProjects();
+
+  const [isFocused, onFocused, onUnFocused] = useToggle();
 
   const onSearch = (name: string, newValue?: string) => {
     const isFirstFetchedSuccess = status === DataStatus.SUCCEEDED;
@@ -73,7 +76,11 @@ const Header = () => {
             placeholder={searchPlaceholder}
             name={key as string}
             onChange={onSearch}
-            // emitWhenEnter
+            InputProps={{
+              onFocus: onFocused,
+              onBlur: onUnFocused,
+            }}
+            emitWhenEnter={isFocused}
             value={filters?.[key as string]}
           />
         )}

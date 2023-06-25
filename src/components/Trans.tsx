@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import { memo, useMemo } from "react";
 import { Stack } from "@mui/material";
 
 type TransProps = {

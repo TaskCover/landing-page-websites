@@ -3,6 +3,9 @@ import { Stack, StackProps } from "@mui/material";
 import { Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import { NS_PROJECT } from "constant/index";
+import { StatusTask, AssignTask } from "./components";
+import { Task } from "store/project/reducer";
+import EditTask from "./components/EditTask";
 
 export enum TabDetail {
   DETAIL = 1,
@@ -22,6 +25,7 @@ type TabListProps = {
 
 const TabList = (props: TabListProps) => {
   const { value, onChange } = props;
+
   const onChangeTab = (newTab: TabDetail) => {
     return () => {
       onChange(newTab);
@@ -50,6 +54,11 @@ const TabList = (props: TabListProps) => {
               {...tab}
             />
           ))}
+        </Stack>
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <AssignTask />
+          <StatusTask />
+          <EditTask />
         </Stack>
       </Stack>
     </>

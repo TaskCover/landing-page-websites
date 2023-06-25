@@ -54,6 +54,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
           "success",
         );
         onDeleteMember(id);
+        onHide();
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error), "error");

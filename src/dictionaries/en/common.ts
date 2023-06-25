@@ -89,4 +89,5 @@ export const CommonLang: CommonDictionary = {
   move: "Move",
   rename: "Rename",
   all: "All",
+  clickToViewLarge: "Click to view larger",
 };

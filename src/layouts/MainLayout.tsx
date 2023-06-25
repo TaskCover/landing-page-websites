@@ -12,6 +12,7 @@ import {
   AUTHORIZED_PATHS,
   FORGOT_PASSWORD_PATH,
   HOME_PATH,
+  JOIN_WORKSPACE_PATH,
   SIGNIN_PATH,
   SIGNUP_PATH,
 } from "constant/paths";
@@ -24,7 +25,7 @@ type MainLayoutProps = {
   children: React.ReactNode;
 };
 
-const AUTH_PATHS = [SIGNUP_PATH, FORGOT_PASSWORD_PATH];
+const AUTH_PATHS = [SIGNUP_PATH, FORGOT_PASSWORD_PATH, JOIN_WORKSPACE_PATH];
 
 const MainLayout = (props: MainLayoutProps) => {
   const { children } = props;

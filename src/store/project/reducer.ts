@@ -1,5 +1,6 @@
 import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import {
+  commentTask,
   createProject,
   createTask,
   createTaskList,
@@ -12,6 +13,7 @@ import {
   GetTasksOfProjectQueries,
   ProjectStatus,
   updateProject,
+  updateTask,
   updateTaskList,
 } from "./actions";
 import {
@@ -92,12 +94,6 @@ export type TaskList = {
   tasks: Task[];
 };
 
-export interface Activity {
-  action: string;
-  time: string;
-  new: string;
-}
-
 export interface Comment {
   id: string;
   attachments: string[];
@@ -107,6 +103,16 @@ export interface Comment {
   activities: Activity[];
   attachments_down: Attachment[];
 }
+export interface Activity {
+  id: string;
+  time: string;
+  user: User;
+  action: string;
+  task: Task;
+  project: Project;
+}
+
+export type TaskDetail = Task & { taskListId: string };
 
 export interface ProjectState {
   items: Project[];
@@ -136,6 +142,8 @@ export interface ProjectState {
   taskOptionsPaging: Paging;
   taskOptionsError?: string;
   taskOptionsFilters: Omit<GetTasksOfProjectQueries, "pageIndex" | "pageSize">;
+
+  task?: TaskDetail;
 }
 
 const initialState: ProjectState = {
@@ -167,7 +175,7 @@ const projectSlice = createSlice({
   initialState,
   reducers: {
     removeMember: (state, action: PayloadAction<string>) => {
-      const indexSelected = state.tasks.findIndex(
+      const indexSelected = state.members.findIndex(
         (member) => member.id === action.payload,
       );
 
@@ -177,6 +185,12 @@ const projectSlice = createSlice({
           state.membersPaging.totalItems -= 1;
         }
       }
+    },
+    updateTaskDetail: (
+      state,
+      action: PayloadAction<TaskDetail | undefined>,
+    ) => {
+      state.task = action.payload;
     },
     reset: () => initialState,
   },
@@ -385,9 +399,78 @@ const projectSlice = createSlice({
             }
           }
         },
+      )
+      .addCase(
+        updateTask.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            task: Task;
+            taskId: string;
+            taskListId: string;
+          }>,
+        ) => {
+          const { task, taskId, taskListId } = action.payload;
+          const indexTaskList = state.tasks.findIndex(
+            (taskListItem) => taskListItem.id === taskListId,
+          );
+          if (indexTaskList !== -1) {
+            if (taskId) {
+              // Sub task
+              const indexTask = state.tasks[indexTaskList].tasks.findIndex(
+                (taskItem) => taskItem.id === taskId,
+              );
+
+              if (indexTask !== -1) {
+                state.tasks[indexTaskList].tasks[indexTask] = Object.assign(
+                  state.tasks[indexTaskList].tasks[indexTask],
+                  action.payload.task,
+                );
+              }
+            }
+          }
+
+          if (state?.task) {
+            state.task = Object.assign(state.task, action.payload.task);
+          }
+        },
+      )
+      .addCase(
+        commentTask.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            comment: Comment;
+            taskId: string;
+            taskListId: string;
+          }>,
+        ) => {
+          const { comment, taskId, taskListId } = action.payload;
+          const indexTaskList = state.tasks.findIndex(
+            (taskListItem) => taskListItem.id === taskListId,
+          );
+          if (indexTaskList !== -1) {
+            if (taskId) {
+              // Sub task
+              const indexTask = state.tasks[indexTaskList].tasks.findIndex(
+                (taskItem) => taskItem.id === taskId,
+              );
+
+              if (indexTask !== -1) {
+                state.tasks[indexTaskList].tasks[indexTask].comments?.push(
+                  comment,
+                );
+              }
+            }
+          }
+
+          if (state?.task) {
+            state.task.comments?.push(comment);
+          }
+        },
       ),
 });
 
-export const { removeMember, reset } = projectSlice.actions;
+export const { removeMember, updateTaskDetail, reset } = projectSlice.actions;
 
 export default projectSlice.reducer;

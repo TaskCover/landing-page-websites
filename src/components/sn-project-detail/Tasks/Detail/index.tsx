@@ -1,6 +1,6 @@
-import React, { memo, useState } from "react";
-import { DrawerProps, Drawer, drawerClasses, Stack } from "@mui/material";
-import { IconButton, Text } from "components/shared";
+import { memo, useEffect, useState, useRef, useMemo } from "react";
+import { DrawerProps, Drawer, drawerClasses, Stack, Box } from "@mui/material";
+import { IconButton, Input, Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import { NS_PROJECT } from "constant/index";
 import CloseIcon from "icons/CloseIcon";
@@ -8,18 +8,23 @@ import TabList, { TabDetail } from "./TabList";
 import Information from "./Information";
 import { Task } from "store/project/reducer";
 import Comments from "./Comments";
+import { useTaskDetail } from "store/project/selectors";
+import { CommentEditor } from "./components";
+import Activities from "./Activities";
 
-type DetailProps = {
-  onClose: () => void;
-  item: Task;
-} & Omit<DrawerProps, "onClose">;
-
-const Detail = (props: DetailProps) => {
-  const { onClose, item, ...rest } = props;
+const Detail = () => {
+  const { task, onUpdateTaskDetail } = useTaskDetail();
+  const scrollEndRef = useRef<HTMLDivElement | null>(null);
 
   const projectT = useTranslations(NS_PROJECT);
 
   const [tab, setTab] = useState<TabDetail>(TabDetail.DETAIL);
+
+  const onClose = () => {
+    onUpdateTaskDetail();
+  };
+
+  if (!task) return null;
 
   return (
     <Drawer
@@ -28,12 +33,12 @@ const Detail = (props: DetailProps) => {
         [`& .${drawerClasses.paper}`]: {
           backgroundColor: "common.white",
           backgroundImage: "none",
-          width: "50%",
+          width: { xs: "100%", md: "50%" },
           overflow: "hidden",
         },
       }}
       onClose={onClose}
-      {...rest}
+      open
     >
       <Stack
         direction="row"
@@ -50,8 +55,16 @@ const Detail = (props: DetailProps) => {
       </Stack>
       <TabList value={tab} onChange={setTab} />
       <Stack flex={1} overflow="auto" p={3}>
-        <Information {...item} />
-        <Comments comments={item?.comments} />
+        {tab === TabDetail.DETAIL ? (
+          <>
+            <Information />
+            <CommentEditor ref={scrollEndRef} />
+            <Comments comments={task?.comments} />
+            <Box ref={scrollEndRef} />
+          </>
+        ) : (
+          <Activities />
+        )}
       </Stack>
     </Drawer>
   );

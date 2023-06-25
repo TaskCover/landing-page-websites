@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import { memo, useState } from "react";
 import { Stack } from "@mui/material";
 import ConfirmDialog, { ConfirmDialogProps } from "components/ConfirmDialog";
 import { Employee } from "store/company/reducer";

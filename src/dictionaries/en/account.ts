@@ -25,7 +25,7 @@ export const AccountLang: AccountDictionary = {
     },
     title: "Change password",
     notification: {
-      changeSuccess: "Change password successfully!",
+      changeSuccess: "Change password successfully. Please sign in again.",
     },
   },
 };

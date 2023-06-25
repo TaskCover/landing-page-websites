@@ -79,13 +79,6 @@ const Form = (props: FormProps) => {
     }
   }, [commonT, type]);
 
-  const validationSchema = useMemo(() => {
-    if (type === DataAction.CREATE) {
-      return createValidationSchema;
-    }
-    return baseValidationSchema;
-  }, [type]);
-
   const onEndReached = () => {
     if (isFetching || (totalPages && pageIndex >= totalPages)) return;
     onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
@@ -362,11 +355,9 @@ const Form = (props: FormProps) => {
 
 export default memo(Form);
 
-const NOW = new Date().setHours(0, 0, 0, 0);
-
 const MAX_NAME_CHARACTERS = 50;
 
-const baseValidationSchema = Yup.object().shape({
+const validationSchema = Yup.object().shape({
   name: Yup.string()
     .trim()
     .required("form.error.required")
@@ -374,12 +365,7 @@ const baseValidationSchema = Yup.object().shape({
   description: Yup.string().trim().required("form.error.required"),
   owner: Yup.string().required("form.error.required"),
   type_project: Yup.string().required("form.error.required"),
-});
-
-const createValidationSchema = baseValidationSchema.shape({
-  start_date: Yup.number()
-    .required("form.error.required")
-    .min(NOW, "form.error.datePast"),
+  start_date: Yup.number().required("form.error.required"),
   end_date: Yup.number()
     .required("form.error.required")
     .min(Yup.ref("start_date"), "form.error.gte"),

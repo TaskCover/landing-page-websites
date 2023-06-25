@@ -2,6 +2,7 @@ export const Endpoint = {
   SIGNIN: "/auth/login",
   SIGNUP: "/auth/register",
   VERIFY: "/auth/code",
+  JOIN_WORKSPACE: "/users/join",
   FORGOT_PASSWORD: "/auth/forgot-password",
   RESET_PASSWORD: "/auth/set-password",
   CHANGE_PASSWORD: "/auth/update-pasword",
@@ -26,6 +27,7 @@ export const Endpoint = {
   SUB_TASKS: "/tasks/sub",
   TASK_ITEM: "/tasks/task",
   TASK_MOVE: "/tasks/move",
+  TASK_COMMENT: "/tasks/comment",
   PROJECT_TYPES_ALL: "type-project/all",
   PROJECT_TYPES: "type-project",
   PROJECT_TYPE_ITEM: "type-project/{id}",
@@ -40,4 +42,5 @@ export const Endpoint = {
 
   UPLOAD: "/files/upload-avatar",
   SIGNUP_UPLOAD: "/avatar/upload",
+  UPLOAD_LINK: "/files/upload-link",
 };

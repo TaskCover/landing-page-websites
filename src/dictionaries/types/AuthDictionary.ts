@@ -82,4 +82,28 @@ export type AuthDictionary = {
       resetSuccess: string;
     };
   };
+  joinWorkspace: {
+    head: {
+      title: string;
+    };
+    form: {
+      title: {
+        email: string;
+      };
+      error: {
+        email: string;
+      };
+    };
+    title: string;
+    content: string;
+    getStarted: string;
+    confirmJoin: {
+      title: string;
+      content: string;
+      submit: string;
+    };
+    notification: {
+      success: string;
+    };
+  };
 };

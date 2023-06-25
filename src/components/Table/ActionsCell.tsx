@@ -1,4 +1,4 @@
-import React, { memo, useId, MouseEvent, useState } from "react";
+import { memo, useId, MouseEvent, useState } from "react";
 import {
   AlertColor,
   Box,

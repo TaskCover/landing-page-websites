@@ -88,4 +88,29 @@ export const AuthLang: AuthDictionary = {
       resetSuccess: "Change password successfully, please sign in again.",
     },
   },
+  joinWorkspace: {
+    head: {
+      title: "Join workspace | Taskcover",
+    },
+    form: {
+      title: {
+        email: "Your work email",
+      },
+      error: {
+        email: "Suffix email is invalid. Example: @example.com",
+      },
+    },
+    getStarted: "Get started",
+    title: "Enter your workspace",
+    content:
+      "You want to create your own company. Click button below to upgrade to a corporate account",
+    confirmJoin: {
+      title: "Confirm to join",
+      content: "Are you sure to join company?",
+      submit: "Join now",
+    },
+    notification: {
+      success: "The request to join the workspace has been sent successfully!",
+    },
+  },
 };

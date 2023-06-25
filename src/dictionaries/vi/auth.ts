@@ -89,4 +89,29 @@ export const AuthLang: AuthDictionary = {
       resetSuccess: "Đổi mật khẩu thành công, vui lòng đăng nhập lại.",
     },
   },
+  joinWorkspace: {
+    head: {
+      title: "Tham gia công ty | Taskcover",
+    },
+    form: {
+      title: {
+        email: "Đuôi email công ty",
+      },
+      error: {
+        email: "Đuôi email không hợp lệ. Ví dụ: @example.com",
+      },
+    },
+    getStarted: "Bắt đầu",
+    title: "Nhập công ty muốn tham gia",
+    content:
+      "Bạn muốn thành lập công ty của riêng mình. Nhấp vào nút bên dưới để nâng cấp lên tài khoản công ty",
+    confirmJoin: {
+      title: "Xác nhận tham gia",
+      content: "Bạn chắc chắc muốn tham gia công ty?",
+      submit: "Tham gia ngay",
+    },
+    notification: {
+      success: "Yêu cầu tham gia công ty được gửi đi thành công!",
+    },
+  },
 };

@@ -1,0 +1,43 @@
+.quill {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.ql-container {
+  font-size: 14px;
+  color: #212121;
+}
+
+.ql-snow .ql-stroke {
+  stroke: #999999;
+}
+
+.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill {
+  fill: #999999;
+}
+
+.quill * {
+  font-family: "Open Sans", sans-serif;
+}
+
+.ql-toolbar.ql-snow {
+  border-bottom: 1px solid #ECECF3;
+  border-left: 1px solid #BABCC6;
+  border-right: 1px solid #BABCC6;
+  border-top: none;
+}
+
+.ql-container.ql-snow {
+  min-height: 50px;
+  max-height: 200px;
+  overflow: auto;
+  border: 1px solid #BABCC6;
+  border-bottom: none;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.ql-toolbar.ql-snow+.ql-container.ql-snow {
+  border-top: 1px solid #BABCC6
+}

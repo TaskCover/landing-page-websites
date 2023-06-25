@@ -25,7 +25,7 @@ export const AccountLang: AccountDictionary = {
     },
     title: "Thay đổi mật khẩu",
     notification: {
-      changeSuccess: "Đổi mật khẩu thành công!",
+      changeSuccess: "Đổi mật khẩu thành công, vui lòng đăng nhập lại.",
     },
   },
 };

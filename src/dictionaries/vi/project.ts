@@ -103,5 +103,12 @@ export const ProjectLang: ProjectDictionary = {
       detail: "Chi tiết",
       history: "Lịch sử thay đổi",
     },
+    assignTask: "Giao công việc",
+    changeStatusTask: "Đổi trang thái công việc",
+    writeComment: "Viết bình luận...",
+    sendComment: "Gửi bình luận",
+    notification: {
+      assignSuccess: "Giao công việc cho thành viên thành công!",
+    },
   },
 };

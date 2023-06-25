@@ -71,6 +71,13 @@ export type MoveTaskData = {
   task_list_move: string;
 };
 
+export type CommentTaskData = {
+  task: string;
+  task_list: string;
+  content: string;
+  attachments?: string[];
+};
+
 export const getProjectList = createAsyncThunk(
   "project/getProjectList",
   async (queries: GetProjectListQueries) => {
@@ -244,6 +251,29 @@ export const createTask = createAsyncThunk(
   },
 );
 
+export const updateTask = createAsyncThunk(
+  "project/updateTask",
+  async (data: Partial<TaskData> & { task: string; task_list: string }) => {
+    try {
+      const response = await client.put(Endpoint.TASK_ITEM, data);
+
+      if (response?.status === HttpStatusCode.CREATED) {
+        return {
+          task: {
+            ...response.data.lastTask,
+            attachments_down: response.data.attachments_down,
+          },
+          taskId: data.task,
+          taskListId: data.task_list,
+        };
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
 export const moveTask = createAsyncThunk(
   "project/moveTask",
   async (data: MoveTaskData) => {
@@ -252,6 +282,29 @@ export const moveTask = createAsyncThunk(
 
       if (response?.status === HttpStatusCode.OK) {
         return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const commentTask = createAsyncThunk(
+  "project/commentTask",
+  async (data: CommentTaskData) => {
+    try {
+      const response = await client.post(Endpoint.TASK_COMMENT, data);
+
+      if (response?.status === HttpStatusCode.CREATED) {
+        return {
+          comment: {
+            ...response.data.last_comment,
+            attachments_down: response.data.attachments_down,
+          },
+          taskId: data.task,
+          taskListId: data.task_list,
+        };
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

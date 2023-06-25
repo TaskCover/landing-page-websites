@@ -19,7 +19,7 @@ import {
   NS_PROJECT,
   TEXT_STATUS,
 } from "constant/index";
-import { useTasksOfProject } from "store/project/selectors";
+import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
 import useQueryParams from "hooks/useQueryParams";
 import { useRouter } from "next-intl/client";
 import useBreakpoint from "hooks/useBreakpoint";
@@ -43,6 +43,7 @@ const ItemList = () => {
     onGetTasksOfProject,
     onMoveTask,
   } = useTasksOfProject();
+  const { task, onUpdateTaskDetail } = useTaskDetail();
 
   const { initQuery, isReady } = useQueryParams();
   const { push } = useRouter();
@@ -73,7 +74,6 @@ const ItemList = () => {
     taskId?: string;
     taskListId?: string;
   }>({});
-  const [task, setTask] = useState<Task | undefined>();
 
   const isShow = useMemo(
     () => Boolean(dataIds?.taskId && dataIds?.taskListId),
@@ -103,9 +103,11 @@ const ItemList = () => {
     return isMdSmaller ? [] : desktopHeaderList;
   }, [desktopHeaderList, isMdSmaller]) as CellProps[];
 
-  const onSetTask = (task?: Task) => {
+  const onSetTask = (taskListId?: string, task?: Task) => {
     return () => {
-      setTask(task);
+      onUpdateTaskDetail(
+        taskListId && task ? { ...task, taskListId } : undefined,
+      );
     };
   };
 
@@ -411,7 +413,7 @@ const ItemList = () => {
                               textAlign="left"
                               noWrap
                               tooltip={task.name}
-                              onClick={onSetTask(task)}
+                              onClick={onSetTask(taskListItem.id, task)}
                             >
                               {task.name}
                             </Content>
@@ -468,7 +470,10 @@ const ItemList = () => {
                                     textAlign="left"
                                     noWrap
                                     tooltip={subTask.name}
-                                    onClick={onSetTask(subTask)}
+                                    onClick={onSetTask(
+                                      taskListItem.id,
+                                      subTask,
+                                    )}
                                   >
                                     {subTask.name}
                                   </Content>
@@ -527,7 +532,7 @@ const ItemList = () => {
           taskId={dataIds?.taskId}
         />
       )}
-      {!!task && <Detail open onClose={onSetTask()} item={task} />}
+      <Detail />
     </Stack>
   );
 };

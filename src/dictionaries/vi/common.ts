@@ -88,4 +88,5 @@ export const CommonLang: CommonDictionary = {
   move: "Di chuyển",
   rename: "Đổi tên",
   all: "Tất cả",
+  clickToViewLarge: "Bấm vào để xem lớn hơn",
 };

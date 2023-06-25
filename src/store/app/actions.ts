@@ -174,7 +174,7 @@ export const changePassword = createAsyncThunk(
       });
 
       if (response?.status === HttpStatusCode.OK) {
-        return response.data;
+        return true;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

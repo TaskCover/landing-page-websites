@@ -1,10 +1,12 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
+  CommentTaskData,
   GetProjectListQueries,
   GetTasksOfProjectQueries,
   ProjectData,
   TaskData,
   TaskListData,
+  commentTask,
   createProject,
   createTask,
   createTaskList,
@@ -14,6 +16,7 @@ import {
   getTasksOfProject,
   moveTask,
   updateProject,
+  updateTask,
   updateTaskList,
 } from "./actions";
 import { DataStatus } from "constant/enums";
@@ -21,7 +24,7 @@ import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
 import { BaseQueries } from "constant/types";
 import { getFiltersIgnoreId } from "utils/index";
-import { removeMember } from "./reducer";
+import { TaskDetail, removeMember, updateTaskDetail } from "./reducer";
 import { string } from "yup";
 
 export const useProjects = () => {
@@ -236,28 +239,6 @@ export const useTasksOfProject = () => {
     }
   };
 
-  // const onUpdateEmployee = useCallback(
-  //   async (id: string, position: string) => {
-  //     try {
-  //       return await dispatch(updateEmployee({ id, position })).unwrap();
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   },
-  //   [dispatch],
-  // );
-
-  // const onDeleteEmployees = useCallback(
-  //   async (ids: string[]) => {
-  //     try {
-  //       return await dispatch(deleteEmployees(ids)).unwrap();
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   },
-  //   [dispatch],
-  // );
-
   return {
     items,
     status,
@@ -275,9 +256,6 @@ export const useTasksOfProject = () => {
     onUpdateTaskList,
     onCreateTask,
     onMoveTask,
-    // onCreateEmployee,
-    // onUpdateEmployee,
-    // onDeleteEmployees,
   };
 };
 
@@ -327,5 +305,44 @@ export const useTaskOptions = () => {
     totalPages,
     filters,
     onGetOptions,
+  };
+};
+
+export const useTaskDetail = () => {
+  const dispatch = useAppDispatch();
+
+  const task = useAppSelector((state) => state.project.task);
+
+  const onUpdateTaskDetail = (task?: TaskDetail) => {
+    dispatch(updateTaskDetail(task));
+  };
+
+  const onCommentTask = async (data: CommentTaskData) => {
+    try {
+      return await dispatch(commentTask(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const onUpdateTask = useCallback(
+    async (data: Partial<TaskData>, taskList: string, taskId: string) => {
+      try {
+        return await dispatch(
+          updateTask({ ...data, task_list: taskList, task: taskId }),
+        ).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  return {
+    task,
+    taskListId: task?.taskListId,
+    onUpdateTaskDetail,
+    onCommentTask,
+    onUpdateTask,
   };
 };

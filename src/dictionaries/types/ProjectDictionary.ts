@@ -99,5 +99,12 @@ export type ProjectDictionary = {
       detail: string;
       history: string;
     };
+    assignTask: string;
+    changeStatusTask: string;
+    writeComment: string;
+    sendComment: string;
+    notification: {
+      assignSuccess: string;
+    };
   };
 };

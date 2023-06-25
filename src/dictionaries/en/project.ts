@@ -103,5 +103,12 @@ export const ProjectLang: ProjectDictionary = {
       detail: "Detail",
       history: "History",
     },
+    assignTask: "Assign task",
+    changeStatusTask: "Change task status",
+    writeComment: "Write comment...",
+    sendComment: "Send comment",
+    notification: {
+      assignSuccess: "Assign task successfully!",
+    },
   },
 };

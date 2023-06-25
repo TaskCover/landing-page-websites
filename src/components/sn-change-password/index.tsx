@@ -3,7 +3,7 @@
 import { Stack } from "@mui/material";
 import { Button, Input, Text } from "components/shared";
 import { memo, useMemo } from "react";
-import { useSnackbar, useUserInfo } from "store/app/selectors";
+import { useAuth, useSnackbar, useUserInfo } from "store/app/selectors";
 import * as Yup from "yup";
 import { useFormik, FormikErrors } from "formik";
 import { getMessageErrorByAPI } from "utils/index";
@@ -17,6 +17,7 @@ import { HOME_PATH } from "constant/paths";
 
 const ChangePassword = ({ prevPath }: { prevPath?: string }) => {
   const { onChangePassword } = useUserInfo();
+  const { onSignOut } = useAuth();
   const commonT = useTranslations(NS_COMMON);
   const accountT = useTranslations(NS_ACCOUNT);
 
@@ -25,12 +26,15 @@ const ChangePassword = ({ prevPath }: { prevPath?: string }) => {
 
   const onSubmit = async (values: ChangePasswordData) => {
     try {
-      await onChangePassword(values);
-      onAddSnackbar(
-        accountT("changePassword.notification.changeSuccess"),
-        "success",
-      );
-      formik.resetForm();
+      const isSuccess = await onChangePassword(values);
+      if (isSuccess === true) {
+        onAddSnackbar(
+          accountT("changePassword.notification.changeSuccess"),
+          "success",
+        );
+        formik.resetForm();
+        onSignOut();
+      }
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
         formik.setFieldError("old_password", "form.error.incorrect");

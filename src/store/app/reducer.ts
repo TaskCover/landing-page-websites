@@ -42,7 +42,6 @@ export type HeaderConfig = {
 export enum SignupStep {
   SIGNUP = 1,
   VERIFY,
-  JOIN_WORKSPACE,
 }
 
 export interface AppState {

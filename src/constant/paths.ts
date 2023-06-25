@@ -3,6 +3,7 @@ import { Permission } from "./enums";
 export const HOME_PATH = "/";
 export const SIGNIN_PATH = "/signin";
 export const SIGNUP_PATH = "/signup";
+export const JOIN_WORKSPACE_PATH = "/join-workspace";
 export const FORGOT_PASSWORD_PATH = "/forgot-password";
 export const RESET_PASSWORD_PATH = "/reset-password/";
 export const CHANGE_PASSWORD_PATH = "/change-password";
@@ -27,6 +28,7 @@ export const PROJECT_INFORMATION_PATH = "/projects/{id}";
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
   SIGNUP_PATH,
+  JOIN_WORKSPACE_PATH,
   FORGOT_PASSWORD_PATH,
   RESET_PASSWORD_PATH,
   CHANGE_PASSWORD_PATH,
@@ -57,6 +59,7 @@ export const AUTHORIZED_PATHS = {
   ],
   [Permission.ST]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
+    PROJECTS_PATH,
     PROJECT_TYPES_PATH,
     PROJECT_TASKS_PATH,
     PROJECT_INFORMATION_PATH,
