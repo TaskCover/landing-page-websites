@@ -224,14 +224,14 @@ export const useTasksOfProject = () => {
   const onMoveTask = async (
     oldTaskListId: string,
     taskListId: string,
-    taskId: string,
+    taskIds: string[],
   ) => {
     try {
       return await dispatch(
         moveTask({
           task_list_current: oldTaskListId,
           task_list_move: taskListId,
-          task_current: taskId,
+          task_current: taskIds,
         }),
       ).unwrap();
     } catch (error) {

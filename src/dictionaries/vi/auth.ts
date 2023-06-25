@@ -21,6 +21,7 @@ export const AuthLang: AuthDictionary = {
     key: "Đăng nhập",
     notification: {
       signinSuccess: "Đăng nhập thành công!",
+      emailOrPasswordWrong: "Tài khoản hoặc mật khẩu không chính xác!",
     },
   },
   signup: {

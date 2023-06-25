@@ -19,6 +19,7 @@ export type AuthDictionary = {
     key: string;
     notification: {
       signinSuccess: string;
+      emailOrPasswordWrong: string;
     };
   };
   signup: {

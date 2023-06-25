@@ -182,3 +182,18 @@ export const changePassword = createAsyncThunk(
     }
   },
 );
+
+export const getProfile = createAsyncThunk("app/getProfile", async () => {
+  try {
+    const response = await client.get(Endpoint.PROFILE, undefined, {
+      baseURL: AUTH_API_URL,
+    });
+
+    if (response?.status === HttpStatusCode.OK) {
+      return response.data;
+    }
+    throw AN_ERROR_TRY_AGAIN;
+  } catch (error) {
+    throw error;
+  }
+});

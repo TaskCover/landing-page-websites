@@ -207,7 +207,7 @@ const ItemList = () => {
       const isSuccess = await onMoveTask(
         sourceTaskListId,
         destinationTaskListId,
-        taskId,
+        [taskId],
       );
       if (isSuccess === true) {
         setDataList(updatedDataList);

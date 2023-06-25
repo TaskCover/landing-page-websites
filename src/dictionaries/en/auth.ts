@@ -21,6 +21,7 @@ export const AuthLang: AuthDictionary = {
     key: "Sign in",
     notification: {
       signinSuccess: "Sign in successfully!",
+      emailOrPasswordWrong: "Email or password is incorrect!",
     },
   },
   signup: {

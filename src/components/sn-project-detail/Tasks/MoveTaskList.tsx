@@ -43,7 +43,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
   const initialValues = useMemo(
     () => ({
       task_list_current: oldTaskListId,
-      task_current: taskId,
+      task_current: [taskId],
       task_list_move: "",
     }),
     [oldTaskListId, taskId],

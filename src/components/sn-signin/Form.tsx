@@ -13,6 +13,8 @@ import { EMAIL_REGEX } from "constant/regex";
 import { getMessageErrorByAPI } from "utils/index";
 import { useSnackbar, useAuth } from "store/app/selectors";
 import { useTranslations } from "next-intl";
+import { formErrorCode } from "api/formErrorCode";
+import { ErrorResponse } from "constant/types";
 
 const Form = () => {
   const { onSignin } = useAuth();
@@ -30,7 +32,17 @@ const Form = () => {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      if (
+        (error as ErrorResponse)["code"] ===
+        formErrorCode.WRONG_EMAIL_OR_PASSWORD
+      ) {
+        onAddSnackbar(
+          authT("signin.notification.emailOrPasswordWrong"),
+          "error",
+        );
+      } else {
+        onAddSnackbar(getMessageErrorByAPI(error), "error");
+      }
     }
   };
 

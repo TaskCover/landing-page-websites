@@ -7,7 +7,6 @@ import {
   AUTH_API_URL,
   REFRESH_TOKEN_STORAGE_KEY,
   UPLOAD_API_URL,
-  USER_INFO_STORAGE_KEY,
 } from "constant";
 import { HttpStatusCode } from "constant/enums";
 import { ErrorResponse } from "constant/types";
@@ -191,6 +190,5 @@ export { client };
 const signOut = () => {
   clientStorage.remove(ACCESS_TOKEN_STORAGE_KEY);
   clientStorage.remove(REFRESH_TOKEN_STORAGE_KEY);
-  clientStorage.remove(USER_INFO_STORAGE_KEY);
   window.location.reload();
 };

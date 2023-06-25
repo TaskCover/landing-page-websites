@@ -64,7 +64,6 @@ export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 
 export const ACCESS_TOKEN_STORAGE_KEY = "aT";
 export const REFRESH_TOKEN_STORAGE_KEY = "rT";
-export const USER_INFO_STORAGE_KEY = "user";
 
 export const API_TIMEOUT = 30_000; //s
 

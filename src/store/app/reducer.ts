@@ -1,11 +1,16 @@
 import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { uuid } from "utils";
-import { signin, signup, signupVerify, updateUserInfo } from "./actions";
+import {
+  getProfile,
+  signin,
+  signup,
+  signupVerify,
+  updateUserInfo,
+} from "./actions";
 import { clientStorage } from "utils/storage";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
   REFRESH_TOKEN_STORAGE_KEY,
-  USER_INFO_STORAGE_KEY,
 } from "constant/index";
 import { User } from "constant/types";
 
@@ -107,7 +112,6 @@ const appSlice = createSlice({
 
       clientStorage.remove(ACCESS_TOKEN_STORAGE_KEY);
       clientStorage.remove(REFRESH_TOKEN_STORAGE_KEY);
-      clientStorage.remove(USER_INFO_STORAGE_KEY);
     },
     updateHeaderConfig: (state, action: PayloadAction<HeaderConfig>) => {
       state.headerConfig = Object.assign(state.headerConfig, action.payload);
@@ -134,7 +138,6 @@ const appSlice = createSlice({
 
           clientStorage.set(ACCESS_TOKEN_STORAGE_KEY, accessToken);
           clientStorage.set(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
-          clientStorage.set(USER_INFO_STORAGE_KEY, userInfo);
 
           state.token = accessToken;
           state.user = userInfo;
@@ -155,7 +158,12 @@ const appSlice = createSlice({
         updateUserInfo.fulfilled,
         (state, action: PayloadAction<UserInfo>) => {
           state.user = Object.assign(state?.user ?? {}, action.payload);
-          clientStorage.set(USER_INFO_STORAGE_KEY, current(state).user);
+        },
+      )
+      .addCase(
+        getProfile.fulfilled,
+        (state, action: PayloadAction<UserInfo>) => {
+          state.user = Object.assign(state?.user ?? {}, action.payload);
         },
       ),
 });

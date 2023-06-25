@@ -67,7 +67,7 @@ export type TaskData = {
 
 export type MoveTaskData = {
   task_list_current: string;
-  task_current: string;
+  task_current: string[];
   task_list_move: string;
 };
 
@@ -178,12 +178,16 @@ export const getTasksOfProject = createAsyncThunk(
   "project/getTasksOfProject",
   async ({
     concat,
+    project,
     ...queries
   }: GetTasksOfProjectQueries & { concat?: boolean }) => {
     queries = serverQueries(queries) as GetTasksOfProjectQueries;
 
     try {
-      const response = await client.get(Endpoint.PROJECT_TASKS, queries);
+      const response = await client.get(
+        StringFormat(Endpoint.PROJECT_TASK_ITEM, { id: project }),
+        queries,
+      );
 
       if (response?.status === HttpStatusCode.OK) {
         return { ...refactorRawItemListResponse(response.data), concat };

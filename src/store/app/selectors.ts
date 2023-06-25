@@ -18,6 +18,7 @@ import {
   UpdateUserInfoData,
   changePassword,
   forgot,
+  getProfile,
   resetPassword,
   signin,
   signup,
@@ -157,6 +158,10 @@ export const useAuth = () => {
     dispatch(clearAuth());
   }, [dispatch]);
 
+  const onGetProfile = useCallback(() => {
+    dispatch(getProfile());
+  }, [dispatch]);
+
   return {
     token,
     user,
@@ -168,6 +173,7 @@ export const useAuth = () => {
     onVerify,
     onForgot,
     onResetPassword,
+    onGetProfile,
   };
 };
 

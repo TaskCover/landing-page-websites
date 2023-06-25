@@ -22,9 +22,9 @@
 }
 
 .ql-toolbar.ql-snow {
-  border-bottom: 1px solid #ECECF3;
-  border-left: 1px solid #BABCC6;
-  border-right: 1px solid #BABCC6;
+  border-bottom: 1px solid #ececf3;
+  border-left: 1px solid #babcc6;
+  border-right: 1px solid #babcc6;
   border-top: none;
 }
 
@@ -32,12 +32,12 @@
   min-height: 50px;
   max-height: 200px;
   overflow: auto;
-  border: 1px solid #BABCC6;
+  border: 1px solid #babcc6;
   border-bottom: none;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
 
 .ql-toolbar.ql-snow+.ql-container.ql-snow {
-  border-top: 1px solid #BABCC6
+  border-top: 1px solid #babcc6;
 }

@@ -5,10 +5,7 @@ import { Provider } from "react-redux";
 import ThemeProvider from "./ThemeProvider";
 import { useEffect, useRef } from "react";
 import { clientStorage } from "utils/storage";
-import {
-  ACCESS_TOKEN_STORAGE_KEY,
-  USER_INFO_STORAGE_KEY,
-} from "constant/index";
+import { ACCESS_TOKEN_STORAGE_KEY } from "constant/index";
 import { usePathname, useRouter } from "next-intl/client";
 import {
   SIGNIN_PATH,
@@ -48,15 +45,11 @@ const AppProvider = ({
 
   useEffect(() => {
     const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
-    const user = clientStorage.get(USER_INFO_STORAGE_KEY) as
-      | UserInfo
-      | undefined
-      | null;
 
     const isResetPath = pathname.startsWith(RESET_PASSWORD_PATH);
 
     if (
-      (!accessToken || !user) &&
+      !accessToken &&
       replaceRef.current &&
       !AUTH_PATHS.includes(pathname) &&
       !isResetPath
@@ -64,7 +57,7 @@ const AppProvider = ({
       replaceRef.current(SIGNIN_PATH);
     }
 
-    store.dispatch(updateAuth({ accessToken, user }));
+    store.dispatch(updateAuth({ accessToken }));
     store.dispatch(toggleAppReady(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

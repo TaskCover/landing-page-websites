@@ -20,6 +20,7 @@ import { Text } from "components/shared";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
+import { useAuth } from "store/app/selectors";
 
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -40,6 +41,8 @@ const MainLayout = (props: MainLayoutProps) => {
     shallowEqual,
   );
 
+  const { onGetProfile } = useAuth();
+
   const isLoggedIn = useMemo(() => !!token, [token]);
 
   const isAuthorized = useMemo(() => {
@@ -55,6 +58,11 @@ const MainLayout = (props: MainLayoutProps) => {
 
     push(SIGNIN_PATH);
   }, [isLoggedIn, push, pathname]);
+
+  useEffect(() => {
+    if (user?.id) return;
+    onGetProfile();
+  }, [user?.id, onGetProfile]);
 
   if (!appReady || !token || !user) return <AppLoading />;
 
