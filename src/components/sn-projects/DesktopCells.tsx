@@ -3,7 +3,7 @@ import { BodyCell, StatusCell } from "components/Table";
 import BookmarkIcon from "icons/BookmarkIcon";
 import { Project } from "store/project/reducer";
 import { getPath } from "utils/index";
-import { PROJECT_INFORMATION_PATH } from "constant/paths";
+import { PROJECT_TASKS_PATH } from "constant/paths";
 import Avatar from "components/Avatar";
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
@@ -20,7 +20,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
     <>
       <BodyCell align="center">{order}</BodyCell>
       <BodyCell
-        href={getPath(PROJECT_INFORMATION_PATH, undefined, { id: item.id })}
+        href={getPath(PROJECT_TASKS_PATH, undefined, { id: item.id })}
         align="left"
       >
         <Stack direction="row" alignItems="center" spacing={1}>

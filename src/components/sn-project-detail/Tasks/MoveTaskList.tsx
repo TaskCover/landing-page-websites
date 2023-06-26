@@ -16,11 +16,11 @@ import { useParams } from "next/navigation";
 
 type MoveTaskListProps = {
   oldTaskListId: string;
-  taskId: string;
+  taskIds: string[];
 } & Omit<DialogLayoutProps, "children" | "onSubmit">;
 
 const MoveTaskList = (props: MoveTaskListProps) => {
-  const { oldTaskListId, taskId, ...rest } = props;
+  const { oldTaskListId, taskIds, ...rest } = props;
 
   const { onAddSnackbar } = useSnackbar();
   const { onMoveTask } = useTasksOfProject();
@@ -43,10 +43,15 @@ const MoveTaskList = (props: MoveTaskListProps) => {
   const initialValues = useMemo(
     () => ({
       task_list_current: oldTaskListId,
-      task_current: [taskId],
+      task_current: taskIds,
       task_list_move: "",
     }),
-    [oldTaskListId, taskId],
+    [oldTaskListId, taskIds],
+  );
+
+  const optionsIgnoreCurrent = useMemo(
+    () => options.filter((option) => option.value !== oldTaskListId),
+    [oldTaskListId, options],
   );
 
   const onSubmit = async (values: MoveTaskData) => {
@@ -61,6 +66,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
           projectT("detailTasks.notification.moveSuccess"),
           "success",
         );
+        props.onClose();
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error), "error");
@@ -131,7 +137,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
           disabled
         />
         <Select
-          options={options}
+          options={optionsIgnoreCurrent}
           title={projectT("detailTasks.form.title.newTaskList")}
           name="task_list_move"
           required

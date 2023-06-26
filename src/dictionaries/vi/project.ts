@@ -91,10 +91,27 @@ export const ProjectLang: ProjectDictionary = {
     taskList: "Danh mục công việc",
     key: "công việc",
     moveTaskList: "Di chuyển danh mục công việc",
+    duplicateName: "{name} sao chép lúc {value}",
+    selectedCount: "{value} đã chọn",
+    assignee: "Người được giao",
+    keys: {
+      owner: "người phụ trách",
+      start_date: "ngày bắt đầu",
+      end_date: "ngày đến hạn",
+      status: "trạng thái",
+    },
+    confirmDeleteTaskList: {
+      title: "Xác nhận xóa danh mục công việc",
+      content: "Bạn chắc chắn muốn xóa danh mục này {name}?",
+    },
+    resetSelected: "Nhấn để bỏ đánh dấu tất cả",
     notification: {
       taskListSuccess: "{label} danh mục công việc thành công!",
       taskSuccess: "{label} công việc thành công!",
       moveSuccess: "Di chuyển danh sách công việc thành công!",
+      duplicateSuccess: "Sao chép công việc thành công!",
+      deleteTaskListSuccess: "Xóa danh mục công việc thành công!",
+      actionTaskSuccess: "Cập nhật {label} công việc thành công!",
     },
   },
   taskDetail: {

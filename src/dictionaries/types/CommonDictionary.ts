@@ -23,6 +23,7 @@ export type CommonDictionary = {
       assigner: string;
       startDate: string;
       endDate: string;
+      dueDate: string;
       description: string;
       note: string;
     };

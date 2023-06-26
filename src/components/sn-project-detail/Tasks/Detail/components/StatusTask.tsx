@@ -13,12 +13,16 @@ import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
 import { TaskData } from "store/project/actions";
 import { useTranslations } from "next-intl";
-import { NS_COMMON, NS_PROJECT, STATUS_OPTIONS } from "constant/index";
+import {
+  AN_ERROR_TRY_AGAIN,
+  NS_COMMON,
+  NS_PROJECT,
+  STATUS_OPTIONS,
+} from "constant/index";
 import { Status } from "constant/enums";
-import { Task } from "store/project/reducer";
 
 const StatusTask = () => {
-  const { task, taskListId, onUpdateTask } = useTaskDetail();
+  const { task, taskListId, onUpdateTask, taskId, subTaskId } = useTaskDetail();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
@@ -34,12 +38,15 @@ const StatusTask = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    if (!status || !taskListId || !task?.id) return;
     try {
+      if (!status || !taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
       const newData = await onUpdateTask(
-        { status } as Partial<TaskData>,
+        { status },
         taskListId,
-        task.id,
+        taskId,
+        subTaskId,
       );
       if (newData) {
         onAddSnackbar(

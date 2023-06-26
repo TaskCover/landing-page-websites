@@ -5,6 +5,7 @@ const useEventListener = (
   eventName: string,
   handler: unknown,
   element?: any,
+  id?: string,
 ) => {
   const savedHandler = useRef<any>();
   // Update ref.current value if handler changes.
@@ -19,7 +20,8 @@ const useEventListener = (
     () => {
       if (typeof window === "undefined") return;
       // Make sure element supports addEventListener
-      const elementListener = element ?? window;
+      const elementListener =
+        element ?? (id ? document.getElementById(id) : window);
       const isSupported = elementListener && elementListener.addEventListener;
       if (!isSupported) return;
       // Create event listener that calls handler function stored in ref
@@ -32,7 +34,7 @@ const useEventListener = (
         elementListener.removeEventListener(eventName, eventListener);
       };
     },
-    [eventName, element], // Re-run if eventName or element changes
+    [eventName, element, id], // Re-run if eventName or element changes
   );
 };
 

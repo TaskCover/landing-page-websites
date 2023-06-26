@@ -1,4 +1,5 @@
-import { Status } from "constant/enums";
+import { TaskData } from "store/project/actions";
+import { formatDate } from "utils/index";
 
 export const reorder = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,3 +13,18 @@ export const reorder = (
 
   return result;
 };
+
+export type TaskFormData = Omit<TaskData, "taskListId" | "task">;
+
+export type Selected = {
+  taskListId?: string;
+  taskListName?: string;
+
+  taskId?: string;
+  taskName?: string;
+
+  subTaskId?: string;
+  subTaskName?: string;
+};
+
+export const genTime = () => formatDate(Date.now(), "HH:mm:ss.ms dd/MM/yyyy");

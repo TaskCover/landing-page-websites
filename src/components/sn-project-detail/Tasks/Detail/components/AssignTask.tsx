@@ -2,7 +2,7 @@ import { memo, useEffect } from "react";
 import { MenuItem, MenuList, Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import { useTranslations } from "next-intl";
-import { NS_COMMON, NS_PROJECT } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import DialogLayout from "components/DialogLayout";
 import useToggle from "hooks/useToggle";
 import { Search } from "components/Filters";
@@ -28,19 +28,22 @@ const AssignTask = (props: AssignTaskProps) => {
     totalPages,
     filters,
   } = useEmployeeOptions();
-  const { task, taskListId, onUpdateTask } = useTaskDetail();
+  const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
   const { onAddSnackbar } = useSnackbar();
 
   const [isShow, onShow, onHide] = useToggle();
 
   const onAssign = (owner: string) => {
     return async () => {
-      if (!taskListId || !task?.id) return;
       try {
+        if (!taskListId || !taskId) {
+          throw AN_ERROR_TRY_AGAIN;
+        }
         const newData = await onUpdateTask(
-          { owner } as Partial<TaskData>,
+          { owner },
           taskListId,
-          task.id,
+          taskId,
+          subTaskId,
         );
         if (newData) {
           onAddSnackbar(

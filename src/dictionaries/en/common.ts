@@ -26,6 +26,7 @@ export const CommonLang: CommonDictionary = {
       assigner: "Assigner",
       startDate: "Start date",
       endDate: "End date",
+      dueDate: "Due date",
       description: "Description",
       note: "Note",
     },

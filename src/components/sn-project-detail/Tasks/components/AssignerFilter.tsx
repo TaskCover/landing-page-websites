@@ -4,7 +4,9 @@ import { NS_COMMON, NS_MANAGER } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useEmployeeOptions } from "store/company/selectors";
 
-const AssignerFilter = (props: Omit<DropdownProps, "options" | "name">) => {
+const AssignerFilter = (
+  props: Omit<DropdownProps, "options" | "name"> & { name?: string },
+) => {
   const {
     options,
     onGetOptions,
@@ -33,7 +35,7 @@ const AssignerFilter = (props: Omit<DropdownProps, "options" | "name">) => {
     <Dropdown
       placeholder={commonT("form.title.assigner")}
       options={options}
-      name="assigner"
+      name="owner"
       onEndReached={onEndReached}
       {...props}
     />

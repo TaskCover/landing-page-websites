@@ -10,6 +10,7 @@ import {
   createProject,
   createTask,
   createTaskList,
+  deleteTaskList,
   getMembersOfProject,
   getProject,
   getProjectList,
@@ -181,7 +182,9 @@ export const useTasksOfProject = () => {
 
   const onGetTasksOfProject = useCallback(
     async (id: string, queries: GetTasksOfProjectQueries) => {
-      await dispatch(getTasksOfProject({ ...queries, project: id }));
+      await dispatch(
+        getTasksOfProject({ ...queries, project: id, prefixKey: "tasks" }),
+      );
     },
     [dispatch],
   );
@@ -198,7 +201,11 @@ export const useTasksOfProject = () => {
   );
 
   const onCreateTask = useCallback(
-    async (data: TaskData, taskList: string, taskId?: string) => {
+    async (
+      data: Omit<TaskData, "task_list" | "task">,
+      taskList: string,
+      taskId?: string,
+    ) => {
       try {
         return await dispatch(
           createTask({ ...data, task_list: taskList, task: taskId }),
@@ -239,6 +246,14 @@ export const useTasksOfProject = () => {
     }
   };
 
+  const onDeleteTaskList = async (id: string) => {
+    try {
+      return await dispatch(deleteTaskList(id)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return {
     items,
     status,
@@ -256,6 +271,7 @@ export const useTasksOfProject = () => {
     onUpdateTaskList,
     onCreateTask,
     onMoveTask,
+    onDeleteTaskList,
   };
 };
 
@@ -287,7 +303,7 @@ export const useTaskOptions = () => {
 
   const onGetOptions = useCallback(
     (queries: GetTasksOfProjectQueries) => {
-      dispatch(getTasksOfProject({ concat: true, ...queries }));
+      dispatch(getTasksOfProject({ ...queries, prefixKey: "taskOptions" }));
     },
     [dispatch],
   );
@@ -326,10 +342,20 @@ export const useTaskDetail = () => {
   };
 
   const onUpdateTask = useCallback(
-    async (data: Partial<TaskData>, taskList: string, taskId: string) => {
+    async (
+      data: Partial<Omit<TaskData, "task_list" | "task" | "sub_task">>,
+      taskListId: string,
+      taskId: string,
+      subTaskId?: string,
+    ) => {
       try {
         return await dispatch(
-          updateTask({ ...data, task_list: taskList, task: taskId }),
+          updateTask({
+            ...data,
+            task_list: taskListId,
+            task: taskId,
+            sub_task: subTaskId,
+          }),
         ).unwrap();
       } catch (error) {
         throw error;
@@ -341,6 +367,8 @@ export const useTaskDetail = () => {
   return {
     task,
     taskListId: task?.taskListId,
+    taskId: task?.taskId,
+    subTaskId: task?.subTaskId,
     onUpdateTaskDetail,
     onCommentTask,
     onUpdateTask,

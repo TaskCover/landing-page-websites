@@ -14,22 +14,24 @@ import * as Yup from "yup";
 import { cleanObject, formatDate, getMessageErrorByAPI } from "utils/index";
 import { TaskData } from "store/project/actions";
 import { DataAction } from "constant/enums";
-import { DatePicker, Input, InputNumber, Select } from "components/shared";
+import {
+  DatePicker,
+  Input,
+  InputNumber,
+  Select,
+  Editor,
+} from "components/shared";
 import { useEmployeeOptions } from "store/company/selectors";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
+import { TaskFormData } from "./components";
 
 type FormProps = {
-  initialValues?: Partial<TaskData>;
+  initialValues?: Partial<TaskFormData>;
   type: DataAction;
   onSubmit: (
-    values: TaskData,
-    taskListId: string,
-    taskId?: string,
+    values: TaskFormData,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any>;
-  taskListId: string;
-  taskId?: string;
 } & Omit<DialogLayoutProps, "children" | "onSubmit">;
 
 const Form = (props: FormProps) => {
@@ -37,8 +39,6 @@ const Form = (props: FormProps) => {
     initialValues = INITIAL_VALUES,
     type,
     onSubmit: onSubmitProps,
-    taskListId,
-    taskId,
     ...rest
   } = props;
   const { onAddSnackbar } = useSnackbar();
@@ -66,10 +66,6 @@ const Form = (props: FormProps) => {
     }
   }, [commonT, type]);
 
-  const params = useParams();
-
-  const projectId = useMemo(() => params.id, [params.id]);
-
   const validationSchema = useMemo(() => {
     if (type === DataAction.CREATE) {
       return createValidationSchema;
@@ -96,7 +92,7 @@ const Form = (props: FormProps) => {
       }
 
       dataParsed = cleanObject(dataParsed) as TaskData;
-      const newItem = await onSubmitProps(dataParsed, taskListId, taskId);
+      const newItem = await onSubmitProps(dataParsed);
 
       if (newItem) {
         onAddSnackbar(
@@ -250,15 +246,11 @@ const Form = (props: FormProps) => {
             }}
           />
         </Stack>
-        <Input
+        <Editor
+          value={formik.values?.description}
+          onChange={onChangeField}
           title={commonT("form.title.note")}
           name="description"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values?.description}
-          fullWidth
-          multiline
-          sx={{ flex: 1, mt: { xs: 2, sm: 0 } }}
         />
       </Stack>
     </FormLayout>

@@ -6,7 +6,7 @@ import { COLOR_STATUS, TEXT_STATUS } from "./components/helpers";
 import { BodyCell } from "components/Table";
 import BookmarkIcon from "icons/BookmarkIcon";
 import { Project } from "store/project/reducer";
-import { PROJECT_INFORMATION_PATH } from "constant/paths";
+import { PROJECT_TASKS_PATH } from "constant/paths";
 import { getPath } from "utils/index";
 import Link from "components/Link";
 import Avatar from "components/Avatar";
@@ -31,7 +31,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
       <Stack spacing={2} py={1.5}>
         <InformationItem
           label={t("name")}
-          href={getPath(PROJECT_INFORMATION_PATH, undefined, { id: item.id })}
+          href={getPath(PROJECT_TASKS_PATH, undefined, { id: item.id })}
         >
           <Stack direction="row" alignItems="center" spacing={1}>
             <Avatar size={32} src={item.avatar?.link} />

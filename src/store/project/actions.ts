@@ -6,6 +6,7 @@ import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import { BaseQueries } from "constant/types";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
+import { Task, TaskList } from "./reducer";
 
 export enum ProjectStatus {
   ACTIVE = "ACTIVE",
@@ -25,10 +26,11 @@ export type GetMembersOfProjectQueries = BaseQueries & {
 };
 
 export type GetTasksOfProjectQueries = BaseQueries & {
-  assigner?: string;
-  start_date?: string;
+  owner?: string;
+  date?: string;
   status?: Status;
   project?: string;
+  name?: string;
 };
 
 export type ProjectData = {
@@ -56,13 +58,15 @@ export type TaskListData = {
 
 export type TaskData = {
   name: string;
-  task?: string;
   task_list: string;
-  start_date: string;
-  end_date: string;
-  estimated_hours: number;
+  task?: string;
+  sub_task?: string;
+  start_date?: string;
+  end_date?: string;
+  estimated_hours?: number;
   description?: string;
-  owner: string;
+  owner?: string;
+  status?: Status;
 };
 
 export type MoveTaskData = {
@@ -177,12 +181,15 @@ export const getMembersOfProject = createAsyncThunk(
 export const getTasksOfProject = createAsyncThunk(
   "project/getTasksOfProject",
   async ({
-    concat,
+    prefixKey,
     project,
     ...queries
-  }: GetTasksOfProjectQueries & { concat?: boolean }) => {
-    queries = serverQueries(queries) as GetTasksOfProjectQueries;
-
+  }: GetTasksOfProjectQueries & { prefixKey: "taskOptions" | "tasks" }) => {
+    queries = serverQueries(
+      queries,
+      ["name"],
+      undefined,
+    ) as GetTasksOfProjectQueries;
     try {
       const response = await client.get(
         StringFormat(Endpoint.PROJECT_TASK_ITEM, { id: project }),
@@ -190,7 +197,7 @@ export const getTasksOfProject = createAsyncThunk(
       );
 
       if (response?.status === HttpStatusCode.OK) {
-        return { ...refactorRawItemListResponse(response.data), concat };
+        return { ...refactorRawItemListResponse(response.data), prefixKey };
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
@@ -243,7 +250,8 @@ export const createTask = createAsyncThunk(
 
       if (response?.status === HttpStatusCode.CREATED) {
         return {
-          task: data?.task ? response.data.subtask : response.data.lastTask,
+          task: response.data.lastTask as Task,
+          subTasks: response.data.subtasks as Task[],
           taskId: data?.task,
           taskListId: data.task_list,
         };
@@ -257,18 +265,19 @@ export const createTask = createAsyncThunk(
 
 export const updateTask = createAsyncThunk(
   "project/updateTask",
-  async (data: Partial<TaskData> & { task: string; task_list: string }) => {
+  async (data: Partial<TaskData>) => {
     try {
-      const response = await client.put(Endpoint.TASK_ITEM, data);
+      const url = data?.sub_task ? Endpoint.SUB_TASK : Endpoint.TASK_ITEM;
+
+      const response = await client.put(url, data);
 
       if (response?.status === HttpStatusCode.CREATED) {
         return {
-          task: {
-            ...response.data.lastTask,
-            attachments_down: response.data.attachments_down,
-          },
+          task: response.data?.task as Task,
+          taskList: response.data?.task_update as TaskList,
           taskId: data.task,
           taskListId: data.task_list,
+          subTaskId: data.sub_task,
         };
       }
       throw AN_ERROR_TRY_AGAIN;
@@ -309,6 +318,24 @@ export const commentTask = createAsyncThunk(
           taskId: data.task,
           taskListId: data.task_list,
         };
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const deleteTaskList = createAsyncThunk(
+  "project/deleteTaskList",
+  async (id: string) => {
+    try {
+      const response = {
+        status: 200,
+      };
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

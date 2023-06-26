@@ -4,6 +4,7 @@ import {
   createProject,
   createTask,
   createTaskList,
+  deleteTaskList,
   getMembersOfProject,
   GetMembersOfProjectQueries,
   getProject,
@@ -11,7 +12,9 @@ import {
   GetProjectListQueries,
   getTasksOfProject,
   GetTasksOfProjectQueries,
+  moveTask,
   ProjectStatus,
+  TaskData,
   updateProject,
   updateTask,
   updateTaskList,
@@ -112,7 +115,11 @@ export interface Activity {
   project: Project;
 }
 
-export type TaskDetail = Task & { taskListId: string };
+export type TaskDetail = Omit<Task, "task_list" | "task" | "sub_task"> & {
+  taskListId: string;
+  taskId: string;
+  subTaskId?: string;
+};
 
 export interface ProjectState {
   items: Project[];
@@ -296,13 +303,13 @@ const projectSlice = createSlice({
       })
       // TASKS
       .addCase(getTasksOfProject.pending, (state, action) => {
-        const prefixKey = action.meta.arg["concat"] ? "taskOptions" : "tasks";
+        const prefixKey = action.meta.arg["prefixKey"];
 
         state[`${prefixKey}Status`] = DataStatus.LOADING;
         state[`${prefixKey}Filters`] = getFiltersFromQueries(action.meta.arg);
 
-        if (action.meta.arg?.concat && action.meta.arg.pageIndex === 1) {
-          state.taskOptions = [];
+        if (action.meta.arg.pageIndex === 1) {
+          state[prefixKey] = [];
         }
         state[`${prefixKey}Paging`].pageIndex = Number(
           action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
@@ -311,29 +318,21 @@ const projectSlice = createSlice({
           action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
         );
       })
-      .addCase(
-        getTasksOfProject.fulfilled,
-        (state, action: PayloadAction<ItemListResponse>) => {
-          const { items, concat, ...paging } = action.payload;
+      .addCase(getTasksOfProject.fulfilled, (state, action) => {
+        const { items, concat, ...paging } = action.payload;
+        const prefixKey = action.meta.arg["prefixKey"];
 
-          if (concat) {
-            state.taskOptions = state.taskOptions.concat(items as TaskList[]);
-          } else {
-            state.tasks = items as TaskList[];
-          }
+        state[prefixKey] = state[prefixKey].concat(items as TaskList[]);
 
-          const prefixKey = concat ? "taskOptions" : "tasks";
-
-          state[`${prefixKey}Status`] = DataStatus.SUCCEEDED;
-          state[`${prefixKey}Error`] = undefined;
-          state[`${prefixKey}Paging`] = Object.assign(
-            state[`${prefixKey}Paging`],
-            paging,
-          );
-        },
-      )
+        state[`${prefixKey}Status`] = DataStatus.SUCCEEDED;
+        state[`${prefixKey}Error`] = undefined;
+        state[`${prefixKey}Paging`] = Object.assign(
+          state[`${prefixKey}Paging`],
+          paging,
+        );
+      })
       .addCase(getTasksOfProject.rejected, (state, action) => {
-        const prefixKey = action.meta.arg["concat"] ? "taskOptions" : "tasks";
+        const prefixKey = action.meta.arg["prefixKey"];
 
         state[`${prefixKey}Status`] = DataStatus.FAILED;
         state[`${prefixKey}Error`] =
@@ -368,73 +367,99 @@ const projectSlice = createSlice({
           }
         },
       )
-      .addCase(
-        createTask.fulfilled,
-        (
-          state,
-          action: PayloadAction<{
-            task: Task;
-            taskId?: string;
-            taskListId: string;
-          }>,
-        ) => {
-          const { task, taskId, taskListId } = action.payload;
-          const indexTaskList = state.tasks.findIndex(
-            (taskListItem) => taskListItem.id === taskListId,
+      .addCase(deleteTaskList.fulfilled, (state, action) => {
+        const indexDeleted = state.tasks.findIndex(
+          (item) => item.id === action.meta.arg,
+        );
+        if (indexDeleted !== -1) {
+          state.tasks.splice(indexDeleted, 1);
+        }
+      })
+      .addCase(moveTask.fulfilled, (state, action) => {
+        const indexDeleted = state.tasks.findIndex(
+          (item) => item.id === action.meta.arg.task_list_current,
+        );
+        const indexAdded = state.tasks.findIndex(
+          (item) => item.id === action.meta.arg.task_list_move,
+        );
+        if (indexAdded !== -1) {
+          state.tasks[indexAdded].tasks = state.tasks[indexAdded].tasks.concat(
+            state.tasks[indexDeleted].tasks,
           );
-          if (indexTaskList !== -1) {
-            if (taskId) {
-              // Sub task
-              const indexTask = state.tasks[indexTaskList].tasks.findIndex(
+        }
+        if (indexDeleted !== -1) {
+          state.tasks[indexDeleted].tasks = [];
+        }
+      })
+      .addCase(createTask.fulfilled, (state, action) => {
+        const { task, taskId, taskListId, subTasks } = action.payload;
+        const indexTaskList = state.tasks.findIndex(
+          (taskListItem) => taskListItem.id === taskListId,
+        );
+        if (indexTaskList !== -1) {
+          if (taskId) {
+            // CREATE SUB TASK
+            const indexTask = state.tasks[indexTaskList].tasks.findIndex(
+              (taskItem) => taskItem.id === taskId,
+            );
+
+            if (indexTask !== -1) {
+              state.tasks[indexTaskList].tasks[indexTask].sub_tasks = subTasks;
+            }
+          } else {
+            // CREATE TASK
+            state.tasks[indexTaskList].tasks.push(task);
+          }
+        }
+      })
+      .addCase(updateTask.fulfilled, (state, action) => {
+        const { task, taskId, taskListId, subTaskId, taskList } =
+          action.payload;
+        const indexTaskList = state.tasks.findIndex(
+          (taskListItem) => taskListItem.id === taskListId,
+        );
+        if (indexTaskList !== -1) {
+          if (subTaskId) {
+            // UPDATE SUB TASK
+            state.tasks[indexTaskList] = taskList;
+
+            if (state?.task) {
+              const indexTask = taskList.tasks.findIndex(
                 (taskItem) => taskItem.id === taskId,
               );
-
               if (indexTask !== -1) {
-                state.tasks[indexTaskList].tasks[indexTask].sub_tasks?.push(
-                  task,
-                );
+                const indexSubTask = (
+                  taskList.tasks[indexTask]?.sub_tasks ?? []
+                ).findIndex((taskItem) => taskItem.id === subTaskId);
+
+                if (indexSubTask !== -1) {
+                  state.task = Object.assign(
+                    state.task,
+                    taskList.tasks[indexTask]?.sub_tasks?.[indexSubTask],
+                  );
+                }
               }
-            } else {
-              state.tasks[indexTaskList].tasks.push(task);
             }
-          }
-        },
-      )
-      .addCase(
-        updateTask.fulfilled,
-        (
-          state,
-          action: PayloadAction<{
-            task: Task;
-            taskId: string;
-            taskListId: string;
-          }>,
-        ) => {
-          const { task, taskId, taskListId } = action.payload;
-          const indexTaskList = state.tasks.findIndex(
-            (taskListItem) => taskListItem.id === taskListId,
-          );
-          if (indexTaskList !== -1) {
-            if (taskId) {
-              // Sub task
-              const indexTask = state.tasks[indexTaskList].tasks.findIndex(
-                (taskItem) => taskItem.id === taskId,
+          } else {
+            // UPDATE TASK
+
+            const indexTask = state.tasks[indexTaskList].tasks.findIndex(
+              (taskItem) => taskItem.id === taskId,
+            );
+
+            if (indexTask !== -1) {
+              state.tasks[indexTaskList].tasks[indexTask] = Object.assign(
+                state.tasks[indexTaskList].tasks[indexTask],
+                action.payload.task,
               );
+            }
 
-              if (indexTask !== -1) {
-                state.tasks[indexTaskList].tasks[indexTask] = Object.assign(
-                  state.tasks[indexTaskList].tasks[indexTask],
-                  action.payload.task,
-                );
-              }
+            if (state?.task) {
+              state.task = Object.assign(state.task, action.payload.task);
             }
           }
-
-          if (state?.task) {
-            state.task = Object.assign(state.task, action.payload.task);
-          }
-        },
-      )
+        }
+      })
       .addCase(
         commentTask.fulfilled,
         (

@@ -78,7 +78,7 @@ const MainLayout = (props: MainLayoutProps) => {
         <Sidebar />
         <Stack flex={1} width="100%" height="100%" overflow="hidden">
           <Header />
-          <Stack p={{ xs: 1, sm: 3 }} overflow="auto" flex={1}>
+          <Stack p={{ xs: 1, sm: 3 }} id={SCROLL_ID} overflow="auto" flex={1}>
             <Stack
               bgcolor={pathname === HOME_PATH ? "transparent" : "common.white"}
               flex={1}
@@ -104,3 +104,5 @@ const MainLayout = (props: MainLayoutProps) => {
 };
 
 export default memo(MainLayout);
+
+export const SCROLL_ID = "scroll-id";

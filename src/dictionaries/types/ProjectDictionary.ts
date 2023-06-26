@@ -87,10 +87,27 @@ export type ProjectDictionary = {
     taskList: string;
     key: string;
     moveTaskList: string;
+    duplicateName: string;
+    selectedCount: string;
+    assignee: string;
+    keys: {
+      owner: string;
+      start_date: string;
+      end_date: string;
+      status: string;
+    };
+    confirmDeleteTaskList: {
+      title: string;
+      content: string;
+    };
+    resetSelected: string;
     notification: {
       taskListSuccess: string;
       taskSuccess: string;
       moveSuccess: string;
+      duplicateSuccess: string;
+      deleteTaskListSuccess: string;
+      actionTaskSuccess: string;
     };
   };
   taskDetail: {

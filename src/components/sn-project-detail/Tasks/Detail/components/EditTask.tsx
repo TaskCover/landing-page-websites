@@ -5,17 +5,17 @@ import { DataAction } from "constant/enums";
 import useToggle from "hooks/useToggle";
 import Form from "components/sn-project-detail/Tasks/Form";
 import PencilIcon from "icons/PencilIcon";
-import { TaskData } from "store/project/actions";
+import { TaskFormData } from "components/sn-project-detail/Tasks/components";
+import { AN_ERROR_TRY_AGAIN } from "constant/index";
 
-type EditTaskProps = {};
-
-const EditTask = (props: EditTaskProps) => {
+const EditTask = () => {
   const [isShow, onShow, onHide] = useToggle();
 
   const {
     task,
     taskListId,
-    onUpdateTaskDetail,
+    taskId,
+    subTaskId,
     onUpdateTask: onUpdateTaskAction,
   } = useTaskDetail();
 
@@ -34,13 +34,15 @@ const EditTask = (props: EditTaskProps) => {
     [task],
   );
 
-  const onUpdateTask = async (
-    values: TaskData,
-    taskListId: string,
-    taskId?: string,
-  ) => {
-    if (!taskId) return;
-    return await onUpdateTaskAction(values, taskListId, taskId);
+  const onUpdateTask = async (values: TaskFormData) => {
+    try {
+      if (!taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      return await onUpdateTaskAction(values, taskListId, taskId, subTaskId);
+    } catch (error) {
+      throw error;
+    }
   };
 
   if (!taskListId || !task) return null;
@@ -60,8 +62,6 @@ const EditTask = (props: EditTaskProps) => {
           onClose={onHide}
           type={DataAction.UPDATE}
           initialValues={initValues}
-          taskListId={taskListId}
-          taskId={task.id}
           onSubmit={onUpdateTask}
         />
       )}

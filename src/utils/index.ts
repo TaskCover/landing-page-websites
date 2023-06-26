@@ -139,6 +139,9 @@ export const serverQueries = (
   },
   likeKeys?: string[],
   booleanKeys?: string[],
+  schemaKeys?: {
+    [key: string]: string;
+  },
 ) => {
   const queries = cleanObject({
     ...rest,
@@ -160,7 +163,8 @@ export const serverQueries = (
               : value === "true" || Number(value) === 1;
           out.query.push(`eq(${key},${boolValue})`);
         } else {
-          out.query.push(`eq(${key},"${value}")`);
+          const schema = schemaKeys?.[key] ?? "eq";
+          out.query.push(`${schema}(${key},"${value}")`);
         }
       }
       return out;
@@ -196,12 +200,14 @@ export const formatDate = (
   const hours = `0${dateObj.getHours()}`.substr(-2);
   const minutes = `0${dateObj.getMinutes()}`.substr(-2);
   const seconds = `0${dateObj.getSeconds()}`.substr(-2);
+  const milliseconds = `${dateObj.getMilliseconds()}`.substr(-2);
   let dateFormat = format.replace("yyyy", year.toString());
   dateFormat = dateFormat.replace("MM", month);
   dateFormat = dateFormat.replace("dd", day);
   dateFormat = dateFormat.replace("HH", hours);
   dateFormat = dateFormat.replace("mm", minutes);
   dateFormat = dateFormat.replace("ss", seconds);
+  dateFormat = dateFormat.replace("ms", milliseconds);
 
   return dateFormat;
 };

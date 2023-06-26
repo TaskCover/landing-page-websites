@@ -200,6 +200,7 @@ const getDefaultSx = (
       },
 
       [`& .${selectClasses.outlined}`]: {
+        pr: "0!important",
         mr: ({ spacing }) => `${spacing(2)}!important`,
         // display: "flex",
         // alignItems: "center",

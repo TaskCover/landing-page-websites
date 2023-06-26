@@ -5,10 +5,11 @@ import {
   MenuList,
   Popover,
   Stack,
+  debounce,
   popoverClasses,
 } from "@mui/material";
 import { Button, Checkbox, IconButton, Text } from "components/shared";
-import { NS_COMMON, NS_PROJECT } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import useToggle from "hooks/useToggle";
 import CaretIcon from "icons/CaretIcon";
 import DuplicateIcon from "icons/DuplicateIcon";
@@ -18,7 +19,15 @@ import PencilIcon from "icons/PencilIcon";
 import PlusIcon from "icons/PlusIcon";
 import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
-import { HTMLAttributes, memo, MouseEvent, useId, useState } from "react";
+import {
+  HTMLAttributes,
+  memo,
+  MouseEvent,
+  useCallback,
+  useId,
+  useMemo,
+  useState,
+} from "react";
 import { Draggable } from "react-beautiful-dnd";
 import Form from "../Form";
 import { DataAction } from "constant/enums";
@@ -26,6 +35,12 @@ import { TaskData, TaskListData } from "store/project/actions";
 import { useTasksOfProject } from "store/project/selectors";
 import TaskListForm from "../TaskListForm";
 import MoveTaskList from "../MoveTaskList";
+import { TaskFormData, genTime } from "./helpers";
+import { useParams } from "next/navigation";
+import { Task } from "store/project/reducer";
+import { useSnackbar } from "store/app/selectors";
+import { formatDate, getMessageErrorByAPI } from "utils/index";
+import ConfirmDialog from "components/ConfirmDialog";
 
 type DragParentProps = {
   id: string;
@@ -44,10 +59,14 @@ type MoreListProps = {
 const DragParent = (props: DragParentProps) => {
   const { id, index, count, name, checked, onChange, ...rest } = props;
   const projectT = useTranslations(NS_PROJECT);
-  const { onCreateTask } = useTasksOfProject();
+  const { onCreateTask: onCreateTaskAction } = useTasksOfProject();
 
-  const [isShow, , , onToggle] = useToggle(count < 4);
+  const [isShow, , , onToggle] = useToggle(count < 5);
   const [isShowCreate, onShowCreate, onHideCreate] = useToggle();
+
+  const onCreateTask = async (data: TaskFormData) => {
+    return await onCreateTaskAction(data, id);
+  };
 
   return (
     <Draggable draggableId={id} index={index} isDragDisabled>
@@ -105,7 +124,6 @@ const DragParent = (props: DragParentProps) => {
                 onClose={onHideCreate}
                 type={DataAction.CREATE}
                 onSubmit={onCreateTask}
-                taskListId={id}
               />
             )}
           </>
@@ -124,10 +142,29 @@ enum Action {
   DELETE,
 }
 
-const MoreList = (props: MoreListProps) => {
+export const MoreList = (props: MoreListProps) => {
   const { id, name } = props;
 
-  const { onUpdateTaskList: onUpdateTaskListAction } = useTasksOfProject();
+  const {
+    onUpdateTaskList: onUpdateTaskListAction,
+    items,
+    onCreateTaskList,
+    onCreateTask,
+    onDeleteTaskList: onDeleteTaskListAction,
+  } = useTasksOfProject();
+  const projectT = useTranslations(NS_PROJECT);
+  const params = useParams();
+  const { onAddSnackbar } = useSnackbar();
+
+  const taskListNameList = useMemo(
+    () => items.map((task) => task.name),
+    [items],
+  );
+  const taskIds = useMemo(() => {
+    const indexTaskList = items.findIndex((item) => item.id === id);
+    if (indexTaskList === -1) return [];
+    return items[indexTaskList].tasks.map((task) => task.id);
+  }, [id, items]);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
@@ -152,6 +189,93 @@ const MoreList = (props: MoreListProps) => {
 
   const onUpdateTaskList = async (values: Omit<TaskListData, "project">) => {
     return await onUpdateTaskListAction(id, values.name);
+  };
+
+  const onDeleteTaskList = async () => {
+    try {
+      const isSuccess = await onDeleteTaskListAction(id);
+      if (isSuccess === true) {
+        onAddSnackbar(
+          projectT("detailTasks.notification.deleteTaskListSuccess"),
+          "success",
+        );
+        onSetTType();
+      }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error), "error");
+    }
+  };
+
+  const onDuplicateTaskList = async () => {
+    try {
+      if (!params?.id) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      const newName = projectT("detailTasks.duplicateName", {
+        name,
+        value: genTime(),
+      });
+      const newTaskList = await onCreateTaskList({
+        name: newName,
+        project: params.id,
+      });
+
+      if (newTaskList?.id) {
+        const tasksOfTaskList = items.find((item) => item.id === id);
+        if (!tasksOfTaskList) {
+          throw AN_ERROR_TRY_AGAIN;
+        }
+        const tasks: Task[] = [];
+        for (const taskItem of tasksOfTaskList.tasks) {
+          const newTask = (await onCreateTask(
+            {
+              name: projectT("detailTasks.duplicateName", {
+                name: taskItem.name,
+                value: genTime(),
+              }),
+              description: taskItem?.description,
+              start_date: taskItem?.start_date,
+              end_date: taskItem?.end_date,
+              owner: taskItem?.owner?.id,
+              estimated_hours: taskItem?.estimated_hours,
+            },
+            newTaskList.id,
+          )) as { task: Task };
+          if (newTask?.task?.id) {
+            tasks.push(newTask.task);
+          }
+        }
+
+        for (let i = 0; i < tasks.length; i++) {
+          const subTasks = tasksOfTaskList.tasks[i]?.sub_tasks ?? [];
+          for (const subTask of subTasks) {
+            (await onCreateTask(
+              {
+                name: projectT("detailTasks.duplicateName", {
+                  name: subTask.name,
+                  value: genTime(),
+                }),
+                description: subTask?.description,
+                start_date: subTask?.start_date,
+                end_date: subTask?.end_date,
+                owner: subTask?.owner?.id,
+                estimated_hours: subTask?.estimated_hours,
+              },
+              newTaskList.id,
+              tasks[i].id,
+            )) as { task: Task };
+          }
+        }
+
+        onAddSnackbar(
+          projectT("detailTasks.notification.duplicateSuccess"),
+          "success",
+        );
+        onSetTType();
+      }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error), "error");
+    }
   };
 
   return (
@@ -209,23 +333,33 @@ const MoreList = (props: MoreListProps) => {
                 {commonT("rename")}
               </Text>
             </MenuItem>
-            <MenuItem component={ButtonBase} sx={sxConfig.item}>
+            <MenuItem
+              onClick={onDuplicateTaskList}
+              component={ButtonBase}
+              sx={sxConfig.item}
+            >
               <DuplicateIcon sx={{ color: "grey.400" }} fontSize="medium" />
               <Text ml={2} variant="body2" color="grey.400">
                 {commonT("duplicate")}
               </Text>
             </MenuItem>
+            {!!taskIds.length && (
+              <MenuItem
+                onClick={onSetTType(Action.MOVE)}
+                component={ButtonBase}
+                sx={sxConfig.item}
+              >
+                <MoveArrowIcon sx={{ color: "grey.400" }} fontSize="medium" />
+                <Text ml={2} variant="body2" color="grey.400">
+                  {commonT("move")}
+                </Text>
+              </MenuItem>
+            )}
             <MenuItem
-              onClick={onSetTType(Action.MOVE)}
+              onClick={onSetTType(Action.DELETE)}
               component={ButtonBase}
               sx={sxConfig.item}
             >
-              <MoveArrowIcon sx={{ color: "grey.400" }} fontSize="medium" />
-              <Text ml={2} variant="body2" color="grey.400">
-                {commonT("move")}
-              </Text>
-            </MenuItem>
-            <MenuItem component={ButtonBase} sx={sxConfig.item}>
               <TrashIcon color="error" fontSize="medium" />
               <Text ml={2} variant="body2" color="error.main">
                 {commonT("delete")}
@@ -247,9 +381,20 @@ const MoreList = (props: MoreListProps) => {
       {type === Action.MOVE && (
         <MoveTaskList
           oldTaskListId={id}
-          taskId={id}
+          taskIds={taskIds}
           open
           onClose={onSetTType()}
+        />
+      )}
+      {type === Action.DELETE && (
+        <ConfirmDialog
+          open
+          onClose={onSetTType()}
+          title={projectT("detailTasks.confirmDeleteTaskList.title")}
+          content={projectT("detailTasks.confirmDeleteTaskList.content", {
+            name,
+          })}
+          onSubmit={onDeleteTaskList}
         />
       )}
     </>

@@ -59,6 +59,7 @@ export type ItemListResponse = {
   items: unknown[];
   filters?: Params;
   concat?: boolean;
+  prefixKey?: string;
 };
 
 export type OptionFormatNumber = {

@@ -37,6 +37,10 @@ const TabList = () => {
         width="100%"
         overflow="auto"
         spacing={4}
+        position="sticky"
+        top={0}
+        bgcolor="common.white"
+        zIndex={1}
       >
         <Stack direction="row" alignItems="center">
           {TABS.map((tab) => (

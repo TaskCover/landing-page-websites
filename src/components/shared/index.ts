@@ -9,6 +9,7 @@ import DatePicker, { DatePickerProps } from "./DatePicker";
 import Switch, { SwitchProps } from "./Switch";
 import Checkbox from "./Checkbox";
 import Upload from "./Upload";
+import Editor from "./Editor";
 
 export {
   Button,
@@ -22,6 +23,7 @@ export {
   Switch,
   Checkbox,
   Upload,
+  Editor,
 };
 
 export type {

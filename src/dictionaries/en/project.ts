@@ -91,10 +91,27 @@ export const ProjectLang: ProjectDictionary = {
     taskList: "Task list",
     key: "task",
     moveTaskList: "Move task list",
+    duplicateName: "{name} copy at {value}",
+    selectedCount: "{value} selected items",
+    assignee: "Assignee",
+    keys: {
+      owner: "assigner",
+      start_date: "start date",
+      end_date: "end date",
+      status: "status",
+    },
+    confirmDeleteTaskList: {
+      title: "Confirm to delete task list",
+      content: "Are you sure to delete task list {name}?",
+    },
+    resetSelected: "Click to reset selected list",
     notification: {
       taskListSuccess: "{label} task list successfully!",
       taskSuccess: "{label} task successfully!",
       moveSuccess: "Move task list successfully!",
+      duplicateSuccess: "Duplicate successfully!",
+      deleteTaskListSuccess: "Delete task list successfully!",
+      actionTaskSuccess: "Update {label} task successfully!",
     },
   },
   taskDetail: {

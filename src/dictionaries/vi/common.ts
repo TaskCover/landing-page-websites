@@ -25,6 +25,7 @@ export const CommonLang: CommonDictionary = {
       assigner: "Người phụ trách",
       startDate: "Ngày bắt đầu",
       endDate: "Ngày kết thúc",
+      dueDate: "Ngày đến hạn",
       description: "Mô tả",
       note: "Ghi chú",
     },

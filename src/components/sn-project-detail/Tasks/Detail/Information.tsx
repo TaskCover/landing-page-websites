@@ -50,10 +50,19 @@ const Information = () => {
         </Stack>
       </Stack>
       <InformationItem label={commonT("assigner")}>
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} src={task?.owner?.avatar?.link} />
-          <Text variant="body2">{task?.owner?.fullname ?? "--"}</Text>
-        </Stack>
+        {!!task?.owner?.id ? (
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar size={32} src={task.owner?.avatar?.link} />
+            <Stack>
+              <Text variant="body2">{task.owner?.fullname ?? "--"}</Text>
+              <Text variant="body2" color="grey.400">
+                {task.owner?.email}
+              </Text>
+            </Stack>
+          </Stack>
+        ) : (
+          "--"
+        )}
       </InformationItem>
       <Stack direction="row" alignItems="center" spacing={2}>
         <InformationItem label={commonT("form.title.startDate")}>

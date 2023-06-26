@@ -1,11 +1,18 @@
 "use client";
 
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { reorder, DragAndDrop, Drop, Drag } from "./components";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  reorder,
+  DragAndDrop,
+  Drop,
+  Drag,
+  TaskFormData,
+  Selected,
+} from "./components";
 import { Button, Checkbox, Text, TextProps } from "components/shared";
-import { Stack, StackProps } from "@mui/material";
+import { Box, BoxProps, Stack, StackProps } from "@mui/material";
 import Avatar from "components/Avatar";
-import { formatNumber, getMessageErrorByAPI } from "utils/index";
+import { formatNumber, getMessageErrorByAPI, debounce } from "utils/index";
 import TextStatus from "components/TextStatus";
 import { CellProps, TableLayout } from "components/Table";
 import React from "react";
@@ -13,6 +20,7 @@ import DragParent from "./components/DragParent";
 import PlusIcon from "icons/PlusIcon";
 import { DropResult } from "react-beautiful-dnd";
 import {
+  AN_ERROR_TRY_AGAIN,
   COLOR_STATUS,
   DEFAULT_PAGING,
   NS_COMMON,
@@ -30,6 +38,11 @@ import { DataAction } from "constant/enums";
 import { Task, TaskList } from "store/project/reducer";
 import { useSnackbar } from "store/app/selectors";
 import Detail from "./Detail";
+import { TaskData } from "store/project/actions";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import useEventListener from "hooks/useEventListener";
+import { SCROLL_ID } from "layouts/MainLayout";
+import ActionsSelected from "./ActionsSelected";
 
 const ItemList = () => {
   const {
@@ -38,12 +51,20 @@ const ItemList = () => {
     isIdle,
     error,
     totalItems,
-    onCreateTask,
+    onCreateTask: onCreateTaskAction,
     id,
     onGetTasksOfProject,
     onMoveTask,
+    pageIndex,
+    filters,
+    totalPages,
   } = useTasksOfProject();
   const { task, onUpdateTaskDetail } = useTaskDetail();
+
+  const filtersRef = useRef<Params>({});
+  const pageIndexRef = useRef<number>(pageIndex);
+  const isFetchingRef = useRef<boolean>(isFetching);
+  const totalPagesRef = useRef<number | undefined>(totalPages);
 
   const { initQuery, isReady } = useQueryParams();
   const { push } = useRouter();
@@ -58,13 +79,7 @@ const ItemList = () => {
   const projectId = useMemo(() => params.id, [params.id]);
 
   const [dataList, setDataList] = useState<TaskList[]>([]);
-  const [selectedList, setSelectedList] = useState<
-    {
-      taskId?: string;
-      subTaskId?: string;
-      taskListId?: string;
-    }[]
-  >([]);
+  const [selectedList, setSelectedList] = useState<Selected[]>([]);
   const [sx, setSx] = useState({
     task: {},
     subTask: {},
@@ -103,98 +118,173 @@ const ItemList = () => {
     return isMdSmaller ? [] : desktopHeaderList;
   }, [desktopHeaderList, isMdSmaller]) as CellProps[];
 
-  const onSetTask = (taskListId?: string, task?: Task) => {
+  const onSetTask = (
+    taskData?: Task,
+    taskListId?: string,
+    taskId?: string,
+    subTaskId?: string,
+  ) => {
     return () => {
       onUpdateTaskDetail(
-        taskListId && task ? { ...task, taskListId } : undefined,
+        taskListId && taskData && taskId
+          ? { ...taskData, taskListId, taskId, subTaskId }
+          : undefined,
       );
     };
   };
 
-  const onToggleTaskList = (
-    newChecked: boolean,
-    taskListId: string,
-    tasks: Task[],
-  ) => {
+  const onCreateTask = async (data: TaskFormData) => {
+    try {
+      //TODO: CREATE SUB TASK
+      if (!dataIds?.taskListId || !dataIds.taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      return await onCreateTaskAction(
+        data,
+        dataIds.taskListId,
+        dataIds?.taskId,
+      );
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const onToggleTaskList = (newChecked: boolean, taskList: TaskList) => {
     return () => {
       let newSelectedList = [...selectedList];
 
       if (newChecked) {
         const additionalSelectedList = [];
-        tasks.forEach((task) => {
-          if (task?.sub_tasks?.length) {
-            task?.sub_tasks?.forEach((subTask) => {
+        if (taskList.tasks?.length) {
+          taskList.tasks.forEach((task) => {
+            const isExisted = newSelectedList.some(
+              (selected) => !selected?.subTaskId && selected.taskId === task.id,
+            );
+            if (!isExisted) {
               newSelectedList.push({
-                taskListId,
+                taskListId: taskList.id,
                 taskId: task.id,
-                subTaskId: subTask.id,
+                taskName: task.name,
+                taskListName: taskList.name,
               });
-            });
-          } else {
-            newSelectedList.push({
-              taskListId,
-              taskId: task.id,
-            });
-          }
-        });
+            }
+
+            if (task?.sub_tasks?.length) {
+              task?.sub_tasks?.forEach((subTask) => {
+                const isExisted = newSelectedList.some(
+                  (selected) => selected?.subTaskId === subTask.id,
+                );
+                if (!isExisted) {
+                  newSelectedList.push({
+                    taskListId: taskList.id,
+                    taskListName: taskList.name,
+                    taskId: task.id,
+                    taskName: task.name,
+                    subTaskId: subTask.id,
+                    subTaskName: subTask.name,
+                  });
+                }
+              });
+            }
+          });
+        }
+
         newSelectedList = [...newSelectedList, ...additionalSelectedList];
-      } else if (tasks?.length) {
-        const taskIds = tasks.map((task) => task.id);
+      } else if (taskList.tasks?.length) {
+        const taskIds = taskList.tasks.map((task) => task.id);
         newSelectedList = newSelectedList.filter(
           (selected) => !selected?.taskId || !taskIds.includes(selected.taskId),
+        );
+      } else {
+        newSelectedList = newSelectedList.filter(
+          (selected) => selected?.taskListId !== taskList.id,
         );
       }
       setSelectedList(newSelectedList);
     };
   };
+
   const onToggleTask = (
     newChecked: boolean,
-    taskListId: string,
-    taskId: string,
+    taskList: TaskList,
+    task: Task,
     subTasks?: Task[],
   ) => {
     return () => {
       let newSelectedList = [...selectedList];
-
       if (newChecked) {
-        const additionalSelectedList =
-          subTasks?.map((subTask) => ({
-            taskListId,
-            taskId,
-            subTaskId: subTask.id,
-          })) ?? [];
-        newSelectedList = [...newSelectedList, ...additionalSelectedList];
-      } else if (subTasks?.length) {
-        const subTaskIds = subTasks.map((subTask) => subTask.id);
+        newSelectedList.push({
+          taskId: task.id,
+          taskName: task.name,
+          taskListId: taskList.id,
+          taskListName: taskList.name,
+        });
+        if (subTasks?.length) {
+          newSelectedList = subTasks.reduce(
+            (out, subTask) => {
+              const isExisted = out.some(
+                (outItem) => outItem?.subTaskId === subTask.id,
+              );
+
+              if (!isExisted) {
+                out.push({
+                  taskId: task.id,
+                  taskName: task.name,
+                  taskListId: taskList.id,
+                  taskListName: taskList.name,
+                  subTaskId: subTask.id,
+                  subTaskName: subTask.name,
+                });
+              }
+              return out;
+            },
+            [...newSelectedList],
+          );
+        }
+      } else {
         newSelectedList = newSelectedList.filter(
-          (selected) =>
-            !selected?.subTaskId || !subTaskIds.includes(selected.subTaskId),
+          (selected) => selected?.taskId !== task.id,
         );
       }
+
       setSelectedList(newSelectedList);
     };
   };
-  const onToggleSubTask = (
-    taskListId: string,
-    taskId: string,
-    subTaskId: string,
-  ) => {
+
+  const onToggleSubTask = (taskList: TaskList, task: Task, subTask: Task) => {
     return () => {
       const newSelectedList = [...selectedList];
       const indexSelected = selectedList.findIndex(
         (item) =>
-          item?.taskListId === taskListId &&
-          item?.taskId === taskId &&
-          item?.subTaskId === subTaskId,
+          item?.taskListId === taskList.id &&
+          item?.taskId === task.id &&
+          item?.subTaskId === subTask.id,
       );
 
       if (indexSelected === -1) {
-        newSelectedList.push({ taskListId, taskId, subTaskId });
+        newSelectedList.push({
+          taskId: task.id,
+          taskName: task.name,
+          taskListId: taskList.id,
+          taskListName: taskList.name,
+          subTaskId: subTask.id,
+          subTaskName: subTask.name,
+        });
       } else {
         newSelectedList.splice(indexSelected, 1);
+        const indexTask = selectedList.findIndex(
+          (selected) => !selected?.subTaskId && selected.taskId === task.id,
+        );
+        if (indexTask !== -1) {
+          newSelectedList.splice(indexTask, 1);
+        }
       }
       setSelectedList(newSelectedList);
     };
+  };
+
+  const onResetSelected = () => {
+    setSelectedList([]);
   };
 
   const onMoveTaskList = async (
@@ -324,17 +414,71 @@ const ItemList = () => {
     setSx(newSx);
   }, []);
 
+  const onScroll = debounce(
+    useCallback(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (event: any) => {
+        if (
+          isFetchingRef.current ||
+          !totalPagesRef.current ||
+          pageIndexRef.current >= totalPagesRef.current
+        )
+          return;
+        const { scrollTop, clientHeight, scrollHeight } = event.target;
+
+        if (scrollTop + clientHeight >= scrollHeight - WRONG_NUMBER) {
+          onGetTasksOfProject(projectId, {
+            ...filtersRef.current,
+            pageIndex: pageIndexRef.current + 1,
+            pageSize: PAGE_SIZE,
+          });
+        }
+      },
+      [projectId, onGetTasksOfProject],
+    ),
+    250,
+  );
+
+  useEventListener("scroll", onScroll, SCROLL_ID);
+
+  useEffect(() => {
+    filtersRef.current = filters;
+  }, [filters]);
+
+  useEffect(() => {
+    pageIndexRef.current = pageIndex;
+  }, [pageIndex]);
+
+  useEffect(() => {
+    totalPagesRef.current = totalPages;
+  }, [totalPages]);
+
+  useEffect(() => {
+    isFetchingRef.current = isFetching;
+  }, [isFetching]);
+
   useEffect(() => {
     setDataList(items);
   }, [items]);
 
   useEffect(() => {
-    if (!isReady || !projectId || id === projectId) return;
-    onGetTasksOfProject(projectId, { ...DEFAULT_PAGING, ...initQuery });
+    if (!isReady || !projectId) return;
+
+    onGetTasksOfProject(projectId, {
+      pageIndex: 1,
+      pageSize: PAGE_SIZE,
+      ...initQuery,
+    });
   }, [id, initQuery, isReady, onGetTasksOfProject, projectId]);
 
   return (
     <Stack flex={1} pb={3}>
+      {!!selectedList.length && (
+        <ActionsSelected
+          selectedList={selectedList}
+          onReset={onResetSelected}
+        />
+      )}
       <TableLayout
         onLayout={onLayout}
         headerList={headerList}
@@ -350,10 +494,15 @@ const ItemList = () => {
       <DragAndDrop onDragEnd={onDragEnd}>
         <Drop id="droppable" type="droppable-taskList">
           {dataList.map((taskListItem, taskListIndex) => {
-            const taskIds = selectedList.map((selected) => selected?.taskId);
+            const nOfTask = selectedList.filter(
+              (selected) =>
+                !selected?.subTaskId &&
+                selected?.taskListId === taskListItem.id,
+            ).length;
+
             const isChecked = Boolean(
-              taskListItem.tasks?.length &&
-                taskListItem.tasks?.every((task) => taskIds.includes(task.id)),
+              taskListItem.tasks.length &&
+                nOfTask === taskListItem.tasks.length,
             );
             return (
               <DragParent
@@ -364,11 +513,7 @@ const ItemList = () => {
                 name={taskListItem.name}
                 count={taskListItem.tasks.length}
                 checked={isChecked}
-                onChange={onToggleTaskList(
-                  !isChecked,
-                  taskListItem.id,
-                  taskListItem.tasks,
-                )}
+                onChange={onToggleTaskList(!isChecked, taskListItem)}
               >
                 <Drop
                   key={taskListItem.id}
@@ -379,12 +524,19 @@ const ItemList = () => {
                     const subTaskIds = selectedList.map(
                       (selected) => selected?.subTaskId,
                     );
-                    const isChecked = Boolean(
-                      task.sub_tasks?.length &&
-                        task.sub_tasks?.every((subTask) =>
-                          subTaskIds.includes(subTask.id),
-                        ),
+                    const isCheckedSelf = selectedList.some(
+                      (selected) =>
+                        !selected?.subTaskId && selected?.taskId === task.id,
                     );
+
+                    const isChecked = Boolean(
+                      task.sub_tasks?.length
+                        ? task.sub_tasks.every((subTask) =>
+                            subTaskIds.includes(subTask.id),
+                          ) && isCheckedSelf
+                        : isCheckedSelf,
+                    );
+
                     return (
                       <Drag
                         className="draggable"
@@ -394,8 +546,8 @@ const ItemList = () => {
                         checked={isChecked}
                         onChange={onToggleTask(
                           !isChecked,
-                          taskListItem.id,
-                          task.id,
+                          taskListItem,
+                          task,
                           task?.sub_tasks,
                         )}
                       >
@@ -413,13 +565,17 @@ const ItemList = () => {
                               textAlign="left"
                               noWrap
                               tooltip={task.name}
-                              onClick={onSetTask(taskListItem.id, task)}
+                              onClick={onSetTask(
+                                task,
+                                taskListItem.id,
+                                task.id,
+                              )}
                             >
                               {task.name}
                             </Content>
                             <Assigner>{task?.owner?.fullname}</Assigner>
                             <Content>
-                              {formatNumber(task.estimated_hours)}
+                              {formatNumber(task?.estimated_hours)}
                             </Content>
                             <Content>
                               {formatNumber(task?.working_hours)}
@@ -429,13 +585,7 @@ const ItemList = () => {
                               text={TEXT_STATUS[task.status]}
                               component="p"
                             />
-                            <Content
-                              textAlign="left"
-                              noWrap
-                              tooltip={task.description}
-                            >
-                              {task.description}
-                            </Content>
+                            <Description>{task?.description}</Description>
                           </Stack>
                           {task?.sub_tasks?.map((subTask) => {
                             const isChecked = selectedList.some(
@@ -451,9 +601,9 @@ const ItemList = () => {
                                 <Checkbox
                                   checked={isChecked}
                                   onChange={onToggleSubTask(
-                                    taskListItem.id,
-                                    task.id,
-                                    subTask.id,
+                                    taskListItem,
+                                    task,
+                                    subTask,
                                   )}
                                 />
                                 <Stack
@@ -471,8 +621,10 @@ const ItemList = () => {
                                     noWrap
                                     tooltip={subTask.name}
                                     onClick={onSetTask(
-                                      taskListItem.id,
                                       subTask,
+                                      taskListItem.id,
+                                      task.id,
+                                      subTask.id,
                                     )}
                                   >
                                     {subTask.name}
@@ -491,13 +643,9 @@ const ItemList = () => {
                                     text={TEXT_STATUS[subTask.status]}
                                     component="p"
                                   />
-                                  <Content
-                                    textAlign="left"
-                                    noWrap
-                                    tooltip={subTask.description}
-                                  >
+                                  <Description>
                                     {subTask.description}
-                                  </Content>
+                                  </Description>
                                 </Stack>
                               </Stack>
                             );
@@ -528,8 +676,6 @@ const ItemList = () => {
           onClose={onSetDataIds()}
           type={DataAction.CREATE}
           onSubmit={onCreateTask}
-          taskListId={dataIds.taskListId as string}
-          taskId={dataIds?.taskId}
         />
       )}
       <Detail />
@@ -585,6 +731,23 @@ const Content = (props: TextProps) => {
   );
 };
 
+const Description = (props: BoxProps) => {
+  const { children = "--" } = props;
+  if (!children) return <Content />;
+
+  return (
+    <Box
+      component="p"
+      sx={{
+        fontSize: 14,
+        px: 2,
+        m: 0,
+      }}
+      dangerouslySetInnerHTML={{ __html: children }}
+    />
+  );
+};
+
 const sxLink = {
   cursor: "pointer",
   color: "text.primary",
@@ -592,3 +755,5 @@ const sxLink = {
     color: "primary.main",
   },
 };
+const WRONG_NUMBER = 10;
+const PAGE_SIZE = 20;

@@ -134,12 +134,12 @@ const Actions = () => {
                 })}
                 name="name"
                 onChange={onChangeQueries}
-                value={queries?.email}
+                value={queries?.name}
                 sx={{ width: 220 }}
               />
               <AssignerFilter
                 onChange={onChangeQueries}
-                value={queries?.assigner}
+                value={queries?.owner}
                 hasAvatar
               />
             </Stack>
@@ -150,9 +150,9 @@ const Actions = () => {
             >
               <Date
                 label={commonT("form.title.startDate")}
-                name="startDate"
+                name="start_date"
                 onChange={onChangeQueries}
-                value={queries?.startDate}
+                value={queries?.start_date}
               />
               <Dropdown
                 placeholder={commonT("status")}
