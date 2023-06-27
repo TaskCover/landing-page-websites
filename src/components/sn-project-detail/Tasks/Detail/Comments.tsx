@@ -54,8 +54,10 @@ const CommentItem = (props: CommentItemProps) => {
             "& *": {
               marginBlockStart: 0,
               marginBlockEnd: 0,
+              wordBreak: "break-all",
             },
           }}
+          className="html"
           dangerouslySetInnerHTML={{ __html: content }}
         />
       )}

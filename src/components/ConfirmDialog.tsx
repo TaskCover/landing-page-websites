@@ -78,7 +78,7 @@ export default memo(ConfirmDialog);
 
 const defaultSx = {
   root: {
-    minWidth: 500,
+    minWidth: { sm: 500 },
     minHeight: 230,
     px: 3,
   },

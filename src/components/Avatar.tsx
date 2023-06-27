@@ -21,6 +21,7 @@ const Avatar = (props: AvatarProps) => {
       style={{
         minWidth: size,
         maxWidth: size,
+        objectFit: "cover",
       }}
       {...rest}
     />

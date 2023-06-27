@@ -8,6 +8,7 @@ import Avatar from "components/Avatar";
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
 import { TEXT_STATUS, COLOR_STATUS } from "./components/helpers";
+import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
 
 type DesktopCellsProps = {
   item: Project;
@@ -24,7 +25,10 @@ const DesktopCells = (props: DesktopCellsProps) => {
         align="left"
       >
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} src={item.avatar?.link} />
+          <Avatar
+            size={32}
+            src={item.avatar?.link ?? ProjectPlaceholderImage}
+          />
           <Text
             variant="body2"
             color="text.primary"

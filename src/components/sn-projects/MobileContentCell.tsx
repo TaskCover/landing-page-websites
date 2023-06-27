@@ -12,6 +12,7 @@ import Link from "components/Link";
 import Avatar from "components/Avatar";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
+import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
 
 type MobileContentCellProps = {
   item: Project;
@@ -34,7 +35,10 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           href={getPath(PROJECT_TASKS_PATH, undefined, { id: item.id })}
         >
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar size={32} src={item.avatar?.link} />
+            <Avatar
+              size={32}
+              src={item.avatar?.link ?? ProjectPlaceholderImage}
+            />
             <Text variant="body2" color="text.primary">
               {item.name}
             </Text>

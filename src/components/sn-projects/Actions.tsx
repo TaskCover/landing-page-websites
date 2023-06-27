@@ -103,7 +103,7 @@ const Actions = () => {
         <Stack
           direction={{ xs: "column", md: "row" }}
           alignItems="center"
-          spacing={{ xs: 1, md: 3 }}
+          spacing={{ xs: 1.5, md: 3 }}
           py={1.25}
           px={2}
           borderRadius={1}
@@ -117,32 +117,48 @@ const Actions = () => {
             alignItems="center"
             spacing={{ xs: 1.5, md: 3 }}
           >
-            <Switch
-              name="sort"
-              onChange={onChangeQueries}
-              size="small"
-              reverse
-              label={projectT("list.filter.recent")}
-              value={queries?.sort === LATEST_VALUE}
-            />
-            <Switch
-              name="saved"
-              onChange={onChangeQueries}
-              size="small"
-              reverse
-              label={projectT("list.filter.saved")}
-              value={queries?.saved}
-            />
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={{ xs: 1.5, md: 3 }}
+            >
+              <Switch
+                name="sort"
+                onChange={onChangeQueries}
+                size="small"
+                reverse
+                label={projectT("list.filter.recent")}
+                value={queries?.sort === LATEST_VALUE}
+              />
+              <Switch
+                name="saved"
+                onChange={onChangeQueries}
+                size="small"
+                reverse
+                label={projectT("list.filter.saved")}
+                value={queries?.saved}
+              />
+            </Stack>
+
             <Dropdown
               placeholder={commonT("status")}
               options={statusOptions}
               name="status"
               onChange={onChangeQueries}
               value={queries?.status}
+              sx={{ display: { xs: "none", md: "initial" } }}
             />
           </Stack>
 
           <Stack direction="row" alignItems="center" spacing={3}>
+            <Dropdown
+              placeholder={commonT("status")}
+              options={statusOptions}
+              name="status"
+              onChange={onChangeQueries}
+              value={queries?.status}
+              sx={{ display: { md: "none" } }}
+            />
             <Button size="small" onClick={onSearch} variant="secondary">
               {commonT("search")}
             </Button>

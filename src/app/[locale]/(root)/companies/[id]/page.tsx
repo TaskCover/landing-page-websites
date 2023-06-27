@@ -1,3 +1,4 @@
+import Wrapper from "components/Wrapper";
 import InformationCompanyPage from "components/sn-company-detail/Information";
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <InformationCompanyPage />;
+  return (
+    <Wrapper overflow="auto">
+      <InformationCompanyPage />
+    </Wrapper>
+  );
 }

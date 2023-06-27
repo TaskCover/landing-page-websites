@@ -42,7 +42,7 @@ const TabList = () => {
         bgcolor="common.white"
         zIndex={1}
       >
-        <Stack direction="row" alignItems="center">
+        <Stack direction="row" alignItems="center" flex={1} width="100%">
           {TABS.map((tab) => (
             <TabItem key={tab.label} {...tab} />
           ))}

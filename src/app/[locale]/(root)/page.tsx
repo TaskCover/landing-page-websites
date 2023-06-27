@@ -1,3 +1,4 @@
+import Wrapper from "components/Wrapper";
 import { Statistics, Transactions } from "components/sn-dashboard";
 
 export const metadata = {
@@ -6,9 +7,9 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <>
+    <Wrapper overflow="auto" spacing={3}>
       <Statistics />
       <Transactions />
-    </>
+    </Wrapper>
   );
 }

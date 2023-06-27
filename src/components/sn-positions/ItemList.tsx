@@ -127,8 +127,7 @@ const ItemList = () => {
         pending={isFetching}
         error={error as string}
         noData={!isIdle && items.length === 0}
-        py={3}
-        px={{ xs: 1, md: 3 }}
+        px={{ xs: 0, md: 3 }}
       >
         {items.map((item, index) => {
           return (
@@ -136,7 +135,10 @@ const ItemList = () => {
               {isMdSmaller ? (
                 <MobileContentCell item={item} />
               ) : (
-                <DesktopCells item={item} order={index + 1} />
+                <DesktopCells
+                  item={item}
+                  order={(pageIndex - 1) * pageSize + (index + 1)}
+                />
               )}
               <ActionsCell
                 onEdit={onActionToItem(DataAction.UPDATE, item)}
@@ -152,7 +154,7 @@ const ItemList = () => {
         totalPages={totalPages}
         page={pageIndex}
         pageSize={pageSize}
-        containerProps={{ px: 3, pb: 3 }}
+        containerProps={{ px: 3, pt: 2.5 }}
         onChangePage={onChangePage}
         onChangeSize={onChangeSize}
       />

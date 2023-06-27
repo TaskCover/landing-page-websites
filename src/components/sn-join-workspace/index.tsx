@@ -102,7 +102,7 @@ const JoinWorkspace = () => {
     <>
       <Stack
         flex={1}
-        height="100vh"
+        height="calc(var(--vh, 1vh) * 100)"
         width="100vw"
         justifyContent="center"
         alignItems="center"
@@ -121,8 +121,12 @@ const JoinWorkspace = () => {
           })}
           height={({ spacing }) => ({
             xs: "fit-content",
-            sm: `calc(100vh - ${spacing((isSmallHeight ? 3 : 6) * 2)})`,
-            lg: `calc(100vh - ${spacing((isSmallHeight ? 3 : 8) * 2)})`,
+            sm: `calc(calc(var(--vh, 1vh) * 100) - ${spacing(
+              (isSmallHeight ? 3 : 6) * 2,
+            )})`,
+            lg: `calc(calc(var(--vh, 1vh) * 100) - ${spacing(
+              (isSmallHeight ? 3 : 8) * 2,
+            )})`,
           })}
           sx={{
             overflowX: "hidden",

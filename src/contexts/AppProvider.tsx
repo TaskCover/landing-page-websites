@@ -3,7 +3,7 @@
 import { store } from "store/configureStore";
 import { Provider } from "react-redux";
 import ThemeProvider from "./ThemeProvider";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { clientStorage } from "utils/storage";
 import { ACCESS_TOKEN_STORAGE_KEY } from "constant/index";
 import { usePathname, useRouter } from "next-intl/client";
@@ -61,6 +61,20 @@ const AppProvider = ({
     store.dispatch(toggleAppReady(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onSetViewHeight = useCallback(() => {
+    const vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }, []);
+
+  useEffect(() => {
+    onSetViewHeight();
+
+    window.addEventListener("resize", () => {
+      onSetViewHeight();
+    });
+  }, [onSetViewHeight]);
 
   return (
     <NextIntlProvider locale={locale} messages={messages}>

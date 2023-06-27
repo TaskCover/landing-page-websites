@@ -35,7 +35,11 @@ const Information = () => {
         justifyContent="space-between"
         spacing={2}
       >
-        <Text variant="h5" color="text.primary">
+        <Text
+          variant="h5"
+          color="text.primary"
+          sx={{ wordBreak: "break-word" }}
+        >
           {task.name}
         </Text>
 
@@ -96,7 +100,11 @@ const Information = () => {
           <Box
             sx={{
               fontSize: 14,
+              "& *": {
+                wordBreak: "break-all",
+              },
             }}
+            className="html"
             dangerouslySetInnerHTML={{ __html: task.description }}
           />
         )}

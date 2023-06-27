@@ -1,4 +1,5 @@
-import { Actions, Wrapper, ItemList } from "components/sn-companies";
+import Wrapper from "components/Wrapper";
+import { Actions, ItemList } from "components/sn-companies";
 
 export const metadata = {
   title: "Danh sách công ty | Taskcover",
@@ -6,7 +7,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <Wrapper>
+    <Wrapper overflow="auto">
       <Actions />
       <ItemList />
     </Wrapper>

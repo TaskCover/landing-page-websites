@@ -21,12 +21,15 @@ import { getDataFromKeys, getMessageErrorByAPI } from "utils/index";
 import { UpdateUserInfoData } from "store/app/actions";
 import { client, Endpoint } from "api";
 import { useTranslations } from "next-intl";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const UserInformation = () => {
   const { user } = useAuth();
   const { onUpdateUserInfo } = useUserInfo();
   const commonT = useTranslations(NS_COMMON);
   const accountT = useTranslations(NS_ACCOUNT);
+
+  const { isSmSmaller } = useBreakpoint();
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
@@ -242,7 +245,7 @@ const UserInformation = () => {
             onClick={onCancel}
             sx={sxConfig.button}
             variant="primaryOutlined"
-            size="small"
+            size={isSmSmaller ? "medium" : "small"}
             fullWidth
           >
             {commonT("form.cancel")}
@@ -252,7 +255,7 @@ const UserInformation = () => {
             pending={formik.isSubmitting}
             sx={{ ...sxConfig.button }}
             variant="primary"
-            size="small"
+            size={isSmSmaller ? "medium" : "small"}
             type="submit"
             fullWidth
           >

@@ -26,6 +26,8 @@ export const DEFAULT_PAGING: Paging = {
   pageSize: DEFAULT_PAGE_SIZE,
 };
 
+export const SCROLL_ID = "scroll-id";
+
 export const i18n = {
   // A list of all locales that are supported
   locales: ["en", "vi"],

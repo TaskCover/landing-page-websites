@@ -1,10 +1,7 @@
 import { memo, useState, MouseEvent, useId } from "react";
 import {
-  Box,
   ButtonBase,
   Divider,
-  MenuItem,
-  MenuList,
   Popover,
   popoverClasses,
   Stack,
@@ -13,15 +10,8 @@ import { Button, Text } from "components/shared";
 import ChevronIcon from "icons/ChevronIcon";
 import { useAuth } from "store/app/selectors";
 import Link from "components/Link";
-import UserIcon from "icons/UserIcon";
-import {
-  ACCOUNT_INFO_PATH,
-  CHANGE_PASSWORD_PATH,
-  UPGRADE_ACCOUNT_PATH,
-} from "constant/paths";
-import SignOutIcon from "icons/SignOutIcon";
+import { UPGRADE_ACCOUNT_PATH } from "constant/paths";
 import Avatar from "components/Avatar";
-import KeyIcon from "icons/KeyIcon";
 import CrownIcon from "icons/CrownIcon";
 import { useAppDispatch } from "store/hooks";
 import { reset as appReset } from "store/app/reducer";
@@ -31,6 +21,7 @@ import { reset as companyReset } from "store/company/reducer";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_LAYOUT } from "constant/index";
 import { Permission } from "constant/enums";
+import UserActions from "./UserActions";
 
 const AccountInfo = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -120,14 +111,26 @@ const AccountInfo = () => {
         >
           <Stack direction="row" alignItems="center" spacing={1.5} py={2}>
             <Avatar size={60} alt={user.fullname} src={user?.avatar?.link} />
-            <Stack>
-              <Text variant="h6" color="grey.400">
+            <Stack flex={1} overflow="hidden">
+              <Text
+                variant="h6"
+                color="grey.400"
+                sx={{ wordBreak: "break-all" }}
+              >
                 {user.fullname}
               </Text>
-              <Text variant="caption" color="grey.400">
+              <Text
+                variant="caption"
+                color="grey.400"
+                sx={{ wordBreak: "break-all" }}
+              >
                 {user?.position?.name ?? "--"}
               </Text>
-              <Text variant="body2" color="grey.400">
+              <Text
+                variant="body2"
+                color="grey.400"
+                sx={{ wordBreak: "break-all" }}
+              >
                 {user.email}
               </Text>
             </Stack>
@@ -145,57 +148,7 @@ const AccountInfo = () => {
               </Button>
             </Link>
           )}
-          <MenuList component={Box} sx={{ pb: 0 }}>
-            {OPTIONS.map((item) => (
-              <MenuItem
-                className="row-center"
-                component={Link}
-                onClick={onClose}
-                href={item.href}
-                sx={{
-                  py: 1,
-                  px: 0,
-
-                  color: "grey.400",
-                  "& svg": {
-                    color: "grey.400",
-                  },
-                  "&:hover": {
-                    color: "primary.main",
-                    backgroundColor: "transparent",
-                  },
-                }}
-                key={item.href}
-                underline="none"
-              >
-                {item.icon}
-                <Text ml={1.5} variant="body2" color="inherit">
-                  {t(item.label)}
-                </Text>
-              </MenuItem>
-            ))}
-            <MenuItem
-              component={ButtonBase}
-              onClick={onSignOut}
-              sx={{
-                width: "100%",
-                py: 1,
-                px: 0,
-                "&:hover": {
-                  color: "error.main",
-                  backgroundColor: "transparent",
-                  "& svg": {
-                    color: "grey.900",
-                  },
-                },
-              }}
-            >
-              <SignOutIcon />
-              <Text ml={1.5} variant="body2" color="inherit">
-                {t("header.account.signOut")}
-              </Text>
-            </MenuItem>
-          </MenuList>
+          <UserActions onClose={onClose} />
         </Stack>
       </Popover>
     </>
@@ -203,16 +156,3 @@ const AccountInfo = () => {
 };
 
 export default memo(AccountInfo);
-
-export const OPTIONS = [
-  {
-    label: "header.account.accountInformation",
-    icon: <UserIcon />,
-    href: ACCOUNT_INFO_PATH,
-  },
-  {
-    label: "header.account.changePassword",
-    icon: <KeyIcon />,
-    href: CHANGE_PASSWORD_PATH,
-  },
-];

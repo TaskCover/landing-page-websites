@@ -1,4 +1,5 @@
-import { Actions, ItemList, Wrapper } from "components/sn-statement-history";
+import Wrapper from "components/Wrapper";
+import { Actions, ItemList } from "components/sn-statement-history";
 
 export const metadata = {
   title: "Lịch sử báo cáo | Taskcover",
@@ -6,7 +7,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <Wrapper>
+    <Wrapper overflow="auto">
       <Actions />
       <ItemList />
     </Wrapper>

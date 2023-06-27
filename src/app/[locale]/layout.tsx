@@ -1,4 +1,5 @@
 import "public/styles/index.css";
+import "public/styles/html.css";
 import AppProvider from "contexts/AppProvider";
 import { openSans } from "public/material/typography";
 import { notFound } from "next/navigation";

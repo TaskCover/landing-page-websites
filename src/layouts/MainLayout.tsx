@@ -21,6 +21,7 @@ import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import { useAuth } from "store/app/selectors";
+import { Permission } from "constant/enums";
 
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -45,6 +46,15 @@ const MainLayout = (props: MainLayoutProps) => {
 
   const isLoggedIn = useMemo(() => !!token, [token]);
 
+  const isNotJoin = useMemo(
+    () =>
+      isLoggedIn &&
+      user?.roles?.includes(Permission.EU) &&
+      !user.is_pay_user &&
+      !user.approve,
+    [isLoggedIn, user?.approve, user?.is_pay_user, user?.roles],
+  );
+
   const isAuthorized = useMemo(() => {
     if (!user?.roles?.length) return false;
     return user?.roles?.some((role) => {
@@ -54,10 +64,14 @@ const MainLayout = (props: MainLayoutProps) => {
   }, [user?.roles, pathname, id]);
 
   useEffect(() => {
-    if (isLoggedIn || AUTH_PATHS.includes(pathname)) return;
-
-    push(SIGNIN_PATH);
-  }, [isLoggedIn, push, pathname]);
+    if (isLoggedIn) {
+      if (pathname === HOME_PATH && isNotJoin) {
+        push(JOIN_WORKSPACE_PATH);
+      }
+    } else if (!AUTH_PATHS.includes(pathname)) {
+      push(SIGNIN_PATH);
+    }
+  }, [isLoggedIn, push, pathname, isNotJoin]);
 
   useEffect(() => {
     if (user?.id) return;
@@ -71,21 +85,22 @@ const MainLayout = (props: MainLayoutProps) => {
       <Stack
         direction="row"
         width="100vw"
-        height="100vh"
+        height="calc(var(--vh, 1vh) * 100)"
         flex={1}
         overflow="hidden"
       >
         <Sidebar />
         <Stack flex={1} width="100%" height="100%" overflow="hidden">
           <Header />
-          <Stack p={{ xs: 1, sm: 3 }} id={SCROLL_ID} overflow="auto" flex={1}>
+          <Stack p={{ xs: 1, sm: 3 }} overflow="hidden" flex={1}>
             <Stack
               bgcolor={pathname === HOME_PATH ? "transparent" : "common.white"}
               flex={1}
               height="fit-content"
-              spacing={3}
+              spacing={{ xs: 1.5, sm: 3 }}
               justifyContent={isAuthorized ? undefined : "center"}
               alignItems={isAuthorized ? undefined : "center"}
+              overflow="hidden"
             >
               {isAuthorized ? (
                 children
@@ -104,5 +119,3 @@ const MainLayout = (props: MainLayoutProps) => {
 };
 
 export default memo(MainLayout);
-
-export const SCROLL_ID = "scroll-id";

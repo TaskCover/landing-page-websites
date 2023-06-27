@@ -25,7 +25,7 @@ const StatisticItem = (props: StatisticItemProps) => {
     <Stack
       spacing={2.5}
       direction="row"
-      justifyContent={{ xs: "space-between", md: "initial" }}
+      // justifyContent={{ xs: "space-between", md: "initial" }}
     >
       <Stack
         justifyContent="center"

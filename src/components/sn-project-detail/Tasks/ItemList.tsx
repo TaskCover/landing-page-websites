@@ -41,7 +41,7 @@ import Detail from "./Detail";
 import { TaskData } from "store/project/actions";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import useEventListener from "hooks/useEventListener";
-import { SCROLL_ID } from "layouts/MainLayout";
+import { SCROLL_ID } from "constant/index";
 import ActionsSelected from "./ActionsSelected";
 
 const ItemList = () => {
@@ -465,7 +465,7 @@ const ItemList = () => {
     250,
   );
 
-  useEventListener("scroll", onScroll, SCROLL_ID);
+  useEventListener("scroll", onScroll, undefined, SCROLL_ID);
 
   useEffect(() => {
     filtersRef.current = filters;
@@ -495,7 +495,7 @@ const ItemList = () => {
       pageSize: PAGE_SIZE,
       ...initQuery,
     });
-  }, [id, initQuery, isReady, onGetTasksOfProject, projectId]);
+  }, [initQuery, isReady, onGetTasksOfProject, projectId]);
 
   return (
     <Stack flex={1} pb={3}>
@@ -513,6 +513,9 @@ const ItemList = () => {
         error={error as string}
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
+        position="sticky"
+        top={selectedList.length ? 64 : 0}
+        zIndex={1}
       >
         <></>
       </TableLayout>
@@ -574,13 +577,14 @@ const ItemList = () => {
                           task?.sub_tasks,
                         )}
                       >
-                        <Stack width="100%">
+                        <Stack width="100%" overflow="hidden">
                           <Stack
                             direction={{ md: "row" }}
                             alignItems={{ xs: "flex-start", md: "center" }}
                             minHeight={48}
                             width="100%"
                             sx={sx.task}
+                            overflow="hidden"
                           >
                             <Content
                               color="text.primary"
@@ -620,6 +624,7 @@ const ItemList = () => {
                                 direction="row"
                                 alignItems="center"
                                 minHeight={48}
+                                overflow="hidden"
                               >
                                 <Checkbox
                                   checked={isChecked}
@@ -636,6 +641,7 @@ const ItemList = () => {
                                     md: "center",
                                   }}
                                   sx={sx.subTask}
+                                  overflow="hidden"
                                 >
                                   <Content
                                     color="text.primary"
@@ -747,6 +753,8 @@ const Content = (props: TextProps) => {
       textAlign="center"
       overflow="hidden"
       sx={{ ...additionalSx, ...sx }}
+      width="100%"
+      noWrap
       {...rest}
     >
       {typeof children === "number" ? formatNumber(children) : children}
@@ -765,7 +773,15 @@ const Description = (props: BoxProps) => {
         fontSize: 14,
         px: 2,
         m: 0,
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        width: "100%",
+        "& *": {
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        },
       }}
+      className="html"
       dangerouslySetInnerHTML={{ __html: children }}
     />
   );

@@ -1,3 +1,4 @@
+import Wrapper from "components/Wrapper";
 import InformationProjectPage from "components/sn-project-detail/Information";
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <InformationProjectPage />;
+  return (
+    <Wrapper overflow="auto">
+      <InformationProjectPage />
+    </Wrapper>
+  );
 }

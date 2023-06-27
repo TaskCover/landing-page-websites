@@ -33,7 +33,7 @@ const Detail = () => {
         [`& .${drawerClasses.paper}`]: {
           backgroundColor: "common.white",
           backgroundImage: "none",
-          width: { xs: "100%", md: "50%" },
+          width: { xs: "100%", md: "70%", lg: "50%" },
           overflow: "hidden",
         },
       }}

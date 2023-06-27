@@ -72,15 +72,11 @@ const Actions = () => {
       direction={{ xs: "column-reverse", md: "row" }}
       alignItems={{ md: "center" }}
       justifyContent="space-between"
-      spacing={3}
+      spacing={{ xs: 1.5, md: 3 }}
       px={{ xs: 1, md: 3 }}
       pb={3}
     >
-      <Stack
-        direction={{ xs: "row", md: "column" }}
-        spacing={1}
-        width="fit-content"
-      >
+      <Stack spacing={1} width="fit-content">
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
           {managerT("employeeList.staffPaid")}:
           <Text
@@ -108,7 +104,7 @@ const Actions = () => {
       <Stack
         direction={{ xs: "column", md: "row" }}
         alignItems="center"
-        spacing={3}
+        spacing={{ xs: 1.5, md: 3 }}
         py={1.25}
         px={2}
         borderRadius={1}

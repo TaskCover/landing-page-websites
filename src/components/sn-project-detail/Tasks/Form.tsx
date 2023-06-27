@@ -162,7 +162,7 @@ const Form = (props: FormProps) => {
       sx={{
         minWidth: { xs: "calc(100vw -24px)", sm: 700 },
         maxWidth: { xs: "calc(100vw -24px)", sm: 700 },
-        maxHeight: "calc(100vh - 24px)",
+        maxHeight: "calc(calc(var(--vh, 1vh) * 100) - 24px)",
         zIndex: 1201,
       }}
       label={`${label} ${projectT("detailTasks.key")}`}

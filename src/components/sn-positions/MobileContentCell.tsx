@@ -5,7 +5,7 @@ import { Text } from "components/shared";
 import { formatDate, formatNumber } from "utils/index";
 import { BodyCell } from "components/Table";
 import { Position } from "store/company/reducer";
-import { NS_COMMON, NS_COMPANY } from "constant/index";
+import { NS_COMMON, NS_COMPANY, DATE_TIME_FORMAT_SLASH } from "constant/index";
 import { useTranslations } from "next-intl";
 
 type MobileContentCellProps = {
@@ -33,7 +33,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           </Stack>
         </InformationItem>
         <InformationItem label={commonT("creationDate")}>
-          {formatDate(item.created_time)}
+          {formatDate(item.created_time, DATE_TIME_FORMAT_SLASH)}
         </InformationItem>
         <InformationItem label={companyT("positions.numberOfEmployees")}>
           {formatNumber()}

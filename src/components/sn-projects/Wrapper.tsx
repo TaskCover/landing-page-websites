@@ -30,7 +30,11 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
     };
   }, [commonT, onUpdateHeaderConfig, projectT]);
 
-  return <Stack flex={1}>{children}</Stack>;
+  return (
+    <Stack flex={1} overflow="hidden">
+      {children}
+    </Stack>
+  );
 };
 
 export default memo(Wrapper);

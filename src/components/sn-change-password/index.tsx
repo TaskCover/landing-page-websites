@@ -14,12 +14,14 @@ import { NS_ACCOUNT, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next-intl/client";
 import { HOME_PATH } from "constant/paths";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const ChangePassword = ({ prevPath }: { prevPath?: string }) => {
   const { onChangePassword } = useUserInfo();
   const { onSignOut } = useAuth();
   const commonT = useTranslations(NS_COMMON);
   const accountT = useTranslations(NS_ACCOUNT);
+  const { isSmSmaller } = useBreakpoint();
 
   const { onAddSnackbar } = useSnackbar();
   const { back, push } = useRouter();
@@ -156,7 +158,7 @@ const ChangePassword = ({ prevPath }: { prevPath?: string }) => {
           onClick={onCancel}
           sx={sxConfig.button}
           variant="primaryOutlined"
-          size="small"
+          size={isSmSmaller ? "medium" : "small"}
           fullWidth
         >
           {commonT("form.cancel")}
@@ -166,7 +168,7 @@ const ChangePassword = ({ prevPath }: { prevPath?: string }) => {
           pending={formik.isSubmitting}
           sx={{ ...sxConfig.button }}
           variant="primary"
-          size="small"
+          size={isSmSmaller ? "medium" : "small"}
           type="submit"
           fullWidth
         >

@@ -8,10 +8,13 @@ import { usePathname, useRouter } from "next-intl/client";
 import { useStatementHistory } from "store/manager/selectors";
 import { Button } from "components/shared";
 import { GetStatementHistoryQueries } from "store/manager/actions";
+import { NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const Actions = () => {
   const { filters, onGetStatementHistory, pageSize, pageIndex } =
     useStatementHistory();
+  const commonT = useTranslations(NS_COMMON);
 
   const [fields, setFields] = useState<{ start?: string; end?: string }>({});
 
@@ -64,7 +67,7 @@ const Actions = () => {
     <Stack
       direction={{ xs: "column", md: "row" }}
       alignItems="center"
-      spacing={3}
+      spacing={{ xs: 1.5, md: 3 }}
       py={1.25}
       px={2}
       borderRadius={1}
@@ -92,7 +95,7 @@ const Actions = () => {
 
       <Stack direction="row" alignItems="center" spacing={3}>
         <Button disabled={disabled} onClick={onSearch} variant="secondary">
-          Tìm kiếm
+          {commonT("search")}
         </Button>
         <Refresh onClick={onRefresh} />
         {!!Object.keys(filters).length && <Clear onClick={onClear} />}

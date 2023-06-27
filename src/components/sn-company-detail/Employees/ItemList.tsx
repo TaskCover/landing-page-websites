@@ -181,114 +181,106 @@ const ItemList = () => {
 
   return (
     <>
-      <Stack flex={1} px={{ xs: 1, md: 3 }}>
-        {!!selectedList.length && (
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={3}
-            p={3}
-            pb={0.25}
+      {!!selectedList.length && (
+        <Stack direction="row" alignItems="center" spacing={3} p={3} pb={0.25}>
+          <IconButton
+            size="small"
+            onClick={onApproveOrReject(PaymentStatus.PAID)}
+            tooltip={managerT("companyList.approve")}
+            sx={{
+              backgroundColor: "primary.light",
+              color: "text.primary",
+              p: 1,
+              "&:hover svg": {
+                color: "common.white",
+              },
+            }}
+            variant="contained"
           >
-            <IconButton
-              size="small"
-              onClick={onApproveOrReject(PaymentStatus.PAID)}
-              tooltip={managerT("companyList.approve")}
-              sx={{
-                backgroundColor: "primary.light",
-                color: "text.primary",
-                p: 1,
-                "&:hover svg": {
-                  color: "common.white",
-                },
-              }}
-              variant="contained"
-            >
-              <CircleTickIcon filled={false} fontSize="small" />
-            </IconButton>
-            <IconButton
-              size="small"
-              onClick={onApproveOrReject(PaymentStatus.UNPAID)}
-              tooltip={managerT("companyList.reject")}
-              sx={{
-                backgroundColor: "primary.light",
-                color: "text.primary",
-                p: 1,
-                "&:hover svg": {
-                  color: "common.white",
-                },
-              }}
-              variant="contained"
-            >
-              <CloseSquareIcon fontSize="small" />
-            </IconButton>
-          </Stack>
-        )}
-        <TableLayout
-          headerList={headerList}
-          pending={isFetching}
-          error={error as string}
-          noData={!isIdle && totalItems === 0}
-          pb={3}
-        >
-          {items.map((item) => {
-            const indexSelected = selectedList.findIndex(
-              (selected) => selected.id === item.id,
-            );
-            return (
-              <TableRow key={item.id}>
-                <BodyCell>
-                  {item.is_pay_user === null && (
-                    <Checkbox
-                      checked={indexSelected !== -1}
-                      onChange={onToggleSelect(item, indexSelected)}
-                    />
-                  )}
-                </BodyCell>
-                {isMdSmaller ? (
-                  <MobileContentCell item={item} />
-                ) : (
-                  <DesktopCells item={item} />
+            <CircleTickIcon filled={false} fontSize="small" />
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={onApproveOrReject(PaymentStatus.UNPAID)}
+            tooltip={managerT("companyList.reject")}
+            sx={{
+              backgroundColor: "primary.light",
+              color: "text.primary",
+              p: 1,
+              "&:hover svg": {
+                color: "common.white",
+              },
+            }}
+            variant="contained"
+          >
+            <CloseSquareIcon fontSize="small" />
+          </IconButton>
+        </Stack>
+      )}
+      <TableLayout
+        headerList={headerList}
+        pending={isFetching}
+        error={error as string}
+        noData={!isIdle && totalItems === 0}
+        px={{ xs: 0, md: 3 }}
+      >
+        {items.map((item) => {
+          const indexSelected = selectedList.findIndex(
+            (selected) => selected.id === item.id,
+          );
+          return (
+            <TableRow key={item.id}>
+              <BodyCell>
+                {item.is_pay_user === null && (
+                  <Checkbox
+                    checked={indexSelected !== -1}
+                    onChange={onToggleSelect(item, indexSelected)}
+                  />
                 )}
+              </BodyCell>
+              {isMdSmaller ? (
+                <MobileContentCell item={item} />
+              ) : (
+                <DesktopCells item={item} />
+              )}
 
-                <ActionsCell
-                  options={
-                    item.is_pay_user === null
-                      ? [
-                          {
-                            content: managerT("companyList.approve"),
-                            onClick: onApproveOrReject(
-                              PaymentStatus.PAID,
-                              item.id,
-                            ),
-                            icon: (
-                              <CircleTickIcon filled={false} fontSize="small" />
-                            ),
-                          },
-                          {
-                            content: managerT("companyList.reject"),
-                            onClick: onApproveOrReject(
-                              PaymentStatus.UNPAID,
-                              item.id,
-                            ),
-                            icon: <CloseSquareIcon fontSize="small" />,
-                          },
-                        ]
-                      : undefined
-                  }
-                />
-              </TableRow>
-            );
-          })}
-        </TableLayout>
-      </Stack>
+              <ActionsCell
+                options={
+                  item.is_pay_user === null
+                    ? [
+                        {
+                          content: managerT("companyList.approve"),
+                          onClick: onApproveOrReject(
+                            PaymentStatus.PAID,
+                            item.id,
+                          ),
+                          icon: (
+                            <CircleTickIcon filled={false} fontSize="small" />
+                          ),
+                        },
+                        {
+                          content: managerT("companyList.reject"),
+                          onClick: onApproveOrReject(
+                            PaymentStatus.UNPAID,
+                            item.id,
+                          ),
+                          icon: <CloseSquareIcon fontSize="small" />,
+                        },
+                      ]
+                    : undefined
+                }
+              />
+            </TableRow>
+          );
+        })}
+      </TableLayout>
 
       <Pagination
         totalItems={totalItems}
         totalPages={totalPages}
         page={pageIndex}
         pageSize={pageSize}
-        containerProps={{ px: 3, pb: 3 }}
+        containerProps={{ px: 3, pt: 2.5 }}
         onChangePage={onChangePage}
         onChangeSize={onChangeSize}
       />

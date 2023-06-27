@@ -1,6 +1,7 @@
 import {
   Box,
   ButtonBase,
+  Dialog,
   MenuItem,
   MenuList,
   Popover,
@@ -41,6 +42,7 @@ import { Task } from "store/project/reducer";
 import { useSnackbar } from "store/app/selectors";
 import { formatDate, getMessageErrorByAPI } from "utils/index";
 import ConfirmDialog from "components/ConfirmDialog";
+import DialogLayout from "components/DialogLayout";
 
 type DragParentProps = {
   id: string;
@@ -61,75 +63,94 @@ const DragParent = (props: DragParentProps) => {
   const projectT = useTranslations(NS_PROJECT);
   const { onCreateTask: onCreateTaskAction } = useTasksOfProject();
 
-  const [isShow, , , onToggle] = useToggle(count < 5);
+  const [isShow, , , onToggle] = useToggle(true);
   const [isShowCreate, onShowCreate, onHideCreate] = useToggle();
+  const [isPreviewName, onShowPreviewName, onHidePreviewName] = useToggle();
 
   const onCreateTask = async (data: TaskFormData) => {
     return await onCreateTaskAction(data, id);
   };
 
   return (
-    <Draggable draggableId={id} index={index} isDragDisabled>
-      {(provided) => {
-        return (
-          <>
-            <div ref={provided.innerRef} {...rest}>
-              <Stack
-                direction="row"
-                alignItems="center"
-                height={48}
-                pl={2}
-                width="100%"
-                justifyContent="space-between"
-              >
-                <Stack direction="row" alignItems="center">
-                  <Checkbox checked={checked} onChange={onChange} />
-                  <IconButton
-                    noPadding
-                    sx={{
-                      ml: 6,
-                      transform: isShow ? undefined : "rotate(180deg)",
-                    }}
-                    onClick={onToggle}
-                  >
-                    <CaretIcon sx={{ color: "grey.300" }} />
-                  </IconButton>
-                  <Text
-                    mr={1}
-                    variant="h5"
-                    color="grey.300"
-                    whiteSpace="nowrap"
-                  >
-                    {`${name} (${count})`}
-                  </Text>
-                  <MoreList id={id} name={name} />
-                </Stack>
-                <Button
-                  onClick={onShowCreate}
-                  startIcon={<PlusIcon />}
-                  variant="text"
-                  size="small"
-                  color="secondary"
-                  sx={{ mr: 4 }}
+    <>
+      <Draggable draggableId={id} index={index} isDragDisabled>
+        {(provided) => {
+          return (
+            <>
+              <div ref={provided.innerRef} {...rest}>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  height={48}
+                  pl={{ xs: 1, md: 2 }}
+                  width="100%"
+                  justifyContent="space-between"
                 >
-                  {projectT("detailTasks.addNewTask")}
-                </Button>
-              </Stack>
+                  <Stack direction="row" alignItems="center" overflow="hidden">
+                    <Checkbox checked={checked} onChange={onChange} />
+                    <IconButton
+                      noPadding
+                      sx={{
+                        ml: { md: 6 },
+                        transform: isShow ? undefined : "rotate(180deg)",
+                      }}
+                      onClick={onToggle}
+                    >
+                      <CaretIcon sx={{ color: "grey.300" }} />
+                    </IconButton>
+                    <Text
+                      variant="h5"
+                      color="grey.300"
+                      onClick={onShowPreviewName}
+                      noWrap
+                      sx={{ cursor: "pointer" }}
+                    >
+                      {name}
+                    </Text>
+                    <Text
+                      mr={1}
+                      ml={0.5}
+                      variant="h5"
+                      fontWeight={400}
+                      color="grey.300"
+                    >
+                      {`(${count})`}
+                    </Text>
+                    <MoreList id={id} name={name} />
+                  </Stack>
+                  <Button
+                    onClick={onShowCreate}
+                    startIcon={<PlusIcon />}
+                    variant="text"
+                    size="small"
+                    color="secondary"
+                    sx={{ mr: { xs: 1.5, md: 4 } }}
+                  >
+                    {projectT("detailTasks.addNewTask")}
+                  </Button>
+                </Stack>
 
-              {isShow && props.children}
-            </div>
-            {isShowCreate && (
-              <Form
-                open={isShowCreate}
-                onClose={onHideCreate}
-                type={DataAction.CREATE}
-                onSubmit={onCreateTask}
-              />
-            )}
-          </>
-        );
-      }}
-    </Draggable>
+                {isShow && props.children}
+              </div>
+              {isShowCreate && (
+                <Form
+                  open={isShowCreate}
+                  onClose={onHideCreate}
+                  type={DataAction.CREATE}
+                  onSubmit={onCreateTask}
+                />
+              )}
+            </>
+          );
+        }}
+      </Draggable>
+
+      <DialogLayout open={isPreviewName} onClose={onHidePreviewName}>
+        <Text variant="body2" fontWeight={600} px={3}>
+          {name}
+        </Text>
+      </DialogLayout>
+    </>
   );
 };
 

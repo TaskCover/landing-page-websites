@@ -60,7 +60,7 @@ const Actions = () => {
       direction={{ xs: "column-reverse", md: "row" }}
       alignItems={{ md: "center" }}
       justifyContent="space-between"
-      spacing={3}
+      spacing={{ xs: 1.5, md: 3 }}
       px={{ xs: 1, md: 3 }}
       py={1.5}
     >
@@ -96,7 +96,7 @@ const Actions = () => {
       <Stack
         direction={{ xs: "column", md: "row" }}
         alignItems="center"
-        spacing={3}
+        spacing={{ xs: 1.5, md: 3 }}
         py={1.25}
         px={2}
         borderRadius={1}

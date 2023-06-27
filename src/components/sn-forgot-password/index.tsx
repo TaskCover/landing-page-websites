@@ -59,7 +59,7 @@ const Forgot = () => {
   return (
     <Stack
       flex={1}
-      height="100vh"
+      height="calc(var(--vh, 1vh) * 100)"
       width="100vw"
       justifyContent="center"
       alignItems="center"
@@ -77,7 +77,7 @@ const Forgot = () => {
         })}
         height={({ spacing }) => ({
           xs: "fit-content",
-          sm: `calc(100vh - ${spacing(8 * 2)})`,
+          sm: `calc(calc(var(--vh, 1vh) * 100) - ${spacing(8 * 2)})`,
         })}
         maxHeight={{ xs: "fit-content", sm: "100%" }}
         borderRadius={2}

@@ -52,7 +52,13 @@ const Header = () => {
       width="100%"
     >
       <AppLogo height={48} className="only-mobile" />
-      <Stack direction="row" alignItems="center" spacing={0.5}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={0.5}
+        overflow="hidden"
+        flex={1}
+      >
         {!!prevPath && (
           <Link
             href={prevPath}
@@ -64,7 +70,7 @@ const Header = () => {
             />
           </Link>
         )}
-        <Text variant="h5" display={{ xs: "none", sm: "initial" }}>
+        <Text variant="h5" display={{ xs: "none", sm: "initial" }} noWrap>
           {title ?? ""}
         </Text>
       </Stack>

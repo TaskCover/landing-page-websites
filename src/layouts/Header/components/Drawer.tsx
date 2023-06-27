@@ -1,9 +1,12 @@
-import { memo, useEffect } from "react";
+import { memo, useEffect, MouseEvent, useId, useState } from "react";
 import {
+  ButtonBase,
   IconButton,
   Drawer as MuiDrawer,
+  Popover,
   Stack,
   drawerClasses,
+  popoverClasses,
 } from "@mui/material";
 import { Menu } from "layouts/components";
 import useToggle from "hooks/useToggle";
@@ -21,6 +24,8 @@ import { Permission } from "constant/enums";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import { usePathname } from "next/navigation";
+import { useAppDispatch } from "store/hooks";
+import UserActions from "./UserActions";
 
 const Drawer = () => {
   const [isShow, onShow, onHide] = useToggle(false);
@@ -97,15 +102,93 @@ const Drawer = () => {
 export default memo(Drawer);
 
 const UserInfo = () => {
-  const { user } = useAuth();
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const popoverId = useId();
+  const { user, onSignOut: onSignOutAuth } = useAuth();
+  const dispatch = useAppDispatch();
+
+  const onOpen = (event: MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const onClose = () => {
+    setAnchorEl(null);
+  };
+
   if (!user) return null;
+
   return (
-    <Stack direction="row" alignItems="center" spacing={1.5} py={2}>
-      <Avatar size={64} alt={user.fullname} src={user?.avatar?.link} />
-      <Stack>
-        <Text fontWeight={600}>{user.fullname}</Text>
-        <Text variant="body2">{user.email}</Text>
+    <>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1.5}
+        py={2}
+        sx={{
+          cursor: "pointer",
+        }}
+        onClick={onOpen}
+      >
+        <Avatar size={64} alt={user.fullname} src={user?.avatar?.link} />
+        <Stack>
+          <Text fontWeight={600} sx={{ wordBreak: "break-all" }}>
+            {user.fullname}
+          </Text>
+          <Text
+            variant="caption"
+            color="grey.400"
+            sx={{ wordBreak: "break-all" }}
+          >
+            {user?.position?.name ?? "--"}
+          </Text>
+          <Text variant="body2" sx={{ wordBreak: "break-all" }}>
+            {user.email}
+          </Text>
+        </Stack>
       </Stack>
-    </Stack>
+
+      <Popover
+        id={popoverId}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={onClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        sx={{
+          [`& .${popoverClasses.paper}`]: {
+            backgroundImage: "none",
+            minWidth: 216,
+            maxWidth: 300,
+          },
+        }}
+        slotProps={{
+          paper: {
+            sx: {
+              borderRadius: 1,
+              mt: 0.5,
+            },
+          },
+        }}
+      >
+        <Stack
+          p={2}
+          sx={{
+            boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.1)",
+            border: "1px solid",
+            borderColor: "grey.100",
+            borderBottomLeftRadius: 1,
+            borderBottomRightRadius: 1,
+          }}
+        >
+          <UserActions onClose={onClose} />
+        </Stack>
+      </Popover>
+    </>
   );
 };

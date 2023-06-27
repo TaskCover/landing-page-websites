@@ -53,9 +53,13 @@ const Wrapper = (props: WrapperProps) => {
         backgroundSize: { xs: "cover", sm: undefined },
       }}
       height={({ spacing }) => ({
-        xs: "100vh",
-        sm: `calc(100vh - ${spacing((isSmallHeight ? 3 : 6) * 2)})`,
-        lg: `calc(100vh - ${spacing((isSmallHeight ? 3 : 8) * 2)})`,
+        xs: "calc(var(--vh, 1vh) * 100)",
+        sm: `calc(calc(var(--vh, 1vh) * 100) - ${spacing(
+          (isSmallHeight ? 3 : 6) * 2,
+        )})`,
+        lg: `calc(calc(var(--vh, 1vh) * 100) - ${spacing(
+          (isSmallHeight ? 3 : 8) * 2,
+        )})`,
       })}
       bgcolor={{ sm: "common.white" }}
       justifyContent={{ xs: "center", sm: "initial" }}

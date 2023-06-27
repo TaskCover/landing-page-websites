@@ -21,7 +21,7 @@ const MainSection = () => {
       flex={{ sm: 1 }}
       width="100%"
       maxHeight={({ spacing }) => ({
-        xs: `calc(100vh - ${spacing(2 * 2)})`,
+        xs: `calc(calc(var(--vh, 1vh) * 100) - ${spacing(2 * 2)})`,
         sm: "100%",
       })}
       alignItems="center"

@@ -15,8 +15,8 @@ const Drag = ({ id, index, checked, onChange, ...props }) => {
               direction="row"
               alignItems="center"
               height={48}
-              pl={2}
-              spacing={1}
+              pl={{ xs: 1, md: 2 }}
+              spacing={{ xs: 0.5, sm: 1 }}
             >
               <Checkbox checked={checked} onChange={onChange} />
               <IconButton noPadding {...provided.dragHandleProps}>

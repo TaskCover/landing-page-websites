@@ -1,3 +1,4 @@
+import Wrapper from "components/Wrapper";
 import ChangePasswordPage from "components/sn-change-password";
 import { NS_ACCOUNT } from "constant/index";
 import { Metadata } from "next";
@@ -18,7 +19,11 @@ export default function Page() {
 
   const prevPath = getPrevPath(headersList);
 
-  return <ChangePasswordPage prevPath={prevPath} />;
+  return (
+    <Wrapper overflow="auto">
+      <ChangePasswordPage prevPath={prevPath} />
+    </Wrapper>
+  );
 }
 
 const getPrevPath = (headersList: ReadonlyHeaders) => {

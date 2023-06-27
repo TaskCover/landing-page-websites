@@ -1,4 +1,5 @@
-import { Actions, ItemList, Wrapper } from "components/sn-positions";
+import Wrapper from "components/Wrapper";
+import { Actions, ItemList } from "components/sn-positions";
 import { NS_COMPANY } from "constant/index";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -13,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function Page() {
   return (
-    <Wrapper>
+    <Wrapper overflow="auto">
       <Actions />
       <ItemList />
     </Wrapper>

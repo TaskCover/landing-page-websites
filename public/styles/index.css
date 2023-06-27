@@ -4,6 +4,12 @@ body {
   font-size: 16px;
   overflow-x: hidden;
   background-color: #f7f7fd !important;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100);
 }
 
 input:-webkit-autofill,
@@ -39,7 +45,7 @@ a {
 }
 
 .h-screen {
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
 }
 
 .rounded {
@@ -90,12 +96,10 @@ a {
   }
 }
 
-
 .draggable-taskList {
   display: flex;
   flex-direction: column;
 }
-
 
 .draggable {
   display: flex;

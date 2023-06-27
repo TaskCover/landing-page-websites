@@ -63,8 +63,7 @@ const ItemList = () => {
         pending={isFetching}
         error={error as string}
         noData={!isIdle && totalItems === 0}
-        pb={3}
-        px={3}
+        px={{ xs: 1.5, md: 3 }}
       >
         {items.map((item) => {
           return (
@@ -84,7 +83,7 @@ const ItemList = () => {
         totalPages={totalPages}
         page={pageIndex}
         pageSize={pageSize}
-        containerProps={{ px: 3, pb: 3 }}
+        containerProps={{ px: 3, p: 2.5 }}
         onChangePage={onChangePage}
         onChangeSize={onChangeSize}
       />

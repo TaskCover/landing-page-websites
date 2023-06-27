@@ -25,6 +25,9 @@ import { AssignerFilter } from "./components";
 import TaskListForm from "./TaskListForm";
 import { useParams } from "next/navigation";
 import { TaskListData } from "store/project/actions";
+import { useHeaderConfig } from "store/app/selectors";
+import Link from "components/Link";
+import ChevronIcon from "icons/ChevronIcon";
 
 const Actions = () => {
   const {
@@ -33,6 +36,8 @@ const Actions = () => {
     onCreateTaskList: onCreateTaskListAction,
     onGetTasksOfProject,
   } = useTasksOfProject();
+  const { title, prevPath } = useHeaderConfig();
+
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
 
@@ -98,9 +103,9 @@ const Actions = () => {
         borderColor="grey.100"
         spacing={{ xs: 1, md: 3 }}
         px={{ xs: 1, md: 3 }}
-        pb={3}
+        pb={{ xs: 1, md: 3 }}
       >
-        <Button
+        {/* <Button
           onClick={onShow}
           startIcon={<PlusIcon />}
           size="small"
@@ -108,7 +113,41 @@ const Actions = () => {
           sx={{ height: "fit-content", width: "fit-content" }}
         >
           {commonT("createNew")}
-        </Button>
+        </Button> */}
+
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          spacing={{ xs: 2, sm: 0 }}
+          width={{ xs: "100%", sm: "fit-content" }}
+        >
+          <Stack direction="row" alignItems="center" spacing={0.5} flex={1}>
+            {!!prevPath && (
+              <Link
+                href={prevPath}
+                sx={{ height: 24, display: { sm: "none" } }}
+              >
+                <ChevronIcon
+                  sx={{ color: "text.primary", transform: "rotate(90deg)" }}
+                  fontSize="medium"
+                />
+              </Link>
+            )}
+            <Text variant="h4" display={{ sm: "none" }} noWrap>
+              {title ?? ""}
+            </Text>
+          </Stack>
+
+          <Button
+            onClick={onShow}
+            startIcon={<PlusIcon />}
+            size="small"
+            variant="primary"
+          >
+            {commonT("createNew")}
+          </Button>
+        </Stack>
 
         <Stack
           direction={{ xs: "column", lg: "row" }}
@@ -141,6 +180,7 @@ const Actions = () => {
                 onChange={onChangeQueries}
                 value={queries?.owner}
                 hasAvatar
+                sx={{ display: { xs: "none", md: "initial" } }}
               />
             </Stack>
             <Stack
@@ -164,7 +204,17 @@ const Actions = () => {
             </Stack>
           </Stack>
 
-          <Stack direction="row" alignItems="center" spacing={3}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={{ xs: 1.5, sm: 3 }}
+          >
+            <AssignerFilter
+              onChange={onChangeQueries}
+              value={queries?.owner}
+              hasAvatar
+              sx={{ display: { md: "none" } }}
+            />
             <Button size="small" onClick={onSearch} variant="secondary">
               {commonT("search")}
             </Button>
