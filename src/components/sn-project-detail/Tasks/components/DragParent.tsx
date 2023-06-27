@@ -150,11 +150,13 @@ export const MoreList = (props: MoreListProps) => {
     items,
     onCreateTaskList,
     onCreateTask,
-    onDeleteTaskList: onDeleteTaskListAction,
+    onDeleteTaskLists: onDeleteTaskListAction,
   } = useTasksOfProject();
   const projectT = useTranslations(NS_PROJECT);
   const params = useParams();
   const { onAddSnackbar } = useSnackbar();
+
+  const projectId = useMemo(() => params?.id, [params?.id]);
 
   const taskListNameList = useMemo(
     () => items.map((task) => task.name),
@@ -193,7 +195,10 @@ export const MoreList = (props: MoreListProps) => {
 
   const onDeleteTaskList = async () => {
     try {
-      const isSuccess = await onDeleteTaskListAction(id);
+      const isSuccess = await onDeleteTaskListAction({
+        project: projectId,
+        tasks_list: [id],
+      });
       if (isSuccess === true) {
         onAddSnackbar(
           projectT("detailTasks.notification.deleteTaskListSuccess"),
@@ -208,7 +213,7 @@ export const MoreList = (props: MoreListProps) => {
 
   const onDuplicateTaskList = async () => {
     try {
-      if (!params?.id) {
+      if (!projectId) {
         throw AN_ERROR_TRY_AGAIN;
       }
       const newName = projectT("detailTasks.duplicateName", {
@@ -217,7 +222,7 @@ export const MoreList = (props: MoreListProps) => {
       });
       const newTaskList = await onCreateTaskList({
         name: newName,
-        project: params.id,
+        project: projectId,
       });
 
       if (newTaskList?.id) {
@@ -380,8 +385,10 @@ export const MoreList = (props: MoreListProps) => {
       )}
       {type === Action.MOVE && (
         <MoveTaskList
-          oldTaskListId={id}
-          taskIds={taskIds}
+          oldTaskListIds={[id]}
+          taskIds={{
+            [id]: taskIds,
+          }}
           open
           onClose={onSetTType()}
         />

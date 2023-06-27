@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   CommentTaskData,
+  DeleteTasksData,
   GetProjectListQueries,
   GetTasksOfProjectQueries,
   ProjectData,
@@ -10,7 +11,8 @@ import {
   createProject,
   createTask,
   createTaskList,
-  deleteTaskList,
+  deleteTasks,
+  deleteTaskLists,
   getMembersOfProject,
   getProject,
   getProjectList,
@@ -19,6 +21,9 @@ import {
   updateProject,
   updateTask,
   updateTaskList,
+  DeleteSubTasksData,
+  DeleteTaskListsData,
+  deleteSubTasks,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -246,9 +251,24 @@ export const useTasksOfProject = () => {
     }
   };
 
-  const onDeleteTaskList = async (id: string) => {
+  const onDeleteTaskLists = async (data: DeleteTaskListsData) => {
     try {
-      return await dispatch(deleteTaskList(id)).unwrap();
+      return await dispatch(deleteTaskLists(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const onDeleteTasks = async (data: DeleteTasksData) => {
+    try {
+      return await dispatch(deleteTasks(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+  const onDeleteSubTasks = async (data: DeleteSubTasksData) => {
+    try {
+      return await dispatch(deleteSubTasks(data)).unwrap();
     } catch (error) {
       throw error;
     }
@@ -271,7 +291,9 @@ export const useTasksOfProject = () => {
     onUpdateTaskList,
     onCreateTask,
     onMoveTask,
-    onDeleteTaskList,
+    onDeleteTaskLists,
+    onDeleteTasks,
+    onDeleteSubTasks,
   };
 };
 

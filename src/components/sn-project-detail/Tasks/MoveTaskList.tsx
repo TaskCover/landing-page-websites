@@ -1,11 +1,9 @@
-import { memo, useEffect, useMemo } from "react";
-import { Input, Stack } from "@mui/material";
+import { Dispatch, SetStateAction, memo, useEffect, useMemo } from "react";
+import { Stack } from "@mui/material";
 import FormLayout from "components/FormLayout";
 import { DialogLayoutProps } from "components/DialogLayout";
 import { Select } from "components/shared";
-import { MoveTaskData } from "store/project/actions";
 import { useTaskOptions, useTasksOfProject } from "store/project/selectors";
-import { DataAction } from "constant/enums";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { useFormik, FormikErrors } from "formik";
 import { useTranslations } from "next-intl";
@@ -15,12 +13,15 @@ import * as Yup from "yup";
 import { useParams } from "next/navigation";
 
 type MoveTaskListProps = {
-  oldTaskListId: string;
-  taskIds: string[];
+  oldTaskListIds: string[];
+  taskIds: {
+    [key: string]: string[];
+  };
+  setIsSubmitting?: Dispatch<SetStateAction<boolean>>;
 } & Omit<DialogLayoutProps, "children" | "onSubmit">;
 
 const MoveTaskList = (props: MoveTaskListProps) => {
-  const { oldTaskListId, taskIds, ...rest } = props;
+  const { oldTaskListIds, taskIds, setIsSubmitting, ...rest } = props;
 
   const { onAddSnackbar } = useSnackbar();
   const { onMoveTask } = useTasksOfProject();
@@ -40,41 +41,31 @@ const MoveTaskList = (props: MoveTaskListProps) => {
 
   const projectId = useMemo(() => params.id, [params.id]);
 
-  const initialValues = useMemo(
-    () => ({
-      task_list_current: oldTaskListId,
-      task_current: taskIds,
-      task_list_move: "",
-    }),
-    [oldTaskListId, taskIds],
-  );
-
-  const optionsIgnoreCurrent = useMemo(
-    () => options.filter((option) => option.value !== oldTaskListId),
-    [oldTaskListId, options],
-  );
-
-  const onSubmit = async (values: MoveTaskData) => {
+  const onSubmit = async (values: typeof INITIAL_VALUES) => {
     try {
-      const isSuccess = await onMoveTask(
-        values.task_list_current,
-        values.task_list_move,
-        values.task_current,
-      );
-      if (isSuccess === true) {
-        onAddSnackbar(
-          projectT("detailTasks.notification.moveSuccess"),
-          "success",
+      setIsSubmitting && setIsSubmitting(true);
+      for (const taskListId of oldTaskListIds) {
+        await onMoveTask(
+          taskListId,
+          values.task_list_move,
+          taskIds[taskListId],
         );
-        props.onClose();
       }
+
+      onAddSnackbar(
+        projectT("detailTasks.notification.moveSuccess"),
+        "success",
+      );
+      props.onClose();
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error), "error");
+    } finally {
+      setIsSubmitting && setIsSubmitting(false);
     }
   };
 
   const formik = useFormik({
-    initialValues,
+    initialValues: INITIAL_VALUES,
     validationSchema,
     enableReinitialize: true,
     onSubmit,
@@ -82,7 +73,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
 
   const touchedErrors = useMemo(() => {
     return Object.entries(formik.errors).reduce(
-      (out: FormikErrors<MoveTaskData>, [key, error]) => {
+      (out: FormikErrors<typeof INITIAL_VALUES>, [key, error]) => {
         if (formik.touched[key]) {
           out[key] = error;
         }
@@ -123,21 +114,6 @@ const MoveTaskList = (props: MoveTaskListProps) => {
       <Stack spacing={2} py={3}>
         <Select
           options={options}
-          title={projectT("detailTasks.form.title.oldTaskList")}
-          name="task_list_current"
-          required
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values?.task_list_current}
-          error={commonT(touchedErrors?.task_list_current, {
-            name: projectT("detailTasks.form.title.oldTaskList"),
-          })}
-          rootSx={sxConfig.input}
-          fullWidth
-          disabled
-        />
-        <Select
-          options={optionsIgnoreCurrent}
           title={projectT("detailTasks.form.title.newTaskList")}
           name="task_list_move"
           required
@@ -157,6 +133,9 @@ const MoveTaskList = (props: MoveTaskListProps) => {
 };
 
 export default memo(MoveTaskList);
+const INITIAL_VALUES = {
+  task_list_move: "",
+};
 
 const validationSchema = Yup.object().shape({
   task_list_move: Yup.string().trim().required("form.error.required"),

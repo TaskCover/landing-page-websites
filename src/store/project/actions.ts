@@ -82,6 +82,22 @@ export type CommentTaskData = {
   attachments?: string[];
 };
 
+export type DeleteTaskListsData = {
+  project: string;
+  tasks_list: string[];
+};
+
+export type DeleteTasksData = {
+  task_list: string;
+  tasks: string[];
+};
+
+export type DeleteSubTasksData = {
+  task_list: string;
+  task: string;
+  sub_tasks: string[];
+};
+
 export const getProjectList = createAsyncThunk(
   "project/getProjectList",
   async (queries: GetProjectListQueries) => {
@@ -326,13 +342,43 @@ export const commentTask = createAsyncThunk(
   },
 );
 
-export const deleteTaskList = createAsyncThunk(
-  "project/deleteTaskList",
-  async (id: string) => {
+export const deleteTaskLists = createAsyncThunk(
+  "project/deleteTaskLists",
+  async (data: DeleteTaskListsData) => {
     try {
-      const response = {
-        status: 200,
-      };
+      const response = await client.put(Endpoint.TASK_LIST_INACTIVE, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const deleteTasks = createAsyncThunk(
+  "project/deleteTasks",
+  async (data: DeleteTasksData) => {
+    try {
+      const response = await client.put(Endpoint.TASKS_INACTIVE, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const deleteSubTasks = createAsyncThunk(
+  "project/deleteSubTasks",
+  async (data: DeleteSubTasksData) => {
+    try {
+      const response = await client.put(Endpoint.SUB_TASKS_INACTIVE, data);
 
       if (response?.status === HttpStatusCode.OK) {
         return true;

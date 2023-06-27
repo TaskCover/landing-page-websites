@@ -91,4 +91,5 @@ export const CommonLang: CommonDictionary = {
   rename: "Rename",
   all: "All",
   clickToViewLarge: "Click to view larger",
+  processing: "Processing",
 };

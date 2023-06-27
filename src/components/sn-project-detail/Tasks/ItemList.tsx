@@ -154,6 +154,10 @@ const ItemList = () => {
       let newSelectedList = [...selectedList];
 
       if (newChecked) {
+        newSelectedList.push({
+          taskListId: taskList.id,
+          taskListName: taskList.name,
+        });
         const additionalSelectedList = [];
         if (taskList.tasks?.length) {
           taskList.tasks.forEach((task) => {
@@ -190,15 +194,29 @@ const ItemList = () => {
         }
 
         newSelectedList = [...newSelectedList, ...additionalSelectedList];
-      } else if (taskList.tasks?.length) {
-        const taskIds = taskList.tasks.map((task) => task.id);
-        newSelectedList = newSelectedList.filter(
-          (selected) => !selected?.taskId || !taskIds.includes(selected.taskId),
-        );
       } else {
-        newSelectedList = newSelectedList.filter(
-          (selected) => selected?.taskListId !== taskList.id,
+        const indexDeleted = newSelectedList.findIndex(
+          (selected) =>
+            !selected?.subTaskId &&
+            !selected?.taskId &&
+            selected.taskListId === taskList.id,
         );
+
+        if (indexDeleted !== -1) {
+          newSelectedList.splice(indexDeleted, 1);
+        }
+
+        // if (taskList.tasks?.length) {
+        //   const taskIds = taskList.tasks.map((task) => task.id);
+        //   newSelectedList = newSelectedList.filter(
+        //     (selected) =>
+        //       !selected?.taskId || !taskIds.includes(selected.taskId),
+        //   );
+        // } else {
+        //   newSelectedList = newSelectedList.filter(
+        //     (selected) => selected?.taskListId !== taskList.id,
+        //   );
+        // }
       }
       setSelectedList(newSelectedList);
     };
@@ -242,9 +260,17 @@ const ItemList = () => {
           );
         }
       } else {
-        newSelectedList = newSelectedList.filter(
-          (selected) => selected?.taskId !== task.id,
+        const indexDeleted = newSelectedList.findIndex(
+          (selected) => !selected?.subTaskId && selected.taskId === task.id,
         );
+
+        if (indexDeleted !== -1) {
+          newSelectedList.splice(indexDeleted, 1);
+        }
+
+        // newSelectedList = newSelectedList.filter(
+        //   (selected) => selected?.taskId !== task.id,
+        // );
       }
 
       setSelectedList(newSelectedList);
@@ -494,16 +520,13 @@ const ItemList = () => {
       <DragAndDrop onDragEnd={onDragEnd}>
         <Drop id="droppable" type="droppable-taskList">
           {dataList.map((taskListItem, taskListIndex) => {
-            const nOfTask = selectedList.filter(
+            const isChecked = selectedList.some(
               (selected) =>
                 !selected?.subTaskId &&
+                !selected.taskId &&
                 selected?.taskListId === taskListItem.id,
-            ).length;
-
-            const isChecked = Boolean(
-              taskListItem.tasks.length &&
-                nOfTask === taskListItem.tasks.length,
             );
+
             return (
               <DragParent
                 className="draggable-taskList"

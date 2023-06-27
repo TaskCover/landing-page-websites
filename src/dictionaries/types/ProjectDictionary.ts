@@ -100,13 +100,19 @@ export type ProjectDictionary = {
       title: string;
       content: string;
     };
+    confirmDeleteTasks: {
+      title: string;
+      content: string;
+    };
     resetSelected: string;
+    noTasksToMove: string;
     notification: {
       taskListSuccess: string;
       taskSuccess: string;
       moveSuccess: string;
       duplicateSuccess: string;
       deleteTaskListSuccess: string;
+      deleteTasksSuccess: string;
       actionTaskSuccess: string;
     };
   };

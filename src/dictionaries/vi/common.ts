@@ -90,4 +90,5 @@ export const CommonLang: CommonDictionary = {
   rename: "Đổi tên",
   all: "Tất cả",
   clickToViewLarge: "Bấm vào để xem lớn hơn",
+  processing: "Đang xử lý",
 };

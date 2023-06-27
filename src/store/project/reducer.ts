@@ -4,7 +4,9 @@ import {
   createProject,
   createTask,
   createTaskList,
-  deleteTaskList,
+  deleteSubTasks,
+  deleteTaskLists,
+  deleteTasks,
   getMembersOfProject,
   GetMembersOfProjectQueries,
   getProject,
@@ -367,28 +369,26 @@ const projectSlice = createSlice({
           }
         },
       )
-      .addCase(deleteTaskList.fulfilled, (state, action) => {
-        const indexDeleted = state.tasks.findIndex(
-          (item) => item.id === action.meta.arg,
-        );
-        if (indexDeleted !== -1) {
-          state.tasks.splice(indexDeleted, 1);
-        }
-      })
       .addCase(moveTask.fulfilled, (state, action) => {
+        const { task_list_current, task_list_move, task_current } =
+          action.meta.arg;
         const indexDeleted = state.tasks.findIndex(
-          (item) => item.id === action.meta.arg.task_list_current,
+          (item) => item.id === task_list_current,
         );
         const indexAdded = state.tasks.findIndex(
-          (item) => item.id === action.meta.arg.task_list_move,
+          (item) => item.id === task_list_move,
         );
-        if (indexAdded !== -1) {
-          state.tasks[indexAdded].tasks = state.tasks[indexAdded].tasks.concat(
-            state.tasks[indexDeleted].tasks,
-          );
-        }
         if (indexDeleted !== -1) {
-          state.tasks[indexDeleted].tasks = [];
+          if (indexAdded !== -1) {
+            const movedTasks = current(state).tasks[indexDeleted].tasks.filter(
+              (taskItem) => task_current.includes(taskItem.id),
+            );
+            state.tasks[indexAdded].tasks =
+              state.tasks[indexAdded].tasks.concat(movedTasks);
+          }
+          state.tasks[indexDeleted].tasks = current(state).tasks[
+            indexDeleted
+          ].tasks.filter((taskItem) => !task_current.includes(taskItem.id));
         }
       })
       .addCase(createTask.fulfilled, (state, action) => {
@@ -493,7 +493,48 @@ const projectSlice = createSlice({
             state.task.comments?.push(comment);
           }
         },
-      ),
+      )
+      .addCase(deleteTasks.fulfilled, (state, action) => {
+        const data = action.meta.arg;
+        const indexTaskList = state.tasks.findIndex(
+          (item) => item.id === data.task_list,
+        );
+
+        if (state.tasks[indexTaskList].tasks.length) {
+          state.tasks[indexTaskList].tasks = state.tasks[
+            indexTaskList
+          ].tasks.filter((task) => !data.tasks.includes(task.id));
+        }
+      })
+      .addCase(deleteSubTasks.fulfilled, (state, action) => {
+        const data = action.meta.arg;
+        const indexTaskList = state.tasks.findIndex(
+          (item) => item.id === data.task_list,
+        );
+        if (indexTaskList !== -1) {
+          const indexTask = state.tasks[indexTaskList].tasks.findIndex(
+            (taskItem) => taskItem.id === data.task,
+          );
+          if (
+            indexTask !== -1 &&
+            state.tasks[indexTaskList].tasks[indexTask]?.sub_tasks?.length
+          ) {
+            state.tasks[indexTaskList].tasks[indexTask].sub_tasks = state.tasks[
+              indexTaskList
+            ].tasks[indexTask].sub_tasks?.filter(
+              (subTask) => !data.sub_tasks.includes(subTask.id),
+            );
+          }
+        }
+      })
+      .addCase(deleteTaskLists.fulfilled, (state, action) => {
+        const data = action.meta.arg;
+        if (state?.tasksFilters?.project === data.project) {
+          state.tasks = current(state).tasks.filter(
+            (taskList) => !data.tasks_list.includes(taskList.id),
+          );
+        }
+      }),
 });
 
 export const { removeMember, updateTaskDetail, reset } = projectSlice.actions;

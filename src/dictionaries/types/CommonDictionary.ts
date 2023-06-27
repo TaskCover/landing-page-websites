@@ -87,4 +87,5 @@ export type CommonDictionary = {
   rename: string;
   all: string;
   clickToViewLarge: string;
+  processing: string;
 };
