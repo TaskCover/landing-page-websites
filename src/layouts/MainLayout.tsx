@@ -92,7 +92,7 @@ const MainLayout = (props: MainLayoutProps) => {
         <Sidebar />
         <Stack flex={1} width="100%" height="100%" overflow="hidden">
           <Header />
-          <Stack p={{ xs: 1, sm: 3 }} overflow="hidden" flex={1}>
+          <Stack overflow="hidden" flex={1}>
             <Stack
               bgcolor={pathname === HOME_PATH ? "transparent" : "common.white"}
               flex={1}

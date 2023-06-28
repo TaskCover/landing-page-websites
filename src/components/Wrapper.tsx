@@ -7,7 +7,7 @@ const Wrapper = (props: StackProps) => {
   const { children, ...rest } = props;
 
   return (
-    <Stack flex={1} overflow="hidden" {...rest}>
+    <Stack p={{ xs: 1, sm: 3 }} flex={1} overflow="hidden" {...rest}>
       {children}
     </Stack>
   );
