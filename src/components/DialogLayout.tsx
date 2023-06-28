@@ -17,6 +17,7 @@ import CloseIcon from "icons/CloseIcon";
 import { SlotComponentProps } from "@mui/base";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
+import { ThemeMode } from "constant/enums";
 
 export type DialogLayoutProps = Omit<DialogProps, "onSubmit"> & {
   children: React.ReactNode;
@@ -151,7 +152,7 @@ const defaultSx = {
     width: { xs: "calc(100% - 24px)", sm: 360 },
     maxWidth: "calc(100vw - 24px)",
     backgroundImage: "none",
-    backgroundColor: "common.white",
+    backgroundColor: "background.paper",
     position: "absolute",
     top: "50%",
     left: "50%",

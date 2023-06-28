@@ -30,6 +30,7 @@ import {
 } from "constant/index";
 import Link from "components/Link";
 import { Endpoint, client } from "api";
+import SwitchTheme from "components/SwitchTheme";
 
 const JoinWorkspace = () => {
   const { onAddSnackbar } = useSnackbar();
@@ -112,7 +113,7 @@ const JoinWorkspace = () => {
           my={{ sm: isSmallHeight ? 3 : 6, lg: isSmallHeight ? 3 : 8 }}
           justifyContent="center"
           alignItems="center"
-          bgcolor="common.white"
+          bgcolor="background.paper"
           p={3}
           flex={{ sm: 1 }}
           width={({ spacing }) => ({
@@ -136,7 +137,17 @@ const JoinWorkspace = () => {
           overflow="auto"
           position="relative"
         >
-          <SwitchLanguage position="absolute" top={16} left={16} />
+          <Stack
+            direction="row"
+            alignItems="center"
+            position="absolute"
+            top={16}
+            right={16}
+            spacing={2}
+          >
+            <SwitchLanguage />
+            <SwitchTheme />
+          </Stack>
 
           <Stack
             minWidth={340}

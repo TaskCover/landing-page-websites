@@ -17,6 +17,7 @@ import useToggle from "hooks/useToggle";
 import IconButton from "./IconButton";
 import UnEyeIcon from "icons/UnEyeIcon";
 import EyeIcon from "icons/EyeIcon";
+import useTheme from "hooks/useTheme";
 
 type CoreInputProps = Omit<TextFieldProps, "error" | "title"> & {
   label?: string;
@@ -77,6 +78,8 @@ const CoreInput = forwardRef(
 
     const [isShow, , , onToggle] = useToggle(false);
 
+    const { isDarkMode } = useTheme();
+
     const type = useMemo(() => {
       if (!typeProps || typeProps !== "password" || !isShow) return typeProps;
       return "text";
@@ -111,8 +114,15 @@ const CoreInput = forwardRef(
 
     const defaultSx = useMemo(
       () =>
-        getDefaultSx(!!title, size === "small", rootSx, titleSx, onlyContent),
-      [title, size, rootSx, titleSx, onlyContent],
+        getDefaultSx(
+          isDarkMode,
+          !!title,
+          size === "small",
+          rootSx,
+          titleSx,
+          onlyContent,
+        ),
+      [isDarkMode, title, size, rootSx, titleSx, onlyContent],
     );
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -162,6 +172,7 @@ export default memo(Input);
 const PREFIX_BUTTON_CLASS = "MuiInputBase-";
 
 const getDefaultSx = (
+  isDarkMode: boolean,
   hasTitle?: boolean,
   smallSize?: boolean,
   rootSx?: SxProps,
@@ -228,11 +239,11 @@ const getDefaultSx = (
 
       [`&.${matchClass(PREFIX_BUTTON_CLASS, "colorWarning")}`]: {
         borderColor: "rgba(255, 184, 0, 0.3)",
-        backgroundColor: "#FFF8EB",
+        backgroundColor: isDarkMode ? "grey.50" : "#FFF8EB",
       },
       [`&.${matchClass(PREFIX_BUTTON_CLASS, "colorError")}`]: {
         borderColor: "rgba(246, 78, 96, 0.3)",
-        backgroundColor: "#FEEDED",
+        backgroundColor: isDarkMode ? "grey.50" : "#FEEDED",
       },
 
       [`&+.${formHelperTextClasses.root}`]: {

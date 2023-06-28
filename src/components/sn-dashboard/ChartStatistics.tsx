@@ -45,7 +45,7 @@ const Layout = (
   return (
     <Stack
       p={{ xs: 1.5, md: 3 }}
-      bgcolor="common.white"
+      bgcolor="background.paper"
       borderRadius={4}
       {...rest}
     >

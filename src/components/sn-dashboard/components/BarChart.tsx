@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { Box, Stack } from "@mui/material";
 import {
   Chart as ChartJS,
@@ -14,6 +14,7 @@ import {
 } from "chart.js";
 import { Bar, ChartProps } from "react-chartjs-2";
 import { formatNumber } from "utils/index";
+import useTheme from "hooks/useTheme";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
 
@@ -33,6 +34,26 @@ const labels = [
 ];
 
 const BarChart = () => {
+  const { isDarkMode, palette } = useTheme();
+
+  const options = useMemo(() => getOptions(isDarkMode), [isDarkMode]);
+
+  const data = useMemo(
+    () => ({
+      labels,
+      datasets: [
+        {
+          data: [10, 20, 30, 25, 40, 32, 20, 60, 50, 70, 50, 50],
+          backgroundColor: isDarkMode ? "#616161" : "#F2EFFF",
+          hoverBackgroundColor: palette.primary.main,
+          borderRadius: 16,
+          borderSkipped: false,
+        },
+      ],
+    }),
+    [isDarkMode, palette.primary.main],
+  );
+
   return (
     <Box position="relative" sx={{ minHeight: 350, flex: 1 }}>
       <Box position="absolute" sx={{ width: "100%", height: "100%" }}>
@@ -45,86 +66,77 @@ const BarChart = () => {
 
 export default memo(BarChart);
 
-const data: ChartData<"bar", number[], string> = {
-  labels,
-  datasets: [
-    {
-      data: [10, 20, 30, 25, 40, 32, 20, 60, 50, 70, 50, 50],
-      backgroundColor: "#F2EFFF",
-      hoverBackgroundColor: "#3699FF",
-      borderRadius: 16,
-      borderSkipped: false,
-    },
-  ],
-};
-
-const options: ChartProps["options"] = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false,
-    },
-    title: {
-      display: true,
-      text: "Monthly Earning",
-      position: "top",
-      align: "start",
-      padding: {
-        top: 10,
-        bottom: 30,
+const getOptions = (isDarkMode: boolean) => {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
       },
-      color: "#BABCC6",
-      font: {
-        size: 14,
-        lineHeight: 1.57,
+      title: {
+        display: true,
+        text: "Monthly Earning",
+        position: "top",
+        align: "start",
+        padding: {
+          top: 10,
+          bottom: 30,
+        },
+        color: isDarkMode ? "#dcdde2" : "#BABCC6",
+        font: {
+          size: 14,
+          lineHeight: 1.57,
+        },
       },
-    },
-    tooltip: {
-      backgroundColor: "#212121",
-      usePointStyle: true,
-      yAlign: "bottom",
-      bodyFont: {
-        size: 12,
-        weight: "600",
-      },
-      callbacks: {
-        title: () => "",
-        label: (ctx) => ` ${formatNumber(ctx.parsed.y)}%`,
-        labelTextColor: () => "#FFFFFF",
-        labelPointStyle: () => {
-          const image = new Image(14, 7);
-          image.src = "/images/ic-trend.svg";
-          return {
-            pointStyle: image,
-            rotation: 0,
-          };
+      tooltip: {
+        backgroundColor: isDarkMode ? "#3B3A39" : "#212121",
+        usePointStyle: true,
+        yAlign: "bottom",
+        bodyFont: {
+          size: 12,
+          weight: "600",
+        },
+        callbacks: {
+          title: () => "",
+          label: (ctx) => ` ${formatNumber(ctx.parsed.y)}%`,
+          labelTextColor: () => "#FFFFFF",
+          labelPointStyle: () => {
+            const image = new Image(14, 7);
+            image.src = "/images/ic-trend.svg";
+            return {
+              pointStyle: image,
+              rotation: 0,
+            };
+          },
         },
       },
     },
-  },
-  scales: {
-    x: {
-      grid: {
-        display: false,
-        drawTicks: false,
+    scales: {
+      x: {
+        grid: {
+          display: false,
+          drawTicks: false,
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          color: isDarkMode ? "#ECECF3" : undefined,
+        },
       },
-      border: {
-        display: false,
+      y: {
+        grid: {
+          display: false,
+          drawTicks: false,
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          display: false,
+        },
       },
     },
-    y: {
-      grid: {
-        display: false,
-        drawTicks: false,
-      },
-      border: {
-        display: false,
-      },
-      ticks: {
-        display: false,
-        color: ["red", "blue"],
-      },
-    },
-  },
+  } as ChartProps["options"];
 };

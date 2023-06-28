@@ -3,7 +3,6 @@ body {
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
   overflow-x: hidden;
-  background-color: #f7f7fd !important;
   overflow: hidden;
   position: fixed;
   top: 0;
@@ -73,25 +72,25 @@ a {
 
   /* width */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: #b5b5c3;
+    background: var(--mui-palette-primary-light);
     border-radius: 2px;
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: rgba(134, 138, 166, 0.9);
+    background: var(--mui-palette-primary-main);
     border-radius: 2px;
   }
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(134, 138, 166, 0.9);
+    background: var(--mui-palette-primary-main);
     cursor: pointer;
   }
 }

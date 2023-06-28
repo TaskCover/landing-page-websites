@@ -11,9 +11,12 @@ import Form from "./Form";
 import SwitchLanguage from "components/SwitchLanguage";
 import { NS_AUTH } from "constant/index";
 import { useTranslations } from "next-intl";
+import useTheme from "hooks/useTheme";
+import SwitchTheme from "components/SwitchTheme";
 
 const MainSection = () => {
   const t = useTranslations(NS_AUTH);
+  const { isDarkMode } = useTheme();
 
   return (
     <Stack
@@ -27,13 +30,26 @@ const MainSection = () => {
       alignItems="center"
       m={{ xs: 2, sm: 0 }}
       justifyContent="center"
-      bgcolor={{ xs: "rgba(255, 255, 255, 0.9)", sm: undefined }}
+      bgcolor={{
+        xs: isDarkMode ? "background.paper" : "rgba(255, 255, 255, 0.9)",
+        sm: undefined,
+      }}
       boxShadow={{ xs: "0px 4px 12px rgba(0, 0, 0, 0.15)", sm: undefined }}
-      borderRadius={{ xs: 2, sm: undefined }}
+      borderRadius={{ xs: 2, sm: 0 }}
       py={{ xs: 2, sm: undefined }}
       position="relative"
     >
-      <SwitchLanguage position="absolute" top={16} left={16} />
+      <Stack
+        direction="row"
+        alignItems="center"
+        position="absolute"
+        top={16}
+        left={16}
+        spacing={2}
+      >
+        <SwitchLanguage />
+        <SwitchTheme />
+      </Stack>
       <Image src={AppLogo} alt="App logo" width={152} />
 
       <Stack

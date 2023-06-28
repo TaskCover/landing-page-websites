@@ -10,6 +10,7 @@ import { useSnackbar } from "store/app/selectors";
 import { useTaskDetail } from "store/project/selectors";
 import { TaskData } from "store/project/actions";
 import CloseIcon from "icons/CloseIcon";
+import useTheme from "hooks/useTheme";
 
 type ActionsSelectedProps = {
   selectedList: Selected[];
@@ -23,6 +24,8 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
   const { onUpdateTask } = useTaskDetail();
 
   const { onAddSnackbar } = useSnackbar();
+
+  const { isDarkMode } = useTheme();
 
   const statusOptions = useMemo(
     () =>
@@ -60,7 +63,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      bgcolor="primary.light"
+      bgcolor={isDarkMode ? "background.default" : "primary.light"}
       px={3}
       py={2}
       position="sticky"

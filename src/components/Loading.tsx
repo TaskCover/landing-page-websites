@@ -25,7 +25,7 @@ const Loading = (props: DialogProps) => {
     >
       <Stack alignItems="center" spacing={1}>
         <CircularProgress size={24} color="primary" />
-        <Text variant="body2" fontWeight={600} color="common.white">
+        <Text variant="body2" fontWeight={600} color="text.primary">
           {`${t("processing")}...`}
         </Text>
         {children}

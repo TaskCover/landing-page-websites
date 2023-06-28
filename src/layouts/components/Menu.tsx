@@ -27,12 +27,20 @@ import { MenuItemProps } from "./helpers";
 import { useTranslations } from "next-intl";
 import { NS_LAYOUT } from "constant/index";
 import { Permission } from "constant/enums";
+import useTheme from "hooks/useTheme";
 
 const Menu = () => {
   const { user } = useAuth();
 
   return (
-    <Stack width="100%" spacing={1.5} overflow="auto">
+    <Stack
+      width="100%"
+      spacing={1.5}
+      sx={{
+        overflowX: "hidden",
+        overflowY: "auto",
+      }}
+    >
       {DATA.map((item) => {
         const isAuthorized = user?.roles?.some((role) =>
           item?.roles?.includes(role),
@@ -78,6 +86,8 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
 
   const t = useTranslations(NS_LAYOUT);
 
+  const { isDarkMode } = useTheme();
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const { isExpandedSidebar } = useSidebar();
@@ -116,9 +126,12 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
         borderRadius: 1,
         px: 2.5,
         py: 1.5,
-        backgroundColor: { xs: "grey.50", sm: undefined },
+        backgroundColor: {
+          xs: isDarkMode ? "background.default" : "grey.50",
+          sm: undefined,
+        },
         "&:hover, &.active": {
-          backgroundColor: "primary.light",
+          backgroundColor: isDarkMode ? "grey.50" : "primary.light",
         },
         display: "inline-flex",
       }}
@@ -174,11 +187,11 @@ const DATA: MenuItemProps[] = [
     href: PROJECTS_PATH,
     roles: [Permission.AM, Permission.ST],
   },
-  {
-    label: "menu.task",
-    icon: <MenuTaskIcon />,
-    roles: [Permission.AM, Permission.ST],
-  },
+  // {
+  //   label: "menu.task",
+  //   icon: <MenuTaskIcon />,
+  //   roles: [Permission.AM, Permission.ST],
+  // },
   {
     label: "menu.company",
     icon: <MenuCompanyIcon />,

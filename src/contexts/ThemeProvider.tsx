@@ -1,30 +1,36 @@
 "use client";
 
-import { typography, palette, breakpoints } from "public/material";
+import { typography, breakpoints } from "public/material";
 import {
-  ThemeProvider as MuiThemeProvider,
-  createTheme,
+  Experimental_CssVarsProvider as CssVarsProvider,
+  experimental_extendTheme as extendTheme,
+  getInitColorSchemeScript,
 } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import colorSchemes from "utils/colorSchemes";
+import { DEFAULT_MODE } from "constant/index";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
 };
 
-const theme = createTheme({
-  palette,
+const theme = extendTheme({
+  colorSchemes,
   typography,
   breakpoints,
 });
 
 const ThemeProvider = (props: ThemeProviderProps) => {
   const { children } = props;
-
+  getInitColorSchemeScript({
+    defaultMode: DEFAULT_MODE,
+    modeStorageKey: "app_mode",
+  });
   return (
-    <MuiThemeProvider theme={theme}>
+    <CssVarsProvider theme={theme} defaultMode={DEFAULT_MODE}>
       <CssBaseline />
       {children}
-    </MuiThemeProvider>
+    </CssVarsProvider>
   );
 };
 

@@ -5,6 +5,7 @@ import { useId } from "react";
 import { MenuItemProps } from "./helpers";
 import { useTranslations } from "next-intl";
 import { NS_LAYOUT } from "constant/index";
+import useTheme from "hooks/useTheme";
 
 const SubMenu = (
   props: Omit<PopperProps, "children"> & { options: MenuItemProps[] },
@@ -12,6 +13,7 @@ const SubMenu = (
   const { options, ...rest } = props;
   const popoverId = useId();
   const t = useTranslations(NS_LAYOUT);
+  const { isDarkMode } = useTheme();
 
   return (
     <Popper
@@ -21,7 +23,7 @@ const SubMenu = (
         borderRadius: 1,
         width: 200,
         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
-        backgroundColor: "common.white",
+        backgroundColor: "background.paper",
         top: ({ spacing }) => `${spacing(2)}!important`,
         zIndex: 1221,
       }}

@@ -1,23 +1,25 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { Stack } from "@mui/material";
 import AppLogo from "components/AppLogo";
 import { Button, Input, Text } from "components/shared";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
 import { formErrorCode } from "api/formErrorCode";
-import { ErrorResponse } from "constant/types";
+import { ErrorResponse, Locale } from "constant/types";
 import { AN_ERROR_TRY_AGAIN, NS_AUTH, NS_COMMON } from "constant/index";
 import { useRouter } from "next-intl/client";
 import { SIGNIN_PATH } from "constant/paths";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import SwitchLanguage from "components/SwitchLanguage";
+import SwitchTheme from "components/SwitchTheme";
 
 const Verify = () => {
   const { onVerify } = useAuth();
   const { onAddSnackbar } = useSnackbar();
   const { push } = useRouter();
+  const locale = useLocale() as Locale;
 
   const authT = useTranslations(NS_AUTH);
   const commonT = useTranslations(NS_COMMON);
@@ -25,6 +27,8 @@ const Verify = () => {
   const [code, setCode] = useState<string>("");
   const [error, setError] = useState<string | undefined>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const isVNLang = useMemo(() => locale === "vi", [locale]);
 
   const onChange = (newValue?: string | number) => {
     setCode(`${newValue ?? ""}`);
@@ -69,7 +73,7 @@ const Verify = () => {
         m={{ xs: 2, sm: 8 }}
         justifyContent="center"
         alignItems="center"
-        bgcolor="common.white"
+        bgcolor="background.paper"
         p={3}
         flex={{ sm: 1 }}
         width={({ spacing }) => ({
@@ -88,7 +92,17 @@ const Verify = () => {
         overflow="auto"
         position="relative"
       >
-        <SwitchLanguage position="absolute" top={16} right={16} />
+        <Stack
+          direction="row"
+          alignItems="center"
+          position="absolute"
+          top={16}
+          left={16}
+          spacing={2}
+        >
+          <SwitchLanguage />
+          <SwitchTheme />
+        </Stack>
 
         <Stack
           minWidth={340}
@@ -128,7 +142,7 @@ const Verify = () => {
             })}
           </Text>
           <Input
-            titleSx={{ left: "39%" }}
+            titleSx={{ left: isVNLang ? "39%" : "42%" }}
             rootSx={{
               backgroundColor: "grey.50",
               height: 58,

@@ -12,6 +12,7 @@ import Link from "components/Link";
 import { NS_AUTH } from "constant/index";
 import { useTranslations } from "next-intl";
 import SwitchLanguage from "components/SwitchLanguage";
+import SwitchTheme from "components/SwitchTheme";
 
 const Result = () => {
   const authT = useTranslations(NS_AUTH);
@@ -27,7 +28,7 @@ const Result = () => {
         m={{ xs: 2, sm: 8 }}
         justifyContent="center"
         alignItems="center"
-        bgcolor="common.white"
+        bgcolor="background.paper"
         p={3}
         flex={{ sm: 1 }}
         width={({ spacing }) => ({
@@ -43,7 +44,17 @@ const Result = () => {
         overflow="auto"
         position="relative"
       >
-        <SwitchLanguage position="absolute" top={16} right={16} />
+        <Stack
+          direction="row"
+          alignItems="center"
+          position="absolute"
+          top={16}
+          right={16}
+          spacing={2}
+        >
+          <SwitchLanguage />
+          <SwitchTheme />
+        </Stack>
 
         <AppLogo width={188} />
         <Text variant="h3" textAlign="center" mt={3}>

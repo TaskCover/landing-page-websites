@@ -17,7 +17,7 @@ const Wrapper = (props: StackProps & { transparent?: boolean }) => {
     >
       <Stack
         flex={1}
-        bgcolor={transparent ? "transparent" : "common.white"}
+        bgcolor={transparent ? "transparent" : "background.paper"}
         borderRadius={1}
         spacing={spacing}
       >

@@ -89,9 +89,9 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
               position: "absolute",
               top: 0,
               right: 0,
-              bgcolor: "common.white",
+              bgcolor: "background.paper",
               "&:hover": {
-                bgcolor: "common.white",
+                bgcolor: "background.paper",
               },
               zIndex: 20,
             }}
