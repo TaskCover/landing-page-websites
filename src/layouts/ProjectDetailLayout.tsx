@@ -4,12 +4,13 @@ import { Endpoint } from "api";
 import Wrapper from "components/Wrapper";
 import { TabList } from "components/sn-project-detail/components";
 import { NS_COMMON, NS_PROJECT, SCROLL_ID } from "constant/index";
-import { PROJECTS_PATH } from "constant/paths";
+import { PROJECTS_PATH, PROJECT_MEMBERS_PATH } from "constant/paths";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef } from "react";
+import { usePathname } from "next-intl/client";
+import { useEffect, useMemo, useRef } from "react";
 import { useHeaderConfig } from "store/app/selectors";
 import { useProject, useProjects } from "store/project/selectors";
-import { cleanObject, getPath } from "utils/index";
+import { getPath } from "utils/index";
 
 type ProjectDetailLayoutProps = {
   children: React.ReactNode;
@@ -22,6 +23,13 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
   const { onUpdateHeaderConfig } = useHeaderConfig();
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
+
+  const pathname = usePathname();
+
+  const isMembersOfProjectPath = useMemo(
+    () => pathname.replace(id, "{id}") === PROJECT_MEMBERS_PATH,
+    [id, pathname],
+  );
 
   const dataStringifyRef = useRef<string | undefined>();
 
@@ -68,6 +76,7 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
       sx={{ overflowX: "hidden", overflowY: "auto" }}
       id={SCROLL_ID}
       overflow="auto"
+      inFrame={isMembersOfProjectPath}
     >
       <TabList />
       {children}

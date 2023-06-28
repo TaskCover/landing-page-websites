@@ -1,4 +1,3 @@
-import Wrapper from "components/Wrapper";
 import InformationCompanyPage from "components/sn-company-detail/Information";
 
 export const metadata = {

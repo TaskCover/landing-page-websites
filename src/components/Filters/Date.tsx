@@ -1,10 +1,18 @@
-import { forwardRef, memo } from "react";
+import { memo } from "react";
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
-import DatePicker, { ReactDatePickerProps } from "react-datepicker";
+import DatePicker, {
+  ReactDatePickerProps,
+  registerLocale,
+} from "react-datepicker";
 import CalendarIcon from "icons/CalendarIcon";
 import { formatDate } from "utils/index";
 import { DATE_FORMAT_FORM } from "constant/index";
+import { vi, enUS } from "date-fns/locale";
+import { useLocale } from "next-intl";
+
+registerLocale("vi", vi);
+registerLocale("en", enUS);
 
 type DateProps = Omit<ReactDatePickerProps, "name" | "onChange"> & {
   label: string;
@@ -23,6 +31,8 @@ const FDate = (props: DateProps) => {
     format = DATE_FORMAT_FORM,
     ...rest
   } = props;
+
+  const locale = useLocale();
 
   const onChangeDate = (date: Date | null) => {
     onChange(name, date ? formatDate(date.getTime(), format) : undefined);
@@ -46,6 +56,7 @@ const FDate = (props: DateProps) => {
       <DatePicker
         selected={value ? new Date(value) : null}
         onChange={onChangeDate}
+        locale={locale}
         customInput={
           <CalendarIcon
             sx={{

@@ -98,7 +98,8 @@ const Verify = () => {
           position="absolute"
           top={16}
           left={16}
-          spacing={2}
+          spacing={{ xs: 1, sm: 2 }}
+          zIndex={10}
         >
           <SwitchLanguage />
           <SwitchTheme />

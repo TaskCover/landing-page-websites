@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <Wrapper overflow="auto">
+    <Wrapper overflow="auto" inFrame>
       <Actions />
       <ItemList />
     </Wrapper>

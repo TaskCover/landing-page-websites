@@ -3,8 +3,10 @@
 import { memo } from "react";
 import { Stack, StackProps } from "@mui/material";
 
-const Wrapper = (props: StackProps & { transparent?: boolean }) => {
-  const { children, transparent, spacing, ...rest } = props;
+const Wrapper = (
+  props: StackProps & { transparent?: boolean; inFrame?: boolean },
+) => {
+  const { children, transparent, spacing, inFrame, ...rest } = props;
 
   return (
     <Stack
@@ -20,6 +22,7 @@ const Wrapper = (props: StackProps & { transparent?: boolean }) => {
         bgcolor={transparent ? "transparent" : "background.paper"}
         borderRadius={1}
         spacing={spacing}
+        overflow={inFrame ? "hidden" : "initial"}
       >
         {children}
       </Stack>

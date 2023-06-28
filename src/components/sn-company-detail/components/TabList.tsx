@@ -9,6 +9,7 @@ import { useHeaderConfig } from "store/app/selectors";
 import ChevronIcon from "icons/ChevronIcon";
 import useBreakpoint from "hooks/useBreakpoint";
 import { useParams } from "next/navigation";
+import useTheme from "hooks/useTheme";
 
 type TabItemProps = {
   href: string;
@@ -30,7 +31,7 @@ const TabList = () => {
       spacing={4}
       position="sticky"
       top={0}
-      bgcolor="common.white"
+      bgcolor="background.paper"
       zIndex={1}
     >
       {!!isSmSmaller && (
@@ -62,6 +63,7 @@ const TabItem = (props: TabItemProps) => {
 
   const pathname = usePathname();
   const params = useParams();
+  const { isDarkMode } = useTheme();
 
   const isActiveLink = useMemo(() => {
     const suffixPath = getSuffixPath(pathname);
@@ -75,9 +77,13 @@ const TabItem = (props: TabItemProps) => {
       underline="none"
       sx={{
         minWidth: 120,
-        bgcolor: isActiveLink ? "primary.light" : "transparent",
+        bgcolor: isActiveLink
+          ? isDarkMode
+            ? "grey.50"
+            : "primary.light"
+          : "transparent",
         "&:hover": {
-          bgcolor: "primary.light",
+          bgcolor: isDarkMode ? "grey.50" : "primary.light",
         },
         py: { xs: 2, sm: 2.5 },
         px: { xs: 2, sm: 3.5 },

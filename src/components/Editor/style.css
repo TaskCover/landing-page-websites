@@ -62,7 +62,6 @@
   border-top: 1px solid #babcc6;
 }
 
-
 .ql-editor.ql-blank::before {
   color: var(--mui-palette-text-secondary);
 }

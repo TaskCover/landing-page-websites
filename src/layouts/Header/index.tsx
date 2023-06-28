@@ -13,7 +13,7 @@ import SwitchLanguage from "components/SwitchLanguage";
 import { useProjects } from "store/project/selectors";
 import { useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
-import { PROJECTS_PATH } from "constant/paths";
+import { HOME_PATH, PROJECTS_PATH } from "constant/paths";
 import { DataStatus } from "constant/enums";
 import useToggle from "hooks/useToggle";
 import SwitchTheme from "components/SwitchTheme";
@@ -52,7 +52,9 @@ const Header = () => {
       px={3}
       width="100%"
     >
-      <AppLogo height={48} className="only-mobile" />
+      <Link href={HOME_PATH} underline="none">
+        <AppLogo height={48} className="only-mobile" />
+      </Link>
       <Stack
         direction="row"
         alignItems="center"
