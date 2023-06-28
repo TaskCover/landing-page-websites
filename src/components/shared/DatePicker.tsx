@@ -5,8 +5,6 @@ import LibDatePicker, {
 } from "react-datepicker";
 import Input, { InputProps } from "./Input";
 import CalendarIcon from "icons/CalendarIcon";
-import "react-datepicker/dist/react-datepicker.css";
-import "./date-picker.css";
 import { vi, enUS } from "date-fns/locale";
 import { useLocale } from "next-intl";
 

@@ -1,5 +1,8 @@
+import "react-datepicker/dist/react-datepicker.css";
 import "public/styles/index.css";
 import "public/styles/html.css";
+import "public/styles/date-picker.css";
+
 import AppProvider from "contexts/AppProvider";
 import { openSans } from "public/material/typography";
 import { notFound } from "next/navigation";

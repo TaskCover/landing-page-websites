@@ -65,7 +65,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
       justifyContent="space-between"
       bgcolor={isDarkMode ? "background.default" : "primary.light"}
       px={3}
-      py={2}
+      py={{ xs: 1, md: 2 }}
       position="sticky"
       top={60}
       zIndex={1}
@@ -86,27 +86,37 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
       </Stack>
 
       <Stack direction="row" alignItems="center" spacing={3}>
-        <AssignerFilter
-          onChange={onChange}
-          placeholder={projectT("detailTasks.assignee")}
-          hasAvatar
-        />
-        <Date
-          label={commonT("form.title.startDate")}
-          name="start_date"
-          onChange={onChange}
-        />
-        <Date
-          label={commonT("form.title.dueDate")}
-          name="end_date"
-          onChange={onChange}
-        />
-        <Dropdown
-          placeholder={commonT("status")}
-          options={statusOptions}
-          name="status"
-          onChange={onChange}
-        />
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          alignItems="center"
+          spacing={{ xs: 1, md: 3 }}
+        >
+          <Stack direction="row" alignItems="center" spacing={{ xs: 1, md: 3 }}>
+            <AssignerFilter
+              onChange={onChange}
+              placeholder={projectT("detailTasks.assignee")}
+              hasAvatar
+            />
+            <Date
+              label={commonT("form.title.startDate")}
+              name="start_date"
+              onChange={onChange}
+            />
+          </Stack>
+          <Stack direction="row" alignItems="center" spacing={{ xs: 1, md: 3 }}>
+            <Date
+              label={commonT("form.title.dueDate")}
+              name="end_date"
+              onChange={onChange}
+            />
+            <Dropdown
+              placeholder={commonT("status")}
+              options={statusOptions}
+              name="status"
+              onChange={onChange}
+            />
+          </Stack>
+        </Stack>
         <MoreList {...props} />
       </Stack>
     </Stack>
