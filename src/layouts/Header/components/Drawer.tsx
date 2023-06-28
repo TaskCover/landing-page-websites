@@ -50,7 +50,7 @@ const Drawer = () => {
         anchor="left"
         sx={{
           [`& .${drawerClasses.paper}`]: {
-            backgroundColor: "common.white",
+            backgroundColor: "background.paper",
             backgroundImage: "none",
             width: "100%",
             px: 3,

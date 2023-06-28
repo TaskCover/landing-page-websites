@@ -1,7 +1,15 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { SvgIcon, SvgIconProps } from "@mui/material";
+import useTheme from "hooks/useTheme";
 
 const MenuCompanyIcon = (props: SvgIconProps) => {
+  const { isDarkMode } = useTheme();
+
+  const fill = useMemo(
+    () => (isDarkMode ? "#FFFFFF" : "#212121"),
+    [isDarkMode],
+  );
+
   return (
     <SvgIcon
       viewBox="0 0 24 24"
@@ -21,7 +29,7 @@ const MenuCompanyIcon = (props: SvgIconProps) => {
       />
       <path
         d="M10.11 4C10.03 4.3 10 4.63 10 5V8H5V6C5 4.9 5.9 4 7 4H10.11Z"
-        stroke="#212121"
+        stroke={fill}
         strokeWidth="1.5"
         strokeMiterlimit="10"
         strokeLinecap="round"
@@ -30,7 +38,7 @@ const MenuCompanyIcon = (props: SvgIconProps) => {
       />
       <path
         d="M14 8V13"
-        stroke="#212121"
+        stroke={fill}
         strokeWidth="1.5"
         strokeMiterlimit="10"
         strokeLinecap="round"
@@ -39,7 +47,7 @@ const MenuCompanyIcon = (props: SvgIconProps) => {
       />
       <path
         d="M18 8V13"
-        stroke="#212121"
+        stroke={fill}
         strokeWidth="1.5"
         strokeMiterlimit="10"
         strokeLinecap="round"
@@ -57,7 +65,7 @@ const MenuCompanyIcon = (props: SvgIconProps) => {
       />
       <path
         d="M6 13V17"
-        stroke="#212121"
+        stroke={fill}
         strokeWidth="1.5"
         strokeMiterlimit="10"
         strokeLinecap="round"

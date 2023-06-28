@@ -31,7 +31,7 @@ const Detail = () => {
       anchor="right"
       sx={{
         [`& .${drawerClasses.paper}`]: {
-          backgroundColor: "common.white",
+          backgroundColor: "background.paper",
           backgroundImage: "none",
           width: { xs: "100%", md: "70%", lg: "50%" },
           overflow: "hidden",

@@ -12,6 +12,7 @@ import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
+import useTheme from "hooks/useTheme";
 
 type DeleteUserProps = {
   id: string;
@@ -24,7 +25,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
   const { item } = useProject();
   const { onAddSnackbar } = useSnackbar();
   const { onDeleteMember } = useMembersOfProject();
-  const commonT = useTranslations(NS_COMMON);
+  const { isDarkMode } = useTheme();
   const projectT = useTranslations(NS_PROJECT);
 
   const onClick = (event) => {
@@ -68,7 +69,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
         tooltip={projectT("detailMembers.removeFromProject")}
         variant="contained"
         size="small"
-        sx={{ bgcolor: "error.light" }}
+        sx={{ bgcolor: isDarkMode ? "error.main" : "error.light" }}
       >
         <DeleteUserIcon sx={{ color: "text.primary" }} />
       </IconButton>

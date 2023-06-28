@@ -35,7 +35,7 @@ const Sidebar = (props: StackProps) => {
       p={isShowLarge ? { lg: 2.5, xl: 3 } : 1.25}
       sx={{
         transition: "width .3s",
-        backgroundColor: "common.white",
+        backgroundColor: "background.paper",
         "&::-webkit-scrollbar": {
           width: 4,
           height: 4,

@@ -19,6 +19,7 @@ import { getPath } from "utils/index";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { NS_PROJECT } from "constant/index";
+import useTheme from "hooks/useTheme";
 
 type TabItemProps = {
   href: string;
@@ -39,7 +40,7 @@ const TabList = () => {
         spacing={4}
         position="sticky"
         top={0}
-        bgcolor="common.white"
+        bgcolor="background.paper"
         zIndex={1}
       >
         <Stack direction="row" alignItems="center" flex={1} width="100%">
@@ -61,6 +62,7 @@ const TabItem = (props: TabItemProps) => {
   const { href, label } = props;
 
   const projectT = useTranslations(NS_PROJECT);
+  const { isDarkMode } = useTheme();
 
   const pathname = usePathname();
   const params = useParams();
@@ -77,9 +79,13 @@ const TabItem = (props: TabItemProps) => {
       underline="none"
       sx={{
         minWidth: 120,
-        bgcolor: isActiveLink ? "primary.light" : "transparent",
+        bgcolor: isActiveLink
+          ? isDarkMode
+            ? "grey.50"
+            : "primary.light"
+          : "transparent",
         "&:hover": {
-          bgcolor: "primary.light",
+          bgcolor: isDarkMode ? "grey.50" : "primary.light",
         },
         py: { xs: 2, sm: 2.5 },
         px: { xs: 2, sm: 3.5 },

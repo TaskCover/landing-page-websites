@@ -33,6 +33,7 @@ import { MobileContentCell, DesktopCells } from "./components";
 import useBreakpoint from "hooks/useBreakpoint";
 import DeleteConfirm from "./components/DeleteConfirm";
 import { useTranslations } from "next-intl";
+import useTheme from "hooks/useTheme";
 
 const ItemList = () => {
   const {
@@ -55,6 +56,7 @@ const ItemList = () => {
   const pathname = usePathname();
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
+  const { isDarkMode } = useTheme();
 
   const [item, setItem] = useState<Employee | undefined>();
   const [selectedList, setSelectedList] = useState<Employee[]>([]);
@@ -206,7 +208,7 @@ const ItemList = () => {
             onClick={onPay}
             tooltip={companyT("employees.pay")}
             sx={{
-              backgroundColor: "primary.light",
+              backgroundColor: isDarkMode ? "grey.50" : "primary.light",
               color: "text.primary",
               p: 1,
               "&:hover svg": {
@@ -222,7 +224,7 @@ const ItemList = () => {
             onClick={onDelete}
             tooltip={commonT("delete")}
             sx={{
-              backgroundColor: "primary.light",
+              backgroundColor: isDarkMode ? "grey.50" : "primary.light",
               color: "text.primary",
               p: 1,
               "&:hover svg": {

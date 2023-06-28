@@ -58,7 +58,7 @@ const Pagination = (props: PaginationProps) => {
           {t("paging.show")}
         </Text>
         <Select
-          rootSx={{ borderColor: "#DDDDDD", borderRadius: 2, height: 40 }}
+          rootSx={{ borderColor: "grey.100", borderRadius: 2, height: 40 }}
           options={OPTIONS}
           onChange={onChangePageSize}
           value={pageSize}

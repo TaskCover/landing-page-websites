@@ -13,6 +13,7 @@ import { useSidebar } from "store/app/selectors";
 import useBreakpoint from "hooks/useBreakpoint";
 import { useTranslations } from "next-intl";
 import { NS_LAYOUT } from "constant/index";
+import useTheme from "hooks/useTheme";
 
 type CollapseProps = {
   label: string;
@@ -24,6 +25,8 @@ type CollapseProps = {
 const Collapse = (props: CollapseProps) => {
   const { label, icon, children, initCollapse = false } = props;
   const t = useTranslations(NS_LAYOUT);
+
+  const { isDarkMode } = useTheme();
 
   const { isExpandedSidebar } = useSidebar();
   const { isLgSmaller, isSmSmaller } = useBreakpoint();
@@ -60,9 +63,12 @@ const Collapse = (props: CollapseProps) => {
           px: 2.5,
           py: 1.5,
           borderRadius: 1,
-          backgroundColor: { xs: "grey.50", sm: undefined },
+          backgroundColor: {
+            xs: isDarkMode ? "background.default" : "grey.50",
+            sm: undefined,
+          },
           "&:hover, &.active": {
-            backgroundColor: "primary.light",
+            backgroundColor: isDarkMode ? "grey.50" : "primary.light",
           },
           minHeight: "auto",
           "&.Mui-expanded": {

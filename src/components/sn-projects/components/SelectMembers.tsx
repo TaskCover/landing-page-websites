@@ -9,6 +9,7 @@ import MemberItem from "./MemberItem";
 import { usePositionOptions } from "store/global/selectors";
 import { NS_PROJECT, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
+import useTheme from "hooks/useTheme";
 
 type SelectMembersProps = {
   value?: Member[];
@@ -173,6 +174,8 @@ const DisplayItem = (
 ) => {
   const { fullname, id, onRemove } = props;
 
+  const { isDarkMode } = useTheme();
+
   const onRemoveMember = (event) => {
     event.stopPropagation();
     onRemove(id);
@@ -184,7 +187,7 @@ const DisplayItem = (
       py={0.25}
       px={0.5}
       borderRadius={5}
-      bgcolor="primary.light"
+      bgcolor={isDarkMode ? "background.default" : "primary.light"}
       spacing={1}
       display="inline-flex"
       width="fit-content"

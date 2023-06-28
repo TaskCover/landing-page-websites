@@ -160,7 +160,10 @@ const UserInformation = () => {
               sx={{
                 width: 24,
                 height: 24,
-                backgroundColor: "common.white",
+                backgroundColor: "grey.50",
+                "&:hover": {
+                  backgroundColor: "grey.50",
+                },
                 borderRadius: "50%",
                 position: "absolute",
                 bottom: 0,

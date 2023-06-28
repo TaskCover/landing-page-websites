@@ -5,16 +5,16 @@
 
 .ql-container {
   font-size: 14px;
-  color: #212121;
+  color: var(--mui-palette-text-primary);
 }
 
 .ql-snow .ql-stroke {
-  stroke: #999999;
+  stroke: var(--mui-palette-grey-300);
 }
 
 .ql-snow .ql-fill,
 .ql-snow .ql-stroke.ql-fill {
-  fill: #999999;
+  fill: var(--mui-palette-grey-300);
 }
 
 .quill * {
@@ -23,8 +23,8 @@
 
 .ql-toolbar.ql-snow {
   border-bottom: 1px solid #ececf3;
-  border-left: 1px solid #babcc6;
-  border-right: 1px solid #babcc6;
+  border-left: 1px solid var(--mui-palette-grey-A200);
+  border-right: 1px solid var(--mui-palette-grey-A200);
   border-top: none;
 }
 
@@ -36,7 +36,7 @@
   border: none !important;
 }
 
-.nocss .ql-toolbar.ql-snow + .ql-container.ql-snow {
+.nocss .ql-toolbar.ql-snow+.ql-container.ql-snow {
   border: none !important;
 }
 
@@ -58,6 +58,11 @@
   border-top-right-radius: 4px;
 }
 
-.ql-toolbar.ql-snow + .ql-container.ql-snow {
+.ql-toolbar.ql-snow+.ql-container.ql-snow {
   border-top: 1px solid #babcc6;
+}
+
+
+.ql-editor.ql-blank::before {
+  color: var(--mui-palette-text-secondary);
 }

@@ -13,6 +13,7 @@ import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
 import { useTranslations } from "next-intl";
 import SwitchLanguage from "components/SwitchLanguage";
+import SwitchTheme from "components/SwitchTheme";
 
 const Forgot = () => {
   const { onForgot } = useAuth();
@@ -68,7 +69,7 @@ const Forgot = () => {
         m={{ xs: 2, sm: 8 }}
         justifyContent="center"
         alignItems="center"
-        bgcolor="common.white"
+        bgcolor="background.paper"
         p={3}
         flex={{ sm: 1 }}
         width={({ spacing }) => ({
@@ -84,7 +85,17 @@ const Forgot = () => {
         overflow="auto"
         position="relative"
       >
-        <SwitchLanguage position="absolute" top={16} right={16} />
+        <Stack
+          direction="row"
+          alignItems="center"
+          position="absolute"
+          top={16}
+          right={16}
+          spacing={2}
+        >
+          <SwitchLanguage />
+          <SwitchTheme />
+        </Stack>
 
         <Stack
           minWidth={{ sm: 380 }}

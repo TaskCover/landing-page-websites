@@ -7,13 +7,16 @@ import Link from "components/Link";
 import { HOME_PATH } from "constant/paths";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
 import { formatDate, formatNumber } from "utils/index";
+import useTheme from "hooks/useTheme";
 
 const Transactions = () => {
+  const { isDarkMode } = useTheme();
+
   return (
     <Stack
       borderRadius={7.5}
-      boxShadow="0px 10px 60px rgba(226, 236, 249, 0.5)"
-      bgcolor="common.white"
+      boxShadow={isDarkMode ? "none" : "0px 10px 60px rgba(226, 236, 249, 0.5)"}
+      bgcolor="background.paper"
       pt={4.375}
       pb={3.5}
       px={{ xs: 1.5, sm: 3, lg: 6 }}

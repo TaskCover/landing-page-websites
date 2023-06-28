@@ -23,6 +23,7 @@ import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
+import useTheme from "hooks/useTheme";
 
 type ActionOption = {
   icon: React.ReactNode;
@@ -49,6 +50,7 @@ const ActionsCell = (props: ActionsCellProps) => {
   } = props;
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
+  const { isDarkMode } = useTheme();
 
   const [isShow, onShow, onHide] = useToggle();
   const [isSubmitting, onSubmittingTrue, onSubmittingFalse] = useToggle(false);
@@ -109,7 +111,11 @@ const ActionsCell = (props: ActionsCellProps) => {
       <IconButton
         size="small"
         onClick={onOpen}
-        sx={{ backgroundColor: "primary.light", color: "grey.400", p: 1 }}
+        sx={{
+          backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+          color: "grey.400",
+          p: 1,
+        }}
         variant="contained"
       >
         <MoreSquareIcon sx={{ fontSize: 24 }} />

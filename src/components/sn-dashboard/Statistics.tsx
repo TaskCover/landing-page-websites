@@ -6,10 +6,12 @@ import { StatisticItem } from "./components";
 import MoneyReceiveIcon from "icons/MoneyReceiveIcon";
 import WalletMoneyIcon from "icons/WalletMoneyIcon";
 import Bag2Icon from "icons/Bag2Icon";
+import useTheme from "hooks/useTheme";
 
 type StatisticsProps = {};
 
 const Statistics = (props: StatisticsProps) => {
+  const { isDarkMode } = useTheme();
   return (
     <Stack
       display="grid"
@@ -20,8 +22,8 @@ const Statistics = (props: StatisticsProps) => {
         lg: "repeat(3, 1fr)",
       }}
       borderRadius={4}
-      boxShadow="0px 10px 60px rgba(226, 236, 249, 0.5)"
-      bgcolor="common.white"
+      boxShadow={isDarkMode ? "none" : "0px 10px 60px rgba(226, 236, 249, 0.5)"}
+      bgcolor="background.paper"
       pt={4.375}
       pb={3.5}
       px={6}

@@ -3,6 +3,7 @@ import LibDatePicker, { ReactDatePickerProps } from "react-datepicker";
 import Input, { InputProps } from "./Input";
 import CalendarIcon from "icons/CalendarIcon";
 import "react-datepicker/dist/react-datepicker.css";
+import "./date-picker.css";
 
 export type DatePickerProps = Omit<InputProps, "name" | "onChange"> & {
   pickerProps?: Omit<ReactDatePickerProps, "onChange">;

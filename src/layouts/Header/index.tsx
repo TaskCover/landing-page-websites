@@ -16,6 +16,7 @@ import { getPath } from "utils/index";
 import { PROJECTS_PATH } from "constant/paths";
 import { DataStatus } from "constant/enums";
 import useToggle from "hooks/useToggle";
+import SwitchTheme from "components/SwitchTheme";
 
 const Header = () => {
   const { title, searchPlaceholder, prevPath, key } = useHeaderConfig();
@@ -44,7 +45,7 @@ const Header = () => {
       height={HEADER_HEIGHT}
       borderBottom="1px solid"
       borderColor="grey.100"
-      bgcolor="common.white"
+      bgcolor="background.paper"
       direction="row"
       alignItems="center"
       justifyContent="space-between"
@@ -90,7 +91,10 @@ const Header = () => {
             value={filters?.[key as string]}
           />
         )}
-        <SwitchLanguage />
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <SwitchLanguage />
+          <SwitchTheme />
+        </Stack>
         <AccountInfo />
       </Stack>
       <Drawer />
