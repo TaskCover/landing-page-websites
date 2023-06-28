@@ -23,7 +23,7 @@ import CrownIcon from "icons/CrownIcon";
 import { Permission } from "constant/enums";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
-import { usePathname } from "next/navigation";
+import { usePathname } from "next-intl/client";
 import { useAppDispatch } from "store/hooks";
 import UserActions from "./UserActions";
 
@@ -36,9 +36,7 @@ const Drawer = () => {
   const commonT = useTranslations(NS_COMMON);
 
   useEffect(() => {
-    if (!isSmSmaller) {
-      onHide();
-    }
+    onHide();
   }, [isSmSmaller, onHide, pathname]);
 
   return (

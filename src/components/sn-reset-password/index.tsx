@@ -9,8 +9,6 @@ import { getMessageErrorByAPI } from "utils/index";
 import { useRouter } from "next-intl/client";
 import * as Yup from "yup";
 import { useFormik, FormikErrors } from "formik";
-import { formErrorCode } from "api/formErrorCode";
-import { ErrorResponse } from "constant/types";
 import { SIGNIN_PATH } from "constant/paths";
 import { useParams } from "next/navigation";
 import { NS_AUTH, NS_COMMON } from "constant/index";
@@ -100,7 +98,8 @@ const Reset = () => {
           position="absolute"
           top={16}
           right={16}
-          spacing={2}
+          spacing={{ xs: 1, sm: 2 }}
+          zIndex={10}
         >
           <SwitchLanguage />
           <SwitchTheme />

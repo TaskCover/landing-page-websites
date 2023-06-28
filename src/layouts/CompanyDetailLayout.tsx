@@ -2,8 +2,9 @@
 
 import Wrapper from "components/Wrapper";
 import { TabList } from "components/sn-company-detail/components";
-import { COMPANIES_PATH } from "constant/paths";
-import { useEffect, useRef } from "react";
+import { COMPANIES_PATH, COMPANY_EMPLOYEES_PATH } from "constant/paths";
+import { usePathname } from "next-intl/client";
+import { useEffect, useMemo, useRef } from "react";
 import { useHeaderConfig } from "store/app/selectors";
 import { useCompany, useCompanies } from "store/manager/selectors";
 import { getPath } from "utils/index";
@@ -17,6 +18,13 @@ const CompanyDetailLayout = ({ children, id }: CompanyDetailLayoutProps) => {
   const { onGetCompany, item } = useCompany();
   const { filters, pageIndex, pageSize } = useCompanies();
   const { onUpdateHeaderConfig } = useHeaderConfig();
+
+  const pathname = usePathname();
+
+  const isEmployeesOfCompanyPath = useMemo(
+    () => pathname.replace(id, "{id}") === COMPANY_EMPLOYEES_PATH,
+    [id, pathname],
+  );
 
   const dataStringifyRef = useRef<string | undefined>();
 

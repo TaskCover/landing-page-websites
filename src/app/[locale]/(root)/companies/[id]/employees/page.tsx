@@ -1,4 +1,3 @@
-import Wrapper from "components/Wrapper";
 import { Actions, ItemList } from "components/sn-company-detail/Employees";
 
 export const metadata = {

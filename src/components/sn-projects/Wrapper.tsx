@@ -30,7 +30,11 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
     };
   }, [commonT, onUpdateHeaderConfig, projectT]);
 
-  return <AppWrapper overflow="hidden">{children}</AppWrapper>;
+  return (
+    <AppWrapper overflow="auto" inFrame>
+      {children}
+    </AppWrapper>
+  );
 };
 
 export default memo(Wrapper);

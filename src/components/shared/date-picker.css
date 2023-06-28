@@ -6,7 +6,6 @@
 
 .react-datepicker__header {
   background-color: var(--mui-palette-background-default);
-
 }
 
 .react-datepicker__current-month,
@@ -41,5 +40,4 @@
 
 .react-datepicker__triangle::after {
   border-bottom-color: var(--mui-palette-background-default) !important;
-
 }
