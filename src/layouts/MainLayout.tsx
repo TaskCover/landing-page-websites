@@ -92,24 +92,21 @@ const MainLayout = (props: MainLayoutProps) => {
         <Sidebar />
         <Stack flex={1} width="100%" height="100%" overflow="hidden">
           <Header />
-          <Stack overflow="hidden" flex={1}>
-            <Stack
-              bgcolor={pathname === HOME_PATH ? "transparent" : "common.white"}
-              flex={1}
-              height="fit-content"
-              spacing={{ xs: 1.5, sm: 3 }}
-              justifyContent={isAuthorized ? undefined : "center"}
-              alignItems={isAuthorized ? undefined : "center"}
-              overflow="hidden"
-            >
-              {isAuthorized ? (
-                children
-              ) : (
-                <Text variant="body2" fontWeight={600}>
-                  {commonT("unauthorized")}
-                </Text>
-              )}
-            </Stack>
+          <Stack
+            flex={1}
+            height="fit-content"
+            spacing={{ xs: 1.5, sm: 3 }}
+            justifyContent={isAuthorized ? undefined : "center"}
+            alignItems={isAuthorized ? undefined : "center"}
+            overflow="hidden"
+          >
+            {isAuthorized ? (
+              children
+            ) : (
+              <Text variant="body2" fontWeight={600}>
+                {commonT("unauthorized")}
+              </Text>
+            )}
           </Stack>
         </Stack>
       </Stack>

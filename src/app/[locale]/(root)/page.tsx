@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <Wrapper overflow="auto" spacing={3}>
+    <Wrapper overflow="auto" spacing={3} transparent>
       <Statistics />
       <ChartStatistics />
       <Transactions />

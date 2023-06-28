@@ -64,7 +64,7 @@ const Actions = () => {
       borderColor="grey.100"
       spacing={3}
       px={{ xs: 1, sm: 3 }}
-      pb={1.5}
+      py={1.5}
     >
       <AddMembers />
       <Stack direction="row" alignItems="center" spacing={3}>

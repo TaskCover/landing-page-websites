@@ -1,8 +1,9 @@
 "use client";
 
 import { Endpoint } from "api";
+import Wrapper from "components/Wrapper";
 import { TabList } from "components/sn-project-detail/components";
-import { NS_COMMON, NS_PROJECT } from "constant/index";
+import { NS_COMMON, NS_PROJECT, SCROLL_ID } from "constant/index";
 import { PROJECTS_PATH } from "constant/paths";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
@@ -63,10 +64,14 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
   }, [commonT, item?.name, onUpdateHeaderConfig, projectT]);
 
   return (
-    <>
+    <Wrapper
+      sx={{ overflowX: "hidden", overflowY: "auto" }}
+      id={SCROLL_ID}
+      overflow="auto"
+    >
       <TabList />
       {children}
-    </>
+    </Wrapper>
   );
 };
 

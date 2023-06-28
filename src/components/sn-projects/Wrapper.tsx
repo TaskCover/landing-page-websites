@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useEffect } from "react";
-import { Stack } from "@mui/material";
+import AppWrapper from "components/Wrapper";
 import { useHeaderConfig } from "store/app/selectors";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
@@ -30,11 +30,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
     };
   }, [commonT, onUpdateHeaderConfig, projectT]);
 
-  return (
-    <Stack flex={1} overflow="hidden">
-      {children}
-    </Stack>
-  );
+  return <AppWrapper overflow="hidden">{children}</AppWrapper>;
 };
 
 export default memo(Wrapper);

@@ -1,5 +1,5 @@
+import Wrapper from "components/Wrapper";
 import InformationCompanyPage from "components/sn-company-detail/Information";
-import Wrapper from "components/sn-company-detail/Information/Wrapper";
 import { NS_COMPANY } from "constant/index";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function Page() {
   return (
-    <Wrapper>
+    <Wrapper overflow="auto">
       <InformationCompanyPage />
     </Wrapper>
   );

@@ -7,9 +7,9 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <Wrapper overflow="auto">
+    <>
       <Actions />
       <ItemList />
-    </Wrapper>
+    </>
   );
 }

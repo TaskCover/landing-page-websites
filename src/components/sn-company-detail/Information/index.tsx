@@ -52,7 +52,7 @@ const InformationProjectPage = () => {
 
   return (
     <StatusServer isFetching={isFetching} error={error} noData={!item}>
-      <Stack px={{ xs: 1, sm: 3 }} pb={3} pt={id ? 0 : 3} spacing={3}>
+      <Stack px={{ xs: 1, sm: 3 }} py={3} spacing={3}>
         <Stack direction="row" spacing={2} justifyContent="space-between">
           <Stack>
             <Text variant="h4">{item?.name ?? "--"}</Text>

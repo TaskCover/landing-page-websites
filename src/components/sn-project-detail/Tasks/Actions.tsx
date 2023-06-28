@@ -103,7 +103,7 @@ const Actions = () => {
         borderColor="grey.100"
         spacing={{ xs: 1, md: 3 }}
         px={{ xs: 1, md: 3 }}
-        pb={{ xs: 1, md: 3 }}
+        py={1.5}
       >
         {/* <Button
           onClick={onShow}

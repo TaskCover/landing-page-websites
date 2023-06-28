@@ -514,7 +514,7 @@ const ItemList = () => {
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
         position="sticky"
-        top={selectedList.length ? 64 : 0}
+        top={selectedList.length ? 124 : 60}
         zIndex={1}
       >
         <></>

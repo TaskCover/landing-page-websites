@@ -1,5 +1,6 @@
 "use client";
 
+import Wrapper from "components/Wrapper";
 import { TabList } from "components/sn-company-detail/components";
 import { COMPANIES_PATH } from "constant/paths";
 import { useEffect, useRef } from "react";
@@ -54,10 +55,10 @@ const CompanyDetailLayout = ({ children, id }: CompanyDetailLayoutProps) => {
   }, [item?.name, onUpdateHeaderConfig]);
 
   return (
-    <>
+    <Wrapper overflow="auto">
       <TabList />
       {children}
-    </>
+    </Wrapper>
   );
 };
 

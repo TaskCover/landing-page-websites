@@ -73,8 +73,7 @@ const Actions = () => {
       alignItems={{ md: "center" }}
       justifyContent="space-between"
       spacing={{ xs: 1.5, md: 3 }}
-      px={{ xs: 1, md: 3 }}
-      pb={3}
+      p={{ xs: 1, md: 3 }}
     >
       <Stack spacing={1} width="fit-content">
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
