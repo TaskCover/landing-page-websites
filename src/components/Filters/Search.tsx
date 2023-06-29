@@ -1,9 +1,10 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { Input, InputProps } from "components/shared";
+import { IconButton, Input, InputProps } from "components/shared";
 import SearchIcon from "icons/SearchIcon";
 import useEventListener from "hooks/useEventListener";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
+import CircleCloseIcon from "icons/CircleCloseIcon";
 
 type SearchProps = Omit<InputProps, "name" | "onChange"> & {
   name: string;
@@ -55,6 +56,13 @@ const Search = (props: SearchProps) => {
     }
   };
 
+  const onClear = (event) => {
+    event.preventDefault();
+    prevTextRef.current = "";
+    setText("");
+    onChange && onChange(name, "");
+  };
+
   useEffect(() => {
     setText(value || search || "");
     if (!emitWhenEnter) return;
@@ -74,6 +82,13 @@ const Search = (props: SearchProps) => {
         onBlur,
       }}
       startNode={<SearchIcon />}
+      endNode={
+        !!value && (
+          <IconButton onClick={onClear} noPadding size="small">
+            <CircleCloseIcon />
+          </IconButton>
+        )
+      }
       placeholder={commonT("search")}
       onChangeValue={onChangeValue}
       value={text}

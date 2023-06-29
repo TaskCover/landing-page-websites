@@ -1,7 +1,9 @@
-import { memo, useId, useMemo } from "react";
+import { KeyboardEventHandler, memo, useId, useMemo } from "react";
 import Input, { InputProps } from "./Input";
 import {
+  ButtonBase,
   CircularProgress,
+  ListSubheader,
   MenuItem,
   Stack,
   inputBaseClasses,
@@ -84,6 +86,12 @@ const Select = (props: SelectProps) => {
     }
   };
 
+  const onKeyDown = (event) => {
+    if (!["Enter", "Escape"].includes(event.key)) {
+      event.stopPropagation();
+    }
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onScroll = debounce((event: any) => {
     const { scrollTop, clientHeight, scrollHeight } = event.target;
@@ -117,15 +125,18 @@ const Select = (props: SelectProps) => {
       {...rest}
     >
       {!!onChangeSearch && isShow && (
-        <Search
-          fullWidth
-          sx={{ px: 2, mb: 0.75 }}
-          name="email"
-          onChange={onChangeSearch}
-          emitWhenEnter
-          search={searchProps?.value}
-          {...searchProps}
-        />
+        <ListSubheader>
+          <Search
+            fullWidth
+            sx={{ mt: 1 }}
+            name="email"
+            onChange={onChangeSearch}
+            emitWhenEnter
+            search={searchProps?.value}
+            onKeyDown={onKeyDown}
+            {...searchProps}
+          />
+        </ListSubheader>
       )}
       {optionList.map((option) => (
         <MenuItem

@@ -189,6 +189,10 @@ const Form = (props: FormProps) => {
     });
   };
 
+  const onChangeSearch = (name: string, newValue?: string | number) => {
+    onGetOptions({ pageIndex: 1, pageSize: 20, [name]: newValue });
+  };
+
   useEffect(() => {
     onGetProjectTypeOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetProjectTypeOptions]);
@@ -238,6 +242,7 @@ const Form = (props: FormProps) => {
             rootSx={sxConfig.input}
             fullWidth
             onEndReached={onEndReached}
+            onChangeSearch={onChangeSearch}
           />
           <Select
             options={projectTypeOptions}

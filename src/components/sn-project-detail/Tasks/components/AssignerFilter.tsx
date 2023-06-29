@@ -23,8 +23,8 @@ const AssignerFilter = (
     onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
   };
 
-  const onChangeSearch = () => {
-    //
+  const onChangeSearch = (name: string, newValue?: string | number) => {
+    onGetOptions({ ...filters, pageIndex: 1, pageSize, [name]: newValue });
   };
 
   return (
@@ -33,6 +33,7 @@ const AssignerFilter = (
       options={options}
       name="owner"
       onEndReached={onEndReached}
+      onChangeSearch={onChangeSearch}
       {...props}
     />
   );
