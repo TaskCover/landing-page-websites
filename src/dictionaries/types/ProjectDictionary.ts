@@ -130,4 +130,9 @@ export type ProjectDictionary = {
       assignSuccess: string;
     };
   };
+  detailActivities: {
+    head: {
+      title: string;
+    };
+  };
 };

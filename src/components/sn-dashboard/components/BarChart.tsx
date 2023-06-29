@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import { memo, useMemo } from "react";
 import { Box, Stack } from "@mui/material";
 import {
   Chart as ChartJS,

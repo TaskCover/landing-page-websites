@@ -24,6 +24,8 @@ import {
   DeleteSubTasksData,
   DeleteTaskListsData,
   deleteSubTasks,
+  getActivitiesOfProject,
+  GetActivitiesQueries,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -31,7 +33,6 @@ import { shallowEqual } from "react-redux";
 import { BaseQueries } from "constant/types";
 import { getFiltersIgnoreId } from "utils/index";
 import { TaskDetail, removeMember, updateTaskDetail } from "./reducer";
-import { string } from "yup";
 
 export const useProjects = () => {
   const dispatch = useAppDispatch();
@@ -394,5 +395,35 @@ export const useTaskDetail = () => {
     onUpdateTaskDetail,
     onCommentTask,
     onUpdateTask,
+  };
+};
+
+export const useActivitiesOfProject = () => {
+  const dispatch = useAppDispatch();
+  const {
+    activities: items,
+    activitiesStatus: status,
+    activitiesError: error,
+    activitiesFilters: filters,
+  } = useAppSelector((state) => state.project, shallowEqual);
+
+  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
+  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
+
+  const onGetActivitiesOfProject = useCallback(
+    async (id: string, queries: GetActivitiesQueries) => {
+      await dispatch(getActivitiesOfProject({ ...queries, id }));
+    },
+    [dispatch],
+  );
+
+  return {
+    items,
+    status,
+    error,
+    filters,
+    isIdle,
+    isFetching,
+    onGetActivitiesOfProject,
   };
 };

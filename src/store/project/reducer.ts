@@ -7,6 +7,8 @@ import {
   deleteSubTasks,
   deleteTaskLists,
   deleteTasks,
+  getActivitiesOfProject,
+  GetActivitiesQueries,
   getMembersOfProject,
   GetMembersOfProjectQueries,
   getProject,
@@ -31,8 +33,13 @@ import {
 } from "constant/types";
 import { DataStatus, Permission, Status } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
-import { getFiltersFromQueries } from "utils/index";
+import {
+  formatDate,
+  getFiltersFromQueries,
+  removeDuplicateItem,
+} from "utils/index";
 import { Position } from "store/company/reducer";
+import { subDays } from "date-fns";
 
 export interface Member {
   id: string;
@@ -105,10 +112,10 @@ export interface Comment {
   content: string;
   created_time: string;
   creator: User;
-  activities: Activity[];
+  activities: ActivityTask[];
   attachments_down: Attachment[];
 }
-export interface Activity {
+export interface ActivityTask {
   id: string;
   time: string;
   user: User;
@@ -122,6 +129,14 @@ export type TaskDetail = Omit<Task, "task_list" | "task" | "sub_task"> & {
   taskId: string;
   subTaskId?: string;
 };
+
+export interface Activity {
+  id: string;
+  created_time: string;
+  user: User;
+  action: string;
+  note: string;
+}
 
 export interface ProjectState {
   items: Project[];
@@ -153,7 +168,17 @@ export interface ProjectState {
   taskOptionsFilters: Omit<GetTasksOfProjectQueries, "pageIndex" | "pageSize">;
 
   task?: TaskDetail;
+
+  activities: Activity[];
+  activitiesStatus: DataStatus;
+  activitiesError?: string;
+  activitiesFilters: GetActivitiesQueries;
 }
+
+export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {
+  start_date: formatDate(subDays(new Date(), 7).getTime()),
+  end_date: formatDate(Date.now()),
+};
 
 const initialState: ProjectState = {
   items: [],
@@ -177,6 +202,10 @@ const initialState: ProjectState = {
   taskOptionsStatus: DataStatus.IDLE,
   taskOptionsPaging: DEFAULT_PAGING,
   taskOptionsFilters: {},
+
+  activities: [],
+  activitiesStatus: DataStatus.IDLE,
+  activitiesFilters: DEFAULT_RANGE_ACTIVITIES,
 };
 
 const projectSlice = createSlice({
@@ -324,7 +353,9 @@ const projectSlice = createSlice({
         const { items, concat, ...paging } = action.payload;
         const prefixKey = action.meta.arg["prefixKey"];
 
-        state[prefixKey] = state[prefixKey].concat(items as TaskList[]);
+        state[prefixKey] = removeDuplicateItem(
+          state[prefixKey].concat(items as TaskList[]),
+        );
 
         state[`${prefixKey}Status`] = DataStatus.SUCCEEDED;
         state[`${prefixKey}Error`] = undefined;
@@ -383,8 +414,9 @@ const projectSlice = createSlice({
             const movedTasks = current(state).tasks[indexDeleted].tasks.filter(
               (taskItem) => task_current.includes(taskItem.id),
             );
-            state.tasks[indexAdded].tasks =
-              state.tasks[indexAdded].tasks.concat(movedTasks);
+            state.tasks[indexAdded].tasks = removeDuplicateItem(
+              state.tasks[indexAdded].tasks.concat(movedTasks),
+            );
           }
           state.tasks[indexDeleted].tasks = current(state).tasks[
             indexDeleted
@@ -534,6 +566,25 @@ const projectSlice = createSlice({
             (taskList) => !data.tasks_list.includes(taskList.id),
           );
         }
+      })
+      .addCase(getActivitiesOfProject.pending, (state, action) => {
+        state.activitiesStatus = DataStatus.LOADING;
+        state.activitiesFilters = getFiltersFromQueries(
+          action.meta.arg,
+        ) as GetActivitiesQueries;
+      })
+      .addCase(
+        getActivitiesOfProject.fulfilled,
+        (state, action: PayloadAction<Activity[]>) => {
+          state.activities = action.payload;
+          state.activitiesStatus = DataStatus.SUCCEEDED;
+          state.activitiesError = undefined;
+        },
+      )
+      .addCase(getActivitiesOfProject.rejected, (state, action) => {
+        state.activities = [];
+        state.activitiesStatus = DataStatus.FAILED;
+        state.activitiesError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
       }),
 });
 

@@ -85,7 +85,7 @@ const ItemList = () => {
   useEffect(() => {
     if (!isReady || !projectId) return;
     onGetMembersOfProject(projectId, { ...DEFAULT_PAGING, ...initQuery });
-  }, [id, initQuery, isReady, onGetMembersOfProject, projectId]);
+  }, [initQuery, isReady, onGetMembersOfProject, projectId]);
 
   return (
     <>

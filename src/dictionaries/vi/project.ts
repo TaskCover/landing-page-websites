@@ -134,4 +134,9 @@ export const ProjectLang: ProjectDictionary = {
       assignSuccess: "Giao công việc cho thành viên thành công!",
     },
   },
+  detailActivities: {
+    head: {
+      title: "Hoạt động dự án | Taskcover",
+    },
+  },
 };

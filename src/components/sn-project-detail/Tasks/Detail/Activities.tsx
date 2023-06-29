@@ -3,7 +3,7 @@ import { Box, Stack } from "@mui/material";
 import { Text } from "components/shared";
 import { formatDate } from "utils/index";
 import { DATE_TIME_FORMAT_SLASH } from "constant/index";
-import { Activity } from "store/project/reducer";
+import { ActivityTask } from "store/project/reducer";
 import Avatar from "components/Avatar";
 
 type ActivitiesProps = {};
@@ -28,9 +28,9 @@ const DATA = [
     project: { name: "Project 01" },
     time: "2023-05-27T16:46:06.705Z",
   },
-] as Activity[];
+] as ActivityTask[];
 
-const Item = (props: Activity) => {
+const Item = (props: ActivityTask) => {
   const { time, user, action, task, project } = props;
 
   return (

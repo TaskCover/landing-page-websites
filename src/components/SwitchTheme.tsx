@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { IconButton } from "./shared";
 import SunIcon from "icons/SunIcon";
 import MoonIcon from "icons/MoonIcon";

@@ -27,10 +27,6 @@ const AssignerFilter = (
     //
   };
 
-  useEffect(() => {
-    onGetOptions({ pageIndex: 1, pageSize: 20 });
-  }, [onGetOptions]);
-
   return (
     <Dropdown
       placeholder={commonT("form.title.assigner")}

@@ -28,6 +28,7 @@ import { TaskListData } from "store/project/actions";
 import { useHeaderConfig } from "store/app/selectors";
 import Link from "components/Link";
 import ChevronIcon from "icons/ChevronIcon";
+import { useEmployeeOptions } from "store/company/selectors";
 
 const Actions = () => {
   const {
@@ -36,6 +37,7 @@ const Actions = () => {
     onCreateTaskList: onCreateTaskListAction,
     onGetTasksOfProject,
   } = useTasksOfProject();
+  const { onGetOptions } = useEmployeeOptions();
   const { title, prevPath } = useHeaderConfig();
 
   const commonT = useTranslations(NS_COMMON);
@@ -92,6 +94,10 @@ const Actions = () => {
   useEffect(() => {
     setQueries(filters);
   }, [filters]);
+
+  useEffect(() => {
+    onGetOptions({ pageIndex: 1, pageSize: 20 });
+  }, [onGetOptions]);
 
   return (
     <>

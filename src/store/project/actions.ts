@@ -98,6 +98,11 @@ export type DeleteSubTasksData = {
   sub_tasks: string[];
 };
 
+export type GetActivitiesQueries = {
+  start_date: string;
+  end_date: string;
+};
+
 export const getProjectList = createAsyncThunk(
   "project/getProjectList",
   async (queries: GetProjectListQueries) => {
@@ -384,6 +389,68 @@ export const deleteSubTasks = createAsyncThunk(
         return true;
       }
       throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getActivitiesOfProject = createAsyncThunk(
+  "project/getActivitiesOfProject",
+  async (queries: GetActivitiesQueries & { id: string }) => {
+    queries = serverQueries(queries) as GetActivitiesQueries & { id: string };
+
+    try {
+      // const response = await client.get(Endpoint.PROJECT_ACTIVITIES, queries);
+
+      // if (response?.status === HttpStatusCode.OK) {
+      //   return response.data;
+      // }
+
+      // throw AN_ERROR_TRY_AGAIN;
+
+      return [
+        {
+          id: "01",
+          action: "Lập tài liệu design",
+          note: "date-fns is the modular path to date/time manipulation. Where I work, it helped us get our bundle sizes down, especially because we are able to include only the functionality we need. date-fns is the modular path to date/time manipulation. Where I work, it helped us get our bundle sizes down, especially because we are able to include only the functionality we need.",
+          created_time: "2023-06-29T02:37:49.149Z",
+          user: {
+            fullname: "Bùi Quang Huy",
+            position: {
+              id: "222",
+              name: "UI/UX Designer",
+            },
+          },
+        },
+        {
+          id: "02",
+          action: "Lập tài liệu design",
+          note: "Ghi chú: Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur ma",
+          created_time: "2023-06-29T02:37:49.149Z",
+          user: {
+            fullname: "Bùi Quang Huy",
+            position: {
+              id: "222",
+              name: "UI/UX Designer",
+            },
+          },
+        },
+        {
+          id: "03",
+          action: "Lập tài liệu design",
+          note: "Ghi chú: Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur ma",
+          created_time: "2023-06-29T02:37:49.149Z",
+          user: {
+            fullname: "Bùi Quang Huy",
+            position: {
+              id: "222",
+              name: "UI/UX Designer",
+            },
+          },
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any[];
     } catch (error) {
       throw error;
     }

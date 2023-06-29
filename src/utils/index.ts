@@ -255,3 +255,15 @@ export const getFiltersIgnoreId = (filters, key = "id") => {
   delete _filters[key];
   return _filters;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const removeDuplicateItem = (data: any[], key = "id") => {
+  return data.reduce((outArr, currentItem) => {
+    const isExisted = outArr.some((item) => item[key] === currentItem[key]);
+    if (isExisted) {
+      return outArr;
+    }
+    outArr.push(currentItem);
+    return outArr;
+  }, []);
+};

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useMemo } from "react";
+import { memo, useMemo } from "react";
 import { Stack, StackProps } from "@mui/material";
 import { BarChart, DoughnutChart } from "./components";
 import { Text } from "components/shared";

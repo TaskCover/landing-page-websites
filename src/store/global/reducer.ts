@@ -4,6 +4,7 @@ import { getPositionOptions, getProjectTypeOptions } from "./actions";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { ItemListResponse, Option, Paging } from "constant/types";
 import { Position, ProjectType } from "store/company/reducer";
+import { removeDuplicateItem } from "utils/index";
 
 export interface GlobalState {
   positionOptions: Option[];
@@ -53,7 +54,9 @@ const globalSlice = createSlice({
             ({ id: value, name: label }) => ({ value, label }),
           );
 
-          state.positionOptions = state.positionOptions.concat(newOptions);
+          state.positionOptions = removeDuplicateItem(
+            state.positionOptions.concat(newOptions),
+          );
           state.positionOptionsPaging = Object.assign(
             state.positionOptionsPaging,
             paging,
@@ -88,8 +91,9 @@ const globalSlice = createSlice({
             ({ id: value, name: label }) => ({ value, label }),
           );
 
-          state.projectTypeOptions =
-            state.projectTypeOptions.concat(newOptions);
+          state.projectTypeOptions = removeDuplicateItem(
+            state.projectTypeOptions.concat(newOptions),
+          );
           state.projectTypeOptionsPaging = Object.assign(
             state.projectTypeOptionsPaging,
             paging,

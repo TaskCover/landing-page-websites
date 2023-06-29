@@ -20,7 +20,7 @@ import {
 import { ItemListResponse, Paging, User } from "constant/types";
 import { DataStatus } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
-import { getFiltersFromQueries } from "utils/index";
+import { getFiltersFromQueries, removeDuplicateItem } from "utils/index";
 
 export interface Employee extends User {
   created_time: string;
@@ -179,8 +179,8 @@ const companySlice = createSlice({
           const { items, concat, ...paging } = action.payload;
 
           if (concat) {
-            state.employeeOptions = state.employeeOptions.concat(
-              items as Employee[],
+            state.employeeOptions = removeDuplicateItem(
+              state.employeeOptions.concat(items as Employee[]),
             );
           } else {
             state.employees = items as Employee[];

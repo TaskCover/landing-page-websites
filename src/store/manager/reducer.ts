@@ -14,7 +14,7 @@ import {
 import { BaseQueries, ItemListResponse, Option, Paging } from "constant/types";
 import { DataStatus } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
-import { getFiltersFromQueries } from "utils/index";
+import { getFiltersFromQueries, removeDuplicateItem } from "utils/index";
 
 import { Employee, Company } from "store/company/reducer";
 
@@ -204,7 +204,9 @@ const managerSlice = createSlice({
               label: item.name,
               value: item.id,
             }));
-            state.companyOptions = state.companyOptions.concat(newOptions);
+            state.companyOptions = removeDuplicateItem(
+              state.companyOptions.concat(newOptions),
+            );
           } else {
             state.companies = items as Company[];
             state.companiesStatistic = {

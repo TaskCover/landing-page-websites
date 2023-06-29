@@ -57,7 +57,7 @@ export const ProjectLang: ProjectDictionary = {
   },
   detailMembers: {
     head: {
-      title: "Project Members | Taskcover",
+      title: "Members Of Project | Taskcover",
     },
     member: "Member",
     hoursWorked: "Hours worked",
@@ -76,7 +76,7 @@ export const ProjectLang: ProjectDictionary = {
   },
   detailTasks: {
     head: {
-      title: "Project Tasks | Taskcover",
+      title: "Tasks of Project | Taskcover",
     },
     form: {
       title: {
@@ -132,6 +132,11 @@ export const ProjectLang: ProjectDictionary = {
     sendComment: "Send comment",
     notification: {
       assignSuccess: "Assign task successfully!",
+    },
+  },
+  detailActivities: {
+    head: {
+      title: "Activities of Project",
     },
   },
 };
