@@ -20,7 +20,7 @@ const EditProject = () => {
         ? {
             name: item.name,
             description: item.description,
-            owner: item.owner.id,
+            owner: item?.owner?.id,
             type_project: item.type_project.id,
             start_date: item.start_date,
             end_date: item.end_date,
@@ -29,7 +29,7 @@ const EditProject = () => {
             members: item.members.map(({ id, fullname, ...rest }) => ({
               id,
               fullname,
-              position: rest.position_project.id,
+              position: rest.position.id,
             })),
           }
         : INITIAL_VALUES,

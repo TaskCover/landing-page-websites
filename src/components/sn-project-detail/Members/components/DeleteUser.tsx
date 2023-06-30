@@ -46,7 +46,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
       newMembers.splice(indexSelected, 1);
       const members = newMembers.map((member) => ({
         id: member.id,
-        position: member.position_project.id,
+        position: member.position.id,
       }));
       const newData = await onUpdateProject(item.id, { members });
       if (newData) {

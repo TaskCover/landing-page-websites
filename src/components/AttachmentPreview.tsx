@@ -118,6 +118,7 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
                 transform: "translate(-50%, -50%)",
                 color: "common.white",
                 fontSize: 24,
+                zIndex: 1,
               }}
               onClick={onEnterFullScreen}
             />

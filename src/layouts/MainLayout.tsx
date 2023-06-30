@@ -65,9 +65,6 @@ const MainLayout = (props: MainLayoutProps) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      if (pathname === HOME_PATH && isNotJoin) {
-        push(JOIN_WORKSPACE_PATH);
-      }
     } else if (!AUTH_PATHS.includes(pathname)) {
       push(SIGNIN_PATH);
     }

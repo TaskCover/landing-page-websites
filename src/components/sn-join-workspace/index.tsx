@@ -79,9 +79,8 @@ const JoinWorkspace = () => {
       );
       if (response?.status === HttpStatusCode.OK) {
         onAddSnackbar(authT("joinWorkspace.notification.success"), "success");
-        onSignOut();
         onHide();
-        push(SIGNIN_PATH);
+        push(HOME_PATH);
       } else {
         throw AN_ERROR_TRY_AGAIN;
       }
@@ -187,7 +186,7 @@ const JoinWorkspace = () => {
               textAlign="center"
               mt={{ xs: 3, sm: 10 }}
               mb={2}
-              color="common.black"
+              color="text.primary"
               maxWidth={280}
             >
               {authT("joinWorkspace.content")}

@@ -143,12 +143,13 @@ const sxConfig = {
   item: {
     fontSize: 14,
     color: "text.primary",
+    backgroundColor: "grey.50",
     lineHeight: "22px",
     "& > img": {
       mr: 1,
     },
     "&:hover": {
-      backgroundColor: "primary.light",
+      backgroundColor: "primary.main",
       "& svg": {
         color: "common.white",
       },
