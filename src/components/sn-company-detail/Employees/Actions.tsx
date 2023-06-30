@@ -33,10 +33,10 @@ const Actions = () => {
     [commonT],
   );
 
-  const hasQueries = useMemo(() => {
-    const queriesIgnoreCompany = { ...queries };
-    delete queriesIgnoreCompany["company"];
-    return !!Object.keys(queriesIgnoreCompany).length;
+  const queriesIgnoreCompany = useMemo(() => {
+    const _queriesIgnoreCompany = { ...queries };
+    delete _queriesIgnoreCompany["company"];
+    return _queriesIgnoreCompany;
   }, [queries]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,7 +45,7 @@ const Actions = () => {
   };
 
   const onSearch = () => {
-    const path = getPath(pathname, queries);
+    const path = getPath(pathname, queriesIgnoreCompany);
     push(path);
 
     onGetEmployees(id, { ...queries, pageIndex: 1, pageSize });
@@ -138,7 +138,9 @@ const Actions = () => {
             {commonT("search")}
           </Button>
           <Refresh onClick={onRefresh} />
-          {hasQueries && <Clear onClick={onClear} />}
+          {!!Object.keys(queriesIgnoreCompany).length && (
+            <Clear onClick={onClear} />
+          )}
         </Stack>
       </Stack>
     </Stack>

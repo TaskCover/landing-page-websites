@@ -48,7 +48,7 @@ const EditCompany = () => {
     return await onUpdateMyCompany(dataOnlyUpdated);
   };
 
-  if (!item) return null;
+  if (!item || id) return null;
   return (
     <>
       <IconButton
