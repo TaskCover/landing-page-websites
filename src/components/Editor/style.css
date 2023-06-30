@@ -1,54 +1,54 @@
-.quill {
+.editor .quill {
   display: flex;
   flex-direction: column-reverse;
 }
 
-.ql-container {
+.editor .ql-container {
   font-size: 14px;
   color: var(--mui-palette-text-primary);
 }
 
-.ql-snow .ql-stroke {
+.editor .ql-snow .ql-stroke {
   stroke: var(--mui-palette-grey-300);
 }
 
-.ql-snow .ql-fill,
-.ql-snow .ql-stroke.ql-fill {
+.editor .ql-snow .ql-fill,
+.editor .ql-snow .ql-stroke.ql-fill {
   fill: var(--mui-palette-grey-300);
 }
 
-.quill * {
+.editor .quill * {
   font-family: "Open Sans", sans-serif;
 }
 
-.ql-toolbar.ql-snow {
+.editor .ql-toolbar.ql-snow {
   border-bottom: 1px solid #ececf3;
   border-left: 1px solid var(--mui-palette-grey-A200);
   border-right: 1px solid var(--mui-palette-grey-A200);
   border-top: none;
 }
 
-.nocss .ql-toolbar.ql-snow {
+.editor .nocss .ql-toolbar.ql-snow {
   border: none !important;
 }
 
-.nocss .ql-container.ql-snow {
+.editor .nocss .ql-container.ql-snow {
   border: none !important;
 }
 
-.nocss .ql-toolbar.ql-snow + .ql-container.ql-snow {
+.editor .nocss .ql-toolbar.ql-snow+.ql-container.ql-snow {
   border: none !important;
 }
 
-.nocss .ql-editor {
+.editor .nocss .ql-editor {
   padding: 0 !important;
 }
 
-.nocss .ql-toolbar.ql-snow {
+.editor .nocss .ql-toolbar.ql-snow {
   padding: 0 !important;
 }
 
-.ql-container.ql-snow {
+.editor .ql-container.ql-snow {
   min-height: 50px;
   max-height: 200px;
   overflow: auto;
@@ -58,10 +58,10 @@
   border-top-right-radius: 4px;
 }
 
-.ql-toolbar.ql-snow + .ql-container.ql-snow {
+.editor .ql-toolbar.ql-snow+.ql-container.ql-snow {
   border-top: 1px solid #babcc6;
 }
 
-.ql-editor.ql-blank::before {
+.editor .ql-editor.ql-blank::before {
   color: var(--mui-palette-text-secondary);
 }

@@ -78,6 +78,7 @@ export type MoveTaskData = {
 export type CommentTaskData = {
   task: string;
   task_list: string;
+  sub_task: string;
   content: string;
   attachments?: string[];
 };
@@ -328,7 +329,11 @@ export const commentTask = createAsyncThunk(
   "project/commentTask",
   async (data: CommentTaskData) => {
     try {
-      const response = await client.post(Endpoint.TASK_COMMENT, data);
+      const url = data?.sub_task
+        ? Endpoint.SUB_TASK_COMMENT
+        : Endpoint.TASK_COMMENT;
+
+      const response = await client.post(url, data);
 
       if (response?.status === HttpStatusCode.CREATED) {
         return {
@@ -338,6 +343,7 @@ export const commentTask = createAsyncThunk(
           },
           taskId: data.task,
           taskListId: data.task_list,
+          subTaskId: data.sub_task,
         };
       }
       throw AN_ERROR_TRY_AGAIN;

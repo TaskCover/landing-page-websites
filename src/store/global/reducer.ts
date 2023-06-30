@@ -56,6 +56,7 @@ const globalSlice = createSlice({
 
           state.positionOptions = removeDuplicateItem(
             state.positionOptions.concat(newOptions),
+            "value",
           );
           state.positionOptionsPaging = Object.assign(
             state.positionOptionsPaging,
@@ -93,6 +94,7 @@ const globalSlice = createSlice({
 
           state.projectTypeOptions = removeDuplicateItem(
             state.projectTypeOptions.concat(newOptions),
+            "value",
           );
           state.projectTypeOptionsPaging = Object.assign(
             state.projectTypeOptionsPaging,

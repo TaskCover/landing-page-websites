@@ -15,7 +15,8 @@ import { CommentTaskData } from "store/project/actions";
 const CommentEditor = forwardRef(
   (_, ref: ForwardedRef<HTMLDivElement | null>) => {
     const projectT = useTranslations(NS_PROJECT);
-    const { task, taskListId, onCommentTask } = useTaskDetail();
+    const { task, taskListId, subTaskId, taskId, onCommentTask } =
+      useTaskDetail();
     const { onAddSnackbar } = useSnackbar();
 
     const [content, setContent] = useState<string>("");
@@ -29,12 +30,13 @@ const CommentEditor = forwardRef(
     };
 
     const onSubmit = async () => {
-      if (!taskListId || !task?.id) return;
+      if (!taskListId || !taskId) return;
 
       try {
         const data = {
-          task: task.id,
+          task: taskId,
           task_list: taskListId,
+          sub_task: subTaskId,
           content,
         } as CommentTaskData;
         if (files.length) {

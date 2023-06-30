@@ -105,7 +105,7 @@ const Editor = (props: EditorProps) => {
   }, [onInit]);
 
   return (
-    <Stack>
+    <Stack className="editor">
       <ReactQuill
         theme="snow"
         placeholder="Write something..."

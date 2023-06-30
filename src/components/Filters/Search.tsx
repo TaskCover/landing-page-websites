@@ -83,7 +83,8 @@ const Search = (props: SearchProps) => {
       }}
       startNode={<SearchIcon />}
       endNode={
-        !!value && (
+        !!value &&
+        emitWhenEnter && (
           <IconButton onClick={onClear} noPadding size="small">
             <CircleCloseIcon />
           </IconButton>

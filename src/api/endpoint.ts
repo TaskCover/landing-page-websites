@@ -33,6 +33,7 @@ export const Endpoint = {
   TASK_LIST_INACTIVE: "/tasks/task-list",
   TASK_MOVE: "/tasks/move",
   TASK_COMMENT: "/tasks/comment",
+  SUB_TASK_COMMENT: "/tasks/comment-sub",
   PROJECT_TYPES_ALL: "type-project/all",
   PROJECT_TYPES: "type-project",
   PROJECT_TYPE_ITEM: "type-project/{id}",

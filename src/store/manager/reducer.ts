@@ -206,6 +206,7 @@ const managerSlice = createSlice({
             }));
             state.companyOptions = removeDuplicateItem(
               state.companyOptions.concat(newOptions),
+              "value",
             );
           } else {
             state.companies = items as Company[];
