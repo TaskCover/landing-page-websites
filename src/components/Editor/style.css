@@ -36,7 +36,7 @@
   border: none !important;
 }
 
-.editor .nocss .ql-toolbar.ql-snow+.ql-container.ql-snow {
+.editor .nocss .ql-toolbar.ql-snow + .ql-container.ql-snow {
   border: none !important;
 }
 
@@ -58,7 +58,7 @@
   border-top-right-radius: 4px;
 }
 
-.editor .ql-toolbar.ql-snow+.ql-container.ql-snow {
+.editor .ql-toolbar.ql-snow + .ql-container.ql-snow {
   border-top: 1px solid #babcc6;
 }
 

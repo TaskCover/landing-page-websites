@@ -243,6 +243,10 @@ const Form = (props: FormProps) => {
             fullWidth
             onEndReached={onEndReached}
             onChangeSearch={onChangeSearch}
+            searchProps={{
+              value: filters?.email,
+              placeholder: commonT("searchBy", { name: "email" }),
+            }}
           />
           <Select
             options={projectTypeOptions}
