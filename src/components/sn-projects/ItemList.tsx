@@ -83,14 +83,14 @@ const ItemList = () => {
             description: item.description,
             owner: item?.owner?.id,
             type_project: item.type_project.id,
-            start_date: item.start_date,
-            end_date: item.end_date,
+            start_date: new Date(item.start_date).getTime(),
+            end_date: new Date(item.end_date).getTime(),
             expected_cost: item.expected_cost,
             working_hours: item.working_hours,
             members: item.members.map(({ id, fullname, ...rest }) => ({
               id,
               fullname,
-              position: rest?.position_project.id,
+              position_project: rest?.position_project.id,
             })),
           }
         : INITIAL_VALUES,

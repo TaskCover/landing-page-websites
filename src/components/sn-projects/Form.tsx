@@ -104,7 +104,7 @@ const Form = (props: FormProps) => {
 
         const positionIds = positionOptions.map((posItem) => posItem.value);
         const isMissingPosition = dataParsed.members.some(
-          (member: Member) => !positionIds.includes(member.position),
+          (member: Member) => !positionIds.includes(member.position_project),
         );
 
         if (isMissingPosition) {

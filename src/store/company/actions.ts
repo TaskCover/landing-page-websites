@@ -170,7 +170,7 @@ export const updatePosition = createAsyncThunk(
         },
       );
 
-      if (response?.status === HttpStatusCode.OK) {
+      if (response?.status === HttpStatusCode.CREATED) {
         return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;
@@ -237,7 +237,7 @@ export const updateProjectType = createAsyncThunk(
         },
       );
 
-      if (response?.status === HttpStatusCode.OK) {
+      if (response?.status === HttpStatusCode.CREATED) {
         return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;

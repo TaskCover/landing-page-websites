@@ -15,7 +15,7 @@ export const COLOR_STATUS: { [key in ProjectStatus]: AlertColor } = {
 
 export type Member = {
   id: string;
-  position: string;
+  position_project: string;
   fullname: string;
 };
 

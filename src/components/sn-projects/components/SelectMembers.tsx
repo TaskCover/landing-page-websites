@@ -53,11 +53,11 @@ const SelectMembers = (props: SelectMembersProps) => {
 
     const newData = [...members];
     if (indexSelected === -1) {
-      newData.push({ id, position, fullname });
+      newData.push({ id, position_project: position, fullname });
     } else if (isUpdatePosition) {
       newData[indexSelected] = {
         ...newData[indexSelected],
-        position,
+        position_project: position,
       };
     } else {
       newData.splice(indexSelected, 1);
@@ -147,7 +147,7 @@ const SelectMembers = (props: SelectMembersProps) => {
               const isChecked = members.some((member) => item.id === member.id);
               const positionOfProject = members.find(
                 (member) => item.id === member.id,
-              )?.position;
+              )?.position_project;
               return (
                 <MemberItem
                   key={item.id}
