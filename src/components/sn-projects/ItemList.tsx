@@ -90,7 +90,7 @@ const ItemList = () => {
             members: item.members.map(({ id, fullname, ...rest }) => ({
               id,
               fullname,
-              position: rest.position.id,
+              position: rest?.position_project.id,
             })),
           }
         : INITIAL_VALUES,

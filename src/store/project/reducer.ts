@@ -47,8 +47,9 @@ export interface Member {
   email: string;
   phone: string;
   company: string;
+  position: Position;
   roles: Permission[];
-  position: {
+  position_project: {
     name: string;
     id: string;
   };
