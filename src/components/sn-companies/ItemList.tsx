@@ -55,7 +55,7 @@ const ItemList = () => {
   const { isMdSmaller } = useBreakpoint();
 
   const [selectedList, setSelectedList] = useState<Company[]>([]);
-  const [action, setAction] = useState<CompanyStatus | undefined>();
+  const [action, setAction] = useState<number | undefined>();
   const [id, setId] = useState<string | undefined>();
 
   const nOfWaitings = useMemo(
@@ -314,7 +314,7 @@ export default memo(ItemList);
 
 const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];
 
-const TEXT_ACTION: { [key in CompanyStatus]: string } = {
+const TEXT_ACTION: { [key: number]: string } = {
   [CompanyStatus.APPROVE]: "companyList.approve",
   [CompanyStatus.REJECT]: "companyList.reject",
 };

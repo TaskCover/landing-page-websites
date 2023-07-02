@@ -4,7 +4,6 @@ import { Text } from "components/shared";
 import TextStatus from "components/TextStatus";
 import { COLOR_STATUS, TEXT_STATUS } from "./components/helpers";
 import { BodyCell } from "components/Table";
-import BookmarkIcon from "icons/BookmarkIcon";
 import { Project } from "store/project/reducer";
 import { PROJECT_TASKS_PATH } from "constant/paths";
 import { getPath } from "utils/index";
@@ -13,6 +12,7 @@ import Avatar from "components/Avatar";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
+import { Saved } from "./components";
 
 type MobileContentCellProps = {
   item: Project;
@@ -58,7 +58,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           )}
         </InformationItem>
         <InformationItem label="">
-          <BookmarkIcon color="primary" fontSize="medium" active={item.saved} />
+          <Saved id={item.id} value={item.saved} />
         </InformationItem>
       </Stack>
     </BodyCell>

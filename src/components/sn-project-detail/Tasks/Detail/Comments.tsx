@@ -38,7 +38,7 @@ const CommentItem = (props: CommentItemProps) => {
           <Stack>
             <Text variant="body2">{creator?.fullname ?? "--"}</Text>
             <Text variant="caption" color="grey.400">
-              {creator.email}
+              {creator?.email ?? "--"}
             </Text>
           </Stack>
         </Stack>

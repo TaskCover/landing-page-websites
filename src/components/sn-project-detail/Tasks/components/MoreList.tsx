@@ -8,7 +8,12 @@ import {
   popoverClasses,
 } from "@mui/material";
 import { IconButton, Text, Tooltip } from "components/shared";
-import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
+import {
+  AN_ERROR_TRY_AGAIN,
+  DATE_FORMAT_FORM,
+  NS_COMMON,
+  NS_PROJECT,
+} from "constant/index";
 import DuplicateIcon from "icons/DuplicateIcon";
 import MoreDotIcon from "icons/MoreDotIcon";
 import MoveArrowIcon from "icons/MoveArrowIcon";
@@ -20,7 +25,7 @@ import { Selected, genTime } from "./helpers";
 import { Task, TaskList } from "store/project/reducer";
 import { useParams } from "next/navigation";
 import { useSnackbar } from "store/app/selectors";
-import { getMessageErrorByAPI } from "utils/index";
+import { formatDate, getMessageErrorByAPI } from "utils/index";
 import {
   DeleteSubTasksData,
   DeleteTaskListsData,
@@ -139,8 +144,12 @@ const MoreList = (props: MoreListProps) => {
                 value: genTime(),
               }),
               description: taskItem?.description,
-              start_date: taskItem?.start_date,
-              end_date: taskItem?.end_date,
+              start_date: taskItem?.start_date
+                ? formatDate(taskItem.start_date, DATE_FORMAT_FORM)
+                : undefined,
+              end_date: taskItem?.end_date
+                ? formatDate(taskItem.end_date, DATE_FORMAT_FORM)
+                : undefined,
               owner: taskItem?.owner?.id,
               estimated_hours: taskItem?.estimated_hours,
             },
@@ -161,8 +170,12 @@ const MoreList = (props: MoreListProps) => {
                   value: genTime(),
                 }),
                 description: subTask?.description,
-                start_date: subTask?.start_date,
-                end_date: subTask?.end_date,
+                start_date: subTask?.start_date
+                  ? formatDate(subTask.start_date, DATE_FORMAT_FORM)
+                  : undefined,
+                end_date: subTask?.end_date
+                  ? formatDate(subTask.end_date, DATE_FORMAT_FORM)
+                  : undefined,
                 owner: subTask?.owner?.id,
                 estimated_hours: subTask?.estimated_hours,
               },
@@ -189,8 +202,12 @@ const MoreList = (props: MoreListProps) => {
             value: genTime(),
           }),
           description: task?.description,
-          start_date: task?.start_date,
-          end_date: task?.end_date,
+          start_date: task?.start_date
+            ? formatDate(task.start_date, DATE_FORMAT_FORM)
+            : undefined,
+          end_date: task?.end_date
+            ? formatDate(task.end_date, DATE_FORMAT_FORM)
+            : undefined,
           owner: task?.owner?.id,
           estimated_hours: task?.estimated_hours,
         },
@@ -205,8 +222,12 @@ const MoreList = (props: MoreListProps) => {
                 value: genTime(),
               }),
               description: subTask?.description,
-              start_date: subTask?.start_date,
-              end_date: subTask?.end_date,
+              start_date: subTask?.start_date
+                ? formatDate(subTask.start_date, DATE_FORMAT_FORM)
+                : undefined,
+              end_date: subTask?.end_date
+                ? formatDate(subTask.end_date, DATE_FORMAT_FORM)
+                : undefined,
               owner: subTask?.owner?.id,
               estimated_hours: subTask?.estimated_hours,
             },
@@ -350,6 +371,12 @@ const MoreList = (props: MoreListProps) => {
         await onCreateTask(
           {
             ...data,
+            start_date: data?.start_date
+              ? formatDate(data.start_date, DATE_FORMAT_FORM)
+              : undefined,
+            end_date: data?.end_date
+              ? formatDate(data.end_date, DATE_FORMAT_FORM)
+              : undefined,
             name: projectT("detailTasks.duplicateName", {
               name: data.name,
               value: genTime(),
@@ -365,7 +392,7 @@ const MoreList = (props: MoreListProps) => {
       );
       onSetTType()();
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -439,7 +466,7 @@ const MoreList = (props: MoreListProps) => {
         "success",
       );
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     } finally {
       setIsSubmitting(false);
     }

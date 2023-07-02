@@ -53,7 +53,7 @@ const AssignTask = (props: AssignTaskProps) => {
           onHide();
         }
       } catch (error) {
-        onAddSnackbar(getMessageErrorByAPI(error), "error");
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
       }
     };
   };

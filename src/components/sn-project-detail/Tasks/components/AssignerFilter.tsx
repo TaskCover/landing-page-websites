@@ -31,7 +31,7 @@ const AssignerFilter = (
     <Dropdown
       placeholder={commonT("form.title.assigner")}
       options={options}
-      name="owner"
+      name="tasks.owner"
       onEndReached={onEndReached}
       onChangeSearch={onChangeSearch}
       {...props}

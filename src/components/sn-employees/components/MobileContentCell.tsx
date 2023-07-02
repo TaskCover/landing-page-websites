@@ -41,8 +41,8 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         <InformationItem label={commonT("status")}>
           <TextStatus
             namespace={NS_COMPANY}
-            color={COLOR_STATUS[Number(item.is_pay_user)]}
-            text={TEXT_STATUS[Number(item.is_pay_user)]}
+            color={COLOR_STATUS[item.status]}
+            text={TEXT_STATUS[item.status]}
           />
         </InformationItem>
       </Stack>

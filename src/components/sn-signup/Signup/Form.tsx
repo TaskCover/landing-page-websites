@@ -41,7 +41,7 @@ const Form = () => {
       if ((error as ErrorResponse)["code"] === formErrorCode.REGISTERED_EMAIL) {
         formik.setFieldError("email", "form.error.existed");
       } else {
-        onAddSnackbar(getMessageErrorByAPI(error), "error");
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
       }
     }
   };

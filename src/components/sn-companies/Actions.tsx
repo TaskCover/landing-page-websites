@@ -114,16 +114,17 @@ const Actions = () => {
         <Stack direction="row" alignItems="center" spacing={3}>
           <Date
             label={commonT("creationDate")}
-            name="date"
+            name="created_time"
             onChange={onChangeQueries}
-            value={queries?.date}
+            value={queries?.created_time}
+            format="dd-MM-YYYY"
           />
           <Dropdown
             placeholder={commonT("status")}
             options={paymentOptions}
-            name="is_pay_company"
+            name="status"
             onChange={onChangeQueries}
-            value={Number(queries?.is_pay_company)}
+            value={Number(queries?.status)}
           />
         </Stack>
         <Stack direction="row" alignItems="center" spacing={3}>
@@ -143,4 +144,5 @@ export default memo(Actions);
 const PAYMENT_OPTIONS = [
   { label: TEXT_STATUS[CompanyStatus.APPROVE], value: CompanyStatus.APPROVE },
   { label: TEXT_STATUS[CompanyStatus.REJECT], value: CompanyStatus.REJECT },
+  { label: TEXT_STATUS[CompanyStatus.WAITING], value: CompanyStatus.WAITING },
 ];

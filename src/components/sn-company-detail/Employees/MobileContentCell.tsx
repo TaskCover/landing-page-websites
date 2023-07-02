@@ -43,16 +43,8 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         </InformationItem>
         <InformationItem label={commonT("status")}>
           <TextStatus
-            color={
-              item.is_pay_user === null
-                ? WAITING_STATUS.COLOR
-                : COLOR_STATUS[Number(item.is_pay_user)]
-            }
-            text={
-              item.is_pay_user === null
-                ? WAITING_STATUS.TEXT
-                : TEXT_STATUS[Number(item.is_pay_user)]
-            }
+            color={COLOR_STATUS[Number(item.status)]}
+            text={TEXT_STATUS[Number(item.status)]}
           />
         </InformationItem>
       </Stack>

@@ -25,7 +25,7 @@ import { useEmployees } from "store/company/selectors";
 import CardSendIcon from "icons/CardSendIcon";
 import ConfirmDialog from "components/ConfirmDialog";
 import { Employee } from "store/company/reducer";
-import { DataAction } from "constant/enums";
+import { DataAction, PayStatus } from "constant/enums";
 import { EmployeeData } from "store/company/actions";
 import Form from "./Form";
 import TrashIcon from "icons/TrashIcon";
@@ -267,7 +267,7 @@ const ItemList = () => {
                 onDelete={onActionToItem(DataAction.DELETE, item)}
                 hasPopup={false}
                 options={
-                  !item.is_pay_user
+                  item.status === PayStatus.WAITING
                     ? [
                         {
                           content: companyT("employees.pay"),

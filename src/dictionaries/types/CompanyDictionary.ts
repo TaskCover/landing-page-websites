@@ -8,6 +8,7 @@ export type CompanyDictionary = {
     paid: string;
     pay: string;
     unPaid: string;
+    waiting: string;
     key: string;
     confirmPayment: {
       title: string;

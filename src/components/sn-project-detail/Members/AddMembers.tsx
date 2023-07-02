@@ -20,7 +20,7 @@ import { useTranslations } from "next-intl";
 
 type MemberData = {
   id: string;
-  position: string;
+  position_project: string;
   fullname: string;
 };
 
@@ -75,11 +75,11 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
     const newData = [...newMembers];
 
     if (indexSelected === -1) {
-      newData.push({ id, position, fullname });
+      newData.push({ id, position_project: position, fullname });
     } else if (isUpdatePosition) {
       newData[indexSelected] = {
         ...newData[indexSelected],
-        position,
+        position_project: position,
       };
     } else {
       newData.splice(indexSelected, 1);
@@ -108,7 +108,7 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
         onGetMembersOfProject(id, newQueries);
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 
@@ -124,7 +124,7 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
     setNewMembers(
       members.map((member) => ({
         id: member.id,
-        position: member?.position_project.id,
+        position_project: member?.position_project.id,
         fullname: member.fullname,
       })),
     );
@@ -136,6 +136,7 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
       renderHeader={<HeaderForm />}
       onSubmit={onSubmit}
       pending={isFetching}
+      submitWhenEnter={false}
       {...rest}
     >
       <MenuList component={Stack} spacing={2}>
@@ -143,7 +144,7 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
           const isChecked = newMembers.some((member) => item.id === member.id);
           const positionOfProject = newMembers.find(
             (member) => item.id === member.id,
-          )?.position;
+          )?.position_project;
           return (
             <MemberItem
               key={item.id}
@@ -162,6 +163,11 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
 const HeaderForm = () => {
   const projectT = useTranslations(NS_PROJECT);
   const commonT = useTranslations(NS_COMMON);
+  const { filters, onGetOptions } = useEmployeeOptions();
+
+  const onChangeSearch = (name: string, value?: string | number) => {
+    onGetOptions({ pageIndex: 1, pageSize: 20, [name]: value ?? "" });
+  };
 
   return (
     <Stack spacing={2}>
@@ -172,6 +178,10 @@ const HeaderForm = () => {
         name="email"
         placeholder={commonT("searchBy", { name: "email" })}
         sx={{ maxWidth: 300 }}
+        emitWhenEnter
+        value={filters?.email}
+        search={filters?.email}
+        onChange={onChangeSearch}
       />
     </Stack>
   );

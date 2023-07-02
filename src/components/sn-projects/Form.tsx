@@ -88,13 +88,13 @@ const Form = (props: FormProps) => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let dataParsed: any = { ...values };
-      if (dataParsed.start_date) {
+      if (dataParsed?.start_date) {
         dataParsed.start_date = formatDate(
           dataParsed.start_date,
           DATE_FORMAT_FORM,
         );
       }
-      if (values.end_date) {
+      if (values?.end_date) {
         dataParsed.end_date = formatDate(dataParsed.end_date, DATE_FORMAT_FORM);
       }
       if (dataParsed?.members?.length) {
@@ -131,7 +131,7 @@ const Form = (props: FormProps) => {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 
@@ -234,7 +234,6 @@ const Form = (props: FormProps) => {
             title={commonT("assigner")}
             name="owner"
             hasAvatar
-            required
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.owner}
@@ -252,7 +251,6 @@ const Form = (props: FormProps) => {
             options={projectTypeOptions}
             title={projectT("list.form.title.projectType")}
             name="type_project"
-            required
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.type_project}
@@ -276,7 +274,6 @@ const Form = (props: FormProps) => {
           <DatePicker
             title={commonT("form.title.startDate")}
             name="start_date"
-            required
             onChange={onChangeDate}
             onBlur={formik.handleBlur}
             value={formik.values?.start_date}
@@ -289,7 +286,6 @@ const Form = (props: FormProps) => {
           <DatePicker
             title={commonT("form.title.endDate")}
             name="end_date"
-            required
             onChange={onChangeDate}
             onBlur={formik.handleBlur}
             value={formik.values?.end_date}
@@ -345,7 +341,6 @@ const Form = (props: FormProps) => {
           <Input
             title={commonT("form.title.description")}
             name="description"
-            required
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.description}
@@ -371,13 +366,11 @@ const validationSchema = Yup.object().shape({
     .trim()
     .required("form.error.required")
     .max(MAX_NAME_CHARACTERS, "form.error.overMax"),
-  description: Yup.string().trim().required("form.error.required"),
-  owner: Yup.string().required("form.error.required"),
-  type_project: Yup.string().required("form.error.required"),
-  start_date: Yup.number().required("form.error.required"),
-  end_date: Yup.number()
-    .required("form.error.required")
-    .min(Yup.ref("start_date"), "form.error.gte"),
+  description: Yup.string(),
+  owner: Yup.string(),
+  type_project: Yup.string(),
+  start_date: Yup.number(),
+  end_date: Yup.number().min(Yup.ref("start_date"), "form.error.gte"),
 });
 
 const sxConfig = {

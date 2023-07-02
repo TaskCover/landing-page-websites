@@ -28,8 +28,8 @@ const DesktopCells = (props: DesktopCellsProps) => {
       </BodyCell>
       <StatusCell
         namespace={NS_COMPANY}
-        text={TEXT_STATUS[Number(item.is_pay_user)]}
-        color={COLOR_STATUS[Number(item.is_pay_user)]}
+        text={TEXT_STATUS[item.status]}
+        color={COLOR_STATUS[item.status]}
         width={93}
       />
     </>

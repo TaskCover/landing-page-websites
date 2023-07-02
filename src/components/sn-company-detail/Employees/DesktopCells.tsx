@@ -36,16 +36,8 @@ const DesktopCells = (props: DesktopCellsProps) => {
         {formatDate(item.created_time)}
       </BodyCell>
       <StatusCell
-        text={
-          item.is_pay_user === null
-            ? WAITING_STATUS.TEXT
-            : TEXT_STATUS[Number(item.is_pay_user)]
-        }
-        color={
-          item.is_pay_user === null
-            ? WAITING_STATUS.TEXT
-            : COLOR_STATUS[Number(item.is_pay_user)]
-        }
+        text={TEXT_STATUS[Number(item.status)]}
+        color={COLOR_STATUS[Number(item.status)]}
         width={93}
       />
     </>

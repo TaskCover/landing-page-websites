@@ -174,6 +174,7 @@ export const MoreList = (props: MoreListProps) => {
     onDeleteTaskLists: onDeleteTaskListAction,
   } = useTasksOfProject();
   const projectT = useTranslations(NS_PROJECT);
+  const commonT = useTranslations(NS_COMMON);
   const params = useParams();
   const { onAddSnackbar } = useSnackbar();
 
@@ -191,7 +192,6 @@ export const MoreList = (props: MoreListProps) => {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
-  const commonT = useTranslations(NS_COMMON);
 
   const [type, setType] = useState<Action | undefined>();
 
@@ -228,7 +228,7 @@ export const MoreList = (props: MoreListProps) => {
         onSetTType();
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 
@@ -300,7 +300,7 @@ export const MoreList = (props: MoreListProps) => {
         onSetTType();
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 

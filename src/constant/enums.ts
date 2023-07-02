@@ -41,3 +41,10 @@ export enum Status {
   ACTIVE = "ACTIVE",
   CLOSE = "CLOSE",
 }
+
+export enum PayStatus {
+  // ALL,
+  PAID = 1,
+  UNPAID,
+  WAITING,
+}

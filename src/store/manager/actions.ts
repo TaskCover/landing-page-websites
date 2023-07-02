@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { client } from "api/client";
 import { Endpoint } from "api/endpoint";
-import { HttpStatusCode } from "constant/enums";
+import { HttpStatusCode, PayStatus } from "constant/enums";
 import {
   AN_ERROR_TRY_AGAIN,
   AUTH_API_URL,
@@ -10,7 +10,6 @@ import {
 import { BaseQueries } from "constant/types";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
-import { PaymentStatus } from "components/sn-employees/helpers";
 
 export enum CompanyStatus {
   REJECT,
@@ -48,7 +47,12 @@ export const getEmployeesOfCompany = createAsyncThunk(
     queries = serverQueries(
       { ...queries, sort: "created_time=-1" },
       ["email"],
-      ["is_pay_user"],
+      undefined,
+      ["status"],
+      {
+        created_time: "gte",
+      },
+      ["company"],
     ) as GetEmployeeListQueries;
 
     try {
@@ -75,7 +79,11 @@ export const getCompanyList = createAsyncThunk(
     queries = serverQueries(
       { ...queries, sort: "created_time=-1" },
       ["email"],
-      ["is_pay_company"],
+      undefined,
+      ["status"],
+      {
+        created_time: "gte",
+      },
     ) as GetCompanyListQueries;
 
     try {
@@ -186,11 +194,9 @@ export const companyApproveOrReject = createAsyncThunk(
 
 export const employeeApproveOrReject = createAsyncThunk(
   "manager/employeeApproveOrReject",
-  async ({ type, ids }: { type: PaymentStatus; ids: string[] }) => {
+  async ({ type, ids }: { type: PayStatus; ids: string[] }) => {
     const url =
-      type === PaymentStatus.PAID
-        ? Endpoint.USERS_APPROVE
-        : Endpoint.USERS_REJECT;
+      type === PayStatus.PAID ? Endpoint.USERS_APPROVE : Endpoint.USERS_REJECT;
 
     try {
       const response = await client.put(

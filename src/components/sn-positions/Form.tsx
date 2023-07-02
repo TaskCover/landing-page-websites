@@ -52,14 +52,14 @@ const Form = (props: FormProps) => {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
-      // if (
-      //   (error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA &&
-      //   (error as ErrorResponse)["message"]
-      // ) {
-      //   formik.setFieldError("name", "form.error.existed");
-      // } else {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
-      // }
+      if (
+        (error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA &&
+        (error as ErrorResponse)["message"]
+      ) {
+        formik.setFieldError("name", "form.error.existed");
+      } else {
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      }
     }
   };
 

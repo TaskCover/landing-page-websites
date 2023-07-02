@@ -10,6 +10,7 @@ export const CompanyLang: CompanyDictionary = {
     paid: "Đã thanh toán",
     pay: "Thanh toán",
     unPaid: "Chưa thanh toán",
+    waiting: "Chờ thanh toán",
     key: "nhân viên",
     confirmPayment: {
       title: "Xác nhận thanh toán",

@@ -10,10 +10,12 @@ export const CompanyLang: CompanyDictionary = {
     paid: "Paid",
     pay: "Pay",
     unPaid: "Unpaid",
+    waiting: "Waiting",
     key: "employee",
     confirmPayment: {
       title: "Confirm payment",
-      content: "Are you sure to pay all these items",
+      content:
+        "Are you sure to pay {count, plural, =1 {this item} other {all these items}}?",
     },
     confirmRemove: {
       title: "Confirm remove employee",

@@ -1,16 +1,14 @@
 import { AlertColor } from "@mui/material";
+import { PayStatus } from "constant/enums";
 
-export enum PaymentStatus {
-  UNPAID,
-  PAID,
-}
-
-export const TEXT_STATUS: { [key in PaymentStatus]: string } = {
-  [PaymentStatus.PAID]: "employees.paid",
-  [PaymentStatus.UNPAID]: "employees.unPaid",
+export const TEXT_STATUS: { [key in PayStatus]: string } = {
+  [PayStatus.PAID]: "employees.paid",
+  [PayStatus.UNPAID]: "employees.unPaid",
+  [PayStatus.WAITING]: "employees.waiting",
 };
 
-export const COLOR_STATUS: { [key in PaymentStatus]: AlertColor } = {
-  [PaymentStatus.PAID]: "success",
-  [PaymentStatus.UNPAID]: "info",
+export const COLOR_STATUS: { [key in PayStatus]: AlertColor } = {
+  [PayStatus.PAID]: "success",
+  [PayStatus.UNPAID]: "info",
+  [PayStatus.WAITING]: "warning",
 };

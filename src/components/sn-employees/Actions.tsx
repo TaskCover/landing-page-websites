@@ -5,11 +5,11 @@ import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import { Clear, Dropdown, Refresh, Search } from "components/Filters";
-import { PaymentStatus, TEXT_STATUS } from "./helpers";
+import { TEXT_STATUS } from "./helpers";
 import { getPath } from "utils/index";
 import { usePathname, useRouter } from "next-intl/client";
 import useToggle from "hooks/useToggle";
-import { DataAction } from "constant/enums";
+import { DataAction, PayStatus } from "constant/enums";
 import Form from "./Form";
 import { useEmployees } from "store/company/selectors";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
@@ -44,10 +44,6 @@ const Actions = () => {
     () =>
       PAYMENT_OPTIONS.map((item) => ({ ...item, label: companyT(item.label) })),
     [companyT],
-  );
-  const positionOptions = useMemo(
-    () => options.map((item) => ({ value: item.label, label: item.label })),
-    [options],
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -146,19 +142,19 @@ const Actions = () => {
           <Stack direction="row" alignItems="center" spacing={3}>
             <Dropdown
               placeholder={commonT("position")}
-              options={positionOptions}
-              name="position.name"
+              options={options}
+              name="position"
               onChange={onChangeQueries}
-              value={queries?.["position.name"]}
+              value={queries?.position}
               pending={positionOptionsIsFetching}
               onEndReached={onEndReached}
             />
             <Dropdown
               placeholder={commonT("status")}
               options={paymentOptions}
-              name="is_pay_user"
+              name="status"
               onChange={onChangeQueries}
-              value={Number(queries?.is_pay_user)}
+              value={Number(queries?.status)}
             />
           </Stack>
 
@@ -187,8 +183,9 @@ const Actions = () => {
 export default memo(Actions);
 
 const PAYMENT_OPTIONS = [
-  { label: TEXT_STATUS[1], value: PaymentStatus.PAID },
-  { label: TEXT_STATUS[0], value: PaymentStatus.UNPAID },
+  { label: TEXT_STATUS[1], value: PayStatus.PAID },
+  { label: TEXT_STATUS[2], value: PayStatus.UNPAID },
+  { label: TEXT_STATUS[3], value: PayStatus.WAITING },
 ];
 
 const INITIAL_VALUES = {

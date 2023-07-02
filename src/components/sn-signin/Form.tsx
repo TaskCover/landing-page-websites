@@ -40,8 +40,12 @@ const Form = () => {
           authT("signin.notification.emailOrPasswordWrong"),
           "error",
         );
+      } else if (
+        (error as ErrorResponse)["code"] === formErrorCode.NOT_FOUND_EMAIL
+      ) {
+        formik.setFieldError("email", "form.error.notExist");
       } else {
-        onAddSnackbar(getMessageErrorByAPI(error), "error");
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
       }
     }
   };

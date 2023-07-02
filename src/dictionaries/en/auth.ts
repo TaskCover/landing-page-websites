@@ -87,6 +87,7 @@ export const AuthLang: AuthDictionary = {
     title: "Reset new password",
     notification: {
       resetSuccess: "Change password successfully, please sign in again.",
+      linkWrong: "The link has timed out or is incorrect.",
     },
   },
   joinWorkspace: {
@@ -99,6 +100,7 @@ export const AuthLang: AuthDictionary = {
       },
       error: {
         email: "Suffix email is invalid. Example: @example.com",
+        notFound: "No company uses this suffix email address in the system.",
       },
     },
     getStarted: "Get started",

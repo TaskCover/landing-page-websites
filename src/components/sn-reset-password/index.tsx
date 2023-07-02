@@ -15,6 +15,8 @@ import { NS_AUTH, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import SwitchLanguage from "components/SwitchLanguage";
 import SwitchTheme from "components/SwitchTheme";
+import { formErrorCode } from "api/formErrorCode";
+import { ErrorResponse } from "constant/types";
 
 const Reset = () => {
   const { onResetPassword, onSignOut } = useAuth();
@@ -33,7 +35,11 @@ const Reset = () => {
       onAddSnackbar(authT("reset.notification.resetSuccess"), "success");
       push(SIGNIN_PATH);
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
+        onAddSnackbar(authT("reset.notification.linkWrong"), "error");
+      } else {
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      }
     }
   };
 

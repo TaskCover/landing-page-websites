@@ -32,6 +32,7 @@ export type DialogLayoutProps = Omit<DialogProps, "onSubmit"> & {
   hasCloseButton?: boolean;
   hasDialogClose?: boolean;
   zIndex?: number;
+  submitWhenEnter?: boolean;
 };
 
 const DialogLayout = forwardRef(
@@ -49,6 +50,7 @@ const DialogLayout = forwardRef(
       hasDialogClose = true,
       onSubmit,
       zIndex = 1,
+      submitWhenEnter,
       ...rest
     } = props;
     const t = useTranslations(NS_COMMON);
@@ -66,7 +68,7 @@ const DialogLayout = forwardRef(
       <Dialog
         scroll="paper"
         slots={{
-          root: onSubmit ? "form" : undefined,
+          root: onSubmit && submitWhenEnter ? "form" : undefined,
         }}
         slotProps={{
           root: {

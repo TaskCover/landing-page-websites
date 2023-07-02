@@ -39,7 +39,8 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
 
   const onUpdateTasks = async (data: Partial<TaskData>, name: string) => {
     try {
-      for (const item of selectedList) {
+      const selectedTasks = selectedList.filter((item) => item?.taskId);
+      for (const item of selectedTasks) {
         await onUpdateTask(
           data,
           item.taskListId as string,
@@ -54,7 +55,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
         "success",
       );
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 

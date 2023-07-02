@@ -3,7 +3,7 @@
 import { ForwardedRef, forwardRef, memo, useState } from "react";
 import Editor from "components/Editor";
 import { useTranslations } from "next-intl";
-import { NS_PROJECT } from "constant/index";
+import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { Stack } from "@mui/material";
 import { Button } from "components/shared";
 import { Endpoint, client } from "api";
@@ -14,6 +14,7 @@ import { CommentTaskData } from "store/project/actions";
 
 const CommentEditor = forwardRef(
   (_, ref: ForwardedRef<HTMLDivElement | null>) => {
+    const commonT = useTranslations(NS_COMMON);
     const projectT = useTranslations(NS_PROJECT);
     const { task, taskListId, subTaskId, taskId, onCommentTask } =
       useTaskDetail();
@@ -60,7 +61,7 @@ const CommentEditor = forwardRef(
           ((ref as any)?.current as HTMLDivElement)?.scrollIntoView();
         }
       } catch (error) {
-        onAddSnackbar(getMessageErrorByAPI(error), "error");
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
       }
     };
 

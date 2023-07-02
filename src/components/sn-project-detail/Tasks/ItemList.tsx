@@ -333,7 +333,7 @@ const ItemList = () => {
         );
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 
@@ -600,7 +600,9 @@ const ItemList = () => {
                             >
                               {task.name}
                             </Content>
-                            <Assigner>{task?.owner?.fullname}</Assigner>
+                            <Assigner src={task?.owner?.avatar?.link}>
+                              {task?.owner?.fullname}
+                            </Assigner>
                             <Content>
                               {formatNumber(task?.estimated_hours)}
                             </Content>

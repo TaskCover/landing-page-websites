@@ -26,6 +26,8 @@ const FormLayout = (props: FormLayoutProps) => {
     sx,
     onClose,
     pending,
+    submitWhenEnter = true,
+    onSubmit,
     ...rest
   } = props;
   return (
@@ -55,15 +57,18 @@ const FormLayout = (props: FormLayoutProps) => {
             variant="primary"
             disabled={disabled}
             sx={defaultSx.button}
-            type="submit"
+            type={submitWhenEnter ? "submit" : "button"}
             size="small"
             pending={submitting}
+            onClick={submitWhenEnter ? undefined : onSubmit}
           >
             {submitText}
           </Button>
         </>
       }
       onClose={onClose}
+      onSubmit={onSubmit}
+      submitWhenEnter={submitWhenEnter}
       {...rest}
     >
       <Stack flex={1} overflow="auto">

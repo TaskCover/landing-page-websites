@@ -57,7 +57,7 @@ const UserInformation = () => {
         "success",
       );
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 

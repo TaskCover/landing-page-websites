@@ -96,7 +96,7 @@ const ActionsCell = (props: ActionsCellProps) => {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, t), "error");
     } finally {
       onSubmittingFalse();
     }

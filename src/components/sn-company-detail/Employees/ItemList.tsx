@@ -29,9 +29,9 @@ import { ApproveOrRejectConfirm } from "./components";
 import useBreakpoint from "hooks/useBreakpoint";
 import CircleTickIcon from "icons/CircleTickIcon";
 import CloseSquareIcon from "icons/CloseSquareIcon";
-import { PaymentStatus } from "components/sn-employees/helpers";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { PayStatus } from "constant/enums";
 
 const ItemList = () => {
   const {
@@ -56,11 +56,11 @@ const ItemList = () => {
   const { id: companyId } = useParams();
 
   const [selectedList, setSelectedList] = useState<Employee[]>([]);
-  const [action, setAction] = useState<PaymentStatus | undefined>();
+  const [action, setAction] = useState<PayStatus | undefined>();
   const [id, setId] = useState<string | undefined>();
 
   const nOfWaitings = useMemo(
-    () => items.filter((item) => item?.is_pay_user === null).length,
+    () => items.filter((item) => item.status === PayStatus.WAITING).length,
     [items],
   );
 
@@ -148,7 +148,7 @@ const ItemList = () => {
     onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
   };
 
-  const onApproveOrReject = (type: PaymentStatus, id?: string) => {
+  const onApproveOrReject = (type: PayStatus, id?: string) => {
     return () => {
       setAction(type);
       setId(id);
@@ -185,7 +185,7 @@ const ItemList = () => {
         <Stack direction="row" alignItems="center" spacing={3} p={3} pb={0.25}>
           <IconButton
             size="small"
-            onClick={onApproveOrReject(PaymentStatus.PAID)}
+            onClick={onApproveOrReject(PayStatus.PAID)}
             tooltip={managerT("companyList.approve")}
             sx={{
               backgroundColor: "primary.light",
@@ -201,7 +201,7 @@ const ItemList = () => {
           </IconButton>
           <IconButton
             size="small"
-            onClick={onApproveOrReject(PaymentStatus.UNPAID)}
+            onClick={onApproveOrReject(PayStatus.UNPAID)}
             tooltip={managerT("companyList.reject")}
             sx={{
               backgroundColor: "primary.light",
@@ -231,7 +231,7 @@ const ItemList = () => {
           return (
             <TableRow key={item.id}>
               <BodyCell>
-                {item.is_pay_user === null && (
+                {item.status === PayStatus.WAITING && (
                   <Checkbox
                     checked={indexSelected !== -1}
                     onChange={onToggleSelect(item, indexSelected)}
@@ -246,24 +246,18 @@ const ItemList = () => {
 
               <ActionsCell
                 options={
-                  item.is_pay_user === null
+                  item.status === PayStatus.WAITING
                     ? [
                         {
                           content: managerT("companyList.approve"),
-                          onClick: onApproveOrReject(
-                            PaymentStatus.PAID,
-                            item.id,
-                          ),
+                          onClick: onApproveOrReject(PayStatus.PAID, item.id),
                           icon: (
                             <CircleTickIcon filled={false} fontSize="small" />
                           ),
                         },
                         {
                           content: managerT("companyList.reject"),
-                          onClick: onApproveOrReject(
-                            PaymentStatus.UNPAID,
-                            item.id,
-                          ),
+                          onClick: onApproveOrReject(PayStatus.UNPAID, item.id),
                           icon: <CloseSquareIcon fontSize="small" />,
                         },
                       ]
@@ -304,7 +298,7 @@ export default memo(ItemList);
 
 const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];
 
-const TEXT_ACTION: { [key in PaymentStatus]: string } = {
-  [PaymentStatus.PAID]: "companyList.approve",
-  [PaymentStatus.UNPAID]: "companyList.reject",
+const TEXT_ACTION: { [key: number]: string } = {
+  [PayStatus.PAID]: "companyList.approve",
+  [PayStatus.UNPAID]: "companyList.reject",
 };

@@ -1,6 +1,5 @@
 import { memo } from "react";
 import { BodyCell, StatusCell } from "components/Table";
-import BookmarkIcon from "icons/BookmarkIcon";
 import { Project } from "store/project/reducer";
 import { getPath } from "utils/index";
 import { PROJECT_TASKS_PATH } from "constant/paths";
@@ -9,6 +8,7 @@ import { Stack } from "@mui/material";
 import { Text } from "components/shared";
 import { TEXT_STATUS, COLOR_STATUS } from "./components/helpers";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
+import { Saved } from "./components";
 
 type DesktopCellsProps = {
   item: Project;
@@ -50,7 +50,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
       )}
 
       <BodyCell align="center">
-        <BookmarkIcon color="primary" fontSize="medium" active={item.saved} />
+        <Saved id={item.id} value={item.saved} />
       </BodyCell>
     </>
   );

@@ -26,6 +26,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
   const { onAddSnackbar } = useSnackbar();
   const { onDeleteMember } = useMembersOfProject();
   const { isDarkMode } = useTheme();
+  const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
 
   const onClick = (event) => {
@@ -46,7 +47,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
       newMembers.splice(indexSelected, 1);
       const members = newMembers.map((member) => ({
         id: member.id,
-        position: member.position_project.id,
+        position_project: member.position_project.id,
       }));
       const newData = await onUpdateProject(item.id, { members });
       if (newData) {
@@ -58,7 +59,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
         onHide();
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 

@@ -424,7 +424,7 @@ const projectSlice = createSlice({
         }
       })
       .addCase(createTask.fulfilled, (state, action) => {
-        const { task, taskId, taskListId, subTasks } = action.payload;
+        const { task, taskId, taskListId, subTask } = action.payload;
         const indexTaskList = state.tasks.findIndex(
           (taskListItem) => taskListItem.id === taskListId,
         );
@@ -436,7 +436,17 @@ const projectSlice = createSlice({
             );
 
             if (indexTask !== -1) {
-              state.tasks[indexTaskList].tasks[indexTask].sub_tasks = subTasks;
+              if (
+                state.tasks[indexTaskList].tasks[indexTask]?.sub_tasks?.length
+              ) {
+                state.tasks[indexTaskList].tasks[indexTask].sub_tasks?.push(
+                  subTask,
+                );
+              } else {
+                state.tasks[indexTaskList].tasks[indexTask].sub_tasks = [
+                  subTask,
+                ];
+              }
             }
           } else {
             // CREATE TASK
@@ -444,54 +454,26 @@ const projectSlice = createSlice({
           }
         }
       })
-      .addCase(updateTask.fulfilled, (state, action) => {
-        const { task, taskId, taskListId, subTaskId, taskList } =
-          action.payload;
-        const indexTaskList = state.tasks.findIndex(
-          (taskListItem) => taskListItem.id === taskListId,
-        );
-        if (indexTaskList !== -1) {
-          if (subTaskId) {
-            // UPDATE SUB TASK
+      .addCase(
+        updateTask.fulfilled,
+        (
+          state,
+          action: PayloadAction<{ taskList: TaskList; task: TaskDetail }>,
+        ) => {
+          const { taskList, task } = action.payload;
+          const indexTaskList = state.tasks.findIndex(
+            (taskListItem) => taskListItem.id === taskList.id,
+          );
+
+          if (indexTaskList !== -1) {
             state.tasks[indexTaskList] = taskList;
 
-            if (state?.task) {
-              const indexTask = taskList.tasks.findIndex(
-                (taskItem) => taskItem.id === taskId,
-              );
-              if (indexTask !== -1) {
-                const indexSubTask = (
-                  taskList.tasks[indexTask]?.sub_tasks ?? []
-                ).findIndex((taskItem) => taskItem.id === subTaskId);
-
-                if (indexSubTask !== -1) {
-                  state.task = Object.assign(
-                    state.task,
-                    taskList.tasks[indexTask]?.sub_tasks?.[indexSubTask],
-                  );
-                }
-              }
-            }
-          } else {
-            // UPDATE TASK
-
-            const indexTask = state.tasks[indexTaskList].tasks.findIndex(
-              (taskItem) => taskItem.id === taskId,
-            );
-
-            if (indexTask !== -1) {
-              state.tasks[indexTaskList].tasks[indexTask] = Object.assign(
-                state.tasks[indexTaskList].tasks[indexTask],
-                action.payload.task,
-              );
-            }
-
-            if (state?.task) {
-              state.task = Object.assign(state.task, action.payload.task);
+            if (state.task?.id === task?.id) {
+              state.task = task;
             }
           }
-        }
-      })
+        },
+      )
       .addCase(
         commentTask.fulfilled,
         (

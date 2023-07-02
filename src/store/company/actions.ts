@@ -13,8 +13,9 @@ import StringFormat from "string-format";
 import { getPositions, getProjectTypes } from "store/global/actions";
 
 export enum CompanyStatus {
+  APPROVE = 1,
   REJECT,
-  APPROVE,
+  WAITING,
 }
 
 export type GetEmployeeListQueries = BaseQueries & {
@@ -55,7 +56,8 @@ export const getEmployees = createAsyncThunk(
     queries = serverQueries(
       { ...queries, sort: "created_time=-1" },
       ["email"],
-      ["is_pay_user"],
+      undefined,
+      ["status"],
     ) as GetEmployeeListQueries;
 
     try {
@@ -73,15 +75,37 @@ export const getEmployees = createAsyncThunk(
   },
 );
 
+export const getEmployeeOptions = createAsyncThunk(
+  "company/getEmployeeOptions",
+  async (queries: BaseQueries & { email?: string }) => {
+    queries = serverQueries({ ...queries, sort: "created_time=-1" }, [
+      "email",
+    ]) as GetEmployeeListQueries;
+
+    try {
+      const response = await client.get(Endpoint.COMPANY_MEMBERS, queries, {
+        baseURL: AUTH_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return { ...refactorRawItemListResponse(response.data) };
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
 export const createEmployee = createAsyncThunk(
   "company/createEmployee",
   async (data: EmployeeData) => {
     try {
-      const response = await client.post(Endpoint.USERS, data, {
-        baseURL: AUTH_API_URL,
+      const response = await client.post(Endpoint.COMPANY_ADD_MEMBER, data, {
+        baseURL: COMPANY_API_URL,
       });
 
-      if (response?.status === HttpStatusCode.CREATED) {
+      if (response?.status === HttpStatusCode.OK) {
         return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;
@@ -237,7 +261,7 @@ export const updateProjectType = createAsyncThunk(
         },
       );
 
-      if (response?.status === HttpStatusCode.CREATED) {
+      if (response?.status === HttpStatusCode.OK) {
         return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;

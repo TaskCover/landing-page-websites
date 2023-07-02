@@ -41,7 +41,7 @@ const ChangePassword = ({ prevPath }: { prevPath?: string }) => {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
         formik.setFieldError("old_password", "form.error.incorrect");
       } else {
-        onAddSnackbar(getMessageErrorByAPI(error), "error");
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
       }
     }
   };

@@ -177,14 +177,14 @@ const Actions = () => {
                 placeholder={commonT("searchBy", {
                   name: projectT("detailTasks.key"),
                 })}
-                name="name"
+                name="tasks.name"
                 onChange={onChangeQueries}
-                value={queries?.name}
+                value={queries?.["tasks.name"]}
                 sx={{ width: 220 }}
               />
               <AssignerFilter
                 onChange={onChangeQueries}
-                value={queries?.owner}
+                value={queries?.["tasks.owner"]}
                 hasAvatar
                 sx={{ display: { xs: "none", md: "initial" } }}
               />
@@ -196,9 +196,9 @@ const Actions = () => {
             >
               <Date
                 label={commonT("form.title.startDate")}
-                name="start_date"
+                name="created_time"
                 onChange={onChangeQueries}
-                value={queries?.start_date}
+                value={queries?.created_time}
               />
               <Dropdown
                 placeholder={commonT("status")}

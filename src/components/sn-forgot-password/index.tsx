@@ -46,7 +46,7 @@ const Forgot = () => {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
         setError(commonT("form.error.notExist", { name: "Email" }));
       } else {
-        onAddSnackbar(getMessageErrorByAPI(error), "error");
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
       }
     } finally {
       setIsSubmitting(false);

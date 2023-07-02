@@ -12,7 +12,6 @@ import { Input } from "components/shared";
 import { PositionData } from "store/company/actions";
 import { useTranslations } from "next-intl";
 import { TaskListData } from "store/project/actions";
-import { useParams } from "next/navigation";
 
 type FormProps = {
   initialValues: Omit<TaskListData, "project">;
@@ -38,8 +37,6 @@ const TaskListForm = (props: FormProps) => {
     }
   }, [commonT, type]);
 
-  const params = useParams();
-
   const onSubmit = async (values: Omit<TaskListData, "project">) => {
     try {
       const newItem = await onSubmitProps(values);
@@ -54,7 +51,7 @@ const TaskListForm = (props: FormProps) => {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 

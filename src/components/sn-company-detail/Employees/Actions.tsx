@@ -8,12 +8,11 @@ import { formatNumber, getPath } from "utils/index";
 import { usePathname, useRouter } from "next-intl/client";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { TEXT_STATUS } from "./components/helpers";
-import { CompanyFilter } from "./components";
-import { PaymentStatus } from "components/sn-employees/helpers";
-import { useCompany, useEmployeesOfCompany } from "store/manager/selectors";
+import { useEmployeesOfCompany } from "store/manager/selectors";
 import { useParams } from "next/navigation";
 import { NS_COMMON, NS_MANAGER } from "constant/index";
 import { useTranslations } from "next-intl";
+import { PayStatus } from "constant/enums";
 
 const Actions = () => {
   const { filters, onGetEmployees, pageSize, statistic } =
@@ -121,16 +120,17 @@ const Actions = () => {
         <Stack direction="row" alignItems="center" spacing={3}>
           <Date
             label={commonT("creationDate")}
-            name="date"
+            name="created_time"
             onChange={onChangeQueries}
-            value={queries?.date}
+            value={queries?.created_time}
+            format="dd-MM-YYYY"
           />
           <Dropdown
             placeholder={commonT("status")}
             options={paymentOptions}
-            name="is_pay_user"
+            name="status"
             onChange={onChangeQueries}
-            value={Number(queries?.is_pay_user)}
+            value={Number(queries?.status)}
           />
         </Stack>
         <Stack direction="row" alignItems="center" spacing={3}>
@@ -148,8 +148,8 @@ const Actions = () => {
 };
 
 export default memo(Actions);
-
 const PAYMENT_OPTIONS = [
-  { label: TEXT_STATUS[PaymentStatus.PAID], value: PaymentStatus.PAID },
-  { label: TEXT_STATUS[PaymentStatus.UNPAID], value: PaymentStatus.UNPAID },
+  { label: TEXT_STATUS[1], value: PayStatus.PAID },
+  { label: TEXT_STATUS[2], value: PayStatus.UNPAID },
+  { label: TEXT_STATUS[3], value: PayStatus.WAITING },
 ];

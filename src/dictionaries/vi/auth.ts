@@ -88,6 +88,7 @@ export const AuthLang: AuthDictionary = {
     title: "Đặt lại mật khẩu mới",
     notification: {
       resetSuccess: "Đổi mật khẩu thành công, vui lòng đăng nhập lại.",
+      linkWrong: "Đường dẫn đã hết hạn thời gian hoặc không chính xác.",
     },
   },
   joinWorkspace: {
@@ -100,6 +101,7 @@ export const AuthLang: AuthDictionary = {
       },
       error: {
         email: "Đuôi email không hợp lệ. Ví dụ: @example.com",
+        notFound: "Không có công ty nào sử dụng đuôi email này trong hệ thống.",
       },
     },
     getStarted: "Bắt đầu",

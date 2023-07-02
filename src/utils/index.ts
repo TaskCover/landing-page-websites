@@ -1,5 +1,10 @@
-import { AN_ERROR_TRY_AGAIN, DATE_FORMAT_SLASH } from "constant/index";
+import {
+  AN_ERROR_TRY_AGAIN,
+  AN_ERROR_TRY_RELOAD_PAGE,
+  DATE_FORMAT_SLASH,
+} from "constant/index";
 import { ItemListResponse, OptionFormatNumber } from "constant/types";
+import { useTranslations } from "next-intl";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import StringFormat from "string-format";
@@ -82,10 +87,17 @@ export const uuid = () => {
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-export const getMessageErrorByAPI = (error) => {
+export const getMessageErrorByAPI = (
+  error: unknown,
+  t: (key: string) => string,
+) => {
+  const isAnError = [AN_ERROR_TRY_AGAIN, AN_ERROR_TRY_RELOAD_PAGE].includes(
+    error?.["message"],
+  );
   return typeof error === "string"
     ? error
-    : error["message"] ?? AN_ERROR_TRY_AGAIN;
+    : (isAnError ? t(error?.["message"]) : error?.["message"]) ??
+        t(AN_ERROR_TRY_AGAIN);
 };
 
 export const getDataFromKeys = (data, keys: string[]) => {
@@ -139,9 +151,11 @@ export const serverQueries = (
   },
   likeKeys?: string[],
   booleanKeys?: string[],
+  numberKeys?: string[],
   schemaKeys?: {
     [key: string]: string;
   },
+  keys?: string[],
 ) => {
   const queries = cleanObject({
     ...rest,
@@ -151,7 +165,7 @@ export const serverQueries = (
 
   const data = Object.entries(queries).reduce(
     (out: { [key: string]: string[] }, [key, value]) => {
-      if (KEYS.includes(key)) {
+      if (KEYS.includes(key) || keys?.includes(key)) {
         out[key] = value;
       } else {
         if (likeKeys?.includes(key)) {
@@ -162,6 +176,8 @@ export const serverQueries = (
               ? value
               : value === "true" || Number(value) === 1;
           out.query.push(`eq(${key},${boolValue})`);
+        } else if (typeof value === "number" || numberKeys?.includes(key)) {
+          out.query.push(`eq(${key},${value})`);
         } else {
           const schema = schemaKeys?.[key] ?? "eq";
           out.query.push(`${schema}(${key},"${value}")`);

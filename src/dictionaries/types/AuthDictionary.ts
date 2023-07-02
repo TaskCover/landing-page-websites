@@ -81,6 +81,7 @@ export type AuthDictionary = {
     title: string;
     notification: {
       resetSuccess: string;
+      linkWrong: string;
     };
   };
   joinWorkspace: {
@@ -93,6 +94,7 @@ export type AuthDictionary = {
       };
       error: {
         email: string;
+        notFound: string;
       };
     };
     title: string;

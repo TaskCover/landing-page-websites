@@ -82,12 +82,16 @@ const ItemList = () => {
             name: item.name,
             description: item.description,
             owner: item?.owner?.id,
-            type_project: item.type_project.id,
-            start_date: new Date(item.start_date).getTime(),
-            end_date: new Date(item.end_date).getTime(),
-            expected_cost: item.expected_cost,
-            working_hours: item.working_hours,
-            members: item.members.map(({ id, fullname, ...rest }) => ({
+            type_project: item?.type_project?.id,
+            start_date: item?.start_date
+              ? new Date(item.start_date).getTime()
+              : undefined,
+            end_date: item?.end_date
+              ? new Date(item.end_date).getTime()
+              : undefined,
+            expected_cost: item?.expected_cost,
+            working_hours: item?.working_hours,
+            members: item?.members.map(({ id, fullname, ...rest }) => ({
               id,
               fullname,
               position_project: rest?.position_project.id,

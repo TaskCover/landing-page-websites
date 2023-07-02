@@ -31,6 +31,8 @@ import {
 import Link from "components/Link";
 import { Endpoint, client } from "api";
 import SwitchTheme from "components/SwitchTheme";
+import { formErrorCode } from "api/formErrorCode";
+import { ErrorResponse } from "constant/types";
 
 const JoinWorkspace = () => {
   const { onAddSnackbar } = useSnackbar();
@@ -79,14 +81,18 @@ const JoinWorkspace = () => {
       );
       if (response?.status === HttpStatusCode.OK) {
         onAddSnackbar(authT("joinWorkspace.notification.success"), "success");
-        onHide();
         push(HOME_PATH);
       } else {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      if ((error as ErrorResponse)["code"] === formErrorCode.NOT_FOUND) {
+        setError(authT("joinWorkspace.form.error.notFound"));
+      } else {
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      }
     } finally {
+      onHide();
       setIsSubmitting(false);
     }
   };

@@ -13,10 +13,9 @@ import {
   getStatementHistory,
   updateCompany,
 } from "./actions";
-import { DataStatus } from "constant/enums";
+import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
-import { PaymentStatus } from "components/sn-employees/helpers";
 
 export const useEmployeesOfCompany = () => {
   const dispatch = useAppDispatch();
@@ -42,7 +41,7 @@ export const useEmployeesOfCompany = () => {
     [dispatch],
   );
 
-  const onApproveOrReject = async (ids, type: PaymentStatus) => {
+  const onApproveOrReject = async (ids, type: PayStatus) => {
     try {
       return await dispatch(employeeApproveOrReject({ ids, type })).unwrap();
     } catch (error) {

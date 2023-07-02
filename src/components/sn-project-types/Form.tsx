@@ -11,6 +11,8 @@ import { DataAction } from "constant/enums";
 import { Input } from "components/shared";
 import { PositionData, ProjectTypeData } from "store/company/actions";
 import { useTranslations } from "next-intl";
+import { formErrorCode } from "api/formErrorCode";
+import { ErrorResponse } from "constant/types";
 
 type FormProps = {
   initialValues: ProjectTypeData;
@@ -50,7 +52,14 @@ const Form = (props: FormProps) => {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      if (
+        (error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA &&
+        (error as ErrorResponse)["message"]
+      ) {
+        formik.setFieldError("name", "form.error.existed");
+      } else {
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      }
     }
   };
 

@@ -58,7 +58,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
       );
       props.onClose();
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     } finally {
       setIsSubmitting && setIsSubmitting(false);
     }

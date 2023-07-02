@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { client } from "api/client";
 import { Endpoint } from "api/endpoint";
 import { HttpStatusCode, Status } from "constant/enums";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, AN_ERROR_TRY_RELOAD_PAGE } from "constant/index";
 import { BaseQueries } from "constant/types";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
@@ -43,7 +43,7 @@ export type ProjectData = {
   description: string;
   members?: {
     id: string;
-    position: string;
+    position_project: string;
   }[];
   type_project: string;
   status?: ProjectStatus;
@@ -207,11 +207,9 @@ export const getTasksOfProject = createAsyncThunk(
     project,
     ...queries
   }: GetTasksOfProjectQueries & { prefixKey: "taskOptions" | "tasks" }) => {
-    queries = serverQueries(
-      queries,
-      ["name"],
-      undefined,
-    ) as GetTasksOfProjectQueries;
+    queries = serverQueries(queries, ["tasks.name"], undefined, undefined, {
+      created_time: "gte",
+    }) as GetTasksOfProjectQueries;
     try {
       const response = await client.get(
         StringFormat(Endpoint.PROJECT_TASK_ITEM, { id: project }),
@@ -272,8 +270,8 @@ export const createTask = createAsyncThunk(
 
       if (response?.status === HttpStatusCode.CREATED) {
         return {
-          task: response.data.lastTask as Task,
-          subTasks: response.data.subtasks as Task[],
+          task: response.data?.tasks as Task,
+          subTask: response.data?.subtasks as Task,
           taskId: data?.task,
           taskListId: data.task_list,
         };
@@ -294,13 +292,22 @@ export const updateTask = createAsyncThunk(
       const response = await client.put(url, data);
 
       if (response?.status === HttpStatusCode.CREATED) {
-        return {
-          task: response.data?.task as Task,
-          taskList: response.data?.task_update as TaskList,
-          taskId: data.task,
-          taskListId: data.task_list,
-          subTaskId: data.sub_task,
-        };
+        const taskListUpdatedResponse = await client.get(
+          StringFormat(Endpoint.TASK_LIST, { id: data.task_list }),
+        );
+
+        if (taskListUpdatedResponse.status === HttpStatusCode.OK) {
+          return {
+            taskList: taskListUpdatedResponse.data,
+            task: {
+              ...(response.data?.sub_task ?? response.data?.task),
+              taskListId: data.task_list,
+              taskId: data.task,
+              subTaskId: data?.sub_task,
+            },
+          };
+        }
+        throw AN_ERROR_TRY_RELOAD_PAGE;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
@@ -337,10 +344,7 @@ export const commentTask = createAsyncThunk(
 
       if (response?.status === HttpStatusCode.CREATED) {
         return {
-          comment: {
-            ...response.data.last_comment,
-            attachments_down: response.data.attachments_down,
-          },
+          comment: response.data.comment,
           taskId: data.task,
           taskListId: data.task_list,
           subTaskId: data.sub_task,

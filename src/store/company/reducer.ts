@@ -16,9 +16,10 @@ import {
   getPositionList,
   getMyCompany,
   deleteEmployees,
+  getEmployeeOptions,
 } from "./actions";
 import { ItemListResponse, Paging, User } from "constant/types";
-import { DataStatus } from "constant/enums";
+import { DataStatus, PayStatus } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { getFiltersFromQueries, removeDuplicateItem } from "utils/index";
 
@@ -29,7 +30,7 @@ export interface Employee extends User {
   updated_time: string;
   date_end_using: string;
   date_start_using: string;
-  is_pay_user: boolean;
+  status: PayStatus;
 }
 
 export interface Position {
@@ -77,6 +78,8 @@ export interface Company {
   tax_code: string;
 
   owner?: User;
+
+  status: PayStatus;
 
   account_paid?: {
     total_paid: number;
@@ -203,6 +206,42 @@ const companySlice = createSlice({
 
         state[`${prefixKey}Status`] = DataStatus.FAILED;
         state[`${prefixKey}Error`] =
+          action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(getEmployeeOptions.pending, (state, action) => {
+        state.employeeOptionsStatus = DataStatus.LOADING;
+        state.employeeOptionsFilters = getFiltersFromQueries(action.meta.arg);
+
+        if (action.meta.arg.pageIndex === 1) {
+          state.employeeOptions = [];
+        }
+        state.employeeOptionsPaging.pageIndex = Number(
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        );
+        state.employeeOptionsPaging.pageSize = Number(
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        );
+      })
+      .addCase(
+        getEmployeeOptions.fulfilled,
+        (state, action: PayloadAction<ItemListResponse>) => {
+          const { items, ...paging } = action.payload;
+
+          state.employeeOptions = removeDuplicateItem(
+            state.employeeOptions.concat(items as Employee[]),
+          );
+
+          state.employeeOptionsStatus = DataStatus.SUCCEEDED;
+          state.employeeOptionsError = undefined;
+          state.employeeOptionsPaging = Object.assign(
+            state.employeeOptionsPaging,
+            paging,
+          );
+        },
+      )
+      .addCase(getEmployeeOptions.rejected, (state, action) => {
+        state.employeeOptionsStatus = DataStatus.FAILED;
+        state.employeeOptionsError =
           action.error?.message ?? AN_ERROR_TRY_AGAIN;
       })
       .addCase(

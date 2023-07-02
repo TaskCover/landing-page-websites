@@ -11,6 +11,7 @@ import {
   deletePosition,
   deleteProjectType,
   getCostHistory,
+  getEmployeeOptions,
   getEmployees,
   getMyCompany,
   getPositionList,
@@ -24,7 +25,6 @@ import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
 import { BaseQueries, Option } from "constant/types";
-import { PaymentStatus } from "components/sn-employees/helpers";
 import Avatar from "components/Avatar";
 
 export const useEmployees = () => {
@@ -127,7 +127,7 @@ export const useEmployeeOptions = () => {
 
   const onGetOptions = useCallback(
     (queries: GetEmployeeListQueries) => {
-      dispatch(getEmployees({ concat: true, ...queries }));
+      dispatch(getEmployeeOptions(queries));
     },
     [dispatch],
   );
