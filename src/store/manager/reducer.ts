@@ -283,7 +283,7 @@ const managerSlice = createSlice({
       .addCase(employeeApproveOrReject.fulfilled, (state, action) => {
         state.employees = state.employees.map((item) => {
           if (action.payload.includes(item.id)) {
-            return { ...item, is_pay_user: Boolean(action.meta.arg.type) };
+            return { ...item, approve: Boolean(action.meta.arg.type) };
           }
           return item;
         });

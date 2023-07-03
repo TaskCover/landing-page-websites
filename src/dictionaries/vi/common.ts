@@ -83,6 +83,8 @@ export const CommonLang: CommonDictionary = {
   waiting: "Đang chờ",
   approved: "Đã chấp nhận",
   rejected: "Đã từ chối",
+  paid: "Đã thanh toán",
+  unpaid: "Chưa thanh toán",
   noData: "Không có dữ liệu.",
   unauthorized: "Tài khoản của bạn không có quyền truy cập trang này!",
   duplicate: "Tạo bản sao",

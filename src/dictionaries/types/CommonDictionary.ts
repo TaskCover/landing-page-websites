@@ -80,6 +80,8 @@ export type CommonDictionary = {
   waiting: string;
   approved: string;
   rejected: string;
+  paid: string;
+  unpaid: string;
   noData: string;
   unauthorized: string;
   duplicate: string;

@@ -194,13 +194,23 @@ export const companyApproveOrReject = createAsyncThunk(
 
 export const employeeApproveOrReject = createAsyncThunk(
   "manager/employeeApproveOrReject",
-  async ({ type, ids }: { type: PayStatus; ids: string[] }) => {
+  async ({
+    type,
+    ids,
+    companyCode,
+  }: {
+    type: CompanyStatus;
+    ids: string[];
+    companyCode: string;
+  }) => {
     const url =
-      type === PayStatus.PAID ? Endpoint.USERS_APPROVE : Endpoint.USERS_REJECT;
+      type === CompanyStatus.APPROVE
+        ? Endpoint.USERS_APPROVE
+        : Endpoint.USERS_REJECT;
 
     try {
       const response = await client.put(
-        url,
+        StringFormat(url, { company: companyCode }),
         { ids },
         {
           baseURL: AUTH_API_URL,

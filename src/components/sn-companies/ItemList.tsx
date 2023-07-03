@@ -29,8 +29,9 @@ import CloseSquareIcon from "icons/CloseSquareIcon";
 import DesktopCells from "./DesktopCells";
 import MobileContentCell from "./MobileContentCell";
 import { ApproveOrRejectConfirm } from "./components";
-import { CompanyStatus } from "store/company/actions";
 import { useTranslations } from "next-intl";
+import { PayStatus } from "constant/enums";
+import { CompanyStatus } from "store/manager/actions";
 
 const ItemList = () => {
   const {
@@ -59,7 +60,11 @@ const ItemList = () => {
   const [id, setId] = useState<string | undefined>();
 
   const nOfWaitings = useMemo(
-    () => items.filter((item) => item?.is_approve === null).length,
+    () =>
+      items.filter(
+        (item) =>
+          item.is_approve === undefined && item.status === PayStatus.PAID,
+      ).length,
     [items],
   );
 
@@ -77,7 +82,12 @@ const ItemList = () => {
     (event: ChangeEvent<HTMLInputElement>) => {
       const isChecked = event.target.checked;
       if (isChecked) {
-        setSelectedList(items.filter((item) => item?.is_approve === null));
+        setSelectedList(
+          items.filter(
+            (item) =>
+              item.is_approve === undefined && item.status === PayStatus.PAID,
+          ),
+        );
       } else {
         setSelectedList([]);
       }
@@ -241,12 +251,13 @@ const ItemList = () => {
           return (
             <TableRow key={item.id}>
               <BodyCell>
-                {item.is_approve === null && (
-                  <Checkbox
-                    checked={indexSelected !== -1}
-                    onChange={onToggleSelect(item, indexSelected)}
-                  />
-                )}
+                {item.is_approve === undefined &&
+                  item.status === PayStatus.PAID && (
+                    <Checkbox
+                      checked={indexSelected !== -1}
+                      onChange={onToggleSelect(item, indexSelected)}
+                    />
+                  )}
               </BodyCell>
               {isMdSmaller ? (
                 <MobileContentCell item={item} />
@@ -256,7 +267,8 @@ const ItemList = () => {
 
               <ActionsCell
                 options={
-                  item.is_approve === null
+                  item.is_approve === undefined &&
+                  item.status === PayStatus.PAID
                     ? [
                         {
                           content: managerT("companyList.approve"),

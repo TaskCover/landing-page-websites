@@ -41,9 +41,15 @@ export const useEmployeesOfCompany = () => {
     [dispatch],
   );
 
-  const onApproveOrReject = async (ids, type: PayStatus) => {
+  const onApproveOrReject = async (
+    ids: string[],
+    type: CompanyStatus,
+    companyCode: string,
+  ) => {
     try {
-      return await dispatch(employeeApproveOrReject({ ids, type })).unwrap();
+      return await dispatch(
+        employeeApproveOrReject({ ids, type, companyCode }),
+      ).unwrap();
     } catch (error) {
       throw error;
     }

@@ -8,8 +8,7 @@ import { formatNumber, getPath } from "utils/index";
 import { usePathname, useRouter } from "next-intl/client";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { TEXT_STATUS } from "./components/helpers";
-import { useEmployeesOfCompany } from "store/manager/selectors";
-import { useParams } from "next/navigation";
+import { useCompany, useEmployeesOfCompany } from "store/manager/selectors";
 import { DATE_FORMAT_HYPHEN, NS_COMMON, NS_MANAGER } from "constant/index";
 import { useTranslations } from "next-intl";
 import { PayStatus } from "constant/enums";
@@ -22,7 +21,9 @@ const Actions = () => {
 
   const pathname = usePathname();
   const { push } = useRouter();
-  const { id } = useParams();
+  const { item } = useCompany();
+
+  const companyCode = useMemo(() => item?.code, [item?.code]);
 
   const [queries, setQueries] = useState<Params>({});
 
@@ -44,27 +45,30 @@ const Actions = () => {
   };
 
   const onSearch = () => {
+    if (!companyCode) return;
     const path = getPath(pathname, queriesIgnoreCompany);
     push(path);
 
-    onGetEmployees(id, { ...queries, pageIndex: 1, pageSize });
+    onGetEmployees(companyCode, { ...queries, pageIndex: 1, pageSize });
   };
 
   const onClear = () => {
+    if (!companyCode) return;
     const newQueries = { pageIndex: 1, pageSize };
     const path = getPath(pathname, newQueries);
     push(path);
-    onGetEmployees(id, newQueries);
+    onGetEmployees(companyCode, newQueries);
   };
 
   const onRefresh = () => {
-    onGetEmployees(id, { ...filters, pageIndex: 1, pageSize });
+    if (!companyCode) return;
+    onGetEmployees(companyCode, { ...filters, pageIndex: 1, pageSize });
   };
 
   useEffect(() => {
-    if (!id) return;
+    if (!companyCode) return;
     setQueries(filters);
-  }, [filters, id]);
+  }, [filters, companyCode]);
 
   return (
     <Stack

@@ -6,7 +6,8 @@ import { formatDate } from "utils/index";
 import {
   TEXT_STATUS,
   COLOR_STATUS,
-  WAITING_STATUS,
+  TEXT_PAY_STATUS,
+  COLOR_PAY_STATUS,
 } from "./components/helpers";
 import { Text } from "components/shared";
 import Avatar from "components/Avatar";
@@ -36,9 +37,16 @@ const DesktopCells = (props: DesktopCellsProps) => {
         {formatDate(item.created_time)}
       </BodyCell>
       <StatusCell
-        text={TEXT_STATUS[Number(item.status)]}
-        color={COLOR_STATUS[Number(item.status)]}
-        namespace={NS_COMPANY}
+        text={
+          item?.approve !== undefined
+            ? TEXT_STATUS[Number(item.approve)]
+            : TEXT_PAY_STATUS[Number(item.status)]
+        }
+        color={
+          item?.approve !== undefined
+            ? COLOR_STATUS[Number(item.approve)]
+            : COLOR_PAY_STATUS[Number(item.status)]
+        }
         width={93}
       />
     </>

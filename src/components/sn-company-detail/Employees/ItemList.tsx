@@ -32,6 +32,7 @@ import CloseSquareIcon from "icons/CloseSquareIcon";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { PayStatus } from "constant/enums";
+import { CompanyStatus } from "store/manager/actions";
 
 const ItemList = () => {
   const {
@@ -54,16 +55,18 @@ const ItemList = () => {
   const pathname = usePathname();
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
-  const { id: companyId } = useParams();
 
   const companyCode = useMemo(() => item?.code, [item?.code]);
 
   const [selectedList, setSelectedList] = useState<Employee[]>([]);
-  const [action, setAction] = useState<PayStatus | undefined>();
+  const [action, setAction] = useState<CompanyStatus | undefined>();
   const [id, setId] = useState<string | undefined>();
 
   const nOfWaitings = useMemo(
-    () => items.filter((item) => item.status === PayStatus.WAITING).length,
+    () =>
+      items.filter(
+        (item) => item.approve === undefined && item.status === PayStatus.PAID,
+      ).length,
     [items],
   );
 
@@ -81,7 +84,12 @@ const ItemList = () => {
     (event: ChangeEvent<HTMLInputElement>) => {
       const isChecked = event.target.checked;
       if (isChecked) {
-        setSelectedList(items);
+        setSelectedList(
+          items.filter(
+            (item) =>
+              item.approve === undefined && item.status === PayStatus.PAID,
+          ),
+        );
       } else {
         setSelectedList([]);
       }
@@ -139,8 +147,8 @@ const ItemList = () => {
     const newQueries = { ...query, ...queries };
     const path = getPath(pathname, newQueries);
     push(path);
-    if (!companyId) return;
-    onGetEmployees(companyId, newQueries);
+    if (!companyCode) return;
+    onGetEmployees(companyCode, newQueries);
   };
 
   const onChangePage = (newPage: number) => {
@@ -151,7 +159,7 @@ const ItemList = () => {
     onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
   };
 
-  const onApproveOrReject = (type: PayStatus, id?: string) => {
+  const onApproveOrReject = (type: CompanyStatus, id?: string) => {
     return () => {
       setAction(type);
       setId(id);
@@ -159,15 +167,20 @@ const ItemList = () => {
   };
 
   const onSubmitApproveOrReject = async () => {
-    if (action === undefined) return;
+    if (action === undefined || !companyCode) return;
     const ids = id ? [id] : selectedList.map((item) => item.id);
     try {
-      const idsResponse = await onApproveOrRejectAction(ids, action);
+      const idsResponse = await onApproveOrRejectAction(
+        ids,
+        action,
+        companyCode,
+      );
       if (idsResponse.length) {
         setAction(undefined);
         setSelectedList([]);
         setId(undefined);
       }
+      return idsResponse;
     } catch (error) {
       throw error;
     }
@@ -188,7 +201,7 @@ const ItemList = () => {
         <Stack direction="row" alignItems="center" spacing={3} p={3} pb={0.25}>
           <IconButton
             size="small"
-            onClick={onApproveOrReject(PayStatus.PAID)}
+            onClick={onApproveOrReject(CompanyStatus.APPROVE)}
             tooltip={managerT("companyList.approve")}
             sx={{
               backgroundColor: "primary.light",
@@ -204,7 +217,7 @@ const ItemList = () => {
           </IconButton>
           <IconButton
             size="small"
-            onClick={onApproveOrReject(PayStatus.UNPAID)}
+            onClick={onApproveOrReject(CompanyStatus.REJECT)}
             tooltip={managerT("companyList.reject")}
             sx={{
               backgroundColor: "primary.light",
@@ -234,12 +247,13 @@ const ItemList = () => {
           return (
             <TableRow key={item.id}>
               <BodyCell>
-                {item.status === PayStatus.WAITING && (
-                  <Checkbox
-                    checked={indexSelected !== -1}
-                    onChange={onToggleSelect(item, indexSelected)}
-                  />
-                )}
+                {item.approve === undefined &&
+                  item.status === PayStatus.PAID && (
+                    <Checkbox
+                      checked={indexSelected !== -1}
+                      onChange={onToggleSelect(item, indexSelected)}
+                    />
+                  )}
               </BodyCell>
               {isMdSmaller ? (
                 <MobileContentCell item={item} />
@@ -249,18 +263,24 @@ const ItemList = () => {
 
               <ActionsCell
                 options={
-                  item.status === PayStatus.WAITING
+                  item.approve === undefined && item.status === PayStatus.PAID
                     ? [
                         {
                           content: managerT("companyList.approve"),
-                          onClick: onApproveOrReject(PayStatus.PAID, item.id),
+                          onClick: onApproveOrReject(
+                            CompanyStatus.REJECT,
+                            item.id,
+                          ),
                           icon: (
                             <CircleTickIcon filled={false} fontSize="small" />
                           ),
                         },
                         {
                           content: managerT("companyList.reject"),
-                          onClick: onApproveOrReject(PayStatus.UNPAID, item.id),
+                          onClick: onApproveOrReject(
+                            CompanyStatus.REJECT,
+                            item.id,
+                          ),
                           icon: <CloseSquareIcon fontSize="small" />,
                         },
                       ]

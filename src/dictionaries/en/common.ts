@@ -84,6 +84,8 @@ export const CommonLang: CommonDictionary = {
   waiting: "Waiting",
   approved: "Approved",
   rejected: "Rejected",
+  paid: "Paid",
+  unpaid: "Unpaid",
   noData: "No data.",
   unauthorized: "Your account does not have permission to access this page!",
   duplicate: "Duplicate",

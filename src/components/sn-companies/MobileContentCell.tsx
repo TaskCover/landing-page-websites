@@ -4,7 +4,12 @@ import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { formatDate, getPath } from "utils/index";
 import TextStatus from "components/TextStatus";
-import { COLOR_STATUS, TEXT_STATUS, WAITING_STATUS } from "./components";
+import {
+  COLOR_STATUS,
+  TEXT_STATUS,
+  COLOR_PAY_STATUS,
+  TEXT_PAY_STATUS,
+} from "./components";
 import { BodyCell } from "components/Table";
 import { Company } from "store/company/reducer";
 import Link from "components/Link";
@@ -51,15 +56,15 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         </InformationItem>
         <InformationItem label={commonT("status")}>
           <TextStatus
-            color={
-              item.is_approve === null
-                ? WAITING_STATUS.COLOR
-                : COLOR_STATUS[Number(item.is_approve)]
-            }
             text={
-              item.is_approve === null
-                ? WAITING_STATUS.TEXT
-                : TEXT_STATUS[Number(item.is_approve)]
+              item?.is_approve !== undefined
+                ? TEXT_STATUS[Number(item.is_approve)]
+                : TEXT_PAY_STATUS[Number(item.status)]
+            }
+            color={
+              item?.is_approve !== undefined
+                ? COLOR_STATUS[Number(item.is_approve)]
+                : COLOR_PAY_STATUS[Number(item.status)]
             }
           />
         </InformationItem>

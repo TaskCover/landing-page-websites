@@ -13,8 +13,8 @@ import StringFormat from "string-format";
 import { getPositions, getProjectTypes } from "store/global/actions";
 
 export enum CompanyStatus {
-  APPROVE = 1,
   REJECT,
+  APPROVE,
   WAITING,
 }
 

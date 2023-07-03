@@ -9,7 +9,8 @@ import { Employee } from "store/company/reducer";
 import {
   COLOR_STATUS,
   TEXT_STATUS,
-  WAITING_STATUS,
+  COLOR_PAY_STATUS,
+  TEXT_PAY_STATUS,
 } from "./components/helpers";
 import { NS_COMMON, NS_MANAGER, NS_COMPANY } from "constant/index";
 import { useTranslations } from "next-intl";
@@ -43,9 +44,16 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         </InformationItem>
         <InformationItem label={commonT("status")}>
           <TextStatus
-            color={COLOR_STATUS[Number(item.status)]}
-            text={TEXT_STATUS[Number(item.status)]}
-            namespace={NS_COMPANY}
+            text={
+              item?.approve !== undefined
+                ? TEXT_STATUS[Number(item.approve)]
+                : TEXT_PAY_STATUS[Number(item.status)]
+            }
+            color={
+              item?.approve !== undefined
+                ? COLOR_STATUS[Number(item.approve)]
+                : COLOR_PAY_STATUS[Number(item.status)]
+            }
           />
         </InformationItem>
       </Stack>

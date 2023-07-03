@@ -3,7 +3,12 @@ import { Company } from "store/company/reducer";
 import { BodyCell, StatusCell } from "components/Table";
 import { DATE_TIME_FORMAT_SLASH, NS_COMMON, NS_MANAGER } from "constant/index";
 import { formatDate, getPath } from "utils/index";
-import { TEXT_STATUS, COLOR_STATUS, WAITING_STATUS } from "./components";
+import {
+  TEXT_STATUS,
+  COLOR_STATUS,
+  TEXT_PAY_STATUS,
+  COLOR_PAY_STATUS,
+} from "./components";
 import { Text } from "components/shared";
 import Avatar from "components/Avatar";
 import { Stack } from "@mui/material";
@@ -53,14 +58,14 @@ const DesktopCells = (props: DesktopCellsProps) => {
       </BodyCell>
       <StatusCell
         text={
-          item.is_approve === null
-            ? WAITING_STATUS.TEXT
-            : TEXT_STATUS[Number(item.is_approve)]
+          item?.is_approve !== undefined
+            ? TEXT_STATUS[Number(item.is_approve)]
+            : TEXT_PAY_STATUS[Number(item.status)]
         }
         color={
-          item.is_approve === null
-            ? WAITING_STATUS.COLOR
-            : COLOR_STATUS[Number(item.is_approve)]
+          item?.is_approve !== undefined
+            ? COLOR_STATUS[Number(item.is_approve)]
+            : COLOR_PAY_STATUS[Number(item.status)]
         }
         width={93}
       />
