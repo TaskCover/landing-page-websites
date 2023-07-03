@@ -76,8 +76,8 @@ const ItemList = () => {
   );
 
   const textAction = useMemo(
-    () => (action !== undefined ? TEXT_ACTION[action] : ""),
-    [action],
+    () => (action !== undefined ? managerT(TEXT_ACTION[action]) : ""),
+    [action, managerT],
   );
 
   const onChangeAll = useCallback(
@@ -202,7 +202,7 @@ const ItemList = () => {
           <IconButton
             size="small"
             onClick={onApproveOrReject(CompanyStatus.APPROVE)}
-            tooltip={managerT("companyList.approve")}
+            tooltip={managerT("approve")}
             sx={{
               backgroundColor: "primary.light",
               color: "text.primary",
@@ -218,7 +218,7 @@ const ItemList = () => {
           <IconButton
             size="small"
             onClick={onApproveOrReject(CompanyStatus.REJECT)}
-            tooltip={managerT("companyList.reject")}
+            tooltip={managerT("reject")}
             sx={{
               backgroundColor: "primary.light",
               color: "text.primary",
@@ -266,9 +266,9 @@ const ItemList = () => {
                   item.approve === undefined && item.status === PayStatus.PAID
                     ? [
                         {
-                          content: managerT("companyList.approve"),
+                          content: managerT("approve"),
                           onClick: onApproveOrReject(
-                            CompanyStatus.REJECT,
+                            CompanyStatus.APPROVE,
                             item.id,
                           ),
                           icon: (
@@ -276,7 +276,7 @@ const ItemList = () => {
                           ),
                         },
                         {
-                          content: managerT("companyList.reject"),
+                          content: managerT("reject"),
                           onClick: onApproveOrReject(
                             CompanyStatus.REJECT,
                             item.id,
@@ -321,7 +321,7 @@ export default memo(ItemList);
 
 const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];
 
-const TEXT_ACTION: { [key: number]: string } = {
-  [PayStatus.PAID]: "companyList.approved",
-  [PayStatus.UNPAID]: "companyList.rejected",
+const TEXT_ACTION: { [key in CompanyStatus]: string } = {
+  [CompanyStatus.APPROVE]: "approve",
+  [CompanyStatus.REJECT]: "reject",
 };

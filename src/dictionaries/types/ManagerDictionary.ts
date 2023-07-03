@@ -1,4 +1,6 @@
 export type ManagerDictionary = {
+  approve: string;
+  reject: string;
   companyList: {
     head: {
       title: string;
@@ -6,8 +8,6 @@ export type ManagerDictionary = {
     title: string;
     staffPaid: string;
     totalStaff: string;
-    approve: string;
-    reject: string;
     approved: string;
     rejected: string;
     company: string;

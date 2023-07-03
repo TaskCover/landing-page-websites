@@ -1,6 +1,8 @@
 import { ManagerDictionary } from "dictionaries/types/ManagerDictionary";
 
 export const ManagerLang: ManagerDictionary = {
+  approve: "chấp nhận",
+  reject: "từ chối",
   companyList: {
     head: {
       title: "Danh sách công ty | Taskcover",
@@ -8,8 +10,6 @@ export const ManagerLang: ManagerDictionary = {
     title: "Danh sách công ty",
     staffPaid: "Số nhân viên đã thanh toán",
     totalStaff: "Tổng số nhân viên",
-    approve: "Chấp nhận",
-    reject: "Từ chối",
     approved: "Đã chấp nhận",
     rejected: "Đã từ chối",
     company: "công ty",

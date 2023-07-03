@@ -8,10 +8,11 @@ import { formatNumber, getPath } from "utils/index";
 import { usePathname, useRouter } from "next-intl/client";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { CompanyStatus } from "store/company/actions";
-import { TEXT_STATUS } from "./components/helpers";
+import { TEXT_PAY_STATUS, TEXT_STATUS } from "./components/helpers";
 import { useCompanies } from "store/manager/selectors";
 import { useTranslations } from "next-intl";
 import { DATE_FORMAT_HYPHEN, NS_COMMON, NS_MANAGER } from "constant/index";
+import { PayStatus } from "constant/enums";
 
 const Actions = () => {
   const { filters, onGetCompanies, pageSize, statistic } = useCompanies();
@@ -30,7 +31,15 @@ const Actions = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (name: string, value: any) => {
-    setQueries((prevQueries) => ({ ...prevQueries, [name]: value }));
+    if (name === "status") {
+      const addQueries = {
+        status: typeof value === "number" ? value : undefined,
+        is_approve: typeof value === "string" ? value : undefined,
+      };
+      setQueries((prevQueries) => ({ ...prevQueries, ...addQueries }));
+    } else {
+      setQueries((prevQueries) => ({ ...prevQueries, [name]: value }));
+    }
   };
 
   const onSearch = () => {
@@ -124,7 +133,9 @@ const Actions = () => {
             options={paymentOptions}
             name="status"
             onChange={onChangeQueries}
-            value={Number(queries?.status)}
+            value={
+              queries?.status ? Number(queries?.status) : queries?.is_approve
+            }
           />
         </Stack>
         <Stack direction="row" alignItems="center" spacing={3}>
@@ -142,7 +153,9 @@ const Actions = () => {
 export default memo(Actions);
 
 const PAYMENT_OPTIONS = [
-  { label: TEXT_STATUS[CompanyStatus.APPROVE], value: CompanyStatus.APPROVE },
-  { label: TEXT_STATUS[CompanyStatus.REJECT], value: CompanyStatus.REJECT },
-  { label: TEXT_STATUS[CompanyStatus.WAITING], value: CompanyStatus.WAITING },
+  { label: TEXT_PAY_STATUS[PayStatus.PAID], value: PayStatus.PAID },
+  { label: TEXT_PAY_STATUS[PayStatus.UNPAID], value: PayStatus.UNPAID },
+  { label: TEXT_PAY_STATUS[PayStatus.WAITING], value: PayStatus.WAITING },
+  { label: TEXT_STATUS[CompanyStatus.APPROVE], value: "true" },
+  { label: TEXT_STATUS[CompanyStatus.REJECT], value: "false" },
 ];

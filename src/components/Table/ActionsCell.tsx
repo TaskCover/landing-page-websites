@@ -168,7 +168,12 @@ const ActionsCell = (props: ActionsCellProps) => {
                 sx={sxConfig.item}
               >
                 {option.icon}
-                <Text ml={2} variant="body2" color="grey.400">
+                <Text
+                  ml={2}
+                  variant="body2"
+                  color="grey.400"
+                  textTransform="capitalize"
+                >
                   {option.content}
                 </Text>
               </MenuItem>

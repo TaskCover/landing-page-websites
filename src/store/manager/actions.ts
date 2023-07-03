@@ -47,7 +47,7 @@ export const getEmployeesOfCompany = createAsyncThunk(
     queries = serverQueries(
       { ...queries, sort: "created_time=-1" },
       ["email"],
-      undefined,
+      ["approve"],
       ["status"],
       {
         created_time: "gte",
@@ -79,7 +79,7 @@ export const getCompanyList = createAsyncThunk(
     queries = serverQueries(
       { ...queries, sort: "created_time=-1" },
       ["email"],
-      undefined,
+      ["is_approve"],
       ["status"],
       {
         created_time: "gte",
