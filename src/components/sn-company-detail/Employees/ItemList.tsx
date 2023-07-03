@@ -21,7 +21,7 @@ import Pagination from "components/Pagination";
 import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
 import { IconButton, Checkbox } from "components/shared";
-import { useEmployeesOfCompany } from "store/manager/selectors";
+import { useCompany, useEmployeesOfCompany } from "store/manager/selectors";
 import { Employee } from "store/company/reducer";
 import DesktopCells from "./DesktopCells";
 import MobileContentCell from "./MobileContentCell";
@@ -46,6 +46,7 @@ const ItemList = () => {
     onGetEmployees,
     onApproveOrReject: onApproveOrRejectAction,
   } = useEmployeesOfCompany();
+  const { item } = useCompany();
   const commonT = useTranslations(NS_COMMON);
   const managerT = useTranslations(NS_MANAGER);
 
@@ -54,6 +55,8 @@ const ItemList = () => {
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
   const { id: companyId } = useParams();
+
+  const companyCode = useMemo(() => item?.code, [item?.code]);
 
   const [selectedList, setSelectedList] = useState<Employee[]>([]);
   const [action, setAction] = useState<PayStatus | undefined>();
@@ -171,9 +174,9 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    if (!isReady || !companyId) return;
-    onGetEmployees(companyId, { ...DEFAULT_PAGING, ...initQuery });
-  }, [initQuery, isReady, companyId, onGetEmployees]);
+    if (!isReady || !companyCode) return;
+    onGetEmployees(companyCode, { ...DEFAULT_PAGING, ...initQuery });
+  }, [initQuery, isReady, companyCode, onGetEmployees]);
 
   useEffect(() => {
     setSelectedList([]);
@@ -299,6 +302,6 @@ export default memo(ItemList);
 const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];
 
 const TEXT_ACTION: { [key: number]: string } = {
-  [PayStatus.PAID]: "companyList.approve",
-  [PayStatus.UNPAID]: "companyList.reject",
+  [PayStatus.PAID]: "companyList.approved",
+  [PayStatus.UNPAID]: "companyList.rejected",
 };

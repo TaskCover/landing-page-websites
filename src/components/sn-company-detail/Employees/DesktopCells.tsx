@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Employee } from "store/company/reducer";
 import { BodyCell, StatusCell } from "components/Table";
-import { DATE_TIME_FORMAT_SLASH, NS_MANAGER } from "constant/index";
+import { DATE_TIME_FORMAT_SLASH, NS_COMPANY, NS_MANAGER } from "constant/index";
 import { formatDate } from "utils/index";
 import {
   TEXT_STATUS,
@@ -38,6 +38,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
       <StatusCell
         text={TEXT_STATUS[Number(item.status)]}
         color={COLOR_STATUS[Number(item.status)]}
+        namespace={NS_COMPANY}
         width={93}
       />
     </>

@@ -11,7 +11,7 @@ import {
   TEXT_STATUS,
   WAITING_STATUS,
 } from "./components/helpers";
-import { NS_COMMON, NS_MANAGER } from "constant/index";
+import { NS_COMMON, NS_MANAGER, NS_COMPANY } from "constant/index";
 import { useTranslations } from "next-intl";
 
 type MobileContentCellProps = {
@@ -45,6 +45,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           <TextStatus
             color={COLOR_STATUS[Number(item.status)]}
             text={TEXT_STATUS[Number(item.status)]}
+            namespace={NS_COMPANY}
           />
         </InformationItem>
       </Stack>
