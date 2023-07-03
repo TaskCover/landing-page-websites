@@ -182,7 +182,7 @@ export const updateProject = createAsyncThunk(
 export const getMembersOfProject = createAsyncThunk(
   "project/getMembersOfProject",
   async ({ id, ...queries }: GetMembersOfProjectQueries & { id: string }) => {
-    queries = serverQueries(queries, ["email"]) as BaseQueries;
+    queries = serverQueries(queries, ["members.email"]) as BaseQueries;
 
     try {
       const response = await client.get(
