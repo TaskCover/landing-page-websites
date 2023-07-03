@@ -66,10 +66,12 @@ const DesktopInformation = () => {
       </Stack>
 
       <InformationItem label={commonT("assigner")}>
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} src={item?.owner?.avatar?.link} />
-          <Text variant="body2">{item?.owner?.fullname ?? "--"}</Text>
-        </Stack>
+        {item?.owner?.avatar?.link ? (
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar size={32} src={item?.owner?.avatar?.link} />
+            <Text variant="body2">{item?.owner?.fullname ?? "--"}</Text>
+          </Stack>
+        ) : undefined}
       </InformationItem>
       <Stack direction="row" alignItems="center" spacing={2}>
         <InformationItem label={commonT("form.title.startDate")}>

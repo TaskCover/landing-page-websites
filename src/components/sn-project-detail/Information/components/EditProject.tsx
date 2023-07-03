@@ -21,7 +21,7 @@ const EditProject = () => {
             name: item.name,
             description: item?.description,
             owner: item?.owner?.id,
-            type_project: item?.type_project.id,
+            type_project: item?.type_project?.id,
             start_date: item?.start_date
               ? new Date(item.start_date).getTime()
               : undefined,
