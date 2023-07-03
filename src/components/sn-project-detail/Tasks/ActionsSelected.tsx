@@ -97,6 +97,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
               onChange={onChange}
               placeholder={projectT("detailTasks.assignee")}
               hasAvatar
+              name="owner"
             />
             <Date
               label={commonT("form.title.startDate")}

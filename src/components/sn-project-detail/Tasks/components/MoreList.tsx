@@ -209,6 +209,7 @@ const MoreList = (props: MoreListProps) => {
             ? formatDate(task.end_date, DATE_FORMAT_FORM)
             : undefined,
           owner: task?.owner?.id,
+          status: task?.status,
           estimated_hours: task?.estimated_hours,
         },
         task.task_list,
@@ -229,6 +230,7 @@ const MoreList = (props: MoreListProps) => {
                 ? formatDate(subTask.end_date, DATE_FORMAT_FORM)
                 : undefined,
               owner: subTask?.owner?.id,
+              status: subTask?.status,
               estimated_hours: subTask?.estimated_hours,
             },
             task.task_list,
@@ -343,6 +345,7 @@ const MoreList = (props: MoreListProps) => {
                     start_date: subTask?.start_date,
                     end_date: subTask?.end_date,
                     owner: subTask?.owner?.id,
+                    status: subTask?.status,
                     estimated_hours: subTask?.estimated_hours,
                   });
                 }

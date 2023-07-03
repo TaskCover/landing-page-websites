@@ -106,7 +106,7 @@ export const createEmployee = createAsyncThunk(
       });
 
       if (response?.status === HttpStatusCode.OK) {
-        return response.data ?? response.data?.body;
+        return response.data?.id ? response.data : response.data?.body;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
