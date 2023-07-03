@@ -10,7 +10,7 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { TEXT_STATUS } from "./components/helpers";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { useParams } from "next/navigation";
-import { NS_COMMON, NS_MANAGER } from "constant/index";
+import { DATE_FORMAT_HYPHEN, NS_COMMON, NS_MANAGER } from "constant/index";
 import { useTranslations } from "next-intl";
 import { PayStatus } from "constant/enums";
 
@@ -123,7 +123,7 @@ const Actions = () => {
             name="created_time"
             onChange={onChangeQueries}
             value={queries?.created_time}
-            format="dd-MM-YYYY"
+            format={DATE_FORMAT_HYPHEN}
           />
           <Dropdown
             placeholder={commonT("status")}

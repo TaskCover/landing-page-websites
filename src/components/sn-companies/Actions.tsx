@@ -11,7 +11,7 @@ import { CompanyStatus } from "store/company/actions";
 import { TEXT_STATUS } from "./components/helpers";
 import { useCompanies } from "store/manager/selectors";
 import { useTranslations } from "next-intl";
-import { NS_COMMON, NS_MANAGER } from "constant/index";
+import { DATE_FORMAT_HYPHEN, NS_COMMON, NS_MANAGER } from "constant/index";
 
 const Actions = () => {
   const { filters, onGetCompanies, pageSize, statistic } = useCompanies();
@@ -117,7 +117,7 @@ const Actions = () => {
             name="created_time"
             onChange={onChangeQueries}
             value={queries?.created_time}
-            format="dd-MM-YYYY"
+            format={DATE_FORMAT_HYPHEN}
           />
           <Dropdown
             placeholder={commonT("status")}

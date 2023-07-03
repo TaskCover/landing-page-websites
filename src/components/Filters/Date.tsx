@@ -7,8 +7,9 @@ import DatePicker, {
 } from "react-datepicker";
 import CalendarIcon from "icons/CalendarIcon";
 import { formatDate } from "utils/index";
-import { DATE_FORMAT_FORM } from "constant/index";
+import { DATE_FORMAT_FORM, DATE_FORMAT_HYPHEN } from "constant/index";
 import { vi, enUS } from "date-fns/locale";
+import { format as formatFns } from "date-fns";
 import { useLocale } from "next-intl";
 
 registerLocale("vi", vi);
@@ -51,10 +52,12 @@ const FDate = (props: DateProps) => {
         color={value ? "primary.main" : "grey.400"}
         whiteSpace="nowrap"
       >
-        {value ? formatDate(value) : label}
+        {value
+          ? formatDate(refactorDate(value, format)?.getTime() as number)
+          : label}
       </Text>
       <DatePicker
-        selected={value ? new Date(value) : null}
+        selected={value ? refactorDate(value, format) : null}
         onChange={onChangeDate}
         locale={locale}
         customInput={
@@ -74,3 +77,11 @@ const FDate = (props: DateProps) => {
 };
 
 export default memo(FDate);
+
+const refactorDate = (value, format) => {
+  if (!value) return null;
+  if (format === DATE_FORMAT_HYPHEN) {
+    return new Date(value.replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3"));
+  }
+  return new Date(value);
+};
