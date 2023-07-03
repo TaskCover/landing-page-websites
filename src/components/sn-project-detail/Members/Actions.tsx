@@ -70,9 +70,9 @@ const Actions = () => {
       <Stack direction="row" alignItems="center" spacing={3}>
         <Search
           placeholder={commonT("searchBy", { name: "email" })}
-          name="email"
+          name="members.email"
           onChange={onChangeData}
-          value={filters?.email}
+          value={filters?.["members.email"]}
           emitWhenEnter
         />
         <Refresh onClick={onRefresh} />
