@@ -80,8 +80,8 @@ export const ProjectLang: ProjectDictionary = {
     },
     form: {
       title: {
-        expectCompletionTime: "Expect completion time",
-        timeTaken: "Time taken",
+        expectCompletionTime: "Expect completion time(h)",
+        timeTaken: "Time taken(h)",
         name: "Task name",
         oldTaskList: "Current task list",
         newTaskList: "New task list",

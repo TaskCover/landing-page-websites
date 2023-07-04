@@ -89,7 +89,7 @@ const Information = () => {
           {formatNumber(task?.estimated_hours)}
         </InformationItem>
         <InformationItem label={projectT("detailTasks.form.title.timeTaken")}>
-          {formatNumber()}
+          {formatNumber(task?.time_execution)}
         </InformationItem>
       </Stack>
       <InformationItem label={commonT("creationDate")}>

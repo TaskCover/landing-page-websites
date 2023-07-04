@@ -607,7 +607,7 @@ const ItemList = () => {
                               {formatNumber(task?.estimated_hours)}
                             </Content>
                             <Content>
-                              {formatNumber(task?.working_hours)}
+                              {formatNumber(task?.time_execution)}
                             </Content>
                             <TextStatus
                               color={COLOR_STATUS[task.status]}
@@ -667,7 +667,7 @@ const ItemList = () => {
                                     {formatNumber(subTask.estimated_hours)}
                                   </Content>
                                   <Content>
-                                    {formatNumber(subTask?.working_hours)}
+                                    {formatNumber(subTask?.time_execution)}
                                   </Content>
                                   <TextStatus
                                     color={COLOR_STATUS[subTask.status]}

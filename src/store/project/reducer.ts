@@ -90,7 +90,7 @@ export interface Task {
 
   owner?: User;
   estimated_hours?: number;
-  working_hours?: number;
+  time_execution?: number;
   status: Status;
   description?: string;
   sub_tasks?: Task[];
