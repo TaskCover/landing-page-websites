@@ -124,8 +124,8 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
         width: "100%",
         color: "grey.400",
         borderRadius: 1,
-        px: 2.5,
-        py: 1.5,
+        px: isShowLarge || isSmSmaller ? 2.5 : 1,
+        py: isShowLarge || isSmSmaller ? 1.5 : 1,
         backgroundColor: {
           xs: isDarkMode ? "background.default" : "grey.50",
           sm: undefined,

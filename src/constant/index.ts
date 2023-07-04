@@ -8,6 +8,7 @@ export const COMPANY_API_URL = process.env.COMPANY_API_URL as string;
 export const UPLOAD_API_URL = process.env.UPLOAD_API_URL as string;
 
 export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
+export const DARK_THEME_MEDIA_SYSTEM = "(prefers-color-scheme: dark)";
 
 export const DATE_FORMAT_FORM = "yyyy-MM-dd";
 

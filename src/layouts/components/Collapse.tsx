@@ -60,8 +60,8 @@ const Collapse = (props: CollapseProps) => {
     >
       <AccordionSummary
         sx={{
-          px: 2.5,
-          py: 1.5,
+          px: isShowLarge || isSmSmaller ? 2.5 : 1,
+          py: isShowLarge || isSmSmaller ? 1.5 : 1,
           borderRadius: 1,
           backgroundColor: {
             xs: isDarkMode ? "background.default" : "grey.50",

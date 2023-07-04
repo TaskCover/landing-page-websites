@@ -1,6 +1,8 @@
+import { ThemeMode } from "constant/enums";
 import {
   AN_ERROR_TRY_AGAIN,
   AN_ERROR_TRY_RELOAD_PAGE,
+  DARK_THEME_MEDIA_SYSTEM,
   DATE_FORMAT_SLASH,
 } from "constant/index";
 import { ItemListResponse, OptionFormatNumber } from "constant/types";
@@ -8,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import StringFormat from "string-format";
+import { clientStorage } from "./storage";
 
 export const parseHashURL = (value: string) => `#${value}`;
 
@@ -282,4 +285,27 @@ export const removeDuplicateItem = (data: any[], key = "id") => {
     outArr.push(currentItem);
     return outArr;
   }, []);
+};
+
+export const getTheme = (key: string, fallback: ThemeMode): ThemeMode => {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const theme = (clientStorage.get(key) as ThemeMode) || getThemeSystem();
+    return theme || fallback;
+  } catch (error) {
+    // Unsupported
+    console.error(error);
+  }
+  return fallback;
+};
+
+export const getThemeSystem = (e?: MediaQueryList): ThemeMode => {
+  if (!e) {
+    e = window.matchMedia(DARK_THEME_MEDIA_SYSTEM);
+  }
+
+  const isDark = e.matches;
+
+  const themeSystem = isDark ? ThemeMode.DARK : ThemeMode.LIGHT;
+  return themeSystem;
 };

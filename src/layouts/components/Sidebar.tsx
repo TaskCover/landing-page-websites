@@ -32,7 +32,7 @@ const Sidebar = (props: StackProps) => {
   return (
     <Stack
       height="100%"
-      p={isShowLarge ? { lg: 2.5, xl: 3 } : 1.25}
+      p={isShowLarge ? { lg: 2.5, xl: 3 } : 1}
       sx={{
         transition: "width .3s",
         backgroundColor: "background.paper",
@@ -45,15 +45,18 @@ const Sidebar = (props: StackProps) => {
       width={isShowLarge ? LARGE_SIZE : SMALL_SIZE}
       maxWidth={340}
       overflow="hidden"
-      spacing={3}
+      spacing={isShowLarge ? 3 : 2.5}
       display={{ xs: "none", sm: "flex" }}
+      borderRight="1px solid"
+      borderColor="grey.100"
       {...props}
     >
       <Stack
         width={{ lg: "100%" }}
-        direction="row"
+        direction={isShowLarge ? "row" : "column-reverse"}
         alignItems="center"
         justifyContent={isShowLarge ? "space-between" : "center"}
+        spacing={2.5}
       >
         <Link href={HOME_PATH} underline="none">
           <AppLogo
@@ -120,4 +123,4 @@ const Sidebar = (props: StackProps) => {
 export default memo(Sidebar);
 
 const LARGE_SIZE = 340;
-const SMALL_SIZE = 80;
+const SMALL_SIZE = 60;
