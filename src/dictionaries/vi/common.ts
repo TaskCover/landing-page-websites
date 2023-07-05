@@ -9,6 +9,7 @@ export const CommonLang: CommonDictionary = {
     error: {
       required: "{name} là bắt buộc.",
       invalid: "{name} không hợp lệ.",
+      min: "{name} phải có ít nhất {min} ký tự.",
       minAndMax: "{name} phải từ {min} đến {max} ký tự.",
       confirmNotMatch: "{name} không khớp.",
       notSame: "{name} không thể trùng với {name2}.",

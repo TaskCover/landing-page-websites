@@ -100,6 +100,7 @@ const Form = () => {
           value={formik.values?.fullname}
           error={commonT(touchedErrors?.fullname, {
             name: authT("signup.form.title.fullName"),
+            min: 6,
           })}
           required
         />
@@ -185,7 +186,10 @@ const INITIAL_VALUES = {
 type FormTypes = typeof INITIAL_VALUES & { avatar?: File };
 
 export const validationSchema = Yup.object().shape({
-  fullname: Yup.string().trim().required("form.error.required"),
+  fullname: Yup.string()
+    .trim()
+    .required("form.error.required")
+    .min(6, "form.error.min"),
   phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
   email: Yup.string()
     .trim()

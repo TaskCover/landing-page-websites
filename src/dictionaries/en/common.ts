@@ -9,6 +9,7 @@ export const CommonLang: CommonDictionary = {
     error: {
       required: "{name} is required.",
       invalid: "{name} is invalid.",
+      min: "{name} must have at least {min} characters.",
       minAndMax: "{name} must be between {min} and {max} characters.",
       confirmNotMatch: "{name} does not match.",
       notSame: "{name} cannot be the same as the {name2}.",

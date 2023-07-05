@@ -7,6 +7,7 @@ export type CommonDictionary = {
     error: {
       required: string;
       invalid: string;
+      min: string;
       minAndMax: string;
       confirmNotMatch: string;
       notSame: string;

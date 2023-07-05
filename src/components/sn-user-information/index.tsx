@@ -207,6 +207,7 @@ const UserInformation = () => {
         value={formik.values?.fullname}
         error={commonT(touchedErrors?.fullname, {
           name: commonT("fullName"),
+          min: 6,
         })}
         required={isEdit}
       />
@@ -279,7 +280,10 @@ const INITIAL_VALUES = {
 };
 
 export const validationSchema = Yup.object().shape({
-  fullname: Yup.string().trim().required("form.error.required"),
+  fullname: Yup.string()
+    .trim()
+    .required("form.error.required")
+    .min(6, "form.error.min"),
   phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
 });
 
