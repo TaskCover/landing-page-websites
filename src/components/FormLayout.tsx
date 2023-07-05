@@ -1,25 +1,33 @@
-import { Stack } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import { memo } from "react";
 import DialogLayout, { DialogLayoutProps } from "./DialogLayout";
 import { Button, Text } from "./shared";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 type FormLayoutProps = {
   label: string;
   submitText?: string;
   cancelText?: string;
   disabled?: boolean;
-  isLoading?: boolean;
+  submitting?: boolean;
+  pending?: boolean;
 } & DialogLayoutProps;
 
 const FormLayout = (props: FormLayoutProps) => {
+  const commonT = useTranslations(NS_COMMON);
   const {
     label,
-    submitText = "Submit",
-    cancelText = "Cancel",
+    submitText = commonT("form.confirm"),
+    cancelText = commonT("form.cancel"),
     children,
     disabled,
-    isLoading,
+    submitting,
     sx,
+    onClose,
+    pending,
+    submitWhenEnter = true,
+    onSubmit,
     ...rest
   } = props;
   return (
@@ -37,6 +45,7 @@ const FormLayout = (props: FormLayoutProps) => {
         <>
           <Button
             type="button"
+            onClick={onClose}
             variant="primaryOutlined"
             size="small"
             disabled={disabled}
@@ -48,17 +57,30 @@ const FormLayout = (props: FormLayoutProps) => {
             variant="primary"
             disabled={disabled}
             sx={defaultSx.button}
-            type="submit"
+            type={submitWhenEnter ? "submit" : "button"}
             size="small"
+            pending={submitting}
+            onClick={submitWhenEnter ? undefined : onSubmit}
           >
             {submitText}
           </Button>
         </>
       }
+      onClose={onClose}
+      onSubmit={onSubmit}
+      submitWhenEnter={submitWhenEnter}
       {...rest}
     >
       <Stack flex={1} overflow="auto">
-        {children}
+        {pending ? (
+          <CircularProgress
+            size={24}
+            color="primary"
+            sx={{ mx: "auto", my: 3 }}
+          />
+        ) : (
+          children
+        )}
       </Stack>
     </DialogLayout>
   );
@@ -68,8 +90,7 @@ export default memo(FormLayout);
 
 const defaultSx = {
   root: {
-    minWidth: 850,
-    minHeight: 500,
+    minWidth: { xs: "calc(100vw - 24px)", sm: 850 },
     px: 0,
   },
   bottom: {
@@ -87,6 +108,11 @@ const defaultSx = {
     borderBottom: "1px solid",
     borderColor: "grey.100",
     pb: 3,
+
+    "& > button": {
+      top: 0,
+      transform: "unset",
+    },
   },
   button: {
     minWidth: 120,

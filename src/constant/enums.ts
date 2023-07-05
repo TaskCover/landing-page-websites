@@ -13,3 +13,38 @@ export enum HttpStatusCode {
   TOO_MANY_REQUEST = 429,
   INTERNAL_SERVER = 500,
 }
+
+export enum DataStatus {
+  IDLE,
+  LOADING,
+  SUCCEEDED,
+  FAILED,
+}
+
+export enum DataAction {
+  DETAIL = 1,
+  CREATE,
+  UPDATE,
+  DELETE,
+  OTHER,
+}
+
+export enum Permission {
+  SA = "SA",
+  AM = "AM",
+  ST = "ST",
+  EU = "EU",
+}
+
+export enum Status {
+  PAUSE = "PAUSE",
+  ACTIVE = "ACTIVE",
+  CLOSE = "CLOSE",
+}
+
+export enum PayStatus {
+  // ALL,
+  PAID = 1,
+  UNPAID,
+  WAITING,
+}

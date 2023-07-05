@@ -6,7 +6,8 @@ import useBreakpoint from "hooks/useBreakpoint";
 
 type CoreTextProps = Omit<TypographyProps, "variant"> & {
   // variant?: Variant | { [key in Breakpoint]: Variant };
-  variant?: Variant | { [key: string]: Variant };
+  variant?: Variant | { [key: string]: Variant } | "inherit";
+  component?: string;
 };
 
 export type TextProps = CoreTextProps & {
@@ -30,7 +31,7 @@ const Text = (props: TextProps) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CoreText = forwardRef((props: CoreTextProps, ref: ForwardedRef<any>) => {
   const { variant: variantProps = "body1", children, ...rest } = props;
-  const breakpoint = useBreakpoint();
+  const { breakpoint } = useBreakpoint();
 
   const variant = useMemo(() => {
     if (typeof variantProps === "object") {

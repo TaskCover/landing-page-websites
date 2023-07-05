@@ -2,7 +2,12 @@
 
 import { Box, Stack } from "@mui/material";
 import { Button, IconButton, Input, Text } from "components/shared";
-import { AN_ERROR_TRY_RELOAD_PAGE } from "constant/index";
+import {
+  AN_ERROR_TRY_RELOAD_PAGE,
+  IMAGES_ACCEPT,
+  NS_ACCOUNT,
+  NS_COMMON,
+} from "constant/index";
 import { ChangeEvent, memo, useMemo, useRef } from "react";
 import { useAuth, useSnackbar, useUserInfo } from "store/app/selectors";
 import Avatar from "components/Avatar";
@@ -14,10 +19,17 @@ import { VN_PHONE_REGEX } from "constant/regex";
 import { useFormik, FormikErrors } from "formik";
 import { getDataFromKeys, getMessageErrorByAPI } from "utils/index";
 import { UpdateUserInfoData } from "store/app/actions";
+import { client, Endpoint } from "api";
+import { useTranslations } from "next-intl";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const UserInformation = () => {
   const { user } = useAuth();
   const { onUpdateUserInfo } = useUserInfo();
+  const commonT = useTranslations(NS_COMMON);
+  const accountT = useTranslations(NS_ACCOUNT);
+
+  const { isSmSmaller } = useBreakpoint();
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
@@ -27,10 +39,25 @@ const UserInformation = () => {
 
   const onSubmit = async (values: UpdateUserInfoData) => {
     try {
-      await onUpdateUserInfo(values);
+      const newData = { ...values };
+      if (typeof values["avatar"] === "object") {
+        const avatarUrl: string = await client.upload(
+          Endpoint.UPLOAD,
+          values["avatar"] as unknown as File,
+        );
+        newData["avatar"] = [avatarUrl];
+      } else {
+        delete newData["avatar"];
+      }
+
+      await onUpdateUserInfo(newData);
       onEditFalse();
+      onAddSnackbar(
+        accountT("accountInformation.notification.updateSuccess"),
+        "success",
+      );
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error), "error");
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 
@@ -46,11 +73,18 @@ const UserInformation = () => {
   const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files) return;
-    formik.setFieldValue("file", files[0]);
+    if (IMAGES_ACCEPT.includes(files[0].type)) {
+      formik.setFieldValue("avatar", files[0]);
+    } else {
+      onAddSnackbar(commonT("form.notification.imageTypeInvalid"), "error");
+    }
   };
 
   const initialValues = useMemo(
-    () => getDataFromKeys(user, Object.keys(INITIAL_VALUES)),
+    () => ({
+      ...getDataFromKeys(user, Object.keys(INITIAL_VALUES)),
+      avatar: user?.avatar?.link,
+    }),
     [user],
   ) as UpdateUserInfoData;
 
@@ -61,13 +95,12 @@ const UserInformation = () => {
     onSubmit,
   });
 
-  const previewImage = useMemo(
-    () =>
-      formik.values["file"]
-        ? URL.createObjectURL(formik.values["file"] as unknown as File)
-        : undefined,
-    [formik.values],
-  );
+  const previewImage = useMemo(() => {
+    if (typeof formik.values?.avatar === "object") {
+      return URL.createObjectURL(formik.values.avatar as unknown as File);
+    }
+    return formik.values?.avatar as string | undefined;
+  }, [formik.values?.avatar]);
 
   const touchedErrors = useMemo(() => {
     return Object.entries(formik.errors).reduce(
@@ -92,7 +125,7 @@ const UserInformation = () => {
   if (!user) {
     return (
       <Text variant="body2" textAlign="center" fontWeight={600}>
-        {AN_ERROR_TRY_RELOAD_PAGE}
+        {commonT(AN_ERROR_TRY_RELOAD_PAGE)}
       </Text>
     );
   }
@@ -115,7 +148,7 @@ const UserInformation = () => {
       onSubmit={formik.handleSubmit}
     >
       <Text variant="subtitle1" fontWeight={700}>
-        Thông tin tài khoản
+        {accountT("accountInformation.title")}
       </Text>
       <Stack width={90} height={90} borderRadius="50%" position="relative">
         <Avatar size={90} src={previewImage} alt={user.fullname} />
@@ -127,7 +160,10 @@ const UserInformation = () => {
               sx={{
                 width: 24,
                 height: 24,
-                backgroundColor: "common.white",
+                backgroundColor: "grey.50",
+                "&:hover": {
+                  backgroundColor: "grey.50",
+                },
                 borderRadius: "50%",
                 position: "absolute",
                 bottom: 0,
@@ -139,7 +175,7 @@ const UserInformation = () => {
             <Box
               component="input"
               type="file"
-              accept="image/*"
+              accept={IMAGES_ACCEPT.join(", ")}
               display="none"
               ref={inputFileRef}
               onChange={onChangeFile}
@@ -150,36 +186,42 @@ const UserInformation = () => {
 
       <Stack direction="row" alignItems="center" spacing={0.5}>
         <BagIcon sx={{ color: "grey.400" }} fontSize="medium" />
-        <Text color="grey.400">{`Chức vụ: ${user.position.name}`}</Text>
+        <Text color="grey.400">{`${commonT("position")}: ${
+          user?.position?.name ?? "--"
+        }`}</Text>
       </Stack>
       {!isEdit && (
         <Button onClick={onEditTrue} variant="secondary" size="small">
-          Chỉnh sửa tài khoản
+          {accountT("accountInformation.updateAccount")}
         </Button>
       )}
 
       <Input
         rootSx={sxConfig.input}
-        title="Họ tên"
+        title={commonT("fullName")}
         fullWidth
         name="fullname"
         disabled={!isEdit}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values?.fullname}
-        error={touchedErrors?.fullname}
+        error={commonT(touchedErrors?.fullname, {
+          name: commonT("fullName"),
+        })}
         required={isEdit}
       />
       <Input
         rootSx={sxConfig.input}
-        title="Số điện thoại"
+        title={commonT("phone")}
         fullWidth
         name="phone"
         disabled={!isEdit}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values?.phone}
-        error={touchedErrors?.phone}
+        error={commonT(touchedErrors?.phone, {
+          name: commonT("phone"),
+        })}
       />
       <Input
         rootSx={sxConfig.input}
@@ -188,9 +230,12 @@ const UserInformation = () => {
         name="email"
         disabled
         value={user.email}
-        tooltip="Email không được phép cập nhật."
+        tooltip={
+          isEdit
+            ? accountT("accountInformation.notAllowUpdate", { name: "Email" })
+            : undefined
+        }
       />
-
       {isEdit && (
         <Stack
           direction={{ xs: "column-reverse", sm: "row" }}
@@ -203,21 +248,21 @@ const UserInformation = () => {
             onClick={onCancel}
             sx={sxConfig.button}
             variant="primaryOutlined"
-            size="small"
+            size={isSmSmaller ? "medium" : "small"}
             fullWidth
           >
-            Hủy
+            {commonT("form.cancel")}
           </Button>
           <Button
             disabled={disabled}
             pending={formik.isSubmitting}
             sx={{ ...sxConfig.button }}
             variant="primary"
-            size="small"
+            size={isSmSmaller ? "medium" : "small"}
             type="submit"
             fullWidth
           >
-            Cập nhật
+            {commonT("form.confirm")}
           </Button>
         </Stack>
       )}
@@ -230,14 +275,12 @@ export default memo(UserInformation);
 const INITIAL_VALUES = {
   fullname: "",
   phone: "",
-  file: "",
+  avatar: "",
 };
 
 export const validationSchema = Yup.object().shape({
-  fullname: Yup.string().trim().required("Họ tên là bắt buộc."),
-  phone: Yup.string()
-    .trim()
-    .matches(VN_PHONE_REGEX, "Số điện thoại không hợp lệ!"),
+  fullname: Yup.string().trim().required("form.error.required"),
+  phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
 });
 
 const sxConfig = {

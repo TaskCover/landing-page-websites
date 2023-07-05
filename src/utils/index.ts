@@ -1,4 +1,16 @@
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { ThemeMode } from "constant/enums";
+import {
+  AN_ERROR_TRY_AGAIN,
+  AN_ERROR_TRY_RELOAD_PAGE,
+  DARK_THEME_MEDIA_SYSTEM,
+  DATE_FORMAT_SLASH,
+} from "constant/index";
+import { ItemListResponse, OptionFormatNumber } from "constant/types";
+import { useTranslations } from "next-intl";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { ReadonlyURLSearchParams } from "next/navigation";
+import StringFormat from "string-format";
+import { clientStorage } from "./storage";
 
 export const parseHashURL = (value: string) => `#${value}`;
 
@@ -32,7 +44,9 @@ export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
   };
 };
 
-export const parseURLSearchParams = (searchParams: URLSearchParams) => {
+export const parseURLSearchParams = (
+  searchParams: URLSearchParams | ReadonlyURLSearchParams,
+) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const params: any = {};
   searchParams.forEach((value, key) => {
@@ -43,6 +57,24 @@ export const parseURLSearchParams = (searchParams: URLSearchParams) => {
       : value;
   });
   return params;
+};
+
+export const stringifyURLSearchParams = (data) => {
+  data = cleanObject(data);
+  if (!Object.keys(data).length) return "";
+  return (
+    "?" +
+    Object.entries(data)
+      .reduce((out: string[], [key, value]) => {
+        if (Array.isArray(value)) {
+          out = [...out, ...value.map((valueItem) => `${key}=${valueItem}`)];
+        } else {
+          out.push(`${key}=${value}`);
+        }
+        return out;
+      }, [])
+      .join("&")
+  );
 };
 
 export const uuid = () => {
@@ -58,10 +90,224 @@ export const uuid = () => {
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-export const getMessageErrorByAPI = (error) => {
+export const getMessageErrorByAPI = (
+  error: unknown,
+  t: (key: string) => string,
+) => {
+  const isAnError = [AN_ERROR_TRY_AGAIN, AN_ERROR_TRY_RELOAD_PAGE].includes(
+    error?.["message"],
+  );
   return typeof error === "string"
     ? error
-    : error["message"] ?? AN_ERROR_TRY_AGAIN;
+    : (isAnError ? t(error?.["message"]) : error?.["message"]) ??
+        t(AN_ERROR_TRY_AGAIN);
+};
+
+export const getDataFromKeys = (data, keys: string[]) => {
+  return keys.reduce((outData, key) => {
+    outData[key] = data[key];
+    return outData;
+  }, {});
+};
+
+export const getFiltersFromQueries = (
+  queries,
+  skipValue = [undefined, null, ""],
+) => {
+  return Object.entries(queries).reduce((out, [key, value]) => {
+    if (
+      !["pageIndex", "pageSize", "concat"].includes(key) &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      !skipValue.includes(value as any)
+    ) {
+      out[key] = value;
+    }
+    return out;
+  }, {});
+};
+
+export const refactorRawItemListResponse = (rawData: {
+  page: number;
+  total: number;
+  total_page: number;
+  data: unknown[];
+}) => {
+  return {
+    ...rawData,
+    pageIndex: rawData.page + 1,
+    totalItems: rawData.total,
+    totalPages: rawData.total_page,
+    items: rawData.data,
+  } as ItemListResponse;
+};
+
+const KEYS = ["page", "size", "sort"];
+
+export const serverQueries = (
+  {
+    pageIndex,
+    pageSize,
+    ...rest
+  }: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  },
+  likeKeys?: string[],
+  booleanKeys?: string[],
+  numberKeys?: string[],
+  schemaKeys?: {
+    [key: string]: string;
+  },
+  keys?: string[],
+) => {
+  const queries = cleanObject({
+    ...rest,
+    page: pageIndex ? (pageIndex as number) - 1 : undefined,
+    size: isNaN(pageSize) ? pageSize : Number(pageSize),
+  });
+
+  const data = Object.entries(queries).reduce(
+    (out: { [key: string]: string[] }, [key, value]) => {
+      if (KEYS.includes(key) || keys?.includes(key)) {
+        out[key] = value;
+      } else {
+        if (likeKeys?.includes(key)) {
+          out.query.push(`like(${key},"${value}")`);
+        } else if (typeof value === "boolean" || booleanKeys?.includes(key)) {
+          const boolValue =
+            typeof value === "boolean"
+              ? value
+              : value === "true" || Number(value) === 1;
+          out.query.push(`eq(${key},${boolValue})`);
+        } else if (typeof value === "number" || numberKeys?.includes(key)) {
+          out.query.push(`eq(${key},${value})`);
+        } else {
+          const schema = schemaKeys?.[key] ?? "eq";
+          out.query.push(`${schema}(${key},"${value}")`);
+        }
+      }
+      return out;
+    },
+    { query: [] },
+  );
+
+  const cleanData = cleanObject(data);
+
+  if (cleanData["query"].length) {
+    cleanData["query"] = `and(${cleanData["query"].join(",")})`;
+  } else {
+    delete cleanData["query"];
+  }
+
+  return cleanData;
+};
+
+export const formatDate = (
+  date?: number | string,
+  format?: string,
+  fallback?: string,
+) => {
+  if (!date) return fallback ?? "";
+  if (!format) format = DATE_FORMAT_SLASH;
+  const dateObj = new Date(date);
+
+  const year = dateObj.getFullYear();
+
+  if (year === 1 || year === 1970) return fallback ?? "";
+  const day = `0${dateObj.getDate()}`.substr(-2);
+  const month = `0${dateObj.getMonth() + 1}`.substr(-2);
+  const hours = `0${dateObj.getHours()}`.substr(-2);
+  const minutes = `0${dateObj.getMinutes()}`.substr(-2);
+  const seconds = `0${dateObj.getSeconds()}`.substr(-2);
+  const milliseconds = `${dateObj.getMilliseconds()}`.substr(-2);
+  let dateFormat = format.replace("yyyy", year.toString());
+  dateFormat = dateFormat.replace("MM", month);
+  dateFormat = dateFormat.replace("dd", day);
+  dateFormat = dateFormat.replace("HH", hours);
+  dateFormat = dateFormat.replace("mm", minutes);
+  dateFormat = dateFormat.replace("ss", seconds);
+  dateFormat = dateFormat.replace("ms", milliseconds);
+
+  return dateFormat;
+};
+
+export const formatNumber = (
+  number?: number | null | string,
+  options: OptionFormatNumber = {},
+) => {
+  if (typeof number === "string") return number;
+  const {
+    numberOfFixed = 4,
+    emptyText = "--",
+    suffix,
+    prefix = "",
+    space = true,
+    ...localeOption
+  } = options;
+  const suffixParsed = suffix ? `${space ? " " : ""}${suffix}` : "";
+  if (!number && number !== 0) return emptyText + suffixParsed;
+  const num = Number(number || 0);
+  const maximumFractionDigits = Number.isInteger(num) ? 0 : numberOfFixed;
+  return (
+    prefix +
+    num.toLocaleString("en-US", {
+      maximumFractionDigits,
+      ...localeOption,
+    }) +
+    suffixParsed
+  );
+};
+
+export const getPath = (
+  basePath: string,
+  queries?: Params,
+  data?: { [key: string]: string },
+) => {
+  queries = cleanObject(queries ?? {});
+  const queryString = stringifyURLSearchParams(queries);
+  const path = data ? StringFormat(basePath, data) : basePath;
+  return path + queryString;
+};
+
+export const getFiltersIgnoreId = (filters, key = "id") => {
+  const _filters = { ...filters };
+  delete _filters[key];
+  return _filters;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const removeDuplicateItem = (data: any[], key = "id") => {
+  return data.reduce((outArr, currentItem) => {
+    const isExisted = outArr.some((item) => item[key] === currentItem[key]);
+    if (isExisted) {
+      return outArr;
+    }
+    outArr.push(currentItem);
+    return outArr;
+  }, []);
+};
+
+export const getTheme = (key: string, fallback: ThemeMode): ThemeMode => {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const theme = (clientStorage.get(key) as ThemeMode) || getThemeSystem();
+    return theme || fallback;
+  } catch (error) {
+    // Unsupported
+    console.error(error);
+  }
+  return fallback;
+};
+
+export const getThemeSystem = (e?: MediaQueryList): ThemeMode => {
+  if (!e) {
+    e = window.matchMedia(DARK_THEME_MEDIA_SYSTEM);
+  }
+
+  const isDark = e.matches;
+
+  const themeSystem = isDark ? ThemeMode.DARK : ThemeMode.LIGHT;
+  return themeSystem;
 };
 
 export const getDataFromKeys = (data, keys: string[]) => {

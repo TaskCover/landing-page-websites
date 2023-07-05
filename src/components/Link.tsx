@@ -1,9 +1,12 @@
 import * as React from "react";
 import clsx from "clsx";
-import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import { LinkProps as NextLinkProps } from "next/link";
+import NextLink from "next-intl/link";
 import MuiLink, { LinkProps as MuiLinkProps } from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
-import { usePathname } from "next/navigation";
+import { usePathname } from "next-intl/client";
+import { Tooltip } from "./shared";
+import { TooltipProps } from "@mui/material";
 
 // Add support for the sx prop for consistency with the other branches.
 const Anchor = styled("a")({});
@@ -43,7 +46,7 @@ export const NextLinkComposed = React.forwardRef<
       scroll={scroll}
       shallow={shallow}
       passHref
-      locale={locale}
+      locale={locale as string | undefined}
       legacyBehavior={legacyBehavior}
     >
       <Anchor ref={ref} {...other} />
@@ -51,7 +54,7 @@ export const NextLinkComposed = React.forwardRef<
   );
 });
 
-export type LinkProps = {
+type CoreLinkProps = {
   activeClassName?: string;
   as?: NextLinkProps["as"];
   href: NextLinkProps["href"];
@@ -62,7 +65,7 @@ export type LinkProps = {
 
 // A styled version of the Next.js Link component:
 // https://nextjs.org/docs/api-reference/next/link
-const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
+const CoreLink = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
   props,
   ref,
 ) {
@@ -135,5 +138,27 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
     />
   );
 });
+
+export type LinkProps = CoreLinkProps & {
+  tooltip?: string;
+  placement?: TooltipProps["placement"];
+};
+
+const Link = React.forwardRef(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (props: LinkProps, ref: React.ForwardedRef<any>) => {
+    const { tooltip, placement, ...rest } = props;
+    if (tooltip) {
+      return (
+        <Tooltip title={tooltip} placement={placement}>
+          <CoreLink ref={ref} {...rest} />
+        </Tooltip>
+      );
+    }
+    return <CoreLink ref={ref} {...rest} />;
+  },
+);
+
+Link.displayName = "Link";
 
 export default Link;

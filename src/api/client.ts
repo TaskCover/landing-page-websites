@@ -1,17 +1,18 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
+  AN_ERROR_TRY_AGAIN,
   API_TIMEOUT,
   API_URL,
+  AUTH_API_URL,
   REFRESH_TOKEN_STORAGE_KEY,
+  UPLOAD_API_URL,
 } from "constant";
 import { HttpStatusCode } from "constant/enums";
 import { ErrorResponse } from "constant/types";
-import { store } from "store/configureStore";
 import { sleep } from "utils/index";
 import { clientStorage } from "utils/storage";
 import { Endpoint } from "./endpoint";
-import { clearAuth } from "store/app/reducer";
 import { LIST_FORM_ERROR_CODE } from "./formErrorCode";
 
 const requestAbortCode = "ECONNABORTED";
@@ -39,17 +40,21 @@ axios.interceptors.response.use(
   async (error) => {
     if (
       error.response &&
-      error.response.status === HttpStatusCode.UNAUTHORIZED
+      error.response.status === HttpStatusCode.UNAUTHORIZED &&
+      error.response?.data?.code !== "ACTION_NOT_ALLOWED"
     ) {
       const refreshToken = clientStorage.get(REFRESH_TOKEN_STORAGE_KEY);
-      if (!refreshToken) {
-        store.dispatch(clearAuth());
-      } else {
+      if (!refreshToken && error.config.headers.token) {
+        signOut();
+      } else if (refreshToken) {
         try {
           const rTResponse = await axios.post(
             Endpoint.REFRESH_TOKEN,
             {},
-            { headers: { "refresh-token": refreshToken } },
+            {
+              baseURL: AUTH_API_URL,
+              headers: { "refresh-token": refreshToken },
+            },
           );
           if (rTResponse?.status === HttpStatusCode.OK) {
             clientStorage.set(
@@ -66,7 +71,7 @@ axios.interceptors.response.use(
           };
           return axios(error.config);
         } catch (error) {
-          store.dispatch(clearAuth());
+          signOut();
         }
       }
     }
@@ -86,10 +91,13 @@ axios.interceptors.response.use(
       ?.data as ErrorResponse;
 
     const messageError: string | undefined =
-      errorResponse?.description ?? errorResponse.code;
-    const isFormErrorCode = LIST_FORM_ERROR_CODE.includes(errorResponse.code);
+      errorResponse?.description ?? errorResponse?.code;
+
+    const isFormErrorCode = LIST_FORM_ERROR_CODE.includes(errorResponse?.code);
     return Promise.reject(
-      isFormErrorCode ? errorResponse : messageError ?? error,
+      isFormErrorCode
+        ? { ...errorResponse, message: errorResponse["description"] }
+        : messageError ?? error,
     );
   },
 );
@@ -140,10 +148,35 @@ const RequestClient = class {
     }
   }
 
-  async delete(endpoint: string, data?: {}) {
+  async delete(endpoint: string, configs = {}) {
     try {
-      const response = await axios.delete(endpoint, { data });
+      const response = await axios.delete(endpoint, configs);
       return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async upload(endpoint: string, file: File) {
+    try {
+      let response = await this.get(
+        `${endpoint}/${file.name}`,
+        { type: file.type },
+        {
+          baseURL: UPLOAD_API_URL,
+        },
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        const urlUpload = response.data.object;
+        response = await this.put(response.data.upload, file);
+        if (response?.status === HttpStatusCode.OK) {
+          return urlUpload;
+        }
+        throw AN_ERROR_TRY_AGAIN;
+      } else {
+        throw AN_ERROR_TRY_AGAIN;
+      }
     } catch (error) {
       throw error;
     }
@@ -153,3 +186,9 @@ const RequestClient = class {
 const client = new RequestClient();
 
 export { client };
+
+const signOut = () => {
+  clientStorage.remove(ACCESS_TOKEN_STORAGE_KEY);
+  clientStorage.remove(REFRESH_TOKEN_STORAGE_KEY);
+  window.location.reload();
+};

@@ -3,8 +3,12 @@
 import { memo } from "react";
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
+import { NS_AUTH } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const Banner = () => {
+  const t = useTranslations(NS_AUTH);
+
   return (
     <Stack
       flex={1}
@@ -23,9 +27,14 @@ const Banner = () => {
         variant={{ sm: "subtitle1", lg: "h3" }}
         color="common.white"
       >
-        Bắt đầu dự án
-        <br />
-        với những tiện ích của Taskcover
+        {t.rich("common.slogan", {
+          br: (chunks) => (
+            <>
+              <br />
+              {chunks}
+            </>
+          ),
+        })}
       </Text>
     </Stack>
   );

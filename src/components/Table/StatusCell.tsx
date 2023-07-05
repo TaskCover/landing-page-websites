@@ -1,29 +1,26 @@
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import { AlertColor, TableCellProps } from "@mui/material";
 import { BodyCell } from "components/Table";
-import { Text } from "components/shared";
+import TextStatus from "components/TextStatus";
 
 type StatusCellProps = {
   text: string;
   color: AlertColor;
+  width?: number;
+  namespace?: string;
 } & TableCellProps;
 
 const StatusCell = (props: StatusCellProps) => {
-  const { text, color, ...rest } = props;
+  const { text, color, width, namespace, ...rest } = props;
 
   return (
     <BodyCell {...rest}>
-      <Text
-        color={({ palette }) => palette[color].main}
-        bgcolor={({ palette }) => palette[color].light}
-        variant="caption"
-        fontWeight={600}
-        py={0.5}
-        px={2}
-        borderRadius={1.5}
-      >
-        {text}
-      </Text>
+      <TextStatus
+        text={text}
+        color={color}
+        width={width}
+        namespace={namespace}
+      />
     </BodyCell>
   );
 };

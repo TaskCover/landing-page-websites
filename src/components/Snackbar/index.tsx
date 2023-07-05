@@ -18,6 +18,7 @@ const Snackbar = () => {
       top={24}
       left="50%"
       sx={{ transform: "translateX(-50%)" }}
+      minWidth={{ xs: "calc(100vw - 24px)", md: "auto" }}
     >
       <>
         {snackbarList.map((item) => (

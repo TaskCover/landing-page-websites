@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import {
   Box,
   Accordion,
@@ -9,6 +9,11 @@ import {
 } from "@mui/material";
 import { Text } from "components/shared";
 import ChevronIcon from "icons/ChevronIcon";
+import { useSidebar } from "store/app/selectors";
+import useBreakpoint from "hooks/useBreakpoint";
+import { useTranslations } from "next-intl";
+import { NS_LAYOUT } from "constant/index";
+import useTheme from "hooks/useTheme";
 
 type CollapseProps = {
   label: string;
@@ -19,6 +24,17 @@ type CollapseProps = {
 
 const Collapse = (props: CollapseProps) => {
   const { label, icon, children, initCollapse = false } = props;
+  const t = useTranslations(NS_LAYOUT);
+
+  const { isDarkMode } = useTheme();
+
+  const { isExpandedSidebar } = useSidebar();
+  const { isLgSmaller, isSmSmaller } = useBreakpoint();
+
+  const isShowLarge = useMemo(
+    () => isExpandedSidebar && !isLgSmaller,
+    [isExpandedSidebar, isLgSmaller],
+  );
 
   return (
     <Accordion
@@ -44,12 +60,15 @@ const Collapse = (props: CollapseProps) => {
     >
       <AccordionSummary
         sx={{
-          px: 2.5,
-          py: 1.5,
+          px: isShowLarge || isSmSmaller ? 2.5 : 1,
+          py: isShowLarge || isSmSmaller ? 1.5 : 1,
           borderRadius: 1,
-          backgroundColor: { xs: "grey.50", sm: undefined },
+          backgroundColor: {
+            xs: isDarkMode ? "background.default" : "grey.50",
+            sm: undefined,
+          },
           "&:hover, &.active": {
-            backgroundColor: "primary.light",
+            backgroundColor: isDarkMode ? "grey.50" : "primary.light",
           },
           minHeight: "auto",
           "&.Mui-expanded": {
@@ -85,9 +104,16 @@ const Collapse = (props: CollapseProps) => {
           }}
         >
           {icon}
-          <Text color="grey.400" noWrap>
-            {label}
-          </Text>
+          {(isShowLarge || isSmSmaller) && (
+            <Text
+              color="grey.400"
+              variant={{ xs: "body2", sm: "body1" }}
+              noWrap
+              textTransform="capitalize"
+            >
+              {t(label)}
+            </Text>
+          )}
         </Stack>
       </AccordionSummary>
       {children}

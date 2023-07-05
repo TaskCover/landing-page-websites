@@ -2,11 +2,18 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useEventListener from "./useEventListener";
-import { Breakpoint, useTheme } from "@mui/material";
+import { Breakpoint, useMediaQuery, useTheme } from "@mui/material";
 
 const useBreakpoint = () => {
   const [breakpoint, setBreakpoint] = useState<Breakpoint | undefined>();
   const { breakpoints } = useTheme();
+
+  const isXsSmaller = useMediaQuery(breakpoints.down("xs"));
+  const isSmSmaller = useMediaQuery(breakpoints.down("sm"));
+
+  const isMdSmaller = useMediaQuery(breakpoints.down("md"));
+  const isLgSmaller = useMediaQuery(breakpoints.down("lg"));
+  const isXlSmaller = useMediaQuery(breakpoints.down("xl"));
 
   const onGetBreakpoint = useCallback(() => {
     const currentBreakpoint = getCurrentBreakpoint(breakpoints.values) || "xs";
@@ -19,7 +26,14 @@ const useBreakpoint = () => {
     onGetBreakpoint();
   }, [onGetBreakpoint]);
 
-  return breakpoint;
+  return {
+    breakpoint,
+    isXsSmaller,
+    isSmSmaller,
+    isMdSmaller,
+    isLgSmaller,
+    isXlSmaller,
+  };
 };
 
 export default useBreakpoint;

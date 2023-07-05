@@ -1,12 +1,15 @@
 import Button from "./Button";
-import IconButton from "./IconButton";
+import IconButton, { IconButtonProps } from "./IconButton";
 import Tooltip from "./Tooltip";
 import Text, { TextProps } from "./Text";
-import Input from "./Input";
-import Select from "./Select";
+import Input, { InputProps } from "./Input";
+import Select, { SelectProps } from "./Select";
 import InputNumber from "./InputNumber";
-import DatePicker from "./DatePicker";
-import Switch from "./Switch";
+import DatePicker, { DatePickerProps } from "./DatePicker";
+import Switch, { SwitchProps } from "./Switch";
+import Checkbox from "./Checkbox";
+import Upload from "./Upload";
+import Editor from "./Editor";
 
 export {
   Button,
@@ -18,6 +21,16 @@ export {
   InputNumber,
   DatePicker,
   Switch,
+  Checkbox,
+  Upload,
+  Editor,
 };
 
-export type { TextProps };
+export type {
+  TextProps,
+  InputProps,
+  SelectProps,
+  SwitchProps,
+  DatePickerProps,
+  IconButtonProps,
+};

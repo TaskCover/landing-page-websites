@@ -1,9 +1,9 @@
 import { memo } from "react";
-import Image, { ImageProps } from "next/image";
+import Image, { ImageProps, StaticImageData } from "next/image";
 import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
 
 type AvatarProps = Omit<ImageProps, "src" | "alt"> & {
-  src?: string;
+  src?: string | StaticImageData;
   alt?: string;
   size: number;
 };
@@ -18,6 +18,11 @@ const Avatar = (props: AvatarProps) => {
       alt={alt}
       width={size}
       height={size}
+      style={{
+        minWidth: size,
+        maxWidth: size,
+        objectFit: "cover",
+      }}
       {...rest}
     />
   );

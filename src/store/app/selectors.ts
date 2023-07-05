@@ -3,9 +3,12 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   addSnackbar,
   clearAuth,
+  HeaderConfig,
   removeSnackbar,
   Snackbar,
   toggleAppReady,
+  toggleExpandSidebar,
+  updateHeaderConfig,
 } from "./reducer";
 import {
   ChangePasswordData,
@@ -15,6 +18,7 @@ import {
   UpdateUserInfoData,
   changePassword,
   forgot,
+  getProfile,
   resetPassword,
   signin,
   signup,
@@ -66,6 +70,23 @@ export const useAppReady = () => {
   );
 
   return { appReady, onToggleAppReady };
+};
+
+export const useSidebar = () => {
+  const dispatch = useAppDispatch();
+
+  const isExpandedSidebar = useAppSelector(
+    (state) => state.app.isExpandedSidebar,
+  );
+
+  const onToggleExpandSidebar = useCallback(
+    (newStatus?: boolean) => {
+      dispatch(toggleExpandSidebar(newStatus));
+    },
+    [dispatch],
+  );
+
+  return { isExpandedSidebar, onToggleExpandSidebar };
 };
 
 export const useAuth = () => {
@@ -137,6 +158,10 @@ export const useAuth = () => {
     dispatch(clearAuth());
   }, [dispatch]);
 
+  const onGetProfile = useCallback(() => {
+    dispatch(getProfile());
+  }, [dispatch]);
+
   return {
     token,
     user,
@@ -148,6 +173,7 @@ export const useAuth = () => {
     onVerify,
     onForgot,
     onResetPassword,
+    onGetProfile,
   };
 };
 
@@ -179,5 +205,24 @@ export const useUserInfo = () => {
   return {
     onUpdateUserInfo,
     onChangePassword,
+  };
+};
+
+export const useHeaderConfig = () => {
+  const dispatch = useAppDispatch();
+
+  const { headerConfig } = useAppSelector((state) => state.app, shallowEqual);
+
+  const onUpdateHeaderConfig = useCallback(
+    (data: HeaderConfig) => {
+      dispatch(updateHeaderConfig(data));
+    },
+    [dispatch],
+  );
+
+  return {
+    headerConfig,
+    ...headerConfig,
+    onUpdateHeaderConfig,
   };
 };

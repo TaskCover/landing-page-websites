@@ -4,38 +4,58 @@ import { memo, useMemo } from "react";
 import { Stack } from "@mui/material";
 import { Button, Input } from "components/shared";
 import * as Yup from "yup";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_AUTH, NS_COMMON } from "constant/index";
 import { useFormik, FormikErrors } from "formik";
 import { SignupData } from "store/app/actions";
 import { EMAIL_REGEX, VN_PHONE_REGEX } from "constant/regex";
-import { getMessageErrorByAPI } from "utils/index";
+import { cleanObject, getMessageErrorByAPI } from "utils/index";
 import { useSnackbar, useAuth } from "store/app/selectors";
 import { AvatarUpload } from "./components";
 import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
+import { Endpoint, client } from "api";
+import { useTranslations } from "next-intl";
 
 const Form = () => {
   const { onSignup } = useAuth();
   const { onAddSnackbar } = useSnackbar();
+  const authT = useTranslations(NS_AUTH);
+  const commonT = useTranslations(NS_COMMON);
 
-  const onSubmit = async (values: SignupData) => {
+  const onSubmit = async (values: FormTypes) => {
     try {
-      await onSignup(values);
+      const newData = { ...values } as SignupData;
+      if (values?.avatar) {
+        const avatarUrl = await client.upload(
+          Endpoint.SIGNUP_UPLOAD,
+          values.avatar,
+        );
+        newData["avatar"] = [avatarUrl];
+      }
+      if (newData["rePassword"]) {
+        delete newData["rePassword"];
+      }
+
+      await onSignup(newData);
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.REGISTERED_EMAIL) {
-        formik.setFieldError("email", "Tên địa chỉ email đã được sử dụng.");
+        formik.setFieldError("email", "form.error.existed");
       } else {
-        onAddSnackbar(getMessageErrorByAPI(error), "error");
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
       }
     }
   };
 
-  const formik = useFormik({
+  const formik = useFormik<FormTypes>({
     initialValues: INITIAL_VALUES,
     validationSchema,
     enableReinitialize: true,
     onSubmit,
   });
+
+  const onChangeAvatar = (newFile?: File) => {
+    formik.setFieldValue("avatar", newFile);
+  };
 
   const touchedErrors = useMemo(() => {
     return Object.entries(formik.errors).reduce(
@@ -73,23 +93,27 @@ const Form = () => {
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Họ tên"
+          title={authT("signup.form.title.fullName")}
           name="fullname"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.fullname}
-          error={touchedErrors?.fullname}
+          error={commonT(touchedErrors?.fullname, {
+            name: authT("signup.form.title.fullName"),
+          })}
           required
         />
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Số điện thoại"
+          title={authT("signup.form.title.phone")}
           name="phone"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.phone}
-          error={touchedErrors?.phone}
+          error={commonT(touchedErrors?.phone, {
+            name: authT("signup.form.title.phone"),
+          })}
         />
         <Input
           rootSx={sxConfig.input}
@@ -99,34 +123,40 @@ const Form = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.email}
-          error={touchedErrors?.email}
+          error={commonT(touchedErrors?.email, { name: "Email" })}
           required
         />
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Mật khẩu"
+          title={authT("common.form.title.password")}
           name="password"
           type="password"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.password}
-          error={touchedErrors?.password}
+          error={commonT(touchedErrors?.password, {
+            name: authT("common.form.title.password"),
+            min: 6,
+            max: 30,
+          })}
           required
         />
         <Input
           rootSx={sxConfig.input}
           fullWidth
-          title="Nhập lại mật khẩu"
+          title={authT("common.form.title.confirmPassword")}
           name="rePassword"
           type="password"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.rePassword}
-          error={touchedErrors?.rePassword}
+          error={commonT(touchedErrors?.rePassword, {
+            name: authT("common.form.title.confirmPassword"),
+          })}
           required
         />
-        <AvatarUpload />
+        <AvatarUpload value={formik.values?.avatar} onChange={onChangeAvatar} />
       </Stack>
 
       <Button
@@ -136,7 +166,7 @@ const Form = () => {
         fullWidth
         pending={formik.isSubmitting}
       >
-        Đăng ký
+        {authT("signup.key")}
       </Button>
     </Stack>
   );
@@ -152,19 +182,23 @@ const INITIAL_VALUES = {
   rePassword: "",
 };
 
+type FormTypes = typeof INITIAL_VALUES & { avatar?: File };
+
 export const validationSchema = Yup.object().shape({
-  fullname: Yup.string().trim().required("Họ tên là bắt buộc."),
-  phone: Yup.string()
-    .trim()
-    .matches(VN_PHONE_REGEX, "Số điện thoại không hợp lệ!"),
+  fullname: Yup.string().trim().required("form.error.required"),
+  phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
   email: Yup.string()
     .trim()
-    .required("Email là bắt buộc.")
-    .matches(EMAIL_REGEX, "Email không hợp lệ!"),
-  password: Yup.string().trim().required("Mật khẩu là bắt buộc."),
+    .required("form.error.required")
+    .matches(EMAIL_REGEX, "form.error.invalid"),
+  password: Yup.string()
+    .trim()
+    .required("form.error.required")
+    .min(6, "form.error.minAndMax")
+    .max(30, "form.error.minAndMax"),
   rePassword: Yup.string()
-    .oneOf([Yup.ref("password"), ""], "Nhập lại mật khẩu không khớp.")
-    .required("Nhập lại mật khẩu là bắt buộc."),
+    .oneOf([Yup.ref("password"), ""], "form.error.confirmNotMatch")
+    .required("form.error.required"),
 });
 
 const sxConfig = {

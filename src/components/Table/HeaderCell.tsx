@@ -21,14 +21,14 @@ const HeaderCell = forwardRef(
         }}
         height={HEIGHT_HEADER}
         ref={ref}
+        align="center"
         {...rest}
       >
         {typeof children === "string" ? (
           <Text
-            color="grey.A200"
+            color="grey.400"
             variant="body2"
             fontWeight={600}
-            whiteSpace="nowrap"
             {...textProps}
           >
             {children}

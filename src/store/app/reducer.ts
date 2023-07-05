@@ -1,12 +1,18 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { uuid } from "utils";
-import { signin, signup, signupVerify, updateUserInfo } from "./actions";
+import {
+  getProfile,
+  signin,
+  signup,
+  signupVerify,
+  updateUserInfo,
+} from "./actions";
 import { clientStorage } from "utils/storage";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
   REFRESH_TOKEN_STORAGE_KEY,
-  USER_INFO_STORAGE_KEY,
 } from "constant/index";
+import { User } from "constant/types";
 
 export interface Snackbar {
   message: string;
@@ -18,30 +24,29 @@ export type SnackbarItem = Snackbar & {
   id: string;
 };
 
-export interface UserInfo {
+export interface UserInfo extends User {
   company: string;
   created_time: string;
   department: string;
-  email: string;
-  fullname: string;
-  id: string;
   is_active: boolean;
-  phone: string;
-  position: {
-    id: string;
-    name: string;
-  };
+  approve?: boolean;
   updated_time: string;
   date_end_using: string;
   date_start_using: string;
   is_pay_user: boolean;
-  roles: string[];
 }
+
+export type HeaderConfig = {
+  prevPath?: string;
+  title?: string;
+  searchPlaceholder?: string;
+  endpoint?: string;
+  key?: string;
+};
 
 export enum SignupStep {
   SIGNUP = 1,
   VERIFY,
-  JOIN_WORKSPACE,
 }
 
 export interface AppState {
@@ -52,6 +57,10 @@ export interface AppState {
 
   signupStep: SignupStep;
   tokenRegister?: string;
+
+  headerConfig: HeaderConfig;
+
+  isExpandedSidebar: boolean;
 }
 
 const initialState: AppState = {
@@ -59,6 +68,10 @@ const initialState: AppState = {
   snackbarList: [],
 
   signupStep: SignupStep.SIGNUP,
+
+  headerConfig: {},
+
+  isExpandedSidebar: false,
 };
 
 const appSlice = createSlice({
@@ -99,8 +112,17 @@ const appSlice = createSlice({
 
       clientStorage.remove(ACCESS_TOKEN_STORAGE_KEY);
       clientStorage.remove(REFRESH_TOKEN_STORAGE_KEY);
-      clientStorage.remove(USER_INFO_STORAGE_KEY);
     },
+    updateHeaderConfig: (state, action: PayloadAction<HeaderConfig>) => {
+      state.headerConfig = Object.assign(state.headerConfig, action.payload);
+    },
+    toggleExpandSidebar: (
+      state,
+      action: PayloadAction<boolean | undefined>,
+    ) => {
+      state.isExpandedSidebar = action?.payload ?? !state.isExpandedSidebar;
+    },
+    reset: () => ({ ...initialState, appReady: true }),
   },
   extraReducers: (builder) =>
     builder
@@ -116,7 +138,6 @@ const appSlice = createSlice({
 
           clientStorage.set(ACCESS_TOKEN_STORAGE_KEY, accessToken);
           clientStorage.set(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
-          clientStorage.set(USER_INFO_STORAGE_KEY, userInfo);
 
           state.token = accessToken;
           state.user = userInfo;
@@ -136,7 +157,13 @@ const appSlice = createSlice({
       .addCase(
         updateUserInfo.fulfilled,
         (state, action: PayloadAction<UserInfo>) => {
-          state.user = action.payload;
+          state.user = Object.assign(state?.user ?? {}, action.payload);
+        },
+      )
+      .addCase(
+        getProfile.fulfilled,
+        (state, action: PayloadAction<UserInfo>) => {
+          state.user = Object.assign(state?.user ?? {}, action.payload);
         },
       ),
 });
@@ -147,6 +174,9 @@ export const {
   toggleAppReady,
   clearAuth,
   updateAuth,
+  updateHeaderConfig,
+  toggleExpandSidebar,
+  reset,
 } = appSlice.actions;
 
 export default appSlice.reducer;

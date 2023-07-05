@@ -5,9 +5,12 @@ import {
   Zoom,
   tooltipClasses,
 } from "@mui/material";
+import useTheme from "hooks/useTheme";
 
 const Tooltip = (props: TooltipProps) => {
   const { children, sx, ...rest } = props;
+
+  const { isDarkMode } = useTheme();
 
   return (
     <MuiTooltip
@@ -17,17 +20,17 @@ const Tooltip = (props: TooltipProps) => {
       PopperProps={{
         sx: {
           [`& .${tooltipClasses.tooltip}`]: {
-            backgroundColor: "grey.900",
-            fontSize: 14,
+            backgroundColor: isDarkMode ? "background.paper" : "grey.900",
+            fontSize: 12,
             lineHeight: 1.25,
-            color: "grey.A200",
-            px: 2.625,
-            py: 1,
+            color: isDarkMode ? "common.white" : "grey.A200",
+            px: 1.5,
+            py: 0.75,
             borderRadius: 0.5,
             ...sx,
           },
           [`& .${tooltipClasses.arrow}`]: {
-            color: "grey.900",
+            color: isDarkMode ? "background.paper" : "grey.900",
           },
         },
       }}

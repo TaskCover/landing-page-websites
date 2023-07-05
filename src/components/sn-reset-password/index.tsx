@@ -6,17 +6,24 @@ import AppLogo from "components/AppLogo";
 import { Button, Input, Text } from "components/shared";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next-intl/client";
 import * as Yup from "yup";
 import { useFormik, FormikErrors } from "formik";
+import { SIGNIN_PATH } from "constant/paths";
+import { useParams } from "next/navigation";
+import { NS_AUTH, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
+import SwitchLanguage from "components/SwitchLanguage";
+import SwitchTheme from "components/SwitchTheme";
 import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
-import { SIGNIN_PATH } from "constant/paths";
 
 const Reset = () => {
   const { onResetPassword, onSignOut } = useAuth();
   const { onAddSnackbar } = useSnackbar();
   const { push } = useRouter();
+  const authT = useTranslations(NS_AUTH);
+  const commonT = useTranslations(NS_COMMON);
 
   const params = useParams();
   const token = useMemo(() => params.token, [params.token]);
@@ -25,21 +32,14 @@ const Reset = () => {
     try {
       await onResetPassword({ password: values.password, token });
       onSignOut();
-      onAddSnackbar(
-        "Đổi mật khẩu thành công, vui lòng đăng nhập lại.",
-        "success",
-      );
+      onAddSnackbar(authT("reset.notification.resetSuccess"), "success");
       push(SIGNIN_PATH);
     } catch (error) {
-      let msg = "";
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
-        msg = "Link không chính xác hoặc đã hết hạn sử dụng.";
+        onAddSnackbar(authT("reset.notification.linkWrong"), "error");
+      } else {
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
       }
-      onAddSnackbar(
-        msg ?? getMessageErrorByAPI(error),
-        "error",
-        msg ? 10000 : undefined,
-      );
     }
   };
 
@@ -70,7 +70,7 @@ const Reset = () => {
   return (
     <Stack
       flex={1}
-      height="100vh"
+      height="calc(var(--vh, 1vh) * 100)"
       width="100vw"
       justifyContent="center"
       alignItems="center"
@@ -79,7 +79,7 @@ const Reset = () => {
         m={{ xs: 2, sm: 8 }}
         justifyContent="center"
         alignItems="center"
-        bgcolor="common.white"
+        bgcolor="background.paper"
         p={3}
         flex={{ sm: 1 }}
         width={({ spacing }) => ({
@@ -88,12 +88,29 @@ const Reset = () => {
         })}
         height={({ spacing }) => ({
           xs: "fit-content",
-          sm: `calc(100vh - ${spacing(8 * 2)})`,
+          sm: `calc(calc(var(--vh, 1vh) * 100) - ${spacing(8 * 2)})`,
         })}
+        sx={{
+          overflowX: "hidden",
+        }}
         maxHeight={{ xs: "fit-content", sm: "100%" }}
         borderRadius={2}
         overflow="auto"
+        position="relative"
       >
+        <Stack
+          direction="row"
+          alignItems="center"
+          position="absolute"
+          top={16}
+          right={16}
+          spacing={{ xs: 1, sm: 2 }}
+          zIndex={10}
+        >
+          <SwitchLanguage />
+          <SwitchTheme />
+        </Stack>
+
         <Stack
           minWidth={340}
           maxWidth={340}
@@ -105,32 +122,38 @@ const Reset = () => {
         >
           <AppLogo width={188} />
           <Text variant="h3" textAlign="center" mt={3} mb={5}>
-            Đặt lại mật khẩu mới
+            {authT("reset.title")}
           </Text>
 
           <Input
             rootSx={sxConfig.input}
             fullWidth
-            title="Mật khẩu mới"
+            title={authT("reset.form.title.newPassword")}
             name="password"
             type="password"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.password}
-            error={touchedErrors?.password}
+            error={commonT(touchedErrors?.password, {
+              name: authT("common.form.title.password"),
+              min: 6,
+              max: 30,
+            })}
             required
           />
           <Input
             rootSx={sxConfig.input}
             sx={{ mt: 3 }}
             fullWidth
-            title="Nhập lại mật khẩu"
+            title={authT("common.form.title.confirmPassword")}
             name="rePassword"
             type="password"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.rePassword}
-            error={touchedErrors?.rePassword}
+            error={commonT(touchedErrors?.rePassword, {
+              name: authT("common.form.title.confirmPassword"),
+            })}
             required
           />
 
@@ -142,7 +165,7 @@ const Reset = () => {
             fullWidth
             pending={formik.isSubmitting}
           >
-            Xác nhận
+            {commonT("form.confirm")}
           </Button>
         </Stack>
       </Stack>
@@ -158,10 +181,14 @@ const INITIAL_VALUES = {
 };
 
 export const validationSchema = Yup.object().shape({
-  password: Yup.string().trim().required("Mật khẩu mới là bắt buộc."),
+  password: Yup.string()
+    .trim()
+    .required("form.error.required")
+    .min(6, "form.error.minAndMax")
+    .max(30, "form.error.minAndMax"),
   rePassword: Yup.string()
-    .oneOf([Yup.ref("password"), ""], "Nhập lại mật khẩu không khớp.")
-    .required("Nhập lại mật khẩu là bắt buộc."),
+    .oneOf([Yup.ref("password"), ""], "form.error.confirmNotMatch")
+    .required("form.error.required"),
 });
 
 const sxConfig = {

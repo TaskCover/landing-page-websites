@@ -1,25 +1,31 @@
 import { memo } from "react";
 import DialogLayout, { DialogLayoutProps } from "./DialogLayout";
 import { Button, Text } from "./shared";
+import { NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
-type ConfirmDialogProps = Omit<DialogLayoutProps, "children"> & {
+export type ConfirmDialogProps = Omit<DialogLayoutProps, "children"> & {
   title: string;
   content: string;
   cancelText?: string;
   submitText?: string;
   pending?: boolean;
+  children?: React.ReactNode;
 };
 
 const ConfirmDialog = (props: ConfirmDialogProps) => {
+  const t = useTranslations(NS_COMMON);
+
   const {
     title,
     content,
-    cancelText = "Cancel",
-    submitText = "Submit",
+    cancelText = t("form.cancel"),
+    submitText = t("form.confirm"),
     onClose,
     onSubmit,
     pending,
     sx,
+    children,
     ...rest
   } = props;
   return (
@@ -63,6 +69,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
       <Text variant="body2" textAlign="center">
         {content}
       </Text>
+      {children}
     </DialogLayout>
   );
 };
@@ -71,7 +78,7 @@ export default memo(ConfirmDialog);
 
 const defaultSx = {
   root: {
-    minWidth: 500,
+    minWidth: { sm: 500 },
     minHeight: 230,
     px: 3,
   },

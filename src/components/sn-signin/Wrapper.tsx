@@ -1,32 +1,48 @@
 "use client";
 
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 import { Stack } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { HOME_PATH } from "constant/paths";
+import { useRouter } from "next-intl/client";
+import { HOME_PATH, JOIN_WORKSPACE_PATH } from "constant/paths";
 import { useAppReady, useAuth } from "store/app/selectors";
 import AppLoading from "components/AppLoading";
+import useWindowSize from "hooks/useWindowSize";
+import { Permission } from "constant/enums";
 
 type WrapperProps = {
   children: React.ReactNode;
 };
 
 const Wrapper = (props: WrapperProps) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const { appReady } = useAppReady();
   const { replace } = useRouter();
 
+  const { height } = useWindowSize();
+
+  const isNotJoin = useMemo(
+    () =>
+      isLoggedIn &&
+      user?.roles?.includes(Permission.EU) &&
+      !user.is_pay_user &&
+      !user.approve,
+    [isLoggedIn, user?.approve, user?.is_pay_user, user?.roles],
+  );
+
+  const isSmallHeight = useMemo(() => height && height < 768, [height]);
+
   useEffect(() => {
     if (!isLoggedIn) return;
-    replace(HOME_PATH);
-  }, [isLoggedIn, replace]);
+    replace(isNotJoin ? JOIN_WORKSPACE_PATH : HOME_PATH);
+  }, [isLoggedIn, isNotJoin, replace]);
 
   if (!appReady || isLoggedIn) return <AppLoading />;
 
   return (
     <Stack
       flex={1}
-      m={{ sm: 6, lg: 8 }}
+      mx={{ sm: 6, lg: 8 }}
+      my={{ sm: isSmallHeight ? 3 : 6, lg: isSmallHeight ? 3 : 8 }}
       direction="row"
       sx={{
         background: {
@@ -37,9 +53,13 @@ const Wrapper = (props: WrapperProps) => {
         backgroundSize: { xs: "cover", sm: undefined },
       }}
       height={({ spacing }) => ({
-        xs: "100vh",
-        sm: `calc(100vh - ${spacing(6 * 2)})`,
-        lg: `calc(100vh - ${spacing(8 * 2)})`,
+        xs: "calc(var(--vh, 1vh) * 100)",
+        sm: `calc(calc(var(--vh, 1vh) * 100) - ${spacing(
+          (isSmallHeight ? 3 : 6) * 2,
+        )})`,
+        lg: `calc(calc(var(--vh, 1vh) * 100) - ${spacing(
+          (isSmallHeight ? 3 : 8) * 2,
+        )})`,
       })}
       bgcolor={{ sm: "common.white" }}
       justifyContent={{ xs: "center", sm: "initial" }}

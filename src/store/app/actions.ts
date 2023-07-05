@@ -1,8 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { client, Endpoint } from "api";
+import { client } from "api/client";
+import { Endpoint } from "api/endpoint";
 import { HttpStatusCode } from "constant/enums";
-import { AN_ERROR_TRY_AGAIN, AN_ERROR_TRY_RELOAD_PAGE } from "constant/index";
+import {
+  AN_ERROR_TRY_AGAIN,
+  AN_ERROR_TRY_RELOAD_PAGE,
+  AUTH_API_URL,
+} from "constant/index";
 import { State } from "store/configureStore";
+import StringFormat from "string-format";
 
 export type SigninData = {
   email: string;
@@ -14,6 +20,7 @@ export type SignupData = {
   password: string;
   phone?: string;
   fullname: string;
+  avatar?: string[];
 };
 
 export type ResetPasswordData = {
@@ -22,8 +29,9 @@ export type ResetPasswordData = {
 };
 
 export type UpdateUserInfoData = {
-  phone: string;
-  fullname: string;
+  phone?: string;
+  fullname?: string;
+  avatar?: string | string[];
 };
 
 export type ChangePasswordData = {
@@ -35,7 +43,9 @@ export const signin = createAsyncThunk(
   "app/signin",
   async (data: SigninData) => {
     try {
-      const response = await client.post(Endpoint.SIGNIN, data);
+      const response = await client.post(Endpoint.SIGNIN, data, {
+        baseURL: AUTH_API_URL,
+      });
 
       if (response?.status === HttpStatusCode.OK) {
         return response.data;
@@ -51,7 +61,9 @@ export const signup = createAsyncThunk(
   "app/signup",
   async (data: SignupData) => {
     try {
-      const response = await client.post(Endpoint.SIGNUP, data);
+      const response = await client.post(Endpoint.SIGNUP, data, {
+        baseURL: AUTH_API_URL,
+      });
 
       if (response?.status === HttpStatusCode.CREATED) {
         return response.data;
@@ -76,6 +88,7 @@ export const signupVerify = createAsyncThunk(
         Endpoint.VERIFY,
         { code },
         {
+          baseURL: AUTH_API_URL,
           headers: {
             tokenRegister,
           },
@@ -94,7 +107,11 @@ export const signupVerify = createAsyncThunk(
 
 export const forgot = createAsyncThunk("app/forgot", async (email: string) => {
   try {
-    const response = await client.post(Endpoint.FORGOT_PASSWORD, { email });
+    const response = await client.post(
+      Endpoint.FORGOT_PASSWORD,
+      { email },
+      { baseURL: AUTH_API_URL },
+    );
 
     if (response?.status === HttpStatusCode.OK) {
       return response.data;
@@ -110,9 +127,10 @@ export const resetPassword = createAsyncThunk(
   async ({ password, token }: ResetPasswordData) => {
     try {
       const response = await client.post(
-        Endpoint.FORGOT_PASSWORD,
+        Endpoint.RESET_PASSWORD,
         { password },
         {
+          baseURL: AUTH_API_URL,
           headers: {
             "reset-password-token": token,
           },
@@ -133,7 +151,9 @@ export const updateUserInfo = createAsyncThunk(
   "app/updateUserInfo",
   async (data: UpdateUserInfoData) => {
     try {
-      const response = await client.post(Endpoint.PROFILE, data);
+      const response = await client.put(Endpoint.PROFILE, data, {
+        baseURL: AUTH_API_URL,
+      });
 
       if (response?.status === HttpStatusCode.OK) {
         return response.data;
@@ -149,10 +169,12 @@ export const changePassword = createAsyncThunk(
   "app/changePassword",
   async (data: ChangePasswordData) => {
     try {
-      const response = await client.post(Endpoint.CHANGE_PASSWORD, data);
+      const response = await client.post(Endpoint.CHANGE_PASSWORD, data, {
+        baseURL: AUTH_API_URL,
+      });
 
       if (response?.status === HttpStatusCode.OK) {
-        return response.data;
+        return true;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
@@ -160,3 +182,18 @@ export const changePassword = createAsyncThunk(
     }
   },
 );
+
+export const getProfile = createAsyncThunk("app/getProfile", async () => {
+  try {
+    const response = await client.get(Endpoint.PROFILE, undefined, {
+      baseURL: AUTH_API_URL,
+    });
+
+    if (response?.status === HttpStatusCode.OK) {
+      return response.data;
+    }
+    throw AN_ERROR_TRY_AGAIN;
+  } catch (error) {
+    throw error;
+  }
+});

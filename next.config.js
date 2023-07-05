@@ -1,20 +1,30 @@
 /** @type {import('next').NextConfig} */
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withNextIntl = require("next-intl/plugin")(
+  // This is the default (also the `src` folder is supported out of the box)
+  "./src/utils/i18n.ts",
+);
+
 const nextConfig = {
   reactStrictMode: false,
   env: {
     API_URL: process.env.API_URL,
+    AUTH_API_URL: process.env.AUTH_API_URL,
+    COMPANY_API_URL: process.env.COMPANY_API_URL,
+    UPLOAD_API_URL: process.env.UPLOAD_API_URL,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  async rewrites() {
-    return [
+  images: {
+    remotePatterns: [
       {
-        source: `/app/:path*`,
-        destination: `${process.env.API_URL}/:path*`,
+        protocol: "http",
+        hostname: "103.196.145.232",
       },
-    ];
+    ],
   },
 };
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

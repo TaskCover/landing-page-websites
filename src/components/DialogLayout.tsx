@@ -14,6 +14,10 @@ import {
 } from "@mui/material";
 import { IconButton, Text } from "./shared";
 import CloseIcon from "icons/CloseIcon";
+import { SlotComponentProps } from "@mui/base";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
+import { ThemeMode } from "constant/enums";
 
 export type DialogLayoutProps = Omit<DialogProps, "onSubmit"> & {
   children: React.ReactNode;
@@ -24,10 +28,11 @@ export type DialogLayoutProps = Omit<DialogProps, "onSubmit"> & {
   bottomProps?: DialogActionsProps;
   onClose: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit?: (event?: React.FormEvent<any> | undefined) => void;
+  onSubmit?: (event?: React.FormEvent<any> | undefined) => void | Promise<any>;
   hasCloseButton?: boolean;
   hasDialogClose?: boolean;
   zIndex?: number;
+  submitWhenEnter?: boolean;
 };
 
 const DialogLayout = forwardRef(
@@ -45,8 +50,10 @@ const DialogLayout = forwardRef(
       hasDialogClose = true,
       onSubmit,
       zIndex = 1,
+      submitWhenEnter,
       ...rest
     } = props;
+    const t = useTranslations(NS_COMMON);
 
     const { sx: sxContentProps, ...restContentProps } = contentProps;
     const { sx: sxHeaderProps, ...restHeaderProps } = headerProps;
@@ -61,7 +68,13 @@ const DialogLayout = forwardRef(
       <Dialog
         scroll="paper"
         slots={{
-          root: "form",
+          root: onSubmit && submitWhenEnter ? "form" : undefined,
+        }}
+        slotProps={{
+          root: {
+            noValidate: true,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any,
         }}
         onSubmit={onSubmit}
         sx={{
@@ -99,7 +112,7 @@ const DialogLayout = forwardRef(
             <IconButton
               size="normal"
               noPadding
-              tooltip="Close"
+              tooltip={t("close")}
               onClick={onCloseProps}
               sx={{
                 color: "grey.400",
@@ -141,7 +154,7 @@ const defaultSx = {
     width: { xs: "calc(100% - 24px)", sm: 360 },
     maxWidth: "calc(100vw - 24px)",
     backgroundImage: "none",
-    backgroundColor: "common.white",
+    backgroundColor: "background.paper",
     position: "absolute",
     top: "50%",
     left: "50%",

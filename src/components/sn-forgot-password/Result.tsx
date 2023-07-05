@@ -9,12 +9,17 @@ import Image from "next/image";
 import ArrowIcon from "icons/ArrowIcon";
 import { SIGNIN_PATH } from "constant/paths";
 import Link from "components/Link";
+import { NS_AUTH } from "constant/index";
+import { useTranslations } from "next-intl";
+import SwitchLanguage from "components/SwitchLanguage";
+import SwitchTheme from "components/SwitchTheme";
 
 const Result = () => {
+  const authT = useTranslations(NS_AUTH);
   return (
     <Stack
       flex={1}
-      height="100vh"
+      height="calc(var(--vh, 1vh) * 100)"
       width="100vw"
       justifyContent="center"
       alignItems="center"
@@ -23,7 +28,7 @@ const Result = () => {
         m={{ xs: 2, sm: 8 }}
         justifyContent="center"
         alignItems="center"
-        bgcolor="common.white"
+        bgcolor="background.paper"
         p={3}
         flex={{ sm: 1 }}
         width={({ spacing }) => ({
@@ -32,20 +37,39 @@ const Result = () => {
         })}
         height={({ spacing }) => ({
           xs: "fit-content",
-          sm: `calc(100vh - ${spacing(8 * 2)})`,
+          sm: `calc(calc(var(--vh, 1vh) * 100) - ${spacing(8 * 2)})`,
         })}
         maxHeight={{ xs: "fit-content", sm: "100%" }}
         borderRadius={2}
         overflow="auto"
+        position="relative"
       >
+        <Stack
+          direction="row"
+          alignItems="center"
+          position="absolute"
+          top={16}
+          right={16}
+          spacing={{ xs: 1, sm: 2 }}
+          zIndex={10}
+        >
+          <SwitchLanguage />
+          <SwitchTheme />
+        </Stack>
+
         <AppLogo width={188} />
         <Text variant="h3" textAlign="center" mt={3}>
-          Quên mật khẩu
+          {authT("forgot.title")}
         </Text>
         <Text variant="body2" textAlign="center" mt={1} mb={2}>
-          Đường link đặt lại mật khẩu đã được gửi đến email của bạn
-          <br />
-          Vui lòng kiểm tra email
+          {authT.rich("forgot.messageSuccess", {
+            br: (chunks) => (
+              <>
+                <br />
+                {chunks}
+              </>
+            ),
+          })}
         </Text>
 
         <Image src={ResultForgotImage} alt="Result forgot" width={230} />
@@ -58,7 +82,7 @@ const Result = () => {
             }}
             startIcon={<ArrowIcon color="primary" sx={{ fontSize: 24 }} />}
           >
-            Quay lại đăng nhập
+            {authT("forgot.backSignin")}
           </Button>
         </Link>
       </Stack>

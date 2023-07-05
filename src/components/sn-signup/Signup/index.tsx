@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import MainSection from "./MainSection";
 import Wrapper from "./Wrapper";
 import Banner from "./Banner";
