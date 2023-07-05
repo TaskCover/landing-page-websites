@@ -309,10 +309,3 @@ export const getThemeSystem = (e?: MediaQueryList): ThemeMode => {
   const themeSystem = isDark ? ThemeMode.DARK : ThemeMode.LIGHT;
   return themeSystem;
 };
-
-export const getDataFromKeys = (data, keys: string[]) => {
-  return keys.reduce((outData, key) => {
-    outData[key] = data[key];
-    return outData;
-  }, {});
-};
