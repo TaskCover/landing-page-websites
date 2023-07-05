@@ -44,7 +44,10 @@ axios.interceptors.response.use(
       error.response?.data?.code !== "ACTION_NOT_ALLOWED"
     ) {
       const refreshToken = clientStorage.get(REFRESH_TOKEN_STORAGE_KEY);
-      if (!refreshToken && error.config.headers.token) {
+      if (
+        (!refreshToken && error.config.headers.token) ||
+        error.config.headers["refresh-token"]
+      ) {
         signOut();
       } else if (refreshToken) {
         try {
