@@ -1,4 +1,37 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Structure
+
+    ├── public
+        ├── images   # Lưu trữ các ảnh, sử dụng tiền tố ic-xx cho icon và img-xx cho ảnh
+        ├── material
+            ├── breakpoints   # Config media queries tương ứng với các tỉ lệ màn hình
+            ├── typography    # Config variant dựa theo design
+        ├── styles/index.css  # Global css
+    ├── src
+        ├── api
+            ├── client        # Config axios instance, methods.
+            ├── endpoints     # Config endpoint cho các API
+            ├── formErrorCode # Các error code muốn hiển thị trên form thay vì thông báo dạng snackbar
+        ├── app[locale]      # Tham khảo docs NextJS 13
+            ├── (auth)         # Định nghĩa route page cho các page không cần auth
+            ├── (root)        # Định nghĩa route page cho các page cần auth
+        ├── components
+            ├── shared        # Các button, input, text,... common của web app
+            ├── Filters/Table/Editor,... Các common layout của web app
+            ├── sn-xx          # Code các components cho màn hình xx, import vào các page trong app/...
+        ├── constant
+            ├── enum         # Common enum
+            ├── paths        # Config biến cho các đường dẫn trên thanh nhập địa chỉ trình duyệt, config path có thể truy cập theo permission
+            ├── types       # Common type, interface
+        ├── dictionaries
+        ├── hooks          # Common hooks
+        ├── icons          # Tạo các icon từ design dạng component
+        ├── layouts        # Các layouts của web app
+        ├── store          # Redux toolkit store
+        ├── utils
+            ├── colorSchemes    # Config colors cho web app theo dark/light mode, ok là đang sử dụng, k được sửa.
+            ├── index      # Các func common cho web app
+            ├── storage    # Custom localStorage, sessionStorage
+    ├── next.config        # Config env...
 
 ## Getting Started
 
@@ -21,11 +54,3 @@ To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
