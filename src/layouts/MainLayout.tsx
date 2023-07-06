@@ -46,15 +46,6 @@ const MainLayout = (props: MainLayoutProps) => {
 
   const isLoggedIn = useMemo(() => !!token, [token]);
 
-  const isNotJoin = useMemo(
-    () =>
-      isLoggedIn &&
-      user?.roles?.includes(Permission.EU) &&
-      !user.is_pay_user &&
-      !user.approve,
-    [isLoggedIn, user?.approve, user?.is_pay_user, user?.roles],
-  );
-
   const isAuthorized = useMemo(() => {
     if (!user?.roles?.length) return false;
     return user?.roles?.some((role) => {
@@ -68,7 +59,7 @@ const MainLayout = (props: MainLayoutProps) => {
     } else if (!AUTH_PATHS.includes(pathname)) {
       push(SIGNIN_PATH);
     }
-  }, [isLoggedIn, push, pathname, isNotJoin]);
+  }, [isLoggedIn, push, pathname]);
 
   useEffect(() => {
     if (user?.id) return;

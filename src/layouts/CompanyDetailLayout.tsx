@@ -63,7 +63,7 @@ const CompanyDetailLayout = ({ children, id }: CompanyDetailLayoutProps) => {
   }, [item?.name, onUpdateHeaderConfig]);
 
   return (
-    <Wrapper overflow="auto">
+    <Wrapper overflow="auto" inFrame={isEmployeesOfCompanyPath}>
       <TabList />
       {children}
     </Wrapper>
