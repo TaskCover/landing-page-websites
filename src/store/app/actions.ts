@@ -9,6 +9,7 @@ import {
 } from "constant/index";
 import { State } from "store/configureStore";
 import StringFormat from "string-format";
+import { UserInfo } from "./reducer";
 
 export type SigninData = {
   email: string;
@@ -48,7 +49,10 @@ export const signin = createAsyncThunk(
       });
 
       if (response?.status === HttpStatusCode.OK) {
-        return response.data;
+        return response.data as UserInfo & {
+          accessToken: string;
+          refreshToken: string;
+        };
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
@@ -66,7 +70,7 @@ export const signup = createAsyncThunk(
       });
 
       if (response?.status === HttpStatusCode.CREATED) {
-        return response.data;
+        return response.data as { registerToken: string };
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

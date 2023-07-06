@@ -20,21 +20,12 @@ const Wrapper = (props: WrapperProps) => {
 
   const { height } = useWindowSize();
 
-  const isNotJoin = useMemo(
-    () =>
-      isLoggedIn &&
-      user?.roles?.includes(Permission.EU) &&
-      !user.is_pay_user &&
-      !user.approve,
-    [isLoggedIn, user?.approve, user?.is_pay_user, user?.roles],
-  );
-
   const isSmallHeight = useMemo(() => height && height < 768, [height]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
-    replace(isNotJoin ? JOIN_WORKSPACE_PATH : HOME_PATH);
-  }, [isLoggedIn, isNotJoin, replace]);
+    replace(HOME_PATH);
+  }, [isLoggedIn, replace]);
 
   if (!appReady || isLoggedIn) return <AppLoading />;
 

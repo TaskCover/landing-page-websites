@@ -4,9 +4,14 @@ import { memo, useMemo } from "react";
 import { Stack } from "@mui/material";
 import { Button, Input } from "components/shared";
 import Link from "components/Link";
-import { FORGOT_PASSWORD_PATH } from "constant/paths";
+import { FORGOT_PASSWORD_PATH, JOIN_WORKSPACE_PATH } from "constant/paths";
 import * as Yup from "yup";
-import { AN_ERROR_TRY_AGAIN, NS_AUTH, NS_COMMON } from "constant/index";
+import {
+  AN_ERROR_TRY_AGAIN,
+  LATEST_EMAIL_SIGNUP_STORAGE_KEY,
+  NS_AUTH,
+  NS_COMMON,
+} from "constant/index";
 import { useFormik, FormikErrors } from "formik";
 import { SigninData } from "store/app/actions";
 import { EMAIL_REGEX } from "constant/regex";
@@ -15,10 +20,14 @@ import { useSnackbar, useAuth } from "store/app/selectors";
 import { useTranslations } from "next-intl";
 import { formErrorCode } from "api/formErrorCode";
 import { ErrorResponse } from "constant/types";
+import { sessionStorage } from "utils/storage";
+import { Permission } from "constant/enums";
+import { useRouter } from "next-intl/client";
 
 const Form = () => {
   const { onSignin } = useAuth();
   const { onAddSnackbar } = useSnackbar();
+  const { push } = useRouter();
   const authT = useTranslations(NS_AUTH);
   const commonT = useTranslations(NS_COMMON);
 
@@ -28,6 +37,16 @@ const Form = () => {
 
       if (newData) {
         onAddSnackbar(authT("signin.notification.signinSuccess"), "success");
+        const latestEmailSignup = sessionStorage.get(
+          LATEST_EMAIL_SIGNUP_STORAGE_KEY,
+        );
+        if (
+          latestEmailSignup === values.email &&
+          newData?.roles?.includes(Permission.EU)
+        ) {
+          sessionStorage.remove(LATEST_EMAIL_SIGNUP_STORAGE_KEY);
+          push(JOIN_WORKSPACE_PATH);
+        }
       } else {
         throw AN_ERROR_TRY_AGAIN;
       }

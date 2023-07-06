@@ -35,7 +35,7 @@ export interface User {
   fullname: string;
   email: string;
   phone?: string;
-  company: string;
+  company?: string;
   position?: {
     name: string;
     id: string;

@@ -7,9 +7,10 @@ import {
   signupVerify,
   updateUserInfo,
 } from "./actions";
-import { clientStorage } from "utils/storage";
+import { clientStorage, sessionStorage } from "utils/storage";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
+  LATEST_EMAIL_SIGNUP_STORAGE_KEY,
   REFRESH_TOKEN_STORAGE_KEY,
 } from "constant/index";
 import { User } from "constant/types";
@@ -25,7 +26,6 @@ export type SnackbarItem = Snackbar & {
 };
 
 export interface UserInfo extends User {
-  company: string;
   created_time: string;
   department: string;
   is_active: boolean;
@@ -143,13 +143,14 @@ const appSlice = createSlice({
           state.user = userInfo;
         },
       )
-      .addCase(
-        signup.fulfilled,
-        (state, action: PayloadAction<{ registerToken: string }>) => {
-          state.signupStep = SignupStep.VERIFY;
-          state.tokenRegister = action.payload.registerToken;
-        },
-      )
+      .addCase(signup.fulfilled, (state, action) => {
+        state.signupStep = SignupStep.VERIFY;
+        state.tokenRegister = action.payload.registerToken;
+        sessionStorage.set(
+          LATEST_EMAIL_SIGNUP_STORAGE_KEY,
+          action.meta.arg.email,
+        );
+      })
       .addCase(signupVerify.fulfilled, (state) => {
         state.signupStep = SignupStep.SIGNUP;
         state.tokenRegister = undefined;

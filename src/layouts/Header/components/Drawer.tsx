@@ -74,7 +74,7 @@ const Drawer = () => {
 
         <UserInfo />
 
-        {user?.roles?.includes(Permission.EU) && (
+        {!user?.company && (
           <Link
             href={UPGRADE_ACCOUNT_PATH}
             underline="none"
