@@ -87,7 +87,7 @@ const AccountInfo = () => {
           [`& .${popoverClasses.paper}`]: {
             backgroundImage: "none",
             minWidth: 216,
-            maxWidth: 300,
+            maxWidth: 236,
           },
         }}
         slotProps={{
