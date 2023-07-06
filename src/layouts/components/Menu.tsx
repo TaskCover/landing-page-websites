@@ -28,6 +28,7 @@ import { useTranslations } from "next-intl";
 import { NS_LAYOUT } from "constant/index";
 import { Permission } from "constant/enums";
 import useTheme from "hooks/useTheme";
+import MenuTimeTrackingIcon from "icons/MenuTimeTrackingIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -236,6 +237,11 @@ const DATA: MenuItemProps[] = [
       },
     ],
     roles: [Permission.SA],
+  },
+  {
+    label: "menu.timeTracking",
+    icon: <MenuTimeTrackingIcon />,
+    roles: [Permission.AM, Permission.ST, Permission.SA, Permission.EU], // Tmp permission
   },
 ];
 

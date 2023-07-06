@@ -25,6 +25,8 @@ export const PROJECT_COST_HISTORY_PATH = "/projects/{id}/cost-history";
 export const PROJECT_MEMBERS_PATH = "/projects/{id}/members";
 export const PROJECT_INFORMATION_PATH = "/projects/{id}";
 
+export const TIME_TRACKING_PATH = "/time-tracking";
+
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
   SIGNUP_PATH,
@@ -33,6 +35,9 @@ const AUTHORIZED_LOGGED_IN_PATHS = [
   RESET_PASSWORD_PATH,
   CHANGE_PASSWORD_PATH,
   ACCOUNT_INFO_PATH,
+
+  // DEV PERMISSIONS
+  TIME_TRACKING_PATH,
 ];
 
 export const AUTHORIZED_PATHS = {

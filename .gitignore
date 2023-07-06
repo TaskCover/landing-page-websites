@@ -40,3 +40,4 @@ next-env.d.ts
 .husky
 .next
 .vscode
+.yarn
