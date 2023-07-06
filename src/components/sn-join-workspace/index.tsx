@@ -38,7 +38,7 @@ const JoinWorkspace = () => {
   const { onAddSnackbar } = useSnackbar();
   const authT = useTranslations(NS_AUTH);
   const commonT = useTranslations(NS_COMMON);
-  const { isLoggedIn, user, onSignOut } = useAuth();
+  const { isLoggedIn, user, onGetProfile } = useAuth();
   const { appReady } = useAppReady();
   const { replace, push } = useRouter();
 
@@ -81,6 +81,7 @@ const JoinWorkspace = () => {
       );
       if (response?.status === HttpStatusCode.OK) {
         onAddSnackbar(authT("joinWorkspace.notification.success"), "success");
+        onGetProfile();
         push(HOME_PATH);
       } else {
         throw AN_ERROR_TRY_AGAIN;
