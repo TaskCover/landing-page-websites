@@ -131,7 +131,7 @@ export const validationSchema = Yup.object().shape({
   name: Yup.string().trim().required("form.error.required"),
   address: Yup.string().trim(),
   // .required("Chức vụ là bắt buộc."),
-  phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
+  // phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
   tax_code: Yup.string().trim(),
   // .required("Tax code là bắt buộc."),
 });

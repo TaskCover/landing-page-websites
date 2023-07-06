@@ -67,7 +67,6 @@ export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 
 export const ACCESS_TOKEN_STORAGE_KEY = "aT";
 export const REFRESH_TOKEN_STORAGE_KEY = "rT";
-export const LATEST_EMAIL_SIGNUP_STORAGE_KEY = "lE";
 
 export const API_TIMEOUT = 30_000; //s
 

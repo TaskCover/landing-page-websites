@@ -10,7 +10,6 @@ import {
 import { clientStorage, sessionStorage } from "utils/storage";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
-  LATEST_EMAIL_SIGNUP_STORAGE_KEY,
   REFRESH_TOKEN_STORAGE_KEY,
 } from "constant/index";
 import { User } from "constant/types";
@@ -146,10 +145,6 @@ const appSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.signupStep = SignupStep.VERIFY;
         state.tokenRegister = action.payload.registerToken;
-        sessionStorage.set(
-          LATEST_EMAIL_SIGNUP_STORAGE_KEY,
-          action.meta.arg.email,
-        );
       })
       .addCase(signupVerify.fulfilled, (state) => {
         state.signupStep = SignupStep.SIGNUP;

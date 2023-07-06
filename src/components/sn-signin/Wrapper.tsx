@@ -20,12 +20,17 @@ const Wrapper = (props: WrapperProps) => {
 
   const { height } = useWindowSize();
 
+  const isNotJoin = useMemo(
+    () => isLoggedIn && !user?.company,
+    [isLoggedIn, user?.company],
+  );
+
   const isSmallHeight = useMemo(() => height && height < 768, [height]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
-    replace(HOME_PATH);
-  }, [isLoggedIn, replace]);
+    replace(isNotJoin ? JOIN_WORKSPACE_PATH : HOME_PATH);
+  }, [isLoggedIn, isNotJoin, replace]);
 
   if (!appReady || isLoggedIn) return <AppLoading />;
 

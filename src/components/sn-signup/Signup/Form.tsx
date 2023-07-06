@@ -190,7 +190,7 @@ export const validationSchema = Yup.object().shape({
     .trim()
     .required("form.error.required")
     .min(6, "form.error.min"),
-  phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
+  // phone: Yup.string().trim().matches(VN_PHONE_REGEX, "form.error.invalid"),
   email: Yup.string()
     .trim()
     .required("form.error.required")
