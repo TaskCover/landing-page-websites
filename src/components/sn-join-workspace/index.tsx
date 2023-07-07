@@ -45,8 +45,8 @@ const JoinWorkspace = () => {
   const { height } = useWindowSize();
 
   const isJoined = useMemo(
-    () => isLoggedIn && user?.roles && !user.roles?.includes(Permission.EU),
-    [isLoggedIn, user?.roles],
+    () => Boolean(isLoggedIn && user?.company),
+    [isLoggedIn, user?.company],
   );
 
   const isSmallHeight = useMemo(() => height && height < 768, [height]);
