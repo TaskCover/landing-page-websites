@@ -21,6 +21,7 @@ import { useAppSelector } from "store/hooks";
 import { Locale } from "constant/types";
 import { AbstractIntlMessages } from "next-intl";
 import NextIntlProvider from "./NextIntlProvider";
+import { getProfile } from "store/app/actions";
 
 const AUTH_PATHS = [SIGNUP_PATH, FORGOT_PASSWORD_PATH, RESET_PASSWORD_PATH];
 
@@ -58,7 +59,11 @@ const AppProvider = ({
     }
 
     store.dispatch(updateAuth({ accessToken }));
-    store.dispatch(toggleAppReady(true));
+    if (accessToken) {
+      store.dispatch(getProfile());
+    } else {
+      store.dispatch(toggleAppReady(true));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

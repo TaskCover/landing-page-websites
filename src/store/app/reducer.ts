@@ -160,6 +160,7 @@ const appSlice = createSlice({
         getProfile.fulfilled,
         (state, action: PayloadAction<UserInfo>) => {
           state.user = Object.assign(state?.user ?? {}, action.payload);
+          state.appReady = true;
         },
       ),
 });
