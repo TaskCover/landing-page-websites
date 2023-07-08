@@ -62,7 +62,9 @@ const DesktopInformation = () => {
             )}
           </Stack>
         </Stack>
-        <Text variant="h6" color="grey.400">{`#${item?.id}`}</Text>
+        <Text variant="h6" color="grey.400">{`#${
+          item?.number ?? item?.id
+        }`}</Text>
       </Stack>
 
       <InformationItem label={commonT("assigner")}>

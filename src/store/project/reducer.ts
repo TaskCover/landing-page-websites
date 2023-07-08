@@ -82,6 +82,7 @@ export interface Project {
   working_hours: number;
   start_date: string;
   end_date: string;
+  number?: string;
   avatar?: {
     link?: string;
   };

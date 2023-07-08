@@ -221,7 +221,7 @@ const Actions = () => {
           >
             <AssignerFilter
               onChange={onChangeQueries}
-              value={queries?.owner}
+              value={queries?.["tasks.owner"]}
               hasAvatar
               sx={{ display: { md: "none" } }}
             />
