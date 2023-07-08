@@ -203,6 +203,7 @@ const Actions = () => {
                 name="tasks.created_time"
                 onChange={onChangeQueries}
                 value={queries?.["tasks.created_time"]}
+                format={DATE_FORMAT_HYPHEN}
               />
               <Dropdown
                 placeholder={commonT("status")}
