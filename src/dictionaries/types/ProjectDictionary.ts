@@ -126,6 +126,30 @@ export type ProjectDictionary = {
     changeStatusTask: string;
     writeComment: string;
     sendComment: string;
+    addDescription: string;
+    addAttachments: string;
+    addDependencies: string;
+    addSubTasks: string;
+    addToDos: string;
+    attachments: string;
+    clickToUploadFile: string;
+    subTasks: string;
+    setDueDate: string;
+    convertToTask: string;
+    convertToSubTask: string;
+    changeParentTask: string;
+    duplicateSubTask: string;
+    toDoList: string;
+    dependencies: string;
+    blocking: string;
+    waitingOn: string;
+    linkedTo: string;
+    addDependencyTask: string;
+    form: {
+      title: {
+        newTask: string;
+      };
+    };
     notification: {
       assignSuccess: string;
     };

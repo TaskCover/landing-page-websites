@@ -94,7 +94,7 @@ const ItemList = () => {
             members: item?.members.map(({ id, fullname, ...rest }) => ({
               id,
               fullname,
-              position_project: rest?.position_project.id,
+              position_project: rest?.position_project?.id,
             })),
           }
         : INITIAL_VALUES,

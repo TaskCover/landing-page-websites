@@ -36,7 +36,7 @@ import { TaskData, TaskListData } from "store/project/actions";
 import { useTasksOfProject } from "store/project/selectors";
 import TaskListForm from "../TaskListForm";
 import MoveTaskList from "../MoveTaskList";
-import { TaskFormData, genTime } from "./helpers";
+import { TaskFormData, genName, genTime } from "./helpers";
 import { useParams } from "next/navigation";
 import { Task } from "store/project/reducer";
 import { useSnackbar } from "store/app/selectors";
@@ -237,12 +237,9 @@ export const MoreList = (props: MoreListProps) => {
       if (!projectId) {
         throw AN_ERROR_TRY_AGAIN;
       }
-      const newName = projectT("detailTasks.duplicateName", {
-        name,
-        value: genTime(),
-      });
+
       const newTaskList = await onCreateTaskList({
-        name: newName,
+        name: genName(taskListNameList, name),
         project: projectId,
       });
 
@@ -252,16 +249,15 @@ export const MoreList = (props: MoreListProps) => {
           throw AN_ERROR_TRY_AGAIN;
         }
         const tasks: Task[] = [];
+
         for (const taskItem of tasksOfTaskList.tasks) {
           const newTask = (await onCreateTask(
             {
-              name: projectT("detailTasks.duplicateName", {
-                name: taskItem.name,
-                value: genTime(),
-              }),
+              name: taskItem.name,
               description: taskItem?.description,
               start_date: taskItem?.start_date,
               end_date: taskItem?.end_date,
+              status: taskItem?.status,
               owner: taskItem?.owner?.id,
               estimated_hours: taskItem?.estimated_hours,
             },
@@ -274,16 +270,15 @@ export const MoreList = (props: MoreListProps) => {
 
         for (let i = 0; i < tasks.length; i++) {
           const subTasks = tasksOfTaskList.tasks[i]?.sub_tasks ?? [];
+
           for (const subTask of subTasks) {
             (await onCreateTask(
               {
-                name: projectT("detailTasks.duplicateName", {
-                  name: subTask.name,
-                  value: genTime(),
-                }),
+                name: subTask.name,
                 description: subTask?.description,
                 start_date: subTask?.start_date,
                 end_date: subTask?.end_date,
+                status: subTask?.status,
                 owner: subTask?.owner?.id,
                 estimated_hours: subTask?.estimated_hours,
               },

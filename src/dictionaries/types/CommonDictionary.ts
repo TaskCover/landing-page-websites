@@ -29,6 +29,7 @@ export type CommonDictionary = {
       note: string;
     };
     confirm: string;
+    save: string;
     cancel: string;
   };
   notification: {

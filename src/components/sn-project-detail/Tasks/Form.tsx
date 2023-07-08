@@ -24,6 +24,8 @@ import {
 import { useEmployeeOptions } from "store/company/selectors";
 import { useTranslations } from "next-intl";
 import { TaskFormData } from "./components";
+import { useMemberOptions } from "store/project/selectors";
+import { useParams } from "next/navigation";
 
 type FormProps = {
   initialValues?: Partial<TaskFormData>;
@@ -51,9 +53,11 @@ const Form = (props: FormProps) => {
     pageSize,
     pageIndex,
     totalPages,
-  } = useEmployeeOptions();
+  } = useMemberOptions();
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
+
+  const { id: projectId } = useParams();
 
   const label = useMemo(() => {
     switch (type) {
@@ -75,7 +79,7 @@ const Form = (props: FormProps) => {
 
   const onEndReached = () => {
     if (isFetching || (totalPages && pageIndex >= totalPages)) return;
-    onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
+    onGetOptions(projectId, { ...filters, pageSize, pageIndex: pageIndex + 1 });
   };
 
   const onSubmit = async (values: TaskData) => {
@@ -133,7 +137,7 @@ const Form = (props: FormProps) => {
   );
 
   const onChangeSearch = (name: string, newValue?: string | number) => {
-    onGetOptions({ pageIndex: 1, pageSize: 20, [name]: newValue });
+    onGetOptions(projectId, { pageIndex: 1, pageSize: 20, [name]: newValue });
   };
 
   const onChangeDate = (name: string, newDate?: Date) => {
@@ -154,8 +158,9 @@ const Form = (props: FormProps) => {
   };
 
   useEffect(() => {
-    onGetOptions({ pageIndex: 1, pageSize: 20 });
-  }, [onGetOptions]);
+    if (!projectId) return;
+    onGetOptions(projectId, { pageIndex: 1, pageSize: 20 });
+  }, [onGetOptions, projectId]);
 
   return (
     <FormLayout
@@ -220,8 +225,9 @@ const Form = (props: FormProps) => {
             title={commonT("assigner")}
             hasAvatar
             searchProps={{
-              value: filters?.email,
+              value: filters?.["members.email"],
               placeholder: commonT("searchBy", { name: "email" }),
+              name: "members.email",
             }}
             name="owner"
             onChange={formik.handleChange}

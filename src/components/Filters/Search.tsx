@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import CircleCloseIcon from "icons/CircleCloseIcon";
 
-type SearchProps = Omit<InputProps, "name" | "onChange"> & {
+export type SearchProps = Omit<InputProps, "name" | "onChange"> & {
   name: string;
   onChange?: (name: string, value?: string) => void;
   emitWhenEnter?: boolean;

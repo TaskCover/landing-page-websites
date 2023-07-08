@@ -33,6 +33,11 @@
   background-color: var(--mui-palette-primary-main);
 }
 
+.react-datepicker__day--disabled {
+  opacity: 0.6;
+  background-color: transparent;
+}
+
 .react-datepicker__triangle::before,
 .react-datepicker__header {
   border-bottom-color: var(--mui-palette-grey-100) !important;

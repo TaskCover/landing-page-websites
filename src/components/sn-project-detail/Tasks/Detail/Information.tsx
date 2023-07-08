@@ -1,7 +1,7 @@
-import { memo } from "react";
+import { ReactNode, memo } from "react";
 import { Box, Divider, Stack, StackProps } from "@mui/material";
 import { Task } from "store/project/reducer";
-import { Text } from "components/shared";
+import { Button, Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import {
   COLOR_STATUS,
@@ -13,17 +13,44 @@ import TextStatus from "components/TextStatus";
 import Avatar from "components/Avatar";
 import { formatDate, formatNumber } from "utils/index";
 import { useTaskDetail } from "store/project/selectors";
+import ArrowTriangleIcon from "icons/ArrowTriangleIcon";
+import AlignLeftIcon from "icons/AlignLeftIcon";
+import LinkSquareIcon from "icons/LinkSquareIcon";
+import FatrowIcon from "icons/FatrowIcon";
+import HierarchyIcon from "icons/HierarchyIcon";
+import TaskSquareIcon from "icons/TaskSquareIcon";
+import useToggle from "hooks/useToggle";
+import {
+  DescriptionTask,
+  AttachmentsTask,
+  SubTasksOfTask,
+  TodoList,
+  Dependencies,
+} from "./components";
 
 type InformationItemProps = StackProps & {
   label: string;
   children?: string | number | React.ReactNode;
 };
 
+type ActionItemProps = {
+  icon: ReactNode;
+  children: string;
+  onClick?: () => void;
+};
+
 const Information = () => {
-  const { task } = useTaskDetail();
+  const { task, subTaskId } = useTaskDetail();
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
+
+  const [isAddDescription, onShowAddDescription, onHideAddDescription] =
+    useToggle(false);
+
+  const onAddAttachments = () => {
+    document.getElementById(ATTACHMENT_ID)?.click();
+  };
 
   if (!task) return null;
 
@@ -53,6 +80,45 @@ const Information = () => {
           />
         </Stack>
       </Stack>
+      <Stack
+        display="grid"
+        gap={1}
+        gridTemplateColumns="repeat(auto-fill, 190px)"
+        pb={3}
+      >
+        {!task?.description && (
+          <ActionItem
+            onClick={onShowAddDescription}
+            icon={<AlignLeftIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addDescription")}
+          </ActionItem>
+        )}
+        {!task?.attachments_down?.length && (
+          <ActionItem
+            onClick={onAddAttachments}
+            icon={<LinkSquareIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addAttachments")}
+          </ActionItem>
+        )}
+        <ActionItem icon={<FatrowIcon sx={{ color: "grey.400" }} />}>
+          {projectT("taskDetail.addDependencies")}
+        </ActionItem>
+        {!task?.sub_tasks?.length && !subTaskId && (
+          <ActionItem icon={<HierarchyIcon sx={{ color: "grey.400" }} />}>
+            {projectT("taskDetail.addSubTasks")}
+          </ActionItem>
+        )}
+        <ActionItem icon={<TaskSquareIcon sx={{ color: "grey.400" }} />}>
+          {projectT("taskDetail.addToDos")}
+        </ActionItem>
+      </Stack>
+      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
+      <AttachmentsTask id={ATTACHMENT_ID} />
+      {!subTaskId && <SubTasksOfTask />}
+      <TodoList />
+      <Dependencies />
       <InformationItem label={commonT("assigner")}>
         {!!task?.owner?.id ? (
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -72,8 +138,8 @@ const Information = () => {
         <InformationItem label={commonT("form.title.startDate")}>
           {formatDate(task?.start_date, undefined, "--")}
         </InformationItem>
-        <Divider sx={{ width: 100, borderColor: "grey.300" }} />
-        {">"}
+
+        <ArrowTriangleIcon sx={{ color: "grey.300", width: 100 }} />
         <InformationItem label={commonT("form.title.endDate")}>
           {formatDate(task?.end_date, undefined, "--")}
         </InformationItem>
@@ -115,6 +181,29 @@ const Information = () => {
 
 export default memo(Information);
 
+const ActionItem = (props: ActionItemProps) => {
+  const { icon, children, onClick } = props;
+  return (
+    <Stack
+      onClick={onClick}
+      spacing={0.5}
+      direction="row"
+      p={0.5}
+      borderRadius={1}
+      alignItems="center"
+      sx={{
+        cursor: "pointer",
+        "&:hover": {
+          backgroundColor: "grey.100",
+        },
+      }}
+    >
+      {icon}
+      <Text variant="h6">{children}</Text>
+    </Stack>
+  );
+};
+
 const InformationItem = (props: InformationItemProps) => {
   const { label, children = "--", ...rest } = props;
   return (
@@ -132,3 +221,5 @@ const InformationItem = (props: InformationItemProps) => {
     </Stack>
   );
 };
+
+const ATTACHMENT_ID = "attachment_id";

@@ -19,6 +19,7 @@ import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import useToggle from "hooks/useToggle";
 import Text from "./Text";
+import { SearchProps } from "components/Filters/Search";
 
 export type SelectProps = InputProps & {
   options: Option[];
@@ -27,12 +28,13 @@ export type SelectProps = InputProps & {
   showPlaceholder?: boolean;
   onEndReached?: () => void;
   onChangeSearch?: (name: string, newValue?: string | number) => void;
-  searchProps?: {
+  searchProps?: Partial<SearchProps> & {
     name?: string;
     placeholder?: string;
     value?: string | number;
   };
   hasAvatar?: boolean;
+  showSubText?: boolean;
 };
 
 const ID_PLACEHOLDER = uuid();
@@ -51,6 +53,7 @@ const Select = (props: SelectProps) => {
     searchProps,
     onChange: onChangeProp,
     hasAvatar,
+    showSubText = true,
     ...rest
   } = props;
 
@@ -157,9 +160,11 @@ const Select = (props: SelectProps) => {
             )}
             <Stack>
               <Text variant="body2">{option.label}</Text>
-              <Text variant="body2" className="sub">
-                {option.subText}
-              </Text>
+              {showSubText && (
+                <Text variant="body2" className="sub">
+                  {option.subText}
+                </Text>
+              )}
             </Stack>
           </Stack>
         </MenuItem>

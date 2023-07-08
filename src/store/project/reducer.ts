@@ -1,5 +1,6 @@
 import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import {
+  changeParentTask,
   commentTask,
   createProject,
   createTask,
@@ -14,6 +15,7 @@ import {
   getProject,
   getProjectList,
   GetProjectListQueries,
+  getTaskList,
   getTasksOfProject,
   GetTasksOfProjectQueries,
   moveTask,
@@ -22,6 +24,7 @@ import {
   updateProject,
   updateTask,
   updateTaskList,
+  Dependency,
 } from "./actions";
 import {
   Attachment,
@@ -84,6 +87,13 @@ export interface Project {
   };
 }
 
+export interface Todo {
+  id: string;
+  name: string;
+  owner?: User;
+  is_done: boolean;
+}
+
 export interface Task {
   id: string;
   name: string;
@@ -98,6 +108,11 @@ export interface Task {
   end_date?: string;
   created_time: string;
   comments?: Comment[];
+  attachments: string[];
+  attachments_down: Attachment[];
+
+  dependencies?: Dependency[];
+  todo_list?: Todo[];
 }
 
 export type TaskList = {
@@ -155,6 +170,15 @@ export interface ProjectState {
   membersError?: string;
   membersFilters: Omit<GetMembersOfProjectQueries, "pageIndex" | "pageSize">;
 
+  memberOptions: Option[];
+  memberOptionsStatus: DataStatus;
+  memberOptionsPaging: Paging;
+  memberOptionsError?: string;
+  memberOptionsFilters: Omit<
+    GetMembersOfProjectQueries,
+    "pageIndex" | "pageSize"
+  >;
+
   tasks: TaskList[];
   tasksStatus: DataStatus;
   tasksPaging: Paging;
@@ -192,6 +216,11 @@ const initialState: ProjectState = {
   membersStatus: DataStatus.IDLE,
   membersPaging: DEFAULT_PAGING,
   membersFilters: {},
+
+  memberOptions: [],
+  memberOptionsStatus: DataStatus.IDLE,
+  memberOptionsPaging: DEFAULT_PAGING,
+  memberOptionsFilters: {},
 
   tasks: [],
   tasksStatus: DataStatus.IDLE,
@@ -308,29 +337,61 @@ const projectSlice = createSlice({
         state.itemError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
       })
       .addCase(getMembersOfProject.pending, (state, action) => {
-        state.membersStatus = DataStatus.LOADING;
-        state.membersFilters = getFiltersFromQueries(action.meta.arg);
-        state.membersPaging.pageIndex = Number(
+        const prefixKey = action.meta.arg["concat"]
+          ? "memberOptions"
+          : "members";
+
+        state[`${prefixKey}Status`] = DataStatus.LOADING;
+        state[`${prefixKey}Filters`] = getFiltersFromQueries(action.meta.arg);
+
+        if (action.meta.arg?.concat && action.meta.arg.pageIndex === 1) {
+          state.memberOptions = [];
+        }
+        state[`${prefixKey}Paging`].pageIndex = Number(
           action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         );
-        state.membersPaging.pageSize = Number(
+        state[`${prefixKey}Paging`].pageSize = Number(
           action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
         );
       })
       .addCase(
         getMembersOfProject.fulfilled,
         (state, action: PayloadAction<ItemListResponse>) => {
-          const { items, ...paging } = action.payload;
-          state.members = items as Member[];
-          state.membersStatus = DataStatus.SUCCEEDED;
-          state.membersError = undefined;
-          state.membersPaging = Object.assign(state.membersPaging, paging);
+          const { items, concat, ...paging } = action.payload;
+
+          if (concat) {
+            const newOptions: Option[] = (items as Member[]).map((item) => ({
+              label: item.fullname,
+              value: item.id,
+              avatar: item?.avatar?.link,
+              subText: item.email,
+            }));
+            state.memberOptions = removeDuplicateItem(
+              state.memberOptions.concat(newOptions),
+              "value",
+            );
+          } else {
+            state.members = items as Member[];
+          }
+
+          const prefixKey = concat ? "memberOptions" : "members";
+
+          state[`${prefixKey}Status`] = DataStatus.SUCCEEDED;
+          state[`${prefixKey}Error`] = undefined;
+          state[`${prefixKey}Paging`] = Object.assign(
+            state[`${prefixKey}Paging`],
+            paging,
+          );
         },
       )
       .addCase(getMembersOfProject.rejected, (state, action) => {
-        state.members = [];
-        state.membersStatus = DataStatus.FAILED;
-        state.membersError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+        const prefixKey = action.meta.arg["concat"]
+          ? "memberOptions"
+          : "members";
+
+        state[`${prefixKey}Status`] = DataStatus.FAILED;
+        state[`${prefixKey}Error`] =
+          action.error?.message ?? AN_ERROR_TRY_AGAIN;
       })
       // TASKS
       .addCase(getTasksOfProject.pending, (state, action) => {
@@ -447,6 +508,16 @@ const projectSlice = createSlice({
                   subTask,
                 ];
               }
+
+              if (state?.task && state?.task?.id === taskId) {
+                if (state.task?.sub_tasks?.length) {
+                  state.task?.sub_tasks?.push(subTask);
+                } else {
+                  state.task = Object.assign(state.task, {
+                    sub_tasks: [subTask],
+                  });
+                }
+              }
             }
           } else {
             // CREATE TASK
@@ -468,7 +539,18 @@ const projectSlice = createSlice({
           if (indexTaskList !== -1) {
             state.tasks[indexTaskList] = taskList;
 
-            if (state.task?.id === task?.id) {
+            if (task?.subTaskId && task.taskId === state.task?.id) {
+              const indexSubTask = (state.task?.sub_tasks ?? []).findIndex(
+                (subTask) => subTask.id === task.subTaskId,
+              );
+
+              if (indexSubTask !== -1 && state.task.sub_tasks?.[indexSubTask]) {
+                state.task.sub_tasks[indexSubTask] = Object.assign(
+                  state.task.sub_tasks[indexSubTask],
+                  task,
+                );
+              }
+            } else if (state.task?.id === task?.id) {
               state.task = task;
             }
           }
@@ -540,6 +622,11 @@ const projectSlice = createSlice({
             );
           }
         }
+        if (state.task?.sub_tasks?.length && data.task === state.task?.id) {
+          state.task.sub_tasks = state.task.sub_tasks.filter(
+            (subTask) => !data.sub_tasks.includes(subTask.id),
+          );
+        }
       })
       .addCase(deleteTaskLists.fulfilled, (state, action) => {
         const data = action.meta.arg;
@@ -549,6 +636,50 @@ const projectSlice = createSlice({
           );
         }
       })
+      .addCase(changeParentTask.fulfilled, (state, action) => {
+        const { task_list_current, task_current, sub_task } = action.meta.arg;
+
+        const indexTaskList = state.tasks.findIndex(
+          (taskList) => taskList.id === task_list_current,
+        );
+        if (indexTaskList !== -1) {
+          const indexTask = state.tasks[indexTaskList].tasks.findIndex(
+            (task) => task.id === task_current,
+          );
+          if (indexTask !== -1) {
+            const indexSubTask = (
+              state.tasks[indexTaskList].tasks[indexTask].sub_tasks ?? []
+            ).findIndex((subTask) => subTask.id === sub_task);
+
+            if (indexSubTask !== -1) {
+              (
+                state.tasks[indexTaskList].tasks[indexTask].sub_tasks ?? []
+              ).splice(indexSubTask, 1);
+            }
+          }
+        }
+
+        if (state.task?.taskId === task_current) {
+          const indexSubTask = (state.task?.sub_tasks ?? []).findIndex(
+            (subTask) => subTask.id === sub_task,
+          );
+
+          if (indexSubTask !== -1) {
+            (state.task.sub_tasks ?? []).splice(indexSubTask, 1);
+          }
+        }
+      })
+      .addCase(
+        getTaskList.fulfilled,
+        (state, action: PayloadAction<TaskList>) => {
+          const indexTaskList = state.tasks.findIndex(
+            (taskList) => taskList.id === action.payload.id,
+          );
+          if (indexTaskList !== -1) {
+            state.tasks[indexTaskList] = action.payload;
+          }
+        },
+      )
       .addCase(getActivitiesOfProject.pending, (state, action) => {
         state.activitiesStatus = DataStatus.LOADING;
         state.activitiesFilters = getFiltersFromQueries(

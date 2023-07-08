@@ -32,6 +32,7 @@ export const CommonLang: CommonDictionary = {
       note: "Note",
     },
     confirm: "Confirm",
+    save: "Save",
     cancel: "Cancel",
   },
   notification: {

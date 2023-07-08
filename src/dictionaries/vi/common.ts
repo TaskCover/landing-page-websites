@@ -31,6 +31,7 @@ export const CommonLang: CommonDictionary = {
       note: "Ghi chú",
     },
     confirm: "Xác nhận",
+    save: "Lưu",
     cancel: "Hủy bỏ",
   },
   notification: {

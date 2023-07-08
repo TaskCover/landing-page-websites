@@ -14,6 +14,20 @@ export enum ProjectStatus {
   CLOSE = "CLOSE",
 }
 
+export enum DependencyStatus {
+  BLOCKING = "BLOCK",
+  WAITING_ON = "WAIT",
+  LINKED_TO = "LINK",
+}
+
+export interface Dependency {
+  task_current: string;
+  task_list_current: string;
+  task_list_update: string;
+  task_update: string;
+  status: DependencyStatus;
+}
+
 export type GetProjectListQueries = BaseQueries & {
   saved?: boolean;
   sort?: string;
@@ -21,7 +35,7 @@ export type GetProjectListQueries = BaseQueries & {
 };
 
 export type GetMembersOfProjectQueries = BaseQueries & {
-  email?: string;
+  ["members.email"]?: string;
   id?: string;
 };
 
@@ -67,6 +81,12 @@ export type TaskData = {
   description?: string;
   owner?: string;
   status?: Status;
+  attachments?: string[];
+  dependencies?: Dependency[];
+  todo_list?: {
+    name: string;
+    owner?: string;
+  }[];
 };
 
 export type MoveTaskData = {
@@ -102,6 +122,14 @@ export type DeleteSubTasksData = {
 export type GetActivitiesQueries = {
   start_date: string;
   end_date: string;
+};
+
+export type ChangeParentTaskData = {
+  task_list_current: string;
+  task_current: string;
+  sub_task: string;
+  task_list_change: string;
+  task_change: string;
 };
 
 export const getProjectList = createAsyncThunk(
@@ -181,7 +209,11 @@ export const updateProject = createAsyncThunk(
 
 export const getMembersOfProject = createAsyncThunk(
   "project/getMembersOfProject",
-  async ({ id, ...queries }: GetMembersOfProjectQueries & { id: string }) => {
+  async ({
+    id,
+    concat,
+    ...queries
+  }: GetMembersOfProjectQueries & { id: string; concat?: boolean }) => {
     queries = serverQueries(queries, ["members.email"]) as BaseQueries;
 
     try {
@@ -191,7 +223,7 @@ export const getMembersOfProject = createAsyncThunk(
       );
 
       if (response?.status === HttpStatusCode.OK) {
-        return refactorRawItemListResponse(response.data);
+        return { ...refactorRawItemListResponse(response.data), concat };
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
@@ -300,6 +332,7 @@ export const updateTask = createAsyncThunk(
           return {
             taskList: taskListUpdatedResponse.data,
             task: {
+              ...data,
               ...(response.data?.sub_task ?? response.data?.task),
               taskListId: data.task_list,
               taskId: data.task,
@@ -397,6 +430,40 @@ export const deleteSubTasks = createAsyncThunk(
 
       if (response?.status === HttpStatusCode.OK) {
         return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const changeParentTask = createAsyncThunk(
+  "project/changeParentTask",
+  async (data: ChangeParentTaskData) => {
+    try {
+      const response = await client.post(Endpoint.CHANGE_PARENT_TASK, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getTaskList = createAsyncThunk(
+  "project/getTaskList",
+  async (id: string) => {
+    try {
+      const response = await client.get(
+        StringFormat(Endpoint.TASK_LIST, { id }),
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

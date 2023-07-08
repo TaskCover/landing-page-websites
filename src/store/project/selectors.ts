@@ -26,11 +26,15 @@ import {
   deleteSubTasks,
   getActivitiesOfProject,
   GetActivitiesQueries,
+  GetMembersOfProjectQueries,
+  ChangeParentTaskData,
+  changeParentTask,
+  getTaskList,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
-import { BaseQueries } from "constant/types";
+import { BaseQueries, Option } from "constant/types";
 import { getFiltersIgnoreId } from "utils/index";
 import { TaskDetail, removeMember, updateTaskDetail } from "./reducer";
 
@@ -163,6 +167,45 @@ export const useMembersOfProject = () => {
     id: storeFilters?.id,
     onGetMembersOfProject,
     onDeleteMember,
+  };
+};
+
+export const useMemberOptions = () => {
+  const dispatch = useAppDispatch();
+
+  const {
+    memberOptions: options,
+    memberOptionsStatus: status,
+    memberOptionsError: error,
+    memberOptionsFilters: filters = {},
+  } = useAppSelector((state) => state.project, shallowEqual);
+  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+    (state) => state.project.memberOptionsPaging,
+    shallowEqual,
+  );
+
+  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
+  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
+
+  const onGetOptions = useCallback(
+    async (id: string, queries: BaseQueries) => {
+      await dispatch(getMembersOfProject({ ...queries, id, concat: true }));
+    },
+    [dispatch],
+  );
+
+  return {
+    options,
+    status,
+    error,
+    isIdle,
+    isFetching,
+    pageIndex,
+    pageSize,
+    totalItems,
+    totalPages,
+    filters,
+    onGetOptions,
   };
 };
 
@@ -387,6 +430,18 @@ export const useTaskDetail = () => {
     [dispatch],
   );
 
+  const onChangeParentTask = async (data: ChangeParentTaskData) => {
+    try {
+      return await dispatch(changeParentTask(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const onGetTaskList = (id: string) => {
+    dispatch(getTaskList(id));
+  };
+
   return {
     task,
     taskListId: task?.taskListId,
@@ -395,6 +450,8 @@ export const useTaskDetail = () => {
     onUpdateTaskDetail,
     onCommentTask,
     onUpdateTask,
+    onChangeParentTask,
+    onGetTaskList,
   };
 };
 

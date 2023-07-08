@@ -124,7 +124,7 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
     setNewMembers(
       members.map((member) => ({
         id: member.id,
-        position_project: member?.position_project.id,
+        position_project: member?.position_project?.id,
         fullname: member.fullname,
       })),
     );

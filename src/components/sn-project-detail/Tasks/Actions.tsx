@@ -12,7 +12,11 @@ import {
   Search,
   Switch,
 } from "components/Filters";
-import { useProjects, useTasksOfProject } from "store/project/selectors";
+import {
+  useMemberOptions,
+  useProjects,
+  useTasksOfProject,
+} from "store/project/selectors";
 import { getPath } from "utils/index";
 import { usePathname, useRouter } from "next-intl/client";
 import useToggle from "hooks/useToggle";
@@ -28,7 +32,6 @@ import { TaskListData } from "store/project/actions";
 import { useHeaderConfig } from "store/app/selectors";
 import Link from "components/Link";
 import ChevronIcon from "icons/ChevronIcon";
-import { useEmployeeOptions } from "store/company/selectors";
 
 const Actions = () => {
   const {
@@ -37,7 +40,7 @@ const Actions = () => {
     onCreateTaskList: onCreateTaskListAction,
     onGetTasksOfProject,
   } = useTasksOfProject();
-  const { onGetOptions } = useEmployeeOptions();
+  const { onGetOptions } = useMemberOptions();
   const { title, prevPath } = useHeaderConfig();
 
   const commonT = useTranslations(NS_COMMON);
@@ -96,8 +99,9 @@ const Actions = () => {
   }, [filters]);
 
   useEffect(() => {
-    onGetOptions({ pageIndex: 1, pageSize: 20 });
-  }, [onGetOptions]);
+    if (!projectId) return;
+    onGetOptions(projectId, { pageIndex: 1, pageSize: 20 });
+  }, [onGetOptions, projectId]);
 
   return (
     <>

@@ -28,3 +28,19 @@ export type Selected = {
 };
 
 export const genTime = () => formatDate(Date.now(), "HH:mm:ss.ms dd/MM/yyyy");
+
+export const genName = (
+  nameList: string[],
+  name: string,
+  count = 0,
+  continueName?: string,
+) => {
+  const compareName = continueName ?? name;
+  const nameExisted = nameList.find((nameValue) => nameValue === compareName);
+
+  if (nameExisted) {
+    return genName(nameList, name, count + 1, name + `(${count + 1})`);
+  }
+
+  return name + `(${count})`;
+};

@@ -10,6 +10,7 @@ import Switch, { SwitchProps } from "./Switch";
 import Checkbox from "./Checkbox";
 import Upload from "./Upload";
 import Editor from "./Editor";
+import Collapse from "./Collapse";
 
 export {
   Button,
@@ -24,6 +25,7 @@ export {
   Checkbox,
   Upload,
   Editor,
+  Collapse,
 };
 
 export type {

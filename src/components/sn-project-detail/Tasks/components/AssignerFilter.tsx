@@ -3,6 +3,8 @@ import { Dropdown, DropdownProps } from "components/Filters";
 import { NS_COMMON, NS_MANAGER } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useEmployeeOptions } from "store/company/selectors";
+import { useMemberOptions } from "store/project/selectors";
+import { useParams } from "next/navigation";
 
 const AssignerFilter = (
   props: Omit<DropdownProps, "options" | "name"> & { name?: string },
@@ -15,16 +17,23 @@ const AssignerFilter = (
     pageIndex,
     pageSize,
     filters,
-  } = useEmployeeOptions();
+  } = useMemberOptions();
   const commonT = useTranslations(NS_COMMON);
+
+  const { id: projectId } = useParams();
 
   const onEndReached = () => {
     if (isFetching || (totalPages && pageIndex >= totalPages)) return;
-    onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
+    onGetOptions(projectId, { ...filters, pageSize, pageIndex: pageIndex + 1 });
   };
 
   const onChangeSearch = (name: string, newValue?: string | number) => {
-    onGetOptions({ ...filters, pageIndex: 1, pageSize, [name]: newValue });
+    onGetOptions(projectId, {
+      ...filters,
+      pageIndex: 1,
+      pageSize,
+      [name]: newValue,
+    });
   };
 
   return (
@@ -34,6 +43,9 @@ const AssignerFilter = (
       name="tasks.owner"
       onEndReached={onEndReached}
       onChangeSearch={onChangeSearch}
+      searchProps={{
+        name: "members.email",
+      }}
       {...props}
     />
   );
