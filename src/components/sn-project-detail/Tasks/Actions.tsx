@@ -200,16 +200,16 @@ const Actions = () => {
             >
               <Date
                 label={commonT("form.title.startDate")}
-                name="created_time"
+                name="tasks.created_time"
                 onChange={onChangeQueries}
-                value={queries?.created_time}
+                value={queries?.["tasks.created_time"]}
               />
               <Dropdown
                 placeholder={commonT("status")}
                 options={statusOptions}
-                name="status"
+                name="tasks.status"
                 onChange={onChangeQueries}
-                value={queries?.status}
+                value={queries?.["tasks.status"]}
               />
             </Stack>
           </Stack>

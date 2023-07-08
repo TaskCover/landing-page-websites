@@ -240,7 +240,7 @@ export const getTasksOfProject = createAsyncThunk(
     ...queries
   }: GetTasksOfProjectQueries & { prefixKey: "taskOptions" | "tasks" }) => {
     queries = serverQueries(queries, ["tasks.name"], undefined, undefined, {
-      created_time: "gte",
+      "tasks.created_time": "gte",
     }) as GetTasksOfProjectQueries;
     try {
       const response = await client.get(
