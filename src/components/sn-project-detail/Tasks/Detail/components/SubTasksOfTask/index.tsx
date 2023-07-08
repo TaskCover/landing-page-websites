@@ -1,5 +1,5 @@
-import React, { ChangeEvent, memo, useEffect, useRef, useState } from "react";
-import { Stack, TextField } from "@mui/material";
+import { ChangeEvent, memo, useEffect, useRef, useState } from "react";
+import { Box, Stack, TextField } from "@mui/material";
 import { Collapse, IconButton, Text } from "components/shared";
 import {
   NS_PROJECT,
@@ -22,10 +22,14 @@ import { genName } from "components/sn-project-detail/Tasks/components";
 import { Status } from "constant/enums";
 import MoveOtherTask from "./MoveOtherTask";
 import ConfirmDialog from "components/ConfirmDialog";
+import useToggle from "hooks/useToggle";
+import Loading from "components/Loading";
 
-type SubTasksOfTaskProps = {};
+type SubTasksOfTaskProps = {
+  open: boolean;
+};
 
-const SubTasksOfTask = (props: SubTasksOfTaskProps) => {
+const SubTasksOfTask = ({ open }: SubTasksOfTaskProps) => {
   const projectT = useTranslations(NS_PROJECT);
   const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
   const { onCreateTask } = useTasksOfProject();
@@ -54,12 +58,15 @@ const SubTasksOfTask = (props: SubTasksOfTaskProps) => {
     }
   };
 
+  if (!open) return null;
+
   return (
     <>
+      <Box component="span" id={SUB_TASKS_ID} hidden />
       <Collapse
         initCollapse
         label={
-          <Text color="text.primary" variant="h6">
+          <Text color="text.primary" variant="h6" textTransform="uppercase">
             {`${projectT("taskDetail.subTasks")} (${
               task?.sub_tasks?.length ?? 0
             })`}
@@ -72,7 +79,10 @@ const SubTasksOfTask = (props: SubTasksOfTaskProps) => {
           ))}
           <Stack direction="row" alignItems="center" spacing={1}>
             <PlusIcon />
-            <TaskName onSubmit={onSubmit} />
+            <TaskName
+              onSubmit={onSubmit}
+              autoFocus={!task?.sub_tasks?.length}
+            />
           </Stack>
         </Stack>
       </Collapse>
@@ -82,13 +92,17 @@ const SubTasksOfTask = (props: SubTasksOfTaskProps) => {
 
 export default memo(SubTasksOfTask);
 
+export const SUB_TASKS_ID = "sub_tasks_id";
+
 const TaskName = ({
   onSubmit,
   value = "",
+  autoFocus,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: (name: string) => Promise<any>;
   value?: string;
+  autoFocus?: boolean;
 }) => {
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
@@ -125,9 +139,13 @@ const TaskName = ({
         variant="filled"
         size="small"
         onChange={onChange}
+        autoFocus={autoFocus}
         sx={{
           "& >div": {
             bgcolor: "transparent!important",
+          },
+          "& input": {
+            fontSize: 15,
           },
         }}
       />
@@ -150,6 +168,8 @@ const SubTaskItem = (props: Task & { subId: string }) => {
     subTaskId,
     onUpdateTask,
     onUpdateTaskDetail,
+    onConvertSubTaskToTask,
+    onGetTaskList,
   } = useTaskDetail();
   const { onAddSnackbar } = useSnackbar();
   const { onCreateTask, onDeleteSubTasks } = useTasksOfProject();
@@ -157,12 +177,14 @@ const SubTaskItem = (props: Task & { subId: string }) => {
   const projectT = useTranslations(NS_PROJECT);
 
   const [action, setAction] = useState<Action | undefined>();
+  const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle(false);
 
   const onChangeDate = async (name: string, value?: string) => {
+    if (!taskListId || !taskId) return;
+
+    onProcessingTrue();
+
     try {
-      if (!taskListId || !taskId) {
-        throw AN_ERROR_TRY_AGAIN;
-      }
       await onUpdateTask(
         { [name]: formatDate(value, DATE_FORMAT_FORM) },
         taskListId,
@@ -171,23 +193,29 @@ const SubTaskItem = (props: Task & { subId: string }) => {
       );
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onProcessingFalse();
     }
   };
 
   const onChangeName = async (newName: string) => {
+    if (!taskListId || !taskId) return;
+
+    onProcessingTrue();
     try {
-      if (!taskListId || !taskId) {
-        throw AN_ERROR_TRY_AGAIN;
-      }
       await onUpdateTask({ name: newName }, taskListId, taskId, subId);
       setAction(undefined);
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onProcessingFalse();
     }
   };
 
   const onDuplicate = async () => {
     if (!taskListId || !taskId) return;
+    onProcessingTrue();
+
     const subTaskNames = (task?.sub_tasks ?? []).map((item) => item.name);
     try {
       await onCreateTask(
@@ -204,14 +232,33 @@ const SubTaskItem = (props: Task & { subId: string }) => {
       );
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onProcessingFalse();
+    }
+  };
+
+  const onConvertToTask = async () => {
+    if (!taskListId || !taskId) return;
+    onProcessingTrue();
+    try {
+      await onConvertSubTaskToTask({
+        task_list: taskListId,
+        task: taskId,
+        sub_task: subId,
+      });
+      onGetTaskList(taskListId);
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onProcessingFalse();
     }
   };
 
   const onDelete = async () => {
+    if (!taskListId || !taskId) return;
+
+    onProcessingTrue();
     try {
-      if (!taskListId || !taskId) {
-        throw AN_ERROR_TRY_AGAIN;
-      }
       await onDeleteSubTasks({
         task: taskId,
         task_list: taskListId,
@@ -220,6 +267,8 @@ const SubTaskItem = (props: Task & { subId: string }) => {
       setAction(undefined);
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onProcessingFalse();
     }
   };
 
@@ -227,6 +276,9 @@ const SubTaskItem = (props: Task & { subId: string }) => {
     switch (newAction) {
       case Action.DUPLICATE_SUB_TASK:
         onDuplicate();
+        break;
+      case Action.CONVERT_TO_TASK:
+        onConvertToTask();
         break;
       default:
         setAction(newAction);
@@ -317,6 +369,7 @@ const SubTaskItem = (props: Task & { subId: string }) => {
           content={commonT("confirmDelete.content")}
         />
       )}
+      <Loading open={isProcessing} />
     </>
   );
 };

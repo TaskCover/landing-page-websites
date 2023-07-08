@@ -1,84 +1,62 @@
-import React, { Dispatch, memo, useMemo, useRef } from "react";
-import { Box, ButtonBase, MenuItem, MenuList, Stack } from "@mui/material";
-import { NS_COMMON, NS_PROJECT } from "constant/index";
+import { memo, useRef } from "react";
+import { Box, ButtonBase, MenuItem, MenuList } from "@mui/material";
+import { NS_COMMON } from "constant/index";
 import { IconButton, Text } from "components/shared";
 import MoreSquareIcon from "icons/MoreSquareIcon";
 import { useTranslations } from "next-intl";
 import { useSnackbar } from "store/app/selectors";
-import { useTaskDetail } from "store/project/selectors";
 import PopoverLayout from "./PopoverLayout";
+import ConfirmDialog from "components/ConfirmDialog";
+import useToggle from "hooks/useToggle";
+import { getMessageErrorByAPI } from "utils/index";
 
 type ActionsProps = {
-  subId: string;
-  onChangeAction: (action: Action) => void;
+  onDelete: () => Promise<boolean | undefined>;
 };
 
-export enum Action {
-  RENAME = 1,
-  CONVERT_TO_TASK,
-  CHANGE_PARENT_TASK,
-  DUPLICATE_SUB_TASK,
-  DELETE,
-}
-
 const Actions = (props: ActionsProps) => {
-  const { subId, onChangeAction } = props;
-  const { taskListId, taskId, onUpdateTask } = useTaskDetail();
+  const { onDelete } = props;
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const { onAddSnackbar } = useSnackbar();
 
   const commonT = useTranslations(NS_COMMON);
-  const projectT = useTranslations(NS_PROJECT);
 
-  const options = useMemo(
-    () => [
-      { label: commonT("rename"), value: Action.RENAME },
-      {
-        label: projectT("taskDetail.convertToTask"),
-        value: Action.CONVERT_TO_TASK,
-      },
-      {
-        label: projectT("taskDetail.changeParentTask"),
-        value: Action.CHANGE_PARENT_TASK,
-      },
-      {
-        label: projectT("taskDetail.duplicateSubTask"),
-        value: Action.DUPLICATE_SUB_TASK,
-      },
-      { label: commonT("delete"), value: Action.DELETE },
-    ],
-    [projectT, commonT],
-  );
+  const [isShow, onShow, onHide] = useToggle();
 
-  const onAction = (action: Action) => {
-    return () => {
-      onChangeAction(action);
+  const onSubmit = async () => {
+    try {
+      await onDelete();
+      onHide();
       buttonRef?.current?.click();
-    };
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
   };
 
   return (
-    <PopoverLayout
-      ref={buttonRef}
-      label={
-        <IconButton>
-          <MoreSquareIcon sx={{ fontSize: 20 }} />
-        </IconButton>
-      }
-    >
-      <MenuList component={Box} sx={{ pb: 0 }}>
-        {options.map((option) => (
-          <MenuItem
-            component={ButtonBase}
-            onClick={onAction(option.value)}
-            sx={defaultSx.item}
-            key={option.value}
-          >
-            <Text variant="body2">{option.label}</Text>
+    <>
+      <PopoverLayout
+        ref={buttonRef}
+        label={
+          <IconButton>
+            <MoreSquareIcon sx={{ fontSize: 20 }} />
+          </IconButton>
+        }
+      >
+        <MenuList component={Box} sx={{ pb: 0 }}>
+          <MenuItem component={ButtonBase} onClick={onShow} sx={defaultSx.item}>
+            <Text variant="body2">{commonT("delete")}</Text>
           </MenuItem>
-        ))}
-      </MenuList>
-    </PopoverLayout>
+        </MenuList>
+      </PopoverLayout>
+      <ConfirmDialog
+        onSubmit={onSubmit}
+        open={isShow}
+        onClose={onHide}
+        title={commonT("confirmDelete.title")}
+        content={commonT("confirmDelete.content")}
+      />
+    </>
   );
 };
 

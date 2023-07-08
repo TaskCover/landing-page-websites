@@ -10,6 +10,7 @@ import { usePositionOptions } from "store/global/selectors";
 import { NS_PROJECT, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
+import { Search } from "components/Filters";
 
 type SelectMembersProps = {
   value?: Member[];
@@ -22,16 +23,26 @@ const SelectMembers = (props: SelectMembersProps) => {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
-  const { items } = useEmployeeOptions();
+  const {
+    items,
+    filters,
+    onGetOptions: onGetEmployeeOptions,
+  } = useEmployeeOptions();
   const { onGetOptions } = usePositionOptions();
   const projectT = useTranslations(NS_PROJECT);
+  const commonT = useTranslations(NS_COMMON);
 
   const onOpen = (event: MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
+    onGetEmployeeOptions({ pageIndex: 1, pageSize: 20 });
   };
 
   const onClose = () => {
     setAnchorEl(null);
+  };
+
+  const onChangeSearch = (name: string, newValue?: string | number) => {
+    onGetEmployeeOptions({ pageIndex: 1, pageSize: 20, [name]: newValue });
   };
 
   const onRemoveMember = (id: string) => {
@@ -142,6 +153,13 @@ const SelectMembers = (props: SelectMembersProps) => {
         }}
       >
         <Stack p={2}>
+          <Search
+            name="email"
+            value={filters?.email}
+            placeholder={commonT("searchBy", { name: "email" })}
+            onChange={onChangeSearch}
+            emitWhenEnter
+          />
           <MenuList component={Stack} spacing={2}>
             {items.map((item) => {
               const isChecked = members.some((member) => item.id === member.id);

@@ -1,4 +1,4 @@
-import React, { Dispatch, memo, useMemo, useRef } from "react";
+import { Dispatch, memo, useMemo, useRef } from "react";
 import { Box, ButtonBase, MenuItem, MenuList, Stack } from "@mui/material";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { IconButton, Text } from "components/shared";
@@ -61,7 +61,7 @@ const Actions = (props: ActionsProps) => {
     <PopoverLayout
       ref={buttonRef}
       label={
-        <IconButton>
+        <IconButton noPadding>
           <MoreSquareIcon sx={{ fontSize: 20 }} />
         </IconButton>
       }

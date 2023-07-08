@@ -1,4 +1,4 @@
-import React, { Dispatch, memo, useMemo, useRef } from "react";
+import { Dispatch, memo, useMemo, useRef } from "react";
 import { Box, ButtonBase, MenuItem, MenuList, Stack } from "@mui/material";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { IconButton, Text } from "components/shared";
@@ -14,22 +14,32 @@ type ActionsProps = {
 };
 
 export enum Action {
-  CONVERT_TO_TASK = 1,
+  RENAME = 1,
+  CONVERT_TO_TASK,
   CONVERT_TO_SUB_TASK,
   DELETE,
 }
 
 const Actions = (props: ActionsProps) => {
   const { todoId, onChangeAction } = props;
-  const { taskListId, taskId, onUpdateTask } = useTaskDetail();
+  const { subTaskId, taskId, onUpdateTask } = useTaskDetail();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const { onAddSnackbar } = useSnackbar();
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
 
-  const options = useMemo(
-    () => [
+  const options = useMemo(() => {
+    if (subTaskId) {
+      return [
+        {
+          label: projectT("taskDetail.convertToTask"),
+          value: Action.CONVERT_TO_TASK,
+        },
+        { label: commonT("delete"), value: Action.DELETE },
+      ];
+    }
+    return [
       {
         label: projectT("taskDetail.convertToTask"),
         value: Action.CONVERT_TO_TASK,
@@ -39,9 +49,8 @@ const Actions = (props: ActionsProps) => {
         value: Action.CONVERT_TO_SUB_TASK,
       },
       { label: commonT("delete"), value: Action.DELETE },
-    ],
-    [projectT, commonT],
-  );
+    ];
+  }, [projectT, commonT, subTaskId]);
 
   const onAction = (action: Action) => {
     return () => {

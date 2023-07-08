@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef } from "react";
+import { memo, useMemo, useRef } from "react";
 import { Box, ButtonBase, MenuItem, MenuList, Stack } from "@mui/material";
 import { Status } from "constant/enums";
 import PopoverLayout from "./PopoverLayout";
@@ -17,14 +17,16 @@ import { getMessageErrorByAPI } from "utils/index";
 import BlockingIcon from "icons/BlockingIcon";
 import PauseCircleIcon from "icons/PauseCircleIcon";
 import AttachCircleIcon from "icons/AttachCircleIcon";
-import { Dependency, DependencyStatus } from "store/project/actions";
+import { DependencyStatus } from "store/project/actions";
 
 type StatusDependencyProps = {
-  // status: Status;
-  // dependency: string;
+  status: DependencyStatus;
+  dependencyId: string;
 };
 
 const StatusDependency = (props: StatusDependencyProps) => {
+  const { status, dependencyId } = props;
+
   const { taskListId, taskId, onUpdateTask, task, subTaskId } = useTaskDetail();
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
@@ -36,25 +38,43 @@ const StatusDependency = (props: StatusDependencyProps) => {
     [projectT],
   );
 
-  // const iconSelected = useMemo(() => )
+  const iconSelected = useMemo(() => {
+    switch (status) {
+      case DependencyStatus.BLOCKING:
+        return <BlockingIcon color="error" />;
+      case DependencyStatus.WAITING_ON:
+        return <PauseCircleIcon color="warning" />;
+      case DependencyStatus.LINKED_TO:
+        return <AttachCircleIcon sx={{ color: "grey.400" }} />;
+      default:
+        return null;
+    }
+  }, [status]);
 
   const onChangeStatus = (newStatus: DependencyStatus) => {
     return async () => {
+      if (!taskListId || !taskId) return;
+
       try {
-        if (!taskListId || !taskId) {
-          throw AN_ERROR_TRY_AGAIN;
+        const newDependencies = [...(task?.dependencies ?? [])];
+
+        const indexUpdated = newDependencies.findIndex(
+          (depen) => depen.id === dependencyId,
+        );
+        if (indexUpdated !== -1) {
+          newDependencies[indexUpdated] = {
+            ...newDependencies[indexUpdated],
+            status: newStatus,
+          };
         }
-        // const newDependencies = [...(task?.dependencies ?? [])];
-        // newDependencies[index] = {
-        //   ...newDependencies[index],
-        //   status: newStatus,
-        // };
-        // await onUpdateTask(
-        //   { dependencies: newDependencies },
-        //   taskListId,
-        //   taskId,
-        //   subTaskId,
-        // );
+        const dependencies = newDependencies.map((item) => ({
+          task_current: subTaskId ?? taskId,
+          task_list_current: taskListId,
+          task_list_update: item.id_task_list,
+          task_update: item.id_task,
+          status: item.status,
+        }));
+        await onUpdateTask({ dependencies }, taskListId, taskId, subTaskId);
         buttonRef?.current?.click();
       } catch (error) {
         onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
@@ -62,7 +82,7 @@ const StatusDependency = (props: StatusDependencyProps) => {
     };
   };
   return (
-    <PopoverLayout ref={buttonRef} label={<h2>sâs</h2>}>
+    <PopoverLayout ref={buttonRef} label={iconSelected}>
       <MenuList component={Box} sx={{ pb: 0 }}>
         {options.map((option) => (
           <MenuItem
@@ -72,11 +92,7 @@ const StatusDependency = (props: StatusDependencyProps) => {
             key={option.value}
           >
             <Stack direction="row" alignItems="center" spacing={1} width="100%">
-              <Box
-                width={16}
-                height={16}
-                bgcolor={`${COLOR_STATUS[option.value]}.main`}
-              />
+              {option.icon}
               <Text variant="body2">{option.label}</Text>
             </Stack>
           </MenuItem>
@@ -90,11 +106,6 @@ export default memo(StatusDependency);
 
 const OPTIONS = [
   {
-    label: "taskDetail.blocking",
-    value: DependencyStatus.BLOCKING,
-    icon: <BlockingIcon color="error" />,
-  },
-  {
     label: "taskDetail.waitingOn",
     value: DependencyStatus.WAITING_ON,
     icon: <PauseCircleIcon color="warning" />,
@@ -103,6 +114,11 @@ const OPTIONS = [
     label: "taskDetail.linkedTo",
     value: DependencyStatus.LINKED_TO,
     icon: <AttachCircleIcon sx={{ color: "grey.400" }} />,
+  },
+  {
+    label: "taskDetail.blocking",
+    value: DependencyStatus.BLOCKING,
+    icon: <BlockingIcon color="error" />,
   },
 ];
 

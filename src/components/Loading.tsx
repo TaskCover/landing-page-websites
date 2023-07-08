@@ -10,14 +10,15 @@ import { Text } from "./shared";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 
-const Loading = (props: DialogProps) => {
+const Loading = (props: DialogProps & { message?: string }) => {
   const t = useTranslations(NS_COMMON);
-  const { children, ...rest } = props;
+  const { children, message = `${t("processing")}...`, ...rest } = props;
   return (
     <Dialog
       sx={{
         [`& .${dialogClasses.paper}`]: {
           backgroundColor: "transparent",
+          backgroundImage: "none",
           boxShadow: "none",
         },
       }}
@@ -26,7 +27,7 @@ const Loading = (props: DialogProps) => {
       <Stack alignItems="center" spacing={1}>
         <CircularProgress size={24} color="primary" />
         <Text variant="body2" fontWeight={600} color="text.primary">
-          {`${t("processing")}...`}
+          {message}
         </Text>
         {children}
       </Stack>

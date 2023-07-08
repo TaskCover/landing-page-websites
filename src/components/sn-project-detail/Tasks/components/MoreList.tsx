@@ -21,7 +21,7 @@ import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
 import { memo, MouseEvent, useId, useMemo, useState } from "react";
 import { useTasksOfProject } from "store/project/selectors";
-import { Selected, genTime } from "./helpers";
+import { Selected, genName, genTime } from "./helpers";
 import { Task, TaskList } from "store/project/reducer";
 import { useParams } from "next/navigation";
 import { useSnackbar } from "store/app/selectors";
@@ -97,6 +97,7 @@ const MoreList = (props: MoreListProps) => {
   const commonT = useTranslations(NS_COMMON);
 
   const [type, setType] = useState<Action | undefined>();
+  const [msg, setMsg] = useState<string | undefined>();
 
   const onOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -121,12 +122,10 @@ const MoreList = (props: MoreListProps) => {
       if (!params?.id) {
         throw AN_ERROR_TRY_AGAIN;
       }
-      const newName = projectT("detailTasks.duplicateName", {
-        name: taskList.name,
-        value: genTime(),
-      });
+      const taskListNames = items.map((item) => item.name);
+
       const newTaskList = await onCreateTaskList({
-        name: newName,
+        name: genName(taskListNames, taskList.name),
         project: params.id,
       });
 
@@ -139,10 +138,7 @@ const MoreList = (props: MoreListProps) => {
         for (const taskItem of tasksOfTaskList.tasks) {
           const newTask = (await onCreateTask(
             {
-              name: projectT("detailTasks.duplicateName", {
-                name: taskItem.name,
-                value: genTime(),
-              }),
+              name: taskItem.name,
               description: taskItem?.description,
               start_date: taskItem?.start_date
                 ? formatDate(taskItem.start_date, DATE_FORMAT_FORM)
@@ -165,10 +161,7 @@ const MoreList = (props: MoreListProps) => {
           for (const subTask of subTasks) {
             (await onCreateTask(
               {
-                name: projectT("detailTasks.duplicateName", {
-                  name: subTask.name,
-                  value: genTime(),
-                }),
+                name: subTask.name,
                 description: subTask?.description,
                 start_date: subTask?.start_date
                   ? formatDate(subTask.start_date, DATE_FORMAT_FORM)
@@ -195,12 +188,11 @@ const MoreList = (props: MoreListProps) => {
       if (!task?.task_list) {
         throw AN_ERROR_TRY_AGAIN;
       }
+      const taskList = items.find((item) => item.id === task.task_list);
+      const taskNames = taskList?.tasks?.map((taskItem) => taskItem.name) ?? [];
       const newTask = (await onCreateTask(
         {
-          name: projectT("detailTasks.duplicateName", {
-            name: task.name,
-            value: genTime(),
-          }),
+          name: genName(taskNames, task.name),
           description: task?.description,
           start_date: task?.start_date
             ? formatDate(task.start_date, DATE_FORMAT_FORM)
@@ -254,6 +246,8 @@ const MoreList = (props: MoreListProps) => {
       //   DM01-Task 03
       //     DM01-Task 02-SubTask 01
       setIsSubmitting(true);
+      setMsg(projectT("detailTasks.processingDuplicate"));
+      onClose();
       const taskListGroup = selectedList.reduce(
         (
           out: {
@@ -398,6 +392,7 @@ const MoreList = (props: MoreListProps) => {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     } finally {
       setIsSubmitting(false);
+      setMsg(undefined);
     }
   };
 
@@ -563,7 +558,7 @@ const MoreList = (props: MoreListProps) => {
           </MenuList>
         </Stack>
       </Popover>
-      <Loading open={isSubmitting} />
+      <Loading open={isSubmitting} message={msg} />
       {type === Action.MOVE && (
         <MoveTaskList
           open

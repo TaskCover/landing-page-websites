@@ -47,8 +47,8 @@ const FormLayout = (props: FormLayoutProps) => {
             type="button"
             onClick={onClose}
             variant="primaryOutlined"
+            disabled={submitting}
             size="small"
-            disabled={disabled}
             sx={defaultSx.button}
           >
             {cancelText}

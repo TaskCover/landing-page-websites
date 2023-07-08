@@ -182,4 +182,4 @@ const Actions = () => {
 
 export default memo(Actions);
 
-const LATEST_VALUE = "created_time=-1";
+const LATEST_VALUE = "updated_time=-1";

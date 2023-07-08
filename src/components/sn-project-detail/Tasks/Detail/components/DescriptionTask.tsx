@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Stack } from "@mui/material";
 import { useTaskDetail } from "store/project/selectors";
 import { Editor, Button } from "components/shared";

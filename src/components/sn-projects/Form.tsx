@@ -193,13 +193,13 @@ const Form = (props: FormProps) => {
     onGetOptions({ pageIndex: 1, pageSize: 20, [name]: newValue });
   };
 
+  const onGetEmployeeOptions = (name: string, newValue?: string | number) => {
+    onGetOptions({ pageIndex: 1, pageSize: 20 });
+  };
+
   useEffect(() => {
     onGetProjectTypeOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetProjectTypeOptions]);
-
-  useEffect(() => {
-    onGetOptions({ pageIndex: 1, pageSize: 20 });
-  }, [onGetOptions]);
 
   return (
     <FormLayout
@@ -246,6 +246,7 @@ const Form = (props: FormProps) => {
               value: filters?.email,
               placeholder: commonT("searchBy", { name: "email" }),
             }}
+            onOpen={onGetEmployeeOptions}
           />
           <Select
             options={projectTypeOptions}

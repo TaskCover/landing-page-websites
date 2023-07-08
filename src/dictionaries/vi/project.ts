@@ -94,6 +94,7 @@ export const ProjectLang: ProjectDictionary = {
     duplicateName: "{name} sao chép lúc {value}",
     selectedCount: "{value} đã chọn",
     assignee: "Người được giao",
+    processingDuplicate: "Hệ thống đang xử lý sao chép...",
     keys: {
       owner: "người phụ trách",
       start_date: "ngày bắt đầu",

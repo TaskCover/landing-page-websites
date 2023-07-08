@@ -47,6 +47,7 @@ const DatePicker = (props: DatePickerProps) => {
       name={name}
       {...pickerProps}
       locale={locale}
+      dateFormat="dd/MM/yyyy"
       customInput={<DatePickerInput {...rest} />}
     />
   );

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, memo, useRef, useState } from "react";
+import { ChangeEvent, memo, useRef, useState } from "react";
 import { Box, Stack } from "@mui/material";
 import { Text, Collapse, Button } from "components/shared";
 import { NS_PROJECT, AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
@@ -11,6 +11,7 @@ import { getMessageErrorByAPI } from "utils/index";
 import { useSnackbar } from "store/app/selectors";
 import useToggle from "hooks/useToggle";
 import ConfirmDialog from "components/ConfirmDialog";
+import Loading from "components/Loading";
 
 type AttachmentsTaskProps = {
   id: string;
@@ -25,6 +26,7 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
   const commonT = useTranslations(NS_COMMON);
 
   const [indexDeleted, setIndexDeleted] = useState<number | undefined>();
+  const [msg, setMsg] = useState<string>("");
 
   const onChooseFile = () => {
     inputFileRef?.current?.click();
@@ -33,27 +35,47 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
   const onChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files) return;
-    const attachments: string[] = [];
-    const promises = Array.from(files).map((file) => {
-      return client.upload(Endpoint.UPLOAD_LINK, file);
-    });
+    const fileExtensions = Array.from(files).map((file) =>
+      getExtension(file.name),
+    );
+    const hasValid = fileExtensions.some((extension) =>
+      SUPPORTS.includes(extension),
+    );
 
-    const results = await Promise.allSettled(promises);
-    results.forEach((result) => {
-      if (result.status === "fulfilled" && result.value) {
-        attachments.push(result.value);
-      }
-    });
+    if (!hasValid) {
+      onAddSnackbar(commonT("aFewFilesInvalid"), "error");
+      return;
+    }
+    try {
+      setMsg(commonT("processingUpload"));
+      const attachments: string[] = [];
+      const promises = Array.from(files).map((file) => {
+        return client.upload(Endpoint.UPLOAD_LINK, file);
+      });
 
-    if (attachments.length) {
-      try {
+      const results = await Promise.allSettled(promises);
+      results.forEach((result) => {
+        if (result.status === "fulfilled" && result.value) {
+          attachments.push(result.value);
+        }
+      });
+
+      if (attachments.length) {
         if (!taskListId || !taskId) {
           throw AN_ERROR_TRY_AGAIN;
         }
-        await onUpdateTask({ attachments }, taskListId, taskId, subTaskId);
-      } catch (error) {
-        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+        const newAttachments = [...(task?.attachments ?? []), ...attachments];
+        await onUpdateTask(
+          { attachments: newAttachments },
+          taskListId,
+          taskId,
+          subTaskId,
+        );
       }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      setMsg("");
     }
   };
 
@@ -93,7 +115,7 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
         <Collapse
           initCollapse
           label={
-            <Text color="text.primary" variant="h6">
+            <Text color="text.primary" variant="h6" textTransform="uppercase">
               {`${projectT("taskDetail.attachments")} (${
                 task?.attachments_down?.length ?? 0
               })`}
@@ -107,6 +129,7 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
                 src={attachment?.link}
                 name={attachment?.name}
                 onRemove={onRemove(index)}
+                showName
               />
             ))}
           </Stack>
@@ -137,8 +160,31 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
         title={commonT("confirmDelete.title")}
         content={commonT("confirmDelete.content")}
       />
+      <Loading open={!!msg} message={msg} />
     </>
   );
 };
 
 export default memo(AttachmentsTask);
+
+const SUPPORTS = [
+  "doc",
+  "docx",
+  "xlsx",
+  "xls",
+  "csv",
+  "mp3",
+  "mp4",
+  "png",
+  "jpeg",
+  "jpg",
+  "pdf",
+  "ppt",
+  "pptx",
+  "zip",
+  "rar",
+];
+const getExtension = (name: string) => {
+  const arr = name.split(".");
+  return arr[arr.length - 1];
+};

@@ -15,6 +15,7 @@ import StatusServer from "components/StatusServer";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
 import useBreakpoint from "hooks/useBreakpoint";
+import ArrowTriangleIcon from "icons/ArrowTriangleIcon";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -79,8 +80,7 @@ const DesktopInformation = () => {
         <InformationItem label={commonT("form.title.startDate")}>
           {formatDate(item?.start_date)}
         </InformationItem>
-        <Divider sx={{ width: 100, borderColor: "grey.300" }} />
-        {">"}
+        <ArrowTriangleIcon sx={{ width: 100, borderColor: "grey.300" }} />
         <InformationItem label={commonT("form.title.endDate")}>
           {formatDate(item?.end_date)}
         </InformationItem>

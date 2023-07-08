@@ -1,49 +1,31 @@
-import React, { ChangeEvent, memo, useEffect, useRef, useState } from "react";
+import { ChangeEvent, memo, useState } from "react";
 import { Stack, TextField } from "@mui/material";
-import { Checkbox, Collapse, IconButton, Text } from "components/shared";
-import {
-  NS_PROJECT,
-  NS_COMMON,
-  AN_ERROR_TRY_AGAIN,
-  DATE_FORMAT_FORM,
-} from "constant/index";
+import { Checkbox, Collapse, Text } from "components/shared";
+import { NS_PROJECT, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useSnackbar } from "store/app/selectors";
-import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
+import { useTaskDetail } from "store/project/selectors";
 import PlusIcon from "icons/PlusIcon";
-import { formatDate, getMessageErrorByAPI } from "utils/index";
-import { Task, TaskDetail, Todo } from "store/project/reducer";
-import MoreSquareIcon from "icons/MoreSquareIcon";
-import PDate from "./PDate";
+import { getMessageErrorByAPI } from "utils/index";
+import { TaskList, Todo } from "store/project/reducer";
 import Assign from "./Assign";
-import StatusTask from "./Status";
 import Actions, { Action } from "./Actions";
-import { genName } from "components/sn-project-detail/Tasks/components";
-import { Status } from "constant/enums";
-import MoveOtherTask from "./MoveOtherTask";
 import ConfirmDialog from "components/ConfirmDialog";
 import { TaskData } from "store/project/actions";
-import { toDimension } from "chart.js/dist/helpers/helpers.core";
+import useToggle from "hooks/useToggle";
+import Loading from "components/Loading";
 
-const TodoList = () => {
+const TodoList = ({ open }: { open: boolean }) => {
   const projectT = useTranslations(NS_PROJECT);
   const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
-  const { onCreateTask } = useTasksOfProject();
-  const inputFileRef = useRef<HTMLInputElement | null>(null);
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
-
-  const [name, setName] = useState<string>("");
-  const [error, setError] = useState<string>("");
-
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-    setError("");
-  };
+  const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
 
   const onSubmit = async (nameValue: string) => {
     if (!taskListId || !taskId) return;
     try {
+      onProcessingTrue();
       const newTodoList = [
         ...(task?.todo_list ?? []),
         {
@@ -58,15 +40,19 @@ const TodoList = () => {
       );
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onProcessingFalse();
     }
   };
+
+  if (!open) return null;
 
   return (
     <>
       <Collapse
         initCollapse
         label={
-          <Text color="text.primary" variant="h6">
+          <Text color="text.primary" variant="h6" textTransform="uppercase">
             {`${projectT("taskDetail.toDoList")} (${
               task?.todo_list?.length ?? 0
             })`}
@@ -74,28 +60,35 @@ const TodoList = () => {
         }
       >
         <Stack mt={2}>
-          {task?.todo_list?.map((toDo, index) => (
+          {task?.todo_list?.map((toDo) => (
             <SubItem key={toDo.id} {...toDo} todoId={toDo.id} />
           ))}
           <Stack direction="row" alignItems="center" spacing={1}>
             <PlusIcon />
-            <TodoName onSubmit={onSubmit} />
+            <TodoName
+              onSubmit={onSubmit}
+              autoFocus={!task?.todo_list?.length}
+            />
           </Stack>
         </Stack>
       </Collapse>
+      <Loading open={isProcessing} />
     </>
   );
 };
 
 export default memo(TodoList);
+export const TODO_LIST_ID = "todo_list_id";
 
 const TodoName = ({
   onSubmit,
   value = "",
+  autoFocus,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: (name: string) => Promise<any>;
   value?: string;
+  autoFocus?: boolean;
 }) => {
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
@@ -132,9 +125,13 @@ const TodoName = ({
         variant="filled"
         size="small"
         onChange={onChange}
+        autoFocus={autoFocus}
         sx={{
           "& >div": {
             bgcolor: "transparent!important",
+          },
+          "& input": {
+            fontSize: 15,
           },
         }}
       />
@@ -155,62 +152,127 @@ const SubItem = (props: Todo & { todoId: string }) => {
     taskId,
     subTaskId,
     onUpdateTask,
+    onConvertToTask,
+    onUpdateTodoStatus,
+    onGetTaskList,
+    onConvertToSubTask,
+    onDeleteTodo,
     onUpdateTaskDetail,
   } = useTaskDetail();
   const { onAddSnackbar } = useSnackbar();
-  const { onCreateTask, onDeleteSubTasks } = useTasksOfProject();
   const commonT = useTranslations(NS_COMMON);
-  const projectT = useTranslations(NS_PROJECT);
 
   const [action, setAction] = useState<Action | undefined>();
+  const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
 
-  const onChangeDate = async (name: string, value?: string) => {
-    // try {
-    //   if (!taskListId || !taskId) {
-    //     throw AN_ERROR_TRY_AGAIN;
-    //   }
-    //   await onUpdateTask(
-    //     { [name]: formatDate(value, DATE_FORMAT_FORM) },
-    //     taskListId,
-    //     taskId,
-    //     subId,
-    //   );
-    // } catch (error) {
-    //   onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-    // }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onUpdateTodoList = async (name: string, value: any) => {
+    if (!taskListId || !taskId) return;
+    onProcessingTrue();
+    try {
+      const newTodoList = [...(task?.todo_list ?? [])].map((item) => ({
+        id: item.id,
+        name: item.name,
+        is_done: item?.is_done,
+        owner: item?.owner?.id,
+      }));
+      const indexUpdated = newTodoList?.findIndex(
+        (todoItem) => todoItem.id === todoId,
+      );
+
+      newTodoList[indexUpdated] = {
+        ...newTodoList[indexUpdated],
+        [name]: value,
+      };
+
+      const result = await onUpdateTask(
+        { todo_list: newTodoList },
+        taskListId,
+        taskId,
+        subTaskId,
+      );
+      setAction(undefined);
+      return result;
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onProcessingFalse();
+    }
   };
 
   const onChangeName = async (newName: string) => {
-    // try {
-    //   if (!taskListId || !taskId) {
-    //     throw AN_ERROR_TRY_AGAIN;
-    //   }
-    //   await onUpdateTask({ name: newName }, taskListId, taskId, subId);
-    //   setAction(undefined);
-    // } catch (error) {
-    //   onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-    // }
+    await onUpdateTodoList("name", newName);
+  };
+
+  const onConvertToDoToTask = async () => {
+    if (!taskListId || !taskId) return;
+
+    try {
+      await onConvertToTask({
+        task_list: taskListId,
+        task: taskId,
+        sub_task: subTaskId,
+        id_todo_list: todoId,
+      });
+      onGetTaskList(taskListId);
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
+  };
+
+  const onConvertToDoToSubTask = async () => {
+    if (!taskListId || !taskId) return;
+
+    try {
+      await onConvertToSubTask({
+        task_list: taskListId,
+        task: taskId,
+        sub_task: subTaskId,
+        id_todo_list: todoId,
+      });
+      const taskList: TaskList = await onGetTaskList(taskListId);
+
+      if (!subTaskId) {
+        const taskItem = taskList.tasks.find(
+          (taskItem) => taskItem.id === taskId,
+        );
+        if (taskItem) {
+          onUpdateTaskDetail({
+            ...taskItem,
+            taskListId,
+            taskId,
+          });
+        }
+      }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
   };
 
   const onDelete = async () => {
-    // try {
-    //   if (!taskListId || !taskId) {
-    //     throw AN_ERROR_TRY_AGAIN;
-    //   }
-    //   await onDeleteSubTasks({
-    //     task: taskId,
-    //     task_list: taskListId,
-    //     sub_tasks: [subId],
-    //   });
-    //   setAction(undefined);
-    // } catch (error) {
-    //   onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-    // }
+    if (!taskListId || !taskId) return;
+
+    try {
+      await onDeleteTodo({
+        task_list: taskListId,
+        task: taskId,
+        sub_task: subTaskId,
+        id_todo_list: todoId,
+      });
+      setAction(undefined);
+      onGetTaskList(taskListId);
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
   };
 
   const onChangeAction = (newAction?: Action) => {
     switch (newAction) {
       case Action.CONVERT_TO_TASK:
+        onConvertToDoToTask();
+        break;
+      case Action.CONVERT_TO_SUB_TASK:
+        onConvertToDoToSubTask();
         break;
       default:
         setAction(newAction);
@@ -218,8 +280,29 @@ const SubItem = (props: Todo & { todoId: string }) => {
     }
   };
 
+  const onChangeStatus = async (_, checked: boolean) => {
+    if (!taskListId || !taskId) return;
+
+    try {
+      await onUpdateTodoStatus({
+        task_list: taskListId,
+        task: taskId,
+        sub_task: subTaskId,
+        id_todo_list: todoId,
+        is_done: checked,
+      });
+      onGetTaskList(taskListId);
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
+  };
+
   const onResetAction = () => {
     setAction(undefined);
+  };
+
+  const onEditName = () => {
+    setAction(Action.RENAME);
   };
 
   return (
@@ -232,14 +315,14 @@ const SubItem = (props: Todo & { todoId: string }) => {
         justifyContent="space-between"
       >
         <Stack direction="row" alignItems="center" spacing={2} flex={1}>
-          <Checkbox checked={is_done} />
-          {/* {action === Action.RENAME ? (
+          <Checkbox checked={is_done} onChange={onChangeStatus} />
+          {action === Action.RENAME ? (
             <TodoName onSubmit={onChangeName} value={name} />
-          ) : ( */}
-          <Text variant="body2" noWrap>
-            {name}
-          </Text>
-          {/* )} */}
+          ) : (
+            <Text variant="body2" noWrap onClick={onEditName}>
+              {name}
+            </Text>
+          )}
         </Stack>
 
         <Stack direction="row" alignItems="center" spacing={1}>
@@ -247,9 +330,6 @@ const SubItem = (props: Todo & { todoId: string }) => {
           <Actions todoId={todoId} onChangeAction={onChangeAction} />
         </Stack>
       </Stack>
-      {/* {action === Action.CHANGE_PARENT_TASK && (
-        <MoveOtherTask subId={subId} open onClose={onResetAction} />
-      )} */}
       {action === Action.DELETE && (
         <ConfirmDialog
           onSubmit={onDelete}
@@ -259,6 +339,7 @@ const SubItem = (props: Todo & { todoId: string }) => {
           content={commonT("confirmDelete.content")}
         />
       )}
+      <Loading open={isProcessing} />
     </>
   );
 };

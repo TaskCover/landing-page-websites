@@ -20,14 +20,6 @@ export enum DependencyStatus {
   LINKED_TO = "LINK",
 }
 
-export interface Dependency {
-  task_current: string;
-  task_list_current: string;
-  task_list_update: string;
-  task_update: string;
-  status: DependencyStatus;
-}
-
 export type GetProjectListQueries = BaseQueries & {
   saved?: boolean;
   sort?: string;
@@ -82,7 +74,13 @@ export type TaskData = {
   owner?: string;
   status?: Status;
   attachments?: string[];
-  dependencies?: Dependency[];
+  dependencies?: {
+    task_current: string;
+    task_list_current: string;
+    task_list_update: string;
+    task_update: string;
+    status: DependencyStatus;
+  }[];
   todo_list?: {
     name: string;
     owner?: string;
@@ -132,17 +130,47 @@ export type ChangeParentTaskData = {
   task_change: string;
 };
 
+export type TodoData = {
+  task_list: string;
+  task: string;
+  id_todo_list: string;
+  sub_task?: string;
+};
+
+export type DependencyData = {
+  task_list: string;
+  task: string;
+  id_dependence: string;
+  sub_task?: string;
+};
+
+export type UpdateTodoStatus = TodoData & {
+  is_done: boolean;
+};
+
+export type ConvertSubTaskToTaskData = {
+  task_list: string;
+  task: string;
+  sub_task: string;
+};
+
 export const getProjectList = createAsyncThunk(
   "project/getProjectList",
   async (queries: GetProjectListQueries) => {
-    queries = serverQueries(
-      queries,
+    let newQueries = { ...queries };
+
+    if (newQueries?.sort !== "updated_time=-1") {
+      newQueries.sort = "created_time=-1";
+    }
+
+    newQueries = serverQueries(
+      newQueries,
       ["name"],
       ["saved"],
     ) as GetProjectListQueries;
 
     try {
-      const response = await client.get(Endpoint.PROJECTS, queries);
+      const response = await client.get(Endpoint.PROJECTS, newQueries);
 
       if (response?.status === HttpStatusCode.OK) {
         return refactorRawItemListResponse(response.data);
@@ -443,6 +471,104 @@ export const changeParentTask = createAsyncThunk(
   async (data: ChangeParentTaskData) => {
     try {
       const response = await client.post(Endpoint.CHANGE_PARENT_TASK, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const updateTodoStatus = createAsyncThunk(
+  "project/updateTodoStatus",
+  async (data: UpdateTodoStatus) => {
+    try {
+      const response = await client.put(Endpoint.TODO_DONE, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const convertToTask = createAsyncThunk(
+  "project/convertToTask",
+  async (data: TodoData) => {
+    try {
+      const response = await client.post(Endpoint.CONVERT_TASK, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const convertToSubTask = createAsyncThunk(
+  "project/convertToSubTask",
+  async (data: TodoData) => {
+    try {
+      const response = await client.post(Endpoint.CONVERT_SUB_TASK, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+export const convertSubTaskToTask = createAsyncThunk(
+  "project/convertSubTaskToTask",
+  async (data: ConvertSubTaskToTaskData) => {
+    try {
+      const response = await client.post(
+        Endpoint.CONVERT_SUB_TASK_TO_TASK,
+        data,
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const deleteTodo = createAsyncThunk(
+  "project/deleteTodo",
+  async (data: TodoData) => {
+    try {
+      const response = await client.put(Endpoint.DELETE_TO_DO, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const deleteDependency = createAsyncThunk(
+  "project/deleteDependency",
+  async (data: DependencyData) => {
+    try {
+      const response = await client.put(Endpoint.DELETE_DEPENDENCY, data);
 
       if (response?.status === HttpStatusCode.OK) {
         return true;

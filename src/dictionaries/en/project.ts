@@ -94,6 +94,7 @@ export const ProjectLang: ProjectDictionary = {
     duplicateName: "{name} copy at {value}",
     selectedCount: "{value} selected items",
     assignee: "Assignee",
+    processingDuplicate: "The system is processing duplicate...",
     keys: {
       owner: "assigner",
       start_date: "start date",

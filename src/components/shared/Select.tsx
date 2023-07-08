@@ -35,6 +35,7 @@ export type SelectProps = InputProps & {
   };
   hasAvatar?: boolean;
   showSubText?: boolean;
+  onOpen?: Function;
 };
 
 const ID_PLACEHOLDER = uuid();
@@ -80,6 +81,11 @@ const Select = (props: SelectProps) => {
     return options;
   }, [hasAll, placeholder, options, hasValue, commonT]) as unknown as Option[];
 
+  const onOpenSelect = () => {
+    props?.onOpen && props.onOpen();
+    onOpen();
+  };
+
   const onChange = (event) => {
     if (event.target.value === ID_PLACEHOLDER) {
       event.target.value = undefined;
@@ -109,7 +115,7 @@ const Select = (props: SelectProps) => {
       select
       SelectProps={{
         IconComponent: ChevronIcon,
-        onOpen,
+        onOpen: onOpenSelect,
         onClose,
         MenuProps: {
           PaperProps: {

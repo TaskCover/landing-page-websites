@@ -89,6 +89,7 @@ const Header = () => {
               onFocus: onFocused,
               onBlur: onUnFocused,
             }}
+            hasClear={false}
             emitWhenEnter={isFocused}
             value={filters?.[key as string]}
           />

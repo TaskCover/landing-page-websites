@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
 import { useActivitiesOfProject } from "store/project/selectors";

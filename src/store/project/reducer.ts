@@ -24,7 +24,13 @@ import {
   updateProject,
   updateTask,
   updateTaskList,
-  Dependency,
+  convertToTask,
+  updateTodoStatus,
+  convertToSubTask,
+  deleteTodo,
+  convertSubTaskToTask,
+  DependencyStatus,
+  deleteDependency,
 } from "./actions";
 import {
   Attachment,
@@ -93,6 +99,15 @@ export interface Todo {
   name: string;
   owner?: User;
   is_done: boolean;
+}
+
+export interface Dependency {
+  id: string;
+  id_link: string;
+  id_task: string;
+  id_task_list: string;
+  status: DependencyStatus;
+  type: string;
 }
 
 export interface Task {
@@ -667,6 +682,97 @@ const projectSlice = createSlice({
 
           if (indexSubTask !== -1) {
             (state.task.sub_tasks ?? []).splice(indexSubTask, 1);
+          }
+        }
+      })
+      .addCase(convertToTask.fulfilled, (state, action) => {
+        const { task, sub_task, id_todo_list } = action.meta.arg;
+        if (
+          state.task?.todo_list?.length &&
+          (state.task?.subTaskId === sub_task || state.task?.taskId === task)
+        ) {
+          const indexTodo = state.task.todo_list.findIndex(
+            (todoItem) => todoItem.id === id_todo_list,
+          );
+          if (indexTodo !== -1) {
+            state.task.todo_list.splice(indexTodo, 1);
+          }
+        }
+      })
+      .addCase(convertToSubTask.fulfilled, (state, action) => {
+        const { task, sub_task, id_todo_list } = action.meta.arg;
+        if (
+          state.task?.todo_list?.length &&
+          (state.task?.subTaskId === sub_task || state.task?.taskId === task)
+        ) {
+          const indexTodo = state.task.todo_list.findIndex(
+            (todoItem) => todoItem.id === id_todo_list,
+          );
+
+          if (indexTodo !== -1) {
+            if (state.task?.sub_tasks?.length) {
+              state.task.sub_tasks.push(
+                state.task.todo_list[indexTodo] as unknown as Task,
+              );
+            } else {
+              state.task.sub_tasks = [
+                state.task.todo_list[indexTodo] as unknown as Task,
+              ];
+            }
+            state.task.todo_list.splice(indexTodo, 1);
+          }
+        }
+      })
+      .addCase(convertSubTaskToTask.fulfilled, (state, action) => {
+        const { task, sub_task } = action.meta.arg;
+        if (state.task?.sub_tasks?.length && state.task?.taskId === task) {
+          const indexSubTask = state.task.sub_tasks.findIndex(
+            (subTask) => subTask.id === sub_task,
+          );
+          if (indexSubTask !== -1) {
+            state.task.sub_tasks.splice(indexSubTask, 1);
+          }
+        }
+      })
+      .addCase(deleteTodo.fulfilled, (state, action) => {
+        const { task, sub_task, id_todo_list } = action.meta.arg;
+        if (
+          state.task?.todo_list?.length &&
+          (state.task?.subTaskId === sub_task || state.task?.taskId === task)
+        ) {
+          const indexTodo = state.task.todo_list.findIndex(
+            (todoItem) => todoItem.id === id_todo_list,
+          );
+          if (indexTodo !== -1) {
+            state.task.todo_list.splice(indexTodo, 1);
+          }
+        }
+      })
+      .addCase(deleteDependency.fulfilled, (state, action) => {
+        const { task, sub_task, id_dependence } = action.meta.arg;
+        if (
+          state.task?.dependencies?.length &&
+          (state.task?.subTaskId === sub_task || state.task?.taskId === task)
+        ) {
+          const indexDepen = state.task.dependencies.findIndex(
+            (depen) => depen.id === id_dependence,
+          );
+          if (indexDepen !== -1) {
+            state.task.dependencies.splice(indexDepen, 1);
+          }
+        }
+      })
+      .addCase(updateTodoStatus.fulfilled, (state, action) => {
+        const { task, sub_task, id_todo_list, is_done } = action.meta.arg;
+        if (
+          state.task?.todo_list?.length &&
+          (state.task?.subTaskId === sub_task || state.task?.taskId === task)
+        ) {
+          const indexTodo = state.task.todo_list.findIndex(
+            (todoItem) => todoItem.id === id_todo_list,
+          );
+          if (indexTodo !== -1) {
+            state.task.todo_list[indexTodo].is_done = is_done;
           }
         }
       })

@@ -1,12 +1,10 @@
 import {
   Box,
   ButtonBase,
-  Dialog,
   MenuItem,
   MenuList,
   Popover,
   Stack,
-  debounce,
   popoverClasses,
 } from "@mui/material";
 import { Button, Checkbox, IconButton, Text } from "components/shared";
@@ -24,7 +22,6 @@ import {
   HTMLAttributes,
   memo,
   MouseEvent,
-  useCallback,
   useId,
   useMemo,
   useState,
@@ -32,17 +29,18 @@ import {
 import { Draggable } from "react-beautiful-dnd";
 import Form from "../Form";
 import { DataAction } from "constant/enums";
-import { TaskData, TaskListData } from "store/project/actions";
+import { TaskListData } from "store/project/actions";
 import { useTasksOfProject } from "store/project/selectors";
 import TaskListForm from "../TaskListForm";
 import MoveTaskList from "../MoveTaskList";
-import { TaskFormData, genName, genTime } from "./helpers";
+import { TaskFormData, genName } from "./helpers";
 import { useParams } from "next/navigation";
 import { Task } from "store/project/reducer";
 import { useSnackbar } from "store/app/selectors";
-import { formatDate, getMessageErrorByAPI } from "utils/index";
+import { getMessageErrorByAPI } from "utils/index";
 import ConfirmDialog from "components/ConfirmDialog";
 import DialogLayout from "components/DialogLayout";
+import Loading from "components/Loading";
 
 type DragParentProps = {
   id: string;
@@ -194,6 +192,7 @@ export const MoreList = (props: MoreListProps) => {
   const popoverId = useId();
 
   const [type, setType] = useState<Action | undefined>();
+  const [msg, setMsg] = useState<string | undefined>();
 
   const onOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -237,7 +236,8 @@ export const MoreList = (props: MoreListProps) => {
       if (!projectId) {
         throw AN_ERROR_TRY_AGAIN;
       }
-
+      onClose();
+      setMsg(projectT("detailTasks.processingDuplicate"));
       const newTaskList = await onCreateTaskList({
         name: genName(taskListNameList, name),
         project: projectId,
@@ -296,6 +296,8 @@ export const MoreList = (props: MoreListProps) => {
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      setMsg(undefined);
     }
   };
 
@@ -389,6 +391,7 @@ export const MoreList = (props: MoreListProps) => {
           </MenuList>
         </Stack>
       </Popover>
+      <Loading open={!!msg} message={msg} />
 
       {type === Action.RENAME && (
         <TaskListForm

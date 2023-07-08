@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { Stack, Divider } from "@mui/material";
 import ChevronIcon from "icons/ChevronIcon";
 import { IconButton } from "components/shared";

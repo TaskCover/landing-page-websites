@@ -1,7 +1,6 @@
-import { ReactNode, memo } from "react";
-import { Box, Divider, Stack, StackProps } from "@mui/material";
-import { Task } from "store/project/reducer";
-import { Button, Text } from "components/shared";
+import { ReactNode, memo, useEffect } from "react";
+import { Box, Stack, StackProps } from "@mui/material";
+import { Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import {
   COLOR_STATUS,
@@ -27,6 +26,9 @@ import {
   TodoList,
   Dependencies,
 } from "./components";
+import { SUB_TASKS_ID } from "./components/SubTasksOfTask";
+import { TODO_LIST_ID } from "./components/TodoList";
+import { DEPENDENCIES_ID } from "./components/Dependencies";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -47,10 +49,45 @@ const Information = () => {
 
   const [isAddDescription, onShowAddDescription, onHideAddDescription] =
     useToggle(false);
+  const [isAddSubTask, onShowAddSubTask, , , setShowAddSubTask] = useToggle(
+    !!task?.sub_tasks?.length,
+  );
+  const [isAddTodo, onShowAddTodo, , , setShowAddTodo] = useToggle(
+    !!task?.todo_list?.length,
+  );
+  const [isAddDepen, onShowAddDepen, , , setShowAddDepen] = useToggle(
+    !!task?.dependencies?.length,
+  );
+
+  const onShowAddSub = () => {
+    onShowAddSubTask();
+    document.getElementById(SUB_TASKS_ID)?.scrollIntoView();
+  };
+  const onShowAddTodoList = () => {
+    onShowAddTodo();
+    document.getElementById(TODO_LIST_ID)?.scrollIntoView();
+  };
+
+  const onShowAddDependencies = () => {
+    onShowAddDepen();
+    document.getElementById(DEPENDENCIES_ID)?.scrollIntoView();
+  };
 
   const onAddAttachments = () => {
     document.getElementById(ATTACHMENT_ID)?.click();
   };
+
+  useEffect(() => {
+    setShowAddSubTask(!!task?.sub_tasks?.length);
+  }, [setShowAddSubTask, task?.sub_tasks?.length]);
+
+  useEffect(() => {
+    setShowAddTodo(!!task?.todo_list?.length);
+  }, [setShowAddTodo, task?.todo_list?.length]);
+
+  useEffect(() => {
+    setShowAddDepen(!!task?.dependencies?.length);
+  }, [setShowAddDepen, task?.dependencies?.length]);
 
   if (!task) return null;
 
@@ -102,23 +139,32 @@ const Information = () => {
             {projectT("taskDetail.addAttachments")}
           </ActionItem>
         )}
-        <ActionItem icon={<FatrowIcon sx={{ color: "grey.400" }} />}>
+        <ActionItem
+          onClick={onShowAddDependencies}
+          icon={<FatrowIcon sx={{ color: "grey.400" }} />}
+        >
           {projectT("taskDetail.addDependencies")}
         </ActionItem>
         {!task?.sub_tasks?.length && !subTaskId && (
-          <ActionItem icon={<HierarchyIcon sx={{ color: "grey.400" }} />}>
+          <ActionItem
+            onClick={onShowAddSub}
+            icon={<HierarchyIcon sx={{ color: "grey.400" }} />}
+          >
             {projectT("taskDetail.addSubTasks")}
           </ActionItem>
         )}
-        <ActionItem icon={<TaskSquareIcon sx={{ color: "grey.400" }} />}>
+        <ActionItem
+          onClick={onShowAddTodoList}
+          icon={<TaskSquareIcon sx={{ color: "grey.400" }} />}
+        >
           {projectT("taskDetail.addToDos")}
         </ActionItem>
       </Stack>
       <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
       <AttachmentsTask id={ATTACHMENT_ID} />
-      {!subTaskId && <SubTasksOfTask />}
-      <TodoList />
-      <Dependencies />
+      {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
+      <TodoList open={isAddTodo} />
+      <Dependencies open={isAddDepen} />
       <InformationItem label={commonT("assigner")}>
         {!!task?.owner?.id ? (
           <Stack direction="row" alignItems="center" spacing={1}>

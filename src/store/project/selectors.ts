@@ -30,6 +30,16 @@ import {
   ChangeParentTaskData,
   changeParentTask,
   getTaskList,
+  TodoData,
+  convertToTask,
+  UpdateTodoStatus,
+  updateTodoStatus,
+  convertToSubTask,
+  deleteTodo,
+  convertSubTaskToTask,
+  ConvertSubTaskToTaskData,
+  DependencyData,
+  deleteDependency,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -438,8 +448,55 @@ export const useTaskDetail = () => {
     }
   };
 
-  const onGetTaskList = (id: string) => {
-    dispatch(getTaskList(id));
+  const onConvertToTask = async (data: TodoData) => {
+    try {
+      return await dispatch(convertToTask(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const onConvertToSubTask = async (data: TodoData) => {
+    try {
+      return await dispatch(convertToSubTask(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const onConvertSubTaskToTask = async (data: ConvertSubTaskToTaskData) => {
+    try {
+      return await dispatch(convertSubTaskToTask(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const onUpdateTodoStatus = async (data: UpdateTodoStatus) => {
+    try {
+      return await dispatch(updateTodoStatus(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+  const onDeleteTodo = async (data: TodoData) => {
+    try {
+      return await dispatch(deleteTodo(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const onDeleteDependency = async (data: DependencyData) => {
+    try {
+      return await dispatch(deleteDependency(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const onGetTaskList = async (id: string) => {
+    return await dispatch(getTaskList(id)).unwrap();
   };
 
   return {
@@ -452,6 +509,12 @@ export const useTaskDetail = () => {
     onUpdateTask,
     onChangeParentTask,
     onGetTaskList,
+    onConvertToTask,
+    onConvertToSubTask,
+    onUpdateTodoStatus,
+    onDeleteTodo,
+    onConvertSubTaskToTask,
+    onDeleteDependency,
   };
 };
 

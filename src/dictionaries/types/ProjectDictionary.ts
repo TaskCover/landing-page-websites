@@ -90,6 +90,7 @@ export type ProjectDictionary = {
     duplicateName: string;
     selectedCount: string;
     assignee: string;
+    processingDuplicate: string;
     keys: {
       owner: string;
       start_date: string;

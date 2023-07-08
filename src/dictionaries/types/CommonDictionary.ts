@@ -92,4 +92,6 @@ export type CommonDictionary = {
   all: string;
   clickToViewLarge: string;
   processing: string;
+  aFewFilesInvalid: string;
+  processingUpload: string;
 };

@@ -11,6 +11,7 @@ export type SearchProps = Omit<InputProps, "name" | "onChange"> & {
   onChange?: (name: string, value?: string) => void;
   emitWhenEnter?: boolean;
   search?: string | number;
+  hasClear?: boolean;
 };
 
 const Search = (props: SearchProps) => {
@@ -21,6 +22,7 @@ const Search = (props: SearchProps) => {
     value = "",
     emitWhenEnter,
     search,
+    hasClear = true,
     ...rest
   } = props;
 
@@ -84,7 +86,8 @@ const Search = (props: SearchProps) => {
       startNode={<SearchIcon />}
       endNode={
         !!value &&
-        emitWhenEnter && (
+        emitWhenEnter &&
+        hasClear && (
           <IconButton onClick={onClear} noPadding size="small">
             <CircleCloseIcon />
           </IconButton>
