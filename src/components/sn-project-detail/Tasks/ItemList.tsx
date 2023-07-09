@@ -540,6 +540,7 @@ const ItemList = () => {
                 count={taskListItem.tasks.length}
                 checked={isChecked}
                 onChange={onToggleTaskList(!isChecked, taskListItem)}
+                setSelectedList={setSelectedList}
               >
                 <Drop
                   key={taskListItem.id}

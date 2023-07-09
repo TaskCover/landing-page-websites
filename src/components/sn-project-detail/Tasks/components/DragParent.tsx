@@ -19,9 +19,11 @@ import PlusIcon from "icons/PlusIcon";
 import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
 import {
+  Dispatch,
   HTMLAttributes,
   memo,
   MouseEvent,
+  SetStateAction,
   useId,
   useMemo,
   useState,
@@ -33,7 +35,7 @@ import { TaskListData } from "store/project/actions";
 import { useTasksOfProject } from "store/project/selectors";
 import TaskListForm from "../TaskListForm";
 import MoveTaskList from "../MoveTaskList";
-import { TaskFormData, genName } from "./helpers";
+import { Selected, TaskFormData, genName } from "./helpers";
 import { useParams } from "next/navigation";
 import { Task } from "store/project/reducer";
 import { useSnackbar } from "store/app/selectors";
@@ -49,15 +51,26 @@ type DragParentProps = {
   name: string;
   checked: boolean;
   onChange: () => void;
+  setSelectedList: Dispatch<SetStateAction<Selected[]>>;
 } & HTMLAttributes<HTMLDivElement>;
 
 type MoreListProps = {
   id: string;
   name: string;
+  setSelectedList: Dispatch<SetStateAction<Selected[]>>;
 };
 
 const DragParent = (props: DragParentProps) => {
-  const { id, index, count, name, checked, onChange, ...rest } = props;
+  const {
+    id,
+    index,
+    count,
+    name,
+    checked,
+    onChange,
+    setSelectedList,
+    ...rest
+  } = props;
   const projectT = useTranslations(NS_PROJECT);
   const { onCreateTask: onCreateTaskAction } = useTasksOfProject();
 
@@ -114,7 +127,11 @@ const DragParent = (props: DragParentProps) => {
                     >
                       {`(${count})`}
                     </Text>
-                    <MoreList id={id} name={name} />
+                    <MoreList
+                      id={id}
+                      name={name}
+                      setSelectedList={setSelectedList}
+                    />
                   </Stack>
                   <Button
                     onClick={onShowCreate}
@@ -162,7 +179,7 @@ enum Action {
 }
 
 export const MoreList = (props: MoreListProps) => {
-  const { id, name } = props;
+  const { id, name, setSelectedList } = props;
 
   const {
     onUpdateTaskList: onUpdateTaskListAction,
@@ -225,6 +242,10 @@ export const MoreList = (props: MoreListProps) => {
           "success",
         );
         onSetTType();
+        setSelectedList((prevSelected) => {
+          const newSelected = [...prevSelected];
+          return newSelected.filter((item) => item.taskListId !== id);
+        });
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");

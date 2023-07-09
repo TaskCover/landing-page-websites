@@ -21,7 +21,7 @@ import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
 import { memo, MouseEvent, useId, useMemo, useState } from "react";
 import { useTasksOfProject } from "store/project/selectors";
-import { Selected, genName, genTime } from "./helpers";
+import { Selected, genName } from "./helpers";
 import { Task, TaskList } from "store/project/reducer";
 import { useParams } from "next/navigation";
 import { useSnackbar } from "store/app/selectors";
@@ -210,10 +210,7 @@ const MoreList = (props: MoreListProps) => {
         for (const subTask of task.sub_tasks) {
           (await onCreateTask(
             {
-              name: projectT("detailTasks.duplicateName", {
-                name: subTask.name,
-                value: genTime(),
-              }),
+              name: subTask.name,
               description: subTask?.description,
               start_date: subTask?.start_date
                 ? formatDate(subTask.start_date, DATE_FORMAT_FORM)
@@ -363,6 +360,9 @@ const MoreList = (props: MoreListProps) => {
         await onDuplicateTask(task);
       }
 
+      const subTaskNames = taskListGroup.subTasks.map(
+        (subTask) => subTask.name,
+      );
       for (const subTask of taskListGroup.subTasks) {
         const { id, ...data } = subTask;
         await onCreateTask(
@@ -374,10 +374,7 @@ const MoreList = (props: MoreListProps) => {
             end_date: data?.end_date
               ? formatDate(data.end_date, DATE_FORMAT_FORM)
               : undefined,
-            name: projectT("detailTasks.duplicateName", {
-              name: data.name,
-              value: genTime(),
-            }),
+            name: genName(subTaskNames, data.name),
           },
           subTask.task_list as string,
           subTask.task as string,

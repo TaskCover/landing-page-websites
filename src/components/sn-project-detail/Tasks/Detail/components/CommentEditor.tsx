@@ -16,8 +16,14 @@ const CommentEditor = forwardRef(
   (_, ref: ForwardedRef<HTMLDivElement | null>) => {
     const commonT = useTranslations(NS_COMMON);
     const projectT = useTranslations(NS_PROJECT);
-    const { task, taskListId, subTaskId, taskId, onCommentTask } =
-      useTaskDetail();
+    const {
+      task,
+      taskListId,
+      subTaskId,
+      taskId,
+      onCommentTask,
+      onGetTaskList,
+    } = useTaskDetail();
     const { onAddSnackbar } = useSnackbar();
 
     const [content, setContent] = useState<string>("");
@@ -55,6 +61,7 @@ const CommentEditor = forwardRef(
         }
         const newData = await onCommentTask(data);
         if (newData) {
+          onGetTaskList(taskListId);
           setContent("");
           setFiles([]);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

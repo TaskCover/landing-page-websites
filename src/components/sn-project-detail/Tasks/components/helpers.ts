@@ -27,8 +27,6 @@ export type Selected = {
   subTaskName?: string;
 };
 
-export const genTime = () => formatDate(Date.now(), "HH:mm:ss.ms dd/MM/yyyy");
-
 export const genName = (
   nameList: string[],
   name: string,
