@@ -62,20 +62,34 @@ const Select = ({ value }: { value?: string }) => {
 
   const [search, setSearch] = useState<string>("");
 
+  const dependencyIds = useMemo(
+    () => (task?.dependencies ?? []).map((depen) => depen.id_task),
+    [task?.dependencies],
+  );
+
   const options = useMemo(() => {
     let _options = items.reduce((out: Option[], item) => {
       item.tasks.forEach((task) => {
-        out.push({
-          label: task.name,
-          value: task.id,
-          subText: item.id,
-        });
-        task?.sub_tasks?.forEach((subTask) => {
+        if (
+          !dependencyIds.includes(task.id) &&
+          (subTaskId || (!subTaskId && taskId !== task.id))
+        ) {
           out.push({
-            label: subTask.name,
-            value: subTask.id,
+            label: task.name,
+            value: task.id,
             subText: item.id,
           });
+        }
+
+        task?.sub_tasks?.forEach((subTask) => {
+          if (!dependencyIds.includes(subTask.id) && subTaskId !== subTask.id) {
+            out.push({
+              label: subTask.name,
+              value: subTask.id,
+              subText: item.id,
+              avatar: task.id,
+            });
+          }
         });
       });
       return out;
@@ -86,7 +100,7 @@ const Select = ({ value }: { value?: string }) => {
       );
     }
     return _options;
-  }, [items, search]);
+  }, [items, search, subTaskId, taskId, dependencyIds]);
 
   const onChangeSearch = (_, newValue) => {
     setSearch(newValue);
@@ -167,8 +181,6 @@ const SubItem = (props: Dependency & { dependencyId: string }) => {
     onDeleteDependency,
     onGetTaskList,
   } = useTaskDetail();
-  const { onAddSnackbar } = useSnackbar();
-  const { onCreateTask, onDeleteSubTasks } = useTasksOfProject();
   const { items } = useTasksOfProject();
 
   const options = useMemo(() => {
@@ -179,6 +191,7 @@ const SubItem = (props: Dependency & { dependencyId: string }) => {
           value: task.id,
           subText: item.id,
         });
+
         task?.sub_tasks?.forEach((subTask) => {
           out.push({
             label: subTask.name,

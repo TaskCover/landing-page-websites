@@ -3,7 +3,11 @@ import { Stack } from "@mui/material";
 import FormLayout from "components/FormLayout";
 import { DialogLayoutProps } from "components/DialogLayout";
 import { Select } from "components/shared";
-import { useTaskOptions, useTasksOfProject } from "store/project/selectors";
+import {
+  useTaskDetail,
+  useTaskOptions,
+  useTasksOfProject,
+} from "store/project/selectors";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { useFormik, FormikErrors } from "formik";
 import { useTranslations } from "next-intl";
@@ -34,6 +38,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
     pageIndex,
     totalPages,
   } = useTaskOptions();
+  const { onGetTaskList } = useTaskDetail();
   const projectT = useTranslations(NS_PROJECT);
   const commonT = useTranslations(NS_COMMON);
 
@@ -50,6 +55,8 @@ const MoveTaskList = (props: MoveTaskListProps) => {
           values.task_list_move,
           taskIds[taskListId],
         );
+        await onGetTaskList(taskListId);
+        await onGetTaskList(values.task_list_move);
       }
 
       onAddSnackbar(

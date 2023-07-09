@@ -291,6 +291,7 @@ export const useTasksOfProject = () => {
     oldTaskListId: string,
     taskListId: string,
     taskIds: string[],
+    newTaskId?: string,
   ) => {
     try {
       return await dispatch(
@@ -298,6 +299,7 @@ export const useTasksOfProject = () => {
           task_list_current: oldTaskListId,
           task_list_move: taskListId,
           task_current: taskIds,
+          task_move: newTaskId,
         }),
       ).unwrap();
     } catch (error) {

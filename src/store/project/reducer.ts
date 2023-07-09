@@ -478,27 +478,27 @@ const projectSlice = createSlice({
         },
       )
       .addCase(moveTask.fulfilled, (state, action) => {
-        const { task_list_current, task_list_move, task_current } =
-          action.meta.arg;
-        const indexDeleted = state.tasks.findIndex(
-          (item) => item.id === task_list_current,
-        );
-        const indexAdded = state.tasks.findIndex(
-          (item) => item.id === task_list_move,
-        );
-        if (indexDeleted !== -1) {
-          if (indexAdded !== -1) {
-            const movedTasks = current(state).tasks[indexDeleted].tasks.filter(
-              (taskItem) => task_current.includes(taskItem.id),
-            );
-            state.tasks[indexAdded].tasks = removeDuplicateItem(
-              state.tasks[indexAdded].tasks.concat(movedTasks),
-            );
-          }
-          state.tasks[indexDeleted].tasks = current(state).tasks[
-            indexDeleted
-          ].tasks.filter((taskItem) => !task_current.includes(taskItem.id));
-        }
+        // const { task_list_current, task_list_move, task_current } =
+        //   action.meta.arg;
+        // const indexDeleted = state.tasks.findIndex(
+        //   (item) => item.id === task_list_current,
+        // );
+        // const indexAdded = state.tasks.findIndex(
+        //   (item) => item.id === task_list_move,
+        // );
+        // if (indexDeleted !== -1) {
+        //   if (indexAdded !== -1) {
+        //     const movedTasks = current(state).tasks[indexDeleted].tasks.filter(
+        //       (taskItem) => task_current.includes(taskItem.id),
+        //     );
+        //     state.tasks[indexAdded].tasks = removeDuplicateItem(
+        //       state.tasks[indexAdded].tasks.concat(movedTasks),
+        //     );
+        //   }
+        //   state.tasks[indexDeleted].tasks = current(state).tasks[
+        //     indexDeleted
+        //   ].tasks.filter((taskItem) => !task_current.includes(taskItem.id));
+        // }
       })
       .addCase(createTask.fulfilled, (state, action) => {
         const { task, taskId, taskListId, subTask } = action.payload;
