@@ -6,12 +6,11 @@ import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import DialogLayout from "components/DialogLayout";
 import useToggle from "hooks/useToggle";
 import { Search } from "components/Filters";
-import { useEmployeeOptions } from "store/company/selectors";
 import Avatar from "components/Avatar";
-import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
+import { useMemberOptions, useTaskDetail } from "store/project/selectors";
 import { useSnackbar } from "store/app/selectors";
-import { TaskData } from "store/project/actions";
 import { debounce, getMessageErrorByAPI } from "utils/index";
+import { useParams } from "next/navigation";
 
 type AssignTaskProps = {};
 
@@ -27,11 +26,13 @@ const AssignTask = (props: AssignTaskProps) => {
     isFetching,
     totalPages,
     filters,
-  } = useEmployeeOptions();
+  } = useMemberOptions();
   const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
   const { onAddSnackbar } = useSnackbar();
 
   const [isShow, onShow, onHide] = useToggle();
+
+  const { id: projectId } = useParams();
 
   const onAssign = (owner: string) => {
     return async () => {
@@ -64,17 +65,21 @@ const AssignTask = (props: AssignTaskProps) => {
     const { scrollTop, clientHeight, scrollHeight } = event.target;
 
     if (scrollTop + clientHeight >= scrollHeight - WRONG_NUMBER) {
-      onGetOptions({ pageIndex: pageIndex + 1, pageSize });
+      onGetOptions(projectId, { pageIndex: pageIndex + 1, pageSize });
     }
   }, 250);
 
   const onChangeSearch = (name: string, newValue?: string) => {
-    onGetOptions({ pageIndex: 1, pageSize: 20, [name]: newValue ?? "" });
+    onGetOptions(projectId, {
+      pageIndex: 1,
+      pageSize: 20,
+      [name]: newValue ?? "",
+    });
   };
 
   useEffect(() => {
-    onGetOptions({ pageIndex: 1, pageSize: 20 });
-  }, [onGetOptions]);
+    onGetOptions(projectId, { pageIndex: 1, pageSize: 20 });
+  }, [onGetOptions, projectId]);
 
   return (
     <>
@@ -99,10 +104,10 @@ const AssignTask = (props: AssignTaskProps) => {
       >
         <Stack flex={1} p={3} height="100%" spacing={2} overflow="hidden">
           <Search
-            name="email"
+            name="members.email"
             placeholder={commonT("searchBy", { name: "email" })}
             onChange={onChangeSearch}
-            value={filters?.email}
+            value={filters?.["members.email"]}
             emitWhenEnter
           />
           <Stack flex={1} overflow="hidden">
