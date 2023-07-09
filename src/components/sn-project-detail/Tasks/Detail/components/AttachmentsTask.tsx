@@ -135,7 +135,12 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
           </Stack>
           <Button
             onClick={onChooseFile}
-            sx={{ mt: 2, p: "0!important", minHeight: "30px!important" }}
+            sx={{
+              mt: 2,
+              p: "0!important",
+              minHeight: "30px!important",
+              color: "text.primary",
+            }}
             variant="text"
             startIcon={<PlusIcon />}
             size="small"
