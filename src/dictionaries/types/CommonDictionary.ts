@@ -27,6 +27,7 @@ export type CommonDictionary = {
       dueDate: string;
       description: string;
       note: string;
+      title: string;
     };
     confirm: string;
     save: string;

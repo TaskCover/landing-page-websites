@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from "react";
+import { memo, useRef } from "react";
 import {
   Box,
   ButtonBase,
@@ -13,16 +13,11 @@ import { User } from "constant/types";
 import useTheme from "hooks/useTheme";
 import { Task } from "store/project/reducer";
 import PopoverLayout from "./PopoverLayout";
-import {
-  useMemberOptions,
-  useMembersOfProject,
-  useTaskDetail,
-} from "store/project/selectors";
+import { useMemberOptions, useTaskDetail } from "store/project/selectors";
 import { NS_COMMON, NS_PROJECT, AN_ERROR_TRY_AGAIN } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useSnackbar } from "store/app/selectors";
 import { debounce, getMessageErrorByAPI } from "utils/index";
-import UserIcon from "icons/UserIcon";
 import { useParams } from "next/navigation";
 import { Search } from "components/Filters";
 import UserPlaceholderImage from "public/images/img-user-placeholder.webp";

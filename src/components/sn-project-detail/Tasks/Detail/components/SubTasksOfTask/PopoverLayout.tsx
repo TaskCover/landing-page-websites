@@ -7,17 +7,25 @@ import {
   useId,
   useState,
 } from "react";
-import { Box, ButtonBase, Popover, popoverClasses, Stack } from "@mui/material";
+import {
+  Box,
+  BoxProps,
+  ButtonBase,
+  Popover,
+  popoverClasses,
+  Stack,
+} from "@mui/material";
 
 type PopoverLayoutProps = {
   children: ReactNode;
 
   label: ReactNode;
+  containerProps?: BoxProps;
 };
 
 const PopoverLayout = forwardRef(
   (props: PopoverLayoutProps, ref: ForwardedRef<HTMLButtonElement | null>) => {
-    const { children, label } = props;
+    const { children, label, containerProps } = props;
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const popoverId = useId();
@@ -31,7 +39,11 @@ const PopoverLayout = forwardRef(
 
     return (
       <>
-        <Box onClick={onOpen} component="span" sx={{ cursor: "pointer" }}>
+        <Box
+          onClick={onOpen}
+          component="span"
+          sx={{ cursor: "pointer", ...containerProps?.sx }}
+        >
           {label}
         </Box>
         <ButtonBase onClick={onClose} hidden ref={ref} />

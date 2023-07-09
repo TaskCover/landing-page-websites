@@ -1,19 +1,13 @@
-import { ChangeEvent, memo, useEffect, useRef, useState } from "react";
+import { ChangeEvent, memo, useMemo, useState } from "react";
 import { Box, Stack, TextField } from "@mui/material";
-import { Collapse, IconButton, Text } from "components/shared";
-import {
-  NS_PROJECT,
-  NS_COMMON,
-  AN_ERROR_TRY_AGAIN,
-  DATE_FORMAT_FORM,
-} from "constant/index";
+import { Collapse, Text } from "components/shared";
+import { NS_PROJECT, NS_COMMON, DATE_FORMAT_FORM } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useSnackbar } from "store/app/selectors";
 import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
 import PlusIcon from "icons/PlusIcon";
 import { formatDate, getMessageErrorByAPI } from "utils/index";
 import { Task, TaskDetail } from "store/project/reducer";
-import MoreSquareIcon from "icons/MoreSquareIcon";
 import PDate from "./PDate";
 import Assign from "./Assign";
 import StatusTask from "./Status";
@@ -24,6 +18,7 @@ import MoveOtherTask from "./MoveOtherTask";
 import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
 import Loading from "components/Loading";
+import Sort, { Action as SortAction } from "./Sort";
 
 type SubTasksOfTaskProps = {
   open: boolean;
@@ -31,19 +26,43 @@ type SubTasksOfTaskProps = {
 
 const SubTasksOfTask = ({ open }: SubTasksOfTaskProps) => {
   const projectT = useTranslations(NS_PROJECT);
-  const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
+  const { task, taskListId, taskId } = useTaskDetail();
   const { onCreateTask } = useTasksOfProject();
-  const inputFileRef = useRef<HTMLInputElement | null>(null);
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
 
-  const [name, setName] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [action, setAction] = useState<SortAction | undefined>();
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-    setError("");
-  };
+  const subTasks = useMemo(() => {
+    const originItems = [...(task?.sub_tasks ?? [])].map((item) => ({
+      ...item,
+      statusNumber:
+        item?.status === Status.ACTIVE
+          ? 0
+          : item?.status === Status.PAUSE
+          ? 1
+          : 2,
+    }));
+    switch (action) {
+      case SortAction.TITLE:
+        return originItems.sort((a, b) => a.name.localeCompare(b.name));
+      case SortAction.DUE_DATE:
+        return originItems.sort(
+          (a, b) =>
+            new Date(a?.end_date ?? TOMORROW_TIME).getTime() -
+            new Date(b?.end_date ?? TOMORROW_TIME).getTime(),
+        );
+      case SortAction.ASSIGNEE:
+        return originItems.sort((a, b) =>
+          (a?.owner?.fullname ?? "z").localeCompare(b?.owner?.fullname ?? "z"),
+        );
+      case SortAction.STATUS:
+        return originItems.sort((a, b) => a.statusNumber - b.statusNumber);
+      case SortAction.MANUAL:
+      default:
+        return originItems;
+    }
+  }, [task?.sub_tasks, action]);
 
   const onSubmit = async (nameValue: string) => {
     if (!taskListId) return;
@@ -73,8 +92,8 @@ const SubTasksOfTask = ({ open }: SubTasksOfTaskProps) => {
           </Text>
         }
       >
-        <Stack mt={2}>
-          {task?.sub_tasks?.map((subTask) => (
+        <Stack mt={2} position="relative">
+          {subTasks.map((subTask) => (
             <SubTaskItem key={subTask.id} subId={subTask.id} {...subTask} />
           ))}
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -84,6 +103,7 @@ const SubTasksOfTask = ({ open }: SubTasksOfTaskProps) => {
               autoFocus={!task?.sub_tasks?.length}
             />
           </Stack>
+          <Sort setAction={setAction} />
         </Stack>
       </Collapse>
     </>
@@ -93,6 +113,8 @@ const SubTasksOfTask = ({ open }: SubTasksOfTaskProps) => {
 export default memo(SubTasksOfTask);
 
 export const SUB_TASKS_ID = "sub_tasks_id";
+
+const TOMORROW_TIME = 4107690000000;
 
 const TaskName = ({
   onSubmit,
@@ -165,7 +187,6 @@ const SubTaskItem = (props: Task & { subId: string }) => {
     task,
     taskListId,
     taskId,
-    subTaskId,
     onUpdateTask,
     onUpdateTaskDetail,
     onConvertSubTaskToTask,
@@ -330,7 +351,13 @@ const SubTaskItem = (props: Task & { subId: string }) => {
           )}
         </Stack>
 
-        <Stack direction="row" alignItems="center" spacing={1} flex={1}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={1}
+          flex={1}
+          justifyContent="flex-end"
+        >
           <PDate
             label={
               start_date

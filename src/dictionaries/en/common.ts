@@ -30,6 +30,7 @@ export const CommonLang: CommonDictionary = {
       dueDate: "Due date",
       description: "Description",
       note: "Note",
+      title: "Title",
     },
     confirm: "Confirm",
     save: "Save",

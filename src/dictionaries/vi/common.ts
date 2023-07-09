@@ -29,6 +29,7 @@ export const CommonLang: CommonDictionary = {
       dueDate: "Ngày đến hạn",
       description: "Mô tả",
       note: "Ghi chú",
+      title: "Tiêu đề",
     },
     confirm: "Xác nhận",
     save: "Lưu",

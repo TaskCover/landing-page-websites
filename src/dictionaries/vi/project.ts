@@ -150,6 +150,7 @@ export const ProjectLang: ProjectDictionary = {
     waitingOn: "Chờ",
     linkedTo: "Liên kết tới",
     addDependencyTask: "Thêm công việc phụ thuộc",
+    manual: "Ban đầu",
     form: {
       title: {
         newTask: "Công việc chuyển đến",

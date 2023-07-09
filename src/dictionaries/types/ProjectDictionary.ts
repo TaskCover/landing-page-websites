@@ -146,6 +146,7 @@ export type ProjectDictionary = {
     waitingOn: string;
     linkedTo: string;
     addDependencyTask: string;
+    manual: string;
     form: {
       title: {
         newTask: string;
