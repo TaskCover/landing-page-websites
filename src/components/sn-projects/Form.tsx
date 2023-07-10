@@ -201,6 +201,10 @@ const Form = (props: FormProps) => {
     onGetProjectTypeOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetProjectTypeOptions]);
 
+  useEffect(() => {
+    onGetOptions({ pageIndex: 1, pageSize: 20 });
+  }, [onGetOptions]);
+
   return (
     <FormLayout
       sx={{
