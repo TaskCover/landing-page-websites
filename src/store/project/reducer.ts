@@ -105,9 +105,9 @@ export interface Dependency {
   id: string;
   id_link: string;
   id_task: string;
+  sub_task?: string;
   id_task_list: string;
   status: DependencyStatus;
-  type: string;
 }
 
 export interface Task {

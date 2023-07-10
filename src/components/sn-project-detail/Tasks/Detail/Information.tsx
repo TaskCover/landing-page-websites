@@ -139,12 +139,14 @@ const Information = () => {
             {projectT("taskDetail.addAttachments")}
           </ActionItem>
         )}
-        <ActionItem
-          onClick={onShowAddDependencies}
-          icon={<FatrowIcon sx={{ color: "grey.400" }} />}
-        >
-          {projectT("taskDetail.addDependencies")}
-        </ActionItem>
+        {!task?.dependencies?.length && (
+          <ActionItem
+            onClick={onShowAddDependencies}
+            icon={<FatrowIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addDependencies")}
+          </ActionItem>
+        )}
         {!task?.sub_tasks?.length && !subTaskId && (
           <ActionItem
             onClick={onShowAddSub}
@@ -153,12 +155,14 @@ const Information = () => {
             {projectT("taskDetail.addSubTasks")}
           </ActionItem>
         )}
-        <ActionItem
-          onClick={onShowAddTodoList}
-          icon={<TaskSquareIcon sx={{ color: "grey.400" }} />}
-        >
-          {projectT("taskDetail.addToDos")}
-        </ActionItem>
+        {!task?.todo_list?.length && (
+          <ActionItem
+            onClick={onShowAddTodoList}
+            icon={<TaskSquareIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addToDos")}
+          </ActionItem>
+        )}
       </Stack>
       <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
       <AttachmentsTask id={ATTACHMENT_ID} />

@@ -68,11 +68,14 @@ const StatusDependency = (props: StatusDependencyProps) => {
           };
         }
         const dependencies = newDependencies.map((item) => ({
-          task_current: subTaskId ?? taskId,
+          task_current: taskId,
           task_list_current: taskListId,
           task_list_update: item.id_task_list,
           task_update: item.id_task,
           status: item.status,
+
+          sub_task_current: subTaskId,
+          sub_task_update: item?.sub_task,
         }));
         await onUpdateTask({ dependencies }, taskListId, taskId, subTaskId);
         buttonRef?.current?.click();

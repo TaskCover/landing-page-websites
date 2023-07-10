@@ -79,6 +79,9 @@ export type TaskData = {
     task_list_current: string;
     task_list_update: string;
     task_update: string;
+
+    sub_task_current?: string;
+    sub_task_update?: string;
     status: DependencyStatus;
   }[];
   todo_list?: {

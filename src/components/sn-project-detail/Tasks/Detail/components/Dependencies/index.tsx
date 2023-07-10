@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useMemo, useRef, useState } from "react";
 import { Box, Stack } from "@mui/material";
 import { Collapse, Text } from "components/shared";
 import { NS_PROJECT, NS_COMMON, AN_ERROR_TRY_AGAIN } from "constant/index";
@@ -42,7 +42,7 @@ const Dependencies = ({ open }: { open: boolean }) => {
           ))}
           <Stack direction="row" alignItems="center" spacing={1}>
             <PlusIcon />
-            <Select />
+            <Select autoFocus={!task?.dependencies?.length} />
           </Stack>
         </Stack>
       </Collapse>
@@ -53,7 +53,13 @@ const Dependencies = ({ open }: { open: boolean }) => {
 export default memo(Dependencies);
 export const DEPENDENCIES_ID = "dependencies_id";
 
-const Select = ({ value }: { value?: string }) => {
+const Select = ({
+  value,
+  autoFocus,
+}: {
+  value?: string;
+  autoFocus?: boolean;
+}) => {
   const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
   const projectT = useTranslations(NS_PROJECT);
   const { items } = useTasksOfProject();
@@ -63,7 +69,10 @@ const Select = ({ value }: { value?: string }) => {
   const [search, setSearch] = useState<string>("");
 
   const dependencyIds = useMemo(
-    () => (task?.dependencies ?? []).map((depen) => depen.id_task),
+    () =>
+      (task?.dependencies ?? []).map(
+        (depen) => depen?.sub_task ?? depen.id_task,
+      ),
     [task?.dependencies],
   );
 
@@ -114,10 +123,13 @@ const Select = ({ value }: { value?: string }) => {
         throw AN_ERROR_TRY_AGAIN;
       }
       const newDependencies = [...(task?.dependencies ?? [])].map((item) => ({
-        task_current: subTaskId ?? taskId,
+        task_current: taskId,
         task_list_current: taskListId,
         task_list_update: item.id_task_list,
         task_update: item.id_task,
+        sub_task_current: subTaskId,
+        sub_task_update: item?.sub_task,
+
         status: item.status,
       }));
 
@@ -134,10 +146,17 @@ const Select = ({ value }: { value?: string }) => {
         }
       } else {
         newDependencies.push({
-          task_current: subTaskId ?? taskId,
+          task_current: taskId,
           task_list_current: taskListId,
           task_list_update: optionSelected.subText as string,
-          task_update: optionSelected.value as string,
+          task_update:
+            optionSelected?.avatar ?? (optionSelected.value as string),
+
+          sub_task_current: subTaskId,
+          sub_task_update: optionSelected?.avatar
+            ? (optionSelected.value as string)
+            : undefined,
+
           status: DependencyStatus.WAITING_ON,
         });
       }
@@ -154,6 +173,7 @@ const Select = ({ value }: { value?: string }) => {
   };
   return (
     <Dropdown
+      autoFocus={autoFocus}
       name=""
       fullWidth
       onChange={onChangeDependency}
@@ -172,7 +192,7 @@ const Select = ({ value }: { value?: string }) => {
 };
 
 const SubItem = (props: Dependency & { dependencyId: string }) => {
-  const { status, id_task, dependencyId } = props;
+  const { status, id_task, dependencyId, sub_task } = props;
   const {
     taskListId,
     subTaskId,
@@ -205,10 +225,10 @@ const SubItem = (props: Dependency & { dependencyId: string }) => {
     }, []);
   }, [items]);
 
-  const selected = useMemo(
-    () => options.find((item) => item.value === id_task),
-    [id_task, options],
-  );
+  const selected = useMemo(() => {
+    const idValue = sub_task ?? id_task;
+    return options.find((item) => item.value === idValue);
+  }, [id_task, options, sub_task]);
 
   const onDelete = async () => {
     if (!taskListId || !taskId) return;
