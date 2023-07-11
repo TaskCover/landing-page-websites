@@ -95,6 +95,8 @@ export const ProjectLang: ProjectDictionary = {
     selectedCount: "{value} selected items",
     assignee: "Assignee",
     processingDuplicate: "The system is processing duplicate...",
+    nameWillBeExisted:
+      "Sub task name is existed, please rename before move it.",
     keys: {
       owner: "assigner",
       start_date: "start date",

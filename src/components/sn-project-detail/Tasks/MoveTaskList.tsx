@@ -37,6 +37,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
     pageSize,
     pageIndex,
     totalPages,
+    taskListOptions,
   } = useTaskOptions();
   const { onGetTaskList } = useTaskDetail();
   const projectT = useTranslations(NS_PROJECT);
@@ -120,7 +121,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
     >
       <Stack spacing={2} py={3}>
         <Select
-          options={options}
+          options={taskListOptions}
           title={projectT("detailTasks.form.title.newTaskList")}
           name="task_list_move"
           required
@@ -133,6 +134,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
           rootSx={sxConfig.input}
           fullWidth
           onEndReached={onEndReached}
+          showSubText={false}
         />
       </Stack>
     </FormLayout>

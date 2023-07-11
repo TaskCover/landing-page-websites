@@ -3,11 +3,10 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   reorder,
-  DragAndDrop,
-  Drop,
-  Drag,
   TaskFormData,
   Selected,
+  DroppableTaskList,
+  DraggableTask,
 } from "./components";
 import { Button, Checkbox, Text, TextProps } from "components/shared";
 import { Box, BoxProps, Stack, StackProps } from "@mui/material";
@@ -16,13 +15,11 @@ import { formatNumber, getMessageErrorByAPI, debounce } from "utils/index";
 import TextStatus from "components/TextStatus";
 import { CellProps, TableLayout } from "components/Table";
 import React from "react";
-import DragParent from "./components/DragParent";
 import PlusIcon from "icons/PlusIcon";
-import { DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import {
   AN_ERROR_TRY_AGAIN,
   COLOR_STATUS,
-  DEFAULT_PAGING,
   NS_COMMON,
   NS_PROJECT,
   TEXT_STATUS,
@@ -38,7 +35,6 @@ import { DataAction } from "constant/enums";
 import { Task, TaskList } from "store/project/reducer";
 import { useSnackbar } from "store/app/selectors";
 import Detail from "./Detail";
-import { TaskData } from "store/project/actions";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import useEventListener from "hooks/useEventListener";
 import { SCROLL_ID } from "constant/index";
@@ -52,14 +48,13 @@ const ItemList = () => {
     error,
     totalItems,
     onCreateTask: onCreateTaskAction,
-    id,
     onGetTasksOfProject,
     onMoveTask,
     pageIndex,
     filters,
     totalPages,
   } = useTasksOfProject();
-  const { task, onUpdateTaskDetail } = useTaskDetail();
+  const { onUpdateTaskDetail, onGetTaskList } = useTaskDetail();
 
   const filtersRef = useRef<Params>({});
   const pageIndexRef = useRef<number>(pageIndex);
@@ -84,6 +79,7 @@ const ItemList = () => {
     task: {},
     subTask: {},
   });
+  const [hideIds, setHideIds] = useState<string[]>([]);
 
   const [dataIds, setDataIds] = useState<{
     taskId?: string;
@@ -318,12 +314,14 @@ const ItemList = () => {
     destinationTaskListId: string,
     taskId: string,
     updatedDataList: TaskList[],
+    destinationTaskId?: string,
   ) => {
     try {
       const isSuccess = await onMoveTask(
         sourceTaskListId,
         destinationTaskListId,
         [taskId],
+        destinationTaskId,
       );
       if (isSuccess === true) {
         setDataList(updatedDataList);
@@ -331,6 +329,8 @@ const ItemList = () => {
           projectT("detailTasks.notification.moveSuccess"),
           "success",
         );
+        await onGetTaskList(sourceTaskListId);
+        await onGetTaskList(destinationTaskListId);
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
@@ -338,75 +338,163 @@ const ItemList = () => {
   };
 
   const onDragEnd = async (result: DropResult) => {
-    const { type, source, destination } = result;
+    const { source, destination } = result;
     if (!destination) return;
 
-    const sourceTaskListId = source.droppableId;
-    const destinationTaskListId = destination.droppableId;
-
-    if (sourceTaskListId === destinationTaskListId) return;
-
-    const indexSourceTaskList = dataList.findIndex(
-      (taskListItem) => taskListItem.id === sourceTaskListId,
+    const sourceTaskListIndex = dataList.findIndex(
+      (taskListItem) => taskListItem.id === source.droppableId,
     );
-    const taskId = dataList?.[indexSourceTaskList]?.tasks?.[source.index]?.id;
+    let destinationTaskListIndex = dataList.findIndex(
+      (taskListItem) => taskListItem.id === destination.droppableId,
+    );
+    const isDestinationTaskList = destinationTaskListIndex !== -1;
+    if (!isDestinationTaskList) {
+      destinationTaskListIndex = dataList.findIndex((taskListItem) => {
+        return !!taskListItem.tasks.find(
+          (taskItem) => taskItem.id === destination.droppableId,
+        );
+      });
+    }
 
-    // Reordering items
-    if (type === DROPPABLE_TASK) {
-      // If drag and dropping within the same category
-      if (sourceTaskListId === destinationTaskListId) {
+    if (sourceTaskListIndex === -1 || destinationTaskListIndex === -1) return;
+
+    if (sourceTaskListIndex === destinationTaskListIndex) {
+      // SAME TASK LIST
+      console.log("1");
+
+      if (source.droppableId === destination.droppableId) {
+        // CHANGE ORDER TASKS
         const updatedOrder = reorder(
-          dataList.find((taskListItem) => taskListItem.id === sourceTaskListId)
-            ?.tasks ?? [],
+          dataList.find(
+            (taskListItem) => taskListItem.id === source.droppableId,
+          )?.tasks ?? [],
           source.index,
           destination.index,
         );
         const updatedDataList = dataList.map((taskListItem) =>
-          taskListItem.id !== sourceTaskListId
+          taskListItem.id !== source.droppableId
             ? taskListItem
             : { ...taskListItem, tasks: updatedOrder },
         );
-        onMoveTaskList(
-          sourceTaskListId,
-          destinationTaskListId,
-          taskId,
-          updatedDataList,
-        );
+        setDataList(updatedDataList);
       } else {
-        const sourceOrder = [
-          ...(dataList.find(
-            (taskListItem) => taskListItem.id === sourceTaskListId,
-          )?.tasks ?? []),
+        // MOVE TASK BECOME TO SUB TASK OF TASK
+        const newTasks = [...dataList[sourceTaskListIndex].tasks];
+
+        newTasks.splice(source.index, 1);
+
+        const sourceTaskOrder = {
+          ...dataList[sourceTaskListIndex].tasks[source.index],
+        };
+
+        const destinationTaskIndex = dataList[
+          sourceTaskListIndex
+        ].tasks.findIndex((task) => task.id === destination.droppableId);
+
+        const subTasks = [
+          ...(dataList[sourceTaskListIndex].tasks[destinationTaskIndex]
+            ?.sub_tasks ?? []),
         ];
-        const destinationOrder = [
-          ...(dataList.find(
-            (taskListItem) => taskListItem.id === destinationTaskListId,
-          )?.tasks ?? []),
-        ];
+        if (subTasks.some((subTask) => subTask.name === sourceTaskOrder.name)) {
+          onAddSnackbar(
+            projectT("detailTasks.nameWillBeExisted"),
+            "error",
+            5000,
+          );
+          return;
+        }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const [removed] = sourceOrder.splice(source.index, 1) as any;
+        subTasks.push(sourceTaskOrder);
 
-        destinationOrder.splice(destination.index, 0, removed);
+        newTasks[destinationTaskIndex] = {
+          ...newTasks[destinationTaskIndex],
+          sub_tasks: subTasks,
+        };
 
-        destinationOrder[removed] = sourceOrder[removed];
-        delete sourceOrder[removed];
+        const newTaskList = {
+          ...dataList[sourceTaskListIndex],
+          tasks: newTasks,
+        };
 
-        const updatedDataList = dataList.map((taskListItem) =>
-          taskListItem.id === sourceTaskListId
-            ? { ...taskListItem, tasks: sourceOrder }
-            : taskListItem.id === destinationTaskListId
-            ? { ...taskListItem, tasks: destinationOrder }
-            : taskListItem,
-        );
+        const newDataList = [...dataList];
+
+        newDataList[sourceTaskListIndex] = newTaskList;
+
+        // setDataList(newDataList);
 
         onMoveTaskList(
-          sourceTaskListId,
-          destinationTaskListId,
-          taskId,
-          updatedDataList,
+          dataList[sourceTaskListIndex].id,
+          dataList[destinationTaskListIndex].id,
+          dataList[sourceTaskListIndex].tasks[source.index].id,
+          newDataList,
+          dataList[destinationTaskListIndex].tasks[destinationTaskIndex].id,
         );
       }
+
+      // onMoveTaskList(
+      //   sourceTaskListId,
+      //   destinationTaskListId,
+      //   taskId,
+      //   updatedDataList,result
+      // );
+    } else {
+      const newSourceTasks = [...dataList[sourceTaskListIndex].tasks];
+
+      newSourceTasks.splice(source.index, 1);
+
+      const newSourceTaskList = {
+        ...dataList[sourceTaskListIndex],
+        tasks: newSourceTasks,
+      };
+
+      const sourceTaskMoved = {
+        ...dataList[sourceTaskListIndex].tasks[source.index],
+      };
+      const newDestinationTasks = [...dataList[destinationTaskListIndex].tasks];
+
+      let destinationTaskIndex: number | undefined;
+
+      if (isDestinationTaskList) {
+        // CHANGE ORDER TASKS
+
+        newDestinationTasks.splice(destination.index, 0, sourceTaskMoved);
+      } else {
+        if (sourceTaskMoved?.sub_tasks?.length) return;
+        destinationTaskIndex = newDestinationTasks.findIndex(
+          (task) => task.id === destination.droppableId,
+        );
+
+        const newDestinationSubTasks = [
+          ...(dataList[destinationTaskListIndex].tasks[destinationTaskIndex]
+            ?.sub_tasks ?? []),
+        ];
+        newDestinationSubTasks.push(sourceTaskMoved);
+
+        newDestinationTasks[destinationTaskIndex] = {
+          ...newDestinationTasks[destinationTaskIndex],
+          sub_tasks: newDestinationSubTasks,
+        };
+      }
+
+      const newDestinationTaskList = {
+        ...dataList[destinationTaskListIndex],
+        tasks: newDestinationTasks,
+      };
+
+      const newDataList = [...dataList];
+
+      newDataList[sourceTaskListIndex] = newSourceTaskList;
+      newDataList[destinationTaskListIndex] = newDestinationTaskList;
+
+      onMoveTaskList(
+        dataList[sourceTaskListIndex].id,
+        dataList[destinationTaskListIndex].id,
+        dataList[sourceTaskListIndex].tasks[source.index].id,
+        newDataList,
+        destinationTaskIndex !== undefined
+          ? dataList[destinationTaskListIndex].tasks[destinationTaskIndex].id
+          : undefined,
+      );
     }
   };
 
@@ -520,168 +608,174 @@ const ItemList = () => {
         <></>
       </TableLayout>
 
-      <DragAndDrop onDragEnd={onDragEnd}>
-        <Drop id="droppable" type="droppable-taskList">
-          {dataList.map((taskListItem, taskListIndex) => {
-            const isChecked = selectedList.some(
-              (selected) =>
-                !selected?.subTaskId &&
-                !selected.taskId &&
-                selected?.taskListId === taskListItem.id,
-            );
+      <DragDropContext onDragEnd={onDragEnd}>
+        {dataList.map((taskListItem) => {
+          const isChecked = selectedList.some(
+            (selected) =>
+              !selected?.subTaskId &&
+              !selected.taskId &&
+              selected?.taskListId === taskListItem.id,
+          );
 
-            return (
-              <DragParent
-                className="draggable-taskList"
-                key={taskListItem.id}
-                id={taskListItem.id}
-                index={taskListIndex}
-                name={taskListItem.name}
-                count={taskListItem.tasks.length}
-                checked={isChecked}
-                onChange={onToggleTaskList(!isChecked, taskListItem)}
-                setSelectedList={setSelectedList}
-              >
-                <Drop
-                  key={taskListItem.id}
-                  id={taskListItem.id}
-                  type={DROPPABLE_TASK}
-                >
-                  {taskListItem.tasks.map((task, taskIndex) => {
-                    const subTaskIds = selectedList.map(
-                      (selected) => selected?.subTaskId,
-                    );
-                    const isCheckedSelf = selectedList.some(
-                      (selected) =>
-                        !selected?.subTaskId && selected?.taskId === task.id,
-                    );
+          return (
+            <DroppableTaskList
+              key={taskListItem.id}
+              id={taskListItem.id}
+              name={taskListItem.name}
+              count={taskListItem.tasks.length}
+              checked={isChecked}
+              onChange={onToggleTaskList(!isChecked, taskListItem)}
+              setSelectedList={setSelectedList}
+            >
+              {taskListItem.tasks.map((task, taskIndex) => {
+                const subTaskIds = selectedList.map(
+                  (selected) => selected?.subTaskId,
+                );
+                const isCheckedSelf = selectedList.some(
+                  (selected) =>
+                    !selected?.subTaskId && selected?.taskId === task.id,
+                );
 
-                    const isChecked = Boolean(
-                      task.sub_tasks?.length
-                        ? task.sub_tasks.every((subTask) =>
-                            subTaskIds.includes(subTask.id),
-                          ) && isCheckedSelf
-                        : isCheckedSelf,
-                    );
+                const isChecked = Boolean(
+                  task.sub_tasks?.length
+                    ? task.sub_tasks.every((subTask) =>
+                        subTaskIds.includes(subTask.id),
+                      ) && isCheckedSelf
+                    : isCheckedSelf,
+                );
 
-                    return (
-                      <Drag
-                        className="draggable"
-                        key={task.id}
-                        id={task.id}
-                        index={taskIndex}
-                        checked={isChecked}
-                        onChange={onToggleTask(
-                          !isChecked,
-                          taskListItem,
-                          task,
-                          task?.sub_tasks,
-                        )}
+                const isHide = hideIds.includes(task.id);
+
+                return (
+                  <DraggableTask
+                    key={task.id}
+                    id={task.id}
+                    index={taskIndex}
+                    checked={isChecked}
+                    onChange={onToggleTask(
+                      !isChecked,
+                      taskListItem,
+                      task,
+                      task?.sub_tasks,
+                    )}
+                    isHide={isHide}
+                    setHideIds={setHideIds}
+                  >
+                    <Stack width="100%" overflow="hidden">
+                      <Stack
+                        direction={{ md: "row" }}
+                        alignItems={{ xs: "flex-start", md: "center" }}
+                        minHeight={48}
+                        width="100%"
+                        sx={sx.task}
+                        overflow="hidden"
                       >
-                        <Stack width="100%" overflow="hidden">
-                          <Stack
-                            direction={{ md: "row" }}
-                            alignItems={{ xs: "flex-start", md: "center" }}
-                            minHeight={48}
-                            width="100%"
-                            sx={sx.task}
-                            overflow="hidden"
-                          >
-                            <Content
-                              color="text.primary"
-                              fontWeight={600}
-                              textAlign="left"
-                              noWrap
-                              tooltip={task.name}
-                              onClick={onSetTask(
-                                task,
-                                taskListItem.id,
-                                task.id,
-                              )}
-                            >
-                              {task.name}
-                            </Content>
-                            <Assigner src={task?.owner?.avatar?.link}>
-                              {task?.owner?.fullname}
-                            </Assigner>
-                            <Content>
-                              {formatNumber(task?.estimated_hours)}
-                            </Content>
-                            <Content>
-                              {formatNumber(task?.time_execution)}
-                            </Content>
-                            <TextStatus
-                              color={COLOR_STATUS[task.status]}
-                              text={TEXT_STATUS[task.status]}
-                              component="p"
-                            />
-                            <Description>{task?.description}</Description>
-                          </Stack>
-                          {task?.sub_tasks?.map((subTask) => {
-                            const isChecked = selectedList.some(
-                              (item) => item?.subTaskId === subTask.id,
-                            );
-                            return (
-                              <Stack
-                                key={subTask.id}
-                                direction="row"
-                                alignItems="center"
-                                minHeight={48}
-                                overflow="hidden"
+                        <Content
+                          color="text.primary"
+                          fontWeight={600}
+                          textAlign="left"
+                          noWrap
+                          tooltip={task.name}
+                          onClick={onSetTask(task, taskListItem.id, task.id)}
+                        >
+                          {task.name}
+                        </Content>
+                        <Assigner src={task?.owner?.avatar?.link}>
+                          {task?.owner?.fullname}
+                        </Assigner>
+                        <Content>{formatNumber(task?.estimated_hours)}</Content>
+                        <Content>{formatNumber(task?.time_execution)}</Content>
+                        <TextStatus
+                          color={COLOR_STATUS[task.status]}
+                          text={TEXT_STATUS[task.status]}
+                          component="p"
+                        />
+                        <Description>{task?.description}</Description>
+                      </Stack>
+                      {!isHide && (
+                        <>
+                          <Droppable droppableId={task.id}>
+                            {(taskDropProvided) => (
+                              <div
+                                ref={taskDropProvided.innerRef}
+                                {...taskDropProvided.droppableProps}
+                                style={{ minHeight: 1 }}
                               >
-                                <Checkbox
-                                  checked={isChecked}
-                                  onChange={onToggleSubTask(
-                                    taskListItem,
-                                    task,
-                                    subTask,
-                                  )}
-                                />
-                                <Stack
-                                  direction={{ md: "row" }}
-                                  alignItems={{
-                                    xs: "flex-start",
-                                    md: "center",
-                                  }}
-                                  sx={sx.subTask}
-                                  overflow="hidden"
-                                >
-                                  <Content
-                                    color="text.primary"
-                                    fontWeight={600}
-                                    textAlign="left"
-                                    noWrap
-                                    tooltip={subTask.name}
-                                    onClick={onSetTask(
-                                      subTask,
-                                      taskListItem.id,
-                                      task.id,
-                                      subTask.id,
-                                    )}
-                                  >
-                                    {subTask.name}
-                                  </Content>
-                                  <Assigner src={subTask?.owner?.avatar?.link}>
-                                    {subTask?.owner?.fullname}
-                                  </Assigner>
-                                  <Content>
-                                    {formatNumber(subTask.estimated_hours)}
-                                  </Content>
-                                  <Content>
-                                    {formatNumber(subTask?.time_execution)}
-                                  </Content>
-                                  <TextStatus
-                                    color={COLOR_STATUS[subTask.status]}
-                                    text={TEXT_STATUS[subTask.status]}
-                                    component="p"
-                                  />
-                                  <Description>
-                                    {subTask.description}
-                                  </Description>
-                                </Stack>
-                              </Stack>
-                            );
-                          })}
+                                {task?.sub_tasks?.map((subTask) => {
+                                  const isChecked = selectedList.some(
+                                    (item) => item?.subTaskId === subTask.id,
+                                  );
+                                  return (
+                                    <Stack
+                                      key={subTask.id}
+                                      direction="row"
+                                      alignItems="center"
+                                      minHeight={48}
+                                      overflow="hidden"
+                                    >
+                                      <Checkbox
+                                        checked={isChecked}
+                                        onChange={onToggleSubTask(
+                                          taskListItem,
+                                          task,
+                                          subTask,
+                                        )}
+                                      />
+                                      <Stack
+                                        direction={{ md: "row" }}
+                                        alignItems={{
+                                          xs: "flex-start",
+                                          md: "center",
+                                        }}
+                                        sx={sx.subTask}
+                                        overflow="hidden"
+                                      >
+                                        <Content
+                                          color="text.primary"
+                                          fontWeight={600}
+                                          textAlign="left"
+                                          noWrap
+                                          tooltip={subTask.name}
+                                          onClick={onSetTask(
+                                            subTask,
+                                            taskListItem.id,
+                                            task.id,
+                                            subTask.id,
+                                          )}
+                                        >
+                                          {subTask.name}
+                                        </Content>
+                                        <Assigner
+                                          src={subTask?.owner?.avatar?.link}
+                                        >
+                                          {subTask?.owner?.fullname}
+                                        </Assigner>
+                                        <Content>
+                                          {formatNumber(
+                                            subTask.estimated_hours,
+                                          )}
+                                        </Content>
+                                        <Content>
+                                          {formatNumber(
+                                            subTask?.time_execution,
+                                          )}
+                                        </Content>
+                                        <TextStatus
+                                          color={COLOR_STATUS[subTask.status]}
+                                          text={TEXT_STATUS[subTask.status]}
+                                          component="p"
+                                        />
+                                        <Description>
+                                          {subTask.description}
+                                        </Description>
+                                      </Stack>
+                                    </Stack>
+                                  );
+                                })}
+                                {taskDropProvided.placeholder}
+                              </div>
+                            )}
+                          </Droppable>
                           <Button
                             onClick={onSetDataIds(taskListItem.id, task.id)}
                             startIcon={<PlusIcon />}
@@ -692,16 +786,16 @@ const ItemList = () => {
                           >
                             {projectT("detailTasks.addNewTask")}
                           </Button>
-                        </Stack>
-                      </Drag>
-                    );
-                  })}
-                </Drop>
-              </DragParent>
-            );
-          })}
-        </Drop>
-      </DragAndDrop>
+                        </>
+                      )}
+                    </Stack>
+                  </DraggableTask>
+                );
+              })}
+            </DroppableTaskList>
+          );
+        })}
+      </DragDropContext>
       {isShow && (
         <Form
           open
@@ -716,8 +810,6 @@ const ItemList = () => {
 };
 
 export default memo(ItemList);
-
-const DROPPABLE_TASK = "droppable-task";
 
 const Assigner = ({
   children,

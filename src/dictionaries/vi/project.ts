@@ -95,6 +95,8 @@ export const ProjectLang: ProjectDictionary = {
     selectedCount: "{value} đã chọn",
     assignee: "Người được giao",
     processingDuplicate: "Hệ thống đang xử lý sao chép...",
+    nameWillBeExisted:
+      "Tên công việc con bị trùng nhau, vui lòng đổi tên nó trước khi di chuyển.",
     keys: {
       owner: "người phụ trách",
       start_date: "ngày bắt đầu",
