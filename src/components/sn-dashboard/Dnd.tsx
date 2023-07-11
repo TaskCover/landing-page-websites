@@ -78,7 +78,7 @@ const DnD = (props: DnDProps) => {
   const [sourceId, setSourceId] = useState<string | undefined>();
 
   const onDragEnd = (result: DropResult) => {
-    console.log(result);
+    //
   };
 
   return (

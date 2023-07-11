@@ -360,7 +360,6 @@ const ItemList = () => {
 
     if (sourceTaskListIndex === destinationTaskListIndex) {
       // SAME TASK LIST
-      console.log("1");
 
       if (source.droppableId === destination.droppableId) {
         // CHANGE ORDER TASKS
@@ -376,7 +375,7 @@ const ItemList = () => {
             ? taskListItem
             : { ...taskListItem, tasks: updatedOrder },
         );
-        setDataList(updatedDataList);
+        // setDataList(updatedDataList);
       } else {
         // MOVE TASK BECOME TO SUB TASK OF TASK
         const newTasks = [...dataList[sourceTaskListIndex].tasks];
