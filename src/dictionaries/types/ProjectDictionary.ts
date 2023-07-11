@@ -81,9 +81,11 @@ export type ProjectDictionary = {
         name: string;
         oldTaskList: string;
         newTaskList: string;
+        newTaskPlace: string;
       };
     };
     addNewTask: string;
+    newMove: string;
     taskList: string;
     key: string;
     moveTaskList: string;

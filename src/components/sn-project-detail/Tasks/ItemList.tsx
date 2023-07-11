@@ -9,7 +9,13 @@ import {
   DraggableTask,
 } from "./components";
 import { Button, Checkbox, Text, TextProps } from "components/shared";
-import { Box, BoxProps, Stack, StackProps } from "@mui/material";
+import {
+  Box,
+  BoxProps,
+  CircularProgress,
+  Stack,
+  StackProps,
+} from "@mui/material";
 import Avatar from "components/Avatar";
 import { formatNumber, getMessageErrorByAPI, debounce } from "utils/index";
 import TextStatus from "components/TextStatus";
@@ -39,6 +45,8 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import useEventListener from "hooks/useEventListener";
 import { SCROLL_ID } from "constant/index";
 import ActionsSelected from "./ActionsSelected";
+import Loading from "components/Loading";
+import useToggle from "hooks/useToggle";
 
 const ItemList = () => {
   const {
@@ -66,6 +74,7 @@ const ItemList = () => {
   const { isMdSmaller } = useBreakpoint();
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
+  const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
 
   const params = useParams();
 
@@ -318,6 +327,7 @@ const ItemList = () => {
     orderTasks?: string[],
   ) => {
     try {
+      onProcessingTrue();
       const isSuccess = await onMoveTask(
         sourceTaskListId,
         destinationTaskListId,
@@ -336,6 +346,8 @@ const ItemList = () => {
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onProcessingFalse();
     }
   };
 
@@ -431,6 +443,12 @@ const ItemList = () => {
         newDataList[sourceTaskListIndex] = newTaskList;
 
         // setDataList(newDataList);
+
+        if (
+          dataList[sourceTaskListIndex].tasks[source.index].id ===
+          dataList[destinationTaskListIndex].tasks[destinationTaskIndex].id
+        )
+          return;
 
         onMoveTaskList(
           dataList[sourceTaskListIndex].id,
@@ -609,7 +627,6 @@ const ItemList = () => {
         onLayout={onLayout}
         headerList={headerList}
         flex="unset"
-        pending={isFetching}
         error={error as string}
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
@@ -807,7 +824,16 @@ const ItemList = () => {
             </DroppableTaskList>
           );
         })}
+        {isFetching && (
+          <CircularProgress
+            size={20}
+            sx={{ mx: "auto", my: 1 }}
+            color="primary"
+          />
+        )}
       </DragDropContext>
+      <Loading open={isProcessing} />
+
       {isShow && (
         <Form
           open
