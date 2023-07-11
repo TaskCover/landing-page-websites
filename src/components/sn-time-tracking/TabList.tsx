@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import {
   Box,
   Grid,
@@ -28,13 +28,17 @@ import CustomizedInputBase from "components/shared/InputSeasrch";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { CalendarOptions } from "@fullcalendar/core";
+import { useGetMyTimeSheet } from "store/timeTracking/selectors";
+import { formatDate } from "utils/index";
+import { subDays } from "date-fns";
 
 type TabMyTimeProps = {};
 
 const TabMyTime = (props: TabMyTimeProps) => {
   const currentDate = moment().toDate();
   const startDate = moment().startOf("month").toDate();
-
+  const { items, onGetMyTimeSheet } = useGetMyTimeSheet();
+  console.log(items, "onGetMyTimeSheet");
   const t = useTranslations(NS_TIME_TRACKING);
   const pickerRef = useRef(null);
   const [selectRangePicker, setSelectRangePicker] = useState([
@@ -44,6 +48,14 @@ const TabMyTime = (props: TabMyTimeProps) => {
   const onChangeRangePicker = (dates) => {
     setSelectRangePicker(dates);
   };
+  useEffect(() => {
+    const queries = {
+      start_date: "2022-11-01",
+      end_date: "2023-07-11",
+    };
+    onGetMyTimeSheet(queries);
+  }, []);
+  const [activeView, setActiveView] = useState("calendar");
 
   const options: CalendarOptions = {
     initialView: "timeGridWeek",
@@ -315,10 +327,15 @@ const TabMyTime = (props: TabMyTimeProps) => {
                 justifyContent: "space-between",
                 width: "75%",
                 alignItems: "center",
+                gap: "10px",
               }}
             >
               <ButtonCalendar icon={<ListIcon />} title="Timesheet" />
-              <ButtonCalendar icon={<CalendarIcon />} title="Calendar" />
+              <ButtonCalendar
+                icon={<CalendarIcon />}
+                isActive={activeView === "calendar"}
+                title="Calendar"
+              />
               <ButtonCalendar icon={<DayIcon />} title="Day" />
             </Box>
           </Grid>

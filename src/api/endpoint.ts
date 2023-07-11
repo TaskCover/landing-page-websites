@@ -59,4 +59,9 @@ export const Endpoint = {
   UPLOAD: "/files/upload-avatar",
   SIGNUP_UPLOAD: "/avatar/upload",
   UPLOAD_LINK: "/files/upload-link",
+
+  MY_TIME_SHEET: "/timesheets/me",
+  WORK_LOG: "/timesheets/log",
+  COMPANY_TIME_SHEET: "timesheets/company",
+  TIME_SHEET: "/timesheets",
 };

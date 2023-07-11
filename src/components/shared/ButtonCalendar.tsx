@@ -5,10 +5,11 @@ type ButtonProps = {
   icon?: ReactElement;
   title?: string;
   sx?: object;
+  isActive?: boolean;
 };
 
 const ButtonCalendar = (props: ButtonProps) => {
-  const { icon, title, sx, ...rest } = props;
+  const { icon, title, sx, isActive, ...rest } = props;
 
   return (
     <Button
@@ -19,10 +20,10 @@ const ButtonCalendar = (props: ButtonProps) => {
         height: "32px",
         width: "161px",
         padding: 0,
-        backgroundColor: "common.white",
+        backgroundColor: isActive ? "#ebf8f8" : "common.white",
         color: "grey.300",
         textTransform: "none",
-        border: "1px solid #999999",
+        border: isActive ? "1px solid #1BC5BD" : "1px solid #999999",
         boxShadow: "none",
         "&:hover": {
           backgroundColor: "#ebf8f8",

@@ -6,6 +6,7 @@ export const AUTH_API_URL = process.env.AUTH_API_URL as string;
 export const API_URL = process.env.API_URL as string;
 export const COMPANY_API_URL = process.env.COMPANY_API_URL as string;
 export const UPLOAD_API_URL = process.env.UPLOAD_API_URL as string;
+export const TIME_SHEET_API_URL = process.env.TIME_SHEET_API_URL as string;
 
 export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
 export const DARK_THEME_MEDIA_SYSTEM = "(prefers-color-scheme: dark)";
