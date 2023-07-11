@@ -95,6 +95,7 @@ export type MoveTaskData = {
   task_current: string[];
   task_list_move: string;
   task_move?: string;
+  tasks?: string[];
 };
 
 export type CommentTaskData = {

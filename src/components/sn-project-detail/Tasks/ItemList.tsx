@@ -315,6 +315,7 @@ const ItemList = () => {
     taskId: string,
     updatedDataList: TaskList[],
     destinationTaskId?: string,
+    orderTasks?: string[],
   ) => {
     try {
       const isSuccess = await onMoveTask(
@@ -322,6 +323,7 @@ const ItemList = () => {
         destinationTaskListId,
         [taskId],
         destinationTaskId,
+        orderTasks,
       );
       if (isSuccess === true) {
         setDataList(updatedDataList);
@@ -363,8 +365,6 @@ const ItemList = () => {
 
       if (source.droppableId === destination.droppableId) {
         // CHANGE ORDER TASKS
-        console.log("1.1");
-
         const updatedOrder = reorder(
           dataList.find(
             (taskListItem) => taskListItem.id === source.droppableId,
@@ -372,12 +372,21 @@ const ItemList = () => {
           source.index,
           destination.index,
         );
-        const updatedDataList = dataList.map((taskListItem) =>
+        const newDataList = dataList.map((taskListItem) =>
           taskListItem.id !== source.droppableId
             ? taskListItem
             : { ...taskListItem, tasks: updatedOrder },
         );
         // setDataList(updatedDataList);
+
+        onMoveTaskList(
+          dataList[sourceTaskListIndex].id,
+          dataList[destinationTaskListIndex].id,
+          dataList[sourceTaskListIndex].tasks[source.index].id,
+          newDataList,
+          undefined,
+          newDataList[destinationTaskListIndex].tasks.map((task) => task.id),
+        );
       } else {
         // MOVE TASK BECOME TO SUB TASK OF TASK
         const newTasks = [...dataList[sourceTaskListIndex].tasks];
@@ -454,11 +463,12 @@ const ItemList = () => {
       const newDestinationTasks = [...dataList[destinationTaskListIndex].tasks];
 
       let destinationTaskIndex: number | undefined;
-
+      let orderTasks: string[] | undefined;
       if (isDestinationTaskList) {
         // CHANGE ORDER TASKS
 
         newDestinationTasks.splice(destination.index, 0, sourceTaskMoved);
+        orderTasks = newDestinationTasks.map((task) => task.id);
       } else {
         if (sourceTaskMoved?.sub_tasks?.length) return;
         destinationTaskIndex = newDestinationTasks.findIndex(
@@ -495,6 +505,7 @@ const ItemList = () => {
         destinationTaskIndex !== undefined
           ? dataList[destinationTaskListIndex].tasks[destinationTaskIndex].id
           : undefined,
+        orderTasks,
       );
     }
   };

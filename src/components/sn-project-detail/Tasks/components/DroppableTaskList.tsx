@@ -78,11 +78,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
       <Droppable droppableId={id}>
         {(provided, taskListDropSnapshot) => {
           return (
-            <div
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              // style={{ minHeight: 48 }}
-            >
+            <div ref={provided.innerRef} {...provided.droppableProps}>
               <Stack
                 direction="row"
                 alignItems="center"

@@ -294,6 +294,7 @@ export const useTasksOfProject = () => {
     taskListId: string,
     taskIds: string[],
     newTaskId?: string,
+    orderTasks?: string[],
   ) => {
     try {
       return await dispatch(
@@ -302,6 +303,7 @@ export const useTasksOfProject = () => {
           task_list_move: taskListId,
           task_current: taskIds,
           task_move: newTaskId,
+          tasks: orderTasks,
         }),
       ).unwrap();
     } catch (error) {
