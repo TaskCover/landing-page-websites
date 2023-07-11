@@ -139,6 +139,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
           fullWidth
           onEndReached={onEndReached}
           showSubText={false}
+          hasIcon
         />
       </Stack>
     </FormLayout>

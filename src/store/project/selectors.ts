@@ -374,12 +374,18 @@ export const useTaskOptions = () => {
   const [taskListOptions, taskOptions] = useMemo(() => {
     return items.reduce(
       (out: [Option[], Option[]], item) => {
-        out[0].push({ label: item.name, value: item.id });
+        out[0].push({
+          label: item.name,
+          value: item.id,
+          icon: "/images/ic-task-list.svg",
+        });
         item.tasks.forEach((task) => {
           out[1].push({
             label: task.name,
             value: task.id,
             subText: item.id,
+
+            icon: "/images/ic-task.svg",
           });
         });
         return out;

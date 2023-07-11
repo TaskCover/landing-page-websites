@@ -87,6 +87,8 @@ const Select = ({
             label: task.name,
             value: task.id,
             subText: item.id,
+
+            icon: "/images/ic-task.svg",
           });
         }
 
@@ -97,6 +99,8 @@ const Select = ({
               value: subTask.id,
               subText: item.id,
               avatar: task.id,
+
+              icon: "/images/ic-sub-task.svg",
             });
           }
         });
@@ -186,6 +190,7 @@ const Select = ({
       showSubText={false}
       size="small"
       hasAll={false}
+      hasIcon
       placeholder={value ? undefined : projectT("taskDetail.addDependencyTask")}
     />
   );

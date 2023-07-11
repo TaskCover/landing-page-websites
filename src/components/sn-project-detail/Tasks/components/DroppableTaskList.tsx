@@ -49,6 +49,7 @@ type DroppableTaskListProps = {
   count: number;
   name: string;
   checked: boolean;
+  isDragging: boolean;
   onChange: () => void;
   setSelectedList: Dispatch<SetStateAction<Selected[]>>;
 } & HTMLAttributes<HTMLDivElement>;
@@ -60,8 +61,16 @@ type MoreListProps = {
 };
 
 const DroppableTaskList = (props: DroppableTaskListProps) => {
-  const { id, count, name, checked, onChange, setSelectedList, ...rest } =
-    props;
+  const {
+    id,
+    count,
+    name,
+    checked,
+    onChange,
+    setSelectedList,
+    isDragging,
+    ...rest
+  } = props;
   const projectT = useTranslations(NS_PROJECT);
   const { onCreateTask: onCreateTaskAction } = useTasksOfProject();
 
@@ -78,7 +87,13 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
       <Droppable droppableId={id}>
         {(provided, taskListDropSnapshot) => {
           return (
-            <div ref={provided.innerRef} {...provided.droppableProps}>
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              style={{
+                border: isDragging ? "1px dashed #EBEBEB" : undefined,
+              }}
+            >
               <Stack
                 direction="row"
                 alignItems="center"

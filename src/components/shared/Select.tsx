@@ -20,6 +20,7 @@ import { NS_COMMON } from "constant/index";
 import useToggle from "hooks/useToggle";
 import Text from "./Text";
 import { SearchProps } from "components/Filters/Search";
+import Image from "next/image";
 
 export type SelectProps = InputProps & {
   options: Option[];
@@ -34,6 +35,7 @@ export type SelectProps = InputProps & {
     value?: string | number;
   };
   hasAvatar?: boolean;
+  hasIcon?: boolean;
   showSubText?: boolean;
   onOpen?: Function;
 };
@@ -55,6 +57,7 @@ const Select = (props: SelectProps) => {
     onChange: onChangeProp,
     hasAvatar,
     showSubText = true,
+    hasIcon,
     ...rest
   } = props;
 
@@ -163,6 +166,14 @@ const Select = (props: SelectProps) => {
           <Stack direction="row" alignItems="center" spacing={1}>
             {option.value !== ID_PLACEHOLDER && hasAvatar && (
               <Avatar src={option?.avatar ?? UserPlaceholderImage} size={24} />
+            )}
+            {hasIcon && !!option?.icon && (
+              <Image
+                src={option.icon as string}
+                width={18}
+                height={18}
+                alt="icon"
+              />
             )}
             <Stack>
               <Text variant="body2">{option.label}</Text>

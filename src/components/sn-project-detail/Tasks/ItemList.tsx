@@ -75,6 +75,7 @@ const ItemList = () => {
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
   const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
+  const [isDragging, onDraggingTrue, onDraggingFalse] = useToggle();
 
   const params = useParams();
 
@@ -352,6 +353,7 @@ const ItemList = () => {
   };
 
   const onDragEnd = async (result: DropResult) => {
+    onDraggingFalse();
     const { source, destination } = result;
     if (!destination) return;
 
@@ -637,7 +639,7 @@ const ItemList = () => {
         <></>
       </TableLayout>
 
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
         {dataList.map((taskListItem) => {
           const isChecked = selectedList.some(
             (selected) =>
@@ -655,6 +657,7 @@ const ItemList = () => {
               checked={isChecked}
               onChange={onToggleTaskList(!isChecked, taskListItem)}
               setSelectedList={setSelectedList}
+              isDragging={isDragging}
             >
               {taskListItem.tasks.map((task, taskIndex) => {
                 const subTaskIds = selectedList.map(
