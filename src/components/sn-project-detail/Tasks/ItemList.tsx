@@ -363,6 +363,8 @@ const ItemList = () => {
 
       if (source.droppableId === destination.droppableId) {
         // CHANGE ORDER TASKS
+        console.log("1.1");
+
         const updatedOrder = reorder(
           dataList.find(
             (taskListItem) => taskListItem.id === source.droppableId,
@@ -385,7 +387,7 @@ const ItemList = () => {
         const sourceTaskOrder = {
           ...dataList[sourceTaskListIndex].tasks[source.index],
         };
-
+        if (sourceTaskOrder?.sub_tasks?.length) return;
         const destinationTaskIndex = dataList[
           sourceTaskListIndex
         ].tasks.findIndex((task) => task.id === destination.droppableId);
