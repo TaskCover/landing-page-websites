@@ -158,6 +158,13 @@ export type ConvertSubTaskToTaskData = {
   sub_task: string;
 };
 
+export type OrderTodoData = {
+  task_list: string;
+  task: string;
+  sub_task?: string;
+  id_priorities: string[];
+};
+
 export const getProjectList = createAsyncThunk(
   "project/getProjectList",
   async (queries: GetProjectListQueries) => {
@@ -573,6 +580,25 @@ export const deleteDependency = createAsyncThunk(
   async (data: DependencyData) => {
     try {
       const response = await client.put(Endpoint.DELETE_DEPENDENCY, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const orderTodo = createAsyncThunk(
+  "project/orderTodo",
+  async (data: OrderTodoData) => {
+    try {
+      const url = data?.sub_task
+        ? Endpoint.ORDER_SUB_TASK
+        : Endpoint.ORDER_TASK;
+      const response = await client.put(url, data);
 
       if (response?.status === HttpStatusCode.OK) {
         return true;
