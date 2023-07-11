@@ -15,6 +15,7 @@ import {
   PROJECTS_PATH,
   PROJECT_TYPES_PATH,
   STATEMENT_HISTORY_PATH,
+  TIME_TRACKING_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -240,6 +241,7 @@ const DATA: MenuItemProps[] = [
   },
   {
     label: "menu.timeTracking",
+    href: TIME_TRACKING_PATH,
     icon: <MenuTimeTrackingIcon />,
     roles: [Permission.AM, Permission.ST, Permission.SA, Permission.EU], // Tmp permission
   },
