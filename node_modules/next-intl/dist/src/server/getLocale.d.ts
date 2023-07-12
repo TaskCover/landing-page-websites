@@ -1,2 +1,0 @@
-declare const getLocale: () => string;
-export default getLocale;
