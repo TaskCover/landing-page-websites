@@ -330,13 +330,22 @@ const TabMyTime = (props: TabMyTimeProps) => {
                 gap: "10px",
               }}
             >
-              <ButtonCalendar icon={<ListIcon />} title="Timesheet" />
+              <ButtonCalendar
+                icon={<ListIcon />}
+                title="Timesheet"
+                onClick={() => ""}
+              />
               <ButtonCalendar
                 icon={<CalendarIcon />}
                 isActive={activeView === "calendar"}
                 title="Calendar"
+                onClick={() => ""}
               />
-              <ButtonCalendar icon={<DayIcon />} title="Day" />
+              <ButtonCalendar
+                icon={<DayIcon />}
+                title="Day"
+                onClick={() => ""}
+              />
             </Box>
           </Grid>
           <Grid

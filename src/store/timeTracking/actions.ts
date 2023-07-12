@@ -5,6 +5,7 @@ import { HttpStatusCode } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, TIME_SHEET_API_URL } from "constant/index";
 import { BaseQueries } from "constant/types";
 import { refactorRawItemListResponse } from "utils/index";
+import { Maybe } from "yup";
 //serverQueries
 export enum ProjectStatus {
   ACTIVE = "ACTIVE",
@@ -21,8 +22,19 @@ export enum DependencyStatus {
 export type GetMyTimeSheetQueries = {
   start_date: string;
   end_date: string;
+  search_key?: string;
 };
 
+export type BodyCreateTimeSheet = {
+  id: string;
+  project_id: string;
+  position: string;
+  start_time: string;
+  type: string;
+  day: string;
+  duration: number;
+  note?: Maybe<string | undefined>;
+};
 export const getMyTimeSheet = createAsyncThunk(
   "timeTracking/getMyTimeSheet",
   async (queries: GetMyTimeSheetQueries) => {
@@ -79,18 +91,20 @@ export const getMyTimeSheet = createAsyncThunk(
 //   },
 // );
 
-// export const createTimeSheet = createAsyncThunk(
-//   "project/createProject",
-//   async (data: ProjectData) => {
-//     try {
-//       const response = await client.post(Endpoint.TIME_SHEET, data);
+export const createTimeSheet = createAsyncThunk(
+  "timeTracking/createTimeSheet",
+  async (data: Omit<BodyCreateTimeSheet, "id">) => {
+    try {
+      const response = await client.post(Endpoint.TIME_SHEET, data, {
+        baseURL: TIME_SHEET_API_URL,
+      });
 
-//       if (response?.status === HttpStatusCode.CREATED) {
-//         return response.data;
-//       }
-//       throw AN_ERROR_TRY_AGAIN;
-//     } catch (error) {
-//       throw error;
-//     }
-//   },
-// );
+      if (response?.status === HttpStatusCode.CREATED) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);

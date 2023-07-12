@@ -6,10 +6,11 @@ type ButtonProps = {
   title?: string;
   sx?: object;
   isActive?: boolean;
+  onClick: () => void;
 };
 
 const ButtonCalendar = (props: ButtonProps) => {
-  const { icon, title, sx, isActive, ...rest } = props;
+  const { onClick, icon, title, sx, isActive } = props;
 
   return (
     <Button
@@ -32,7 +33,7 @@ const ButtonCalendar = (props: ButtonProps) => {
         },
         ...sx,
       }}
-      {...rest}
+      onClick={() => onClick()}
     >
       {title}
     </Button>

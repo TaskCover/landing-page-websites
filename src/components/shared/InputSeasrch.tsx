@@ -4,7 +4,8 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 
-export default function CustomizedInputBase() {
+export default function CustomizedInputBase(props) {
+  const { ...rest } = props;
   return (
     <Paper
       component="form"
@@ -24,6 +25,7 @@ export default function CustomizedInputBase() {
         sx={{ ml: 1, flex: 1 }}
         placeholder="Search Project"
         inputProps={{ "aria-label": "search google maps" }}
+        {...rest}
       />
     </Paper>
   );

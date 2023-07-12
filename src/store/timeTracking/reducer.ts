@@ -1,5 +1,9 @@
 import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
-import { getMyTimeSheet } from "./actions";
+import {
+  getMyTimeSheet,
+  createTimeSheet,
+  BodyCreateTimeSheet,
+} from "./actions";
 import {
   Attachment,
   BaseQueries,
@@ -17,6 +21,7 @@ import {
 } from "utils/index";
 import { Position } from "store/company/reducer";
 import { subDays } from "date-fns";
+import dayjs from "dayjs";
 
 export interface MyTimeSheet {
   created_time: string;
@@ -37,6 +42,7 @@ export interface TimeTrackingState {
   items: MyTimeSheet[];
   params: object;
   status: DataStatus;
+  itemStatus: DataStatus;
   paging: Paging;
   error?: string;
 }
@@ -50,15 +56,22 @@ export type PayloadType = {
   payload: MyTimeSheet[];
   type: string;
 };
+const today = dayjs().add(1, "day"); // Ngày hiện tại + 1 ngày (ngày mai)
+const startOfWeek = today.startOf("week").add(0, "day"); // Ngày bắt đầu tuần (chủ nhật)
+const endOfWeek = today.startOf("week").add(6, "day"); // Ngày kết thúc tuần (thứ 2)
+
+const defaultStartDate = startOfWeek.format("YYYY-MM-DD");
+const defaultEndDate = endOfWeek.format("YYYY-MM-DD");
 
 export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {
-  start_date: formatDate(subDays(new Date(), 7).getTime()),
-  end_date: formatDate(Date.now()),
+  start_date: defaultStartDate,
+  end_date: defaultEndDate,
 };
 
 const initialState: TimeTrackingState = {
   items: [],
   params: {},
+  itemStatus: DataStatus.IDLE,
   status: DataStatus.IDLE,
   paging: DEFAULT_PAGING,
 };
@@ -86,7 +99,15 @@ const timeTrackingSlice = createSlice({
       .addCase(getMyTimeSheet.rejected, (state, action) => {
         state.status = DataStatus.FAILED;
         state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
-      }),
+      })
+      .addCase(
+        createTimeSheet.fulfilled,
+        (state, action: PayloadAction<BodyCreateTimeSheet>) => {
+          state.itemStatus = DataStatus.SUCCEEDED;
+
+          state.error = undefined;
+        },
+      ),
 });
 
 export const { reset } = timeTrackingSlice.actions;
