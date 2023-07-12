@@ -62,6 +62,18 @@ export type TaskListData = {
   project: string;
 };
 
+export type TaskDataDependency = {
+  task_current: string;
+  task_list_current: string;
+  task_list_update: string;
+  task_update: string;
+
+  sub_task_current?: string;
+  sub_task_update?: string;
+  sub_task?: string;
+  status: DependencyStatus;
+};
+
 export type TaskData = {
   name: string;
   task_list: string;
@@ -74,16 +86,7 @@ export type TaskData = {
   owner?: string;
   status?: Status;
   attachments?: string[];
-  dependencies?: {
-    task_current: string;
-    task_list_current: string;
-    task_list_update: string;
-    task_update: string;
-
-    sub_task_current?: string;
-    sub_task_update?: string;
-    status: DependencyStatus;
-  }[];
+  dependencies?: TaskDataDependency[];
   todo_list?: {
     name: string;
     owner?: string;

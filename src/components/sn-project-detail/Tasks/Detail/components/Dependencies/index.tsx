@@ -10,7 +10,11 @@ import { getMessageErrorByAPI } from "utils/index";
 import StatusDependency from "./Status";
 import Actions from "./Actions";
 import ConfirmDialog from "components/ConfirmDialog";
-import { DependencyStatus } from "store/project/actions";
+import {
+  DependencyStatus,
+  TaskData,
+  TaskDataDependency,
+} from "store/project/actions";
 import { Option } from "constant/types";
 import { Dropdown } from "components/Filters";
 import { Dependency, TaskDetail } from "store/project/reducer";
@@ -126,44 +130,33 @@ const Select = ({
       if (!optionSelected) {
         throw AN_ERROR_TRY_AGAIN;
       }
+
+      const key = subTaskId ? "sub_task_update" : "sub_task";
+
       const newDependencies = [...(task?.dependencies ?? [])].map((item) => ({
         task_current: taskId,
         task_list_current: taskListId,
         task_list_update: item.id_task_list,
         task_update: item.id_task,
         sub_task_current: subTaskId,
-        sub_task_update: item?.sub_task,
+        [key]: item?.sub_task,
 
         status: item.status,
-      }));
+      })) as TaskDataDependency[];
 
-      if (value) {
-        const indexUpdated = newDependencies.findIndex(
-          (depen) => depen.task_update === value,
-        );
-        if (indexUpdated !== -1) {
-          newDependencies[indexUpdated] = {
-            ...newDependencies[indexUpdated],
-            task_list_update: optionSelected.subText as string,
-            task_update: optionSelected.value as string,
-          };
-        }
-      } else {
-        newDependencies.push({
-          task_current: taskId,
-          task_list_current: taskListId,
-          task_list_update: optionSelected.subText as string,
-          task_update:
-            optionSelected?.avatar ?? (optionSelected.value as string),
+      newDependencies.push({
+        task_current: taskId,
+        task_list_current: taskListId,
+        task_list_update: optionSelected.subText as string,
+        task_update: optionSelected?.avatar ?? (optionSelected.value as string),
 
-          sub_task_current: subTaskId,
-          sub_task_update: optionSelected?.avatar
-            ? (optionSelected.value as string)
-            : undefined,
+        sub_task_current: subTaskId,
+        [key]: optionSelected?.avatar
+          ? (optionSelected.value as string)
+          : undefined,
 
-          status: DependencyStatus.WAITING_ON,
-        });
-      }
+        status: DependencyStatus.WAITING_ON,
+      });
 
       return await onUpdateTask(
         { dependencies: newDependencies },
