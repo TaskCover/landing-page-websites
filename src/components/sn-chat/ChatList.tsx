@@ -1,10 +1,10 @@
-import { TextField, Typography } from "@mui/material";
+import { Skeleton, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import ChatItem from "./ChatItem";
 import { useChat } from "store/chat/selectors";
 import { ChatItemInfo, STEP } from "store/chat/type";
-import { setRoomId } from "store/chat/reducer";
+import { useAuth } from "store/app/selectors";
 
 const ChatList = () => {
   const [listChat, setListChat] = useState<ChatItemInfo[]>(
@@ -35,11 +35,15 @@ const ChatList = () => {
     })),
   );
   const [textSearch, setTextSearch] = useState("");
+  const { user } = useAuth();
   const {
-    convention,
+    isError,
     isIdle,
+    convention,
+    conversationPaging,
+    prevStep,
+    currStep,
     isFetching,
-    roomId,
     onSetRoomId,
     onGetAllConvention,
     onSetStep,
@@ -47,8 +51,10 @@ const ChatList = () => {
 
   useEffect(() => {
     onGetAllConvention({
-      type: "d",
+      type: "a",
       text: textSearch,
+      offset: 0,
+      count: 1000,
     });
   }, [onGetAllConvention, textSearch]);
 
@@ -58,9 +64,9 @@ const ChatList = () => {
     }
   };
 
-  const handleClickConversation = (id: string) => {
+  const handleClickConversation = (chatInfo: ChatItemInfo) => {
+    onSetRoomId(chatInfo._id);
     onSetStep(STEP.CHAT_ONE);
-    setRoomId(id);
   };
 
   return (
@@ -79,7 +85,9 @@ const ChatList = () => {
           backgroundColor: "#3699FF",
         }}
       >
-        <Typography color="white">Chat</Typography>
+        <Typography color="white" variant="h4">
+          Chat
+        </Typography>
         <TextField
           size="small"
           sx={{
@@ -97,8 +105,28 @@ const ChatList = () => {
         />
       </Box>
       <Box overflow="auto" maxHeight="calc(600px - 74px - 15px)">
-        {isFetching ? (
-          "Loading..."
+        {isFetching || isError ? (
+          Array.from({ length: 5 }, (_, i) => (
+            <Box
+              key={i}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+              }}
+              p={2}
+            >
+              <Skeleton variant="rounded" width={40} height={40} />
+              <Box flex={1}>
+                <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: "1rem" }}
+                  width="40%"
+                />
+              </Box>
+            </Box>
+          ))
         ) : (
           <>
             {convention?.length > 0
@@ -106,6 +134,7 @@ const ChatList = () => {
                   return (
                     <ChatItem
                       chatInfo={item}
+                      sessionId={user?.["username"]}
                       key={index}
                       onClickConvention={handleClickConversation}
                     />

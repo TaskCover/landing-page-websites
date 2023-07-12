@@ -18,6 +18,23 @@ export interface ChatItemInfo {
   lm: string;
 }
 
+export interface MessageInfo {
+  _id: string;
+  alias: string;
+  msg: string;
+  attachments: unknown[];
+  parseUrls: boolean;
+  groupable: boolean;
+  ts: string;
+  u: UserSendInfo;
+  rid: string;
+  _updatedAt: string;
+  urls?: unknown[];
+  mentions: unknown[];
+  channels: unknown[];
+  md: unknown[];
+}
+
 export interface MessengerInfo {
   msg: string;
   ts: string;
@@ -36,27 +53,39 @@ export interface UserSendInfo {
 export interface ChatState {
   convention: ChatItemInfo[];
   status: DataStatus;
-  paging: Paging;
+  conversationPaging: Paging;
 
   roomId: string;
 
   currStep: STEP;
   prevStep: STEP;
+
+  messageInfo: MessageInfo[];
+  messageStatus: DataStatus;
+  messagePaging: Paging;
 }
 
 export type DirectionChat = "a" | "c" | "d";
 
-export interface ChatConventionItemRequest {
+export interface ChatRequestCommon {
   authToken: string;
   userId: string;
   type: DirectionChat;
   count?: number;
   offset?: number;
+}
+export interface ChatConventionItemRequest extends ChatRequestCommon {
   text: string;
+}
+
+export interface LastMessagesRequest extends ChatRequestCommon {
+  roomId: string;
 }
 
 export enum STEP {
   CONVENTION,
   CHAT_ONE,
   VIEW_DETAIL_USER,
+  ACCOUNT_INFO,
+  MEDIA_INFO,
 }

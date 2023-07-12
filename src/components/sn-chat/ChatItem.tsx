@@ -1,17 +1,26 @@
 import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { Typography } from "@mui/material";
+import { ImageList, Typography } from "@mui/material";
 import { ChatItemInfo } from "store/chat/type";
+import { useMemo } from "react";
 
 interface ChatItemProp {
+  sessionId: string;
   chatInfo: ChatItemInfo;
-  onClickConvention: (id: string) => void;
+  onClickConvention: (data: ChatItemInfo) => void;
 }
-const ChatItem = ({ chatInfo, onClickConvention }: ChatItemProp) => {
-  const { lastMessage } = chatInfo;
+const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
+  const { lastMessage, name, usersCount } = chatInfo;
+  const isGroup = usersCount > 1;
+  const isCurrentAcc = sessionId === lastMessage?.u.username;
+  const nameLastMessage = isCurrentAcc ? "You: " : "";
+
+  const lastMessageRender = useMemo(() => {
+    return [nameLastMessage, lastMessage?.msg].join("").trim();
+  }, [lastMessage?.msg, nameLastMessage]);
   return (
     <Box
-      onClick={() => onClickConvention(chatInfo._id)}
+      onClick={() => onClickConvention(chatInfo)}
       sx={{
         display: "flex",
         alignItems: "center",
@@ -24,13 +33,52 @@ const ChatItem = ({ chatInfo, onClickConvention }: ChatItemProp) => {
       }}
       p={2}
     >
-      <Avatar
-        alt="Avatar"
-        size={56}
-        style={{
-          borderRadius: "10px",
-        }}
-      />
+      {isGroup ? (
+        <ImageList sx={{ width: 56, height: 56 }} cols={2} rowHeight={164}>
+          <Avatar
+            alt="Avatar"
+            size={25}
+            style={{
+              borderRadius: "5px",
+            }}
+          />
+          <Avatar
+            alt="Avatar"
+            size={25}
+            style={{
+              borderRadius: "5px",
+            }}
+          />
+          <Avatar
+            alt="Avatar"
+            size={25}
+            style={{
+              borderRadius: "5px",
+            }}
+          />
+          {usersCount - 3 > 0 ? (
+            <Box
+              sx={{
+                textAlign: "center",
+                borderRadius: "5px",
+                backgroundColor: "#3078F1",
+                color: "white",
+              }}
+            >
+              <Typography variant="caption">+ {usersCount - 3}</Typography>
+            </Box>
+          ) : null}
+        </ImageList>
+      ) : (
+        <Avatar
+          alt="Avatar"
+          size={56}
+          style={{
+            borderRadius: "10px",
+          }}
+        />
+      )}
+
       <Box
         sx={{
           display: "flex",
@@ -38,10 +86,10 @@ const ChatItem = ({ chatInfo, onClickConvention }: ChatItemProp) => {
         }}
       >
         <Typography variant="inherit" fontWeight="bold">
-          {lastMessage.u.name}
+          {name}
         </Typography>
         <Typography variant="caption" color="#999999">
-          You: What’s man!
+          {lastMessageRender}
         </Typography>
       </Box>
       <Typography variant="caption" color="#999999" ml="auto">

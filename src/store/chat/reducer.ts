@@ -1,17 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllConvention } from "./actions";
+import { getAllConvention, getLatestMessages } from "./actions";
 import { DataStatus } from "constant/enums";
 import { DEFAULT_PAGING } from "constant/index";
-import { ChatItemInfo, ChatState, STEP } from "./type";
+import { ChatItemInfo, ChatState, MessageInfo, STEP } from "./type";
 
 const initialState: ChatState = {
   convention: [],
   status: DataStatus.IDLE,
-  paging: DEFAULT_PAGING,
+  conversationPaging: DEFAULT_PAGING,
 
   roomId: "",
   currStep: STEP.CONVENTION,
   prevStep: STEP.CONVENTION,
+
+  messageInfo: [],
+  messageStatus: DataStatus.IDLE,
+  messagePaging: DEFAULT_PAGING,
 };
 
 const chatSlice = createSlice({
@@ -29,8 +33,13 @@ const chatSlice = createSlice({
   },
   extraReducers: (builder) =>
     builder
+      //getAllConvention
       .addCase(getAllConvention.pending, (state, action) => {
         state.status = DataStatus.LOADING;
+        state.conversationPaging = {
+          pageIndex: action.meta.arg.offset || 0,
+          pageSize: action.meta.arg.count || 20,
+        };
       })
       .addCase(
         getAllConvention.fulfilled,
@@ -42,6 +51,21 @@ const chatSlice = createSlice({
       .addCase(getAllConvention.rejected, (state, action) => {
         state.convention = [];
         state.status = DataStatus.FAILED;
+      })
+      // getLatestMessages
+      .addCase(getLatestMessages.pending, (state, action) => {
+        state.messageStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        getLatestMessages.fulfilled,
+        (state, action: PayloadAction<MessageInfo[]>) => {
+          state.messageInfo = action.payload;
+          state.messageStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(getLatestMessages.rejected, (state, action) => {
+        state.messageInfo = [];
+        state.messageStatus = DataStatus.FAILED;
       }),
 });
 

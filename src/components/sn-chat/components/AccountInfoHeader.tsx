@@ -6,15 +6,23 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
 import VideoCallIcon from "icons/VideoCallIcon";
+import { ChatItemInfo } from "store/chat/type";
 
-const AccountInfoHeader = () => {
+interface AccountInfoHeaderProp {
+  accountInfo: ChatItemInfo | undefined;
+  onPrevious: () => void;
+}
+const AccountInfoHeader = ({
+  accountInfo,
+  onPrevious,
+}: AccountInfoHeaderProp) => {
   return (
     <>
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: 2,
+          gap: 1,
           padding: 2,
           borderBottom: "1px solid #ECECF3",
         }}
@@ -23,6 +31,7 @@ const AccountInfoHeader = () => {
           sx={{
             cursor: "pointer",
           }}
+          onClick={onPrevious}
         >
           <ArrowDownIcon />
         </IconButton>
@@ -40,7 +49,7 @@ const AccountInfoHeader = () => {
           }}
         >
           <Typography variant="inherit" fontWeight="bold">
-            name
+            {accountInfo?.lastMessage.u.name}
           </Typography>
           <Typography variant="caption" color="#999999">
             Active
