@@ -10,7 +10,7 @@ const WrapperChat = () => {
   const { currStep, onSetStep } = useChat();
 
   useEffect(() => {
-    onSetStep(STEP.CHAT_ONE);
+    onSetStep(STEP.CONVENTION);
   }, [onSetStep]);
 
   const renderContent = useCallback(() => {
