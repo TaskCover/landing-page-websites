@@ -13,6 +13,7 @@ const nextConfig = {
     AUTH_API_URL: process.env.AUTH_API_URL,
     COMPANY_API_URL: process.env.COMPANY_API_URL,
     UPLOAD_API_URL: process.env.UPLOAD_API_URL,
+    CHAT_API_URL: process.env.CHAT_API_URL,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
@@ -25,6 +26,19 @@ const nextConfig = {
       },
     ],
   },
+  /**
+   * if you need proxy, then try this
+   */
+  // async rewrites() {
+  //   return process.env.NODE_ENV === 'development'
+  //     ? [
+  //         {
+  //           source: '/api/:path*',
+  //           destination: `${process.env.CHAT_API_URL}/:path*`,
+  //         },
+  //       ]
+  //     : [];
+  // },
 };
 
 module.exports = withNextIntl(nextConfig);
