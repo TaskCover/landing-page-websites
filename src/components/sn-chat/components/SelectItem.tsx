@@ -14,7 +14,7 @@ interface SelectItemProp {
 }
 const SelectItem = ({ employee, onClick }: SelectItemProp) => {
   const { fullname, email, avatar } = employee;
-  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+  const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   return (
     <Box
@@ -30,14 +30,13 @@ const SelectItem = ({ employee, onClick }: SelectItemProp) => {
       }}
       p={1.5}
     >
-      
       <Typography variant="caption" color="#999999">
         <Checkbox
-        onChange={onClick}
-        {...label}
-        icon={<CircleUnchecked />}
-        checkedIcon={<CircleCheckedFilled />}
-      />
+          onChange={onClick}
+          {...label}
+          icon={<CircleUnchecked />}
+          checkedIcon={<CircleCheckedFilled />}
+        />
       </Typography>
       <Avatar
         src={avatar?.link}
@@ -60,7 +59,6 @@ const SelectItem = ({ employee, onClick }: SelectItemProp) => {
           {email}
         </Typography>
       </Box>
-      
     </Box>
   );
 };

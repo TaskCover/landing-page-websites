@@ -1,24 +1,26 @@
-import { IconButton, InputAdornment, Skeleton, TextField, Typography } from "@mui/material";
+import {
+  IconButton,
+  InputAdornment,
+  Skeleton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import { ChangeEvent, useEffect, useState } from "react";
-import ChatItem from "./ChatItem";
 import { useChat } from "store/chat/selectors";
-import { ChatItemInfo, STEP } from "store/chat/type";
-import { useAuth } from "store/app/selectors";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import SearchIcon from "icons/SearchIcon";
-import SelectItem from "./SelectItem";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";
-import {
-  NS_COMMON,
-} from "constant/index";
+import { NS_COMMON } from "constant/index";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { Employee } from "store/company/reducer";
+import SelectItem from "./components/SelectItem";
+import { useAuth } from "store/app/selectors";
+
 const AddGroup = () => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState({});
-
 
   const {
     items,
@@ -33,13 +35,15 @@ const AddGroup = () => {
     onApproveOrReject: onApproveOrRejectAction,
   } = useEmployeesOfCompany();
 
-  const { prevStep, currStep, onSetStep } = useChat();
+  const { user } = useAuth();
+
+  const { prevStep, onSetStep } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
 
   useEffect(() => {
-    onGetEmployees('SASS', { pageIndex: 0, pageSize: 20});
-  }, [onGetEmployees, textSearch]);
+    onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 20 });
+  }, [onGetEmployees, textSearch, user?.company]);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -47,12 +51,14 @@ const AddGroup = () => {
     }
   };
 
-  const handleClickConversation = (employee: Employee, event: ChangeEvent<HTMLInputElement>) => {
+  const handleClickConversation = (
+    employee: Employee,
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
     setEmployeeSelected({
       ...employeeSelected,
-      [employee?.username ?? '']: event.target.checked,
+      [employee?.username ?? ""]: event.target.checked,
     });
-    
   };
 
   return (
@@ -74,7 +80,9 @@ const AddGroup = () => {
           sx={{
             cursor: "pointer",
           }}
-          onClick={() => { onSetStep(prevStep) }}
+          onClick={() => {
+            onSetStep(prevStep);
+          }}
         >
           <ArrowDownIcon />
         </IconButton>
@@ -130,16 +138,16 @@ const AddGroup = () => {
           ))
         ) : (
           <>
-              {items?.length > 0
-                ? items.map((item, index) => {
-                return (
-                  <SelectItem
-                    employee={item}
-                    key={index}
-                    onClick={event => handleClickConversation(item, event)}
-                  />
-                );
-              })
+            {items?.length > 0
+              ? items.map((item, index) => {
+                  return (
+                    <SelectItem
+                      employee={item}
+                      key={index}
+                      onClick={(event) => handleClickConversation(item, event)}
+                    />
+                  );
+                })
               : null}
           </>
         )}
@@ -153,26 +161,26 @@ const AddGroup = () => {
           padding: 2,
         }}
       >
-      <Button
-            type="button"
-            variant="primaryOutlined"
-            size="small"
-            sx={defaultSx.button}
-            // onClick={onClose}
-          >
-            {commonT("form.cancel")}
-          </Button>
-          <Button
-            variant="primary"
-            sx={defaultSx.button}
-            type="button"
-            size="small"
-            // onClick={onSubmit}
-            // pending={pending}
-          >
-            {commonT("form.add")}
-          </Button>
-          </Box>
+        <Button
+          type="button"
+          variant="primaryOutlined"
+          size="small"
+          sx={defaultSx.button}
+          // onClick={onClose}
+        >
+          {commonT("form.cancel")}
+        </Button>
+        <Button
+          variant="primary"
+          sx={defaultSx.button}
+          type="button"
+          size="small"
+          // onClick={onSubmit}
+          // pending={pending}
+        >
+          {commonT("form.add")}
+        </Button>
+      </Box>
     </Box>
   );
 };
