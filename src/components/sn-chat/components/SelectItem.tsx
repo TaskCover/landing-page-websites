@@ -21,14 +21,14 @@ const SelectItem = ({ employee, onClick }: SelectItemProp) => {
       sx={{
         display: "flex",
         alignItems: "center",
-        gap: "1rem",
+        gap: "0.5rem",
         marginBottom: 1,
-        cursor: "pointer",
+        // cursor: "pointer",
         ":hover": {
           backgroundColor: "#F7F7FD",
         },
       }}
-      p={1.5}
+      p={1}
     >
       <Typography variant="caption" color="#999999">
         <Checkbox
@@ -41,7 +41,7 @@ const SelectItem = ({ employee, onClick }: SelectItemProp) => {
       <Avatar
         src={avatar?.link}
         alt="Avatar"
-        size={56}
+        size={42}
         style={{
           borderRadius: "50%",
         }}
