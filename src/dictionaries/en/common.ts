@@ -35,6 +35,7 @@ export const CommonLang: CommonDictionary = {
     confirm: "Confirm",
     save: "Save",
     cancel: "Cancel",
+    add: "Add",
   },
   notification: {
     imageTypeInvalid:

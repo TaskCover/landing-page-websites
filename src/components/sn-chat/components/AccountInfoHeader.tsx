@@ -6,15 +6,17 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
 import VideoCallIcon from "icons/VideoCallIcon";
-import { ChatItemInfo } from "store/chat/type";
+import { ChatItemInfo, STEP } from "store/chat/type";
 
 interface AccountInfoHeaderProp {
   accountInfo: ChatItemInfo | undefined;
   onPrevious: () => void;
+  onSetStep: () => void;
 }
 const AccountInfoHeader = ({
   accountInfo,
   onPrevious,
+  onSetStep,
 }: AccountInfoHeaderProp) => {
   return (
     <>
@@ -67,6 +69,7 @@ const AccountInfoHeader = ({
             sx={{
               color: "white",
             }}
+            onClick={onSetStep}
           >
             <ProfileAdd />
           </IconButton>

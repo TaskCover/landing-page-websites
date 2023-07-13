@@ -25,6 +25,7 @@ const ConversationLayout = ({ children }: ConversationLayoutProp) => {
       <AccountInfoHeader
         accountInfo={accountInfo}
         onPrevious={() => onSetStep(prevStep)}
+        onSetStep={() => onSetStep(STEP.ADD_GROUP)}
       />
       <Box overflow="auto" maxHeight="calc(600px - 74px - 15px)">
         {children}

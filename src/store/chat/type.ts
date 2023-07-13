@@ -88,4 +88,5 @@ export enum STEP {
   VIEW_DETAIL_USER,
   ACCOUNT_INFO,
   MEDIA_INFO,
+  ADD_GROUP
 }
