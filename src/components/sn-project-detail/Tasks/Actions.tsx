@@ -205,9 +205,9 @@ const Actions = () => {
             >
               <Date
                 label={commonT("form.title.startDate")}
-                name="tasks.created_time"
+                name="tasks.start_date"
                 onChange={onChangeQueries}
-                value={queries?.["tasks.created_time"]}
+                value={queries?.["tasks.start_date"]}
                 format={DATE_FORMAT_HYPHEN}
               />
               <Dropdown

@@ -85,9 +85,11 @@ export const ProjectLang: ProjectDictionary = {
         name: "Tên công việc",
         oldTaskList: "Danh mục công việc hiện tại",
         newTaskList: "Danh mục công việc chuyển tới",
+        newTaskPlace: "Vị trí di chuyển tới",
       },
     },
     addNewTask: "Thêm công việc mới",
+    newMove: "Di chuyển tới",
     taskList: "Danh mục công việc",
     key: "công việc",
     moveTaskList: "Di chuyển danh mục công việc",
@@ -95,6 +97,8 @@ export const ProjectLang: ProjectDictionary = {
     selectedCount: "{value} đã chọn",
     assignee: "Người được giao",
     processingDuplicate: "Hệ thống đang xử lý sao chép...",
+    nameWillBeExisted:
+      "Tên công việc con bị trùng nhau, vui lòng đổi tên nó trước khi di chuyển.",
     keys: {
       owner: "người phụ trách",
       start_date: "ngày bắt đầu",

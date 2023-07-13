@@ -4,6 +4,17 @@ import Drop from "./Drop";
 import AssignerFilter from "./AssignerFilter";
 import MoreList from "./MoreList";
 
+import DroppableTaskList from "./DroppableTaskList";
+import DraggableTask from "./DraggableTask";
+
 export * from "./helpers";
 
-export { DragAndDrop, Drag, Drop, AssignerFilter, MoreList };
+export {
+  DragAndDrop,
+  Drag,
+  Drop,
+  AssignerFilter,
+  MoreList,
+  DroppableTaskList,
+  DraggableTask,
+};

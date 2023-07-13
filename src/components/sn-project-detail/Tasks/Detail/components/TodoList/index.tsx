@@ -1,23 +1,40 @@
 import { ChangeEvent, memo, useState } from "react";
 import { Stack, TextField } from "@mui/material";
-import { Checkbox, Collapse, Text } from "components/shared";
+import { Checkbox, Collapse, IconButton, Text } from "components/shared";
 import { NS_PROJECT, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useSnackbar } from "store/app/selectors";
 import { useTaskDetail } from "store/project/selectors";
 import PlusIcon from "icons/PlusIcon";
 import { getMessageErrorByAPI } from "utils/index";
-import { TaskList, Todo } from "store/project/reducer";
+import { TaskDetail, TaskList, Todo } from "store/project/reducer";
 import Assign from "./Assign";
 import Actions, { Action } from "./Actions";
 import ConfirmDialog from "components/ConfirmDialog";
 import { TaskData } from "store/project/actions";
 import useToggle from "hooks/useToggle";
 import Loading from "components/Loading";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
+import MoveDotIcon from "icons/MoveDotIcon";
+import { reorder } from "components/sn-project-detail/Tasks/components";
 
 const TodoList = ({ open }: { open: boolean }) => {
   const projectT = useTranslations(NS_PROJECT);
-  const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
+  const {
+    task,
+    taskListId,
+    taskId,
+    subTaskId,
+    onUpdateTask,
+    onUpdateOrderTodo,
+    onGetTaskList,
+    onUpdateTaskDetail,
+  } = useTaskDetail();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
   const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
@@ -45,6 +62,51 @@ const TodoList = ({ open }: { open: boolean }) => {
     }
   };
 
+  const onDragEnd = async (result: DropResult) => {
+    if (!taskListId || !taskId) return;
+    const { source, destination } = result;
+    if (!destination) return;
+
+    const newData = [...(task?.todo_list ?? [])];
+
+    const updatedOrder = reorder(
+      newData,
+      source.index,
+      destination.index,
+    ) as Todo[];
+
+    const id_priorities = updatedOrder.map((item) => item.id);
+    try {
+      onProcessingTrue();
+      await onUpdateOrderTodo({
+        task_list: taskListId,
+        task: taskId,
+        sub_task: subTaskId,
+        id_priorities,
+      });
+
+      onGetTaskList(taskListId);
+      onUpdateTaskDetail({
+        taskId,
+        taskListId,
+        subTaskId,
+        ...task,
+        todo_list: updatedOrder,
+      } as TaskDetail);
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onProcessingFalse();
+    }
+
+    // newData = newData.map((todoItem) =>
+    //   taskListItem.id !== sourceTaskListId
+    //     ? taskListItem
+    //     : { ...taskListItem, tasks: updatedOrder },
+    // );
+    // setDataList(updatedDataList);
+  };
+
   if (!open) return null;
 
   return (
@@ -60,9 +122,24 @@ const TodoList = ({ open }: { open: boolean }) => {
         }
       >
         <Stack mt={2}>
-          {task?.todo_list?.map((toDo) => (
-            <SubItem key={toDo.id} {...toDo} todoId={toDo.id} />
-          ))}
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppableId">
+              {(provided) => (
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  {task?.todo_list?.map((toDo, index) => (
+                    <SubItem
+                      key={toDo.id}
+                      {...toDo}
+                      todoId={toDo.id}
+                      index={index}
+                    />
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+
           <Stack direction="row" alignItems="center" spacing={1}>
             <PlusIcon />
             <TodoName
@@ -144,8 +221,8 @@ const TodoName = ({
   );
 };
 
-const SubItem = (props: Todo & { todoId: string }) => {
-  const { name, is_done, owner, todoId } = props;
+const SubItem = (props: Todo & { todoId: string; index: number }) => {
+  const { name, is_done, owner, todoId, index } = props;
   const {
     task,
     taskListId,
@@ -307,29 +384,43 @@ const SubItem = (props: Todo & { todoId: string }) => {
 
   return (
     <>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={2}
-        width="100%"
-        justifyContent="space-between"
-      >
-        <Stack direction="row" alignItems="center" spacing={2} flex={1}>
-          <Checkbox checked={is_done} onChange={onChangeStatus} />
-          {action === Action.RENAME ? (
-            <TodoName onSubmit={onChangeName} value={name} />
-          ) : (
-            <Text variant="body2" noWrap onClick={onEditName}>
-              {name}
-            </Text>
-          )}
-        </Stack>
+      <Draggable draggableId={todoId} index={index}>
+        {(provided, snapshot) => (
+          <div ref={provided.innerRef} {...provided.draggableProps}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={2}
+              width="100%"
+              justifyContent="space-between"
+            >
+              <Stack direction="row" alignItems="center" spacing={0.5} flex={1}>
+                <Checkbox
+                  size="small"
+                  checked={is_done}
+                  onChange={onChangeStatus}
+                />
+                <IconButton noPadding {...provided.dragHandleProps}>
+                  <MoveDotIcon fontSize="small" sx={{ color: "grey.A200" }} />
+                </IconButton>
+                {action === Action.RENAME ? (
+                  <TodoName onSubmit={onChangeName} value={name} />
+                ) : (
+                  <Text variant="body2" noWrap onClick={onEditName} mt={0.25}>
+                    {name}
+                  </Text>
+                )}
+              </Stack>
 
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Assign owner={owner} todoId={todoId} />
-          <Actions todoId={todoId} onChangeAction={onChangeAction} />
-        </Stack>
-      </Stack>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Assign owner={owner} todoId={todoId} />
+                <Actions todoId={todoId} onChangeAction={onChangeAction} />
+              </Stack>
+            </Stack>
+          </div>
+        )}
+      </Draggable>
+
       {action === Action.DELETE && (
         <ConfirmDialog
           onSubmit={onDelete}

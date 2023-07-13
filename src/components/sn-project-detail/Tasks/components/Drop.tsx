@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import { Droppable } from "react-beautiful-dnd";
 
-const Drop = ({ id, type, ...props }) => {
+const Drop = ({ id, ...props }) => {
   const [enabled, setEnabled] = useState(false);
   useEffect(() => {
     const animation = requestAnimationFrame(() => setEnabled(true));
@@ -15,7 +15,7 @@ const Drop = ({ id, type, ...props }) => {
   }
 
   return (
-    <Droppable droppableId={id} type={type}>
+    <Droppable droppableId={id}>
       {(provided) => {
         return (
           <div

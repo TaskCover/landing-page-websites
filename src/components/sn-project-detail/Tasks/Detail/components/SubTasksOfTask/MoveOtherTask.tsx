@@ -1,20 +1,9 @@
-import {
-  Dispatch,
-  SetStateAction,
-  memo,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { memo, useMemo } from "react";
 import { Stack } from "@mui/material";
 import FormLayout from "components/FormLayout";
 import { DialogLayoutProps } from "components/DialogLayout";
 import { Select } from "components/shared";
-import {
-  useTaskDetail,
-  useTaskOptions,
-  useTasksOfProject,
-} from "store/project/selectors";
+import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import { useFormik, FormikErrors } from "formik";
 import { useTranslations } from "next-intl";

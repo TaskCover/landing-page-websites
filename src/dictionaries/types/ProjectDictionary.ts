@@ -81,9 +81,11 @@ export type ProjectDictionary = {
         name: string;
         oldTaskList: string;
         newTaskList: string;
+        newTaskPlace: string;
       };
     };
     addNewTask: string;
+    newMove: string;
     taskList: string;
     key: string;
     moveTaskList: string;
@@ -91,6 +93,7 @@ export type ProjectDictionary = {
     selectedCount: string;
     assignee: string;
     processingDuplicate: string;
+    nameWillBeExisted: string;
     keys: {
       owner: string;
       start_date: string;
