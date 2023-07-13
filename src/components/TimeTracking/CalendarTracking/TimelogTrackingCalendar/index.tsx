@@ -18,12 +18,15 @@ import {
 import Filter from "../../Component/Filter";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-//import { MobileDatePicker } from "@mui/x-date-pickers";
-
+import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 // import { TimeTrackingActions } from "@/Actions";
 // import { useTypedDispatch, RootState } from "@/store";
 import { ENUMS, ROUTERS } from "../../Component/Constants";
 import CustomizedInputBase from "components/shared/InputSeasrch";
+import { useGetMyTimeSheet } from "store/timeTracking/selectors";
+import MobileDatePickerComponent from "components/TimeTracking/Component/MobileDatePicker";
+import { WorkLogItem } from "store/timeTracking/reducer";
 
 //const { getTimeLog } = TimeTrackingActions;
 const { TASK_ACTION } = ENUMS;
@@ -84,22 +87,23 @@ interface ITimeLogStructure {
 
 const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
   //const dispatch = useTypedDispatch();
-  const payload: any = [];
+  const { workLog, onGetWorkLog } = useGetMyTimeSheet();
+
   const isGetLoading: any = false;
   const [isOpen, setIsOpen] = useState(false);
-  const [timeLogs, setTimeLogs] = useState<ITimeLogStructure[]>([]);
+  const [timeLogs, setTimeLogs] = useState<WorkLogItem[]>([]);
   const [filters, setFilters] = useState({
     search_key: "",
     date: dayjs().format("YYYY-MM-DD"),
   });
 
-  // useEffect(() => {
-  //   dispatch(getTimeLog(filters));
-  // }, []);
+  useEffect(() => {
+    onGetWorkLog(filters);
+  }, []);
 
   useEffect(() => {
-    setTimeLogs(payload?.data);
-  }, [payload]);
+    if (workLog?.data?.length) setTimeLogs(workLog.data);
+  }, [workLog]);
 
   const getTaskActionString = (action: string) => {
     return taskActionStrings[action as keyof typeof taskActionStrings] || "";
@@ -223,49 +227,52 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
           }}
           onClick={() => setIsOpen(!isOpen)}
         >
-          {/* <MobileDatePicker
-            open={isOpen}
-            onOpen={() => setIsOpen(true)}
-            onClose={() => setIsOpen(false)}
-            onChange={(date: any) => {
-              const newDate = dayjs(date).format("YYYY-MM-DD");
-              const newFilters = { ...filters, date: newDate };
-              console.log("newFilters", newFilters);
-              setFilters(newFilters);
-              //dispatch(getTimeLog(newFilters));
-            }}
-            sx={{ display: "none" }}
-            slotProps={{
-              actionBar: {
-                actions: [],
-              },
-              toolbar: {
-                hidden: true,
-              },
-              day: {
-                sx: {
-                  transition: "all ease 0.25s",
-                  borderRadius: "4px",
-                  fontWeight: 600,
-                  "&.Mui-selected": {
-                    color: "#ffffff",
-                    background: `red !important`,
-                    "&.MuiPickersDay-today": {
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MobileDatePicker
+              open={isOpen}
+              onOpen={() => setIsOpen(true)}
+              onClose={() => setIsOpen(false)}
+              onChange={(date: any) => {
+                const newDate = dayjs(date).format("YYYY-MM-DD");
+                const newFilters = { ...filters, date: newDate };
+
+                setFilters(newFilters);
+                onGetWorkLog(newFilters);
+              }}
+              sx={{ display: "none" }}
+              slotProps={{
+                actionBar: {
+                  actions: [],
+                },
+                toolbar: {
+                  hidden: true,
+                },
+                day: {
+                  sx: {
+                    transition: "all ease 0.25s",
+                    borderRadius: "4px",
+                    fontWeight: 600,
+                    "&.Mui-selected": {
                       color: "#ffffff",
-                      borderColor: "green",
+                      backgroundColor: `rgba(54, 153, 255, 1) !important`,
+                      "&.MuiPickersDay-today": {
+                        color: "#ffffff",
+                        borderColor: "rgba(54, 153, 255, 1)",
+                      },
+                    },
+                    "&.MuiPickersDay-today": {
+                      color: "rgba(54, 153, 255, 1)",
+                      borderColor: "rgba(54, 153, 255, 1)",
+                    },
+                    ":hover": {
+                      background: "rgba(54, 153, 255, 1)",
                     },
                   },
-                  "&.MuiPickersDay-today": {
-                    color: "gray",
-                    borderColor: "grey.400",
-                  },
-                  ":hover": {
-                    background: "red",
-                  },
                 },
-              },
-            }}
-          /> */}
+              }}
+            />
+          </LocalizationProvider>
+
           <Typography
             sx={{
               fontSize: "14px",
@@ -286,9 +293,7 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
           onChange={(event) =>
             setFilters({ ...filters, search_key: event.target.value })
           }
-          // onKeyUp={(event) =>
-          //   event.key === "Enter" && onGetMyTimeSheet(filters)
-          // }
+          onKeyUp={(event) => event.key === "Enter" && onGetWorkLog(filters)}
         />
       </Stack>
     );

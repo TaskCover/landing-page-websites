@@ -66,4 +66,5 @@ export const Endpoint = {
   WORK_LOG: "/timesheets/log",
   COMPANY_TIME_SHEET: "timesheets/company",
   TIME_SHEET: "/timesheets",
+  PIN: "/timesheets/pin",
 };

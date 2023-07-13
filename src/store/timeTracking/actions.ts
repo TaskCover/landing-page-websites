@@ -25,6 +25,17 @@ export type GetMyTimeSheetQueries = {
   search_key?: string;
 };
 
+export type GetWorkLogQueries = {
+  date: string;
+  search_key?: string;
+};
+
+export type BodyPinTimeSheet = {
+  id: string;
+  is_pin: boolean;
+  type: string;
+};
+
 export type BodyCreateTimeSheet = {
   id: string;
   project_id: string;
@@ -55,23 +66,25 @@ export const getMyTimeSheet = createAsyncThunk(
   },
 );
 
-// export const getWorkLog = createAsyncThunk(
-//   "timeTracking/getWorkLog",
-//   async (id: string) => {
-//     try {
-//       const response = await client.get(
-//         StringFormat(Endpoint.WORK_LOG, { id }),
-//       );
+export const getWorkLog = createAsyncThunk(
+  "timeTracking/getWorkLog",
+  async (queries: GetWorkLogQueries) => {
+    const newQueries = { ...queries };
 
-//       if (response?.status === HttpStatusCode.OK) {
-//         return response.data;
-//       }
-//       throw AN_ERROR_TRY_AGAIN;
-//     } catch (error) {
-//       throw error;
-//     }
-//   },
-// );
+    try {
+      const response = await client.get(Endpoint.WORK_LOG, newQueries, {
+        baseURL: TIME_SHEET_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
 
 export const getCompanyTimeSheet = createAsyncThunk(
   "timeTracking/getCompanyTimeSheet",
@@ -126,6 +139,24 @@ export const updateTimeSheet = createAsyncThunk(
           baseURL: TIME_SHEET_API_URL,
         },
       );
+
+      if (response?.status === HttpStatusCode.CREATED) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const pinTimeSheet = createAsyncThunk(
+  "timeTracking/pinTimeSheet",
+  async (data: BodyPinTimeSheet) => {
+    try {
+      const response = await client.post(`${Endpoint.PIN}`, data, {
+        baseURL: TIME_SHEET_API_URL,
+      });
 
       if (response?.status === HttpStatusCode.CREATED) {
         return response.data;

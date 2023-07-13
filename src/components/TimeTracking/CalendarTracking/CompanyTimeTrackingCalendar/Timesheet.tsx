@@ -21,6 +21,8 @@ import {
 } from "@mui/material";
 import PinActiveIcon from "icons/PinActiveIcon";
 import PinIcon from "icons/PinIcon";
+import { useSnackbar } from "store/app/selectors";
+import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 
 interface IProps {
   data: any[];
@@ -51,6 +53,10 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
   const [totalEachRows, setTotalEachRows] = useState<{ [key: string]: number }>(
     {},
   );
+
+  const { onAddSnackbar } = useSnackbar();
+  const { onPinTimeSheet, onGetMyTimeSheet, params } = useGetMyTimeSheet();
+
   const [totalWeek, setTotalWeek] = useState<number>(0);
   const [weeklyTotals, setWeeklyTotals] = useState<Map<string, number>>(
     new Map<string, number>(),
@@ -153,18 +159,31 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                         height: 24,
                         visibility: user?.is_pin ? "visible" : "hidden",
                       }}
-                      // onClick={() => {
-                      //   dispatch(
-                      //     pinTimeLog(
-                      //       {
-                      //         id: user?.id,
-                      //         is_pin: user?.is_pin ? !user?.is_pin : true,
-                      //         type: "USER",
-                      //       },
-                      //       filters,
-                      //     ),
-                      //   );
-                      // }}
+                      onClick={() => {
+                        onPinTimeSheet({
+                          id: user?.id,
+                          is_pin: user?.is_pin ? !user?.is_pin : true,
+                          type: "USER",
+                        })
+                          .then(() => {
+                            onGetMyTimeSheet({ ...params });
+                            onAddSnackbar(
+                              `${
+                                user?.is_pin ? "Unpin" : "Pin"
+                              } timesheet success`,
+                              "success",
+                            );
+                          })
+                          .catch(() => {
+                            onGetMyTimeSheet({ ...params });
+                            onAddSnackbar(
+                              `${
+                                user?.is_pin ? "Unpin" : "Pin"
+                              } timesheet success`,
+                              "success",
+                            );
+                          });
+                      }}
                     >
                       {user?.is_pin ? <PinActiveIcon /> : <PinIcon />}
                     </IconButton>

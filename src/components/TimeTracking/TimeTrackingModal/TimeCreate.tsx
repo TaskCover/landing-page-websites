@@ -48,6 +48,7 @@ const TimeCreate: React.FC<IProps> = ({
   const { items: projects, onGetProjects } = useProjects();
   const { items: positions, onGetPositions } = usePositions();
   const {
+    params,
     itemStatus,
     statusUpdate,
     statusDelete,
@@ -179,19 +180,19 @@ const TimeCreate: React.FC<IProps> = ({
         .then((res) => {
           onAddSnackbar("Update timesheet success", "success");
           onClose();
-          onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
+          onGetMyTimeSheet({ ...params });
         })
         .catch((err) => {
           onAddSnackbar("Update timesheet success", "success");
           onClose();
-          onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
+          onGetMyTimeSheet({ ...params });
         });
     } else {
       onCreateTimeSheet(resolveData)
         .then(() => {
           onAddSnackbar("Create timesheet success", "success");
           onClose();
-          onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
+          onGetMyTimeSheet({ ...params });
         })
         .catch((err) => {
           onAddSnackbar(getMessageErrorByAPI(err, commonT), "error");
