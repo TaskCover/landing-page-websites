@@ -113,7 +113,7 @@ const AddGroup = () => {
           }}
         />
       </Box>
-      <Box overflow="auto" maxHeight="calc(550px - 85px - 15px)">
+      <Box overflow="auto" maxHeight="calc(550px - 85px - 15px)" minHeight="calc(550px - 85px - 15px)">
         {isFetching || error ? (
           Array.from({ length: 5 }, (_, i) => (
             <Box
