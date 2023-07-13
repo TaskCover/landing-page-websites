@@ -23,6 +23,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 // import { TimeTrackingActions } from "@/Actions";
 // import { useTypedDispatch, RootState } from "@/store";
 import { ENUMS, ROUTERS } from "../../Component/Constants";
+import CustomizedInputBase from "components/shared/InputSeasrch";
 
 //const { getTimeLog } = TimeTrackingActions;
 const { TASK_ACTION } = ENUMS;
@@ -280,30 +281,14 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
           </Typography>
           <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
         </Stack>
-        <Filter.SearchField
-          sx={{
-            maxWidth: "295px",
-            height: "40px",
-            " .MuiInputBase-root": {
-              maxWidth: "295px",
-              height: "40px",
-            },
-          }}
-          placeholder="Search"
+        <CustomizedInputBase
           value={filters.search_key}
-          onChange={(event) => {
-            setFilters({ ...filters, search_key: event?.target.value });
-          }}
-          // onKeyUp={(event) => {
-          //   if (event.key === "Enter" || event.keyCode === 13) {
-          //     dispatch(
-          //       getTimeLog({
-          //         ...filters,
-          //         date: dayjs(filters?.date).format("YYYY-MM-DD"),
-          //       }),
-          //     );
-          //   }
-          // }}
+          onChange={(event) =>
+            setFilters({ ...filters, search_key: event.target.value })
+          }
+          // onKeyUp={(event) =>
+          //   event.key === "Enter" && onGetMyTimeSheet(filters)
+          // }
         />
       </Stack>
     );

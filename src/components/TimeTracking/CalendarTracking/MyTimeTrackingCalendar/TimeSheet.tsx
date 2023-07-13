@@ -19,6 +19,8 @@ import {
   Stack,
   CircularProgress,
 } from "@mui/material";
+import PinActiveIcon from "icons/PinActiveIcon";
+import PinIcon from "icons/PinIcon";
 
 // import Assets from '@/Assets';
 // import { TimeTrackingActions } from '@/Actions';
@@ -198,13 +200,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                       //   );
                       // }}
                     >
-                      <Box
-                        component="img"
-                        sx={{
-                          width: 24,
-                          height: 24,
-                        }}
-                      />
+                      {timeSheet?.is_pin ? <PinActiveIcon /> : <PinIcon />}
                     </IconButton>
                   </Box>
                 </StyledTableCell>

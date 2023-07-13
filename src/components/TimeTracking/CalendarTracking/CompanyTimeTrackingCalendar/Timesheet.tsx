@@ -19,6 +19,8 @@ import {
   Stack,
   CircularProgress,
 } from "@mui/material";
+import PinActiveIcon from "icons/PinActiveIcon";
+import PinIcon from "icons/PinIcon";
 
 interface IProps {
   data: any[];
@@ -103,6 +105,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
     const sortedByPin = sortedByDate?.sort((_a: any, b: any) =>
       b && b.is_pin ? 1 : -1,
     );
+
     return (
       <TableBody sx={{ position: "relative" }}>
         {!_.isEmpty(sortedByPin) ? (
@@ -163,16 +166,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                       //   );
                       // }}
                     >
-                      <Box
-                        component="img"
-                        // src={
-                        //   user?.is_pin ? Assets.pinActiveIcon : Assets.pinIcon
-                        // }
-                        sx={{
-                          width: 24,
-                          height: 24,
-                        }}
-                      />
+                      {user?.is_pin ? <PinActiveIcon /> : <PinIcon />}
                     </IconButton>
                   </Box>
                 </StyledTableCell>
@@ -190,12 +184,12 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                   {totalEachRows[user.id] || 0} giờ
                 </StyledTableCell>
                 {_.map(weekdays, (weekday, _index: number) => {
-                  const entries = user.timesheet.filter(
+                  const entries = user?.timesheet?.filter(
                     (entry: any) =>
                       dayjs(entry.day).day() === weekdays.indexOf(weekday),
                   );
 
-                  const totalDuration = entries.reduce(
+                  const totalDuration = entries?.reduce(
                     (total: any, entry: any) => total + entry.duration,
                     0,
                   );

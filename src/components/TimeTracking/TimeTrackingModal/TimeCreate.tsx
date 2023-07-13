@@ -21,6 +21,8 @@ import { useAuth } from "store/app/selectors";
 interface IProps {
   type?: string;
   open: boolean;
+  isEdit?: boolean;
+  selectedEvent?: any;
   onClose(): void;
   filters?: any;
   currentScreen: "myTime" | "companyTime";
@@ -36,10 +38,19 @@ const TimeCreate: React.FC<IProps> = ({
   onClose,
   filters,
   currentScreen,
+  isEdit,
+  selectedEvent,
 }) => {
   const { items: projects, onGetProjects } = useProjects();
   const { items: positions, onGetPositions } = usePositions();
-  const { itemStatus, onCreateTimeSheet } = useGetMyTimeSheet();
+  const {
+    itemStatus,
+    statusUpdate,
+    statusDelete,
+    onCreateTimeSheet,
+    onUpdateTimeSheet,
+    onDeleteTimeSheet,
+  } = useGetMyTimeSheet();
 
   const { user: userData } = useAuth();
 
@@ -95,8 +106,21 @@ const TimeCreate: React.FC<IProps> = ({
   }, [userData]);
 
   useEffect(() => {
-    if (!open) reset();
-  }, [open]);
+    if (isEdit) {
+      const validResetData = {
+        project_id: selectedEvent?.extendedProps?.project?.id,
+        type: selectedEvent?.extendedProps?.typeDefault,
+        position: selectedEvent?.extendedProps?.position?.id,
+        day: dayjs(selectedEvent?.extendedProps?.day).format("YYYY-MM-DD"),
+        start_time: selectedEvent?.start,
+        duration: selectedEvent?.extendedProps?.hour || 0,
+        note: selectedEvent?.extendedProps?.note,
+      };
+      reset(validResetData);
+    } else {
+      reset();
+    }
+  }, [isEdit, open]);
 
   useEffect(() => {
     if (!_.isEmpty(projects)) {
@@ -123,11 +147,15 @@ const TimeCreate: React.FC<IProps> = ({
   }, [positions]);
 
   useEffect(() => {
-    if (itemStatus === DataStatus.SUCCEEDED) {
+    if (
+      itemStatus === DataStatus.SUCCEEDED ||
+      statusUpdate === DataStatus.SUCCEEDED ||
+      statusDelete === DataStatus.SUCCEEDED
+    ) {
       reset();
       onClose();
     }
-  }, [itemStatus]);
+  }, [itemStatus, statusUpdate, statusDelete]);
 
   const onSubmit = (data: FormData) => {
     const resolveData = {
@@ -137,7 +165,14 @@ const TimeCreate: React.FC<IProps> = ({
         .set("date", dayjs(data?.day).date())
         .format("YYYY-MM-DD HH:mm"),
     };
-    onCreateTimeSheet(resolveData);
+    if (isEdit) {
+      onUpdateTimeSheet({
+        ...resolveData,
+        id: selectedEvent?.extendedProps?.id,
+      });
+    } else {
+      onCreateTimeSheet(resolveData);
+    }
   };
 
   const _renderMain = () => {
@@ -292,12 +327,34 @@ const TimeCreate: React.FC<IProps> = ({
             Confirm
           </Button>
         </Stack>
+        {isEdit && (
+          <Stack direction="row" justifyContent="center" sx={{ mt: 1 }}>
+            <Button
+              variant="outlined"
+              sx={{
+                width: "150px",
+                marginRight: "24px",
+                borderColor: "error.light",
+                color: "error.main",
+                "&:hover": {
+                  borderColor: "error.main",
+                  color: "error.main",
+                },
+              }}
+              onClick={() => {
+                onDeleteTimeSheet({ id: selectedEvent?.extendedProps?.id });
+              }}
+            >
+              Delete
+            </Button>
+          </Stack>
+        )}
       </DialogContent>
     );
   };
   return (
     <DefaultPopupLayout
-      title="Add Time"
+      title={isEdit ? "Edit time" : "Add time"}
       content={_renderMain()}
       open={open}
       onClose={onClose}

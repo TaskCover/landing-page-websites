@@ -3,6 +3,9 @@ import {
   getMyTimeSheet,
   createTimeSheet,
   BodyCreateTimeSheet,
+  getCompanyTimeSheet,
+  updateTimeSheet,
+  deleteTimeSheet,
 } from "./actions";
 import {
   Attachment,
@@ -24,27 +27,45 @@ import { subDays } from "date-fns";
 import dayjs from "dayjs";
 
 export interface MyTimeSheet {
-  created_time: string;
-  day: string;
-  duration: number;
-  end_time: string;
-  id: string;
-  note: string;
-  position: { id: string; name: string };
-  project_id: string;
-  start_time: string;
-  type: string;
-  user_id: string;
-  _id: string;
+  created_time?: string;
+  day?: string;
+  duration?: number;
+  end_time?: string;
+  id?: string;
+  note?: string;
+  position?: { id: string; name: string };
+  project_id?: string;
+  start_time?: string;
+  type?: string;
+  user_id?: string;
+  _id?: string;
 }
-
+export interface CompanyTimeSheet {
+  id: string;
+  fullname: string;
+  company: string;
+  avatar: {
+    object: string;
+    name: string;
+    link: string;
+  };
+  email: string;
+  position: string;
+  timesheet: MyTimeSheet[];
+}
 export interface TimeTrackingState {
   items: MyTimeSheet[];
+  timeSheet: MyTimeSheet;
   params: object;
   status: DataStatus;
   itemStatus: DataStatus;
+  statusDelete: DataStatus;
   paging: Paging;
   error?: string;
+
+  companyItems: CompanyTimeSheet[];
+  companyStatus: DataStatus;
+  statusUpdate: DataStatus;
 }
 export type GetActivitiesQueries = {
   start_date: string;
@@ -70,10 +91,16 @@ export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {
 
 const initialState: TimeTrackingState = {
   items: [],
+  timeSheet: {},
   params: {},
   itemStatus: DataStatus.IDLE,
+  statusDelete: DataStatus.IDLE,
   status: DataStatus.IDLE,
   paging: DEFAULT_PAGING,
+
+  companyItems: [],
+  companyStatus: DataStatus.IDLE,
+  statusUpdate: DataStatus.IDLE,
 };
 
 const timeTrackingSlice = createSlice({
@@ -106,6 +133,42 @@ const timeTrackingSlice = createSlice({
           state.itemStatus = DataStatus.SUCCEEDED;
 
           state.error = undefined;
+        },
+      )
+      .addCase(getCompanyTimeSheet.pending, (state, action) => {
+        state.status = DataStatus.LOADING;
+      })
+      .addCase(
+        getCompanyTimeSheet.fulfilled,
+        (state, action: PayloadAction<CompanyTimeSheet[]>) => {
+          const items = action.payload;
+          state.companyItems = items as CompanyTimeSheet[];
+          state.companyStatus = DataStatus.SUCCEEDED;
+          state.error = undefined;
+        },
+      )
+      .addCase(getCompanyTimeSheet.rejected, (state, action) => {
+        state.status = DataStatus.FAILED;
+        state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+
+      .addCase(
+        updateTimeSheet.fulfilled,
+        (state, action: PayloadAction<MyTimeSheet>) => {
+          if (state?.timeSheet?.id === action.payload.id) {
+            state.statusUpdate = DataStatus.SUCCEEDED;
+            state.timeSheet = action.payload;
+          }
+        },
+      )
+      .addCase(updateTimeSheet.rejected, (state, action) => {
+        state.statusUpdate = DataStatus.FAILED;
+        state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(
+        deleteTimeSheet.fulfilled,
+        (state, action: PayloadAction<{ id: string }>) => {
+          state.statusDelete = DataStatus.SUCCEEDED;
         },
       ),
 });

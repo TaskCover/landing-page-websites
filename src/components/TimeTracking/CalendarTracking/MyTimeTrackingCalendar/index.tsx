@@ -152,6 +152,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isOpenCreatePopup, setIsOpenCreatePopup] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState<any>(null);
+  const [isEdit, setIsEdit] = React.useState<boolean>(false);
   const [activeTab, setActiveTab] = React.useState<string>("timeSheet");
   const [events, setEvents] = React.useState<any[]>([]);
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(
@@ -853,7 +854,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
                         <StyledTableRow
                           sx={{ ...rowStyles, cursor: "pointer" }}
                           key={index}
-                          onClick={() => setSelectedEvent(event)}
+                          onClick={() => {
+                            setIsEdit(true);
+                            setSelectedEvent(event);
+                            setIsOpenCreatePopup(true);
+                          }}
                         >
                           <StyledTableCell>
                             <Box
@@ -967,21 +972,35 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const _redderCreatePopup = () => (
     <TimeCreate
       open={isOpenCreatePopup}
-      onClose={() => setIsOpenCreatePopup(false)}
+      onClose={() => {
+        setIsOpenCreatePopup(false);
+        setIsEdit(false);
+      }}
       filters={filters}
       currentScreen="myTime"
+      isEdit={isEdit}
+      selectedEvent={selectedEvent}
     />
   );
 
-  const _redderUpdatePopup = () => (
-    // <TimeTrackingPopup.TimeDetails
-    //   open={!!selectedEvent}
-    //   onClose={() => setSelectedEvent(null)}
-    //   payload={selectedEvent}
-    //   filters={filters}
-    // />
-    <p>hello</p>
-  );
+  // const _redderUpdatePopup = () => (
+  //   <TimeCreate
+  //     open={isOpenCreatePopup}
+  //     onClose={() => {
+  //       setIsOpenCreatePopup(false);
+  //       setIsEdit(false);
+  //     }}
+  //     filters={filters}
+  //     currentScreen="myTime"
+
+  //   />
+  //   // <TimeTrackingPopup.TimeDetails
+  //   //   open={!!selectedEvent}
+  //   //   onClose={() => setSelectedEvent(null)}
+  //   //   payload={selectedEvent}
+  //   //   filters={filters}
+  //   // />
+  // );
 
   const _renderTimeSheetContent = () => {
     if (activeTab !== "timeSheet") return;
