@@ -50,6 +50,13 @@ export interface UserSendInfo {
   name: string;
 }
 
+export interface ChatGroup {
+  _id: string;
+  fname: string;
+  name: string;
+  usersCount: number;
+}
+
 export interface ChatState {
   convention: ChatItemInfo[];
   status: DataStatus;
@@ -63,6 +70,8 @@ export interface ChatState {
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
   messagePaging: Paging;
+  newGroupData: ChatGroup | {};
+  createGroupStatus: DataStatus,
 }
 
 export type DirectionChat = "a" | "c" | "d";
@@ -80,6 +89,11 @@ export interface ChatConventionItemRequest extends ChatRequestCommon {
 
 export interface LastMessagesRequest extends ChatRequestCommon {
   roomId: string;
+}
+
+export interface CreateGroupRequest extends ChatRequestCommon {
+  groupName: string;
+  members: string[];
 }
 
 export enum STEP {

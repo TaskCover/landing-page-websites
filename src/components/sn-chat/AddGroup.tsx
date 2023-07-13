@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   IconButton,
   InputAdornment,
@@ -17,10 +18,12 @@ import { useEmployeesOfCompany } from "store/manager/selectors";
 import { Employee } from "store/company/reducer";
 import SelectItem from "./components/SelectItem";
 import { useAuth } from "store/app/selectors";
+import { STEP } from "store/chat/type";
+import { DataStatus } from "constant/enums";
 
 const AddGroup = () => {
   const [textSearch, setTextSearch] = useState("");
-  const [employeeSelected, setEmployeeSelected] = useState({});
+  const [employeeSelected, setEmployeeSelected] = useState<any>({});
 
   const {
     items,
@@ -37,13 +40,22 @@ const AddGroup = () => {
 
   const { user } = useAuth();
 
-  const { prevStep, onSetStep } = useChat();
+  const { prevStep, createGroupStatus, newGroupData,
+    convention,
+    onSetStep, onCreateDirectMessageGroup } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
 
   useEffect(() => {
     onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 20 });
   }, [onGetEmployees, textSearch, user?.company]);
+
+  useEffect(() => {
+    if (createGroupStatus === DataStatus.SUCCEEDED) {
+      onSetStep(STEP.CHAT_ONE);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createGroupStatus]);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -58,6 +70,14 @@ const AddGroup = () => {
     setEmployeeSelected({
       ...employeeSelected,
       [employee?.username ?? ""]: event.target.checked,
+    });
+  };
+
+  const handleCreateGroup = () => {
+    onCreateDirectMessageGroup({
+      groupName: `NewGroup${(convention?.filter(chat => chat.t === 'd')?.length ?? 0) + 1}`,
+      members: Object.keys(employeeSelected).filter((item) => employeeSelected[item] === true),
+      type: 'd'
     });
   };
 
@@ -175,7 +195,7 @@ const AddGroup = () => {
           sx={defaultSx.button}
           type="button"
           size="small"
-          // onClick={onSubmit}
+          onClick={handleCreateGroup}
           // pending={pending}
         >
           {commonT("form.add")}

@@ -1,9 +1,9 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { getAllConvention, getLatestMessages } from "./actions";
+import { createDirectMessageGroup, getAllConvention, getLatestMessages } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
-import { ChatConventionItemRequest, LastMessagesRequest, STEP } from "./type";
+import { ChatConventionItemRequest, CreateGroupRequest, LastMessagesRequest, STEP } from "./type";
 import { useAuth } from "store/app/selectors";
 import { setRoomId, setStep } from "./reducer";
 
@@ -19,6 +19,8 @@ export const useChat = () => {
     status,
     currStep,
     prevStep,
+    createGroupStatus,
+    newGroupData,
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -82,6 +84,25 @@ export const useChat = () => {
     dispatch(setRoomId(id));
   };
 
+  const onCreateDirectMessageGroup = useCallback(
+    async ({
+      type = 'd',
+      ...rest
+    }: Omit<CreateGroupRequest, "authToken" | "userId">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      await dispatch(
+        createDirectMessageGroup({
+          type,
+          authToken,
+          userId,
+          ...rest,
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
   return {
     convention,
     conversationPaging,
@@ -96,9 +117,12 @@ export const useChat = () => {
     roomId,
     currStep,
     prevStep,
+    createGroupStatus,
+    newGroupData,
     onGetAllConvention,
     onGetLastMessages,
     onSetStep,
     onSetRoomId,
+    onCreateDirectMessageGroup,
   };
 };

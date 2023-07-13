@@ -3,7 +3,7 @@ import { client } from "api/client";
 import { Endpoint } from "api/endpoint";
 import { HttpStatusCode } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, CHAT_API_URL } from "constant/index";
-import { ChatConventionItemRequest, LastMessagesRequest } from "./type";
+import { ChatConventionItemRequest, CreateGroupRequest, LastMessagesRequest } from "./type";
 
 export const getAllConvention = createAsyncThunk(
   "chat/getAllConvention",
@@ -28,6 +28,25 @@ export const getLatestMessages = createAsyncThunk(
   async (paramReq: LastMessagesRequest) => {
     try {
       const response = await client.post("getLatestMessages", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+
+export const createDirectMessageGroup = createAsyncThunk(
+  "chat/createDirectMessageGroup",
+  async (paramReq: CreateGroupRequest) => {
+    try {
+      const response = await client.post("createDirectMessageGroup", paramReq, {
         baseURL: CHAT_API_URL,
       });
 
