@@ -7,12 +7,12 @@ import { ChatItemInfo, STEP } from "store/chat/type";
 import { useAuth } from "store/app/selectors";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import SearchIcon from "icons/SearchIcon";
-import SelectItem from "./SelectItem";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";
 import {
   NS_COMMON,
 } from "constant/index";
+import SelectItem from "./components/SelectItem";
 const AddGroup = () => {
   const [textSearch, setTextSearch] = useState("");
   const { user } = useAuth();
