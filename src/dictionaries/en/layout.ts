@@ -25,5 +25,6 @@ export const LayoutLang: LayoutDictionary = {
     manager: "Manager",
     companyList: "Company List",
     statementHistory: "Statement History",
+    timeTracking: "Time Tracking",
   },
 };
