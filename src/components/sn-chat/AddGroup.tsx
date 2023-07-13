@@ -1,6 +1,6 @@
 import { IconButton, InputAdornment, Skeleton, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import ChatItem from "./ChatItem";
 import { useChat } from "store/chat/selectors";
 import { ChatItemInfo, STEP } from "store/chat/type";
@@ -13,28 +13,33 @@ import { useTranslations } from "next-intl";
 import {
   NS_COMMON,
 } from "constant/index";
+import { useEmployeesOfCompany } from "store/manager/selectors";
+import { Employee } from "store/company/reducer";
 const AddGroup = () => {
   const [textSearch, setTextSearch] = useState("");
-  const { user } = useAuth();
+  const [employeeSelected, setEmployeeSelected] = useState({});
+
+
   const {
-    isError,
-    convention,
+    items,
     isFetching,
-    prevStep,
-    onSetRoomId,
-    onGetAllConvention,
-    onSetStep,
-  } = useChat();
+    isIdle,
+    error,
+    totalItems,
+    pageSize,
+    pageIndex,
+    totalPages,
+    onGetEmployees,
+    onApproveOrReject: onApproveOrRejectAction,
+  } = useEmployeesOfCompany();
+
+  const { prevStep, currStep, onSetStep } = useChat();
+
   const commonT = useTranslations(NS_COMMON);
 
   useEffect(() => {
-    onGetAllConvention({
-      type: "a",
-      text: textSearch,
-      offset: 0,
-      count: 1000,
-    });
-  }, [onGetAllConvention, textSearch]);
+    onGetEmployees('SASS', { pageIndex: 0, pageSize: 20});
+  }, [onGetEmployees, textSearch]);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -42,9 +47,12 @@ const AddGroup = () => {
     }
   };
 
-  const handleClickConversation = (chatInfo: ChatItemInfo) => {
-    onSetRoomId(chatInfo._id);
-    onSetStep(STEP.CHAT_ONE);
+  const handleClickConversation = (employee: Employee, event: ChangeEvent<HTMLInputElement>) => {
+    setEmployeeSelected({
+      ...employeeSelected,
+      [employee?.username ?? '']: event.target.checked,
+    });
+    
   };
 
   return (
@@ -98,7 +106,7 @@ const AddGroup = () => {
         />
       </Box>
       <Box overflow="auto" maxHeight="calc(550px - 85px - 15px)">
-        {isFetching || isError ? (
+        {isFetching || error ? (
           Array.from({ length: 5 }, (_, i) => (
             <Box
               key={i}
@@ -122,14 +130,13 @@ const AddGroup = () => {
           ))
         ) : (
           <>
-            {convention?.length > 0
-              ? convention.map((item, index) => {
+              {items?.length > 0
+                ? items.map((item, index) => {
                 return (
                   <SelectItem
-                    chatInfo={item}
-                    sessionId={user?.["username"]}
+                    employee={item}
                     key={index}
-                    onClickConvention={handleClickConversation}
+                    onClick={event => handleClickConversation(item, event)}
                   />
                 );
               })

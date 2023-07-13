@@ -2,29 +2,22 @@ import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
 import { Checkbox, ImageList, Typography } from "@mui/material";
 import { ChatItemInfo } from "store/chat/type";
-import { useMemo } from "react";
+import { ChangeEvent, useMemo } from "react";
 import CircleUnchecked from "icons/CircleUnchecked";
 import CircleCheckedFilled from "icons/CircleCheckedFilled";
 import { Button } from "components/shared";
+import { Employee } from "store/company/reducer";
 
-interface ChatItemProp {
-  sessionId: string;
-  chatInfo: ChatItemInfo;
-  onClickConvention: (data: ChatItemInfo) => void;
+interface SelectItemProp {
+  employee: Employee;
+  onClick: (event: ChangeEvent<HTMLInputElement>) => void;
 }
-const SelectItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
-  const { lastMessage, name, usersCount } = chatInfo;
-  const isGroup = usersCount > 1;
-  const isCurrentAcc = sessionId === lastMessage?.u.username;
-  const nameLastMessage = isCurrentAcc ? "You: " : "";
+const SelectItem = ({ employee, onClick }: SelectItemProp) => {
+  const { fullname, email, avatar } = employee;
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-  const lastMessageRender = useMemo(() => {
-    return [nameLastMessage, lastMessage?.msg].join("").trim();
-  }, [lastMessage?.msg, nameLastMessage]);
   return (
     <Box
-      // onClick={() => onClickConvention(chatInfo)}
       sx={{
         display: "flex",
         alignItems: "center",
@@ -39,13 +32,15 @@ const SelectItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) =>
     >
       
       <Typography variant="caption" color="#999999">
-      <Checkbox
+        <Checkbox
+        onChange={onClick}
         {...label}
         icon={<CircleUnchecked />}
         checkedIcon={<CircleCheckedFilled />}
       />
       </Typography>
       <Avatar
+        src={avatar?.link}
         alt="Avatar"
         size={56}
         style={{
@@ -59,10 +54,10 @@ const SelectItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) =>
         }}
       >
         <Typography variant="inherit" fontWeight="bold">
-          {name}
+          {fullname}
         </Typography>
         <Typography variant="caption" color="#999999">
-          {lastMessageRender}
+          {email}
         </Typography>
       </Box>
       
