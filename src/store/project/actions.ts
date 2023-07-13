@@ -79,11 +79,11 @@ export type TaskData = {
   task_list: string;
   task?: string;
   sub_task?: string;
-  start_date?: string;
-  end_date?: string;
-  estimated_hours?: number;
+  start_date?: string | null;
+  end_date?: string | null;
+  estimated_hours?: number | null;
   description?: string;
-  owner?: string;
+  owner?: string | null;
   status?: Status;
   attachments?: string[];
   dependencies?: TaskDataDependency[];

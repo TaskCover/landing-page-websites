@@ -14,7 +14,8 @@ const Editor = (props: EditorProps) => {
   const { title, name, required, onChange, ...rest } = props;
 
   const onChangeEditor = (value?: string) => {
-    onChange(name, value ?? "");
+    const isEmpty = "<p><br></p>" === value;
+    onChange(name, isEmpty ? "" : value ?? "");
   };
 
   return (

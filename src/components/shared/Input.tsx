@@ -25,7 +25,7 @@ type CoreInputProps = Omit<TextFieldProps, "error" | "title"> & {
   startNode?: React.ReactNode;
   endNode?: React.ReactNode;
   rootSx?: SxProps;
-  value?: string | number;
+  value?: string | number | null;
   onChangeValue?: (newValue?: string | number) => void;
   titleSx?: SxProps;
   onlyContent?: boolean;
@@ -73,6 +73,7 @@ const CoreInput = forwardRef(
       type: typeProps,
       titleSx,
       onlyContent,
+      value,
       ...rest
     } = props;
 
@@ -157,6 +158,7 @@ const CoreInput = forwardRef(
         minRows={minRows}
         maxRows={maxRows}
         type={type}
+        value={value || ""}
         {...rest}
         variant="outlined"
         label={title}

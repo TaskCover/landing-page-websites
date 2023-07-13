@@ -123,7 +123,7 @@ const Information = () => {
         gridTemplateColumns="repeat(auto-fill, 190px)"
         pb={3}
       >
-        {!task?.description && (
+        {(!task?.description || task?.description === VALUE_AS_EMPTY) && (
           <ActionItem
             onClick={onShowAddDescription}
             icon={<AlignLeftIcon sx={{ color: "grey.400" }} />}
@@ -273,3 +273,5 @@ const InformationItem = (props: InformationItemProps) => {
 };
 
 const ATTACHMENT_ID = "attachment_id";
+
+const VALUE_AS_EMPTY = "<p><br></p>";

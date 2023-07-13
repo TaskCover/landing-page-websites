@@ -309,3 +309,7 @@ export const getThemeSystem = (e?: MediaQueryList): ThemeMode => {
   const themeSystem = isDark ? ThemeMode.DARK : ThemeMode.LIGHT;
   return themeSystem;
 };
+
+export const hasValue = (value?) => {
+  return value !== null && value !== "" && value !== undefined;
+};
