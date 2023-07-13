@@ -49,7 +49,7 @@ const AccountInfoHeader = ({
           }}
         >
           <Typography variant="inherit" fontWeight="bold">
-            {accountInfo?.lastMessage.u.name}
+            {accountInfo?.lastMessage?.u?.name}
           </Typography>
           <Typography variant="caption" color="#999999">
             Active
