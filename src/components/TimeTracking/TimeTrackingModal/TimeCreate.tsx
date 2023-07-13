@@ -16,7 +16,11 @@ import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import { useProjects } from "store/project/selectors";
 import { usePositions } from "store/company/selectors";
 import { DataStatus } from "constant/enums";
-import { useAuth } from "store/app/selectors";
+import { useAuth, useSnackbar } from "store/app/selectors";
+import { getMessageErrorByAPI } from "utils/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
+import { DEFAULT_RANGE_ACTIVITIES } from "store/timeTracking/reducer";
 
 interface IProps {
   type?: string;
@@ -50,8 +54,9 @@ const TimeCreate: React.FC<IProps> = ({
     onCreateTimeSheet,
     onUpdateTimeSheet,
     onDeleteTimeSheet,
+    onGetMyTimeSheet,
   } = useGetMyTimeSheet();
-
+  const { onAddSnackbar } = useSnackbar();
   const { user: userData } = useAuth();
 
   const [projectOptions, setProjectOptions] = useState<IOptionStructure[]>([]);
@@ -146,16 +151,17 @@ const TimeCreate: React.FC<IProps> = ({
     }
   }, [positions]);
 
-  useEffect(() => {
-    if (
-      itemStatus === DataStatus.SUCCEEDED ||
-      statusUpdate === DataStatus.SUCCEEDED ||
-      statusDelete === DataStatus.SUCCEEDED
-    ) {
-      reset();
-      onClose();
-    }
-  }, [itemStatus, statusUpdate, statusDelete]);
+  // useEffect(() => {
+  //   if (
+  //     itemStatus === DataStatus.SUCCEEDED ||
+  //     statusUpdate === DataStatus.SUCCEEDED ||
+  //     statusDelete === DataStatus.SUCCEEDED
+  //   ) {
+  //     reset();
+  //     onClose();
+  //   }
+  // }, [itemStatus, statusUpdate, statusDelete]);
+  const commonT = useTranslations(NS_COMMON);
 
   const onSubmit = (data: FormData) => {
     const resolveData = {
@@ -169,9 +175,27 @@ const TimeCreate: React.FC<IProps> = ({
       onUpdateTimeSheet({
         ...resolveData,
         id: selectedEvent?.extendedProps?.id,
-      });
+      })
+        .then((res) => {
+          onAddSnackbar("Update timesheet success", "success");
+          onClose();
+          onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
+        })
+        .catch((err) => {
+          onAddSnackbar("Update timesheet success", "success");
+          onClose();
+          onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
+        });
     } else {
-      onCreateTimeSheet(resolveData);
+      onCreateTimeSheet(resolveData)
+        .then(() => {
+          onAddSnackbar("Create timesheet success", "success");
+          onClose();
+          onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
+        })
+        .catch((err) => {
+          onAddSnackbar(getMessageErrorByAPI(err, commonT), "error");
+        });
     }
   };
 
@@ -342,7 +366,17 @@ const TimeCreate: React.FC<IProps> = ({
                 },
               }}
               onClick={() => {
-                onDeleteTimeSheet({ id: selectedEvent?.extendedProps?.id });
+                onDeleteTimeSheet({ id: selectedEvent?.extendedProps?.id })
+                  .then(() => {
+                    onAddSnackbar("Delete timesheet success", "success");
+                    onClose();
+                    onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
+                  })
+                  .catch((err) => {
+                    onAddSnackbar("Delete timesheet success", "success");
+                    onClose();
+                    onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
+                  });
               }}
             >
               Delete

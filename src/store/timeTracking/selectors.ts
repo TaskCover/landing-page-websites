@@ -50,41 +50,21 @@ export const useGetMyTimeSheet = () => {
 
   const onCreateTimeSheet = useCallback(
     async (data: Omit<BodyCreateTimeSheet, "id">) => {
-      return await dispatch(createTimeSheet(data))
-        .unwrap()
-        .then(() => {
-          dispatch(getMyTimeSheet(DEFAULT_RANGE_ACTIVITIES));
-        });
+      return await dispatch(createTimeSheet(data)).unwrap();
     },
     [dispatch],
   );
 
   const onUpdateTimeSheet = useCallback(
     async (data: BodyCreateTimeSheet) => {
-      try {
-        return await dispatch(updateTimeSheet(data))
-          .unwrap()
-          .then(() => {
-            dispatch(getMyTimeSheet(DEFAULT_RANGE_ACTIVITIES));
-          });
-      } catch (error) {
-        throw error;
-      }
+      return await dispatch(updateTimeSheet(data)).unwrap();
     },
     [dispatch],
   );
 
   const onDeleteTimeSheet = useCallback(
     async (data: { id: string }) => {
-      try {
-        return await dispatch(deleteTimeSheet(data))
-          .unwrap()
-          .then(() => {
-            dispatch(getMyTimeSheet(DEFAULT_RANGE_ACTIVITIES));
-          });
-      } catch (error) {
-        throw error;
-      }
+      return await dispatch(deleteTimeSheet(data)).unwrap();
     },
     [dispatch],
   );

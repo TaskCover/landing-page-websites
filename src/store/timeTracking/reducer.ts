@@ -155,16 +155,10 @@ const timeTrackingSlice = createSlice({
       .addCase(
         updateTimeSheet.fulfilled,
         (state, action: PayloadAction<MyTimeSheet>) => {
-          if (state?.timeSheet?.id === action.payload.id) {
-            state.statusUpdate = DataStatus.SUCCEEDED;
-            state.timeSheet = action.payload;
-          }
+          state.statusUpdate = DataStatus.SUCCEEDED;
+          state.timeSheet = action.payload;
         },
       )
-      .addCase(updateTimeSheet.rejected, (state, action) => {
-        state.statusUpdate = DataStatus.FAILED;
-        state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
-      })
       .addCase(
         deleteTimeSheet.fulfilled,
         (state, action: PayloadAction<{ id: string }>) => {
