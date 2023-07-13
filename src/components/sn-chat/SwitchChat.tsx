@@ -14,7 +14,6 @@ const WrapperChat = () => {
   }, [onSetStep]);
 
   const renderContent = useCallback(() => {
-    console.log(currStep);
 
     switch (currStep) {
       case STEP.CONVENTION:

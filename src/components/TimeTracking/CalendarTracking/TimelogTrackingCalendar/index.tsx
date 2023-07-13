@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
@@ -22,7 +23,7 @@ import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 // import { TimeTrackingActions } from "@/Actions";
 // import { useTypedDispatch, RootState } from "@/store";
-import { ENUMS, ROUTERS } from "../../Component/Constants";
+import { ENUMS } from "../../Component/Constants";
 import CustomizedInputBase from "components/shared/InputSeasrch";
 import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import MobileDatePickerComponent from "components/TimeTracking/Component/MobileDatePicker";
@@ -188,9 +189,6 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
                       textDecoration: "underline",
                     },
                   }}
-                  // onClick={() =>
-                  //   Utils.redirect(`${ROUTERS.PROJECTS}/${timeLog?.project_id}`)
-                  // }
                 >
                   {`${timeLog?.task_number ? `#${timeLog.task_number}` : ""} ${
                     timeLog?.task_name ? "-" : ""
