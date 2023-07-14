@@ -186,7 +186,7 @@ const AddGroup = () => {
           variant="primaryOutlined"
           size="small"
           sx={defaultSx.button}
-          // onClick={onClose}
+          onClick={()=>{onSetStep(prevStep)}}
         >
           {commonT("form.cancel")}
         </Button>
