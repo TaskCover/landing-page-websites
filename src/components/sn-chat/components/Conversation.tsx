@@ -3,6 +3,7 @@ import { useEffect, useMemo } from "react";
 import { useChat } from "store/chat/selectors";
 import Messages from "./Messages";
 import { useAuth } from "store/app/selectors";
+import ChatInput from "./ChatInput";
 
 const Conversation = () => {
   const { roomId, messageInfo, onSetStep, onGetLastMessages } = useChat();
@@ -15,9 +16,15 @@ const Conversation = () => {
   console.log("user", user?.["username"]);
 
   return (
-    <Box>
+    <>
       <Messages sessionId={user?.["username"]} initialMessage={messageInfo} />
-    </Box>
+      <ChatInput
+        isSendLoading={false}
+        onChangeInput={(message) => {
+          console.log(message);
+        }}
+      />
+    </>
   );
 };
 

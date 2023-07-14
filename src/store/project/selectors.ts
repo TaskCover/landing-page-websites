@@ -40,6 +40,8 @@ import {
   ConvertSubTaskToTaskData,
   DependencyData,
   deleteDependency,
+  orderTodo,
+  OrderTodoData,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -292,6 +294,7 @@ export const useTasksOfProject = () => {
     taskListId: string,
     taskIds: string[],
     newTaskId?: string,
+    orderTasks?: string[],
   ) => {
     try {
       return await dispatch(
@@ -300,6 +303,7 @@ export const useTasksOfProject = () => {
           task_list_move: taskListId,
           task_current: taskIds,
           task_move: newTaskId,
+          tasks: orderTasks,
         }),
       ).unwrap();
     } catch (error) {
@@ -367,13 +371,32 @@ export const useTaskOptions = () => {
     shallowEqual,
   );
 
+  const [taskListOptions, taskOptions] = useMemo(() => {
+    return items.reduce(
+      (out: [Option[], Option[]], item) => {
+        out[0].push({
+          label: item.name,
+          value: item.id,
+          icon: "/images/ic-task-list.svg",
+        });
+        item.tasks.forEach((task) => {
+          out[1].push({
+            label: task.name,
+            value: task.id,
+            subText: item.id,
+
+            icon: "/images/ic-task.svg",
+          });
+        });
+        return out;
+      },
+      [[], []],
+    );
+  }, [items]);
+
   const options = useMemo(
-    () =>
-      items.map((item) => ({
-        label: item.name,
-        value: item.id,
-      })),
-    [items],
+    () => [...taskListOptions, ...taskOptions],
+    [taskListOptions, taskOptions],
   );
 
   const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
@@ -389,6 +412,8 @@ export const useTaskOptions = () => {
   return {
     items,
     options,
+    taskListOptions,
+    taskOptions,
     status,
     error,
     isIdle,
@@ -501,6 +526,13 @@ export const useTaskDetail = () => {
     return await dispatch(getTaskList(id)).unwrap();
   };
 
+  const onUpdateOrderTodo = async (data: OrderTodoData) => {
+    try {
+      return await dispatch(orderTodo(data)).unwrap();
+    } catch (error) {
+      throw error;
+    }
+  };
   return {
     task,
     taskListId: task?.taskListId,
@@ -517,6 +549,7 @@ export const useTaskDetail = () => {
     onDeleteTodo,
     onConvertSubTaskToTask,
     onDeleteDependency,
+    onUpdateOrderTodo,
   };
 };
 

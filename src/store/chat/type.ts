@@ -38,7 +38,7 @@ export interface MessageInfo {
 export interface MessengerInfo {
   msg: string;
   ts: string;
-  u: UserSendInfo;
+  u: UserSendInfo | null;
   _id: string;
   rid: string;
   _updatedAt: string;
@@ -59,6 +59,7 @@ export interface ChatGroup {
 
 export interface ChatState {
   convention: ChatItemInfo[];
+  userOnlinePage: UserOnlinePage[];
   status: DataStatus;
   conversationPaging: Paging;
 

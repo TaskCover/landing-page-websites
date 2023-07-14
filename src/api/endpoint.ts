@@ -40,6 +40,8 @@ export const Endpoint = {
   CONVERT_SUB_TASK: "/tasks/convert-subtask",
   CONVERT_SUB_TASK_TO_TASK: "/tasks/convert-task-by-subtask",
   DELETE_DEPENDENCY: "/tasks/delete-dependences",
+  ORDER_TASK: "/tasks/update-priority-todo-task",
+  ORDER_SUB_TASK: "/tasks/update-priority-todo-sub",
   DELETE_TO_DO: "/tasks/delete-todo-list",
   TASK_MOVE: "/tasks/move",
   TASK_COMMENT: "/tasks/comment",
@@ -59,4 +61,10 @@ export const Endpoint = {
   UPLOAD: "/files/upload-avatar",
   SIGNUP_UPLOAD: "/avatar/upload",
   UPLOAD_LINK: "/files/upload-link",
+
+  MY_TIME_SHEET: "/timesheets/me",
+  WORK_LOG: "/timesheets/log",
+  COMPANY_TIME_SHEET: "timesheets/company",
+  TIME_SHEET: "/timesheets",
+  PIN: "/timesheets/pin",
 };

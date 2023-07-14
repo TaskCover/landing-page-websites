@@ -50,13 +50,18 @@ const MoveTaskList = (props: MoveTaskListProps) => {
     try {
       setIsSubmitting && setIsSubmitting(true);
       for (const taskListId of oldTaskListIds) {
+        const selected = options.find(
+          (option) => option.value === values.task_move,
+        );
+        const destinationTaskListId = selected?.subText ?? values.task_move;
         await onMoveTask(
           taskListId,
-          values.task_list_move,
+          destinationTaskListId,
           taskIds[taskListId],
+          selected?.subText ? values.task_move : undefined,
         );
         await onGetTaskList(taskListId);
-        await onGetTaskList(values.task_list_move);
+        await onGetTaskList(destinationTaskListId);
       }
 
       onAddSnackbar(
@@ -112,7 +117,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
-      label={projectT("detailTasks.moveTaskList")}
+      label={projectT("detailTasks.newMove")}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
@@ -121,18 +126,20 @@ const MoveTaskList = (props: MoveTaskListProps) => {
       <Stack spacing={2} py={3}>
         <Select
           options={options}
-          title={projectT("detailTasks.form.title.newTaskList")}
-          name="task_list_move"
+          title={projectT("detailTasks.form.title.newTaskPlace")}
+          name="task_move"
           required
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values?.task_list_move}
-          error={commonT(touchedErrors?.task_list_move, {
-            name: projectT("detailTasks.form.title.newTaskList"),
+          value={formik.values?.task_move}
+          error={commonT(touchedErrors?.task_move, {
+            name: projectT("detailTasks.form.title.newTaskPlace"),
           })}
           rootSx={sxConfig.input}
           fullWidth
           onEndReached={onEndReached}
+          showSubText={false}
+          hasIcon
         />
       </Stack>
     </FormLayout>
@@ -141,11 +148,11 @@ const MoveTaskList = (props: MoveTaskListProps) => {
 
 export default memo(MoveTaskList);
 const INITIAL_VALUES = {
-  task_list_move: "",
+  task_move: "",
 };
 
 const validationSchema = Yup.object().shape({
-  task_list_move: Yup.string().trim().required("form.error.required"),
+  task_move: Yup.string().trim().required("form.error.required"),
 });
 
 const sxConfig = {

@@ -15,6 +15,7 @@ const Messages = ({ sessionId, initialMessage: messages }: MessagesProps) => {
         display: "flex",
         gap: "0.5rem",
         flexDirection: "column",
+        overflow: "auto",
         height: "100%",
         padding: "1rem",
       }}

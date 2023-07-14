@@ -1,8 +1,10 @@
 import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { ImageList, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { ChatItemInfo } from "store/chat/type";
 import { useMemo } from "react";
+import { getDaysDiff } from "utils/index";
+import { useChat } from "store/chat/selectors";
 
 interface ChatItemProp {
   sessionId: string;
@@ -10,14 +12,33 @@ interface ChatItemProp {
   onClickConvention: (data: ChatItemInfo) => void;
 }
 const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
-  const { lastMessage, name, usersCount } = chatInfo;
-  const isGroup = usersCount > 1;
-  const isCurrentAcc = sessionId === lastMessage?.u.username;
+  const { userOnlinePage } = useChat();
+
+  const { lastMessage, name, usersCount, usernames, avatar } = chatInfo;
+  const isGroup = usersCount > 2;
+  const isCurrentAcc = sessionId === lastMessage?.u?.username;
   const nameLastMessage = isCurrentAcc ? "You: " : "";
+
+  const stateOnPage = userOnlinePage?.find(
+    (item) => item.username === usernames?.[1],
+  )?.status;
 
   const lastMessageRender = useMemo(() => {
     return [nameLastMessage, lastMessage?.msg].join("").trim();
   }, [lastMessage?.msg, nameLastMessage]);
+
+  const renderTimeDiff = useMemo(() => {
+    const timeDiff = getDaysDiff(new Date(), new Date(lastMessage?.ts));
+    const timePositive = Math.abs(timeDiff);
+    if (timePositive < 60) {
+      return timePositive + "m";
+    } else if (timePositive < 1440) {
+      return (timePositive / 60).toFixed(0) + "h";
+    } else if (timePositive < 4320) {
+      return (timePositive / 60 / 24).toFixed(0);
+    }
+  }, [lastMessage?.ts]);
+
   return (
     <Box
       onClick={() => onClickConvention(chatInfo)}
@@ -33,22 +54,8 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
       }}
       p={2}
     >
-      {isGroup ? (
+      {/* {isGroup ? (
         <ImageList sx={{ width: 56, height: 56 }} cols={2} rowHeight={164}>
-          <Avatar
-            alt="Avatar"
-            size={25}
-            style={{
-              borderRadius: "5px",
-            }}
-          />
-          <Avatar
-            alt="Avatar"
-            size={25}
-            style={{
-              borderRadius: "5px",
-            }}
-          />
           <Avatar
             alt="Avatar"
             size={25}
@@ -77,7 +84,33 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
             borderRadius: "10px",
           }}
         />
-      )}
+      )} */}
+      <Box
+        position="relative"
+        sx={{
+          "&::before": {
+            content: `''`,
+            position: "absolute",
+            right: "-5px",
+            top: "-2px",
+            width: "17px",
+            height: "17px",
+            border: "2px solid #ffffff",
+            backgroundColor: "#55C000",
+            borderRadius: "50%",
+            visibility: stateOnPage === "online" ? "visible" : "hidden",
+          },
+        }}
+      >
+        <Avatar
+          alt="Avatar"
+          size={56}
+          src={avatar ?? undefined}
+          style={{
+            borderRadius: "10px",
+          }}
+        />
+      </Box>
 
       <Box
         sx={{
@@ -86,14 +119,14 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
         }}
       >
         <Typography variant="inherit" fontWeight="bold">
-          {name}
+          {name ?? usernames[1]}
         </Typography>
         <Typography variant="caption" color="#999999">
           {lastMessageRender}
         </Typography>
       </Box>
       <Typography variant="caption" color="#999999" ml="auto">
-        3m
+        {renderTimeDiff}
       </Typography>
     </Box>
   );

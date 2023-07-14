@@ -62,6 +62,18 @@ export type TaskListData = {
   project: string;
 };
 
+export type TaskDataDependency = {
+  task_current: string;
+  task_list_current: string;
+  task_list_update: string;
+  task_update: string;
+
+  sub_task_current?: string;
+  sub_task_update?: string;
+  sub_task?: string;
+  status: DependencyStatus;
+};
+
 export type TaskData = {
   name: string;
   task_list: string;
@@ -74,16 +86,7 @@ export type TaskData = {
   owner?: string;
   status?: Status;
   attachments?: string[];
-  dependencies?: {
-    task_current: string;
-    task_list_current: string;
-    task_list_update: string;
-    task_update: string;
-
-    sub_task_current?: string;
-    sub_task_update?: string;
-    status: DependencyStatus;
-  }[];
+  dependencies?: TaskDataDependency[];
   todo_list?: {
     name: string;
     owner?: string;
@@ -95,6 +98,7 @@ export type MoveTaskData = {
   task_current: string[];
   task_list_move: string;
   task_move?: string;
+  tasks?: string[];
 };
 
 export type CommentTaskData = {
@@ -156,6 +160,13 @@ export type ConvertSubTaskToTaskData = {
   task_list: string;
   task: string;
   sub_task: string;
+};
+
+export type OrderTodoData = {
+  task_list: string;
+  task: string;
+  sub_task?: string;
+  id_priorities: string[];
 };
 
 export const getProjectList = createAsyncThunk(
@@ -272,7 +283,7 @@ export const getTasksOfProject = createAsyncThunk(
     ...queries
   }: GetTasksOfProjectQueries & { prefixKey: "taskOptions" | "tasks" }) => {
     queries = serverQueries(queries, ["tasks.name"], undefined, undefined, {
-      "tasks.created_time": "gte",
+      "tasks.start_date": "gte",
     }) as GetTasksOfProjectQueries;
     try {
       const response = await client.get(
@@ -573,6 +584,25 @@ export const deleteDependency = createAsyncThunk(
   async (data: DependencyData) => {
     try {
       const response = await client.put(Endpoint.DELETE_DEPENDENCY, data);
+
+      if (response?.status === HttpStatusCode.OK) {
+        return true;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const orderTodo = createAsyncThunk(
+  "project/orderTodo",
+  async (data: OrderTodoData) => {
+    try {
+      const url = data?.sub_task
+        ? Endpoint.ORDER_SUB_TASK
+        : Endpoint.ORDER_TASK;
+      const response = await client.put(url, data);
 
       if (response?.status === HttpStatusCode.OK) {
         return true;

@@ -85,9 +85,11 @@ export const ProjectLang: ProjectDictionary = {
         name: "Task name",
         oldTaskList: "Current task list",
         newTaskList: "New task list",
+        newTaskPlace: "New move place",
       },
     },
     addNewTask: "Add new task",
+    newMove: "Move to",
     taskList: "Task list",
     key: "task",
     moveTaskList: "Move task list",
@@ -95,6 +97,8 @@ export const ProjectLang: ProjectDictionary = {
     selectedCount: "{value} selected items",
     assignee: "Assignee",
     processingDuplicate: "The system is processing duplicate...",
+    nameWillBeExisted:
+      "Sub task name is existed, please rename before move it.",
     keys: {
       owner: "assigner",
       start_date: "start date",
