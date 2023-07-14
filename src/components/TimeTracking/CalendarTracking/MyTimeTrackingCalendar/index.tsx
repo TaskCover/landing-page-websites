@@ -26,8 +26,6 @@ import AddIcon from "@mui/icons-material/Add";
 import FullCalendar from "@fullcalendar/react"; // Import DateClickArg type
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-// import enLocale from '@fullcalendar/core/locales/en-nz';
-// import viLocale from '@fullcalendar/core/locales/vi';
 
 import Filter from "../../Component/Filter";
 import { calendarStyles } from "./TrackingCalendar.styles";
@@ -44,6 +42,8 @@ import DayIcon from "icons/DayIcon";
 import CustomizedInputBase from "components/shared/InputSeasrch";
 import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import TimeCreate from "../../TimeTrackingModal/TimeCreate";
+import moment from 'moment';
+
 const eventStyles = {
   working_time: {
     borderLeft: `4px solid rgba(54, 153, 255, 1)`,
@@ -136,7 +136,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
 
   const { items: myTime, onGetMyTimeSheet } = useGetMyTimeSheet();
 
-  const t = useTranslations(NS_TIME_TRACKING);
+  const timeT = useTranslations(NS_TIME_TRACKING);
 
   const isGetLoading: any = false;
 
@@ -178,6 +178,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
             extendedProps: {
               id: timesheet?.id,
               date: timesheet?.day,
+              start_time: moment(timesheet?.start_time).format('hh:mm A'),
               project: timesheet?.project,
               name: "hello",
               avatar: timesheet?.project?.avatar?.link,
@@ -311,7 +312,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
             }}
             onClick={() => setIsOpenCreatePopup(true)}
           >
-            {t("myTime.addButton")}
+            {timeT("myTime.addButton")}
           </Button>
         </Grid>
         <Grid
@@ -465,13 +466,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
           <ButtonCalendar
             icon={<ListIcon />}
             isActive={activeTab === "timeSheet"}
-            title="Timesheet"
+            title={timeT("myTime.timesheet")}
             onClick={() => handleTabChange("timeSheet")}
           />
           <ButtonCalendar
             icon={<CalendarIcon />}
             isActive={activeTab === "timeGridWeek"}
-            title="Calendar"
+            title={timeT("myTime.calender")}
             onClick={() => {
               onAction("view", "timeGridWeek");
               handleTabChange("timeGridWeek");
@@ -480,7 +481,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           <ButtonCalendar
             icon={<DayIcon />}
             isActive={activeTab === "dayGridWeek"}
-            title="Day"
+            title={timeT("myTime.day")}
             onClick={() => handleTabChange("dayGridWeek")}
           />
         </Stack>
@@ -623,7 +624,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                         mb: 1,
                       }}
                     >
-                      Người làm cùng giờ:
+                     {timeT("myTime.calender_tab.same_time_worker")}:
                     </Typography>
                     <Box
                       sx={{
@@ -827,11 +828,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
             >
               <TableHead>
                 <StyledTableRow>
-                  <StyledTableCell>Project</StyledTableCell>
-                  <StyledTableCell>Design</StyledTableCell>
-                  <StyledTableCell>Position</StyledTableCell>
-                  <StyledTableCell>Time</StyledTableCell>
-                  <StyledTableCell>Note</StyledTableCell>
+                  <StyledTableCell>{timeT("myTime.day_tab.project")}</StyledTableCell>
+                  <StyledTableCell>{timeT("myTime.day_tab.position")}</StyledTableCell>
+                  <StyledTableCell>{timeT("myTime.day_tab.start_time")}</StyledTableCell>
+                  <StyledTableCell>{timeT("myTime.day_tab.time")}</StyledTableCell>
+                  <StyledTableCell>{timeT("myTime.day_tab.note")}</StyledTableCell>
                 </StyledTableRow>
               </TableHead>
               <TableBody>
@@ -879,10 +880,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
                               {event?.extendedProps?.project?.name}
                             </Box>
                           </StyledTableCell>
-                          <StyledTableCell>Design</StyledTableCell>
                           <StyledTableCell>
                             {event?.extendedProps?.position?.name}
                           </StyledTableCell>
+                          < StyledTableCell > {event?.extendedProps?.start_time} </StyledTableCell>
                           <StyledTableCell>
                             {" "}
                             {event?.extendedProps?.hour || 0}h
@@ -952,7 +953,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
         <Typography
           sx={{ fontSize: "16px", fontWeight: 600, color: "#212121" }}
         >
-          Weekly total
+          {timeT("header.tab.weekly_total")}
         </Typography>
         <Stack direction="row">
           <Typography
@@ -963,12 +964,12 @@ const TrackingCalendar: React.FC<IProps> = () => {
               marginRight: "16px",
             }}
           >
-            Work time: {totalTime.work}h
+            {timeT("header.tab.workTime")}: {totalTime.work}h
           </Typography>
           <Typography
             sx={{ fontSize: "16px", fontWeight: 400, color: "#212121" }}
           >
-            Break time: {totalTime.break}h
+            {timeT("header.tab.breakTime")}: {totalTime.break}h
           </Typography>
         </Stack>
       </Stack>
@@ -989,24 +990,6 @@ const TrackingCalendar: React.FC<IProps> = () => {
     />
   );
 
-  // const _redderUpdatePopup = () => (
-  //   <TimeCreate
-  //     open={isOpenCreatePopup}
-  //     onClose={() => {
-  //       setIsOpenCreatePopup(false);
-  //       setIsEdit(false);
-  //     }}
-  //     filters={filters}
-  //     currentScreen="myTime"
-
-  //   />
-  //   // <TimeTrackingPopup.TimeDetails
-  //   //   open={!!selectedEvent}
-  //   //   onClose={() => setSelectedEvent(null)}
-  //   //   payload={selectedEvent}
-  //   //   filters={filters}
-  //   // />
-  // );
 
   const _renderTimeSheetContent = () => {
     if (activeTab !== "timeSheet") return;

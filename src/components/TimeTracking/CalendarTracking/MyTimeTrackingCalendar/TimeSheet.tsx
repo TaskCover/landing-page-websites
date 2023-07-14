@@ -23,12 +23,9 @@ import PinActiveIcon from "icons/PinActiveIcon";
 import PinIcon from "icons/PinIcon";
 import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import { useSnackbar } from "store/app/selectors";
+import { useTranslations } from "next-intl";
+import { NS_TIME_TRACKING } from "constant/index";
 
-// import Assets from '@/Assets';
-// import { TimeTrackingActions } from '@/Actions';
-// import { RootState, useTypedDispatch } from '@/store';
-
-//const { pinTimeLog } = TimeTrackingActions;
 interface IProps {
   data: any[];
   filters: any;
@@ -57,6 +54,8 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
   //const dispatch = useTypedDispatch();
   const isGetLoading: any = false;
   const [timeSheets, setTimesheets] = useState<any>([]);
+  const timeT = useTranslations(NS_TIME_TRACKING);
+
 
   const { onAddSnackbar } = useSnackbar();
   const { onPinTimeSheet, onGetMyTimeSheet, params } = useGetMyTimeSheet();

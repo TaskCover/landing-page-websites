@@ -3,6 +3,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import _ from "lodash";
+import moment from 'moment';
 import {
   Avatar,
   Box,
@@ -107,7 +108,7 @@ const StyledDay = styled(Box)(() => ({
 
 const TrackingCalendar: React.FC<IProps> = () => {
   const isGetLoading: any = false;
-  const t = useTranslations(NS_TIME_TRACKING);
+  const timeT = useTranslations(NS_TIME_TRACKING);
 
   const { companyItems: company, onGetCompanyTimeSheet } = useGetMyTimeSheet();
 
@@ -142,8 +143,8 @@ const TrackingCalendar: React.FC<IProps> = () => {
             if (!_.isEmpty(data)) {
               const newEvent = {
                 title: `Event ${++index}`,
-                start: data?.start_time,
-                end: data?.end_time,
+                start: moment(data?.start_time ).format('hh:mm A'),
+                end: moment(data?.end_time).format('hh:mm A'),
                 extendedProps: {
                   project: {
                     avatar:  data?.project?.avatar?.link,
@@ -151,6 +152,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                   },
                   name: user?.fullname,
                   position: data?.position?.name,
+                  start: moment(data?.start_time ).format('hh:mm A'),
                   hour: data?.duration,
                   type:
                     data?.type === "Work time" ? "working_time" : "break_time",
@@ -260,13 +262,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
             <ButtonCalendar
               icon={<ListIcon />}
               isActive={activeTab === "timeSheet"}
-              title="Timesheet"
+              title={timeT("company_time.timesheet")}
               onClick={() => setActiveTab("timeSheet")}
             />
             <ButtonCalendar
               icon={<ListIcon />}
               isActive={activeTab === "table"}
-              title="Table"
+              title={timeT("company_time.table")}
               onClick={() => setActiveTab("table")}
             />
           </Stack>
@@ -302,7 +304,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
             }}
             onClick={() => setIsOpenCreatePopup(true)}
           >
-            {t("myTime.addButton")}
+            {timeT("myTime.addButton")}
           </Button>
         </Grid>
         <Grid
@@ -495,12 +497,12 @@ const TrackingCalendar: React.FC<IProps> = () => {
             >
               <TableHead>
                 <StyledTableRow>
-                  <StyledTableCell>Employee</StyledTableCell>
-                  <StyledTableCell>Project</StyledTableCell>
-                  <StyledTableCell>Design</StyledTableCell>
-                  <StyledTableCell>Position</StyledTableCell>
-                  <StyledTableCell>Time</StyledTableCell>
-                  <StyledTableCell>Note</StyledTableCell>
+                  <StyledTableCell>{timeT("company_time.table_tab.employee")}</StyledTableCell>
+                  <StyledTableCell>{timeT("company_time.table_tab.project")}</StyledTableCell>
+                  <StyledTableCell>{timeT("company_time.table_tab.position")}</StyledTableCell>
+                  <StyledTableCell>{timeT("company_time.table_tab.start_time")}</StyledTableCell>
+                  <StyledTableCell>{timeT("company_time.table_tab.time")}</StyledTableCell>
+                  <StyledTableCell>{timeT("company_time.table_tab.note")}</StyledTableCell>
                 </StyledTableRow>
               </TableHead>
               <TableBody>
@@ -549,9 +551,12 @@ const TrackingCalendar: React.FC<IProps> = () => {
                             {event?.extendedProps?.project?.name}
                           </Box>
                         </StyledTableCell>
-                        <StyledTableCell>Design</StyledTableCell>
+                      
                         <StyledTableCell>
                           {event?.extendedProps?.position}
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          {event?.extendedProps?.start}
                         </StyledTableCell>
                         <StyledTableCell>
                           {" "}
@@ -623,7 +628,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
         <Typography
           sx={{ fontSize: "16px", fontWeight: 600, color: "#212121" }}
         >
-          Weekly total
+          {timeT("header.tab.weekly_total")}
         </Typography>
         <Stack direction="row">
           <Typography
@@ -634,12 +639,12 @@ const TrackingCalendar: React.FC<IProps> = () => {
               marginRight: "16px",
             }}
           >
-            Work time: {totalTime.work}h
+          {timeT("header.tab.workTime")}: {totalTime.work}h
           </Typography>
           <Typography
             sx={{ fontSize: "16px", fontWeight: 400, color: "#212121" }}
           >
-            Break time: {totalTime.break}h
+            {timeT("header.tab.breakTime")}: {totalTime.break}h
           </Typography>
         </Stack>
       </Stack>
