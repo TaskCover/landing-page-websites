@@ -539,8 +539,8 @@ const ItemList = () => {
   const onLayout = useCallback((refsData) => {
     const newSx = refsData?.reduce(
       (out, widthValue, index) => {
-        const widthTask = index === 0 ? widthValue - 72 : widthValue;
-        const widthSubTask = index === 0 ? widthValue - 96 : widthValue;
+        const widthTask = index === 0 ? widthValue - 100 : widthValue;
+        const widthSubTask = index === 0 ? widthValue - 124 : widthValue;
         out.task[`& > :nth-of-type(${index + 1})`] = {
           minWidth: widthTask,
           width: widthTask,
@@ -900,11 +900,20 @@ const Content = (props: TextProps) => {
 
 const Description = (props: BoxProps) => {
   const { children = "--" } = props;
+  const ref = useRef<HTMLElement | null>(null);
+  const [isOverflow, setIsOverflow] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsOverflow((ref.current?.scrollHeight ?? 0) > 48);
+  }, []);
+
   if (!children) return <Content />;
+  // console.log(getChild(children as string, isOverflow));
 
   return (
     <Box
       component="p"
+      ref={ref}
       sx={{
         fontSize: 14,
         px: 2,
@@ -912,13 +921,18 @@ const Description = (props: BoxProps) => {
         overflow: "hidden",
         textOverflow: "ellipsis",
         width: "100%",
+        whiteSpace: "nowrap",
+        maxHeight: 48,
         "& *": {
           overflow: "hidden",
           textOverflow: "ellipsis",
+          maxWidth: "100%",
         },
       }}
       className="html"
-      dangerouslySetInnerHTML={{ __html: children }}
+      dangerouslySetInnerHTML={{
+        __html: getChild(children as string, isOverflow),
+      }}
     />
   );
 };
@@ -932,3 +946,22 @@ const sxLink = {
 };
 const WRONG_NUMBER = 10;
 const PAGE_SIZE = 20;
+
+const getArrayTagsHtmlString = (str) => {
+  const doc = new DOMParser().parseFromString(str, "text/html");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const arr = [...(doc.body.childNodes as unknown as any[])].map(
+    (child) => child.outerHTML || child.textContent,
+  );
+  return arr;
+};
+
+const getChild = (children: string, isOverflow: boolean) => {
+  if (!isOverflow) return children;
+  const rawFirst = getArrayTagsHtmlString(children)?.[0] as string | undefined;
+  if (!rawFirst) return children;
+
+  const first = rawFirst[0] + rawFirst.slice(1).replace("<", "...<");
+
+  return children.replace(rawFirst, first);
+};
