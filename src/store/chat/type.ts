@@ -19,16 +19,6 @@ export interface ChatItemInfo {
   lm: string;
 }
 
-export interface UserOnlinePage {
-  active: boolean;
-  name: string;
-  nameInsensitive: string;
-  status: string;
-  type: string;
-  username: string;
-  _id: string;
-}
-
 export interface MessageInfo {
   _id: string;
   alias: string;
@@ -46,6 +36,16 @@ export interface MessageInfo {
   md: unknown[];
 }
 
+export interface UserOnlinePage {
+  active: boolean;
+  name: string;
+  nameInsensitive: string;
+  status: string;
+  type: string;
+  username: string;
+  _id: string;
+}
+
 export interface MessengerInfo {
   msg: string;
   ts: string;
@@ -59,6 +59,13 @@ export interface UserSendInfo {
   _id: string;
   username: string;
   name: string;
+}
+
+export interface ChatGroup {
+  _id: string;
+  fname: string;
+  name: string;
+  usersCount: number;
 }
 
 export interface ChatState {
@@ -75,6 +82,8 @@ export interface ChatState {
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
   messagePaging: Paging;
+  newGroupData: ChatGroup | {};
+  createGroupStatus: DataStatus,
 }
 
 export type DirectionChat = "a" | "c" | "d";
@@ -94,10 +103,16 @@ export interface LastMessagesRequest extends ChatRequestCommon {
   roomId: string;
 }
 
+export interface CreateGroupRequest extends ChatRequestCommon {
+  groupName: string;
+  members: string[];
+}
+
 export enum STEP {
   CONVENTION,
   CHAT_ONE,
   VIEW_DETAIL_USER,
   ACCOUNT_INFO,
   MEDIA_INFO,
+  ADD_GROUP
 }

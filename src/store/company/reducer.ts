@@ -32,6 +32,7 @@ export interface Employee extends User {
   date_start_using: string;
   status: PayStatus;
   approve?: boolean;
+  username?: string;
 }
 
 export interface Position {

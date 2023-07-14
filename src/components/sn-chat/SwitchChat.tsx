@@ -4,6 +4,7 @@ import { STEP } from "store/chat/type";
 import ChatList from "./ChatList";
 import ConversationLayout from "./components/ConversationLayout";
 import Conversation from "./components/Conversation";
+import AddGroup from "./AddGroup";
 
 const WrapperChat = () => {
   const { roomId, prevStep, currStep, onSetStep } = useChat();
@@ -28,7 +29,8 @@ const WrapperChat = () => {
             <Conversation />
           </ConversationLayout>
         );
-
+      case STEP.ADD_GROUP:
+        return <AddGroup />;
       default:
         return <ChatList />;
     }

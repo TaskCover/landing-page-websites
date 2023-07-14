@@ -28,6 +28,7 @@ const ConversationLayout = ({ children }: ConversationLayoutProp) => {
       <AccountInfoHeader
         accountInfo={accountInfo}
         onPrevious={() => onSetStep(prevStep)}
+        onSetStep={()=>onSetStep(STEP.ADD_GROUP)}
       />
       <Box
         display="flex"

@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllConvention, getLatestMessages } from "./actions";
+import { createDirectMessageGroup, getAllConvention, getLatestMessages } from "./actions";
 import { DataStatus } from "constant/enums";
 import { DEFAULT_PAGING } from "constant/index";
 import {
+  ChatGroup,
   ChatItemInfo,
   ChatState,
   MessageInfo,
-  STEP,
-  UserOnlinePage,
+  STEP
 } from "./type";
 
 const initialState: ChatState = {
@@ -24,6 +24,8 @@ const initialState: ChatState = {
   messageInfo: [],
   messageStatus: DataStatus.IDLE,
   messagePaging: DEFAULT_PAGING,
+  newGroupData: {},
+  createGroupStatus: DataStatus.IDLE,
 };
 
 const isConversation = (type: string) => {
@@ -88,6 +90,21 @@ const chatSlice = createSlice({
       .addCase(getLatestMessages.rejected, (state, action) => {
         state.messageInfo = [];
         state.messageStatus = DataStatus.FAILED;
+      })
+      // createDirectMessageGroup
+      .addCase(createDirectMessageGroup.pending, (state, action) => {
+        state.createGroupStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        createDirectMessageGroup.fulfilled,
+        (state, action: PayloadAction<ChatGroup>) => {
+          state.newGroupData = action.payload;
+          state.createGroupStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(createDirectMessageGroup.rejected, (state, action) => {
+        state.newGroupData = {};
+        state.createGroupStatus = DataStatus.FAILED;
       }),
 });
 
