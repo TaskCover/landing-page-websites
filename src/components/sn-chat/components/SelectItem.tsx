@@ -10,7 +10,7 @@ import { Employee } from "store/company/reducer";
 
 interface SelectItemProp {
   employee: Employee;
-  onClick: (event: ChangeEvent<HTMLInputElement>) => void;
+  onClick?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 const SelectItem = ({ employee, onClick }: SelectItemProp) => {
   const { fullname, email, avatar } = employee;

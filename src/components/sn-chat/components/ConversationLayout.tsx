@@ -8,7 +8,7 @@ interface ConversationLayoutProp {
   children: React.ReactNode;
   viewStep?: STEP;
 }
-const ConversationLayout = ({ children }: ConversationLayoutProp) => {
+const ConversationLayout = ({ children, viewStep }: ConversationLayoutProp) => {
   const { roomId, convention, userOnlinePage, prevStep, onSetStep } = useChat();
 
   const accountInfo = useMemo(() => {
@@ -28,7 +28,7 @@ const ConversationLayout = ({ children }: ConversationLayoutProp) => {
       <AccountInfoHeader
         accountInfo={accountInfo}
         onPrevious={() => onSetStep(prevStep)}
-        onSetStep={()=>onSetStep(STEP.ADD_GROUP)}
+        viewStep={viewStep}
       />
       <Box
         display="flex"
