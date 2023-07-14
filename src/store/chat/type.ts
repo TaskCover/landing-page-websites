@@ -12,10 +12,21 @@ export interface ChatItemInfo {
   fname?: string;
   _updatedAt: string;
   name?: string;
+  avatar: string;
   t: string;
   msgs: number;
   lastMessage: MessengerInfo;
   lm: string;
+}
+
+export interface UserOnlinePage {
+  active: boolean;
+  name: string;
+  nameInsensitive: string;
+  status: string;
+  type: string;
+  username: string;
+  _id: string;
 }
 
 export interface MessageInfo {
@@ -38,7 +49,7 @@ export interface MessageInfo {
 export interface MessengerInfo {
   msg: string;
   ts: string;
-  u: UserSendInfo;
+  u: UserSendInfo | null;
   _id: string;
   rid: string;
   _updatedAt: string;
@@ -52,6 +63,7 @@ export interface UserSendInfo {
 
 export interface ChatState {
   convention: ChatItemInfo[];
+  userOnlinePage: UserOnlinePage[];
   status: DataStatus;
   conversationPaging: Paging;
 

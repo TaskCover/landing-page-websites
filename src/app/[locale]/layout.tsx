@@ -39,7 +39,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className={openSans.className}>
+      <body suppressHydrationWarning={true} className={openSans.className}>
         <AppProvider locale={locale} messages={messages}>
           {children}
         </AppProvider>

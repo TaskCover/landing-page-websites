@@ -9,7 +9,7 @@ import VideoCallIcon from "icons/VideoCallIcon";
 import { ChatItemInfo } from "store/chat/type";
 
 interface AccountInfoHeaderProp {
-  accountInfo: ChatItemInfo | undefined;
+  accountInfo?: ChatItemInfo & { stateOnPage: string };
   onPrevious: () => void;
 }
 const AccountInfoHeader = ({
@@ -49,10 +49,10 @@ const AccountInfoHeader = ({
           }}
         >
           <Typography variant="inherit" fontWeight="bold">
-            {accountInfo?.lastMessage.u.name}
+            {accountInfo?.usernames?.[1]}
           </Typography>
           <Typography variant="caption" color="#999999">
-            Active
+            {accountInfo?.stateOnPage}
           </Typography>
         </Box>
         <Box ml="auto">

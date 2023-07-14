@@ -45,6 +45,7 @@
     "sharp": "^0.32.1",
     "string-format": "^2.0.0",
     "swiper": "^9.4.1",
+    "ws": "^8.13.0",
     "yup": "^1.2.0"
   },
   "devDependencies": {

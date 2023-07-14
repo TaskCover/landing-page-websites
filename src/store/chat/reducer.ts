@@ -2,12 +2,20 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAllConvention, getLatestMessages } from "./actions";
 import { DataStatus } from "constant/enums";
 import { DEFAULT_PAGING } from "constant/index";
-import { ChatItemInfo, ChatState, MessageInfo, STEP } from "./type";
+import {
+  ChatItemInfo,
+  ChatState,
+  MessageInfo,
+  STEP,
+  UserOnlinePage,
+} from "./type";
 
 const initialState: ChatState = {
   convention: [],
   status: DataStatus.IDLE,
   conversationPaging: DEFAULT_PAGING,
+
+  userOnlinePage: [],
 
   roomId: "",
   currStep: STEP.CONVENTION,
@@ -16,6 +24,10 @@ const initialState: ChatState = {
   messageInfo: [],
   messageStatus: DataStatus.IDLE,
   messagePaging: DEFAULT_PAGING,
+};
+
+const isConversation = (type: string) => {
+  return type === "d" || type === "c" || type === "p";
 };
 
 const chatSlice = createSlice({
@@ -43,8 +55,16 @@ const chatSlice = createSlice({
       })
       .addCase(
         getAllConvention.fulfilled,
-        (state, action: PayloadAction<ChatItemInfo[]>) => {
-          state.convention = action.payload;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (state, action: PayloadAction<any[]>) => {
+          if (action.payload.length > 0) {
+            state.convention = action.payload.filter((item) =>
+              isConversation(item["t"]) ? item : undefined,
+            );
+            state.userOnlinePage = action.payload.filter((item) =>
+              !isConversation(item["t"]) ? item : undefined,
+            );
+          }
           state.status = DataStatus.SUCCEEDED;
         },
       )
@@ -59,7 +79,9 @@ const chatSlice = createSlice({
       .addCase(
         getLatestMessages.fulfilled,
         (state, action: PayloadAction<MessageInfo[]>) => {
-          state.messageInfo = action.payload;
+          if (action.payload.length > 0) {
+            state.messageInfo = action.payload.reverse();
+          }
           state.messageStatus = DataStatus.SUCCEEDED;
         },
       )

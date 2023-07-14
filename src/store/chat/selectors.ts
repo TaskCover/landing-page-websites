@@ -14,6 +14,7 @@ export const useChat = () => {
   const {
     convention,
     messageInfo,
+    userOnlinePage,
     roomId,
     conversationPaging,
     status,
@@ -86,6 +87,7 @@ export const useChat = () => {
     convention,
     conversationPaging,
     messageInfo,
+    userOnlinePage,
     isError,
     isIdle,
     isFetching,

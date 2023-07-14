@@ -7,33 +7,6 @@ import { ChatItemInfo, STEP } from "store/chat/type";
 import { useAuth } from "store/app/selectors";
 
 const ChatList = () => {
-  const [listChat, setListChat] = useState<ChatItemInfo[]>(
-    Array.from({ length: 50 }, (_, i) => ({
-      _id: "W9NNPYa2c66x9CH8zrNGpPWHQzakWfsktK",
-      t: "d",
-      usernames: ["rocket.admin", "tuanbn"],
-      usersCount: 2,
-      msgs: 40,
-      ts: "2023-06-30T14:16:42.115Z",
-      default: false,
-      ro: false,
-      sysMes: true,
-      _updatedAt: "2023-07-10T15:26:30.735Z",
-      lastMessage: {
-        _id: "8r6DZK6BjwFAHvZLE",
-        rid: "W9NNPYa2c66x9CH8zrNGpPWHQzakWfsktK",
-        msg: "sd",
-        ts: "2023-07-10T15:26:30.706Z",
-        u: {
-          _id: "W9NNPYa2c66x9CH8z",
-          username: "tuanbn",
-          name: "tuanBN",
-        },
-        _updatedAt: "2023-07-10T15:26:30.731Z",
-      },
-      lm: "2023-07-10T15:26:30.706Z",
-    })),
-  );
   const [textSearch, setTextSearch] = useState("");
   const { user } = useAuth();
   const {
@@ -51,7 +24,7 @@ const ChatList = () => {
 
   useEffect(() => {
     onGetAllConvention({
-      type: "a",
+      type: "d",
       text: textSearch,
       offset: 0,
       count: 1000,
@@ -66,7 +39,10 @@ const ChatList = () => {
 
   const handleClickConversation = (chatInfo: ChatItemInfo) => {
     onSetRoomId(chatInfo._id);
-    onSetStep(STEP.CHAT_ONE);
+
+    if (chatInfo?.t) {
+      onSetStep(STEP.CHAT_ONE);
+    }
   };
 
   return (
