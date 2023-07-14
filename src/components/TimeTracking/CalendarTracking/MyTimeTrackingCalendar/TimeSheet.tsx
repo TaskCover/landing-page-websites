@@ -72,6 +72,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
             totalDuration: 0,
             projectName: project?.name,
             projectId: project?.id,
+            avatar: project?.avatar?.link,
             is_pin: timesheet?.is_pin || false,
           };
         }
@@ -167,7 +168,8 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                     }}
                   >
                     <Avatar
-                      sx={{ width: 20, height: 20, objectFit: "cover" }}
+                      sx={{ width: 20, height: 20, objectFit: 'cover' }}
+                      src={timeSheet?.avatar}
                     />
                     <Typography
                       sx={{

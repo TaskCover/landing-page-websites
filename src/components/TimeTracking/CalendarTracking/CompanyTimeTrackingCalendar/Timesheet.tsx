@@ -135,7 +135,8 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                     }}
                   >
                     <Avatar
-                      sx={{ width: 20, height: 20, objectFit: "cover" }}
+                      sx={ { width: 20, height: 20, objectFit: "cover" } }
+                      src = { user?.avatar?.link }
                     />
                     <Typography
                       sx={{

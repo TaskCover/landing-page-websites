@@ -180,6 +180,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
               date: timesheet?.day,
               project: timesheet?.project,
               name: "hello",
+              avatar: timesheet?.project?.avatar?.link,
               position: timesheet?.position,
               hour: timesheet?.duration,
               typeDefault: timesheet?.type,
@@ -584,7 +585,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
               return (
                 <Stack direction="column" sx={boxStyles}>
                   <Stack direction="row" alignItems="center">
-                    <Avatar sx={{ width: "20px", height: "20px" }} />
+                    <Avatar 
+                      sx={ { width: "20px", height: "20px" } }
+                      src = { eventInfo?.event?.extendedProps?.avatar }
+                    />
                     <Typography
                       sx={{
                         fontSize: "14px",
@@ -868,7 +872,9 @@ const TrackingCalendar: React.FC<IProps> = () => {
                                 gap: "12px",
                               }}
                             >
-                              <Avatar sx={{ width: 20, height: 20 }} />
+                            <Avatar 
+                              sx={ { width: 20, height: 20 } }
+                            />
 
                               {event?.extendedProps?.project?.name}
                             </Box>
