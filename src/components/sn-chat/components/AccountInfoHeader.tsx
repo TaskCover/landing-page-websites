@@ -12,7 +12,7 @@ import VideoCallIcon from "icons/VideoCallIcon";
 import { ChatItemInfo } from "store/chat/type";
 
 interface AccountInfoHeaderProp {
-  accountInfo: ChatItemInfo | undefined;
+  accountInfo: ChatItemInfo;
   onPrevious: () => void;
   onSetStep: () => void;
 }
