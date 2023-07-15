@@ -192,7 +192,7 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
                     },
                   }}
                   onClick={() =>
-                    router.push(`/projects/${timeLog?.project_id}`)
+                    router.push(`/projects/${timeLog?.project_id}/tasks/`)
                   }
                 >
                   {`${timeLog?.task_number ? `#${timeLog.task_number}` : ""} ${
