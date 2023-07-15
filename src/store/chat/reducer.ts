@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createDirectMessageGroup, getAllConvention, getLatestMessages } from "./actions";
+import { addMembersToDirectMessageGroup, createDirectMessageGroup, getAllConvention, getLatestMessages, leftDirectMessageGroup, removeMemberDirectMessageGroup } from "./actions";
 import { DataStatus } from "constant/enums";
 import { DEFAULT_PAGING } from "constant/index";
 import {
@@ -14,18 +14,18 @@ const initialState: ChatState = {
   convention: [],
   status: DataStatus.IDLE,
   conversationPaging: DEFAULT_PAGING,
-
   userOnlinePage: [],
-
   roomId: "",
   currStep: STEP.CONVENTION,
   prevStep: STEP.CONVENTION,
-
   messageInfo: [],
   messageStatus: DataStatus.IDLE,
   messagePaging: DEFAULT_PAGING,
   newGroupData: {},
   createGroupStatus: DataStatus.IDLE,
+  addMembers2GroupStatus: DataStatus.IDLE,
+  leftGroupStatus: DataStatus.IDLE,
+  removeMemberGroupStatus: DataStatus.IDLE,
 };
 
 const isConversation = (type: string) => {
@@ -105,6 +105,45 @@ const chatSlice = createSlice({
       .addCase(createDirectMessageGroup.rejected, (state, action) => {
         state.newGroupData = {};
         state.createGroupStatus = DataStatus.FAILED;
+      })
+      // addMembersToDirectMessageGroup
+      .addCase(addMembersToDirectMessageGroup.pending, (state, action) => {
+        state.addMembers2GroupStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        addMembersToDirectMessageGroup.fulfilled,
+        (state, action: PayloadAction<ChatGroup>) => {
+          state.addMembers2GroupStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(addMembersToDirectMessageGroup.rejected, (state, action) => {
+        state.addMembers2GroupStatus = DataStatus.FAILED;
+      })
+      // removeMemberDirectMessageGroup
+      .addCase(removeMemberDirectMessageGroup.pending, (state, action) => {
+        state.removeMemberGroupStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        removeMemberDirectMessageGroup.fulfilled,
+        (state, action: PayloadAction<ChatGroup>) => {
+          state.removeMemberGroupStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(removeMemberDirectMessageGroup.rejected, (state, action) => {
+        state.removeMemberGroupStatus = DataStatus.FAILED;
+      })
+      // leftDirectMessageGroup
+      .addCase(leftDirectMessageGroup.pending, (state, action) => {
+        state.leftGroupStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        leftDirectMessageGroup.fulfilled,
+        (state, action: PayloadAction<ChatGroup>) => {
+          state.leftGroupStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(leftDirectMessageGroup.rejected, (state, action) => {
+        state.leftGroupStatus = DataStatus.FAILED;
       }),
 });
 

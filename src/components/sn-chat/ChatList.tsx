@@ -24,7 +24,7 @@ const ChatList = () => {
 
   useEffect(() => {
     onGetAllConvention({
-      type: "d",
+      type: "a",
       text: textSearch,
       offset: 0,
       count: 1000,

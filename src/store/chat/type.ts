@@ -73,24 +73,26 @@ export interface ChatState {
   userOnlinePage: UserOnlinePage[];
   status: DataStatus;
   conversationPaging: Paging;
-
   roomId: string;
-
   currStep: STEP;
   prevStep: STEP;
-
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
   messagePaging: Paging;
   newGroupData: ChatGroup | {};
   createGroupStatus: DataStatus,
+  addMembers2GroupStatus: DataStatus,
+  leftGroupStatus: DataStatus,
+  removeMemberGroupStatus: DataStatus,
 }
 
 export type DirectionChat = "a" | "c" | "d";
 
-export interface ChatRequestCommon {
+export interface AuthenRequestCommon {
   authToken: string;
   userId: string;
+}
+export interface ChatRequestCommon extends AuthenRequestCommon {
   type: DirectionChat;
   count?: number;
   offset?: number;
@@ -106,6 +108,20 @@ export interface LastMessagesRequest extends ChatRequestCommon {
 export interface CreateGroupRequest extends ChatRequestCommon {
   groupName: string;
   members: string[];
+}
+
+export interface AddMember2GroupRequest extends AuthenRequestCommon {
+  roomId: string;
+  userId_to_add: string;
+}
+
+export interface LeftGroupRequest extends AuthenRequestCommon {
+  roomId: string;
+}
+
+export interface RemoveGroupMemberRequest extends AuthenRequestCommon {
+  roomId: string;
+  userId_to_remove: string;
 }
 
 export enum STEP {

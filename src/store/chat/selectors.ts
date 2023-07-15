@@ -1,9 +1,9 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { createDirectMessageGroup, getAllConvention, getLatestMessages } from "./actions";
+import { addMembersToDirectMessageGroup, createDirectMessageGroup, getAllConvention, getLatestMessages, leftDirectMessageGroup, removeMemberDirectMessageGroup } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
-import { ChatConventionItemRequest, CreateGroupRequest, LastMessagesRequest, STEP } from "./type";
+import { AddMember2GroupRequest, ChatConventionItemRequest, CreateGroupRequest, LastMessagesRequest, LeftGroupRequest, RemoveGroupMemberRequest, STEP } from "./type";
 import { useAuth } from "store/app/selectors";
 import { setRoomId, setStep } from "./reducer";
 
@@ -22,6 +22,9 @@ export const useChat = () => {
     prevStep,
     createGroupStatus,
     newGroupData,
+    addMembers2GroupStatus,
+    leftGroupStatus,
+    removeMemberGroupStatus,
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -104,6 +107,52 @@ export const useChat = () => {
     [dispatch, user],
   );
 
+
+  const onAddMembers2Group = useCallback(
+    async (params: Omit<AddMember2GroupRequest, "authToken" | "userId">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      await dispatch(
+        addMembersToDirectMessageGroup({
+          authToken,
+          userId,
+          ...params
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
+  const onLeftGroup = useCallback(
+    async (params: Omit<LeftGroupRequest, "authToken" | "userId">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      await dispatch(
+        leftDirectMessageGroup({
+          authToken,
+          userId,
+          ...params
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
+  const onRemoveGroupMember = useCallback(
+    async (params: Omit<RemoveGroupMemberRequest, "authToken" | "userId">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      await dispatch(
+        removeMemberDirectMessageGroup({
+          authToken,
+          userId,
+          ...params
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
   return {
     convention,
     conversationPaging,
@@ -121,10 +170,16 @@ export const useChat = () => {
     prevStep,
     createGroupStatus,
     newGroupData,
+    addMembers2GroupStatus,
+    leftGroupStatus,
+    removeMemberGroupStatus,
     onGetAllConvention,
     onGetLastMessages,
     onSetStep,
     onSetRoomId,
     onCreateDirectMessageGroup,
+    onAddMembers2Group,
+    onLeftGroup,
+    onRemoveGroupMember,
   };
 };

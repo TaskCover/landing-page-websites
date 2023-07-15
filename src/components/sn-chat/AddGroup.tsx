@@ -41,14 +41,20 @@ const AddGroup = () => {
   const { user } = useAuth();
 
   const { prevStep, createGroupStatus, newGroupData,
-    convention,
+    convention, onGetAllConvention,
     onSetStep, onCreateDirectMessageGroup } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
 
   useEffect(() => {
-    onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 20 });
-  }, [onGetEmployees, textSearch, user?.company]);
+    onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 30 });
+    onGetAllConvention({
+      type: "a",
+      text: '',
+      offset: 0,
+      count: 1000,
+    })
+  }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
     if (createGroupStatus === DataStatus.SUCCEEDED) {
