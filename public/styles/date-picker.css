@@ -67,3 +67,7 @@
 .event-border {
   border-left: "3px solid #3699FF";
 }
+
+.fc-event-main:hover {
+  overflow: visible !important;
+}

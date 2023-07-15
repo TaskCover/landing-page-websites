@@ -117,7 +117,7 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
               ? "rgba(54, 153, 255, 0.5)"
               : isDarkMode
               ? "#393939"
-              : "inherit",
+              : "grey.50",
             alignItems: "center",
             width: "100%",
           }}

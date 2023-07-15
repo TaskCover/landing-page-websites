@@ -9,6 +9,7 @@ import {
   getWorkLog,
   pinTimeSheet,
   GetMyTimeSheetQueries,
+  getSameWorker,
 } from "./actions";
 import {
   Attachment,
@@ -75,6 +76,21 @@ export interface CompanyTimeSheet {
   position: string;
   timesheet: MyTimeSheet[];
 }
+export interface ISameWorker {
+  id?: string;
+  fullname?: string;
+  company?: string;
+  avatar?: {
+    object?: string;
+    name?: string;
+    link?: string;
+  };
+  email?: string;
+  position?: {
+    id?: string;
+    name?: string;
+  };
+}
 export interface TimeTrackingState {
   items: MyTimeSheet[];
   timeSheet: MyTimeSheet;
@@ -90,6 +106,7 @@ export interface TimeTrackingState {
   statusUpdate: DataStatus;
 
   workLog: WorkLogResponse;
+  sameWorker: ISameWorker[];
 }
 export type GetActivitiesQueries = {
   start_date: string;
@@ -127,6 +144,7 @@ const initialState: TimeTrackingState = {
   statusUpdate: DataStatus.IDLE,
 
   workLog: {},
+  sameWorker: [],
 };
 
 const timeTrackingSlice = createSlice({
@@ -212,6 +230,13 @@ const timeTrackingSlice = createSlice({
       .addCase(pinTimeSheet.fulfilled, (state, _) => {
         state.status = DataStatus.SUCCEEDED;
       }),
+  // .addCase(
+  //   getSameWorker.fulfilled,
+  //   (state, action: PayloadAction<ISameWorker[]>) => {
+  //     const items = action.payload;
+  //     state.sameWorker = items as ISameWorker[];
+  //   },
+  // ),
 });
 
 export const { reset } = timeTrackingSlice.actions;

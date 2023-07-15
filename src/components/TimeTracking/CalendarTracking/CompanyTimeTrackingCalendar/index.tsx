@@ -275,15 +275,17 @@ const TrackingCalendar: React.FC<IProps> = () => {
               onClick={() => setActiveTab("table")}
             />
           </Stack>
-          <CustomizedInputBase
-            value={filters.search_key}
-            onChange={(event) =>
-              setFilters({ ...filters, search_key: event.target.value })
-            }
-            onKeyUp={(event) =>
-              event.key === "Enter" && onGetCompanyTimeSheet(filters)
-            }
-          />
+          {activeTab === "timeSheet" && (
+            <CustomizedInputBase
+              value={filters.search_key}
+              onChange={(event) =>
+                setFilters({ ...filters, search_key: event.target.value })
+              }
+              onKeyUp={(event) =>
+                event.key === "Enter" && onGetCompanyTimeSheet(filters)
+              }
+            />
+          )}
         </Stack>
       </>
     );
