@@ -3,9 +3,9 @@ import { addMembersToDirectMessageGroup, createDirectMessageGroup, getAllConvent
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
-import { AddMember2GroupRequest, ChatConventionItemRequest, CreateGroupRequest, LastMessagesRequest, LeftGroupRequest, RemoveGroupMemberRequest, STEP } from "./type";
+import { AddMember2GroupRequest, ChatConventionItemRequest, CreateGroupRequest, LastMessagesRequest, LeftGroupRequest, RemoveGroupMemberRequest, STEP, TYPE_LIST } from "./type";
 import { useAuth } from "store/app/selectors";
-import { setRoomId, setStep } from "./reducer";
+import { setRoomId, setStep, setTypeList } from "./reducer";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +25,7 @@ export const useChat = () => {
     addMembers2GroupStatus,
     leftGroupStatus,
     removeMemberGroupStatus,
+    typeList,
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -80,6 +81,13 @@ export const useChat = () => {
   const onSetStep = useCallback(
     (step: STEP) => {
       dispatch(setStep(step));
+    },
+    [dispatch],
+  );
+
+  const onSetTypeList = useCallback(
+    (type: TYPE_LIST) => {
+      dispatch(setTypeList(type));
     },
     [dispatch],
   );
@@ -173,6 +181,7 @@ export const useChat = () => {
     addMembers2GroupStatus,
     leftGroupStatus,
     removeMemberGroupStatus,
+    typeList,
     onGetAllConvention,
     onGetLastMessages,
     onSetStep,
@@ -181,5 +190,6 @@ export const useChat = () => {
     onAddMembers2Group,
     onLeftGroup,
     onRemoveGroupMember,
+    onSetTypeList,
   };
 };

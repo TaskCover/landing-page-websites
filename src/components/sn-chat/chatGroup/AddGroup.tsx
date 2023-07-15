@@ -16,7 +16,7 @@ import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { Employee } from "store/company/reducer";
-import SelectItem from "./components/SelectItem";
+import SelectItem from "../components/SelectItem";
 import { useAuth } from "store/app/selectors";
 import { STEP } from "store/chat/type";
 import { DataStatus } from "constant/enums";

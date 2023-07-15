@@ -1,6 +1,7 @@
+/* eslint-disable no-console */
 import Avatar from "components/Avatar";
 import { Box, Button, Fab, Typography } from "@mui/material";
-import ItemDetail from "./components/ItemDetail";
+import ItemDetail from "../components/ItemDetail";
 import ItemMemberDetail from "./ItemMemberDetail";
 import GroupNameIcon from "icons/GroupNameIcon";
 import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/DefaultPopupLayout";
@@ -14,10 +15,13 @@ import ArrowRightIcon from "icons/ArrowRightIcon";
 import EditGroupNameIcon from "icons/EditGroupNameIcon";
 import UploadImageIcon from "icons/UploadImageIcon";
 import { IconButton } from "components/shared";
+import { useChat } from "store/chat/selectors";
+import { STEP, TYPE_LIST } from "store/chat/type";
 
 const ChatDetailGroup = () => {
+  const { onSetTypeList, typeList, onSetStep } = useChat();
   const commonT = useTranslations(NS_COMMON);
-
+  
   const init = {
     statusPopup: false,
     title: "",
@@ -133,16 +137,17 @@ const ChatDetailGroup = () => {
             text={'Name'}
             icon={<GroupNameIcon />}
             iconClick={<EditGroupNameIcon />}
-            onClick={() => {
-              // console.log(123)
-            }}
+          // onClick={() => {
+          //   console.log(111)
+          // }}          
           />
           <ItemDetail
             text={'Media'}
             icon={<MediaFileIcon />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
-              // console.log(123)
+              onSetStep(STEP.LIST)
+              onSetTypeList(TYPE_LIST.MEDIA_LIST)
             }}
           />
           <ItemDetail
@@ -150,7 +155,8 @@ const ChatDetailGroup = () => {
             icon={<LinkIcon />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
-              // console.log(123)
+              onSetStep(STEP.LIST)
+              onSetTypeList(TYPE_LIST.LINK_LIST)
             }}
           />
 
@@ -159,7 +165,8 @@ const ChatDetailGroup = () => {
             icon={<FileGroupIcon />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
-              // console.log(123)
+              onSetStep(STEP.LIST)
+              onSetTypeList(TYPE_LIST.FILE_LIST)
             }}
           />
         </Box>
