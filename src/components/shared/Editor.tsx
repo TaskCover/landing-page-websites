@@ -1,7 +1,8 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { Stack } from "@mui/material";
 import AppEditor, { EditorProps as AppEditorProps } from "components/Editor";
 import Text from "./Text";
+import hljs from "highlight.js";
 
 type EditorProps = {
   title: string;
@@ -13,9 +14,12 @@ type EditorProps = {
 const Editor = (props: EditorProps) => {
   const { title, name, required, onChange, ...rest } = props;
 
+  const prevRef = useRef<string | undefined>();
+
   const onChangeEditor = (value?: string) => {
     const isEmpty = "<p><br></p>" === value;
-    onChange(name, isEmpty ? "" : value ?? "");
+    const newValue = isEmpty ? "" : getChild(value) ?? "";
+    onChange(name, value);
   };
 
   return (
@@ -38,3 +42,10 @@ const Editor = (props: EditorProps) => {
 };
 
 export default memo(Editor);
+
+const getChild = (value?: string) => {
+  if (value?.startsWith("<pre") && !value?.includes('"hljs-')) {
+    return value + "<span></span>";
+  }
+  return value;
+};

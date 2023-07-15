@@ -38,6 +38,8 @@
 
 .editor .nocss .ql-toolbar.ql-snow + .ql-container.ql-snow {
   border: none !important;
+  padding-bottom: 20px;
+
 }
 
 .editor .nocss .ql-editor {
@@ -64,4 +66,9 @@
 
 .editor .ql-editor.ql-blank::before {
   color: var(--mui-palette-text-secondary);
+}
+
+.ql-snow .ql-editor blockquote {
+  margin-top: 0;
+  margin-bottom: 0;
 }

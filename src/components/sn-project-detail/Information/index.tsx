@@ -85,14 +85,10 @@ const DesktopInformation = () => {
           {formatDate(item?.end_date)}
         </InformationItem>
       </Stack>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: 2, sm: 5, lg: 10 }}
-      >
+      <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 16.5 }}>
         <InformationItem
           label={projectT("list.form.title.estimatedWorkingHours")}
-          width={135}
+          width={170}
         >
           {formatNumber(item?.working_hours)}
         </InformationItem>
@@ -100,14 +96,10 @@ const DesktopInformation = () => {
           {formatNumber()}
         </InformationItem>
       </Stack>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: 2, sm: 5, lg: 10 }}
-      >
+      <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 16.5 }}>
         <InformationItem
           label={projectT("list.form.title.estimatedCost")}
-          width={135}
+          width={170}
         >
           {formatNumber(item?.expected_cost)}
         </InformationItem>

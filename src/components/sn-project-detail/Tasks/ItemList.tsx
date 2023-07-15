@@ -7,6 +7,7 @@ import {
   Selected,
   DroppableTaskList,
   DraggableTask,
+  TASK_TEXT_STATUS,
 } from "./components";
 import { Button, Checkbox, Text, TextProps } from "components/shared";
 import {
@@ -17,7 +18,12 @@ import {
   StackProps,
 } from "@mui/material";
 import Avatar from "components/Avatar";
-import { formatNumber, getMessageErrorByAPI, debounce } from "utils/index";
+import {
+  formatNumber,
+  getMessageErrorByAPI,
+  debounce,
+  formatDate,
+} from "utils/index";
 import TextStatus from "components/TextStatus";
 import { CellProps, TableLayout } from "components/Table";
 import React from "react";
@@ -101,6 +107,11 @@ const ItemList = () => {
     [dataIds?.taskId, dataIds?.taskListId],
   );
 
+  const baseTop = useMemo(
+    () => (selectedList.length ? 124 : 60),
+    [selectedList.length],
+  );
+
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
       {
@@ -110,10 +121,10 @@ const ItemList = () => {
       },
       { value: commonT("form.title.assigner"), width: "15%", align: "left" },
       {
-        value: projectT("detailTasks.form.title.expectCompletionTime"),
+        value: commonT("form.title.startDate"),
         width: "12.5%",
       },
-      { value: projectT("detailTasks.form.title.timeTaken"), width: "12.5%" },
+      { value: commonT("form.title.endDate"), width: "12.5%" },
       { value: commonT("status"), width: "15%" },
       { value: commonT("form.title.note"), width: "15%" },
     ],
@@ -633,7 +644,7 @@ const ItemList = () => {
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
         position="sticky"
-        top={selectedList.length ? 124 : 60}
+        top={{ xs: baseTop + 8, sm: baseTop + 24 }}
         zIndex={1}
       >
         <></>
@@ -715,13 +726,14 @@ const ItemList = () => {
                         <Assigner src={task?.owner?.avatar?.link}>
                           {task?.owner?.fullname}
                         </Assigner>
-                        <Content>{formatNumber(task?.estimated_hours)}</Content>
-                        <Content>{formatNumber(task?.time_execution)}</Content>
-                        <TextStatus
-                          color={COLOR_STATUS[task.status]}
-                          text={TEXT_STATUS[task.status]}
-                          component="p"
-                        />
+                        <Content>{formatDate(task?.start_date)}</Content>
+                        <Content>{formatDate(task?.end_date)}</Content>
+                        <Content>
+                          <TextStatus
+                            color={COLOR_STATUS[task.status]}
+                            text={TASK_TEXT_STATUS[task.status]}
+                          />
+                        </Content>
                         <Description>{task?.description}</Description>
                       </Stack>
                       {!isHide && (
@@ -783,20 +795,20 @@ const ItemList = () => {
                                           {subTask?.owner?.fullname}
                                         </Assigner>
                                         <Content>
-                                          {formatNumber(
-                                            subTask.estimated_hours,
-                                          )}
+                                          {formatDate(subTask?.start_date)}
                                         </Content>
                                         <Content>
-                                          {formatNumber(
-                                            subTask?.time_execution,
-                                          )}
+                                          {formatDate(subTask?.end_date)}
                                         </Content>
-                                        <TextStatus
-                                          color={COLOR_STATUS[subTask.status]}
-                                          text={TEXT_STATUS[subTask.status]}
-                                          component="p"
-                                        />
+                                        <Content>
+                                          <TextStatus
+                                            color={COLOR_STATUS[subTask.status]}
+                                            text={
+                                              TASK_TEXT_STATUS[subTask.status]
+                                            }
+                                          />
+                                        </Content>
+
                                         <Description>
                                           {subTask.description}
                                         </Description>
@@ -857,7 +869,7 @@ const Assigner = ({
   src,
   ...rest
 }: StackProps & { src?: string }) => {
-  if (!children) return <Content />;
+  if (!children) return <Content textAlign="left" />;
   return (
     <Stack
       component="p"
@@ -908,7 +920,6 @@ const Description = (props: BoxProps) => {
   }, []);
 
   if (!children) return <Content />;
-  // console.log(getChild(children as string, isOverflow));
 
   return (
     <Box
@@ -922,7 +933,7 @@ const Description = (props: BoxProps) => {
         textOverflow: "ellipsis",
         width: "100%",
         whiteSpace: "nowrap",
-        maxHeight: 48,
+        maxHeight: 34,
         "& *": {
           overflow: "hidden",
           textOverflow: "ellipsis",
@@ -931,7 +942,7 @@ const Description = (props: BoxProps) => {
       }}
       className="html"
       dangerouslySetInnerHTML={{
-        __html: getChild(children as string, isOverflow),
+        __html: children,
       }}
     />
   );

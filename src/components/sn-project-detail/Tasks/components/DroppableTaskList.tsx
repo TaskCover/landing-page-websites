@@ -103,11 +103,15 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                 justifyContent="space-between"
               >
                 <Stack direction="row" alignItems="center" overflow="hidden">
-                  <Checkbox checked={checked} onChange={onChange} />
+                  <Checkbox
+                    className="checkbox"
+                    checked={checked}
+                    onChange={onChange}
+                  />
                   <IconButton
                     noPadding
                     sx={{
-                      ml: { md: 6 },
+                      ml: { md: 5 },
                       transform: isShow ? undefined : "rotate(180deg)",
                     }}
                     onClick={onToggle}

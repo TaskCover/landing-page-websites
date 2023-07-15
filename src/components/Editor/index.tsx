@@ -16,7 +16,46 @@ import "./style.css";
 import { IMAGES_ACCEPT } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import dynamic from "next/dynamic";
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import hljs from "highlight.js";
+
+const ReactQuill = dynamic(
+  () => {
+    hljs.configure({
+      // optionally configure hljs
+      languages: [
+        "javascript",
+        "php",
+        "go",
+        "typescript",
+        "css",
+        "xml",
+        "yaml",
+        "swift",
+        "sql",
+        "shell",
+        "scss",
+        "scala",
+        "rust",
+        "ruby",
+        "python",
+        "perl",
+        "nginx",
+        "markdown",
+        "less",
+        "kotlin",
+        "cpp",
+        "csharp",
+        "c",
+        "bash",
+      ],
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).hljs = hljs;
+    return import("react-quill");
+  },
+  { ssr: false },
+);
 
 export type EditorProps = {
   hasAttachment?: boolean;
@@ -111,6 +150,7 @@ const Editor = (props: EditorProps) => {
         placeholder="Write something..."
         modules={{
           toolbar,
+          syntax: true,
         }}
         className={noCss ? "nocss" : ""}
         value={value}

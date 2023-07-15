@@ -49,7 +49,6 @@ export type ProjectData = {
   description: string;
   members?: {
     id: string;
-    position_project: string;
   }[];
   type_project: string;
   status?: ProjectStatus;

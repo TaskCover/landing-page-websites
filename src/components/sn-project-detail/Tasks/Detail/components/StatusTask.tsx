@@ -1,25 +1,16 @@
 import { memo, useEffect, useState } from "react";
 import { Button, Text } from "components/shared";
-import {
-  useProject,
-  useTaskDetail,
-  useTasksOfProject,
-} from "store/project/selectors";
+import { useTaskDetail } from "store/project/selectors";
 import FormLayout from "components/FormLayout";
 import useToggle from "hooks/useToggle";
 import { Radio, Stack } from "@mui/material";
 import CircleTickIcon from "icons/CircleTickIcon";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { TaskData } from "store/project/actions";
 import { useTranslations } from "next-intl";
-import {
-  AN_ERROR_TRY_AGAIN,
-  NS_COMMON,
-  NS_PROJECT,
-  STATUS_OPTIONS,
-} from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import { Status } from "constant/enums";
+import { TASK_STATUS_OPTIONS } from "../../components";
 
 const StatusTask = () => {
   const { task, taskListId, onUpdateTask, taskId, subTaskId } = useTaskDetail();
@@ -91,7 +82,7 @@ const StatusTask = () => {
         }}
       >
         <Stack>
-          {STATUS_OPTIONS.map((item) => (
+          {TASK_STATUS_OPTIONS.map((item) => (
             <Stack key={item.value} direction="row" alignItems="center">
               <Radio
                 checked={item.value === status}

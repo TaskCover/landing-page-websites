@@ -108,13 +108,6 @@ const Form = (props: FormProps) => {
         );
 
         const positionIds = positionOptions.map((posItem) => posItem.value);
-        const isMissingPosition = dataParsed.members.some(
-          (member: Member) => !positionIds.includes(member.position_project),
-        );
-
-        if (isMissingPosition) {
-          throw projectT("list.notification.invalidPositions");
-        }
       }
       if (typeof values["avatar"] === "object") {
         const logoUrl = await client.upload(Endpoint.UPLOAD, values["avatar"]);
@@ -204,8 +197,21 @@ const Form = (props: FormProps) => {
     onGetOptions({ pageIndex: 1, pageSize: 20, [name]: newValue });
   };
 
-  const onGetEmployeeOptions = (name: string, newValue?: string | number) => {
+  const onGetEmployeeOptions = () => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
+  };
+
+  const onChangeAssigner = (event) => {
+    formik.handleChange(event);
+    const newMembers = [...(formik.values?.members ?? [])];
+    if (newMembers.some((item) => item.id === event.target.value)) return;
+    const mem = employeeOptions.find(
+      (item) => item.value === event.target.value,
+    );
+    if (mem) {
+      newMembers.push({ id: mem.value as string, fullname: mem.label });
+      formik.setFieldValue("members", newMembers);
+    }
   };
 
   useEffect(() => {
@@ -249,7 +255,7 @@ const Form = (props: FormProps) => {
             title={commonT("assigner")}
             name="owner"
             hasAvatar
-            onChange={formik.handleChange}
+            onChange={onChangeAssigner}
             onBlur={formik.handleBlur}
             value={formik.values?.owner}
             error={commonT(touchedErrors?.owner, { name: commonT("assigner") })}

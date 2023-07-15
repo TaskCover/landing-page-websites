@@ -30,7 +30,7 @@ import {
   NS_PROJECT,
   STATUS_OPTIONS,
 } from "constant/index";
-import { AssignerFilter } from "./components";
+import { AssignerFilter, TASK_STATUS_OPTIONS } from "./components";
 import TaskListForm from "./TaskListForm";
 import { useParams } from "next/navigation";
 import { TaskListData } from "store/project/actions";
@@ -62,7 +62,10 @@ const Actions = () => {
 
   const statusOptions = useMemo(
     () =>
-      STATUS_OPTIONS.map((item) => ({ ...item, label: commonT(item.label) })),
+      TASK_STATUS_OPTIONS.map((item) => ({
+        ...item,
+        label: commonT(item.label),
+      })),
     [commonT],
   );
 
@@ -160,25 +163,27 @@ const Actions = () => {
             size="small"
             variant="primary"
           >
-            {commonT("createNew")}
+            {projectT("detailTasks.createNewTaskList")}
           </Button>
         </Stack>
 
         <Stack
-          direction={{ xs: "column", lg: "row" }}
+          direction="row"
           alignItems="center"
           spacing={{ xs: 1, md: 3 }}
           px={{ sm: 2 }}
           width={{ xs: "100%", md: "fit-content" }}
           justifyContent="flex-end"
+          flexWrap="wrap"
+          rowGap={2}
         >
           <Stack
-            direction={{ xs: "column", lg: "row" }}
+            direction="row"
             alignItems="center"
             spacing={{ xs: 1.5, md: 3 }}
           >
             <Stack
-              direction={{ xs: "column", sm: "row" }}
+              direction="row"
               alignItems="center"
               spacing={{ xs: 1.5, md: 3 }}
             >
@@ -189,7 +194,7 @@ const Actions = () => {
                 name="tasks.name"
                 onChange={onChangeQueries}
                 value={queries?.["tasks.name"]}
-                sx={{ width: 220 }}
+                sx={{ width: 220, minWidth: 220 }}
               />
               <AssignerFilter
                 onChange={onChangeQueries}

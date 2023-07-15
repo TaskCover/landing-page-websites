@@ -54,22 +54,12 @@ const SelectMembers = (props: SelectMembersProps) => {
     onChange(name, newData);
   };
 
-  const onChangeMembers = (
-    id: string,
-    position: string,
-    fullname: string,
-    isUpdatePosition?: boolean,
-  ) => {
+  const onChangeMembers = (id: string, fullname: string) => {
     const indexSelected = members.findIndex((item) => item.id === id);
 
     const newData = [...members];
     if (indexSelected === -1) {
-      newData.push({ id, position_project: position, fullname });
-    } else if (isUpdatePosition) {
-      newData[indexSelected] = {
-        ...newData[indexSelected],
-        position_project: position,
-      };
+      newData.push({ id, fullname });
     } else {
       newData.splice(indexSelected, 1);
     }
@@ -163,15 +153,11 @@ const SelectMembers = (props: SelectMembersProps) => {
           <MenuList component={Stack} spacing={2}>
             {items.map((item) => {
               const isChecked = members.some((member) => item.id === member.id);
-              const positionOfProject = members.find(
-                (member) => item.id === member.id,
-              )?.position_project;
               return (
                 <MemberItem
                   key={item.id}
                   {...item}
                   onChange={onChangeMembers}
-                  positionOfProject={positionOfProject}
                   checked={isChecked}
                 />
               );

@@ -85,6 +85,7 @@ export type ProjectDictionary = {
       };
     };
     addNewTask: string;
+    createNewTaskList: string;
     newMove: string;
     taskList: string;
     key: string;

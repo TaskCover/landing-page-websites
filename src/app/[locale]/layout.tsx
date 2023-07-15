@@ -2,6 +2,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "public/styles/index.css";
 import "public/styles/html.css";
 import "public/styles/date-picker.css";
+import "highlight.js/styles/atom-one-dark.css";
 
 import AppProvider from "contexts/AppProvider";
 import { openSans } from "public/material/typography";

@@ -67,6 +67,7 @@ export type CommonDictionary = {
     outOf: string;
   };
   statusEnum: {
+    inprogress: string;
     active: string;
     close: string;
     pause: string;

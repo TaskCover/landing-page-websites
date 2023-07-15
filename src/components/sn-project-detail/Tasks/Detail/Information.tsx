@@ -29,6 +29,8 @@ import {
 import { SUB_TASKS_ID } from "./components/SubTasksOfTask";
 import { TODO_LIST_ID } from "./components/TodoList";
 import { DEPENDENCIES_ID } from "./components/Dependencies";
+import hljs from "highlight.js";
+import { TASK_TEXT_STATUS } from "../components";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -113,7 +115,7 @@ const Information = () => {
           </Text>
           <TextStatus
             color={COLOR_STATUS[task.status]}
-            text={TEXT_STATUS[task.status]}
+            text={TASK_TEXT_STATUS[task.status]}
           />
         </Stack>
       </Stack>
@@ -221,7 +223,9 @@ const Information = () => {
               },
             }}
             className="html"
-            dangerouslySetInnerHTML={{ __html: task.description }}
+            dangerouslySetInnerHTML={{
+              __html: task.description,
+            }}
           />
         )}
       </InformationItem>
