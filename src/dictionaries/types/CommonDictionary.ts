@@ -33,6 +33,7 @@ export type CommonDictionary = {
     save: string;
     cancel: string;
     add: string;
+    admin: string;
   };
   notification: {
     imageTypeInvalid: string;
