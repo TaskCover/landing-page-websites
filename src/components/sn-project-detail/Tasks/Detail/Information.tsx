@@ -186,8 +186,8 @@ const Information = () => {
           "--"
         )}
       </InformationItem>
-      <Stack direction="row" alignItems="center" spacing={2}>
-        <InformationItem label={commonT("form.title.startDate")}>
+      <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 16.5 }}>
+        <InformationItem label={commonT("form.title.startDate")} width={150}>
           {formatDate(task?.start_date, undefined, "--")}
         </InformationItem>
 
@@ -196,13 +196,10 @@ const Information = () => {
           {formatDate(task?.end_date, undefined, "--")}
         </InformationItem>
       </Stack>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: 2, sm: 5, lg: 10 }}
-      >
+      <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 16.5 }}>
         <InformationItem
           label={projectT("detailTasks.form.title.expectCompletionTime")}
+          width={150}
         >
           {formatNumber(task?.estimated_hours)}
         </InformationItem>
