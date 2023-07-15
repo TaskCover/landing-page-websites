@@ -105,7 +105,7 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
         <Avatar
           alt="Avatar"
           size={56}
-          src={avatar ?? undefined}
+          // src={avatar ?? undefined}
           style={{
             borderRadius: "10px",
           }}
