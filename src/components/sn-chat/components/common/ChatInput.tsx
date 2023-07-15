@@ -2,16 +2,21 @@
 
 import Box from "@mui/material/Box";
 import ChatEditor from "./ChatEditor";
+import { memo } from "react";
 
 interface ChatInputProps {
   isLoading: boolean;
   initalMessage?: string;
+  files?: File[];
   onEnterMessage: (message: string) => void;
+  onChangeFiles?: (file: File[]) => void;
 }
 const ChatInput = ({
   isLoading,
   initalMessage,
+  files,
   onEnterMessage,
+  onChangeFiles,
 }: ChatInputProps) => {
   return (
     <Box
@@ -30,11 +35,13 @@ const ChatInput = ({
         <ChatEditor
           isLoading={isLoading}
           initalValue={initalMessage || ""}
+          files={files}
           onEnterText={onEnterMessage}
+          onChangeFiles={onChangeFiles}
         />
       </Box>
     </Box>
   );
 };
 
-export default ChatInput;
+export default memo(ChatInput);

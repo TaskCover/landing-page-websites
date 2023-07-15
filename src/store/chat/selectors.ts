@@ -5,11 +5,13 @@ import {
   createDirectMessageGroup,
   getAllConvention,
   getLatestMessages,
+  getUserInfoById,
   leftDirectMessageGroup,
   changeGroupRole,
   fetchGroupMembers,
   removeUserFromGroup,
   getChatAttachments,
+  sendMessages,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -17,6 +19,7 @@ import { shallowEqual } from "react-redux";
 import {
   AddMember2GroupRequest,
   ChatConventionItemRequest,
+  ChatItemInfo,
   CreateGroupRequest,
   LastMessagesRequest,
   LeftGroupRequest,
@@ -27,33 +30,51 @@ import {
   FetchGroupMemberRequest,
   ChangeRoleRequest,
   ChatAttachmentsRequest,
+  MessageBodyRequest,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
   setRoomId,
   setStep,
   setMessage,
-  setUserPartner,
+  setConversationInfo,
   setTypeList,
+  setStateSendMessage,
+  setLastMessage,
   clearConversation,
   clearMessageList,
+  reset,
 } from "./reducer";
+import { Attachment, ChatUrlsQueryParam } from "./media/typeMedia";
+import { getChatUrls, uploadFile } from "./media/actionMedia";
+import { IMAGES_ACCEPT } from "constant/index";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
   const { user } = useAuth();
-
   const {
     convention,
     messageInfo,
+
     userOnlinePage,
     roomId,
-    userPartner,
+    conversationInfo,
     conversationPaging,
+    messagePaging,
     status,
+
     currStep,
     prevStep,
     backFallStep,
+
+    partnerInfo,
+    partnerInfoStatus,
+
+    chatLinks,
+    chatLinksStatus,
+
+    stateSendMessage,
+
     createGroupStatus,
     newGroupData,
     addMembers2GroupStatus,
@@ -62,7 +83,7 @@ export const useChat = () => {
     typeList,
     dataTransfer,
     groupMembers,
-    chatAttachments
+    chatAttachments,
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -115,6 +136,48 @@ export const useChat = () => {
     [dispatch, user],
   );
 
+  const onGetChatUrls = useCallback(
+    async (params?: Omit<ChatUrlsQueryParam, "userId" | "authToken">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      await dispatch(
+        getChatUrls({
+          roomId: params?.roomId ?? roomId,
+          type: params?.type ?? conversationInfo?.t,
+          authToken,
+          userId,
+        }),
+      );
+    },
+    [conversationInfo?.t, dispatch, roomId, user],
+  );
+
+  const onSendMessage = useCallback(
+    async (
+      message: Omit<
+        MessageBodyRequest,
+        "sender_userId" | "sender_authToken" | "receiverUsername"
+      >,
+    ) => {
+      await dispatch(
+        sendMessages({
+          sender_userId: user?.["id_rocket"] || "",
+          sender_authToken: user?.["authToken"] || "",
+          receiverUsername: conversationInfo?.partnerUsername || "",
+          ...message,
+        }),
+      );
+    },
+    [conversationInfo?.partnerUsername, dispatch, user],
+  );
+
+  const onGetUserInfo = useCallback(
+    async (username: string) => {
+      await dispatch(getUserInfoById(username));
+    },
+    [dispatch],
+  );
+
   const onSetStep = useCallback(
     (step: STEP, dataTransfer?: any) => {
       dispatch(setStep({ step, dataTransfer }));
@@ -160,7 +223,7 @@ export const useChat = () => {
         addMembersToDirectMessageGroup({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -175,7 +238,7 @@ export const useChat = () => {
         leftDirectMessageGroup({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -190,7 +253,7 @@ export const useChat = () => {
         removeUserFromGroup({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -205,7 +268,7 @@ export const useChat = () => {
         fetchGroupMembers({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -220,7 +283,7 @@ export const useChat = () => {
         changeGroupRole({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -235,7 +298,7 @@ export const useChat = () => {
         getChatAttachments({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -247,8 +310,17 @@ export const useChat = () => {
     dispatch(setMessage(message));
   };
 
-  const onSetUserPartner = (username: string | null) => {
-    dispatch(setUserPartner(username));
+  const onSetConversationInfo = (conversationInfo: ChatItemInfo | null) => {
+    dispatch(
+      setConversationInfo({ conversationInfo, sessionId: user?.["username"] }),
+    );
+  };
+
+  const onSetLastMessage = (newMessage: {
+    roomId: string;
+    lastMessage: Attachment;
+  }) => {
+    dispatch(setLastMessage(newMessage));
   };
 
   const onClearConversation = () => {
@@ -259,9 +331,69 @@ export const useChat = () => {
     dispatch(clearMessageList());
   };
 
+  const onSetStateSendMessage = useCallback(
+    (state: { files: File | File[] | null; status: DataStatus }) => {
+      dispatch(setStateSendMessage(state));
+    },
+    [dispatch],
+  );
+
+  const onReset = () => {
+    dispatch(reset());
+  };
+
+  const onUploadAndSendFile = useCallback(
+    async ({ endpoint, files }: { endpoint: string; files: File[] }) => {
+      onSetStateSendMessage({ files, status: DataStatus.LOADING });
+      try {
+        const promises: Promise<any>[] = [];
+        for (let index = 0; index < files.length; index++) {
+          promises.push(
+            dispatch(
+              uploadFile({
+                endpoint,
+                file: files[index],
+              }),
+            ),
+          );
+        }
+        const urlFiles = await Promise.all(promises);
+        const listFileUrl: {
+          download: string;
+          object: string;
+          upload: string;
+          type: string;
+        }[] = urlFiles.map((item) => {
+          return item.payload;
+        });
+
+        if (listFileUrl.length > 0) {
+          const attachments = listFileUrl.map((item) => {
+            const obj: Attachment = {};
+            if (IMAGES_ACCEPT.includes(item.type)) {
+              obj.image_url = item.download;
+            }
+
+            if (item.type === "video/mp4") {
+              obj.video_url = item.download;
+            }
+
+            return obj;
+          });
+          await onSendMessage({ attachments });
+          onSetStateSendMessage({ files: [], status: DataStatus.SUCCEEDED });
+        }
+      } catch (error) {
+        onSetStateSendMessage({ files: [], status: DataStatus.FAILED });
+      }
+    },
+    [dispatch, onSendMessage, onSetStateSendMessage],
+  );
+
   return {
     convention,
     conversationPaging,
+    messagePaging,
     messageInfo,
     userOnlinePage,
     isError,
@@ -272,10 +404,18 @@ export const useChat = () => {
     totalItems,
     totalPages,
     roomId,
-    userPartner,
+    conversationInfo,
     currStep,
     prevStep,
     backFallStep,
+    partnerInfo,
+    partnerInfoStatus,
+
+    chatLinks,
+    chatLinksStatus,
+
+    stateSendMessage,
+
     createGroupStatus,
     newGroupData,
     addMembers2GroupStatus,
@@ -297,9 +437,16 @@ export const useChat = () => {
     onFetchGroupMembersMember,
     onChangeGroupRole,
     onGetChatAttachments,
-    onSetUserPartner,
+    onSetConversationInfo,
     onSetMessage,
     onClearConversation,
     onClearMessageList,
+    onGetUserInfo,
+    onGetChatUrls,
+    onReset,
+    onUploadAndSendFile,
+    onSendMessage,
+    onSetStateSendMessage,
+    onSetLastMessage,
   };
 };

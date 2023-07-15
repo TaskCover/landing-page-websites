@@ -1,29 +1,46 @@
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { ImageList, Typography } from "@mui/material";
+import { ImageList, SxProps, Typography } from "@mui/material";
 import { ChatItemInfo } from "store/chat/type";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { getDaysDiff } from "utils/index";
 import { useChat } from "store/chat/selectors";
 
 interface ChatItemProp {
   sessionId: string;
   chatInfo: ChatItemInfo;
+  chatItemProps?: BoxProps;
   onClickConvention: (data: ChatItemInfo) => void;
 }
-const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
+const ChatItem = ({
+  chatItemProps,
+  sessionId,
+  chatInfo,
+  onClickConvention,
+}: ChatItemProp) => {
   const { userOnlinePage } = useChat();
 
+  const { sx, ...props } = chatItemProps || {};
   const { lastMessage, name, usersCount, usernames, avatar, t } = chatInfo;
-  const isGroup = useMemo(() => t !== 'd', [t]);
+  const isGroup = useMemo(() => t !== "d", [t]);
   const isCurrentAcc = sessionId === lastMessage?.u?.username;
-  const nameLastMessage = isCurrentAcc ? "You: " : "";
+  const lastMessageContent = useMemo(() => {
+    const sendAttachment = lastMessage?.attachments?.length > 0;
+    if (sendAttachment) {
+      return isCurrentAcc ? "You sent a file." : "Sent a file.";
+    } else {
+      return isCurrentAcc ? `You: ${lastMessage?.msg}` : lastMessage?.msg;
+    }
+  }, [isCurrentAcc, lastMessage]);
 
   const accountPartner = useMemo(() => {
-    if (isGroup) return { status: 'off' }; 
-    const partnerUsername =
-      sessionId === usernames[0] ? usernames[1] : usernames[0];
-    return userOnlinePage?.find((item) => item.username === partnerUsername);
+    if (!isGroup) {
+      const partnerUsername =
+        sessionId === usernames[0] ? usernames[1] : usernames[0];
+      return userOnlinePage?.find((item) => item.username === partnerUsername);
+    } else {
+      return { status: "off" };
+    }
   }, [isGroup, sessionId, userOnlinePage, usernames]);
 
   const renderTimeDiff = useMemo(() => {
@@ -50,8 +67,10 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
         ":hover": {
           backgroundColor: "#F7F7FD",
         },
+        ...sx,
       }}
       p={2}
+      {...props}
     >
       <Box
         position="relative"
@@ -132,8 +151,17 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
         <Typography variant="inherit" fontWeight="bold">
           {name}
         </Typography>
-        <Typography variant="caption" color="#999999">
-          {[isCurrentAcc ? "You: " : "", lastMessage?.msg].join("").trim()}
+        <Typography
+          variant="caption"
+          color="#999999"
+          sx={{
+            display: "-webkit-box",
+            WebkitLineClamp: "1",
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {lastMessageContent}
         </Typography>
       </Box>
       <Typography variant="caption" color="#999999" ml="auto">

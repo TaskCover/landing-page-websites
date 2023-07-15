@@ -72,7 +72,7 @@ const Preview = (props: PreviewProps) => {
       >
         {type.startsWith("video") ? (
           <Box component="video" height="100%" width="auto" controls>
-            <source src={src} type={type} />
+            <source src={src} />
           </Box>
         ) : (
           <Box

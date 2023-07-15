@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataStatus } from "constant/enums";
 import { Paging } from "constant/types";
+import { Attachment, ChatLinkType } from "./media/typeMedia";
 
 export interface ChatItemInfo {
   _id: string;
@@ -18,6 +19,7 @@ export interface ChatItemInfo {
   msgs: number;
   lastMessage: MessengerInfo;
   lm: string;
+  statuses: { username: string; status: string }[];
 }
 
 export interface UserOnlinePage {
@@ -31,21 +33,51 @@ export interface UserOnlinePage {
   avatar: string;
 }
 
+export interface Url {
+  url: string;
+  meta: Meta;
+  headers: Headers;
+  parsedUrl: ParsedURL;
+}
+
+export interface Headers {
+  contentType: string;
+}
+
+export interface Meta {
+  pageTitle: string;
+  ogImage: string;
+  twitterCard: string;
+  ogTitle: string;
+  twitterSite: string;
+}
+
+export interface ParsedURL {
+  host: string;
+  hash: null;
+  pathname: string;
+  protocol: string;
+  port: null;
+  query: null;
+  search: null;
+  hostname: string;
+}
+
 export interface MessageInfo {
   _id: string;
   alias: string;
   msg: string;
-  attachments: unknown[];
+  attachments: Attachment[];
   parseUrls: boolean;
   groupable: boolean;
   ts: string;
   u: UserSendInfo;
   rid: string;
   _updatedAt: string;
-  urls?: unknown[];
+  urls?: Url[];
   mentions: unknown[];
   channels: unknown[];
-  md: unknown[];
+  md?: unknown[];
 }
 
 export interface UserOnlinePage {
@@ -65,6 +97,12 @@ export interface MessengerInfo {
   _id: string;
   rid: string;
   _updatedAt: string;
+  alias: string;
+  attachments: Attachment[];
+  parseUrls: false;
+  groupable: false;
+  mentions: [];
+  channels: [];
 }
 
 export interface UserSendInfo {
@@ -90,8 +128,11 @@ export interface ChatState {
   userOnlinePage: UserOnlinePage[];
   status: DataStatus;
   conversationPaging: Paging;
+  conversationInfo:
+    | (ChatItemInfo & { partnerUsername: string; statusOnline: string })
+    | null;
   roomId: string;
-  userPartner: UserOnlinePage | null;
+
   currStep: STEP;
   prevStep: STEP;
   backFallStep: STEP;
@@ -100,14 +141,26 @@ export interface ChatState {
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
   messagePaging: Paging;
+  //partner info
+  partnerInfo: UserInfo | null;
+  partnerInfoStatus: DataStatus;
+  //chat links
+  chatLinks: ChatLinkType[];
+  chatLinksStatus: DataStatus;
+  //sendMessage state
+  stateSendMessage: {
+    filePreview?: File | File[] | null;
+    status: DataStatus;
+  };
+
   newGroupData: ChatGroup | {};
-  createGroupStatus: DataStatus,
-  addMembers2GroupStatus: DataStatus,
-  leftGroupStatus: DataStatus,
-  removeMemberGroupStatus: DataStatus,
-  typeList: TYPE_LIST,
-  groupMembers: any[],
-  chatAttachments: any,
+  createGroupStatus: DataStatus;
+  addMembers2GroupStatus: DataStatus;
+  leftGroupStatus: DataStatus;
+  removeMemberGroupStatus: DataStatus;
+  typeList: TYPE_LIST;
+  groupMembers: any[];
+  chatAttachments: any;
 }
 
 export type DirectionChat = "a" | "c" | "d";
@@ -154,19 +207,62 @@ export interface RemoveGroupMemberRequest extends AuthenRequestCommon {
 
 export interface ChatAttachmentsRequest extends AuthenRequestCommon {
   roomId: string;
-  fileType?: 'media' | 'file' | 'link';
-  roomType: 'c' | 'p' | 'd';
+  fileType?: "media" | "file" | "link";
+  roomType: "c" | "p" | "d";
 }
 
 export interface ChangeRoleRequest extends AuthenRequestCommon {
   groupId: string;
   userIdToChange: string;
-  newRole: 'addOwner' | 'removeOwner' | 'addModerator' | 'removeModerator' | 'addLeader' | 'removeLeader';
+  newRole:
+    | "addOwner"
+    | "removeOwner"
+    | "addModerator"
+    | "removeModerator"
+    | "addLeader"
+    | "removeLeader";
 }
 
 export interface RemoveMemberRequest extends AuthenRequestCommon {
   groupId: string;
   userIdToKick: string;
+}
+
+export interface Avatar {
+  object: string;
+  name: string;
+  link: string;
+}
+
+export interface Position {
+  id: string;
+  name: string;
+}
+export interface UserInfo {
+  company: string;
+  department: string;
+  email: string;
+  fullname: string;
+  id: string;
+  is_active: true;
+  phone: string;
+  position: Position;
+  date_end_using: string;
+  date_start_using: string;
+  approve: true;
+  avatar: Avatar;
+  status: 1;
+  authToken: string;
+  id_rocket: string;
+  username: string;
+}
+
+export interface MessageBodyRequest {
+  sender_authToken: string;
+  sender_userId: string;
+  receiverUsername: string;
+  message?: string;
+  attachments?: Attachment[];
 }
 
 export enum STEP {
@@ -179,7 +275,7 @@ export enum STEP {
   ADD_GROUP,
   CHAT_DETAIL_GROUP,
   LIST,
-  User_INFO,
+  USER_INFO,
   MEDIA,
   LINK,
   FILE,
@@ -191,3 +287,13 @@ export enum TYPE_LIST {
   LINK_LIST,
   FILE_LIST,
 }
+
+export const mimiMap = {
+  "application/zip": ".zip",
+  "application/xhtml+xml": ".xhtml",
+  "application/vnd.visio": ".vsd",
+  "image/svg_xml": ".svg",
+  "video.mp4": ".mp4",
+  "image/jpeg": [".jpeg", ".jpg"],
+  "image/png": ".png",
+};
