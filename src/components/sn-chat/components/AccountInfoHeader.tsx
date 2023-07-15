@@ -9,20 +9,174 @@ import PointOnline from "icons/pointOnline";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
 import VideoCallIcon from "icons/VideoCallIcon";
-import { ChatItemInfo } from "store/chat/type";
+import { useMemo } from "react";
+import { useChat } from "store/chat/selectors";
+import { ChatItemInfo, STEP } from "store/chat/type";
 
 interface AccountInfoHeaderProp {
   accountInfo: ChatItemInfo;
   onPrevious: () => void;
-  onSetStep: () => void;
+  viewStep?: STEP;
 }
 const AccountInfoHeader = ({
   accountInfo,
   onPrevious,
-  onSetStep,
+  viewStep,
 }: AccountInfoHeaderProp) => {
-  const { usersCount } = accountInfo;
-  const isGroup = usersCount > 1;
+  const { dataTransfer, onSetStep } = useChat();
+  const { usersCount, t, name } = accountInfo;
+  const isGroup = useMemo(() => t !== 'd', [t]);
+
+  const _renderChatOne = () => {
+    if (isGroup) {
+      return (
+        <>
+          <div style={{ position: 'relative' }}>
+            <ImageList sx={{ width: 56, height: 56, margin: 0 }} cols={2} rowHeight={164}>
+              <Avatar
+                alt="Avatar"
+                size={25}
+                style={{
+                  borderRadius: "5px",
+                }}
+              />
+              <Avatar
+                alt="Avatar"
+                size={25}
+                style={{
+                  borderRadius: "5px",
+                }}
+              />
+              <Avatar
+                alt="Avatar"
+                size={25}
+                style={{
+                  borderRadius: "5px",
+                }}
+              />
+              {usersCount - 3 > 0 ? (
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    borderRadius: "5px",
+                    backgroundColor: "#3078F1",
+                    color: "white",
+                  }}
+                >
+                  <Typography variant="caption">+ {usersCount - 3}</Typography>
+                </Box>
+              ) : null}
+            </ImageList>
+            <IconButton
+              style={{
+                width: 5,
+                height: 5,
+                position: 'absolute',
+                right: -2,
+                top: -2,
+                cursor: 'unset'
+              }}
+            >
+              <PointOnline />
+            </IconButton>
+          </div>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Typography variant="inherit" fontWeight="bold">
+              {name}
+            </Typography>
+            <Typography variant="caption" color="#999999">
+              Active
+            </Typography>
+          </Box>
+          <IconButton
+            sx={{
+              cursor: "pointer",
+            }}
+            onClick={() => { onSetStep(STEP.CHAT_DETAIL_GROUP) }}
+          >
+            <ArrowRightIcon />
+          </IconButton>
+        </>
+      )
+    } else {
+      return (<>
+        <Avatar
+          alt="Avatar"
+          size={40}
+          style={{
+            borderRadius: "10px",
+          }}
+        />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography variant="inherit" fontWeight="bold">
+            {accountInfo?.lastMessage?.u?.name}
+          </Typography>
+          <Typography variant="caption" color="#999999">
+            Active
+          </Typography>
+        </Box>
+        <IconButton
+          sx={{
+            cursor: "pointer",
+          }}
+          onClick={() => onSetStep(STEP.CHAT_DETAIL_GROUP, { ...dataTransfer, isNew: !isGroup })}
+        >
+          <ArrowRightIcon />
+        </IconButton>
+      </>)
+    }
+  }
+  const _renderHeader = (viewStep) => {
+    switch (viewStep) {
+      case STEP.CHAT_ONE:
+        return (
+          <>
+            {_renderChatOne()}
+          </>
+        )
+      case STEP.CHAT_DETAIL_GROUP:
+        return (
+          <>
+            <Box
+              sx={{
+                fontSize: "16px",
+                fontWeight: 600,
+
+              }}
+            >
+              {dataTransfer?.name}
+            </Box>
+          </>
+        )
+      case STEP.LIST:
+        return (
+          <>
+            <Box
+              sx={{
+                fontSize: "16px",
+                fontWeight: 600,
+
+              }}
+            >
+              {dataTransfer?.name}
+            </Box>
+          </>
+        )
+      default:
+        break;
+    }
+  }
+
   return (
     <>
       <Box
@@ -42,93 +196,10 @@ const AccountInfoHeader = ({
         >
           <ArrowDownIcon />
         </IconButton>
-        {isGroup ?
-        <div style={{position: 'relative'}}>
-          <ImageList sx={{ width: 56, height: 56, margin: 0 }} cols={2} rowHeight={164}>
-            <Avatar
-              alt="Avatar"
-              size={25}
-              style={{
-                borderRadius: "5px",
-              }}
-            />
-            <Avatar
-              alt="Avatar"
-              size={25}
-              style={{
-                borderRadius: "5px",
-              }}
-            />
-            <Avatar
-              alt="Avatar"
-              size={25}
-              style={{
-                borderRadius: "5px",
-              }}
-            />
-           
-            {usersCount - 3 > 0 ? (
-              <Box
-                sx={{
-                  textAlign: "center",
-                  borderRadius: "5px",
-                  backgroundColor: "#3078F1",
-                  color: "white",
-                }}
-              >
-                <Typography variant="caption">+ {usersCount - 3}</Typography>
-              </Box>
-            ) : null}
-          </ImageList>
-          <IconButton 
-            style={{
-              width: 5,
-              height: 5,
-              position: 'absolute',
-              right: -2,
-              top: -2,
-              cursor: 'unset'
-            }}
-          >
-            <PointOnline />
-          </IconButton>
-        </div>
-          :
-          <>
-            <Avatar
-              alt="Avatar"
-              size={40}
-              style={{
-                borderRadius: "10px",
-              }}
-            />
-           
-          </>
-        }
-         
-         <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <Typography variant="inherit" fontWeight="bold">
-                {accountInfo?.lastMessage?.u?.name}
-              </Typography>
-              <Typography variant="caption" color="#999999">
-                Active
-              </Typography>
-            </Box>
-            <IconButton
-          sx={{
-            cursor: "pointer",
-          }}
-          // onClick={onPrevious}
-        >
-          <ArrowRightIcon />
-        </IconButton>
+        {_renderHeader(viewStep)}
+
         <Box ml="auto">
-          {!isGroup && <IconButton>
+          {viewStep != STEP.CHAT_ONE && <IconButton>
             <SearchIcon
               sx={{
                 color: "#1BC5BD",
@@ -139,7 +210,7 @@ const AccountInfoHeader = ({
             sx={{
               color: "white",
             }}
-            onClick={onSetStep}
+            onClick={() => { onSetStep(STEP.ADD_GROUP) }}
           >
             <ProfileAdd />
           </IconButton>

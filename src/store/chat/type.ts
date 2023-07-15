@@ -68,29 +68,39 @@ export interface ChatGroup {
   usersCount: number;
 }
 
+export interface SetStepAction <T> {
+  step: STEP;
+  dataTransfer?: T;
+}
+
 export interface ChatState {
   convention: ChatItemInfo[];
   userOnlinePage: UserOnlinePage[];
   status: DataStatus;
   conversationPaging: Paging;
-
   roomId: string;
-
   currStep: STEP;
   prevStep: STEP;
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dataTransfer?: any;
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
   messagePaging: Paging;
   newGroupData: ChatGroup | {};
   createGroupStatus: DataStatus,
+  addMembers2GroupStatus: DataStatus,
+  leftGroupStatus: DataStatus,
+  removeMemberGroupStatus: DataStatus,
+  typeList: TYPE_LIST
 }
 
 export type DirectionChat = "a" | "c" | "d";
 
-export interface ChatRequestCommon {
+export interface AuthenRequestCommon {
   authToken: string;
   userId: string;
+}
+export interface ChatRequestCommon extends AuthenRequestCommon {
   type: DirectionChat;
   count?: number;
   offset?: number;
@@ -108,11 +118,33 @@ export interface CreateGroupRequest extends ChatRequestCommon {
   members: string[];
 }
 
+export interface AddMember2GroupRequest extends AuthenRequestCommon {
+  roomId: string;
+  userId_to_add: string[];
+}
+
+export interface LeftGroupRequest extends AuthenRequestCommon {
+  roomId: string;
+}
+
+export interface RemoveGroupMemberRequest extends AuthenRequestCommon {
+  roomId: string;
+  userId_to_remove: string;
+}
+
 export enum STEP {
   CONVENTION,
   CHAT_ONE,
   VIEW_DETAIL_USER,
   ACCOUNT_INFO,
   MEDIA_INFO,
-  ADD_GROUP
+  ADD_GROUP,
+  CHAT_DETAIL_GROUP,
+  LIST,
+}
+
+export enum TYPE_LIST {
+  MEDIA_LIST,
+  LINK_LIST,
+  FILE_LIST,
 }

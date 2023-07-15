@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { Typography } from "@mui/material";
+import { ImageList, Typography } from "@mui/material";
 import { ChatItemInfo } from "store/chat/type";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { getDaysDiff } from "utils/index";
 import { useChat } from "store/chat/selectors";
 
@@ -14,8 +14,8 @@ interface ChatItemProp {
 const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
   const { userOnlinePage } = useChat();
 
-  const { lastMessage, name, usersCount, usernames, avatar } = chatInfo;
-  const isGroup = usersCount > 2;
+  const { lastMessage, name, usersCount, usernames, avatar, t } = chatInfo;
+  const isGroup = useMemo(() => t !== 'd', [t]);
   const isCurrentAcc = sessionId === lastMessage?.u?.username;
   const nameLastMessage = isCurrentAcc ? "You: " : "";
 
@@ -102,14 +102,54 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
           },
         }}
       >
-        <Avatar
-          alt="Avatar"
-          size={56}
-          src={avatar ?? undefined}
-          style={{
-            borderRadius: "10px",
-          }}
-        />
+        {
+          isGroup ? (
+            <ImageList sx={{ width: 56, height: 56, margin: 0 }} cols={2} rowHeight={164}>
+              <Avatar
+                alt="Avatar"
+                size={25}
+                style={{
+                  borderRadius: "5px",
+                }}
+              />
+              <Avatar
+                alt="Avatar"
+                size={25}
+                style={{
+                  borderRadius: "5px",
+                }}
+              />
+              <Avatar
+                alt="Avatar"
+                size={25}
+                style={{
+                  borderRadius: "5px",
+                }}
+              />
+              {usersCount - 3 > 0 ? (
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    borderRadius: "5px",
+                    backgroundColor: "#3078F1",
+                    color: "white",
+                  }}
+                >
+                  <Typography variant="caption">+ {usersCount - 3}</Typography>
+                </Box>
+              ) : null}
+            </ImageList>
+          ): (
+              <Avatar
+                alt="Avatar"
+                size={56}
+                src={avatar ?? undefined}
+                style={{
+                  borderRadius: "10px",
+                }}
+              />
+          )
+        }
       </Box>
 
       <Box

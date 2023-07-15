@@ -4,10 +4,12 @@ import { STEP } from "store/chat/type";
 import ChatList from "./ChatList";
 import ConversationLayout from "./components/ConversationLayout";
 import Conversation from "./components/Conversation";
-import AddGroup from "./AddGroup";
+import AddGroup from "./chatGroup/AddGroup";
+import ChatDetailGroup from "./chatGroup/ChatDetailGroup";
+import List from "./chatGroup/list/List";
 
 const WrapperChat = () => {
-  const { roomId, prevStep, currStep, onSetStep } = useChat();
+  const { roomId, prevStep, currStep, dataTransfer, onSetStep } = useChat();
   useEffect(() => {
     onSetStep(STEP.CONVENTION);
   }, [onSetStep]);
@@ -18,7 +20,7 @@ const WrapperChat = () => {
         return <ChatList />;
       case STEP.CHAT_ONE:
         return (
-          <ConversationLayout>
+          <ConversationLayout viewStep={STEP.CHAT_ONE}>
             <Conversation />
           </ConversationLayout>
         );
@@ -31,6 +33,18 @@ const WrapperChat = () => {
         );
       case STEP.ADD_GROUP:
         return <AddGroup />;
+      case STEP.CHAT_DETAIL_GROUP:
+        return (
+          <ConversationLayout viewStep={STEP.CHAT_DETAIL_GROUP}>
+            <ChatDetailGroup />
+          </ConversationLayout>
+        );
+      case STEP.LIST:
+        return (
+          <ConversationLayout viewStep={STEP.LIST}>
+            <List />
+          </ConversationLayout>
+        );
       default:
         return <ChatList />;
     }

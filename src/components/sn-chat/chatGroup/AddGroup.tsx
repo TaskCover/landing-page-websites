@@ -16,7 +16,7 @@ import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { Employee } from "store/company/reducer";
-import SelectItem from "./components/SelectItem";
+import SelectItem from "../components/SelectItem";
 import { useAuth } from "store/app/selectors";
 import { STEP } from "store/chat/type";
 import { DataStatus } from "constant/enums";
@@ -24,6 +24,8 @@ import { DataStatus } from "constant/enums";
 const AddGroup = () => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
+  const [employeeNameSelected, setEmployeeNameSelected] = useState<any>({});
+  const [employeeIdSelected, setEmployeeIdSelected] = useState<any>({});
 
   const {
     items,
@@ -41,14 +43,20 @@ const AddGroup = () => {
   const { user } = useAuth();
 
   const { prevStep, createGroupStatus, newGroupData,
-    convention,
-    onSetStep, onCreateDirectMessageGroup } = useChat();
+    convention, dataTransfer, onGetAllConvention,
+    onSetStep, onCreateDirectMessageGroup, onAddMembers2Group } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
 
   useEffect(() => {
-    onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 20 });
-  }, [onGetEmployees, textSearch, user?.company]);
+    onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 30 });
+    onGetAllConvention({
+      type: "a",
+      text: '',
+      offset: 0,
+      count: 1000,
+    })
+  }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
     if (createGroupStatus === DataStatus.SUCCEEDED) {
@@ -71,14 +79,37 @@ const AddGroup = () => {
       ...employeeSelected,
       [employee?.username ?? ""]: event.target.checked,
     });
+    setEmployeeNameSelected({
+      ...employeeNameSelected,
+      [employee?.id ?? ""]: event.target.checked,
+    });
+    setEmployeeIdSelected({
+      ...employeeIdSelected,
+      [employee?.username ?? ""]: event.target.checked,
+    });
   };
 
   const handleCreateGroup = () => {
-    onCreateDirectMessageGroup({
-      groupName: `NewGroup${(convention?.filter(chat => chat.t === 'd')?.length ?? 0) + 1}`,
-      members: Object.keys(employeeSelected).filter((item) => employeeSelected[item] === true),
-      type: 'd'
-    });
+    if (dataTransfer?.isNew) {
+      onCreateDirectMessageGroup({
+        groupName: (() => {
+          return Object
+            .keys(employeeNameSelected)
+            .filter((item) => employeeNameSelected[item] === true)
+            ?.join('-')
+            .slice(0, 10) + '...'
+        })(),
+        members: Object.keys(employeeSelected).filter((item) => employeeSelected[item] === true),
+        type: 'd'
+      });
+    } else {
+      onAddMembers2Group({
+        roomId: dataTransfer?._id,
+        userId_to_add: Object.keys(employeeNameSelected).filter((item) => employeeNameSelected[item] === true)
+
+      })
+    }
+    
   };
 
   return (
