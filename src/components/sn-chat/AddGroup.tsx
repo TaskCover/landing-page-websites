@@ -24,6 +24,7 @@ import { DataStatus } from "constant/enums";
 const AddGroup = () => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
+  const [employeeNameSelected, setEmployeeNameSelected] = useState<any>({});
 
   const {
     items,
@@ -77,11 +78,21 @@ const AddGroup = () => {
       ...employeeSelected,
       [employee?.username ?? ""]: event.target.checked,
     });
+    setEmployeeNameSelected({
+      ...employeeNameSelected,
+      [employee?.username ?? ""]: event.target.checked,
+    });
   };
 
   const handleCreateGroup = () => {
     onCreateDirectMessageGroup({
-      groupName: `NewGroup${(convention?.filter(chat => chat.t === 'd')?.length ?? 0) + 1}`,
+      groupName: (() => {
+        return Object
+          .keys(employeeNameSelected)
+          .filter((item) => employeeNameSelected[item] === true)
+          ?.join('-')
+        .slice(0, 10) + '...'
+      })(),
       members: Object.keys(employeeSelected).filter((item) => employeeSelected[item] === true),
       type: 'd'
     });

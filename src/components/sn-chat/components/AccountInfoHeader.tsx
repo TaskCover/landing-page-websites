@@ -9,6 +9,7 @@ import PointOnline from "icons/pointOnline";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
 import VideoCallIcon from "icons/VideoCallIcon";
+import { useMemo } from "react";
 import { useChat } from "store/chat/selectors";
 import { ChatItemInfo, STEP } from "store/chat/type";
 
@@ -23,8 +24,8 @@ const AccountInfoHeader = ({
   viewStep,
 }: AccountInfoHeaderProp) => {
   const { onSetStep } = useChat();
-  const { usersCount } = accountInfo;
-  const isGroup = usersCount > 1;
+  const { usersCount, t } = accountInfo;
+  const isGroup = useMemo(() => t !== 'd', [t]);
 
   const _renderChatOne = () => {
     if (isGroup) {
