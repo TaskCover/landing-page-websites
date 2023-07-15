@@ -10,9 +10,10 @@ import {
 import CurrencyInput from "react-currency-input-field";
 import { Stack } from "@mui/system";
 import useTheme from "hooks/useTheme";
+import { InputNumber } from "components/shared";
 
 interface ISectionProps {
-  value?: number | null;
+  value?: number;
   label?: string;
   onChange?(value: any): void;
   required?: boolean;
@@ -27,7 +28,7 @@ const NumberInput: React.FC<TextFieldInputProps> = (
   props: TextFieldInputProps,
 ) => {
   const {
-    value = 0,
+    value,
     label,
     onChange,
     required,
@@ -57,7 +58,7 @@ const NumberInput: React.FC<TextFieldInputProps> = (
         sx={{
           display: "flex",
           flexDirection: "row",
-          backgroundColor: "grey.50",
+          backgroundColor: isDarkMode ? "#393939" : "grey.50",
           borderRadius: "4px",
           padding: "8px 20px",
           height: "58px",
@@ -71,6 +72,8 @@ const NumberInput: React.FC<TextFieldInputProps> = (
             ? "rgba(246, 78, 96, 1)"
             : isFocus
             ? "rgba(54, 153, 255, 0.5)"
+            : isDarkMode
+            ? "#393939"
             : "#F7F7FD",
           alignItems: "center",
           width: "100%",
@@ -106,19 +109,22 @@ const NumberInput: React.FC<TextFieldInputProps> = (
             id={`input-field-${randomId}`}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
-            value={value || 0}
-            onValueChange={onChange}
+            value={value}
+            onValueChange={(value) => {
+              if (onChange) onChange(value);
+            }}
             style={{
               fontSize: "14px",
               lineHeight: "22px",
               fontWeight: 400,
-              color: "common.black",
+              color: isDarkMode ? "#fff" : "common.black",
               padding: 0,
-              backgroundColor: "#F7F7FD",
+              backgroundColor: isDarkMode ? "#393939" : "#F7F7FD",
               border: "none",
               outline: "none",
             }}
           />
+
           {/* <TextField
             sx={{
               input: {

@@ -8,7 +8,7 @@ export default function CustomizedInputBase(props) {
   const { ...rest } = props;
   return (
     <Paper
-      component="form"
+      //component="form"
       sx={{
         display: "flex",
         alignItems: "center",

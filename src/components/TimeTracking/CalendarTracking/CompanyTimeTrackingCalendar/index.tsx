@@ -3,7 +3,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import _ from "lodash";
-import moment from 'moment';
+import moment from "moment";
 import {
   Avatar,
   Box,
@@ -37,6 +37,9 @@ import ListIcon from "@mui/icons-material/List";
 import TimeCreate from "../../TimeTrackingModal/TimeCreate";
 import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import CustomizedInputBase from "components/shared/InputSeasrch";
+import useTheme from "hooks/useTheme";
+import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 interface IProps {
   events: any[];
   onClick(action: "create" | "edit", item?: any): void;
@@ -48,7 +51,7 @@ interface IFilter {
   search_key: string;
 }
 
-const today = dayjs().add(1, "day"); // Ngày hiện tại + 1 ngày (ngày mai)
+const today = dayjs(); // Ngày hiện tại + 1 ngày (ngày mai)
 const startOfWeek = today.startOf("week").add(0, "day"); // Ngày bắt đầu tuần (chủ nhật)
 const endOfWeek = today.startOf("week").add(6, "day"); // Ngày kết thúc tuần (thứ 2)
 
@@ -86,7 +89,6 @@ const StyledDay = styled(Box)(() => ({
       color: "#3699FF",
     },
   },
-
   h3: {
     margin: 0,
     fontFamily: "Open Sans",
@@ -102,7 +104,6 @@ const StyledDay = styled(Box)(() => ({
     fontSize: "20px",
     lineHeight: "24px",
     fontWeight: 600,
-    color: "#212121",
   },
 }));
 
@@ -110,6 +111,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const isGetLoading: any = false;
   const timeT = useTranslations(NS_TIME_TRACKING);
 
+  const { isDarkMode } = useTheme();
   const { companyItems: company, onGetCompanyTimeSheet } = useGetMyTimeSheet();
 
   const [isOpen, setIsOpen] = React.useState(false);
@@ -143,16 +145,17 @@ const TrackingCalendar: React.FC<IProps> = () => {
             if (!_.isEmpty(data)) {
               const newEvent = {
                 title: `Event ${++index}`,
-                start: moment(data?.start_time ).format('hh:mm A'),
-                end: moment(data?.end_time).format('hh:mm A'),
+                start: moment(data?.start_time).format("hh:mm A"),
+                end: moment(data?.end_time).format("hh:mm A"),
                 extendedProps: {
                   project: {
-                    avatar:  data?.project?.avatar?.link,
+                    avatar: data?.project?.avatar?.link,
                     name: data?.project?.name,
                   },
+                  day: data?.day,
                   name: user?.fullname,
                   position: data?.position?.name,
-                  start: moment(data?.start_time ).format('hh:mm A'),
+                  start: moment(data?.start_time).format("hh:mm A"),
                   hour: data?.duration,
                   type:
                     data?.type === "Work time" ? "working_time" : "break_time",
@@ -277,9 +280,9 @@ const TrackingCalendar: React.FC<IProps> = () => {
             onChange={(event) =>
               setFilters({ ...filters, search_key: event.target.value })
             }
-            // onKeyUp={(event) =>
-            //   event.key === "Enter" && onGetMyTimeSheet(filters)
-            // }
+            onKeyUp={(event) =>
+              event.key === "Enter" && onGetCompanyTimeSheet(filters)
+            }
           />
         </Stack>
       </>
@@ -316,54 +319,56 @@ const TrackingCalendar: React.FC<IProps> = () => {
             justifyContent: "center",
           }}
         >
-          {/* <MobileDatePicker
-            open={isOpen}
-            onOpen={() => setIsOpen(true)}
-            onClose={() => setIsOpen(false)}
-            onChange={(date: Date | null) => {
-              if (date) {
-                const { startDate, endDate } = getWeekStartAndEndDates(date);
-                setSelectedDate(date);
-                setFilters({
-                  ...filters,
-                  start_date: startDate,
-                  end_date: endDate,
-                });
-              }
-            }}
-            closeOnSelect
-            sx={{ display: "none" }}
-            slotProps={{
-              actionBar: {
-                actions: [],
-              },
-              toolbar: {
-                hidden: true,
-              },
-              day: {
-                sx: {
-                  transition: "all ease 0.25s",
-                  borderRadius: "4px",
-                  fontWeight: 600,
-                  "&.Mui-selected": {
-                    color: "#ffffff",
-                    background: `red !important`,
-                    "&.MuiPickersDay-today": {
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MobileDatePicker
+              open={isOpen}
+              onOpen={() => setIsOpen(true)}
+              onClose={() => setIsOpen(false)}
+              onChange={(date: Date | null) => {
+                if (date) {
+                  const { startDate, endDate } = getWeekStartAndEndDates(date);
+                  setSelectedDate(date);
+                  setFilters({
+                    ...filters,
+                    start_date: startDate,
+                    end_date: endDate,
+                  });
+                }
+              }}
+              closeOnSelect
+              sx={{ display: "none" }}
+              slotProps={{
+                actionBar: {
+                  actions: [],
+                },
+                toolbar: {
+                  hidden: true,
+                },
+                day: {
+                  sx: {
+                    transition: "all ease 0.25s",
+                    borderRadius: "4px",
+                    fontWeight: 600,
+                    "&.Mui-selected": {
                       color: "#ffffff",
-                      borderColor: "green",
+                      backgroundColor: `rgba(54, 153, 255, 1) !important`,
+                      "&.MuiPickersDay-today": {
+                        color: "#ffffff",
+                        borderColor: "rgba(54, 153, 255, 1)",
+                      },
+                    },
+                    "&.MuiPickersDay-today": {
+                      color: "rgba(54, 153, 255, 1)",
+                      borderColor: "rgba(54, 153, 255, 1)",
+                    },
+                    ":hover": {
+                      background: "rgba(54, 153, 255, 1)",
                     },
                   },
-                  "&.MuiPickersDay-today": {
-                    color: "blue",
-                    borderColor: "hotpink",
-                  },
-                  ":hover": {
-                    background: "yellow",
-                  },
                 },
-              },
-            }}
-          /> */}
+              }}
+            />
+          </LocalizationProvider>
           <Stack
             direction="row"
             alignItems="center"
@@ -452,6 +457,8 @@ const TrackingCalendar: React.FC<IProps> = () => {
               sx={{
                 display: "grid",
                 gridTemplateColumns: "repeat(7, 1fr)",
+                borderTop: "1px solid rgb(224, 224, 224)",
+                borderLeft: "1px solid rgb(224, 224, 224)",
               }}
             >
               {_.map(dateRange, (date: Date, index) => {
@@ -470,7 +477,16 @@ const TrackingCalendar: React.FC<IProps> = () => {
                     onClick={() => setSelectedDate(date)}
                   >
                     <h3>{weekday}</h3>
-                    <h4>{dayNumber}</h4>
+                    <Typography
+                      variant="h4"
+                      sx={{
+                        color: isDarkMode
+                          ? "common.white!important"
+                          : "common.black",
+                      }}
+                    >
+                      {dayNumber}
+                    </Typography>
                   </StyledDay>
                 );
               })}
@@ -486,7 +502,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
     return (
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          <TableContainer>
+          <TableContainer sx={{ borderLeft: "1px solid rgb(224, 224, 224)" }}>
             <Table
               sx={{
                 borderCollapse: "separate",
@@ -497,77 +513,102 @@ const TrackingCalendar: React.FC<IProps> = () => {
             >
               <TableHead>
                 <StyledTableRow>
-                  <StyledTableCell>{timeT("company_time.table_tab.employee")}</StyledTableCell>
-                  <StyledTableCell>{timeT("company_time.table_tab.project")}</StyledTableCell>
-                  <StyledTableCell>{timeT("company_time.table_tab.position")}</StyledTableCell>
-                  <StyledTableCell>{timeT("company_time.table_tab.start_time")}</StyledTableCell>
-                  <StyledTableCell>{timeT("company_time.table_tab.time")}</StyledTableCell>
-                  <StyledTableCell>{timeT("company_time.table_tab.note")}</StyledTableCell>
+                  <StyledTableCell>
+                    {timeT("company_time.table_tab.employee")}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {timeT("company_time.table_tab.project")}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {timeT("company_time.table_tab.position")}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {timeT("company_time.table_tab.start_time")}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {timeT("company_time.table_tab.time")}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {timeT("company_time.table_tab.note")}
+                  </StyledTableCell>
                 </StyledTableRow>
               </TableHead>
               <TableBody>
                 {!_.isEmpty(events) ? (
-                  _.map(events, (event, index) => {
-                    if (
-                      selectedDate &&
-                      !dayjs(dayjs(selectedDate).format("YYYY-MM-DD")).isSame(
-                        dayjs(event?.start).format("YYYY-MM-DD"),
-                      )
+                  events
+                    ?.filter(
+                      (item) =>
+                        dayjs(item?.extendedProps?.day).format("YYYY-MM-DD") ===
+                        dayjs(selectedDate).format("YYYY-MM-DD"),
                     )
-                      return <></>;
-                    const rowStyles = {
-                      borderLeft: `4px solid rgba(54, 153, 255, 1)`,
-                      background: "rgba(225, 240, 255, 1)",
-                    };
-                    if (event?.extendedProps?.type === "break_time")
-                      Object.assign(rowStyles, {
-                        borderLeft: `4px solid rgba(246, 78, 96, 1)`,
-                        background: "rgba(246, 78, 96, 0.1)",
-                      });
-                    return (
-                      <StyledTableRow sx={rowStyles} key={index}>
-                        <StyledTableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "12px",
-                            }}
-                          >
-                            <Avatar sx={{ width: 20, height: 20 }} />
-                            {event?.extendedProps?.name}
-                          </Box>
-                        </StyledTableCell>
-                        <StyledTableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "12px",
-                            }}
-                          >
-                            <Avatar sx={{ width: 20, height: 20 }} />
+                    ?.map((event, index) => {
+                      // console.log(
+                      //   "c",
+                      //   selectedDate,
+                      //   !dayjs(dayjs(selectedDate).format("YYYY-MM-DD")).isSame(
+                      //     dayjs(event?.start).format("YYYY-MM-DD"),
+                      //   ),
+                      // );
+                      // if (
+                      //   selectedDate &&
+                      //   !dayjs(dayjs(selectedDate).format("YYYY-MM-DD")).isSame(
+                      //     dayjs(event?.start).format("YYYY-MM-DD"),
+                      //   )
+                      // )
+                      //   return <></>;
+                      const rowStyles = {
+                        borderLeft: `4px solid rgba(54, 153, 255, 1)`,
+                        backgroundColor: "primary.light",
+                      };
+                      if (event?.extendedProps?.type === "break_time")
+                        Object.assign(rowStyles, {
+                          borderLeft: `4px solid rgba(246, 78, 96, 1)`,
+                          backgroundColor: "error.light",
+                        });
+                      return (
+                        <StyledTableRow sx={rowStyles} key={index}>
+                          <StyledTableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "12px",
+                              }}
+                            >
+                              <Avatar sx={{ width: 20, height: 20 }} />
+                              {event?.extendedProps?.name}
+                            </Box>
+                          </StyledTableCell>
+                          <StyledTableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "12px",
+                              }}
+                            >
+                              <Avatar sx={{ width: 20, height: 20 }} />
 
-                            {event?.extendedProps?.project?.name}
-                          </Box>
-                        </StyledTableCell>
-                      
-                        <StyledTableCell>
-                          {event?.extendedProps?.position}
-                        </StyledTableCell>
-                        <StyledTableCell>
-                          {event?.extendedProps?.start}
-                        </StyledTableCell>
-                        <StyledTableCell>
-                          {" "}
-                          {event?.extendedProps?.hour || 0}h
-                        </StyledTableCell>
-                        <StyledTableCell>
-                          {event?.extendedProps?.note}
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    );
-                  })
+                              {event?.extendedProps?.project?.name}
+                            </Box>
+                          </StyledTableCell>
+
+                          <StyledTableCell>
+                            {event?.extendedProps?.position}
+                          </StyledTableCell>
+                          <StyledTableCell>
+                            {event?.extendedProps?.start}
+                          </StyledTableCell>
+                          <StyledTableCell>
+                            {" "}
+                            {event?.extendedProps?.hour || 0}h
+                          </StyledTableCell>
+                          <StyledTableCell>
+                            {event?.extendedProps?.note}
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      );
+                    })
                 ) : (
                   <StyledTableRow>
                     <Typography
@@ -619,15 +660,17 @@ const TrackingCalendar: React.FC<IProps> = () => {
 
   const _renderTimeSheetContent = () => {
     if (activeTab !== "timeSheet") return;
-    return <TimeSheet data={company} filters={filters} />;
+    return <TimeSheet data={company} filters={filters} dateRange={dateRange} />;
   };
 
   const _renderFooter = () => {
     return (
-      <Stack direction="column" alignItems="center" sx={{ marginTop: "16px" }}>
-        <Typography
-          sx={{ fontSize: "16px", fontWeight: 600, color: "#212121" }}
-        >
+      <Stack
+        direction="column"
+        alignItems="center"
+        sx={{ marginTop: "16px", color: isDarkMode ? "#fff" : "#212121" }}
+      >
+        <Typography sx={{ fontSize: "16px", fontWeight: 600 }}>
           {timeT("header.tab.weekly_total")}
         </Typography>
         <Stack direction="row">
@@ -635,15 +678,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
             sx={{
               fontSize: "16px",
               fontWeight: 400,
-              color: "#212121",
+
               marginRight: "16px",
             }}
           >
-          {timeT("header.tab.workTime")}: {totalTime.work}h
+            {timeT("header.tab.workTime")}: {totalTime.work}h
           </Typography>
-          <Typography
-            sx={{ fontSize: "16px", fontWeight: 400, color: "#212121" }}
-          >
+          <Typography sx={{ fontSize: "16px", fontWeight: 400 }}>
             {timeT("header.tab.breakTime")}: {totalTime.break}h
           </Typography>
         </Stack>

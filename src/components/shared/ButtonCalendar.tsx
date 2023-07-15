@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import useTheme from "hooks/useTheme";
 import { ReactElement } from "react";
 
 type ButtonProps = {
@@ -11,7 +12,7 @@ type ButtonProps = {
 
 const ButtonCalendar = (props: ButtonProps) => {
   const { onClick, icon, title, sx, isActive } = props;
-
+  const { isDarkMode } = useTheme();
   return (
     <Button
       startIcon={icon}
@@ -21,13 +22,17 @@ const ButtonCalendar = (props: ButtonProps) => {
         height: "32px",
         width: "161px",
         padding: 0,
-        backgroundColor: isActive ? "#ebf8f8" : "common.white",
+        backgroundColor: isDarkMode
+          ? "grey.100"
+          : isActive
+          ? "#ebf8f8"
+          : "common.white",
         color: "grey.300",
         textTransform: "none",
         border: isActive ? "1px solid #1BC5BD" : "1px solid #999999",
         boxShadow: "none",
         "&:hover": {
-          backgroundColor: "#ebf8f8",
+          backgroundColor: isDarkMode ? "#565656" : "#ebf8f8",
           //opacity: "10%",
           border: "1px solid #1BC5BD",
         },

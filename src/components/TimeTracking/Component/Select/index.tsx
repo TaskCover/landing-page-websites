@@ -101,7 +101,7 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
           sx={{
             display: "flex",
             flexDirection: "row",
-            backgroundColor: !!isDarkMode ? "grey.300" : "grey.50",
+            backgroundColor: !!isDarkMode ? "#393939" : "grey.50",
             borderRadius: "4px",
             padding: "8px 20px",
             height: "58px",
@@ -115,7 +115,9 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
               ? "rgba(246, 78, 96, 1)"
               : isFocus
               ? "rgba(54, 153, 255, 0.5)"
-              : "#F7F7FD",
+              : isDarkMode
+              ? "#393939"
+              : "inherit",
             alignItems: "center",
             width: "100%",
           }}
@@ -157,7 +159,7 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
                 fontSize: "14px",
                 fontWeight: 400,
                 lineHeight: "22px",
-                color: !!isDarkMode ? "#A0A0A0" : "common.black",
+                color: !!isDarkMode ? "common.white" : "common.black",
                 backgroundColor: !!isDarkMode ? "#393939" : "grey.50",
                 " .MuiSelect-select": {
                   padding: "0 16px 0 0 ",
@@ -174,6 +176,7 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
                   vertical: "top",
                   horizontal: "center",
                 },
+
                 MenuListProps: {
                   sx: {
                     width: "100%",
@@ -182,6 +185,9 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
                 sx: {
                   " .MuiPaper-root": {
                     width: `${containerRef?.current?.clientWidth}px`,
+                  },
+                  " .MuiMenuItem-root": {
+                    color: !!isDarkMode ? "common.white" : "common.black",
                   },
                 },
               }}

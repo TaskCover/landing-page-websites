@@ -25,10 +25,12 @@ import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import { useSnackbar } from "store/app/selectors";
 import { useTranslations } from "next-intl";
 import { NS_TIME_TRACKING } from "constant/index";
+import useTheme from "hooks/useTheme";
 
 interface IProps {
   data: any[];
   filters: any;
+  dateRange: any;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -50,13 +52,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const weekdays = ["SUN", "MON", "TUE", "WEB", "THU", "FRI", "SAT"];
 
-const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
+const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
   //const dispatch = useTypedDispatch();
   const isGetLoading: any = false;
   const [timeSheets, setTimesheets] = useState<any>([]);
   const timeT = useTranslations(NS_TIME_TRACKING);
 
-
+  const { isDarkMode } = useTheme();
   const { onAddSnackbar } = useSnackbar();
   const { onPinTimeSheet, onGetMyTimeSheet, params } = useGetMyTimeSheet();
   useEffect(() => {
@@ -167,7 +169,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                     }}
                   >
                     <Avatar
-                      sx={{ width: 20, height: 20, objectFit: 'cover' }}
+                      sx={{ width: 20, height: 20, objectFit: "cover" }}
                       src={timeSheet?.avatar}
                     />
                     <Typography
@@ -250,7 +252,9 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                         py: 1,
                         background:
                           _index === 0 || _index === _.size(weekdays) - 1
-                            ? "#FAFAFA"
+                            ? isDarkMode
+                              ? "inherit"
+                              : "#FAFAFA"
                             : "inherit",
                       }}
                     >
@@ -359,40 +363,44 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                   </Typography>
                 </Box>
               </StyledTableCell>
-              {weekdays?.map((weekday) => (
-                <StyledTableCell key={weekday}>
-                  <Box
-                    sx={{
-                      mb: "12px",
-                      py: 1,
-                    }}
-                  >
-                    <Typography
+              {dateRange?.map((date, index) => {
+                const weekday = weekdays[date.getDay()];
+                const dayNumber = date.getDate();
+                return (
+                  <StyledTableCell key={date}>
+                    <Box
                       sx={{
-                        fontSize: "10px",
-                        fontWeight: 400,
-                        lineHeight: "18px",
-                        textTransform: "uppercase",
-                        textAlign: "left",
+                        mb: "12px",
+                        py: 1,
                       }}
                     >
-                      {weekday}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "16px",
-                        fontWeight: 600,
-                        lineHeight: "20px",
-                        textTransform: "uppercase",
-                        color: "#212121",
-                        textAlign: "left",
-                      }}
-                    >
-                      {formatDuration(calculateTotalWeekdays(weekday))}
-                    </Typography>
-                  </Box>
-                </StyledTableCell>
-              ))}
+                      <Typography
+                        sx={{
+                          fontSize: "10px",
+                          fontWeight: 400,
+                          lineHeight: "18px",
+                          textTransform: "uppercase",
+                          textAlign: "left",
+                        }}
+                      >
+                        {`${weekday} ${dayNumber}`}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: 600,
+                          lineHeight: "20px",
+                          textTransform: "uppercase",
+                          color: isDarkMode ? "#fff" : "#212121",
+                          textAlign: "left",
+                        }}
+                      >
+                        {formatDuration(calculateTotalWeekdays(weekday))}
+                      </Typography>
+                    </Box>
+                  </StyledTableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           {_renderTableBody()}
