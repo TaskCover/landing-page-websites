@@ -143,7 +143,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const timeT = useTranslations(NS_TIME_TRACKING);
 
   const isGetLoading: any = false;
-  const { user: userData } = useAuth();
+  const { user: userData } = useAuth();  
 
   const calendarRef = React.useRef<FullCalendar>(null);
   const [filters, setFilters] = React.useState<IFilter>(DEFAULT_FILTER);
@@ -184,7 +184,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
               date: timesheet?.day,
               start_time: moment(timesheet?.start_time).format("hh:mm A"),
               project: timesheet?.project,
-              avatar: timesheet?.project?.avatar?.link,
+              avatar: userData?.avatar?.link,
               name: userData?.fullname,
               position: timesheet?.position,
               hour: timesheet?.duration,
