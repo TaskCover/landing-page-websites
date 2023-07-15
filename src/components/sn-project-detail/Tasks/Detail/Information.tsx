@@ -186,7 +186,7 @@ const Information = () => {
           "--"
         )}
       </InformationItem>
-      <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 16.5 }}>
+      <Stack direction="row" alignItems="center" spacing={2}>
         <InformationItem label={commonT("form.title.startDate")} width={150}>
           {formatDate(task?.start_date, undefined, "--")}
         </InformationItem>
