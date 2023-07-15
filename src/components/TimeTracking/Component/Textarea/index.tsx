@@ -67,7 +67,7 @@ const Textarea: React.FC<TextFieldInputProps> = React.forwardRef(
           sx={{
             display: "flex",
             flexDirection: "row",
-            backgroundColor: "grey.50",
+            backgroundColor: isDarkMode ? "#393939" : "grey.50",
             borderRadius: "4px",
             ":hover": {
               cursor: disabled ? "not-allowed" : "text",
@@ -79,6 +79,8 @@ const Textarea: React.FC<TextFieldInputProps> = React.forwardRef(
               ? "rgba(246, 78, 96, 1)"
               : isFocus
               ? "rgba(54, 153, 255, 0.5)"
+              : isDarkMode
+              ? "#393939"
               : "#F7F7FD",
             width: "100%",
             height: "100%",
@@ -115,7 +117,7 @@ const Textarea: React.FC<TextFieldInputProps> = React.forwardRef(
                 overflow: "auto",
                 padding: "0 20px 20px 20px",
                 resize: "vertical",
-                backgroundColor: "grey.50",
+                backgroundColor: isDarkMode ? "#393939" : "grey.50",
                 minHeight: "112px",
                 maxHeight: "250px",
                 " .MuiInputBase-root": {
@@ -127,9 +129,9 @@ const Textarea: React.FC<TextFieldInputProps> = React.forwardRef(
                   fontSize: "14px",
                   lineHeight: "22px",
                   fontWeight: 400,
-                  color: "common.black",
+                  color: isDarkMode ? "#fff" : "common.black",
                   padding: 0,
-                  backgroundColor: "grey.50",
+                  backgroundColor: isDarkMode ? "#393939" : "grey.50",
                   height: "calc(100% - 20px)",
                 },
                 "> :before, :after": {

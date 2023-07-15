@@ -22,6 +22,7 @@ import { getMessageErrorByAPI } from "utils/index";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { DEFAULT_RANGE_ACTIVITIES } from "store/timeTracking/reducer";
+import useTheme from "hooks/useTheme";
 
 interface IProps {
   type?: string;
@@ -65,6 +66,7 @@ const TimeCreate: React.FC<IProps> = ({
   const [positionOptions, setPositionOptions] = useState<IOptionStructure[]>(
     [],
   );
+  const { isDarkMode } = useTheme();
 
   const schema = yup
     .object({
@@ -96,7 +98,7 @@ const TimeCreate: React.FC<IProps> = ({
       start_time: "",
       type: "",
       day: "",
-      duration: 0,
+      duration: undefined,
       note: "",
     },
   });
@@ -120,12 +122,12 @@ const TimeCreate: React.FC<IProps> = ({
         position: selectedEvent?.extendedProps?.position?.id,
         day: dayjs(selectedEvent?.extendedProps?.day).format("YYYY-MM-DD"),
         start_time: selectedEvent?.start,
-        duration: selectedEvent?.extendedProps?.hour || 0,
+        duration: selectedEvent?.extendedProps?.hour,
         note: selectedEvent?.extendedProps?.note,
       };
       reset(validResetData);
     } else {
-      reset();
+      reset({});
     }
   }, [isEdit, open]);
 
@@ -153,16 +155,6 @@ const TimeCreate: React.FC<IProps> = ({
     }
   }, [positions]);
 
-  // useEffect(() => {
-  //   if (
-  //     itemStatus === DataStatus.SUCCEEDED ||
-  //     statusUpdate === DataStatus.SUCCEEDED ||
-  //     statusDelete === DataStatus.SUCCEEDED
-  //   ) {
-  //     reset();
-  //     onClose();
-  //   }
-  // }, [itemStatus, statusUpdate, statusDelete]);
   const commonT = useTranslations(NS_COMMON);
 
   const onSubmit = (data: FormData) => {
@@ -207,7 +199,10 @@ const TimeCreate: React.FC<IProps> = ({
         <Stack
           direction="column"
           component="form"
-          sx={{ marginBottom: "24px", backgroundColor: "common.white" }}
+          sx={{
+            marginBottom: "24px",
+            backgroundColor: isDarkMode ? "inherit" : "common.white",
+          }}
           spacing="20px"
         >
           <Controller

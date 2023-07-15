@@ -28,8 +28,9 @@ import CustomizedInputBase from "components/shared/InputSeasrch";
 import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import MobileDatePickerComponent from "components/TimeTracking/Component/MobileDatePicker";
 import { WorkLogItem } from "store/timeTracking/reducer";
+import useTheme from "hooks/useTheme";
+import { useRouter } from "next/navigation";
 
-//const { getTimeLog } = TimeTrackingActions;
 const { TASK_ACTION } = ENUMS;
 
 const taskActionStrings = {
@@ -89,7 +90,8 @@ interface ITimeLogStructure {
 const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
   //const dispatch = useTypedDispatch();
   const { workLog, onGetWorkLog } = useGetMyTimeSheet();
-
+  const router = useRouter();
+  const { isDarkMode } = useTheme();
   const isGetLoading: any = false;
   const [isOpen, setIsOpen] = useState(false);
   const [timeLogs, setTimeLogs] = useState<WorkLogItem[]>([]);
@@ -171,7 +173,7 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
               >
                 <Link
                   sx={{
-                    color: "#212121",
+                    color: isDarkMode ? "common.white" : "#212121",
                     textDecoration: "none",
                     marginRight: "8px",
                   }}
@@ -189,6 +191,9 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
                       textDecoration: "underline",
                     },
                   }}
+                  onClick={() =>
+                    router.push(`/projects/${timeLog?.project_id}/tasks/`)
+                  }
                 >
                   {`${timeLog?.task_number ? `#${timeLog.task_number}` : ""} ${
                     timeLog?.task_name ? "-" : ""
@@ -196,7 +201,12 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
                 </Link>
                 in {timeLog?.project?.name}
               </Typography>
-              <Typography sx={{ fontSize: "12px", color: "#212121" }}>
+              <Typography
+                sx={{
+                  fontSize: "12px",
+                  color: isDarkMode ? "common.white" : "#212121",
+                }}
+              >
                 {timeLog?.user?.position?.name}
               </Typography>
             </Stack>

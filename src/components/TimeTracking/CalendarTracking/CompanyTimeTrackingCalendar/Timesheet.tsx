@@ -23,10 +23,12 @@ import PinActiveIcon from "icons/PinActiveIcon";
 import PinIcon from "icons/PinIcon";
 import { useSnackbar } from "store/app/selectors";
 import { useGetMyTimeSheet } from "store/timeTracking/selectors";
+import useTheme from "hooks/useTheme";
 
 interface IProps {
   data: any[];
   filters: any;
+  dateRange: any;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -48,14 +50,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const weekdays = ["SUN", "MON", "TUE", "WEB", "THU", "FRI", "SAT"];
 
-const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
+const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
   const isGetLoading = false;
+  const { isDarkMode } = useTheme();
   const [totalEachRows, setTotalEachRows] = useState<{ [key: string]: number }>(
     {},
   );
 
   const { onAddSnackbar } = useSnackbar();
-  const { onPinTimeSheet, onGetMyTimeSheet, params } = useGetMyTimeSheet();
+  const { onPinTimeSheet, onGetCompanyTimeSheet, params } = useGetMyTimeSheet();
 
   const [totalWeek, setTotalWeek] = useState<number>(0);
   const [weeklyTotals, setWeeklyTotals] = useState<Map<string, number>>(
@@ -167,7 +170,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                           type: "USER",
                         })
                           .then(() => {
-                            onGetMyTimeSheet({ ...params });
+                            onGetCompanyTimeSheet({ ...params });
                             onAddSnackbar(
                               `${
                                 user?.is_pin ? "Unpin" : "Pin"
@@ -176,7 +179,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                             );
                           })
                           .catch(() => {
-                            onGetMyTimeSheet({ ...params });
+                            onGetCompanyTimeSheet({ ...params });
                             onAddSnackbar(
                               `${
                                 user?.is_pin ? "Unpin" : "Pin"
@@ -227,7 +230,9 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                         py: 1,
                         background:
                           _index === 0 || _index === _.size(weekdays) - 1
-                            ? "#FAFAFA"
+                            ? isDarkMode
+                              ? "inherit"
+                              : "#FAFAFA"
                             : "inherit",
                       }}
                     >
@@ -336,40 +341,44 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                   </Typography>
                 </Box>
               </StyledTableCell>
-              {weekdays?.map((weekday) => (
-                <StyledTableCell key={weekday}>
-                  <Box
-                    sx={{
-                      mb: "12px",
-                      py: 1,
-                    }}
-                  >
-                    <Typography
+              {dateRange?.map((date, index) => {
+                const weekday = weekdays[date.getDay()];
+                const dayNumber = date.getDate();
+                return (
+                  <StyledTableCell key={date}>
+                    <Box
                       sx={{
-                        fontSize: "10px",
-                        fontWeight: 400,
-                        lineHeight: "18px",
-                        textTransform: "uppercase",
-                        textAlign: "left",
+                        mb: "12px",
+                        py: 1,
                       }}
                     >
-                      {weekday}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "16px",
-                        fontWeight: 600,
-                        lineHeight: "20px",
-                        textTransform: "uppercase",
-                        color: "#212121",
-                        textAlign: "left",
-                      }}
-                    >
-                      {formatDuration(weeklyTotals?.get(weekday) || 0)}
-                    </Typography>
-                  </Box>
-                </StyledTableCell>
-              ))}
+                      <Typography
+                        sx={{
+                          fontSize: "10px",
+                          fontWeight: 400,
+                          lineHeight: "18px",
+                          textTransform: "uppercase",
+                          textAlign: "left",
+                        }}
+                      >
+                        {`${weekday} ${dayNumber}`}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: 600,
+                          lineHeight: "20px",
+                          textTransform: "uppercase",
+                          color: isDarkMode ? "#fff" : "#212121",
+                          textAlign: "left",
+                        }}
+                      >
+                        {formatDuration(weeklyTotals?.get(weekday) || 0)}
+                      </Typography>
+                    </Box>
+                  </StyledTableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           {_renderTableBody()}

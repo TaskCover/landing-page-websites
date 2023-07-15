@@ -8,6 +8,7 @@ import {
   deleteTimeSheet,
   getCompanyTimeSheet,
   getMyTimeSheet,
+  getSameWorker,
   getWorkLog,
   pinTimeSheet,
   updateTimeSheet,
@@ -31,6 +32,7 @@ export const useGetMyTimeSheet = () => {
     statusDelete,
     workLog,
     params,
+    sameWorker,
   } = useAppSelector((state) => state.timeTracking, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.timeTracking.paging,
@@ -89,10 +91,18 @@ export const useGetMyTimeSheet = () => {
     [dispatch],
   );
 
+  // const onGetSameWorker = useCallback(
+  //   async (data: { id: string }) => {
+  //     return await dispatch(getSameWorker(data));
+  //   },
+  //   [dispatch],
+  // );
+
   return {
     params,
     items,
     companyItems,
+    sameWorker,
     workLog,
     status,
     itemStatus,
@@ -112,5 +122,6 @@ export const useGetMyTimeSheet = () => {
     onDeleteTimeSheet,
     onGetWorkLog,
     onPinTimeSheet,
+    //onGetSameWorker,
   };
 };
