@@ -181,24 +181,18 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
                   {timeLog?.user?.email}
                 </Link>
                 {getTaskActionString(timeLog.action)}
-                <Link
+                <Typography
+                  component="span"
                   sx={{
                     color: "#3699FF",
                     textDecoration: "none",
                     margin: "0 6px",
-                    cursor: "pointer",
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
                   }}
-                  onClick={() =>
-                    router.push(`/projects/${timeLog?.project_id}/tasks/`)
-                  }
                 >
                   {`${timeLog?.task_number ? `#${timeLog.task_number}` : ""} ${
                     timeLog?.task_name ? "-" : ""
                   } ${timeLog?.task_name}`}
-                </Link>
+                </Typography>
                 in {timeLog?.project?.name}
               </Typography>
               <Typography
@@ -296,13 +290,7 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
           </Typography>
           <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
         </Stack>
-        <CustomizedInputBase
-          value={filters.search_key}
-          onChange={(event) =>
-            setFilters({ ...filters, search_key: event.target.value })
-          }
-          onKeyUp={(event) => event.key === "Enter" && onGetWorkLog(filters)}
-        />
+        
       </Stack>
     );
   };

@@ -503,8 +503,9 @@ const TrackingCalendar: React.FC<IProps> = () => {
         </Stack>
         {activeTab === "timeSheet" && (
           <CustomizedInputBase
-            value={filters.search_key}
-            onChange={(event) =>
+            value={ filters.search_key }
+            placeholder="Search Project"
+            onChange = {(event) =>
               setFilters({ ...filters, search_key: event.target.value })
             }
             // onKeyUp={(event) =>
