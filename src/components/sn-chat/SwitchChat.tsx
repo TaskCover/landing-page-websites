@@ -4,8 +4,9 @@ import { STEP } from "store/chat/type";
 import ChatList from "./ChatList";
 import ConversationLayout from "./components/ConversationLayout";
 import Conversation from "./components/Conversation";
-import AddGroup from "./AddGroup";
-import ChatDetailGroup from "./ChatDetailGroup";
+import AddGroup from "./chatGroup/AddGroup";
+import ChatDetailGroup from "./chatGroup/ChatDetailGroup";
+import List from "./chatGroup/list/List";
 
 const WrapperChat = () => {
   const { roomId, prevStep, currStep, onSetStep } = useChat();
@@ -35,9 +36,13 @@ const WrapperChat = () => {
       case STEP.CHAT_DETAIL_GROUP:
         return (
           <ConversationLayout viewStep={STEP.CHAT_DETAIL_GROUP}>
-            <>
-              <ChatDetailGroup />
-            </>
+            <ChatDetailGroup />
+          </ConversationLayout>
+        );
+      case STEP.LIST:
+        return (
+          <ConversationLayout viewStep={STEP.LIST}>
+            <List />
           </ConversationLayout>
         );
       default:

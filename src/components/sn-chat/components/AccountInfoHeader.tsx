@@ -158,6 +158,20 @@ const AccountInfoHeader = ({
             </Box>
           </>
         )
+      case STEP.LIST:
+        return (
+          <>
+            <Box
+              sx={{
+                fontSize: "16px",
+                fontWeight: 600,
+
+              }}
+            >
+              GROUP X
+            </Box>
+          </>
+        )
       default:
         break;
     }

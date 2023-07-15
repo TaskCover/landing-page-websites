@@ -84,6 +84,7 @@ export interface ChatState {
   addMembers2GroupStatus: DataStatus,
   leftGroupStatus: DataStatus,
   removeMemberGroupStatus: DataStatus,
+  typeList: TYPE_LIST
 }
 
 export type DirectionChat = "a" | "c" | "d";
@@ -132,4 +133,11 @@ export enum STEP {
   MEDIA_INFO,
   ADD_GROUP,
   CHAT_DETAIL_GROUP,
+  LIST,
+}
+
+export enum TYPE_LIST {
+  MEDIA_LIST,
+  LINK_LIST,
+  FILE_LIST,
 }

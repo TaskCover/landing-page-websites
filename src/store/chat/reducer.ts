@@ -7,7 +7,8 @@ import {
   ChatItemInfo,
   ChatState,
   MessageInfo,
-  STEP
+  STEP,
+  TYPE_LIST
 } from "./type";
 
 const initialState: ChatState = {
@@ -26,6 +27,7 @@ const initialState: ChatState = {
   addMembers2GroupStatus: DataStatus.IDLE,
   leftGroupStatus: DataStatus.IDLE,
   removeMemberGroupStatus: DataStatus.IDLE,
+  typeList: TYPE_LIST.MEDIA_LIST,
 };
 
 const isConversation = (type: string) => {
@@ -43,6 +45,9 @@ const chatSlice = createSlice({
     },
     setRoomId: (state, action) => {
       state.roomId = action.payload;
+    },
+    setTypeList: (state, action) => {
+      state.typeList = action.payload;
     },
   },
   extraReducers: (builder) =>
@@ -147,6 +152,6 @@ const chatSlice = createSlice({
       }),
 });
 
-export const { reset, setStep, setRoomId } = chatSlice.actions;
+export const { reset, setStep, setRoomId, setTypeList } = chatSlice.actions;
 
 export default chatSlice.reducer;
