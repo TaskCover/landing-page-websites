@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { addMembersToDirectMessageGroup, createDirectMessageGroup, getAllConvention, getLatestMessages, leftDirectMessageGroup, removeMemberDirectMessageGroup } from "./actions";
 import { DataStatus } from "constant/enums";
@@ -7,6 +8,7 @@ import {
   ChatItemInfo,
   ChatState,
   MessageInfo,
+  SetStepAction,
   STEP,
   TYPE_LIST
 } from "./type";
@@ -39,9 +41,10 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
-    setStep: (state, action) => {
+    setStep: (state, action: PayloadAction<SetStepAction<any>>) => {
       state.prevStep = state.currStep;
-      state.currStep = action.payload;
+      state.currStep = action.payload.step;
+      if (action.payload.dataTransfer !== undefined) state.dataTransfer = action.payload.dataTransfer;
     },
     setRoomId: (state, action) => {
       state.roomId = action.payload;

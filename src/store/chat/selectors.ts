@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addMembersToDirectMessageGroup, createDirectMessageGroup, getAllConvention, getLatestMessages, leftDirectMessageGroup, removeMemberDirectMessageGroup } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
@@ -26,6 +27,7 @@ export const useChat = () => {
     leftGroupStatus,
     removeMemberGroupStatus,
     typeList,
+    dataTransfer,
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -79,8 +81,8 @@ export const useChat = () => {
   );
 
   const onSetStep = useCallback(
-    (step: STEP) => {
-      dispatch(setStep(step));
+    (step: STEP, dataTransfer?: any) => {
+      dispatch(setStep({ step, dataTransfer }));
     },
     [dispatch],
   );
@@ -182,6 +184,7 @@ export const useChat = () => {
     leftGroupStatus,
     removeMemberGroupStatus,
     typeList,
+    dataTransfer,
     onGetAllConvention,
     onGetLastMessages,
     onSetStep,

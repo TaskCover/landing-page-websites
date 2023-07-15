@@ -5,7 +5,7 @@ import ItemDetail from "../components/ItemDetail";
 import ItemMemberDetail from "./ItemMemberDetail";
 import GroupNameIcon from "icons/GroupNameIcon";
 import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/DefaultPopupLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import MediaFileIcon from "icons/MediaFileIcon";
@@ -17,20 +17,35 @@ import UploadImageIcon from "icons/UploadImageIcon";
 import { IconButton } from "components/shared";
 import { useChat } from "store/chat/selectors";
 import { STEP, TYPE_LIST } from "store/chat/type";
+import { DataStatus } from "constant/enums";
 
-const ChatDetailGroup = () => {
-  const { onSetTypeList, typeList, onSetStep } = useChat();
+const ChatDetailGroup = (props) => {
+  const { typeList, dataTransfer, leftGroupStatus, onSetStep, onLeftGroup, onSetTypeList } = useChat();
   const commonT = useTranslations(NS_COMMON);
   
   const init = {
     statusPopup: false,
     title: "",
-    content: <></>
+    content: <></>,
+    actionType: 0,
   }
   const [showPopup, setShowPopup] = useState(init)
   const handlePopup = () => {
     setShowPopup(init)
   }
+  
+  const handleConfirm = () => {
+    console.log({ showPopup });
+    if (showPopup.actionType === 1) {
+      onLeftGroup({
+        roomId: dataTransfer._id,
+      })
+    } else {
+      // remove
+    }
+    setShowPopup(init);
+    onSetStep(STEP.CONVENTION);
+    }
   const _renderContentPopup = () => {
     return (
       <Box sx={{
@@ -69,8 +84,7 @@ const ChatDetailGroup = () => {
             sx={defaultSx.buttonConfirm}
             type="button"
             size="small"
-            onClick={() => { setShowPopup(init) }}
-          // pending={pending}
+            onClick={() => handleConfirm()}
           >
             {commonT("form.confirm")}
           </Button>
@@ -134,12 +148,9 @@ const ChatDetailGroup = () => {
           paddingBottom: "10px",
         }}>
           <ItemDetail
-            text={'Name'}
+            text={`Group name: ${ dataTransfer?.name }`}
             icon={<GroupNameIcon />}
             iconClick={<EditGroupNameIcon />}
-          // onClick={() => {
-          //   console.log(111)
-          // }}          
           />
           <ItemDetail
             text={'Media'}
@@ -177,7 +188,7 @@ const ChatDetailGroup = () => {
         }}>
           <Box>
             <Typography variant="caption" color="#212121" fontSize={16} fontWeight={600}>
-              Member(5)
+              {`Member (${dataTransfer?.usersCount })`}
             </Typography>
           </Box>
           <Box>
@@ -206,6 +217,7 @@ const ChatDetailGroup = () => {
                     statusPopup: true,
                     title: "Delete Group",
                     content: <>Are you sure to delete group?</>,
+                    actionType: 0,
                   })
                 }}
               >
@@ -215,14 +227,10 @@ const ChatDetailGroup = () => {
             <Box sx={{ textAlign: "center" }}>
               <Typography variant="caption" color="#F64E60" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}
                 onClick={() => {
-                  // setShowPopup({
-                  //   statusPopup: true,
-                  //   title: "Leave Group",
-                  //   content: <>Are you sure to leave group?</>,
-                  // })
                   setShowPopup({
                     statusPopup: true,
-                    title: "Delete Group",
+                    actionType: 1,
+                    title: "Leave Group",
                     content:
                       <Box sx={{
                         textAlign: "center"

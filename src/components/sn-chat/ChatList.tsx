@@ -38,10 +38,9 @@ const ChatList = () => {
   };
 
   const handleClickConversation = (chatInfo: ChatItemInfo) => {
-    onSetRoomId(chatInfo._id);
-
+    onSetRoomId(chatInfo._id);    
     if (chatInfo?.t) {
-      onSetStep(STEP.CHAT_ONE);
+      onSetStep(STEP.CHAT_ONE, chatInfo);
     }
   };
 

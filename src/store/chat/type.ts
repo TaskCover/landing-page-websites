@@ -68,6 +68,11 @@ export interface ChatGroup {
   usersCount: number;
 }
 
+export interface SetStepAction <T> {
+  step: STEP;
+  dataTransfer?: T;
+}
+
 export interface ChatState {
   convention: ChatItemInfo[];
   userOnlinePage: UserOnlinePage[];
@@ -76,6 +81,8 @@ export interface ChatState {
   roomId: string;
   currStep: STEP;
   prevStep: STEP;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dataTransfer?: any;
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
   messagePaging: Paging;
@@ -113,7 +120,7 @@ export interface CreateGroupRequest extends ChatRequestCommon {
 
 export interface AddMember2GroupRequest extends AuthenRequestCommon {
   roomId: string;
-  userId_to_add: string;
+  userId_to_add: string[];
 }
 
 export interface LeftGroupRequest extends AuthenRequestCommon {

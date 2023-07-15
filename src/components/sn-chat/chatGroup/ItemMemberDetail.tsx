@@ -1,18 +1,33 @@
 import Avatar from "components/Avatar";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Menu, MenuItem, Typography } from "@mui/material";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import ItemDetail from "../components/ItemDetail";
 import MoreSquareIcon from "icons/MoreSquareIcon";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import { IconButton } from "components/shared";
+import { useState } from "react";
 
 interface ItemMemberDetailProp {
   admin?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any;
+  callbackAddAdmin?: () => void;
+  callbackRemove?: () => void;
 }
 
-const ItemMemberDetail = ({ admin }: ItemMemberDetailProp) => {
+const ItemMemberDetail = ({ admin, data, callbackAddAdmin, callbackRemove }: ItemMemberDetailProp) => {
   const commonT = useTranslations(NS_COMMON);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClickMenu = (action: 'addAdmin' | 'remove') => {
+    setAnchorEl(null);
+    if (action === 'addAdmin') callbackAddAdmin;
+    if (action === 'remove') callbackRemove;
+  };
 
   return (
     <Box sx={{
@@ -27,7 +42,6 @@ const ItemMemberDetail = ({ admin }: ItemMemberDetailProp) => {
         }}
       >
         <Avatar
-          // src={"avatar?.link"}
           alt="Avatar"
           size={32}
           style={{
@@ -60,14 +74,35 @@ const ItemMemberDetail = ({ admin }: ItemMemberDetailProp) => {
             }}
             type="button"
             size="small"
-          // pending={pending}
           >
             {commonT("form.admin")}
           </Button>
           :
-          <IconButton noPadding size="normal">
-            <MoreSquareIcon />
-          </IconButton>
+          <>
+            <IconButton noPadding size="normal">
+              <MoreSquareIcon
+                onClick={handleClick}
+              />
+            </IconButton>
+            <Menu
+              id="demo-positioned-menu"
+              aria-labelledby="demo-positioned-button"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={() => setAnchorEl(null)}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+            >
+              <MenuItem onClick={() => handleClickMenu('addAdmin')}>Add as admin</MenuItem>
+              <MenuItem onClick={() => handleClickMenu('remove')}>Remove from chat </MenuItem>
+            </Menu>
+          </>
         }
       </Box>
     </Box >

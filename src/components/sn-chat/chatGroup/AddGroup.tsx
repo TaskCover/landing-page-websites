@@ -25,6 +25,7 @@ const AddGroup = () => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
   const [employeeNameSelected, setEmployeeNameSelected] = useState<any>({});
+  const [employeeIdSelected, setEmployeeIdSelected] = useState<any>({});
 
   const {
     items,
@@ -42,8 +43,8 @@ const AddGroup = () => {
   const { user } = useAuth();
 
   const { prevStep, createGroupStatus, newGroupData,
-    convention, onGetAllConvention,
-    onSetStep, onCreateDirectMessageGroup } = useChat();
+    convention, dataTransfer, onGetAllConvention,
+    onSetStep, onCreateDirectMessageGroup, onAddMembers2Group } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
 
@@ -80,22 +81,35 @@ const AddGroup = () => {
     });
     setEmployeeNameSelected({
       ...employeeNameSelected,
+      [employee?.id ?? ""]: event.target.checked,
+    });
+    setEmployeeIdSelected({
+      ...employeeIdSelected,
       [employee?.username ?? ""]: event.target.checked,
     });
   };
 
   const handleCreateGroup = () => {
-    onCreateDirectMessageGroup({
-      groupName: (() => {
-        return Object
-          .keys(employeeNameSelected)
-          .filter((item) => employeeNameSelected[item] === true)
-          ?.join('-')
-        .slice(0, 10) + '...'
-      })(),
-      members: Object.keys(employeeSelected).filter((item) => employeeSelected[item] === true),
-      type: 'd'
-    });
+    if (dataTransfer?.isNew) {
+      onCreateDirectMessageGroup({
+        groupName: (() => {
+          return Object
+            .keys(employeeNameSelected)
+            .filter((item) => employeeNameSelected[item] === true)
+            ?.join('-')
+            .slice(0, 10) + '...'
+        })(),
+        members: Object.keys(employeeSelected).filter((item) => employeeSelected[item] === true),
+        type: 'd'
+      });
+    } else {
+      onAddMembers2Group({
+        roomId: dataTransfer?._id,
+        userId_to_add: Object.keys(employeeNameSelected).filter((item) => employeeNameSelected[item] === true)
+
+      })
+    }
+    
   };
 
   return (

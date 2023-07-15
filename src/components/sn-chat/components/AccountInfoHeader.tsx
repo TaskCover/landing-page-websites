@@ -23,8 +23,8 @@ const AccountInfoHeader = ({
   onPrevious,
   viewStep,
 }: AccountInfoHeaderProp) => {
-  const { onSetStep } = useChat();
-  const { usersCount, t } = accountInfo;
+  const { dataTransfer, onSetStep } = useChat();
+  const { usersCount, t, name } = accountInfo;
   const isGroup = useMemo(() => t !== 'd', [t]);
 
   const _renderChatOne = () => {
@@ -87,7 +87,7 @@ const AccountInfoHeader = ({
             }}
           >
             <Typography variant="inherit" fontWeight="bold">
-              {accountInfo?.lastMessage?.u?.name}
+              {name}
             </Typography>
             <Typography variant="caption" color="#999999">
               Active
@@ -129,7 +129,7 @@ const AccountInfoHeader = ({
           sx={{
             cursor: "pointer",
           }}
-          onClick={() => { onSetStep(STEP.CHAT_DETAIL_GROUP) }}
+          onClick={() => onSetStep(STEP.CHAT_DETAIL_GROUP, { ...dataTransfer, isNew: !isGroup })}
         >
           <ArrowRightIcon />
         </IconButton>
@@ -154,7 +154,7 @@ const AccountInfoHeader = ({
 
               }}
             >
-              GROUP X
+              {dataTransfer?.name}
             </Box>
           </>
         )
@@ -168,7 +168,7 @@ const AccountInfoHeader = ({
 
               }}
             >
-              GROUP X
+              {dataTransfer?.name}
             </Box>
           </>
         )

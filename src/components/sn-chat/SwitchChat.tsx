@@ -9,7 +9,7 @@ import ChatDetailGroup from "./chatGroup/ChatDetailGroup";
 import List from "./chatGroup/list/List";
 
 const WrapperChat = () => {
-  const { roomId, prevStep, currStep, onSetStep } = useChat();
+  const { roomId, prevStep, currStep, dataTransfer, onSetStep } = useChat();
   useEffect(() => {
     onSetStep(STEP.CONVENTION);
   }, [onSetStep]);
