@@ -1,17 +1,24 @@
 import Avatar from "components/Avatar";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import ItemDetail from "./components/ItemDetail";
+import MoreSquareIcon from "icons/MoreSquareIcon";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
+import { IconButton } from "components/shared";
 
 interface ItemMemberDetailProp {
   admin?: boolean;
 }
 
 const ItemMemberDetail = ({ admin }: ItemMemberDetailProp) => {
+  const commonT = useTranslations(NS_COMMON);
+
   return (
     <Box sx={{
       display: "flex",
       justifyContent: "space-between",
+      marginBottom: "10px"
     }}>
       <Box
         sx={{
@@ -44,17 +51,26 @@ const ItemMemberDetail = ({ admin }: ItemMemberDetailProp) => {
       </Box>
       <Box>
         {admin ?
-          <Avatar
-            // src={"avatar?.link"}
-            alt="Avatar"
-            size={24}
-            style={{
-              borderRadius: "50%",
+          <Button
+            variant="primary"
+            sx={{
+              background: "#ECECF3",
+              fontSize: "0.75rem",
+              fontWeight: 400,
             }}
-          />
-          : ""}
+            type="button"
+            size="small"
+          // pending={pending}
+          >
+            {commonT("form.admin")}
+          </Button>
+          :
+          <IconButton noPadding size="normal">
+            <MoreSquareIcon />
+          </IconButton>
+        }
       </Box>
-    </Box>
+    </Box >
   );
 };
 
