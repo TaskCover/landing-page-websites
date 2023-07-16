@@ -1,4 +1,4 @@
-import { MouseEvent, memo, useEffect, useId, useState } from "react";
+import { MouseEvent, memo, useEffect, useId, useMemo, useState } from "react";
 import { MenuList, Popover, Stack, popoverClasses } from "@mui/material";
 import { IconButton, Text } from "components/shared";
 import CircleCloseIcon from "icons/CircleCloseIcon";
@@ -16,10 +16,11 @@ type SelectMembersProps = {
   value?: Member[];
   name: string;
   onChange: (name: string, data: Member[]) => void;
+  ignoreId?: string;
 };
 
 const SelectMembers = (props: SelectMembersProps) => {
-  const { name, value: members = [], onChange } = props;
+  const { name, value: members = [], onChange, ignoreId } = props;
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
@@ -31,6 +32,16 @@ const SelectMembers = (props: SelectMembersProps) => {
   const { onGetOptions } = usePositionOptions();
   const projectT = useTranslations(NS_PROJECT);
   const commonT = useTranslations(NS_COMMON);
+
+  const ignoreItems = useMemo(() => {
+    if (!ignoreId) return items;
+    return items.filter((item) => item.id !== ignoreId);
+  }, [ignoreId, items]);
+
+  const ignoreMembers = useMemo(() => {
+    if (!ignoreId) return members;
+    return members.filter((item) => item.id !== ignoreId);
+  }, [ignoreId, members]);
 
   const onOpen = (event: MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
@@ -94,7 +105,7 @@ const SelectMembers = (props: SelectMembersProps) => {
             flex={1}
             flexWrap="wrap"
           >
-            {members.map((member) => (
+            {ignoreMembers.map((member) => (
               <DisplayItem
                 key={member.id}
                 {...member}
@@ -151,7 +162,7 @@ const SelectMembers = (props: SelectMembersProps) => {
             emitWhenEnter
           />
           <MenuList component={Stack} spacing={2}>
-            {items.map((item) => {
+            {ignoreItems.map((item) => {
               const isChecked = members.some((member) => item.id === member.id);
               return (
                 <MemberItem

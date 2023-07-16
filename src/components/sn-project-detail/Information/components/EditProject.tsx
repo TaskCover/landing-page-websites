@@ -7,10 +7,13 @@ import { INITIAL_VALUES } from "components/sn-projects/components/helpers";
 import { DataAction } from "constant/enums";
 import useToggle from "hooks/useToggle";
 import { ProjectData } from "store/project/actions";
+import PencilUnderlineIcon from "icons/PencilUnderlineIcon";
+import useTheme from "hooks/useTheme";
 
 const EditProject = () => {
   const { item } = useProject();
   const { onUpdateProject: onUpdateProjectAction } = useProjects();
+  const { isDarkMode } = useTheme();
 
   const [isShow, onShow, onHide] = useToggle();
 
@@ -51,9 +54,18 @@ const EditProject = () => {
     <>
       <IconButton
         onClick={onShow}
-        sx={{ bgcolor: "grey.50", p: 0.5, borderRadius: 1 }}
+        variant="contained"
+        size="small"
+        sx={{
+          backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+          color: "text.primary",
+          p: 1,
+          "&:hover svg": {
+            color: "common.white",
+          },
+        }}
       >
-        <PencilIcon sx={{ fontSize: 24 }} />
+        <PencilUnderlineIcon sx={{ fontSize: 24 }} />
       </IconButton>
 
       {isShow && (

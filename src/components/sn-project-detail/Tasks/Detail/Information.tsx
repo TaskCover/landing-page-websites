@@ -35,6 +35,7 @@ import { TASK_TEXT_STATUS } from "../components";
 type InformationItemProps = StackProps & {
   label: string;
   children?: string | number | React.ReactNode;
+  color?: string;
 };
 
 type ActionItemProps = {
@@ -119,11 +120,30 @@ const Information = () => {
           />
         </Stack>
       </Stack>
+      <InformationItem label={commonT("assigner")}>
+        {!!task?.owner?.id ? (
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar size={32} src={task.owner?.avatar?.link} />
+            <Stack>
+              <Text variant="body2" lineHeight={1.57}>
+                {task.owner?.fullname ?? "--"}
+              </Text>
+              <Text variant="caption" color="grey.400" lineHeight={1.5}>
+                {task.owner?.email}
+              </Text>
+            </Stack>
+          </Stack>
+        ) : (
+          "--"
+        )}
+      </InformationItem>
       <Stack
         display="grid"
         gap={1}
         gridTemplateColumns="repeat(auto-fill, 190px)"
-        pb={3}
+        bgcolor="grey.50"
+        p={2}
+        borderRadius={1}
       >
         {(!task?.description || task?.description === VALUE_AS_EMPTY) && (
           <ActionItem
@@ -171,46 +191,52 @@ const Information = () => {
       {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
       <TodoList open={isAddTodo} />
       <Dependencies open={isAddDepen} />
-      <InformationItem label={commonT("assigner")}>
-        {!!task?.owner?.id ? (
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar size={32} src={task.owner?.avatar?.link} />
-            <Stack>
-              <Text variant="body2">{task.owner?.fullname ?? "--"}</Text>
-              <Text variant="body2" color="grey.400">
-                {task.owner?.email}
-              </Text>
-            </Stack>
-          </Stack>
-        ) : (
-          "--"
-        )}
-      </InformationItem>
-      <Stack direction="row" alignItems="center" spacing={2}>
-        <InformationItem label={commonT("form.title.startDate")} width={150}>
-          {formatDate(task?.start_date, undefined, "--")}
-        </InformationItem>
+      <Stack
+        display="grid"
+        gap={1}
+        gridTemplateColumns="repeat(2, 1fr)"
+        bgcolor="grey.50"
+        p={2}
+        borderRadius={1}
+      >
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <InformationItem label={commonT("form.title.startDate")}>
+            {formatDate(task?.start_date, undefined, "--")}
+          </InformationItem>
 
-        <ArrowTriangleIcon sx={{ color: "grey.300", width: 100 }} />
-        <InformationItem label={commonT("form.title.endDate")}>
-          {formatDate(task?.end_date, undefined, "--")}
-        </InformationItem>
-      </Stack>
-      <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 16.5 }}>
+          <ArrowTriangleIcon sx={{ color: "grey.400", width: 46 }} />
+          <InformationItem label={commonT("form.title.endDate")}>
+            {formatDate(task?.end_date, undefined, "--")}
+          </InformationItem>
+        </Stack>
+
         <InformationItem
           label={projectT("detailTasks.form.title.expectCompletionTime")}
           width={150}
         >
           {formatNumber(task?.estimated_hours)}
         </InformationItem>
-        <InformationItem label={projectT("detailTasks.form.title.timeTaken")}>
-          {formatNumber(task?.time_execution)}
+        <InformationItem label={commonT("creationDate")}>
+          {formatDate(task.created_time, "HH:mm - dd/MM/yyyy")}
+        </InformationItem>
+        <InformationItem
+          color="secondary.main"
+          label={projectT("detailTasks.form.title.timeTaken")}
+        >
+          {formatNumber(task?.time_execution, {
+            space: false,
+            suffix: "h",
+          })}
         </InformationItem>
       </Stack>
-      <InformationItem label={commonT("creationDate")}>
-        {formatDate(task.created_time, "HH:mm - dd/MM/yyyy")}
-      </InformationItem>
-      <InformationItem label={commonT("form.title.note")} minHeight={150}>
+
+      <InformationItem
+        label={`${commonT("form.title.note")}:`}
+        minHeight={150}
+        bgcolor="grey.50"
+        p={2}
+        borderRadius={1}
+      >
         {!!task?.description && (
           <Box
             sx={{
@@ -250,20 +276,22 @@ const ActionItem = (props: ActionItemProps) => {
       }}
     >
       {icon}
-      <Text variant="h6">{children}</Text>
+      <Text variant="h6" color="grey.400" lineHeight={1.28}>
+        {children}
+      </Text>
     </Stack>
   );
 };
 
 const InformationItem = (props: InformationItemProps) => {
-  const { label, children = "--", ...rest } = props;
+  const { label, children = "--", color = "text.primary", ...rest } = props;
   return (
     <Stack spacing={0.5} {...rest}>
-      <Text color="grey.400" variant="caption">
+      <Text color="grey.300" variant="caption">
         {label}
       </Text>
       {typeof children === "string" ? (
-        <Text variant="body2" color="text.primary">
+        <Text variant="body2" color={color}>
           {children}
         </Text>
       ) : (

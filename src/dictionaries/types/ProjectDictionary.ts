@@ -18,6 +18,7 @@ export type ProjectDictionary = {
       };
     };
     title: string;
+    projectCode: string;
     key: string;
     notification: {
       success: string;
@@ -151,6 +152,7 @@ export type ProjectDictionary = {
     linkedTo: string;
     addDependencyTask: string;
     manual: string;
+    commentList: string;
     form: {
       title: {
         newTask: string;

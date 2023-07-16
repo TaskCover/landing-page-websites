@@ -83,7 +83,16 @@ const AssignTask = (props: AssignTaskProps) => {
 
   return (
     <>
-      <Button variant="secondary" size="small" onClick={onShow}>
+      <Button
+        variant="secondary"
+        size="small"
+        onClick={onShow}
+        sx={{
+          minHeight: "32px!important",
+          py: "7px!important",
+          lineHeight: 1.28,
+        }}
+      >
         {projectT("taskDetail.assignTask")}
       </Button>
 

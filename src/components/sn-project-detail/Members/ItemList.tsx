@@ -117,7 +117,7 @@ const ItemList = () => {
         totalPages={totalPages}
         page={pageIndex}
         pageSize={pageSize}
-        containerProps={{ px: 3, pt: 2.5 }}
+        containerProps={{ px: 3, py: 1 }}
         onChangePage={onChangePage}
         onChangeSize={onChangeSize}
       />

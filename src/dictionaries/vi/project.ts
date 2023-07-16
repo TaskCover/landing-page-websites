@@ -20,6 +20,7 @@ export const ProjectLang: ProjectDictionary = {
       },
     },
     title: "Quản lý dự án",
+    projectCode: "Mã dự án",
     key: "dự án",
     notification: {
       success: "{label} dự án thành công!",
@@ -156,6 +157,7 @@ export const ProjectLang: ProjectDictionary = {
     linkedTo: "Liên kết tới",
     addDependencyTask: "Thêm công việc phụ thuộc",
     manual: "Ban đầu",
+    commentList: "Danh sách bình luận",
     form: {
       title: {
         newTask: "Công việc chuyển đến",

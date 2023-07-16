@@ -102,12 +102,22 @@ const Form = (props: FormProps) => {
       if (values?.end_date) {
         dataParsed.end_date = formatDate(dataParsed.end_date, DATE_FORMAT_FORM);
       }
+      // if (values?.owner) {
+      //   const newMembers = [...(dataParsed?.members ?? [])];
+      //   if (newMembers.every((item) => item.id !== values.owner)) {
+      //     const mem = employeeOptions.find(
+      //       (item) => item.value === values.owner,
+      //     );
+      //     if (mem) {
+      //       newMembers.push({ id: mem.value as string, fullname: mem.label });
+      //       dataParsed.members = newMembers;
+      //     }
+      //   }
+      // }
       if (dataParsed?.members?.length) {
         dataParsed.members = dataParsed.members.map(
           ({ fullname, ...rest }) => rest,
         );
-
-        const positionIds = positionOptions.map((posItem) => posItem.value);
       }
       if (typeof values["avatar"] === "object") {
         const logoUrl = await client.upload(Endpoint.UPLOAD, values["avatar"]);
@@ -201,19 +211,6 @@ const Form = (props: FormProps) => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   };
 
-  const onChangeAssigner = (event) => {
-    formik.handleChange(event);
-    const newMembers = [...(formik.values?.members ?? [])];
-    if (newMembers.some((item) => item.id === event.target.value)) return;
-    const mem = employeeOptions.find(
-      (item) => item.value === event.target.value,
-    );
-    if (mem) {
-      newMembers.push({ id: mem.value as string, fullname: mem.label });
-      formik.setFieldValue("members", newMembers);
-    }
-  };
-
   useEffect(() => {
     onGetProjectTypeOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetProjectTypeOptions]);
@@ -255,7 +252,7 @@ const Form = (props: FormProps) => {
             title={commonT("assigner")}
             name="owner"
             hasAvatar
-            onChange={onChangeAssigner}
+            onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values?.owner}
             error={commonT(touchedErrors?.owner, { name: commonT("assigner") })}
@@ -291,6 +288,7 @@ const Form = (props: FormProps) => {
           name="members"
           value={formik.values?.members}
           onChange={onChangeField}
+          ignoreId={formik.values?.owner}
         />
         <Stack direction={{ sm: "row" }} spacing={2}>
           <DatePicker

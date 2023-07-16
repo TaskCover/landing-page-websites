@@ -57,7 +57,12 @@ const StatusTask = () => {
 
   return (
     <>
-      <Button onClick={onShow} variant="secondary" size="small">
+      <Button
+        onClick={onShow}
+        variant="secondary"
+        size="small"
+        sx={{ minHeight: "32px!important", py: "7px!important" }}
+      >
         {projectT("detail.changeStatus")}
       </Button>
 

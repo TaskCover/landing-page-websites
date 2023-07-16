@@ -7,6 +7,8 @@ import Form from "components/sn-project-detail/Tasks/Form";
 import PencilIcon from "icons/PencilIcon";
 import { TaskFormData } from "components/sn-project-detail/Tasks/components";
 import { AN_ERROR_TRY_AGAIN } from "constant/index";
+import PencilUnderlineIcon from "icons/PencilUnderlineIcon";
+import useTheme from "hooks/useTheme";
 
 const EditTask = () => {
   const [isShow, onShow, onHide] = useToggle();
@@ -18,6 +20,7 @@ const EditTask = () => {
     subTaskId,
     onUpdateTask: onUpdateTaskAction,
   } = useTaskDetail();
+  const { isDarkMode } = useTheme();
 
   const initValues = useMemo(
     () =>
@@ -51,9 +54,18 @@ const EditTask = () => {
     <>
       <IconButton
         onClick={onShow}
-        sx={{ bgcolor: "grey.50", p: 0.5, borderRadius: 1 }}
+        variant="contained"
+        size="small"
+        sx={{
+          backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+          color: "text.primary",
+          p: 1,
+          "&:hover svg": {
+            color: "common.white",
+          },
+        }}
       >
-        <PencilIcon sx={{ fontSize: 24 }} />
+        <PencilUnderlineIcon sx={{ fontSize: 16 }} />
       </IconButton>
 
       {isShow && (
