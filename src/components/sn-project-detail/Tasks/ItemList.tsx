@@ -67,6 +67,7 @@ const ItemList = () => {
     pageIndex,
     filters,
     totalPages,
+    onResetTasks,
   } = useTasksOfProject();
   const { onUpdateTaskDetail, onGetTaskList } = useTaskDetail();
 
@@ -617,6 +618,12 @@ const ItemList = () => {
   useEffect(() => {
     setDataList(items);
   }, [items]);
+
+  useEffect(() => {
+    return () => {
+      onResetTasks();
+    };
+  }, [onResetTasks]);
 
   useEffect(() => {
     if (!isReady || !projectId) return;

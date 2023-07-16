@@ -269,6 +269,12 @@ const projectSlice = createSlice({
         }
       }
     },
+    resetTasks: (state) => {
+      state.tasks = [];
+      state.tasksStatus = DataStatus.IDLE;
+      state.tasksPaging = DEFAULT_PAGING;
+      state.tasksFilters = {};
+    },
     updateTaskDetail: (
       state,
       action: PayloadAction<TaskDetail | undefined>,
@@ -808,6 +814,7 @@ const projectSlice = createSlice({
       }),
 });
 
-export const { removeMember, updateTaskDetail, reset } = projectSlice.actions;
+export const { removeMember, updateTaskDetail, resetTasks, reset } =
+  projectSlice.actions;
 
 export default projectSlice.reducer;
