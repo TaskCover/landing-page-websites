@@ -76,7 +76,12 @@ const TimeCreate: React.FC<IProps> = ({
         .required("Start time is a required field"),
       type: yup.string().trim().required("Type code is a required field"),
       day: yup.string().trim().required("Date is a required field"),
-      duration: yup.number().required("Duration is a required field"),
+      duration: yup
+        .number()
+        .required("Duration is a required field")
+        .positive("Duration must be greater than zero")
+        .integer("Duration must be an integer")
+        .moreThan(0, "Duration must be greater than zero"),
       note: yup.string().trim().notRequired(),
     })
     .required();
@@ -319,6 +324,7 @@ const TimeCreate: React.FC<IProps> = ({
                 label="Time Duration (hour)"
                 sx={{ flex: 1 }}
                 error={Boolean(errors?.duration?.message)}
+                helperText={errors?.duration?.message}
                 value={value}
                 onChange={onChange}
               />

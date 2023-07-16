@@ -294,31 +294,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const _renderHeader = () => {
     return (
       <Grid container spacing={2}>
-        <Grid item xs={3}>
-          <Button
-            startIcon={<PlusIcon />}
-            size="small"
-            variant="contained"
-            sx={{
-              height: "36px",
-              width: "113px",
-              padding: 0,
-              backgroundColor: "primary.main",
-              color: "common.white",
-              textTransform: "none",
-            }}
-            onClick={() => setIsOpenCreatePopup(true)}
-          >
-            {timeT("myTime.addButton")}
-          </Button>
-        </Grid>
-        <Grid
-          item
-          xs={6}
+        <Grid item xs={3}
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "flex-start",
           }}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -396,6 +376,9 @@ const TrackingCalendar: React.FC<IProps> = () => {
             </Typography>
             <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
           </Stack>
+        </Grid>
+        <Grid item xs={6}>
+          
         </Grid>
         <Grid item xs={3}>
           <Stack

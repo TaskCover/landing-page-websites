@@ -13,6 +13,7 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
   },
   myTime: {
     addButton: "Thêm",
+    searchButton: "Tìm kiếm dự án",
     search: "Tìm kiếm dự án",
     timesheet: "Thời gian biểu",
     timesheet_tab: {

@@ -11,6 +11,7 @@ export type TimeTrackingDictionary = {
   };
   myTime: {
     addButton: string;
+    searchButton: string;
     search: string;
     timesheet: string;
     timesheet_tab: {
