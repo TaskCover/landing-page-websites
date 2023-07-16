@@ -1,15 +1,17 @@
-import { ImageList } from "@mui/material";
+import { ImageList, InputAdornment, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Avatar from "components/Avatar";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import ArrowRightIcon from "icons/ArrowRightIcon";
+import CloseIcon from "icons/CloseIcon";
 import PointOnline from "icons/pointOnline";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
 import VideoCallIcon from "icons/VideoCallIcon";
 import { useMemo } from "react";
+import { useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { ChatItemInfo, STEP } from "store/chat/type";
 
@@ -23,9 +25,17 @@ const AccountInfoHeader = ({
   onPrevious,
   viewStep,
 }: AccountInfoHeaderProp) => {
-  const { dataTransfer, onSetStep } = useChat();
+  const { dataTransfer, onSetStep, prevStep } = useChat();
   const { usersCount, t, name } = accountInfo;
   const isGroup = useMemo(() => t !== 'd', [t]);
+
+  const [textSearch, setTextSearch] = useState("");
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      setTextSearch(event.target.value);
+    }
+  };
 
   const _renderChatOne = () => {
     if (isGroup) {
@@ -136,7 +146,7 @@ const AccountInfoHeader = ({
       </>)
     }
   }
-  const _renderHeader = (viewStep) => {
+  const _renderItemHeader = (viewStep) => {
     switch (viewStep) {
       case STEP.CHAT_ONE:
         return (
@@ -177,52 +187,121 @@ const AccountInfoHeader = ({
     }
   }
 
-  return (
-    <>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: 1,
-          padding: 1.5,
-          borderBottom: "1px solid #ECECF3",
-        }}
-      >
-        <IconButton
-          sx={{
-            cursor: "pointer",
-          }}
-          onClick={onPrevious}
-        >
-          <ArrowDownIcon />
-        </IconButton>
-        {_renderHeader(viewStep)}
 
-        <Box ml="auto">
-          {viewStep != STEP.CHAT_ONE && <IconButton>
-            <SearchIcon
-              sx={{
-                color: "#1BC5BD",
-              }}
-            />
-          </IconButton>}
+
+  const _renderHeaderForward = () => {
+    return (<>
+      <Box sx={{ padding: 3, borderBottom: "1px solid #ECECF3" }}>
+        <Box sx={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}>
+          <Typography sx={{
+            color: "var(--black, #212121)",
+            fontSize: "1rem",
+            fontWeight: 600,
+            paddingBottom: 2,
+          }}>
+            Forward message
+          </Typography>
           <IconButton
-            sx={{
-              color: "white",
-            }}
             onClick={() => { onSetStep(STEP.ADD_GROUP, { ...dataTransfer, isNew: !isGroup }) }}
-          >
-            <ProfileAdd />
-          </IconButton>
-          <IconButton
             sx={{
-              color: "white",
+              width: "26px",
+              height: "26px",
             }}
           >
-            <VideoCallIcon />
+            <CloseIcon sx={{ width: "20px", height: "20px" }} />
           </IconButton>
         </Box>
+        <TextField
+          size="small"
+          sx={{
+            backgroundColor: "var(--gray-0, #F7F7FD)",
+            borderRadius: "10px",
+            "& .MuiInputBase-root": {
+              color: "black",
+              borderRadius: "10px",
+              border: "1px solid transparent",
+            },
+          }}
+          placeholder="Search"
+          fullWidth
+          onKeyDown={handleKeyDown}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon
+                  sx={{
+                    color: "#999999",
+                  }}
+                />
+              </InputAdornment>
+            ),
+          }}
+        />
       </Box>
+    </>)
+  }
+
+  const _renderHeader = (viewStep) => {
+    switch (viewStep) {
+      case STEP.CHAT_FORWARD:
+        return (<>{_renderHeaderForward()}</>)
+      default:
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              padding: 1.5,
+              borderBottom: "1px solid #ECECF3",
+            }}
+          >
+            <IconButton
+              sx={{
+                cursor: "pointer",
+              }}
+              onClick={onPrevious}
+            >
+              <ArrowDownIcon />
+            </IconButton>
+            {_renderItemHeader(viewStep)}
+
+            <Box ml="auto">
+              {viewStep != STEP.CHAT_ONE && <IconButton>
+                <SearchIcon
+                  sx={{
+                    color: "#1BC5BD",
+                  }}
+                />
+              </IconButton>}
+              <IconButton
+                sx={{
+                  color: "white",
+                }}
+                onClick={() => { onSetStep(STEP.ADD_GROUP) }}
+              >
+                <ProfileAdd />
+              </IconButton>
+              <IconButton
+                sx={{
+                  color: "white",
+                }}
+              >
+                <VideoCallIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        )
+    }
+
+  }
+
+  return (
+    <>
+      {_renderHeader(viewStep)}
     </>
   );
 };

@@ -198,6 +198,7 @@ const AddGroup = () => {
               ? items.map((item, index) => {
                   return (
                     <SelectItem
+                      checkbox
                       employee={item}
                       key={index}
                       onClick={(event) => handleClickConversation(item, event)}
@@ -244,31 +245,6 @@ const AddGroup = () => {
 export default AddGroup;
 
 const defaultSx = {
-  root: {
-    minWidth: { sm: 500 },
-    minHeight: 230,
-    px: 3,
-  },
-  bottom: {
-    p: 0,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  header: {
-    borderBottom: "1px solid",
-    borderColor: "grey.100",
-    pb: 3,
-    mx: 0,
-    "& > p": {
-      textAlign: "center",
-    },
-    "& > button": {
-      top: 0,
-      transform: "unset",
-    },
-  },
   button: {
     minWidth: 120,
     mx: 1.5,

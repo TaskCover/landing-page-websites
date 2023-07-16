@@ -20,6 +20,7 @@ import { useChat } from "store/chat/selectors";
 import { STEP, TYPE_LIST } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 import { useSnackbar } from "store/app/selectors";
+import SelectItem from "../components/SelectItem";
 
 const ChatDetailGroup = (props) => {
   const {
@@ -34,26 +35,33 @@ const ChatDetailGroup = (props) => {
     onRemoveGroupMember,
   } = useChat();
   const commonT = useTranslations(NS_COMMON);
-  
+  const TYPE_POPUP = {
+    DELETE: "DELETE",
+    LEAVE: "LEAVE",
+    NEW_ADMIN: "NEW_ADMIN",
+    CONFIRM_LEAVE: "CONFIRM_LEAVE",
+  }
   const init = {
+    type: "",
     statusPopup: false,
     title: "",
     content: <></>,
     actionType: 0,
-  }
+    widthPopup: "500px",
+  };
+
   const [showPopup, setShowPopup] = useState(init)
   const { onAddSnackbar } = useSnackbar();
+  const handleClosePopup = () => {
+    setShowPopup(init)
+  }
 
   useEffect(() => {
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handlePopup = () => {
-    setShowPopup(init)
-  }
 
   const handleManageMember = async (action: 'addAdmin' | 'remove', member) => {
     if (action === 'addAdmin') {
@@ -79,7 +87,7 @@ const ChatDetailGroup = (props) => {
       roomId: dataTransfer?._id,
     });
   }
-  
+
   const handleConfirm = () => {
     console.log({ showPopup });
     if (showPopup.actionType === 1) {
@@ -91,52 +99,148 @@ const ChatDetailGroup = (props) => {
     }
     setShowPopup(init);
     onSetStep(STEP.CONVENTION);
-    }
+  }
+
+  const _renderNewAdmin = () => {
+    return (
+      <>
+        {/* chỗ này thêm api */}
+        {/* {items?.length > 0
+              ? items.map((item, index) => {
+                  return (
+                    <SelectItem
+                      employee={item}
+                      key={index}
+                    />
+                  );
+                })
+              : null} */}
+        <Box sx={{
+          margin: "0 40px",
+          width: "100%",
+        }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              marginBottom: 1,
+              cursor: "pointer",
+              ":hover": {
+                backgroundColor: "#F7F7FD",
+              },
+            }}
+            p={1}
+            onClick={() => {
+              setShowPopup((pre) => ({
+                ...pre,
+                type: TYPE_POPUP.CONFIRM_LEAVE,
+                statusPopup: true,
+                title: "Leave Group",
+                content: (
+                  <Typography>Leave group and select <span style={{ color: "var(--brand-primary, #3699FF)" }} >Name User</span> as new admin?</Typography>
+                ),
+              }));
+            }}
+          >
+
+            <Avatar
+              // src={avatar?.link}
+              alt="Avatar"
+              size={42}
+              style={{
+                borderRadius: "50%",
+              }}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Typography variant="inherit" fontWeight="bold">
+                {"fullname"}
+              </Typography>
+              <Typography variant="caption" color="#999999">
+                {"email"}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+      </>
+    )
+  }
+  
   const _renderContentPopup = () => {
     return (
       <Box sx={{
-        margin: "10px auto",
+        margin: "10px 0",
       }}>
         <Box sx={{
           display: "flex",
-          margin: "10px auto",
+          margin: "10px 0",
           justifyContent: "center",
         }}
         >
-          <Box>
-            {showPopup?.content}
+          {showPopup?.content}
+        </Box>
+        {showPopup?.type !== TYPE_POPUP.NEW_ADMIN &&
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+              padding: 2,
+            }}
+          >
+            <Button
+              type="button"
+              variant="primaryOutlined"
+              size="small"
+              sx={defaultSx.buttonCancel}
+              onClick={handleClosePopup}
+            >
+              {commonT("form.cancel")}
+            </Button>
+            <Button
+              variant="primary"
+              sx={defaultSx.buttonConfirm}
+              type="button"
+              size="small"
+              onClick={() => setShowPopup(init)}
+            // pending={pending}
+            >
+              {commonT("form.confirm")}
+            </Button>
           </Box>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 1,
-            padding: 2,
-          }}
-        >
-          <Button
-            type="button"
-            variant="primaryOutlined"
-            size="small"
-            sx={defaultSx.buttonCancel}
-            onClick={() => { setShowPopup(init) }}
-          >
-            {commonT("form.cancel")}
-          </Button>
-          <Button
-            variant="primary"
-            sx={defaultSx.buttonConfirm}
-            type="button"
-            size="small"
-            onClick={() => handleConfirm()}
-          >
-            {commonT("form.confirm")}
-          </Button>
-        </Box>
+        }
       </Box>
     )
+  }
+  const handlePopup = () => {
+    switch (showPopup?.type) {
+      case TYPE_POPUP.DELETE:
+        setShowPopup(init)
+        break;
+
+      case TYPE_POPUP.LEAVE:
+        setShowPopup((pre) => ({
+          ...pre,
+          type: TYPE_POPUP.NEW_ADMIN,
+          statusPopup: true,
+          title: "select a new admin",
+          content: (
+            <>{_renderNewAdmin()}</>
+          ),
+        }));
+        break;
+      case TYPE_POPUP.CONFIRM_LEAVE:
+        setShowPopup(init)
+        break;
+      default:
+        break;
+    }
   }
   return (
     <>
@@ -266,12 +370,14 @@ const ChatDetailGroup = (props) => {
             <Box sx={{ marginBottom: 1 }} >
               <Typography variant="caption" color="#F64E60" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}
                 onClick={() => {
-                  setShowPopup({
+                  setShowPopup((pre) => ({
+                    ...pre,
+                    type: TYPE_POPUP.DELETE,
                     statusPopup: true,
                     title: "Delete Group",
                     content: <>Are you sure to delete group?</>,
                     actionType: 0,
-                  })
+                  }))
                 }}
               >
                 {"Delete group"}
@@ -280,11 +386,12 @@ const ChatDetailGroup = (props) => {
             <Box sx={{ textAlign: "center" }}>
               <Typography variant="caption" color="#F64E60" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}
                 onClick={() => {
-                  setShowPopup({
+                  setShowPopup((pre) => ({
+                    ...pre,
+                    type: TYPE_POPUP.LEAVE,
                     statusPopup: true,
-                    actionType: 1,
                     title: "Leave Group",
-                    content:
+                    content: (
                       <Box sx={{
                         textAlign: "center"
                       }}>
@@ -292,8 +399,8 @@ const ChatDetailGroup = (props) => {
                         <Typography>again after you leave the group. Please <span style={{ color: "var(--brand-primary, #3699FF)" }} >select a new admin</span></Typography>
                         <Typography>or the system will choose automatically</Typography>
                       </Box>
-                    ,
-                  })
+                    ),
+                  }));
                 }}
               >
                 {"Leave group"}
@@ -306,8 +413,8 @@ const ChatDetailGroup = (props) => {
         title={showPopup?.title}
         content={_renderContentPopup()}
         open={showPopup?.statusPopup}
-        onClose={handlePopup}
-        sx={{ width: "500px" }}
+        onClose={handleClosePopup}
+        sx={{ width: showPopup?.widthPopup }}
       />
     </>
   );

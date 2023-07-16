@@ -4,9 +4,10 @@ import { STEP } from "store/chat/type";
 import ChatList from "./ChatList";
 import ConversationLayout from "./components/ConversationLayout";
 import Conversation from "./components/Conversation";
+import List from "./chatGroup/list/List";
 import AddGroup from "./chatGroup/AddGroup";
 import ChatDetailGroup from "./chatGroup/ChatDetailGroup";
-import List from "./chatGroup/list/List";
+import ChatForward from "./ChatForward";
 
 const WrapperChat = () => {
   const { roomId, prevStep, currStep, dataTransfer, onSetStep } = useChat();
@@ -18,6 +19,12 @@ const WrapperChat = () => {
     switch (currStep) {
       case STEP.CONVENTION:
         return <ChatList />;
+        //muốn hiển thị thì cmt cái trên đi
+        return (
+          <ConversationLayout viewStep={STEP.CHAT_FORWARD}>
+            <ChatForward/>
+          </ConversationLayout>
+        );
       case STEP.CHAT_ONE:
         return (
           <ConversationLayout viewStep={STEP.CHAT_ONE}>
@@ -43,6 +50,13 @@ const WrapperChat = () => {
         return (
           <ConversationLayout viewStep={STEP.LIST}>
             <List />
+          </ConversationLayout>
+        );
+        // chưa có icon forward nên chưa hiển thị được
+      case STEP.CHAT_FORWARD:
+        return (
+          <ConversationLayout viewStep={STEP.CHAT_FORWARD}>
+            <ChatForward/>
           </ConversationLayout>
         );
       default:
