@@ -123,8 +123,7 @@ const Actions = () => {
         borderColor="grey.100"
         spacing={{ xs: 1, md: 3 }}
         px={{ xs: 1, md: 2, xl: 3 }}
-        py={{ xs: 1, xl: 1.5 }}
-        maxHeight={{ md: 44 }}
+        py={{ xs: 0.75, xl: 1.5 }}
       >
         {/* <Button
           onClick={onShow}
