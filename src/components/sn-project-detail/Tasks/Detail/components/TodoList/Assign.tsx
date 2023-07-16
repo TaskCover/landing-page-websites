@@ -50,7 +50,7 @@ const Assign = (props: AssignProps) => {
     filters,
   } = useMemberOptions();
 
-  const { id: projectId } = useParams();
+  const { id: projectId } = useParams() as { id: string };
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   const onEndReached = () => {
