@@ -234,7 +234,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
       setEvents(result);
     }
   }, [myTime, userData]);
-  console.log(events);
+
   React.useEffect(() => {
     if (
       !_.isEmpty(filters) &&
