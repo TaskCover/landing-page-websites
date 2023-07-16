@@ -13,7 +13,7 @@ export const useWSChat = () => {
   const id = user?.["userId"];
 
   // Connect websocket
-  const connectMessage = () => {
+  const connectMessage = useCallback(() => {
     if (ws) {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -50,9 +50,9 @@ export const useWSChat = () => {
         }
       };
     }
-  };
+  }, [ws]);
 
-  const connectSocket = () => {
+  const connectSocket = useCallback(() => {
     if (roomId) {
       const wsClient = new WebSocket(process.env.NEXT_APP_WS_URL || "");
 
@@ -67,7 +67,7 @@ export const useWSChat = () => {
         );
       };
     }
-  };
+  }, [ws]);
 
   useEffect(() => {
     connectSocket();
