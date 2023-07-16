@@ -134,6 +134,7 @@ export enum STEP {
   ADD_GROUP,
   CHAT_DETAIL_GROUP,
   LIST,
+  CHAT_FORWARD,
 }
 
 export enum TYPE_LIST {

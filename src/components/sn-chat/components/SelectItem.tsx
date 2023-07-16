@@ -11,8 +11,10 @@ import { Employee } from "store/company/reducer";
 interface SelectItemProp {
   employee: Employee;
   onClick?: (event: ChangeEvent<HTMLInputElement>) => void;
+  checkbox?: boolean;
+  onClickItem?: () => void;
 }
-const SelectItem = ({ employee, onClick }: SelectItemProp) => {
+const SelectItem = ({ employee, onClick, checkbox, onClickItem }: SelectItemProp) => {
   const { fullname, email, avatar } = employee;
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -29,15 +31,14 @@ const SelectItem = ({ employee, onClick }: SelectItemProp) => {
         },
       }}
       p={1}
+      onClick={onClickItem}
     >
-      <Typography variant="caption" color="#999999">
-        <Checkbox
-          onChange={onClick}
-          {...label}
-          icon={<CircleUnchecked />}
-          checkedIcon={<CircleCheckedFilled />}
-        />
-      </Typography>
+      {checkbox && <Checkbox
+        onChange={onClick}
+        {...label}
+        icon={<CircleUnchecked />}
+        checkedIcon={<CircleCheckedFilled />}
+      />}
       <Avatar
         src={avatar?.link}
         alt="Avatar"
