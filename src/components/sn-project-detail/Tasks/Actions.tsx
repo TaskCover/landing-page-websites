@@ -124,6 +124,7 @@ const Actions = () => {
         spacing={{ xs: 1, md: 3 }}
         px={{ xs: 1, md: 2, xl: 3 }}
         py={{ xs: 1, xl: 1.5 }}
+        maxHeight={{ md: 44 }}
       >
         {/* <Button
           onClick={onShow}
@@ -162,9 +163,9 @@ const Actions = () => {
           <Button
             onClick={onShow}
             startIcon={<PlusIcon />}
-            size="small"
+            size="extraSmall"
             variant="primary"
-            sx={{ height: 40 }}
+            sx={{ height: 32, px: ({ spacing }) => `${spacing(2)}!important` }}
           >
             {projectT("detailTasks.createNewTaskList")}
           </Button>
@@ -243,7 +244,12 @@ const Actions = () => {
               sx={{ display: { md: "none" } }}
             />
 
-            <Button size="small" onClick={onSearch} variant="secondary">
+            <Button
+              size="extraSmall"
+              sx={{ height: 32 }}
+              onClick={onSearch}
+              variant="secondary"
+            >
               {commonT("search")}
             </Button>
             {/* <Refresh onClick={onRefresh} />

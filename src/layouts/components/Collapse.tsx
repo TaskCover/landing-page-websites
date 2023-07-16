@@ -45,9 +45,9 @@ const Collapse = (props: CollapseProps) => {
         boxShadow: "none",
         "&.Mui-expanded": {
           mx: 0,
-          my: 1.5,
+          my: { xs: 1, xl: 1.5 },
           "&:first-of-type": {
-            mt: 1.5,
+            mt: { xs: 1, xl: 1.5 },
           },
         },
         "&:before": {
@@ -61,7 +61,7 @@ const Collapse = (props: CollapseProps) => {
       <AccordionSummary
         sx={{
           px: isShowLarge || isSmSmaller ? { xs: 1.5, xl: 2.5 } : 1,
-          py: isShowLarge || isSmSmaller ? 1.5 : 1,
+          py: isShowLarge || isSmSmaller ? { xs: 1, xl: 1.5 } : 1,
           borderRadius: 1,
           backgroundColor: {
             xs: isDarkMode ? "background.default" : "grey.50",
