@@ -22,8 +22,12 @@ const MemberItem = (props: MemberItemProps) => {
       spacing={2}
       alignItems="center"
       justifyContent="space-between"
+      onClick={onSelect}
+      sx={{
+        cursor: "pointer",
+      }}
     >
-      <Checkbox onChange={onSelect} checked={checked} />
+      <Checkbox checked={checked} />
       <Stack direction={{ sm: "row" }} spacing={1.5} flex={1}>
         <Avatar size={40} src={avatar?.link} />
         <Stack>
