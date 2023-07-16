@@ -140,7 +140,7 @@ export const updateTimeSheet = createAsyncThunk(
         },
       );
 
-      if (response?.status === HttpStatusCode.CREATED) {
+      if (response?.status === HttpStatusCode.OK) {
         return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;
@@ -158,7 +158,7 @@ export const pinTimeSheet = createAsyncThunk(
         baseURL: TIME_SHEET_API_URL,
       });
 
-      if (response?.status === HttpStatusCode.CREATED) {
+      if (response?.status === HttpStatusCode.OK) {
         return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;
@@ -179,7 +179,7 @@ export const deleteTimeSheet = createAsyncThunk(
         },
       );
 
-      if (response?.status === HttpStatusCode.CREATED) {
+      if (response?.status === HttpStatusCode.OK) {
         return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;

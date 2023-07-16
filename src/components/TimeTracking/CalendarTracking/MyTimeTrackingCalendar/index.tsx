@@ -281,6 +281,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
     setActiveTab(tab);
   };
 
+  const onGoDay = (value: Date) => {
+    const calendarApi = calendarRef?.current && calendarRef?.current.getApi();
+    calendarApi?.gotoDate(dayjs(value).format("YYYY-MM-DD"));
+  };
   const onAction = (action: "view" | "week", value: string) => {
     const calendarApi = calendarRef?.current && calendarRef?.current.getApi();
 
@@ -305,7 +309,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           .format("YYYY-MM-DD");
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
-        setSelectedDate(dayjs(filters?.start_date).subtract(7, "day"));
+        setSelectedDate(dayjs(filters?.start_date).subtract(6, "day"));
 
         if (calendarApi) {
           calendarApi.prev();
@@ -322,7 +326,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
 
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
-        setSelectedDate(dayjs(filters?.end_date).add(1, "day"));
+        setSelectedDate(dayjs(filters?.end_date).add(2, "day"));
         if (calendarApi) {
           calendarApi.next();
           calendarApi.refetchEvents();
@@ -370,6 +374,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                 if (date) {
                   const { startDate, endDate } = getWeekStartAndEndDates(date);
                   setSelectedDate(date);
+                  onGoDay(date);
                   setFilters({
                     ...filters,
                     start_date: startDate,

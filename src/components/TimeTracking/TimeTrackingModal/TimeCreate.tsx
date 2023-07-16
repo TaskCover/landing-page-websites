@@ -51,13 +51,11 @@ const TimeCreate: React.FC<IProps> = ({
   const { items: positions, onGetPositions } = usePositions();
   const {
     params,
-    itemStatus,
-    statusUpdate,
-    statusDelete,
     onCreateTimeSheet,
     onUpdateTimeSheet,
     onDeleteTimeSheet,
     onGetMyTimeSheet,
+    onGetCompanyTimeSheet,
   } = useGetMyTimeSheet();
   const { onAddSnackbar } = useSnackbar();
   const { user: userData } = useAuth();
@@ -171,21 +169,29 @@ const TimeCreate: React.FC<IProps> = ({
         id: selectedEvent?.extendedProps?.id,
       })
         .then((res) => {
+          if (currentScreen === "myTime") {
+            onGetMyTimeSheet({ ...params });
+          } else {
+            onGetCompanyTimeSheet({ ...params });
+          }
           onAddSnackbar("Update timesheet success", "success");
           onClose();
-          onGetMyTimeSheet({ ...params });
         })
         .catch((err) => {
-          onAddSnackbar("Update timesheet success", "success");
+          onAddSnackbar("Update timesheet failure", "error");
           onClose();
-          onGetMyTimeSheet({ ...params });
         });
     } else {
       onCreateTimeSheet(resolveData)
         .then(() => {
           onAddSnackbar("Create timesheet success", "success");
           onClose();
-          onGetMyTimeSheet({ ...params });
+
+          if (currentScreen === "myTime") {
+            onGetMyTimeSheet({ ...params });
+          } else {
+            onGetCompanyTimeSheet({ ...params });
+          }
         })
         .catch((err) => {
           onAddSnackbar(getMessageErrorByAPI(err, commonT), "error");

@@ -236,7 +236,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           .format("YYYY-MM-DD");
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
-        setSelectedDate(dayjs(filters?.start_date).subtract(7, "day"));
+        setSelectedDate(dayjs(filters?.start_date).subtract(6, "day"));
       }
       if (value === "next") {
         const startDate = dayjs(filters?.end_date)
@@ -247,7 +247,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           .format("YYYY-MM-DD");
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
-        setSelectedDate(dayjs(filters?.end_date).add(1, "day"));
+        setSelectedDate(dayjs(filters?.end_date).add(2, "day"));
       }
     }
   };
@@ -549,7 +549,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
       open={isOpenCreatePopup}
       onClose={() => setIsOpenCreatePopup(false)}
       filters={filters}
-      currentScreen="myTime"
+      currentScreen="companyTime"
     />
   );
 

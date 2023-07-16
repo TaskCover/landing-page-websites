@@ -210,12 +210,11 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
                             );
                           })
                           .catch(() => {
-                            onGetMyTimeSheet({ ...params });
                             onAddSnackbar(
                               `${
                                 timeSheet?.is_pin ? "Unpin" : "Pin"
-                              } timesheet success`,
-                              "success",
+                              } timesheet failed`,
+                              "error",
                             );
                           });
                       }}
