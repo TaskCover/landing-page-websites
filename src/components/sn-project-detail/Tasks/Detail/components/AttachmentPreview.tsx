@@ -179,5 +179,5 @@ const shortName = (value: string) => {
   if (value.length <= 16) {
     return value;
   }
-  return value.slice(0, 6) + "..." + value.slice(-10);
+  return value.slice(0, 5) + "..." + value.slice(-8);
 };
