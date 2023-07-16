@@ -17,13 +17,12 @@
   font-size: 14px;
 }
 
-.html  blockquote {
+.html blockquote {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-
-.html  pre {
+.html pre {
   white-space: pre-wrap;
   margin-bottom: 5px;
   margin-top: 5px;

@@ -716,9 +716,12 @@ const ItemList = () => {
                         direction={{ md: "row" }}
                         alignItems={{ xs: "flex-start", md: "center" }}
                         minHeight={48}
+                        maxHeight={48}
                         width="100%"
                         sx={sx.task}
                         overflow="hidden"
+                        borderBottom="1px solid"
+                        borderColor="grey.100"
                       >
                         <Content
                           color="text.primary"
@@ -763,6 +766,9 @@ const ItemList = () => {
                                       alignItems="center"
                                       minHeight={48}
                                       overflow="hidden"
+                                      borderBottom="1px solid"
+                                      borderColor="grey.100"
+                                      maxHeight={48}
                                     >
                                       <Checkbox
                                         checked={isChecked}
