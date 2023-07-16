@@ -17,7 +17,7 @@ import { NS_COMMON } from "constant/index";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { Employee } from "store/company/reducer";
 import SelectItem from "../components/SelectItem";
-import { useAuth } from "store/app/selectors";
+import { useAuth, useSnackbar } from "store/app/selectors";
 import { STEP } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 
@@ -47,6 +47,7 @@ const AddGroup = () => {
     onSetStep, onCreateDirectMessageGroup, onAddMembers2Group } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
+  const { onAddSnackbar } = useSnackbar();
 
   useEffect(() => {
     onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 30 });
@@ -58,12 +59,14 @@ const AddGroup = () => {
     })
   }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
 
-  useEffect(() => {
-    if (createGroupStatus === DataStatus.SUCCEEDED) {
-      onSetStep(STEP.CHAT_ONE);
+  const handleSuccess = (result) => {
+    if (result?.error) {
+      onAddSnackbar(result?.error?.message, 'error');
+      return;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createGroupStatus]);
+    onAddSnackbar('Successfully!', 'success');
+    onSetStep(STEP.CHAT_ONE);
+  }
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -81,35 +84,37 @@ const AddGroup = () => {
     });
     setEmployeeNameSelected({
       ...employeeNameSelected,
-      [employee?.id ?? ""]: event.target.checked,
+      [employee?.fullname ?? ""]: event.target.checked,
     });
     setEmployeeIdSelected({
       ...employeeIdSelected,
-      [employee?.username ?? ""]: event.target.checked,
+      [employee?.id_rocket ?? ""]: event.target.checked,
     });
   };
 
-  const handleCreateGroup = () => {
+  const handleCreateGroup = async () => {    
     if (dataTransfer?.isNew) {
-      onCreateDirectMessageGroup({
+      const result =  await onCreateDirectMessageGroup({
         groupName: (() => {
           return Object
-            .keys(employeeNameSelected)
-            .filter((item) => employeeNameSelected[item] === true)
+            .keys(employeeSelected)
+            .filter((item) => employeeSelected[item] === true)
             ?.join('-')
-            .slice(0, 10) + '...'
+            .slice(0, 10) + `...${Math.floor(Math.random() * (9999 - 1 + 1) + 1) }`
         })(),
         members: Object.keys(employeeSelected).filter((item) => employeeSelected[item] === true),
         type: 'd'
       });
+      handleSuccess(result);
     } else {
-      onAddMembers2Group({
+      const users = Object.keys(employeeIdSelected).filter((item) => employeeIdSelected[item] === true);
+      const tasks = users.map(async (userId_to_add) => (await onAddMembers2Group({
         roomId: dataTransfer?._id,
-        userId_to_add: Object.keys(employeeNameSelected).filter((item) => employeeNameSelected[item] === true)
-
-      })
+        userId_to_add,
+      })))
+      const result = await Promise.all(tasks);      
+      handleSuccess(result.pop());
     }
-    
   };
 
   return (

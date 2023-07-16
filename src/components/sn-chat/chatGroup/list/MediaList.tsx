@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useChat } from 'store/chat/selectors';
@@ -12,6 +13,16 @@ interface TabPanelProps {
 const MediaList = () => {
   const { onSetTypeList, typeList } = useChat();
 
+  const { chatAttachments, dataTransfer, onGetChatAttachments } = useChat();
+
+  React.useEffect(() => {
+    onGetChatAttachments({
+      roomId: dataTransfer?._id,
+      fileType: 'media',
+      roomType: 'p',
+    })
+  }, []);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     onSetTypeList(newValue);
   };
@@ -25,31 +36,14 @@ const MediaList = () => {
           gridTemplateColumns: 'repeat(4, 1fr)',
         }}
       >
-        <Media
-          size={90}
-        // src={user?.avatar?.link}
-        // alt={user.fullname} 
-        />
-        <Media
-          size={90}
-        // src={user?.avatar?.link}
-        // alt={user.fullname} 
-        />
-        <Media
-          size={90}
-        // src={user?.avatar?.link}
-        // alt={user.fullname} 
-        />
-        <Media
-          size={90}
-        // src={user?.avatar?.link}
-        // alt={user.fullname} 
-        />
-        <Media
-          size={90}
-        // src={user?.avatar?.link}
-        // alt={user.fullname} 
-        />
+        {chatAttachments?.files?.map((file, index) => (
+          <Media
+            key={index}
+            size={90}
+          // src={user?.avatar?.link}
+          // alt={user.fullname} 
+          />
+        ))}
       </Box>
 
     </>

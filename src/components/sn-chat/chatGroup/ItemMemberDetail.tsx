@@ -23,10 +23,10 @@ const ItemMemberDetail = ({ admin, data, callbackAddAdmin, callbackRemove }: Ite
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClickMenu = (action: 'addAdmin' | 'remove') => {
+  const handleClickMenu = (action: 'addAdmin' | 'remove') => {    
     setAnchorEl(null);
-    if (action === 'addAdmin') callbackAddAdmin;
-    if (action === 'remove') callbackRemove;
+    if (action === 'addAdmin' && callbackAddAdmin) callbackAddAdmin();
+    if (action === 'remove' && callbackRemove) callbackRemove();
   };
 
   return (
@@ -44,6 +44,7 @@ const ItemMemberDetail = ({ admin, data, callbackAddAdmin, callbackRemove }: Ite
         <Avatar
           alt="Avatar"
           size={32}
+          src={data?.avatar}
           style={{
             borderRadius: "50%",
           }}
@@ -56,15 +57,15 @@ const ItemMemberDetail = ({ admin, data, callbackAddAdmin, callbackRemove }: Ite
           }}
         >
           <Typography variant="inherit" color="#212121" fontWeight={600} fontSize={14}>
-            {"fullname"}
+            {data?.fullname}
           </Typography>
           <Typography variant="caption" color="#666666" fontWeight={400} fontSize={12}>
-            {"email"}
+            {`${data?.username}@`}
           </Typography>
         </Box>
       </Box>
       <Box>
-        {admin ?
+        {data?.roles?.includes('owner') ?
           <Button
             variant="primary"
             sx={{

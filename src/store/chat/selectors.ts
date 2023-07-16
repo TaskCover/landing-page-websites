@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { addMembersToDirectMessageGroup, createDirectMessageGroup, getAllConvention, getLatestMessages, leftDirectMessageGroup, removeMemberDirectMessageGroup } from "./actions";
+import { addMembersToDirectMessageGroup, changeGroupRole, createDirectMessageGroup, fetchGroupMembers, getAllConvention, getChatAttachments, getLatestMessages, leftDirectMessageGroup, removeUserFromGroup } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
-import { AddMember2GroupRequest, ChatConventionItemRequest, CreateGroupRequest, LastMessagesRequest, LeftGroupRequest, RemoveGroupMemberRequest, STEP, TYPE_LIST } from "./type";
+import { AddMember2GroupRequest, ChangeRoleRequest, ChatAttachmentsRequest, ChatConventionItemRequest, CreateGroupRequest, FetchGroupMemberRequest, LastMessagesRequest, LeftGroupRequest, RemoveGroupMemberRequest, RemoveMemberRequest, STEP, TYPE_LIST } from "./type";
 import { useAuth } from "store/app/selectors";
 import { setRoomId, setStep, setTypeList } from "./reducer";
 
@@ -28,6 +28,8 @@ export const useChat = () => {
     removeMemberGroupStatus,
     typeList,
     dataTransfer,
+    groupMembers,
+    chatAttachments
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -105,7 +107,7 @@ export const useChat = () => {
     }: Omit<CreateGroupRequest, "authToken" | "userId">) => {
       const authToken = user ? user["authToken"] : "";
       const userId = user ? user["id_rocket"] : "";
-      await dispatch(
+      return await dispatch(
         createDirectMessageGroup({
           type,
           authToken,
@@ -122,7 +124,7 @@ export const useChat = () => {
     async (params: Omit<AddMember2GroupRequest, "authToken" | "userId">) => {
       const authToken = user ? user["authToken"] : "";
       const userId = user ? user["id_rocket"] : "";
-      await dispatch(
+      return await dispatch(
         addMembersToDirectMessageGroup({
           authToken,
           userId,
@@ -137,7 +139,7 @@ export const useChat = () => {
     async (params: Omit<LeftGroupRequest, "authToken" | "userId">) => {
       const authToken = user ? user["authToken"] : "";
       const userId = user ? user["id_rocket"] : "";
-      await dispatch(
+      return await dispatch(
         leftDirectMessageGroup({
           authToken,
           userId,
@@ -149,11 +151,56 @@ export const useChat = () => {
   );
 
   const onRemoveGroupMember = useCallback(
-    async (params: Omit<RemoveGroupMemberRequest, "authToken" | "userId">) => {
+    async (params: Omit<RemoveMemberRequest, "authToken" | "userId">) => {
       const authToken = user ? user["authToken"] : "";
       const userId = user ? user["id_rocket"] : "";
-      await dispatch(
-        removeMemberDirectMessageGroup({
+      return await dispatch(
+        removeUserFromGroup({
+          authToken,
+          userId,
+          ...params
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
+  const onFetchGroupMembersMember = useCallback(
+    async (params: Omit<FetchGroupMemberRequest, "authToken" | "userId">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      return await dispatch(
+        fetchGroupMembers({
+          authToken,
+          userId,
+          ...params
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
+  const onChangeGroupRole = useCallback(
+    async (params: Omit<ChangeRoleRequest, "authToken" | "userId">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      return await dispatch(
+        changeGroupRole({
+          authToken,
+          userId,
+          ...params
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
+  const onGetChatAttachments = useCallback(
+    async (params: Omit<ChatAttachmentsRequest, "authToken" | "userId">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      return await dispatch(
+        getChatAttachments({
           authToken,
           userId,
           ...params
@@ -185,7 +232,9 @@ export const useChat = () => {
     removeMemberGroupStatus,
     typeList,
     dataTransfer,
+    groupMembers,
     onGetAllConvention,
+    chatAttachments,
     onGetLastMessages,
     onSetStep,
     onSetRoomId,
@@ -194,5 +243,8 @@ export const useChat = () => {
     onLeftGroup,
     onRemoveGroupMember,
     onSetTypeList,
+    onFetchGroupMembersMember,
+    onChangeGroupRole,
+    onGetChatAttachments,
   };
 };

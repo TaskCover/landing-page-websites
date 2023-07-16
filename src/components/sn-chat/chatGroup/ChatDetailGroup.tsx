@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import Avatar from "components/Avatar";
 import { Box, Button, Fab, Typography } from "@mui/material";
@@ -18,9 +19,20 @@ import { IconButton } from "components/shared";
 import { useChat } from "store/chat/selectors";
 import { STEP, TYPE_LIST } from "store/chat/type";
 import { DataStatus } from "constant/enums";
+import { useSnackbar } from "store/app/selectors";
 
 const ChatDetailGroup = (props) => {
-  const { typeList, dataTransfer, leftGroupStatus, onSetStep, onLeftGroup, onSetTypeList } = useChat();
+  const {
+    typeList,
+    dataTransfer,
+    groupMembers,
+    onSetStep,
+    onLeftGroup,
+    onSetTypeList,
+    onFetchGroupMembersMember,
+    onChangeGroupRole,
+    onRemoveGroupMember,
+  } = useChat();
   const commonT = useTranslations(NS_COMMON);
   
   const init = {
@@ -30,15 +42,49 @@ const ChatDetailGroup = (props) => {
     actionType: 0,
   }
   const [showPopup, setShowPopup] = useState(init)
+  const { onAddSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    onFetchGroupMembersMember({
+      roomId: dataTransfer?._id,
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handlePopup = () => {
     setShowPopup(init)
+  }
+
+  const handleManageMember = async (action: 'addAdmin' | 'remove', member) => {
+    if (action === 'addAdmin') {
+      const result = await onChangeGroupRole({
+        groupId: dataTransfer?._id,
+        userIdToChange: member?._id,
+        newRole: 'addOwner',
+      }) as any;
+      if (result?.error) {
+        return onAddSnackbar(result?.error?.message, 'error');
+      }
+    } else {
+      const result = await onRemoveGroupMember({
+        groupId: dataTransfer?._id,
+        userIdToKick: member?._id,
+      }) as any;
+      if (result?.error) {
+        return onAddSnackbar(result?.error?.message, 'error');
+      };
+    }
+    onAddSnackbar('Successfully!', 'success');
+    onFetchGroupMembersMember({
+      roomId: dataTransfer?._id,
+    });
   }
   
   const handleConfirm = () => {
     console.log({ showPopup });
     if (showPopup.actionType === 1) {
       onLeftGroup({
-        roomId: dataTransfer._id,
+        roomId: dataTransfer?._id,
       })
     } else {
       // remove
@@ -201,9 +247,16 @@ const ChatDetailGroup = (props) => {
           height: "180px",
           overflow: "auto"
         }}>
-          <ItemMemberDetail admin />
-          <ItemMemberDetail />
-          <ItemMemberDetail />
+          {groupMembers?.map((member, index) => (<ItemMemberDetail
+            key={index}
+            data={member}
+            callbackAddAdmin={() => {
+              handleManageMember('addAdmin', member);
+            }}
+            callbackRemove={() => {
+              handleManageMember('remove', member);
+            }}
+            admin />))}
         </Box>
         <Box sx={{
           display: "flex",

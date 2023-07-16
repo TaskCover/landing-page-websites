@@ -129,7 +129,7 @@ const AccountInfoHeader = ({
           sx={{
             cursor: "pointer",
           }}
-          onClick={() => onSetStep(STEP.CHAT_DETAIL_GROUP, { ...dataTransfer, isNew: !isGroup })}
+          onClick={() => onSetStep(STEP.CHAT_DETAIL_GROUP)}
         >
           <ArrowRightIcon />
         </IconButton>
@@ -210,7 +210,7 @@ const AccountInfoHeader = ({
             sx={{
               color: "white",
             }}
-            onClick={() => { onSetStep(STEP.ADD_GROUP) }}
+            onClick={() => { onSetStep(STEP.ADD_GROUP, { ...dataTransfer, isNew: !isGroup }) }}
           >
             <ProfileAdd />
           </IconButton>

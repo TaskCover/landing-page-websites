@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addMembersToDirectMessageGroup, createDirectMessageGroup, getAllConvention, getLatestMessages, leftDirectMessageGroup, removeMemberDirectMessageGroup } from "./actions";
+import { addMembersToDirectMessageGroup, createDirectMessageGroup, fetchGroupMembers, getAllConvention, getChatAttachments, getLatestMessages, leftDirectMessageGroup } from "./actions";
 import { DataStatus } from "constant/enums";
 import { DEFAULT_PAGING } from "constant/index";
 import {
@@ -30,6 +30,8 @@ const initialState: ChatState = {
   leftGroupStatus: DataStatus.IDLE,
   removeMemberGroupStatus: DataStatus.IDLE,
   typeList: TYPE_LIST.MEDIA_LIST,
+  groupMembers: [],
+  chatAttachments: [],
 };
 
 const isConversation = (type: string) => {
@@ -127,19 +129,6 @@ const chatSlice = createSlice({
       .addCase(addMembersToDirectMessageGroup.rejected, (state, action) => {
         state.addMembers2GroupStatus = DataStatus.FAILED;
       })
-      // removeMemberDirectMessageGroup
-      .addCase(removeMemberDirectMessageGroup.pending, (state, action) => {
-        state.removeMemberGroupStatus = DataStatus.LOADING;
-      })
-      .addCase(
-        removeMemberDirectMessageGroup.fulfilled,
-        (state, action: PayloadAction<ChatGroup>) => {
-          state.removeMemberGroupStatus = DataStatus.SUCCEEDED;
-        },
-      )
-      .addCase(removeMemberDirectMessageGroup.rejected, (state, action) => {
-        state.removeMemberGroupStatus = DataStatus.FAILED;
-      })
       // leftDirectMessageGroup
       .addCase(leftDirectMessageGroup.pending, (state, action) => {
         state.leftGroupStatus = DataStatus.LOADING;
@@ -152,7 +141,21 @@ const chatSlice = createSlice({
       )
       .addCase(leftDirectMessageGroup.rejected, (state, action) => {
         state.leftGroupStatus = DataStatus.FAILED;
-      }),
+      })
+      // groupMembers
+      .addCase(
+        fetchGroupMembers.fulfilled,
+        (state, action: PayloadAction<any[]>) => {
+          state.groupMembers = action.payload;
+        },
+      )
+      // getChatAttachments
+      .addCase(
+        getChatAttachments.fulfilled,
+        (state, action: PayloadAction<any[]>) => {
+          state.leftGroupStatus = DataStatus.SUCCEEDED;
+        },
+      )
 });
 
 export const { reset, setStep, setRoomId, setTypeList } = chatSlice.actions;
