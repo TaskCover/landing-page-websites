@@ -105,7 +105,13 @@ const InformationProjectPage = () => {
               <Link
                 href={EMPLOYEES_PATH}
                 underline="none"
-                sx={{ color: "inherit", fontSize: 14 }}
+                sx={{
+                  color: "inherit",
+                  "&:hover": {
+                    color: "primary.main",
+                  },
+                  fontSize: 14,
+                }}
               >
                 {formatNumber(item?.total_member)}
               </Link>
@@ -115,7 +121,13 @@ const InformationProjectPage = () => {
               <Link
                 href={POSITIONS_PATH}
                 underline="none"
-                sx={{ color: "inherit", fontSize: 14 }}
+                sx={{
+                  color: "inherit",
+                  "&:hover": {
+                    color: "primary.main",
+                  },
+                  fontSize: 14,
+                }}
               >
                 {formatNumber(item?.total_position)}
               </Link>
@@ -130,7 +142,13 @@ const InformationProjectPage = () => {
               <Link
                 href={PROJECTS_PATH}
                 underline="none"
-                sx={{ color: "inherit", fontSize: 14 }}
+                sx={{
+                  color: "inherit",
+                  "&:hover": {
+                    color: "primary.main",
+                  },
+                  fontSize: 14,
+                }}
               >
                 {formatNumber(item?.total_project)}
               </Link>

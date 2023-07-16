@@ -5,6 +5,7 @@ import { AccountLang } from "./account";
 import { ProjectLang } from "./project";
 import { CompanyLang } from "./company";
 import { ManagerLang } from "./manager";
+import { TimeTrackingLang } from "./timetracking";
 import {
   NS_AUTH,
   NS_COMMON,
@@ -13,6 +14,7 @@ import {
   NS_PROJECT,
   NS_COMPANY,
   NS_MANAGER,
+  NS_TIME_TRACKING,
 } from "constant/index";
 
 export default {
@@ -23,4 +25,5 @@ export default {
   [NS_PROJECT]: ProjectLang,
   [NS_COMPANY]: CompanyLang,
   [NS_MANAGER]: ManagerLang,
+  [NS_TIME_TRACKING]: TimeTrackingLang,
 };

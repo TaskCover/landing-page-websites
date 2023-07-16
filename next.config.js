@@ -13,6 +13,7 @@ const nextConfig = {
     AUTH_API_URL: process.env.AUTH_API_URL,
     COMPANY_API_URL: process.env.COMPANY_API_URL,
     UPLOAD_API_URL: process.env.UPLOAD_API_URL,
+    TIME_SHEET_API_URL: process.env.TIME_SHEET_API_URL,
     CHAT_API_URL: process.env.CHAT_API_URL,
   },
   compiler: {
