@@ -4,15 +4,17 @@ import {
   Box,
   FormHelperText,
   InputLabel,
+  TextField,
   TextFieldProps,
   Typography,
 } from "@mui/material";
 import CurrencyInput from "react-currency-input-field";
 import { Stack } from "@mui/system";
 import useTheme from "hooks/useTheme";
+import { InputNumber } from "components/shared";
 
 interface ISectionProps {
-  value?: number | null;
+  value?: number;
   label?: string;
   onChange?(value: any): void;
   required?: boolean;
@@ -27,7 +29,7 @@ const NumberInput: React.FC<TextFieldInputProps> = (
   props: TextFieldInputProps,
 ) => {
   const {
-    value = 0,
+    value,
     label,
     onChange,
     required,
@@ -38,6 +40,7 @@ const NumberInput: React.FC<TextFieldInputProps> = (
     helperText,
     sx,
     endAdornment,
+    ...rest
   } = props;
 
   const randomId = (Math.random() + 1).toString(36).substring(7);
@@ -57,7 +60,7 @@ const NumberInput: React.FC<TextFieldInputProps> = (
         sx={{
           display: "flex",
           flexDirection: "row",
-          backgroundColor: "grey.50",
+          backgroundColor: isDarkMode ? "#393939" : "grey.50",
           borderRadius: "4px",
           padding: "8px 20px",
           height: "58px",
@@ -71,6 +74,8 @@ const NumberInput: React.FC<TextFieldInputProps> = (
             ? "rgba(246, 78, 96, 1)"
             : isFocus
             ? "rgba(54, 153, 255, 0.5)"
+            : isDarkMode
+            ? "#393939"
             : "#F7F7FD",
           alignItems: "center",
           width: "100%",
@@ -101,39 +106,66 @@ const NumberInput: React.FC<TextFieldInputProps> = (
               </Typography>
             )}
           </InputLabel>
-          <CurrencyInput
+          {/* <CurrencyInput
             placeholder={placeholder}
             id={`input-field-${randomId}`}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
-            value={value || 0}
-            onValueChange={onChange}
+            value={value}
+            onValueChange={(value) => {
+              if (onChange) onChange(value);
+            }}
             style={{
               fontSize: "14px",
               lineHeight: "22px",
               fontWeight: 400,
-              color: "common.black",
+              color: isDarkMode ? "#fff" : "common.black",
               padding: 0,
-              backgroundColor: "#F7F7FD",
+              backgroundColor: isDarkMode ? "#393939" : "#F7F7FD",
               border: "none",
               outline: "none",
             }}
-          />
+          /> */}
           {/* <TextField
+            {...rest}
+            fullWidth
+            size="small"
+            placeholder={"20"}
             sx={{
+              border: "none",
+              outline: "none",
+              boxShadow: "none",
               input: {
-                fontSize: '14px',
-                lineHeight: '22px',
+                fontSize: "14px",
+                lineHeight: "22px",
                 fontWeight: 400,
-                color: CommonColors.colorInput,
+                color: isDarkMode ? "#fff" : "common.black",
                 padding: 0,
-                background: CommonColors.bgInput,
+                backgroundColor: isDarkMode ? "#393939" : "#F7F7FD",
+                border: "none",
+                outline: "none",
+                boxShadow: "none",
               },
-              '> :before, :after': {
-                display: 'none',
+              "> :before, :after": {
+                display: "none",
               },
             }}
-            {...otherProps}
+          /> */}
+          <TextField
+            sx={{
+              input: {
+                fontSize: "14px",
+                lineHeight: "22px",
+                fontWeight: 400,
+                color: isDarkMode ? "#fff" : "common.black",
+                padding: 0,
+                backgroundColor: isDarkMode ? "#393939" : "#F7F7FD",
+              },
+              "> :before, :after": {
+                display: "none",
+              },
+            }}
+            {...rest}
             value={value}
             onChange={onChange}
             disabled={disabled}
@@ -144,7 +176,8 @@ const NumberInput: React.FC<TextFieldInputProps> = (
             id={`input-field-${randomId}`}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
-          /> */}
+            type="number"
+          />
         </Stack>
         {endAdornment}
       </Box>

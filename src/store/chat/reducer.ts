@@ -1,17 +1,48 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllConvention } from "./actions";
+import {
+  addMembersToDirectMessageGroup,
+  createDirectMessageGroup,
+  getAllConvention,
+  getLatestMessages,
+  leftDirectMessageGroup,
+  removeMemberDirectMessageGroup,
+} from "./actions";
 import { DataStatus } from "constant/enums";
 import { DEFAULT_PAGING } from "constant/index";
-import { ChatItemInfo, ChatState, STEP } from "./type";
+import {
+  ChatGroup,
+  ChatItemInfo,
+  ChatState,
+  MessageInfo,
+  SetStepAction,
+  STEP,
+  TYPE_LIST,
+} from "./type";
 
 const initialState: ChatState = {
   convention: [],
   status: DataStatus.IDLE,
-  paging: DEFAULT_PAGING,
-
+  conversationPaging: DEFAULT_PAGING,
+  userOnlinePage: [],
   roomId: "",
+  userPartner: null,
   currStep: STEP.CONVENTION,
   prevStep: STEP.CONVENTION,
+  backFallStep: STEP.IDLE,
+  messageInfo: [],
+  messageStatus: DataStatus.IDLE,
+  messagePaging: DEFAULT_PAGING,
+  newGroupData: {},
+  createGroupStatus: DataStatus.IDLE,
+  addMembers2GroupStatus: DataStatus.IDLE,
+  leftGroupStatus: DataStatus.IDLE,
+  removeMemberGroupStatus: DataStatus.IDLE,
+  typeList: TYPE_LIST.MEDIA_LIST,
+};
+
+const isConversation = (type: string) => {
+  return type === "d" || type === "c" || type === "p";
 };
 
 const chatSlice = createSlice({
@@ -20,31 +51,151 @@ const chatSlice = createSlice({
   reducers: {
     reset: () => initialState,
     setStep: (state, action) => {
-      state.prevStep = state.currStep;
-      state.currStep = action.payload;
+      const prevStep = Number(action.payload.step) - 1;
+      state.backFallStep = state.currStep;
+
+      state.prevStep = prevStep === STEP.IDLE ? STEP.CONVENTION : prevStep;
+      state.currStep = action.payload.step;
+
+      if (action.payload.dataTransfer !== undefined) {
+        state.dataTransfer = action.payload.dataTransfer;
+      }
     },
     setRoomId: (state, action) => {
       state.roomId = action.payload;
     },
+    setTypeList: (state, action) => {
+      state.typeList = action.payload;
+    },
+    setUserPartner: (state, action) => {
+      console.log(action.payload);
+
+      const user = state.userOnlinePage?.find(
+        (item) => item.username === action.payload,
+      );
+      state.userPartner = user || null;
+    },
+    setMessage: (state, action) => {
+      state.messageInfo.push(action.payload);
+    },
+    clearConversation: (state) => {
+      state.convention = [];
+    },
+    clearMessageList: (state) => {
+      state.messageInfo = [];
+    },
   },
   extraReducers: (builder) =>
     builder
+      //getAllConvention
       .addCase(getAllConvention.pending, (state, action) => {
         state.status = DataStatus.LOADING;
+        state.conversationPaging = {
+          pageIndex: action.meta.arg.offset || 0,
+          pageSize: action.meta.arg.count || 20,
+        };
       })
       .addCase(
         getAllConvention.fulfilled,
-        (state, action: PayloadAction<ChatItemInfo[]>) => {
-          state.convention = action.payload;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (state, action: PayloadAction<any[]>) => {
+          if (action.payload.length > 0) {
+            state.convention = action.payload.filter((item) =>
+              isConversation(item["t"]) ? item : undefined,
+            );
+            state.userOnlinePage = action.payload.filter((item) =>
+              !isConversation(item["t"]) ? item : undefined,
+            );
+          }
           state.status = DataStatus.SUCCEEDED;
         },
       )
       .addCase(getAllConvention.rejected, (state, action) => {
         state.convention = [];
         state.status = DataStatus.FAILED;
+      })
+      // getLatestMessages
+      .addCase(getLatestMessages.pending, (state, action) => {
+        state.messageStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        getLatestMessages.fulfilled,
+        (state, action: PayloadAction<MessageInfo[]>) => {
+          if (action.payload.length > 0) {
+            state.messageInfo = action.payload.reverse();
+          }
+          state.messageStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(getLatestMessages.rejected, (state, action) => {
+        state.messageInfo = [];
+        state.messageStatus = DataStatus.FAILED;
+      })
+      // createDirectMessageGroup
+      .addCase(createDirectMessageGroup.pending, (state, action) => {
+        state.createGroupStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        createDirectMessageGroup.fulfilled,
+        (state, action: PayloadAction<ChatGroup>) => {
+          state.newGroupData = action.payload;
+          state.createGroupStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(createDirectMessageGroup.rejected, (state, action) => {
+        state.newGroupData = {};
+        state.createGroupStatus = DataStatus.FAILED;
+      })
+      // addMembersToDirectMessageGroup
+      .addCase(addMembersToDirectMessageGroup.pending, (state, action) => {
+        state.addMembers2GroupStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        addMembersToDirectMessageGroup.fulfilled,
+        (state, action: PayloadAction<ChatGroup>) => {
+          state.addMembers2GroupStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(addMembersToDirectMessageGroup.rejected, (state, action) => {
+        state.addMembers2GroupStatus = DataStatus.FAILED;
+      })
+      // removeMemberDirectMessageGroup
+      .addCase(removeMemberDirectMessageGroup.pending, (state, action) => {
+        state.removeMemberGroupStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        removeMemberDirectMessageGroup.fulfilled,
+        (state, action: PayloadAction<ChatGroup>) => {
+          state.removeMemberGroupStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(removeMemberDirectMessageGroup.rejected, (state, action) => {
+        state.removeMemberGroupStatus = DataStatus.FAILED;
+      })
+      // leftDirectMessageGroup
+      .addCase(leftDirectMessageGroup.pending, (state, action) => {
+        state.leftGroupStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        leftDirectMessageGroup.fulfilled,
+        (state, action: PayloadAction<ChatGroup>) => {
+          state.leftGroupStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(leftDirectMessageGroup.rejected, (state, action) => {
+        state.leftGroupStatus = DataStatus.FAILED;
       }),
 });
 
-export const { reset, setStep, setRoomId } = chatSlice.actions;
+export const {
+  reset,
+  setStep,
+  setRoomId,
+  setMessage,
+  setUserPartner,
+  setTypeList,
+  clearConversation,
+  clearMessageList,
+} = chatSlice.actions;
 
 export default chatSlice.reducer;
