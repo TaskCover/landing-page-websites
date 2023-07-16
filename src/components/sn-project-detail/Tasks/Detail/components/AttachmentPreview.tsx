@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, StackProps } from "@mui/material";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { IMAGES_ACCEPT, NS_COMMON } from "constant/index";
 import { IconButton, Text, Tooltip } from "components/shared";
@@ -6,8 +6,12 @@ import CircleCloseIcon from "icons/CircleCloseIcon";
 import PlayIcon from "icons/PlayIcon";
 import { useTranslations } from "next-intl";
 import FileIcon from "icons/FileIcon";
-import Link from "./Link";
-import Preview from "./Preview";
+import Link from "components/Link";
+import FilePdfIcon from "icons/FilePdfIcon";
+import FileDocIcon from "icons/FileDocIcon";
+import FileExcelIcon from "icons/FileExcelIcon";
+import FileCsvIcon from "icons/FileCsvIcon";
+import Preview from "components/Preview";
 import useToggle from "hooks/useToggle";
 
 type AttachmentPreviewProps = {
@@ -16,14 +20,20 @@ type AttachmentPreviewProps = {
   src: string;
   size?: number;
   showName?: boolean;
+  containerProps?: StackProps;
 };
 
 const AttachmentPreview = (props: AttachmentPreviewProps) => {
-  const { name, onRemove, size = 64, showName, ...rest } = props;
+  const {
+    name,
+    onRemove,
+    size = 64,
+    showName,
+    containerProps,
+    ...rest
+  } = props;
   const ref = useRef<HTMLVideoElement | HTMLImageElement | null>(null);
   const commonT = useTranslations(NS_COMMON);
-
-  const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
   const [isPreview, onPreviewTrue, onPreviewFalse] = useToggle(false);
 
@@ -31,6 +41,23 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
     const arr = name.split(".");
     return arr[arr.length - 1];
   }, [name]);
+
+  const fileIcon = useMemo(() => {
+    switch (extension) {
+      case "pdf":
+        return <FilePdfIcon sx={{ fontSize: 40 }} />;
+      case "doc":
+      case "docx":
+        return <FileDocIcon sx={{ fontSize: 40 }} />;
+      case "xls":
+      case "xlsx":
+        return <FileExcelIcon sx={{ fontSize: 40 }} />;
+      case "csv":
+        return <FileCsvIcon sx={{ fontSize: 40 }} />;
+      default:
+        return <FileIcon sx={{ fontSize: 40 }} />;
+    }
+  }, [extension]);
 
   const type = useMemo(() => {
     if (IMAGES_EXTENSION.includes(extension)) return `image/${extension}`;
@@ -40,19 +67,22 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
 
   const previewProps = useMemo(
     () => ({
-      width: onRemove ? size - 20 : size,
-      height: onRemove ? size - 20 : size,
-      sx: {
-        objectFit: isFullScreen ? "contain" : "cover",
-        borderRadius: 1,
-      },
+      width: size,
+      height: size,
     }),
-    [isFullScreen, onRemove, size],
+    [size],
   );
 
   return (
     <Tooltip title={type && !isPreview ? commonT("clickToViewLarge") : ""}>
-      <Stack direction="row" alignItems="center">
+      <Stack
+        direction="row"
+        alignItems="center"
+        borderRadius={1}
+        position="relative"
+        spacing={1}
+        {...containerProps}
+      >
         <Stack
           alignItems="center"
           justifyContent="center"
@@ -60,31 +90,11 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
           height={size}
           borderRadius={1}
           overflow="hidden"
-          position="relative"
           p={onRemove ? 1.25 : 0}
           sx={{
             cursor: "pointer",
           }}
         >
-          {!!onRemove && (
-            <IconButton
-              noPadding
-              onClick={onRemove}
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                bgcolor: "background.paper",
-                "&:hover": {
-                  bgcolor: "background.paper",
-                },
-                zIndex: 20,
-              }}
-            >
-              <CircleCloseIcon sx={{ color: "grey.400", fontSize: 20 }} />
-            </IconButton>
-          )}
-
           {IMAGES_EXTENSION.includes(extension) ? (
             <Box
               component="img"
@@ -100,8 +110,8 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
                 sx={{
                   position: "absolute",
                   top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
+                  left: 20,
+                  transform: "translateY(-50%)",
                   color: "common.white",
                   fontSize: 24,
                   zIndex: 1,
@@ -120,14 +130,32 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
               underline="none"
               color="inherit"
             >
-              <FileIcon sx={{ fontSize: 50 }} />
+              {fileIcon}
             </Link>
           )}
         </Stack>
         {!!showName && (
-          <Text variant="caption" maxWidth={69} noWrap>
-            {name}
+          <Text variant="caption" maxWidth={100}>
+            {shortName(name)}
           </Text>
+        )}
+        {!!onRemove && (
+          <IconButton
+            noPadding
+            onClick={onRemove}
+            sx={{
+              position: "absolute",
+              top: -10,
+              right: -10,
+              bgcolor: "background.paper",
+              "&:hover": {
+                bgcolor: "background.paper",
+              },
+              zIndex: 20,
+            }}
+          >
+            <CircleCloseIcon sx={{ color: "grey.400", fontSize: 20 }} />
+          </IconButton>
         )}
         {Boolean(isPreview && props?.src && type) && (
           <Preview
@@ -146,3 +174,10 @@ export default memo(AttachmentPreview);
 
 const IMAGES_EXTENSION = ["png", "jpeg", "jpg", "ico", "gif"];
 const VIDEOS_EXTENSION = ["mp4", "mov", "wmv", "flv", "avi", "webm", "mkv"];
+
+const shortName = (value: string) => {
+  if (value.length <= 16) {
+    return value;
+  }
+  return value.slice(0, 5) + "..." + value.slice(-8);
+};

@@ -7,6 +7,7 @@ import {
   Selected,
   DroppableTaskList,
   DraggableTask,
+  TASK_TEXT_STATUS,
 } from "./components";
 import { Button, Checkbox, Text, TextProps } from "components/shared";
 import {
@@ -17,7 +18,12 @@ import {
   StackProps,
 } from "@mui/material";
 import Avatar from "components/Avatar";
-import { formatNumber, getMessageErrorByAPI, debounce } from "utils/index";
+import {
+  formatNumber,
+  getMessageErrorByAPI,
+  debounce,
+  formatDate,
+} from "utils/index";
 import TextStatus from "components/TextStatus";
 import { CellProps, TableLayout } from "components/Table";
 import React from "react";
@@ -61,6 +67,7 @@ const ItemList = () => {
     pageIndex,
     filters,
     totalPages,
+    onResetTasks,
   } = useTasksOfProject();
   const { onUpdateTaskDetail, onGetTaskList } = useTaskDetail();
 
@@ -101,6 +108,11 @@ const ItemList = () => {
     [dataIds?.taskId, dataIds?.taskListId],
   );
 
+  const baseTop = useMemo(
+    () => (selectedList.length ? 124 : 60),
+    [selectedList.length],
+  );
+
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
       {
@@ -110,10 +122,10 @@ const ItemList = () => {
       },
       { value: commonT("form.title.assigner"), width: "15%", align: "left" },
       {
-        value: projectT("detailTasks.form.title.expectCompletionTime"),
+        value: commonT("form.title.startDate"),
         width: "12.5%",
       },
-      { value: projectT("detailTasks.form.title.timeTaken"), width: "12.5%" },
+      { value: commonT("form.title.endDate"), width: "12.5%" },
       { value: commonT("status"), width: "15%" },
       { value: commonT("form.title.note"), width: "15%" },
     ],
@@ -539,8 +551,8 @@ const ItemList = () => {
   const onLayout = useCallback((refsData) => {
     const newSx = refsData?.reduce(
       (out, widthValue, index) => {
-        const widthTask = index === 0 ? widthValue - 72 : widthValue;
-        const widthSubTask = index === 0 ? widthValue - 96 : widthValue;
+        const widthTask = index === 0 ? widthValue - 100 : widthValue;
+        const widthSubTask = index === 0 ? widthValue - 124 : widthValue;
         out.task[`& > :nth-of-type(${index + 1})`] = {
           minWidth: widthTask,
           width: widthTask,
@@ -608,6 +620,12 @@ const ItemList = () => {
   }, [items]);
 
   useEffect(() => {
+    return () => {
+      onResetTasks();
+    };
+  }, [onResetTasks]);
+
+  useEffect(() => {
     if (!isReady || !projectId) return;
 
     onGetTasksOfProject(projectId, {
@@ -633,7 +651,7 @@ const ItemList = () => {
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
         position="sticky"
-        top={selectedList.length ? 124 : 60}
+        top={{ xs: baseTop + 8, sm: baseTop + 24 }}
         zIndex={1}
       >
         <></>
@@ -698,9 +716,12 @@ const ItemList = () => {
                         direction={{ md: "row" }}
                         alignItems={{ xs: "flex-start", md: "center" }}
                         minHeight={48}
+                        maxHeight={48}
                         width="100%"
                         sx={sx.task}
                         overflow="hidden"
+                        borderBottom="1px solid"
+                        borderColor="grey.100"
                       >
                         <Content
                           color="text.primary"
@@ -715,13 +736,14 @@ const ItemList = () => {
                         <Assigner src={task?.owner?.avatar?.link}>
                           {task?.owner?.fullname}
                         </Assigner>
-                        <Content>{formatNumber(task?.estimated_hours)}</Content>
-                        <Content>{formatNumber(task?.time_execution)}</Content>
-                        <TextStatus
-                          color={COLOR_STATUS[task.status]}
-                          text={TEXT_STATUS[task.status]}
-                          component="p"
-                        />
+                        <Content>{formatDate(task?.start_date)}</Content>
+                        <Content>{formatDate(task?.end_date)}</Content>
+                        <Content>
+                          <TextStatus
+                            color={COLOR_STATUS[task.status]}
+                            text={TASK_TEXT_STATUS[task.status]}
+                          />
+                        </Content>
                         <Description>{task?.description}</Description>
                       </Stack>
                       {!isHide && (
@@ -744,6 +766,9 @@ const ItemList = () => {
                                       alignItems="center"
                                       minHeight={48}
                                       overflow="hidden"
+                                      borderBottom="1px solid"
+                                      borderColor="grey.100"
+                                      maxHeight={48}
                                     >
                                       <Checkbox
                                         checked={isChecked}
@@ -783,20 +808,20 @@ const ItemList = () => {
                                           {subTask?.owner?.fullname}
                                         </Assigner>
                                         <Content>
-                                          {formatNumber(
-                                            subTask.estimated_hours,
-                                          )}
+                                          {formatDate(subTask?.start_date)}
                                         </Content>
                                         <Content>
-                                          {formatNumber(
-                                            subTask?.time_execution,
-                                          )}
+                                          {formatDate(subTask?.end_date)}
                                         </Content>
-                                        <TextStatus
-                                          color={COLOR_STATUS[subTask.status]}
-                                          text={TEXT_STATUS[subTask.status]}
-                                          component="p"
-                                        />
+                                        <Content>
+                                          <TextStatus
+                                            color={COLOR_STATUS[subTask.status]}
+                                            text={
+                                              TASK_TEXT_STATUS[subTask.status]
+                                            }
+                                          />
+                                        </Content>
+
                                         <Description>
                                           {subTask.description}
                                         </Description>
@@ -857,7 +882,7 @@ const Assigner = ({
   src,
   ...rest
 }: StackProps & { src?: string }) => {
-  if (!children) return <Content />;
+  if (!children) return <Content textAlign="left" />;
   return (
     <Stack
       component="p"
@@ -900,11 +925,19 @@ const Content = (props: TextProps) => {
 
 const Description = (props: BoxProps) => {
   const { children = "--" } = props;
+  const ref = useRef<HTMLElement | null>(null);
+  const [isOverflow, setIsOverflow] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsOverflow((ref.current?.scrollHeight ?? 0) > 48);
+  }, []);
+
   if (!children) return <Content />;
 
   return (
     <Box
       component="p"
+      ref={ref}
       sx={{
         fontSize: 14,
         px: 2,
@@ -912,13 +945,18 @@ const Description = (props: BoxProps) => {
         overflow: "hidden",
         textOverflow: "ellipsis",
         width: "100%",
+        whiteSpace: "nowrap",
+        maxHeight: 34,
         "& *": {
           overflow: "hidden",
           textOverflow: "ellipsis",
+          maxWidth: "100%",
         },
       }}
       className="html"
-      dangerouslySetInnerHTML={{ __html: children }}
+      dangerouslySetInnerHTML={{
+        __html: children,
+      }}
     />
   );
 };
@@ -932,3 +970,22 @@ const sxLink = {
 };
 const WRONG_NUMBER = 10;
 const PAGE_SIZE = 20;
+
+const getArrayTagsHtmlString = (str) => {
+  const doc = new DOMParser().parseFromString(str, "text/html");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const arr = [...(doc.body.childNodes as unknown as any[])].map(
+    (child) => child.outerHTML || child.textContent,
+  );
+  return arr;
+};
+
+const getChild = (children: string, isOverflow: boolean) => {
+  if (!isOverflow) return children;
+  const rawFirst = getArrayTagsHtmlString(children)?.[0] as string | undefined;
+  if (!rawFirst) return children;
+
+  const first = rawFirst[0] + rawFirst.slice(1).replace("<", "...<");
+
+  return children.replace(rawFirst, first);
+};

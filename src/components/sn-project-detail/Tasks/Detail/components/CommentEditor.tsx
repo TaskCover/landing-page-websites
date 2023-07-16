@@ -1,6 +1,6 @@
 "use client";
 
-import { ForwardedRef, forwardRef, memo, useState } from "react";
+import { ForwardedRef, forwardRef, memo, useMemo, useState } from "react";
 import Editor from "components/Editor";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
@@ -30,11 +30,17 @@ const CommentEditor = forwardRef(
     const [files, setFiles] = useState<File[]>([]);
 
     const onChange = (value: string) => {
-      setContent(value);
+      const isEmpty = value === VALUE_AS_EMPTY;
+      setContent(isEmpty ? "" : value);
     };
     const onChangeFiles = (files: File[]) => {
       setFiles(files);
     };
+
+    const disabled = useMemo(
+      () => !content?.trim()?.length && !files.length,
+      [content, files.length],
+    );
 
     const onSubmit = async () => {
       if (!taskListId || !taskId) return;
@@ -87,7 +93,12 @@ const CommentEditor = forwardRef(
           justifyContent="space-between"
           mt={2}
         >
-          <Button onClick={onSubmit} variant="primary" size="small">
+          <Button
+            disabled={disabled}
+            onClick={onSubmit}
+            variant="primary"
+            size="small"
+          >
             {projectT("taskDetail.sendComment")}
           </Button>
         </Stack>
@@ -99,3 +110,5 @@ const CommentEditor = forwardRef(
 CommentEditor.displayName = "CommentEditor";
 
 export default memo(CommentEditor);
+
+const VALUE_AS_EMPTY = "<p><br></p>";

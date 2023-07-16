@@ -6,6 +6,8 @@ import { Comment } from "store/project/reducer";
 import Image from "next/image";
 import { formatDate } from "utils/index";
 import AttachmentPreview from "components/AttachmentPreview";
+import { useTranslations } from "next-intl";
+import { NS_PROJECT } from "constant/index";
 
 type CommentsProps = {
   comments?: Comment[];
@@ -15,9 +17,13 @@ type CommentItemProps = {} & Comment;
 
 const Comments = (props: CommentsProps) => {
   const { comments = [] } = props;
+  const projectT = useTranslations(NS_PROJECT);
 
   return (
-    <Stack spacing={4} pt={3}>
+    <Stack spacing={4}>
+      <Text color="text.primary" variant="h6" textTransform="uppercase">
+        {projectT("taskDetail.commentList")}
+      </Text>
       {comments.map((comment) => (
         <CommentItem key={comment.id} {...comment} />
       ))}

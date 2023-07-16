@@ -4,7 +4,7 @@ import FormLayout from "components/FormLayout";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_COMPANY } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
 import { memo, useMemo } from "react";
-import { useSnackbar } from "store/app/selectors";
+import { useAuth, useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
 import { getMessageErrorByAPI } from "utils/index";
 import { DataAction } from "constant/enums";
@@ -24,6 +24,7 @@ type FormProps = {
 const Form = (props: FormProps) => {
   const { initialValues, type, onSubmit: onSubmitProps, ...rest } = props;
   const { onAddSnackbar } = useSnackbar();
+  const { user, onGetProfile } = useAuth();
   const companyT = useTranslations(NS_COMPANY);
   const commonT = useTranslations(NS_COMMON);
 
@@ -50,6 +51,9 @@ const Form = (props: FormProps) => {
           companyT("employees.notification.success", { label }),
           "success",
         );
+        if (values?.email === user?.email) {
+          onGetProfile();
+        }
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;

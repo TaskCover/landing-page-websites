@@ -318,3 +318,7 @@ export const getDaysDiff = (
 ) => {
   return dayjs(date_2).diff(dayjs(date_1), trick);
 };
+
+export const hasValue = (value?) => {
+  return value !== null && value !== "" && value !== undefined;
+};

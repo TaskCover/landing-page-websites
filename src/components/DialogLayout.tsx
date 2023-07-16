@@ -112,7 +112,6 @@ const DialogLayout = forwardRef(
             <IconButton
               size="normal"
               noPadding
-              tooltip={t("close")}
               onClick={onCloseProps}
               sx={{
                 color: "grey.400",

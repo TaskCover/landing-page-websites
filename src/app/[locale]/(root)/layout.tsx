@@ -1,4 +1,3 @@
-import { ChatListTemp } from "components/sn-chat";
 import MainLayout from "layouts/MainLayout";
 
 type RootLayoutProps = {
@@ -6,12 +5,7 @@ type RootLayoutProps = {
 };
 
 const RootLayout = (props: RootLayoutProps) => {
-  return (
-    <MainLayout>
-      <ChatListTemp />
-      {props.children}
-    </MainLayout>
-  );
+  return <MainLayout>{props.children}</MainLayout>;
 };
 
 export default RootLayout;
