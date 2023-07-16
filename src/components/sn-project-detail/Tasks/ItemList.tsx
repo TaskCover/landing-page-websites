@@ -210,28 +210,9 @@ const ItemList = () => {
 
         newSelectedList = [...newSelectedList, ...additionalSelectedList];
       } else {
-        const indexDeleted = newSelectedList.findIndex(
-          (selected) =>
-            !selected?.subTaskId &&
-            !selected?.taskId &&
-            selected.taskListId === taskList.id,
+        newSelectedList = newSelectedList.filter(
+          (item) => item.taskListId !== taskList.id,
         );
-
-        if (indexDeleted !== -1) {
-          newSelectedList.splice(indexDeleted, 1);
-        }
-
-        // if (taskList.tasks?.length) {
-        //   const taskIds = taskList.tasks.map((task) => task.id);
-        //   newSelectedList = newSelectedList.filter(
-        //     (selected) =>
-        //       !selected?.taskId || !taskIds.includes(selected.taskId),
-        //   );
-        // } else {
-        //   newSelectedList = newSelectedList.filter(
-        //     (selected) => selected?.taskListId !== taskList.id,
-        //   );
-        // }
       }
       setSelectedList(newSelectedList);
     };
@@ -244,7 +225,7 @@ const ItemList = () => {
     subTasks?: Task[],
   ) => {
     return () => {
-      let newSelectedList = [...selectedList];
+      const newSelectedList = [...selectedList];
       if (newChecked) {
         newSelectedList.push({
           taskId: task.id,
@@ -252,28 +233,6 @@ const ItemList = () => {
           taskListId: taskList.id,
           taskListName: taskList.name,
         });
-        if (subTasks?.length) {
-          newSelectedList = subTasks.reduce(
-            (out, subTask) => {
-              const isExisted = out.some(
-                (outItem) => outItem?.subTaskId === subTask.id,
-              );
-
-              if (!isExisted) {
-                out.push({
-                  taskId: task.id,
-                  taskName: task.name,
-                  taskListId: taskList.id,
-                  taskListName: taskList.name,
-                  subTaskId: subTask.id,
-                  subTaskName: subTask.name,
-                });
-              }
-              return out;
-            },
-            [...newSelectedList],
-          );
-        }
       } else {
         const indexDeleted = newSelectedList.findIndex(
           (selected) => !selected?.subTaskId && selected.taskId === task.id,
@@ -282,10 +241,6 @@ const ItemList = () => {
         if (indexDeleted !== -1) {
           newSelectedList.splice(indexDeleted, 1);
         }
-
-        // newSelectedList = newSelectedList.filter(
-        //   (selected) => selected?.taskId !== task.id,
-        // );
       }
 
       setSelectedList(newSelectedList);
@@ -313,12 +268,6 @@ const ItemList = () => {
         });
       } else {
         newSelectedList.splice(indexSelected, 1);
-        const indexTask = selectedList.findIndex(
-          (selected) => !selected?.subTaskId && selected.taskId === task.id,
-        );
-        if (indexTask !== -1) {
-          newSelectedList.splice(indexTask, 1);
-        }
       }
       setSelectedList(newSelectedList);
     };
@@ -670,20 +619,9 @@ const ItemList = () => {
               isDragging={isDragging}
             >
               {taskListItem.tasks.map((task, taskIndex) => {
-                const subTaskIds = selectedList.map(
-                  (selected) => selected?.subTaskId,
-                );
-                const isCheckedSelf = selectedList.some(
+                const isChecked = selectedList.some(
                   (selected) =>
                     !selected?.subTaskId && selected?.taskId === task.id,
-                );
-
-                const isChecked = Boolean(
-                  task.sub_tasks?.length
-                    ? task.sub_tasks.every((subTask) =>
-                        subTaskIds.includes(subTask.id),
-                      ) && isCheckedSelf
-                    : isCheckedSelf,
                 );
 
                 const isHide = hideIds.includes(task.id);

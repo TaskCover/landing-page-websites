@@ -164,6 +164,7 @@ const Actions = () => {
             startIcon={<PlusIcon />}
             size="small"
             variant="primary"
+            sx={{ height: 40 }}
           >
             {projectT("detailTasks.createNewTaskList")}
           </Button>

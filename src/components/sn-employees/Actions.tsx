@@ -115,6 +115,7 @@ const Actions = () => {
             startIcon={<PlusIcon />}
             size="small"
             variant="primary"
+            sx={{ height: 40 }}
           >
             {commonT("createNew")}
           </Button>
