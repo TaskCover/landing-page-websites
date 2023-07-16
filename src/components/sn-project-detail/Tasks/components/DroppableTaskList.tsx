@@ -43,6 +43,7 @@ import { getMessageErrorByAPI } from "utils/index";
 import ConfirmDialog from "components/ConfirmDialog";
 import DialogLayout from "components/DialogLayout";
 import Loading from "components/Loading";
+import useBreakpoint from "hooks/useBreakpoint";
 
 type DroppableTaskListProps = {
   id: string;
@@ -71,6 +72,8 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
     isDragging,
     ...rest
   } = props;
+  const { isXlSmaller } = useBreakpoint();
+
   const projectT = useTranslations(NS_PROJECT);
   const { onCreateTask: onCreateTaskAction } = useTasksOfProject();
 
@@ -97,7 +100,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
               <Stack
                 direction="row"
                 alignItems="center"
-                height={48}
+                height={38}
                 pl={{ xs: 1, md: 2 }}
                 width="100%"
                 justifyContent="space-between"
@@ -106,6 +109,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
               >
                 <Stack direction="row" alignItems="center" overflow="hidden">
                   <Checkbox
+                    size="small"
                     className="checkbox"
                     checked={checked}
                     onChange={onChange}
@@ -121,7 +125,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                     <CaretIcon sx={{ color: "grey.300" }} />
                   </IconButton>
                   <Text
-                    variant="h5"
+                    variant={isXlSmaller ? "h6" : "h5"}
                     color="grey.300"
                     onClick={onShowPreviewName}
                     noWrap

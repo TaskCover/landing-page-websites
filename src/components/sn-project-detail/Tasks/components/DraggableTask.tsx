@@ -1,5 +1,6 @@
 import { Stack } from "@mui/material";
 import { Checkbox, IconButton } from "components/shared";
+import useBreakpoint from "hooks/useBreakpoint";
 import useToggle from "hooks/useToggle";
 import CaretIcon from "icons/CaretIcon";
 import MoveDotIcon from "icons/MoveDotIcon";
@@ -27,6 +28,8 @@ const DraggableTask = (props: DraggableTaskProps) => {
     setHideIds,
     ...rest
   } = props;
+
+  const { isXlSmaller } = useBreakpoint();
 
   const onToggle = () => {
     setHideIds((prevIds) => {
@@ -58,15 +61,18 @@ const DraggableTask = (props: DraggableTaskProps) => {
             <Stack
               direction="row"
               alignItems="center"
-              height={48}
-              pl={{ xs: 1, md: 5 }}
+              height={38}
+              ml={5}
               spacing={{ xs: 0.5, sm: 1 }}
               borderBottom={{ md: "1px solid" }}
               borderColor={{ md: "grey.100" }}
             >
-              <Checkbox checked={checked} onChange={onChange} />
+              <Checkbox size="small" checked={checked} onChange={onChange} />
               <IconButton noPadding {...provided.dragHandleProps}>
-                <MoveDotIcon fontSize="medium" sx={{ color: "grey.A200" }} />
+                <MoveDotIcon
+                  fontSize={isXlSmaller ? "small" : "medium"}
+                  sx={{ color: "grey.A200" }}
+                />
               </IconButton>
               <IconButton
                 noPadding

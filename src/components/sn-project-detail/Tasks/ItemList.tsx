@@ -548,8 +548,8 @@ const ItemList = () => {
   const onLayout = useCallback((refsData) => {
     const newSx = refsData?.reduce(
       (out, widthValue, index) => {
-        const widthTask = index === 0 ? widthValue - 128 : widthValue;
-        const widthSubTask = index === 0 ? widthValue - 152 : widthValue;
+        const widthTask = index === 0 ? widthValue - 120 : widthValue;
+        const widthSubTask = index === 0 ? widthValue - 140 : widthValue;
         out.task[`& > :nth-of-type(${index + 1})`] = {
           minWidth: widthTask,
           width: widthTask,
@@ -707,8 +707,8 @@ const ItemList = () => {
                       <Stack
                         direction={{ md: "row" }}
                         alignItems={{ xs: "flex-start", md: "center" }}
-                        minHeight={48}
-                        maxHeight={{ md: 48 }}
+                        minHeight={38}
+                        maxHeight={{ md: 38 }}
                         width="100%"
                         sx={sx.task}
                         overflow="hidden"
@@ -756,13 +756,14 @@ const ItemList = () => {
                                       key={subTask.id}
                                       direction="row"
                                       alignItems="center"
-                                      minHeight={48}
+                                      minHeight={38}
                                       overflow="hidden"
                                       borderBottom={{ md: "1px solid" }}
                                       borderColor={{ md: "grey.100" }}
-                                      maxHeight={{ md: 48 }}
+                                      maxHeight={{ md: 38 }}
                                     >
                                       <Checkbox
+                                        size="small"
                                         checked={isChecked}
                                         onChange={onToggleSubTask(
                                           taskListItem,
@@ -924,7 +925,7 @@ const Description = (props: BoxProps) => {
   const [isOverflow, setIsOverflow] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsOverflow((ref.current?.scrollHeight ?? 0) > 48);
+    setIsOverflow((ref.current?.scrollHeight ?? 0) > 38);
   }, []);
 
   if (!children) return <Content />;
