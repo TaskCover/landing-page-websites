@@ -1,39 +1,66 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Avatar from "components/Avatar";
+import { useEffect, useRef } from "react";
 import { MessageInfo } from "store/chat/type";
-import { formatDate } from "utils/index";
+import { formatDate, sleep } from "utils/index";
 
 interface MessagesProps {
   sessionId: string;
+  avatarPartner: string | undefined;
   initialMessage: MessageInfo[];
 }
 
-const Messages = ({ sessionId, initialMessage: messages }: MessagesProps) => {
+const Messages = ({
+  sessionId,
+  avatarPartner,
+  initialMessage: messages,
+}: MessagesProps) => {
+  const messageRef = useRef<HTMLDivElement>(null);
+
+  const initScrollIntoView = async () => {
+    await sleep(1);
+    if (messageRef.current) {
+      messageRef.current.lastElementChild?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
+  };
+  useEffect(() => {
+    initScrollIntoView();
+  }, [messages]);
+
   return (
     <Box
+      ref={messageRef}
       sx={{
         display: "flex",
         gap: "0.5rem",
         flexDirection: "column",
         overflow: "auto",
         height: "100%",
-        padding: "1rem",
+        padding: "1rem 1rem 0 1rem",
       }}
     >
       {messages.map((message, index) => {
         const isCurrentUser = message.u.username === sessionId;
         const hasNextMessageFromSameUser =
-          messages[index + 1]?.u.username === messages[index].u.username;
+          messages[index + 1]?.u?.username === messages[index]?.u?.username;
 
         return (
           <Box
             key={index}
             sx={{
-              width: "fit-content",
+              width: "100%",
               display: "flex",
               gap: "0.5rem",
               alignItems: "flex-end",
-              ...(isCurrentUser ? { marginLeft: "auto" } : null),
+              justifyContent: isCurrentUser ? "flex-end" : "flex-start",
+              "&:last-child": {
+                paddingBottom: "1rem",
+              },
             }}
           >
             <Box
@@ -67,16 +94,19 @@ const Messages = ({ sessionId, initialMessage: messages }: MessagesProps) => {
                 alignItems: "center",
               }}
             >
-              {/* <Image
-                src={isCurrentUser ? sessionImg : chatPartner.image}
-                alt={""}
-                width={20}
-                height={20}
-                style={{
-                  borderRadius: "50%",
-                  visibility: hasNextMessageFromSameUser ? "hidden" : "visible",
-                }}
-              /> */}
+              {!isCurrentUser && (
+                <Avatar
+                  alt="Avatar"
+                  size={30}
+                  src={avatarPartner}
+                  style={{
+                    borderRadius: "10px",
+                    visibility: hasNextMessageFromSameUser
+                      ? "hidden"
+                      : "visible",
+                  }}
+                />
+              )}
             </Box>
           </Box>
         );

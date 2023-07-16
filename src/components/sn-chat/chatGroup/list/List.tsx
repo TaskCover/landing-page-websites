@@ -1,12 +1,12 @@
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { useChat } from 'store/chat/selectors';
-import MediaList from './MediaList';
-import LinkList from './LinkList';
-import FileList from './FileList';
+import * as React from "react";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { useChat } from "store/chat/selectors";
+import MediaList from "./MediaList";
+import LinkList from "./LinkList";
+import FileList from "./FileList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -37,7 +37,7 @@ function CustomTabPanel(props: TabPanelProps) {
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -58,19 +58,22 @@ const List = () => {
       margin: "0 5px",
       padding: 0,
       minHeight: "1.75rem",
-      
-    }
-  }
+    },
+  };
 
   return (
-    <Box sx={{ width: '100%', marginTop: "10px" }}>
+    <Box sx={{ width: "100%", marginTop: "10px" }}>
       <Box>
-        <Tabs value={typeList} onChange={handleChange} variant="fullWidth" aria-label="basic tabs example"
+        <Tabs
+          value={typeList}
+          onChange={handleChange}
+          variant="fullWidth"
+          aria-label="basic tabs example"
           sx={{
             margin: "0 20px",
             "& .css-sn2yfa-MuiTabs-indicator": {
-              display: "none"
-            }
+              display: "none",
+            },
           }}
         >
           <Tab label="Media file" {...a11yProps(0)} sx={styleTab?.tab} />
@@ -89,6 +92,6 @@ const List = () => {
       </CustomTabPanel>
     </Box>
   );
-}
+};
 
 export default List;

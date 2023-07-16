@@ -20,46 +20,54 @@ import { STEP, TYPE_LIST } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 
 const ChatDetailGroup = (props) => {
-  const { typeList, dataTransfer, leftGroupStatus, onSetStep, onLeftGroup, onSetTypeList } = useChat();
+  const {
+    typeList,
+    dataTransfer,
+    leftGroupStatus,
+    onSetStep,
+    onLeftGroup,
+    onSetTypeList,
+  } = useChat();
   const commonT = useTranslations(NS_COMMON);
-  
+
   const init = {
     statusPopup: false,
     title: "",
     content: <></>,
     actionType: 0,
-  }
-  const [showPopup, setShowPopup] = useState(init)
+  };
+  const [showPopup, setShowPopup] = useState(init);
   const handlePopup = () => {
-    setShowPopup(init)
-  }
-  
+    setShowPopup(init);
+  };
+
   const handleConfirm = () => {
     console.log({ showPopup });
     if (showPopup.actionType === 1) {
       onLeftGroup({
         roomId: dataTransfer._id,
-      })
+      });
     } else {
       // remove
     }
     setShowPopup(init);
     onSetStep(STEP.CONVENTION);
-    }
+  };
   const _renderContentPopup = () => {
     return (
-      <Box sx={{
-        margin: "10px auto",
-      }}>
-        <Box sx={{
-          display: "flex",
+      <Box
+        sx={{
           margin: "10px auto",
-          justifyContent: "center",
         }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            margin: "10px auto",
+            justifyContent: "center",
+          }}
         >
-          <Box>
-            {showPopup?.content}
-          </Box>
+          <Box>{showPopup?.content}</Box>
         </Box>
         <Box
           sx={{
@@ -75,7 +83,9 @@ const ChatDetailGroup = (props) => {
             variant="primaryOutlined"
             size="small"
             sx={defaultSx.buttonCancel}
-            onClick={() => { setShowPopup(init) }}
+            onClick={() => {
+              setShowPopup(init);
+            }}
           >
             {commonT("form.cancel")}
           </Button>
@@ -90,37 +100,44 @@ const ChatDetailGroup = (props) => {
           </Button>
         </Box>
       </Box>
-    )
-  }
+    );
+  };
   return (
     <>
-      <Box sx={{
-        margin: "10px"
-      }}>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "center",
-        }}>
-          <Box sx={{
-            position: "relative"
-          }}>
+      <Box
+        sx={{
+          margin: "10px",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Box
+            sx={{
+              position: "relative",
+            }}
+          >
             <Avatar
               alt="Avatar"
               size={80}
               style={{
                 borderRadius: "10px",
-                margin: 'auto'
+                margin: "auto",
               }}
             />
-            <Box sx={{
-              position: "absolute",
-              bottom: 0,
-              right: "-22px",
-              boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
-              cursor: "pointer",
-              borderRadius: "50%",
-
-            }}>
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: 0,
+                right: "-22px",
+                boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
+                cursor: "pointer",
+                borderRadius: "50%",
+              }}
+            >
               <label htmlFor="upload-photo">
                 <input
                   style={{ display: "none" }}
@@ -128,7 +145,11 @@ const ChatDetailGroup = (props) => {
                   name="upload-photo"
                   type="file"
                 />
-                <Fab color="primary" size="small" component="span" aria-label="add"
+                <Fab
+                  color="primary"
+                  size="small"
+                  component="span"
+                  aria-label="add"
                   sx={{
                     background: "#fff",
                     padding: "10px",
@@ -143,104 +164,147 @@ const ChatDetailGroup = (props) => {
             </Box>
           </Box>
         </Box>
-        <Box sx={{
-          borderBottom: "1px solid #ECECF3",
-          paddingBottom: "10px",
-        }}>
+        <Box
+          sx={{
+            borderBottom: "1px solid #ECECF3",
+            paddingBottom: "10px",
+          }}
+        >
           <ItemDetail
-            text={`Group name: ${ dataTransfer?.name }`}
+            text={`Group name: ${dataTransfer?.name}`}
             icon={<GroupNameIcon />}
             iconClick={<EditGroupNameIcon />}
           />
           <ItemDetail
-            text={'Media'}
+            text={"Media"}
             icon={<MediaFileIcon />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
-              onSetStep(STEP.LIST)
-              onSetTypeList(TYPE_LIST.MEDIA_LIST)
+              onSetStep(STEP.LIST);
+              onSetTypeList(TYPE_LIST.MEDIA_LIST);
             }}
           />
           <ItemDetail
-            text={'Link'}
+            text={"Link"}
             icon={<LinkIcon />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
-              onSetStep(STEP.LIST)
-              onSetTypeList(TYPE_LIST.LINK_LIST)
+              onSetStep(STEP.LIST);
+              onSetTypeList(TYPE_LIST.LINK_LIST);
             }}
           />
 
           <ItemDetail
-            text={'File'}
+            text={"File"}
             icon={<FileGroupIcon />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
-              onSetStep(STEP.LIST)
-              onSetTypeList(TYPE_LIST.FILE_LIST)
+              onSetStep(STEP.LIST);
+              onSetTypeList(TYPE_LIST.FILE_LIST);
             }}
           />
         </Box>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          margin: "10px 0",
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            margin: "10px 0",
+          }}
+        >
           <Box>
-            <Typography variant="caption" color="#212121" fontSize={16} fontWeight={600}>
-              {`Member (${dataTransfer?.usersCount })`}
+            <Typography
+              variant="caption"
+              color="#212121"
+              fontSize={16}
+              fontWeight={600}
+            >
+              {`Member (${dataTransfer?.usersCount})`}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" color="#3699FF" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}>
+            <Typography
+              variant="caption"
+              color="#3699FF"
+              fontSize={14}
+              fontWeight={600}
+              sx={{ cursor: "pointer" }}
+            >
               See more
             </Typography>
           </Box>
         </Box>
-        <Box sx={{
-          height: "180px",
-          overflow: "auto"
-        }}>
+        <Box
+          sx={{
+            height: "180px",
+            overflow: "auto",
+          }}
+        >
           <ItemMemberDetail admin />
           <ItemMemberDetail />
           <ItemMemberDetail />
         </Box>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "center"
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <Box>
-            <Box sx={{ marginBottom: 1 }} >
-              <Typography variant="caption" color="#F64E60" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}
+            <Box sx={{ marginBottom: 1 }}>
+              <Typography
+                variant="caption"
+                color="#F64E60"
+                fontSize={14}
+                fontWeight={600}
+                sx={{ cursor: "pointer" }}
                 onClick={() => {
                   setShowPopup({
                     statusPopup: true,
                     title: "Delete Group",
                     content: <>Are you sure to delete group?</>,
                     actionType: 0,
-                  })
+                  });
                 }}
               >
                 {"Delete group"}
               </Typography>
             </Box>
             <Box sx={{ textAlign: "center" }}>
-              <Typography variant="caption" color="#F64E60" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}
+              <Typography
+                variant="caption"
+                color="#F64E60"
+                fontSize={14}
+                fontWeight={600}
+                sx={{ cursor: "pointer" }}
                 onClick={() => {
                   setShowPopup({
                     statusPopup: true,
                     actionType: 1,
                     title: "Leave Group",
-                    content:
-                      <Box sx={{
-                        textAlign: "center"
-                      }}>
-                        <Typography>You won&apos;t be able to see the messages in this conversation</Typography>
-                        <Typography>again after you leave the group. Please <span style={{ color: "var(--brand-primary, #3699FF)" }} >select a new admin</span></Typography>
-                        <Typography>or the system will choose automatically</Typography>
+                    content: (
+                      <Box
+                        sx={{
+                          textAlign: "center",
+                        }}
+                      >
+                        <Typography>
+                          You won&apos;t be able to see the messages in this
+                          conversation
+                        </Typography>
+                        <Typography>
+                          again after you leave the group. Please{" "}
+                          <span
+                            style={{ color: "var(--brand-primary, #3699FF)" }}
+                          >
+                            select a new admin
+                          </span>
+                        </Typography>
+                        <Typography>
+                          or the system will choose automatically
+                        </Typography>
                       </Box>
-                    ,
-                  })
+                    ),
+                  });
                 }}
               >
                 {"Leave group"}
@@ -282,4 +346,3 @@ const defaultSx = {
 };
 
 export default ChatDetailGroup;
-

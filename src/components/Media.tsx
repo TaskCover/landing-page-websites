@@ -7,7 +7,7 @@ type MediaProps = Omit<ImageProps, "src" | "alt"> & {
   alt?: string;
   size: number;
   className?: string;
-  borderRadius?: string
+  borderRadius?: string;
 };
 
 const Media = (props: MediaProps) => {
@@ -24,7 +24,7 @@ const Media = (props: MediaProps) => {
         minWidth: size,
         maxWidth: size,
         objectFit: "cover",
-        borderRadius: borderRadius
+        borderRadius: borderRadius,
       }}
       {...rest}
     />

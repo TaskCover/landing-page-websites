@@ -15,17 +15,15 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
   const { userOnlinePage } = useChat();
 
   const { lastMessage, name, usersCount, usernames, avatar, t } = chatInfo;
-  const isGroup = useMemo(() => t !== 'd', [t]);
+  const isGroup = useMemo(() => t !== "d", [t]);
   const isCurrentAcc = sessionId === lastMessage?.u?.username;
   const nameLastMessage = isCurrentAcc ? "You: " : "";
 
-  const stateOnPage = userOnlinePage?.find(
-    (item) => item.username === usernames?.[1],
-  )?.status;
-
-  const lastMessageRender = useMemo(() => {
-    return [nameLastMessage, lastMessage?.msg].join("").trim();
-  }, [lastMessage?.msg, nameLastMessage]);
+  const accountPartner = useMemo(() => {
+    const partnerUsername =
+      sessionId === usernames[0] ? usernames[1] : usernames[0];
+    return userOnlinePage?.find((item) => item.username === partnerUsername);
+  }, [sessionId, userOnlinePage, usernames]);
 
   const renderTimeDiff = useMemo(() => {
     const timeDiff = getDaysDiff(new Date(), new Date(lastMessage?.ts));
@@ -98,58 +96,61 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
             border: "2px solid #ffffff",
             backgroundColor: "#55C000",
             borderRadius: "50%",
-            visibility: stateOnPage === "online" ? "visible" : "hidden",
+            visibility:
+              accountPartner?.status === "online" ? "visible" : "hidden",
           },
         }}
       >
-        {
-          isGroup ? (
-            <ImageList sx={{ width: 56, height: 56, margin: 0 }} cols={2} rowHeight={164}>
-              <Avatar
-                alt="Avatar"
-                size={25}
-                style={{
+        {isGroup ? (
+          <ImageList
+            sx={{ width: 56, height: 56, margin: 0 }}
+            cols={2}
+            rowHeight={164}
+          >
+            <Avatar
+              alt="Avatar"
+              size={25}
+              style={{
+                borderRadius: "5px",
+              }}
+            />
+            <Avatar
+              alt="Avatar"
+              size={25}
+              style={{
+                borderRadius: "5px",
+              }}
+            />
+            <Avatar
+              alt="Avatar"
+              size={25}
+              style={{
+                borderRadius: "5px",
+              }}
+            />
+            {usersCount - 3 > 0 ? (
+              <Box
+                sx={{
+                  textAlign: "center",
                   borderRadius: "5px",
+                  backgroundColor: "#3078F1",
+                  color: "white",
                 }}
-              />
-              <Avatar
-                alt="Avatar"
-                size={25}
-                style={{
-                  borderRadius: "5px",
-                }}
-              />
-              <Avatar
-                alt="Avatar"
-                size={25}
-                style={{
-                  borderRadius: "5px",
-                }}
-              />
-              {usersCount - 3 > 0 ? (
-                <Box
-                  sx={{
-                    textAlign: "center",
-                    borderRadius: "5px",
-                    backgroundColor: "#3078F1",
-                    color: "white",
-                  }}
-                >
-                  <Typography variant="caption">+ {usersCount - 3}</Typography>
-                </Box>
-              ) : null}
-            </ImageList>
-          ): (
-              <Avatar
-                alt="Avatar"
-                size={56}
-                src={avatar ?? undefined}
-                style={{
-                  borderRadius: "10px",
-                }}
-              />
-          )
-        }
+              >
+                <Typography variant="caption">+ {usersCount - 3}</Typography>
+              </Box>
+            ) : null}
+          </ImageList>
+        ) : (
+          <Avatar
+            alt="Avatar"
+            size={56}
+            src={avatar ?? undefined}
+            style={{
+              borderRadius: "10px",
+            }}
+          />
+        )}
       </Box>
 
       <Box
@@ -159,10 +160,10 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
         }}
       >
         <Typography variant="inherit" fontWeight="bold">
-          {name ?? usernames[1]}
+          {name}
         </Typography>
         <Typography variant="caption" color="#999999">
-          {lastMessageRender}
+          {[isCurrentAcc ? "You: " : "", lastMessage?.msg].join("").trim()}
         </Typography>
       </Box>
       <Typography variant="caption" color="#999999" ml="auto">

@@ -42,9 +42,17 @@ const AddGroup = () => {
 
   const { user } = useAuth();
 
-  const { prevStep, createGroupStatus, newGroupData,
-    convention, dataTransfer, onGetAllConvention,
-    onSetStep, onCreateDirectMessageGroup, onAddMembers2Group } = useChat();
+  const {
+    prevStep,
+    createGroupStatus,
+    newGroupData,
+    convention,
+    dataTransfer,
+    onGetAllConvention,
+    onSetStep,
+    onCreateDirectMessageGroup,
+    onAddMembers2Group,
+  } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
 
@@ -52,17 +60,17 @@ const AddGroup = () => {
     onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 30 });
     onGetAllConvention({
       type: "a",
-      text: '',
+      text: "",
       offset: 0,
       count: 1000,
-    })
+    });
   }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
     if (createGroupStatus === DataStatus.SUCCEEDED) {
       onSetStep(STEP.CHAT_ONE);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createGroupStatus]);
 
   const handleKeyDown = (event) => {
@@ -93,23 +101,26 @@ const AddGroup = () => {
     if (dataTransfer?.isNew) {
       onCreateDirectMessageGroup({
         groupName: (() => {
-          return Object
-            .keys(employeeNameSelected)
-            .filter((item) => employeeNameSelected[item] === true)
-            ?.join('-')
-            .slice(0, 10) + '...'
+          return (
+            Object.keys(employeeNameSelected)
+              .filter((item) => employeeNameSelected[item] === true)
+              ?.join("-")
+              .slice(0, 10) + "..."
+          );
         })(),
-        members: Object.keys(employeeSelected).filter((item) => employeeSelected[item] === true),
-        type: 'd'
+        members: Object.keys(employeeSelected).filter(
+          (item) => employeeSelected[item] === true,
+        ),
+        type: "d",
       });
     } else {
       onAddMembers2Group({
         roomId: dataTransfer?._id,
-        userId_to_add: Object.keys(employeeNameSelected).filter((item) => employeeNameSelected[item] === true)
-
-      })
+        userId_to_add: Object.keys(employeeNameSelected).filter(
+          (item) => employeeNameSelected[item] === true,
+        ),
+      });
     }
-    
   };
 
   return (
@@ -164,7 +175,11 @@ const AddGroup = () => {
           }}
         />
       </Box>
-      <Box overflow="auto" maxHeight="calc(550px - 85px - 15px)" minHeight="calc(550px - 85px - 15px)">
+      <Box
+        overflow="auto"
+        maxHeight="calc(550px - 85px - 15px)"
+        minHeight="calc(550px - 85px - 15px)"
+      >
         {isFetching || error ? (
           Array.from({ length: 5 }, (_, i) => (
             <Box
@@ -217,7 +232,9 @@ const AddGroup = () => {
           variant="primaryOutlined"
           size="small"
           sx={defaultSx.button}
-          onClick={()=>{onSetStep(prevStep)}}
+          onClick={() => {
+            onSetStep(prevStep);
+          }}
         >
           {commonT("form.cancel")}
         </Button>

@@ -1,12 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { addMembersToDirectMessageGroup, createDirectMessageGroup, getAllConvention, getLatestMessages, leftDirectMessageGroup, removeMemberDirectMessageGroup } from "./actions";
+import {
+  addMembersToDirectMessageGroup,
+  createDirectMessageGroup,
+  getAllConvention,
+  getLatestMessages,
+  leftDirectMessageGroup,
+  removeMemberDirectMessageGroup,
+} from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
-import { AddMember2GroupRequest, ChatConventionItemRequest, CreateGroupRequest, LastMessagesRequest, LeftGroupRequest, RemoveGroupMemberRequest, STEP, TYPE_LIST } from "./type";
+import {
+  AddMember2GroupRequest,
+  ChatConventionItemRequest,
+  CreateGroupRequest,
+  LastMessagesRequest,
+  LeftGroupRequest,
+  RemoveGroupMemberRequest,
+  STEP,
+  TYPE_LIST,
+} from "./type";
 import { useAuth } from "store/app/selectors";
-import { setRoomId, setStep, setTypeList } from "./reducer";
+import {
+  setRoomId,
+  setStep,
+  setMessage,
+  setUserPartner,
+  setTypeList,
+  clearConversation,
+  clearMessageList,
+} from "./reducer";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
@@ -17,10 +41,12 @@ export const useChat = () => {
     messageInfo,
     userOnlinePage,
     roomId,
+    userPartner,
     conversationPaging,
     status,
     currStep,
     prevStep,
+    backFallStep,
     createGroupStatus,
     newGroupData,
     addMembers2GroupStatus,
@@ -100,7 +126,7 @@ export const useChat = () => {
 
   const onCreateDirectMessageGroup = useCallback(
     async ({
-      type = 'd',
+      type = "d",
       ...rest
     }: Omit<CreateGroupRequest, "authToken" | "userId">) => {
       const authToken = user ? user["authToken"] : "";
@@ -117,7 +143,6 @@ export const useChat = () => {
     [dispatch, user],
   );
 
-
   const onAddMembers2Group = useCallback(
     async (params: Omit<AddMember2GroupRequest, "authToken" | "userId">) => {
       const authToken = user ? user["authToken"] : "";
@@ -126,7 +151,7 @@ export const useChat = () => {
         addMembersToDirectMessageGroup({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -141,7 +166,7 @@ export const useChat = () => {
         leftDirectMessageGroup({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -156,12 +181,28 @@ export const useChat = () => {
         removeMemberDirectMessageGroup({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
     [dispatch, user],
   );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onSetMessage = (message: any) => {
+    dispatch(setMessage(message));
+  };
+
+  const onSetUserPartner = (username: string | null) => {
+    dispatch(setUserPartner(username));
+  };
+
+  const onClearConversation = () => {
+    dispatch(clearConversation());
+  };
+
+  const onClearMessageList = () => {
+    dispatch(clearMessageList());
+  };
 
   return {
     convention,
@@ -176,8 +217,10 @@ export const useChat = () => {
     totalItems,
     totalPages,
     roomId,
+    userPartner,
     currStep,
     prevStep,
+    backFallStep,
     createGroupStatus,
     newGroupData,
     addMembers2GroupStatus,
@@ -194,5 +237,9 @@ export const useChat = () => {
     onLeftGroup,
     onRemoveGroupMember,
     onSetTypeList,
+    onSetUserPartner,
+    onSetMessage,
+    onClearConversation,
+    onClearMessageList,
   };
 };
