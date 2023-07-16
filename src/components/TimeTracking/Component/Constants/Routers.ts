@@ -1,19 +1,19 @@
-const ADMIN_ROUTER_ROOT = '/admin';
-const USER_ROUTER_ROOT = '/';
+const ADMIN_ROUTER_ROOT = "/admin";
+const USER_ROUTER_ROOT = "/";
 
 const BASIC_ROUTERS = {
-  FORBIDEN: '/forbiden',
-  NOT_FOUND: '*',
-  AUTH: '/auth',
-  REGISTER: 'auth/register',
-  CHANGE_PASSWORD: '/auth/change-password',
-  FORGOT_PASSWORD: '/auth/forgot-password',
-  PROFILE: '/profile',
-  VERIFY_ACCOUNT: '/verify-account',
-  VERIFY_ACCOUNT_SUCCESS: '/verify-account-success',
-  VERIFY_ACCOUNT_FAIL: '/verify-account-failure',
-  UPGRADE_ACCOUNT: '/upgrade-account',
-  RESET_PASSWORD: '/reset-password/:token',
+  FORBIDEN: "/forbiden",
+  NOT_FOUND: "*",
+  AUTH: "/auth",
+  REGISTER: "auth/register",
+  CHANGE_PASSWORD: "/auth/change-password",
+  FORGOT_PASSWORD: "/auth/forgot-password",
+  PROFILE: "/profile",
+  VERIFY_ACCOUNT: "/verify-account",
+  VERIFY_ACCOUNT_SUCCESS: "/verify-account-success",
+  VERIFY_ACCOUNT_FAIL: "/verify-account-failure",
+  UPGRADE_ACCOUNT: "/upgrade-account",
+  RESET_PASSWORD: "/reset-password/:token",
 };
 
 const ADMIN_ROUTERS = {

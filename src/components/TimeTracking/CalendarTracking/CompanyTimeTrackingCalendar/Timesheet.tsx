@@ -47,7 +47,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const weekdays = ["SUN", "MON", "TUE", "WEB", "THU", "FRI", "SAT"];
 
 const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
-  const isGetLoading: boolean = false;
+  const isGetLoading = false;
   const [totalEachRows, setTotalEachRows] = useState<{ [key: string]: number }>(
     {},
   );
