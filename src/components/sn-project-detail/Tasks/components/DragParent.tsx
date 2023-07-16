@@ -96,6 +96,8 @@ const DragParent = (props: DragParentProps) => {
                   pl={{ xs: 1, md: 2 }}
                   width="100%"
                   justifyContent="space-between"
+                  borderBottom={{ md: "1px solid" }}
+                  borderColor={{ md: "grey.100" }}
                 >
                   <Stack direction="row" alignItems="center" overflow="hidden">
                     <Checkbox checked={checked} onChange={onChange} />

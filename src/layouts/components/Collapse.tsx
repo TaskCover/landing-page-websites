@@ -60,7 +60,7 @@ const Collapse = (props: CollapseProps) => {
     >
       <AccordionSummary
         sx={{
-          px: isShowLarge || isSmSmaller ? 2.5 : 1,
+          px: isShowLarge || isSmSmaller ? { xs: 1.5, xl: 2.5 } : 1,
           py: isShowLarge || isSmSmaller ? 1.5 : 1,
           borderRadius: 1,
           backgroundColor: {
@@ -107,7 +107,7 @@ const Collapse = (props: CollapseProps) => {
           {(isShowLarge || isSmSmaller) && (
             <Text
               color="grey.400"
-              variant={{ xs: "body2", sm: "body1" }}
+              variant={{ xs: "body2", xl: "body1" }}
               noWrap
               textTransform="capitalize"
             >

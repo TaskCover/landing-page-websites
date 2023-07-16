@@ -21,7 +21,7 @@ const Comments = (props: CommentsProps) => {
 
   return (
     <Stack spacing={4}>
-      <Text color="text.primary" variant="h6" textTransform="uppercase">
+      <Text color="grey.400" variant="h6" textTransform="uppercase">
         {projectT("taskDetail.commentList")}
       </Text>
       {comments.map((comment) => (

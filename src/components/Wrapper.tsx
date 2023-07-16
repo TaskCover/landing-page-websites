@@ -10,7 +10,7 @@ const Wrapper = (
 
   return (
     <Stack
-      px={{ xs: 1, sm: 3 }}
+      px={{ xs: 1, sm: 2, xl: 3 }}
       pb={{ xs: 1, sm: 3 }}
       // pt={{ xs: 1, sm: 3 }}
       flex={1}

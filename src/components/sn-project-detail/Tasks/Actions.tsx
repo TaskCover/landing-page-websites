@@ -37,6 +37,7 @@ import { TaskListData } from "store/project/actions";
 import { useHeaderConfig } from "store/app/selectors";
 import Link from "components/Link";
 import ChevronIcon from "icons/ChevronIcon";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const Actions = () => {
   const {
@@ -47,6 +48,7 @@ const Actions = () => {
   } = useTasksOfProject();
   const { onGetOptions } = useMemberOptions();
   const { title, prevPath } = useHeaderConfig();
+  const { isMdSmaller } = useBreakpoint();
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
@@ -120,8 +122,8 @@ const Actions = () => {
         borderBottom="1px solid"
         borderColor="grey.100"
         spacing={{ xs: 1, md: 3 }}
-        px={{ xs: 1, md: 3 }}
-        py={1.5}
+        px={{ xs: 1, md: 2, xl: 3 }}
+        py={{ xs: 1, xl: 1.5 }}
       >
         {/* <Button
           onClick={onShow}
@@ -170,7 +172,7 @@ const Actions = () => {
         <Stack
           direction="row"
           alignItems="center"
-          spacing={{ xs: 1, md: 3 }}
+          spacing={{ xs: 1, md: 1.5, xl: 3 }}
           px={{ sm: 2 }}
           width={{ xs: "100%", md: "fit-content" }}
           justifyContent="flex-end"
@@ -194,7 +196,10 @@ const Actions = () => {
                 name="tasks.name"
                 onChange={onChangeQueries}
                 value={queries?.["tasks.name"]}
-                sx={{ width: 220, minWidth: 220 }}
+                sx={{
+                  width: { xs: 180, xl: 220 },
+                  minWidth: { xs: 180, xl: 220 },
+                }}
               />
               <AssignerFilter
                 onChange={onChangeQueries}
@@ -236,11 +241,12 @@ const Actions = () => {
               hasAvatar
               sx={{ display: { md: "none" } }}
             />
+
             <Button size="small" onClick={onSearch} variant="secondary">
               {commonT("search")}
             </Button>
-            <Refresh onClick={onRefresh} />
-            {!!Object.keys(queries).length && <Clear onClick={onClear} />}
+            {/* <Refresh onClick={onRefresh} />
+            {!!Object.keys(queries).length && <Clear onClick={onClear} />} */}
           </Stack>
         </Stack>
       </Stack>

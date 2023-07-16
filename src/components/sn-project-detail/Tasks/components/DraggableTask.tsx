@@ -59,10 +59,10 @@ const DraggableTask = (props: DraggableTaskProps) => {
               direction="row"
               alignItems="center"
               height={48}
-              pl={{ xs: 1, md: 2 }}
+              pl={{ xs: 1, md: 5 }}
               spacing={{ xs: 0.5, sm: 1 }}
-              borderBottom="1px solid"
-              borderColor="grey.100"
+              borderBottom={{ md: "1px solid" }}
+              borderColor={{ md: "grey.100" }}
             >
               <Checkbox checked={checked} onChange={onChange} />
               <IconButton noPadding {...provided.dragHandleProps}>

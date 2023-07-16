@@ -108,10 +108,7 @@ const ItemList = () => {
     [dataIds?.taskId, dataIds?.taskListId],
   );
 
-  const baseTop = useMemo(
-    () => (selectedList.length ? 124 : 60),
-    [selectedList.length],
-  );
+  const baseTop = useMemo(() => 116, []);
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -551,8 +548,8 @@ const ItemList = () => {
   const onLayout = useCallback((refsData) => {
     const newSx = refsData?.reduce(
       (out, widthValue, index) => {
-        const widthTask = index === 0 ? widthValue - 100 : widthValue;
-        const widthSubTask = index === 0 ? widthValue - 124 : widthValue;
+        const widthTask = index === 0 ? widthValue - 128 : widthValue;
+        const widthSubTask = index === 0 ? widthValue - 152 : widthValue;
         out.task[`& > :nth-of-type(${index + 1})`] = {
           minWidth: widthTask,
           width: widthTask,
@@ -637,12 +634,7 @@ const ItemList = () => {
 
   return (
     <Stack flex={1} pb={3}>
-      {!!selectedList.length && (
-        <ActionsSelected
-          selectedList={selectedList}
-          onReset={onResetSelected}
-        />
-      )}
+      <ActionsSelected selectedList={selectedList} onReset={onResetSelected} />
       <TableLayout
         onLayout={onLayout}
         headerList={headerList}
@@ -651,7 +643,7 @@ const ItemList = () => {
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
         position="sticky"
-        top={{ xs: baseTop + 8, sm: baseTop + 24 }}
+        top={{ xs: baseTop + 8, xl: baseTop + 24 }}
         zIndex={1}
       >
         <></>
@@ -716,12 +708,12 @@ const ItemList = () => {
                         direction={{ md: "row" }}
                         alignItems={{ xs: "flex-start", md: "center" }}
                         minHeight={48}
-                        maxHeight={48}
+                        maxHeight={{ md: 48 }}
                         width="100%"
                         sx={sx.task}
                         overflow="hidden"
-                        borderBottom="1px solid"
-                        borderColor="grey.100"
+                        borderBottom={{ md: "1px solid" }}
+                        borderColor={{ md: "grey.100" }}
                       >
                         <Content
                           color="text.primary"
@@ -738,7 +730,7 @@ const ItemList = () => {
                         </Assigner>
                         <Content>{formatDate(task?.start_date)}</Content>
                         <Content>{formatDate(task?.end_date)}</Content>
-                        <Content>
+                        <Content noWrap={false} whiteSpace="nowrap">
                           <TextStatus
                             color={COLOR_STATUS[task.status]}
                             text={TASK_TEXT_STATUS[task.status]}
@@ -766,9 +758,9 @@ const ItemList = () => {
                                       alignItems="center"
                                       minHeight={48}
                                       overflow="hidden"
-                                      borderBottom="1px solid"
-                                      borderColor="grey.100"
-                                      maxHeight={48}
+                                      borderBottom={{ md: "1px solid" }}
+                                      borderColor={{ md: "grey.100" }}
+                                      maxHeight={{ md: 48 }}
                                     >
                                       <Checkbox
                                         checked={isChecked}
@@ -813,7 +805,10 @@ const ItemList = () => {
                                         <Content>
                                           {formatDate(subTask?.end_date)}
                                         </Content>
-                                        <Content>
+                                        <Content
+                                          noWrap={false}
+                                          whiteSpace="nowrap"
+                                        >
                                           <TextStatus
                                             color={COLOR_STATUS[subTask.status]}
                                             text={
@@ -911,7 +906,7 @@ const Content = (props: TextProps) => {
       onClick={onClick}
       variant="body2"
       color="grey.400"
-      textAlign="center"
+      textAlign={{ md: "center" }}
       overflow="hidden"
       sx={{ ...additionalSx, ...sx }}
       width="100%"
@@ -947,6 +942,9 @@ const Description = (props: BoxProps) => {
         width: "100%",
         whiteSpace: "nowrap",
         maxHeight: 34,
+        "& > p": {
+          m: 0,
+        },
         "& *": {
           overflow: "hidden",
           textOverflow: "ellipsis",

@@ -469,7 +469,7 @@ const MoreList = (props: MoreListProps) => {
 
   return (
     <>
-      <IconButton noPadding onClick={onOpen}>
+      <IconButton disabled={!selectedList.length} noPadding onClick={onOpen}>
         <MoreDotIcon fontSize="medium" sx={{ color: "grey.300" }} />
       </IconButton>
       <Popover
