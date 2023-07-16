@@ -83,7 +83,7 @@ const Sidebar = (props: StackProps) => {
           </IconButton>
         )}
       </Stack>
-      {!user?.company && (
+      {!user?.company && !user?.roles?.includes(Permission.SA) && (
         <Link
           href={UPGRADE_ACCOUNT_PATH}
           underline="none"
