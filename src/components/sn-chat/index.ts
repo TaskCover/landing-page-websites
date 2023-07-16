@@ -1,1 +1,1 @@
-export { default as ChatListTemp } from "./components/chat/ChatListTemp";
+export { default as ChatListTemp } from "./ChatListTemp";
