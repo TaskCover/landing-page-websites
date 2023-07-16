@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { styled } from "@mui/material/styles";
 import _ from "lodash";
 import { useSelector } from "react-redux";
@@ -412,4 +412,4 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
   return renderMain();
 };
 
-export default TimeSheet;
+export default memo(TimeSheet);

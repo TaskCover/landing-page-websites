@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import _ from "lodash";
 import moment from "moment";
@@ -122,8 +122,8 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const [currentDate, setCurrentDate] = React.useState<string>(
     dayjs().toString(),
   );
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-    new Date(),
+  const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs | Date>(
+    dayjs(),
   );
 
   const [dateRange, setDateRange] = React.useState<any[]>([]);
@@ -236,7 +236,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           .format("YYYY-MM-DD");
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
-        setSelectedDate(null);
+        setSelectedDate(dayjs(filters?.start_date).subtract(7, "day"));
       }
       if (value === "next") {
         const startDate = dayjs(filters?.end_date)
@@ -247,7 +247,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           .format("YYYY-MM-DD");
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
-        setSelectedDate(null);
+        setSelectedDate(dayjs(filters?.end_date).add(1, "day"));
       }
     }
   };
@@ -277,7 +277,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           </Stack>
           {activeTab === "timeSheet" && (
             <CustomizedInputBase
-              value={ filters.search_key }
+              value={filters.search_key}
               placeholder="Search Employee"
               onChange={(event) => {
                 const searchKey = event.target.value;
@@ -499,65 +499,101 @@ const TrackingCalendar: React.FC<IProps> = () => {
     );
   };
 
-  const _renderTable = () => {
-    if (activeTab !== "table") return;
+  const dataDayTable = useMemo(() => {
+    if (!_.isEmpty(events)) {
+      return events?.filter((item) => {
+        return (
+          dayjs(item?.extendedProps?.day).format("YYYY-MM-DD") ===
+          dayjs(selectedDate).format("YYYY-MM-DD")
+        );
+      });
+    }
+  }, [events, selectedDate]);
+
+  const _renderTimeSheetContent = () => {
+    if (activeTab !== "timeSheet") return;
+    return <TimeSheet data={company} filters={filters} dateRange={dateRange} />;
+  };
+
+  const _renderFooter = () => {
     return (
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <TableContainer sx={{ borderLeft: "1px solid rgb(224, 224, 224)" }}>
-            <Table
-              sx={{
-                borderCollapse: "separate",
-                borderSpacing: "0 8px",
-                position: "relative",
-                bottom: "-7px",
-              }}
-            >
-              <TableHead>
-                <StyledTableRow>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.employee")}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.project")}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.position")}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.start_time")}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.time")}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.note")}
-                  </StyledTableCell>
-                </StyledTableRow>
-              </TableHead>
-              <TableBody>
-                {!_.isEmpty(events) ? (
-                  events
-                    ?.filter(
-                      (item) =>
-                        dayjs(item?.extendedProps?.day).format("YYYY-MM-DD") ===
-                        dayjs(selectedDate).format("YYYY-MM-DD"),
-                    )
-                    ?.map((event, index) => {
-                      // console.log(
-                      //   "c",
-                      //   selectedDate,
-                      //   !dayjs(dayjs(selectedDate).format("YYYY-MM-DD")).isSame(
-                      //     dayjs(event?.start).format("YYYY-MM-DD"),
-                      //   ),
-                      // );
-                      // if (
-                      //   selectedDate &&
-                      //   !dayjs(dayjs(selectedDate).format("YYYY-MM-DD")).isSame(
-                      //     dayjs(event?.start).format("YYYY-MM-DD"),
-                      //   )
-                      // )
-                      //   return <></>;
+      <Stack
+        direction="column"
+        alignItems="center"
+        sx={{ marginTop: "16px", color: isDarkMode ? "#fff" : "#212121" }}
+      >
+        <Typography sx={{ fontSize: "16px", fontWeight: 600 }}>
+          {timeT("header.tab.weekly_total")}
+        </Typography>
+        <Stack direction="row">
+          <Typography
+            sx={{
+              fontSize: "16px",
+              fontWeight: 400,
+
+              marginRight: "16px",
+            }}
+          >
+            {timeT("header.tab.workTime")}: {totalTime.work}h
+          </Typography>
+          <Typography sx={{ fontSize: "16px", fontWeight: 400 }}>
+            {timeT("header.tab.breakTime")}: {totalTime.break}h
+          </Typography>
+        </Stack>
+      </Stack>
+    );
+  };
+
+  const _redderCreatePopup = () => (
+    <TimeCreate
+      open={isOpenCreatePopup}
+      onClose={() => setIsOpenCreatePopup(false)}
+      filters={filters}
+      currentScreen="myTime"
+    />
+  );
+
+  return (
+    <Stack direction="column" sx={{ position: "relative" }}>
+      {_renderHeader()}
+
+      {activeTab === "table" && (
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <TableContainer sx={{ borderLeft: "1px solid rgb(224, 224, 224)" }}>
+              <Table
+                sx={{
+                  borderCollapse: "separate",
+                  borderSpacing: "0 8px",
+                  position: "relative",
+                  bottom: "-7px",
+                }}
+              >
+                <TableHead>
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      {timeT("company_time.table_tab.employee")}
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      {timeT("company_time.table_tab.project")}
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      {timeT("company_time.table_tab.position")}
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      {timeT("company_time.table_tab.start_time")}
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      {timeT("company_time.table_tab.time")}
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      {timeT("company_time.table_tab.note")}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                </TableHead>
+                <TableBody>
+                  {!_.isEmpty(dataDayTable) ? (
+                    dataDayTable?.map((event, index) => {
                       const rowStyles = {
                         borderLeft: `4px solid rgba(54, 153, 255, 1)`,
                         backgroundColor: "primary.light",
@@ -611,103 +647,53 @@ const TrackingCalendar: React.FC<IProps> = () => {
                         </StyledTableRow>
                       );
                     })
-                ) : (
-                  <StyledTableRow>
-                    <Typography
-                      sx={{
-                        fontSize: "14px",
-                        lineHeight: "20px",
-                        fontWeight: 400,
-                        p: 1,
-                      }}
-                    >
-                      No data were found
-                    </Typography>
-                  </StyledTableRow>
-                )}
+                  ) : (
+                    <StyledTableRow>
+                      <Typography
+                        sx={{
+                          fontSize: "14px",
+                          lineHeight: "20px",
+                          fontWeight: 400,
+                          p: 1,
+                        }}
+                      >
+                        No data were found
+                      </Typography>
+                    </StyledTableRow>
+                  )}
 
-                {isGetLoading && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      width: 1,
-                      height: 1,
-                      top: 0,
-                      left: 0,
-                      backgroundColor: " rgba(0, 0, 0, 0.1)",
-
-                      webkitTapHighlightColor: "transparent",
-                    }}
-                  >
-                    <Stack
+                  {isGetLoading && (
+                    <Box
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        height: 1,
+                        position: "absolute",
                         width: 1,
+                        height: 1,
+                        top: 0,
+                        left: 0,
+                        backgroundColor: " rgba(0, 0, 0, 0.1)",
+
+                        webkitTapHighlightColor: "transparent",
                       }}
                     >
-                      <CircularProgress />
-                    </Stack>
-                  </Box>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                      <Stack
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          height: 1,
+                          width: 1,
+                        }}
+                      >
+                        <CircularProgress />
+                      </Stack>
+                    </Box>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
         </Grid>
-      </Grid>
-    );
-  };
-
-  const _renderTimeSheetContent = () => {
-    if (activeTab !== "timeSheet") return;
-    return <TimeSheet data={company} filters={filters} dateRange={dateRange} />;
-  };
-
-  const _renderFooter = () => {
-    return (
-      <Stack
-        direction="column"
-        alignItems="center"
-        sx={{ marginTop: "16px", color: isDarkMode ? "#fff" : "#212121" }}
-      >
-        <Typography sx={{ fontSize: "16px", fontWeight: 600 }}>
-          {timeT("header.tab.weekly_total")}
-        </Typography>
-        <Stack direction="row">
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontWeight: 400,
-
-              marginRight: "16px",
-            }}
-          >
-            {timeT("header.tab.workTime")}: {totalTime.work}h
-          </Typography>
-          <Typography sx={{ fontSize: "16px", fontWeight: 400 }}>
-            {timeT("header.tab.breakTime")}: {totalTime.break}h
-          </Typography>
-        </Stack>
-      </Stack>
-    );
-  };
-
-  const _redderCreatePopup = () => (
-    <TimeCreate
-      open={isOpenCreatePopup}
-      onClose={() => setIsOpenCreatePopup(false)}
-      filters={filters}
-      currentScreen="myTime"
-    />
-  );
-
-  return (
-    <Stack direction="column" sx={{ position: "relative" }}>
-      {_renderHeader()}
-
-      {_renderTable()}
+      )}
       {_renderTimeSheetContent()}
       {_renderFooter()}
       {_redderCreatePopup()}

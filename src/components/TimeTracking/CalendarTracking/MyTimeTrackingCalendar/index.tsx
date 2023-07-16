@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import _ from "lodash";
 import { styled } from "@mui/system";
 import {
@@ -17,7 +17,6 @@ import {
   TableRow,
   CircularProgress,
   Box,
-  Tooltip,
 } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -53,8 +52,19 @@ import Popper from "@mui/material/Popper";
 import PopupState, { bindToggle, bindPopper } from "material-ui-popup-state";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
-
 import { getSameWorker } from "store/timeTracking/actions";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+
+const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "white",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    border: "1px solid #dadde9",
+  },
+}));
 
 const eventStyles = {
   working_time: {
@@ -168,6 +178,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const [activeTab, setActiveTab] = React.useState<string>("timeSheet");
   const [events, setEvents] = React.useState<any[]>([]);
 
+  const [sameTime, setSameTime] = useState({});
   const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs | Date>(
     dayjs(),
   );
@@ -177,38 +188,50 @@ const TrackingCalendar: React.FC<IProps> = () => {
     break: 0,
   });
 
+  useEffect(() => {
+    _.forEach(myTime, (timesheet) => {
+      const idEvent = timesheet?.id;
+      getSameWorker({ id: idEvent }).then(async (res) => {
+        const cloneObject = _.cloneDeep(sameTime);
+
+        cloneObject[idEvent] = res || [];
+        setSameTime((state) => ({ ...state, ...cloneObject }));
+      });
+    });
+  }, [myTime]);
+
   React.useEffect(() => {
     if (!_.isEmpty(myTime)) {
       const result: any[] = [];
       let totalWorkTime = 0;
       let totalBreakTime = 0;
       _.forEach(myTime, (timesheet) => {
-        if (!_.isEmpty(timesheet)) {
-          const newEvent = {
-            title: timesheet?.project?.name,
-            start: timesheet?.start_time,
-            end: timesheet?.end_time,
-            extendedProps: {
-              id: timesheet?.id,
-              date: timesheet?.day,
-              start_time: moment(timesheet?.start_time).format("hh:mm A"),
-              project: timesheet?.project,
-              avatar: userData?.avatar?.link,
-              name: userData?.fullname,
-              position: timesheet?.position,
-              hour: timesheet?.duration,
-              typeDefault: timesheet?.type,
-              type:
-                timesheet?.type === "Work time" ? "working_time" : "break_time",
-              note: timesheet?.note,
-            },
-          };
-          if (timesheet.type === "Work time")
-            totalWorkTime += timesheet.duration;
-          else totalBreakTime += timesheet.duration;
-          result.push(newEvent);
-        }
+        const newEvent = {
+          title: timesheet?.project?.name,
+          start: timesheet?.start_time,
+          end: timesheet?.end_time,
+          extendedProps: {
+            id: timesheet?.id,
+            date: timesheet?.day,
+            start_time: moment(timesheet?.start_time).format("hh:mm A"),
+            project: timesheet?.project,
+            avatar: userData?.avatar?.link,
+            day: timesheet?.day,
+            name: userData?.fullname,
+            position: timesheet?.position,
+            hour: timesheet?.duration,
+            typeDefault: timesheet?.type,
+            type:
+              timesheet?.type === "Work time" ? "working_time" : "break_time",
+            note: timesheet?.note,
+          },
+        };
+        if (timesheet.type === "Work time") totalWorkTime += timesheet.duration;
+        else totalBreakTime += timesheet.duration;
+
+        result.push(newEvent);
       });
+
       setTotalTime({
         work: totalWorkTime,
         break: totalBreakTime,
@@ -283,6 +306,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
         setSelectedDate(dayjs(filters?.start_date).subtract(7, "day"));
+
         if (calendarApi) {
           calendarApi.prev();
           calendarApi.refetchEvents();
@@ -503,9 +527,9 @@ const TrackingCalendar: React.FC<IProps> = () => {
         </Stack>
         {activeTab === "timeSheet" && (
           <CustomizedInputBase
-            value={ filters.search_key }
+            value={filters.search_key}
             placeholder="Search Project"
-            onChange = {(event) =>
+            onChange={(event) =>
               setFilters({ ...filters, search_key: event.target.value })
             }
             // onKeyUp={(event) =>
@@ -589,8 +613,14 @@ const TrackingCalendar: React.FC<IProps> = () => {
       {_renderCalendarModule()}
 
       {_renderTimeSheetContent()}
-      {activeTab === "timeGridWeek" && (
-        <Stack sx={{ ...calendarStyles }} className={`view-timeGridWeek`}>
+      {true && (
+        <Stack
+          sx={{
+            ...calendarStyles,
+            display: activeTab === "timeGridWeek" ? "block" : "none",
+          }}
+          className={`view-timeGridWeek`}
+        >
           <FullCalendar
             ref={calendarRef}
             // locale={locale === 'en' ? enLocale : viLocale}
@@ -657,27 +687,28 @@ const TrackingCalendar: React.FC<IProps> = () => {
                 ...styles,
                 height: "100%",
                 padding: "0 6px",
-                "&:hover": {
-                  cursor: "pointer",
-                  opacity: 1,
-                  transtion: "all .3s ease-in-out",
-                  height: "100%",
-                  ".fc-event-main": {
-                    overflow: "visible!important",
-                  },
-                  ".same-time-worker": {
-                    visibility: "visible",
-                  },
-                },
+                // "&:hover": {
+                //   cursor: "pointer",
+                //   opacity: 1,
+                //   transtion: "all .3s ease-in-out",
+                //   height: "100%",
+                //   ".fc-event-main": {
+                //     overflow: "visible!important",
+                //   },
+                //   ".same-time-worker": {
+                //     visibility: "visible",
+                //   },
+                // },
               };
               if (type === "working_time")
                 return (
-                  <PopupState variant="popper" popupId="demo-popup-popper">
-                    {(popupState) => (
-                      <div>
+                  <HtmlTooltip
+                    title={
+                      <>
                         <Stack
                           direction="column"
-                          sx={boxStyles}
+                          sx={{ backgroundColor: "common.white" }}
+
                           // {...bindToggle(popupState)}
                         >
                           <Stack direction="row" alignItems="center">
@@ -704,72 +735,148 @@ const TrackingCalendar: React.FC<IProps> = () => {
                           <Typography sx={subEventDayStyles}>
                             {eventInfo?.event?.extendedProps.hour}
                           </Typography>
-                          {eventInfo?.event?.extendedProps.sameWorker?.map(
-                            (item, index) => {
+
+                          <Stack
+                            className="same-time-worker"
+                            // sx={{
+                            //   visibility: "hidden",
+                            //   transition: "all .3s ease-in-out",
+                            // }}
+                          >
+                            <Typography
+                              sx={{
+                                fontSize: "12px",
+                                lineHeight: "18px",
+                                fontWeight: 400,
+                                color: "#212121",
+                                mb: 1,
+                              }}
+                            >
+                              Người làm cùng giờ:
+                            </Typography>
+                            {sameTime[
+                              `${eventInfo?.event?.extendedProps?.id}`
+                            ]?.map((item, index) => {
                               return (
-                                <Stack
+                                <Box
                                   key={index}
-                                  className="same-time-worker"
                                   sx={{
-                                    visibility: "hidden",
-                                    transition: "all .3s ease-in-out",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                    mb: 1,
                                   }}
                                 >
+                                  <Avatar
+                                    sx={{ width: 20, height: 20 }}
+                                    src={item?.avatar?.link}
+                                  />
                                   <Typography
                                     sx={{
                                       fontSize: "12px",
-                                      lineHeight: "18px",
-                                      fontWeight: 400,
-                                      color: "#212121",
-                                      mb: 1,
+                                      lineHeight: "16px",
+                                      color: "#000",
                                     }}
                                   >
-                                    Người làm cùng giờ:
+                                    {item.fullname}
                                   </Typography>
-
-                                  <Box
-                                    sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      gap: 1,
-                                      mb: 1,
-                                    }}
-                                  >
-                                    <Avatar
-                                      sx={{ width: 20, height: 20 }}
-                                      src={item?.avatar?.link}
-                                    />
-                                    <Typography
-                                      sx={{
-                                        fontSize: "12px",
-                                        lineHeight: "16px",
-                                        color: "#000",
-                                      }}
-                                    >
-                                      {item.fullname}
-                                    </Typography>
-                                  </Box>
-                                </Stack>
+                                </Box>
                               );
-                            },
-                          )}
+                            })}
+                          </Stack>
                         </Stack>
-                        <Popper {...bindPopper(popupState)} transition>
-                          {({ TransitionProps }) => (
-                            <Fade {...TransitionProps} timeout={350}>
-                              <Paper></Paper>
-                            </Fade>
-                          )}
-                        </Popper>
-                      </div>
-                    )}
-                  </PopupState>
+                      </>
+                    }
+                  >
+                    <Stack
+                      direction="column"
+                      sx={boxStyles}
+                      // {...bindToggle(popupState)}
+                    >
+                      <Stack direction="row" alignItems="center">
+                        <Avatar
+                          sx={{ width: "20px", height: "20px" }}
+                          src={eventInfo?.event?.extendedProps?.avatar}
+                        />
+                        <Typography
+                          sx={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                            lineHeight: "18px",
+                            marginLeft: "4px",
+                            color: "primary.main",
+                          }}
+                        >
+                          {eventInfo?.event?.extendedProps.name}
+                        </Typography>
+                      </Stack>
+                      <Typography sx={subEventDayStyles}>
+                        {eventInfo?.event?.extendedProps?.position?.name ||
+                          "--"}
+                      </Typography>
+                      <Typography sx={subEventDayStyles}>
+                        {eventInfo?.event?.extendedProps.hour}
+                      </Typography>
+
+                      <Stack
+                        className="same-time-worker"
+                        // sx={{
+                        //   visibility: "hidden",
+                        //   transition: "all .3s ease-in-out",
+                        // }}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: "12px",
+                            lineHeight: "18px",
+                            fontWeight: 400,
+                            color: "#212121",
+                            mb: 1,
+                          }}
+                        >
+                          Người làm cùng giờ:
+                        </Typography>
+                        {sameTime[
+                          `${eventInfo?.event?.extendedProps?.id}`
+                        ]?.map((item, index) => {
+                          return (
+                            <Box
+                              key={index}
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                                mb: 1,
+                              }}
+                            >
+                              <Avatar
+                                sx={{ width: 20, height: 20 }}
+                                src={item?.avatar?.link}
+                              />
+                              <Typography
+                                sx={{
+                                  fontSize: "12px",
+                                  lineHeight: "16px",
+                                  color: "#000",
+                                }}
+                              >
+                                {item.fullname}
+                              </Typography>
+                            </Box>
+                          );
+                        })}
+                      </Stack>
+                    </Stack>
+                  </HtmlTooltip>
                 );
               return (
-                <PopupState variant="popper" popupId="demo-popup-popper">
-                  {(popupState) => (
-                    <div>
-                      <Stack direction="column" sx={boxStyles}>
+                <HtmlTooltip
+                  title={
+                    <>
+                      <Stack
+                        direction="column"
+                        sx={{ backgroundColor: "common.white" }}
+                      >
                         <Stack direction="row" alignItems="center">
                           <Box
                             sx={{
@@ -798,70 +905,139 @@ const TrackingCalendar: React.FC<IProps> = () => {
                         <Typography sx={subEventDayStyles}>
                           {eventInfo?.event?.extendedProps.position?.name}
                         </Typography>
-                        {eventInfo?.event?.extendedProps.sameWorker?.map(
-                          (item, index) => {
+
+                        <Stack
+                          className="same-time-worker"
+                          // sx={{
+                          //   visibility: "hidden",
+                          //   transition: "all .3s ease-in-out",
+                          // }}
+                        >
+                          <Typography
+                            sx={{
+                              fontSize: "12px",
+                              lineHeight: "18px",
+                              fontWeight: 400,
+                              color: "#212121",
+                              mb: 1,
+                            }}
+                          >
+                            Người làm cùng giờ:
+                          </Typography>
+                          {sameTime[
+                            `${eventInfo?.event?.extendedProps?.id}`
+                          ]?.map((item, index) => {
                             return (
-                              <Stack
+                              <Box
                                 key={index}
-                                className="same-time-worker"
                                 sx={{
-                                  visibility: "hidden",
-                                  transition: "all .3s ease-in-out",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 1,
+                                  mb: 1,
                                 }}
                               >
+                                <Avatar
+                                  sx={{ width: 20, height: 20 }}
+                                  src={item.avatar.link}
+                                />
                                 <Typography
                                   sx={{
                                     fontSize: "12px",
-                                    lineHeight: "18px",
-                                    fontWeight: 400,
-                                    color: "#212121",
-                                    mb: 1,
+                                    lineHeight: "16px",
+                                    color: "#000",
                                   }}
                                 >
-                                  Người làm cùng giờ:
+                                  {item.fullname}
                                 </Typography>
-
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 1,
-                                    mb: 1,
-                                  }}
-                                >
-                                  <Avatar
-                                    sx={{ width: 20, height: 20 }}
-                                    src={item.avatar.link}
-                                  />
-                                  <Typography
-                                    sx={{
-                                      fontSize: "12px",
-                                      lineHeight: "16px",
-                                      color: "#000",
-                                    }}
-                                  >
-                                    {item.fullname}
-                                  </Typography>
-                                </Box>
-                              </Stack>
+                              </Box>
                             );
-                          },
-                        )}
+                          })}
+                        </Stack>
                       </Stack>
-                      <Popper {...bindPopper(popupState)} transition>
-                        {({ TransitionProps }) => (
-                          <Fade {...TransitionProps} timeout={350}>
-                            <Paper>
-                              <Typography sx={{ p: 2 }}>
-                                The content of the Popper.
+                    </>
+                  }
+                >
+                  <Stack direction="column" sx={boxStyles}>
+                    <Stack direction="row" alignItems="center">
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                          mt: "6px",
+                        }}
+                      >
+                        <Avatar
+                          sx={{ width: "20px", height: "20px" }}
+                          src={eventInfo?.event?.extendedProps?.avatar}
+                        />
+                        <Typography
+                          sx={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                            lineHeight: "18px",
+                            color: "rgba(246, 78, 96, 1)",
+                          }}
+                        >
+                          {eventInfo?.event?.extendedProps.name}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                    <Typography sx={subEventDayStyles}>
+                      {eventInfo?.event?.extendedProps.position?.name}
+                    </Typography>
+
+                    <Stack
+                      className="same-time-worker"
+                      // sx={{
+                      //   visibility: "hidden",
+                      //   transition: "all .3s ease-in-out",
+                      // }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: "12px",
+                          lineHeight: "18px",
+                          fontWeight: 400,
+                          color: "#212121",
+                          mb: 1,
+                        }}
+                      >
+                        Người làm cùng giờ:
+                      </Typography>
+                      {sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.map(
+                        (item, index) => {
+                          return (
+                            <Box
+                              key={index}
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                                mb: 1,
+                              }}
+                            >
+                              <Avatar
+                                sx={{ width: 20, height: 20 }}
+                                src={item.avatar.link}
+                              />
+                              <Typography
+                                sx={{
+                                  fontSize: "12px",
+                                  lineHeight: "16px",
+                                  color: "#000",
+                                }}
+                              >
+                                {item.fullname}
                               </Typography>
-                            </Paper>
-                          </Fade>
-                        )}
-                      </Popper>
-                    </div>
-                  )}
-                </PopupState>
+                            </Box>
+                          );
+                        },
+                      )}
+                    </Stack>
+                  </Stack>
+                </HtmlTooltip>
               );
             }}
             slotLabelContent={(eventInfo: { date: Date }) => {
