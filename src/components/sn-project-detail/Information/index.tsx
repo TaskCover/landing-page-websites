@@ -16,6 +16,7 @@ import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
 import useBreakpoint from "hooks/useBreakpoint";
 import ArrowTriangleIcon from "icons/ArrowTriangleIcon";
+import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -50,7 +51,10 @@ const DesktopInformation = () => {
       <Stack>
         <Stack direction="row" spacing={2} justifyContent="space-between">
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar src={item?.avatar?.link} size={40} />
+            <Avatar
+              src={item?.avatar?.link ?? ProjectPlaceholderImage}
+              size={40}
+            />
 
             <Stack>
               <Text variant="h4">{item?.name}</Text>
