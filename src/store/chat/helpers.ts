@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "store/app/selectors";
 import { useChat } from "./selectors";
 
@@ -7,16 +7,16 @@ export const useWSChat = () => {
   const { user } = useAuth();
   const { roomId, onSetMessage } = useChat();
 
-  const wsRef = useRef<WebSocket | null>(null);
-  const { current: ws } = wsRef;
+  const [ws, setWs] = useState<WebSocket | null>(null);
   const token = user?.["authToken"];
   const id = user?.["userId"];
 
   // Connect websocket
-  const connectMessage = useCallback(() => {
+  const connectMessage = () => {
     if (ws) {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log("logggggggggggggg", data.msg);
         if (data.msg === "connected") {
           ws.send(
             JSON.stringify({
@@ -50,14 +50,14 @@ export const useWSChat = () => {
         }
       };
     }
-  }, [ws]);
+  };
 
-  const connectSocket = useCallback(() => {
+  const connectSocket = () => {
     if (roomId) {
       const wsClient = new WebSocket(process.env.NEXT_APP_WS_URL || "");
 
       wsClient.onopen = () => {
-        wsRef.current = wsClient;
+        setWs(wsClient);
         wsClient.send(
           JSON.stringify({
             msg: "connect",
@@ -67,7 +67,7 @@ export const useWSChat = () => {
         );
       };
     }
-  }, [ws]);
+  };
 
   useEffect(() => {
     connectSocket();
@@ -80,9 +80,10 @@ export const useWSChat = () => {
       ws.onclose = () => {
         if (openSocketFlag) {
           setTimeout(() => {
+            console.log("reConnect");
             connectSocket();
             connectMessage();
-          }, 500);
+          }, 100);
         }
       };
     }
