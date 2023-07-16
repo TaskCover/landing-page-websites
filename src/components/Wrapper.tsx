@@ -19,8 +19,8 @@ const Wrapper = (
     >
       <Box
         width="100%"
-        minHeight={{ xs: 8, sm: 24 }}
-        height={{ xs: 8, sm: 24 }}
+        minHeight={{ xs: 8, md: 16, xl: 24 }}
+        height={{ xs: 8, md: 16, xl: 24 }}
         bgcolor="background.default"
         position="sticky"
         zIndex={1}

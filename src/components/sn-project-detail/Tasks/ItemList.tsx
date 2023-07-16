@@ -108,7 +108,7 @@ const ItemList = () => {
     [dataIds?.taskId, dataIds?.taskListId],
   );
 
-  const baseTop = useMemo(() => 105, []);
+  const baseTop = useMemo(() => 97, []);
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [

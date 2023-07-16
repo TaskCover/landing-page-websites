@@ -128,10 +128,10 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
         borderRadius: 1,
         px: isShowLarge || isSmSmaller ? { xs: 1.5, xl: 2.5 } : 1,
         py: isShowLarge || isSmSmaller ? { xs: 1, xl: 1.5 } : 1,
-        backgroundColor: {
-          xs: isDarkMode ? "background.default" : "grey.50",
-          sm: undefined,
-        },
+        // backgroundColor: {
+        //   xs: isDarkMode ? "background.default" : "grey.50",
+        //   sm: undefined,
+        // },
         "&:hover, &.active": {
           backgroundColor: isDarkMode ? "grey.50" : "primary.light",
         },

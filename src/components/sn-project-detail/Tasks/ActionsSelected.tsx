@@ -68,7 +68,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
       px={3}
       py={{ xs: 1, md: 0.75, xl: 2 }}
       position="sticky"
-      top={{ xs: 60, sm: 69, xl: 84 }}
+      top={{ xs: 60, sm: 61, xl: 76 }}
       zIndex={1}
     >
       <Stack direction="row" alignItems="center" spacing={1}>

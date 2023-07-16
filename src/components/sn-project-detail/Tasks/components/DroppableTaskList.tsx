@@ -107,7 +107,20 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                 borderBottom={{ md: "1px solid" }}
                 borderColor={{ md: "grey.100" }}
               >
-                <Stack direction="row" alignItems="center" overflow="hidden">
+                <Stack
+                  direction="row"
+                  sx={{
+                    "& >.checkbox": {
+                      opacity: 0,
+                      userSelect: "none",
+                    },
+                    "&:hover >.checkbox": {
+                      opacity: 1,
+                    },
+                  }}
+                  alignItems="center"
+                  overflow="hidden"
+                >
                   <Checkbox
                     size="small"
                     className="checkbox"
@@ -117,7 +130,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   <IconButton
                     noPadding
                     sx={{
-                      ml: { md: 5 },
+                      ml: { md: 1.5 },
                       transform: isShow ? undefined : "rotate(180deg)",
                     }}
                     onClick={onToggle}

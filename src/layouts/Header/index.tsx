@@ -89,7 +89,7 @@ const Header = () => {
         )}
       </Stack>
       {/* {breakpoint}-{width} */}
-      <Stack direction="row" alignItems="center" spacing={8}>
+      <Stack direction="row" alignItems="center" spacing={3}>
         {Boolean(searchPlaceholder && key) && (
           <Search
             sx={{ display: { xs: "none", sm: "initial" } }}

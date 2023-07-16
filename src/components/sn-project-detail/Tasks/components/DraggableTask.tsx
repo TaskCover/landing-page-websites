@@ -66,9 +66,27 @@ const DraggableTask = (props: DraggableTaskProps) => {
               spacing={{ xs: 0.5, sm: 1 }}
               borderBottom={{ md: "1px solid" }}
               borderColor={{ md: "grey.100" }}
+              sx={{
+                "& >.checkbox": {
+                  opacity: 0,
+                  userSelect: "none",
+                },
+                "&:hover >.checkbox": {
+                  opacity: 1,
+                },
+              }}
             >
-              <Checkbox size="small" checked={checked} onChange={onChange} />
-              <IconButton noPadding {...provided.dragHandleProps}>
+              <Checkbox
+                size="small"
+                className="checkbox"
+                checked={checked}
+                onChange={onChange}
+              />
+              <IconButton
+                className="checkbox"
+                noPadding
+                {...provided.dragHandleProps}
+              >
                 <MoveDotIcon
                   fontSize={isXlSmaller ? "small" : "medium"}
                   sx={{ color: "grey.A200" }}

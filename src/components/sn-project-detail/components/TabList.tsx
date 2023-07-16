@@ -47,7 +47,7 @@ const TabList = () => {
         overflow="auto"
         spacing={4}
         position="sticky"
-        top={isMembersOfProjectPath ? undefined : { xs: 8, sm: 24 }}
+        top={isMembersOfProjectPath ? undefined : { xs: 8, sm: 16 }}
         bgcolor="background.paper"
         zIndex={1}
       >
