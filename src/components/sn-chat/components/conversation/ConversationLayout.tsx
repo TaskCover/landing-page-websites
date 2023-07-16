@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { ChatItemInfo, STEP } from "store/chat/type";
 import { useChat } from "store/chat/selectors";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import Conversation from "./Conversation";
 import ProfileHeader from "../common/ProfileHeader";
 
@@ -44,7 +44,6 @@ const ConversationLayout = ({
           onClearMessageList();
           onSetUserPartner(null);
           onSetRoomId("");
-          onClearMessageList();
         }}
         onShowProfile={() => {
           onSetStep(STEP.VIEW_DETAIL_USER);

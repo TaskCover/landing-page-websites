@@ -15,7 +15,6 @@ const Conversation = () => {
     convention,
     messageInfo,
     onGetLastMessages,
-    onClearMessageList,
   } = useChat();
   const { user } = useAuth();
   const { sendMessage } = useWSChat();
