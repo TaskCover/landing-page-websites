@@ -195,7 +195,7 @@ export const MoreList = (props: MoreListProps) => {
   const params = useParams();
   const { onAddSnackbar } = useSnackbar();
 
-  const projectId = useMemo(() => params?.id, [params?.id]);
+  const projectId = useMemo(() => params?.id, [params?.id]) as string;
 
   const taskListNameList = useMemo(
     () => items.map((task) => task.name),

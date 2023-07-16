@@ -60,7 +60,7 @@ const Actions = () => {
   const [queries, setQueries] = useState<Params>({});
   const params = useParams();
 
-  const projectId = useMemo(() => params.id, [params.id]);
+  const projectId = useMemo(() => params.id, [params.id]) as string;
 
   const statusOptions = useMemo(
     () =>
