@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, TextField } from "@mui/material";
 import {
   ChangeEvent,
   memo,
@@ -15,6 +15,9 @@ import { IMAGES_ACCEPT } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
+import ReactQuill from "react-quill";
+import ImageImportIcon from "icons/ImageImportIcon";
+import ImojiImportIcon from "icons/ImojiImportIcon";
 
 export type EditorProps = {
   hasAttachment?: boolean;
@@ -153,6 +156,9 @@ const ChatEditor = (props: EditorProps) => {
           borderRadius: "unset !important",
         },
         "& .ql-container": {
+          "& .ql-editor": {
+            paddingRight: "5rem",
+          },
           "& .ql-blank::before": {
             color: "#BABCC6",
           },
@@ -160,13 +166,41 @@ const ChatEditor = (props: EditorProps) => {
       }}
     >
       {isLoading ? "loading..." : null}
-      <Box
-        ref={quillRef}
-        sx={{
-          color: "black",
-          flexDirection: "column",
-        }}
-      />
+      <Box position="relative">
+        <Box
+          ref={quillRef}
+          sx={{
+            color: "black",
+            flexDirection: "column",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            right: "1rem",
+            bottom: "0.7rem",
+            display: "flex",
+            flexDirection: "row",
+            gap: "0.5rem",
+          }}
+        >
+          <ImojiImportIcon
+            sx={{
+              fill: "transparent",
+              cursor: "pointer",
+            }}
+          />
+          <ImageImportIcon
+            sx={{
+              fill: "transparent",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              inputFileRef?.current?.click();
+            }}
+          />
+        </Box>
+      </Box>
       <Stack
         direction="row"
         flex={1}

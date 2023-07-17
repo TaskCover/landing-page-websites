@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataStatus } from "constant/enums";
 import { Paging } from "constant/types";
+import { ChatLinkType } from "./media/typeMedia";
 
 export interface ChatItemInfo {
   _id: string;
@@ -18,6 +19,7 @@ export interface ChatItemInfo {
   msgs: number;
   lastMessage: MessengerInfo;
   lm: string;
+  statuses: { username: string; status: string }[];
 }
 
 export interface UserOnlinePage {
@@ -90,8 +92,11 @@ export interface ChatState {
   userOnlinePage: UserOnlinePage[];
   status: DataStatus;
   conversationPaging: Paging;
+  conversationInfo:
+    | (ChatItemInfo & { partnerUsername: string; statusOnline: string })
+    | null;
   roomId: string;
-  userPartner: UserOnlinePage | null;
+
   currStep: STEP;
   prevStep: STEP;
   backFallStep: STEP;
@@ -100,14 +105,21 @@ export interface ChatState {
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
   messagePaging: Paging;
+  //partner info
+  partnerInfo: UserInfo | null;
+  partnerInfoStatus: DataStatus;
+  //chat links
+  chatLinks: ChatLinkType[];
+  chatLinksStatus: DataStatus;
+
   newGroupData: ChatGroup | {};
-  createGroupStatus: DataStatus,
-  addMembers2GroupStatus: DataStatus,
-  leftGroupStatus: DataStatus,
-  removeMemberGroupStatus: DataStatus,
-  typeList: TYPE_LIST,
-  groupMembers: any[],
-  chatAttachments: any,
+  createGroupStatus: DataStatus;
+  addMembers2GroupStatus: DataStatus;
+  leftGroupStatus: DataStatus;
+  removeMemberGroupStatus: DataStatus;
+  typeList: TYPE_LIST;
+  groupMembers: any[];
+  chatAttachments: any;
 }
 
 export type DirectionChat = "a" | "c" | "d";
@@ -154,19 +166,50 @@ export interface RemoveGroupMemberRequest extends AuthenRequestCommon {
 
 export interface ChatAttachmentsRequest extends AuthenRequestCommon {
   roomId: string;
-  fileType?: 'media' | 'file' | 'link';
-  roomType: 'c' | 'p' | 'd';
+  fileType?: "media" | "file" | "link";
+  roomType: "c" | "p" | "d";
 }
 
 export interface ChangeRoleRequest extends AuthenRequestCommon {
   groupId: string;
   userIdToChange: string;
-  newRole: 'addOwner' | 'removeOwner' | 'addModerator' | 'removeModerator' | 'addLeader' | 'removeLeader';
+  newRole:
+    | "addOwner"
+    | "removeOwner"
+    | "addModerator"
+    | "removeModerator"
+    | "addLeader"
+    | "removeLeader";
 }
 
 export interface RemoveMemberRequest extends AuthenRequestCommon {
   groupId: string;
   userIdToKick: string;
+}
+
+export interface Avatar {
+  object: string;
+  name: string;
+  link: string;
+}
+
+export interface UserInfo {
+  company: string;
+  department: string;
+  email: string;
+  fullname: string;
+  id: string;
+  is_active: true;
+  phone: string;
+  position: string;
+  date_end_using: string;
+  date_start_using: string;
+  approve: true;
+  avatar: Avatar;
+  status: 1;
+  authToken: string;
+  id_rocket: string;
+  username: string;
 }
 
 export enum STEP {
@@ -179,7 +222,7 @@ export enum STEP {
   ADD_GROUP,
   CHAT_DETAIL_GROUP,
   LIST,
-  User_INFO,
+  USER_INFO,
   MEDIA,
   LINK,
   FILE,

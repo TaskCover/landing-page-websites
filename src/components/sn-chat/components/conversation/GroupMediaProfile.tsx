@@ -5,23 +5,22 @@ import { STEP } from "store/chat/type";
 import ProfileHeader from "../common/ProfileHeader";
 import { useChat } from "store/chat/selectors";
 import { SxProps } from "@mui/material";
+import LinkContent from "../common/LinkContent";
+import { useAuth } from "store/app/selectors";
 
 interface GroupMediaProfileProps {
   type?: STEP;
 }
 const GroupMediaProfile = ({ type }: GroupMediaProfileProps) => {
   const [tab, setTab] = useState(type);
-  const { currStep, prevStep, userPartner, onSetStep } = useChat();
+  const { onSetStep } = useChat();
 
-  const { avatar } = userPartner || {};
-  console.log("userPartner", userPartner);
   const renderContent = useMemo(() => {
-    console.log("123");
     switch (tab) {
       case STEP.MEDIA:
         return <>MEDIA</>;
       case STEP.LINK:
-        return <>LINK</>;
+        return <LinkContent />;
       case STEP.FILE:
         return <>FILE</>;
     }

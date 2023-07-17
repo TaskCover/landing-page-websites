@@ -14,7 +14,7 @@ import ChatForward from "./ChatForward";
 import Conversation from "./components/conversation/Conversation";
 
 const SwitchChat = () => {
-  const { roomId, prevStep, currStep, dataTransfer, onSetStep } = useChat();
+  const { currStep, onSetStep } = useChat();
   useEffect(() => {
     onSetStep(STEP.CONVENTION);
 
@@ -31,7 +31,7 @@ const SwitchChat = () => {
         return <ConversationLayoutUser />;
       case STEP.VIEW_DETAIL_USER:
         return <UserLanding />;
-      case STEP.User_INFO:
+      case STEP.USER_INFO:
         return <UserInfomation />;
       case STEP.MEDIA:
         return <GroupMediaProfile type={STEP.MEDIA} />;

@@ -4,32 +4,55 @@ import ChatItem from "./ChatItem";
 import { useChat } from "store/chat/selectors";
 import { ChatItemInfo, STEP } from "store/chat/type";
 import { useAuth } from "store/app/selectors";
+import { useEffect, useRef, useState } from "react";
 
 const ChatList = () => {
   const { user } = useAuth();
   const {
     isError,
     convention,
+    conversationPaging: { pageIndex, pageSize },
     isFetching,
     onSetRoomId,
-    onSetUserPartner,
+    onSetConversationInfo,
     onGetAllConvention,
     onSetStep,
   } = useChat();
 
+  const [textSearch, setTextSearch] = useState("");
+  const [lastElement, setLastElement] = useState(null);
+  const pageRef = useRef(pageIndex);
+  const observer = useRef(
+    new IntersectionObserver((entries) => {
+      const first = entries[0];
+      if (first.isIntersecting) {
+        pageRef.current = pageRef.current + 1;
+        onGetAllConvention({
+          type: "a",
+          text: textSearch,
+          offset: pageRef.current,
+          count: 20,
+        });
+      }
+    }),
+  );
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
+      setTextSearch(event.target.value);
       onGetAllConvention({
         type: "a",
         text: event.target.value,
         offset: 0,
-        count: 1000,
+        count: 20,
       });
     }
   };
 
   const handleClickConversation = (chatInfo: ChatItemInfo) => {
     onSetRoomId(chatInfo._id);
+    onSetConversationInfo(chatInfo);
+
     if (chatInfo?.t)
       if (chatInfo?.t !== 'd') {
         onSetStep(STEP.CHAT_GROUP, chatInfo);
@@ -37,6 +60,21 @@ const ChatList = () => {
         onSetStep(STEP.CHAT_ONE, chatInfo);
       }
   };
+
+  useEffect(() => {
+    const currentElement = lastElement;
+    const currentObserver = observer.current;
+
+    if (currentElement) {
+      currentObserver.observe(currentElement);
+    }
+
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement);
+      }
+    };
+  }, [lastElement]);
 
   return (
     <Box
@@ -74,7 +112,7 @@ const ChatList = () => {
         />
       </Box>
       <Box overflow="auto" maxHeight="calc(600px - 74px - 15px)">
-        {isFetching || isError ? (
+        {(isFetching || isError) && convention?.length < 1 ? (
           Array.from({ length: 5 }, (_, i) => (
             <Box
               key={i}
@@ -100,15 +138,20 @@ const ChatList = () => {
           <>
             {convention?.length > 0
               ? convention.map((item, index) => {
-                  return (
-                    <ChatItem
-                      chatInfo={item}
-                      sessionId={user?.["username"]}
-                      key={index}
-                      onClickConvention={handleClickConversation}
-                    />
-                  );
-                })
+                return (
+                  <ChatItem
+                    chatInfo={item}
+                    sessionId={user?.["username"]}
+                    key={index}
+                    onClickConvention={handleClickConversation}
+                    chatItemProps={{
+                      ...(index === convention?.length - 1 && {
+                        ref: setLastElement,
+                      }),
+                    }}
+                  />
+                );
+              })
               : null}
           </>
         )}

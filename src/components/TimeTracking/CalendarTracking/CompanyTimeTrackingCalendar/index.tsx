@@ -294,7 +294,9 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const _renderHeader = () => {
     return (
       <Grid container spacing={2}>
-        <Grid item xs={3}
+        <Grid
+          item
+          xs={3}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -377,9 +379,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
             <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
           </Stack>
         </Grid>
-        <Grid item xs={6}>
-          
-        </Grid>
+        <Grid item xs={6}></Grid>
         <Grid item xs={3}>
           <Stack
             direction="row"
