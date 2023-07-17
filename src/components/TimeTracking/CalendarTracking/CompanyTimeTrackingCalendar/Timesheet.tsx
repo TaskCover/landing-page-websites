@@ -117,7 +117,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
 
     return (
       <TableBody sx={{ position: "relative" }}>
-        {!_.isEmpty(sortedByPin) ? (
+        {!_.isEmpty(sortedByPin) && !_.isEmpty(data) ? (
           _.map(sortedByPin, (user: any, userIndex) => {
             return (
               <StyledTableRow key={user.id || userIndex}>
