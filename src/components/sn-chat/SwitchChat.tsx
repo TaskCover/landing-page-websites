@@ -24,8 +24,6 @@ const SwitchChat = () => {
   }, [onSetStep]);
 
   const renderContent = useCallback(() => {
-    console.log(currStep);
-
     switch (currStep) {
       case STEP.CONVENTION:
         return <ChatListUser />;

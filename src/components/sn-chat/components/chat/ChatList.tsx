@@ -20,7 +20,7 @@ const ChatList = () => {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       onGetAllConvention({
-        type: "d",
+        type: "a",
         text: event.target.value,
         offset: 0,
         count: 1000,
