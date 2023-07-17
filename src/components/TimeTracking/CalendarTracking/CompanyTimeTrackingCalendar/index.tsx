@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import _ from "lodash";
 import moment from "moment";
@@ -122,8 +122,8 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const [currentDate, setCurrentDate] = React.useState<string>(
     dayjs().toString(),
   );
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-    new Date(),
+  const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs | Date>(
+    dayjs(),
   );
 
   const [dateRange, setDateRange] = React.useState<any[]>([]);
@@ -236,7 +236,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           .format("YYYY-MM-DD");
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
-        setSelectedDate(null);
+        setSelectedDate(dayjs(filters?.start_date).subtract(6, "day"));
       }
       if (value === "next") {
         const startDate = dayjs(filters?.end_date)
@@ -247,7 +247,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           .format("YYYY-MM-DD");
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
-        setSelectedDate(null);
+        setSelectedDate(dayjs(filters?.end_date).add(2, "day"));
       }
     }
   };
@@ -278,12 +278,12 @@ const TrackingCalendar: React.FC<IProps> = () => {
           {activeTab === "timeSheet" && (
             <CustomizedInputBase
               value={filters.search_key}
-              onChange={(event) =>
-                setFilters({ ...filters, search_key: event.target.value })
-              }
-              onKeyUp={(event) =>
-                event.key === "Enter" && onGetCompanyTimeSheet(filters)
-              }
+              placeholder="Search Employee"
+              onChange={(event) => {
+                const searchKey = event.target.value;
+                setFilters({ ...filters, search_key: searchKey });
+                onGetCompanyTimeSheet({ ...filters, search_key: searchKey });
+              }}
             />
           )}
         </Stack>
@@ -294,31 +294,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const _renderHeader = () => {
     return (
       <Grid container spacing={2}>
-        <Grid item xs={3}>
-          <Button
-            startIcon={<PlusIcon />}
-            size="small"
-            variant="contained"
-            sx={{
-              height: "36px",
-              width: "113px",
-              padding: 0,
-              backgroundColor: "primary.main",
-              color: "common.white",
-              textTransform: "none",
-            }}
-            onClick={() => setIsOpenCreatePopup(true)}
-          >
-            {timeT("myTime.addButton")}
-          </Button>
-        </Grid>
-        <Grid
-          item
-          xs={6}
+        <Grid item xs={3}
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "flex-start",
           }}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -396,6 +376,9 @@ const TrackingCalendar: React.FC<IProps> = () => {
             </Typography>
             <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
           </Stack>
+        </Grid>
+        <Grid item xs={6}>
+          
         </Grid>
         <Grid item xs={3}>
           <Stack
@@ -499,166 +482,16 @@ const TrackingCalendar: React.FC<IProps> = () => {
     );
   };
 
-  const _renderTable = () => {
-    if (activeTab !== "table") return;
-    return (
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <TableContainer sx={{ borderLeft: "1px solid rgb(224, 224, 224)" }}>
-            <Table
-              sx={{
-                borderCollapse: "separate",
-                borderSpacing: "0 8px",
-                position: "relative",
-                bottom: "-7px",
-              }}
-            >
-              <TableHead>
-                <StyledTableRow>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.employee")}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.project")}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.position")}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.start_time")}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.time")}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {timeT("company_time.table_tab.note")}
-                  </StyledTableCell>
-                </StyledTableRow>
-              </TableHead>
-              <TableBody>
-                {!_.isEmpty(events) ? (
-                  events
-                    ?.filter(
-                      (item) =>
-                        dayjs(item?.extendedProps?.day).format("YYYY-MM-DD") ===
-                        dayjs(selectedDate).format("YYYY-MM-DD"),
-                    )
-                    ?.map((event, index) => {
-                      // console.log(
-                      //   "c",
-                      //   selectedDate,
-                      //   !dayjs(dayjs(selectedDate).format("YYYY-MM-DD")).isSame(
-                      //     dayjs(event?.start).format("YYYY-MM-DD"),
-                      //   ),
-                      // );
-                      // if (
-                      //   selectedDate &&
-                      //   !dayjs(dayjs(selectedDate).format("YYYY-MM-DD")).isSame(
-                      //     dayjs(event?.start).format("YYYY-MM-DD"),
-                      //   )
-                      // )
-                      //   return <></>;
-                      const rowStyles = {
-                        borderLeft: `4px solid rgba(54, 153, 255, 1)`,
-                        backgroundColor: "primary.light",
-                      };
-                      if (event?.extendedProps?.type === "break_time")
-                        Object.assign(rowStyles, {
-                          borderLeft: `4px solid rgba(246, 78, 96, 1)`,
-                          backgroundColor: "error.light",
-                        });
-                      return (
-                        <StyledTableRow sx={rowStyles} key={index}>
-                          <StyledTableCell>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "12px",
-                              }}
-                            >
-                              <Avatar sx={{ width: 20, height: 20 }} />
-                              {event?.extendedProps?.name}
-                            </Box>
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "12px",
-                              }}
-                            >
-                              <Avatar sx={{ width: 20, height: 20 }} />
-
-                              {event?.extendedProps?.project?.name}
-                            </Box>
-                          </StyledTableCell>
-
-                          <StyledTableCell>
-                            {event?.extendedProps?.position}
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            {event?.extendedProps?.start}
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            {" "}
-                            {event?.extendedProps?.hour || 0}h
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            {event?.extendedProps?.note}
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      );
-                    })
-                ) : (
-                  <StyledTableRow>
-                    <Typography
-                      sx={{
-                        fontSize: "14px",
-                        lineHeight: "20px",
-                        fontWeight: 400,
-                        p: 1,
-                      }}
-                    >
-                      No data were found
-                    </Typography>
-                  </StyledTableRow>
-                )}
-
-                {isGetLoading && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      width: 1,
-                      height: 1,
-                      top: 0,
-                      left: 0,
-                      backgroundColor: " rgba(0, 0, 0, 0.1)",
-
-                      webkitTapHighlightColor: "transparent",
-                    }}
-                  >
-                    <Stack
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        height: 1,
-                        width: 1,
-                      }}
-                    >
-                      <CircularProgress />
-                    </Stack>
-                  </Box>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
-    );
-  };
+  const dataDayTable = useMemo(() => {
+    if (!_.isEmpty(events)) {
+      return events?.filter((item) => {
+        return (
+          dayjs(item?.extendedProps?.day).format("YYYY-MM-DD") ===
+          dayjs(selectedDate).format("YYYY-MM-DD")
+        );
+      });
+    }
+  }, [events, selectedDate]);
 
   const _renderTimeSheetContent = () => {
     if (activeTab !== "timeSheet") return;
@@ -699,16 +532,168 @@ const TrackingCalendar: React.FC<IProps> = () => {
       open={isOpenCreatePopup}
       onClose={() => setIsOpenCreatePopup(false)}
       filters={filters}
-      currentScreen="myTime"
+      currentScreen="companyTime"
     />
   );
 
   return (
-    <Stack direction="column" sx={{ position: "relative" }}>
+    <Stack direction="column">
       {_renderHeader()}
 
-      {_renderTable()}
-      {_renderTimeSheetContent()}
+      <Stack
+        //ref={scrollRef}
+        sx={{
+          height: `calc(100vh - 475px)`,
+          overflow: "auto",
+          position: "relative",
+        }}
+      >
+        {activeTab === "table" && (
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <TableContainer
+                sx={{
+                  borderLeft: "1px solid rgb(224, 224, 224)",
+
+                  height: "calc(100vh - 495px)",
+                }}
+              >
+                <Table
+                  sx={{
+                    borderCollapse: "separate",
+                    borderSpacing: "0 8px",
+                    position: "relative",
+                    bottom: "-7px",
+                  }}
+                  stickyHeader={true}
+                >
+                  <TableHead>
+                    <StyledTableRow>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.employee")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.project")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.position")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.start_time")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.time")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.note")}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  </TableHead>
+                  <TableBody>
+                    {!_.isEmpty(dataDayTable) ? (
+                      dataDayTable?.map((event, index) => {
+                        const rowStyles = {
+                          borderLeft: `4px solid rgba(54, 153, 255, 1)`,
+                          backgroundColor: "primary.light",
+                        };
+                        if (event?.extendedProps?.type === "break_time")
+                          Object.assign(rowStyles, {
+                            borderLeft: `4px solid rgba(246, 78, 96, 1)`,
+                            backgroundColor: "error.light",
+                          });
+                        return (
+                          <StyledTableRow sx={rowStyles} key={index}>
+                            <StyledTableCell>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                }}
+                              >
+                                <Avatar sx={{ width: 20, height: 20 }} />
+                                {event?.extendedProps?.name}
+                              </Box>
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                }}
+                              >
+                                <Avatar sx={{ width: 20, height: 20 }} />
+
+                                {event?.extendedProps?.project?.name}
+                              </Box>
+                            </StyledTableCell>
+
+                            <StyledTableCell>
+                              {event?.extendedProps?.position}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {event?.extendedProps?.start}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {" "}
+                              {event?.extendedProps?.hour || 0}h
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {event?.extendedProps?.note}
+                            </StyledTableCell>
+                          </StyledTableRow>
+                        );
+                      })
+                    ) : (
+                      <StyledTableRow>
+                        <Typography
+                          sx={{
+                            fontSize: "14px",
+                            lineHeight: "20px",
+                            fontWeight: 400,
+                            p: 1,
+                          }}
+                        >
+                          No data were found
+                        </Typography>
+                      </StyledTableRow>
+                    )}
+
+                    {isGetLoading && (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          width: 1,
+                          height: 1,
+                          top: 0,
+                          left: 0,
+                          backgroundColor: " rgba(0, 0, 0, 0.1)",
+
+                          webkitTapHighlightColor: "transparent",
+                        }}
+                      >
+                        <Stack
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            height: 1,
+                            width: 1,
+                          }}
+                        >
+                          <CircularProgress />
+                        </Stack>
+                      </Box>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
+        )}
+        {_renderTimeSheetContent()}
+      </Stack>
       {_renderFooter()}
       {_redderCreatePopup()}
     </Stack>

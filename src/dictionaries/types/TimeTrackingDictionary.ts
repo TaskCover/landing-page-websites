@@ -7,11 +7,11 @@ export type TimeTrackingDictionary = {
       workTime: string;
       breakTime: string;
       weekly_total: string;
-
     };
   };
   myTime: {
     addButton: string;
+    searchButton: string;
     search: string;
     timesheet: string;
     timesheet_tab: {
@@ -32,7 +32,7 @@ export type TimeTrackingDictionary = {
       start_time: string;
       time: string;
       note: string;
-    }
+    };
   };
   company_time: {
     timesheet: string;
@@ -50,6 +50,6 @@ export type TimeTrackingDictionary = {
       start_time: string;
       time: string;
       note: string;
-    }
-  }
+    };
+  };
 };

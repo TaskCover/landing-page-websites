@@ -1,6 +1,6 @@
 import TimeLog from "components/TimeTracking";
 import Wrapper from "components/Wrapper";
-import TimeTrackingComponent from "components/sn-time-tracking";
+// import TimeTrackingComponent from "components/sn-time-tracking";
 
 export const metadata = {
   title: "Time tracking | Taskcover",

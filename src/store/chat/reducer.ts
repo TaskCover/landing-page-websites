@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addMembersToDirectMessageGroup, createDirectMessageGroup, fetchGroupMembers, getAllConvention, getChatAttachments, getLatestMessages, leftDirectMessageGroup } from "./actions";
+import {
+  addMembersToDirectMessageGroup,
+  createDirectMessageGroup,
+  getAllConvention,
+  getLatestMessages,
+  leftDirectMessageGroup,
+  fetchGroupMembers,
+  getChatAttachments
+} from "./actions";
 import { DataStatus } from "constant/enums";
 import { DEFAULT_PAGING } from "constant/index";
 import {
@@ -10,7 +18,7 @@ import {
   MessageInfo,
   SetStepAction,
   STEP,
-  TYPE_LIST
+  TYPE_LIST,
 } from "./type";
 
 const initialState: ChatState = {
@@ -19,8 +27,10 @@ const initialState: ChatState = {
   conversationPaging: DEFAULT_PAGING,
   userOnlinePage: [],
   roomId: "",
+  userPartner: null,
   currStep: STEP.CONVENTION,
   prevStep: STEP.CONVENTION,
+  backFallStep: STEP.IDLE,
   messageInfo: [],
   messageStatus: DataStatus.IDLE,
   messagePaging: DEFAULT_PAGING,
@@ -43,16 +53,39 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
-    setStep: (state, action: PayloadAction<SetStepAction<any>>) => {
-      state.prevStep = state.currStep;
+    setStep: (state, action) => {
+      const prevStep = Number(action.payload.step) - 1;
+      state.backFallStep = state.currStep;
+
+      state.prevStep = prevStep === STEP.IDLE ? STEP.CONVENTION : prevStep;
       state.currStep = action.payload.step;
-      if (action.payload.dataTransfer !== undefined) state.dataTransfer = action.payload.dataTransfer;
+
+      if (action.payload.dataTransfer !== undefined) {
+        state.dataTransfer = action.payload.dataTransfer;
+      }
     },
     setRoomId: (state, action) => {
       state.roomId = action.payload;
     },
     setTypeList: (state, action) => {
       state.typeList = action.payload;
+    },
+    setUserPartner: (state, action) => {
+      console.log(action.payload);
+
+      const user = state.userOnlinePage?.find(
+        (item) => item.username === action.payload,
+      );
+      state.userPartner = user || null;
+    },
+    setMessage: (state, action) => {
+      state.messageInfo.push(action.payload);
+    },
+    clearConversation: (state) => {
+      state.convention = [];
+    },
+    clearMessageList: (state) => {
+      state.messageInfo = [];
     },
   },
   extraReducers: (builder) =>
@@ -155,9 +188,18 @@ const chatSlice = createSlice({
         (state, action: PayloadAction<any[]>) => {
           state.leftGroupStatus = DataStatus.SUCCEEDED;
         },
-      )
+      ),
 });
 
-export const { reset, setStep, setRoomId, setTypeList } = chatSlice.actions;
+export const {
+  reset,
+  setStep,
+  setRoomId,
+  setMessage,
+  setUserPartner,
+  setTypeList,
+  clearConversation,
+  clearMessageList,
+} = chatSlice.actions;
 
 export default chatSlice.reducer;

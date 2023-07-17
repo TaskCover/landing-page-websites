@@ -29,10 +29,13 @@ import {
 import { SUB_TASKS_ID } from "./components/SubTasksOfTask";
 import { TODO_LIST_ID } from "./components/TodoList";
 import { DEPENDENCIES_ID } from "./components/Dependencies";
+import hljs from "highlight.js";
+import { TASK_TEXT_STATUS } from "../components";
 
 type InformationItemProps = StackProps & {
   label: string;
   children?: string | number | React.ReactNode;
+  color?: string;
 };
 
 type ActionItemProps = {
@@ -113,7 +116,7 @@ const Information = () => {
           </Text>
           <TextStatus
             color={COLOR_STATUS[task.status]}
-            text={TEXT_STATUS[task.status]}
+            text={TASK_TEXT_STATUS[task.status]}
           />
         </Stack>
       </Stack>
@@ -174,8 +177,10 @@ const Information = () => {
           <Stack direction="row" alignItems="center" spacing={1}>
             <Avatar size={32} src={task.owner?.avatar?.link} />
             <Stack>
-              <Text variant="body2">{task.owner?.fullname ?? "--"}</Text>
-              <Text variant="body2" color="grey.400">
+              <Text variant="body2" lineHeight={1.57}>
+                {task.owner?.fullname ?? "--"}
+              </Text>
+              <Text variant="caption" color="grey.400" lineHeight={1.5}>
                 {task.owner?.email}
               </Text>
             </Stack>
@@ -184,34 +189,106 @@ const Information = () => {
           "--"
         )}
       </InformationItem>
-      <Stack direction="row" alignItems="center" spacing={2}>
-        <InformationItem label={commonT("form.title.startDate")}>
-          {formatDate(task?.start_date, undefined, "--")}
-        </InformationItem>
-
-        <ArrowTriangleIcon sx={{ color: "grey.300", width: 100 }} />
-        <InformationItem label={commonT("form.title.endDate")}>
-          {formatDate(task?.end_date, undefined, "--")}
-        </InformationItem>
-      </Stack>
       <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: 2, sm: 5, lg: 10 }}
+        display="grid"
+        gap={1}
+        gridTemplateColumns="repeat(auto-fill, 190px)"
+        bgcolor="grey.50"
+        p={2}
+        borderRadius={1}
       >
+        {(!task?.description || task?.description === VALUE_AS_EMPTY) && (
+          <ActionItem
+            onClick={onShowAddDescription}
+            icon={<AlignLeftIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addDescription")}
+          </ActionItem>
+        )}
+        {!task?.attachments_down?.length && (
+          <ActionItem
+            onClick={onAddAttachments}
+            icon={<LinkSquareIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addAttachments")}
+          </ActionItem>
+        )}
+        {!task?.dependencies?.length && (
+          <ActionItem
+            onClick={onShowAddDependencies}
+            icon={<FatrowIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addDependencies")}
+          </ActionItem>
+        )}
+        {!task?.sub_tasks?.length && !subTaskId && (
+          <ActionItem
+            onClick={onShowAddSub}
+            icon={<HierarchyIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addSubTasks")}
+          </ActionItem>
+        )}
+        {!task?.todo_list?.length && (
+          <ActionItem
+            onClick={onShowAddTodoList}
+            icon={<TaskSquareIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addToDos")}
+          </ActionItem>
+        )}
+      </Stack>
+      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
+      <AttachmentsTask id={ATTACHMENT_ID} />
+      {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
+      <TodoList open={isAddTodo} />
+      <Dependencies open={isAddDepen} />
+      <Stack
+        display="grid"
+        gap={1}
+        gridTemplateColumns="repeat(2, 1fr)"
+        bgcolor="grey.50"
+        p={2}
+        borderRadius={1}
+      >
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <InformationItem label={commonT("form.title.startDate")}>
+            {formatDate(task?.start_date, undefined, "--")}
+          </InformationItem>
+
+          <ArrowTriangleIcon sx={{ color: "grey.400", width: 46 }} />
+          <InformationItem label={commonT("form.title.endDate")}>
+            {formatDate(task?.end_date, undefined, "--")}
+          </InformationItem>
+        </Stack>
+
         <InformationItem
           label={projectT("detailTasks.form.title.expectCompletionTime")}
+          width={150}
         >
           {formatNumber(task?.estimated_hours)}
         </InformationItem>
-        <InformationItem label={projectT("detailTasks.form.title.timeTaken")}>
-          {formatNumber(task?.time_execution)}
+        <InformationItem label={commonT("creationDate")}>
+          {formatDate(task.created_time, "HH:mm - dd/MM/yyyy")}
+        </InformationItem>
+        <InformationItem
+          color="secondary.main"
+          label={projectT("detailTasks.form.title.timeTaken")}
+        >
+          {formatNumber(task?.time_execution, {
+            space: false,
+            suffix: "h",
+          })}
         </InformationItem>
       </Stack>
-      <InformationItem label={commonT("creationDate")}>
-        {formatDate(task.created_time, "HH:mm - dd/MM/yyyy")}
-      </InformationItem>
-      <InformationItem label={commonT("form.title.note")} minHeight={150}>
+
+      <InformationItem
+        label={`${commonT("form.title.note")}:`}
+        minHeight={150}
+        bgcolor="grey.50"
+        p={2}
+        borderRadius={1}
+      >
         {!!task?.description && (
           <Box
             sx={{
@@ -221,7 +298,9 @@ const Information = () => {
               },
             }}
             className="html"
-            dangerouslySetInnerHTML={{ __html: task.description }}
+            dangerouslySetInnerHTML={{
+              __html: task.description,
+            }}
           />
         )}
       </InformationItem>
@@ -249,20 +328,22 @@ const ActionItem = (props: ActionItemProps) => {
       }}
     >
       {icon}
-      <Text variant="h6">{children}</Text>
+      <Text variant="h6" color="grey.400" lineHeight={1.28}>
+        {children}
+      </Text>
     </Stack>
   );
 };
 
 const InformationItem = (props: InformationItemProps) => {
-  const { label, children = "--", ...rest } = props;
+  const { label, children = "--", color = "text.primary", ...rest } = props;
   return (
     <Stack spacing={0.5} {...rest}>
-      <Text color="grey.400" variant="caption">
+      <Text color="grey.300" variant="caption">
         {label}
       </Text>
       {typeof children === "string" ? (
-        <Text variant="body2" color="text.primary">
+        <Text variant="body2" color={color}>
           {children}
         </Text>
       ) : (
@@ -273,3 +354,5 @@ const InformationItem = (props: InformationItemProps) => {
 };
 
 const ATTACHMENT_ID = "attachment_id";
+
+const VALUE_AS_EMPTY = "<p><br></p>";

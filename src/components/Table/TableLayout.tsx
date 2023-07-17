@@ -154,6 +154,8 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                       ...sxHeaderProps,
                     } as CellProps["sx"]
                   }
+                  isStart={index === 0}
+                  isEnd={index === headerList.length - 1}
                   {...restHeaderProps}
                   ref={refs[index]}
                 >

@@ -30,7 +30,7 @@ const TabList = () => {
       overflow="auto"
       spacing={4}
       position="sticky"
-      top={0}
+      top={{ xs: 8, sm: 24 }}
       bgcolor="background.paper"
       zIndex={1}
     >
@@ -73,7 +73,7 @@ const TabItem = (props: TabItemProps) => {
 
   return (
     <Link
-      href={getPath(href, undefined, { id: params.id })}
+      href={getPath(href, undefined, { id: params.id as string })}
       underline="none"
       sx={{
         minWidth: 120,
@@ -90,7 +90,12 @@ const TabItem = (props: TabItemProps) => {
         borderRadius: 1,
       }}
     >
-      <Text variant="body2" fontWeight={600} whiteSpace="nowrap">
+      <Text
+        variant="body2"
+        color={isActiveLink ? "text.primary" : "grey.300"}
+        fontWeight={600}
+        whiteSpace="nowrap"
+      >
         {label}
       </Text>
     </Link>

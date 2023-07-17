@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import _ from "lodash";
 import { styled } from "@mui/system";
 import {
@@ -17,7 +17,6 @@ import {
   TableRow,
   CircularProgress,
   Box,
-  Tooltip,
 } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -53,8 +52,19 @@ import Popper from "@mui/material/Popper";
 import PopupState, { bindToggle, bindPopper } from "material-ui-popup-state";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
-
 import { getSameWorker } from "store/timeTracking/actions";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+
+const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "white",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    border: "1px solid #dadde9",
+  },
+}));
 
 const eventStyles = {
   working_time: {
@@ -168,6 +178,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const [activeTab, setActiveTab] = React.useState<string>("timeSheet");
   const [events, setEvents] = React.useState<any[]>([]);
 
+  const [sameTime, setSameTime] = useState({});
   const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs | Date>(
     dayjs(),
   );
@@ -177,38 +188,50 @@ const TrackingCalendar: React.FC<IProps> = () => {
     break: 0,
   });
 
+  useEffect(() => {
+    _.forEach(myTime, (timesheet) => {
+      const idEvent = timesheet?.id;
+      getSameWorker({ id: idEvent }).then(async (res) => {
+        const cloneObject = _.cloneDeep(sameTime);
+
+        cloneObject[idEvent] = res || [];
+        setSameTime((state) => ({ ...state, ...cloneObject }));
+      });
+    });
+  }, [myTime]);
+
   React.useEffect(() => {
     if (!_.isEmpty(myTime)) {
       const result: any[] = [];
       let totalWorkTime = 0;
       let totalBreakTime = 0;
       _.forEach(myTime, (timesheet) => {
-        if (!_.isEmpty(timesheet)) {
-          const newEvent = {
-            title: timesheet?.project?.name,
-            start: timesheet?.start_time,
-            end: timesheet?.end_time,
-            extendedProps: {
-              id: timesheet?.id,
-              date: timesheet?.day,
-              start_time: moment(timesheet?.start_time).format("hh:mm A"),
-              project: timesheet?.project,
-              avatar: userData?.avatar?.link,
-              name: userData?.fullname,
-              position: timesheet?.position,
-              hour: timesheet?.duration,
-              typeDefault: timesheet?.type,
-              type:
-                timesheet?.type === "Work time" ? "working_time" : "break_time",
-              note: timesheet?.note,
-            },
-          };
-          if (timesheet.type === "Work time")
-            totalWorkTime += timesheet.duration;
-          else totalBreakTime += timesheet.duration;
-          result.push(newEvent);
-        }
+        const newEvent = {
+          title: timesheet?.project?.name,
+          start: timesheet?.start_time,
+          end: timesheet?.end_time,
+          extendedProps: {
+            id: timesheet?.id,
+            date: timesheet?.day,
+            start_time: moment(timesheet?.start_time).format("hh:mm A"),
+            project: timesheet?.project,
+            avatar: userData?.avatar?.link,
+            day: timesheet?.day,
+            name: userData?.fullname,
+            position: timesheet?.position,
+            hour: timesheet?.duration,
+            typeDefault: timesheet?.type,
+            type:
+              timesheet?.type === "Work time" ? "working_time" : "break_time",
+            note: timesheet?.note,
+          },
+        };
+        if (timesheet.type === "Work time") totalWorkTime += timesheet.duration;
+        else totalBreakTime += timesheet.duration;
+
+        result.push(newEvent);
       });
+
       setTotalTime({
         work: totalWorkTime,
         break: totalBreakTime,
@@ -258,6 +281,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
     setActiveTab(tab);
   };
 
+  const onGoDay = (value: Date) => {
+    const calendarApi = calendarRef?.current && calendarRef?.current.getApi();
+    calendarApi?.gotoDate(dayjs(value).format("YYYY-MM-DD"));
+  };
   const onAction = (action: "view" | "week", value: string) => {
     const calendarApi = calendarRef?.current && calendarRef?.current.getApi();
 
@@ -282,7 +309,8 @@ const TrackingCalendar: React.FC<IProps> = () => {
           .format("YYYY-MM-DD");
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
-        setSelectedDate(dayjs(filters?.start_date).subtract(7, "day"));
+        setSelectedDate(dayjs(filters?.start_date).subtract(6, "day"));
+
         if (calendarApi) {
           calendarApi.prev();
           calendarApi.refetchEvents();
@@ -298,176 +326,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
 
         setFilters({ ...filters, start_date: startDate, end_date: endDate });
         setCurrentDate("");
-        setSelectedDate(dayjs(filters?.end_date).add(1, "day"));
+        setSelectedDate(dayjs(filters?.end_date).add(2, "day"));
         if (calendarApi) {
           calendarApi.next();
           calendarApi.refetchEvents();
         }
       }
     }
-  };
-
-  const _renderHeader = () => {
-    return (
-      <Grid container>
-        <Grid item xs={3}>
-          <Button
-            startIcon={<PlusIcon />}
-            size="small"
-            variant="contained"
-            sx={{
-              height: "36px",
-              width: "113px",
-              padding: 0,
-              backgroundColor: "primary.main",
-              color: "common.white",
-              textTransform: "none",
-            }}
-            onClick={() => setIsOpenCreatePopup(true)}
-          >
-            {timeT("myTime.addButton")}
-          </Button>
-        </Grid>
-        <Grid
-          item
-          xs={6}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <MobileDatePicker
-              open={isOpen}
-              onOpen={() => setIsOpen(true)}
-              onClose={() => setIsOpen(false)}
-              onChange={(date: Date | null) => {
-                if (date) {
-                  const { startDate, endDate } = getWeekStartAndEndDates(date);
-                  setSelectedDate(date);
-                  setFilters({
-                    ...filters,
-                    start_date: startDate,
-                    end_date: endDate,
-                  });
-                }
-              }}
-              closeOnSelect
-              sx={{ display: "none" }}
-              slotProps={{
-                actionBar: {
-                  actions: [],
-                },
-                toolbar: {
-                  hidden: true,
-                },
-                day: {
-                  sx: {
-                    transition: "all ease 0.25s",
-                    borderRadius: "4px",
-                    fontWeight: 600,
-                    "&.Mui-selected": {
-                      color: "#ffffff",
-                      backgroundColor: `rgba(54, 153, 255, 1) !important`,
-                      "&.MuiPickersDay-today": {
-                        color: "#ffffff",
-                        borderColor: "rgba(54, 153, 255, 1)",
-                      },
-                    },
-                    "&.MuiPickersDay-today": {
-                      color: "rgba(54, 153, 255, 1)",
-                      borderColor: "rgba(54, 153, 255, 1)",
-                    },
-                    ":hover": {
-                      background: "rgba(54, 153, 255, 1)",
-                    },
-                  },
-                },
-              }}
-            />
-          </LocalizationProvider>
-
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{
-              ":hover": {
-                cursor: "pointer",
-              },
-            }}
-            onClick={() => setIsOpen(true)}
-          >
-            <Typography
-              sx={{
-                fontSize: "14px",
-                fontWeight: 600,
-                lineHeight: "18px",
-                color: "#666666",
-                marginRight: "10px",
-              }}
-            >
-              {`${dayjs(filters?.start_date).format("DD MMM YYYY")} - ${dayjs(
-                filters?.end_date,
-              ).format("DD MMM YYYY")}`}
-            </Typography>
-            <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
-          </Stack>
-        </Grid>
-        <Grid item xs={3}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="flex-end"
-            sx={{ gap: "3px" }}
-          >
-            <Button
-              sx={{
-                minWidth: "28px",
-                height: "28px",
-                padding: 0,
-                borderRadius: "4px 0px 0px 4px",
-                backgroundColor: "grey.100",
-                color: "grey.400",
-              }}
-              onClick={() => onAction("week", "prev")}
-            >
-              <ChevronLeftIcon />
-            </Button>
-            <Button
-              sx={{
-                width: "97px",
-                height: "30px",
-                backgroundColor: "grey.100",
-                padding: "4px",
-                color: "grey.400",
-                textAlign: "center",
-              }}
-              onClick={() => onAction("week", "today")}
-              disabled={
-                dayjs(currentDate).format("YYYY-MM-DD") ===
-                dayjs().format("YYYY-MM-DD")
-              }
-            >
-              This week
-            </Button>
-            <Button
-              sx={{
-                minWidth: "28px",
-                height: "28px",
-                padding: 0,
-                borderRadius: "0px 4px 4px 0px",
-                backgroundColor: "grey.100",
-                color: "grey.400",
-              }}
-              onClick={() => onAction("week", "next")}
-            >
-              <ChevronRightIcon />
-            </Button>
-          </Stack>
-        </Grid>
-      </Grid>
-    );
   };
 
   const _renderCalendarModule = () => {
@@ -504,6 +369,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
         {activeTab === "timeSheet" && (
           <CustomizedInputBase
             value={filters.search_key}
+            placeholder={timeT("myTime.searchButton")}
             onChange={(event) =>
               setFilters({ ...filters, search_key: event.target.value })
             }
@@ -513,6 +379,174 @@ const TrackingCalendar: React.FC<IProps> = () => {
           />
         )}
       </Stack>
+    );
+  };
+
+  const _renderHeader = () => {
+    return (
+      <>
+        <Grid container>
+          <Grid item xs={3}>
+            <Button
+              startIcon={<PlusIcon />}
+              size="small"
+              variant="contained"
+              sx={{
+                height: "36px",
+                width: "113px",
+                padding: 0,
+                backgroundColor: "primary.main",
+                color: "common.white",
+                textTransform: "none",
+              }}
+              onClick={() => setIsOpenCreatePopup(true)}
+            >
+              {timeT("myTime.addButton")}
+            </Button>
+          </Grid>
+          <Grid
+            item
+            xs={6}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <MobileDatePicker
+                open={isOpen}
+                onOpen={() => setIsOpen(true)}
+                onClose={() => setIsOpen(false)}
+                onChange={(date: Date | null) => {
+                  if (date) {
+                    const { startDate, endDate } =
+                      getWeekStartAndEndDates(date);
+                    setSelectedDate(date);
+                    onGoDay(date);
+                    setFilters({
+                      ...filters,
+                      start_date: startDate,
+                      end_date: endDate,
+                    });
+                  }
+                }}
+                closeOnSelect
+                sx={{ display: "none" }}
+                slotProps={{
+                  actionBar: {
+                    actions: [],
+                  },
+                  toolbar: {
+                    hidden: true,
+                  },
+                  day: {
+                    sx: {
+                      transition: "all ease 0.25s",
+                      borderRadius: "4px",
+                      fontWeight: 600,
+                      "&.Mui-selected": {
+                        color: "#ffffff",
+                        backgroundColor: `rgba(54, 153, 255, 1) !important`,
+                        "&.MuiPickersDay-today": {
+                          color: "#ffffff",
+                          borderColor: "rgba(54, 153, 255, 1)",
+                        },
+                      },
+                      "&.MuiPickersDay-today": {
+                        color: "rgba(54, 153, 255, 1)",
+                        borderColor: "rgba(54, 153, 255, 1)",
+                      },
+                      ":hover": {
+                        background: "rgba(54, 153, 255, 1)",
+                      },
+                    },
+                  },
+                }}
+              />
+            </LocalizationProvider>
+
+            <Stack
+              direction="row"
+              alignItems="center"
+              sx={{
+                ":hover": {
+                  cursor: "pointer",
+                },
+              }}
+              onClick={() => setIsOpen(true)}
+            >
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  lineHeight: "18px",
+                  color: "#666666",
+                  marginRight: "10px",
+                }}
+              >
+                {`${dayjs(filters?.start_date).format("DD MMM YYYY")} - ${dayjs(
+                  filters?.end_date,
+                ).format("DD MMM YYYY")}`}
+              </Typography>
+              <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
+            </Stack>
+          </Grid>
+          <Grid item xs={3}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="flex-end"
+              sx={{ gap: "3px" }}
+            >
+              <Button
+                sx={{
+                  minWidth: "28px",
+                  height: "28px",
+                  padding: 0,
+                  borderRadius: "4px 0px 0px 4px",
+                  backgroundColor: "grey.100",
+                  color: "grey.400",
+                }}
+                onClick={() => onAction("week", "prev")}
+              >
+                <ChevronLeftIcon />
+              </Button>
+              <Button
+                sx={{
+                  width: "97px",
+                  height: "30px",
+                  backgroundColor: "grey.100",
+                  padding: "4px",
+                  color: "grey.400",
+                  textAlign: "center",
+                }}
+                onClick={() => onAction("week", "today")}
+                disabled={
+                  dayjs(currentDate).format("YYYY-MM-DD") ===
+                  dayjs().format("YYYY-MM-DD")
+                }
+              >
+                This week
+              </Button>
+              <Button
+                sx={{
+                  minWidth: "28px",
+                  height: "28px",
+                  padding: 0,
+                  borderRadius: "0px 4px 4px 0px",
+                  backgroundColor: "grey.100",
+                  color: "grey.400",
+                }}
+                onClick={() => onAction("week", "next")}
+              >
+                <ChevronRightIcon />
+              </Button>
+            </Stack>
+          </Grid>
+        </Grid>
+        {_renderCalendarModule()}
+      </>
     );
   };
 
@@ -585,229 +619,154 @@ const TrackingCalendar: React.FC<IProps> = () => {
       }}
     >
       {_renderHeader()}
-      {_renderCalendarModule()}
+      <Stack
+        //ref={scrollRef}
+        sx={{
+          height: `calc(100vh - 400px)`,
+          overflow: "auto",
+          position: "relative",
+        }}
+      >
+        {/* {_renderCalendarModule()} */}
 
-      {_renderTimeSheetContent()}
-      {activeTab === "timeGridWeek" && (
-        <Stack sx={{ ...calendarStyles }} className={`view-timeGridWeek`}>
-          <FullCalendar
-            ref={calendarRef}
-            // locale={locale === 'en' ? enLocale : viLocale}
-            plugins={[dayGridPlugin, timeGridPlugin]}
-            initialView={"timeGridWeek"}
-            //weekends={true}
-            headerToolbar={false}
-            allDaySlot={false}
-            events={events}
-            dayHeaderContent={(eventInfo: {
-              date: Date;
-              text: string;
-              isToday: boolean;
-            }) => {
-              // const date = dayjs(eventInfo.date);
-              const dayOfWeek = eventInfo.text.split(" ").shift();
-              // const isSelected = dayjs(dayjs(date).format('YYYY-MM-DDDD')).isSame(
-              //   dayjs(selectedDate).format('YYYY-MM-DDDD')
-              // );
-              return (
-                <Stack
-                  direction="column"
-                  // sx={{ cursor: 'pointer' }}
-                  // onClick={() => {
-                  //   setSelectedDate(date);
-                  // }}
-                >
-                  <Typography
-                    sx={{
-                      textTransform: "uppercase",
-                      fontSize: "10px",
-                      fontWeight: 400,
-                      textAlign: "left",
-                      // color: isSelected ? CommonColors.brandColor : '#71717A',
-                    }}
-                  >
-                    {dayOfWeek}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      textTransform: "uppercase",
-                      fontSize: "20px",
-                      textAlign: "left",
-                      fontWeight: 600,
-                      // color: isSelected ? CommonColors.brandColor : '#212121',
-                    }}
-                  >
-                    {dayjs(eventInfo?.date).isValid() &&
-                      dayjs(eventInfo?.date).format("DD")}
-                  </Typography>
-                </Stack>
-              );
+        {_renderTimeSheetContent()}
+        {true && (
+          <Stack
+            sx={{
+              ...calendarStyles,
+              display: activeTab === "timeGridWeek" ? "block" : "none",
+
+              //overflow: "hidden",
             }}
-            slotLabelFormat={{
-              hour: "numeric",
-              minute: "2-digit",
-              omitZeroMinute: false,
-            }}
-            eventContent={(eventInfo) => {
-              const type = eventInfo?.event?.extendedProps?.type;
-              const styles = eventStyles[type as "working_time" | "break_time"];
-              const boxStyles = {
-                position: "relative",
-                ...styles,
-                height: "100%",
-                padding: "0 6px",
-                "&:hover": {
-                  cursor: "pointer",
-                  opacity: 1,
-                  transtion: "all .3s ease-in-out",
-                  height: "100%",
-                  ".fc-event-main": {
-                    overflow: "visible!important",
-                  },
-                  ".same-time-worker": {
-                    visibility: "visible",
-                  },
-                },
-              };
-              if (type === "working_time")
+            className={`view-timeGridWeek`}
+          >
+            <FullCalendar
+              ref={calendarRef}
+              height={`calc(100vh - 420px)`}
+              // locale={locale === 'en' ? enLocale : viLocale}
+              plugins={[dayGridPlugin, timeGridPlugin]}
+              initialView={"timeGridWeek"}
+              //weekends={true}
+              headerToolbar={false}
+              allDaySlot={false}
+              events={events}
+              dayHeaderContent={(eventInfo: {
+                date: Date;
+                text: string;
+                isToday: boolean;
+              }) => {
+                // const date = dayjs(eventInfo.date);
+                const dayOfWeek = eventInfo.text.split(" ").shift();
+                // const isSelected = dayjs(dayjs(date).format('YYYY-MM-DDDD')).isSame(
+                //   dayjs(selectedDate).format('YYYY-MM-DDDD')
+                // );
                 return (
-                  <PopupState variant="popper" popupId="demo-popup-popper">
-                    {(popupState) => (
-                      <div>
-                        <Stack
-                          direction="column"
-                          sx={boxStyles}
-                          // {...bindToggle(popupState)}
-                        >
-                          <Stack direction="row" alignItems="center">
-                            <Avatar
-                              sx={{ width: "20px", height: "20px" }}
-                              src={eventInfo?.event?.extendedProps?.avatar}
-                            />
-                            <Typography
-                              sx={{
-                                fontSize: "14px",
-                                fontWeight: 600,
-                                lineHeight: "18px",
-                                marginLeft: "4px",
-                                color: "primary.main",
-                              }}
-                            >
-                              {eventInfo?.event?.extendedProps.name}
-                            </Typography>
-                          </Stack>
-                          <Typography sx={subEventDayStyles}>
-                            {eventInfo?.event?.extendedProps?.position?.name ||
-                              "--"}
-                          </Typography>
-                          <Typography sx={subEventDayStyles}>
-                            {eventInfo?.event?.extendedProps.hour}
-                          </Typography>
-                          {eventInfo?.event?.extendedProps.sameWorker?.map(
-                            (item, index) => {
-                              return (
-                                <Stack
-                                  key={index}
-                                  className="same-time-worker"
-                                  sx={{
-                                    visibility: "hidden",
-                                    transition: "all .3s ease-in-out",
-                                  }}
-                                >
-                                  <Typography
-                                    sx={{
-                                      fontSize: "12px",
-                                      lineHeight: "18px",
-                                      fontWeight: 400,
-                                      color: "#212121",
-                                      mb: 1,
-                                    }}
-                                  >
-                                    Người làm cùng giờ:
-                                  </Typography>
-
-                                  <Box
-                                    sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      gap: 1,
-                                      mb: 1,
-                                    }}
-                                  >
-                                    <Avatar
-                                      sx={{ width: 20, height: 20 }}
-                                      src={item?.avatar?.link}
-                                    />
-                                    <Typography
-                                      sx={{
-                                        fontSize: "12px",
-                                        lineHeight: "16px",
-                                        color: "#000",
-                                      }}
-                                    >
-                                      {item.fullname}
-                                    </Typography>
-                                  </Box>
-                                </Stack>
-                              );
-                            },
-                          )}
-                        </Stack>
-                        <Popper {...bindPopper(popupState)} transition>
-                          {({ TransitionProps }) => (
-                            <Fade {...TransitionProps} timeout={350}>
-                              <Paper></Paper>
-                            </Fade>
-                          )}
-                        </Popper>
-                      </div>
-                    )}
-                  </PopupState>
+                  <Stack
+                    direction="column"
+                    // sx={{ cursor: 'pointer' }}
+                    // onClick={() => {
+                    //   setSelectedDate(date);
+                    // }}
+                  >
+                    <Typography
+                      sx={{
+                        textTransform: "uppercase",
+                        fontSize: "10px",
+                        fontWeight: 400,
+                        textAlign: "left",
+                        // color: isSelected ? CommonColors.brandColor : '#71717A',
+                      }}
+                    >
+                      {dayOfWeek}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        textTransform: "uppercase",
+                        fontSize: "20px",
+                        textAlign: "left",
+                        fontWeight: 600,
+                        // color: isSelected ? CommonColors.brandColor : '#212121',
+                      }}
+                    >
+                      {dayjs(eventInfo?.date).isValid() &&
+                        dayjs(eventInfo?.date).format("DD")}
+                    </Typography>
+                  </Stack>
                 );
-              return (
-                <PopupState variant="popper" popupId="demo-popup-popper">
-                  {(popupState) => (
-                    <div>
-                      <Stack direction="column" sx={boxStyles}>
-                        <Stack direction="row" alignItems="center">
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                              mt: "6px",
-                            }}
+              }}
+              slotLabelFormat={{
+                hour: "numeric",
+                minute: "2-digit",
+                omitZeroMinute: false,
+              }}
+              eventContent={(eventInfo) => {
+                const type = eventInfo?.event?.extendedProps?.type;
+                const styles =
+                  eventStyles[type as "working_time" | "break_time"];
+                const boxStyles = {
+                  position: "relative",
+                  ...styles,
+                  height: "100%",
+                  padding: "0 6px",
+                  // "&:hover": {
+                  //   cursor: "pointer",
+                  //   opacity: 1,
+                  //   transtion: "all .3s ease-in-out",
+                  //   height: "100%",
+                  //   ".fc-event-main": {
+                  //     overflow: "visible!important",
+                  //   },
+                  //   ".same-time-worker": {
+                  //     visibility: "visible",
+                  //   },
+                  // },
+                };
+                if (type === "working_time")
+                  return (
+                    <HtmlTooltip
+                      title={
+                        <>
+                          <Stack
+                            direction="column"
+                            sx={{ backgroundColor: "common.white" }}
+
+                            // {...bindToggle(popupState)}
                           >
-                            <Avatar
-                              sx={{ width: "20px", height: "20px" }}
-                              src={eventInfo?.event?.extendedProps?.avatar}
-                            />
-                            <Typography
-                              sx={{
-                                fontSize: "14px",
-                                fontWeight: 600,
-                                lineHeight: "18px",
-                                color: "rgba(246, 78, 96, 1)",
-                              }}
-                            >
-                              {eventInfo?.event?.extendedProps.name}
-                            </Typography>
-                          </Box>
-                        </Stack>
-                        <Typography sx={subEventDayStyles}>
-                          {eventInfo?.event?.extendedProps.position?.name}
-                        </Typography>
-                        {eventInfo?.event?.extendedProps.sameWorker?.map(
-                          (item, index) => {
-                            return (
-                              <Stack
-                                key={index}
-                                className="same-time-worker"
+                            <Stack direction="row" alignItems="center">
+                              <Avatar
+                                sx={{ width: "20px", height: "20px", marginTop: "6px" }}
+                                src={eventInfo?.event?.extendedProps?.avatar}
+                              />
+                              <Typography
                                 sx={{
-                                  visibility: "hidden",
-                                  transition: "all .3s ease-in-out",
+                                  fontSize: "14px",
+                                  fontWeight: 600,
+                                  lineHeight: "18px",
+                                  marginTop: "6px",
+                                  marginLeft: "4px",
+                                  color: "primary.main",
                                 }}
                               >
+                                {eventInfo?.event?.extendedProps.name}
+                              </Typography>
+                            </Stack>
+                            <Typography sx={subEventDayStyles}>
+                              {eventInfo?.event?.extendedProps?.position
+                                ?.name || "--"}
+                            </Typography>
+                            <Typography sx={subEventDayStyles}>
+                              {eventInfo?.event?.extendedProps.hour}
+                            </Typography>
+
+                            <Stack
+                              className="same-time-worker"
+                              // sx={{
+                              //   visibility: "hidden",
+                              //   transition: "all .3s ease-in-out",
+                              // }}
+                            >
+                            {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
+                              <>  
                                 <Typography
                                   sx={{
                                     fontSize: "12px",
@@ -817,258 +776,534 @@ const TrackingCalendar: React.FC<IProps> = () => {
                                     mb: 1,
                                   }}
                                 >
-                                  Người làm cùng giờ:
+                                  {timeT("myTime.calender_tab.same_time_worker")}:
                                 </Typography>
+                                {sameTime[
+                                  `${eventInfo?.event?.extendedProps?.id}`
+                                ]?.map((item, index) => {
+                                  return (
+                                    <Box
+                                      key={index}
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        mb: 1,
+                                      }}
+                                    >
+                                      <Avatar
+                                        sx={{ width: 20, height: 20 }}
+                                        src={item?.avatar?.link}
+                                      />
+                                      <Typography
+                                        sx={{
+                                          fontSize: "12px",
+                                          lineHeight: "16px",
+                                          color: "#000",
+                                        }}
+                                      >
+                                        {item.fullname}
+                                      </Typography>
+                                    </Box>
+                                  );
+                                })}
+                              </>
+                            )}
+                            </Stack>
+                          </Stack>
+                        </>
+                      }
+                    >
+                      <Stack
+                        direction="column"
+                        sx={boxStyles}
+                        // {...bindToggle(popupState)}
+                      >
+                        <Stack direction="row" alignItems="center">
+                          <Avatar
+                            sx={{ width: "20px", height: "20px", marginTop: "6px" }}
+                            src={eventInfo?.event?.extendedProps?.avatar}
+                          />
+                          <Typography
+                            sx={{
+                              fontSize: "14px",
+                              fontWeight: 600,
+                              lineHeight: "18px",
+                              marginTop: "6px",
+                              marginLeft: "4px",
+                              color: "primary.main",
+                            }}
+                          >
+                            {eventInfo?.event?.extendedProps.name}
+                          </Typography>
+                        </Stack>
+                        <Typography sx={subEventDayStyles}>
+                          {eventInfo?.event?.extendedProps?.position?.name ||
+                            "--"}
+                        </Typography>
+                        <Typography sx={subEventDayStyles}>
+                          {eventInfo?.event?.extendedProps.hour}
+                        </Typography>
 
+                        <Stack
+                          className="same-time-worker"
+                          // sx={{
+                          //   visibility: "hidden",
+                          //   transition: "all .3s ease-in-out",
+                          // }}
+                        >
+                          {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
+                              <>  
+                                <Typography
+                                  sx={{
+                                    fontSize: "12px",
+                                    lineHeight: "18px",
+                                    fontWeight: 400,
+                                    color: "#212121",
+                                    mb: 1,
+                                  }}
+                                >
+                                  {timeT("myTime.calender_tab.same_time_worker")}:
+                                </Typography>
+                                {sameTime[
+                                  `${eventInfo?.event?.extendedProps?.id}`
+                                ]?.map((item, index) => {
+                                  return (
+                                    <Box
+                                      key={index}
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        mb: 1,
+                                      }}
+                                    >
+                                      <Avatar
+                                        sx={{ width: 20, height: 20 }}
+                                        src={item?.avatar?.link}
+                                      />
+                                      <Typography
+                                        sx={{
+                                          fontSize: "12px",
+                                          lineHeight: "16px",
+                                          color: "#000",
+                                        }}
+                                      >
+                                        {item.fullname}
+                                      </Typography>
+                                    </Box>
+                                  );
+                                })}
+                              </>
+                            )}
+                        </Stack>
+                      </Stack>
+                    </HtmlTooltip>
+                  );
+                return (
+                  <HtmlTooltip
+                    title={
+                      <>
+                        <Stack
+                          direction="column"
+                          sx={{ backgroundColor: "common.white" }}
+                        >
+                          <Stack direction="row" alignItems="center">
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                                mt: "6px",
+                              }}
+                            >
+                              <Avatar
+                                sx={{ width: "20px", height: "20px", marginTop: "6px" }}
+                                src={eventInfo?.event?.extendedProps?.avatar}
+                              />
+                              <Typography
+                                sx={{
+                                  fontSize: "14px",
+                                  fontWeight: 600,
+                                  lineHeight: "18px",
+                                  marginTop: "6px",
+                                  marginLeft: "4px",
+                                  color: "rgba(246, 78, 96, 1)",
+                                }}
+                              >
+                                {eventInfo?.event?.extendedProps.name}
+                              </Typography>
+                            </Box>
+                          </Stack>
+                          <Typography sx={subEventDayStyles}>
+                            {eventInfo?.event?.extendedProps.position?.name}
+                          </Typography>
+
+                          <Stack
+                            className="same-time-worker"
+                            // sx={{
+                            //   visibility: "hidden",
+                            //   transition: "all .3s ease-in-out",
+                            // }}
+                          >
+                            {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
+                              <>  
+                                <Typography
+                                  sx={{
+                                    fontSize: "12px",
+                                    lineHeight: "18px",
+                                    fontWeight: 400,
+                                    color: "#212121",
+                                    mb: 1,
+                                  }}
+                                >
+                                  {timeT("myTime.calender_tab.same_time_worker")}:
+                                </Typography>
+                                {sameTime[
+                                  `${eventInfo?.event?.extendedProps?.id}`
+                                ]?.map((item, index) => {
+                                  return (
+                                    <Box
+                                      key={index}
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        mb: 1,
+                                      }}
+                                    >
+                                      <Avatar
+                                        sx={{ width: 20, height: 20 }}
+                                        src={item?.avatar?.link}
+                                      />
+                                      <Typography
+                                        sx={{
+                                          fontSize: "12px",
+                                          lineHeight: "16px",
+                                          color: "#000",
+                                        }}
+                                      >
+                                        {item.fullname}
+                                      </Typography>
+                                    </Box>
+                                  );
+                                })}
+                              </>
+                            )}
+                          </Stack>
+                        </Stack>
+                      </>
+                    }
+                  >
+                    <Stack direction="column" sx={boxStyles}>
+                      <Stack direction="row" alignItems="center">
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            mt: "6px",
+                          }}
+                        >
+                          <Avatar
+                            sx={{ width: "20px", height: "20px", marginTop: "6px" }}
+                            src={eventInfo?.event?.extendedProps?.avatar}
+                          />
+                          <Typography
+                            sx={{
+                              fontSize: "14px",
+                              fontWeight: 600,
+                              lineHeight: "18px",
+                              marginTop: "6px",
+                              marginLeft: "4px",
+                              color: "rgba(246, 78, 96, 1)",
+                            }}
+                          >
+                            {eventInfo?.event?.extendedProps.name}
+                          </Typography>
+                        </Box>
+                      </Stack>
+                      <Typography sx={subEventDayStyles}>
+                        {eventInfo?.event?.extendedProps.position?.name}
+                      </Typography>
+
+                      <Stack
+                        className="same-time-worker"
+                        // sx={{
+                        //   visibility: "hidden",
+                        //   transition: "all .3s ease-in-out",
+                        // }}
+                      >
+                        {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
+                              <>  
+                                <Typography
+                                  sx={{
+                                    fontSize: "12px",
+                                    lineHeight: "18px",
+                                    fontWeight: 400,
+                                    color: "#212121",
+                                    mb: 1,
+                                  }}
+                                >
+                                  {timeT("myTime.calender_tab.same_time_worker")}:
+                                </Typography>
+                                {sameTime[
+                                  `${eventInfo?.event?.extendedProps?.id}`
+                                ]?.map((item, index) => {
+                                  return (
+                                    <Box
+                                      key={index}
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        mb: 1,
+                                      }}
+                                    >
+                                      <Avatar
+                                        sx={{ width: 20, height: 20 }}
+                                        src={item?.avatar?.link}
+                                      />
+                                      <Typography
+                                        sx={{
+                                          fontSize: "12px",
+                                          lineHeight: "16px",
+                                          color: "#000",
+                                        }}
+                                      >
+                                        {item.fullname}
+                                      </Typography>
+                                    </Box>
+                                  );
+                                })}
+                              </>
+                            )}
+                      </Stack>
+                    </Stack>
+                  </HtmlTooltip>
+                );
+              }}
+              slotLabelContent={(eventInfo: { date: Date }) => {
+                const currentTime = dayjs(eventInfo.date).format("hh:mm A");
+                return (
+                  <Typography
+                    sx={{
+                      // width: '128px',
+                      textAlign: "left",
+                      padding: "0px 8px",
+                      fontSize: "12px",
+                      lineHeight: "18px",
+                      fontWeight: 400,
+                      color: "#666666",
+                    }}
+                  >
+                    {currentTime}
+                  </Typography>
+                );
+              }}
+              viewDidMount={(view) => {
+                const timeGridAxisElement = view.el.querySelector(
+                  ".fc-timegrid-axis-frame",
+                );
+                if (timeGridAxisElement) timeGridAxisElement.innerHTML = "Time";
+              }}
+              //allDayDidMount={(arg) => ""}
+            />
+          </Stack>
+        )}
+        {activeTab === "dayGridWeek" && (
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(7, 1fr)",
+                  borderTop: "1px solid rgb(224, 224, 224)",
+                  borderLeft: "1px solid rgb(224, 224, 224)",
+                }}
+              >
+                {_.map(dateRange, (date: Date, index) => {
+                  const weekday = weekdays[date.getDay()];
+                  const dayNumber = date.getDate();
+                  return (
+                    <StyledDay
+                      key={index}
+                      className={
+                        dayjs(dayjs(date).format("YYYY-MM-DDDD")).isSame(
+                          dayjs(selectedDate).format("YYYY-MM-DDDD"),
+                        )
+                          ? "selected"
+                          : ""
+                      }
+                      onClick={() => setSelectedDate(date)}
+                    >
+                      <h3>{weekday}</h3>
+                      <Typography
+                        variant="h4"
+                        sx={{ color: isDarkMode ? "#fff" : "common.black" }}
+                      >
+                        {dayNumber}
+                      </Typography>
+                    </StyledDay>
+                  );
+                })}
+              </Box>
+            </Grid>
+            <Grid item xs={12} sx={{ paddingTop: "0px!important" }}>
+              <TableContainer
+                sx={{
+                  borderLeft: "1px solid rgb(224, 224, 224)",
+                  height: "calc(100vh - 470px)",
+                  paddingTop: "0px!important",
+                }}
+              >
+                <Table
+                  sx={{
+                    borderCollapse: "separate",
+                    borderSpacing: "0 8px",
+                    position: "relative",
+                    //bottom: "-7px",
+                  }}
+                  stickyHeader={true}
+                >
+                  <TableHead>
+                    <StyledTableRow>
+                      <StyledTableCell>
+                        {timeT("myTime.day_tab.project")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("myTime.day_tab.position")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("myTime.day_tab.start_time")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("myTime.day_tab.time")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("myTime.day_tab.note")}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  </TableHead>
+                  <TableBody>
+                    {!_.isEmpty(dataDayTable) ? (
+                      dataDayTable?.map((event, index) => {
+                        // if (
+                        //   selectedDate &&
+                        //   !dayjs(dayjs(selectedDate).format("YYYY-MM-DD")).isSame(
+                        //     dayjs(event?.start).format("YYYY-MM-DD"),
+                        //   )
+                        // )
+                        //   return <></>;
+                        const rowStyles = {
+                          borderLeft: `4px solid rgba(54, 153, 255, 1)`,
+                          backgroundColor: "primary.light",
+                        };
+                        if (event?.extendedProps?.type === "break_time")
+                          Object.assign(rowStyles, {
+                            borderLeft: `4px solid rgba(246, 78, 96, 1)`,
+                            backgroundColor: "error.light",
+                          });
+                        return (
+                          <Tooltip
+                            key={index}
+                            title="Click to view detail"
+                            arrow
+                          >
+                            <StyledTableRow
+                              sx={{
+                                ...rowStyles,
+                                cursor: "pointer",
+                              }}
+                              key={index}
+                              onClick={() => {
+                                setIsEdit(true);
+                                setSelectedEvent(event);
+                                setIsOpenCreatePopup(true);
+                              }}
+                            >
+                              <StyledTableCell>
                                 <Box
                                   sx={{
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: 1,
-                                    mb: 1,
+                                    gap: "12px",
                                   }}
                                 >
-                                  <Avatar
-                                    sx={{ width: 20, height: 20 }}
-                                    src={item.avatar.link}
-                                  />
-                                  <Typography
-                                    sx={{
-                                      fontSize: "12px",
-                                      lineHeight: "16px",
-                                      color: "#000",
-                                    }}
-                                  >
-                                    {item.fullname}
-                                  </Typography>
+                                  <Avatar sx={{ width: 20, height: 20 }} />
+
+                                  {event?.extendedProps?.project?.name}
                                 </Box>
-                              </Stack>
-                            );
-                          },
-                        )}
-                      </Stack>
-                      <Popper {...bindPopper(popupState)} transition>
-                        {({ TransitionProps }) => (
-                          <Fade {...TransitionProps} timeout={350}>
-                            <Paper>
-                              <Typography sx={{ p: 2 }}>
-                                The content of the Popper.
-                              </Typography>
-                            </Paper>
-                          </Fade>
-                        )}
-                      </Popper>
-                    </div>
-                  )}
-                </PopupState>
-              );
-            }}
-            slotLabelContent={(eventInfo: { date: Date }) => {
-              const currentTime = dayjs(eventInfo.date).format("hh:mm A");
-              return (
-                <Typography
-                  sx={{
-                    // width: '128px',
-                    textAlign: "left",
-                    padding: "0px 8px",
-                    fontSize: "12px",
-                    lineHeight: "18px",
-                    fontWeight: 400,
-                    color: "#666666",
-                  }}
-                >
-                  {currentTime}
-                </Typography>
-              );
-            }}
-            viewDidMount={(view) => {
-              const timeGridAxisElement = view.el.querySelector(
-                ".fc-timegrid-axis-frame",
-              );
-              if (timeGridAxisElement) timeGridAxisElement.innerHTML = "Time";
-            }}
-            //allDayDidMount={(arg) => ""}
-          />
-        </Stack>
-      )}
-      {activeTab === "dayGridWeek" && (
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(7, 1fr)",
-                borderTop: "1px solid rgb(224, 224, 224)",
-                borderLeft: "1px solid rgb(224, 224, 224)",
-              }}
-            >
-              {_.map(dateRange, (date: Date, index) => {
-                const weekday = weekdays[date.getDay()];
-                const dayNumber = date.getDate();
-                return (
-                  <StyledDay
-                    key={index}
-                    className={
-                      dayjs(dayjs(date).format("YYYY-MM-DDDD")).isSame(
-                        dayjs(selectedDate).format("YYYY-MM-DDDD"),
-                      )
-                        ? "selected"
-                        : ""
-                    }
-                    onClick={() => setSelectedDate(date)}
-                  >
-                    <h3>{weekday}</h3>
-                    <Typography
-                      variant="h4"
-                      sx={{ color: isDarkMode ? "#fff" : "common.black" }}
-                    >
-                      {dayNumber}
-                    </Typography>
-                  </StyledDay>
-                );
-              })}
-            </Box>
-          </Grid>
-          <Grid item xs={12} sx={{ paddingTop: "0px!important" }}>
-            <TableContainer sx={{ borderLeft: "1px solid rgb(224, 224, 224)" }}>
-              <Table
-                sx={{
-                  borderCollapse: "separate",
-                  borderSpacing: "0 8px",
-                  position: "relative",
-                  bottom: "-7px",
-                }}
-              >
-                <TableHead>
-                  <StyledTableRow>
-                    <StyledTableCell>
-                      {timeT("myTime.day_tab.project")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {timeT("myTime.day_tab.position")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {timeT("myTime.day_tab.start_time")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {timeT("myTime.day_tab.time")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {timeT("myTime.day_tab.note")}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                </TableHead>
-                <TableBody>
-                  {!_.isEmpty(dataDayTable) ? (
-                    dataDayTable?.map((event, index) => {
-                      // if (
-                      //   selectedDate &&
-                      //   !dayjs(dayjs(selectedDate).format("YYYY-MM-DD")).isSame(
-                      //     dayjs(event?.start).format("YYYY-MM-DD"),
-                      //   )
-                      // )
-                      //   return <></>;
-                      const rowStyles = {
-                        borderLeft: `4px solid rgba(54, 153, 255, 1)`,
-                        backgroundColor: "primary.light",
-                      };
-                      if (event?.extendedProps?.type === "break_time")
-                        Object.assign(rowStyles, {
-                          borderLeft: `4px solid rgba(246, 78, 96, 1)`,
-                          backgroundColor: "error.light",
-                        });
-                      return (
-                        <Tooltip key={index} title="Click to view detail" arrow>
-                          <StyledTableRow
-                            sx={{ ...rowStyles, cursor: "pointer" }}
-                            key={index}
-                            onClick={() => {
-                              setIsEdit(true);
-                              setSelectedEvent(event);
-                              setIsOpenCreatePopup(true);
-                            }}
-                          >
-                            <StyledTableCell>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: "12px",
-                                }}
-                              >
-                                <Avatar sx={{ width: 20, height: 20 }} />
+                              </StyledTableCell>
+                              <StyledTableCell>
+                                {event?.extendedProps?.position?.name}
+                              </StyledTableCell>
+                              <StyledTableCell>
+                                {" "}
+                                {event?.extendedProps?.start_time}{" "}
+                              </StyledTableCell>
+                              <StyledTableCell>
+                                {" "}
+                                {event?.extendedProps?.hour || 0}h
+                              </StyledTableCell>
+                              <StyledTableCell>
+                                {event?.extendedProps?.note}
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          </Tooltip>
+                        );
+                      })
+                    ) : (
+                      <StyledTableRow>
+                        <StyledTableCell
+                          colSpan={9}
+                          align="center"
+                          sx={{
+                            fontSize: "14px",
+                            lineHeight: "20px",
+                            fontWeight: 400,
+                            p: 1,
+                            widtH: 1,
+                          }}
+                        >
+                          No data were found
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    )}
 
-                                {event?.extendedProps?.project?.name}
-                              </Box>
-                            </StyledTableCell>
-                            <StyledTableCell>
-                              {event?.extendedProps?.position?.name}
-                            </StyledTableCell>
-                            <StyledTableCell>
-                              {" "}
-                              {event?.extendedProps?.start_time}{" "}
-                            </StyledTableCell>
-                            <StyledTableCell>
-                              {" "}
-                              {event?.extendedProps?.hour || 0}h
-                            </StyledTableCell>
-                            <StyledTableCell>
-                              {event?.extendedProps?.note}
-                            </StyledTableCell>
-                          </StyledTableRow>
-                        </Tooltip>
-                      );
-                    })
-                  ) : (
-                    <StyledTableRow>
-                      <StyledTableCell
-                        colSpan={9}
-                        align="center"
+                    {isGetLoading && (
+                      <Box
                         sx={{
-                          fontSize: "14px",
-                          lineHeight: "20px",
-                          fontWeight: 400,
-                          p: 1,
-                          widtH: 1,
-                        }}
-                      >
-                        No data were found
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  )}
-
-                  {isGetLoading && (
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        width: 1,
-                        height: 1,
-                        top: 0,
-                        left: 0,
-                        backgroundColor: " rgba(0, 0, 0, 0.1)",
-
-                        webkitTapHighlightColor: "transparent",
-                      }}
-                    >
-                      <Stack
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          height: 1,
+                          position: "absolute",
                           width: 1,
+                          height: 1,
+                          top: 0,
+                          left: 0,
+                          backgroundColor: " rgba(0, 0, 0, 0.1)",
+
+                          webkitTapHighlightColor: "transparent",
                         }}
                       >
-                        <CircularProgress />
-                      </Stack>
-                    </Box>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                        <Stack
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            height: 1,
+                            width: 1,
+                          }}
+                        >
+                          <CircularProgress />
+                        </Stack>
+                      </Box>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
           </Grid>
-        </Grid>
-      )}
+        )}
+      </Stack>
       {_renderFooter()}
       {_redderCreatePopup()}
       {/* {_redderUpdatePopup()} */}

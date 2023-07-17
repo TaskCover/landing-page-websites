@@ -118,7 +118,7 @@ const Textarea: React.FC<TextFieldInputProps> = React.forwardRef(
                 padding: "0 20px 20px 20px",
                 resize: "vertical",
                 backgroundColor: isDarkMode ? "#393939" : "grey.50",
-                minHeight: "112px",
+                minHeight: "52px",
                 maxHeight: "250px",
                 " .MuiInputBase-root": {
                   // background: CommonColors.bgInput,

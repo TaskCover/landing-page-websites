@@ -21,8 +21,8 @@ const Wrapper = (props: WrapperProps) => {
   const { height } = useWindowSize();
 
   const isNotJoin = useMemo(
-    () => isLoggedIn && !user?.company,
-    [isLoggedIn, user?.company],
+    () => isLoggedIn && !user?.company && !user?.roles?.includes(Permission.SA),
+    [isLoggedIn, user?.company, user?.roles],
   );
 
   const isSmallHeight = useMemo(() => height && height < 768, [height]);

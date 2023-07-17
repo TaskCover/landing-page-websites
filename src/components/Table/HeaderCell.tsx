@@ -5,11 +5,13 @@ import { Text, TextProps } from "components/shared";
 export type HeaderCellProps = {
   children: string | React.ReactNode;
   textProps?: TextProps;
+  isStart: boolean;
+  isEnd: boolean;
 } & TableCellProps;
 
 const HeaderCell = forwardRef(
   (props: HeaderCellProps, ref: ForwardedRef<HTMLTableCellElement>) => {
-    const { children, textProps = {}, sx, ...rest } = props;
+    const { children, textProps = {}, sx, isStart, isEnd, ...rest } = props;
 
     return (
       <TableCell
@@ -17,6 +19,10 @@ const HeaderCell = forwardRef(
           backgroundColor: "grey.50",
           borderBottom: "none",
           py: 0,
+          borderTopLeftRadius: isStart ? 4 : undefined,
+          borderBottomLeftRadius: isStart ? 4 : undefined,
+          borderTopRightRadius: isEnd ? 4 : undefined,
+          borderBottomRightRadius: isEnd ? 4 : undefined,
           ...sx,
         }}
         height={HEIGHT_HEADER}
@@ -25,12 +31,7 @@ const HeaderCell = forwardRef(
         {...rest}
       >
         {typeof children === "string" ? (
-          <Text
-            color="grey.400"
-            variant="body2"
-            fontWeight={600}
-            {...textProps}
-          >
+          <Text variant="h6" {...textProps}>
             {children}
           </Text>
         ) : (

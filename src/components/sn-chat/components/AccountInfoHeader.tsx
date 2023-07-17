@@ -41,8 +41,12 @@ const AccountInfoHeader = ({
     if (isGroup) {
       return (
         <>
-          <div style={{ position: 'relative' }}>
-            <ImageList sx={{ width: 56, height: 56, margin: 0 }} cols={2} rowHeight={164}>
+          <div style={{ position: "relative" }}>
+            <ImageList
+              sx={{ width: 56, height: 56, margin: 0 }}
+              cols={2}
+              rowHeight={164}
+            >
               <Avatar
                 alt="Avatar"
                 size={25}
@@ -81,10 +85,10 @@ const AccountInfoHeader = ({
               style={{
                 width: 5,
                 height: 5,
-                position: 'absolute',
+                position: "absolute",
                 right: -2,
                 top: -2,
-                cursor: 'unset'
+                cursor: "unset",
               }}
             >
               <PointOnline />
@@ -107,7 +111,9 @@ const AccountInfoHeader = ({
             sx={{
               cursor: "pointer",
             }}
-            onClick={() => { onSetStep(STEP.CHAT_DETAIL_GROUP) }}
+            onClick={() => {
+              onSetStep(STEP.CHAT_DETAIL_GROUP);
+            }}
           >
             <ArrowRightIcon />
           </IconButton>

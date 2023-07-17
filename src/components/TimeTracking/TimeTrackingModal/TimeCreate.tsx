@@ -51,13 +51,11 @@ const TimeCreate: React.FC<IProps> = ({
   const { items: positions, onGetPositions } = usePositions();
   const {
     params,
-    itemStatus,
-    statusUpdate,
-    statusDelete,
     onCreateTimeSheet,
     onUpdateTimeSheet,
     onDeleteTimeSheet,
     onGetMyTimeSheet,
+    onGetCompanyTimeSheet,
   } = useGetMyTimeSheet();
   const { onAddSnackbar } = useSnackbar();
   const { user: userData } = useAuth();
@@ -78,7 +76,12 @@ const TimeCreate: React.FC<IProps> = ({
         .required("Start time is a required field"),
       type: yup.string().trim().required("Type code is a required field"),
       day: yup.string().trim().required("Date is a required field"),
-      duration: yup.number().required("Duration is a required field"),
+      duration: yup
+        .number()
+        .required("Duration is a required field")
+        .positive("Duration must be greater than zero")
+        .integer("Duration must be an integer")
+        .moreThan(0, "Duration must be greater than zero"),
       note: yup.string().trim().notRequired(),
     })
     .required();
@@ -171,21 +174,29 @@ const TimeCreate: React.FC<IProps> = ({
         id: selectedEvent?.extendedProps?.id,
       })
         .then((res) => {
+          if (currentScreen === "myTime") {
+            onGetMyTimeSheet({ ...params });
+          } else {
+            onGetCompanyTimeSheet({ ...params });
+          }
           onAddSnackbar("Update timesheet success", "success");
           onClose();
-          onGetMyTimeSheet({ ...params });
         })
         .catch((err) => {
-          onAddSnackbar("Update timesheet success", "success");
+          onAddSnackbar("Update timesheet failure", "error");
           onClose();
-          onGetMyTimeSheet({ ...params });
         });
     } else {
       onCreateTimeSheet(resolveData)
         .then(() => {
           onAddSnackbar("Create timesheet success", "success");
           onClose();
-          onGetMyTimeSheet({ ...params });
+
+          if (currentScreen === "myTime") {
+            onGetMyTimeSheet({ ...params });
+          } else {
+            onGetCompanyTimeSheet({ ...params });
+          }
         })
         .catch((err) => {
           onAddSnackbar(getMessageErrorByAPI(err, commonT), "error");
@@ -308,12 +319,14 @@ const TimeCreate: React.FC<IProps> = ({
           <Controller
             name="duration"
             control={control}
-            render={({ field }) => (
+            render={({ field: { onChange, value } }) => (
               <NumberInput
                 label="Time Duration (hour)"
                 sx={{ flex: 1 }}
                 error={Boolean(errors?.duration?.message)}
-                {...field}
+                helperText={errors?.duration?.message}
+                value={value}
+                onChange={onChange}
               />
             )}
           />

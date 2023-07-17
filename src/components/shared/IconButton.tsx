@@ -33,7 +33,9 @@ const IconButton = (props: IconButtonProps) => {
   if (tooltip) {
     return (
       <Tooltip title={tooltip}>
-        <CoreIconButton {...rest} />
+        <span>
+          <CoreIconButton {...rest} />
+        </span>
       </Tooltip>
     );
   }

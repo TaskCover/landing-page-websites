@@ -14,13 +14,11 @@ import { useMembersOfProject, useProjects } from "store/project/selectors";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI, getPath } from "utils/index";
-import { usePositionOptions } from "store/global/selectors";
 import { usePathname, useRouter } from "next-intl/client";
 import { useTranslations } from "next-intl";
 
 type MemberData = {
   id: string;
-  position_project: string;
   fullname: string;
 };
 
@@ -35,6 +33,7 @@ const AddMembers = () => {
         startIcon={<PlusIcon />}
         size="small"
         variant="primary"
+        sx={{ height: 40 }}
       >
         {projectT("detailMembers.addMember")}
       </Button>
@@ -59,28 +58,17 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
 
-  const { options, onGetOptions: onGetPositionOptions } = usePositionOptions();
   const pathname = usePathname();
   const { push } = useRouter();
   const [newMembers, setNewMembers] = useState<MemberData[]>([]);
 
-  const onChangeMembers = (
-    id: string,
-    position: string,
-    fullname: string,
-    isUpdatePosition?: boolean,
-  ) => {
+  const onChangeMembers = (id: string, fullname: string) => {
     const indexSelected = newMembers.findIndex((item) => item.id === id);
 
     const newData = [...newMembers];
 
     if (indexSelected === -1) {
-      newData.push({ id, position_project: position, fullname });
-    } else if (isUpdatePosition) {
-      newData[indexSelected] = {
-        ...newData[indexSelected],
-        position_project: position,
-      };
+      newData.push({ id, fullname });
     } else {
       newData.splice(indexSelected, 1);
     }
@@ -117,14 +105,9 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
   }, [onGetOptions]);
 
   useEffect(() => {
-    onGetPositionOptions({ pageIndex: 1, pageSize: 200000 });
-  }, [onGetPositionOptions]);
-
-  useEffect(() => {
     setNewMembers(
       members.map((member) => ({
         id: member.id,
-        position_project: member?.position_project?.id,
         fullname: member.fullname,
       })),
     );
@@ -142,15 +125,11 @@ const Form = (props: Omit<DialogLayoutProps, "children" | "onSubmit">) => {
       <MenuList component={Stack} spacing={2}>
         {items.map((item) => {
           const isChecked = newMembers.some((member) => item.id === member.id);
-          const positionOfProject = newMembers.find(
-            (member) => item.id === member.id,
-          )?.position_project;
           return (
             <MemberItem
               key={item.id}
               {...item}
               onChange={onChangeMembers}
-              positionOfProject={positionOfProject}
               checked={isChecked}
             />
           );

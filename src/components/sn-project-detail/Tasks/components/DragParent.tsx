@@ -96,6 +96,8 @@ const DragParent = (props: DragParentProps) => {
                   pl={{ xs: 1, md: 2 }}
                   width="100%"
                   justifyContent="space-between"
+                  borderBottom={{ md: "1px solid" }}
+                  borderColor={{ md: "grey.100" }}
                 >
                   <Stack direction="row" alignItems="center" overflow="hidden">
                     <Checkbox checked={checked} onChange={onChange} />
@@ -193,7 +195,7 @@ export const MoreList = (props: MoreListProps) => {
   const params = useParams();
   const { onAddSnackbar } = useSnackbar();
 
-  const projectId = useMemo(() => params?.id, [params?.id]);
+  const projectId = useMemo(() => params?.id, [params?.id]) as string;
 
   const taskListNameList = useMemo(
     () => items.map((task) => task.name),

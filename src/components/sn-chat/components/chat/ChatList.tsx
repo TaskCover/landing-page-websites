@@ -1,44 +1,35 @@
 import { Skeleton, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useEffect, useState } from "react";
 import ChatItem from "./ChatItem";
 import { useChat } from "store/chat/selectors";
 import { ChatItemInfo, STEP } from "store/chat/type";
 import { useAuth } from "store/app/selectors";
 
 const ChatList = () => {
-  const [textSearch, setTextSearch] = useState("");
   const { user } = useAuth();
   const {
     isError,
-    isIdle,
     convention,
-    conversationPaging,
-    prevStep,
-    currStep,
     isFetching,
     onSetRoomId,
+    onSetUserPartner,
     onGetAllConvention,
     onSetStep,
   } = useChat();
 
-  useEffect(() => {
-    onGetAllConvention({
-      type: "a",
-      text: textSearch,
-      offset: 0,
-      count: 1000,
-    });
-  }, [onGetAllConvention, textSearch]);
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      setTextSearch(event.target.value);
+      onGetAllConvention({
+        type: "d",
+        text: event.target.value,
+        offset: 0,
+        count: 1000,
+      });
     }
   };
 
   const handleClickConversation = (chatInfo: ChatItemInfo) => {
-    onSetRoomId(chatInfo._id);    
+    onSetRoomId(chatInfo._id);
     if (chatInfo?.t) {
       onSetStep(STEP.CHAT_ONE, chatInfo);
     }

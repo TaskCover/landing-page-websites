@@ -24,7 +24,7 @@ const ItemDetail = ({ text, icon, iconClick, onClick }: SelectItemProp) => {
       sx={{
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
       }}
     >
       <Box
@@ -49,7 +49,7 @@ const ItemDetail = ({ text, icon, iconClick, onClick }: SelectItemProp) => {
         <IconButton
           sx={{
             cursor: "pointer",
-            padding: 0.5
+            padding: 0.5,
           }}
           onClick={onClick}
         >

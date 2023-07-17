@@ -70,7 +70,7 @@ const initialState: AppState = {
 
   headerConfig: {},
 
-  isExpandedSidebar: false,
+  isExpandedSidebar: true,
 };
 
 const appSlice = createSlice({

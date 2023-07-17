@@ -20,6 +20,7 @@ export const ProjectLang: ProjectDictionary = {
       },
     },
     title: "Projects Management",
+    projectCode: "Project code",
     key: "project",
     notification: {
       success: "{label} project successfully!",
@@ -80,8 +81,8 @@ export const ProjectLang: ProjectDictionary = {
     },
     form: {
       title: {
-        expectCompletionTime: "Expect completion time(h)",
-        timeTaken: "Time taken(h)",
+        expectCompletionTime: "Working hours (expected)",
+        timeTaken: "Hours worked (done)",
         name: "Task name",
         oldTaskList: "Current task list",
         newTaskList: "New task list",
@@ -89,6 +90,7 @@ export const ProjectLang: ProjectDictionary = {
       },
     },
     addNewTask: "Add new task",
+    createNewTaskList: "Create new list",
     newMove: "Move to",
     taskList: "Task list",
     key: "task",
@@ -155,6 +157,7 @@ export const ProjectLang: ProjectDictionary = {
     linkedTo: "Linked to",
     addDependencyTask: "Add dependency task",
     manual: "Manual",
+    commentList: "Comments",
     form: {
       title: {
         newTask: "Move to task",

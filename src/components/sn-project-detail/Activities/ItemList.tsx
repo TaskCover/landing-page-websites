@@ -34,7 +34,7 @@ const ItemList = () => {
   const params = useParams();
   const locale = useLocale();
 
-  const projectId = useMemo(() => params.id, [params.id]);
+  const projectId = useMemo(() => params.id, [params.id]) as string;
 
   const localeData = useMemo(() => (locale === "vi" ? vi : enUS), [locale]);
 

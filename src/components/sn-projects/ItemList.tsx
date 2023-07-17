@@ -21,6 +21,8 @@ import { useAppDispatch } from "store/hooks";
 import DesktopCells from "./DesktopCells";
 import MobileContentCell from "./MobileContentCell";
 import { useTranslations } from "next-intl";
+import useTheme from "hooks/useTheme";
+import PencilUnderlineIcon from "icons/PencilUnderlineIcon";
 
 const ItemList = () => {
   const {
@@ -41,6 +43,7 @@ const ItemList = () => {
   const pathname = usePathname();
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
+  const { isDarkMode } = useTheme();
 
   const [item, setItem] = useState<Project | undefined>();
   const [action, setAction] = useState<DataAction | undefined>();
@@ -94,7 +97,6 @@ const ItemList = () => {
             members: item?.members.map(({ id, fullname, ...rest }) => ({
               id,
               fullname,
-              position_project: rest?.position_project?.id,
             })),
           }
         : INITIAL_VALUES,
@@ -167,8 +169,16 @@ const ItemList = () => {
                   tooltip={commonT("edit")}
                   variant="contained"
                   size="small"
+                  sx={{
+                    backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+                    color: "text.primary",
+                    p: 1,
+                    "&:hover svg": {
+                      color: "common.white",
+                    },
+                  }}
                 >
-                  <PencilIcon />
+                  <PencilUnderlineIcon />
                 </IconButton>
               </BodyCell>
             </TableRow>
@@ -181,7 +191,7 @@ const ItemList = () => {
         totalPages={totalPages}
         page={pageIndex}
         pageSize={pageSize}
-        containerProps={{ px: 3, pt: 2.5 }}
+        containerProps={{ px: 3, py: 1 }}
         onChangePage={onChangePage}
         onChangeSize={onChangeSize}
       />

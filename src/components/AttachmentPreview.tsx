@@ -7,6 +7,8 @@ import PlayIcon from "icons/PlayIcon";
 import { useTranslations } from "next-intl";
 import FileIcon from "icons/FileIcon";
 import Link from "./Link";
+import Preview from "./Preview";
+import useToggle from "hooks/useToggle";
 
 type AttachmentPreviewProps = {
   name: string;
@@ -22,6 +24,8 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
   const commonT = useTranslations(NS_COMMON);
 
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
+
+  const [isPreview, onPreviewTrue, onPreviewFalse] = useToggle(false);
 
   const extension = useMemo(() => {
     const arr = name.split(".");
@@ -46,34 +50,8 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
     [isFullScreen, onRemove, size],
   );
 
-  const onEnterFullScreen = (event) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const element = ref?.current as any;
-    if (!element) return;
-    if (element.requestFullscreen) {
-      element.requestFullscreen();
-    } else if (element.mozRequestFullScreen) {
-      element.mozRequestFullScreen(); // Firefox
-    } else if (element.webkitRequestFullscreen) {
-      element.webkitRequestFullscreen(); // Safari
-    } else if (element.msRequestFullscreen) {
-      element.msRequestFullscreen(); // IE/Edge
-    }
-  };
-
-  useEffect(() => {
-    if (!ref?.current) return;
-    ref.current.addEventListener("fullscreenchange", (event) => {
-      setIsFullScreen(!!document.fullscreenElement);
-      if ((ref.current as HTMLVideoElement)?.pause) {
-        (ref.current as HTMLVideoElement).pause();
-        (ref.current as HTMLVideoElement).load();
-      }
-    });
-  }, []);
-
   return (
-    <Tooltip title={type ? commonT("clickToViewLarge") : ""}>
+    <Tooltip title={type && !isPreview ? commonT("clickToViewLarge") : ""}>
       <Stack direction="row" alignItems="center">
         <Stack
           alignItems="center"
@@ -113,7 +91,7 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
               {...previewProps}
               alt={name ?? "Image"}
               ref={ref}
-              onClick={onEnterFullScreen}
+              onClick={onPreviewTrue}
               {...rest}
             />
           ) : VIDEOS_EXTENSION.includes(extension) ? (
@@ -128,7 +106,7 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
                   fontSize: 24,
                   zIndex: 1,
                 }}
-                onClick={onEnterFullScreen}
+                onClick={onPreviewTrue}
               />
               <Box component="video" ref={ref} {...previewProps}>
                 <source {...rest} type={type} />
@@ -150,6 +128,14 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
           <Text variant="caption" maxWidth={69} noWrap>
             {name}
           </Text>
+        )}
+        {Boolean(isPreview && props?.src && type) && (
+          <Preview
+            open={isPreview}
+            onClose={onPreviewFalse}
+            type={type as string}
+            src={props.src as string}
+          />
         )}
       </Stack>
     </Tooltip>

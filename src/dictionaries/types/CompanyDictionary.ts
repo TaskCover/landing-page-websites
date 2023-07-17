@@ -10,6 +10,7 @@ export type CompanyDictionary = {
     unPaid: string;
     waiting: string;
     key: string;
+    isNeedSelect: string;
     confirmPayment: {
       title: string;
       content: string;

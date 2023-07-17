@@ -17,6 +17,7 @@ import { getDataFromKeys, getPath } from "utils/index";
 import { DEFAULT_PAGING, NS_COMMON, NS_COMPANY } from "constant/index";
 import Pagination from "components/Pagination";
 import { useTranslations } from "next-intl";
+import { useAuth } from "store/app/selectors";
 
 const ItemList = () => {
   const {
@@ -37,6 +38,7 @@ const ItemList = () => {
 
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
+  const { onGetProfile, user } = useAuth();
 
   const pathname = usePathname();
   const { initQuery, isReady, query } = useQueryParams();
@@ -106,7 +108,11 @@ const ItemList = () => {
 
   const onUpdate = async (data: PositionData) => {
     if (!item) return;
-    return await onUpdatePosition(item.id, data.name);
+    const result = await onUpdatePosition(item.id, data.name);
+    if (result && item.id === user?.position?.id) {
+      onGetProfile();
+    }
+    return result;
   };
 
   const onDelete = (id: string) => {
@@ -154,7 +160,7 @@ const ItemList = () => {
         totalPages={totalPages}
         page={pageIndex}
         pageSize={pageSize}
-        containerProps={{ px: 3, pt: 2.5 }}
+        containerProps={{ px: 3, py: 1 }}
         onChangePage={onChangePage}
         onChangeSize={onChangeSize}
       />

@@ -4,6 +4,7 @@ import {
   Box,
   FormHelperText,
   InputLabel,
+  TextField,
   TextFieldProps,
   Typography,
 } from "@mui/material";
@@ -39,6 +40,7 @@ const NumberInput: React.FC<TextFieldInputProps> = (
     helperText,
     sx,
     endAdornment,
+    ...rest
   } = props;
 
   const randomId = (Math.random() + 1).toString(36).substring(7);
@@ -104,7 +106,7 @@ const NumberInput: React.FC<TextFieldInputProps> = (
               </Typography>
             )}
           </InputLabel>
-          <CurrencyInput
+          {/* <CurrencyInput
             placeholder={placeholder}
             id={`input-field-${randomId}`}
             onFocus={() => setIsFocus(true)}
@@ -123,23 +125,47 @@ const NumberInput: React.FC<TextFieldInputProps> = (
               border: "none",
               outline: "none",
             }}
-          />
-
+          /> */}
           {/* <TextField
+            {...rest}
+            fullWidth
+            size="small"
+            placeholder={"20"}
             sx={{
+              border: "none",
+              outline: "none",
+              boxShadow: "none",
               input: {
-                fontSize: '14px',
-                lineHeight: '22px',
+                fontSize: "14px",
+                lineHeight: "22px",
                 fontWeight: 400,
-                color: CommonColors.colorInput,
+                color: isDarkMode ? "#fff" : "common.black",
                 padding: 0,
-                background: CommonColors.bgInput,
+                backgroundColor: isDarkMode ? "#393939" : "#F7F7FD",
+                border: "none",
+                outline: "none",
+                boxShadow: "none",
               },
-              '> :before, :after': {
-                display: 'none',
+              "> :before, :after": {
+                display: "none",
               },
             }}
-            {...otherProps}
+          /> */}
+          <TextField
+            sx={{
+              input: {
+                fontSize: "14px",
+                lineHeight: "22px",
+                fontWeight: 400,
+                color: isDarkMode ? "#fff" : "common.black",
+                padding: 0,
+                backgroundColor: isDarkMode ? "#393939" : "#F7F7FD",
+              },
+              "> :before, :after": {
+                display: "none",
+              },
+            }}
+            {...rest}
             value={value}
             onChange={onChange}
             disabled={disabled}
@@ -150,7 +176,8 @@ const NumberInput: React.FC<TextFieldInputProps> = (
             id={`input-field-${randomId}`}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
-          /> */}
+            type="number"
+          />
         </Stack>
         {endAdornment}
       </Box>

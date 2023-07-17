@@ -42,9 +42,17 @@ const AddGroup = () => {
 
   const { user } = useAuth();
 
-  const { prevStep, createGroupStatus, newGroupData,
-    convention, dataTransfer, onGetAllConvention,
-    onSetStep, onCreateDirectMessageGroup, onAddMembers2Group } = useChat();
+  const {
+    prevStep,
+    createGroupStatus,
+    newGroupData,
+    convention,
+    dataTransfer,
+    onGetAllConvention,
+    onSetStep,
+    onCreateDirectMessageGroup,
+    onAddMembers2Group,
+  } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
@@ -53,10 +61,10 @@ const AddGroup = () => {
     onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 30 });
     onGetAllConvention({
       type: "a",
-      text: '',
+      text: "",
       offset: 0,
       count: 1000,
-    })
+    });
   }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
 
   const handleSuccess = (result) => {
@@ -169,7 +177,11 @@ const AddGroup = () => {
           }}
         />
       </Box>
-      <Box overflow="auto" maxHeight="calc(550px - 85px - 15px)" minHeight="calc(550px - 85px - 15px)">
+      <Box
+        overflow="auto"
+        maxHeight="calc(550px - 85px - 15px)"
+        minHeight="calc(550px - 85px - 15px)"
+      >
         {isFetching || error ? (
           Array.from({ length: 5 }, (_, i) => (
             <Box
@@ -223,7 +235,9 @@ const AddGroup = () => {
           variant="primaryOutlined"
           size="small"
           sx={defaultSx.button}
-          onClick={()=>{onSetStep(prevStep)}}
+          onClick={() => {
+            onSetStep(prevStep);
+          }}
         >
           {commonT("form.cancel")}
         </Button>

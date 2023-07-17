@@ -66,26 +66,29 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
       justifyContent="space-between"
       bgcolor={isDarkMode ? "background.default" : "primary.light"}
       px={3}
-      py={{ xs: 1, md: 2 }}
+      py={{ xs: 1, md: 0.75, xl: 2 }}
       position="sticky"
-      top={60}
+      top={{ xs: 60, sm: 61, xl: 76 }}
       zIndex={1}
     >
       <Stack direction="row" alignItems="center" spacing={1}>
-        <Text variant="h6" color="grey.400">
-          {projectT("detailTasks.selectedCount", {
-            value: formatNumber(selectedList.length),
-          })}
-        </Text>
-        <IconButton
-          noPadding
-          onClick={onReset}
-          tooltip={projectT("detailTasks.resetSelected")}
-        >
-          <CloseIcon sx={{ color: "grey.400", fontSize: 18 }} />
-        </IconButton>
+        {!!selectedList.length && (
+          <>
+            <Text variant="h6" color="grey.400">
+              {projectT("detailTasks.selectedCount", {
+                value: formatNumber(selectedList.length),
+              })}
+            </Text>
+            <IconButton
+              noPadding
+              onClick={onReset}
+              tooltip={projectT("detailTasks.resetSelected")}
+            >
+              <CloseIcon sx={{ color: "grey.400", fontSize: 18 }} />
+            </IconButton>
+          </>
+        )}
       </Stack>
-
       <Stack direction="row" alignItems="center" spacing={3}>
         <Stack
           direction={{ xs: "column", md: "row" }}
@@ -98,11 +101,13 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
               placeholder={projectT("detailTasks.assignee")}
               hasAvatar
               name="owner"
+              disabled={!selectedList.length}
             />
             <Date
               label={commonT("form.title.startDate")}
               name="start_date"
               onChange={onChange}
+              disabled={!selectedList.length}
             />
           </Stack>
           <Stack direction="row" alignItems="center" spacing={{ xs: 1, md: 3 }}>
@@ -110,12 +115,14 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
               label={commonT("form.title.dueDate")}
               name="end_date"
               onChange={onChange}
+              disabled={!selectedList.length}
             />
             <Dropdown
               placeholder={commonT("status")}
               options={statusOptions}
               name="status"
               onChange={onChange}
+              disabled={!selectedList.length}
             />
           </Stack>
         </Stack>

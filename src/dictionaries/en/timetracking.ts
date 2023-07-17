@@ -8,32 +8,33 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
       workLog: "Work log",
       workTime: "Work time",
       breakTime: "Break time",
-      weekly_total: "Weekly total"
+      weekly_total: "Weekly total",
     },
   },
   myTime: {
     addButton: "Add",
+    searchButton: "Search Project",
     search: "Search project",
     timesheet: "Timesheet",
     timesheet_tab: {
       weekly_summary: "Weekly summary",
       total: "Total",
       pin: "Pin",
-      unpin: "Unpin"
+      unpin: "Unpin",
     },
     calender: "Calender",
     calender_tab: {
       time_label: "Time",
-      same_time_worker: 'Same  time worker',
+      same_time_worker: "Same  time worker",
     },
-    day: "Day",    
+    day: "Day",
     day_tab: {
-      project: 'Project',
-      position: 'Position',
-      start_time: 'Start time',
-      time: 'Time',
-      note: 'Note'
-    }
+      project: "Project",
+      position: "Position",
+      start_time: "Start time",
+      time: "Time",
+      note: "Note",
+    },
   },
   company_time: {
     timesheet: "Timesheet",
@@ -41,7 +42,7 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
       weekly_summary: "Weekly summary",
       total: "Total",
       pin: "Pin",
-      unpin: "Unpin"
+      unpin: "Unpin",
     },
     table: "Table",
     table_tab: {
@@ -51,6 +52,6 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
       start_time: "Start time",
       time: "Time",
       note: "Note",
-    }
-  }
+    },
+  },
 };

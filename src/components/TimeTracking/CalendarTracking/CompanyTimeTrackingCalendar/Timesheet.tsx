@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { styled } from "@mui/material/styles";
 import _ from "lodash";
 import dayjs from "dayjs";
@@ -117,7 +117,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
 
     return (
       <TableBody sx={{ position: "relative" }}>
-        {!_.isEmpty(sortedByPin) ? (
+        {!_.isEmpty(sortedByPin) && !_.isEmpty(data) ? (
           _.map(sortedByPin, (user: any, userIndex) => {
             return (
               <StyledTableRow key={user.id || userIndex}>
@@ -138,8 +138,8 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
                     }}
                   >
                     <Avatar
-                      sx={ { width: 20, height: 20, objectFit: "cover" } }
-                      src = { user?.avatar?.link }
+                      sx={{ width: 20, height: 20, objectFit: "cover" }}
+                      src={user?.avatar?.link}
                     />
                     <Typography
                       sx={{
@@ -179,12 +179,11 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
                             );
                           })
                           .catch(() => {
-                            onGetCompanyTimeSheet({ ...params });
                             onAddSnackbar(
                               `${
                                 user?.is_pin ? "Unpin" : "Pin"
-                              } timesheet success`,
-                              "success",
+                              } timesheet fail`,
+                              "error",
                             );
                           });
                       }}
@@ -390,4 +389,4 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
   return renderMain();
 };
 
-export default TimeSheet;
+export default memo(TimeSheet);

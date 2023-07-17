@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import _ from "lodash";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
@@ -100,6 +100,12 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
     date: dayjs().format("YYYY-MM-DD"),
   });
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  function scrollToTop() {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }
   useEffect(() => {
     onGetWorkLog(filters);
   }, []);
@@ -181,24 +187,18 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
                   {timeLog?.user?.email}
                 </Link>
                 {getTaskActionString(timeLog.action)}
-                <Link
+                <Typography
+                  component="span"
                   sx={{
                     color: "#3699FF",
                     textDecoration: "none",
                     margin: "0 6px",
-                    cursor: "pointer",
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
                   }}
-                  onClick={() =>
-                    router.push(`/projects/${timeLog?.project_id}/tasks/`)
-                  }
                 >
                   {`${timeLog?.task_number ? `#${timeLog.task_number}` : ""} ${
                     timeLog?.task_name ? "-" : ""
                   } ${timeLog?.task_name}`}
-                </Link>
+                </Typography>
                 in {timeLog?.project?.name}
               </Typography>
               <Typography
@@ -245,7 +245,9 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
                 const newFilters = { ...filters, date: newDate };
 
                 setFilters(newFilters);
-                onGetWorkLog(newFilters);
+                onGetWorkLog(newFilters).then(() => {
+                  scrollToTop();
+                });
               }}
               sx={{ display: "none" }}
               slotProps={{
@@ -296,13 +298,6 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
           </Typography>
           <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
         </Stack>
-        <CustomizedInputBase
-          value={filters.search_key}
-          onChange={(event) =>
-            setFilters({ ...filters, search_key: event.target.value })
-          }
-          onKeyUp={(event) => event.key === "Enter" && onGetWorkLog(filters)}
-        />
       </Stack>
     );
   };
@@ -311,6 +306,7 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
     <Stack direction="column">
       {_renderCalendarModule()}
       <Stack
+        ref={scrollRef}
         sx={{
           width: 1,
           height: `calc(100vh - 300px)`,

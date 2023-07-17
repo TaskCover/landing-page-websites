@@ -35,6 +35,7 @@ export const CommonLang: CommonDictionary = {
     save: "Lưu",
     cancel: "Hủy bỏ",
     add: "Thêm",
+    admin: "Quản lý",
   },
   notification: {
     imageTypeInvalid:
@@ -71,6 +72,7 @@ export const CommonLang: CommonDictionary = {
     outOf: "mỗi trang trên tổng số {count}",
   },
   statusEnum: {
+    inprogress: "Đang thực hiện",
     active: "Hoạt động",
     close: "Kết thúc",
     pause: "Tạm dừng",
