@@ -47,7 +47,7 @@ const TabList = () => {
         overflow="auto"
         spacing={4}
         position="sticky"
-        top={isMembersOfProjectPath ? undefined : { xs: 8, sm: 24 }}
+        top={isMembersOfProjectPath ? undefined : { xs: 8, sm: 16 }}
         bgcolor="background.paper"
         zIndex={1}
       >
@@ -95,7 +95,7 @@ const TabItem = (props: TabItemProps) => {
         "&:hover": {
           bgcolor: isDarkMode ? "grey.50" : "primary.light",
         },
-        py: { xs: 2, xl: 2.5 },
+        py: { xs: 2, md: 1.5, xl: 2.5 },
         px: { xs: 2, sm: 3.5 },
         borderRadius: 1,
       }}

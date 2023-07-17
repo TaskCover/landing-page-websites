@@ -45,7 +45,7 @@ const Sidebar = (props: StackProps) => {
       width={isShowLarge ? { xs: LARGE_SIZE, xl: LARGEST_SIZE } : SMALL_SIZE}
       maxWidth={{ xs: LARGE_SIZE, xl: LARGEST_SIZE }}
       overflow="hidden"
-      spacing={isShowLarge ? 3 : 2.5}
+      spacing={isShowLarge ? { xs: 2, xl: 3 } : 2.5}
       display={{ xs: "none", sm: "flex" }}
       borderRight="1px solid"
       borderColor="grey.100"

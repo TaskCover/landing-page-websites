@@ -33,6 +33,7 @@ const AddMembers = () => {
         startIcon={<PlusIcon />}
         size="small"
         variant="primary"
+        sx={{ height: 40 }}
       >
         {projectT("detailMembers.addMember")}
       </Button>
