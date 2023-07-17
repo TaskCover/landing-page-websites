@@ -208,7 +208,7 @@ const AddGroup = () => {
         ) : (
           <>
             {items?.length > 0
-              ? items.map((item, index) => {
+                ? items?.filter(m => m.id_rocket !== user?.id_rocket).map((item, index) => {
                   return (
                     <SelectItem
                       checkbox

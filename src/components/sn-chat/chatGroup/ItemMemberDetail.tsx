@@ -100,8 +100,11 @@ const ItemMemberDetail = ({ admin, data, callbackAddAdmin, callbackRemove }: Ite
                 horizontal: 'left',
               }}
             >
-              <MenuItem onClick={() => handleClickMenu('addAdmin')}>Add as admin</MenuItem>
-              <MenuItem onClick={() => handleClickMenu('remove')}>Remove from chat </MenuItem>
+              {data?.roles?.includes('owner') ? (
+                <>
+                  <MenuItem onClick={() => handleClickMenu('addAdmin')}>Add as admin</MenuItem>
+                  <MenuItem onClick={() => handleClickMenu('remove')}>Remove from chat </MenuItem></>
+              ) : (<></>)}
             </Menu>
           </>
         }

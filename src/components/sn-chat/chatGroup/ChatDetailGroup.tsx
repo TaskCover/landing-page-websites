@@ -119,7 +119,7 @@ const ChatDetailGroup = (props) => {
       <>
         <Box sx={{ width: "100%", margin: "0 50px" }}>
           {groupMembers?.length > 0
-            ? groupMembers.map((item, index) => {
+            ? groupMembers.filter(m => m._id !== user?.id_rocket).map((item, index) => {
 
               return (
                 <Box
@@ -232,37 +232,52 @@ const ChatDetailGroup = (props) => {
   }
 
   const handlePopup = async () => {
+    const left = async () => {
+      const leftResult = await onLeftGroup({
+        roomId: dataTransfer?._id,
+      }) as any;
+      if (leftResult?.error) {
+        return onAddSnackbar(leftResult?.error?.message, 'error');
+      } else {
+        onAddSnackbar('Successfully!', 'success');
+        onSetStep(STEP.CONVENTION);
+      }
+    }
+    const addAndRemove = async (add: string, remove: string) => {
+      const addOwnerResult = await onChangeGroupRole({
+        groupId: dataTransfer?._id,
+        userIdToChange: add,
+        newRole: 'addOwner',
+      }) as any;
+      if (addOwnerResult?.error) {
+        return onAddSnackbar(addOwnerResult?.error?.message, 'error');
+      }
+      const removeOwner = await onChangeGroupRole({
+        groupId: dataTransfer?._id,
+        userIdToChange: remove,
+        newRole: 'removeOwner',
+      }) as any;
+      if (removeOwner?.error) {
+        return onAddSnackbar(removeOwner?.error?.message, 'error');
+      }
+    }
     switch (showPopup?.type) {
       case TYPE_POPUP.DELETE:
         //CALL API DELETE
         break;
       case TYPE_POPUP.LEAVE_MEMBER:
-        onLeftGroup({
-          roomId: dataTransfer?._id,
-        })
+        await left();
         break;
       case TYPE_POPUP.LEAVE_AND_NEW_ADD:
-        const result = await onChangeGroupRole({
-          groupId: dataTransfer?._id,
-          userIdToChange: userId,
-          newRole: 'addOwner',
-        }) as any;
-        if (result?.error) {
-          return onAddSnackbar(result?.error?.message, 'error');
-        }
-        await onChangeGroupRole({
-          groupId: dataTransfer?._id,
-          userIdToChange: user?.id_rocket ?? '',
-          newRole: 'removeOwner',
-        }) as any;
+        await addAndRemove(userId, user?.id_rocket ?? '');
+        await left();
         break;
       case TYPE_POPUP.LEAVE_OWNER:
         //NEW OWNER RANDOM
-        await onChangeGroupRole({
-          groupId: dataTransfer?._id,
-          userIdToChange: user?.id_rocket ?? '',
-          newRole: 'removeOwner',
-        }) as any;
+        const random = groupMembers?.filter(m => m._id !== user?.id_rocket)?.pop()?._id;
+        if (!random) return onAddSnackbar('Error!', 'error'); // Handle delete group
+        await addAndRemove(random, user?.id_rocket ?? '');
+        await left();
         break;
       default:
         break;
@@ -381,9 +396,9 @@ const ChatDetailGroup = (props) => {
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" color="#3699FF" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}>
+            {/* <Typography variant="caption" color="#3699FF" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}>
               See more
-            </Typography>
+            </Typography> */}
           </Box>
         </Box>
         <Box sx={{
