@@ -20,10 +20,11 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
   const nameLastMessage = isCurrentAcc ? "You: " : "";
 
   const accountPartner = useMemo(() => {
+    if (isGroup) return { status: 'off' }; 
     const partnerUsername =
       sessionId === usernames[0] ? usernames[1] : usernames[0];
     return userOnlinePage?.find((item) => item.username === partnerUsername);
-  }, [sessionId, userOnlinePage, usernames]);
+  }, [isGroup, sessionId, userOnlinePage, usernames]);
 
   const renderTimeDiff = useMemo(() => {
     const timeDiff = getDaysDiff(new Date(), new Date(lastMessage?.ts));
