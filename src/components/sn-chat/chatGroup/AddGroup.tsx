@@ -215,7 +215,7 @@ const AddGroup = () => {
           <>
             {items?.length > 0
                 ? items
-                  ?.filter(item => !groupMembers?.filter(m => m._id)?.includes(item.id_rocket))
+                  ?.filter(item => !groupMembers?.map(m => m._id)?.includes(item.id_rocket))
                   ?.filter(m => m.id_rocket !== user?.id_rocket).map((item, index) => {
                   return (
                     <SelectItem
