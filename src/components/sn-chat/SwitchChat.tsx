@@ -41,13 +41,6 @@ const SwitchChat = () => {
         return <GroupMediaProfile type={STEP.FILE} />;
       case STEP.ADD_GROUP:
         return <AddGroup />;
-      case STEP.CHAT_DETAIL_GROUP:
-        return (
-          <ConversationLayout viewStep={STEP.CHAT_ONE}>
-            <Conversation />
-          </ConversationLayout>
-        );
-
       case STEP.VIEW_DETAIL_USER:
         return (
           <ConversationLayout>
@@ -68,11 +61,16 @@ const SwitchChat = () => {
             <List />
           </ConversationLayout>
         );
-        // chưa có icon forward nên chưa hiển thị được
       case STEP.CHAT_FORWARD:
         return (
           <ConversationLayout viewStep={STEP.CHAT_FORWARD}>
-            <ChatForward/>
+            <ChatForward />
+          </ConversationLayout>
+        );
+      case STEP.CHAT_GROUP:
+        return (
+          <ConversationLayout viewStep={STEP.CHAT_GROUP}>
+            <Conversation />
           </ConversationLayout>
         );
       default:

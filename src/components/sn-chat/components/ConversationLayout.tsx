@@ -34,7 +34,7 @@ const ConversationLayout = ({ children, viewStep }: ConversationLayoutProp) => {
         display="flex"
         flexDirection="column"
         overflow="hidden"
-        maxHeight="calc(600px - 77px)"
+        height="calc(600px - 77px)"
       >
         {children}
       </Box>

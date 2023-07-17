@@ -37,7 +37,7 @@ const AccountInfoHeader = ({
     }
   };
 
-  const _renderChatOne = () => {
+  const _renderChatGroup = () => {
     if (isGroup) {
       return (
         <>
@@ -119,45 +119,14 @@ const AccountInfoHeader = ({
           </IconButton>
         </>
       )
-    } else {
-      return (<>
-        <Avatar
-          alt="Avatar"
-          size={40}
-          style={{
-            borderRadius: "10px",
-          }}
-        />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography variant="inherit" fontWeight="bold">
-            {accountInfo?.lastMessage?.u?.name}
-          </Typography>
-          <Typography variant="caption" color="#999999">
-            Active
-          </Typography>
-        </Box>
-        <IconButton
-          sx={{
-            cursor: "pointer",
-          }}
-          onClick={() => onSetStep(STEP.CHAT_DETAIL_GROUP)}
-        >
-          <ArrowRightIcon />
-        </IconButton>
-      </>)
     }
   }
   const _renderItemHeader = (viewStep) => {
     switch (viewStep) {
-      case STEP.CHAT_ONE:
+      case STEP.CHAT_GROUP:
         return (
           <>
-            {_renderChatOne()}
+            {_renderChatGroup()}
           </>
         )
       case STEP.CHAT_DETAIL_GROUP:
@@ -260,7 +229,7 @@ const AccountInfoHeader = ({
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: 1,
+              gap: "2px",
               padding: 1.5,
               borderBottom: "1px solid #ECECF3",
             }}
