@@ -32,6 +32,8 @@ export type CommonDictionary = {
     confirm: string;
     save: string;
     cancel: string;
+    add: string;
+    admin: string;
   };
   notification: {
     imageTypeInvalid: string;

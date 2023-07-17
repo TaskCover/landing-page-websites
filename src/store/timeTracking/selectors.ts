@@ -1,11 +1,16 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   BodyCreateTimeSheet,
+  BodyPinTimeSheet,
   GetMyTimeSheetQueries,
+  GetWorkLogQueries,
   createTimeSheet,
   deleteTimeSheet,
   getCompanyTimeSheet,
   getMyTimeSheet,
+  getSameWorker,
+  getWorkLog,
+  pinTimeSheet,
   updateTimeSheet,
 } from "./actions";
 import { DataStatus } from "constant/enums";
@@ -25,6 +30,9 @@ export const useGetMyTimeSheet = () => {
     companyItems,
     statusUpdate,
     statusDelete,
+    workLog,
+    params,
+    sameWorker,
   } = useAppSelector((state) => state.timeTracking, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.timeTracking.paging,
@@ -37,6 +45,13 @@ export const useGetMyTimeSheet = () => {
   const onGetMyTimeSheet = useCallback(
     async (queries: GetMyTimeSheetQueries) => {
       await dispatch(getMyTimeSheet(queries));
+    },
+    [dispatch],
+  );
+
+  const onGetWorkLog = useCallback(
+    async (queries: GetWorkLogQueries) => {
+      await dispatch(getWorkLog(queries));
     },
     [dispatch],
   );
@@ -69,9 +84,26 @@ export const useGetMyTimeSheet = () => {
     [dispatch],
   );
 
+  const onPinTimeSheet = useCallback(
+    async (data: BodyPinTimeSheet) => {
+      return await dispatch(pinTimeSheet(data)).unwrap();
+    },
+    [dispatch],
+  );
+
+  // const onGetSameWorker = useCallback(
+  //   async (data: { id: string }) => {
+  //     return await dispatch(getSameWorker(data));
+  //   },
+  //   [dispatch],
+  // );
+
   return {
+    params,
     items,
     companyItems,
+    sameWorker,
+    workLog,
     status,
     itemStatus,
     statusUpdate,
@@ -88,5 +120,8 @@ export const useGetMyTimeSheet = () => {
     onGetCompanyTimeSheet,
     onUpdateTimeSheet,
     onDeleteTimeSheet,
+    onGetWorkLog,
+    onPinTimeSheet,
+    //onGetSameWorker,
   };
 };

@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import _ from "lodash";
 import { useSelector } from "react-redux";
@@ -21,15 +21,16 @@ import {
 } from "@mui/material";
 import PinActiveIcon from "icons/PinActiveIcon";
 import PinIcon from "icons/PinIcon";
+import { useGetMyTimeSheet } from "store/timeTracking/selectors";
+import { useSnackbar } from "store/app/selectors";
+import { useTranslations } from "next-intl";
+import { NS_TIME_TRACKING } from "constant/index";
+import useTheme from "hooks/useTheme";
 
-// import Assets from '@/Assets';
-// import { TimeTrackingActions } from '@/Actions';
-// import { RootState, useTypedDispatch } from '@/store';
-
-//const { pinTimeLog } = TimeTrackingActions;
 interface IProps {
   data: any[];
   filters: any;
+  dateRange: any;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -51,11 +52,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const weekdays = ["SUN", "MON", "TUE", "WEB", "THU", "FRI", "SAT"];
 
-const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
+const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
   //const dispatch = useTypedDispatch();
   const isGetLoading: any = false;
   const [timeSheets, setTimesheets] = useState<any>([]);
+  const timeT = useTranslations(NS_TIME_TRACKING);
 
+  const { isDarkMode } = useTheme();
+  const { onAddSnackbar } = useSnackbar();
+  const { onPinTimeSheet, onGetMyTimeSheet, params } = useGetMyTimeSheet();
   useEffect(() => {
     if (!_.isEmpty(data)) {
       const transformedData: any = {};
@@ -68,6 +73,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
             totalDuration: 0,
             projectName: project?.name,
             projectId: project?.id,
+            avatar: project?.avatar?.link,
             is_pin: timesheet?.is_pin || false,
           };
         }
@@ -85,6 +91,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
           }
         });
       });
+
       setTimesheets(transformedData);
     }
   }, [data]);
@@ -117,11 +124,21 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
     return formattedDuration;
   };
 
-  const _renderTableBody = () => {
+  // const convertObjectToArray = useMemo(() => {
+  //   if (!_.isEmpty(timeSheets)) {
+  //     return Object.values(timeSheets);
+  //   } else {
+  //     return timeSheets;
+  //   }
+  //   // !_.isEmpty(timeSheets)
+  //   // ?
+  //   // : timeSheets;
+  // }, [timeSheets]);
+
+  const filteredProjects = useMemo(() => {
     const convertObjectToArray = !_.isEmpty(timeSheets)
       ? Object.values(timeSheets)
       : timeSheets;
-
     const sortedByDate = convertObjectToArray?.sort((a: any, b: any) => {
       const dateA = new Date(a.is_pin);
       const dateB = b ? new Date(b.is_pin ?? 0) : null;
@@ -134,160 +151,18 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
       b && b.is_pin ? 1 : -1,
     );
 
-    const filteredProjects = sortedByPin?.filter((project: any) =>
+    return sortedByPin?.filter((project: any) =>
       project?.projectName
         ?.toLowerCase()
         ?.includes(filters?.search_key?.trim()?.toLowerCase()),
     );
+  }, [timeSheets]);
 
-    return (
-      <TableBody sx={{ position: "relative" }}>
-        {!_.isEmpty(filteredProjects) ? (
-          _.map(filteredProjects, (timeSheet: any, index: number) => {
-            return (
-              <StyledTableRow key={timeSheet.id || index}>
-                <StyledTableCell sx={{ maxWidth: 235 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      justifyContent: "flex-start",
-                      mb: "12px",
-                      py: 1,
-                      "&:hover": {
-                        ".pin_project": {
-                          visibility: "visible",
-                        },
-                      },
-                    }}
-                  >
-                    <Avatar
-                      sx={{ width: 20, height: 20, objectFit: "cover" }}
-                    />
-                    <Typography
-                      sx={{
-                        fontSize: "14px",
-                        lineHeight: "18px",
-                        fontWeight: 600,
-                        maxWidth: "200px",
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                        textOverflow: "ellipsis",
-                        WebkitLineClamp: 1,
-                      }}
-                    >
-                      {timeSheet?.projectName}
-                    </Typography>
-                    <IconButton
-                      className="pin_project"
-                      sx={{
-                        ml: "auto",
-                        width: 24,
-                        height: 24,
-                        visibility: timeSheet?.is_pin ? "visible" : "hidden",
-                      }}
-                      // onClick={() => {
-                      //   dispatch(
-                      //     pinTimeLog(
-                      //       {
-                      //         id: timeSheet?.projectId,
-                      //         is_pin: timeSheet?.is_pin ? false : true,
-                      //         type: 'PROJECT',
-                      //       },
-                      //       filters
-                      //     )
-                      //   );
-                      // }}
-                    >
-                      {timeSheet?.is_pin ? <PinActiveIcon /> : <PinIcon />}
-                    </IconButton>
-                  </Box>
-                </StyledTableCell>
-                <StyledTableCell
-                  sx={{
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    lineHeight: "18px",
-                    color: "#999999",
-                    textAlign: "right",
-                    mb: "12px",
-                    py: 1,
-                  }}
-                >
-                  {timeSheet?.totalDuration || 0} giờ
-                </StyledTableCell>
-                {_.map(weekdays, (weekday, _index: number) => {
-                  const totalDay = timeSheet?.weekdays?.[`${weekday}`];
-                  return (
-                    <StyledTableCell
-                      key={_index}
-                      sx={{
-                        fontSize: "14px",
-                        lineHeight: "18px",
-                        fontWeight: 600,
-                        color: "#999999",
-                        textAlign: "left",
-                        mb: "12px",
-                        py: 1,
-                        background:
-                          _index === 0 || _index === _.size(weekdays) - 1
-                            ? "#FAFAFA"
-                            : "inherit",
-                      }}
-                    >
-                      {totalDay}
-                    </StyledTableCell>
-                  );
-                })}
-              </StyledTableRow>
-            );
-          })
-        ) : (
-          <StyledTableRow>
-            <StyledTableCell colSpan={9}>
-              <Typography
-                sx={{
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  fontWeight: 400,
-                  textAlign: "center",
-                }}
-              >
-                No data were found
-              </Typography>
-            </StyledTableCell>
-          </StyledTableRow>
-        )}
-        {isGetLoading && (
-          <Box
-            sx={{
-              position: "absolute",
-              width: 1,
-              height: 1,
-              top: 0,
-              left: 0,
-              backgroundColor: " rgba(0, 0, 0, 0.1)",
+  // const _renderTableBody = () => {
+  //   return (
 
-              webkitTapHighlightColor: "transparent",
-            }}
-          >
-            <Stack
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 1,
-                width: 1,
-              }}
-            >
-              <CircularProgress />
-            </Stack>
-          </Box>
-        )}
-      </TableBody>
-    );
-  };
+  //   );
+  // };
 
   const renderMain = () => {
     return (
@@ -341,43 +216,208 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                   </Typography>
                 </Box>
               </StyledTableCell>
-              {weekdays?.map((weekday) => (
-                <StyledTableCell key={weekday}>
-                  <Box
-                    sx={{
-                      mb: "12px",
-                      py: 1,
-                    }}
-                  >
-                    <Typography
+              {dateRange?.map((date, index) => {
+                const weekday = weekdays[date.getDay()];
+                const dayNumber = date.getDate();
+                return (
+                  <StyledTableCell key={date}>
+                    <Box
                       sx={{
-                        fontSize: "10px",
-                        fontWeight: 400,
-                        lineHeight: "18px",
-                        textTransform: "uppercase",
-                        textAlign: "left",
+                        mb: "12px",
+                        py: 1,
                       }}
                     >
-                      {weekday}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "16px",
-                        fontWeight: 600,
-                        lineHeight: "20px",
-                        textTransform: "uppercase",
-                        color: "#212121",
-                        textAlign: "left",
-                      }}
-                    >
-                      {formatDuration(calculateTotalWeekdays(weekday))}
-                    </Typography>
-                  </Box>
-                </StyledTableCell>
-              ))}
+                      <Typography
+                        sx={{
+                          fontSize: "10px",
+                          fontWeight: 400,
+                          lineHeight: "18px",
+                          textTransform: "uppercase",
+                          textAlign: "left",
+                        }}
+                      >
+                        {`${weekday} ${dayNumber}`}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: 600,
+                          lineHeight: "20px",
+                          textTransform: "uppercase",
+                          color: isDarkMode ? "#fff" : "#212121",
+                          textAlign: "left",
+                        }}
+                      >
+                        {formatDuration(calculateTotalWeekdays(weekday))}
+                      </Typography>
+                    </Box>
+                  </StyledTableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
-          {_renderTableBody()}
+          <TableBody sx={{ position: "relative" }}>
+            {!_.isEmpty(filteredProjects) && !_.isEmpty(data) ? (
+              _.map(filteredProjects, (timeSheet: any, index: number) => {
+                return (
+                  <StyledTableRow key={timeSheet.id || index}>
+                    <StyledTableCell sx={{ maxWidth: 235 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
+                          justifyContent: "flex-start",
+                          mb: "12px",
+                          py: 1,
+                          "&:hover": {
+                            ".pin_project": {
+                              visibility: "visible",
+                            },
+                          },
+                        }}
+                      >
+                        <Avatar
+                          sx={{ width: 20, height: 20, objectFit: "cover" }}
+                          src={timeSheet?.avatar}
+                        />
+                        <Typography
+                          sx={{
+                            fontSize: "14px",
+                            lineHeight: "18px",
+                            fontWeight: 600,
+                            maxWidth: "200px",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                            WebkitLineClamp: 1,
+                          }}
+                        >
+                          {timeSheet?.projectName}
+                        </Typography>
+                        <IconButton
+                          className="pin_project"
+                          sx={{
+                            ml: "auto",
+                            width: 24,
+                            height: 24,
+                            visibility: timeSheet?.is_pin
+                              ? "visible"
+                              : "hidden",
+                          }}
+                          onClick={() => {
+                            onPinTimeSheet({
+                              id: timeSheet?.projectId,
+                              is_pin: timeSheet?.is_pin ? false : true,
+                              type: "PROJECT",
+                            })
+                              .then(() => {
+                                onGetMyTimeSheet({ ...params });
+                                onAddSnackbar(
+                                  `${
+                                    timeSheet?.is_pin ? "Unpin" : "Pin"
+                                  } timesheet success`,
+                                  "success",
+                                );
+                              })
+                              .catch(() => {
+                                onAddSnackbar(
+                                  `${
+                                    timeSheet?.is_pin ? "Unpin" : "Pin"
+                                  } timesheet failed`,
+                                  "error",
+                                );
+                              });
+                          }}
+                        >
+                          {timeSheet?.is_pin ? <PinActiveIcon /> : <PinIcon />}
+                        </IconButton>
+                      </Box>
+                    </StyledTableCell>
+                    <StyledTableCell
+                      sx={{
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        lineHeight: "18px",
+                        color: "#999999",
+                        textAlign: "right",
+                        mb: "12px",
+                        py: 1,
+                      }}
+                    >
+                      {timeSheet?.totalDuration || 0} giờ
+                    </StyledTableCell>
+                    {_.map(weekdays, (weekday, _index: number) => {
+                      const totalDay = timeSheet?.weekdays?.[`${weekday}`];
+                      return (
+                        <StyledTableCell
+                          key={_index}
+                          sx={{
+                            fontSize: "14px",
+                            lineHeight: "18px",
+                            fontWeight: 600,
+                            color: "#999999",
+                            textAlign: "left",
+                            mb: "12px",
+                            py: 1,
+                            background:
+                              _index === 0 || _index === _.size(weekdays) - 1
+                                ? isDarkMode
+                                  ? "inherit"
+                                  : "#FAFAFA"
+                                : "inherit",
+                          }}
+                        >
+                          {totalDay}
+                        </StyledTableCell>
+                      );
+                    })}
+                  </StyledTableRow>
+                );
+              })
+            ) : (
+              <StyledTableRow>
+                <StyledTableCell colSpan={9}>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      lineHeight: "20px",
+                      fontWeight: 400,
+                      textAlign: "center",
+                    }}
+                  >
+                    No data were found
+                  </Typography>
+                </StyledTableCell>
+              </StyledTableRow>
+            )}
+            {isGetLoading && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  width: 1,
+                  height: 1,
+                  top: 0,
+                  left: 0,
+                  backgroundColor: " rgba(0, 0, 0, 0.1)",
+
+                  webkitTapHighlightColor: "transparent",
+                }}
+              >
+                <Stack
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: 1,
+                    width: 1,
+                  }}
+                >
+                  <CircularProgress />
+                </Stack>
+              </Box>
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
     );
@@ -386,4 +426,4 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
   return renderMain();
 };
 
-export default TimeSheet;
+export default memo(TimeSheet);

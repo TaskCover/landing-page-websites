@@ -62,7 +62,7 @@ const Form = (props: FormProps) => {
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
 
-  const { id: projectId } = useParams();
+  const { id: projectId } = useParams() as { id: string };
 
   const label = useMemo(() => {
     switch (type) {

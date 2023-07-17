@@ -35,7 +35,7 @@ const MainLayout = (props: MainLayoutProps) => {
 
   const { push } = useRouter();
   const pathname = usePathname();
-  const { id } = useParams();
+  const { id } = useParams() as { id: string };
   const commonT = useTranslations(NS_COMMON);
 
   const { appReady, token, user } = useAppSelector(

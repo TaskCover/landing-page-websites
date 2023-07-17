@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { styled } from "@mui/material/styles";
 import _ from "lodash";
 import dayjs from "dayjs";
@@ -21,10 +21,14 @@ import {
 } from "@mui/material";
 import PinActiveIcon from "icons/PinActiveIcon";
 import PinIcon from "icons/PinIcon";
+import { useSnackbar } from "store/app/selectors";
+import { useGetMyTimeSheet } from "store/timeTracking/selectors";
+import useTheme from "hooks/useTheme";
 
 interface IProps {
   data: any[];
   filters: any;
+  dateRange: any;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -46,11 +50,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const weekdays = ["SUN", "MON", "TUE", "WEB", "THU", "FRI", "SAT"];
 
-const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
+const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
   const isGetLoading = false;
+  const { isDarkMode } = useTheme();
   const [totalEachRows, setTotalEachRows] = useState<{ [key: string]: number }>(
     {},
   );
+
+  const { onAddSnackbar } = useSnackbar();
+  const { onPinTimeSheet, onGetCompanyTimeSheet, params } = useGetMyTimeSheet();
+
   const [totalWeek, setTotalWeek] = useState<number>(0);
   const [weeklyTotals, setWeeklyTotals] = useState<Map<string, number>>(
     new Map<string, number>(),
@@ -108,7 +117,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
 
     return (
       <TableBody sx={{ position: "relative" }}>
-        {!_.isEmpty(sortedByPin) ? (
+        {!_.isEmpty(sortedByPin) && !_.isEmpty(data) ? (
           _.map(sortedByPin, (user: any, userIndex) => {
             return (
               <StyledTableRow key={user.id || userIndex}>
@@ -130,6 +139,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                   >
                     <Avatar
                       sx={{ width: 20, height: 20, objectFit: "cover" }}
+                      src={user?.avatar?.link}
                     />
                     <Typography
                       sx={{
@@ -153,18 +163,30 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                         height: 24,
                         visibility: user?.is_pin ? "visible" : "hidden",
                       }}
-                      // onClick={() => {
-                      //   dispatch(
-                      //     pinTimeLog(
-                      //       {
-                      //         id: user?.id,
-                      //         is_pin: user?.is_pin ? !user?.is_pin : true,
-                      //         type: "USER",
-                      //       },
-                      //       filters,
-                      //     ),
-                      //   );
-                      // }}
+                      onClick={() => {
+                        onPinTimeSheet({
+                          id: user?.id,
+                          is_pin: user?.is_pin ? !user?.is_pin : true,
+                          type: "USER",
+                        })
+                          .then(() => {
+                            onGetCompanyTimeSheet({ ...params });
+                            onAddSnackbar(
+                              `${
+                                user?.is_pin ? "Unpin" : "Pin"
+                              } timesheet success`,
+                              "success",
+                            );
+                          })
+                          .catch(() => {
+                            onAddSnackbar(
+                              `${
+                                user?.is_pin ? "Unpin" : "Pin"
+                              } timesheet fail`,
+                              "error",
+                            );
+                          });
+                      }}
                     >
                       {user?.is_pin ? <PinActiveIcon /> : <PinIcon />}
                     </IconButton>
@@ -207,7 +229,9 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                         py: 1,
                         background:
                           _index === 0 || _index === _.size(weekdays) - 1
-                            ? "#FAFAFA"
+                            ? isDarkMode
+                              ? "inherit"
+                              : "#FAFAFA"
                             : "inherit",
                       }}
                     >
@@ -316,40 +340,44 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
                   </Typography>
                 </Box>
               </StyledTableCell>
-              {weekdays?.map((weekday) => (
-                <StyledTableCell key={weekday}>
-                  <Box
-                    sx={{
-                      mb: "12px",
-                      py: 1,
-                    }}
-                  >
-                    <Typography
+              {dateRange?.map((date, index) => {
+                const weekday = weekdays[date.getDay()];
+                const dayNumber = date.getDate();
+                return (
+                  <StyledTableCell key={date}>
+                    <Box
                       sx={{
-                        fontSize: "10px",
-                        fontWeight: 400,
-                        lineHeight: "18px",
-                        textTransform: "uppercase",
-                        textAlign: "left",
+                        mb: "12px",
+                        py: 1,
                       }}
                     >
-                      {weekday}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "16px",
-                        fontWeight: 600,
-                        lineHeight: "20px",
-                        textTransform: "uppercase",
-                        color: "#212121",
-                        textAlign: "left",
-                      }}
-                    >
-                      {formatDuration(weeklyTotals?.get(weekday) || 0)}
-                    </Typography>
-                  </Box>
-                </StyledTableCell>
-              ))}
+                      <Typography
+                        sx={{
+                          fontSize: "10px",
+                          fontWeight: 400,
+                          lineHeight: "18px",
+                          textTransform: "uppercase",
+                          textAlign: "left",
+                        }}
+                      >
+                        {`${weekday} ${dayNumber}`}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: 600,
+                          lineHeight: "20px",
+                          textTransform: "uppercase",
+                          color: isDarkMode ? "#fff" : "#212121",
+                          textAlign: "left",
+                        }}
+                      >
+                        {formatDuration(weeklyTotals?.get(weekday) || 0)}
+                      </Typography>
+                    </Box>
+                  </StyledTableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           {_renderTableBody()}
@@ -361,4 +389,4 @@ const TimeSheet: React.FC<IProps> = ({ data, filters }) => {
   return renderMain();
 };
 
-export default TimeSheet;
+export default memo(TimeSheet);

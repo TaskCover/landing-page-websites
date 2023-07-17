@@ -243,7 +243,7 @@ const DATA: MenuItemProps[] = [
     label: "menu.timeTracking",
     href: TIME_TRACKING_PATH,
     icon: <MenuTimeTrackingIcon />,
-    roles: [Permission.AM, Permission.ST, Permission.SA, Permission.EU], // Tmp permission
+    roles: [Permission.AM, Permission.ST],
   },
 ];
 
