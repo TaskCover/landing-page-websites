@@ -40,7 +40,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.divider}`,
   padding: theme.spacing(1),
   textAlign: "center",
-  minWidth: "100px",
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -166,13 +165,12 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
   // };
 
   const renderMain = () => {
-    const hasData = !_.isEmpty(data);
     return (
       <TableContainer>
-        <Table stickyHeader sx={{ overflowX: "auto" }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <StyledTableCell sx={{ minWidth: hasData ? 50 : 150 }}>
+              <StyledTableCell sx={{ minWidth: 50 }}>
                 <Typography
                   sx={{
                     fontSize: "10px",
