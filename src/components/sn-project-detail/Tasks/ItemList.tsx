@@ -108,7 +108,7 @@ const ItemList = () => {
     [dataIds?.taskId, dataIds?.taskListId],
   );
 
-  const baseTop = useMemo(() => 97, []);
+  const baseTop = useMemo(() => 90, []);
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -582,7 +582,7 @@ const ItemList = () => {
   }, [initQuery, isReady, onGetTasksOfProject, projectId]);
 
   return (
-    <Stack flex={1} pb={3}>
+    <Stack flex={1} pb={3}  sx={{ minWidth: 0 }}>
       <ActionsSelected selectedList={selectedList} onReset={onResetSelected} />
       <TableLayout
         onLayout={onLayout}
@@ -591,7 +591,7 @@ const ItemList = () => {
         error={error as string}
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
-        position="sticky"
+        position = "sticky"
         top={{ xs: baseTop + 8 }}
         zIndex={1}
       >
@@ -656,7 +656,8 @@ const ItemList = () => {
                       >
                         <Content
                           color="text.primary"
-                          fontWeight={600}
+                          // fontWeight = { 600}
+                          fontSize={13}
                           textAlign="left"
                           noWrap
                           tooltip={task.name}
@@ -667,16 +668,16 @@ const ItemList = () => {
                         <Assigner src={task?.owner?.avatar?.link}>
                           {task?.owner?.fullname}
                         </Assigner>
-                        <Content>{formatDate(task?.start_date)}</Content>
-                        <Content>{formatDate(task?.end_date)}</Content>
-                        <Content noWrap={false} whiteSpace="nowrap">
+                        <Content  fontSize={13}>{formatDate(task?.start_date)}</Content>
+                        <Content  fontSize={13}>{formatDate(task?.end_date)}</Content>
+                        <Content noWrap={false} whiteSpace="nowrap"  fontSize={14}>
                           <TextStatus
                             color={COLOR_STATUS[task.status]}
                             text={TASK_TEXT_STATUS[task.status]}
                             width={121}
                           />
                         </Content>
-                        <Description>{task?.description}</Description>
+                        <Description fontSize={13}>{task?.description}</Description>
                       </Stack>
                       {!isHide && (
                         <>
@@ -734,7 +735,8 @@ const ItemList = () => {
                                       >
                                         <Content
                                           color="text.primary"
-                                          textAlign="left"
+                                          textAlign = "left"
+                                          fontSize={13}
                                           noWrap
                                           tooltip={subTask.name}
                                           onClick={onSetTask(
@@ -751,15 +753,16 @@ const ItemList = () => {
                                         >
                                           {subTask?.owner?.fullname}
                                         </Assigner>
-                                        <Content>
+                                        <Content fontSize={13}>
                                           {formatDate(subTask?.start_date)}
                                         </Content>
-                                        <Content>
+                                        <Content fontSize={13}>
                                           {formatDate(subTask?.end_date)}
                                         </Content>
                                         <Content
                                           noWrap={false}
-                                          whiteSpace="nowrap"
+                                          whiteSpace = "nowrap"
+                                          fontSize={14}
                                         >
                                           <TextStatus
                                             color={COLOR_STATUS[subTask.status]}
@@ -770,7 +773,7 @@ const ItemList = () => {
                                           />
                                         </Content>
 
-                                        <Description>
+                                        <Description fontSize={13}>
                                           {subTask.description}
                                         </Description>
                                       </Stack>
@@ -786,7 +789,7 @@ const ItemList = () => {
                             startIcon={<PlusIcon />}
                             variant="text"
                             size="extraSmall"
-                            color="secondary"
+                            color = "secondary"
                             sx={{ mr: 4 }}
                           >
                             {projectT("detailTasks.addNewTask")}
@@ -830,18 +833,18 @@ const Assigner = ({
   src,
   ...rest
 }: StackProps & { src?: string }) => {
-  if (!children) return <Content textAlign="left" />;
+  if (!children) return <Content textAlign="left"  fontSize={13}/>;
   return (
     <Stack
       component="p"
       direction="row"
       alignItems="center"
       spacing={1.25}
-      px={2}
+      px = { 2}
       {...rest}
     >
-      <Avatar size={24} src={src} />
-      <Text variant="body2" component="span" overflow="hidden" color="grey.400">
+      <Avatar size={23} src={src} />
+      <Text variant="body2" component="span" overflow="hidden" color="grey.400" fontSize={13}>
         {children}
       </Text>
     </Stack>
