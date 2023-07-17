@@ -48,10 +48,12 @@ const AddGroup = () => {
     newGroupData,
     convention,
     dataTransfer,
+    groupMembers,
     onGetAllConvention,
     onSetStep,
     onCreateDirectMessageGroup,
     onAddMembers2Group,
+    onFetchGroupMembersMember,
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -65,6 +67,9 @@ const AddGroup = () => {
       offset: 0,
       count: 1000,
     });
+    onFetchGroupMembersMember({
+      roomId: dataTransfer?._id,
+    })
   }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
 
   const handleSuccess = (result) => {
@@ -116,7 +121,8 @@ const AddGroup = () => {
       });
       handleSuccess(result);
     } else {
-      const users = Object.keys(employeeIdSelected).filter((item) => employeeIdSelected[item] === true);
+      const users = Object.keys(employeeIdSelected)
+        .filter((item) => employeeIdSelected[item] === true);
       const tasks = users.map(async (userId_to_add) => (await onAddMembers2Group({
         roomId: dataTransfer?._id,
         userId_to_add,
@@ -208,7 +214,9 @@ const AddGroup = () => {
         ) : (
           <>
             {items?.length > 0
-                ? items?.filter(m => m.id_rocket !== user?.id_rocket).map((item, index) => {
+                ? items
+                  ?.filter(item => !groupMembers?.filter(m => m._id)?.includes(item.id_rocket))
+                  ?.filter(m => m.id_rocket !== user?.id_rocket).map((item, index) => {
                   return (
                     <SelectItem
                       checkbox
