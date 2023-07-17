@@ -592,7 +592,7 @@ const ItemList = () => {
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
         position="sticky"
-        top={{ xs: baseTop + 8, xl: baseTop + 42 }}
+        top={{ xs: baseTop + 8 }}
         zIndex={1}
       >
         <></>

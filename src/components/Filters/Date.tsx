@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Stack } from "@mui/material";
+import { Stack, SvgIconProps } from "@mui/material";
 import { Text } from "components/shared";
 import DatePicker, {
   ReactDatePickerProps,
@@ -21,6 +21,7 @@ type DateProps = Omit<ReactDatePickerProps, "name" | "onChange"> & {
   name: string;
   value?: string | number;
   format?: string;
+  iconProps?: SvgIconProps;
 };
 
 const FDate = (props: DateProps) => {
@@ -30,6 +31,7 @@ const FDate = (props: DateProps) => {
     onChange,
     name,
     format = DATE_FORMAT_FORM,
+    iconProps,
     ...rest
   } = props;
 
@@ -67,6 +69,7 @@ const FDate = (props: DateProps) => {
               fontSize: 20,
               mt: 0.675,
               cursor: "pointer",
+              ...iconProps?.sx,
             }}
           />
         }

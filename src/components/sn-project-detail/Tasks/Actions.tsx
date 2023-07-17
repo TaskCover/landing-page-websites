@@ -123,7 +123,7 @@ const Actions = () => {
         borderColor="grey.100"
         spacing={{ xs: 1, md: 3 }}
         px={{ xs: 1, md: 2, xl: 3 }}
-        py={{ xs: 0.75, xl: 1.5 }}
+        py={{ xs: 0.75 }}
       >
         {/* <Button
           onClick={onShow}
@@ -207,6 +207,9 @@ const Actions = () => {
                 value={queries?.["tasks.owner"]}
                 hasAvatar
                 sx={{ display: { xs: "none", md: "initial" } }}
+                rootSx={{
+                  "& >svg": { fontSize: 16 },
+                }}
               />
             </Stack>
             <Stack
@@ -220,6 +223,9 @@ const Actions = () => {
                 onChange={onChangeQueries}
                 value={queries?.["tasks.start_date"]}
                 format={DATE_FORMAT_HYPHEN}
+                iconProps={{
+                  sx: { fontSize: 16 },
+                }}
               />
               <Dropdown
                 placeholder={commonT("status")}
@@ -227,6 +233,9 @@ const Actions = () => {
                 name="tasks.status"
                 onChange={onChangeQueries}
                 value={queries?.["tasks.status"]}
+                rootSx={{
+                  "& >svg": { fontSize: 16 },
+                }}
               />
             </Stack>
           </Stack>
@@ -241,6 +250,9 @@ const Actions = () => {
               value={queries?.["tasks.owner"]}
               hasAvatar
               sx={{ display: { md: "none" } }}
+              rootSx={{
+                "& >svg": { fontSize: 16 },
+              }}
             />
 
             <Button
