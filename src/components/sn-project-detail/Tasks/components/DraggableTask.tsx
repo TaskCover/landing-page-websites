@@ -85,6 +85,7 @@ const DraggableTask = (props: DraggableTaskProps) => {
               <IconButton
                 className="checkbox"
                 noPadding
+                sx={{ zIndex: 10 }}
                 {...provided.dragHandleProps}
               >
                 <MoveDotIcon
