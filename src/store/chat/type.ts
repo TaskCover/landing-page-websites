@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataStatus } from "constant/enums";
 import { Paging } from "constant/types";
 
@@ -100,11 +101,13 @@ export interface ChatState {
   messageStatus: DataStatus;
   messagePaging: Paging;
   newGroupData: ChatGroup | {};
-  createGroupStatus: DataStatus;
-  addMembers2GroupStatus: DataStatus;
-  leftGroupStatus: DataStatus;
-  removeMemberGroupStatus: DataStatus;
-  typeList: TYPE_LIST;
+  createGroupStatus: DataStatus,
+  addMembers2GroupStatus: DataStatus,
+  leftGroupStatus: DataStatus,
+  removeMemberGroupStatus: DataStatus,
+  typeList: TYPE_LIST,
+  groupMembers: any[],
+  chatAttachments: any,
 }
 
 export type DirectionChat = "a" | "c" | "d";
@@ -133,16 +136,37 @@ export interface CreateGroupRequest extends ChatRequestCommon {
 
 export interface AddMember2GroupRequest extends AuthenRequestCommon {
   roomId: string;
-  userId_to_add: string[];
+  userId_to_add: string;
 }
 
 export interface LeftGroupRequest extends AuthenRequestCommon {
   roomId: string;
 }
 
+export interface FetchGroupMemberRequest extends AuthenRequestCommon {
+  roomId: string;
+}
+
 export interface RemoveGroupMemberRequest extends AuthenRequestCommon {
   roomId: string;
   userId_to_remove: string;
+}
+
+export interface ChatAttachmentsRequest extends AuthenRequestCommon {
+  roomId: string;
+  fileType?: 'media' | 'file' | 'link';
+  roomType: 'c' | 'p' | 'd';
+}
+
+export interface ChangeRoleRequest extends AuthenRequestCommon {
+  groupId: string;
+  userIdToChange: string;
+  newRole: 'addOwner' | 'removeOwner' | 'addModerator' | 'removeModerator' | 'addLeader' | 'removeLeader';
+}
+
+export interface RemoveMemberRequest extends AuthenRequestCommon {
+  groupId: string;
+  userIdToKick: string;
 }
 
 export enum STEP {
@@ -159,6 +183,7 @@ export enum STEP {
   MEDIA,
   LINK,
   FILE,
+  CHAT_FORWARD,
 }
 
 export enum TYPE_LIST {

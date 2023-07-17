@@ -33,6 +33,7 @@ export interface Employee extends User {
   status: PayStatus;
   approve?: boolean;
   username?: string;
+  id_rocket?: string;
 }
 
 export interface Position {

@@ -16,32 +16,25 @@ interface ItemMemberDetailProp {
   callbackRemove?: () => void;
 }
 
-const ItemMemberDetail = ({
-  admin,
-  data,
-  callbackAddAdmin,
-  callbackRemove,
-}: ItemMemberDetailProp) => {
+const ItemMemberDetail = ({ admin, data, callbackAddAdmin, callbackRemove }: ItemMemberDetailProp) => {
   const commonT = useTranslations(NS_COMMON);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClickMenu = (action: "addAdmin" | "remove") => {
+  const handleClickMenu = (action: 'addAdmin' | 'remove') => {    
     setAnchorEl(null);
-    if (action === "addAdmin") callbackAddAdmin;
-    if (action === "remove") callbackRemove;
+    if (action === 'addAdmin' && callbackAddAdmin) callbackAddAdmin();
+    if (action === 'remove' && callbackRemove) callbackRemove();
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        marginBottom: "10px",
-      }}
-    >
+    <Box sx={{
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: "10px"
+    }}>
       <Box
         sx={{
           display: "flex",
@@ -51,6 +44,7 @@ const ItemMemberDetail = ({
         <Avatar
           alt="Avatar"
           size={32}
+          src={data?.avatar}
           style={{
             borderRadius: "50%",
           }}
@@ -59,29 +53,19 @@ const ItemMemberDetail = ({
           sx={{
             display: "flex",
             flexDirection: "column",
-            marginLeft: "10px",
+            marginLeft: "10px"
           }}
         >
-          <Typography
-            variant="inherit"
-            color="#212121"
-            fontWeight={600}
-            fontSize={14}
-          >
-            {"fullname"}
+          <Typography variant="inherit" color="#212121" fontWeight={600} fontSize={14}>
+            {data?.fullname}
           </Typography>
-          <Typography
-            variant="caption"
-            color="#666666"
-            fontWeight={400}
-            fontSize={12}
-          >
-            {"email"}
+          <Typography variant="caption" color="#666666" fontWeight={400} fontSize={12}>
+            {`${data?.username}@`}
           </Typography>
         </Box>
       </Box>
       <Box>
-        {admin ? (
+        {data?.roles?.includes('owner') ?
           <Button
             variant="primary"
             sx={{
@@ -94,10 +78,12 @@ const ItemMemberDetail = ({
           >
             {commonT("form.admin")}
           </Button>
-        ) : (
+          :
           <>
             <IconButton noPadding size="normal">
-              <MoreSquareIcon onClick={handleClick} />
+              <MoreSquareIcon
+                onClick={handleClick}
+              />
             </IconButton>
             <Menu
               id="demo-positioned-menu"
@@ -106,25 +92,21 @@ const ItemMemberDetail = ({
               open={open}
               onClose={() => setAnchorEl(null)}
               anchorOrigin={{
-                vertical: "top",
-                horizontal: "left",
+                vertical: 'top',
+                horizontal: 'left',
               }}
               transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
+                vertical: 'top',
+                horizontal: 'left',
               }}
             >
-              <MenuItem onClick={() => handleClickMenu("addAdmin")}>
-                Add as admin
-              </MenuItem>
-              <MenuItem onClick={() => handleClickMenu("remove")}>
-                Remove from chat{" "}
-              </MenuItem>
+              <MenuItem onClick={() => handleClickMenu('addAdmin')}>Add as admin</MenuItem>
+              <MenuItem onClick={() => handleClickMenu('remove')}>Remove from chat </MenuItem>
             </Menu>
           </>
-        )}
+        }
       </Box>
-    </Box>
+    </Box >
   );
 };
 

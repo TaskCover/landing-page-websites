@@ -15,7 +15,7 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
   const { userOnlinePage } = useChat();
 
   const { lastMessage, name, usersCount, usernames, avatar, t } = chatInfo;
-  const isGroup = useMemo(() => t !== "d", [t]);
+  const isGroup = useMemo(() => t !== 'd', [t]);
   const isCurrentAcc = sessionId === lastMessage?.u?.username;
   const nameLastMessage = isCurrentAcc ? "You: " : "";
 
@@ -52,37 +52,6 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
       }}
       p={2}
     >
-      {/* {isGroup ? (
-        <ImageList sx={{ width: 56, height: 56 }} cols={2} rowHeight={164}>
-          <Avatar
-            alt="Avatar"
-            size={25}
-            style={{
-              borderRadius: "5px",
-            }}
-          />
-          {usersCount - 3 > 0 ? (
-            <Box
-              sx={{
-                textAlign: "center",
-                borderRadius: "5px",
-                backgroundColor: "#3078F1",
-                color: "white",
-              }}
-            >
-              <Typography variant="caption">+ {usersCount - 3}</Typography>
-            </Box>
-          ) : null}
-        </ImageList>
-      ) : (
-        <Avatar
-          alt="Avatar"
-          size={56}
-          style={{
-            borderRadius: "10px",
-          }}
-        />
-      )} */}
       <Box
         position="relative"
         sx={{
