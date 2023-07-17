@@ -53,7 +53,6 @@ type DroppableTaskListProps = {
   isDragging: boolean;
   onChange: () => void;
   setSelectedList: Dispatch<SetStateAction<Selected[]>>;
-  index: number;
 } & HTMLAttributes<HTMLDivElement>;
 
 type MoreListProps = {
@@ -71,7 +70,6 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
     onChange,
     setSelectedList,
     isDragging,
-    index,
     ...rest
   } = props;
   const { isXlSmaller } = useBreakpoint();
@@ -106,7 +104,6 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                 pl={{ xs: 1, md: 2 }}
                 width="100%"
                 justifyContent="space-between"
-                borderTop={index !== 0 ? { md: "1px solid" } : undefined}
                 borderBottom={{ md: "1px solid" }}
                 borderColor={{ md: "grey.100" }}
               >
@@ -114,8 +111,8 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   direction="row"
                   sx={{
                     "& >.checkbox": {
-                      opacity: checked ? 1 : 0,
-                      userSelect: checked ? undefined : "none",
+                      opacity: 0,
+                      userSelect: "none",
                     },
                     "&:hover >.checkbox": {
                       opacity: 1,
@@ -168,11 +165,9 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   onClick={onShowCreate}
                   startIcon={<PlusIcon />}
                   variant="text"
-                  size="extraSmall"
+                  size="small"
                   color="secondary"
-                  sx={{
-                    mr: { xs: 1.5, md: 4 },
-                  }}
+                  sx={{ mr: { xs: 1.5, md: 4 } }}
                 >
                   {projectT("detailTasks.addNewTask")}
                 </Button>
@@ -357,7 +352,7 @@ export const MoreList = (props: MoreListProps) => {
   return (
     <>
       <IconButton noPadding onClick={onOpen}>
-        <MoreDotIcon fontSize="small" sx={{ color: "grey.300" }} />
+        <MoreDotIcon fontSize="medium" sx={{ color: "grey.300" }} />
       </IconButton>
       <Popover
         id={popoverId}

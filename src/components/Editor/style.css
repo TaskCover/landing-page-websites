@@ -77,8 +77,3 @@
   line-height: 1.57;
   color: var(--mui-palette-grey-400);
 }
-
-.ql-snow .ql-editor pre.ql-syntax {
-  background-color: var(--mui-palette-grey-50);
-  color: var(--mui-palette-text-primary)
-}

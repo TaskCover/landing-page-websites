@@ -68,8 +68,8 @@ const DraggableTask = (props: DraggableTaskProps) => {
               borderColor={{ md: "grey.100" }}
               sx={{
                 "& >.checkbox": {
-                  opacity: checked ? 1 : 0,
-                  userSelect: checked ? undefined : "none",
+                  opacity: 0,
+                  userSelect: "none",
                 },
                 "&:hover >.checkbox": {
                   opacity: 1,
