@@ -30,6 +30,6 @@
 }
 
 .html pre.ql-syntax {
-  background-color: var(--mui-palette-grey-50);
+  background-color: var(--mui-palette-grey-100);
   color: var(--mui-palette-text-primary);
 }
