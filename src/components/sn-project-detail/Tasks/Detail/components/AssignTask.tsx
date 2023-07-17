@@ -32,7 +32,7 @@ const AssignTask = (props: AssignTaskProps) => {
 
   const [isShow, onShow, onHide] = useToggle();
 
-  const { id: projectId } = useParams();
+  const { id: projectId } = useParams() as { id: string };
 
   const onAssign = (owner: string) => {
     return async () => {

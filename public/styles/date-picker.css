@@ -58,12 +58,16 @@
   font-size: 14px;
 }
 
-.fc-col-header-cell {
+/* .fc-col-header-cell {
   height: 62px;
-}
+} */
 .fc .fc-timegrid-col.fc-day-today {
   background-color: transparent;
 }
 .event-border {
   border-left: "3px solid #3699FF";
+}
+
+height-s {
+  height: calc(100vh - 380px);
 }

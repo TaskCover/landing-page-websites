@@ -6,6 +6,10 @@ import {
   getCompanyTimeSheet,
   updateTimeSheet,
   deleteTimeSheet,
+  getWorkLog,
+  pinTimeSheet,
+  GetMyTimeSheetQueries,
+  getSameWorker,
 } from "./actions";
 import {
   Attachment,
@@ -40,6 +44,25 @@ export interface MyTimeSheet {
   user_id?: string;
   _id?: string;
 }
+
+export interface WorkLogItem {
+  id: string;
+  created_time: string;
+  user_id: string;
+  task_id: string;
+  task_list_id: string;
+  task_name: string;
+  task_number: string;
+  project_id: string;
+  action: string;
+}
+
+export interface WorkLogResponse {
+  page?: number;
+  total?: number;
+  total_page?: number;
+  data?: WorkLogItem[];
+}
 export interface CompanyTimeSheet {
   id: string;
   fullname: string;
@@ -53,10 +76,25 @@ export interface CompanyTimeSheet {
   position: string;
   timesheet: MyTimeSheet[];
 }
+export interface ISameWorker {
+  id?: string;
+  fullname?: string;
+  company?: string;
+  avatar?: {
+    object?: string;
+    name?: string;
+    link?: string;
+  };
+  email?: string;
+  position?: {
+    id?: string;
+    name?: string;
+  };
+}
 export interface TimeTrackingState {
   items: MyTimeSheet[];
   timeSheet: MyTimeSheet;
-  params: object;
+  params: GetMyTimeSheetQueries;
   status: DataStatus;
   itemStatus: DataStatus;
   statusDelete: DataStatus;
@@ -66,6 +104,9 @@ export interface TimeTrackingState {
   companyItems: CompanyTimeSheet[];
   companyStatus: DataStatus;
   statusUpdate: DataStatus;
+
+  workLog: WorkLogResponse;
+  sameWorker: ISameWorker[];
 }
 export type GetActivitiesQueries = {
   start_date: string;
@@ -92,7 +133,7 @@ export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {
 const initialState: TimeTrackingState = {
   items: [],
   timeSheet: {},
-  params: {},
+  params: DEFAULT_RANGE_ACTIVITIES,
   itemStatus: DataStatus.IDLE,
   statusDelete: DataStatus.IDLE,
   status: DataStatus.IDLE,
@@ -101,6 +142,9 @@ const initialState: TimeTrackingState = {
   companyItems: [],
   companyStatus: DataStatus.IDLE,
   statusUpdate: DataStatus.IDLE,
+
+  workLog: {},
+  sameWorker: [],
 };
 
 const timeTrackingSlice = createSlice({
@@ -112,6 +156,8 @@ const timeTrackingSlice = createSlice({
   extraReducers: (builder) =>
     builder
       .addCase(getMyTimeSheet.pending, (state, action) => {
+        //console.log("BodyPinTimeSheet", action);
+        state.params = action.meta.arg;
         state.status = DataStatus.LOADING;
       })
       .addCase(
@@ -164,7 +210,33 @@ const timeTrackingSlice = createSlice({
         (state, action: PayloadAction<{ id: string }>) => {
           state.statusDelete = DataStatus.SUCCEEDED;
         },
-      ),
+      )
+      .addCase(getWorkLog.pending, (state, action) => {
+        state.status = DataStatus.LOADING;
+      })
+      .addCase(
+        getWorkLog.fulfilled,
+        (state, action: PayloadAction<WorkLogResponse>) => {
+          const items = action.payload;
+          state.workLog = items as WorkLogResponse;
+          state.status = DataStatus.SUCCEEDED;
+          state.error = undefined;
+        },
+      )
+      .addCase(getWorkLog.rejected, (state, action) => {
+        state.status = DataStatus.FAILED;
+        state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(pinTimeSheet.fulfilled, (state, _) => {
+        state.status = DataStatus.SUCCEEDED;
+      }),
+  // .addCase(
+  //   getSameWorker.fulfilled,
+  //   (state, action: PayloadAction<ISameWorker[]>) => {
+  //     const items = action.payload;
+  //     state.sameWorker = items as ISameWorker[];
+  //   },
+  // ),
 });
 
 export const { reset } = timeTrackingSlice.actions;

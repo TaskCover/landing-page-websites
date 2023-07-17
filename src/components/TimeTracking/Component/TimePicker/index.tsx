@@ -64,7 +64,7 @@ const MobileDatePickerComponent: React.FC<TextFieldInputProps> = ({
           sx={{
             display: "flex",
             flexDirection: "row",
-            backgroundColor: "grey.50",
+            backgroundColor: isDarkMode ? "#393939" : "grey.50",
             borderRadius: "4px",
             padding: "8px 20px",
             height: "58px",
@@ -78,6 +78,8 @@ const MobileDatePickerComponent: React.FC<TextFieldInputProps> = ({
               ? "rgba(246, 78, 96, 1)"
               : isFocus
               ? "rgba(54, 153, 255, 0.5)"
+              : isDarkMode
+              ? "#393939"
               : "#F7F7FD",
             alignItems: "center",
             width: "100%",
@@ -114,9 +116,9 @@ const MobileDatePickerComponent: React.FC<TextFieldInputProps> = ({
                   fontSize: "14px",
                   lineHeight: "22px",
                   fontWeight: 400,
-                  color: "common.black",
+                  color: isDarkMode ? "#fff" : "common.black",
                   padding: 0,
-                  backgroundColor: "grey.50",
+                  backgroundColor: isDarkMode ? "#393939" : "grey.50",
                 },
                 fieldset: {
                   border: "none",

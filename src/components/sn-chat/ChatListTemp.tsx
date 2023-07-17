@@ -4,19 +4,36 @@ import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
+import SwitchChat from "components/sn-chat/SwitchChat";
 import ChatMessageIcon from "icons/ChatMessageIcon";
 import CloseIcon from "icons/CloseIcon";
-import { ChangeEvent, MouseEventHandler, useState } from "react";
-import SwitchChat from "./SwitchChat";
+import { useRef, useState } from "react";
+import { useChat } from "store/chat/selectors";
 
 const ChatListTemp = () => {
+  const { onGetAllConvention, onClearConversation } = useChat();
+  const popperRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
 
   const handleTrigger = (e: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(e.currentTarget);
+    popperRef.current = !popperRef.current;
     setOpen((state) => !state);
+
+    console.log(popperRef.current);
+    if (popperRef.current) {
+      onGetAllConvention({
+        type: "d",
+        text: "",
+        offset: 0,
+        count: 1000,
+      });
+    } else {
+      onClearConversation();
+    }
   };
+
   return (
     <Box
       sx={{

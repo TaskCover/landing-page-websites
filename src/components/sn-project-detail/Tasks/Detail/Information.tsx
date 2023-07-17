@@ -120,6 +120,58 @@ const Information = () => {
           />
         </Stack>
       </Stack>
+      <Stack
+        display="grid"
+        gap={1}
+        gridTemplateColumns="repeat(auto-fill, 190px)"
+        pb={3}
+      >
+        {!task?.description && (
+          <ActionItem
+            onClick={onShowAddDescription}
+            icon={<AlignLeftIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addDescription")}
+          </ActionItem>
+        )}
+        {!task?.attachments_down?.length && (
+          <ActionItem
+            onClick={onAddAttachments}
+            icon={<LinkSquareIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addAttachments")}
+          </ActionItem>
+        )}
+        {!task?.dependencies?.length && (
+          <ActionItem
+            onClick={onShowAddDependencies}
+            icon={<FatrowIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addDependencies")}
+          </ActionItem>
+        )}
+        {!task?.sub_tasks?.length && !subTaskId && (
+          <ActionItem
+            onClick={onShowAddSub}
+            icon={<HierarchyIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addSubTasks")}
+          </ActionItem>
+        )}
+        {!task?.todo_list?.length && (
+          <ActionItem
+            onClick={onShowAddTodoList}
+            icon={<TaskSquareIcon sx={{ color: "grey.400" }} />}
+          >
+            {projectT("taskDetail.addToDos")}
+          </ActionItem>
+        )}
+      </Stack>
+      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
+      <AttachmentsTask id={ATTACHMENT_ID} />
+      {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
+      <TodoList open={isAddTodo} />
+      <Dependencies open={isAddDepen} />
       <InformationItem label={commonT("assigner")}>
         {!!task?.owner?.id ? (
           <Stack direction="row" alignItems="center" spacing={1}>

@@ -65,7 +65,7 @@ const MoreList = (props: MoreListProps) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const params = useParams();
-  const projectId = useMemo(() => params?.id, [params?.id]);
+  const projectId = useMemo(() => params?.id, [params?.id]) as string;
 
   const { taskIds, taskListIds } = useMemo(() => {
     return selectedList.reduce(
@@ -126,7 +126,7 @@ const MoreList = (props: MoreListProps) => {
 
       const newTaskList = await onCreateTaskList({
         name: genName(taskListNames, taskList.name),
-        project: params.id,
+        project: projectId,
       });
 
       if (newTaskList?.id) {

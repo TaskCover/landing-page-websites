@@ -9,12 +9,12 @@ type AvatarProps = Omit<ImageProps, "src" | "alt"> & {
 };
 
 const Avatar = (props: AvatarProps) => {
-  const { src = UserPlaceholderImage, alt = "Avatar", size, ...rest } = props;
+  const { src, alt = "Avatar", size, ...rest } = props;
 
   return (
     <Image
       className="rounded"
-      src={src}
+      src={src ? src : UserPlaceholderImage}
       alt={alt}
       width={size}
       height={size}

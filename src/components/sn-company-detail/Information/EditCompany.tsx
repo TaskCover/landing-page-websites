@@ -21,7 +21,10 @@ const EditCompany = () => {
     return myItem ?? {};
   }, [detailItem, paramId, myItem]);
 
-  const id = useMemo(() => paramId ?? myItem?.id, [myItem?.id, paramId]);
+  const id = useMemo(
+    () => paramId ?? myItem?.id,
+    [myItem?.id, paramId],
+  ) as string;
 
   const { onUpdateCompany } = useCompany();
 

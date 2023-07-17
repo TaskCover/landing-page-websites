@@ -88,7 +88,7 @@ const ItemList = () => {
 
   const { onAddSnackbar } = useSnackbar();
 
-  const projectId = useMemo(() => params.id, [params.id]);
+  const projectId = useMemo(() => params.id, [params.id]) as string;
 
   const [dataList, setDataList] = useState<TaskList[]>([]);
   const [selectedList, setSelectedList] = useState<Selected[]>([]);

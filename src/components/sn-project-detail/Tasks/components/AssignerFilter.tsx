@@ -20,7 +20,7 @@ const AssignerFilter = (
   } = useMemberOptions();
   const commonT = useTranslations(NS_COMMON);
 
-  const { id: projectId } = useParams();
+  const { id: projectId } = useParams() as { id: string };
 
   const onEndReached = () => {
     if (isFetching || (totalPages && pageIndex >= totalPages)) return;

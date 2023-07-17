@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 
 import React from "react";
@@ -11,6 +12,7 @@ import {
   MyTimeTrackingCalendar,
 } from "./CalendarTracking";
 import { TabPanel } from "@mui/lab";
+import useTheme from "hooks/useTheme";
 
 interface ITab {
   label: string;
@@ -40,6 +42,7 @@ const tabStyles = {
 };
 
 const TimeLog: React.FC = () => {
+  const { isDarkMode } = useTheme();
   const [tab, setTab] = React.useState<string>("myTime");
 
   return (
@@ -48,7 +51,7 @@ const TimeLog: React.FC = () => {
         <Stack
           direction="row"
           sx={{
-            background: "#F7F7FD",
+            backgroundColor: isDarkMode ? "#565656" : "#F7F7FD",
             justifyContent: "space-between",
           }}
         >

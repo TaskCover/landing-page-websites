@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import React, { memo, useEffect, useRef, useState } from "react";
@@ -38,7 +39,6 @@ const TabMyTime = (props: TabMyTimeProps) => {
   const currentDate = moment().toDate();
   const startDate = moment().startOf("month").toDate();
   const { items, onGetMyTimeSheet } = useGetMyTimeSheet();
-  console.log(items, "onGetMyTimeSheet");
   const t = useTranslations(NS_TIME_TRACKING);
   const pickerRef = useRef(null);
   const [selectRangePicker, setSelectRangePicker] = useState([

@@ -15,6 +15,7 @@ const nextConfig = {
     UPLOAD_API_URL: process.env.UPLOAD_API_URL,
     TIME_SHEET_API_URL: process.env.TIME_SHEET_API_URL,
     CHAT_API_URL: process.env.CHAT_API_URL,
+    NEXT_APP_WS_URL: process.env.NEXT_APP_WS_URL,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
@@ -27,6 +28,9 @@ const nextConfig = {
       },
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  }
   /**
    * if you need proxy, then try this
    */

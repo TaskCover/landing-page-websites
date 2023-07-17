@@ -33,7 +33,6 @@ const FilterSelect: React.FC<IProps> = ({ label, value, sx, onChange }) => {
         sx={{ ...typographyStyles, marginRight: "4px" }}
         onClick={() => {
           if (calendarRef) calendarRef.current?.click();
-          console.log("here");
         }}
       >
         {value ? value : label}

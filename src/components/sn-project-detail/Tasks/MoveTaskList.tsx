@@ -44,7 +44,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
 
   const params = useParams();
 
-  const projectId = useMemo(() => params.id, [params.id]);
+  const projectId = useMemo(() => params.id, [params.id]) as string;
 
   const onSubmit = async (values: typeof INITIAL_VALUES) => {
     try {
