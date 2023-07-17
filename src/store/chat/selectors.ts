@@ -5,6 +5,7 @@ import {
   createDirectMessageGroup,
   getAllConvention,
   getLatestMessages,
+  getUserInfoById,
   leftDirectMessageGroup,
   changeGroupRole,
   fetchGroupMembers,
@@ -17,6 +18,7 @@ import { shallowEqual } from "react-redux";
 import {
   AddMember2GroupRequest,
   ChatConventionItemRequest,
+  ChatItemInfo,
   CreateGroupRequest,
   LastMessagesRequest,
   LeftGroupRequest,
@@ -33,11 +35,13 @@ import {
   setRoomId,
   setStep,
   setMessage,
-  setUserPartner,
+  setConversationInfo,
   setTypeList,
   clearConversation,
   clearMessageList,
 } from "./reducer";
+import { ChatUrlsQueryParam } from "./media/typeMedia";
+import { getChatUrls } from "./media/actionMedia";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
@@ -46,14 +50,24 @@ export const useChat = () => {
   const {
     convention,
     messageInfo,
+
     userOnlinePage,
     roomId,
-    userPartner,
+    conversationInfo,
     conversationPaging,
+    messagePaging,
     status,
+
     currStep,
     prevStep,
     backFallStep,
+
+    partnerInfo,
+    partnerInfoStatus,
+
+    chatLinks,
+    chatLinksStatus,
+
     createGroupStatus,
     newGroupData,
     addMembers2GroupStatus,
@@ -62,7 +76,7 @@ export const useChat = () => {
     typeList,
     dataTransfer,
     groupMembers,
-    chatAttachments
+    chatAttachments,
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -115,6 +129,29 @@ export const useChat = () => {
     [dispatch, user],
   );
 
+  const onGetChatUrls = useCallback(
+    async (params?: Omit<ChatUrlsQueryParam, "userId" | "authToken">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      await dispatch(
+        getChatUrls({
+          roomId: params?.roomId ?? roomId,
+          type: params?.type ?? conversationInfo?.t,
+          authToken,
+          userId,
+        }),
+      );
+    },
+    [conversationInfo?.t, dispatch, roomId, user],
+  );
+
+  const onGetUserInfo = useCallback(
+    async (username: string) => {
+      await dispatch(getUserInfoById(username));
+    },
+    [dispatch],
+  );
+
   const onSetStep = useCallback(
     (step: STEP, dataTransfer?: any) => {
       dispatch(setStep({ step, dataTransfer }));
@@ -160,7 +197,7 @@ export const useChat = () => {
         addMembersToDirectMessageGroup({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -175,7 +212,7 @@ export const useChat = () => {
         leftDirectMessageGroup({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -190,7 +227,7 @@ export const useChat = () => {
         removeUserFromGroup({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -205,7 +242,7 @@ export const useChat = () => {
         fetchGroupMembers({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -220,7 +257,7 @@ export const useChat = () => {
         changeGroupRole({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -235,7 +272,7 @@ export const useChat = () => {
         getChatAttachments({
           authToken,
           userId,
-          ...params
+          ...params,
         }),
       );
     },
@@ -247,8 +284,10 @@ export const useChat = () => {
     dispatch(setMessage(message));
   };
 
-  const onSetUserPartner = (username: string | null) => {
-    dispatch(setUserPartner(username));
+  const onSetConversationInfo = (conversationInfo: ChatItemInfo | null) => {
+    dispatch(
+      setConversationInfo({ conversationInfo, sessionId: user?.["username"] }),
+    );
   };
 
   const onClearConversation = () => {
@@ -262,6 +301,7 @@ export const useChat = () => {
   return {
     convention,
     conversationPaging,
+    messagePaging,
     messageInfo,
     userOnlinePage,
     isError,
@@ -272,10 +312,16 @@ export const useChat = () => {
     totalItems,
     totalPages,
     roomId,
-    userPartner,
+    conversationInfo,
     currStep,
     prevStep,
     backFallStep,
+    partnerInfo,
+    partnerInfoStatus,
+
+    chatLinks,
+    chatLinksStatus,
+
     createGroupStatus,
     newGroupData,
     addMembers2GroupStatus,
@@ -297,9 +343,11 @@ export const useChat = () => {
     onFetchGroupMembersMember,
     onChangeGroupRole,
     onGetChatAttachments,
-    onSetUserPartner,
+    onSetConversationInfo,
     onSetMessage,
     onClearConversation,
     onClearMessageList,
+    onGetUserInfo,
+    onGetChatUrls,
   };
 };

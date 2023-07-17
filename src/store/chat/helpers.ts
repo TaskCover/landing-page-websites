@@ -9,14 +9,12 @@ export const useWSChat = () => {
 
   const [ws, setWs] = useState<WebSocket | null>(null);
   const token = user?.["authToken"];
-  const id = user?.["userId"];
 
   // Connect websocket
-  const connectMessage = useCallback(() => {
+  const connectMessage = () => {
     if (ws) {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log("logggggggggggggg", data.msg);
         if (data.msg === "connected") {
           ws.send(
             JSON.stringify({
@@ -50,9 +48,9 @@ export const useWSChat = () => {
         }
       };
     }
-  }, [ws]);
+  };
 
-  const connectSocket = useCallback(() => {
+  const connectSocket = () => {
     if (roomId) {
       const wsClient = new WebSocket(process.env.NEXT_APP_WS_URL || "");
 
@@ -67,7 +65,7 @@ export const useWSChat = () => {
         );
       };
     }
-  }, [ws]);
+  };
 
   useEffect(() => {
     connectSocket();
@@ -80,7 +78,6 @@ export const useWSChat = () => {
       ws.onclose = () => {
         if (openSocketFlag) {
           setTimeout(() => {
-            console.log("reConnect");
             connectSocket();
             connectMessage();
           }, 100);
@@ -109,20 +106,22 @@ export const useWSChat = () => {
   );
 
   const sendMessage = (message: string) => {
-    ws?.send(
-      JSON.stringify({
-        msg: "method",
-        id: "3",
-        method: "sendMessage",
-        params: [
-          {
-            _id: Math.random().toString(36).substr(2, 10),
-            rid: roomId,
-            msg: message,
-          },
-        ],
-      }),
-    );
+    if (message.trim()?.length > 0) {
+      ws?.send(
+        JSON.stringify({
+          msg: "method",
+          id: "3",
+          method: "sendMessage",
+          params: [
+            {
+              _id: Math.random().toString(36).substr(2, 10),
+              rid: roomId,
+              msg: message,
+            },
+          ],
+        }),
+      );
+    }
   };
 
   return { sendMessage };

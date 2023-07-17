@@ -43,15 +43,15 @@ const ItemProfile = ({
 };
 
 const UserLanding = () => {
-  const { currStep, prevStep, userPartner, onSetStep } = useChat();
+  const { currStep, prevStep, conversationInfo, onSetStep } = useChat();
 
-  const { avatar } = userPartner || {};
-  console.log("userPartner", userPartner);
+  const { avatar, name } = conversationInfo || {};
+  console.log("userPartner", conversationInfo);
 
   return (
     <>
       <ProfileHeader
-        name={"Martin Randolph"}
+        name={name || ""}
         onPrevious={() => {
           onSetStep(prevStep);
         }}
@@ -66,13 +66,14 @@ const UserLanding = () => {
           size={80}
           style={{
             borderRadius: "10px",
+            border: "1px solid #efefef",
           }}
         />
         <Box display="flex" flexDirection="column" gap={2} mt={5}>
           <ItemProfile
             Icon={ProfileCircleIcon}
             title="Account infomation"
-            onClick={() => onSetStep(STEP.User_INFO)}
+            onClick={() => onSetStep(STEP.USER_INFO)}
           />
           <ItemProfile
             Icon={MediaFileIcon}
