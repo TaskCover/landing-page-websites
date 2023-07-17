@@ -19,7 +19,7 @@ import { IconButton } from "components/shared";
 import { useChat } from "store/chat/selectors";
 import { STEP, TYPE_LIST } from "store/chat/type";
 import { DataStatus } from "constant/enums";
-import { useSnackbar } from "store/app/selectors";
+import { useAuth, useSnackbar } from "store/app/selectors";
 import SelectItem from "../components/SelectItem";
 
 const ChatDetailGroup = (props) => {
@@ -34,6 +34,7 @@ const ChatDetailGroup = (props) => {
     onChangeGroupRole,
     onRemoveGroupMember,
   } = useChat();
+  const { user } = useAuth();
   const commonT = useTranslations(NS_COMMON);
   const TYPE_POPUP = {
     DELETE: "DELETE",
@@ -64,6 +65,8 @@ const ChatDetailGroup = (props) => {
   }, []);
 
   const handleManageMember = async (action: 'addAdmin' | 'remove', member) => {
+    console.log({ user });
+    
     if (action === 'addAdmin') {
       const result = await onChangeGroupRole({
         groupId: dataTransfer?._id,
@@ -73,6 +76,11 @@ const ChatDetailGroup = (props) => {
       if (result?.error) {
         return onAddSnackbar(result?.error?.message, 'error');
       }
+      await onChangeGroupRole({
+        groupId: dataTransfer?._id,
+        userIdToChange: user?.id_rocket ?? '',
+        newRole: 'removeOwner',
+      }) as any;
     } else {
       const result = await onRemoveGroupMember({
         groupId: dataTransfer?._id,

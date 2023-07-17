@@ -73,7 +73,8 @@ const AddGroup = () => {
       return;
     }
     onAddSnackbar('Successfully!', 'success');
-    onSetStep(STEP.CHAT_ONE);
+    // onSetStep(STEP.CHAT_ONE);
+    onSetStep(STEP.CHAT_GROUP, dataTransfer);
   }
 
   const handleKeyDown = (event) => {
