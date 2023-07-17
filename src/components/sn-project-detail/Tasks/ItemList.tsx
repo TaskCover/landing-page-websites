@@ -592,14 +592,14 @@ const ItemList = () => {
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
         position="sticky"
-        top={{ xs: baseTop + 8, xl: baseTop + 42 }}
+        top={{ xs: baseTop + 8 }}
         zIndex={1}
       >
         <></>
       </TableLayout>
 
       <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
-        {dataList.map((taskListItem) => {
+        {dataList.map((taskListItem, indexTaskList) => {
           const isChecked = selectedList.some(
             (selected) =>
               !selected?.subTaskId &&
@@ -617,6 +617,7 @@ const ItemList = () => {
               onChange={onToggleTaskList(!isChecked, taskListItem)}
               setSelectedList={setSelectedList}
               isDragging={isDragging}
+              index={indexTaskList}
             >
               {taskListItem.tasks.map((task, taskIndex) => {
                 const isChecked = selectedList.some(
@@ -672,6 +673,7 @@ const ItemList = () => {
                           <TextStatus
                             color={COLOR_STATUS[task.status]}
                             text={TASK_TEXT_STATUS[task.status]}
+                            width={121}
                           />
                         </Content>
                         <Description>{task?.description}</Description>
@@ -699,8 +701,20 @@ const ItemList = () => {
                                       borderBottom={{ md: "1px solid" }}
                                       borderColor={{ md: "grey.100" }}
                                       maxHeight={{ md: 38 }}
+                                      sx={{
+                                        "& >.checkbox": {
+                                          opacity: isChecked ? 1 : 0,
+                                          userSelect: isChecked
+                                            ? undefined
+                                            : "none",
+                                        },
+                                        "&:hover >.checkbox": {
+                                          opacity: 1,
+                                        },
+                                      }}
                                     >
                                       <Checkbox
+                                        className="checkbox"
                                         size="small"
                                         checked={isChecked}
                                         onChange={onToggleSubTask(
@@ -720,7 +734,6 @@ const ItemList = () => {
                                       >
                                         <Content
                                           color="text.primary"
-                                          fontWeight={600}
                                           textAlign="left"
                                           noWrap
                                           tooltip={subTask.name}
@@ -753,6 +766,7 @@ const ItemList = () => {
                                             text={
                                               TASK_TEXT_STATUS[subTask.status]
                                             }
+                                            width={121}
                                           />
                                         </Content>
 
@@ -771,7 +785,7 @@ const ItemList = () => {
                             onClick={onSetDataIds(taskListItem.id, task.id)}
                             startIcon={<PlusIcon />}
                             variant="text"
-                            size="small"
+                            size="extraSmall"
                             color="secondary"
                             sx={{ mr: 4 }}
                           >

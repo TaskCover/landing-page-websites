@@ -28,3 +28,8 @@
   margin-top: 5px;
   padding: 5px 10px;
 }
+
+.html pre.ql-syntax {
+  background-color: var(--mui-palette-grey-50);
+  color: var(--mui-palette-text-primary)
+}
