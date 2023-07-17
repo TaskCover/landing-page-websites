@@ -18,8 +18,8 @@ const Editor = (props: EditorProps) => {
 
   const onChangeEditor = (value?: string) => {
     const isEmpty = "<p><br></p>" === value;
-    const newValue = isEmpty ? "" : getChild(value) ?? "";
-    onChange(name, value);
+    const newValue = isEmpty ? "" : value ?? "";
+    onChange(name, newValue);
   };
 
   return (
