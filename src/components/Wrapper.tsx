@@ -23,7 +23,7 @@ const Wrapper = (
         height={{ xs: 8, md: 16, xl: 24 }}
         bgcolor="background.default"
         position="sticky"
-        zIndex={1}
+        zIndex={12}
         top={0}
       />
       <Stack

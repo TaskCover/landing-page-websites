@@ -23,6 +23,7 @@ import {
   getMessageErrorByAPI,
   debounce,
   formatDate,
+  checkIsMobile,
 } from "utils/index";
 import TextStatus from "components/TextStatus";
 import { CellProps, TableLayout } from "components/Table";
@@ -133,6 +134,8 @@ const ItemList = () => {
   const headerList = useMemo(() => {
     return isMdSmaller ? [] : desktopHeaderList;
   }, [desktopHeaderList, isMdSmaller]) as CellProps[];
+
+  const isMobile = useMemo(() => checkIsMobile(), []);
 
   const onSetTask = (
     taskData?: Task,
@@ -721,10 +724,12 @@ const ItemList = () => {
                                       maxHeight={{ md: 38 }}
                                       sx={{
                                         "& >.checkbox": {
-                                          opacity: isChecked ? 1 : 0,
-                                          userSelect: isChecked
-                                            ? undefined
-                                            : "none",
+                                          opacity:
+                                            isMobile || isChecked ? 1 : 0,
+                                          userSelect:
+                                            isMobile || isChecked
+                                              ? undefined
+                                              : "none",
                                         },
                                         "&:hover >.checkbox": {
                                           opacity: 1,

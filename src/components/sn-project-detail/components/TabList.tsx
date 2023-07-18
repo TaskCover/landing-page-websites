@@ -49,7 +49,7 @@ const TabList = () => {
         position="sticky"
         top={isMembersOfProjectPath ? undefined : { xs: 8, sm: 16 }}
         bgcolor="background.paper"
-        zIndex={1}
+        zIndex={12}
       >
         <Stack direction="row" alignItems="center" flex={1} width="100%">
           {TABS.map((tab) => (

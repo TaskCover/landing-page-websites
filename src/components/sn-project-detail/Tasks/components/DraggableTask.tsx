@@ -4,8 +4,9 @@ import useBreakpoint from "hooks/useBreakpoint";
 import useToggle from "hooks/useToggle";
 import CaretIcon from "icons/CaretIcon";
 import MoveDotIcon from "icons/MoveDotIcon";
-import { Dispatch, memo, SetStateAction } from "react";
+import { Dispatch, memo, SetStateAction, useMemo } from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { checkIsMobile } from "utils/index";
 
 type DraggableTaskProps = {
   id: string;
@@ -32,6 +33,8 @@ const DraggableTask = (props: DraggableTaskProps) => {
   } = props;
 
   const { isXlSmaller } = useBreakpoint();
+
+  const isMobile = useMemo(() => checkIsMobile(), []);
 
   const onToggle = () => {
     setHideIds((prevIds) => {
@@ -70,8 +73,9 @@ const DraggableTask = (props: DraggableTaskProps) => {
               borderColor={{ md: "grey.100" }}
               sx={{
                 "& >.checkbox": {
-                  opacity: checked || isHovered ? 1 : 0,
-                  userSelect: checked || isHovered ? undefined : "none",
+                  opacity: isMobile || checked || isHovered ? 1 : 0,
+                  userSelect:
+                    isMobile || checked || isHovered ? undefined : "none",
                 },
                 "&:hover >.checkbox": {
                   opacity: 1,
