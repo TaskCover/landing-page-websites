@@ -170,7 +170,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <StyledTableCell sx={{ minWidth: 50, position: "relative", paddingLeft: 8 }}>
+              <StyledTableCell sx={{ minWidth: 50 }}>
                 <Typography
                   sx={{
                     fontSize: "10px",
