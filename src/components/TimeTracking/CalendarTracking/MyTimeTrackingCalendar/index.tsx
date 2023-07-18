@@ -50,6 +50,7 @@ import useTheme from "hooks/useTheme";
 
 import { getSameWorker } from "store/timeTracking/actions";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -153,7 +154,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const { items: myTime, onGetMyTimeSheet } = useGetMyTimeSheet();
   const { isDarkMode } = useTheme();
   const timeT = useTranslations(NS_TIME_TRACKING);
-
+  const { isSmSmaller } = useBreakpoint();
   const isGetLoading: any = false;
   const { user: userData } = useAuth();
 
@@ -337,43 +338,60 @@ const TrackingCalendar: React.FC<IProps> = () => {
         justifyContent="space-between"
         sx={{ my: "16px" }}
       >
-        <Stack direction="row" alignItems="center" sx={{ gap: "16px" }}>
-          <ButtonCalendar
-            icon={<ListIcon />}
-            isActive={activeTab === "timeSheet"}
-            title={timeT("myTime.timesheet")}
-            onClick={() => handleTabChange("timeSheet")}
-          />
-          <ButtonCalendar
-            icon={<CalendarIcon />}
-            isActive={activeTab === "timeGridWeek"}
-            title={timeT("myTime.calender")}
-            onClick={() => {
-              onAction("view", "timeGridWeek");
-              handleTabChange("timeGridWeek");
+        <Grid container rowSpacing={1}>
+          <Grid
+            item
+            md={6}
+            sm={12}
+            sx={{
+              display: "flex",
+              gap: "10px",
+              alignItems: "center",
+              flexWrap: "wrap",
             }}
-          />
-          <ButtonCalendar
-            icon={<DayIcon />}
-            isActive={activeTab === "dayGridWeek"}
-            title={timeT("myTime.day")}
-            onClick={() => handleTabChange("dayGridWeek")}
-          />
-        </Stack>
-        {activeTab === "timeSheet" && (
-          <CustomizedInputBase
-            value={filters.search_key}
-            placeholder={timeT("myTime.searchButton")}
-            onChange={(event) => {
-              const searchKey = event.target.value;
-              setFilters({ ...filters, search_key: event.target.value });
-              onGetMyTimeSheet({ ...filters, search_key: searchKey });
-            }}
-            // onKeyUp={(event) =>
-            //   event.key === "Enter" && onGetMyTimeSheet(filters)
-            // }
-          />
-        )}
+          >
+            <ButtonCalendar
+              icon={<ListIcon />}
+              isActive={activeTab === "timeSheet"}
+              title={timeT("myTime.timesheet")}
+              onClick={() => handleTabChange("timeSheet")}
+            />
+            <ButtonCalendar
+              icon={<CalendarIcon />}
+              isActive={activeTab === "timeGridWeek"}
+              title={timeT("myTime.calender")}
+              onClick={() => {
+                onAction("view", "timeGridWeek");
+                handleTabChange("timeGridWeek");
+              }}
+            />
+            <ButtonCalendar
+              icon={<DayIcon />}
+              isActive={activeTab === "dayGridWeek"}
+              title={timeT("myTime.day")}
+              onClick={() => handleTabChange("dayGridWeek")}
+            />
+          </Grid>
+          <Grid
+            item
+            md={6}
+            sm={12}
+            sx={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            {activeTab === "timeSheet" && (
+              <CustomizedInputBase
+                value={filters.search_key}
+                placeholder={timeT("myTime.searchButton")}
+                onChange={(event) =>
+                  setFilters({ ...filters, search_key: event.target.value })
+                }
+                // onKeyUp={(event) =>
+                //   event.key === "Enter" && onGetMyTimeSheet(filters)
+                // }
+              />
+            )}
+          </Grid>
+        </Grid>
       </Stack>
     );
   };
@@ -381,8 +399,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const _renderHeader = () => {
     return (
       <>
-        <Grid container>
-          <Grid item xs={3}>
+        <Grid container rowSpacing={1}>
+          <Grid
+            item
+            sm={12}
+            md={4}
+            sx={{ width: "100%", order: isSmSmaller ? 3 : 1 }}
+          >
             <Button
               startIcon={<PlusIcon />}
               size="small"
@@ -402,11 +425,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
           </Grid>
           <Grid
             item
-            xs={6}
+            sm={12}
+            md={4}
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              order: 2,
             }}
           >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -488,7 +513,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
               <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
             </Stack>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item sm={12} md={4} sx={{ order: isSmSmaller ? 1 : 3 }}>
             <Stack
               direction="row"
               alignItems="center"
@@ -732,6 +757,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
                                     color: "primary.main",
                                   }}
                                 >
+                                  {timeT(
+                                    "myTime.calender_tab.same_time_worker",
+                                  )}
+                                  :
                                   {eventInfo?.event?.extendedProps.name}
                                 </Typography>
                               </Stack>
@@ -1098,7 +1127,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           </Stack>
         )}
         {activeTab === "dayGridWeek" && (
-          <Grid container spacing={1}>
+          <Grid container spacing={1} >
             <Grid item xs={12}>
               <Box
                 sx={{

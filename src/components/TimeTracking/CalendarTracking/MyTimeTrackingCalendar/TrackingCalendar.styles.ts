@@ -13,7 +13,7 @@ export const calendarStyles: SxProps<Theme> = {
   },
   " .fc-timegrid-axis": {
     width: "128px",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "inherit",
   },
   " .fc-v-event": {
     border: "none",
@@ -25,10 +25,10 @@ export const calendarStyles: SxProps<Theme> = {
     overflow: "hidden",
   },
   " .fc-day-sun": {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "inherit",
   },
   " .fc-day-sat": {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "inherit",
   },
   " .fc-timegrid-axis-frame": {
     fontSize: "10px",
