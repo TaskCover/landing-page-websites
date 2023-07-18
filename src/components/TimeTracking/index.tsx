@@ -43,7 +43,7 @@ const tabStyles = {
   fontWeight: 600,
 };
 
-const TimeLog: React.FC = () => {
+const TimeTrackingPage: React.FC = () => {
   const { isDarkMode } = useTheme();
   const [tab, setTab] = React.useState<string>("myTime");
   const timeT = useTranslations(NS_TIME_TRACKING);
@@ -155,9 +155,8 @@ const TimeLog: React.FC = () => {
           />
         </TabPanel>
       </TabContext>
-      {/* <Stack sx={{ padding: '16px' }}></Stack> */}
     </Stack>
   );
 };
 
-export default TimeLog;
+export default TimeTrackingPage;
