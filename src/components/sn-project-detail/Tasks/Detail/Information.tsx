@@ -192,60 +192,6 @@ const Information = () => {
       <Stack
         display="grid"
         gap={1}
-        gridTemplateColumns="repeat(auto-fill, 190px)"
-        bgcolor="grey.50"
-        p={2}
-        borderRadius={1}
-      >
-        {(!task?.description || task?.description === VALUE_AS_EMPTY) && (
-          <ActionItem
-            onClick={onShowAddDescription}
-            icon={<AlignLeftIcon sx={{ color: "grey.400" }} />}
-          >
-            {projectT("taskDetail.addDescription")}
-          </ActionItem>
-        )}
-        {!task?.attachments_down?.length && (
-          <ActionItem
-            onClick={onAddAttachments}
-            icon={<LinkSquareIcon sx={{ color: "grey.400" }} />}
-          >
-            {projectT("taskDetail.addAttachments")}
-          </ActionItem>
-        )}
-        {!task?.dependencies?.length && (
-          <ActionItem
-            onClick={onShowAddDependencies}
-            icon={<FatrowIcon sx={{ color: "grey.400" }} />}
-          >
-            {projectT("taskDetail.addDependencies")}
-          </ActionItem>
-        )}
-        {!task?.sub_tasks?.length && !subTaskId && (
-          <ActionItem
-            onClick={onShowAddSub}
-            icon={<HierarchyIcon sx={{ color: "grey.400" }} />}
-          >
-            {projectT("taskDetail.addSubTasks")}
-          </ActionItem>
-        )}
-        {!task?.todo_list?.length && (
-          <ActionItem
-            onClick={onShowAddTodoList}
-            icon={<TaskSquareIcon sx={{ color: "grey.400" }} />}
-          >
-            {projectT("taskDetail.addToDos")}
-          </ActionItem>
-        )}
-      </Stack>
-      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
-      <AttachmentsTask id={ATTACHMENT_ID} />
-      {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
-      <TodoList open={isAddTodo} />
-      <Dependencies open={isAddDepen} />
-      <Stack
-        display="grid"
-        gap={1}
         gridTemplateColumns="repeat(2, 1fr)"
         bgcolor="grey.50"
         p={2}
