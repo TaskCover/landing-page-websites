@@ -831,10 +831,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
                           </Typography>
 
                           <Stack
-                            direction="column"
-                            sx={{ backgroundColor: "common.white" }}
-
-                            // {...bindToggle(popupState)}
+                            className="same-time-worker"
+                            // sx={{
+                            //   visibility: "hidden",
+                            //   transition: "all .3s ease-in-out",
+                            // }}
                           >
                             {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
                                 <>  
@@ -981,18 +982,12 @@ const TrackingCalendar: React.FC<IProps> = () => {
                     >
                       <Stack direction="column" sx={boxStyles}>
                         <Stack direction="row" alignItems="center">
-                          <Avatar
-                            sx={{ width: "20px", height: "20px", marginTop: "6px" }}
-                            src={eventInfo?.event?.extendedProps?.avatar}
-                          />
-                          <Typography
+                          <Box
                             sx={{
-                              fontSize: "14px",
-                              fontWeight: 600,
-                              lineHeight: "18px",
-                              marginTop: "6px",
-                              marginLeft: "4px",
-                              color: "primary.main",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1,
+                              mt: "6px",
                             }}
                           >
                             <Avatar
@@ -1014,11 +1009,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                           </Box>
                         </Stack>
                         <Typography sx={subEventDayStyles}>
-                          {eventInfo?.event?.extendedProps?.position?.name ||
-                            "--"}
-                        </Typography>
-                        <Typography sx={subEventDayStyles}>
-                          {eventInfo?.event?.extendedProps.hour}
+                          {eventInfo?.event?.extendedProps.position?.name}
                         </Typography>
 
                         <Stack
