@@ -370,9 +370,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
           <CustomizedInputBase
             value={filters.search_key}
             placeholder={timeT("myTime.searchButton")}
-            onChange={(event) =>
-              setFilters({ ...filters, search_key: event.target.value })
-            }
+            onChange={(event) => {
+              const searchKey = event.target.value;
+              setFilters({ ...filters, search_key: event.target.value });
+              onGetMyTimeSheet({ ...filters, search_key: searchKey });
+            }}
             // onKeyUp={(event) =>
             //   event.key === "Enter" && onGetMyTimeSheet(filters)
             // }

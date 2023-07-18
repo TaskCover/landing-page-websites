@@ -237,7 +237,8 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <MobileDatePicker
-              open={isOpen}
+              open={ isOpen }
+              disableFuture
               onOpen={() => setIsOpen(true)}
               onClose={() => setIsOpen(false)}
               onChange={(date: any) => {
