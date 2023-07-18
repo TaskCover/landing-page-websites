@@ -14,6 +14,7 @@ type DraggableTaskProps = {
   onChange: () => void;
   children: React.ReactNode;
   isHide: boolean;
+  isHovered: boolean;
   setHideIds: Dispatch<SetStateAction<string[]>>;
 };
 
@@ -25,6 +26,7 @@ const DraggableTask = (props: DraggableTaskProps) => {
     onChange,
     children,
     isHide,
+    isHovered,
     setHideIds,
     ...rest
   } = props;
@@ -55,15 +57,6 @@ const DraggableTask = (props: DraggableTaskProps) => {
               overflow: "hidden",
               ...provided.draggableProps.style,
             }}
-            sx={{
-              "& >div>.checkbox": {
-                opacity: checked ? 1 : 0,
-                userSelect: checked ? undefined : "none",
-              },
-              "&:hover >div>.checkbox": {
-                opacity: 1,
-              },
-            }}
             className="draggable"
             {...rest}
           >
@@ -75,6 +68,15 @@ const DraggableTask = (props: DraggableTaskProps) => {
               spacing={{ xs: 0.5, sm: 1 }}
               borderBottom={{ md: "1px solid" }}
               borderColor={{ md: "grey.100" }}
+              sx={{
+                "& >.checkbox": {
+                  opacity: checked || isHovered ? 1 : 0,
+                  userSelect: checked || isHovered ? undefined : "none",
+                },
+                "&:hover >.checkbox": {
+                  opacity: 1,
+                },
+              }}
             >
               <Checkbox
                 size="small"

@@ -97,6 +97,7 @@ const ItemList = () => {
     subTask: {},
   });
   const [hideIds, setHideIds] = useState<string[]>([]);
+  const [hoveredId, setHoveredId] = useState<string | undefined>(undefined);
 
   const [dataIds, setDataIds] = useState<{
     taskId?: string;
@@ -543,6 +544,12 @@ const ItemList = () => {
     250,
   );
 
+  const onChangeHovered = (id?: string) => {
+    return () => {
+      setHoveredId(id);
+    };
+  };
+
   useEventListener("scroll", onScroll, undefined, SCROLL_ID);
 
   useEffect(() => {
@@ -640,6 +647,7 @@ const ItemList = () => {
                       task?.sub_tasks,
                     )}
                     isHide={isHide}
+                    isHovered={hoveredId === task.id}
                     setHideIds={setHideIds}
                   >
                     <Stack
@@ -661,6 +669,8 @@ const ItemList = () => {
                         overflow="hidden"
                         borderBottom={{ md: "1px solid" }}
                         borderColor={{ md: "grey.100" }}
+                        onMouseEnter={onChangeHovered(task.id)}
+                        onMouseLeave={onChangeHovered()}
                       >
                         <Content
                           color="text.primary"
