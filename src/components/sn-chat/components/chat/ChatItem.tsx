@@ -1,29 +1,42 @@
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { ImageList, Typography } from "@mui/material";
+import { ImageList, SxProps, Typography } from "@mui/material";
 import { ChatItemInfo } from "store/chat/type";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { getDaysDiff } from "utils/index";
 import { useChat } from "store/chat/selectors";
 
 interface ChatItemProp {
   sessionId: string;
   chatInfo: ChatItemInfo;
+  chatItemProps?: BoxProps;
   onClickConvention: (data: ChatItemInfo) => void;
 }
-const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
+const ChatItem = ({
+  chatItemProps,
+  sessionId,
+  chatInfo,
+  onClickConvention,
+}: ChatItemProp) => {
   const { userOnlinePage } = useChat();
 
+  const { sx, ...props } = chatItemProps || {};
   const { lastMessage, name, usersCount, usernames, avatar, t } = chatInfo;
   const isGroup = useMemo(() => t !== 'd', [t]);
   const isCurrentAcc = sessionId === lastMessage?.u?.username;
   const nameLastMessage = isCurrentAcc ? "You: " : "";
 
+  if (isGroup) {
+  }
   const accountPartner = useMemo(() => {
-    const partnerUsername =
-      sessionId === usernames[0] ? usernames[1] : usernames[0];
-    return userOnlinePage?.find((item) => item.username === partnerUsername);
-  }, [sessionId, userOnlinePage, usernames]);
+    if (!isGroup) {
+      const partnerUsername =
+        sessionId === usernames[0] ? usernames[1] : usernames[0];
+      return userOnlinePage?.find((item) => item.username === partnerUsername);
+    } else {
+      return { status: "off" };
+    }
+  }, [isGroup, sessionId, userOnlinePage, usernames]);
 
   const renderTimeDiff = useMemo(() => {
     const timeDiff = getDaysDiff(new Date(), new Date(lastMessage?.ts));
@@ -49,8 +62,10 @@ const ChatItem = ({ sessionId, chatInfo, onClickConvention }: ChatItemProp) => {
         ":hover": {
           backgroundColor: "#F7F7FD",
         },
+        ...sx,
       }}
       p={2}
+      {...props}
     >
       <Box
         position="relative"

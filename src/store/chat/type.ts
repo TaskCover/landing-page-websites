@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataStatus } from "constant/enums";
 import { Paging } from "constant/types";
+import { ChatLinkType } from "./media/typeMedia";
 
 export interface ChatItemInfo {
   _id: string;
@@ -18,6 +19,7 @@ export interface ChatItemInfo {
   msgs: number;
   lastMessage: MessengerInfo;
   lm: string;
+  statuses: { username: string; status: string }[];
 }
 
 export interface UserOnlinePage {
@@ -90,8 +92,11 @@ export interface ChatState {
   userOnlinePage: UserOnlinePage[];
   status: DataStatus;
   conversationPaging: Paging;
+  conversationInfo:
+    | (ChatItemInfo & { partnerUsername: string; statusOnline: string })
+    | null;
   roomId: string;
-  userPartner: UserOnlinePage | null;
+
   currStep: STEP;
   prevStep: STEP;
   backFallStep: STEP;
@@ -100,6 +105,13 @@ export interface ChatState {
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
   messagePaging: Paging;
+  //partner info
+  partnerInfo: UserInfo | null;
+  partnerInfoStatus: DataStatus;
+  //chat links
+  chatLinks: ChatLinkType[];
+  chatLinksStatus: DataStatus;
+
   newGroupData: ChatGroup | {};
   createGroupStatus: DataStatus,
   addMembers2GroupStatus: DataStatus,
@@ -179,7 +191,7 @@ export enum STEP {
   ADD_GROUP,
   CHAT_DETAIL_GROUP,
   LIST,
-  User_INFO,
+  USER_INFO,
   MEDIA,
   LINK,
   FILE,

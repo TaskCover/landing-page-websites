@@ -1,22 +1,38 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Avatar from "components/Avatar";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MessageInfo } from "store/chat/type";
 import { formatDate, sleep } from "utils/index";
 
 interface MessagesProps {
   sessionId: string;
   avatarPartner: string | undefined;
+  pageNumber: number;
   initialMessage: MessageInfo[];
+  onRefetch: (page: number) => void;
 }
 
 const Messages = ({
   sessionId,
   avatarPartner,
+  pageNumber,
   initialMessage: messages,
+  onRefetch,
 }: MessagesProps) => {
+  const [firstElement, setFirstElement] = useState(null);
+
+  const pageRef = useRef(pageNumber);
   const messageRef = useRef<HTMLDivElement>(null);
+  const observer = useRef(
+    new IntersectionObserver((entries) => {
+      const first = entries[0];
+      if (first.isIntersecting) {
+        pageRef.current = pageRef.current + 1;
+        onRefetch(pageRef.current);
+      }
+    }),
+  );
 
   const initScrollIntoView = async () => {
     await sleep(1);
@@ -31,6 +47,21 @@ const Messages = ({
   useEffect(() => {
     initScrollIntoView();
   }, [messages]);
+
+  useEffect(() => {
+    const currentElement = firstElement;
+    const currentObserver = observer.current;
+
+    if (currentElement) {
+      currentObserver.observe(currentElement);
+    }
+
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement);
+      }
+    };
+  }, [firstElement]);
 
   return (
     <Box
@@ -62,6 +93,7 @@ const Messages = ({
                 paddingBottom: "1rem",
               },
             }}
+            {...(index === 0 && { ref: setFirstElement })}
           >
             <Box
               sx={{

@@ -21,13 +21,12 @@ const ChatListTemp = () => {
     popperRef.current = !popperRef.current;
     setOpen((state) => !state);
 
-    console.log(popperRef.current);
     if (popperRef.current) {
       onGetAllConvention({
-        type: "d",
+        type: "a",
         text: "",
         offset: 0,
-        count: 1000,
+        count: 20,
       });
     } else {
       onClearConversation();

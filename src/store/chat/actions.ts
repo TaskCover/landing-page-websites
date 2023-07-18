@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { client } from "api/client";
 import { Endpoint } from "api/endpoint";
 import { HttpStatusCode } from "constant/enums";
-import { AN_ERROR_TRY_AGAIN, CHAT_API_URL } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, AUTH_API_URL, CHAT_API_URL } from "constant/index";
 import {
   AddMember2GroupRequest,
   ChatConventionItemRequest,
@@ -41,6 +41,28 @@ export const getLatestMessages = createAsyncThunk(
       const response = await client.post("getLatestMessages", paramReq, {
         baseURL: CHAT_API_URL,
       });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getUserInfoById = createAsyncThunk(
+  "chat/getUserInfoById",
+  async (username: string) => {
+    try {
+      const response = await client.get(
+        `in/users/${username}`,
+        {},
+        {
+          baseURL: AUTH_API_URL,
+        },
+      );
 
       if (response?.status === HttpStatusCode.OK) {
         return response.data;

@@ -17,10 +17,10 @@ const ConversationLayout = ({
     roomId,
     convention,
     prevStep,
-    userPartner,
+    conversationInfo,
     onSetStep,
     onSetRoomId,
-    onSetUserPartner,
+    onSetConversationInfo,
     onClearMessageList,
   } = useChat();
 
@@ -31,18 +31,16 @@ const ConversationLayout = ({
     return account;
   }, [convention, roomId]);
 
-  console.log("roomId", roomId);
-
   return (
     <>
       <ProfileHeader
         avatar={accountInfo?.avatar}
         name={accountInfo?.name || ""}
-        statusOnline={userPartner?.status || ""}
+        statusOnline={conversationInfo?.statusOnline || ""}
         onPrevious={() => {
           onSetStep(prevStep);
           onClearMessageList();
-          onSetUserPartner(null);
+          onSetConversationInfo(null);
           onSetRoomId("");
         }}
         onShowProfile={() => {

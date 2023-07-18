@@ -38,7 +38,6 @@ const ThemeProvider = (props: ThemeProviderProps) => {
   return (
     <CssVarsProvider theme={theme} defaultMode={DEFAULT_MODE}>
       <CssBaseline />
-      {/* <ListenerThemeSystem /> */}
       {children}
     </CssVarsProvider>
   );
