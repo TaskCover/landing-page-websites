@@ -13,6 +13,8 @@ import {
 } from "./CalendarTracking";
 import { TabPanel } from "@mui/lab";
 import useTheme from "hooks/useTheme";
+import { useTranslations } from "next-intl";
+import { NS_TIME_TRACKING } from "constant/index";
 
 interface ITab {
   label: string;
@@ -44,6 +46,13 @@ const tabStyles = {
 const TimeLog: React.FC = () => {
   const { isDarkMode } = useTheme();
   const [tab, setTab] = React.useState<string>("myTime");
+  const timeT = useTranslations(NS_TIME_TRACKING);
+
+  const timeTabLabels = [
+    timeT("header.tab.myTime"),
+    timeT("header.tab.companyTime"),
+    timeT("header.tab.workLog"),
+  ];
 
   return (
     <Stack direction="column">
@@ -75,10 +84,10 @@ const TimeLog: React.FC = () => {
               setTab(newValue)
             }
           >
-            {timeTabs.map((tab: ITab) => (
+            {timeTabs.map((tab: ITab, index: number) => (
               <Tab
                 key={`tab-${tab.value}`}
-                label={tab.label}
+                label={timeTabLabels[index]}
                 value={tab.value}
                 sx={tabStyles}
               />
@@ -102,7 +111,7 @@ const TimeLog: React.FC = () => {
                     color: "#999999",
                   }}
                 >
-                  Work time
+                  {timeT("header.tab.workTime")}
                 </Typography>
               </Box>
               <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
@@ -121,7 +130,7 @@ const TimeLog: React.FC = () => {
                     color: "#999999",
                   }}
                 >
-                  Break time
+                 {timeT("header.tab.breakTime")}
                 </Typography>
               </Box>
             </Box>
