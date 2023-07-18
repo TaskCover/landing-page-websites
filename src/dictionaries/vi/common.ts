@@ -72,6 +72,7 @@ export const CommonLang: CommonDictionary = {
     outOf: "mỗi trang trên tổng số {count}",
   },
   statusEnum: {
+    inprogress: "Đang thực hiện",
     active: "Hoạt động",
     close: "Kết thúc",
     pause: "Tạm dừng",

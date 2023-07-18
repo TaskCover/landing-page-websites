@@ -91,6 +91,7 @@ const TabItem = (props: TabItemProps) => {
         fontWeight={600}
         color="inherit"
         whiteSpace="nowrap"
+        lineHeight={1.14}
       >
         {projectT(label)}
       </Text>

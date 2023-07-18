@@ -12,7 +12,12 @@ import { FormikErrors, useFormik } from "formik";
 import { memo, useEffect, useMemo } from "react";
 import { useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
-import { cleanObject, formatDate, getMessageErrorByAPI } from "utils/index";
+import {
+  cleanObject,
+  formatDate,
+  getMessageErrorByAPI,
+  hasValue,
+} from "utils/index";
 import { ProjectData } from "store/project/actions";
 import { DataAction } from "constant/enums";
 import {
@@ -87,7 +92,7 @@ const Form = (props: FormProps) => {
   const onSubmit = async (values: ProjectDataForm) => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let dataParsed: any = { ...values };
+      const dataParsed: any = { ...values };
       if (dataParsed?.start_date) {
         dataParsed.start_date = formatDate(
           dataParsed.start_date,
@@ -97,19 +102,22 @@ const Form = (props: FormProps) => {
       if (values?.end_date) {
         dataParsed.end_date = formatDate(dataParsed.end_date, DATE_FORMAT_FORM);
       }
+      // if (values?.owner) {
+      //   const newMembers = [...(dataParsed?.members ?? [])];
+      //   if (newMembers.every((item) => item.id !== values.owner)) {
+      //     const mem = employeeOptions.find(
+      //       (item) => item.value === values.owner,
+      //     );
+      //     if (mem) {
+      //       newMembers.push({ id: mem.value as string, fullname: mem.label });
+      //       dataParsed.members = newMembers;
+      //     }
+      //   }
+      // }
       if (dataParsed?.members?.length) {
         dataParsed.members = dataParsed.members.map(
           ({ fullname, ...rest }) => rest,
         );
-
-        const positionIds = positionOptions.map((posItem) => posItem.value);
-        const isMissingPosition = dataParsed.members.some(
-          (member: Member) => !positionIds.includes(member.position_project),
-        );
-
-        if (isMissingPosition) {
-          throw projectT("list.notification.invalidPositions");
-        }
       }
       if (typeof values["avatar"] === "object") {
         const logoUrl = await client.upload(Endpoint.UPLOAD, values["avatar"]);
@@ -118,7 +126,13 @@ const Form = (props: FormProps) => {
         delete dataParsed["avatar"];
       }
 
-      dataParsed = cleanObject(dataParsed) as ProjectData;
+      if (hasValue(initialValues?.expected_cost)) {
+        dataParsed["expected_cost"] = dataParsed["expected_cost"] ?? null;
+      }
+      if (hasValue(initialValues?.working_hours)) {
+        dataParsed["working_hours"] = dataParsed["working_hours"] ?? null;
+      }
+
       const newItem = await onSubmitProps(dataParsed);
 
       if (newItem) {
@@ -160,7 +174,7 @@ const Form = (props: FormProps) => {
   );
 
   const onChangeDate = (name: string, newDate?: Date) => {
-    formik.setFieldValue(name, newDate ? newDate.getTime() : undefined);
+    formik.setFieldValue(name, newDate ? newDate.getTime() : null);
     formik.setFieldTouched(name, true);
 
     // Fix validate failed when change network
@@ -193,7 +207,7 @@ const Form = (props: FormProps) => {
     onGetOptions({ pageIndex: 1, pageSize: 20, [name]: newValue });
   };
 
-  const onGetEmployeeOptions = (name: string, newValue?: string | number) => {
+  const onGetEmployeeOptions = () => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   };
 
@@ -274,6 +288,7 @@ const Form = (props: FormProps) => {
           name="members"
           value={formik.values?.members}
           onChange={onChangeField}
+          ignoreId={formik.values?.owner}
         />
         <Stack direction={{ sm: "row" }} spacing={2}>
           <DatePicker

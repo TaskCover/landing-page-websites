@@ -16,10 +16,12 @@ import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
 import useBreakpoint from "hooks/useBreakpoint";
 import ArrowTriangleIcon from "icons/ArrowTriangleIcon";
+import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
 
 type InformationItemProps = StackProps & {
   label: string;
   children?: string | number | React.ReactNode;
+  color?: string;
 };
 
 const InformationProjectPage = () => {
@@ -48,7 +50,20 @@ const DesktopInformation = () => {
     <>
       <Stack>
         <Stack direction="row" spacing={2} justifyContent="space-between">
-          <Text variant="h4">{item?.name}</Text>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar
+              src={item?.avatar?.link ?? ProjectPlaceholderImage}
+              size={40}
+            />
+
+            <Stack>
+              <Text variant="h4">{item?.name}</Text>
+              <Text variant="h6" color="grey.400">{`#${
+                item?.number ?? item?.id
+              }`}</Text>
+            </Stack>
+          </Stack>
+
           <Stack direction="row" alignItems="center" spacing={1}>
             <Text variant="caption" color="grey.400">
               {commonT("status")}
@@ -63,13 +78,10 @@ const DesktopInformation = () => {
             )}
           </Stack>
         </Stack>
-        <Text variant="h6" color="grey.400">{`#${
-          item?.number ?? item?.id
-        }`}</Text>
       </Stack>
 
       <InformationItem label={commonT("assigner")}>
-        {item?.owner?.avatar?.link ? (
+        {item?.owner?.fullname ? (
           <Stack direction="row" alignItems="center" spacing={1}>
             <Avatar size={32} src={item?.owner?.avatar?.link} />
             <Text variant="body2">{item?.owner?.fullname ?? "--"}</Text>
@@ -78,45 +90,43 @@ const DesktopInformation = () => {
       </InformationItem>
       <Stack direction="row" alignItems="center" spacing={2}>
         <InformationItem label={commonT("form.title.startDate")}>
-          {formatDate(item?.start_date)}
+          {formatDate(item?.start_date, undefined, "--")}
         </InformationItem>
-        <ArrowTriangleIcon sx={{ width: 100, borderColor: "grey.300" }} />
+        <ArrowTriangleIcon sx={{ width: 100, color: "grey.400" }} />
         <InformationItem label={commonT("form.title.endDate")}>
-          {formatDate(item?.end_date)}
+          {formatDate(item?.end_date, undefined, "--")}
         </InformationItem>
       </Stack>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: 2, sm: 5, lg: 10 }}
-      >
+      <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 16.5 }}>
         <InformationItem
           label={projectT("list.form.title.estimatedWorkingHours")}
-          width={135}
+          width={170}
         >
           {formatNumber(item?.working_hours)}
         </InformationItem>
-        <InformationItem label={projectT("detail.workingHoursActual")}>
+        <InformationItem
+          color="secondary.main"
+          label={projectT("detail.workingHoursActual")}
+        >
           {formatNumber()}
         </InformationItem>
       </Stack>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: 2, sm: 5, lg: 10 }}
-      >
+      <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 16.5 }}>
         <InformationItem
           label={projectT("list.form.title.estimatedCost")}
-          width={135}
+          width={170}
         >
           {formatNumber(item?.expected_cost)}
         </InformationItem>
-        <InformationItem label={projectT("detail.costSpent")}>
+        <InformationItem
+          color="secondary.main"
+          label={projectT("detail.costSpent")}
+        >
           {formatNumber()}
         </InformationItem>
       </Stack>
       <InformationItem label={commonT("form.title.description")} maxWidth={700}>
-        {item?.description}
+        {item?.description || "--"}
       </InformationItem>
     </>
   );
@@ -130,28 +140,33 @@ const MobileInformation = () => {
 
   return (
     <>
-      <InformationItem label={commonT("form.title.startDate")}>
-        {item?.id}
+      <InformationItem label={projectT("list.projectCode")}>
+        {item?.number}
       </InformationItem>
-      <InformationItem label={commonT("form.title.startDate")}>
+      <InformationItem label={projectT("list.form.title.name")}>
         {item?.name}
       </InformationItem>
-      <InformationItem label={commonT("status")}>
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} src={item?.owner?.avatar?.link} />
-          <Text variant="body2">{item?.owner?.fullname ?? "--"}</Text>
-        </Stack>
+      <InformationItem label={commonT("assigner")}>
+        {item?.owner?.fullname ? (
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar size={32} src={item?.owner?.avatar?.link} />
+            <Text variant="body2">{item?.owner?.fullname ?? "--"}</Text>
+          </Stack>
+        ) : undefined}
       </InformationItem>
       <InformationItem label={commonT("form.title.startDate")}>
-        {formatDate(item?.start_date)}
+        {formatDate(item?.start_date, undefined, "--")}
       </InformationItem>
       <InformationItem label={commonT("form.title.endDate")}>
-        {formatDate(item?.end_date)}
+        {formatDate(item?.end_date, undefined, "--")}
       </InformationItem>
       <InformationItem label={projectT("list.form.title.estimatedCost")}>
         {formatNumber(item?.expected_cost)}
       </InformationItem>
-      <InformationItem label={projectT("detail.costSpent")}>
+      <InformationItem
+        color="secondary.main"
+        label={projectT("detail.costSpent")}
+      >
         {formatNumber()}
       </InformationItem>
       <InformationItem
@@ -159,7 +174,10 @@ const MobileInformation = () => {
       >
         {formatNumber(item?.working_hours)}
       </InformationItem>
-      <InformationItem label={projectT("detail.workingHoursActual")}>
+      <InformationItem
+        color="secondary.main"
+        label={projectT("detail.workingHoursActual")}
+      >
         {formatNumber()}
       </InformationItem>
       <InformationItem label={commonT("status")}>
@@ -177,7 +195,7 @@ const MobileInformation = () => {
 };
 
 const InformationItem = (props: InformationItemProps) => {
-  const { label, children = "--", ...rest } = props;
+  const { label, children = "--", color = "text.primary", ...rest } = props;
   const { isSmSmaller } = useBreakpoint();
   return (
     <Stack
@@ -186,7 +204,8 @@ const InformationItem = (props: InformationItemProps) => {
       {...rest}
     >
       <Text
-        color={isSmSmaller ? "grey.300" : "grey.400"}
+        color="grey.400"
+        lineHeight={1.33}
         variant={{ xs: "h6", sm: "caption" }}
         width={170}
         minWidth={170}
@@ -194,7 +213,12 @@ const InformationItem = (props: InformationItemProps) => {
         {label}
       </Text>
       {typeof children === "string" ? (
-        <Text variant="body2" sx={{ wordBreak: "break-all" }}>
+        <Text
+          variant="body2"
+          lineHeight={1.57}
+          color={color}
+          sx={{ wordBreak: "break-all" }}
+        >
           {children}
         </Text>
       ) : (

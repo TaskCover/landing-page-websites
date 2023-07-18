@@ -73,6 +73,7 @@ export const CommonLang: CommonDictionary = {
     outOf: "per page out of {count}",
   },
   statusEnum: {
+    inprogress: "In progress",
     active: "Activated",
     close: "Closed",
     pause: "Paused",

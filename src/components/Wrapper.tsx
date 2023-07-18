@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { Stack, StackProps } from "@mui/material";
+import { Box, Stack, StackProps } from "@mui/material";
 
 const Wrapper = (
   props: StackProps & { transparent?: boolean; inFrame?: boolean },
@@ -10,13 +10,22 @@ const Wrapper = (
 
   return (
     <Stack
-      px={{ xs: 1, sm: 3 }}
+      px={{ xs: 1, sm: 2, xl: 3 }}
       pb={{ xs: 1, sm: 3 }}
-      pt={{ xs: 1, sm: 3 }}
+      // pt={{ xs: 1, sm: 3 }}
       flex={1}
       overflow="hidden"
       {...rest}
     >
+      <Box
+        width="100%"
+        minHeight={{ xs: 8, md: 16, xl: 24 }}
+        height={{ xs: 8, md: 16, xl: 24 }}
+        bgcolor="background.default"
+        position="sticky"
+        zIndex={1}
+        top={0}
+      />
       <Stack
         flex={1}
         bgcolor={transparent ? "transparent" : "background.paper"}

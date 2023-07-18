@@ -32,7 +32,7 @@ const Sidebar = (props: StackProps) => {
   return (
     <Stack
       height="100%"
-      p={isShowLarge ? { lg: 2.5, xl: 3 } : 1}
+      p={isShowLarge ? { sm: 1.5, xl: 3 } : 1}
       sx={{
         transition: "width .3s",
         backgroundColor: "background.paper",
@@ -42,10 +42,10 @@ const Sidebar = (props: StackProps) => {
         },
       }}
       alignItems="center"
-      width={isShowLarge ? LARGE_SIZE : SMALL_SIZE}
-      maxWidth={340}
+      width={isShowLarge ? { xs: LARGE_SIZE, xl: LARGEST_SIZE } : SMALL_SIZE}
+      maxWidth={{ xs: LARGE_SIZE, xl: LARGEST_SIZE }}
       overflow="hidden"
-      spacing={isShowLarge ? 3 : 2.5}
+      spacing={isShowLarge ? { xs: 2, xl: 3 } : 2.5}
       display={{ xs: "none", sm: "flex" }}
       borderRight="1px solid"
       borderColor="grey.100"
@@ -83,7 +83,7 @@ const Sidebar = (props: StackProps) => {
           </IconButton>
         )}
       </Stack>
-      {!user?.company && (
+      {!user?.company && !user?.roles?.includes(Permission.SA) && (
         <Link
           href={UPGRADE_ACCOUNT_PATH}
           underline="none"
@@ -122,5 +122,6 @@ const Sidebar = (props: StackProps) => {
 
 export default memo(Sidebar);
 
-const LARGE_SIZE = 340;
+const LARGEST_SIZE = 340;
+const LARGE_SIZE = 280;
 const SMALL_SIZE = 60;

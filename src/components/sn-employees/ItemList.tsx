@@ -190,53 +190,59 @@ const ItemList = () => {
 
   return (
     <>
-      {!!selectedList.length && (
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={2}
-          pb={0.25}
-          border="1px solid"
-          borderColor="grey.100"
-          borderBottom="none"
-          sx={{ borderTopLeftRadius: 1, borderTopRightRadius: 1 }}
-          py={1.125}
-          px={1}
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={2}
+        pb={0.25}
+        border="1px solid"
+        borderColor="grey.100"
+        borderBottom="none"
+        sx={{ borderTopLeftRadius: 1, borderTopRightRadius: 1 }}
+        p={1.125}
+        mx={{ xs: 1, md: 3 }}
+      >
+        <IconButton
+          size="small"
+          onClick={onPay}
+          tooltip={companyT(
+            selectedList.length ? "employees.pay" : "employees.isNeedSelect",
+          )}
+          sx={{
+            backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+            color: "text.primary",
+            p: 1,
+            "&:hover svg": {
+              color: "common.white",
+            },
+          }}
+          variant="contained"
+          disabled={!selectedList.length}
         >
-          <IconButton
-            size="small"
-            onClick={onPay}
-            tooltip={companyT("employees.pay")}
-            sx={{
-              backgroundColor: isDarkMode ? "grey.50" : "primary.light",
-              color: "text.primary",
-              p: 1,
-              "&:hover svg": {
-                color: "common.white",
-              },
-            }}
-            variant="contained"
-          >
-            <CardSendIcon fontSize="small" />
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={onDelete}
-            tooltip={commonT("delete")}
-            sx={{
-              backgroundColor: isDarkMode ? "grey.50" : "primary.light",
-              color: "text.primary",
-              p: 1,
-              "&:hover svg": {
-                color: "common.white",
-              },
-            }}
-            variant="contained"
-          >
-            <TrashIcon fontSize="small" />
-          </IconButton>
-        </Stack>
-      )}
+          <CardSendIcon fontSize="small" />
+        </IconButton>
+        <IconButton
+          size="small"
+          onClick={onDelete}
+          tooltip={
+            selectedList.length
+              ? commonT("delete")
+              : companyT("employees.isNeedSelect")
+          }
+          sx={{
+            backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+            color: "text.primary",
+            p: 1,
+            "&:hover svg": {
+              color: "common.white",
+            },
+          }}
+          variant="contained"
+          disabled={!selectedList.length}
+        >
+          <TrashIcon fontSize="small" />
+        </IconButton>
+      </Stack>
       <TableLayout
         headerList={headerList}
         pending={isFetching}
@@ -293,7 +299,7 @@ const ItemList = () => {
         totalPages={totalPages}
         page={pageIndex}
         pageSize={pageSize}
-        containerProps={{ px: 3, pt: 2.5 }}
+        containerProps={{ px: 3, py: 1 }}
         onChangePage={onChangePage}
         onChangeSize={onChangeSize}
       />

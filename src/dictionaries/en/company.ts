@@ -12,6 +12,7 @@ export const CompanyLang: CompanyDictionary = {
     unPaid: "Unpaid",
     waiting: "Waiting",
     key: "employee",
+    isNeedSelect: "No employee selected",
     confirmPayment: {
       title: "Confirm payment",
       content:

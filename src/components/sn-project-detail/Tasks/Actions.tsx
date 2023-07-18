@@ -30,13 +30,14 @@ import {
   NS_PROJECT,
   STATUS_OPTIONS,
 } from "constant/index";
-import { AssignerFilter } from "./components";
+import { AssignerFilter, TASK_STATUS_OPTIONS } from "./components";
 import TaskListForm from "./TaskListForm";
 import { useParams } from "next/navigation";
 import { TaskListData } from "store/project/actions";
 import { useHeaderConfig } from "store/app/selectors";
 import Link from "components/Link";
 import ChevronIcon from "icons/ChevronIcon";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const Actions = () => {
   const {
@@ -47,6 +48,7 @@ const Actions = () => {
   } = useTasksOfProject();
   const { onGetOptions } = useMemberOptions();
   const { title, prevPath } = useHeaderConfig();
+  const { isMdSmaller } = useBreakpoint();
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
@@ -58,11 +60,14 @@ const Actions = () => {
   const [queries, setQueries] = useState<Params>({});
   const params = useParams();
 
-  const projectId = useMemo(() => params.id, [params.id]);
+  const projectId = useMemo(() => params.id, [params.id]) as string;
 
   const statusOptions = useMemo(
     () =>
-      STATUS_OPTIONS.map((item) => ({ ...item, label: commonT(item.label) })),
+      TASK_STATUS_OPTIONS.map((item) => ({
+        ...item,
+        label: commonT(item.label),
+      })),
     [commonT],
   );
 
@@ -117,8 +122,8 @@ const Actions = () => {
         borderBottom="1px solid"
         borderColor="grey.100"
         spacing={{ xs: 1, md: 3 }}
-        px={{ xs: 1, md: 3 }}
-        py={1.5}
+        px={{ xs: 1, md: 2, xl: 3 }}
+        py={{ xs: 0.75 }}
       >
         {/* <Button
           onClick={onShow}
@@ -157,28 +162,31 @@ const Actions = () => {
           <Button
             onClick={onShow}
             startIcon={<PlusIcon />}
-            size="small"
+            size="extraSmall"
             variant="primary"
+            sx={{ height: 32, px: ({ spacing }) => `${spacing(2)}!important` }}
           >
-            {commonT("createNew")}
+            {projectT("detailTasks.createNewTaskList")}
           </Button>
         </Stack>
 
         <Stack
-          direction={{ xs: "column", lg: "row" }}
+          direction="row"
           alignItems="center"
-          spacing={{ xs: 1, md: 3 }}
+          spacing={{ xs: 1, md: 1.5, xl: 3 }}
           px={{ sm: 2 }}
           width={{ xs: "100%", md: "fit-content" }}
           justifyContent="flex-end"
+          flexWrap="wrap"
+          rowGap={2}
         >
           <Stack
-            direction={{ xs: "column", lg: "row" }}
+            direction="row"
             alignItems="center"
             spacing={{ xs: 1.5, md: 3 }}
           >
             <Stack
-              direction={{ xs: "column", sm: "row" }}
+              direction="row"
               alignItems="center"
               spacing={{ xs: 1.5, md: 3 }}
             >
@@ -189,13 +197,19 @@ const Actions = () => {
                 name="tasks.name"
                 onChange={onChangeQueries}
                 value={queries?.["tasks.name"]}
-                sx={{ width: 220 }}
+                sx={{
+                  width: { xs: 180, xl: 220 },
+                  minWidth: { xs: 180, xl: 220 },
+                }}
               />
               <AssignerFilter
                 onChange={onChangeQueries}
                 value={queries?.["tasks.owner"]}
                 hasAvatar
                 sx={{ display: { xs: "none", md: "initial" } }}
+                rootSx={{
+                  "& >svg": { fontSize: 16 },
+                }}
               />
             </Stack>
             <Stack
@@ -209,6 +223,9 @@ const Actions = () => {
                 onChange={onChangeQueries}
                 value={queries?.["tasks.start_date"]}
                 format={DATE_FORMAT_HYPHEN}
+                iconProps={{
+                  sx: { fontSize: 16 },
+                }}
               />
               <Dropdown
                 placeholder={commonT("status")}
@@ -216,6 +233,9 @@ const Actions = () => {
                 name="tasks.status"
                 onChange={onChangeQueries}
                 value={queries?.["tasks.status"]}
+                rootSx={{
+                  "& >svg": { fontSize: 16 },
+                }}
               />
             </Stack>
           </Stack>
@@ -230,12 +250,21 @@ const Actions = () => {
               value={queries?.["tasks.owner"]}
               hasAvatar
               sx={{ display: { md: "none" } }}
+              rootSx={{
+                "& >svg": { fontSize: 16 },
+              }}
             />
-            <Button size="small" onClick={onSearch} variant="secondary">
+
+            <Button
+              size="extraSmall"
+              sx={{ height: 32 }}
+              onClick={onSearch}
+              variant="secondary"
+            >
               {commonT("search")}
             </Button>
-            <Refresh onClick={onRefresh} />
-            {!!Object.keys(queries).length && <Clear onClick={onClear} />}
+            {/* <Refresh onClick={onRefresh} />
+            {!!Object.keys(queries).length && <Clear onClick={onClear} />} */}
           </Stack>
         </Stack>
       </Stack>

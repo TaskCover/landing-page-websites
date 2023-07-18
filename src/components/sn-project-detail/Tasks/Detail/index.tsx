@@ -54,7 +54,7 @@ const Detail = () => {
         </IconButton>
       </Stack>
       <TabList value={tab} onChange={setTab} />
-      <Stack flex={1} overflow="auto" p={3}>
+      <Stack flex={1} overflow="auto" p={3} spacing={3}>
         {tab === TabDetail.DETAIL ? (
           <>
             <Information />

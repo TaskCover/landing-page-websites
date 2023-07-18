@@ -5,11 +5,12 @@ import {
   createDirectMessageGroup,
   getAllConvention,
   getLatestMessages,
+  getUserInfoById,
   leftDirectMessageGroup,
-  removeMemberDirectMessageGroup,
+  fetchGroupMembers,
+  getChatAttachments,
 } from "./actions";
 import { DataStatus } from "constant/enums";
-import { DEFAULT_PAGING } from "constant/index";
 import {
   ChatGroup,
   ChatItemInfo,
@@ -18,27 +19,39 @@ import {
   SetStepAction,
   STEP,
   TYPE_LIST,
+  UserInfo,
 } from "./type";
+import { getChatUrls } from "./media/actionMedia";
+import { ChatLinkType } from "./media/typeMedia";
 
 const initialState: ChatState = {
   convention: [],
   status: DataStatus.IDLE,
-  conversationPaging: DEFAULT_PAGING,
+  conversationPaging: { pageIndex: 0, pageSize: 20 },
   userOnlinePage: [],
   roomId: "",
-  userPartner: null,
+  conversationInfo: null,
   currStep: STEP.CONVENTION,
   prevStep: STEP.CONVENTION,
   backFallStep: STEP.IDLE,
   messageInfo: [],
   messageStatus: DataStatus.IDLE,
-  messagePaging: DEFAULT_PAGING,
+  messagePaging: { pageIndex: 0, pageSize: 20 },
+  //Partner Infomation
+  partnerInfo: null,
+  partnerInfoStatus: DataStatus.IDLE,
+  //chatLinks
+  chatLinks: [],
+  chatLinksStatus: DataStatus.IDLE,
+
   newGroupData: {},
   createGroupStatus: DataStatus.IDLE,
   addMembers2GroupStatus: DataStatus.IDLE,
   leftGroupStatus: DataStatus.IDLE,
   removeMemberGroupStatus: DataStatus.IDLE,
   typeList: TYPE_LIST.MEDIA_LIST,
+  groupMembers: [],
+  chatAttachments: [],
 };
 
 const isConversation = (type: string) => {
@@ -67,13 +80,22 @@ const chatSlice = createSlice({
     setTypeList: (state, action) => {
       state.typeList = action.payload;
     },
-    setUserPartner: (state, action) => {
-      console.log(action.payload);
+    setConversationInfo: (state, action) => {
+      const { conversationInfo, sessionId } = action.payload;
+      if (conversationInfo) {
+        const { usernames } = conversationInfo || {};
+        const partnerUsername =
+          sessionId === usernames?.[0] ? usernames?.[1] : usernames?.[0];
+        const statusOnline = conversationInfo.statuses?.find(
+          (item) => item.username === partnerUsername,
+        )?.status;
 
-      const user = state.userOnlinePage?.find(
-        (item) => item.username === action.payload,
-      );
-      state.userPartner = user || null;
+        state.conversationInfo = {
+          ...conversationInfo,
+          partnerUsername,
+          statusOnline,
+        };
+      }
     },
     setMessage: (state, action) => {
       state.messageInfo.push(action.payload);
@@ -100,36 +122,88 @@ const chatSlice = createSlice({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (state, action: PayloadAction<any[]>) => {
           if (action.payload.length > 0) {
-            state.convention = action.payload.filter((item) =>
+            const conversationNew = action.payload.filter((item) =>
               isConversation(item["t"]) ? item : undefined,
             );
-            state.userOnlinePage = action.payload.filter((item) =>
+            const userOnlinePageNew = action.payload.filter((item) =>
               !isConversation(item["t"]) ? item : undefined,
             );
+
+            state.convention = [...state.convention, ...conversationNew];
+            state.userOnlinePage = [
+              ...state.userOnlinePage,
+              ...userOnlinePageNew,
+            ];
           }
           state.status = DataStatus.SUCCEEDED;
         },
       )
       .addCase(getAllConvention.rejected, (state, action) => {
-        state.convention = [];
         state.status = DataStatus.FAILED;
+        state.conversationPaging = {
+          pageIndex:
+            state.conversationPaging.pageIndex - 1 === 0
+              ? 0
+              : state.conversationPaging.pageIndex - 1,
+          pageSize: state.conversationPaging.pageSize,
+        };
       })
       // getLatestMessages
       .addCase(getLatestMessages.pending, (state, action) => {
         state.messageStatus = DataStatus.LOADING;
+        state.messagePaging = {
+          pageIndex: action.meta.arg.offset || 0,
+          pageSize: action.meta.arg.count || 20,
+        };
       })
       .addCase(
         getLatestMessages.fulfilled,
         (state, action: PayloadAction<MessageInfo[]>) => {
           if (action.payload.length > 0) {
-            state.messageInfo = action.payload.reverse();
+            const messageOld = action.payload.reverse();
+            state.messageInfo = [...messageOld, ...state.messageInfo];
           }
           state.messageStatus = DataStatus.SUCCEEDED;
         },
       )
       .addCase(getLatestMessages.rejected, (state, action) => {
-        state.messageInfo = [];
         state.messageStatus = DataStatus.FAILED;
+        state.messagePaging = {
+          pageIndex:
+            state.messagePaging.pageIndex - 1 === 0
+              ? 0
+              : state.messagePaging.pageIndex - 1,
+          pageSize: state.messagePaging.pageSize,
+        };
+      })
+      // getPartnerInfoById
+      .addCase(getUserInfoById.pending, (state, action) => {
+        state.partnerInfoStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        getUserInfoById.fulfilled,
+        (state, action: PayloadAction<UserInfo>) => {
+          state.partnerInfo = action.payload || null;
+          state.partnerInfoStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(getUserInfoById.rejected, (state, action) => {
+        state.partnerInfo = null;
+        state.partnerInfoStatus = DataStatus.FAILED;
+      })
+      // getChatUrls
+      .addCase(getChatUrls.pending, (state) => {
+        state.chatLinksStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        getChatUrls.fulfilled,
+        (state, action: PayloadAction<{ links: ChatLinkType[] }>) => {
+          state.chatLinks = action.payload.links;
+          state.chatLinksStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(getChatUrls.rejected, (state, action) => {
+        state.chatLinksStatus = DataStatus.FAILED;
       })
       // createDirectMessageGroup
       .addCase(createDirectMessageGroup.pending, (state, action) => {
@@ -159,19 +233,6 @@ const chatSlice = createSlice({
       .addCase(addMembersToDirectMessageGroup.rejected, (state, action) => {
         state.addMembers2GroupStatus = DataStatus.FAILED;
       })
-      // removeMemberDirectMessageGroup
-      .addCase(removeMemberDirectMessageGroup.pending, (state, action) => {
-        state.removeMemberGroupStatus = DataStatus.LOADING;
-      })
-      .addCase(
-        removeMemberDirectMessageGroup.fulfilled,
-        (state, action: PayloadAction<ChatGroup>) => {
-          state.removeMemberGroupStatus = DataStatus.SUCCEEDED;
-        },
-      )
-      .addCase(removeMemberDirectMessageGroup.rejected, (state, action) => {
-        state.removeMemberGroupStatus = DataStatus.FAILED;
-      })
       // leftDirectMessageGroup
       .addCase(leftDirectMessageGroup.pending, (state, action) => {
         state.leftGroupStatus = DataStatus.LOADING;
@@ -184,7 +245,21 @@ const chatSlice = createSlice({
       )
       .addCase(leftDirectMessageGroup.rejected, (state, action) => {
         state.leftGroupStatus = DataStatus.FAILED;
-      }),
+      })
+      // groupMembers
+      .addCase(
+        fetchGroupMembers.fulfilled,
+        (state, action: PayloadAction<any[]>) => {
+          state.groupMembers = action.payload;
+        },
+      )
+      // getChatAttachments
+      .addCase(
+        getChatAttachments.fulfilled,
+        (state, action: PayloadAction<any[]>) => {
+          state.leftGroupStatus = DataStatus.SUCCEEDED;
+        },
+      ),
 });
 
 export const {
@@ -192,7 +267,7 @@ export const {
   setStep,
   setRoomId,
   setMessage,
-  setUserPartner,
+  setConversationInfo,
   setTypeList,
   clearConversation,
   clearMessageList,

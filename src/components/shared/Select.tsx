@@ -176,7 +176,9 @@ const Select = (props: SelectProps) => {
               />
             )}
             <Stack>
-              <Text variant="body2">{option.label}</Text>
+              <Text variant="body2" className="text-option">
+                {option.label}
+              </Text>
               {showSubText && (
                 <Text variant="body2" className="sub">
                   {option.subText}

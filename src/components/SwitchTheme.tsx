@@ -12,17 +12,15 @@ const SwitchTheme = () => {
     setMode(isDarkMode ? ThemeMode.LIGHT : ThemeMode.DARK);
   };
 
-  return null;
-
-  // return (
-  //   <IconButton onClick={onToggleMode}>
-  //     {isDarkMode ? (
-  //       <MoonIcon sx={{ color: "common.white" }} />
-  //     ) : (
-  //       <SunIcon sx={{ color: "common.black" }} />
-  //     )}
-  //   </IconButton>
-  // );
+  return (
+    <IconButton onClick={onToggleMode}>
+      {isDarkMode ? (
+        <MoonIcon sx={{ color: "common.white" }} />
+      ) : (
+        <SunIcon sx={{ color: "common.black" }} />
+      )}
+    </IconButton>
+  );
 };
 
 export default memo(SwitchTheme);

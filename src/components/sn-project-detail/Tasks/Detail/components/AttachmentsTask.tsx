@@ -3,7 +3,7 @@ import { Box, Stack } from "@mui/material";
 import { Text, Collapse, Button } from "components/shared";
 import { NS_PROJECT, AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
-import AttachmentPreview from "components/AttachmentPreview";
+import AttachmentPreview from "./AttachmentPreview";
 import { useTaskDetail } from "store/project/selectors";
 import PlusIcon from "icons/PlusIcon";
 import { client, Endpoint } from "api";
@@ -122,14 +122,19 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
             </Text>
           }
         >
-          <Stack direction="row" gap={1.5} flex={1} flexWrap="wrap">
+          <Stack direction="row" gap={1.5} flex={1} flexWrap="wrap" mt={2}>
             {task?.attachments_down.map((attachment, index) => (
               <AttachmentPreview
                 key={attachment?.link}
                 src={attachment?.link}
                 name={attachment?.name}
                 onRemove={onRemove(index)}
+                size={40}
                 showName
+                containerProps={{
+                  bgcolor: "grey.50",
+                  p: 1.25,
+                }}
               />
             ))}
           </Stack>

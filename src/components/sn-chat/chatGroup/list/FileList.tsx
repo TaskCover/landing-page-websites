@@ -15,30 +15,43 @@ interface TabPanelProps {
 const FileList = () => {
   const { onSetTypeList, typeList } = useChat();
 
+  const { chatAttachments, dataTransfer, onGetChatAttachments } = useChat();
+
+  React.useEffect(() => {
+    onGetChatAttachments({
+      roomId: dataTransfer?._id,
+      fileType: "file",
+      roomType: "p",
+    });
+  }, []);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     onSetTypeList(newValue);
   };
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          justifyItems: "center",
-        }}
-      >
-        <FileGroupIcon />
-        <Typography
+      {chatAttachments?.files?.map((file, index) => (
+        <Box
+          key={index}
           sx={{
-            marginLeft: "1rem",
-            color: "var(--black, #212121)",
-            fontSize: "0.875rem",
-            fontWeight: 600,
+            display: "flex",
+            justifyItems: "center",
           }}
         >
-          Chat Mobile App.docx
-        </Typography>
-      </Box>
+          <FileGroupIcon />
+          <Typography
+            sx={{
+              marginLeft: "1rem",
+              color: "var(--black, #212121)",
+              fontSize: "0.875rem",
+              fontWeight: 600,
+            }}
+          >
+            Chat Mobile App.docx
+          </Typography>
+        </Box>
+      ))}
     </>
   );
 };

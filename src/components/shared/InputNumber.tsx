@@ -48,7 +48,7 @@ const InputNumber = (props: InputNumberProps) => {
         onChange(name, parsedValue);
       }
     } else {
-      onChange(name, value);
+      onChange(name, newValue);
     }
   };
 

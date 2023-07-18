@@ -17,7 +17,7 @@ import { NS_COMMON } from "constant/index";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { Employee } from "store/company/reducer";
 import SelectItem from "../components/SelectItem";
-import { useAuth } from "store/app/selectors";
+import { useAuth, useSnackbar } from "store/app/selectors";
 import { STEP } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 
@@ -48,13 +48,16 @@ const AddGroup = () => {
     newGroupData,
     convention,
     dataTransfer,
+    groupMembers,
     onGetAllConvention,
     onSetStep,
     onCreateDirectMessageGroup,
     onAddMembers2Group,
+    onFetchGroupMembersMember,
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
+  const { onAddSnackbar } = useSnackbar();
 
   useEffect(() => {
     onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 30 });
@@ -64,14 +67,20 @@ const AddGroup = () => {
       offset: 0,
       count: 1000,
     });
+    onFetchGroupMembersMember({
+      roomId: dataTransfer?._id,
+    });
   }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
 
-  useEffect(() => {
-    if (createGroupStatus === DataStatus.SUCCEEDED) {
-      onSetStep(STEP.CHAT_ONE);
+  const handleSuccess = (result) => {
+    if (result?.error) {
+      onAddSnackbar(result?.error?.message, "error");
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createGroupStatus]);
+    onAddSnackbar("Successfully!", "success");
+    // onSetStep(STEP.CHAT_ONE);
+    onSetStep(STEP.CHAT_GROUP, dataTransfer);
+  };
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -89,23 +98,24 @@ const AddGroup = () => {
     });
     setEmployeeNameSelected({
       ...employeeNameSelected,
-      [employee?.id ?? ""]: event.target.checked,
+      [employee?.fullname ?? ""]: event.target.checked,
     });
     setEmployeeIdSelected({
       ...employeeIdSelected,
-      [employee?.username ?? ""]: event.target.checked,
+      [employee?.id_rocket ?? ""]: event.target.checked,
     });
   };
 
-  const handleCreateGroup = () => {
+  const handleCreateGroup = async () => {
     if (dataTransfer?.isNew) {
-      onCreateDirectMessageGroup({
+      const result = await onCreateDirectMessageGroup({
         groupName: (() => {
           return (
-            Object.keys(employeeNameSelected)
-              .filter((item) => employeeNameSelected[item] === true)
+            Object.keys(employeeSelected)
+              .filter((item) => employeeSelected[item] === true)
               ?.join("-")
-              .slice(0, 10) + "..."
+              .slice(0, 10) +
+            `...${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`
           );
         })(),
         members: Object.keys(employeeSelected).filter(
@@ -113,13 +123,20 @@ const AddGroup = () => {
         ),
         type: "d",
       });
+      handleSuccess(result);
     } else {
-      onAddMembers2Group({
-        roomId: dataTransfer?._id,
-        userId_to_add: Object.keys(employeeNameSelected).filter(
-          (item) => employeeNameSelected[item] === true,
-        ),
-      });
+      const users = Object.keys(employeeIdSelected).filter(
+        (item) => employeeIdSelected[item] === true,
+      );
+      const tasks = users.map(
+        async (userId_to_add) =>
+          await onAddMembers2Group({
+            roomId: dataTransfer?._id,
+            userId_to_add,
+          }),
+      );
+      const result = await Promise.all(tasks);
+      handleSuccess(result.pop());
     }
   };
 
@@ -205,15 +222,26 @@ const AddGroup = () => {
         ) : (
           <>
             {items?.length > 0
-              ? items.map((item, index) => {
-                  return (
-                    <SelectItem
-                      employee={item}
-                      key={index}
-                      onClick={(event) => handleClickConversation(item, event)}
-                    />
-                  );
-                })
+              ? items
+                  ?.filter(
+                    (item) =>
+                      !groupMembers
+                        ?.map((m) => m._id)
+                        ?.includes(item.id_rocket),
+                  )
+                  ?.filter((m) => m.id_rocket !== user?.id_rocket)
+                  .map((item, index) => {
+                    return (
+                      <SelectItem
+                        checkbox
+                        employee={item}
+                        key={index}
+                        onClick={(event) =>
+                          handleClickConversation(item, event)
+                        }
+                      />
+                    );
+                  })
               : null}
           </>
         )}
@@ -256,31 +284,6 @@ const AddGroup = () => {
 export default AddGroup;
 
 const defaultSx = {
-  root: {
-    minWidth: { sm: 500 },
-    minHeight: 230,
-    px: 3,
-  },
-  bottom: {
-    p: 0,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  header: {
-    borderBottom: "1px solid",
-    borderColor: "grey.100",
-    pb: 3,
-    mx: 0,
-    "& > p": {
-      textAlign: "center",
-    },
-    "& > button": {
-      top: 0,
-      transform: "unset",
-    },
-  },
   button: {
     minWidth: 120,
     mx: 1.5,

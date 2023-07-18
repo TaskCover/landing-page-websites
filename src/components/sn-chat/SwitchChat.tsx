@@ -10,9 +10,11 @@ import ConversationLayoutUser from "./components/conversation/ConversationLayout
 import UserLanding from "./components/conversation/UserLanding";
 import UserInfomation from "./components/conversation/UserInfomation";
 import GroupMediaProfile from "./components/conversation/GroupMediaProfile";
+import ChatForward from "./ChatForward";
+import Conversation from "./components/conversation/Conversation";
 
 const SwitchChat = () => {
-  const { roomId, prevStep, currStep, dataTransfer, onSetStep } = useChat();
+  const { currStep, onSetStep } = useChat();
   useEffect(() => {
     onSetStep(STEP.CONVENTION);
 
@@ -22,8 +24,6 @@ const SwitchChat = () => {
   }, [onSetStep]);
 
   const renderContent = useCallback(() => {
-    console.log(currStep);
-
     switch (currStep) {
       case STEP.CONVENTION:
         return <ChatListUser />;
@@ -31,7 +31,7 @@ const SwitchChat = () => {
         return <ConversationLayoutUser />;
       case STEP.VIEW_DETAIL_USER:
         return <UserLanding />;
-      case STEP.User_INFO:
+      case STEP.USER_INFO:
         return <UserInfomation />;
       case STEP.MEDIA:
         return <GroupMediaProfile type={STEP.MEDIA} />;
@@ -39,6 +39,14 @@ const SwitchChat = () => {
         return <GroupMediaProfile type={STEP.LINK} />;
       case STEP.FILE:
         return <GroupMediaProfile type={STEP.FILE} />;
+      case STEP.ADD_GROUP:
+        return <AddGroup />;
+      case STEP.VIEW_DETAIL_USER:
+        return (
+          <ConversationLayout>
+            <Conversation />
+          </ConversationLayout>
+        );
       case STEP.ADD_GROUP:
         return <AddGroup />;
       case STEP.CHAT_DETAIL_GROUP:
@@ -53,7 +61,18 @@ const SwitchChat = () => {
             <List />
           </ConversationLayout>
         );
-
+      case STEP.CHAT_FORWARD:
+        return (
+          <ConversationLayout viewStep={STEP.CHAT_FORWARD}>
+            <ChatForward />
+          </ConversationLayout>
+        );
+      case STEP.CHAT_GROUP:
+        return (
+          <ConversationLayout viewStep={STEP.CHAT_GROUP}>
+            <Conversation />
+          </ConversationLayout>
+        );
       default:
         return null;
     }

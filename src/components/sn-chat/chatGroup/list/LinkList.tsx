@@ -15,37 +15,50 @@ interface TabPanelProps {
 const LinkList = () => {
   const { onSetTypeList, typeList } = useChat();
 
+  const { chatAttachments, dataTransfer, onGetChatAttachments } = useChat();
+
+  React.useEffect(() => {
+    onGetChatAttachments({
+      roomId: dataTransfer?._id,
+      fileType: "link",
+      roomType: "p",
+    });
+  }, []);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     onSetTypeList(newValue);
   };
 
   return (
     <>
-      <Box
-        sx={{
-          margin: "0 8px",
-        }}
-      >
+      {chatAttachments?.files?.map((file, index) => (
         <Box
+          key={index}
           sx={{
-            borderBottom: "1px solid var(--gray-1, #ECECF3)",
-            display: "flex",
-            alignItems: "center",
+            margin: "0 8px",
           }}
         >
-          <Media size={54} borderRadius="0.625rem" />
-          <Typography
+          <Box
             sx={{
-              color: "var(--brand-primary, #3699FF)",
-              fontSize: "0.875rem",
-              fontWeight: 400,
-              marginLeft: "1rem",
+              borderBottom: "1px solid var(--gray-1, #ECECF3)",
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            https://www.figma.com/community file/1094158825418681136
-          </Typography>
+            <Media size={54} borderRadius="0.625rem" />
+            <Typography
+              sx={{
+                color: "var(--brand-primary, #3699FF)",
+                fontSize: "0.875rem",
+                fontWeight: 400,
+                marginLeft: "1rem",
+              }}
+            >
+              https://www.figma.com/community file/1094158825418681136
+            </Typography>
+          </Box>
         </Box>
-      </Box>
+      ))}
     </>
   );
 };

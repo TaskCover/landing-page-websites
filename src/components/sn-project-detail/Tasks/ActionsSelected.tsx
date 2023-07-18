@@ -65,27 +65,30 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
       alignItems="center"
       justifyContent="space-between"
       bgcolor={isDarkMode ? "background.default" : "primary.light"}
-      px={3}
-      py={{ xs: 1, md: 2 }}
+      px={2}
+      py={{ xs: 1, md: 0.25 }}
       position="sticky"
-      top={60}
+      top={{ xs: 50, sm: 41 }}
       zIndex={1}
     >
       <Stack direction="row" alignItems="center" spacing={1}>
-        <Text variant="h6" color="grey.400">
-          {projectT("detailTasks.selectedCount", {
-            value: formatNumber(selectedList.length),
-          })}
-        </Text>
-        <IconButton
-          noPadding
-          onClick={onReset}
-          tooltip={projectT("detailTasks.resetSelected")}
-        >
-          <CloseIcon sx={{ color: "grey.400", fontSize: 18 }} />
-        </IconButton>
+        {!!selectedList.length && (
+          <>
+            <Text variant="h6" color="grey.400">
+              {projectT("detailTasks.selectedCount", {
+                value: formatNumber(selectedList.length),
+              })}
+            </Text>
+            <IconButton
+              noPadding
+              onClick={onReset}
+              tooltip={projectT("detailTasks.resetSelected")}
+            >
+              <CloseIcon sx={{ color: "grey.400", fontSize: 18 }} />
+            </IconButton>
+          </>
+        )}
       </Stack>
-
       <Stack direction="row" alignItems="center" spacing={3}>
         <Stack
           direction={{ xs: "column", md: "row" }}
@@ -98,11 +101,21 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
               placeholder={projectT("detailTasks.assignee")}
               hasAvatar
               name="owner"
+              disabled={!selectedList.length}
+              rootSx={{
+                "& >svg": { fontSize: 16 },
+              }}
             />
             <Date
               label={commonT("form.title.startDate")}
               name="start_date"
               onChange={onChange}
+              disabled={!selectedList.length}
+              iconProps={{
+                sx: {
+                  fontSize: 16,
+                },
+              }}
             />
           </Stack>
           <Stack direction="row" alignItems="center" spacing={{ xs: 1, md: 3 }}>
@@ -110,12 +123,22 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
               label={commonT("form.title.dueDate")}
               name="end_date"
               onChange={onChange}
+              disabled={!selectedList.length}
+              iconProps={{
+                sx: {
+                  fontSize: 16,
+                },
+              }}
             />
             <Dropdown
               placeholder={commonT("status")}
               options={statusOptions}
               name="status"
               onChange={onChange}
+              disabled={!selectedList.length}
+              rootSx={{
+                "& >svg": { fontSize: 16 },
+              }}
             />
           </Stack>
         </Stack>

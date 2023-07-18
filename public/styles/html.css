@@ -16,3 +16,15 @@
 .html {
   font-size: 14px;
 }
+
+.html blockquote {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.html pre {
+  white-space: pre-wrap;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 5px 10px;
+}

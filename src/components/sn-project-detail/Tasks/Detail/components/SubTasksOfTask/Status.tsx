@@ -2,17 +2,13 @@ import { memo, useMemo, useRef } from "react";
 import { Box, ButtonBase, MenuItem, MenuList, Stack } from "@mui/material";
 import { Status } from "constant/enums";
 import PopoverLayout from "./PopoverLayout";
-import {
-  AN_ERROR_TRY_AGAIN,
-  COLOR_STATUS,
-  NS_COMMON,
-  STATUS_OPTIONS,
-} from "constant/index";
+import { AN_ERROR_TRY_AGAIN, COLOR_STATUS, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { Text } from "components/shared";
 import { useSnackbar } from "store/app/selectors";
 import { useTaskDetail } from "store/project/selectors";
 import { getMessageErrorByAPI } from "utils/index";
+import { TASK_STATUS_OPTIONS } from "components/sn-project-detail/Tasks/components";
 
 type StatusTaskProps = {
   status: Status;
@@ -28,7 +24,10 @@ const StatusTask = (props: StatusTaskProps) => {
 
   const options = useMemo(
     () =>
-      STATUS_OPTIONS.map((item) => ({ ...item, label: commonT(item.label) })),
+      TASK_STATUS_OPTIONS.map((item) => ({
+        ...item,
+        label: commonT(item.label),
+      })),
     [commonT],
   );
 

@@ -12,6 +12,8 @@ import { useHeaderConfig } from "store/app/selectors";
 import { useCompany } from "store/manager/selectors";
 import { NS_COMMON, NS_COMPANY } from "constant/index";
 import { useTranslations } from "next-intl";
+import Link from "components/Link";
+import { EMPLOYEES_PATH, POSITIONS_PATH, PROJECTS_PATH } from "constant/paths";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -100,11 +102,35 @@ const InformationProjectPage = () => {
             spacing={{ xs: 2, sm: 5, lg: 10 }}
           >
             <InformationItem label={companyT("information.numberOfEmployees")}>
-              {formatNumber(item?.total_member)}
+              <Link
+                href={EMPLOYEES_PATH}
+                underline="none"
+                sx={{
+                  color: "inherit",
+                  "&:hover": {
+                    color: "primary.main",
+                  },
+                  fontSize: 14,
+                }}
+              >
+                {formatNumber(item?.total_member)}
+              </Link>
             </InformationItem>
 
             <InformationItem label={companyT("information.numberOfPositions")}>
-              {formatNumber(item?.total_position)}
+              <Link
+                href={POSITIONS_PATH}
+                underline="none"
+                sx={{
+                  color: "inherit",
+                  "&:hover": {
+                    color: "primary.main",
+                  },
+                  fontSize: 14,
+                }}
+              >
+                {formatNumber(item?.total_position)}
+              </Link>
             </InformationItem>
           </Stack>
           <Stack
@@ -113,7 +139,19 @@ const InformationProjectPage = () => {
             spacing={{ xs: 2, sm: 5, lg: 10 }}
           >
             <InformationItem label={companyT("information.numberOfProjects")}>
-              {formatNumber(item?.total_project)}
+              <Link
+                href={PROJECTS_PATH}
+                underline="none"
+                sx={{
+                  color: "inherit",
+                  "&:hover": {
+                    color: "primary.main",
+                  },
+                  fontSize: 14,
+                }}
+              >
+                {formatNumber(item?.total_project)}
+              </Link>
             </InformationItem>
 
             <InformationItem label={commonT("creationDate")}>

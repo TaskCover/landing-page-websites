@@ -9,7 +9,6 @@ export const useWSChat = () => {
 
   const [ws, setWs] = useState<WebSocket | null>(null);
   const token = user?.["authToken"];
-  const id = user?.["userId"];
 
   // Connect websocket
   const connectMessage = () => {
@@ -109,20 +108,22 @@ export const useWSChat = () => {
   );
 
   const sendMessage = (message: string) => {
-    ws?.send(
-      JSON.stringify({
-        msg: "method",
-        id: "3",
-        method: "sendMessage",
-        params: [
-          {
-            _id: Math.random().toString(36).substr(2, 10),
-            rid: roomId,
-            msg: message,
-          },
-        ],
-      }),
-    );
+    if (message.trim()?.length > 0) {
+      ws?.send(
+        JSON.stringify({
+          msg: "method",
+          id: "3",
+          method: "sendMessage",
+          params: [
+            {
+              _id: Math.random().toString(36).substr(2, 10),
+              rid: roomId,
+              msg: message,
+            },
+          ],
+        }),
+      );
+    }
   };
 
   return { sendMessage };

@@ -30,8 +30,8 @@ const ItemMemberDetail = ({
   };
   const handleClickMenu = (action: "addAdmin" | "remove") => {
     setAnchorEl(null);
-    if (action === "addAdmin") callbackAddAdmin;
-    if (action === "remove") callbackRemove;
+    if (action === "addAdmin" && callbackAddAdmin) callbackAddAdmin();
+    if (action === "remove" && callbackRemove) callbackRemove();
   };
 
   return (
@@ -51,6 +51,7 @@ const ItemMemberDetail = ({
         <Avatar
           alt="Avatar"
           size={32}
+          src={data?.avatar}
           style={{
             borderRadius: "50%",
           }}
@@ -68,7 +69,7 @@ const ItemMemberDetail = ({
             fontWeight={600}
             fontSize={14}
           >
-            {"fullname"}
+            {data?.fullname}
           </Typography>
           <Typography
             variant="caption"
@@ -76,12 +77,12 @@ const ItemMemberDetail = ({
             fontWeight={400}
             fontSize={12}
           >
-            {"email"}
+            {`${data?.username}@`}
           </Typography>
         </Box>
       </Box>
       <Box>
-        {admin ? (
+        {data?.roles?.includes("owner") ? (
           <Button
             variant="primary"
             sx={{
@@ -114,12 +115,18 @@ const ItemMemberDetail = ({
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={() => handleClickMenu("addAdmin")}>
-                Add as admin
-              </MenuItem>
-              <MenuItem onClick={() => handleClickMenu("remove")}>
-                Remove from chat{" "}
-              </MenuItem>
+              {true ? (
+                <>
+                  <MenuItem onClick={() => handleClickMenu("addAdmin")}>
+                    Add as admin
+                  </MenuItem>
+                  <MenuItem onClick={() => handleClickMenu("remove")}>
+                    Remove from chat{" "}
+                  </MenuItem>
+                </>
+              ) : (
+                <></>
+              )}
             </Menu>
           </>
         )}

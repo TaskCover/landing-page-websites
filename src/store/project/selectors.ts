@@ -48,7 +48,12 @@ import { useMemo, useCallback } from "react";
 import { shallowEqual } from "react-redux";
 import { BaseQueries, Option } from "constant/types";
 import { getFiltersIgnoreId } from "utils/index";
-import { TaskDetail, removeMember, updateTaskDetail } from "./reducer";
+import {
+  TaskDetail,
+  removeMember,
+  resetTasks,
+  updateTaskDetail,
+} from "./reducer";
 
 export const useProjects = () => {
   const dispatch = useAppDispatch();
@@ -333,6 +338,9 @@ export const useTasksOfProject = () => {
       throw error;
     }
   };
+  const onResetTasks = useCallback(() => {
+    dispatch(resetTasks());
+  }, [dispatch]);
 
   return {
     items,
@@ -354,6 +362,7 @@ export const useTasksOfProject = () => {
     onDeleteTaskLists,
     onDeleteTasks,
     onDeleteSubTasks,
+    onResetTasks,
   };
 };
 
