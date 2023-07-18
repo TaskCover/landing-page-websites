@@ -53,6 +53,7 @@ type DroppableTaskListProps = {
   isDragging: boolean;
   onChange: () => void;
   setSelectedList: Dispatch<SetStateAction<Selected[]>>;
+  index: number;
 } & HTMLAttributes<HTMLDivElement>;
 
 type MoreListProps = {
@@ -70,6 +71,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
     onChange,
     setSelectedList,
     isDragging,
+    index,
     ...rest
   } = props;
   const { isXlSmaller } = useBreakpoint();
@@ -104,6 +106,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                 pl={{ xs: 1, md: 2 }}
                 width="100%"
                 justifyContent="space-between"
+                borderTop={index !== 0 ? { md: "1px solid" } : undefined}
                 borderBottom={{ md: "1px solid" }}
                 borderColor={{ md: "grey.100" }}
               >
@@ -165,9 +168,11 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   onClick={onShowCreate}
                   startIcon={<PlusIcon />}
                   variant="text"
-                  size="small"
+                  size="extraSmall"
                   color="secondary"
-                  sx={{ mr: { xs: 1.5, md: 4 } }}
+                  sx={{
+                    mr: { xs: 1.5, md: 4 },
+                  }}
                 >
                   {projectT("detailTasks.addNewTask")}
                 </Button>
@@ -352,7 +357,7 @@ export const MoreList = (props: MoreListProps) => {
   return (
     <>
       <IconButton noPadding onClick={onOpen}>
-        <MoreDotIcon fontSize="medium" sx={{ color: "grey.300" }} />
+        <MoreDotIcon fontSize="small" sx={{ color: "grey.300" }} />
       </IconButton>
       <Popover
         id={popoverId}

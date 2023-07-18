@@ -108,7 +108,7 @@ const ItemList = () => {
     [dataIds?.taskId, dataIds?.taskListId],
   );
 
-  const baseTop = useMemo(() => 90, []);
+  const baseTop = useMemo(() => 97, []);
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -582,7 +582,7 @@ const ItemList = () => {
   }, [initQuery, isReady, onGetTasksOfProject, projectId]);
 
   return (
-    <Stack flex={1} pb={3}  sx={{ minWidth: 0 }}>
+    <Stack flex={1} pb={3}>
       <ActionsSelected selectedList={selectedList} onReset={onResetSelected} />
       <TableLayout
         onLayout={onLayout}
@@ -599,7 +599,7 @@ const ItemList = () => {
       </TableLayout>
 
       <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
-        {dataList.map((taskListItem) => {
+        {dataList.map((taskListItem, indexTaskList) => {
           const isChecked = selectedList.some(
             (selected) =>
               !selected?.subTaskId &&
@@ -617,6 +617,7 @@ const ItemList = () => {
               onChange={onToggleTaskList(!isChecked, taskListItem)}
               setSelectedList={setSelectedList}
               isDragging={isDragging}
+              index={indexTaskList}
             >
               {taskListItem.tasks.map((task, taskIndex) => {
                 const isChecked = selectedList.some(
@@ -663,8 +664,7 @@ const ItemList = () => {
                       >
                         <Content
                           color="text.primary"
-                          // fontWeight = { 600}
-                          fontSize={13}
+                          fontWeight={600}
                           textAlign="left"
                           noWrap
                           tooltip={task.name}
@@ -675,15 +675,16 @@ const ItemList = () => {
                         <Assigner src={task?.owner?.avatar?.link}>
                           {task?.owner?.fullname}
                         </Assigner>
-                        <Content  fontSize={13}>{formatDate(task?.start_date)}</Content>
-                        <Content  fontSize={13}>{formatDate(task?.end_date)}</Content>
-                        <Content noWrap={false} whiteSpace="nowrap"  fontSize={14}>
+                        <Content>{formatDate(task?.start_date)}</Content>
+                        <Content>{formatDate(task?.end_date)}</Content>
+                        <Content noWrap={false} whiteSpace="nowrap">
                           <TextStatus
                             color={COLOR_STATUS[task.status]}
                             text={TASK_TEXT_STATUS[task.status]}
+                            width={121}
                           />
                         </Content>
-                        <Description fontSize={13}>{task?.description}</Description>
+                        <Description>{task?.description}</Description>
                       </Stack>
                       {!isHide && (
                         <>
@@ -741,7 +742,6 @@ const ItemList = () => {
                                       >
                                         <Content
                                           color="text.primary"
-                                          fontWeight={600}
                                           textAlign="left"
                                           noWrap
                                           tooltip={subTask.name}
@@ -759,26 +759,26 @@ const ItemList = () => {
                                         >
                                           {subTask?.owner?.fullname}
                                         </Assigner>
-                                        <Content fontSize={13}>
+                                        <Content>
                                           {formatDate(subTask?.start_date)}
                                         </Content>
-                                        <Content fontSize={13}>
+                                        <Content>
                                           {formatDate(subTask?.end_date)}
                                         </Content>
                                         <Content
                                           noWrap={false}
-                                          whiteSpace = "nowrap"
-                                          fontSize={14}
+                                          whiteSpace="nowrap"
                                         >
                                           <TextStatus
                                             color={COLOR_STATUS[subTask.status]}
                                             text={
                                               TASK_TEXT_STATUS[subTask.status]
                                             }
+                                            width={121}
                                           />
                                         </Content>
 
-                                        <Description fontSize={13}>
+                                        <Description>
                                           {subTask.description}
                                         </Description>
                                       </Stack>
@@ -793,7 +793,7 @@ const ItemList = () => {
                             onClick={onSetDataIds(taskListItem.id, task.id)}
                             startIcon={<PlusIcon />}
                             variant="text"
-                            size="small"
+                            size="extraSmall"
                             color="secondary"
                             sx={{ mr: 4 }}
                           >
@@ -838,18 +838,18 @@ const Assigner = ({
   src,
   ...rest
 }: StackProps & { src?: string }) => {
-  if (!children) return <Content textAlign="left"  fontSize={13}/>;
+  if (!children) return <Content textAlign="left" />;
   return (
     <Stack
       component="p"
       direction="row"
       alignItems="center"
       spacing={1.25}
-      px = { 2}
+      px={2}
       {...rest}
     >
-      <Avatar size={23} src={src} />
-      <Text variant="body2" component="span" overflow="hidden" color="grey.400" fontSize={13}>
+      <Avatar size={24} src={src} />
+      <Text variant="body2" component="span" overflow="hidden" color="grey.400">
         {children}
       </Text>
     </Stack>

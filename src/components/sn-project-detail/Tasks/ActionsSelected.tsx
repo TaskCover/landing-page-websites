@@ -65,10 +65,10 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
       alignItems="center"
       justifyContent="space-between"
       bgcolor={isDarkMode ? "background.default" : "primary.light"}
-      px={2}
-      py={{ xs: 1, md: 0.25 }}
+      px={3}
+      py={{ xs: 1, md: 0.75 }}
       position="sticky"
-      top={{ xs: 50, sm: 41 }}
+      top={{ xs: 60, sm: 61 }}
       zIndex={1}
     >
       <Stack direction="row" alignItems="center" spacing={1}>
