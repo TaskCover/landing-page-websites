@@ -19,10 +19,9 @@ import {
 import Filter from "../../Component/Filter";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { MobileDatePicker, LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import { TimeTrackingActions } from "@/Actions";
-// import { useTypedDispatch, RootState } from "@/store";
+
 import { ENUMS } from "../../Component/Constants";
 import CustomizedInputBase from "components/shared/InputSeasrch";
 import { useGetMyTimeSheet } from "store/timeTracking/selectors";
@@ -239,9 +238,6 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
                     transition: "all ease 0.25s",
                     borderRadius: "4px",
                     fontWeight: 600,
-                    "& .MuiDayCalendar-header .MuiTypography-caption": {
-                      color: "black",
-                    },
                     "&.Mui-selected": {
                       color: "#ffffff",
                       backgroundColor: `rgba(54, 153, 255, 1) !important`,
@@ -326,3 +322,4 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
 };
 
 export default TimelogTrackingCalendar;
+
