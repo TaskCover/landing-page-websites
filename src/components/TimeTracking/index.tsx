@@ -84,46 +84,48 @@ const TimeLog: React.FC = () => {
               />
             ))}
           </TabList>
-          <Box sx={{ display: "flex", gap: 3, mr: 3 }}>
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-              <Box
-                sx={{
-                  width: "8px",
-                  height: "8px",
-                  background: "#3699FF",
-                }}
-              />
-              <Typography
-                sx={{
-                  fontSize: "16px",
-                  lineHeight: "20px",
-                  fontWeight: 600,
-                  color: "#999999",
-                }}
-              >
-                Work time
-              </Typography>
+           {tab !== "timeLog" && (
+            <Box sx={{ display: "flex", gap: 3, mr: 3 }}>
+              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: "8px",
+                    height: "8px",
+                    background: "#3699FF",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontSize: "16px",
+                    lineHeight: "20px",
+                    fontWeight: 600,
+                    color: "#999999",
+                  }}
+                >
+                  Work time
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: "8px",
+                    height: "8px",
+                    background: "#F64E60",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontSize: "16px",
+                    lineHeight: "20px",
+                    fontWeight: 600,
+                    color: "#999999",
+                  }}
+                >
+                  Break time
+                </Typography>
+              </Box>
             </Box>
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-              <Box
-                sx={{
-                  width: "8px",
-                  height: "8px",
-                  background: "#F64E60",
-                }}
-              />
-              <Typography
-                sx={{
-                  fontSize: "16px",
-                  lineHeight: "20px",
-                  fontWeight: 600,
-                  color: "#999999",
-                }}
-              >
-                Break time
-              </Typography>
-            </Box>
-          </Box>
+          )}
         </Stack>
         <TabPanel value="myTime">
           <MyTimeTrackingCalendar
