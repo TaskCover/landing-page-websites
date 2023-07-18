@@ -54,6 +54,7 @@ import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
 import { getSameWorker } from "store/timeTracking/actions";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -159,7 +160,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const { items: myTime, onGetMyTimeSheet } = useGetMyTimeSheet();
   const { isDarkMode } = useTheme();
   const timeT = useTranslations(NS_TIME_TRACKING);
-
+  const { isSmSmaller } = useBreakpoint();
   const isGetLoading: any = false;
   const { user: userData } = useAuth();
 
@@ -343,41 +344,60 @@ const TrackingCalendar: React.FC<IProps> = () => {
         justifyContent="space-between"
         sx={{ my: "16px" }}
       >
-        <Stack direction="row" alignItems="center" sx={{ gap: "16px" }}>
-          <ButtonCalendar
-            icon={<ListIcon />}
-            isActive={activeTab === "timeSheet"}
-            title={timeT("myTime.timesheet")}
-            onClick={() => handleTabChange("timeSheet")}
-          />
-          <ButtonCalendar
-            icon={<CalendarIcon />}
-            isActive={activeTab === "timeGridWeek"}
-            title={timeT("myTime.calender")}
-            onClick={() => {
-              onAction("view", "timeGridWeek");
-              handleTabChange("timeGridWeek");
+        <Grid container rowSpacing={1}>
+          <Grid
+            item
+            md={6}
+            sm={12}
+            sx={{
+              display: "flex",
+              gap: "10px",
+              alignItems: "center",
+              flexWrap: "wrap",
             }}
-          />
-          <ButtonCalendar
-            icon={<DayIcon />}
-            isActive={activeTab === "dayGridWeek"}
-            title={timeT("myTime.day")}
-            onClick={() => handleTabChange("dayGridWeek")}
-          />
-        </Stack>
-        {activeTab === "timeSheet" && (
-          <CustomizedInputBase
-            value={filters.search_key}
-            placeholder={timeT("myTime.searchButton")}
-            onChange={(event) =>
-              setFilters({ ...filters, search_key: event.target.value })
-            }
-            // onKeyUp={(event) =>
-            //   event.key === "Enter" && onGetMyTimeSheet(filters)
-            // }
-          />
-        )}
+          >
+            <ButtonCalendar
+              icon={<ListIcon />}
+              isActive={activeTab === "timeSheet"}
+              title={timeT("myTime.timesheet")}
+              onClick={() => handleTabChange("timeSheet")}
+            />
+            <ButtonCalendar
+              icon={<CalendarIcon />}
+              isActive={activeTab === "timeGridWeek"}
+              title={timeT("myTime.calender")}
+              onClick={() => {
+                onAction("view", "timeGridWeek");
+                handleTabChange("timeGridWeek");
+              }}
+            />
+            <ButtonCalendar
+              icon={<DayIcon />}
+              isActive={activeTab === "dayGridWeek"}
+              title={timeT("myTime.day")}
+              onClick={() => handleTabChange("dayGridWeek")}
+            />
+          </Grid>
+          <Grid
+            item
+            md={6}
+            sm={12}
+            sx={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            {activeTab === "timeSheet" && (
+              <CustomizedInputBase
+                value={filters.search_key}
+                placeholder={timeT("myTime.searchButton")}
+                onChange={(event) =>
+                  setFilters({ ...filters, search_key: event.target.value })
+                }
+                // onKeyUp={(event) =>
+                //   event.key === "Enter" && onGetMyTimeSheet(filters)
+                // }
+              />
+            )}
+          </Grid>
+        </Grid>
       </Stack>
     );
   };
@@ -385,8 +405,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const _renderHeader = () => {
     return (
       <>
-        <Grid container>
-          <Grid item xs={3}>
+        <Grid container rowSpacing={1}>
+          <Grid
+            item
+            sm={12}
+            md={4}
+            sx={{ width: "100%", order: isSmSmaller ? 3 : 1 }}
+          >
             <Button
               startIcon={<PlusIcon />}
               size="small"
@@ -406,11 +431,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
           </Grid>
           <Grid
             item
-            xs={6}
+            sm={12}
+            md={4}
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              order: 2,
             }}
           >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -492,7 +519,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
               <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
             </Stack>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item sm={12} md={4} sx={{ order: isSmSmaller ? 1 : 3 }}>
             <Stack
               direction="row"
               alignItems="center"
@@ -566,7 +593,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
       <Stack
         direction="column"
         alignItems="center"
-        sx={{ marginTop: "16px", color: isDarkMode ? "#fff" : "#212121" }}
+        sx={{
+          marginTop: "16px",
+          color: isDarkMode ? "#fff" : "#212121",
+        }}
       >
         <Typography sx={{ fontSize: "16px", fontWeight: 600 }}>
           {timeT("header.tab.weekly_total")}
@@ -622,7 +652,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
       <Stack
         //ref={scrollRef}
         sx={{
-          height: `calc(100vh - 400px)`,
+          height: `calc(100vh - 380px)`,
           overflow: "auto",
           position: "relative",
         }}
@@ -642,7 +672,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           >
             <FullCalendar
               ref={calendarRef}
-              height={`calc(100vh - 420px)`}
+              height={`calc(100vh - 380px)`}
               // locale={locale === 'en' ? enLocale : viLocale}
               plugins={[dayGridPlugin, timeGridPlugin]}
               initialView={"timeGridWeek"}
@@ -734,7 +764,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
                           >
                             <Stack direction="row" alignItems="center">
                               <Avatar
-                                sx={{ width: "20px", height: "20px", marginTop: "6px" }}
+                                sx={{
+                                  width: "20px",
+                                  height: "20px",
+                                  marginTop: "6px",
+                                }}
                                 src={eventInfo?.event?.extendedProps?.avatar}
                               />
                               <Typography
@@ -765,50 +799,56 @@ const TrackingCalendar: React.FC<IProps> = () => {
                               //   transition: "all .3s ease-in-out",
                               // }}
                             >
-                            {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
-                              <>  
-                                <Typography
-                                  sx={{
-                                    fontSize: "12px",
-                                    lineHeight: "18px",
-                                    fontWeight: 400,
-                                    color: "#212121",
-                                    mb: 1,
-                                  }}
-                                >
-                                  {timeT("myTime.calender_tab.same_time_worker")}:
-                                </Typography>
-                                {sameTime[
+                              {!_.isEmpty(sameTime) &&
+                                sameTime[
                                   `${eventInfo?.event?.extendedProps?.id}`
-                                ]?.map((item, index) => {
-                                  return (
-                                    <Box
-                                      key={index}
+                                ]?.length > 0 && (
+                                  <>
+                                    <Typography
                                       sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 1,
+                                        fontSize: "12px",
+                                        lineHeight: "18px",
+                                        fontWeight: 400,
+                                        color: "#212121",
                                         mb: 1,
                                       }}
                                     >
-                                      <Avatar
-                                        sx={{ width: 20, height: 20 }}
-                                        src={item?.avatar?.link}
-                                      />
-                                      <Typography
-                                        sx={{
-                                          fontSize: "12px",
-                                          lineHeight: "16px",
-                                          color: "#000",
-                                        }}
-                                      >
-                                        {item.fullname}
-                                      </Typography>
-                                    </Box>
-                                  );
-                                })}
-                              </>
-                            )}
+                                      {timeT(
+                                        "myTime.calender_tab.same_time_worker",
+                                      )}
+                                      :
+                                    </Typography>
+                                    {sameTime[
+                                      `${eventInfo?.event?.extendedProps?.id}`
+                                    ]?.map((item, index) => {
+                                      return (
+                                        <Box
+                                          key={index}
+                                          sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                            mb: 1,
+                                          }}
+                                        >
+                                          <Avatar
+                                            sx={{ width: 20, height: 20 }}
+                                            src={item?.avatar?.link}
+                                          />
+                                          <Typography
+                                            sx={{
+                                              fontSize: "12px",
+                                              lineHeight: "16px",
+                                              color: "#000",
+                                            }}
+                                          >
+                                            {item.fullname}
+                                          </Typography>
+                                        </Box>
+                                      );
+                                    })}
+                                  </>
+                                )}
                             </Stack>
                           </Stack>
                         </>
@@ -821,7 +861,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
                       >
                         <Stack direction="row" alignItems="center">
                           <Avatar
-                            sx={{ width: "20px", height: "20px", marginTop: "6px" }}
+                            sx={{
+                              width: "20px",
+                              height: "20px",
+                              marginTop: "6px",
+                            }}
                             src={eventInfo?.event?.extendedProps?.avatar}
                           />
                           <Typography
@@ -852,8 +896,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
                           //   transition: "all .3s ease-in-out",
                           // }}
                         >
-                          {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
-                              <>  
+                          {!_.isEmpty(sameTime) &&
+                            sameTime[`${eventInfo?.event?.extendedProps?.id}`]
+                              ?.length > 0 && (
+                              <>
                                 <Typography
                                   sx={{
                                     fontSize: "12px",
@@ -863,7 +909,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
                                     mb: 1,
                                   }}
                                 >
-                                  {timeT("myTime.calender_tab.same_time_worker")}:
+                                  {timeT(
+                                    "myTime.calender_tab.same_time_worker",
+                                  )}
+                                  :
                                 </Typography>
                                 {sameTime[
                                   `${eventInfo?.event?.extendedProps?.id}`
@@ -918,7 +967,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
                               }}
                             >
                               <Avatar
-                                sx={{ width: "20px", height: "20px", marginTop: "6px" }}
+                                sx={{
+                                  width: "20px",
+                                  height: "20px",
+                                  marginTop: "6px",
+                                }}
                                 src={eventInfo?.event?.extendedProps?.avatar}
                               />
                               <Typography
@@ -946,50 +999,55 @@ const TrackingCalendar: React.FC<IProps> = () => {
                             //   transition: "all .3s ease-in-out",
                             // }}
                           >
-                            {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
-                              <>  
-                                <Typography
-                                  sx={{
-                                    fontSize: "12px",
-                                    lineHeight: "18px",
-                                    fontWeight: 400,
-                                    color: "#212121",
-                                    mb: 1,
-                                  }}
-                                >
-                                  {timeT("myTime.calender_tab.same_time_worker")}:
-                                </Typography>
-                                {sameTime[
-                                  `${eventInfo?.event?.extendedProps?.id}`
-                                ]?.map((item, index) => {
-                                  return (
-                                    <Box
-                                      key={index}
-                                      sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 1,
-                                        mb: 1,
-                                      }}
-                                    >
-                                      <Avatar
-                                        sx={{ width: 20, height: 20 }}
-                                        src={item?.avatar?.link}
-                                      />
-                                      <Typography
+                            {!_.isEmpty(sameTime) &&
+                              sameTime[`${eventInfo?.event?.extendedProps?.id}`]
+                                ?.length > 0 && (
+                                <>
+                                  <Typography
+                                    sx={{
+                                      fontSize: "12px",
+                                      lineHeight: "18px",
+                                      fontWeight: 400,
+                                      color: "#212121",
+                                      mb: 1,
+                                    }}
+                                  >
+                                    {timeT(
+                                      "myTime.calender_tab.same_time_worker",
+                                    )}
+                                    :
+                                  </Typography>
+                                  {sameTime[
+                                    `${eventInfo?.event?.extendedProps?.id}`
+                                  ]?.map((item, index) => {
+                                    return (
+                                      <Box
+                                        key={index}
                                         sx={{
-                                          fontSize: "12px",
-                                          lineHeight: "16px",
-                                          color: "#000",
+                                          display: "flex",
+                                          alignItems: "center",
+                                          gap: 1,
+                                          mb: 1,
                                         }}
                                       >
-                                        {item.fullname}
-                                      </Typography>
-                                    </Box>
-                                  );
-                                })}
-                              </>
-                            )}
+                                        <Avatar
+                                          sx={{ width: 20, height: 20 }}
+                                          src={item?.avatar?.link}
+                                        />
+                                        <Typography
+                                          sx={{
+                                            fontSize: "12px",
+                                            lineHeight: "16px",
+                                            color: "#000",
+                                          }}
+                                        >
+                                          {item.fullname}
+                                        </Typography>
+                                      </Box>
+                                    );
+                                  })}
+                                </>
+                              )}
                           </Stack>
                         </Stack>
                       </>
@@ -1006,7 +1064,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
                           }}
                         >
                           <Avatar
-                            sx={{ width: "20px", height: "20px", marginTop: "6px" }}
+                            sx={{
+                              width: "20px",
+                              height: "20px",
+                              marginTop: "6px",
+                            }}
                             src={eventInfo?.event?.extendedProps?.avatar}
                           />
                           <Typography
@@ -1034,50 +1096,52 @@ const TrackingCalendar: React.FC<IProps> = () => {
                         //   transition: "all .3s ease-in-out",
                         // }}
                       >
-                        {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
-                              <>  
-                                <Typography
-                                  sx={{
-                                    fontSize: "12px",
-                                    lineHeight: "18px",
-                                    fontWeight: 400,
-                                    color: "#212121",
-                                    mb: 1,
-                                  }}
-                                >
-                                  {timeT("myTime.calender_tab.same_time_worker")}:
-                                </Typography>
-                                {sameTime[
-                                  `${eventInfo?.event?.extendedProps?.id}`
-                                ]?.map((item, index) => {
-                                  return (
-                                    <Box
-                                      key={index}
+                        {!_.isEmpty(sameTime) &&
+                          sameTime[`${eventInfo?.event?.extendedProps?.id}`]
+                            ?.length > 0 && (
+                            <>
+                              <Typography
+                                sx={{
+                                  fontSize: "12px",
+                                  lineHeight: "18px",
+                                  fontWeight: 400,
+                                  color: "#212121",
+                                  mb: 1,
+                                }}
+                              >
+                                {timeT("myTime.calender_tab.same_time_worker")}:
+                              </Typography>
+                              {sameTime[
+                                `${eventInfo?.event?.extendedProps?.id}`
+                              ]?.map((item, index) => {
+                                return (
+                                  <Box
+                                    key={index}
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: 1,
+                                      mb: 1,
+                                    }}
+                                  >
+                                    <Avatar
+                                      sx={{ width: 20, height: 20 }}
+                                      src={item?.avatar?.link}
+                                    />
+                                    <Typography
                                       sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 1,
-                                        mb: 1,
+                                        fontSize: "12px",
+                                        lineHeight: "16px",
+                                        color: "#000",
                                       }}
                                     >
-                                      <Avatar
-                                        sx={{ width: 20, height: 20 }}
-                                        src={item?.avatar?.link}
-                                      />
-                                      <Typography
-                                        sx={{
-                                          fontSize: "12px",
-                                          lineHeight: "16px",
-                                          color: "#000",
-                                        }}
-                                      >
-                                        {item.fullname}
-                                      </Typography>
-                                    </Box>
-                                  );
-                                })}
-                              </>
-                            )}
+                                      {item.fullname}
+                                    </Typography>
+                                  </Box>
+                                );
+                              })}
+                            </>
+                          )}
                       </Stack>
                     </Stack>
                   </HtmlTooltip>
@@ -1112,7 +1176,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           </Stack>
         )}
         {activeTab === "dayGridWeek" && (
-          <Grid container spacing={1}>
+          <Grid container spacing={1} >
             <Grid item xs={12}>
               <Box
                 sx={{
@@ -1153,7 +1217,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
               <TableContainer
                 sx={{
                   borderLeft: "1px solid rgb(224, 224, 224)",
-                  height: "calc(100vh - 470px)",
+                  height: "calc(100vh - 440px)",
                   paddingTop: "0px!important",
                 }}
               >

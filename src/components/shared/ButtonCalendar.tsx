@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import useTheme from "hooks/useTheme";
 import { ReactElement } from "react";
+import useBreakpoint from "hooks/useBreakpoint";
 
 type ButtonProps = {
   icon?: ReactElement;
@@ -13,6 +14,7 @@ type ButtonProps = {
 const ButtonCalendar = (props: ButtonProps) => {
   const { onClick, icon, title, sx, isActive } = props;
   const { isDarkMode } = useTheme();
+  const { isSmSmaller } = useBreakpoint();
   return (
     <Button
       startIcon={icon}
@@ -20,7 +22,7 @@ const ButtonCalendar = (props: ButtonProps) => {
       variant="contained"
       sx={{
         height: "32px",
-        width: "161px",
+        width: isSmSmaller ? '100px' : "161px",
         padding: 0,
         backgroundColor: isDarkMode
           ? "grey.100"

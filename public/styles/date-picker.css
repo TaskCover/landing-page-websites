@@ -71,3 +71,6 @@
 height-s {
   height: calc(100vh - 380px);
 }
+.tab-panel-top-0 {
+  padding-top: 0px !important;
+}
