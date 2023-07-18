@@ -1139,9 +1139,9 @@ const TrackingCalendar: React.FC<IProps> = () => {
               <TableContainer
                 sx={{
                   // borderLeft: "1px solid rgb(224, 224, 224)",
-                  height: "calc(100vh - 480px)",
-                  paddingTop: "0px!important",
-                  flexGrow: "1 1 calc(100vh - 480px)"
+                  maxHeight: "calc(100vh - 340px)",
+                  // paddingTop: "0px!important",
+                  overflow: "auto"
                 }}
               >
                 <Table
