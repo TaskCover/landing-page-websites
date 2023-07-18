@@ -321,7 +321,7 @@ const TimeCreate: React.FC<IProps> = ({
             control={control}
             render={({ field: { onChange, value } }) => (
               <NumberInput
-                label= "Time Duration (hour)"
+                label="Time Duration (hour)"
                 required
                 sx={{ flex: 1 }}
                 error={Boolean(errors?.duration?.message)}
@@ -381,12 +381,11 @@ const TimeCreate: React.FC<IProps> = ({
                   .then(() => {
                     onAddSnackbar("Delete timesheet success", "success");
                     onClose();
-                    onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
+                    onGetMyTimeSheet({ ...params });
                   })
                   .catch((err) => {
-                    onAddSnackbar("Delete timesheet success", "success");
+                    onAddSnackbar("Delete timesheet failed", "error");
                     onClose();
-                    onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
                   });
               }}
             >
@@ -403,7 +402,7 @@ const TimeCreate: React.FC<IProps> = ({
       content={_renderMain()}
       open={open}
       onClose={onClose}
-      sx = {{
+      sx={{
         width: "500px",
         maxHeight: "100vh",
         overflow: "hidden",
