@@ -76,11 +76,7 @@ export const useChat = () => {
     typeList,
     dataTransfer,
     groupMembers,
-<<<<<<< HEAD
     chatAttachments
-=======
-    chatAttachments,
->>>>>>> dev
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -246,11 +242,7 @@ export const useChat = () => {
         fetchGroupMembers({
           authToken,
           userId,
-<<<<<<< HEAD
           ...params
-=======
-          ...params,
->>>>>>> dev
         }),
       );
     },
@@ -265,11 +257,7 @@ export const useChat = () => {
         changeGroupRole({
           authToken,
           userId,
-<<<<<<< HEAD
           ...params
-=======
-          ...params,
->>>>>>> dev
         }),
       );
     },
@@ -355,11 +343,6 @@ export const useChat = () => {
     onFetchGroupMembersMember,
     onChangeGroupRole,
     onGetChatAttachments,
-<<<<<<< HEAD
-    onSetUserPartner,
-=======
-    onSetConversationInfo,
->>>>>>> dev
     onSetMessage,
     onClearConversation,
     onClearMessageList,
