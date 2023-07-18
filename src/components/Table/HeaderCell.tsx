@@ -31,7 +31,7 @@ const HeaderCell = forwardRef(
         {...rest}
       >
         {typeof children === "string" ? (
-          <Text variant="h6" {...textProps}>
+          <Text variant="h6" color="grey.400" {...textProps}>
             {children}
           </Text>
         ) : (
@@ -46,4 +46,4 @@ export default memo(HeaderCell);
 
 HeaderCell.displayName = "HeaderCell";
 
-export const HEIGHT_HEADER = 48;
+export const HEIGHT_HEADER = 46;

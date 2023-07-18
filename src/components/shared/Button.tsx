@@ -68,7 +68,10 @@ const CoreButton = forwardRef(
       [pending, startIconProps, variant],
     );
 
-    const defaultSx = useMemo(() => getDefaultSx(isDarkMode), [isDarkMode]);
+    const defaultSx = useMemo(
+      () => getDefaultSx(isDarkMode, sx),
+      [isDarkMode, sx],
+    );
 
     return (
       <MuiButton
@@ -88,7 +91,7 @@ export default memo(Button);
 
 const PREFIX_BUTTON_CLASS = "MuiButton-";
 
-const getDefaultSx = (isDarkMode: boolean) => {
+const getDefaultSx = (isDarkMode: boolean, sx) => {
   return {
     fontWeight: 600,
     borderRadius: 1,
@@ -196,6 +199,7 @@ const getDefaultSx = (isDarkMode: boolean) => {
       fontSize: 14,
       lineHeight: 1.14,
       minHeight: 40,
+      ...sx,
     },
     [`&.${matchClass(PREFIX_BUTTON_CLASS, EXTRA_SMALL, "size")}`]: {
       py: 1,

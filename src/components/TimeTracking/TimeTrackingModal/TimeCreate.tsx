@@ -321,7 +321,8 @@ const TimeCreate: React.FC<IProps> = ({
             control={control}
             render={({ field: { onChange, value } }) => (
               <NumberInput
-                label="Time Duration (hour)"
+                label= "Time Duration (hour)"
+                required
                 sx={{ flex: 1 }}
                 error={Boolean(errors?.duration?.message)}
                 helperText={errors?.duration?.message}
@@ -402,7 +403,11 @@ const TimeCreate: React.FC<IProps> = ({
       content={_renderMain()}
       open={open}
       onClose={onClose}
-      sx={{ width: "500px" }}
+      sx = {{
+        width: "500px",
+        maxHeight: "100vh",
+        overflow: "hidden",
+      }}
     />
   );
 };

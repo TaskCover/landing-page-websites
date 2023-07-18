@@ -31,7 +31,7 @@ const timeTabs: ITab[] = [
     value: "companyTime",
   },
   {
-    label: "Time log",
+    label: "Work log",
     value: "timeLog",
   },
 ];

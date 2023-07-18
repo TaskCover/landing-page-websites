@@ -19,7 +19,7 @@ import dynamic from "next/dynamic";
 import hljs from "highlight.js";
 
 const ReactQuill = dynamic(
-  () => {
+  async () => {
     hljs.configure({
       // optionally configure hljs
       languages: [
@@ -52,7 +52,12 @@ const ReactQuill = dynamic(
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).hljs = hljs;
-    return import("react-quill");
+    const { default: RQ } = await import("react-quill");
+
+    // eslint-disable-next-line react/display-name,  @typescript-eslint/no-explicit-any
+    return ({ forwardedRef, ...props }: any) => (
+      <RQ ref={forwardedRef} {...props} />
+    );
   },
   { ssr: false },
 );
@@ -208,4 +213,5 @@ const TOOLBAR = [
   [{ script: "sub" }, { script: "super" }], // superscript/subscript
   [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
   [{ color: [] }, { background: [] }],
+  ["clean"],
 ];

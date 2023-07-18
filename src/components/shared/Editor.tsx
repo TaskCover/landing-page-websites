@@ -2,24 +2,31 @@ import { memo, useRef } from "react";
 import { Stack } from "@mui/material";
 import AppEditor, { EditorProps as AppEditorProps } from "components/Editor";
 import Text from "./Text";
-import hljs from "highlight.js";
+import { UnprivilegedEditor } from "react-quill";
 
 type EditorProps = {
   title: string;
   name: string;
   required?: boolean;
   onChange: (name: string, value?: string) => void;
+  editorKey?: string;
 } & Omit<AppEditorProps, "onChange">;
 
 const Editor = (props: EditorProps) => {
-  const { title, name, required, onChange, ...rest } = props;
+  const { title, name, required, onChange, editorKey, ...rest } = props;
 
-  const prevRef = useRef<string | undefined>();
-
-  const onChangeEditor = (value?: string) => {
+  const onChangeEditor = (
+    value: string,
+    delta,
+    _source,
+    editor: UnprivilegedEditor,
+  ) => {
     const isEmpty = "<p><br></p>" === value;
-    const newValue = isEmpty ? "" : getChild(value) ?? "";
-    onChange(name, value);
+    const newValue = isEmpty ? "" : value ?? "";
+    onChange(name, newValue);
+    if (editorKey) {
+      window[getEditorName(editorKey)] = editor;
+    }
   };
 
   return (
@@ -43,9 +50,4 @@ const Editor = (props: EditorProps) => {
 
 export default memo(Editor);
 
-const getChild = (value?: string) => {
-  if (value?.startsWith("<pre") && !value?.includes('"hljs-')) {
-    return value + "<span></span>";
-  }
-  return value;
-};
+export const getEditorName = (name: string) => `editor-${name}`;
