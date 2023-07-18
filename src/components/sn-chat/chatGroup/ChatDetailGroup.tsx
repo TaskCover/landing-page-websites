@@ -442,4 +442,3 @@ const defaultSx = {
 };
 
 export default ChatDetailGroup;
-

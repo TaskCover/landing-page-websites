@@ -216,6 +216,9 @@ const AccountInfoHeader = ({
               width: "26px",
               height: "26px",
             }}
+            onClick={() => {
+              onSetStep(STEP.ADD_GROUP);
+            }}
           >
             <CloseIcon sx={{ width: "20px", height: "20px" }} />
           </IconButton>
