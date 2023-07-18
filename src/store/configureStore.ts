@@ -7,8 +7,6 @@ import timeTrackingReducer, {
   TimeTrackingState,
 } from "store/timeTracking/reducer";
 import managerReducer, { ManagerState } from "store/manager/reducer";
-import chatReducer from "store/chat/reducer";
-import { ChatState } from "./chat/type";
 
 export interface State {
   app: AppState;
@@ -17,7 +15,6 @@ export interface State {
   company: CompanyState;
   manager: ManagerState;
   timeTracking: TimeTrackingState;
-  chat: ChatState;
 }
 
 export const store = configureStore({
@@ -28,7 +25,6 @@ export const store = configureStore({
     company: companyReducer,
     timeTracking: timeTrackingReducer,
     manager: managerReducer,
-    chat: chatReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
