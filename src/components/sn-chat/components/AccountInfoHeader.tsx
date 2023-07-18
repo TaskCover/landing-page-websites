@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 import { ImageList, InputAdornment, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -215,9 +216,6 @@ const AccountInfoHeader = ({
             sx={{
               width: "26px",
               height: "26px",
-            }}
-            onClick={() => {
-              onSetStep(STEP.ADD_GROUP);
             }}
           >
             <CloseIcon sx={{ width: "20px", height: "20px" }} />
