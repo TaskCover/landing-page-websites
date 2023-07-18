@@ -293,12 +293,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
 
   const _renderHeader = () => {
     return (
-      <Grid container spacing={2}>
-        <Grid item xs={3}
+      <Grid container spacing = { 2} >
+        <Grid item xs={3}></Grid>
+        <Grid item xs={6}
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-start",
+            justifyContent: "center",
           }}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -376,9 +377,6 @@ const TrackingCalendar: React.FC<IProps> = () => {
             </Typography>
             <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
           </Stack>
-        </Grid>
-        <Grid item xs={6}>
-          
         </Grid>
         <Grid item xs={3}>
           <Stack
@@ -543,7 +541,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
       <Stack
         //ref={scrollRef}
         sx={{
-          height: `calc(100vh - 475px)`,
+          height: `calc(100vh - 370px)`,
           overflow: "auto",
           position: "relative",
         }}
@@ -553,8 +551,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
             <Grid item xs={12}>
               <TableContainer
                 sx={{
-                  borderLeft: "1px solid rgb(224, 224, 224)",
-
+                  // borderLeft: "1px solid rgb(224, 224, 224)",
                   height: "calc(100vh - 495px)",
                 }}
               >
