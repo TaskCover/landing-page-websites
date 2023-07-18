@@ -403,7 +403,11 @@ const TimeCreate: React.FC<IProps> = ({
       content={_renderMain()}
       open={open}
       onClose={onClose}
-      sx={{ width: "500px" }}
+      sx = {{
+        width: "500px",
+        maxHeight: "100vh",
+        overflow: "hidden",
+      }}
     />
   );
 };
