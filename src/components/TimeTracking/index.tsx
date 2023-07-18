@@ -15,6 +15,8 @@ import { TabPanel } from "@mui/lab";
 import useTheme from "hooks/useTheme";
 import useBreakpoint from "hooks/useBreakpoint";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { useTranslations } from "next-intl";
+import { NS_TIME_TRACKING } from "constant/index";
 
 interface ITab {
   label: string;
@@ -36,7 +38,14 @@ const timeTabs: ITab[] = [
   },
 ];
 
-const TimeLog: React.FC = () => {
+const tabStyles = {
+  width: "216px",
+  fontSize: "16px",
+  lineHeight: "20px",
+  fontWeight: 600,
+};
+
+const TimeTrackingPage: React.FC = () => {
   const { isDarkMode } = useTheme();
   const { isSmSmaller } = useBreakpoint();
   const tabStyles = {
@@ -46,6 +55,13 @@ const TimeLog: React.FC = () => {
     fontWeight: 600,
   };
   const [tab, setTab] = React.useState<string>("myTime");
+  const timeT = useTranslations(NS_TIME_TRACKING);
+
+  const timeTabLabels = [
+    timeT("header.tab.myTime"),
+    timeT("header.tab.companyTime"),
+    timeT("header.tab.workLog"),
+  ];
 
   return (
     <Stack>
@@ -148,7 +164,7 @@ const TimeLog: React.FC = () => {
                     color: "#999999",
                   }}
                 >
-                  Work time
+                  {timeT("header.tab.workTime")}
                 </Typography>
               </Box>
               <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
@@ -167,7 +183,7 @@ const TimeLog: React.FC = () => {
                     color: "#999999",
                   }}
                 >
-                  Break time
+                 {timeT("header.tab.breakTime")}
                 </Typography>
               </Box>
             </Box>
@@ -202,9 +218,8 @@ const TimeLog: React.FC = () => {
           />
         </TabPanel>
       </TabContext>
-      {/* <Stack sx={{ padding: '16px' }}></Stack> */}
     </Stack>
   );
 };
 
-export default TimeLog;
+export default TimeTrackingPage;
