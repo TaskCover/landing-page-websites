@@ -28,6 +28,7 @@
     "chart.js": "^4.3.0",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
+    "emoji-picker-react": "^4.4.9",
     "formik": "^2.4.1",
     "material-ui-popup-state": "^5.0.9",
     "highlight.js": "^11.8.0",

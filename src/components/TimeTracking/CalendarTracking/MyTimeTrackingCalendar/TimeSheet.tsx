@@ -124,17 +124,6 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
     return formattedDuration;
   };
 
-  // const convertObjectToArray = useMemo(() => {
-  //   if (!_.isEmpty(timeSheets)) {
-  //     return Object.values(timeSheets);
-  //   } else {
-  //     return timeSheets;
-  //   }
-  //   // !_.isEmpty(timeSheets)
-  //   // ?
-  //   // : timeSheets;
-  // }, [timeSheets]);
-
   const filteredProjects = useMemo(() => {
     const convertObjectToArray = !_.isEmpty(timeSheets)
       ? Object.values(timeSheets)
@@ -173,12 +162,14 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
               <StyledTableCell sx={{ minWidth: 50 }}>
                 <Typography
                   sx={{
-                    fontSize: "10px",
+                    fontSize: "13px",
                     fontWeight: 400,
                     lineHeight: "18px",
-                    textAlign: "left",
+                    textAlign: "center",
                     position: "absolute",
-                    top: 0,
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
                   }}
                 >
                   Weekly summary
