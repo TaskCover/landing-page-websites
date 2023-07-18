@@ -47,8 +47,7 @@ const SwitchChat = () => {
             <Conversation />
           </ConversationLayout>
         );
-
-      case STEP.VIEW_DETAIL_USER:
+      case STEP.LIST:
         return (
           <ConversationLayout>
             <Conversation />

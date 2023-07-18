@@ -12,7 +12,6 @@ const SwitchTheme = () => {
     setMode(isDarkMode ? ThemeMode.LIGHT : ThemeMode.DARK);
   };
 
-
   return (
     <IconButton onClick={onToggleMode}>
       {isDarkMode ? (

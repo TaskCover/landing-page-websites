@@ -76,7 +76,7 @@ export const useChat = () => {
     typeList,
     dataTransfer,
     groupMembers,
-    chatAttachments,
+    chatAttachments
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -197,7 +197,7 @@ export const useChat = () => {
         addMembersToDirectMessageGroup({
           authToken,
           userId,
-          ...params,
+          ...params
         }),
       );
     },
@@ -212,7 +212,7 @@ export const useChat = () => {
         leftDirectMessageGroup({
           authToken,
           userId,
-          ...params,
+          ...params
         }),
       );
     },
@@ -227,7 +227,7 @@ export const useChat = () => {
         removeUserFromGroup({
           authToken,
           userId,
-          ...params,
+          ...params
         }),
       );
     },
@@ -242,7 +242,7 @@ export const useChat = () => {
         fetchGroupMembers({
           authToken,
           userId,
-          ...params,
+          ...params
         }),
       );
     },
@@ -257,7 +257,7 @@ export const useChat = () => {
         changeGroupRole({
           authToken,
           userId,
-          ...params,
+          ...params
         }),
       );
     },
@@ -272,7 +272,7 @@ export const useChat = () => {
         getChatAttachments({
           authToken,
           userId,
-          ...params,
+          ...params
         }),
       );
     },
@@ -343,7 +343,6 @@ export const useChat = () => {
     onFetchGroupMembersMember,
     onChangeGroupRole,
     onGetChatAttachments,
-    onSetConversationInfo,
     onSetMessage,
     onClearConversation,
     onClearMessageList,

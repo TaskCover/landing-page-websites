@@ -22,7 +22,7 @@ const ChatItem = ({
 
   const { sx, ...props } = chatItemProps || {};
   const { lastMessage, name, usersCount, usernames, avatar, t } = chatInfo;
-  const isGroup = useMemo(() => t !== "d", [t]);
+  const isGroup = useMemo(() => t !== 'd', [t]);
   const isCurrentAcc = sessionId === lastMessage?.u?.username;
   const nameLastMessage = isCurrentAcc ? "You: " : "";
 

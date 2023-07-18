@@ -113,13 +113,13 @@ export interface ChatState {
   chatLinksStatus: DataStatus;
 
   newGroupData: ChatGroup | {};
-  createGroupStatus: DataStatus;
-  addMembers2GroupStatus: DataStatus;
-  leftGroupStatus: DataStatus;
-  removeMemberGroupStatus: DataStatus;
-  typeList: TYPE_LIST;
-  groupMembers: any[];
-  chatAttachments: any;
+  createGroupStatus: DataStatus,
+  addMembers2GroupStatus: DataStatus,
+  leftGroupStatus: DataStatus,
+  removeMemberGroupStatus: DataStatus,
+  typeList: TYPE_LIST,
+  groupMembers: any[],
+  chatAttachments: any,
 }
 
 export type DirectionChat = "a" | "c" | "d";
@@ -166,50 +166,19 @@ export interface RemoveGroupMemberRequest extends AuthenRequestCommon {
 
 export interface ChatAttachmentsRequest extends AuthenRequestCommon {
   roomId: string;
-  fileType?: "media" | "file" | "link";
-  roomType: "c" | "p" | "d";
+  fileType?: 'media' | 'file' | 'link';
+  roomType: 'c' | 'p' | 'd';
 }
 
 export interface ChangeRoleRequest extends AuthenRequestCommon {
   groupId: string;
   userIdToChange: string;
-  newRole:
-    | "addOwner"
-    | "removeOwner"
-    | "addModerator"
-    | "removeModerator"
-    | "addLeader"
-    | "removeLeader";
+  newRole: 'addOwner' | 'removeOwner' | 'addModerator' | 'removeModerator' | 'addLeader' | 'removeLeader';
 }
 
 export interface RemoveMemberRequest extends AuthenRequestCommon {
   groupId: string;
   userIdToKick: string;
-}
-
-export interface Avatar {
-  object: string;
-  name: string;
-  link: string;
-}
-
-export interface UserInfo {
-  company: string;
-  department: string;
-  email: string;
-  fullname: string;
-  id: string;
-  is_active: true;
-  phone: string;
-  position: string;
-  date_end_using: string;
-  date_start_using: string;
-  approve: true;
-  avatar: Avatar;
-  status: 1;
-  authToken: string;
-  id_rocket: string;
-  username: string;
 }
 
 export enum STEP {

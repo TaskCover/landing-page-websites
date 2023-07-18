@@ -1,5 +1,5 @@
 import { memo, useMemo } from "react";
-import { Stack } from "@mui/material";
+import { Stack, Theme, selectClasses } from "@mui/material";
 import { IconButton, Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_PROJECT, STATUS_OPTIONS } from "constant/index";
@@ -89,59 +89,74 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
           </>
         )}
       </Stack>
-      <Stack direction="row" alignItems="center" spacing={3}>
-        <Stack
-          direction={{ xs: "column", md: "row" }}
-          alignItems="center"
-          spacing={{ xs: 1, md: 3 }}
-        >
-          <Stack direction="row" alignItems="center" spacing={{ xs: 1, md: 3 }}>
-            <AssignerFilter
-              onChange={onChange}
-              placeholder={projectT("detailTasks.assignee")}
-              hasAvatar
-              name="owner"
-              disabled={!selectedList.length}
-              rootSx={{
-                "& >svg": { fontSize: 16 },
-              }}
-            />
-            <Date
-              label={commonT("form.title.startDate")}
-              name="start_date"
-              onChange={onChange}
-              disabled={!selectedList.length}
-              iconProps={{
-                sx: {
-                  fontSize: 16,
-                },
-              }}
-            />
-          </Stack>
-          <Stack direction="row" alignItems="center" spacing={{ xs: 1, md: 3 }}>
-            <Date
-              label={commonT("form.title.dueDate")}
-              name="end_date"
-              onChange={onChange}
-              disabled={!selectedList.length}
-              iconProps={{
-                sx: {
-                  fontSize: 16,
-                },
-              }}
-            />
-            <Dropdown
-              placeholder={commonT("status")}
-              options={statusOptions}
-              name="status"
-              onChange={onChange}
-              disabled={!selectedList.length}
-              rootSx={{
-                "& >svg": { fontSize: 16 },
-              }}
-            />
-          </Stack>
-        </Stack>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={{ xs: 1, md: 1.5, xl: 3 }}
+        justifyContent="flex-end"
+        flexWrap="wrap"
+        rowGap={1}
+      >
+        <AssignerFilter
+          onChange={onChange}
+          placeholder={projectT("detailTasks.assignee")}
+          hasAvatar
+          name="owner"
+          disabled={!selectedList.length}
+          rootSx={{
+            "& >svg": { fontSize: 16 },
+            px: "0px!important",
+            [`& .${selectClasses.outlined}`]: {
+              pr: "0!important",
+              mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                `${spacing(4)}!important`,
+              "& .sub": {
+                display: "none",
+              },
+            },
+          }}
+        />
+        <Date
+          label={commonT("form.title.startDate")}
+          name="start_date"
+          onChange={onChange}
+          disabled={!selectedList.length}
+          iconProps={{
+            sx: {
+              fontSize: 16,
+            },
+          }}
+        />
+        <Date
+          label={commonT("form.title.dueDate")}
+          name="end_date"
+          onChange={onChange}
+          disabled={!selectedList.length}
+          iconProps={{
+            sx: {
+              fontSize: 16,
+            },
+          }}
+        />
+        <Dropdown
+          placeholder={commonT("status")}
+          options={statusOptions}
+          name="status"
+          onChange={onChange}
+          disabled={!selectedList.length}
+          rootSx={{
+            "& >svg": { fontSize: 16 },
+            px: "0px!important",
+            [`& .${selectClasses.outlined}`]: {
+              pr: "0!important",
+              mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                `${spacing(4)}!important`,
+              "& .sub": {
+                display: "none",
+              },
+            },
+          }}
+        />
         <MoreList {...props} />
       </Stack>
     </Stack>

@@ -497,8 +497,8 @@ const ItemList = () => {
   const onLayout = useCallback((refsData) => {
     const newSx = refsData?.reduce(
       (out, widthValue, index) => {
-        const widthTask = index === 0 ? widthValue - 120 : widthValue;
-        const widthSubTask = index === 0 ? widthValue - 140 : widthValue;
+        const widthTask = index === 0 ? widthValue - 107 : widthValue;
+        const widthSubTask = index === 0 ? widthValue - 95 : widthValue;
         out.task[`& > :nth-of-type(${index + 1})`] = {
           minWidth: widthTask,
           width: widthTask,
@@ -591,7 +591,7 @@ const ItemList = () => {
         error={error as string}
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
-        position = "sticky"
+        position="sticky"
         top={{ xs: baseTop + 8 }}
         zIndex={1}
       >
@@ -641,14 +641,22 @@ const ItemList = () => {
                     isHide={isHide}
                     setHideIds={setHideIds}
                   >
-                    <Stack width="100%" overflow="hidden">
+                    <Stack
+                      width="100%"
+                      overflow="hidden"
+                      sx={{
+                        // transform: "translateX(-45px)",
+                        ml: -5.625,
+                      }}
+                    >
                       <Stack
                         direction={{ md: "row" }}
                         alignItems={{ xs: "flex-start", md: "center" }}
                         minHeight={38}
                         maxHeight={{ md: 38 }}
                         width="100%"
-                        sx={sx.task}
+                        sx={{ ...sx.task, ml: 4 }}
+                        // sx={sx.task}
                         overflow="hidden"
                         borderBottom={{ md: "1px solid" }}
                         borderColor={{ md: "grey.100" }}
@@ -700,8 +708,20 @@ const ItemList = () => {
                                       borderBottom={{ md: "1px solid" }}
                                       borderColor={{ md: "grey.100" }}
                                       maxHeight={{ md: 38 }}
+                                      sx={{
+                                        "& >.checkbox": {
+                                          opacity: isChecked ? 1 : 0,
+                                          userSelect: isChecked
+                                            ? undefined
+                                            : "none",
+                                        },
+                                        "&:hover >.checkbox": {
+                                          opacity: 1,
+                                        },
+                                      }}
                                     >
                                       <Checkbox
+                                        className="checkbox"
                                         size="small"
                                         checked={isChecked}
                                         onChange={onToggleSubTask(

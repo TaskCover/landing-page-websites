@@ -111,8 +111,8 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   direction="row"
                   sx={{
                     "& >.checkbox": {
-                      opacity: 0,
-                      userSelect: "none",
+                      opacity: checked ? 1 : 0,
+                      userSelect: checked ? undefined : "none",
                     },
                     "&:hover >.checkbox": {
                       opacity: 1,
