@@ -543,7 +543,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
       <Stack
         //ref={scrollRef}
         sx={{
-          height: `calc(100vh - 475px)`,
+          height: `calc(100vh - 370px)`,
           overflow: "auto",
           position: "relative",
         }}
@@ -553,8 +553,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
             <Grid item xs={12}>
               <TableContainer
                 sx={{
-                  borderLeft: "1px solid rgb(224, 224, 224)",
-
+                  // borderLeft: "1px solid rgb(224, 224, 224)",
                   height: "calc(100vh - 495px)",
                 }}
               >
