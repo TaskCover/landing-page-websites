@@ -562,7 +562,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
       <Stack
         direction="column"
         alignItems="center"
-        sx={{ marginTop: "16px", color: isDarkMode ? "#fff" : "#212121" }}
+        sx={{ marginTop: "15px", color: isDarkMode ? "#fff" : "#212121" }}
       >
         <Typography sx={{ fontSize: "16px", fontWeight: 600 }}>
           {timeT("header.tab.weekly_total")}
@@ -618,7 +618,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
       <Stack
         //ref={scrollRef}
         sx={{
-          height: `calc(100vh - 357px)`,
+          height: `calc(100vh - 365px)`,
           overflow: "auto",
           position: "relative",
         }}
@@ -640,7 +640,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
             <Box sx={{ height: "100%" }}>
               <FullCalendar
                 ref={calendarRef}
-                height={`calc(100vh - 357px)`}
+                height={`calc(100vh - 365px)`}
                 plugins={[dayGridPlugin, timeGridPlugin]}
                 initialView={"timeGridWeek"}
                 //weekends={true}

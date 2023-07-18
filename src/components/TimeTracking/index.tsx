@@ -51,7 +51,7 @@ const TimeLog: React.FC = () => {
         <Stack
           direction="row"
           sx={{
-            backgroundColor: isDarkMode ? "#565656" : "#F7F7FD",
+            backgroundColor: isDarkMode ? "#565656" : "#FFFFFF",
             justifyContent: "space-between",
           }}
         >
