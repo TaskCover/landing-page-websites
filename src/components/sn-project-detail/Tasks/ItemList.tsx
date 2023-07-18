@@ -797,7 +797,7 @@ const ItemList = () => {
                             color="secondary"
                             sx={{ mr: 4 }}
                           >
-                            {projectT("detailTasks.addNewTask")}
+                            {projectT("detailTasks.addNewSubTask")}
                           </Button>
                         </>
                       )}

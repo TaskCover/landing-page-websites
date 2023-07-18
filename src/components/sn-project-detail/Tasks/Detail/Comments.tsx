@@ -20,7 +20,7 @@ const Comments = (props: CommentsProps) => {
   const projectT = useTranslations(NS_PROJECT);
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={2}>
       <Text color="grey.400" variant="h6" textTransform="uppercase">
         {projectT("taskDetail.commentList")}
       </Text>
@@ -37,7 +37,7 @@ const CommentItem = (props: CommentItemProps) => {
   const { creator, content, attachments_down = [], created_time } = props;
 
   return (
-    <Stack flex={1} spacing={1}>
+    <Stack flex={1} spacing={1} bgcolor="grey.50" p={2} borderRadius={1}>
       <Stack direction="row" justifyContent="space-between" spacing={1}>
         <Stack direction="row" alignItems="center" spacing={1}>
           <Avatar size={32} src={creator?.avatar?.link} />

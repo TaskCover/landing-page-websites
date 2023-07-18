@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { Checkbox, IconButton } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 import useToggle from "hooks/useToggle";
@@ -48,12 +48,21 @@ const DraggableTask = (props: DraggableTaskProps) => {
     <Draggable draggableId={id} index={index}>
       {(provided, snapshot) => {
         return (
-          <div
+          <Box
             ref={provided.innerRef}
             {...provided.draggableProps}
             style={{
               overflow: "hidden",
               ...provided.draggableProps.style,
+            }}
+            sx={{
+              "& >div>.checkbox": {
+                opacity: checked ? 1 : 0,
+                userSelect: checked ? undefined : "none",
+              },
+              "&:hover >div>.checkbox": {
+                opacity: 1,
+              },
             }}
             className="draggable"
             {...rest}
@@ -66,15 +75,6 @@ const DraggableTask = (props: DraggableTaskProps) => {
               spacing={{ xs: 0.5, sm: 1 }}
               borderBottom={{ md: "1px solid" }}
               borderColor={{ md: "grey.100" }}
-              sx={{
-                "& >.checkbox": {
-                  opacity: checked ? 1 : 0,
-                  userSelect: checked ? undefined : "none",
-                },
-                "&:hover >.checkbox": {
-                  opacity: 1,
-                },
-              }}
             >
               <Checkbox
                 size="small"
@@ -105,7 +105,7 @@ const DraggableTask = (props: DraggableTaskProps) => {
             </Stack>
 
             {children}
-          </div>
+          </Box>
         );
       }}
     </Draggable>
