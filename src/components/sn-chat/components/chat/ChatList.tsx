@@ -54,7 +54,7 @@ const ChatList = () => {
     onSetConversationInfo(chatInfo);
 
     if (chatInfo?.t)
-      if (chatInfo?.t !== 'd') {
+      if (chatInfo?.t !== "d") {
         onSetStep(STEP.CHAT_GROUP, chatInfo);
       } else {
         onSetStep(STEP.CHAT_ONE, chatInfo);
@@ -138,20 +138,20 @@ const ChatList = () => {
           <>
             {convention?.length > 0
               ? convention.map((item, index) => {
-                return (
-                  <ChatItem
-                    chatInfo={item}
-                    sessionId={user?.["username"]}
-                    key={index}
-                    onClickConvention={handleClickConversation}
-                    chatItemProps={{
-                      ...(index === convention?.length - 1 && {
-                        ref: setLastElement,
-                      }),
-                    }}
-                  />
-                );
-              })
+                  return (
+                    <ChatItem
+                      chatInfo={item}
+                      sessionId={user?.["username"]}
+                      key={index}
+                      onClickConvention={handleClickConversation}
+                      chatItemProps={{
+                        ...(index === convention?.length - 1 && {
+                          ref: setLastElement,
+                        }),
+                      }}
+                    />
+                  );
+                })
               : null}
           </>
         )}

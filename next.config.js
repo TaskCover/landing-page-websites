@@ -30,7 +30,7 @@ const nextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
-  }
+  },
   /**
    * if you need proxy, then try this
    */

@@ -8,7 +8,7 @@ import {
   getUserInfoById,
   leftDirectMessageGroup,
   fetchGroupMembers,
-  getChatAttachments
+  getChatAttachments,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import {

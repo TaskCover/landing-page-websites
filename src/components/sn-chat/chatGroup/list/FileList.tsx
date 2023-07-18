@@ -1,10 +1,10 @@
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { useChat } from 'store/chat/selectors';
-import FileGroupIcon from 'icons/FileGroupIcon';
+import * as React from "react";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { useChat } from "store/chat/selectors";
+import FileGroupIcon from "icons/FileGroupIcon";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -20,9 +20,9 @@ const FileList = () => {
   React.useEffect(() => {
     onGetChatAttachments({
       roomId: dataTransfer?._id,
-      fileType: 'file',
-      roomType: 'p',
-    })
+      fileType: "file",
+      roomType: "p",
+    });
   }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -54,6 +54,6 @@ const FileList = () => {
       ))}
     </>
   );
-}
+};
 
 export default FileList;

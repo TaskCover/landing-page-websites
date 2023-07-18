@@ -582,7 +582,7 @@ const ItemList = () => {
   }, [initQuery, isReady, onGetTasksOfProject, projectId]);
 
   return (
-    <Stack flex={1} pb={3}  sx={{ minWidth: 0 }}>
+    <Stack flex={1} pb={3} sx={{ minWidth: 0 }}>
       <ActionsSelected selectedList={selectedList} onReset={onResetSelected} />
       <TableLayout
         onLayout={onLayout}
@@ -591,7 +591,7 @@ const ItemList = () => {
         error={error as string}
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
-        position = "sticky"
+        position="sticky"
         top={{ xs: baseTop + 8 }}
         zIndex={1}
       >
@@ -667,15 +667,25 @@ const ItemList = () => {
                         <Assigner src={task?.owner?.avatar?.link}>
                           {task?.owner?.fullname}
                         </Assigner>
-                        <Content  fontSize={13}>{formatDate(task?.start_date)}</Content>
-                        <Content  fontSize={13}>{formatDate(task?.end_date)}</Content>
-                        <Content noWrap={false} whiteSpace="nowrap"  fontSize={14}>
+                        <Content fontSize={13}>
+                          {formatDate(task?.start_date)}
+                        </Content>
+                        <Content fontSize={13}>
+                          {formatDate(task?.end_date)}
+                        </Content>
+                        <Content
+                          noWrap={false}
+                          whiteSpace="nowrap"
+                          fontSize={14}
+                        >
                           <TextStatus
                             color={COLOR_STATUS[task.status]}
                             text={TASK_TEXT_STATUS[task.status]}
                           />
                         </Content>
-                        <Description fontSize={13}>{task?.description}</Description>
+                        <Description fontSize={13}>
+                          {task?.description}
+                        </Description>
                       </Stack>
                       {!isHide && (
                         <>
@@ -747,7 +757,7 @@ const ItemList = () => {
                                         </Content>
                                         <Content
                                           noWrap={false}
-                                          whiteSpace = "nowrap"
+                                          whiteSpace="nowrap"
                                           fontSize={14}
                                         >
                                           <TextStatus
@@ -818,18 +828,24 @@ const Assigner = ({
   src,
   ...rest
 }: StackProps & { src?: string }) => {
-  if (!children) return <Content textAlign="left"  fontSize={13}/>;
+  if (!children) return <Content textAlign="left" fontSize={13} />;
   return (
     <Stack
       component="p"
       direction="row"
       alignItems="center"
       spacing={1.25}
-      px = { 2}
+      px={2}
       {...rest}
     >
       <Avatar size={23} src={src} />
-      <Text variant="body2" component="span" overflow="hidden" color="grey.400" fontSize={13}>
+      <Text
+        variant="body2"
+        component="span"
+        overflow="hidden"
+        color="grey.400"
+        fontSize={13}
+      >
         {children}
       </Text>
     </Stack>

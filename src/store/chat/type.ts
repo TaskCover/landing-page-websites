@@ -227,7 +227,7 @@ export enum STEP {
   LINK,
   FILE,
   CHAT_FORWARD,
-  CHAT_GROUP
+  CHAT_GROUP,
 }
 
 export enum TYPE_LIST {

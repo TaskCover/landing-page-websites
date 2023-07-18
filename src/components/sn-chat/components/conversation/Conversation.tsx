@@ -26,7 +26,12 @@ const Conversation = () => {
 
   useEffect(() => {
     if (backFallStep !== STEP.VIEW_DETAIL_USER) {
-      onGetLastMessages({ roomId: dataTransfer?._id ?? roomId, type: dataTransfer?.t ?? 'd', offset: 0, count: 10 });
+      onGetLastMessages({
+        roomId: dataTransfer?._id ?? roomId,
+        type: dataTransfer?.t ?? "d",
+        offset: 0,
+        count: 10,
+      });
     }
   }, [roomId, onGetLastMessages, backFallStep]);
 
@@ -37,7 +42,12 @@ const Conversation = () => {
   const fetchLastMessage = useCallback(
     (page: number) => {
       if (backFallStep !== STEP.VIEW_DETAIL_USER) {
-        onGetLastMessages({ roomId: dataTransfer?._id ?? roomId, type: dataTransfer?.t ?? 'd', offset: page, count: 10 });
+        onGetLastMessages({
+          roomId: dataTransfer?._id ?? roomId,
+          type: dataTransfer?.t ?? "d",
+          offset: page,
+          count: 10,
+        });
       }
     },
     [backFallStep, onGetLastMessages, roomId],

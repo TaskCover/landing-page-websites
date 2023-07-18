@@ -13,7 +13,7 @@ import {
   ChangeRoleRequest,
   ChatAttachmentsRequest,
   FetchGroupMemberRequest,
-  RemoveMemberRequest
+  RemoveMemberRequest,
 } from "./type";
 
 export const getAllConvention = createAsyncThunk(
@@ -199,4 +199,3 @@ export const getChatAttachments = createAsyncThunk(
     }
   },
 );
-

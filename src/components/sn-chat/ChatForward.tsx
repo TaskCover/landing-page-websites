@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import SelectItem from "./components/SelectItem";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 import { Typography } from "@mui/material";
 import { Button } from "components/shared";
 import { useChat } from "store/chat/selectors";
@@ -16,18 +16,18 @@ const ChatForward = () => {
       <Box sx={{ padding: 3 }}>
         <Box
           sx={{
-            height: "260px"
+            height: "260px",
           }}
         >
-          <Box>
-            {/* <SelectItem employee={undefined} /> */}
-          </Box>
+          <Box>{/* <SelectItem employee={undefined} /> */}</Box>
         </Box>
 
         <Box>
-          <Box sx={{
-            position: "relative"
-          }}>
+          <Box
+            sx={{
+              position: "relative",
+            }}
+          >
             <Typography
               sx={{
                 color: "var(--gray-3, #999)",
@@ -43,7 +43,7 @@ const ChatForward = () => {
             </Typography>
             <TextareaAutosize
               style={{
-                resize: 'vertical',
+                resize: "vertical",
                 width: "100%",
                 padding: "28px 14px 14px",
                 borderRadius: "0.25rem",
@@ -86,7 +86,9 @@ const ChatForward = () => {
             variant="primaryOutlined"
             size="small"
             sx={defaultSx.button}
-            onClick={() => { onSetStep(prevStep) }}
+            onClick={() => {
+              onSetStep(prevStep);
+            }}
           >
             {commonT("form.cancel")}
           </Button>
@@ -95,7 +97,7 @@ const ChatForward = () => {
             sx={defaultSx.button}
             type="button"
             size="small"
-          // onClick={()=>{}}
+            // onClick={()=>{}}
           >
             {commonT("form.add")}
           </Button>

@@ -69,18 +69,18 @@ const AddGroup = () => {
     });
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
-    })
+    });
   }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
 
   const handleSuccess = (result) => {
     if (result?.error) {
-      onAddSnackbar(result?.error?.message, 'error');
+      onAddSnackbar(result?.error?.message, "error");
       return;
     }
-    onAddSnackbar('Successfully!', 'success');
+    onAddSnackbar("Successfully!", "success");
     // onSetStep(STEP.CHAT_ONE);
     onSetStep(STEP.CHAT_GROUP, dataTransfer);
-  }
+  };
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -106,28 +106,36 @@ const AddGroup = () => {
     });
   };
 
-  const handleCreateGroup = async () => {    
+  const handleCreateGroup = async () => {
     if (dataTransfer?.isNew) {
-      const result =  await onCreateDirectMessageGroup({
+      const result = await onCreateDirectMessageGroup({
         groupName: (() => {
-          return Object
-            .keys(employeeSelected)
-            .filter((item) => employeeSelected[item] === true)
-            ?.join('-')
-            .slice(0, 10) + `...${Math.floor(Math.random() * (9999 - 1 + 1) + 1) }`
+          return (
+            Object.keys(employeeSelected)
+              .filter((item) => employeeSelected[item] === true)
+              ?.join("-")
+              .slice(0, 10) +
+            `...${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`
+          );
         })(),
-        members: Object.keys(employeeSelected).filter((item) => employeeSelected[item] === true),
-        type: 'd'
+        members: Object.keys(employeeSelected).filter(
+          (item) => employeeSelected[item] === true,
+        ),
+        type: "d",
       });
       handleSuccess(result);
     } else {
-      const users = Object.keys(employeeIdSelected)
-        .filter((item) => employeeIdSelected[item] === true);
-      const tasks = users.map(async (userId_to_add) => (await onAddMembers2Group({
-        roomId: dataTransfer?._id,
-        userId_to_add,
-      })))
-      const result = await Promise.all(tasks);      
+      const users = Object.keys(employeeIdSelected).filter(
+        (item) => employeeIdSelected[item] === true,
+      );
+      const tasks = users.map(
+        async (userId_to_add) =>
+          await onAddMembers2Group({
+            roomId: dataTransfer?._id,
+            userId_to_add,
+          }),
+      );
+      const result = await Promise.all(tasks);
       handleSuccess(result.pop());
     }
   };
@@ -214,18 +222,26 @@ const AddGroup = () => {
         ) : (
           <>
             {items?.length > 0
-                ? items
-                  ?.filter(item => !groupMembers?.map(m => m._id)?.includes(item.id_rocket))
-                  ?.filter(m => m.id_rocket !== user?.id_rocket).map((item, index) => {
-                  return (
-                    <SelectItem
-                      checkbox
-                      employee={item}
-                      key={index}
-                      onClick={(event) => handleClickConversation(item, event)}
-                    />
-                  );
-                })
+              ? items
+                  ?.filter(
+                    (item) =>
+                      !groupMembers
+                        ?.map((m) => m._id)
+                        ?.includes(item.id_rocket),
+                  )
+                  ?.filter((m) => m.id_rocket !== user?.id_rocket)
+                  .map((item, index) => {
+                    return (
+                      <SelectItem
+                        checkbox
+                        employee={item}
+                        key={index}
+                        onClick={(event) =>
+                          handleClickConversation(item, event)
+                        }
+                      />
+                    );
+                  })
               : null}
           </>
         )}

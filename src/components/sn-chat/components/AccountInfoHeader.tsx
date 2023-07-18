@@ -27,7 +27,7 @@ const AccountInfoHeader = ({
 }: AccountInfoHeaderProp) => {
   const { dataTransfer, onSetStep, prevStep } = useChat();
   const { usersCount, t, name } = accountInfo;
-  const isGroup = useMemo(() => t !== 'd', [t]);
+  const isGroup = useMemo(() => t !== "d", [t]);
 
   const [textSearch, setTextSearch] = useState("");
 
@@ -118,17 +118,13 @@ const AccountInfoHeader = ({
             <ArrowRightIcon />
           </IconButton>
         </>
-      )
+      );
     }
-  }
+  };
   const _renderItemHeader = (viewStep) => {
     switch (viewStep) {
       case STEP.CHAT_GROUP:
-        return (
-          <>
-            {_renderChatGroup()}
-          </>
-        )
+        return <>{_renderChatGroup()}</>;
       case STEP.CHAT_DETAIL_GROUP:
         return (
           <>
@@ -136,13 +132,12 @@ const AccountInfoHeader = ({
               sx={{
                 fontSize: "16px",
                 fontWeight: 600,
-
               }}
             >
               {dataTransfer?.name}
             </Box>
           </>
-        )
+        );
       case STEP.LIST:
         return (
           <>
@@ -150,79 +145,84 @@ const AccountInfoHeader = ({
               sx={{
                 fontSize: "16px",
                 fontWeight: 600,
-
               }}
             >
               {dataTransfer?.name}
             </Box>
           </>
-        )
+        );
       default:
         break;
     }
-  }
-
-
+  };
 
   const _renderHeaderForward = () => {
-    return (<>
-      <Box sx={{ padding: 3, borderBottom: "1px solid #ECECF3" }}>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}>
-          <Typography sx={{
-            color: "var(--black, #212121)",
-            fontSize: "1rem",
-            fontWeight: 600,
-            paddingBottom: 2,
-          }}>
-            Forward message
-          </Typography>
-          <IconButton
-            onClick={() => { onSetStep(STEP.ADD_GROUP, { ...dataTransfer, isNew: !isGroup }) }}
+    return (
+      <>
+        <Box sx={{ padding: 3, borderBottom: "1px solid #ECECF3" }}>
+          <Box
             sx={{
-              width: "26px",
-              height: "26px",
+              display: "flex",
+              justifyContent: "space-between",
             }}
           >
-            <CloseIcon sx={{ width: "20px", height: "20px" }} />
-          </IconButton>
-        </Box>
-        <TextField
-          size="small"
-          sx={{
-            backgroundColor: "var(--gray-0, #F7F7FD)",
-            borderRadius: "10px",
-            "& .MuiInputBase-root": {
-              color: "black",
+            <Typography
+              sx={{
+                color: "var(--black, #212121)",
+                fontSize: "1rem",
+                fontWeight: 600,
+                paddingBottom: 2,
+              }}
+            >
+              Forward message
+            </Typography>
+            <IconButton
+              onClick={() => {
+                onSetStep(STEP.ADD_GROUP, { ...dataTransfer, isNew: !isGroup });
+              }}
+              sx={{
+                width: "26px",
+                height: "26px",
+              }}
+            >
+              <CloseIcon sx={{ width: "20px", height: "20px" }} />
+            </IconButton>
+          </Box>
+          <TextField
+            size="small"
+            sx={{
+              backgroundColor: "var(--gray-0, #F7F7FD)",
               borderRadius: "10px",
-              border: "1px solid transparent",
-            },
-          }}
-          placeholder="Search"
-          fullWidth
-          onKeyDown={handleKeyDown}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon
-                  sx={{
-                    color: "#999999",
-                  }}
-                />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
-    </>)
-  }
+              "& .MuiInputBase-root": {
+                color: "black",
+                borderRadius: "10px",
+                border: "1px solid transparent",
+              },
+            }}
+            placeholder="Search"
+            fullWidth
+            onKeyDown={handleKeyDown}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon
+                    sx={{
+                      color: "#999999",
+                    }}
+                  />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+      </>
+    );
+  };
 
   const _renderHeader = (viewStep) => {
     switch (viewStep) {
       case STEP.CHAT_FORWARD:
-        return (<>{_renderHeaderForward()}</>)
+        return <>{_renderHeaderForward()}</>;
       default:
         return (
           <Box
@@ -245,18 +245,22 @@ const AccountInfoHeader = ({
             {_renderItemHeader(viewStep)}
 
             <Box ml="auto">
-              {viewStep != STEP.CHAT_ONE && <IconButton>
-                <SearchIcon
-                  sx={{
-                    color: "#1BC5BD",
-                  }}
-                />
-              </IconButton>}
+              {viewStep != STEP.CHAT_ONE && (
+                <IconButton>
+                  <SearchIcon
+                    sx={{
+                      color: "#1BC5BD",
+                    }}
+                  />
+                </IconButton>
+              )}
               <IconButton
                 sx={{
                   color: "white",
                 }}
-                onClick={() => { onSetStep(STEP.ADD_GROUP) }}
+                onClick={() => {
+                  onSetStep(STEP.ADD_GROUP);
+                }}
               >
                 <ProfileAdd />
               </IconButton>
@@ -269,16 +273,11 @@ const AccountInfoHeader = ({
               </IconButton>
             </Box>
           </Box>
-        )
+        );
     }
+  };
 
-  }
-
-  return (
-    <>
-      {_renderHeader(viewStep)}
-    </>
-  );
+  return <>{_renderHeader(viewStep)}</>;
 };
 
 export default AccountInfoHeader;

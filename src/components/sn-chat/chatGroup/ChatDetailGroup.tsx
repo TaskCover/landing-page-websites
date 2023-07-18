@@ -35,8 +35,10 @@ const ChatDetailGroup = (props) => {
   } = useChat();
   const { user } = useAuth();
   //check owner
-  const owners = Object.values(groupMembers).filter(item => item.roles.includes('owner'));
-  const owner = owners.some(obj => obj._id === user?.id_rocket);
+  const owners = Object.values(groupMembers).filter((item) =>
+    item.roles.includes("owner"),
+  );
+  const owner = owners.some((obj) => obj._id === user?.id_rocket);
 
   const commonT = useTranslations(NS_COMMON);
   const TYPE_POPUP = {
@@ -45,7 +47,7 @@ const ChatDetailGroup = (props) => {
     LEAVE_OWNER: "LEAVE_OWNER",
     LEAVE_MEMBER: "LEAVE_MEMBER",
     NEW_ADMIN: "NEW_ADMIN",
-  }
+  };
   const init = {
     type: "",
     statusPopup: false,
@@ -55,12 +57,12 @@ const ChatDetailGroup = (props) => {
     widthPopup: "500px",
   };
 
-  const [showPopup, setShowPopup] = useState(init)
-  const [userId, setUserId] = useState('')
+  const [showPopup, setShowPopup] = useState(init);
+  const [userId, setUserId] = useState("");
   const { onAddSnackbar } = useSnackbar();
   const handleClosePopup = () => {
-    setShowPopup(init)
-  }
+    setShowPopup(init);
+  };
 
   useEffect(() => {
     onFetchGroupMembersMember({
@@ -69,135 +71,149 @@ const ChatDetailGroup = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleManageMember = async (action: 'addAdmin' | 'remove', member) => {
+  const handleManageMember = async (action: "addAdmin" | "remove", member) => {
     console.log({ user });
 
-    if (action === 'addAdmin') {
-      const result = await onChangeGroupRole({
+    if (action === "addAdmin") {
+      const result = (await onChangeGroupRole({
         groupId: dataTransfer?._id,
         userIdToChange: member?._id,
-        newRole: 'addOwner',
-      }) as any;
+        newRole: "addOwner",
+      })) as any;
       if (result?.error) {
-        return onAddSnackbar(result?.error?.message, 'error');
+        return onAddSnackbar(result?.error?.message, "error");
       }
-      await onChangeGroupRole({
+      (await onChangeGroupRole({
         groupId: dataTransfer?._id,
-        userIdToChange: user?.id_rocket ?? '',
-        newRole: 'removeOwner',
-      }) as any;
+        userIdToChange: user?.id_rocket ?? "",
+        newRole: "removeOwner",
+      })) as any;
     } else {
-      const result = await onRemoveGroupMember({
+      const result = (await onRemoveGroupMember({
         groupId: dataTransfer?._id,
         userIdToKick: member?._id,
-      }) as any;
+      })) as any;
       if (result?.error) {
-        return onAddSnackbar(result?.error?.message, 'error');
-      };
+        return onAddSnackbar(result?.error?.message, "error");
+      }
     }
-    onAddSnackbar('Successfully!', 'success');
+    onAddSnackbar("Successfully!", "success");
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
     });
-  }
+  };
 
   const handleConfirm = () => {
     console.log({ showPopup });
     if (showPopup.actionType === 1) {
       onLeftGroup({
         roomId: dataTransfer?._id,
-      })
+      });
     } else {
       // remove
     }
     setShowPopup(init);
     onSetStep(STEP.CONVENTION);
-  }
+  };
 
   const _renderNewAdmin = () => {
     return (
       <>
         <Box sx={{ width: "100%", margin: "0 50px" }}>
           {groupMembers?.length > 0
-            ? groupMembers.filter(m => m._id !== user?.id_rocket).map((item, index) => {
-
-              return (
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    marginBottom: 1,
-                    // cursor: "pointer",
-                    ":hover": {
-                      backgroundColor: "#F7F7FD",
-                    },
-                  }}
-                  p={1}
-                  onClick={() => {
-                    setUserId(item?._id)
-                    setShowPopup((pre) => ({
-                      ...pre,
-                      type: TYPE_POPUP.LEAVE_AND_NEW_ADD,
-                      statusPopup: true,
-                      title: "Leave Group",
-                      content: (
-                        <Box sx={{
-                          textAlign: "center"
-                        }}>
-                          <Typography>Leave group and select <span style={{ color: "var(--brand-primary, #3699FF)" }} >{item?.fullname}</span> as new admin?</Typography>
-                        </Box>
-                      ),
-                    }));
-                  }}
-                  key={index}
-                >
-
-                  <Avatar
-                    src={item?.avatar}
-                    alt="Avatar"
-                    size={42}
-                    style={{
-                      borderRadius: "50%",
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Typography variant="inherit" fontWeight="bold">
-                      {item?.fullname}
-                    </Typography>
-                    <Typography variant="caption" color="#999999">
-                      {item?.email}
-                    </Typography>
-                  </Box>
-                </Box>
-              );
-            })
+            ? groupMembers
+                .filter((m) => m._id !== user?.id_rocket)
+                .map((item, index) => {
+                  return (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        marginBottom: 1,
+                        // cursor: "pointer",
+                        ":hover": {
+                          backgroundColor: "#F7F7FD",
+                        },
+                      }}
+                      p={1}
+                      onClick={() => {
+                        setUserId(item?._id);
+                        setShowPopup((pre) => ({
+                          ...pre,
+                          type: TYPE_POPUP.LEAVE_AND_NEW_ADD,
+                          statusPopup: true,
+                          title: "Leave Group",
+                          content: (
+                            <Box
+                              sx={{
+                                textAlign: "center",
+                              }}
+                            >
+                              <Typography>
+                                Leave group and select{" "}
+                                <span
+                                  style={{
+                                    color: "var(--brand-primary, #3699FF)",
+                                  }}
+                                >
+                                  {item?.fullname}
+                                </span>{" "}
+                                as new admin?
+                              </Typography>
+                            </Box>
+                          ),
+                        }));
+                      }}
+                      key={index}
+                    >
+                      <Avatar
+                        src={item?.avatar}
+                        alt="Avatar"
+                        size={42}
+                        style={{
+                          borderRadius: "50%",
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <Typography variant="inherit" fontWeight="bold">
+                          {item?.fullname}
+                        </Typography>
+                        <Typography variant="caption" color="#999999">
+                          {item?.email}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  );
+                })
             : null}
         </Box>
-
       </>
-    )
-  }
+    );
+  };
 
   const _renderContentPopup = () => {
     return (
-      <Box sx={{
-        margin: "10px 0",
-      }}>
-        <Box sx={{
-          display: "flex",
+      <Box
+        sx={{
           margin: "10px 0",
-          justifyContent: "center",
         }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            margin: "10px 0",
+            justifyContent: "center",
+          }}
         >
           {showPopup?.content}
         </Box>
-        {showPopup?.type !== TYPE_POPUP.NEW_ADMIN &&
+        {showPopup?.type !== TYPE_POPUP.NEW_ADMIN && (
           <Box
             sx={{
               display: "flex",
@@ -226,41 +242,41 @@ const ChatDetailGroup = (props) => {
               {commonT("form.confirm")}
             </Button>
           </Box>
-        }
+        )}
       </Box>
-    )
-  }
+    );
+  };
 
   const handlePopup = async () => {
     const left = async () => {
-      const leftResult = await onLeftGroup({
+      const leftResult = (await onLeftGroup({
         roomId: dataTransfer?._id,
-      }) as any;
+      })) as any;
       if (leftResult?.error) {
-        return onAddSnackbar(leftResult?.error?.message, 'error');
+        return onAddSnackbar(leftResult?.error?.message, "error");
       } else {
-        onAddSnackbar('Successfully!', 'success');
+        onAddSnackbar("Successfully!", "success");
         onSetStep(STEP.CONVENTION);
       }
-    }
+    };
     const addAndRemove = async (add: string, remove: string) => {
-      const addOwnerResult = await onChangeGroupRole({
+      const addOwnerResult = (await onChangeGroupRole({
         groupId: dataTransfer?._id,
         userIdToChange: add,
-        newRole: 'addOwner',
-      }) as any;
+        newRole: "addOwner",
+      })) as any;
       if (addOwnerResult?.error) {
-        return onAddSnackbar(addOwnerResult?.error?.message, 'error');
+        return onAddSnackbar(addOwnerResult?.error?.message, "error");
       }
-      const removeOwner = await onChangeGroupRole({
+      const removeOwner = (await onChangeGroupRole({
         groupId: dataTransfer?._id,
         userIdToChange: remove,
-        newRole: 'removeOwner',
-      }) as any;
+        newRole: "removeOwner",
+      })) as any;
       if (removeOwner?.error) {
-        return onAddSnackbar(removeOwner?.error?.message, 'error');
+        return onAddSnackbar(removeOwner?.error?.message, "error");
       }
-    }
+    };
     switch (showPopup?.type) {
       case TYPE_POPUP.DELETE:
         //CALL API DELETE
@@ -269,62 +285,68 @@ const ChatDetailGroup = (props) => {
         await left();
         break;
       case TYPE_POPUP.LEAVE_AND_NEW_ADD:
-        await addAndRemove(userId, user?.id_rocket ?? '');
+        await addAndRemove(userId, user?.id_rocket ?? "");
         await left();
         break;
       case TYPE_POPUP.LEAVE_OWNER:
         //NEW OWNER RANDOM
-        const random = groupMembers?.filter(m => m._id !== user?.id_rocket)?.pop()?._id;
-        if (!random) return onAddSnackbar('Error!', 'error'); // Handle delete group
-        await addAndRemove(random, user?.id_rocket ?? '');
+        const random = groupMembers
+          ?.filter((m) => m._id !== user?.id_rocket)
+          ?.pop()?._id;
+        if (!random) return onAddSnackbar("Error!", "error"); // Handle delete group
+        await addAndRemove(random, user?.id_rocket ?? "");
         await left();
         break;
       default:
         break;
     }
-    setShowPopup(init)
-
-  }
+    setShowPopup(init);
+  };
   const handleNewAdd = () => {
     setShowPopup((pre) => ({
       ...pre,
       type: TYPE_POPUP.NEW_ADMIN,
       statusPopup: true,
       title: "select a new admin",
-      content: (
-        <>{_renderNewAdmin()}</>
-      ),
+      content: <>{_renderNewAdmin()}</>,
     }));
-  }
+  };
   return (
     <>
-      <Box sx={{
-        margin: "10px"
-      }}>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "center",
-        }}>
-          <Box sx={{
-            position: "relative"
-          }}>
+      <Box
+        sx={{
+          margin: "10px",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Box
+            sx={{
+              position: "relative",
+            }}
+          >
             <Avatar
               alt="Avatar"
               size={80}
               style={{
                 borderRadius: "10px",
-                margin: 'auto'
+                margin: "auto",
               }}
             />
-            <Box sx={{
-              position: "absolute",
-              bottom: 0,
-              right: "-22px",
-              boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
-              cursor: "pointer",
-              borderRadius: "50%",
-
-            }}>
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: 0,
+                right: "-22px",
+                boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
+                cursor: "pointer",
+                borderRadius: "50%",
+              }}
+            >
               <label htmlFor="upload-photo">
                 <input
                   style={{ display: "none" }}
@@ -332,7 +354,11 @@ const ChatDetailGroup = (props) => {
                   name="upload-photo"
                   type="file"
                 />
-                <Fab color="primary" size="small" component="span" aria-label="add"
+                <Fab
+                  color="primary"
+                  size="small"
+                  component="span"
+                  aria-label="add"
                   sx={{
                     background: "#fff",
                     padding: "10px",
@@ -347,51 +373,60 @@ const ChatDetailGroup = (props) => {
             </Box>
           </Box>
         </Box>
-        <Box sx={{
-          borderBottom: "1px solid #ECECF3",
-          paddingBottom: "10px",
-        }}>
+        <Box
+          sx={{
+            borderBottom: "1px solid #ECECF3",
+            paddingBottom: "10px",
+          }}
+        >
           <ItemDetail
             text={`Group name: ${dataTransfer?.name}`}
             icon={<GroupNameIcon />}
             iconClick={<EditGroupNameIcon />}
           />
           <ItemDetail
-            text={'Media'}
+            text={"Media"}
             icon={<MediaFileIcon />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
-              onSetStep(STEP.LIST)
-              onSetTypeList(TYPE_LIST.MEDIA_LIST)
+              onSetStep(STEP.LIST);
+              onSetTypeList(TYPE_LIST.MEDIA_LIST);
             }}
           />
           <ItemDetail
-            text={'Link'}
+            text={"Link"}
             icon={<LinkIcon />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
-              onSetStep(STEP.LIST)
-              onSetTypeList(TYPE_LIST.LINK_LIST)
+              onSetStep(STEP.LIST);
+              onSetTypeList(TYPE_LIST.LINK_LIST);
             }}
           />
 
           <ItemDetail
-            text={'File'}
+            text={"File"}
             icon={<FileGroupIcon />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
-              onSetStep(STEP.LIST)
-              onSetTypeList(TYPE_LIST.FILE_LIST)
+              onSetStep(STEP.LIST);
+              onSetTypeList(TYPE_LIST.FILE_LIST);
             }}
           />
         </Box>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          margin: "10px 0",
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            margin: "10px 0",
+          }}
+        >
           <Box>
-            <Typography variant="caption" color="#212121" fontSize={16} fontWeight={600}>
+            <Typography
+              variant="caption"
+              color="#212121"
+              fontSize={16}
+              fontWeight={600}
+            >
               {`Member (${dataTransfer?.usersCount})`}
             </Typography>
           </Box>
@@ -401,29 +436,41 @@ const ChatDetailGroup = (props) => {
             </Typography> */}
           </Box>
         </Box>
-        <Box sx={{
-          height: "180px",
-          overflow: "auto"
-        }}>
-          {groupMembers?.map((member, index) => (<ItemMemberDetail
-            key={index}
-            data={member}
-            callbackAddAdmin={() => {
-              handleManageMember('addAdmin', member);
-            }}
-            callbackRemove={() => {
-              handleManageMember('remove', member);
-            }}
-            admin />))}
+        <Box
+          sx={{
+            height: "180px",
+            overflow: "auto",
+          }}
+        >
+          {groupMembers?.map((member, index) => (
+            <ItemMemberDetail
+              key={index}
+              data={member}
+              callbackAddAdmin={() => {
+                handleManageMember("addAdmin", member);
+              }}
+              callbackRemove={() => {
+                handleManageMember("remove", member);
+              }}
+              admin
+            />
+          ))}
         </Box>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "center"
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <Box>
-            {owner &&
-              <Box sx={{ marginBottom: 1 }} >
-                <Typography variant="caption" color="#F64E60" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}
+            {owner && (
+              <Box sx={{ marginBottom: 1 }}>
+                <Typography
+                  variant="caption"
+                  color="#F64E60"
+                  fontSize={14}
+                  fontWeight={600}
+                  sx={{ cursor: "pointer" }}
                   onClick={() => {
                     setShowPopup((pre) => ({
                       ...pre,
@@ -432,15 +479,20 @@ const ChatDetailGroup = (props) => {
                       title: "Delete Group",
                       content: <>Are you sure to delete group?</>,
                       actionType: 0,
-                    }))
+                    }));
                   }}
                 >
                   {"Delete group"}
                 </Typography>
               </Box>
-            }
+            )}
             <Box sx={{ textAlign: "center" }}>
-              <Typography variant="caption" color="#F64E60" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}
+              <Typography
+                variant="caption"
+                color="#F64E60"
+                fontSize={14}
+                fontWeight={600}
+                sx={{ cursor: "pointer" }}
                 onClick={() => {
                   if (owner) {
                     setShowPopup((pre) => ({
@@ -449,12 +501,30 @@ const ChatDetailGroup = (props) => {
                       statusPopup: true,
                       title: "Leave Group",
                       content: (
-                        <Box sx={{
-                          textAlign: "center"
-                        }}>
-                          <Typography>You won&apos;t be able to see the messages in this conversation</Typography>
-                          <Typography>again after you leave the group. Please <span style={{ color: "var(--brand-primary, #3699FF)", cursor: "pointer" }} onClick={handleNewAdd} >select a new admin</span></Typography>
-                          <Typography>or the system will choose automatically</Typography>
+                        <Box
+                          sx={{
+                            textAlign: "center",
+                          }}
+                        >
+                          <Typography>
+                            You won&apos;t be able to see the messages in this
+                            conversation
+                          </Typography>
+                          <Typography>
+                            again after you leave the group. Please{" "}
+                            <span
+                              style={{
+                                color: "var(--brand-primary, #3699FF)",
+                                cursor: "pointer",
+                              }}
+                              onClick={handleNewAdd}
+                            >
+                              select a new admin
+                            </span>
+                          </Typography>
+                          <Typography>
+                            or the system will choose automatically
+                          </Typography>
                         </Box>
                       ),
                     }));
@@ -465,9 +535,8 @@ const ChatDetailGroup = (props) => {
                       statusPopup: true,
                       title: "Leave Group",
                       content: <>Are you sure to leave group?</>,
-                    }))
+                    }));
                   }
-
                 }}
               >
                 {"Leave group"}
@@ -509,4 +578,3 @@ const defaultSx = {
 };
 
 export default ChatDetailGroup;
-
