@@ -111,7 +111,10 @@ const ItemList = () => {
     [dataIds?.taskId, dataIds?.taskListId],
   );
 
-  const baseTop = useMemo(() => 97, []);
+  const baseTop = useMemo(
+    () => (selectedList.length ? 44 : 0),
+    [selectedList.length],
+  );
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -594,7 +597,12 @@ const ItemList = () => {
 
   return (
     <Stack flex={1} pb={3}>
-      <ActionsSelected selectedList={selectedList} onReset={onResetSelected} />
+      {!!selectedList.length && (
+        <ActionsSelected
+          selectedList={selectedList}
+          onReset={onResetSelected}
+        />
+      )}
       <FixedLayout>
         <TableLayout
           onLayout={onLayout}

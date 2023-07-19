@@ -72,22 +72,18 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
       zIndex={12}
     >
       <Stack direction="row" alignItems="center" spacing={1}>
-        {!!selectedList.length && (
-          <>
-            <Text variant="h6" color="grey.400">
-              {projectT("detailTasks.selectedCount", {
-                value: formatNumber(selectedList.length),
-              })}
-            </Text>
-            <IconButton
-              noPadding
-              onClick={onReset}
-              tooltip={projectT("detailTasks.resetSelected")}
-            >
-              <CloseIcon sx={{ color: "grey.400", fontSize: 18 }} />
-            </IconButton>
-          </>
-        )}
+        <Text variant="h6" color="grey.400">
+          {projectT("detailTasks.selectedCount", {
+            value: formatNumber(selectedList.length),
+          })}
+        </Text>
+        <IconButton
+          noPadding
+          onClick={onReset}
+          tooltip={projectT("detailTasks.resetSelected")}
+        >
+          <CloseIcon sx={{ color: "grey.400", fontSize: 18 }} />
+        </IconButton>
       </Stack>
       <Stack
         direction="row"
