@@ -9,6 +9,7 @@ import {
   leftDirectMessageGroup,
   fetchGroupMembers,
   getChatAttachments,
+  deleteConversation,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import {
@@ -52,6 +53,8 @@ const initialState: ChatState = {
   typeList: TYPE_LIST.MEDIA_LIST,
   groupMembers: [],
   chatAttachments: [],
+  deleteConversationStatus: DataStatus.IDLE,
+
 };
 
 const isConversation = (type: string) => {
@@ -259,7 +262,21 @@ const chatSlice = createSlice({
         (state, action: PayloadAction<any[]>) => {
           state.leftGroupStatus = DataStatus.SUCCEEDED;
         },
-      ),
+      )
+      // deleteConversation
+      .addCase(deleteConversation.pending, (state, action) => {
+        state.deleteConversationStatus = DataStatus.LOADING;
+      })
+      .addCase(
+        deleteConversation.fulfilled,
+        (state, action: PayloadAction<ChatGroup>) => {
+          state.deleteConversationStatus = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(deleteConversation.rejected, (state, action) => {
+        state.deleteConversationStatus = DataStatus.FAILED;
+      })
+      
 });
 
 export const {

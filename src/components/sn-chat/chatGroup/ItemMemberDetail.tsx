@@ -14,6 +14,7 @@ interface ItemMemberDetailProp {
   data?: any;
   callbackAddAdmin?: () => void;
   callbackRemove?: () => void;
+  onClick?: () => void;
 }
 
 const ItemMemberDetail = ({
@@ -21,6 +22,7 @@ const ItemMemberDetail = ({
   data,
   callbackAddAdmin,
   callbackRemove,
+  onClick,
 }: ItemMemberDetailProp) => {
   const commonT = useTranslations(NS_COMMON);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -47,6 +49,7 @@ const ItemMemberDetail = ({
           display: "flex",
           alignItems: "center",
         }}
+        onClick={onClick}
       >
         <Avatar
           alt="Avatar"

@@ -32,6 +32,8 @@ const ChatDetailGroup = (props) => {
     onFetchGroupMembersMember,
     onChangeGroupRole,
     onRemoveGroupMember,
+    onSetConversationInfo,
+    onDeleteConversationGroup,
   } = useChat();
   const { user } = useAuth();
   //check owner
@@ -103,18 +105,10 @@ const ChatDetailGroup = (props) => {
     });
   };
 
-  const handleConfirm = () => {
-    console.log({ showPopup });
-    if (showPopup.actionType === 1) {
-      onLeftGroup({
-        roomId: dataTransfer?._id,
-      });
-    } else {
-      // remove
-    }
-    setShowPopup(init);
-    onSetStep(STEP.CONVENTION);
-  };
+  const handleClickMember = (member) => {
+    onSetConversationInfo(member)
+    onSetStep(STEP.VIEW_DETAIL_USER);
+  }
 
   const _renderNewAdmin = () => {
     return (
@@ -280,6 +274,11 @@ const ChatDetailGroup = (props) => {
     switch (showPopup?.type) {
       case TYPE_POPUP.DELETE:
         //CALL API DELETE
+        onDeleteConversationGroup({
+          type: 'p',
+          roomId: dataTransfer?._id,
+        })
+        onSetStep(STEP.CONVENTION);
         break;
       case TYPE_POPUP.LEAVE_MEMBER:
         await left();
@@ -451,6 +450,9 @@ const ChatDetailGroup = (props) => {
               }}
               callbackRemove={() => {
                 handleManageMember("remove", member);
+              }}
+              onClick={()=>{
+                handleClickMember(member)
               }}
               admin
             />

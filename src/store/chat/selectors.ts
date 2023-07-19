@@ -11,6 +11,7 @@ import {
   fetchGroupMembers,
   removeUserFromGroup,
   getChatAttachments,
+  deleteConversation,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -29,6 +30,7 @@ import {
   FetchGroupMemberRequest,
   ChangeRoleRequest,
   ChatAttachmentsRequest,
+  DeleteConversationGroup,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -298,6 +300,21 @@ export const useChat = () => {
     dispatch(clearMessageList());
   };
 
+  const onDeleteConversationGroup = useCallback(
+    async (params: Omit<DeleteConversationGroup, "authToken" | "userId">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      return await dispatch(
+        deleteConversation({
+          authToken,
+          userId,
+          ...params,
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
   return {
     convention,
     conversationPaging,
@@ -349,5 +366,6 @@ export const useChat = () => {
     onClearMessageList,
     onGetUserInfo,
     onGetChatUrls,
+    onDeleteConversationGroup,
   };
 };

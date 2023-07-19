@@ -120,6 +120,7 @@ export interface ChatState {
   typeList: TYPE_LIST;
   groupMembers: any[];
   chatAttachments: any;
+  deleteConversationStatus: DataStatus;
 }
 
 export type DirectionChat = "a" | "c" | "d";
@@ -162,6 +163,11 @@ export interface FetchGroupMemberRequest extends AuthenRequestCommon {
 export interface RemoveGroupMemberRequest extends AuthenRequestCommon {
   roomId: string;
   userId_to_remove: string;
+}
+
+export interface DeleteConversationGroup extends AuthenRequestCommon {
+  roomId: string;
+  type: string;
 }
 
 export interface ChatAttachmentsRequest extends AuthenRequestCommon {
