@@ -380,14 +380,16 @@ const TrackingCalendar: React.FC<IProps> = () => {
           >
             {activeTab === "timeSheet" && (
               <CustomizedInputBase
-                value={filters.search_key}
-                placeholder={timeT("myTime.searchButton")}
-                onChange={(event) =>
-                  setFilters({ ...filters, search_key: event.target.value })
-                }
-                // onKeyUp={(event) =>
-                //   event.key === "Enter" && onGetMyTimeSheet(filters)
-                // }
+              value={filters.search_key}
+              placeholder = { timeT("myTime.searchButton") }
+              onChange={(event) => {
+                const searchKey = event.target.value;
+                setFilters({ ...filters, search_key: searchKey });
+                onGetMyTimeSheet({
+                  ...filters,
+                  search_key: searchKey,
+                });
+              }}
               />
             )}
           </Grid>
