@@ -5,7 +5,7 @@ import React from "react";
 import _ from "lodash";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
-import { Tab, Box, Typography, Stack, Grid } from "@mui/material";
+import { Tab, Box, Typography, Stack } from "@mui/material";
 import {
   TimelogTrackingCalendar,
   CompanyTimeTrackingCalendar,
@@ -13,8 +13,6 @@ import {
 } from "./CalendarTracking";
 import { TabPanel } from "@mui/lab";
 import useTheme from "hooks/useTheme";
-import useBreakpoint from "hooks/useBreakpoint";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useTranslations } from "next-intl";
 import { NS_TIME_TRACKING } from "constant/index";
 
@@ -47,13 +45,6 @@ const tabStyles = {
 
 const TimeTrackingPage: React.FC = () => {
   const { isDarkMode } = useTheme();
-  const { isSmSmaller } = useBreakpoint();
-  const tabStyles = {
-    width: isSmSmaller ? "auto" : "216px",
-    fontSize: "16px",
-    lineHeight: "20px",
-    fontWeight: 600,
-  };
   const [tab, setTab] = React.useState<string>("myTime");
   const timeT = useTranslations(NS_TIME_TRACKING);
 
@@ -64,90 +55,46 @@ const TimeTrackingPage: React.FC = () => {
   ];
 
   return (
-    <Stack>
-      <Grid
-        container
-        sx={{ display: isSmSmaller ? "block" : "none", padding: "10px" }}
-      >
-        <Grid
-          item
-          xs={12}
-          sx={{ display: "flex", alignItems: "center", gap: "5px" }}
-        >
-          <ChevronLeftIcon sx={{ width: "20px", height: "20px" }} />{" "}
-          <Typography
-            sx={{ fontWeight: 600, fontSize: "20px", lineHeight: "24px" }}
-          >
-            Time tracking
-          </Typography>
-        </Grid>
-      </Grid>
+    <Stack direction="column">
       <TabContext value={tab}>
-        {/* <Stack
+        <Stack
           direction="row"
-          
-        > */}
-        <Grid
-          container
           sx={{
-            backgroundColor: isSmSmaller
-              ? "inherit"
-              : isDarkMode
-              ? "#565656"
-              : "#F7F7FD",
-            // display: "flex",
-            height: isSmSmaller ? "110px" : "auto",
-            alignItems: "center",
-
-            //justifyContent: "space-between",
+            backgroundColor: isDarkMode ? "#565656" : "#FFFFFF",
+            justifyContent: "space-between",
           }}
         >
-          <Grid
-            item
-            md={6}
-            sm={12}
-            //sx={{ marginBottom: isSmSmaller ? "15px" : 0 }}
+          <TabList
+            sx={{
+              "& .MuiTabs-flexContainer": {
+                gap: "16px",
+              },
+              "& .MuiTab-root": {
+                textTransform: "unset",
+                fontSize: "16px",
+                lineHeight: "20px",
+                fontWeight: 600,
+                color: "rgba(153, 153, 153, 1)",
+                "&.active": {
+                  color: "#3699FF",
+                },
+              },
+            }}
+            onChange={(_event: React.SyntheticEvent, newValue: string) =>
+              setTab(newValue)
+            }
           >
-            <TabList
-              sx={{
-                "& .MuiTabs-flexContainer": {
-                  gap: "16px",
-                },
-                "& .MuiTab-root": {
-                  textTransform: "unset",
-                  fontSize: "16px",
-                  lineHeight: "20px",
-                  fontWeight: 600,
-                  color: "rgba(153, 153, 153, 1)",
-                  "&.active": {
-                    color: "#3699FF",
-                  },
-                },
-              }}
-              onChange={(_event: React.SyntheticEvent, newValue: string) =>
-                setTab(newValue)
-              }
-            >
-              {timeTabs.map((tab: ITab) => (
-                <Tab
-                  key={`tab-${tab.value}`}
-                  label={tab.label}
-                  value={tab.value}
-                  sx={tabStyles}
-                />
-              ))}
-            </TabList>
-          </Grid>
-          <Grid item md={6} sm={12} sx={{ padding: "15px" }}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                gap: 3,
-                //mr: 3,
-              }}
-            >
+            {timeTabs.map((tab: ITab, index: number) => (
+              <Tab
+                key={`tab-${tab.value}`}
+                label={timeTabLabels[index]}
+                value={tab.value}
+                sx={tabStyles}
+              />
+            ))}
+          </TabList>
+           {tab !== "timeLog" && (
+            <Box sx={{ display: "flex", gap: 3, mr: 3 }}>
               <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
                 <Box
                   sx={{
@@ -187,31 +134,21 @@ const TimeTrackingPage: React.FC = () => {
                 </Typography>
               </Box>
             </Box>
-          </Grid>
-        </Grid>
-
-        {/* </Stack> */}
-        <TabPanel
-          value="myTime"
-          sx={{ "& .MuiTabPanel-root": { paddingTop: "0px!important" } }}
-          classes={{ root: isSmSmaller ? "tab-panel-top-0" : "" }}
-        >
+          )}
+        </Stack>
+        <TabPanel value="myTime">
           <MyTimeTrackingCalendar
             events={[]}
             onClick={() => console.log("click")}
           />
         </TabPanel>
-        <TabPanel
-          value="companyTime"
-          sx={{ paddingTop: { sm: 0, md: "auto" } }}
-          classes={{ root: isSmSmaller ? "tab-panel-top-0" : "" }}
-        >
+        <TabPanel value="companyTime">
           <CompanyTimeTrackingCalendar
             events={[]}
             onClick={() => console.log("click")}
           />
         </TabPanel>
-        <TabPanel value="timeLog" sx={{ paddingTop: { sm: 0, md: "auto" } }}>
+        <TabPanel value="timeLog">
           <TimelogTrackingCalendar
             events={[]}
             onClick={() => console.log("click")}
