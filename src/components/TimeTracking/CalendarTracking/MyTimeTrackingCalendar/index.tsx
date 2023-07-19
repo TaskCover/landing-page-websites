@@ -757,10 +757,6 @@ const TrackingCalendar: React.FC<IProps> = () => {
                                     color: "primary.main",
                                   }}
                                 >
-                                  {timeT(
-                                    "myTime.calender_tab.same_time_worker",
-                                  )}
-                                  :
                                   {eventInfo?.event?.extendedProps.name}
                                 </Typography>
                               </Stack>
@@ -792,9 +788,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                                   >
                                     {timeT("myTime.calender_tab.same_time_worker")}:
                                   </Typography>
-                                  {sameTime[
-                                    `${eventInfo?.event?.extendedProps?.id}`
-                                  ]?.map((item, index) => {
+                                  {sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.map((item, index) => {
                                     return (
                                       <Box
                                         key={index}
@@ -879,9 +873,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                                   >
                                     {timeT("myTime.calender_tab.same_time_worker")}:
                                   </Typography>
-                                  {sameTime[
-                                    `${eventInfo?.event?.extendedProps?.id}`
-                                  ]?.map((item, index) => {
+                                  {sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.map((item, index) => {
                                     return (
                                       <Box
                                         key={index}
@@ -960,7 +952,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                                 transition: "all .3s ease-in-out",
                               }}
                             >
-                              {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
+                               {!_.isEmpty(sameTime) && sameTime[`${eventInfo?.event?.extendedProps?.id}`]?.length > 0 && (
                                 <>  
                                   <Typography
                                     sx={{
