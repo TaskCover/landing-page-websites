@@ -600,7 +600,7 @@ const projectSlice = createSlice({
               );
 
               if (indexTask !== -1) {
-                state.tasks[indexTaskList].tasks[indexTask].comments?.push(
+                state.tasks[indexTaskList].tasks[indexTask].comments?.unshift(
                   comment,
                 );
               }
@@ -608,7 +608,7 @@ const projectSlice = createSlice({
           }
 
           if (state?.task) {
-            state.task.comments?.push(comment);
+            state.task.comments?.unshift(comment);
           }
         },
       )
