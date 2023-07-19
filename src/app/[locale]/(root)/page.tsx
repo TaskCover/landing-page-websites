@@ -1,3 +1,4 @@
+import FixedLayout from "components/FixedLayout";
 import Wrapper from "components/Wrapper";
 import {
   Statistics,
@@ -12,9 +13,11 @@ export const metadata = {
 export default function Page() {
   return (
     <Wrapper overflow="auto" spacing={3} transparent>
-      <Statistics />
-      <ChartStatistics />
-      <Transactions />
+      <FixedLayout flex={1} spacing={3} bgcolor="transparent">
+        <Statistics />
+        <ChartStatistics />
+        <Transactions />
+      </FixedLayout>
     </Wrapper>
   );
 }

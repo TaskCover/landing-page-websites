@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { TableRow } from "@mui/material";
+import { Stack, TableRow } from "@mui/material";
 import { TableLayout, BodyCell, CellProps } from "components/Table";
 import { useProjects } from "store/project/selectors";
 import { DEFAULT_PAGING, NS_COMMON } from "constant/index";
@@ -23,6 +23,7 @@ import MobileContentCell from "./MobileContentCell";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
 import PencilUnderlineIcon from "icons/PencilUnderlineIcon";
+import FixedLayout from "components/FixedLayout";
 
 const ItemList = () => {
   const {
@@ -145,56 +146,57 @@ const ItemList = () => {
 
   return (
     <>
-      <TableLayout
-        headerList={headerList}
-        pending={isFetching}
-        error={error as string}
-        noData={!isIdle && totalItems === 0}
-        px={{ xs: 1, md: 3 }}
-      >
-        {items.map((item, index) => {
-          return (
-            <TableRow key={item.id}>
-              {isMdSmaller ? (
-                <MobileContentCell item={item} />
-              ) : (
-                <DesktopCells
-                  item={item}
-                  order={(pageIndex - 1) * pageSize + (index + 1)}
-                />
-              )}
-              <BodyCell align="left">
-                <IconButton
-                  onClick={onActionToItem(DataAction.UPDATE, item)}
-                  tooltip={commonT("edit")}
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    backgroundColor: isDarkMode ? "grey.50" : "primary.light",
-                    color: "text.primary",
-                    p: 1,
-                    "&:hover svg": {
-                      color: "common.white",
-                    },
-                  }}
-                >
-                  <PencilUnderlineIcon />
-                </IconButton>
-              </BodyCell>
-            </TableRow>
-          );
-        })}
-      </TableLayout>
-
-      <Pagination
-        totalItems={totalItems}
-        totalPages={totalPages}
-        page={pageIndex}
-        pageSize={pageSize}
-        containerProps={{ px: 3, py: 1 }}
-        onChangePage={onChangePage}
-        onChangeSize={onChangeSize}
-      />
+      <FixedLayout>
+        <TableLayout
+          headerList={headerList}
+          pending={isFetching}
+          error={error as string}
+          noData={!isIdle && totalItems === 0}
+          px={{ xs: 1, md: 3 }}
+        >
+          {items.map((item, index) => {
+            return (
+              <TableRow key={item.id}>
+                {isMdSmaller ? (
+                  <MobileContentCell item={item} />
+                ) : (
+                  <DesktopCells
+                    item={item}
+                    order={(pageIndex - 1) * pageSize + (index + 1)}
+                  />
+                )}
+                <BodyCell align="left">
+                  <IconButton
+                    onClick={onActionToItem(DataAction.UPDATE, item)}
+                    tooltip={commonT("edit")}
+                    variant="contained"
+                    size="small"
+                    sx={{
+                      backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+                      color: "text.primary",
+                      p: 1,
+                      "&:hover svg": {
+                        color: "common.white",
+                      },
+                    }}
+                  >
+                    <PencilUnderlineIcon />
+                  </IconButton>
+                </BodyCell>
+              </TableRow>
+            );
+          })}
+        </TableLayout>
+        <Pagination
+          totalItems={totalItems}
+          totalPages={totalPages}
+          page={pageIndex}
+          pageSize={pageSize}
+          containerProps={{ px: 3, py: 1 }}
+          onChangePage={onChangePage}
+          onChangeSize={onChangeSize}
+        />
+      </FixedLayout>
 
       {action === DataAction.UPDATE && (
         <Form

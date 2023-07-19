@@ -17,6 +17,7 @@ import { useTranslations } from "next-intl";
 import useBreakpoint from "hooks/useBreakpoint";
 import ArrowTriangleIcon from "icons/ArrowTriangleIcon";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
+import FixedLayout from "components/FixedLayout";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -31,9 +32,11 @@ const InformationProjectPage = () => {
 
   return (
     <StatusServer isFetching={isFetching} error={error} noData={!item}>
-      <Stack p={{ xs: 1, sm: 3 }} spacing={3}>
-        {isSmSmaller ? <MobileInformation /> : <DesktopInformation />}
-      </Stack>
+      <FixedLayout flex={1}>
+        <Stack p={{ xs: 1, sm: 3 }} spacing={3}>
+          {isSmSmaller ? <MobileInformation /> : <DesktopInformation />}
+        </Stack>
+      </FixedLayout>
     </StatusServer>
   );
 };

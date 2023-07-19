@@ -14,6 +14,7 @@ import MobileContentCell from "./MobileContentCell";
 import DesktopCells from "./DesktopCells";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import FixedLayout from "components/FixedLayout";
 
 const ItemList = () => {
   const {
@@ -89,38 +90,40 @@ const ItemList = () => {
 
   return (
     <>
-      <TableLayout
-        headerList={headerList}
-        pending={isFetching}
-        error={error as string}
-        noData={!isIdle && totalItems === 0}
-        px={{ xs: 1, md: 3 }}
-      >
-        {items.map((item, index) => {
-          return (
-            <TableRow key={item.id}>
-              {isMdSmaller ? (
-                <MobileContentCell item={item} />
-              ) : (
-                <DesktopCells
-                  item={item}
-                  order={(pageIndex - 1) * pageSize + (index + 1)}
-                />
-              )}
-            </TableRow>
-          );
-        })}
-      </TableLayout>
+      <FixedLayout>
+        <TableLayout
+          headerList={headerList}
+          pending={isFetching}
+          error={error as string}
+          noData={!isIdle && totalItems === 0}
+          px={{ xs: 1, md: 3 }}
+        >
+          {items.map((item, index) => {
+            return (
+              <TableRow key={item.id}>
+                {isMdSmaller ? (
+                  <MobileContentCell item={item} />
+                ) : (
+                  <DesktopCells
+                    item={item}
+                    order={(pageIndex - 1) * pageSize + (index + 1)}
+                  />
+                )}
+              </TableRow>
+            );
+          })}
+        </TableLayout>
 
-      <Pagination
-        totalItems={totalItems}
-        totalPages={totalPages}
-        page={pageIndex}
-        pageSize={pageSize}
-        containerProps={{ px: 3, py: 1 }}
-        onChangePage={onChangePage}
-        onChangeSize={onChangeSize}
-      />
+        <Pagination
+          totalItems={totalItems}
+          totalPages={totalPages}
+          page={pageIndex}
+          pageSize={pageSize}
+          containerProps={{ px: 3, py: 1 }}
+          onChangePage={onChangePage}
+          onChangeSize={onChangeSize}
+        />
+      </FixedLayout>
     </>
   );
 };

@@ -17,6 +17,7 @@ import { DEFAULT_PAGING, NS_COMMON, NS_COMPANY } from "constant/index";
 import { usePathname, useRouter } from "next-intl/client";
 import Pagination from "components/Pagination";
 import { useTranslations } from "next-intl";
+import FixedLayout from "components/FixedLayout";
 
 const ItemList = () => {
   const {
@@ -119,42 +120,45 @@ const ItemList = () => {
 
   return (
     <>
-      <TableLayout
-        headerList={headerList}
-        pending={isFetching}
-        error={error as string}
-        noData={!isIdle && items.length === 0}
-        px={{ xs: 0, md: 3 }}
-      >
-        {items.map((item, index) => {
-          return (
-            <TableRow key={item.id}>
-              {isMdSmaller ? (
-                <MobileContentCell item={item} />
-              ) : (
-                <DesktopCells
-                  item={item}
-                  order={(pageIndex - 1) * pageSize + (index + 1)}
+      <FixedLayout>
+        <TableLayout
+          headerList={headerList}
+          pending={isFetching}
+          error={error as string}
+          noData={!isIdle && items.length === 0}
+          px={{ xs: 0, md: 3 }}
+        >
+          {items.map((item, index) => {
+            return (
+              <TableRow key={item.id}>
+                {isMdSmaller ? (
+                  <MobileContentCell item={item} />
+                ) : (
+                  <DesktopCells
+                    item={item}
+                    order={(pageIndex - 1) * pageSize + (index + 1)}
+                  />
+                )}
+                <ActionsCell
+                  onEdit={onActionToItem(DataAction.UPDATE, item)}
+                  onDelete={onDelete(item.id)}
                 />
-              )}
-              <ActionsCell
-                onEdit={onActionToItem(DataAction.UPDATE, item)}
-                onDelete={onDelete(item.id)}
-              />
-            </TableRow>
-          );
-        })}
-      </TableLayout>
+              </TableRow>
+            );
+          })}
+        </TableLayout>
 
-      <Pagination
-        totalItems={totalItems}
-        totalPages={totalPages}
-        page={pageIndex}
-        pageSize={pageSize}
-        containerProps={{ px: 3, py: 1 }}
-        onChangePage={onChangePage}
-        onChangeSize={onChangeSize}
-      />
+        <Pagination
+          totalItems={totalItems}
+          totalPages={totalPages}
+          page={pageIndex}
+          pageSize={pageSize}
+          containerProps={{ px: 3, py: 1 }}
+          onChangePage={onChangePage}
+          onChangeSize={onChangeSize}
+        />
+      </FixedLayout>
+
       {action === DataAction.UPDATE && (
         <Form
           open

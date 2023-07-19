@@ -12,6 +12,7 @@ import Pagination from "components/Pagination";
 import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
 import { useTranslations } from "next-intl";
+import FixedLayout from "components/FixedLayout";
 
 const CostHistoryPage = () => {
   const {
@@ -55,25 +56,27 @@ const CostHistoryPage = () => {
   }, [initQuery, isIdle, isReady, onGetCostHistory]);
 
   return (
-    <Stack p={{ xs: 1, sm: 3 }} spacing={2}>
-      <Text variant="h5">{companyT("costHistory.title")}</Text>
-      <StatusServer isFetching={isFetching} error={error}>
-        <Stack width="100%">
-          {items.map((item) => (
-            <Item key={item.id} {...item} />
-          ))}
-        </Stack>
+    <FixedLayout flex={1}>
+      <Stack p={{ xs: 1, sm: 3 }} spacing={2}>
+        <Text variant="h5">{companyT("costHistory.title")}</Text>
+        <StatusServer isFetching={isFetching} error={error}>
+          <Stack width="100%">
+            {items.map((item) => (
+              <Item key={item.id} {...item} />
+            ))}
+          </Stack>
 
-        <Pagination
-          totalItems={totalItems}
-          totalPages={totalPages}
-          page={pageIndex}
-          pageSize={pageSize}
-          onChangePage={onChangePage}
-          onChangeSize={onChangeSize}
-        />
-      </StatusServer>
-    </Stack>
+          <Pagination
+            totalItems={totalItems}
+            totalPages={totalPages}
+            page={pageIndex}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangeSize={onChangeSize}
+          />
+        </StatusServer>
+      </Stack>
+    </FixedLayout>
   );
 };
 
