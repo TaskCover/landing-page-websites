@@ -112,7 +112,7 @@ const ItemList = () => {
   );
 
   const baseTop = useMemo(
-    () => (selectedList.length ? 44 : 0),
+    () => (selectedList.length ? 60 : 16),
     [selectedList.length],
   );
 
@@ -596,28 +596,35 @@ const ItemList = () => {
   }, [initQuery, isReady, onGetTasksOfProject, projectId]);
 
   return (
-    <Stack flex={1} pb={3}>
+    <Stack flex={1}>
       {!!selectedList.length && (
         <ActionsSelected
           selectedList={selectedList}
           onReset={onResetSelected}
         />
       )}
-      <FixedLayout>
+      <Stack
+        position="sticky"
+        top={baseTop + 44}
+        zIndex={1}
+        display={{ xs: "none", md: "flex" }}
+        bgcolor="background.default"
+      >
         <TableLayout
           onLayout={onLayout}
           headerList={headerList}
           flex="unset"
           error={error as string}
           noData={!isIdle && totalItems === 0}
-          display={{ xs: "none", md: "flex" }}
-          position="sticky"
-          top={0}
-          zIndex={1}
+          maxWidth={1349}
+          mx="auto"
+          width="100%"
         >
           <></>
         </TableLayout>
+      </Stack>
 
+      <FixedLayout flex={1}>
         <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
           {dataList.map((taskListItem, indexTaskList) => {
             const isChecked = selectedList.some(
@@ -932,6 +939,7 @@ const Description = (props: BoxProps) => {
         width: "100%",
         whiteSpace: "nowrap",
         maxHeight: 34,
+        py: 1,
         "& > p": {
           m: 0,
         },
@@ -966,14 +974,4 @@ const getArrayTagsHtmlString = (str) => {
     (child) => child.outerHTML || child.textContent,
   );
   return arr;
-};
-
-const getChild = (children: string, isOverflow: boolean) => {
-  if (!isOverflow) return children;
-  const rawFirst = getArrayTagsHtmlString(children)?.[0] as string | undefined;
-  if (!rawFirst) return children;
-
-  const first = rawFirst[0] + rawFirst.slice(1).replace("<", "...<");
-
-  return children.replace(rawFirst, first);
 };
