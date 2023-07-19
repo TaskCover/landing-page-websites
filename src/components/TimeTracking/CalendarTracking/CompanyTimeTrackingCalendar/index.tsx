@@ -316,7 +316,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
 
   const _renderHeader = () => {
     return (
-    <Grid container spacing = { 2} sx = {{ mt: isSmSmaller ? 0 : 1 }}>
+    <Grid container rowSpacing={1} sx = {{ mt: 0, mb: 1 }}>  
         <Grid item md={3} sm={12}>
         </Grid>
         <Grid item md={6} sm={12}
@@ -388,7 +388,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           >
             <Typography
               sx={{
-                fontSize: "14px",
+                fontSize: "13px",
                 fontWeight: 600,
                 lineHeight: "18px",
                 color: "#666666",
@@ -434,11 +434,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
               }}
               onClick={() => onAction("week", "today")}
               disabled={
-                dayjs(currentDate).format("YYYY-MM-DD") ===
-                dayjs().format("YYYY-MM-DD")
+                dayjs(currentDate).format("YYYY-MM-DD") === dayjs().format("YYYY-MM-DD")
               }
             >
-              This week
+                This week
             </Button>
             <Button
               sx={{
