@@ -22,6 +22,7 @@ import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import { useAuth } from "store/app/selectors";
 import { Permission } from "constant/enums";
+import ChatListTemp from "components/sn-chat/ChatListTemp";
 
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -99,6 +100,7 @@ const MainLayout = (props: MainLayoutProps) => {
         </Stack>
       </Stack>
       <Snackbar />
+      <ChatListTemp />
     </>
   );
 };
