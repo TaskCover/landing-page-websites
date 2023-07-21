@@ -32,6 +32,7 @@ interface IProps {
   onClose(): void;
   filters?: any;
   currentScreen: "myTime" | "companyTime";
+  dateClick?: string;
 }
 
 interface IOptionStructure {
@@ -46,6 +47,7 @@ const TimeCreate: React.FC<IProps> = ({
   currentScreen,
   isEdit,
   selectedEvent,
+  dateClick,
 }) => {
   const { items: projects, onGetProjects } = useProjects();
   const { items: positions, onGetPositions } = usePositions();
@@ -117,6 +119,15 @@ const TimeCreate: React.FC<IProps> = ({
     }
   }, [userData]);
 
+  // useEffect(() => {
+  //   if (dateClick) {
+
+  //     console.log(date, time)
+  //    setValue('day', date);
+  //    setValue('start_time', time);
+  //   }
+  // }, [dateClick]);
+
   useEffect(() => {
     if (isEdit) {
       const validResetData = {
@@ -130,9 +141,19 @@ const TimeCreate: React.FC<IProps> = ({
       };
       reset(validResetData);
     } else {
-      reset({});
+      if (dateClick) {
+        const date = dayjs(dateClick).format("YYYY/MM/DD") || "";
+        const time = dateClick;
+
+        reset({
+          day: date,
+          start_time: time,
+        });
+      } else {
+        reset({});
+      }
     }
-  }, [isEdit, open]);
+  }, [isEdit, open, dateClick]);
 
   useEffect(() => {
     if (!_.isEmpty(projects)) {
