@@ -42,7 +42,7 @@ import CustomizedInputBase from "components/shared/InputSeasrch";
 import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import TimeCreate from "../../TimeTrackingModal/TimeCreate";
 import moment from "moment";
-
+import interactionPlugin from '@fullcalendar/interaction';
 import { useAuth } from "store/app/selectors";
 import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -177,6 +177,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
   const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs | Date>(
     dayjs(),
   );
+
+  const [dateClick, setDateClick] = React.useState<string>(
+   ''
+  );
+
   const [dateRange, setDateRange] = React.useState<any[]>([]);
   const [totalTime, setTotalTime] = React.useState({
     work: 0,
@@ -619,11 +624,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
       onClose={() => {
         setIsOpenCreatePopup(false);
         setIsEdit(false);
+        setDateClick('');
       }}
       filters={filters}
       currentScreen="myTime"
       isEdit={isEdit}
       selectedEvent={selectedEvent}
+      dateClick={dateClick}
     />
   );
 
@@ -667,8 +674,15 @@ const TrackingCalendar: React.FC<IProps> = () => {
             <Box sx={{ height: "100%" }}>
               <FullCalendar
                 ref={calendarRef}
+                scrollTime="00:00:00"
+                scrollTimeReset={true}
                 height={`calc(100vh - 365px)`}
-                plugins={[dayGridPlugin, timeGridPlugin]}
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                dateClick={(info) => {
+                 
+                  setDateClick(info.dateStr);
+                  setIsOpenCreatePopup(true)
+                }}
                 initialView={"timeGridWeek"}
                 //weekends={true}
                 headerToolbar={false}
