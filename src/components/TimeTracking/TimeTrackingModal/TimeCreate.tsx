@@ -32,6 +32,7 @@ interface IProps {
   onClose(): void;
   filters?: any;
   currentScreen: "myTime" | "companyTime";
+  dateClick?: string;
 }
 
 interface IOptionStructure {
@@ -46,6 +47,7 @@ const TimeCreate: React.FC<IProps> = ({
   currentScreen,
   isEdit,
   selectedEvent,
+  dateClick,
 }) => {
   const { items: projects, onGetProjects } = useProjects();
   const { items: positions, onGetPositions } = usePositions();
@@ -117,6 +119,15 @@ const TimeCreate: React.FC<IProps> = ({
     }
   }, [userData]);
 
+  // useEffect(() => {
+  //   if (dateClick) {
+
+  //     console.log(date, time)
+  //    setValue('day', date);
+  //    setValue('start_time', time);
+  //   }
+  // }, [dateClick]);
+
   useEffect(() => {
     if (isEdit) {
       const validResetData = {
@@ -130,9 +141,19 @@ const TimeCreate: React.FC<IProps> = ({
       };
       reset(validResetData);
     } else {
-      reset({});
+      if (dateClick) {
+        const date = dayjs(dateClick).format("YYYY/MM/DD") || "";
+        const time = dateClick;
+
+        reset({
+          day: date,
+          start_time: time,
+        });
+      } else {
+        reset({});
+      }
     }
-  }, [isEdit, open]);
+  }, [isEdit, open, dateClick]);
 
   useEffect(() => {
     if (!_.isEmpty(projects)) {
@@ -322,6 +343,7 @@ const TimeCreate: React.FC<IProps> = ({
             render={({ field: { onChange, value } }) => (
               <NumberInput
                 label="Time Duration (hour)"
+                required
                 sx={{ flex: 1 }}
                 error={Boolean(errors?.duration?.message)}
                 helperText={errors?.duration?.message}
@@ -380,12 +402,11 @@ const TimeCreate: React.FC<IProps> = ({
                   .then(() => {
                     onAddSnackbar("Delete timesheet success", "success");
                     onClose();
-                    onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
+                    onGetMyTimeSheet({ ...params });
                   })
                   .catch((err) => {
-                    onAddSnackbar("Delete timesheet success", "success");
+                    onAddSnackbar("Delete timesheet failed", "error");
                     onClose();
-                    onGetMyTimeSheet(DEFAULT_RANGE_ACTIVITIES);
                   });
               }}
             >
@@ -402,7 +423,11 @@ const TimeCreate: React.FC<IProps> = ({
       content={_renderMain()}
       open={open}
       onClose={onClose}
-      sx={{ width: "500px" }}
+      sx={{
+        width: "500px",
+        maxHeight: "100vh",
+        overflow: "hidden",
+      }}
     />
   );
 };

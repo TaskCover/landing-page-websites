@@ -21,12 +21,10 @@ import Filter from "../../Component/Filter";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import { TimeTrackingActions } from "@/Actions";
-// import { useTypedDispatch, RootState } from "@/store";
+
 import { ENUMS } from "../../Component/Constants";
 import CustomizedInputBase from "components/shared/InputSeasrch";
 import { useGetMyTimeSheet } from "store/timeTracking/selectors";
-import MobileDatePickerComponent from "components/TimeTracking/Component/MobileDatePicker";
 import { WorkLogItem } from "store/timeTracking/reducer";
 import useTheme from "hooks/useTheme";
 import { useRouter } from "next/navigation";
@@ -50,29 +48,6 @@ interface IProps {
   onClick(action: "create" | "edit", item?: any): void;
 }
 
-// const headerStyles = {
-//   display: 'flex',
-//   alignItems: 'center',
-//   flexDirection: 'row',
-//   fontSize: '14px',
-//   fontWeight: 600,
-//   lineHeight: '18px',
-//   color: '#999999',
-//   height: '62px',
-//   padding: '12px 16px',
-// };
-
-// const bodyStyles = {
-//   display: 'flex',
-//   alignItems: 'center',
-//   flexDirection: 'row',
-//   fontSize: '14px',
-//   fontWeight: 400,
-//   color: '#212121',
-//   lineHeight: '22px',
-//   height: '49px',
-//   padding: '12px 16px',
-// };
 
 interface ITimeLogStructure {
   id: string;
@@ -237,7 +212,8 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <MobileDatePicker
-              open={isOpen}
+              open={ isOpen }
+              disableFuture
               onOpen={() => setIsOpen(true)}
               onClose={() => setIsOpen(false)}
               onChange={(date: any) => {
@@ -346,3 +322,4 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
 };
 
 export default TimelogTrackingCalendar;
+

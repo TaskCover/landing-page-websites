@@ -67,6 +67,18 @@ export const NS_MANAGER = "manager";
 export const NS_TIME_TRACKING = "timeTracking";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
+export const FILE_ACCEPT = [
+  "application/zip",
+  "application/vnd.ms-powerpoint",
+  "text/csv",
+  "application/java-archive",
+  "application/pdf",
+  "application/vnd.ms-excel",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+];
 
 export const ACCESS_TOKEN_STORAGE_KEY = "aT";
 export const REFRESH_TOKEN_STORAGE_KEY = "rT";

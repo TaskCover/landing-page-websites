@@ -35,6 +35,7 @@ export type TimeTrackingDictionary = {
     };
   };
   company_time: {
+    this_week: string;
     timesheet: string;
     timesheet_tab: {
       weekly_summary: string;

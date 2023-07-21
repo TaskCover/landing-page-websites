@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useState, useEffect, useRef, use, useMemo } from "react";
-import { Stack } from "@mui/material";
+import { Stack, Theme, selectClasses } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import {
@@ -124,6 +124,7 @@ const Actions = () => {
         spacing={{ xs: 1, md: 3 }}
         px={{ xs: 1, md: 2, xl: 3 }}
         py={{ xs: 0.75 }}
+        mt={{ sm: 1.25, md: 0 }}
       >
         {/* <Button
           onClick={onShow}
@@ -142,19 +143,28 @@ const Actions = () => {
           spacing={{ xs: 2, sm: 0 }}
           width={{ xs: "100%", sm: "fit-content" }}
         >
-          <Stack direction="row" alignItems="center" spacing={0.5} flex={1}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={0.5}
+            flex={1}
+            width="50%"
+          >
             {!!prevPath && (
               <Link
                 href={prevPath}
-                sx={{ height: 24, display: { sm: "none" } }}
+                sx={{ height: isMdSmaller ? 16 : 24, display: { sm: "none" } }}
               >
                 <ChevronIcon
-                  sx={{ color: "text.primary", transform: "rotate(90deg)" }}
-                  fontSize="medium"
+                  sx={{
+                    color: "text.primary",
+                    transform: "rotate(90deg)",
+                  }}
+                  fontSize={isMdSmaller ? "small" : "medium"}
                 />
               </Link>
             )}
-            <Text variant="h4" display={{ sm: "none" }} noWrap>
+            <Text variant={{ xs: "body2", md: "h4" }} display={{ sm: "none" }}>
               {title ?? ""}
             </Text>
           </Stack>
@@ -174,98 +184,82 @@ const Actions = () => {
           direction="row"
           alignItems="center"
           spacing={{ xs: 1, md: 1.5, xl: 3 }}
-          px={{ sm: 2 }}
           width={{ xs: "100%", md: "fit-content" }}
           justifyContent="flex-end"
           flexWrap="wrap"
           rowGap={2}
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{ xs: 1.5, md: 3 }}
-          >
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={{ xs: 1.5, md: 3 }}
-            >
-              <Search
-                placeholder={commonT("searchBy", {
-                  name: projectT("detailTasks.key"),
-                })}
-                name="tasks.name"
-                onChange={onChangeQueries}
-                value={queries?.["tasks.name"]}
-                sx={{
-                  width: { xs: 180, xl: 220 },
-                  minWidth: { xs: 180, xl: 220 },
-                }}
-              />
-              <AssignerFilter
-                onChange={onChangeQueries}
-                value={queries?.["tasks.owner"]}
-                hasAvatar
-                sx={{ display: { xs: "none", md: "initial" } }}
-                rootSx={{
-                  "& >svg": { fontSize: 16 },
-                }}
-              />
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={{ xs: 1.5, md: 3 }}
-            >
-              <Date
-                label={commonT("form.title.startDate")}
-                name="tasks.start_date"
-                onChange={onChangeQueries}
-                value={queries?.["tasks.start_date"]}
-                format={DATE_FORMAT_HYPHEN}
-                iconProps={{
-                  sx: { fontSize: 16 },
-                }}
-              />
-              <Dropdown
-                placeholder={commonT("status")}
-                options={statusOptions}
-                name="tasks.status"
-                onChange={onChangeQueries}
-                value={queries?.["tasks.status"]}
-                rootSx={{
-                  "& >svg": { fontSize: 16 },
-                }}
-              />
-            </Stack>
-          </Stack>
+          <Search
+            placeholder={commonT("searchBy", {
+              name: projectT("detailTasks.key"),
+            })}
+            name="tasks.name"
+            onChange={onChangeQueries}
+            value={queries?.["tasks.name"]}
+            sx={{
+              width: { xs: 160, xlg: 220 },
+              minWidth: { xs: 160, xlg: 220 },
+            }}
+          />
+          <AssignerFilter
+            onChange={onChangeQueries}
+            value={queries?.["tasks.owner"]}
+            hasAvatar
+            sx={{ display: { xs: "none", md: "initial" } }}
+            rootSx={{
+              "& >svg": { fontSize: 16 },
+              px: "0px!important",
+              [`& .${selectClasses.outlined}`]: {
+                pr: "0!important",
+                mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                  `${spacing(4)}!important`,
+                "& .sub": {
+                  display: "none",
+                },
+              },
+            }}
+          />
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{ xs: 1.5, sm: 3 }}
-          >
-            <AssignerFilter
-              onChange={onChangeQueries}
-              value={queries?.["tasks.owner"]}
-              hasAvatar
-              sx={{ display: { md: "none" } }}
-              rootSx={{
-                "& >svg": { fontSize: 16 },
-              }}
-            />
+          <Date
+            label={commonT("form.title.startDate")}
+            name="tasks.start_date"
+            onChange={onChangeQueries}
+            value={queries?.["tasks.start_date"]}
+            format={DATE_FORMAT_HYPHEN}
+            iconProps={{
+              sx: { fontSize: 16 },
+            }}
+          />
+          <Dropdown
+            placeholder={commonT("status")}
+            options={statusOptions}
+            name="tasks.status"
+            onChange={onChangeQueries}
+            value={queries?.["tasks.status"]}
+            rootSx={{
+              "& >svg": { fontSize: 16 },
+              px: "0px!important",
+              [`& .${selectClasses.outlined}`]: {
+                pr: "0!important",
+                mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                  `${spacing(4)}!important`,
+                "& .sub": {
+                  display: "none",
+                },
+              },
+            }}
+          />
 
-            <Button
-              size="extraSmall"
-              sx={{ height: 32 }}
-              onClick={onSearch}
-              variant="secondary"
-            >
-              {commonT("search")}
-            </Button>
-            {/* <Refresh onClick={onRefresh} />
+          <Button
+            size="extraSmall"
+            sx={{ height: 32 }}
+            onClick={onSearch}
+            variant="secondary"
+          >
+            {commonT("search")}
+          </Button>
+          {/* <Refresh onClick={onRefresh} />
             {!!Object.keys(queries).length && <Clear onClick={onClear} />} */}
-          </Stack>
         </Stack>
       </Stack>
       {isShow && (

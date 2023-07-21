@@ -13,6 +13,8 @@ import {
 } from "./CalendarTracking";
 import { TabPanel } from "@mui/lab";
 import useTheme from "hooks/useTheme";
+import { useTranslations } from "next-intl";
+import { NS_TIME_TRACKING } from "constant/index";
 
 interface ITab {
   label: string;
@@ -29,7 +31,7 @@ const timeTabs: ITab[] = [
     value: "companyTime",
   },
   {
-    label: "Time log",
+    label: "Work log",
     value: "timeLog",
   },
 ];
@@ -41,9 +43,16 @@ const tabStyles = {
   fontWeight: 600,
 };
 
-const TimeLog: React.FC = () => {
+const TimeTrackingPage: React.FC = () => {
   const { isDarkMode } = useTheme();
   const [tab, setTab] = React.useState<string>("myTime");
+  const timeT = useTranslations(NS_TIME_TRACKING);
+
+  const timeTabLabels = [
+    timeT("header.tab.myTime"),
+    timeT("header.tab.companyTime"),
+    timeT("header.tab.workLog"),
+  ];
 
   return (
     <Stack direction="column">
@@ -51,7 +60,7 @@ const TimeLog: React.FC = () => {
         <Stack
           direction="row"
           sx={{
-            backgroundColor: isDarkMode ? "#565656" : "#F7F7FD",
+            backgroundColor: isDarkMode ? "#565656" : "#FFFFFF",
             justifyContent: "space-between",
           }}
         >
@@ -75,55 +84,57 @@ const TimeLog: React.FC = () => {
               setTab(newValue)
             }
           >
-            {timeTabs.map((tab: ITab) => (
+            {timeTabs.map((tab: ITab, index: number) => (
               <Tab
                 key={`tab-${tab.value}`}
-                label={tab.label}
+                label={timeTabLabels[index]}
                 value={tab.value}
                 sx={tabStyles}
               />
             ))}
           </TabList>
-          <Box sx={{ display: "flex", gap: 3, mr: 3 }}>
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-              <Box
-                sx={{
-                  width: "8px",
-                  height: "8px",
-                  background: "#3699FF",
-                }}
-              />
-              <Typography
-                sx={{
-                  fontSize: "16px",
-                  lineHeight: "20px",
-                  fontWeight: 600,
-                  color: "#999999",
-                }}
-              >
-                Work time
-              </Typography>
+           {tab !== "timeLog" && (
+            <Box sx={{ display: "flex", gap: 3, mr: 3 }}>
+              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: "8px",
+                    height: "8px",
+                    background: "#3699FF",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontSize: "16px",
+                    lineHeight: "20px",
+                    fontWeight: 600,
+                    color: "#999999",
+                  }}
+                >
+                  {timeT("header.tab.workTime")}
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: "8px",
+                    height: "8px",
+                    background: "#F64E60",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontSize: "16px",
+                    lineHeight: "20px",
+                    fontWeight: 600,
+                    color: "#999999",
+                  }}
+                >
+                 {timeT("header.tab.breakTime")}
+                </Typography>
+              </Box>
             </Box>
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-              <Box
-                sx={{
-                  width: "8px",
-                  height: "8px",
-                  background: "#F64E60",
-                }}
-              />
-              <Typography
-                sx={{
-                  fontSize: "16px",
-                  lineHeight: "20px",
-                  fontWeight: 600,
-                  color: "#999999",
-                }}
-              >
-                Break time
-              </Typography>
-            </Box>
-          </Box>
+          )}
         </Stack>
         <TabPanel value="myTime">
           <MyTimeTrackingCalendar
@@ -144,9 +155,8 @@ const TimeLog: React.FC = () => {
           />
         </TabPanel>
       </TabContext>
-      {/* <Stack sx={{ padding: '16px' }}></Stack> */}
     </Stack>
   );
 };
 
-export default TimeLog;
+export default TimeTrackingPage;

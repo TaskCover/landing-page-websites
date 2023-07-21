@@ -11,13 +11,14 @@ import {
   useState,
 } from "react";
 import "react-quill/dist/quill.snow.css";
-import { IMAGES_ACCEPT } from "constant/index";
+import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import ImageImportIcon from "icons/ImageImportIcon";
 import ImojiImportIcon from "icons/ImojiImportIcon";
+import UploadFileIcon from "icons/UploadFileIcon";
 
 export type EditorProps = {
   hasAttachment?: boolean;
@@ -199,13 +200,23 @@ const ChatEditor = (props: EditorProps) => {
               inputFileRef?.current?.click();
             }}
           />
+          {/* <UploadFileIcon
+            sx={{
+              fill: "transparent",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              inputFileRef?.current?.click();
+            }}
+          /> */}
         </Box>
       </Box>
       <Stack
         direction="row"
         flex={1}
-        flexWrap="wrap"
-        display={urlFiles?.length > 0 ? "block" : "none"}
+        flexWrap="nowrap"
+        overflow="auto"
+        display={urlFiles?.length > 0 ? "flex" : "none"}
         p={noCss ? 0 : 1}
         sx={
           noCss

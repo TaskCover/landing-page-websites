@@ -59,3 +59,9 @@ export interface AttachmentFields {
   title?: string;
   value?: string;
 }
+
+export interface FileUploadResponse {
+  download: string;
+  object: string;
+  upload: string;
+}

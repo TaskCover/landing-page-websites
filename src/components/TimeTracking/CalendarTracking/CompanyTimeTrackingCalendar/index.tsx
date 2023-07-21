@@ -40,6 +40,7 @@ import CustomizedInputBase from "components/shared/InputSeasrch";
 import useTheme from "hooks/useTheme";
 import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import useBreakpoint from "hooks/useBreakpoint";
 interface IProps {
   events: any[];
   onClick(action: "create" | "edit", item?: any): void;
@@ -110,7 +111,7 @@ const StyledDay = styled(Box)(() => ({
 const TrackingCalendar: React.FC<IProps> = () => {
   const isGetLoading: any = false;
   const timeT = useTranslations(NS_TIME_TRACKING);
-
+  const { isSmSmaller } = useBreakpoint();
   const { isDarkMode } = useTheme();
   const { companyItems: company, onGetCompanyTimeSheet } = useGetMyTimeSheet();
 
@@ -259,33 +260,55 @@ const TrackingCalendar: React.FC<IProps> = () => {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          sx={{ my: "16px" }}
+          sx={{ mb: isSmSmaller ? "0px" : "16px" }}
         >
-          <Stack direction="row" alignItems="center" sx={{ gap: "16px" }}>
-            <ButtonCalendar
-              icon={<ListIcon />}
-              isActive={activeTab === "timeSheet"}
-              title={timeT("company_time.timesheet")}
-              onClick={() => setActiveTab("timeSheet")}
-            />
-            <ButtonCalendar
-              icon={<ListIcon />}
-              isActive={activeTab === "table"}
-              title={timeT("company_time.table")}
-              onClick={() => setActiveTab("table")}
-            />
-          </Stack>
-          {activeTab === "timeSheet" && (
-            <CustomizedInputBase
-              value={filters.search_key}
-              placeholder="Search Employee"
-              onChange={(event) => {
-                const searchKey = event.target.value;
-                setFilters({ ...filters, search_key: searchKey });
-                onGetCompanyTimeSheet({ ...filters, search_key: searchKey });
+          <Grid
+            container
+            rowSpacing={1}
+            sx={{ mb: isSmSmaller ? "16px" : "0" }}
+          >
+            <Grid item md={6} sm={12}>
+              <Stack direction="row" alignItems="center" sx={{ gap: "16px" }}>
+                <ButtonCalendar
+                  icon={<ListIcon />}
+                  isActive={activeTab === "timeSheet"}
+                  title={timeT("company_time.timesheet")}
+                  onClick={() => setActiveTab("timeSheet")}
+                />
+                <ButtonCalendar
+                  icon={<ListIcon />}
+                  isActive={activeTab === "table"}
+                  title={timeT("company_time.table")}
+                  onClick={() => setActiveTab("table")}
+                />
+              </Stack>
+            </Grid>
+            <Grid
+              item
+              md={6}
+              sm={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
               }}
-            />
-          )}
+            >
+              {activeTab === "timeSheet" && (
+                <CustomizedInputBase
+                  value={filters.search_key}
+                  placeholder="Search Employee"
+                  onChange={(event) => {
+                    const searchKey = event.target.value;
+                    setFilters({ ...filters, search_key: searchKey });
+                    onGetCompanyTimeSheet({
+                      ...filters,
+                      search_key: searchKey,
+                    });
+                  }}
+                />
+              )}
+            </Grid>
+          </Grid>
         </Stack>
       </>
     );
@@ -293,14 +316,14 @@ const TrackingCalendar: React.FC<IProps> = () => {
 
   const _renderHeader = () => {
     return (
-      <Grid container spacing={2}>
-        <Grid
-          item
-          xs={3}
+    <Grid container rowSpacing={1} sx = {{ mt: 0, mb: 1 }}>  
+        <Grid item md={3} sm={12}>
+        </Grid>
+        <Grid item md={6} sm={12}
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-start",
+            justifyContent: { md: 'center', sm: 'flex-start' },
           }}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -365,7 +388,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
           >
             <Typography
               sx={{
-                fontSize: "14px",
+                fontSize: "13px",
                 fontWeight: 600,
                 lineHeight: "18px",
                 color: "#666666",
@@ -379,8 +402,8 @@ const TrackingCalendar: React.FC<IProps> = () => {
             <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
           </Stack>
         </Grid>
-        <Grid item xs={6}></Grid>
-        <Grid item xs={3}>
+
+        <Grid item md={3} sm={12}>
           <Stack
             direction="row"
             alignItems="center"
@@ -411,11 +434,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
               }}
               onClick={() => onAction("week", "today")}
               disabled={
-                dayjs(currentDate).format("YYYY-MM-DD") ===
-                dayjs().format("YYYY-MM-DD")
+                dayjs(currentDate).format("YYYY-MM-DD") === dayjs().format("YYYY-MM-DD")
               }
             >
-              This week
+                This week
             </Button>
             <Button
               sx={{
@@ -539,23 +561,22 @@ const TrackingCalendar: React.FC<IProps> = () => {
   return (
     <Stack direction="column">
       {_renderHeader()}
-
-      <Stack
-        //ref={scrollRef}
-        sx={{
-          height: `calc(100vh - 475px)`,
-          overflow: "auto",
-          position: "relative",
-        }}
-      >
-        {activeTab === "table" && (
-          <Grid container spacing={1}>
+      {activeTab === "table" ? (
+        <Stack
+          //ref={scrollRef}
+          sx={{
+            height: `calc(100vh - 430px)`,
+            overflow: "auto",
+            position: "relative",
+          }}
+        >
+          <Grid container spacing={1} sx={{ height: "calc(100vh - 380px)" }}>
             <Grid item xs={12}>
               <TableContainer
                 sx={{
                   borderLeft: "1px solid rgb(224, 224, 224)",
 
-                  height: "calc(100vh - 495px)",
+                  //height: "calc(100vh - 420px)",
                 }}
               >
                 <Table
@@ -691,9 +712,20 @@ const TrackingCalendar: React.FC<IProps> = () => {
               </TableContainer>
             </Grid>
           </Grid>
-        )}
-        {_renderTimeSheetContent()}
-      </Stack>
+        </Stack>
+      ) : (
+        <Stack
+          //ref={scrollRef}
+          sx={{
+            height: `calc(100vh - 370px)`,
+            overflow: "auto",
+            position: "relative",
+          }}
+        >
+          {_renderTimeSheetContent()}
+        </Stack>
+      )}
+
       {_renderFooter()}
       {_redderCreatePopup()}
     </Stack>

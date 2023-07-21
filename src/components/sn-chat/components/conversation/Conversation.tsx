@@ -1,13 +1,10 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import Messages from "./Messages";
 import { useAuth } from "store/app/selectors";
 import { useWSChat } from "store/chat/helpers";
 import ChatInput from "../common/ChatInput";
 import { STEP } from "store/chat/type";
-import { uploadFile } from "store/chat/media/actionMedia";
-import { client } from "api";
-import { Attachment } from "store/chat/media/typeMedia";
 
 const Conversation = () => {
   const {
@@ -16,65 +13,48 @@ const Conversation = () => {
     conversationInfo,
     convention,
     messageInfo,
-    dataTransfer,
-    messagePaging: { pageIndex },
+    messagePaging: { pageIndex, pageSize },
+    stateSendMessage,
     onGetLastMessages,
+    onUploadAndSendFile,
   } = useChat();
   const { user } = useAuth();
   const { sendMessage } = useWSChat();
+  const [files, setFiles] = useState<File[]>([]);
+
   const account = convention?.find((item) => item._id === roomId);
 
   useEffect(() => {
     if (backFallStep !== STEP.VIEW_DETAIL_USER) {
-      onGetLastMessages({
-        roomId: dataTransfer?._id ?? roomId,
-        type: dataTransfer?.t ?? "d",
-        offset: 0,
-        count: 10,
-      });
+      onGetLastMessages({ roomId, type: "d", offset: 0, count: 10 });
     }
   }, [roomId, onGetLastMessages, backFallStep]);
 
-  const handleSendMessage = (message: string) => {
-    sendMessage(message);
-  };
+  useEffect(() => {
+    if (stateSendMessage.status) {
+      setFiles([]);
+    }
+  }, [stateSendMessage.status]);
 
-  const fetchLastMessage = useCallback(
-    (page: number) => {
-      if (backFallStep !== STEP.VIEW_DETAIL_USER) {
-        onGetLastMessages({
-          roomId: dataTransfer?._id ?? roomId,
-          type: dataTransfer?.t ?? "d",
-          offset: page,
-          count: 10,
+  const handleSendMessage = useCallback(
+    async (message: string) => {
+      sendMessage({ message });
+      if (files.length > 0) {
+        await onUploadAndSendFile({
+          endpoint: "files/upload-link",
+          files,
         });
       }
     },
-    [backFallStep, onGetLastMessages, roomId],
+    [files, onUploadAndSendFile, sendMessage],
   );
 
-  const handleImportFile = useCallback(async (files: File[]) => {
-    console.log(files);
-    // const urlFile = await uploadFile("files/upload-link", files[0]);
-
-    // console.log(urlFile);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const promises: any[] = [];
-    const attachmentImages: Attachment[] = [];
-
-    for (let index = 0; index < files.length; index++) {
-      // promises.push(uploadFile("files/upload-link", files[index]));
-      promises.push(files[index].name);
-    }
-
-    const urlFiles = await Promise.all(promises);
-    urlFiles.forEach(({ url }) => {
-      attachmentImages.push({
-        image_url: url as string,
-      });
-    });
-  }, []);
+  const fetchLastMessage = useCallback(
+    (page: number) => {
+      onGetLastMessages({ roomId, type: "d", offset: page, count: 10 });
+    },
+    [onGetLastMessages, roomId],
+  );
 
   return (
     <>
@@ -82,17 +62,20 @@ const Conversation = () => {
         sessionId={user?.["username"]}
         avatarPartner={conversationInfo?.avatar ?? account?.avatar ?? undefined}
         pageNumber={pageIndex}
+        pageSize={pageSize}
         initialMessage={messageInfo}
+        stateMessage={stateSendMessage}
         onRefetch={(page) => {
-          if (page > 1) {
-            fetchLastMessage(page - 1);
+          if (page > pageSize) {
+            fetchLastMessage(page);
           }
         }}
       />
       <ChatInput
         isLoading={false}
         onEnterMessage={handleSendMessage}
-        onChangeFiles={handleImportFile}
+        files={files}
+        onChangeFiles={(file) => setFiles(file)}
       />
     </>
   );

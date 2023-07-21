@@ -26,16 +26,23 @@ const ChatList = () => {
     new IntersectionObserver((entries) => {
       const first = entries[0];
       if (first.isIntersecting) {
-        pageRef.current = pageRef.current + 1;
+        pageRef.current = pageRef.current + pageSize;
         onGetAllConvention({
           type: "a",
           text: textSearch,
           offset: pageRef.current,
-          count: 20,
+          count: pageSize,
         });
       }
     }),
   );
+
+  console.log('convention', convention);
+  
+
+  useEffect(() => {
+    pageRef.current = pageIndex;
+  }, [pageIndex]);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -44,7 +51,7 @@ const ChatList = () => {
         type: "a",
         text: event.target.value,
         offset: 0,
-        count: 20,
+        count: 10,
       });
     }
   };

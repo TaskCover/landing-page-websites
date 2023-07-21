@@ -10,6 +10,7 @@ import {
   fetchGroupMembers,
   getChatAttachments,
   deleteConversation,
+  sendMessages,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import {
@@ -25,10 +26,11 @@ import {
 import { getChatUrls } from "./media/actionMedia";
 import { ChatLinkType } from "./media/typeMedia";
 
+const initalPage = { pageIndex: 0, pageSize: 10 };
 const initialState: ChatState = {
   convention: [],
   status: DataStatus.IDLE,
-  conversationPaging: { pageIndex: 0, pageSize: 20 },
+  conversationPaging: initalPage,
   userOnlinePage: [],
   roomId: "",
   conversationInfo: null,
@@ -37,13 +39,18 @@ const initialState: ChatState = {
   backFallStep: STEP.IDLE,
   messageInfo: [],
   messageStatus: DataStatus.IDLE,
-  messagePaging: { pageIndex: 0, pageSize: 20 },
+  messagePaging: initalPage,
   //Partner Infomation
   partnerInfo: null,
   partnerInfoStatus: DataStatus.IDLE,
   //chatLinks
   chatLinks: [],
   chatLinksStatus: DataStatus.IDLE,
+  //stateSendMessage
+  stateSendMessage: {
+    filePreview: null,
+    status: DataStatus.IDLE,
+  },
 
   newGroupData: {},
   createGroupStatus: DataStatus.IDLE,
@@ -103,11 +110,34 @@ const chatSlice = createSlice({
     setMessage: (state, action) => {
       state.messageInfo.push(action.payload);
     },
+    setStateSendMessage: (
+      state,
+      action: PayloadAction<{
+        files: File | File[] | null;
+        status: DataStatus;
+      }>,
+    ) => {
+      state.stateSendMessage = {
+        filePreview: action.payload.files,
+        status: action.payload.status,
+      };
+    },
+    setLastMessage: (state, action) => {
+      const newConversation = state.convention.map((item) => {
+        if (item._id === action.payload.roomId) {
+          return { ...item, lastMessage: action.payload.lastMessage };
+        }
+        return item;
+      });
+      state.convention = newConversation;
+    },
     clearConversation: (state) => {
       state.convention = [];
+      state.conversationPaging = initalPage;
     },
     clearMessageList: (state) => {
       state.messageInfo = [];
+      state.messagePaging = initalPage;
     },
   },
   extraReducers: (builder) =>
@@ -143,13 +173,14 @@ const chatSlice = createSlice({
       )
       .addCase(getAllConvention.rejected, (state, action) => {
         state.status = DataStatus.FAILED;
-        state.conversationPaging = {
-          pageIndex:
-            state.conversationPaging.pageIndex - 1 === 0
-              ? 0
-              : state.conversationPaging.pageIndex - 1,
-          pageSize: state.conversationPaging.pageSize,
-        };
+        state.conversationPaging.pageIndex =
+          state.conversationPaging.pageIndex -
+            state.conversationPaging.pageSize ===
+          0
+            ? 0
+            : state.conversationPaging.pageIndex -
+              state.conversationPaging.pageSize;
+        state.conversationPaging.pageSize = state.conversationPaging.pageSize;
       })
       // getLatestMessages
       .addCase(getLatestMessages.pending, (state, action) => {
@@ -171,13 +202,21 @@ const chatSlice = createSlice({
       )
       .addCase(getLatestMessages.rejected, (state, action) => {
         state.messageStatus = DataStatus.FAILED;
-        state.messagePaging = {
-          pageIndex:
-            state.messagePaging.pageIndex - 1 === 0
-              ? 0
-              : state.messagePaging.pageIndex - 1,
-          pageSize: state.messagePaging.pageSize,
-        };
+        state.messagePaging.pageIndex =
+          state.messagePaging.pageIndex - state.messagePaging.pageSize === 0
+            ? 0
+            : state.messagePaging.pageIndex - state.messagePaging.pageSize;
+        state.messagePaging.pageSize = state.messagePaging.pageSize;
+      })
+      // sendMessages
+      .addCase(sendMessages.pending, (state, action) => {
+        state.stateSendMessage.status = DataStatus.LOADING;
+      })
+      .addCase(sendMessages.fulfilled, (state, action) => {
+        state.stateSendMessage.status = DataStatus.SUCCEEDED;
+      })
+      .addCase(sendMessages.rejected, (state, action) => {
+        state.stateSendMessage.status = DataStatus.FAILED;
       })
       // getPartnerInfoById
       .addCase(getUserInfoById.pending, (state, action) => {
@@ -286,6 +325,8 @@ export const {
   setMessage,
   setConversationInfo,
   setTypeList,
+  setStateSendMessage,
+  setLastMessage,
   clearConversation,
   clearMessageList,
 } = chatSlice.actions;

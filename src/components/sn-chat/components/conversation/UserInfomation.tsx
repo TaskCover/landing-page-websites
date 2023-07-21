@@ -65,7 +65,7 @@ const UserInfomation = () => {
               </Box>
               <Box sx={styleFormItem}>
                 <Typography color="#666666">Chức vụ</Typography>
-                <Typography>{partnerInfo?.position}</Typography>
+                <Typography>{partnerInfo?.position.name}</Typography>
               </Box>
               <Box sx={styleFormItem}>
                 <Typography color="#666666">Số điện thoại</Typography>

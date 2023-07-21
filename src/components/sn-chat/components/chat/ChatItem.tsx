@@ -24,10 +24,15 @@ const ChatItem = ({
   const { lastMessage, name, usersCount, usernames, avatar, t } = chatInfo;
   const isGroup = useMemo(() => t !== "d", [t]);
   const isCurrentAcc = sessionId === lastMessage?.u?.username;
-  const nameLastMessage = isCurrentAcc ? "You: " : "";
+  const lastMessageContent = useMemo(() => {
+    const sendAttachment = lastMessage?.attachments?.length > 0;
+    if (sendAttachment) {
+      return isCurrentAcc ? "You sent a file." : "Sent a file.";
+    } else {
+      return isCurrentAcc ? `You: ${lastMessage?.msg}` : lastMessage?.msg;
+    }
+  }, [isCurrentAcc, lastMessage]);
 
-  if (isGroup) {
-  }
   const accountPartner = useMemo(() => {
     if (!isGroup) {
       const partnerUsername =
@@ -146,8 +151,17 @@ const ChatItem = ({
         <Typography variant="inherit" fontWeight="bold">
           {name}
         </Typography>
-        <Typography variant="caption" color="#999999">
-          {[isCurrentAcc ? "You: " : "", lastMessage?.msg].join("").trim()}
+        <Typography
+          variant="caption"
+          color="#999999"
+          sx={{
+            display: "-webkit-box",
+            WebkitLineClamp: "1",
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {lastMessageContent}
         </Typography>
       </Box>
       <Typography variant="caption" color="#999999" ml="auto">

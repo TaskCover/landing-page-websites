@@ -12,6 +12,7 @@ import {
   removeUserFromGroup,
   getChatAttachments,
   deleteConversation,
+  sendMessages,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -31,6 +32,7 @@ import {
   ChangeRoleRequest,
   ChatAttachmentsRequest,
   DeleteConversationGroup,
+  MessageBodyRequest,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -39,16 +41,19 @@ import {
   setMessage,
   setConversationInfo,
   setTypeList,
+  setStateSendMessage,
+  setLastMessage,
   clearConversation,
   clearMessageList,
+  reset,
 } from "./reducer";
-import { ChatUrlsQueryParam } from "./media/typeMedia";
-import { getChatUrls } from "./media/actionMedia";
+import { Attachment, ChatUrlsQueryParam } from "./media/typeMedia";
+import { getChatUrls, uploadFile } from "./media/actionMedia";
+import { IMAGES_ACCEPT } from "constant/index";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
   const { user } = useAuth();
-
   const {
     convention,
     messageInfo,
@@ -69,6 +74,8 @@ export const useChat = () => {
 
     chatLinks,
     chatLinksStatus,
+
+    stateSendMessage,
 
     createGroupStatus,
     newGroupData,
@@ -145,6 +152,25 @@ export const useChat = () => {
       );
     },
     [conversationInfo?.t, dispatch, roomId, user],
+  );
+
+  const onSendMessage = useCallback(
+    async (
+      message: Omit<
+        MessageBodyRequest,
+        "sender_userId" | "sender_authToken" | "receiverUsername"
+      >,
+    ) => {
+      await dispatch(
+        sendMessages({
+          sender_userId: user?.["id_rocket"] || "",
+          sender_authToken: user?.["authToken"] || "",
+          receiverUsername: conversationInfo?.partnerUsername || "",
+          ...message,
+        }),
+      );
+    },
+    [conversationInfo?.partnerUsername, dispatch, user],
   );
 
   const onGetUserInfo = useCallback(
@@ -292,6 +318,13 @@ export const useChat = () => {
     );
   };
 
+  const onSetLastMessage = (newMessage: {
+    roomId: string;
+    lastMessage: Attachment;
+  }) => {
+    dispatch(setLastMessage(newMessage));
+  };
+
   const onClearConversation = () => {
     dispatch(clearConversation());
   };
@@ -313,6 +346,65 @@ export const useChat = () => {
       );
     },
     [dispatch, user],
+  );
+  
+  const onSetStateSendMessage = useCallback(
+    (state: { files: File | File[] | null; status: DataStatus }) => {
+      dispatch(setStateSendMessage(state));
+    },
+    [dispatch],
+  );
+
+  const onReset = () => {
+    dispatch(reset());
+  };
+
+  const onUploadAndSendFile = useCallback(
+    async ({ endpoint, files }: { endpoint: string; files: File[] }) => {
+      onSetStateSendMessage({ files, status: DataStatus.LOADING });
+      try {
+        const promises: Promise<any>[] = [];
+        for (let index = 0; index < files.length; index++) {
+          promises.push(
+            dispatch(
+              uploadFile({
+                endpoint,
+                file: files[index],
+              }),
+            ),
+          );
+        }
+        const urlFiles = await Promise.all(promises);
+        const listFileUrl: {
+          download: string;
+          object: string;
+          upload: string;
+          type: string;
+        }[] = urlFiles.map((item) => {
+          return item.payload;
+        });
+
+        if (listFileUrl.length > 0) {
+          const attachments = listFileUrl.map((item) => {
+            const obj: Attachment = {};
+            if (IMAGES_ACCEPT.includes(item.type)) {
+              obj.image_url = item.download;
+            }
+
+            if (item.type === "video/mp4") {
+              obj.video_url = item.download;
+            }
+
+            return obj;
+          });
+          await onSendMessage({ attachments });
+          onSetStateSendMessage({ files: [], status: DataStatus.SUCCEEDED });
+        }
+      } catch (error) {
+        onSetStateSendMessage({ files: [], status: DataStatus.FAILED });
+      }
+    },
+    [dispatch, onSendMessage, onSetStateSendMessage],
   );
 
   return {
@@ -338,6 +430,8 @@ export const useChat = () => {
 
     chatLinks,
     chatLinksStatus,
+
+    stateSendMessage,
 
     createGroupStatus,
     newGroupData,
@@ -366,6 +460,14 @@ export const useChat = () => {
     onClearMessageList,
     onGetUserInfo,
     onGetChatUrls,
+<<<<<<< HEAD
     onDeleteConversationGroup,
+=======
+    onReset,
+    onUploadAndSendFile,
+    onSendMessage,
+    onSetStateSendMessage,
+    onSetLastMessage,
+>>>>>>> a76cce29582e0d65ebbf6e1fed961679e0c2a5a3
   };
 };

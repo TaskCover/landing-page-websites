@@ -31,6 +31,8 @@ import { useTranslations } from "next-intl";
 import { TaskFormData } from "./components";
 import { useMemberOptions } from "store/project/selectors";
 import { useParams } from "next/navigation";
+import { getEditorName } from "components/shared/Editor";
+import { UnprivilegedEditor } from "react-quill";
 
 type FormProps = {
   initialValues?: Partial<TaskFormData>;
@@ -105,6 +107,12 @@ const Form = (props: FormProps) => {
 
       if (hasValue(initialValues?.estimated_hours)) {
         dataParsed["estimated_hours"] = dataParsed["estimated_hours"] ?? null;
+      }
+
+      if (values?.description) {
+        dataParsed["description"] = (
+          window[getEditorName(TASK_EDITOR)] as UnprivilegedEditor
+        ).getHTML();
       }
 
       // dataParsed = cleanObject(dataParsed) as TaskData;
@@ -270,6 +278,7 @@ const Form = (props: FormProps) => {
           onChange={onChangeField}
           title={commonT("form.title.note")}
           name="description"
+          editorKey={TASK_EDITOR}
         />
       </Stack>
     </FormLayout>
@@ -299,3 +308,5 @@ const INITIAL_VALUES = {
   end_date: "",
   description: "",
 } as Partial<TaskData>;
+
+const TASK_EDITOR = "taskEditor";

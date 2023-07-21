@@ -1,6 +1,5 @@
-import TimeLog from "components/TimeTracking";
+import TimeTrackingPage from "components/TimeTracking";
 import Wrapper from "components/Wrapper";
-// import TimeTrackingComponent from "components/sn-time-tracking";
 
 export const metadata = {
   title: "Time tracking | Taskcover",
@@ -9,7 +8,7 @@ export const metadata = {
 export default function Page() {
   return (
     <Wrapper overflow="auto">
-      <TimeLog />
+      <TimeTrackingPage />
     </Wrapper>
   );
 }

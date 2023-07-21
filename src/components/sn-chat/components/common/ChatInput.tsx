@@ -7,12 +7,14 @@ import { memo } from "react";
 interface ChatInputProps {
   isLoading: boolean;
   initalMessage?: string;
+  files?: File[];
   onEnterMessage: (message: string) => void;
   onChangeFiles?: (file: File[]) => void;
 }
 const ChatInput = ({
   isLoading,
   initalMessage,
+  files,
   onEnterMessage,
   onChangeFiles,
 }: ChatInputProps) => {
@@ -33,6 +35,7 @@ const ChatInput = ({
         <ChatEditor
           isLoading={isLoading}
           initalValue={initalMessage || ""}
+          files={files}
           onEnterText={onEnterMessage}
           onChangeFiles={onChangeFiles}
         />

@@ -7,7 +7,7 @@ import {
   CHAT_API_URL,
   UPLOAD_API_URL,
 } from "constant/index";
-import { ChatUrlsQueryParam } from "./typeMedia";
+import { ChatUrlsQueryParam, FileUploadResponse } from "./typeMedia";
 
 export const getChatUrls = createAsyncThunk(
   "chat/getChatUrls",
@@ -27,31 +27,30 @@ export const getChatUrls = createAsyncThunk(
   },
 );
 
-export const uploadFile = async (endpoint: string, file: File) => {
-  try {
-    let response = await client.get(
-      `${endpoint}/${file.name}`,
-      { type: file.type },
-      {
-        baseURL: UPLOAD_API_URL,
-      },
-    );
-
-    console.log(response);
-
-    if (response?.status === HttpStatusCode.OK) {
-      const urlUpload = response.data.object;
-      response = await client.put(response.data.upload, file);
-      console.log("response", response);
+export const uploadFile = createAsyncThunk(
+  "chat/uploadFiles",
+  async ({ endpoint, file }: { endpoint: string; file: File }) => {
+    try {
+      let response = await client.get(
+        `${endpoint}/${file.name}`,
+        { type: file.type },
+        {
+          baseURL: UPLOAD_API_URL,
+        },
+      );
 
       if (response?.status === HttpStatusCode.OK) {
-        return urlUpload;
+        const fileUpload = response.data;
+        response = await client.put(response.data.upload, file);
+        if (response?.status === HttpStatusCode.OK) {
+          return { ...fileUpload, type: file.type };
+        }
+        throw AN_ERROR_TRY_AGAIN;
+      } else {
+        throw AN_ERROR_TRY_AGAIN;
       }
-      throw AN_ERROR_TRY_AGAIN;
-    } else {
-      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
     }
-  } catch (error) {
-    throw error;
-  }
-};
+  },
+);

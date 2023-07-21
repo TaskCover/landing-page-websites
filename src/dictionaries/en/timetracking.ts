@@ -37,6 +37,7 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
     },
   },
   company_time: {
+    this_week: "This week",
     timesheet: "Timesheet",
     timesheet_tab: {
       weekly_summary: "Weekly summary",

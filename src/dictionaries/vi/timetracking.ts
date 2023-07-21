@@ -37,6 +37,7 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
     },
   },
   company_time: {
+    this_week: "Tuần này",
     timesheet: "Thời gian biểu",
     timesheet_tab: {
       weekly_summary: "Tóm tắt hàng tuần",

@@ -2,10 +2,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "store/app/selectors";
 import { useChat } from "./selectors";
+import { MessageBodyRequest } from "./type";
 
 export const useWSChat = () => {
   const { user } = useAuth();
-  const { roomId, onSetMessage } = useChat();
+  const { roomId, onSetMessage, onSetLastMessage } = useChat();
 
   const [ws, setWs] = useState<WebSocket | null>(null);
   const token = user?.["authToken"];
@@ -42,10 +43,7 @@ export const useWSChat = () => {
           data.collection === "stream-room-messages" &&
           data.msg === "changed"
         ) {
-          appendMessage(
-            data.fields.args[0].msg,
-            data.fields.args[0].u.username,
-          );
+          appendMessage(data.fields.args[0]);
         }
       };
     }
@@ -94,21 +92,21 @@ export const useWSChat = () => {
   }, [roomId, ws]);
 
   const appendMessage = useCallback(
-    (message, sender) => {
-      const messageInfoOne = {
-        ts: new Date(),
-        msg: message,
-        u: {
-          username: sender,
-        },
-      };
-      onSetMessage(messageInfoOne);
+    (message) => {
+      const newMessage = { ...message, ts: new Date(message?.ts?.["$date"]) };
+      onSetMessage(newMessage);
+      onSetLastMessage({ roomId, lastMessage: newMessage });
     },
-    [onSetMessage],
+    [onSetMessage, onSetLastMessage],
   );
 
-  const sendMessage = (message: string) => {
-    if (message.trim()?.length > 0) {
+  const sendMessage = (
+    message: Omit<
+      MessageBodyRequest,
+      "sender_userId" | "sender_authToken" | "receiverUsername"
+    >,
+  ) => {
+    if (message.message && message.message.trim()?.length > 0) {
       ws?.send(
         JSON.stringify({
           msg: "method",
@@ -118,7 +116,7 @@ export const useWSChat = () => {
             {
               _id: Math.random().toString(36).substr(2, 10),
               rid: roomId,
-              msg: message,
+              msg: message.message,
             },
           ],
         }),

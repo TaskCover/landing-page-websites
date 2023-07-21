@@ -11,7 +11,7 @@ import { useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 
 const ChatListTemp = () => {
-  const { onGetAllConvention, onClearConversation } = useChat();
+  const { onGetAllConvention, onClearConversation, onReset } = useChat();
   const popperRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
@@ -26,10 +26,11 @@ const ChatListTemp = () => {
         type: "a",
         text: "",
         offset: 0,
-        count: 20,
+        count: 10,
       });
     } else {
       onClearConversation();
+      onReset();
     }
   };
 
@@ -43,7 +44,15 @@ const ChatListTemp = () => {
         zIndex: 1,
       }}
     >
-      <Popper open={open} anchorEl={anchorEl} placement="top-start" transition>
+      <Popper
+        open={open}
+        anchorEl={anchorEl}
+        placement="top-start"
+        transition
+        sx={{
+          zIndex: 10,
+        }}
+      >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
             <Box paddingBottom={2}>

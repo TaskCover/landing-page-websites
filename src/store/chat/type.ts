@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataStatus } from "constant/enums";
 import { Paging } from "constant/types";
-import { ChatLinkType } from "./media/typeMedia";
+import { Attachment, ChatLinkType } from "./media/typeMedia";
 
 export interface ChatItemInfo {
   _id: string;
@@ -33,21 +33,51 @@ export interface UserOnlinePage {
   avatar: string;
 }
 
+export interface Url {
+  url: string;
+  meta: Meta;
+  headers: Headers;
+  parsedUrl: ParsedURL;
+}
+
+export interface Headers {
+  contentType: string;
+}
+
+export interface Meta {
+  pageTitle: string;
+  ogImage: string;
+  twitterCard: string;
+  ogTitle: string;
+  twitterSite: string;
+}
+
+export interface ParsedURL {
+  host: string;
+  hash: null;
+  pathname: string;
+  protocol: string;
+  port: null;
+  query: null;
+  search: null;
+  hostname: string;
+}
+
 export interface MessageInfo {
   _id: string;
   alias: string;
   msg: string;
-  attachments: unknown[];
+  attachments: Attachment[];
   parseUrls: boolean;
   groupable: boolean;
   ts: string;
   u: UserSendInfo;
   rid: string;
   _updatedAt: string;
-  urls?: unknown[];
+  urls?: Url[];
   mentions: unknown[];
   channels: unknown[];
-  md: unknown[];
+  md?: unknown[];
 }
 
 export interface UserOnlinePage {
@@ -67,6 +97,12 @@ export interface MessengerInfo {
   _id: string;
   rid: string;
   _updatedAt: string;
+  alias: string;
+  attachments: Attachment[];
+  parseUrls: false;
+  groupable: false;
+  mentions: [];
+  channels: [];
 }
 
 export interface UserSendInfo {
@@ -111,6 +147,11 @@ export interface ChatState {
   //chat links
   chatLinks: ChatLinkType[];
   chatLinksStatus: DataStatus;
+  //sendMessage state
+  stateSendMessage: {
+    filePreview?: File | File[] | null;
+    status: DataStatus;
+  };
 
   newGroupData: ChatGroup | {};
   createGroupStatus: DataStatus;
@@ -199,6 +240,10 @@ export interface Avatar {
   link: string;
 }
 
+export interface Position {
+  id: string;
+  name: string;
+}
 export interface UserInfo {
   company: string;
   department: string;
@@ -207,7 +252,7 @@ export interface UserInfo {
   id: string;
   is_active: true;
   phone: string;
-  position: string;
+  position: Position;
   date_end_using: string;
   date_start_using: string;
   approve: true;
@@ -216,6 +261,14 @@ export interface UserInfo {
   authToken: string;
   id_rocket: string;
   username: string;
+}
+
+export interface MessageBodyRequest {
+  sender_authToken: string;
+  sender_userId: string;
+  receiverUsername: string;
+  message?: string;
+  attachments?: Attachment[];
 }
 
 export enum STEP {
@@ -241,3 +294,13 @@ export enum TYPE_LIST {
   LINK_LIST,
   FILE_LIST,
 }
+
+export const mimiMap = {
+  "application/zip": ".zip",
+  "application/xhtml+xml": ".xhtml",
+  "application/vnd.visio": ".vsd",
+  "image/svg_xml": ".svg",
+  "video.mp4": ".mp4",
+  "image/jpeg": [".jpeg", ".jpg"],
+  "image/png": ".png",
+};
