@@ -347,7 +347,7 @@ export const useChat = () => {
     },
     [dispatch, user],
   );
-  
+
   const onSetStateSendMessage = useCallback(
     (state: { files: File | File[] | null; status: DataStatus }) => {
       dispatch(setStateSendMessage(state));
@@ -460,14 +460,11 @@ export const useChat = () => {
     onClearMessageList,
     onGetUserInfo,
     onGetChatUrls,
-<<<<<<< HEAD
     onDeleteConversationGroup,
-=======
     onReset,
     onUploadAndSendFile,
     onSendMessage,
     onSetStateSendMessage,
     onSetLastMessage,
->>>>>>> a76cce29582e0d65ebbf6e1fed961679e0c2a5a3
   };
 };
