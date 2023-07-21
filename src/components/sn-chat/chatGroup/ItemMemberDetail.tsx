@@ -1,7 +1,5 @@
 import Avatar from "components/Avatar";
 import { Box, Button, Menu, MenuItem, Typography } from "@mui/material";
-import ArrowDownIcon from "icons/ArrowDownIcon";
-import ItemDetail from "../components/ItemDetail";
 import MoreSquareIcon from "icons/MoreSquareIcon";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
