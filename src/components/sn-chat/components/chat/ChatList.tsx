@@ -59,9 +59,13 @@ const ChatList = () => {
   const handleClickConversation = (chatInfo: ChatItemInfo) => {
     onSetRoomId(chatInfo._id);
     onSetConversationInfo(chatInfo);
-    if (chatInfo?.t) {
-      onSetStep(STEP.CHAT_ONE, chatInfo);
-    }
+
+    if (chatInfo?.t)
+      if (chatInfo?.t !== "d") {
+        onSetStep(STEP.CHAT_GROUP, chatInfo);
+      } else {
+        onSetStep(STEP.CHAT_ONE, chatInfo);
+      }
   };
 
   useEffect(() => {

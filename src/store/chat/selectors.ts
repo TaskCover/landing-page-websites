@@ -11,6 +11,7 @@ import {
   fetchGroupMembers,
   removeUserFromGroup,
   getChatAttachments,
+  deleteConversation,
   sendMessages,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
@@ -30,6 +31,7 @@ import {
   FetchGroupMemberRequest,
   ChangeRoleRequest,
   ChatAttachmentsRequest,
+  DeleteConversationGroup,
   MessageBodyRequest,
 } from "./type";
 import { useAuth } from "store/app/selectors";
@@ -331,6 +333,21 @@ export const useChat = () => {
     dispatch(clearMessageList());
   };
 
+  const onDeleteConversationGroup = useCallback(
+    async (params: Omit<DeleteConversationGroup, "authToken" | "userId">) => {
+      const authToken = user ? user["authToken"] : "";
+      const userId = user ? user["id_rocket"] : "";
+      return await dispatch(
+        deleteConversation({
+          authToken,
+          userId,
+          ...params,
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
   const onSetStateSendMessage = useCallback(
     (state: { files: File | File[] | null; status: DataStatus }) => {
       dispatch(setStateSendMessage(state));
@@ -443,6 +460,7 @@ export const useChat = () => {
     onClearMessageList,
     onGetUserInfo,
     onGetChatUrls,
+    onDeleteConversationGroup,
     onReset,
     onUploadAndSendFile,
     onSendMessage,

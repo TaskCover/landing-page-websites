@@ -13,6 +13,7 @@ import {
   ChatAttachmentsRequest,
   FetchGroupMemberRequest,
   RemoveMemberRequest,
+  DeleteConversationGroup,
   MessageBodyRequest
 } from "./type";
 
@@ -218,3 +219,20 @@ export const getChatAttachments = createAsyncThunk(
   },
 );
 
+export const deleteConversation = createAsyncThunk(
+  "chat/deleteConversation",
+  async (paramReq: DeleteConversationGroup) => {
+    try {
+      const response = await client.post("deleteConversation", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);

@@ -16,6 +16,7 @@ export const useWSChat = () => {
     if (ws) {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log("logggggggggggggg", data.msg);
         if (data.msg === "connected") {
           ws.send(
             JSON.stringify({
@@ -76,6 +77,7 @@ export const useWSChat = () => {
       ws.onclose = () => {
         if (openSocketFlag) {
           setTimeout(() => {
+            console.log("reConnect");
             connectSocket();
             connectMessage();
           }, 100);
