@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 import Avatar from "components/Avatar";
 import { Box, Button, Fab, Typography } from "@mui/material";
-import ItemDetail from "../components/ItemDetail";
 import ItemMemberDetail from "./ItemMemberDetail";
 import GroupNameIcon from "icons/GroupNameIcon";
 import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/DefaultPopupLayout";
@@ -20,6 +19,7 @@ import { useChat } from "store/chat/selectors";
 import { STEP, TYPE_LIST } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 import { useAuth, useSnackbar } from "store/app/selectors";
+import ItemDetail from "../components/ItemDetail";
 
 const ChatDetailGroup = (props) => {
   const {
