@@ -5,6 +5,7 @@ import { useChat } from "store/chat/selectors";
 import { ChatItemInfo, STEP } from "store/chat/type";
 import { useAuth } from "store/app/selectors";
 import { useEffect, useRef, useState } from "react";
+import NewGroupIcon from "icons/NewGroupIcon";
 
 const ChatList = () => {
   const { user } = useAuth();
@@ -35,10 +36,7 @@ const ChatList = () => {
         });
       }
     }),
-  );
-
-  console.log('convention', convention);
-  
+  );  
 
   useEffect(() => {
     pageRef.current = pageIndex;
@@ -117,6 +115,11 @@ const ChatList = () => {
           fullWidth
           onKeyDown={handleKeyDown}
         />
+        <Box onClick={() => {
+          onSetStep(STEP.ADD_GROUP, { isNew: true });
+        }}>
+          <NewGroupIcon />
+        </Box>
       </Box>
       <Box overflow="auto" maxHeight="calc(600px - 74px - 15px)">
         {(isFetching || isError) && convention?.length < 1 ? (
