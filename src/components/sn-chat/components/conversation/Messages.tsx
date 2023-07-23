@@ -1,11 +1,16 @@
 import Box from "@mui/material/Box";
-import { useEffect, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { MessageInfo } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 import Skeleton from "@mui/material/Skeleton";
 import MessageLayout from "../common/MessageLayout";
 import MessageContent from "./MessageContent";
-import { useChat } from "store/chat/selectors";
 
 interface MessagesProps {
   sessionId: string;
@@ -17,24 +22,31 @@ interface MessagesProps {
     filePreview?: File | File[] | null;
     status: DataStatus;
   };
-  isNewMessage: boolean;
   onRefetch: (page: number) => void;
 }
 
-const Messages = ({
-  sessionId,
-  avatarPartner,
-  pageNumber,
-  pageSize,
-  initialMessage: messages,
-  stateMessage,
-  isNewMessage,
-  onRefetch,
-}: MessagesProps) => {
+type MessageHandle = {
+  scrollBottom: () => void;
+  resetHeightScroll: () => void;
+};
+
+const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
+  {
+    sessionId,
+    avatarPartner,
+    pageNumber,
+    pageSize,
+    initialMessage: messages,
+    stateMessage,
+    onRefetch,
+  }: MessagesProps,
+  ref,
+) => {
   const [firstElement, setFirstElement] = useState(null);
-  const scrollHeightRef = useRef(0);
   const pageRef = useRef(pageNumber);
+  const messageEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
+  const scrollHeightRef = useRef(0);
   const observer = useRef(
     new IntersectionObserver((entries) => {
       const first = entries[0];
@@ -47,29 +59,39 @@ const Messages = ({
     }),
   );
 
-  const initScrollIntoView = (index: number) => {
+  const resetHeightScroll = () => {
+    scrollHeightRef.current = 0;
+  };
+
+  const scrollBottom = () => {
+    if (messageEndRef?.current) {
+      messageEndRef?.current.scrollIntoView();
+    }
+  };
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return { scrollBottom, resetHeightScroll };
+    },
+    [],
+  );
+
+  const initScrollIntoView = () => {
     if (messagesContentRef.current) {
+      const index = messagesContentRef.current?.scrollHeight
+        ? Number(
+            messagesContentRef.current?.scrollHeight -
+              scrollHeightRef.current || 0,
+          )
+        : 0;
       messagesContentRef.current.scrollTo(0, index);
     }
   };
 
   useEffect(() => {
-    if (messages?.length > 0) {
-      console.log(
-        messagesContentRef.current?.scrollHeight || 0,
-        scrollHeightRef.current,
-      );
-
-      const index = messagesContentRef.current?.scrollHeight
-        ? Number(
-            messagesContentRef.current?.scrollHeight - scrollHeightRef.current,
-          )
-        : 0;
-      console.log("12332323232");
-
-      initScrollIntoView(index);
-    }
-  }, [isNewMessage, messages, scrollHeightRef, messagesContentRef]);
+    initScrollIntoView();
+  }, [messages, scrollHeightRef, messagesContentRef]);
 
   useEffect(() => {
     const currentElement = firstElement;
@@ -169,9 +191,10 @@ const Messages = ({
             </Box>
           </Box>
         )}
+        <Box ref={messageEndRef} />
       </Box>
     </>
   );
 };
 
-export default Messages;
+export default forwardRef(Messages);

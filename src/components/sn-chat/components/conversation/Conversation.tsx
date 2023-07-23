@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import Messages from "./Messages";
 import { useAuth } from "store/app/selectors";
@@ -21,7 +21,6 @@ const Conversation = () => {
   const { user } = useAuth();
   const { sendMessage } = useWSChat();
   const [files, setFiles] = useState<File[]>([]);
-  const [isSending, setIsSending] = useState(false);
 
   const account = convention?.find((item) => item._id === roomId);
 
@@ -37,8 +36,13 @@ const Conversation = () => {
     }
   }, [stateSendMessage.status]);
 
+  type MessageHandle = React.ElementRef<typeof Messages>;
+  const inputRef = useRef<MessageHandle>(null);
+
   const handleSendMessage = useCallback(
     async (message: string) => {
+      inputRef?.current?.scrollBottom();
+      inputRef?.current?.resetHeightScroll();
       sendMessage({ message });
       if (files.length > 0) {
         await onUploadAndSendFile({
@@ -46,7 +50,6 @@ const Conversation = () => {
           files,
         });
       }
-      setIsSending((prev) => !prev);
     },
     [files, onUploadAndSendFile, sendMessage],
   );
@@ -67,10 +70,10 @@ const Conversation = () => {
         pageSize={pageSize}
         initialMessage={messageInfo}
         stateMessage={stateSendMessage}
-        isNewMessage={isSending}
         onRefetch={(page) => {
           fetchLastMessage(page);
         }}
+        ref={inputRef}
       />
       <ChatInput
         isLoading={false}
