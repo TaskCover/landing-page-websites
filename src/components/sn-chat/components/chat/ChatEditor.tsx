@@ -3,7 +3,6 @@
 import { Box, Stack } from "@mui/material";
 import {
   ChangeEvent,
-  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -132,7 +131,6 @@ const ChatEditor = (props: EditorProps) => {
 
   const handleKeyDown = useCallback(
     (event) => {
-      quill?.root.focus();
       if (event.key === "Enter" && !event.shiftKey) {
         onEnterText?.(quill?.root.innerHTML || "");
         quill?.setText("");
@@ -172,11 +170,19 @@ const ChatEditor = (props: EditorProps) => {
           borderRadius: "unset !important",
         },
         "& .ql-container": {
+          position: "unset!important",
+          maxHeight: "150px",
+          display: "block",
           "& .ql-editor": {
             paddingRight: "7rem",
           },
           "& .ql-blank::before": {
             color: "#BABCC6",
+          },
+          "& .ql-tooltip": {
+            right: "0",
+            left: "0!important",
+            width: "fit-content",
           },
         },
       }}
