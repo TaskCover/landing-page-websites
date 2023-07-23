@@ -38,6 +38,7 @@ const initialState: ChatState = {
   messageInfo: [],
   messageStatus: DataStatus.IDLE,
   messagePaging: initalPage,
+  isLoadMessage: false,
   //Partner Infomation
   partnerInfo: null,
   partnerInfoStatus: DataStatus.IDLE,
@@ -62,7 +63,6 @@ const initialState: ChatState = {
   groupMembers: [],
   chatAttachments: [],
   deleteConversationStatus: DataStatus.IDLE,
-
 };
 
 const isConversation = (type: string) => {
@@ -110,6 +110,7 @@ const chatSlice = createSlice({
     },
     setMessage: (state, action) => {
       state.messageInfo.push(action.payload);
+      state.isLoadMessage = !state.isLoadMessage;
     },
     setStateSendMessage: (
       state,
@@ -212,6 +213,7 @@ const chatSlice = createSlice({
       // sendMessages
       .addCase(sendMessages.pending, (state, action) => {
         state.stateSendMessage.status = DataStatus.LOADING;
+        state.isLoadMessage = !state.isLoadMessage;
       })
       .addCase(sendMessages.fulfilled, (state, action) => {
         state.stateSendMessage.status = DataStatus.SUCCEEDED;
@@ -320,8 +322,7 @@ const chatSlice = createSlice({
       )
       .addCase(deleteConversation.rejected, (state, action) => {
         state.deleteConversationStatus = DataStatus.FAILED;
-      })
-      
+      }),
 });
 
 export const {

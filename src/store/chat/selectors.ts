@@ -58,6 +58,8 @@ export const useChat = () => {
   const {
     convention,
     messageInfo,
+    messageStatus,
+    isLoadMessage,
 
     userOnlinePage,
     roomId,
@@ -106,8 +108,8 @@ export const useChat = () => {
       offset = 0,
       ...rest
     }: Omit<ChatConventionItemRequest, "authToken" | "userId">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       await dispatch(
         getAllConvention({
           count,
@@ -127,8 +129,8 @@ export const useChat = () => {
       offset = 0,
       ...rest
     }: Omit<LastMessagesRequest, "authToken" | "userId">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       await dispatch(
         getLatestMessages({
           count,
@@ -144,8 +146,8 @@ export const useChat = () => {
 
   const onGetChatUrls = useCallback(
     async (params?: Omit<UrlsQuery, "userId" | "authToken">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       await dispatch(
         getChatUrls({
           roomId: params?.roomId ?? roomId,
@@ -207,8 +209,8 @@ export const useChat = () => {
       type = "d",
       ...rest
     }: Omit<CreateGroupRequest, "authToken" | "userId">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
         createDirectMessageGroup({
           type,
@@ -223,8 +225,8 @@ export const useChat = () => {
 
   const onAddMembers2Group = useCallback(
     async (params: Omit<AddMember2GroupRequest, "authToken" | "userId">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
         addMembersToDirectMessageGroup({
           authToken,
@@ -238,8 +240,8 @@ export const useChat = () => {
 
   const onLeftGroup = useCallback(
     async (params: Omit<LeftGroupRequest, "authToken" | "userId">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
         leftDirectMessageGroup({
           authToken,
@@ -253,8 +255,8 @@ export const useChat = () => {
 
   const onRemoveGroupMember = useCallback(
     async (params: Omit<RemoveMemberRequest, "authToken" | "userId">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
         removeUserFromGroup({
           authToken,
@@ -268,8 +270,8 @@ export const useChat = () => {
 
   const onFetchGroupMembersMember = useCallback(
     async (params: Omit<FetchGroupMemberRequest, "authToken" | "userId">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
         fetchGroupMembers({
           authToken,
@@ -283,8 +285,8 @@ export const useChat = () => {
 
   const onChangeGroupRole = useCallback(
     async (params: Omit<ChangeRoleRequest, "authToken" | "userId">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
         changeGroupRole({
           authToken,
@@ -298,8 +300,8 @@ export const useChat = () => {
 
   const onGetChatAttachments = useCallback(
     async (params: Omit<ChatAttachmentsRequest, "authToken" | "userId">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
         getChatAttachments({
           authToken,
@@ -342,8 +344,8 @@ export const useChat = () => {
 
   const onDeleteConversationGroup = useCallback(
     async (params: Omit<DeleteConversationGroup, "authToken" | "userId">) => {
-      const authToken = user ? user["authToken"] : "";
-      const userId = user ? user["id_rocket"] : "";
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
         deleteConversation({
           authToken,
@@ -426,6 +428,8 @@ export const useChat = () => {
     conversationPaging,
     messagePaging,
     messageInfo,
+    messageStatus,
+    isLoadMessage,
     userOnlinePage,
     isError,
     isIdle,

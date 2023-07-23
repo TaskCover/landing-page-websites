@@ -16,7 +16,6 @@ export const useWSChat = () => {
     if (ws) {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log("logggggggggggggg", data.msg);
         if (data.msg === "connected") {
           ws.send(
             JSON.stringify({
@@ -80,7 +79,7 @@ export const useWSChat = () => {
             console.log("reConnect");
             connectSocket();
             connectMessage();
-          }, 100);
+          }, 10);
         }
       };
     }
@@ -107,8 +106,6 @@ export const useWSChat = () => {
     >,
   ) => {
     if (message.message && message.message.trim()?.length > 0) {
-      console.log('triggle 1');
-      
       ws?.send(
         JSON.stringify({
           msg: "method",

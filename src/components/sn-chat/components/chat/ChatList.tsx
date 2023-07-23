@@ -2,7 +2,7 @@ import { Skeleton, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import ChatItemLayout from "./ChatItemLayout";
 import { useChat } from "store/chat/selectors";
-import { ChatItemInfo, STEP } from "store/chat/type";
+import { IChatItemInfo, STEP } from "store/chat/type";
 import { useAuth } from "store/app/selectors";
 import { useEffect, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
@@ -54,7 +54,7 @@ const ChatList = () => {
     }
   };
 
-  const handleClickConversation = (chatInfo: ChatItemInfo) => {
+  const handleClickConversation = (chatInfo: IChatItemInfo) => {
     onSetRoomId(chatInfo._id);
     onSetConversationInfo(chatInfo);
 

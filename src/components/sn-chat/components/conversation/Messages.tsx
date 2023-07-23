@@ -40,10 +40,6 @@ const Messages = ({
       const first = entries[0];
       if (first.isIntersecting) {
         pageRef.current = pageRef.current + pageSize;
-        console.log(
-          "messagesContentRef.current?.firstElementChild?.scrollHeight",
-          messagesContentRef.current?.scrollHeight,
-        );
 
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         onRefetch(pageRef.current);
@@ -54,32 +50,19 @@ const Messages = ({
   const initScrollIntoView = (index: number) => {
     if (messagesContentRef.current) {
       messagesContentRef.current.scrollTo(0, index);
-      // messagesEndRef.current?.scrollIntoView({
-      //   behavior: "instant",
-      // });
     }
   };
 
-  //tifm casch luwu laji gias trij cuoosi cufng
-
   useEffect(() => {
-    console.log('1111111111111111111111111', scrollHeightRef.current);
-    
-    initScrollIntoView(scrollHeightRef.current);
-  }, [messages, scrollHeightRef]);
-
-  // useEffect(() => {
-  //   console.log(
-  //     "messagesEndContentRef.current?.scrollHeight",
-  //     messagesContentRef.current?.scrollHeight,
-  //   );
-  //   if (messagesContentRef.current) {
-  //     messagesContentRef.current.lastElementChild?.scrollTo(
-  //       0,
-  //       messagesContentRef.current?.scrollHeight,
-  //     );
-  //   }
-  // }, [messages]);
+    if (messages?.length > 0) {
+      const index = messagesContentRef.current?.scrollHeight
+        ? Number(
+            messagesContentRef.current?.scrollHeight - scrollHeightRef.current,
+          )
+        : 0;
+      initScrollIntoView(index);
+    }
+  }, [messages, scrollHeightRef, messagesContentRef]);
 
   useEffect(() => {
     const currentElement = firstElement;
@@ -92,7 +75,7 @@ const Messages = ({
         currentObserver.unobserve(currentElement);
       }
     };
-  }, [firstElement]);
+  }, [firstElement, messagesContentRef]);
 
   return (
     <>
