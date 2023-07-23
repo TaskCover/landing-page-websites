@@ -54,14 +54,12 @@ const Messages = ({
   };
 
   useEffect(() => {
-    if (messagesContentRef.current) {
-      scrollHeightRef.current = 0;
-      initScrollIntoView(messagesContentRef.current?.scrollHeight);
-    }
-  }, [isNewMessage]);
-
-  useEffect(() => {
     if (messages?.length > 0) {
+      console.log(
+        messagesContentRef.current?.scrollHeight || 0,
+        scrollHeightRef.current,
+      );
+
       const index = messagesContentRef.current?.scrollHeight
         ? Number(
             messagesContentRef.current?.scrollHeight - scrollHeightRef.current,
