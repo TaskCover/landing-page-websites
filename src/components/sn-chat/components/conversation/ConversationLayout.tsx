@@ -1,21 +1,14 @@
 import Box from "@mui/material/Box";
-import { IChatItemInfo, STEP, STEP_INFO, TYPE_LIST } from "store/chat/type";
+import { IChatItemInfo, STEP_INFO } from "store/chat/type";
 import { useChat } from "store/chat/selectors";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Conversation from "./Conversation";
 import ProfileHeader from "../common/ProfileHeader";
 import UserLanding from "./UserLanding";
 import UserInfo from "./UserInfo";
 import GroupMediaProfile from "./GroupMediaProfile";
 
-interface ConversationLayoutProp {
-  viewStep?: STEP;
-  onShowUserInfo?: () => void;
-}
-const ConversationLayout = ({
-  viewStep,
-  onShowUserInfo,
-}: ConversationLayoutProp) => {
+const ConversationLayout = () => {
   const {
     roomId,
     convention,

@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Popover, Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import {
   ChangeEvent,
   memo,
@@ -134,7 +134,7 @@ const ChatEditor = (props: EditorProps) => {
     (event) => {
       quill?.root.focus();
       if (event.key === "Enter" && !event.shiftKey) {
-        onEnterText?.(quill?.getText() || "");
+        onEnterText?.(quill?.root.innerHTML || "");
         quill?.setText("");
         setValue("");
       }
@@ -162,8 +162,6 @@ const ChatEditor = (props: EditorProps) => {
     }
   }, [initalValue, quill]);
 
-  // console.log("quill?.root", quill?.root);
-
   return (
     <Stack
       className="editor"
@@ -186,6 +184,7 @@ const ChatEditor = (props: EditorProps) => {
       {isLoading ? "loading..." : null}
       <Box position="relative">
         <Box
+          component={"span"}
           ref={quillRef}
           sx={{
             color: "black",

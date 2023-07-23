@@ -1,6 +1,4 @@
 import Box from "@mui/material/Box";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
 import Skeleton from "@mui/material/Skeleton";
 import Media from "components/Media";
 import Preview from "components/Preview";
@@ -18,9 +16,6 @@ export const MediaClone = ({ src, type }: { src: string; type: MediaType }) => {
     src: string;
     type: MediaType;
   }>({ isPreview: false, src: "", type: "image_url" });
-
-  console.log("type", type, isError);
-
   const switchMedia = useMemo(() => {
     switch (type) {
       case "image_url": {
@@ -51,7 +46,7 @@ export const MediaClone = ({ src, type }: { src: string; type: MediaType }) => {
             variant="rounded"
             style={{
               width: "100%",
-              height: "100%",
+              height: "92px",
             }}
           />
         );
@@ -93,8 +88,8 @@ export const MediaClone = ({ src, type }: { src: string; type: MediaType }) => {
               <Skeleton
                 variant="rounded"
                 style={{
-                  width: "100%",
-                  height: "100%",
+                  width: "92px",
+                  height: "92px",
                 }}
               />
             )}
@@ -164,7 +159,7 @@ const MediaContent = () => {
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: "4px",
             overflow: "auto",
-            height: "calc(600px - 73px - 37px - 35px)",
+            maxHeight: "calc(600px - 73px - 37px - 35px)",
           }}
         >
           {mediaClone?.map((item, index) => (

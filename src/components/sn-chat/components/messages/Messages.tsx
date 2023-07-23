@@ -9,7 +9,7 @@ import {
 import { MessageInfo } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 import Skeleton from "@mui/material/Skeleton";
-import MessageLayout from "../common/MessageLayout";
+import MessageLayout from "../messages/MessageLayout";
 import MessageContent from "./MessageContent";
 
 interface MessagesProps {

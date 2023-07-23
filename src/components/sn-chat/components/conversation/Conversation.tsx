@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
-import Messages from "./Messages";
 import { useAuth } from "store/app/selectors";
 import { useWSChat } from "store/chat/helpers";
-import ChatInput from "../common/ChatInput";
+import ChatInput from "../chat/ChatInput";
 import { STEP } from "store/chat/type";
+import Messages from "../messages/Messages";
 
 const Conversation = () => {
   const {

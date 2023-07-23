@@ -55,7 +55,7 @@ const UserLanding = ({
   onPrevious,
   onSetMediaStep,
 }: UserLandingProps) => {
-  const { conversationInfo, onSetStep } = useChat();
+  const { conversationInfo } = useChat();
   const { avatar, name } = conversationInfo || {};
 
   return (
