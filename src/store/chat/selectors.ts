@@ -48,8 +48,8 @@ import {
   clearMessageList,
   reset,
 } from "./reducer";
-import { Attachment, MediaQuery, UrlsQuery } from "./media/typeMedia";
-import { getChatUrls, getChatRoomFile, uploadFile } from "./media/actionMedia";
+import { Attachment, UrlsQuery } from "./media/typeMedia";
+import { getChatUrls, uploadFile } from "./media/actionMedia";
 import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
 
 export const useChat = () => {
@@ -59,7 +59,7 @@ export const useChat = () => {
     convention,
     messageInfo,
     messageStatus,
-    isLoadMessage,
+    timeMessage,
 
     userOnlinePage,
     roomId,
@@ -429,7 +429,7 @@ export const useChat = () => {
     messagePaging,
     messageInfo,
     messageStatus,
-    isLoadMessage,
+    timeMessage,
     userOnlinePage,
     isError,
     isIdle,

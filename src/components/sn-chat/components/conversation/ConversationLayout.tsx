@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { ChatItemInfo, STEP, STEP_INFO, TYPE_LIST } from "store/chat/type";
+import { IChatItemInfo, STEP, STEP_INFO, TYPE_LIST } from "store/chat/type";
 import { useChat } from "store/chat/selectors";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Conversation from "./Conversation";
@@ -31,7 +31,7 @@ const ConversationLayout = ({
   const accountInfo = useMemo(() => {
     const account = convention?.find(
       (item) => item._id === roomId,
-    ) as ChatItemInfo;
+    ) as IChatItemInfo;
     return account;
   }, [convention, roomId]);
 

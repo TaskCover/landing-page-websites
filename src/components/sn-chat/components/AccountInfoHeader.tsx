@@ -13,10 +13,10 @@ import VideoCallIcon from "icons/VideoCallIcon";
 import { useMemo } from "react";
 import { useState } from "react";
 import { useChat } from "store/chat/selectors";
-import { ChatItemInfo, STEP } from "store/chat/type";
+import { IChatItemInfo, STEP } from "store/chat/type";
 
 interface AccountInfoHeaderProp {
-  accountInfo: ChatItemInfo;
+  accountInfo: IChatItemInfo;
   onPrevious: () => void;
   viewStep?: STEP;
 }

@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { ChatItemInfo, STEP } from "store/chat/type";
+import { IChatItemInfo, STEP } from "store/chat/type";
 import AccountInfoHeader from "./AccountInfoHeader";
 import { useChat } from "store/chat/selectors";
 import { useMemo } from "react";
@@ -14,7 +14,7 @@ const ConversationLayout = ({ children, viewStep }: ConversationLayoutProp) => {
   const accountInfo = useMemo(() => {
     const account = convention?.find(
       (item) => item._id === roomId,
-    ) as ChatItemInfo & { stateOnPage: string };
+    ) as IChatItemInfo & { stateOnPage: string };
 
     const stateOnPage =
       userOnlinePage?.find((item) => item.username === account?.usernames?.[1])

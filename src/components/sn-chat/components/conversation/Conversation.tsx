@@ -67,6 +67,7 @@ const Conversation = () => {
         pageSize={pageSize}
         initialMessage={messageInfo}
         stateMessage={stateSendMessage}
+        isNewMessage={isSending}
         onRefetch={(page) => {
           fetchLastMessage(page);
         }}
