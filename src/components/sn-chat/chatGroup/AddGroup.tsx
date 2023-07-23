@@ -225,9 +225,7 @@ const AddGroup = () => {
               ? items
                   ?.filter(
                     (item) =>
-                      !groupMembers
-                        ?.map((m) => m._id)
-                        ?.includes(item.id_rocket),
+                      dataTransfer?.isNew || !dataTransfer?.isNew && !groupMembers?.map((m) => m._id)?.includes(item.id_rocket),
                   )
                   ?.filter((m) => m.id_rocket !== user?.id_rocket)
                   .map((item, index) => {
