@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
 import { Checkbox, IconButton, ImageList, Typography } from "@mui/material";
-import { ChatItemInfo } from "store/chat/type";
+import { IChatItemInfo } from "store/chat/type";
 import { ChangeEvent, useMemo } from "react";
 import CircleUnchecked from "icons/CircleUnchecked";
 import CircleCheckedFilled from "icons/CircleCheckedFilled";

@@ -42,15 +42,14 @@ const ProfileHeader = ({
           </IconButton>
         )}
 
-        {/* Closed for phase2 */}
-        {/* <IconButton
+        <IconButton
           sx={{
             color: "white",
           }}
         >
           <ProfileAdd />
         </IconButton>
-        <IconButton
+        {/* <IconButton
           sx={{
             color: "white",
           }}

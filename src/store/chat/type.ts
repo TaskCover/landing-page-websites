@@ -158,7 +158,6 @@ export interface ChatState {
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
   messagePaging: Paging;
-  isLoadMessage: boolean;
   //partner info
   partnerInfo: UserInfo | null;
   partnerInfoStatus: DataStatus;

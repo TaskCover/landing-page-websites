@@ -5,7 +5,7 @@ import { DataStatus } from "constant/enums";
 import Skeleton from "@mui/material/Skeleton";
 import MessageLayout from "../common/MessageLayout";
 import MessageContent from "./MessageContent";
-import { sleep } from "utils/index";
+import { useChat } from "store/chat/selectors";
 
 interface MessagesProps {
   sessionId: string;
@@ -17,6 +17,7 @@ interface MessagesProps {
     filePreview?: File | File[] | null;
     status: DataStatus;
   };
+  isNewMessage: boolean;
   onRefetch: (page: number) => void;
 }
 
@@ -27,13 +28,12 @@ const Messages = ({
   pageSize,
   initialMessage: messages,
   stateMessage,
+  isNewMessage,
   onRefetch,
 }: MessagesProps) => {
   const [firstElement, setFirstElement] = useState(null);
-
   const scrollHeightRef = useRef(0);
   const pageRef = useRef(pageNumber);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
   const observer = useRef(
     new IntersectionObserver((entries) => {
@@ -54,15 +54,24 @@ const Messages = ({
   };
 
   useEffect(() => {
+    if (messagesContentRef.current) {
+      scrollHeightRef.current = 0;
+      initScrollIntoView(messagesContentRef.current?.scrollHeight);
+    }
+  }, [isNewMessage]);
+
+  useEffect(() => {
     if (messages?.length > 0) {
       const index = messagesContentRef.current?.scrollHeight
         ? Number(
             messagesContentRef.current?.scrollHeight - scrollHeightRef.current,
           )
         : 0;
+      console.log("12332323232");
+
       initScrollIntoView(index);
     }
-  }, [messages, scrollHeightRef, messagesContentRef]);
+  }, [isNewMessage, messages, scrollHeightRef, messagesContentRef]);
 
   useEffect(() => {
     const currentElement = firstElement;
@@ -163,7 +172,6 @@ const Messages = ({
           </Box>
         )}
       </Box>
-      <Box ref={messagesEndRef} />
     </>
   );
 };
