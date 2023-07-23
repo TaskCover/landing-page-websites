@@ -1,6 +1,6 @@
 import { Skeleton, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import ChatItem from "./ChatItem";
+import ChatItemLayout from "./ChatItemLayout";
 import { useChat } from "store/chat/selectors";
 import { ChatItemInfo, STEP } from "store/chat/type";
 import { useAuth } from "store/app/selectors";
@@ -149,7 +149,7 @@ const ChatList = () => {
             {convention?.length > 0
               ? convention.map((item, index) => {
                   return (
-                    <ChatItem
+                    <ChatItemLayout
                       chatInfo={item}
                       sessionId={user?.["username"]}
                       key={index}

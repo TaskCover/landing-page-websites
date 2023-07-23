@@ -8,7 +8,8 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 import MediaFileIcon from "icons/MediaFileIcon";
 import LinkIcon from "icons/LinkIcon";
 import FileBasicIcon from "icons/FileBasicIcon";
-import { STEP } from "store/chat/type";
+import { STEP_INFO } from "store/chat/type";
+import React from "react";
 
 const ItemProfile = ({
   Icon,
@@ -42,57 +43,81 @@ const ItemProfile = ({
   );
 };
 
-const UserLanding = () => {
-  const { currStep, prevStep, conversationInfo, onSetStep } = useChat();
-
+interface UserLandingProps {
+  displayUserInfo: boolean;
+  children?: React.ReactNode;
+  onPrevious: () => void;
+  onSetMediaStep: (step: STEP_INFO) => void;
+}
+const UserLanding = ({
+  displayUserInfo,
+  children,
+  onPrevious,
+  onSetMediaStep,
+}: UserLandingProps) => {
+  const { conversationInfo, onSetStep } = useChat();
   const { avatar, name } = conversationInfo || {};
-  console.log("userPartner", conversationInfo);
 
   return (
-    <>
-      <ProfileHeader
-        name={name || ""}
-        onPrevious={() => {
-          onSetStep(prevStep);
-        }}
-        onSearch={(text: string) => {
-          console.log("search", text);
-        }}
-      />
-      <Box textAlign="center" mt={2}>
-        <Avatar
-          alt="Avatar"
-          src={avatar || undefined}
-          size={80}
-          style={{
-            borderRadius: "10px",
-            border: "1px solid #efefef",
-          }}
-        />
-        <Box display="flex" flexDirection="column" gap={2} mt={5}>
-          <ItemProfile
-            Icon={ProfileCircleIcon}
-            title="Account infomation"
-            onClick={() => onSetStep(STEP.USER_INFO)}
+    <Box
+      sx={{
+        position: "absolute",
+        top: 0,
+        zIndex: 15,
+        width: "100%",
+        height: "600px",
+        minHeight: "600px",
+        backgroundColor: "white",
+        display: displayUserInfo ? "block" : "none",
+      }}
+    >
+      {!children ? (
+        <>
+          <ProfileHeader
+            name={name || ""}
+            onPrevious={onPrevious}
+            onSearch={(text: string) => {
+              console.log("search", text);
+            }}
           />
-          <ItemProfile
-            Icon={MediaFileIcon}
-            title="Media file"
-            onClick={() => onSetStep(STEP.MEDIA)}
-          />
-          <ItemProfile
-            Icon={LinkIcon}
-            title="Link"
-            onClick={() => onSetStep(STEP.LINK)}
-          />
-          <ItemProfile
-            Icon={FileBasicIcon}
-            title="File"
-            onClick={() => onSetStep(STEP.FILE)}
-          />
-        </Box>
-      </Box>
-    </>
+          <Box textAlign="center" mt={2}>
+            <Avatar
+              alt="Avatar"
+              src={avatar || undefined}
+              size={80}
+              style={{
+                borderRadius: "10px",
+                border: "1px solid #efefef",
+              }}
+            />
+            <Box display="flex" flexDirection="column" gap={2} mt={5}>
+              <ItemProfile
+                Icon={ProfileCircleIcon}
+                title="Account infomation"
+                onClick={() => onSetMediaStep(STEP_INFO.USER)}
+              />
+              <ItemProfile
+                Icon={MediaFileIcon}
+                title="Media file"
+                onClick={() => onSetMediaStep(STEP_INFO.MEDIA)}
+              />
+              <ItemProfile
+                Icon={LinkIcon}
+                title="Link"
+                onClick={() => onSetMediaStep(STEP_INFO.LINK)}
+              />
+              <ItemProfile
+                Icon={FileBasicIcon}
+                title="File"
+                onClick={() => onSetMediaStep(STEP_INFO.FILE)}
+              />
+            </Box>
+          </Box>
+        </>
+      ) : (
+        children
+      )}
+    </Box>
   );
 };
 

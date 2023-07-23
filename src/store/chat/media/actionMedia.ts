@@ -7,13 +7,31 @@ import {
   CHAT_API_URL,
   UPLOAD_API_URL,
 } from "constant/index";
-import { ChatUrlsQueryParam, FileUploadResponse } from "./typeMedia";
+import { UrlsQuery, MediaQuery } from "./typeMedia";
 
 export const getChatUrls = createAsyncThunk(
   "chat/getChatUrls",
-  async (params: ChatUrlsQueryParam) => {
+  async (params: UrlsQuery) => {
     try {
       const response = await client.post("getChatUrls", params, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getChatRoomFile = createAsyncThunk(
+  "chat/roomFiles",
+  async (params: MediaQuery) => {
+    try {
+      const response = await client.post("roomFiles", params, {
         baseURL: CHAT_API_URL,
       });
 
@@ -43,7 +61,7 @@ export const uploadFile = createAsyncThunk(
         const fileUpload = response.data;
         response = await client.put(response.data.upload, file);
         if (response?.status === HttpStatusCode.OK) {
-          return { ...fileUpload, type: file.type };
+          return { ...fileUpload, type: file.type, title: file.name };
         }
         throw AN_ERROR_TRY_AGAIN;
       } else {

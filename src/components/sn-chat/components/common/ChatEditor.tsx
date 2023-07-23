@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Stack, TextField } from "@mui/material";
+import { Box, Popover, Stack } from "@mui/material";
 import {
   ChangeEvent,
   memo,
@@ -15,10 +15,9 @@ import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
-import ReactQuill from "react-quill";
 import ImageImportIcon from "icons/ImageImportIcon";
-import ImojiImportIcon from "icons/ImojiImportIcon";
 import UploadFileIcon from "icons/UploadFileIcon";
+import ChatEmoji, { Emoji } from "./ChatEmoji";
 
 export type EditorProps = {
   hasAttachment?: boolean;
@@ -30,6 +29,13 @@ export type EditorProps = {
   onChangeFiles?: (files: File[]) => void;
   onEnterText?: (text: string) => void;
 };
+
+const ACCEPT_MEDIA = [...IMAGES_ACCEPT, "video/mp4"];
+const TOOLBAR = [
+  ["bold", "italic", "underline", "strike"],
+  ["link", "code-block"],
+  [{ list: "ordered" }, { list: "bullet" }],
+];
 
 const ChatEditor = (props: EditorProps) => {
   const {
@@ -45,19 +51,23 @@ const ChatEditor = (props: EditorProps) => {
   } = props;
 
   const [value, setValue] = useState(initalValue);
+  const inputMediaRef = useRef<HTMLInputElement | null>(null);
   const inputFileRef = useRef<HTMLInputElement | null>(null);
   const urlFiles = useMemo(
     () => files.map((file) => URL.createObjectURL(file)),
     [files],
   );
 
-  const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChangeFile = (
+    event: ChangeEvent<HTMLInputElement>,
+    type: string[],
+  ) => {
     if (!event.target.files?.length) return;
     let newFiles = Array.from(event.target.files);
 
     newFiles = newFiles.reduce(
       (out: File[], file) => {
-        if (ACCEPTS.includes(file.type)) {
+        if (type?.includes(file.type)) {
           out.push(file);
         }
         return out;
@@ -101,7 +111,7 @@ const ChatEditor = (props: EditorProps) => {
   );
 
   const { quill, quillRef } = useQuill({
-    strict: false,
+    strict: true,
     modules: {
       toolbar,
       keyboard: {
@@ -122,20 +132,25 @@ const ChatEditor = (props: EditorProps) => {
 
   const handleKeyDown = useCallback(
     (event) => {
+      quill?.root.focus();
       if (event.key === "Enter" && !event.shiftKey) {
-        onEnterText?.(value);
+        onEnterText?.(quill?.getText() || "");
         quill?.setText("");
         setValue("");
       }
     },
-    [onEnterText, quill, value],
+    [onEnterText, quill],
   );
 
+  const handleChaneEmoji = (emoji: Emoji) => {
+    const newText = `${value}${emoji.native}`;
+    quill?.insertText(quill?.getLength() - 1, newText);
+    quill?.root.focus();
+  };
+
   useEffect(() => {
+    quill?.focus();
     quillRefCurr?.addEventListener("keydown", handleKeyDown);
-    quill?.on("text-change", function (delta, oldDelta, source) {
-      setValue(quill.getText());
-    });
     return () => {
       quillRefCurr?.removeEventListener("keydown", handleKeyDown);
     };
@@ -146,6 +161,8 @@ const ChatEditor = (props: EditorProps) => {
       quill?.setText(initalValue);
     }
   }, [initalValue, quill]);
+
+  // console.log("quill?.root", quill?.root);
 
   return (
     <Stack
@@ -158,7 +175,7 @@ const ChatEditor = (props: EditorProps) => {
         },
         "& .ql-container": {
           "& .ql-editor": {
-            paddingRight: "5rem",
+            paddingRight: "7rem",
           },
           "& .ql-blank::before": {
             color: "#BABCC6",
@@ -185,22 +202,17 @@ const ChatEditor = (props: EditorProps) => {
             gap: "0.5rem",
           }}
         >
-          <ImojiImportIcon
-            sx={{
-              fill: "transparent",
-              cursor: "pointer",
-            }}
-          />
+          <ChatEmoji onChange={handleChaneEmoji} />
           <ImageImportIcon
             sx={{
               fill: "transparent",
               cursor: "pointer",
             }}
             onClick={() => {
-              inputFileRef?.current?.click();
+              inputMediaRef?.current?.click();
             }}
           />
-          {/* <UploadFileIcon
+          <UploadFileIcon
             sx={{
               fill: "transparent",
               cursor: "pointer",
@@ -208,7 +220,7 @@ const ChatEditor = (props: EditorProps) => {
             onClick={() => {
               inputFileRef?.current?.click();
             }}
-          /> */}
+          />
         </Box>
       </Box>
       <Stack
@@ -243,10 +255,19 @@ const ChatEditor = (props: EditorProps) => {
         multiple
         component="input"
         type="file"
-        accept={ACCEPTS.join(",")}
+        accept={ACCEPT_MEDIA.join(",")}
+        display="none"
+        ref={inputMediaRef}
+        onChange={(e) => onChangeFile(e, ACCEPT_MEDIA)}
+      />
+      <Box
+        multiple
+        component="input"
+        type="file"
+        accept={FILE_ACCEPT.join(",")}
         display="none"
         ref={inputFileRef}
-        onChange={onChangeFile}
+        onChange={(e) => onChangeFile(e, FILE_ACCEPT)}
       />
       {children}
     </Stack>
@@ -254,11 +275,3 @@ const ChatEditor = (props: EditorProps) => {
 };
 
 export default ChatEditor;
-
-const ACCEPTS = [...IMAGES_ACCEPT, "video/mp4"];
-
-const TOOLBAR = [
-  ["bold", "italic", "underline", "strike"],
-  ["link", "code-block"],
-  [{ list: "ordered" }, { list: "bullet" }],
-];

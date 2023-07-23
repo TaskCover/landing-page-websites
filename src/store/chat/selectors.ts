@@ -20,7 +20,7 @@ import { shallowEqual } from "react-redux";
 import {
   AddMember2GroupRequest,
   ChatConventionItemRequest,
-  ChatItemInfo,
+  IChatItemInfo,
   CreateGroupRequest,
   LastMessagesRequest,
   LeftGroupRequest,
@@ -33,6 +33,7 @@ import {
   ChatAttachmentsRequest,
   DeleteConversationGroup,
   MessageBodyRequest,
+  RoomType,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -47,9 +48,9 @@ import {
   clearMessageList,
   reset,
 } from "./reducer";
-import { Attachment, ChatUrlsQueryParam } from "./media/typeMedia";
-import { getChatUrls, uploadFile } from "./media/actionMedia";
-import { IMAGES_ACCEPT } from "constant/index";
+import { Attachment, MediaQuery, UrlsQuery } from "./media/typeMedia";
+import { getChatUrls, getChatRoomFile, uploadFile } from "./media/actionMedia";
+import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
@@ -74,6 +75,9 @@ export const useChat = () => {
 
     chatLinks,
     chatLinksStatus,
+
+    mediaList,
+    mediaListStatus,
 
     stateSendMessage,
 
@@ -139,7 +143,7 @@ export const useChat = () => {
   );
 
   const onGetChatUrls = useCallback(
-    async (params?: Omit<ChatUrlsQueryParam, "userId" | "authToken">) => {
+    async (params?: Omit<UrlsQuery, "userId" | "authToken">) => {
       const authToken = user ? user["authToken"] : "";
       const userId = user ? user["id_rocket"] : "";
       await dispatch(
@@ -300,11 +304,14 @@ export const useChat = () => {
         getChatAttachments({
           authToken,
           userId,
-          ...params,
+          roomId: params?.roomId ?? roomId,
+          roomType:
+            params?.roomType ?? (conversationInfo?.t as RoomType) ?? "c",
+          fileType: params?.fileType ?? "media",
         }),
       );
     },
-    [dispatch, user],
+    [conversationInfo, dispatch, roomId, user],
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -312,7 +319,7 @@ export const useChat = () => {
     dispatch(setMessage(message));
   };
 
-  const onSetConversationInfo = (conversationInfo: ChatItemInfo | null) => {
+  const onSetConversationInfo = (conversationInfo: IChatItemInfo | null) => {
     dispatch(
       setConversationInfo({ conversationInfo, sessionId: user?.["username"] }),
     );
@@ -380,6 +387,7 @@ export const useChat = () => {
           object: string;
           upload: string;
           type: string;
+          title: string;
         }[] = urlFiles.map((item) => {
           return item.payload;
         });
@@ -393,6 +401,12 @@ export const useChat = () => {
 
             if (item.type === "video/mp4") {
               obj.video_url = item.download;
+            }
+
+            if (FILE_ACCEPT.includes(item.type)) {
+              obj.title = item.title;
+              obj.title_link = item.download;
+              obj.title_link_download = true;
             }
 
             return obj;
@@ -430,6 +444,9 @@ export const useChat = () => {
 
     chatLinks,
     chatLinksStatus,
+
+    mediaList,
+    mediaListStatus,
 
     stateSendMessage,
 

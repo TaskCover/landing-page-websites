@@ -61,6 +61,7 @@ const ChatListTemp = () => {
                   width: "400px",
                   minHeight: "600px",
                   height: "600px",
+                  position: "relative",
                   overflow: "hidden",
                   borderTopLeftRadius: "15px",
                   borderTopRightRadius: "15px",

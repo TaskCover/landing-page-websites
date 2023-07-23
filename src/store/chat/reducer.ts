@@ -15,16 +15,14 @@ import {
 import { DataStatus } from "constant/enums";
 import {
   ChatGroup,
-  ChatItemInfo,
   ChatState,
   MessageInfo,
-  SetStepAction,
   STEP,
   TYPE_LIST,
   UserInfo,
 } from "./type";
-import { getChatUrls } from "./media/actionMedia";
-import { ChatLinkType } from "./media/typeMedia";
+import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
+import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
 
 const initalPage = { pageIndex: 0, pageSize: 10 };
 const initialState: ChatState = {
@@ -46,6 +44,9 @@ const initialState: ChatState = {
   //chatLinks
   chatLinks: [],
   chatLinksStatus: DataStatus.IDLE,
+  //media list
+  mediaList: [],
+  mediaListStatus: DataStatus.IDLE,
   //stateSendMessage
   stateSendMessage: {
     filePreview: null,
@@ -295,11 +296,16 @@ const chatSlice = createSlice({
           state.groupMembers = action.payload;
         },
       )
+      .addCase(getChatRoomFile.pending, (state) => {
+        state.mediaListStatus = DataStatus.LOADING;
+      })
       // getChatAttachments
       .addCase(
         getChatAttachments.fulfilled,
-        (state, action: PayloadAction<any[]>) => {
+        (state, action: PayloadAction<MediaResponse<MediaType>>) => {
           state.leftGroupStatus = DataStatus.SUCCEEDED;
+          state.mediaList = action.payload.files;
+          state.mediaListStatus = DataStatus.SUCCEEDED;
         },
       )
       // deleteConversation

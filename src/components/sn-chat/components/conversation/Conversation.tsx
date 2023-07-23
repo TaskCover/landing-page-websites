@@ -21,6 +21,7 @@ const Conversation = () => {
   const { user } = useAuth();
   const { sendMessage } = useWSChat();
   const [files, setFiles] = useState<File[]>([]);
+  const [isSending, setIsSending] = useState(false);
 
   const account = convention?.find((item) => item._id === roomId);
 
@@ -45,6 +46,7 @@ const Conversation = () => {
           files,
         });
       }
+      setIsSending((prev) => !prev);
     },
     [files, onUploadAndSendFile, sendMessage],
   );
@@ -66,9 +68,7 @@ const Conversation = () => {
         initialMessage={messageInfo}
         stateMessage={stateSendMessage}
         onRefetch={(page) => {
-          if (page > pageSize) {
-            fetchLastMessage(page);
-          }
+          fetchLastMessage(page);
         }}
       />
       <ChatInput

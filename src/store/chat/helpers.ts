@@ -107,6 +107,8 @@ export const useWSChat = () => {
     >,
   ) => {
     if (message.message && message.message.trim()?.length > 0) {
+      console.log('triggle 1');
+      
       ws?.send(
         JSON.stringify({
           msg: "method",

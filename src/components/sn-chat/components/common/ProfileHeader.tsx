@@ -81,33 +81,39 @@ const ProfileHeader = ({
               flexDirection: "column",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="inherit" fontWeight="bold">
-                {name}
-              </Typography>
-              {onShowProfile && (
+            {onShowProfile ? (
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                onClick={onShowProfile}
+              >
+                <Typography variant="inherit" fontWeight="bold">
+                  {name}
+                </Typography>
+
                 <Box
                   component="span"
                   sx={{
                     transform: "rotate(180deg)",
                     display: "flex",
-                    cursor: "pointer",
+
                     "& .MuiSvgIcon-root": {
                       width: "20px",
                       height: "20px",
                     },
                   }}
-                  onClick={onShowProfile}
                 >
                   <ArrowDownIcon />
                 </Box>
-              )}
-            </Box>
+              </Box>
+            ) : (
+              <Typography variant="inherit" fontWeight="bold">
+                {name}
+              </Typography>
+            )}
             {statusOnline && (
               <Typography variant="caption" color="#999999">
                 {statusOnline}

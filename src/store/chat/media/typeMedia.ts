@@ -28,12 +28,19 @@ export interface UrlInfo {
   };
 }
 
-export interface ChatUrlsQueryParam {
+export interface ChatQueryParam {
   authToken: string;
   userId: string;
-  type?: string;
-  roomId?: string;
+  roomId: string;
 }
+
+export type UrlsQuery = ChatQueryParam & {
+  type?: string;
+};
+
+export type MediaQuery = ChatQueryParam & {
+  roomType?: string;
+};
 
 export interface Attachment {
   audio_url?: string;
@@ -64,4 +71,39 @@ export interface FileUploadResponse {
   download: string;
   object: string;
   upload: string;
+}
+
+export interface MediaTypeCommon {
+  rid: string;
+  userId: string;
+  _updatedAt: Date | string;
+  uploadedAt: Date | string;
+  user: User;
+}
+export interface MediaHistoryType extends MediaTypeCommon {
+  url: string;
+}
+
+export interface FileHistoryType extends MediaTypeCommon {
+  name: string;
+  path: string;
+}
+
+export type MediaType = MediaHistoryType & FileHistoryType;
+
+export interface User {
+  _id: string;
+  username: string;
+  name: string;
+}
+
+export type MediaResponse<T> = Page & {
+  files: T[];
+};
+
+export interface Page {
+  count: number;
+  offset: number;
+  total: number;
+  success: boolean;
 }

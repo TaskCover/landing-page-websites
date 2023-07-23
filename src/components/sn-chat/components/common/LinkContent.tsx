@@ -1,40 +1,74 @@
+import Box from "@mui/material/Box";
+import Link from "components/Link";
+import Media from "components/Media";
 import { DataStatus } from "constant/enums";
 import { useEffect, useMemo } from "react";
 import { useAuth } from "store/app/selectors";
-import { ChatLinkType } from "store/chat/media/typeMedia";
 import { useChat } from "store/chat/selectors";
-
-const LinkItem = ({ linkInfo }: { linkInfo: ChatLinkType }) => {
-  const { urls } = linkInfo || {};
-  return <>Item</>;
-};
 
 const LinkContent = () => {
   const { user } = useAuth();
   const { chatLinks, chatLinksStatus, conversationInfo, onGetChatUrls } =
     useChat();
 
-  const { avatar, t } = conversationInfo || {};
-  console.log("conversationInfo", chatLinks);
-
-  //   const listLink = useMemo(() => {
-
-  //   }, [])
-
   useEffect(() => {
     onGetChatUrls();
   }, [onGetChatUrls]);
+
+  const chatLinkClone = useMemo(() => {
+    return chatLinks?.reduce((result, current) => {
+      const { urls, ...rest } = current;
+      const url = current.urls.map((item) => ({ ...rest, ...item }));
+      return [...result, ...url];
+    }, [] as unknown as { url: string; meta: {}; messageId: string; ts: string }[]);
+  }, [chatLinks]);
+
   return (
-    <>
+    <Box
+      sx={{
+        overflow: "auto",
+        maxHeight: "calc(600px - 77px - 59px - 16px)",
+        height: "100%",
+        paddingLeft: "1rem",
+        paddingRight: "0.3rem",
+      }}
+    >
       {chatLinksStatus === DataStatus.LOADING ||
       chatLinksStatus === DataStatus.FAILED ? (
         <>Loading...</>
       ) : (
-        chatLinks?.map((item) => {
-          return <LinkItem key={item.messageId} linkInfo={item} />;
+        chatLinkClone?.map((item, index) => {
+          return (
+            <Box
+              key={index}
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              py=".5rem"
+              gap="1rem"
+              borderBottom="1px solid #ECECF3"
+            >
+              <Media
+                size={64}
+                style={{
+                  minWidth: "64px",
+                  borderRadius: "10px",
+                }}
+              />
+              <Link
+                href={item.url}
+                target="_blank"
+                sx={{
+                  overflowWrap: "anywhere",
+                }}
+              >
+                {item.url}
+              </Link>
+            </Box>
+          );
         })
       )}
-    </>
+    </Box>
   );
 };
 

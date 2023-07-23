@@ -1,25 +1,42 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataStatus } from "constant/enums";
 import { Paging } from "constant/types";
-import { Attachment, ChatLinkType } from "./media/typeMedia";
+import { Attachment, ChatLinkType, MediaType } from "./media/typeMedia";
 
-export interface ChatItemInfo {
+export type IChatItemInfo = IChatInfo & IChatGroup & IChatDirect;
+export interface IChatInfo {
   _id: string;
-  usernames: string[];
-  usersCount: number;
-  ts: string;
-  default: boolean;
-  ro: boolean;
-  sysMes: boolean;
-  fname?: string;
   _updatedAt: string;
-  name?: string;
-  avatar: string;
+  name: string;
   t: string;
   msgs: number;
-  lastMessage: MessengerInfo;
+  usersCount: number;
+  ts: string;
+  ro: boolean;
+  default: boolean;
+  sysMes: boolean;
+  avatar: string;
+}
+
+export interface IChatGroup {
+  fname: string;
+  customFields: unknown;
+  u: UserSendInfo;
   lm: string;
+  lastMessage: MessageInfo;
+}
+
+export interface IChatDirect {
+  active: boolean;
+  nameInsensitive: string;
+  status: string;
   statuses: { username: string; status: string }[];
+  type: string;
+  lm: string;
+  username: string;
+  usernames: string[];
+  lastMessage: MessageInfo;
+  uids: string[];
 }
 
 export interface UserOnlinePage {
@@ -124,12 +141,12 @@ export interface SetStepAction<T> {
 }
 
 export interface ChatState {
-  convention: ChatItemInfo[];
+  convention: IChatItemInfo[];
   userOnlinePage: UserOnlinePage[];
   status: DataStatus;
   conversationPaging: Paging;
   conversationInfo:
-    | (ChatItemInfo & { partnerUsername: string; statusOnline: string })
+    | (IChatItemInfo & { partnerUsername: string; statusOnline: string })
     | null;
   roomId: string;
 
@@ -147,6 +164,9 @@ export interface ChatState {
   //chat links
   chatLinks: ChatLinkType[];
   chatLinksStatus: DataStatus;
+  //media list
+  mediaList: MediaType[];
+  mediaListStatus: DataStatus;
   //sendMessage state
   stateSendMessage: {
     filePreview?: File | File[] | null;
@@ -211,10 +231,11 @@ export interface DeleteConversationGroup extends AuthenRequestCommon {
   type: string;
 }
 
+export type RoomType = "c" | "d" | "p";
 export interface ChatAttachmentsRequest extends AuthenRequestCommon {
-  roomId: string;
+  roomId?: string;
   fileType?: "media" | "file" | "link";
-  roomType: "c" | "p" | "d";
+  roomType?: RoomType;
 }
 
 export interface ChangeRoleRequest extends AuthenRequestCommon {
@@ -287,6 +308,14 @@ export enum STEP {
   FILE,
   CHAT_FORWARD,
   CHAT_GROUP,
+}
+
+export enum STEP_INFO {
+  IDLE,
+  USER,
+  MEDIA,
+  LINK,
+  FILE,
 }
 
 export enum TYPE_LIST {

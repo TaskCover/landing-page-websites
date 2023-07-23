@@ -1,28 +1,31 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useMemo, useState } from "react";
-import { STEP } from "store/chat/type";
+import { STEP, STEP_INFO } from "store/chat/type";
 import ProfileHeader from "../common/ProfileHeader";
 import { useChat } from "store/chat/selectors";
 import { SxProps } from "@mui/material";
 import LinkContent from "../common/LinkContent";
-import { useAuth } from "store/app/selectors";
+import MediaContent from "../common/MediaContent";
+import FileContent from "../common/FileContent";
 
 interface GroupMediaProfileProps {
-  type?: STEP;
+  type?: STEP_INFO;
+  onPrevious: (step) => void;
 }
-const GroupMediaProfile = ({ type }: GroupMediaProfileProps) => {
-  const [tab, setTab] = useState(type);
-  const { onSetStep } = useChat();
+const GroupMediaProfile = ({ type, onPrevious }: GroupMediaProfileProps) => {
+  const [tab, setTab] = useState<STEP_INFO>(type || STEP_INFO.MEDIA);
+  const { conversationInfo } = useChat();
+  const { name } = conversationInfo || {};
 
   const renderContent = useMemo(() => {
     switch (tab) {
-      case STEP.MEDIA:
-        return <>MEDIA</>;
-      case STEP.LINK:
+      case STEP_INFO.MEDIA:
+        return <MediaContent />;
+      case STEP_INFO.LINK:
         return <LinkContent />;
-      case STEP.FILE:
-        return <>FILE</>;
+      case STEP_INFO.FILE:
+        return <FileContent />;
     }
   }, [tab]);
 
@@ -39,9 +42,9 @@ const GroupMediaProfile = ({ type }: GroupMediaProfileProps) => {
   return (
     <>
       <ProfileHeader
-        name={"Martin Randolph"}
+        name={name || ""}
         onPrevious={() => {
-          onSetStep(STEP.VIEW_DETAIL_USER);
+          onPrevious(STEP_INFO.IDLE);
         }}
       />
       <Box>
@@ -61,37 +64,30 @@ const GroupMediaProfile = ({ type }: GroupMediaProfileProps) => {
         >
           <Button
             variant="outlined"
-            onClick={() => setTab(STEP.MEDIA)}
+            onClick={() => setTab(STEP_INFO.MEDIA)}
             sx={styleButtonTab}
-            className={tab === STEP.MEDIA ? "active" : ""}
+            className={tab === STEP_INFO.MEDIA ? "active" : ""}
           >
             Media file
           </Button>
           <Button
             variant="outlined"
-            onClick={() => setTab(STEP.LINK)}
+            onClick={() => setTab(STEP_INFO.LINK)}
             sx={styleButtonTab}
-            className={tab === STEP.LINK ? "active" : ""}
+            className={tab === STEP_INFO.LINK ? "active" : ""}
           >
             Link
           </Button>
           <Button
             variant="outlined"
-            onClick={() => setTab(STEP.FILE)}
+            onClick={() => setTab(STEP_INFO.FILE)}
             sx={styleButtonTab}
-            className={tab === STEP.FILE ? "active" : ""}
+            className={tab === STEP_INFO.FILE ? "active" : ""}
           >
             File
           </Button>
         </Box>
-        <Box
-          px={1}
-          sx={{
-            backgroundColor: "red",
-          }}
-        >
-          {renderContent}
-        </Box>
+        {renderContent}
       </Box>
     </>
   );

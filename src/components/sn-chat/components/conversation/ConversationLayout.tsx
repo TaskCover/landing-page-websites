@@ -1,9 +1,12 @@
 import Box from "@mui/material/Box";
-import { ChatItemInfo, STEP } from "store/chat/type";
+import { ChatItemInfo, STEP, STEP_INFO, TYPE_LIST } from "store/chat/type";
 import { useChat } from "store/chat/selectors";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Conversation from "./Conversation";
 import ProfileHeader from "../common/ProfileHeader";
+import UserLanding from "./UserLanding";
+import UserInfo from "./UserInfo";
+import GroupMediaProfile from "./GroupMediaProfile";
 
 interface ConversationLayoutProp {
   viewStep?: STEP;
@@ -23,13 +26,35 @@ const ConversationLayout = ({
     onSetConversationInfo,
     onClearMessageList,
   } = useChat();
-
+  const [displayUserInfo, setDisplayUserInfo] = useState(false);
+  const [stepMedia, setStepMedia] = useState<STEP_INFO>(STEP_INFO.IDLE);
   const accountInfo = useMemo(() => {
     const account = convention?.find(
       (item) => item._id === roomId,
     ) as ChatItemInfo;
     return account;
   }, [convention, roomId]);
+
+  const _renderMediaContent = useMemo(() => {
+    switch (stepMedia) {
+      case STEP_INFO.USER:
+        return <UserInfo onPrevious={setStepMedia} />;
+      case STEP_INFO.MEDIA:
+        return (
+          <GroupMediaProfile type={STEP_INFO.MEDIA} onPrevious={setStepMedia} />
+        );
+      case STEP_INFO.LINK:
+        return (
+          <GroupMediaProfile type={STEP_INFO.LINK} onPrevious={setStepMedia} />
+        );
+      case STEP_INFO.FILE:
+        return (
+          <GroupMediaProfile type={STEP_INFO.FILE} onPrevious={setStepMedia} />
+        );
+      default:
+        return null;
+    }
+  }, [stepMedia]);
 
   return (
     <>
@@ -44,7 +69,7 @@ const ConversationLayout = ({
           onSetRoomId("");
         }}
         onShowProfile={() => {
-          onSetStep(STEP.VIEW_DETAIL_USER);
+          setDisplayUserInfo((prev) => !prev);
         }}
       />
       <Box
@@ -55,6 +80,15 @@ const ConversationLayout = ({
       >
         <Conversation />
       </Box>
+      <UserLanding
+        displayUserInfo={displayUserInfo}
+        onPrevious={() => {
+          setDisplayUserInfo((prev) => !prev);
+        }}
+        onSetMediaStep={setStepMedia}
+      >
+        {_renderMediaContent}
+      </UserLanding>
     </>
   );
 };

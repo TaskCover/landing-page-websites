@@ -1,5 +1,5 @@
 import { AlertColor } from "@mui/material";
-import { Status, ThemeMode } from "./enums";
+import { FILE_MAP, Status, ThemeMode } from "./enums";
 import { Mode, Paging } from "./types";
 
 export const AUTH_API_URL = process.env.AUTH_API_URL as string;
@@ -87,3 +87,10 @@ export const API_TIMEOUT = 30_000; //s
 
 export const AN_ERROR_TRY_RELOAD_PAGE = "error.anErrorTryReload";
 export const AN_ERROR_TRY_AGAIN = "error.anErrorTryAgain";
+
+export const mapType = {
+  [FILE_MAP.DOC]: ["doc", "docx", "dot", "dotx"],
+  [FILE_MAP.EXCEL]: ["xls", "xlsx", "xlsm"],
+  [FILE_MAP.CSV]: ["csv"],
+  [FILE_MAP.PDF]: ["pdf"],
+};

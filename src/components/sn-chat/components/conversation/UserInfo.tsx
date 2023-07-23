@@ -3,12 +3,14 @@ import ProfileHeader from "../common/ProfileHeader";
 import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
 import { SxProps, Typography } from "@mui/material";
-import { STEP } from "store/chat/type";
-import { useAuth } from "store/app/selectors";
+import { STEP, STEP_INFO } from "store/chat/type";
 import { useEffect } from "react";
 import { DataStatus } from "constant/enums";
 
-const UserInfomation = () => {
+interface UserInfoProps {
+  onPrevious: (step) => void;
+}
+const UserInfo = ({ onPrevious }: UserInfoProps) => {
   const {
     conversationInfo,
     partnerInfo,
@@ -40,7 +42,7 @@ const UserInfomation = () => {
       <ProfileHeader
         name={name || ""}
         onPrevious={() => {
-          onSetStep(STEP.VIEW_DETAIL_USER);
+          onPrevious(STEP_INFO.IDLE);
         }}
       />
       <Box textAlign="center" mt={2}>
@@ -83,4 +85,4 @@ const UserInfomation = () => {
   );
 };
 
-export default UserInfomation;
+export default UserInfo;
