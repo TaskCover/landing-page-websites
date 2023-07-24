@@ -47,9 +47,9 @@ const tabStyles = {
 
 const TimeTrackingPage: React.FC = () => {
   const { isDarkMode } = useTheme();
-  const { isSmSmaller } = useBreakpoint();
+  const { isSmSmaller, isMdSmaller } = useBreakpoint();
   const tabStyles = {
-    width: isSmSmaller ? "auto" : "216px",
+    width: 'auto',
     fontSize: "16px",
     lineHeight: "20px",
     fontWeight: 600,
@@ -106,12 +106,14 @@ const TimeTrackingPage: React.FC = () => {
             item
             md={6}
             sm={12}
-            //sx={{ marginBottom: isSmSmaller ? "15px" : 0 }}
+            //sx={{ display: "flex"}}
           >
             <TabList
               sx={{
                 "& .MuiTabs-flexContainer": {
                   gap: "16px",
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)'
                 },
                 "& .MuiTab-root": {
                   textTransform: "unset",
