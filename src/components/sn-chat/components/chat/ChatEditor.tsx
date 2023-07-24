@@ -1,9 +1,8 @@
 "use client";
 
-import { Box, Popover, Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import {
   ChangeEvent,
-  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -132,9 +131,8 @@ const ChatEditor = (props: EditorProps) => {
 
   const handleKeyDown = useCallback(
     (event) => {
-      quill?.root.focus();
       if (event.key === "Enter" && !event.shiftKey) {
-        onEnterText?.(quill?.getText() || "");
+        onEnterText?.(quill?.root.innerHTML || "");
         quill?.setText("");
         setValue("");
       }
@@ -162,8 +160,6 @@ const ChatEditor = (props: EditorProps) => {
     }
   }, [initalValue, quill]);
 
-  // console.log("quill?.root", quill?.root);
-
   return (
     <Stack
       className="editor"
@@ -174,11 +170,19 @@ const ChatEditor = (props: EditorProps) => {
           borderRadius: "unset !important",
         },
         "& .ql-container": {
+          position: "unset!important",
+          maxHeight: "150px",
+          display: "block",
           "& .ql-editor": {
             paddingRight: "7rem",
           },
           "& .ql-blank::before": {
             color: "#BABCC6",
+          },
+          "& .ql-tooltip": {
+            right: "0",
+            left: "0!important",
+            width: "fit-content",
           },
         },
       }}
@@ -186,6 +190,7 @@ const ChatEditor = (props: EditorProps) => {
       {isLoading ? "loading..." : null}
       <Box position="relative">
         <Box
+          component={"span"}
           ref={quillRef}
           sx={{
             color: "black",

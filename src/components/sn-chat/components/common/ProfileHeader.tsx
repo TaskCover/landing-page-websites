@@ -8,7 +8,6 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
-import VideoCallIcon from "icons/VideoCallIcon";
 import { useCallback, useState } from "react";
 
 interface ProfileHeaderProps {
@@ -92,13 +91,11 @@ const ProfileHeader = ({
                 <Typography variant="inherit" fontWeight="bold">
                   {name}
                 </Typography>
-
                 <Box
                   component="span"
                   sx={{
                     transform: "rotate(180deg)",
                     display: "flex",
-
                     "& .MuiSvgIcon-root": {
                       width: "20px",
                       height: "20px",

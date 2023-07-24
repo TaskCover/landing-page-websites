@@ -3,13 +3,16 @@ import Typography from "@mui/material/Typography";
 import { MessageInfo } from "store/chat/type";
 import { formatDate } from "utils/index";
 import Linkify from "linkify-react";
-import AttachmentContent from "./AttachmentContent";
+import AttachmentContent from "../conversation/AttachmentContent";
+import { useEffect, useRef } from "react";
 
 interface MessageContentProps {
   message: MessageInfo;
   isCurrentUser: boolean;
 }
 const MessageContent = ({ message, isCurrentUser }: MessageContentProps) => {
+  const textRef = useRef<HTMLDivElement>(null);
+
   if (message.msg) {
     return (
       <Box
@@ -40,7 +43,7 @@ const MessageContent = ({ message, isCurrentUser }: MessageContentProps) => {
               target: "_blank",
             }}
           >
-            {message.msg}
+            <Box dangerouslySetInnerHTML={{ __html: message.msg }} />
           </Linkify>
         </Typography>
         <Typography variant="caption" color="#999999">

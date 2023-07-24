@@ -42,7 +42,16 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
             overflow: "hidden",
           }}
         >
-          {!isMessageNotConnect ? lastMessageContent : null}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.2rem",
+            }}
+            dangerouslySetInnerHTML={{
+              __html: !isMessageNotConnect ? lastMessageContent : "",
+            }}
+          />
         </Typography>
       </>
     );

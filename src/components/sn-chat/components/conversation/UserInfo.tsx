@@ -15,7 +15,6 @@ const UserInfo = ({ onPrevious }: UserInfoProps) => {
     conversationInfo,
     partnerInfo,
     partnerInfoStatus,
-    onSetStep,
     onGetUserInfo,
   } = useChat();
   const { avatar, name, partnerUsername } = conversationInfo || {};

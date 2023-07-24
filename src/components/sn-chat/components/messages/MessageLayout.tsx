@@ -1,6 +1,6 @@
 import Box, { BoxProps } from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { MessageInfo, Url } from "store/chat/type";
+import { MessageInfo } from "store/chat/type";
 
 interface MessageLayoutProps {
   sessionId: string;

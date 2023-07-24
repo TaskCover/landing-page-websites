@@ -7,9 +7,7 @@ import { useAuth } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
 
 const LinkContent = () => {
-  const { user } = useAuth();
-  const { chatLinks, chatLinksStatus, conversationInfo, onGetChatUrls } =
-    useChat();
+  const { chatLinks, chatLinksStatus, onGetChatUrls } = useChat();
 
   useEffect(() => {
     onGetChatUrls();
