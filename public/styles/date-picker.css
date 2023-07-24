@@ -79,3 +79,7 @@ height-s {
 .tab-panel-top-0 {
   padding-top: 0px !important;
 }
+
+.MuiDayCalendar-weekDayLabel {
+  color: #999999 !important;
+}
