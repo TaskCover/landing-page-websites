@@ -24,6 +24,7 @@ const ButtonCalendar = (props: ButtonProps) => {
         height: "32px",
         width: isSmSmaller ? '100px' : "161px",
         padding: 0,
+        fontSize: isSmSmaller ? '10px' : "13px",
         backgroundColor: isDarkMode
           ? "grey.100"
           : isActive
