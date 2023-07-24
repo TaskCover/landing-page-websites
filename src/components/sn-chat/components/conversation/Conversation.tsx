@@ -15,6 +15,7 @@ const Conversation = () => {
     messageInfo,
     messagePaging: { pageIndex, pageSize },
     stateSendMessage,
+    dataTransfer,
     onGetLastMessages,
     onUploadAndSendFile,
   } = useChat();
@@ -24,11 +25,11 @@ const Conversation = () => {
 
   const account = convention?.find((item) => item._id === roomId);
 
-  useEffect(() => {
+  useEffect(() => {    
     if (backFallStep !== STEP.VIEW_DETAIL_USER) {
-      onGetLastMessages({ roomId, type: "d", offset: 0, count: 10 });
+      onGetLastMessages({ roomId: dataTransfer?._id ?? roomId, type: dataTransfer?.t ?? 'd', offset: 0, count: 10 });
     }
-  }, [roomId, onGetLastMessages, backFallStep]);
+  }, [roomId, onGetLastMessages, backFallStep, dataTransfer?._id, dataTransfer?.t]);
 
   useEffect(() => {
     if (stateSendMessage.status) {
@@ -56,9 +57,9 @@ const Conversation = () => {
 
   const fetchLastMessage = useCallback(
     (page: number) => {
-      onGetLastMessages({ roomId, type: "d", offset: page, count: 10 });
+      onGetLastMessages({ roomId: dataTransfer?._id ?? roomId, type: dataTransfer?.t ?? 'd', offset: page, count: 10 });
     },
-    [onGetLastMessages, roomId],
+    [dataTransfer?._id, dataTransfer?.t, onGetLastMessages, roomId],
   );
 
   return (

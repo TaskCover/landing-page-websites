@@ -49,6 +49,7 @@ const AddGroup = () => {
     convention,
     dataTransfer,
     groupMembers,
+    onSetRoomId,
     onGetAllConvention,
     onSetStep,
     onCreateDirectMessageGroup,
@@ -78,8 +79,8 @@ const AddGroup = () => {
       return;
     }
     onAddSnackbar("Successfully!", "success");
-    // onSetStep(STEP.CHAT_ONE);
-    onSetStep(STEP.CHAT_GROUP, dataTransfer);
+    onSetStep(STEP.CHAT_GROUP, !dataTransfer?.isNew ? dataTransfer : result?.payload?.group);
+    onSetRoomId(dataTransfer?.isNew ? result?.payload?.group?._id : dataTransfer?._id)
   };
 
   const handleKeyDown = (event) => {
@@ -122,7 +123,7 @@ const AddGroup = () => {
           (item) => employeeSelected[item] === true,
         ),
         type: "d",
-      });
+      });      
       handleSuccess(result);
     } else {
       const users = Object.keys(employeeIdSelected).filter(

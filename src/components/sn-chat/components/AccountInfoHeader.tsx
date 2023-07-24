@@ -101,7 +101,7 @@ const AccountInfoHeader = ({
             }}
           >
             <Typography variant="inherit" fontWeight="bold">
-              {name}
+              {name ? name : dataTransfer?.fname }
             </Typography>
             <Typography variant="caption" color="#999999">
               Active

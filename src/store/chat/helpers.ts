@@ -6,7 +6,7 @@ import { MessageBodyRequest } from "./type";
 
 export const useWSChat = () => {
   const { user } = useAuth();
-  const { roomId, onSetMessage, onSetLastMessage } = useChat();
+  const { roomId, dataTransfer, onSetMessage, onSetLastMessage } = useChat();
 
   const [ws, setWs] = useState<WebSocket | null>(null);
   const token = user?.["authToken"];
@@ -88,7 +88,7 @@ export const useWSChat = () => {
       openSocketFlag = false;
       ws?.close();
     };
-  }, [roomId, ws]);
+  }, [roomId, ws, dataTransfer?._id]);
 
   const appendMessage = useCallback(
     (message) => {
