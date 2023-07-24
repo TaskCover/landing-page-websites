@@ -43,7 +43,14 @@ const MessageContent = ({ message, isCurrentUser }: MessageContentProps) => {
               target: "_blank",
             }}
           >
-            <Box dangerouslySetInnerHTML={{ __html: message.msg }} />
+            <Box
+              sx={{
+                "& p": {
+                  display: "initial",
+                },
+              }}
+              dangerouslySetInnerHTML={{ __html: message.msg }}
+            />
           </Linkify>
         </Typography>
         <Typography variant="caption" color="#999999">

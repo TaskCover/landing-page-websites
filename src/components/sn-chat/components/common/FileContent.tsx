@@ -48,6 +48,7 @@ const FileContent = () => {
               />
               <Link
                 href={item.path}
+                target="_blank"
                 sx={{
                   color: "#212121",
                   overflowWrap: "anywhere",

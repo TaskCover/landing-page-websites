@@ -199,6 +199,7 @@ const AttachmentContent = ({
                       />
                       <Link
                         href={file?.title_link || ""}
+                        target="_blank"
                         sx={{
                           color: "#3699FF",
                           overflowWrap: "anywhere",

@@ -27,7 +27,6 @@ interface MessagesProps {
 
 type MessageHandle = {
   scrollBottom: () => void;
-  resetHeightScroll: () => void;
 };
 
 const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
@@ -59,20 +58,19 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     }),
   );
 
-  const resetHeightScroll = () => {
-    scrollHeightRef.current = 0;
-  };
-
   const scrollBottom = () => {
     if (messageEndRef?.current) {
-      messageEndRef?.current.scrollIntoView();
+      messageEndRef?.current.scrollIntoView({
+        behavior: "smooth",
+      });
+      scrollHeightRef.current = 0;
     }
   };
 
   useImperativeHandle(
     ref,
     () => {
-      return { scrollBottom, resetHeightScroll };
+      return { scrollBottom };
     },
     [],
   );

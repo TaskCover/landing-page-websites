@@ -43,7 +43,6 @@ const Conversation = () => {
   const handleSendMessage = useCallback(
     async (message: string) => {
       inputRef?.current?.scrollBottom();
-      inputRef?.current?.resetHeightScroll();
       sendMessage({ message });
       if (files.length > 0) {
         await onUploadAndSendFile({
