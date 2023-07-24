@@ -3,8 +3,6 @@ import { useChat } from "store/chat/selectors";
 import { STEP } from "store/chat/type";
 import ChatListUser from "./components/chat/ChatList";
 import ConversationLayoutUser from "./components/conversation/ConversationLayout";
-import UserLanding from "./components/conversation/UserLanding";
-import GroupMediaProfile from "./components/conversation/GroupMediaProfile";
 import ConversationLayout from "./components/ConversationLayout";
 import AddGroup from "./chatGroup/AddGroup";
 import ChatDetailGroup from "./chatGroup/ChatDetailGroup";
@@ -28,14 +26,6 @@ const SwitchChat = () => {
         return <ChatListUser />;
       case STEP.CHAT_ONE:
         return <ConversationLayoutUser />;
-      case STEP.VIEW_DETAIL_USER:
-        return <UserLanding />;
-      case STEP.MEDIA:
-        return <GroupMediaProfile type={STEP.MEDIA} />;
-      case STEP.LINK:
-        return <GroupMediaProfile type={STEP.LINK} />;
-      case STEP.FILE:
-        return <GroupMediaProfile type={STEP.FILE} />;
       case STEP.ADD_GROUP:
         return <AddGroup />;
       case STEP.VIEW_DETAIL_USER:
