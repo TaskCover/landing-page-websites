@@ -133,7 +133,7 @@ const Actions = () => {
         py={{ xs: 0.75 }}
         mt={{ sm: 1.25, md: 0 }}
         position="sticky"
-        top={61}
+        top={45}
         zIndex={12}
         bgcolor="background.paper"
         display={{ xs: "none", md: "flex" }}
