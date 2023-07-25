@@ -112,7 +112,7 @@ const ItemList = () => {
   );
 
   const baseTop = useMemo(
-    () => (selectedList.length ? 60 : 16),
+    () => (selectedList.length ? 106 : 62),
     [selectedList.length],
   );
 
@@ -596,7 +596,7 @@ const ItemList = () => {
   }, [initQuery, isReady, onGetTasksOfProject, projectId]);
 
   return (
-    <Stack flex={1}>
+    <Stack flex={1} order={3}>
       {!!selectedList.length && (
         <ActionsSelected
           selectedList={selectedList}
@@ -606,7 +606,7 @@ const ItemList = () => {
       <Stack
         position="sticky"
         top={baseTop + 44}
-        zIndex={1}
+        zIndex={12}
         display={{ xs: "none", md: "flex" }}
         bgcolor="background.default"
       >

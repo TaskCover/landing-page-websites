@@ -5,10 +5,21 @@ import { Stack, StackProps } from "@mui/material";
 import { BarChart, DoughnutChart } from "./components";
 import { Text } from "components/shared";
 import { Dropdown } from "components/Filters";
+import { useAuth } from "store/app/selectors";
+import { Permission } from "constant/enums";
 
 type ChartStatisticProps = {};
 
 const ChartStatistic = (props: ChartStatisticProps) => {
+  const { user } = useAuth();
+
+  const isSARole = useMemo(
+    () => user?.roles?.includes(Permission.SA),
+    [user?.roles],
+  );
+
+  if (!isSARole) return null;
+
   return (
     <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
       <Layout

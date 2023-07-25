@@ -61,17 +61,33 @@ const ItemList = () => {
     ],
     [commonT],
   );
+  const mobileHeaderList: CellProps[] = useMemo(
+    () => [
+      {
+        value: commonT("name"),
+        width: "30%",
+        align: "left",
+      },
+      {
+        value: commonT("creator"),
+        width: "30%",
+        align: "left",
+      },
+      { value: commonT("creationDate"), width: "20%" },
+    ],
+    [commonT],
+  );
 
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
-      ? MOBILE_HEADER_LIST
+      ? mobileHeaderList
       : desktopHeaderList;
 
     return [
       ...additionalHeaderList,
-      { value: "", width: isMdSmaller ? "25%" : "10%" },
+      { value: "", width: isMdSmaller ? "20%" : "10%" },
     ] as CellProps[];
-  }, [desktopHeaderList, isMdSmaller]);
+  }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
 
   const onActionToItem = (action: DataAction, item?: ProjectType) => {
     return () => {
@@ -127,6 +143,9 @@ const ItemList = () => {
           error={error as string}
           noData={!isIdle && items.length === 0}
           px={{ xs: 0, md: 3 }}
+          headerProps={{
+            sx: { px: { xs: 0.5, md: 2 }, wordBreak: "break-all" },
+          }}
         >
           {items.map((item, index) => {
             return (
@@ -140,8 +159,14 @@ const ItemList = () => {
                   />
                 )}
                 <ActionsCell
+                  sx={{ pl: { xs: 0.5, md: 2 } }}
                   onEdit={onActionToItem(DataAction.UPDATE, item)}
                   onDelete={onDelete(item.id)}
+                  iconProps={{
+                    sx: {
+                      p: { xs: "4px!important", md: 1 },
+                    },
+                  }}
                 />
               </TableRow>
             );
@@ -153,7 +178,7 @@ const ItemList = () => {
           totalPages={totalPages}
           page={pageIndex}
           pageSize={pageSize}
-          containerProps={{ px: 3, py: 1 }}
+          containerProps={{ px: { md: 3 }, py: 1 }}
           onChangePage={onChangePage}
           onChangeSize={onChangeSize}
         />

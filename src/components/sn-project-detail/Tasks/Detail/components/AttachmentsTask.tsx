@@ -32,8 +32,7 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
     inputFileRef?.current?.click();
   };
 
-  const onChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
+  const onHandleFiles = async (files: FileList | null) => {
     if (!files) return;
     const fileExtensions = Array.from(files).map((file) =>
       getExtension(file.name),
@@ -79,6 +78,11 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
     }
   };
 
+  const onChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    onHandleFiles(files);
+  };
+
   const onRemove = (index: number) => {
     return () => {
       setIndexDeleted(index);
@@ -109,6 +113,18 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
     }
   };
 
+  const onDragOver = (event) => {
+    event.preventDefault();
+  };
+  const onDrop = (event) => {
+    event.preventDefault();
+    const { files } = event.dataTransfer;
+    onHandleFiles(files);
+  };
+  const onDragStart = (event) => {
+    event.dataTransfer.setData("text/plain", event.target.id);
+  };
+
   return (
     <>
       {!!task?.attachments_down?.length && (
@@ -122,21 +138,30 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
             </Text>
           }
         >
-          <Stack direction="row" gap={1.5} flex={1} flexWrap="wrap" mt={2}>
-            {task?.attachments_down.map((attachment, index) => (
-              <AttachmentPreview
-                key={attachment?.link}
-                src={attachment?.link}
-                name={attachment?.name}
-                onRemove={onRemove(index)}
-                size={40}
-                showName
-                containerProps={{
-                  bgcolor: "grey.100",
-                  p: 1.25,
-                }}
-              />
-            ))}
+          <Stack mt={2} flex={1} onDrop={onDrop} onDragOver={onDragOver}>
+            <Stack
+              draggable
+              onDragStart={onDragStart}
+              direction="row"
+              gap={1.5}
+              flex={1}
+              flexWrap="wrap"
+            >
+              {task?.attachments_down.map((attachment, index) => (
+                <AttachmentPreview
+                  key={attachment?.link}
+                  src={attachment?.link}
+                  name={attachment?.name}
+                  onRemove={onRemove(index)}
+                  size={40}
+                  showName
+                  containerProps={{
+                    bgcolor: "grey.100",
+                    p: 1.25,
+                  }}
+                />
+              ))}
+            </Stack>
           </Stack>
           <Button
             onClick={onChooseFile}

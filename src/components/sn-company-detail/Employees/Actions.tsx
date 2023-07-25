@@ -81,13 +81,19 @@ const Actions = () => {
 
   return (
     <Stack
-      direction={{ xs: "column-reverse", md: "row" }}
+      direction={{ xs: "column", md: "row" }}
       alignItems={{ md: "center" }}
       justifyContent="space-between"
-      spacing={{ xs: 1.5, md: 3 }}
-      p={{ xs: 1, md: 3 }}
+      spacing={{ xs: 2, md: 3 }}
+      px={{ md: 3 }}
+      pt={{ md: 3 }}
+      pb={2}
     >
-      <Stack spacing={1} width="fit-content">
+      <Stack
+        direction={{ xs: "row", md: "column" }}
+        spacing={{ xs: 3, md: 1 }}
+        width="fit-content"
+      >
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
           {managerT("employeeList.staffPaid")}:
           <Text
@@ -113,49 +119,62 @@ const Actions = () => {
       </Stack>
 
       <Stack
-        direction={{ xs: "column", md: "row" }}
+        direction="row"
         alignItems="center"
-        spacing={{ xs: 1.5, md: 3 }}
-        py={1.25}
-        px={2}
+        spacing={{ xs: 2, md: 3 }}
+        py={{ md: 1.25 }}
+        px={{ md: 2 }}
         borderRadius={1}
         width={{ xs: "100%", md: "fit-content" }}
-        border="1px solid"
-        borderColor="grey.100"
-        justifyContent="flex-end"
+        border={{ md: "1px solid" }}
+        borderColor={{ md: "grey.100" }}
+        justifyContent={{ xs: "flex-start", md: "flex-end" }}
+        overflow="auto"
+        maxWidth="100%"
       >
         <Search
           placeholder={commonT("searchBy", { name: "email" })}
           name="email"
           onChange={onChangeQueries}
           value={queries?.email}
+          sx={{ minWidth: "fit-content", height: { xs: 46, md: 32 } }}
+          rootSx={{ height: { xs: 46, md: 32 } }}
         />
-        <Stack direction="row" alignItems="center" spacing={3}>
-          <Date
-            label={commonT("creationDate")}
-            name="created_time"
-            onChange={onChangeQueries}
-            value={queries?.created_time}
-            format={DATE_FORMAT_HYPHEN}
-          />
-          <Dropdown
-            placeholder={commonT("status")}
-            options={paymentOptions}
-            name="status"
-            onChange={onChangeQueries}
-            value={queries?.status ? Number(queries?.status) : queries?.approve}
-          />
-        </Stack>
-        <Stack direction="row" alignItems="center" spacing={3}>
-          <Button size="small" onClick={onSearch} variant="secondary">
-            {commonT("search")}
-          </Button>
-          <Refresh onClick={onRefresh} />
+        <Date
+          label={commonT("creationDate")}
+          name="created_time"
+          onChange={onChangeQueries}
+          value={queries?.created_time}
+          format={DATE_FORMAT_HYPHEN}
+        />
+        <Dropdown
+          placeholder={commonT("status")}
+          options={paymentOptions}
+          name="status"
+          onChange={onChangeQueries}
+          value={queries?.status ? Number(queries?.status) : queries?.approve}
+        />
+        <Button
+          size="small"
+          onClick={onSearch}
+          variant="secondary"
+          sx={{ display: { xs: "none", md: "flex" } }}
+        >
+          {commonT("search")}
+        </Button>
+        {/* <Refresh onClick={onRefresh} />
           {!!Object.keys(queriesIgnoreCompany).length && (
             <Clear onClick={onClear} />
-          )}
-        </Stack>
+          )} */}
       </Stack>
+      <Button
+        size="small"
+        onClick={onSearch}
+        variant="secondary"
+        sx={{ display: { md: "none" }, width: "fit-content" }}
+      >
+        {commonT("search")}
+      </Button>
     </Stack>
   );
 };

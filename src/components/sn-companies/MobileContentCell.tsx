@@ -32,7 +32,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
   const managerT = useTranslations(NS_MANAGER);
 
   return (
-    <BodyCell align="left">
+    <BodyCell align="left" sx={{ px: 0.5 }}>
       <Stack spacing={2} py={1.5}>
         <Link
           sx={{ color: "text.primary" }}
@@ -79,13 +79,13 @@ const InformationItem = (props: InformationItemProps) => {
   const { label, children = "--" } = props;
 
   return (
-    <Stack direction="row" alignItems="center" spacing={2}>
+    <Stack direction="row" spacing={2}>
       <Text variant="caption" color="grey.400" width={57}>
         {label}
       </Text>
 
       {typeof children === "string" ? (
-        <Text variant="body2" noWrap>
+        <Text variant="body2" sx={{ wordBreak: "break-all" }}>
           {children}
         </Text>
       ) : (

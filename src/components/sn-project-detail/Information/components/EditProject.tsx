@@ -54,18 +54,17 @@ const EditProject = () => {
     <>
       <IconButton
         onClick={onShow}
-        variant="contained"
-        size="small"
         sx={{
           backgroundColor: isDarkMode ? "grey.50" : "primary.light",
           color: "text.primary",
-          p: 1,
+          borderRadius: 1,
+          p: 0.5,
           "&:hover svg": {
             color: "common.white",
           },
         }}
       >
-        <PencilUnderlineIcon sx={{ fontSize: 24 }} />
+        <PencilUnderlineIcon sx={{ fontSize: 20 }} />
       </IconButton>
 
       {isShow && (

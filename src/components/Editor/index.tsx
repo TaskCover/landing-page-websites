@@ -114,15 +114,7 @@ const Editor = (props: EditorProps) => {
 
   const toolbarAttachment = useMemo(
     () => ({
-      container: [
-        ["bold", "italic", "underline", "strike"], // toggled buttons
-        ["blockquote", "code-block"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ script: "sub" }, { script: "super" }], // superscript/subscript
-        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-        ["attachment"],
-      ],
+      container: TOOLBAR,
       handlers: {
         attachment: () => {
           inputFileRef?.current?.click();

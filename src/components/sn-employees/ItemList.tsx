@@ -35,6 +35,7 @@ import DeleteConfirm from "./components/DeleteConfirm";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
 import FixedLayout from "components/FixedLayout";
+import { HEADER_HEIGHT } from "layouts/Header";
 
 const ItemList = () => {
   const {
@@ -201,9 +202,17 @@ const ItemList = () => {
           borderColor="grey.100"
           borderBottom="none"
           sx={{ borderTopLeftRadius: 1, borderTopRightRadius: 1 }}
-          p={1.125}
-          mx={{ xs: 1, md: 3 }}
+          px={{ xs: 0.75, md: 1.125 }}
+          py={1.125}
+          mx={{ xs: 0, md: 3 }}
         >
+          {isMdSmaller && (
+            <Checkbox
+              checked={isCheckedAll}
+              onChange={onChangeAll}
+              sx={{ mr: "auto" }}
+            />
+          )}
           <IconButton
             size="small"
             onClick={onPay}
@@ -213,7 +222,7 @@ const ItemList = () => {
             sx={{
               backgroundColor: isDarkMode ? "grey.50" : "primary.light",
               color: "text.primary",
-              p: 1,
+              p: { xs: "4px!important", md: 1 },
               "&:hover svg": {
                 color: "common.white",
               },
@@ -234,7 +243,7 @@ const ItemList = () => {
             sx={{
               backgroundColor: isDarkMode ? "grey.50" : "primary.light",
               color: "text.primary",
-              p: 1,
+              p: { xs: "4px!important", md: 1 },
               "&:hover svg": {
                 color: "common.white",
               },
@@ -251,6 +260,13 @@ const ItemList = () => {
           error={error as string}
           noData={!isIdle && totalItems === 0}
           px={{ xs: 0, md: 3 }}
+          containerHeaderProps={{
+            sx: {
+              maxHeight: { xs: 0, md: undefined },
+              minHeight: { xs: 0, md: HEADER_HEIGHT },
+            },
+          }}
+          sx={{ bgcolor: { xs: "grey.50", md: "transparent" } }}
         >
           {items.map((item) => {
             const indexSelected = selectedList.findIndex(
@@ -258,7 +274,7 @@ const ItemList = () => {
             );
             return (
               <TableRow key={item.id}>
-                <BodyCell>
+                <BodyCell sx={{ pl: { xs: 0.5, md: 2 } }}>
                   <Checkbox
                     checked={indexSelected !== -1}
                     onChange={onToggleSelect(item, indexSelected)}
@@ -271,6 +287,16 @@ const ItemList = () => {
                 )}
 
                 <ActionsCell
+                  sx={{
+                    pl: { xs: 0.5, md: 0 },
+                    verticalAlign: { xs: "top", md: "middle" },
+                    pt: { xs: 2, md: undefined },
+                  }}
+                  iconProps={{
+                    sx: {
+                      p: { xs: "4px!important", lg: 1 },
+                    },
+                  }}
                   onEdit={onActionToItem(DataAction.UPDATE, item)}
                   onDelete={onActionToItem(DataAction.DELETE, item)}
                   hasPopup={false}
@@ -301,7 +327,7 @@ const ItemList = () => {
           totalPages={totalPages}
           page={pageIndex}
           pageSize={pageSize}
-          containerProps={{ px: 3, py: 1 }}
+          containerProps={{ px: { md: 3 }, py: 1 }}
           onChangePage={onChangePage}
           onChangeSize={onChangeSize}
         />

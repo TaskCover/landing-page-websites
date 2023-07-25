@@ -207,7 +207,7 @@ const InformationItem = (props: InformationItemProps) => {
       {...rest}
     >
       <Text
-        color="grey.400"
+        color={{ xs: "grey.300", md: "grey.400" }}
         lineHeight={1.33}
         variant={{ xs: "h6", sm: "caption" }}
         width={170}

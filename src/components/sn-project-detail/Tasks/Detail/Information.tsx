@@ -115,7 +115,7 @@ const Information = () => {
   if (!task) return null;
 
   return (
-    <Stack spacing={2} flex={1}>
+    <Stack spacing={2} width="100%">
       <Stack
         direction="row"
         alignItems="center"
@@ -248,7 +248,7 @@ const Information = () => {
       </Stack>
 
       <InformationItem
-        label={`${commonT("form.title.note")}:`}
+        label={`${commonT("form.title.description")}:`}
         minHeight={150}
         bgcolor="grey.50"
         p={2}

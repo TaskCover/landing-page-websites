@@ -130,9 +130,13 @@ const Actions = () => {
         borderBottom="1px solid"
         borderColor="grey.100"
         spacing={{ xs: 1, md: 3 }}
-        px={{ xs: 1, md: 2, xl: 3 }}
         py={{ xs: 0.75 }}
         mt={{ sm: 1.25, md: 0 }}
+        position="sticky"
+        top={61}
+        zIndex={12}
+        bgcolor="background.paper"
+        display={{ xs: "none", md: "flex" }}
       >
         {/* <Button
           onClick={onShow}
@@ -179,6 +183,7 @@ const Actions = () => {
 
           <Button
             onClick={onShow}
+            id="add_new_id"
             startIcon={<PlusIcon />}
             size="extraSmall"
             variant="primary"
@@ -191,11 +196,10 @@ const Actions = () => {
         <Stack
           direction="row"
           alignItems="center"
-          spacing={{ xs: 1, md: 1.5, xl: 3 }}
-          width={{ xs: "100%", md: "fit-content" }}
-          justifyContent="flex-end"
-          flexWrap="wrap"
-          rowGap={2}
+          spacing={3}
+          justifyContent={{ xs: "flex-start", md: "flex-end" }}
+          overflow="auto"
+          width="100%"
         >
           <Search
             placeholder={commonT("searchBy", {
@@ -260,7 +264,7 @@ const Actions = () => {
 
           <Button
             size="extraSmall"
-            sx={{ height: 32 }}
+            sx={{ height: 32, display: { xs: "none", md: "flex" } }}
             onClick={onSearch}
             variant="secondary"
           >
@@ -269,6 +273,15 @@ const Actions = () => {
           {/* <Refresh onClick={onRefresh} />
             {!!Object.keys(queries).length && <Clear onClick={onClear} />} */}
         </Stack>
+
+        <Button
+          size="small"
+          sx={{ height: 40, display: { md: "none" }, width: "fit-content" }}
+          onClick={onSearch}
+          variant="secondary"
+        >
+          {commonT("search")}
+        </Button>
       </Stack>
       {isShow && (
         <TaskListForm

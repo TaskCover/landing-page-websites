@@ -8,6 +8,7 @@ export const ManagerLang: ManagerDictionary = {
       title: "Companies Management | Taskcover",
     },
     title: "Companies Management",
+    accountList: "Account List",
     staffPaid: "Staff paid",
     totalStaff: "Total staff",
     approved: "Approved",

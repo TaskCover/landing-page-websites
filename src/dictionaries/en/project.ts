@@ -144,7 +144,7 @@ export const ProjectLang: ProjectDictionary = {
     addSubTasks: "Add sub tasks",
     addToDos: "Add to-dos",
     attachments: "Attachments",
-    clickToUploadFile: "Click to upload files",
+    clickToUploadFile: "Click or drag & drop to upload files",
     subTasks: "Sub tasks",
     setDueDate: "Set due date",
     convertToTask: "Convert to task",

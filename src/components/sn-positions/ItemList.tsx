@@ -66,17 +66,34 @@ const ItemList = () => {
     ],
     [commonT, companyT],
   );
+  const mobileHeaderList: CellProps[] = useMemo(
+    () => [
+      {
+        value: commonT("name"),
+        width: "20%",
+        align: "left",
+      },
+      {
+        value: commonT("creator"),
+        width: "25%",
+        align: "left",
+      },
+      { value: commonT("creationDate"), width: "20%" },
+      { value: companyT("positions.numberOfEmployees"), width: "20%" },
+    ],
+    [commonT, companyT],
+  );
 
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
-      ? MOBILE_HEADER_LIST
+      ? mobileHeaderList
       : desktopHeaderList;
 
     return [
       ...additionalHeaderList,
-      { value: "", width: isMdSmaller ? "25%" : "10%" },
+      { value: "", width: isMdSmaller ? "15%" : "10%" },
     ] as CellProps[];
-  }, [desktopHeaderList, isMdSmaller]);
+  }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
 
   const onActionToItem = (action: DataAction, item?: Position) => {
     return () => {
@@ -136,6 +153,9 @@ const ItemList = () => {
           error={error as string}
           noData={!isIdle && items.length === 0}
           px={{ xs: 0, md: 3 }}
+          headerProps={{
+            sx: { px: { xs: 0.5, md: 2 }, wordBreak: "break-all" },
+          }}
         >
           {items.map((item, index) => {
             return (
@@ -151,6 +171,12 @@ const ItemList = () => {
                 <ActionsCell
                   onEdit={onActionToItem(DataAction.UPDATE, item)}
                   onDelete={onDelete(item.id)}
+                  sx={{ px: { xs: 0.5, md: 2 } }}
+                  iconProps={{
+                    sx: {
+                      p: { xs: "4px!important", md: 1 },
+                    },
+                  }}
                 />
               </TableRow>
             );
@@ -162,7 +188,7 @@ const ItemList = () => {
           totalPages={totalPages}
           page={pageIndex}
           pageSize={pageSize}
-          containerProps={{ px: 3, py: 1 }}
+          containerProps={{ px: { md: 3 }, py: 1 }}
           onChangePage={onChangePage}
           onChangeSize={onChangeSize}
         />

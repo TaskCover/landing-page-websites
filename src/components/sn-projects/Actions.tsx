@@ -4,7 +4,7 @@ import { memo, useState, useEffect, useMemo } from "react";
 import { Stack, Theme, selectClasses } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
-import { Dropdown, Switch } from "components/Filters";
+import { Dropdown, Search, Switch } from "components/Filters";
 import { INITIAL_VALUES, STATUS_OPTIONS } from "./components/helpers";
 import { useProjects } from "store/project/selectors";
 import { getPath } from "utils/index";
@@ -73,14 +73,15 @@ const Actions = () => {
   return (
     <>
       <Stack
-        direction={{ md: "row" }}
+        direction={{ xs: "column", md: "row" }}
         alignItems="center"
         justifyContent="space-between"
         borderBottom="1px solid"
         borderColor="grey.100"
-        spacing={{ xs: 1, md: 3 }}
-        px={{ xs: 1, md: 3 }}
-        py={1.5}
+        spacing={{ xs: 2, md: 3 }}
+        px={{ md: 3 }}
+        pt={{ md: 1, lg: 1.5 }}
+        pb={{ xs: 1.5, md: 1, lg: 1.5 }}
       >
         <Stack
           direction="row"
@@ -89,7 +90,7 @@ const Actions = () => {
           spacing={{ xs: 2, md: 0 }}
           width={{ xs: "100%", md: "fit-content" }}
         >
-          <Text variant="h4" display={{ md: "none" }}>
+          <Text variant={{ xs: "h3", md: "h4" }} display={{ md: "none" }}>
             {projectT("list.title")}
           </Text>
           <Button
@@ -98,44 +99,48 @@ const Actions = () => {
             size="small"
             variant="primary"
             sx={{
-              height: 40,
+              minHeight: { xs: 32, lg: 40 },
+              height: { xs: 32, lg: 40 },
               px: 1.75,
             }}
           >
             {commonT("createNew")}
           </Button>
         </Stack>
-
+        <Search
+          placeholder={commonT("searchBy", { name: projectT("list.key") })}
+          name="name"
+          onChange={onChangeQueries}
+          value={queries?.["name"]}
+          sx={{ display: { xs: "flex", md: "none" } }}
+          rootSx={{ height: 44, bgcolor: "grey.50" }}
+          fullWidth
+        />
         <Stack
-          direction={{ xs: "column", sm: "row" }}
+          direction="row"
           alignItems="center"
-          spacing={{ xs: 1.5, md: 3 }}
+          spacing={3}
           borderRadius={1}
-          width={{ xs: "100%", md: "fit-content" }}
-          justifyContent="flex-end"
+          justifyContent={{ xs: "flex-start", md: "flex-end" }}
+          overflow="auto"
+          width="100%"
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{ xs: 1.5, md: 3 }}
-          >
-            <Switch
-              name="sort"
-              onChange={onChangeQueries}
-              size="small"
-              reverse
-              label={projectT("list.filter.recent")}
-              value={queries?.sort === LATEST_VALUE}
-            />
-            <Switch
-              name="saved"
-              onChange={onChangeQueries}
-              size="small"
-              reverse
-              label={projectT("list.filter.saved")}
-              value={queries?.saved}
-            />
-          </Stack>
+          <Switch
+            name="sort"
+            onChange={onChangeQueries}
+            size="small"
+            reverse
+            label={projectT("list.filter.recent")}
+            value={queries?.sort === LATEST_VALUE}
+          />
+          <Switch
+            name="saved"
+            onChange={onChangeQueries}
+            size="small"
+            reverse
+            label={projectT("list.filter.saved")}
+            value={queries?.saved}
+          />
 
           <Dropdown
             placeholder={commonT("status")}

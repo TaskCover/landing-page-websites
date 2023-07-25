@@ -65,7 +65,7 @@ const ItemList = () => {
           pending={isFetching}
           error={error as string}
           noData={!isIdle && totalItems === 0}
-          px={{ xs: 1.5, md: 3 }}
+          px={{ xs: 0, md: 3 }}
         >
           {items.map((item) => {
             return (

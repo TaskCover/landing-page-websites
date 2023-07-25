@@ -55,7 +55,7 @@ const Actions = () => {
     const path = getPath(pathname, queries);
     push(path);
 
-    onGetEmployees({ ...queries, pageIndex: 1, pageSize });
+    // onGetEmployees({ ...queries, pageIndex: 1, pageSize });
   };
 
   const onClear = () => {
@@ -93,12 +93,13 @@ const Actions = () => {
   return (
     <>
       <Stack
-        direction={{ md: "row" }}
+        direction={{ xs: "column", md: "row" }}
         alignItems={{ md: "center" }}
         justifyContent="space-between"
         spacing={{ xs: 1, md: 3 }}
-        px={{ xs: 1, md: 3 }}
-        py={1.5}
+        px={{ xs: 0, md: 3 }}
+        pt={{ md: 1.5 }}
+        pb={1.5}
       >
         <Stack
           direction="row"
@@ -115,58 +116,82 @@ const Actions = () => {
             startIcon={<PlusIcon />}
             size="small"
             variant="primary"
-            sx={{ height: 40 }}
+            sx={{
+              height: { xs: 32, lg: 40 },
+              minHeight: { xs: 32, lg: 40 },
+              px: { xs: 2, md: 3 },
+            }}
           >
             {commonT("createNew")}
           </Button>
         </Stack>
 
         <Stack
-          direction={{ md: "row" }}
+          direction="row"
           alignItems="center"
-          spacing={{ xs: 1.5, md: 3 }}
-          py={1.25}
-          px={2}
+          spacing={3}
+          py={{ xs: 1.25, md: 0.5, lg: 1.25 }}
+          px={{ md: 1, lg: 2 }}
           borderRadius={1}
           width={{ xs: "100%", md: undefined }}
-          border="1px solid"
-          borderColor="grey.100"
-          justifyContent="flex-end"
+          border={{ md: "1px solid" }}
+          borderColor={{ md: "grey.100" }}
+          justifyContent={{ xs: "flex-start", md: "flex-end" }}
+          maxWidth={{ xs: "100%", md: "fit-content" }}
+          overflow="auto"
+          minWidth={{ md: "fit-content" }}
         >
           <Search
             placeholder={commonT("searchBy", { name: "email" })}
             name="email"
             onChange={onChangeQueries}
             value={queries?.email}
-            sx={{ width: 200 }}
+            sx={{ width: 200, minWidth: 200 }}
           />
-          <Stack direction="row" alignItems="center" spacing={3}>
-            <Dropdown
-              placeholder={commonT("position")}
-              options={options}
-              name="position"
-              onChange={onChangeQueries}
-              value={queries?.position}
-              pending={positionOptionsIsFetching}
-              onEndReached={onEndReached}
-            />
-            <Dropdown
-              placeholder={commonT("status")}
-              options={paymentOptions}
-              name="status"
-              onChange={onChangeQueries}
-              value={Number(queries?.status)}
-            />
-          </Stack>
-
-          <Stack direction="row" alignItems="center" spacing={3}>
+          <Dropdown
+            placeholder={commonT("position")}
+            options={options}
+            name="position"
+            onChange={onChangeQueries}
+            value={queries?.position}
+            pending={positionOptionsIsFetching}
+            onEndReached={onEndReached}
+          />
+          <Dropdown
+            placeholder={commonT("status")}
+            options={paymentOptions}
+            name="status"
+            onChange={onChangeQueries}
+            value={Number(queries?.status)}
+          />
+          <Button
+            size="extraSmall"
+            sx={{
+              height: { xs: 32, lg: 40 },
+              minHeight: { xs: 32, lg: 40 },
+              display: { xs: "none", md: "flex" },
+            }}
+            onClick={onSearch}
+            variant="secondary"
+          >
+            {commonT("search")}
+          </Button>
+          {/* <Stack direction="row" alignItems="center" spacing={3}>
             <Button size="small" onClick={onSearch} variant="secondary">
               {commonT("search")}
             </Button>
             <Refresh onClick={onRefresh} />
             {!!Object.keys(queries).length && <Clear onClick={onClear} />}
-          </Stack>
+          </Stack> */}
         </Stack>
+        <Button
+          size="small"
+          sx={{ height: 40, display: { md: "none" }, width: "fit-content" }}
+          onClick={onSearch}
+          variant="secondary"
+        >
+          {commonT("search")}
+        </Button>
       </Stack>
       {isShow && (
         <Form

@@ -33,6 +33,7 @@ const MainSection = () => {
       boxShadow={{ xs: "0px 4px 12px rgba(0, 0, 0, 0.15)", sm: undefined }}
       borderRadius={{ xs: 2, sm: 0 }}
       py={{ xs: 2, sm: undefined }}
+      px={2}
       position="relative"
     >
       <Stack

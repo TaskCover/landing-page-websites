@@ -57,17 +57,16 @@ const Actions = () => {
 
   return (
     <Stack
-      direction={{ xs: "column", sm: "row" }}
+      direction="row"
       alignItems="center"
       justifyContent="space-between"
-      borderBottom="1px solid"
-      borderColor="grey.100"
       spacing={3}
-      px={{ xs: 1, sm: 3 }}
-      py={1.5}
+      py={{ xs: 1.5, md: 1, lg: 1.5 }}
+      px={{ xs: 0, md: 3 }}
+      display={{ xs: "none", md: "flex" }}
     >
       <AddMembers />
-      <Stack direction="row" alignItems="center" spacing={3}>
+      {/* <Stack direction="row" alignItems="center" spacing={3}>
         <Search
           placeholder={commonT("searchBy", { name: "email" })}
           name="members.email"
@@ -77,7 +76,7 @@ const Actions = () => {
         />
         <Refresh onClick={onRefresh} />
         {!!Object.keys(filters).length && <Clear onClick={onClear} />}
-      </Stack>
+      </Stack> */}
     </Stack>
   );
 };

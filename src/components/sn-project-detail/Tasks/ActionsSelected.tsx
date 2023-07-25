@@ -61,37 +61,48 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
 
   return (
     <Stack
-      direction="row"
+      direction={{ xs: "column", md: "row" }}
       alignItems="center"
       justifyContent="space-between"
       bgcolor={isDarkMode ? "background.default" : "primary.light"}
-      px={3}
+      px={1.5}
       py={{ xs: 1, md: 0.75 }}
       position="sticky"
-      top={{ xs: 60, sm: 61 }}
+      top={106}
       zIndex={12}
     >
-      <Stack direction="row" alignItems="center" spacing={1}>
-        <Text variant="h6" color="grey.400">
-          {projectT("detailTasks.selectedCount", {
-            value: formatNumber(selectedList.length),
-          })}
-        </Text>
-        <IconButton
-          noPadding
-          onClick={onReset}
-          tooltip={projectT("detailTasks.resetSelected")}
-        >
-          <CloseIcon sx={{ color: "grey.400", fontSize: 18 }} />
-        </IconButton>
+      <Stack
+        direction="row"
+        alignItems={{ md: "center" }}
+        width="100%"
+        justifyContent={{ xs: "space-between", md: "flex-start" }}
+        spacing={1}
+      >
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Text variant="h6" color="grey.400">
+            {projectT("detailTasks.selectedCount", {
+              value: formatNumber(selectedList.length),
+            })}
+          </Text>
+          <IconButton
+            noPadding
+            onClick={onReset}
+            tooltip={projectT("detailTasks.resetSelected")}
+          >
+            <CloseIcon sx={{ color: "grey.400", fontSize: 18 }} />
+          </IconButton>
+        </Stack>
+
+        <MoreList sx={{ display: { xs: "flex", md: "none" } }} {...props} />
       </Stack>
       <Stack
         direction="row"
         alignItems="center"
-        spacing={{ xs: 1, md: 1.5, xl: 3 }}
-        justifyContent="flex-end"
-        flexWrap="wrap"
-        rowGap={1}
+        spacing={{ md: 3 }}
+        width="100%"
+        justifyContent={{ xs: "space-between", md: "flex-start" }}
+        display={{ xs: "grid", md: "flex" }}
+        gridTemplateColumns={{ xs: "repeat(2, 1fr)", md: "unset" }}
       >
         <AssignerFilter
           onChange={onChange}
@@ -100,6 +111,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
           name="owner"
           disabled={!selectedList.length}
           rootSx={{
+            width: "fit-content",
             "& >svg": { fontSize: 16 },
             px: "0px!important",
             [`& .${selectClasses.outlined}`]: {
@@ -141,6 +153,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
           onChange={onChange}
           disabled={!selectedList.length}
           rootSx={{
+            width: "fit-content",
             "& >svg": { fontSize: 16 },
             px: "0px!important",
             [`& .${selectClasses.outlined}`]: {
@@ -153,7 +166,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
             },
           }}
         />
-        <MoreList {...props} />
+        <MoreList sx={{ display: { xs: "none", md: "flex" } }} {...props} />
       </Stack>
     </Stack>
   );
