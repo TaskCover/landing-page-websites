@@ -69,9 +69,9 @@ const PREFIX_BUTTON_CLASS = "MuiIconButton-";
 const sxConfig = {
   default: {
     height: "fit-content",
-    "& >*": {
-      fontSize: "inherit",
-    },
+    // "& >*": {
+    //   fontSize: "inherit",
+    // },
     // Size
     [`&.${iconButtonClasses.sizeLarge}`]: {
       fontSize: "1.75rem",
