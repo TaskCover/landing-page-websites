@@ -13,6 +13,7 @@ import { useCompanies } from "store/manager/selectors";
 import { useTranslations } from "next-intl";
 import { DATE_FORMAT_HYPHEN, NS_COMMON, NS_MANAGER } from "constant/index";
 import { PayStatus } from "constant/enums";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const Actions = () => {
   const { filters, onGetCompanies, pageSize, statistic } = useCompanies();
@@ -21,6 +22,7 @@ const Actions = () => {
   const pathname = usePathname();
   const { push } = useRouter();
 
+  const { isMdSmaller } = useBreakpoint();
   const [queries, setQueries] = useState<Params>({});
 
   const paymentOptions = useMemo(
@@ -66,17 +68,106 @@ const Actions = () => {
 
   return (
     <Stack
-      direction={{ xs: "column-reverse", md: "row" }}
-      alignItems={{ md: "center" }}
+      direction={{ xs: "column", md: "row" }}
+      alignItems={{ xs: "flex-start", md: "center" }}
       justifyContent="space-between"
-      spacing={{ xs: 1.5, md: 3 }}
-      px={{ xs: 1, md: 3 }}
-      py={1.5}
+      spacing={{ xs: 2, md: 3 }}
+      px={{ md: 3 }}
+      pt={{ md: 1.5 }}
+      pb={1.5}
     >
+      {isMdSmaller ? (
+        <Text variant="h4">{managerT("companyList.accountList")}</Text>
+      ) : (
+        <Stack spacing={1} width="fit-content">
+          <Text variant="h6" color="grey.400" whiteSpace="nowrap">
+            {managerT("companyList.staffPaid")}:
+            <Text
+              component="span"
+              variant="inherit"
+              color="success.main"
+              ml={0.5}
+            >
+              {formatNumber(statistic?.total_company_paid)}
+            </Text>
+          </Text>
+          <Text variant="h6" color="grey.400" whiteSpace="nowrap">
+            {managerT("companyList.totalStaff")}:
+            <Text
+              component="span"
+              variant="inherit"
+              color="text.primary"
+              ml={0.5}
+            >
+              {formatNumber(statistic?.total_company)}
+            </Text>
+          </Text>
+        </Stack>
+      )}
+
       <Stack
-        direction={{ xs: "row", md: "column" }}
+        direction="row"
+        alignItems="center"
+        spacing={{ xs: 2, md: 3 }}
+        py={{ md: 1.25 }}
+        px={{ md: 2 }}
+        borderRadius={1}
+        width={{ xs: "100%", md: "fit-content" }}
+        border={{ md: "1px solid" }}
+        borderColor={{ md: "grey.100" }}
+        justifyContent={{ xs: "flex-start", md: "flex-end" }}
+        overflow="auto"
+        maxWidth="100%"
+      >
+        <Search
+          placeholder={commonT("searchBy", { name: "email" })}
+          name="email"
+          onChange={onChangeQueries}
+          value={queries?.email}
+          sx={{ minWidth: "fit-content", height: { xs: 46, md: 32 } }}
+          rootSx={{ height: { xs: 46, md: 32 } }}
+        />
+        <Date
+          label={commonT("creationDate")}
+          name="created_time"
+          onChange={onChangeQueries}
+          value={queries?.created_time}
+          format={DATE_FORMAT_HYPHEN}
+        />
+        <Dropdown
+          placeholder={commonT("status")}
+          options={paymentOptions}
+          name="status"
+          onChange={onChangeQueries}
+          value={
+            queries?.status ? Number(queries?.status) : queries?.is_approve
+          }
+        />
+        <Button
+          size="small"
+          onClick={onSearch}
+          variant="secondary"
+          sx={{ display: { xs: "none", md: "flex" } }}
+        >
+          {commonT("search")}
+        </Button>
+        {/* <Refresh onClick={onRefresh} /> */}
+        {/* {!!Object.keys(queries).length && <Clear onClick={onClear} />} */}
+      </Stack>
+
+      <Button
+        size="small"
+        onClick={onSearch}
+        variant="secondary"
+        sx={{ display: { md: "none" } }}
+      >
+        {commonT("search")}
+      </Button>
+      <Stack
+        direction="row"
         spacing={1}
         width="fit-content"
+        display={{ md: "none" }}
       >
         <Text variant="h6" color="grey.400" whiteSpace="nowrap">
           {managerT("companyList.staffPaid")}:
@@ -100,51 +191,6 @@ const Actions = () => {
             {formatNumber(statistic?.total_company)}
           </Text>
         </Text>
-      </Stack>
-
-      <Stack
-        direction={{ xs: "column", md: "row" }}
-        alignItems="center"
-        spacing={{ xs: 1.5, md: 3 }}
-        py={1.25}
-        px={2}
-        borderRadius={1}
-        width={{ xs: "100%", md: "fit-content" }}
-        border="1px solid"
-        borderColor="grey.100"
-        justifyContent="flex-end"
-      >
-        <Search
-          placeholder={commonT("searchBy", { name: "email" })}
-          name="email"
-          onChange={onChangeQueries}
-          value={queries?.email}
-        />
-        <Stack direction="row" alignItems="center" spacing={3}>
-          <Date
-            label={commonT("creationDate")}
-            name="created_time"
-            onChange={onChangeQueries}
-            value={queries?.created_time}
-            format={DATE_FORMAT_HYPHEN}
-          />
-          <Dropdown
-            placeholder={commonT("status")}
-            options={paymentOptions}
-            name="status"
-            onChange={onChangeQueries}
-            value={
-              queries?.status ? Number(queries?.status) : queries?.is_approve
-            }
-          />
-        </Stack>
-        <Stack direction="row" alignItems="center" spacing={3}>
-          <Button size="small" onClick={onSearch} variant="secondary">
-            {commonT("search")}
-          </Button>
-          <Refresh onClick={onRefresh} />
-          {!!Object.keys(queries).length && <Clear onClick={onClear} />}
-        </Stack>
       </Stack>
     </Stack>
   );

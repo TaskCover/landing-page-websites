@@ -49,7 +49,7 @@ const Header = () => {
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      px={3}
+      px={{ xs: 2, md: 3 }}
       width="100%"
     >
       <Link href={HOME_PATH} underline="none">
@@ -89,7 +89,7 @@ const Header = () => {
         )}
       </Stack>
       {/* {breakpoint}-{width} */}
-      <Stack direction="row" alignItems="center" spacing={8}>
+      <Stack direction="row" alignItems="center" spacing={3}>
         {Boolean(searchPlaceholder && key) && (
           <Search
             sx={{ display: { xs: "none", sm: "initial" } }}

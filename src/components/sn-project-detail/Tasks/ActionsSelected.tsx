@@ -1,5 +1,5 @@
 import { memo, useMemo } from "react";
-import { Stack } from "@mui/material";
+import { Stack, Theme, selectClasses } from "@mui/material";
 import { IconButton, Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_PROJECT, STATUS_OPTIONS } from "constant/index";
@@ -61,72 +61,112 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
 
   return (
     <Stack
-      direction="row"
+      direction={{ xs: "column", md: "row" }}
       alignItems="center"
       justifyContent="space-between"
       bgcolor={isDarkMode ? "background.default" : "primary.light"}
-      px={3}
-      py={{ xs: 1, md: 1, xl: 2 }}
+      px={1.5}
+      py={{ xs: 1, md: 0.75 }}
       position="sticky"
-      top={{ xs: 68, sm: 76, xl: 84 }}
-      zIndex={1}
+      top={106}
+      zIndex={12}
     >
-      <Stack direction="row" alignItems="center" spacing={1}>
-        {!!selectedList.length && (
-          <>
-            <Text variant="h6" color="grey.400">
-              {projectT("detailTasks.selectedCount", {
-                value: formatNumber(selectedList.length),
-              })}
-            </Text>
-            <IconButton
-              noPadding
-              onClick={onReset}
-              tooltip={projectT("detailTasks.resetSelected")}
-            >
-              <CloseIcon sx={{ color: "grey.400", fontSize: 18 }} />
-            </IconButton>
-          </>
-        )}
-      </Stack>
-      <Stack direction="row" alignItems="center" spacing={3}>
-        <Stack
-          direction={{ xs: "column", md: "row" }}
-          alignItems="center"
-          spacing={{ xs: 1, md: 3 }}
-        >
-          <Stack direction="row" alignItems="center" spacing={{ xs: 1, md: 3 }}>
-            <AssignerFilter
-              onChange={onChange}
-              placeholder={projectT("detailTasks.assignee")}
-              hasAvatar
-              name="owner"
-              disabled={!selectedList.length}
-            />
-            <Date
-              label={commonT("form.title.startDate")}
-              name="start_date"
-              onChange={onChange}
-              disabled={!selectedList.length}
-            />
-          </Stack>
-          <Stack direction="row" alignItems="center" spacing={{ xs: 1, md: 3 }}>
-            <Date
-              label={commonT("form.title.dueDate")}
-              name="end_date"
-              onChange={onChange}
-              disabled={!selectedList.length}
-            />
-            <Dropdown
-              placeholder={commonT("status")}
-              options={statusOptions}
-              name="status"
-              onChange={onChange}
-              disabled={!selectedList.length}
-            />
-          </Stack>
+      <Stack
+        direction="row"
+        alignItems={{ md: "center" }}
+        width="100%"
+        justifyContent={{ xs: "space-between", md: "flex-start" }}
+        spacing={1}
+      >
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Text variant="h6" color="grey.400">
+            {projectT("detailTasks.selectedCount", {
+              value: formatNumber(selectedList.length),
+            })}
+          </Text>
+          <IconButton
+            noPadding
+            onClick={onReset}
+            tooltip={projectT("detailTasks.resetSelected")}
+          >
+            <CloseIcon sx={{ color: "grey.400", fontSize: 18 }} />
+          </IconButton>
         </Stack>
-        <MoreList {...props} />
+
+        <MoreList sx={{ display: { xs: "flex", md: "none" } }} {...props} />
+      </Stack>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={{ md: 3 }}
+        width="100%"
+        justifyContent={{ xs: "space-between", md: "flex-start" }}
+        display={{ xs: "grid", md: "flex" }}
+        gridTemplateColumns={{ xs: "repeat(2, 1fr)", md: "unset" }}
+      >
+        <AssignerFilter
+          onChange={onChange}
+          placeholder={projectT("detailTasks.assignee")}
+          hasAvatar
+          name="owner"
+          disabled={!selectedList.length}
+          rootSx={{
+            width: "fit-content",
+            "& >svg": { fontSize: 16 },
+            px: "0px!important",
+            [`& .${selectClasses.outlined}`]: {
+              pr: "0!important",
+              mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                `${spacing(4)}!important`,
+              "& .sub": {
+                display: "none",
+              },
+            },
+          }}
+        />
+        <Date
+          label={commonT("form.title.startDate")}
+          name="start_date"
+          onChange={onChange}
+          disabled={!selectedList.length}
+          iconProps={{
+            sx: {
+              fontSize: 16,
+            },
+          }}
+        />
+        <Date
+          label={commonT("form.title.dueDate")}
+          name="end_date"
+          onChange={onChange}
+          disabled={!selectedList.length}
+          iconProps={{
+            sx: {
+              fontSize: 16,
+            },
+          }}
+        />
+        <Dropdown
+          placeholder={commonT("status")}
+          options={statusOptions}
+          name="status"
+          onChange={onChange}
+          disabled={!selectedList.length}
+          rootSx={{
+            width: "fit-content",
+            "& >svg": { fontSize: 16 },
+            px: "0px!important",
+            [`& .${selectClasses.outlined}`]: {
+              pr: "0!important",
+              mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                `${spacing(4)}!important`,
+              "& .sub": {
+                display: "none",
+              },
+            },
+          }}
+        />
+        <MoreList sx={{ display: { xs: "none", md: "flex" } }} {...props} />
       </Stack>
     </Stack>
   );

@@ -70,7 +70,10 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
         variant="contained"
         size="small"
         sx={{
-          backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+          backgroundColor: {
+            xs: "#FFE2E5",
+            md: isDarkMode ? "grey.50" : "primary.light",
+          },
           color: "text.primary",
           p: 1,
           "&:hover svg": {
@@ -78,7 +81,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
           },
         }}
       >
-        <DeleteUserIcon sx={{ color: "text.primary" }} />
+        <DeleteUserIcon sx={{ color: { xs: "#212121", md: "text.primary" } }} />
       </IconButton>
 
       <ConfirmDialog

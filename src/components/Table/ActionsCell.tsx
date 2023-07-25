@@ -13,7 +13,7 @@ import {
   popoverClasses,
 } from "@mui/material";
 import { BodyCell } from "components/Table";
-import { IconButton, Text } from "components/shared";
+import { IconButton, IconButtonProps, Text } from "components/shared";
 import MoreSquareIcon from "icons/MoreSquareIcon";
 import PencilIcon from "icons/PencilIcon";
 import TrashIcon from "icons/TrashIcon";
@@ -37,6 +37,7 @@ type ActionsCellProps = {
   options?: ActionOption[];
   hasPopup?: boolean;
   deleteProps?: Omit<ConfirmDialogProps, "open" | "onClose" | "onSubmit">;
+  iconProps?: IconButtonProps;
 } & Omit<TableCellProps, "children">;
 
 const ActionsCell = (props: ActionsCellProps) => {
@@ -46,8 +47,10 @@ const ActionsCell = (props: ActionsCellProps) => {
     onDelete: onDeleteProps,
     hasPopup = true,
     deleteProps,
+    iconProps = {},
     ...rest
   } = props;
+  const { sx: sxIconProps, ...restIconProps } = iconProps;
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
   const { isDarkMode } = useTheme();
@@ -115,8 +118,10 @@ const ActionsCell = (props: ActionsCellProps) => {
           backgroundColor: isDarkMode ? "grey.50" : "primary.light",
           color: "grey.400",
           p: 1,
+          ...sxIconProps,
         }}
         variant="contained"
+        {...restIconProps}
       >
         <MoreSquareIcon sx={{ fontSize: 24 }} />
       </IconButton>

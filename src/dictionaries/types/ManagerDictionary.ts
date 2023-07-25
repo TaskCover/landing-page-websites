@@ -6,6 +6,7 @@ export type ManagerDictionary = {
       title: string;
     };
     title: string;
+    accountList: string;
     staffPaid: string;
     totalStaff: string;
     approved: string;

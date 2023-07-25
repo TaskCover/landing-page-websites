@@ -41,6 +41,7 @@ const Dropdown = (props: DropdownProps) => {
       value={value}
       showPlaceholder
       sx={{
+        minWidth: "fit-content",
         height: 32,
         fontWeight: 600,
         ...sx,

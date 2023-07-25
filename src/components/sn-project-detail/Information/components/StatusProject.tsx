@@ -53,7 +53,7 @@ const StatusProject = () => {
 
   return (
     <>
-      <Button onClick={onShow} variant="secondary" size="small">
+      <Button onClick={onShow} variant="secondary" size="extraSmall">
         {projectT("detail.changeStatus")}
       </Button>
 

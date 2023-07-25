@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, memo, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import _ from "lodash";
 import { useSelector } from "react-redux";
@@ -40,7 +40,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.divider}`,
   padding: theme.spacing(1),
   textAlign: "center",
-  minWidth: "100px",
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -92,6 +91,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
           }
         });
       });
+
       setTimesheets(transformedData);
     }
   }, [data]);
@@ -124,11 +124,10 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
     return formattedDuration;
   };
 
-  const _renderTableBody = () => {
+  const filteredProjects = useMemo(() => {
     const convertObjectToArray = !_.isEmpty(timeSheets)
       ? Object.values(timeSheets)
       : timeSheets;
-
     const sortedByDate = convertObjectToArray?.sort((a: any, b: any) => {
       const dateA = new Date(a.is_pin);
       const dateB = b ? new Date(b.is_pin ?? 0) : null;
@@ -141,192 +140,36 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
       b && b.is_pin ? 1 : -1,
     );
 
-    const filteredProjects = sortedByPin?.filter((project: any) =>
+    return sortedByPin?.filter((project: any) =>
       project?.projectName
         ?.toLowerCase()
         ?.includes(filters?.search_key?.trim()?.toLowerCase()),
     );
+  }, [timeSheets]);
 
-    return (
-      <TableBody sx={{ position: "relative" }}>
-        {!_.isEmpty(filteredProjects) ? (
-          _.map(filteredProjects, (timeSheet: any, index: number) => {
-            return (
-              <StyledTableRow key={timeSheet.id || index}>
-                <StyledTableCell sx={{ maxWidth: 235 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      justifyContent: "flex-start",
-                      mb: "12px",
-                      py: 1,
-                      "&:hover": {
-                        ".pin_project": {
-                          visibility: "visible",
-                        },
-                      },
-                    }}
-                  >
-                    <Avatar
-                      sx={{ width: 20, height: 20, objectFit: "cover" }}
-                      src={timeSheet?.avatar}
-                    />
-                    <Typography
-                      sx={{
-                        fontSize: "14px",
-                        lineHeight: "18px",
-                        fontWeight: 600,
-                        maxWidth: "200px",
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                        textOverflow: "ellipsis",
-                        WebkitLineClamp: 1,
-                      }}
-                    >
-                      {timeSheet?.projectName}
-                    </Typography>
-                    <IconButton
-                      className="pin_project"
-                      sx={{
-                        ml: "auto",
-                        width: 24,
-                        height: 24,
-                        visibility: timeSheet?.is_pin ? "visible" : "hidden",
-                      }}
-                      onClick={() => {
-                        onPinTimeSheet({
-                          id: timeSheet?.projectId,
-                          is_pin: timeSheet?.is_pin ? false : true,
-                          type: "PROJECT",
-                        })
-                          .then(() => {
-                            onGetMyTimeSheet({ ...params });
-                            onAddSnackbar(
-                              `${
-                                timeSheet?.is_pin ? "Unpin" : "Pin"
-                              } timesheet success`,
-                              "success",
-                            );
-                          })
-                          .catch(() => {
-                            onAddSnackbar(
-                              `${
-                                timeSheet?.is_pin ? "Unpin" : "Pin"
-                              } timesheet failed`,
-                              "error",
-                            );
-                          });
-                      }}
-                    >
-                      {timeSheet?.is_pin ? <PinActiveIcon /> : <PinIcon />}
-                    </IconButton>
-                  </Box>
-                </StyledTableCell>
-                <StyledTableCell
-                  sx={{
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    lineHeight: "18px",
-                    color: "#999999",
-                    textAlign: "right",
-                    mb: "12px",
-                    py: 1,
-                  }}
-                >
-                  {timeSheet?.totalDuration || 0} giờ
-                </StyledTableCell>
-                {_.map(weekdays, (weekday, _index: number) => {
-                  const totalDay = timeSheet?.weekdays?.[`${weekday}`];
-                  return (
-                    <StyledTableCell
-                      key={_index}
-                      sx={{
-                        fontSize: "14px",
-                        lineHeight: "18px",
-                        fontWeight: 600,
-                        color: "#999999",
-                        textAlign: "left",
-                        mb: "12px",
-                        py: 1,
-                        background:
-                          _index === 0 || _index === _.size(weekdays) - 1
-                            ? isDarkMode
-                              ? "inherit"
-                              : "#FAFAFA"
-                            : "inherit",
-                      }}
-                    >
-                      {totalDay}
-                    </StyledTableCell>
-                  );
-                })}
-              </StyledTableRow>
-            );
-          })
-        ) : (
-          <StyledTableRow>
-            <StyledTableCell colSpan={9}>
-              <Typography
-                sx={{
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  fontWeight: 400,
-                  textAlign: "center",
-                }}
-              >
-                No data were found
-              </Typography>
-            </StyledTableCell>
-          </StyledTableRow>
-        )}
-        {isGetLoading && (
-          <Box
-            sx={{
-              position: "absolute",
-              width: 1,
-              height: 1,
-              top: 0,
-              left: 0,
-              backgroundColor: " rgba(0, 0, 0, 0.1)",
+  // const _renderTableBody = () => {
+  //   return (
 
-              webkitTapHighlightColor: "transparent",
-            }}
-          >
-            <Stack
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 1,
-                width: 1,
-              }}
-            >
-              <CircularProgress />
-            </Stack>
-          </Box>
-        )}
-      </TableBody>
-    );
-  };
+  //   );
+  // };
 
   const renderMain = () => {
-    const hasData = !_.isEmpty(data);
     return (
       <TableContainer>
-        <Table stickyHeader sx={{ overflowX: "auto" }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <StyledTableCell sx={{ minWidth: hasData ? 50 : 150 }}>
+              <StyledTableCell sx={{ minWidth: 50 }}>
                 <Typography
                   sx={{
-                    fontSize: "10px",
+                    fontSize: "13px",
                     fontWeight: 400,
                     lineHeight: "18px",
-                    textAlign: "left",
+                    textAlign: "center",
                     position: "absolute",
-                    top: 0,
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
                   }}
                 >
                   Weekly summary
@@ -404,7 +247,168 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
               })}
             </TableRow>
           </TableHead>
-          {_renderTableBody()}
+          <TableBody sx={{ position: "relative" }}>
+            {!_.isEmpty(filteredProjects) && !_.isEmpty(data) ? (
+              _.map(filteredProjects, (timeSheet: any, index: number) => {
+                return (
+                  <StyledTableRow key={timeSheet.id || index}>
+                    <StyledTableCell sx={{ maxWidth: 235 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
+                          justifyContent: "flex-start",
+                          mb: "12px",
+                          py: 1,
+                          "&:hover": {
+                            ".pin_project": {
+                              visibility: "visible",
+                            },
+                          },
+                        }}
+                      >
+                        <Avatar
+                          sx={{ width: 20, height: 20, objectFit: "cover" }}
+                          src={timeSheet?.avatar}
+                        />
+                        <Typography
+                          sx={{
+                            fontSize: "14px",
+                            lineHeight: "18px",
+                            fontWeight: 600,
+                            maxWidth: "200px",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                            WebkitLineClamp: 1,
+                          }}
+                        >
+                          {timeSheet?.projectName}
+                        </Typography>
+                        <IconButton
+                          className="pin_project"
+                          sx={{
+                            ml: "auto",
+                            width: 24,
+                            height: 24,
+                            visibility: timeSheet?.is_pin
+                              ? "visible"
+                              : "hidden",
+                          }}
+                          onClick={() => {
+                            onPinTimeSheet({
+                              id: timeSheet?.projectId,
+                              is_pin: timeSheet?.is_pin ? false : true,
+                              type: "PROJECT",
+                            })
+                              .then(() => {
+                                onGetMyTimeSheet({ ...params });
+                                onAddSnackbar(
+                                  `${
+                                    timeSheet?.is_pin ? "Unpin" : "Pin"
+                                  } timesheet success`,
+                                  "success",
+                                );
+                              })
+                              .catch(() => {
+                                onAddSnackbar(
+                                  `${
+                                    timeSheet?.is_pin ? "Unpin" : "Pin"
+                                  } timesheet failed`,
+                                  "error",
+                                );
+                              });
+                          }}
+                        >
+                          {timeSheet?.is_pin ? <PinActiveIcon /> : <PinIcon />}
+                        </IconButton>
+                      </Box>
+                    </StyledTableCell>
+                    <StyledTableCell
+                      sx={{
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        lineHeight: "18px",
+                        color: "#999999",
+                        textAlign: "right",
+                        mb: "12px",
+                        py: 1,
+                      }}
+                    >
+                      {timeSheet?.totalDuration || 0} giờ
+                    </StyledTableCell>
+                    {_.map(weekdays, (weekday, _index: number) => {
+                      const totalDay = timeSheet?.weekdays?.[`${weekday}`];
+                      return (
+                        <StyledTableCell
+                          key={_index}
+                          sx={{
+                            fontSize: "14px",
+                            lineHeight: "18px",
+                            fontWeight: 600,
+                            color: "#999999",
+                            textAlign: "left",
+                            mb: "12px",
+                            py: 1,
+                            background:
+                              _index === 0 || _index === _.size(weekdays) - 1
+                                ? isDarkMode
+                                  ? "inherit"
+                                  : "#FAFAFA"
+                                : "inherit",
+                          }}
+                        >
+                          {totalDay}
+                        </StyledTableCell>
+                      );
+                    })}
+                  </StyledTableRow>
+                );
+              })
+            ) : (
+              <StyledTableRow>
+                <StyledTableCell colSpan={9}>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      lineHeight: "20px",
+                      fontWeight: 400,
+                      textAlign: "center",
+                    }}
+                  >
+                    No data were found
+                  </Typography>
+                </StyledTableCell>
+              </StyledTableRow>
+            )}
+            {isGetLoading && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  width: 1,
+                  height: 1,
+                  top: 0,
+                  left: 0,
+                  backgroundColor: " rgba(0, 0, 0, 0.1)",
+
+                  webkitTapHighlightColor: "transparent",
+                }}
+              >
+                <Stack
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: 1,
+                    width: 1,
+                  }}
+                >
+                  <CircularProgress />
+                </Stack>
+              </Box>
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
     );

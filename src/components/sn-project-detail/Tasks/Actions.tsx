@@ -1,7 +1,13 @@
 "use client";
 
 import { memo, useState, useEffect, useRef, use, useMemo } from "react";
-import { Stack } from "@mui/material";
+import {
+  Stack,
+  Theme,
+  selectClasses,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import {
@@ -49,6 +55,8 @@ const Actions = () => {
   const { onGetOptions } = useMemberOptions();
   const { title, prevPath } = useHeaderConfig();
   const { isMdSmaller } = useBreakpoint();
+  const { breakpoints } = useTheme();
+  const is1440Larger = useMediaQuery(breakpoints.up(1440));
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
@@ -122,8 +130,13 @@ const Actions = () => {
         borderBottom="1px solid"
         borderColor="grey.100"
         spacing={{ xs: 1, md: 3 }}
-        px={{ xs: 1, md: 2, xl: 3 }}
-        py={{ xs: 1, xl: 1.5 }}
+        py={{ xs: 0.75 }}
+        mt={{ sm: 1.25, md: 0 }}
+        position="sticky"
+        top={61}
+        zIndex={12}
+        bgcolor="background.paper"
+        display={{ xs: "none", md: "flex" }}
       >
         {/* <Button
           onClick={onShow}
@@ -142,28 +155,39 @@ const Actions = () => {
           spacing={{ xs: 2, sm: 0 }}
           width={{ xs: "100%", sm: "fit-content" }}
         >
-          <Stack direction="row" alignItems="center" spacing={0.5} flex={1}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={0.5}
+            flex={1}
+            width="50%"
+          >
             {!!prevPath && (
               <Link
                 href={prevPath}
-                sx={{ height: 24, display: { sm: "none" } }}
+                sx={{ height: isMdSmaller ? 16 : 24, display: { sm: "none" } }}
               >
                 <ChevronIcon
-                  sx={{ color: "text.primary", transform: "rotate(90deg)" }}
-                  fontSize="medium"
+                  sx={{
+                    color: "text.primary",
+                    transform: "rotate(90deg)",
+                  }}
+                  fontSize={isMdSmaller ? "small" : "medium"}
                 />
               </Link>
             )}
-            <Text variant="h4" display={{ sm: "none" }} noWrap>
+            <Text variant={{ xs: "body2", md: "h4" }} display={{ sm: "none" }}>
               {title ?? ""}
             </Text>
           </Stack>
 
           <Button
             onClick={onShow}
+            id="add_new_id"
             startIcon={<PlusIcon />}
-            size="small"
+            size="extraSmall"
             variant="primary"
+            sx={{ height: 32, px: ({ spacing }) => `${spacing(2)}!important` }}
           >
             {projectT("detailTasks.createNewTaskList")}
           </Button>
@@ -172,83 +196,92 @@ const Actions = () => {
         <Stack
           direction="row"
           alignItems="center"
-          spacing={{ xs: 1, md: 1.5, xl: 3 }}
-          px={{ sm: 2 }}
-          width={{ xs: "100%", md: "fit-content" }}
-          justifyContent="flex-end"
-          flexWrap="wrap"
-          rowGap={2}
+          spacing={3}
+          justifyContent={{ xs: "flex-start", md: "flex-end" }}
+          overflow="auto"
+          width="100%"
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{ xs: 1.5, md: 3 }}
-          >
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={{ xs: 1.5, md: 3 }}
-            >
-              <Search
-                placeholder={commonT("searchBy", {
-                  name: projectT("detailTasks.key"),
-                })}
-                name="tasks.name"
-                onChange={onChangeQueries}
-                value={queries?.["tasks.name"]}
-                sx={{
-                  width: { xs: 180, xl: 220 },
-                  minWidth: { xs: 180, xl: 220 },
-                }}
-              />
-              <AssignerFilter
-                onChange={onChangeQueries}
-                value={queries?.["tasks.owner"]}
-                hasAvatar
-                sx={{ display: { xs: "none", md: "initial" } }}
-              />
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={{ xs: 1.5, md: 3 }}
-            >
-              <Date
-                label={commonT("form.title.startDate")}
-                name="tasks.start_date"
-                onChange={onChangeQueries}
-                value={queries?.["tasks.start_date"]}
-                format={DATE_FORMAT_HYPHEN}
-              />
-              <Dropdown
-                placeholder={commonT("status")}
-                options={statusOptions}
-                name="tasks.status"
-                onChange={onChangeQueries}
-                value={queries?.["tasks.status"]}
-              />
-            </Stack>
-          </Stack>
+          <Search
+            placeholder={commonT("searchBy", {
+              name: projectT("detailTasks.key"),
+            })}
+            name="tasks.name"
+            onChange={onChangeQueries}
+            value={queries?.["tasks.name"]}
+            sx={{
+              width: { xs: is1440Larger ? 220 : 160 },
+              minWidth: { xs: is1440Larger ? 220 : 160 },
+            }}
+          />
+          <AssignerFilter
+            onChange={onChangeQueries}
+            value={queries?.["tasks.owner"]}
+            hasAvatar
+            sx={{ display: { xs: "none", md: "initial" } }}
+            rootSx={{
+              "& >svg": { fontSize: 16 },
+              px: "0px!important",
+              [`& .${selectClasses.outlined}`]: {
+                pr: "0!important",
+                mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                  `${spacing(4)}!important`,
+                "& .sub": {
+                  display: "none",
+                },
+              },
+            }}
+          />
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{ xs: 1.5, sm: 3 }}
-          >
-            <AssignerFilter
-              onChange={onChangeQueries}
-              value={queries?.["tasks.owner"]}
-              hasAvatar
-              sx={{ display: { md: "none" } }}
-            />
+          <Date
+            label={commonT("form.title.startDate")}
+            name="tasks.start_date"
+            onChange={onChangeQueries}
+            value={queries?.["tasks.start_date"]}
+            format={DATE_FORMAT_HYPHEN}
+            iconProps={{
+              sx: { fontSize: 16 },
+            }}
+          />
+          <Dropdown
+            placeholder={commonT("status")}
+            options={statusOptions}
+            name="tasks.status"
+            onChange={onChangeQueries}
+            value={queries?.["tasks.status"]}
+            rootSx={{
+              "& >svg": { fontSize: 16 },
+              px: "0px!important",
+              [`& .${selectClasses.outlined}`]: {
+                pr: "0!important",
+                mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                  `${spacing(4)}!important`,
+                "& .sub": {
+                  display: "none",
+                },
+              },
+            }}
+          />
 
-            <Button size="small" onClick={onSearch} variant="secondary">
-              {commonT("search")}
-            </Button>
-            {/* <Refresh onClick={onRefresh} />
+          <Button
+            size="extraSmall"
+            sx={{ height: 32, display: { xs: "none", md: "flex" } }}
+            onClick={onSearch}
+            variant="secondary"
+          >
+            {commonT("search")}
+          </Button>
+          {/* <Refresh onClick={onRefresh} />
             {!!Object.keys(queries).length && <Clear onClick={onClear} />} */}
-          </Stack>
         </Stack>
+
+        <Button
+          size="small"
+          sx={{ height: 40, display: { md: "none" }, width: "fit-content" }}
+          onClick={onSearch}
+          variant="secondary"
+        >
+          {commonT("search")}
+        </Button>
       </Stack>
       {isShow && (
         <TaskListForm

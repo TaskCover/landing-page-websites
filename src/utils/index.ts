@@ -322,3 +322,6 @@ export const getDaysDiff = (
 export const hasValue = (value?) => {
   return value !== null && value !== "" && value !== undefined;
 };
+
+export const checkIsMobile = () => /Android|iPhone/i.test(navigator?.userAgent);
+ 

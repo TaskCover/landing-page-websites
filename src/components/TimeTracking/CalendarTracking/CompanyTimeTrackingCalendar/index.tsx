@@ -293,12 +293,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
 
   const _renderHeader = () => {
     return (
-      <Grid container spacing={2}>
-        <Grid item xs={3}
+      <Grid container spacing = { 2} >
+        <Grid item xs={3}></Grid>
+        <Grid item xs={6}
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-start",
+            justifyContent: "center",
           }}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -376,9 +377,6 @@ const TrackingCalendar: React.FC<IProps> = () => {
             </Typography>
             <ExpandMoreIcon sx={{ color: "rgba(102, 102, 102, 1)" }} />
           </Stack>
-        </Grid>
-        <Grid item xs={6}>
-          
         </Grid>
         <Grid item xs={3}>
           <Stack
@@ -537,147 +535,162 @@ const TrackingCalendar: React.FC<IProps> = () => {
   );
 
   return (
-    <Stack direction="column" sx={{ position: "relative" }}>
+    <Stack direction="column">
       {_renderHeader()}
 
-      {activeTab === "table" && (
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <TableContainer sx={{ borderLeft: "1px solid rgb(224, 224, 224)" }}>
-              <Table
+      <Stack
+        //ref={scrollRef}
+        sx={{
+          height: `calc(100vh - 370px)`,
+          overflow: "auto",
+          position: "relative",
+        }}
+      >
+        {activeTab === "table" && (
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <TableContainer
                 sx={{
-                  borderCollapse: "separate",
-                  borderSpacing: "0 8px",
-                  position: "relative",
-                  bottom: "-7px",
+                  // borderLeft: "1px solid rgb(224, 224, 224)",
+                  height: "calc(100vh - 495px)",
                 }}
               >
-                <TableHead>
-                  <StyledTableRow>
-                    <StyledTableCell>
-                      {timeT("company_time.table_tab.employee")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {timeT("company_time.table_tab.project")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {timeT("company_time.table_tab.position")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {timeT("company_time.table_tab.start_time")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {timeT("company_time.table_tab.time")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {timeT("company_time.table_tab.note")}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                </TableHead>
-                <TableBody>
-                  {!_.isEmpty(dataDayTable) ? (
-                    dataDayTable?.map((event, index) => {
-                      const rowStyles = {
-                        borderLeft: `4px solid rgba(54, 153, 255, 1)`,
-                        backgroundColor: "primary.light",
-                      };
-                      if (event?.extendedProps?.type === "break_time")
-                        Object.assign(rowStyles, {
-                          borderLeft: `4px solid rgba(246, 78, 96, 1)`,
-                          backgroundColor: "error.light",
-                        });
-                      return (
-                        <StyledTableRow sx={rowStyles} key={index}>
-                          <StyledTableCell>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "12px",
-                              }}
-                            >
-                              <Avatar sx={{ width: 20, height: 20 }} />
-                              {event?.extendedProps?.name}
-                            </Box>
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "12px",
-                              }}
-                            >
-                              <Avatar sx={{ width: 20, height: 20 }} />
-
-                              {event?.extendedProps?.project?.name}
-                            </Box>
-                          </StyledTableCell>
-
-                          <StyledTableCell>
-                            {event?.extendedProps?.position}
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            {event?.extendedProps?.start}
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            {" "}
-                            {event?.extendedProps?.hour || 0}h
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            {event?.extendedProps?.note}
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      );
-                    })
-                  ) : (
+                <Table
+                  sx={{
+                    borderCollapse: "separate",
+                    borderSpacing: "0 8px",
+                    position: "relative",
+                    bottom: "-7px",
+                  }}
+                  stickyHeader={true}
+                >
+                  <TableHead>
                     <StyledTableRow>
-                      <Typography
-                        sx={{
-                          fontSize: "14px",
-                          lineHeight: "20px",
-                          fontWeight: 400,
-                          p: 1,
-                        }}
-                      >
-                        No data were found
-                      </Typography>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.employee")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.project")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.position")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.start_time")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.time")}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {timeT("company_time.table_tab.note")}
+                      </StyledTableCell>
                     </StyledTableRow>
-                  )}
+                  </TableHead>
+                  <TableBody>
+                    {!_.isEmpty(dataDayTable) ? (
+                      dataDayTable?.map((event, index) => {
+                        const rowStyles = {
+                          borderLeft: `4px solid rgba(54, 153, 255, 1)`,
+                          backgroundColor: "primary.light",
+                        };
+                        if (event?.extendedProps?.type === "break_time")
+                          Object.assign(rowStyles, {
+                            borderLeft: `4px solid rgba(246, 78, 96, 1)`,
+                            backgroundColor: "error.light",
+                          });
+                        return (
+                          <StyledTableRow sx={rowStyles} key={index}>
+                            <StyledTableCell>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                }}
+                              >
+                                <Avatar sx={{ width: 20, height: 20 }} />
+                                {event?.extendedProps?.name}
+                              </Box>
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                }}
+                              >
+                                <Avatar sx={{ width: 20, height: 20 }} />
 
-                  {isGetLoading && (
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        width: 1,
-                        height: 1,
-                        top: 0,
-                        left: 0,
-                        backgroundColor: " rgba(0, 0, 0, 0.1)",
+                                {event?.extendedProps?.project?.name}
+                              </Box>
+                            </StyledTableCell>
 
-                        webkitTapHighlightColor: "transparent",
-                      }}
-                    >
-                      <Stack
+                            <StyledTableCell>
+                              {event?.extendedProps?.position}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {event?.extendedProps?.start}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {" "}
+                              {event?.extendedProps?.hour || 0}h
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {event?.extendedProps?.note}
+                            </StyledTableCell>
+                          </StyledTableRow>
+                        );
+                      })
+                    ) : (
+                      <StyledTableRow>
+                        <Typography
+                          sx={{
+                            fontSize: "14px",
+                            lineHeight: "20px",
+                            fontWeight: 400,
+                            p: 1,
+                          }}
+                        >
+                          No data were found
+                        </Typography>
+                      </StyledTableRow>
+                    )}
+
+                    {isGetLoading && (
+                      <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          height: 1,
+                          position: "absolute",
                           width: 1,
+                          height: 1,
+                          top: 0,
+                          left: 0,
+                          backgroundColor: " rgba(0, 0, 0, 0.1)",
+
+                          webkitTapHighlightColor: "transparent",
                         }}
                       >
-                        <CircularProgress />
-                      </Stack>
-                    </Box>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                        <Stack
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            height: 1,
+                            width: 1,
+                          }}
+                        >
+                          <CircularProgress />
+                        </Stack>
+                      </Box>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
           </Grid>
-        </Grid>
-      )}
-      {_renderTimeSheetContent()}
+        )}
+        {_renderTimeSheetContent()}
+      </Stack>
       {_renderFooter()}
       {_redderCreatePopup()}
     </Stack>

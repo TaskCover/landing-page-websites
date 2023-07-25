@@ -3,6 +3,7 @@ import { Accordion, AccordionSummary, accordionClasses } from "@mui/material";
 import ChevronIcon from "icons/ChevronIcon";
 import { useSidebar } from "store/app/selectors";
 import useBreakpoint from "hooks/useBreakpoint";
+import useTheme from "hooks/useTheme";
 
 type CollapseProps = {
   label: React.ReactNode;
@@ -12,6 +13,8 @@ type CollapseProps = {
 
 const Collapse = (props: CollapseProps) => {
   const { label, children, initCollapse = false } = props;
+
+  const { isDarkMode } = useTheme();
 
   return (
     <Accordion
@@ -37,7 +40,7 @@ const Collapse = (props: CollapseProps) => {
           px: 2,
           // backgroundColor: { xs: "grey.50", sm: undefined },
           "&:hover, &.active": {
-            backgroundColor: "primary.light",
+            backgroundColor: isDarkMode ? "grey.100" : "primary.light",
           },
           minHeight: "auto",
           "&.Mui-expanded": {
@@ -55,6 +58,7 @@ const Collapse = (props: CollapseProps) => {
         }}
         expandIcon={
           <ChevronIcon
+            fontSize="medium"
             sx={{
               transform: "rotate(-90deg)",
               color: "grey.900",

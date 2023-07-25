@@ -1,10 +1,10 @@
 "use client";
 
-import { memo, useState, useEffect, useRef, use, useMemo } from "react";
-import { Stack } from "@mui/material";
+import { memo, useState, useEffect, useMemo } from "react";
+import { Stack, Theme, selectClasses } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
-import { Clear, Dropdown, Refresh, Switch } from "components/Filters";
+import { Dropdown, Search, Switch } from "components/Filters";
 import { INITIAL_VALUES, STATUS_OPTIONS } from "./components/helpers";
 import { useProjects } from "store/project/selectors";
 import { getPath } from "utils/index";
@@ -35,22 +35,24 @@ const Actions = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (name: string, value: any) => {
-    setQueries((prevQueries) => ({
-      ...prevQueries,
+    const newQueries = {
+      ...queries,
       [name]:
         name === "sort" && value
           ? LATEST_VALUE
           : name === "sort"
           ? undefined
           : value,
-    }));
+    };
+
+    onSearch(newQueries);
   };
 
-  const onSearch = () => {
-    const path = getPath(pathname, queries);
+  const onSearch = (newQueries: Params) => {
+    const path = getPath(pathname, newQueries);
     push(path);
 
-    onGetProjects({ ...queries, pageIndex: 1, pageSize });
+    // onGetProjects({ ...newQueries, pageIndex: 1, pageSize });
   };
 
   const onClear = () => {
@@ -71,14 +73,15 @@ const Actions = () => {
   return (
     <>
       <Stack
-        direction={{ md: "row" }}
+        direction={{ xs: "column", md: "row" }}
         alignItems="center"
         justifyContent="space-between"
         borderBottom="1px solid"
         borderColor="grey.100"
-        spacing={{ xs: 1, md: 3 }}
-        px={{ xs: 1, md: 3 }}
-        py={1.5}
+        spacing={{ xs: 2, md: 3 }}
+        px={{ md: 3 }}
+        pt={{ md: 1, lg: 1.5 }}
+        pb={{ xs: 1.5, md: 1, lg: 1.5 }}
       >
         <Stack
           direction="row"
@@ -87,7 +90,7 @@ const Actions = () => {
           spacing={{ xs: 2, md: 0 }}
           width={{ xs: "100%", md: "fit-content" }}
         >
-          <Text variant="h4" display={{ md: "none" }}>
+          <Text variant={{ xs: "h3", md: "h4" }} display={{ md: "none" }}>
             {projectT("list.title")}
           </Text>
           <Button
@@ -95,76 +98,68 @@ const Actions = () => {
             startIcon={<PlusIcon />}
             size="small"
             variant="primary"
+            sx={{
+              minHeight: { xs: 32, lg: 40 },
+              height: { xs: 32, lg: 40 },
+              px: 1.75,
+            }}
           >
             {commonT("createNew")}
           </Button>
         </Stack>
-
+        <Search
+          placeholder={commonT("searchBy", { name: projectT("list.key") })}
+          name="name"
+          onChange={onChangeQueries}
+          value={queries?.["name"]}
+          sx={{ display: { xs: "flex", md: "none" } }}
+          rootSx={{ height: 44, bgcolor: "grey.50" }}
+          fullWidth
+        />
         <Stack
-          direction={{ xs: "column", md: "row" }}
+          direction="row"
           alignItems="center"
-          spacing={{ xs: 1.5, md: 3 }}
-          py={1.25}
-          px={2}
+          spacing={3}
           borderRadius={1}
-          width={{ xs: "100%", md: "fit-content" }}
-          border="1px solid"
-          borderColor="grey.100"
-          justifyContent="flex-end"
+          justifyContent={{ xs: "flex-start", md: "flex-end" }}
+          overflow="auto"
+          width="100%"
         >
-          <Stack
-            direction={{ xs: "column", md: "row" }}
-            alignItems="center"
-            spacing={{ xs: 1.5, md: 3 }}
-          >
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={{ xs: 1.5, md: 3 }}
-            >
-              <Switch
-                name="sort"
-                onChange={onChangeQueries}
-                size="small"
-                reverse
-                label={projectT("list.filter.recent")}
-                value={queries?.sort === LATEST_VALUE}
-              />
-              <Switch
-                name="saved"
-                onChange={onChangeQueries}
-                size="small"
-                reverse
-                label={projectT("list.filter.saved")}
-                value={queries?.saved}
-              />
-            </Stack>
+          <Switch
+            name="sort"
+            onChange={onChangeQueries}
+            size="small"
+            reverse
+            label={projectT("list.filter.recent")}
+            value={queries?.sort === LATEST_VALUE}
+          />
+          <Switch
+            name="saved"
+            onChange={onChangeQueries}
+            size="small"
+            reverse
+            label={projectT("list.filter.saved")}
+            value={queries?.saved}
+          />
 
-            <Dropdown
-              placeholder={commonT("status")}
-              options={statusOptions}
-              name="status"
-              onChange={onChangeQueries}
-              value={queries?.status}
-              sx={{ display: { xs: "none", md: "initial" } }}
-            />
-          </Stack>
-
-          <Stack direction="row" alignItems="center" spacing={3}>
-            <Dropdown
-              placeholder={commonT("status")}
-              options={statusOptions}
-              name="status"
-              onChange={onChangeQueries}
-              value={queries?.status}
-              sx={{ display: { md: "none" } }}
-            />
-            <Button size="small" onClick={onSearch} variant="secondary">
-              {commonT("search")}
-            </Button>
-            <Refresh onClick={onRefresh} />
-            {!!Object.keys(queries).length && <Clear onClick={onClear} />}
-          </Stack>
+          <Dropdown
+            placeholder={commonT("status")}
+            options={statusOptions}
+            name="status"
+            onChange={onChangeQueries}
+            value={queries?.status}
+            rootSx={{
+              px: "0px!important",
+              [`& .${selectClasses.outlined}`]: {
+                pr: "0!important",
+                mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                  `${spacing(4)}!important`,
+                "& .sub": {
+                  display: "none",
+                },
+              },
+            }}
+          />
         </Stack>
       </Stack>
       {isShow && (

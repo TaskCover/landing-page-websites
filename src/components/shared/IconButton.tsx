@@ -74,19 +74,19 @@ const sxConfig = {
     },
     // Size
     [`&.${iconButtonClasses.sizeLarge}`]: {
-      fontSize: 28,
+      fontSize: "1.75rem",
     },
     [`&.${matchClass(PREFIX_BUTTON_CLASS, NORMAL, "size")}`]: {
-      fontSize: 24,
+      fontSize: "1.5rem",
     },
     [`&.${iconButtonClasses.sizeMedium}`]: {
-      fontSize: 20,
+      fontSize: "1.25rem",
     },
     [`&.${iconButtonClasses.sizeSmall}`]: {
-      fontSize: 16,
+      fontSize: "1rem",
     },
     [`&.${matchClass(PREFIX_BUTTON_CLASS, EXTRA_SMALL, "size")}`]: {
-      fontSize: 12,
+      fontSize: "0.75rem",
     },
   },
   contained: {
@@ -103,23 +103,23 @@ const sxConfig = {
       color: "#F2F2F2",
     },
     [`&.${iconButtonClasses.sizeLarge}`]: {
-      fontSize: 24,
+      fontSize: "1.5rem",
       p: 2.5,
     },
     [`&.${matchClass(PREFIX_BUTTON_CLASS, NORMAL, "size")}`]: {
-      fontSize: 24,
+      fontSize: "1.5rem",
       p: 2,
     },
     [`&.${iconButtonClasses.sizeMedium}`]: {
-      fontSize: 24,
+      fontSize: "1.5rem",
       p: 1.5,
     },
     [`&.${iconButtonClasses.sizeSmall}`]: {
-      fontSize: 16,
+      fontSize: "1rem",
       p: 1,
     },
     [`&.${matchClass(PREFIX_BUTTON_CLASS, EXTRA_SMALL, "size")}`]: {
-      fontSize: 16,
+      fontSize: "1rem",
       p: 1,
     },
   },

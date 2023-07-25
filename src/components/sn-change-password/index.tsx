@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next-intl/client";
 import { HOME_PATH } from "constant/paths";
 import useBreakpoint from "hooks/useBreakpoint";
+import FixedLayout from "components/FixedLayout";
 
 const ChangePassword = ({ prevPath }: { prevPath?: string }) => {
   const { onChangePassword } = useUserInfo();
@@ -80,102 +81,104 @@ const ChangePassword = ({ prevPath }: { prevPath?: string }) => {
   );
 
   return (
-    <Stack
-      flex={1}
-      justifyContent="center"
-      alignItems="center"
-      spacing={3}
-      maxWidth={({ spacing }) => ({
-        xs: `calc(100vw - ${spacing(3 * 2)})`,
-        sm: 340,
-      })}
-      alignSelf="center"
-      width="100%"
-      py={3}
-      component="form"
-      noValidate
-      onSubmit={formik.handleSubmit}
-    >
-      <Text variant="subtitle1" fontWeight={700}>
-        {accountT("changePassword.title")}
-      </Text>
-      <Input
-        rootSx={sxConfig.input}
-        fullWidth
-        title={accountT("changePassword.form.title.oldPassword")}
-        name="old_password"
-        type="password"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values?.old_password}
-        error={commonT(touchedErrors?.old_password, {
-          name: accountT("changePassword.form.title.oldPassword"),
-        })}
-        required
-      />
-      <Input
-        rootSx={sxConfig.input}
-        fullWidth
-        title={accountT("changePassword.form.title.newPassword")}
-        name="new_password"
-        type="password"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values?.new_password}
-        error={commonT(touchedErrors?.new_password, {
-          name: accountT("changePassword.form.title.newPassword"),
-          name2: accountT("changePassword.form.title.oldPassword"),
-          min: 6,
-          max: 30,
-        })}
-        required
-      />
-      <Input
-        rootSx={sxConfig.input}
-        fullWidth
-        title={accountT("changePassword.form.title.confirmNewPassword")}
-        name="renew_password"
-        type="password"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values?.renew_password}
-        error={commonT(touchedErrors?.renew_password, {
-          name: accountT("changePassword.form.title.confirmNewPassword"),
-          min: 6,
-          max: 30,
-        })}
-        required
-      />
-
+    <FixedLayout flex={1}>
       <Stack
-        direction={{ xs: "column-reverse", sm: "row" }}
+        flex={1}
+        justifyContent="center"
         alignItems="center"
-        spacing={{ xs: 2, sm: 3 }}
+        spacing={3}
+        maxWidth={({ spacing }) => ({
+          xs: `calc(100vw - ${spacing(3 * 2)})`,
+          sm: 340,
+        })}
+        alignSelf="center"
         width="100%"
+        py={3}
+        component="form"
+        noValidate
+        onSubmit={formik.handleSubmit}
       >
-        <Button
-          type="button"
-          onClick={onCancel}
-          sx={sxConfig.button}
-          variant="primaryOutlined"
-          size={isSmSmaller ? "medium" : "small"}
+        <Text variant="subtitle1" fontWeight={700}>
+          {accountT("changePassword.title")}
+        </Text>
+        <Input
+          rootSx={sxConfig.input}
           fullWidth
-        >
-          {commonT("form.cancel")}
-        </Button>
-        <Button
-          disabled={disabled}
-          pending={formik.isSubmitting}
-          sx={{ ...sxConfig.button }}
-          variant="primary"
-          size={isSmSmaller ? "medium" : "small"}
-          type="submit"
+          title={accountT("changePassword.form.title.oldPassword")}
+          name="old_password"
+          type="password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values?.old_password}
+          error={commonT(touchedErrors?.old_password, {
+            name: accountT("changePassword.form.title.oldPassword"),
+          })}
+          required
+        />
+        <Input
+          rootSx={sxConfig.input}
           fullWidth
+          title={accountT("changePassword.form.title.newPassword")}
+          name="new_password"
+          type="password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values?.new_password}
+          error={commonT(touchedErrors?.new_password, {
+            name: accountT("changePassword.form.title.newPassword"),
+            name2: accountT("changePassword.form.title.oldPassword"),
+            min: 6,
+            max: 30,
+          })}
+          required
+        />
+        <Input
+          rootSx={sxConfig.input}
+          fullWidth
+          title={accountT("changePassword.form.title.confirmNewPassword")}
+          name="renew_password"
+          type="password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values?.renew_password}
+          error={commonT(touchedErrors?.renew_password, {
+            name: accountT("changePassword.form.title.confirmNewPassword"),
+            min: 6,
+            max: 30,
+          })}
+          required
+        />
+
+        <Stack
+          direction={{ xs: "column-reverse", sm: "row" }}
+          alignItems="center"
+          spacing={{ xs: 2, sm: 3 }}
+          width="100%"
         >
-          {commonT("form.confirm")}
-        </Button>
+          <Button
+            type="button"
+            onClick={onCancel}
+            sx={sxConfig.button}
+            variant="primaryOutlined"
+            size={isSmSmaller ? "medium" : "small"}
+            fullWidth
+          >
+            {commonT("form.cancel")}
+          </Button>
+          <Button
+            disabled={disabled}
+            pending={formik.isSubmitting}
+            sx={{ ...sxConfig.button }}
+            variant="primary"
+            size={isSmSmaller ? "medium" : "small"}
+            type="submit"
+            fullWidth
+          >
+            {commonT("form.confirm")}
+          </Button>
+        </Stack>
       </Stack>
-    </Stack>
+    </FixedLayout>
   );
 };
 

@@ -92,7 +92,7 @@ const SubTasksOfTask = ({ open }: SubTasksOfTaskProps) => {
           </Text>
         }
       >
-        <Stack mt={2} position="relative">
+        <Stack mt={2} position="relative" maxWidth="100%" overflow="auto">
           {subTasks.map((subTask) => (
             <SubTaskItem key={subTask.id} subId={subTask.id} {...subTask} />
           ))}
@@ -329,7 +329,13 @@ const SubTaskItem = (props: Task & { subId: string }) => {
         width="100%"
         justifyContent="space-between"
       >
-        <Stack direction="row" alignItems="center" spacing={2} flex={1}>
+        <Stack
+          direction="row"
+          minWidth={200}
+          alignItems="center"
+          spacing={2}
+          flex={1}
+        >
           <StatusTask status={status} subId={subId} />
           {action === Action.RENAME ? (
             <TaskName onSubmit={onChangeName} value={name} />

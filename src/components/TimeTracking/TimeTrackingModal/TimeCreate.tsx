@@ -321,7 +321,8 @@ const TimeCreate: React.FC<IProps> = ({
             control={control}
             render={({ field: { onChange, value } }) => (
               <NumberInput
-                label="Time Duration (hour)"
+                label= "Time Duration (hour)"
+                required
                 sx={{ flex: 1 }}
                 error={Boolean(errors?.duration?.message)}
                 helperText={errors?.duration?.message}

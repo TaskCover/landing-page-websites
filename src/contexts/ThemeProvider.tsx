@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 "use client";
 
 import { typography, breakpoints } from "public/material";
@@ -37,7 +38,7 @@ const ThemeProvider = (props: ThemeProviderProps) => {
   return (
     <CssVarsProvider theme={theme} defaultMode={DEFAULT_MODE}>
       <CssBaseline />
-      <ListenerThemeSystem />
+      {/* <ListenerThemeSystem /> */}
       {children}
     </CssVarsProvider>
   );
