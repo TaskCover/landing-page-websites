@@ -291,7 +291,7 @@ const ItemList = () => {
                   sx={{
                     pl: { xs: 0.5, md: 0 },
                     verticalAlign: { xs: "top", md: "middle" },
-                    pt: { xs: 2, md: undefined },
+                    pt: { xs: 2, md: 0 },
                   }}
                   iconProps={{
                     sx: {
