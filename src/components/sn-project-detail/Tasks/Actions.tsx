@@ -133,10 +133,9 @@ const Actions = () => {
         py={{ xs: 0.75 }}
         mt={{ sm: 1.25, md: 0 }}
         position="sticky"
-        top={45}
+        top={{ xs: 108, md: 45 }}
         zIndex={12}
         bgcolor="background.paper"
-        display={{ xs: "none", md: "flex" }}
       >
         {/* <Button
           onClick={onShow}
@@ -154,6 +153,7 @@ const Actions = () => {
           justifyContent="space-between"
           spacing={{ xs: 2, sm: 0 }}
           width={{ xs: "100%", sm: "fit-content" }}
+          display={{ xs: "none", md: "flex" }}
         >
           <Stack
             direction="row"
