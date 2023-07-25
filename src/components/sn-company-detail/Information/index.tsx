@@ -13,6 +13,8 @@ import { useCompany } from "store/manager/selectors";
 import { NS_COMMON, NS_COMPANY } from "constant/index";
 import { useTranslations } from "next-intl";
 import Link from "components/Link";
+import Avatar from "components/Avatar";
+import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
 import { EMPLOYEES_PATH, POSITIONS_PATH, PROJECTS_PATH } from "constant/paths";
 
 type InformationItemProps = StackProps & {
@@ -56,11 +58,18 @@ const InformationProjectPage = () => {
     <StatusServer isFetching={isFetching} error={error} noData={!item}>
       <Stack px={{ xs: 1, sm: 3 }} py={3} spacing={3}>
         <Stack direction="row" spacing={2} justifyContent="space-between">
-          <Stack>
-            <Text variant="h4">{item?.name ?? "--"}</Text>
-            <Text variant="h6" color="grey.400">{`${companyT(
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar
+              src={item?.owner?.avatar?.link ?? ProjectPlaceholderImage}
+              size={40}
+            />
+
+            <Stack>
+              <Text variant="h4">{item?.name ?? "--"}</Text>
+              <Text variant="h6" color="grey.400">{`${companyT(
               "information.form.title.taxCode",
             )}: ${item?.tax_code}`}</Text>
+            </Stack>
           </Stack>
 
           <EditCompany />
