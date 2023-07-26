@@ -98,7 +98,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
       setTotalWeek(totalWeek);
       setTotalEachRows(newTotal);
     }
-  }, [data, totalEachRows]);
+  }, [data]);
 
   const _renderTableBody = () => {
     const convertObjectToArray = !_.isEmpty(data) ? Object.values(data) : data;

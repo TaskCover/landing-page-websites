@@ -113,12 +113,6 @@ const TimeCreate: React.FC<IProps> = ({
     onGetPositions({ pageSize: -1, pageIndex: 0 });
   }, []);
 
-  useEffect(() => {
-    if (userData) {
-      userData.position?.id && setValue("position", userData.position?.id);
-    }
-  }, [userData]);
-
   // useEffect(() => {
   //   if (dateClick) {
 
@@ -150,7 +144,9 @@ const TimeCreate: React.FC<IProps> = ({
           start_time: time,
         });
       } else {
-        reset({});
+        reset({
+          position: userData?.position?.id
+        });
       }
     }
   }, [isEdit, open, dateClick]);
@@ -296,7 +292,7 @@ const TimeCreate: React.FC<IProps> = ({
             control={control}
             render={({ field }) => (
               <TextFieldSelect
-                //disabled
+                disabled
                 options={positionOptions}
                 label="Position"
                 sx={{ flex: 1 }}
