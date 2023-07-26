@@ -1,4 +1,13 @@
-import { ChangeEvent, memo, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  memo,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { Box, Stack } from "@mui/material";
 import { Text, Collapse, Button } from "components/shared";
 import { NS_PROJECT, AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
@@ -15,15 +24,18 @@ import Loading from "components/Loading";
 
 type AttachmentsTaskProps = {
   id: string;
+  files: FileList | null;
+  setFiles: Dispatch<SetStateAction<FileList | null>>;
 };
 
 const AttachmentsTask = (props: AttachmentsTaskProps) => {
-  const { id } = props;
+  const { id, files, setFiles } = props;
   const projectT = useTranslations(NS_PROJECT);
   const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
   const inputFileRef = useRef<HTMLInputElement | null>(null);
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
+  const isSubmittingRef = useRef<boolean>(false);
 
   const [indexDeleted, setIndexDeleted] = useState<number | undefined>();
   const [msg, setMsg] = useState<string>("");
@@ -32,51 +44,66 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
     inputFileRef?.current?.click();
   };
 
-  const onHandleFiles = async (files: FileList | null) => {
-    if (!files) return;
-    const fileExtensions = Array.from(files).map((file) =>
-      getExtension(file.name),
-    );
-    const hasValid = fileExtensions.some((extension) =>
-      SUPPORTS.includes(extension),
-    );
+  const onHandleFiles = useCallback(
+    async (files: FileList | null) => {
+      if (!files) return;
+      isSubmittingRef.current = true;
+      const fileExtensions = Array.from(files).map((file) =>
+        getExtension(file.name),
+      );
+      const hasValid = fileExtensions.some((extension) =>
+        SUPPORTS.includes(extension),
+      );
 
-    if (!hasValid) {
-      onAddSnackbar(commonT("aFewFilesInvalid"), "error");
-      return;
-    }
-    try {
-      setMsg(commonT("processingUpload"));
-      const attachments: string[] = [];
-      const promises = Array.from(files).map((file) => {
-        return client.upload(Endpoint.UPLOAD_LINK, file);
-      });
-
-      const results = await Promise.allSettled(promises);
-      results.forEach((result) => {
-        if (result.status === "fulfilled" && result.value) {
-          attachments.push(result.value);
-        }
-      });
-
-      if (attachments.length) {
-        if (!taskListId || !taskId) {
-          throw AN_ERROR_TRY_AGAIN;
-        }
-        const newAttachments = [...(task?.attachments ?? []), ...attachments];
-        await onUpdateTask(
-          { attachments: newAttachments },
-          taskListId,
-          taskId,
-          subTaskId,
-        );
+      if (!hasValid) {
+        onAddSnackbar(commonT("aFewFilesInvalid"), "error");
+        return;
       }
-    } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-    } finally {
-      setMsg("");
-    }
-  };
+      try {
+        setMsg(commonT("processingUpload"));
+        const attachments: string[] = [];
+        const promises = Array.from(files).map((file) => {
+          return client.upload(Endpoint.UPLOAD_LINK, file);
+        });
+
+        const results = await Promise.allSettled(promises);
+        results.forEach((result) => {
+          if (result.status === "fulfilled" && result.value) {
+            attachments.push(result.value);
+          }
+        });
+
+        if (attachments.length) {
+          if (!taskListId || !taskId) {
+            throw AN_ERROR_TRY_AGAIN;
+          }
+          const newAttachments = [...(task?.attachments ?? []), ...attachments];
+          await onUpdateTask(
+            { attachments: newAttachments },
+            taskListId,
+            taskId,
+            subTaskId,
+          );
+        }
+      } catch (error) {
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      } finally {
+        setMsg("");
+        setFiles(null);
+        isSubmittingRef.current = false;
+      }
+    },
+    [
+      commonT,
+      onAddSnackbar,
+      onUpdateTask,
+      subTaskId,
+      task?.attachments,
+      taskId,
+      taskListId,
+      setFiles,
+    ],
+  );
 
   const onChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -113,17 +140,10 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
     }
   };
 
-  const onDragOver = (event) => {
-    event.preventDefault();
-  };
-  const onDrop = (event) => {
-    event.preventDefault();
-    const { files } = event.dataTransfer;
+  useEffect(() => {
+    if (isSubmittingRef.current || !files || !files.length) return;
     onHandleFiles(files);
-  };
-  const onDragStart = (event) => {
-    event.dataTransfer.setData("text/plain", event.target.id);
-  };
+  }, [files, onHandleFiles]);
 
   return (
     <>
@@ -138,30 +158,21 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
             </Text>
           }
         >
-          <Stack mt={2} flex={1} onDrop={onDrop} onDragOver={onDragOver}>
-            <Stack
-              draggable
-              onDragStart={onDragStart}
-              direction="row"
-              gap={1.5}
-              flex={1}
-              flexWrap="wrap"
-            >
-              {task?.attachments_down.map((attachment, index) => (
-                <AttachmentPreview
-                  key={attachment?.link}
-                  src={attachment?.link}
-                  name={attachment?.name}
-                  onRemove={onRemove(index)}
-                  size={40}
-                  showName
-                  containerProps={{
-                    bgcolor: "grey.100",
-                    p: 1.25,
-                  }}
-                />
-              ))}
-            </Stack>
+          <Stack mt={2} flex={1} direction="row" gap={1.5} flexWrap="wrap">
+            {task?.attachments_down.map((attachment, index) => (
+              <AttachmentPreview
+                key={attachment?.link}
+                src={attachment?.link}
+                name={attachment?.name}
+                onRemove={onRemove(index)}
+                size={40}
+                showName
+                containerProps={{
+                  bgcolor: "grey.100",
+                  p: 1.25,
+                }}
+              />
+            ))}
           </Stack>
           <Button
             onClick={onChooseFile}

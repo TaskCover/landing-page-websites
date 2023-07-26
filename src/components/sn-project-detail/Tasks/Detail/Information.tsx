@@ -1,4 +1,4 @@
-import { ReactNode, memo, useEffect, useMemo } from "react";
+import { ReactNode, memo, useEffect, useMemo, useState } from "react";
 import { Box, Stack, StackProps } from "@mui/material";
 import { Text } from "components/shared";
 import { useTranslations } from "next-intl";
@@ -62,6 +62,9 @@ const Information = () => {
     !!task?.dependencies?.length,
   );
 
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [isDragging, onDraggingTrue, onDraggingFalse] = useToggle(false);
+
   const isHideActions = useMemo(
     () =>
       Boolean(
@@ -100,6 +103,18 @@ const Information = () => {
     document.getElementById(ATTACHMENT_ID)?.click();
   };
 
+  const onDragOver = (event) => {
+    event.preventDefault();
+    onDraggingTrue();
+  };
+  const onDrop = (event) => {
+    event.preventDefault();
+    onDraggingFalse();
+
+    const { files } = event.dataTransfer;
+    setFiles(files);
+  };
+
   useEffect(() => {
     setShowAddSubTask(!!task?.sub_tasks?.length);
   }, [setShowAddSubTask, task?.sub_tasks?.length]);
@@ -115,7 +130,29 @@ const Information = () => {
   if (!task) return null;
 
   return (
-    <Stack spacing={2} width="100%">
+    <Stack
+      width="100%"
+      onDrop={onDrop}
+      onDragOver={onDragOver}
+      onDragLeave={onDraggingFalse}
+      position="relative"
+      spacing={2}
+    >
+      {isDragging && (
+        <Box
+          width="100%"
+          height="100%"
+          border="3px dashed"
+          borderColor="grey.100"
+          position="absolute"
+          top={0}
+          left={0}
+          zIndex={52}
+          bgcolor="text.primary"
+          sx={{ opacity: 0.2 }}
+        />
+      )}
+
       <Stack
         direction="row"
         alignItems="center"
@@ -270,7 +307,7 @@ const Information = () => {
         )}
       </InformationItem>
       <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
-      <AttachmentsTask id={ATTACHMENT_ID} />
+      <AttachmentsTask id={ATTACHMENT_ID} files={files} setFiles={setFiles} />
       {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
       <TodoList open={isAddTodo} />
       <Dependencies open={isAddDepen} />
