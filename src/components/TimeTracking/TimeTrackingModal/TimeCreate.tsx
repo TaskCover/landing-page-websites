@@ -142,6 +142,7 @@ const TimeCreate: React.FC<IProps> = ({
         reset({
           day: date,
           start_time: time,
+          position: userData?.position?.id
         });
       } else {
         reset({
