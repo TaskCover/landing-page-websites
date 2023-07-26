@@ -331,7 +331,7 @@ const SubTaskItem = (props: Task & { subId: string }) => {
       >
         <Stack
           direction="row"
-          minWidth={200}
+          minWidth={190}
           alignItems="center"
           spacing={2}
           flex={1}
