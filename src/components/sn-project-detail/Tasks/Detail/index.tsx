@@ -35,6 +35,7 @@ const Detail = () => {
           backgroundColor: "background.paper",
           backgroundImage: "none",
           width: { xs: "100%", md: "70%", lg: "50%" },
+          maxWidth: 720,
           overflow: "hidden",
         },
       }}

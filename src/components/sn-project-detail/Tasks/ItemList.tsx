@@ -111,6 +111,11 @@ const ItemList = () => {
     [dataIds?.taskId, dataIds?.taskListId],
   );
 
+  const noData = useMemo(
+    () => !isIdle && totalItems === 0,
+    [isIdle, totalItems],
+  );
+
   const baseTop = useMemo(
     () => (selectedList.length ? 106 : 62),
     [selectedList.length],
@@ -615,10 +620,11 @@ const ItemList = () => {
           headerList={headerList}
           flex="unset"
           error={error as string}
-          noData={!isIdle && totalItems === 0}
+          noData={noData}
           maxWidth={1349}
           mx="auto"
           width="100%"
+          bgcolor={noData ? "background.paper" : "background.default"}
         >
           <></>
         </TableLayout>
