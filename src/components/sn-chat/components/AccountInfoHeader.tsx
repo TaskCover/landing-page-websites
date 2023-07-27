@@ -100,14 +100,18 @@ const AccountInfoHeader = ({
               flexDirection: "column",
             }}
           >
-            <Typography variant="inherit" fontWeight="bold">
-              {name ? name : dataTransfer?.fname }
+            <Typography variant="inherit" fontWeight="bold" style={{ cursor: "pointer" }}
+              onClick={() => {
+                onSetStep(STEP.CHAT_DETAIL_GROUP);
+              }}
+            >
+              {name ? name : dataTransfer?.fname}
             </Typography>
             <Typography variant="caption" color="#999999">
               Active
             </Typography>
           </Box>
-          <IconButton
+          {/* <IconButton
             sx={{
               cursor: "pointer",
             }}
@@ -116,7 +120,7 @@ const AccountInfoHeader = ({
             }}
           >
             <ArrowRightIcon />
-          </IconButton>
+          </IconButton> */}
         </>
       );
     }
@@ -229,7 +233,7 @@ const AccountInfoHeader = ({
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: "2px",
+              gap: "10px",
               padding: 1.5,
               borderBottom: "1px solid #ECECF3",
             }}
@@ -264,13 +268,13 @@ const AccountInfoHeader = ({
               >
                 <ProfileAdd />
               </IconButton>
-              <IconButton
+              {/* <IconButton
                 sx={{
                   color: "white",
                 }}
               >
                 <VideoCallIcon />
-              </IconButton>
+              </IconButton> */}
             </Box>
           </Box>
         );
