@@ -24,6 +24,8 @@ import PinIcon from "icons/PinIcon";
 import { useSnackbar } from "store/app/selectors";
 import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import useTheme from "hooks/useTheme";
+import { useTranslations } from "next-intl";
+import { NS_TIME_TRACKING } from "constant/index";
 
 interface IProps {
   data: any[];
@@ -53,6 +55,7 @@ const weekdays = ["SUN", "MON", "TUE", "WEB", "THU", "FRI", "SAT"];
 const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
   const isGetLoading = false;
   const { isDarkMode } = useTheme();
+  const timeT = useTranslations(NS_TIME_TRACKING);
   const [totalEachRows, setTotalEachRows] = useState<{ [key: string]: number }>(
     {},
   );
@@ -253,7 +256,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
                   textAlign: "center",
                 }}
               >
-                No data were found
+                 {timeT("header.noData")}
               </Typography>
             </StyledTableCell>
           </StyledTableRow>
@@ -311,7 +314,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
                     transform: "translate(-50%, -50%)",
                   }}
                 >
-                  Weekly summary
+                  {timeT("myTime.timesheet_tab.weekly_summary")}
                 </Typography>
               </StyledTableCell>
               <StyledTableCell>
@@ -330,7 +333,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
                       textAlign: "right",
                     }}
                   >
-                    Total
+                    {timeT("myTime.timesheet_tab.total")}
                   </Typography>
                   <Typography
                     sx={{

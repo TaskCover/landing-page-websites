@@ -172,7 +172,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
                     transform: "translate(-50%, -50%)",
                   }}
                 >
-                  Weekly summary
+                  {timeT("myTime.timesheet_tab.weekly_summary")}
                 </Typography>
               </StyledTableCell>
               <StyledTableCell>
@@ -191,7 +191,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
                       textAlign: "right",
                     }}
                   >
-                    Total
+                    {timeT("myTime.timesheet_tab.total")}
                   </Typography>
                   <Typography
                     sx={{
@@ -377,7 +377,7 @@ const TimeSheet: React.FC<IProps> = ({ data, filters, dateRange }) => {
                       textAlign: "center",
                     }}
                   >
-                    No data were found
+                    {timeT("header.noData")}
                   </Typography>
                 </StyledTableCell>
               </StyledTableRow>
