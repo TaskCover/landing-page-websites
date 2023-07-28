@@ -115,7 +115,7 @@ const ItemList = () => {
         setIsAllChecked((prevIsAllChecked) => !prevIsAllChecked);
 
         setSelectedList((prevSelectedList) => {
-            const newSelectedList = [...prevSelectedList];
+            const newSelectedList: Selected[] = [];
             if (isAllChecked) {
                 // If the new checkbox is checked, uncheck all task lists and tasks
                 return []
