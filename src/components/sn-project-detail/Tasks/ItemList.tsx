@@ -118,9 +118,7 @@ const ItemList = () => {
             const newSelectedList = [...prevSelectedList];
             if (isAllChecked) {
                 // If the new checkbox is checked, uncheck all task lists and tasks
-                newSelectedList.forEach((item) => {
-                    item.checked = false;
-                });
+                return []
             } else {
                 // If the new checkbox is unchecked, check all task lists and tasks
                 dataList.forEach((taskListItem) => {
