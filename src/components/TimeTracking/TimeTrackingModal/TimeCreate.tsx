@@ -19,7 +19,7 @@ import { usePositions } from "store/company/selectors";
 import { DataStatus } from "constant/enums";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_TIME_TRACKING } from "constant/index";
 import { useTranslations } from "next-intl";
 import { DEFAULT_RANGE_ACTIVITIES } from "store/timeTracking/reducer";
 import useTheme from "hooks/useTheme";
@@ -177,6 +177,7 @@ const TimeCreate: React.FC<IProps> = ({
   }, [positions]);
 
   const commonT = useTranslations(NS_COMMON);
+  const timeT = useTranslations(NS_TIME_TRACKING);
 
   const onSubmit = (data: FormData) => {
     const resolveData = {
@@ -240,7 +241,7 @@ const TimeCreate: React.FC<IProps> = ({
             render={({ field }) => (
               <TextFieldSelect
                 options={projectOptions}
-                label="Project"
+                label={timeT("modal.Project")}
                 sx={{ flex: 1 }}
                 required
                 error={Boolean(errors?.project_id?.message)}
@@ -255,10 +256,10 @@ const TimeCreate: React.FC<IProps> = ({
             render={({ field }) => (
               <TextFieldSelect
                 options={[
-                  { label: "Work time", value: "Work time" },
-                  { label: "Break time", value: "Break time" },
+                  { label: timeT("header.tab.workTime"), value: "Work time" },
+                  { label: timeT("header.tab.breakTime"), value: "Break time" },
                 ]}
-                label="Type"
+                label={timeT("modal.Type")}
                 sx={{ flex: 1 }}
                 required
                 error={Boolean(errors?.type?.message)}
@@ -295,7 +296,7 @@ const TimeCreate: React.FC<IProps> = ({
               <TextFieldSelect
                 disabled
                 options={positionOptions}
-                label="Position"
+                label={timeT("modal.Position")}
                 sx={{ flex: 1 }}
                 required
                 error={Boolean(errors?.position?.message)}
@@ -310,7 +311,7 @@ const TimeCreate: React.FC<IProps> = ({
             control={control}
             render={({ field }) => (
               <MobileDatePickerComponent
-                label="Date"
+                label={timeT("modal.Date")}
                 sx={{ flex: 1 }}
                 required
                 error={Boolean(errors?.day?.message)}
@@ -325,7 +326,7 @@ const TimeCreate: React.FC<IProps> = ({
             control={control}
             render={({ field }) => (
               <TimePicker
-                label="Start time"
+                label={timeT("modal.start_time")}
                 sx={{ flex: 1 }}
                 required
                 error={Boolean(errors?.start_time?.message)}
@@ -339,7 +340,7 @@ const TimeCreate: React.FC<IProps> = ({
             control={control}
             render={({ field: { onChange, value } }) => (
               <NumberInput
-                label="Time Duration (hour)"
+                label={timeT("modal.timeDuration")}
                 required
                 sx={{ flex: 1 }}
                 error={Boolean(errors?.duration?.message)}
@@ -353,7 +354,7 @@ const TimeCreate: React.FC<IProps> = ({
             name="note"
             control={control}
             render={({ field }) => (
-              <Textarea label="Note" sx={{ flex: 1 }} {...field} />
+              <Textarea label={timeT("modal.Note")} sx={{ flex: 1 }} {...field} />
             )}
           />
         </Stack>
@@ -363,7 +364,7 @@ const TimeCreate: React.FC<IProps> = ({
             sx={{ width: "150px", marginRight: "24px" }}
             onClick={onClose}
           >
-            Cancel
+            {timeT("modal.Cancel")}
           </Button>
           <Button
             variant="contained"
@@ -377,7 +378,7 @@ const TimeCreate: React.FC<IProps> = ({
             }}
             onClick={handleSubmit(onSubmit)}
           >
-            Confirm
+            {timeT("modal.Confirm")}
           </Button>
         </Stack>
         {isEdit && (
@@ -407,7 +408,7 @@ const TimeCreate: React.FC<IProps> = ({
                   });
               }}
             >
-              Delete
+              {timeT("modal.Delete")}
             </Button>
           </Stack>
         )}
@@ -416,7 +417,7 @@ const TimeCreate: React.FC<IProps> = ({
   };
   return (
     <DefaultPopupLayout
-      title={isEdit ? "Edit time" : "Add time"}
+      title={isEdit ? timeT("modal.edit_time") : timeT("modal.add_time")}
       content={_renderMain()}
       open={open}
       onClose={onClose}

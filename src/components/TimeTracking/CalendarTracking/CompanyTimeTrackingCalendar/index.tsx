@@ -296,7 +296,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
               {activeTab === "timeSheet" && (
                 <CustomizedInputBase
                   value={filters.search_key}
-                  placeholder="Search Employee"
+                  placeholder={timeT("myTime.searchButton")}
                   onChange={(event) => {
                     const searchKey = event.target.value;
                     setFilters({ ...filters, search_key: searchKey });
@@ -316,14 +316,16 @@ const TrackingCalendar: React.FC<IProps> = () => {
 
   const _renderHeader = () => {
     return (
-    <Grid container rowSpacing={1} sx = {{ mt: 0, mb: 1 }}>  
-        <Grid item md={3} sm={12}>
-        </Grid>
-        <Grid item md={6} sm={12}
+      <Grid container rowSpacing={1} sx={{ mt: 0, mb: 1 }}>
+        <Grid item md={3} sm={12}></Grid>
+        <Grid
+          item
+          md={6}
+          sm={12}
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: { md: 'center', sm: 'flex-start' },
+            justifyContent: { md: "center", sm: "flex-start" },
           }}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -434,10 +436,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
               }}
               onClick={() => onAction("week", "today")}
               disabled={
-                dayjs(currentDate).format("YYYY-MM-DD") === dayjs().format("YYYY-MM-DD")
+                dayjs(currentDate).format("YYYY-MM-DD") ===
+                dayjs().format("YYYY-MM-DD")
               }
             >
-                This week
+              {timeT("company_time.this_week")}
             </Button>
             <Button
               sx={{
@@ -668,16 +671,21 @@ const TrackingCalendar: React.FC<IProps> = () => {
                       })
                     ) : (
                       <StyledTableRow>
-                        <Typography
+                        <StyledTableCell
+                          colSpan={9}
+                          align="center"
                           sx={{
                             fontSize: "14px",
                             lineHeight: "20px",
                             fontWeight: 400,
                             p: 1,
+                            widtH: 1,
+                            textAlign: "center",
                           }}
                         >
-                          No data were found
-                        </Typography>
+                          {timeT("header.noData")}
+                        </StyledTableCell>
+                        
                       </StyledTableRow>
                     )}
 

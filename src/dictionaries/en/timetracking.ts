@@ -10,6 +10,8 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
       breakTime: "Break time",
       weekly_total: "Weekly total",
     },
+    timeTracking: "Time Tracking",
+    noData: "No data were found"
   },
   myTime: {
     addButton: "Add",
@@ -55,4 +57,30 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
       note: "Note",
     },
   },
+  timeLog: {
+    createTL: "Create task list",
+     moveT: "Move task",
+     upITL: "Update inactive task list",
+     upTL: "Update task list",
+     upT: "Update task",
+     upST: "Update sub task",
+     upIT: "Update inactive task",
+     upIST: "Update inactive sub task",
+     creT: "Create task",
+     creST: "Create sub task",
+   },
+   modal: {
+    Project: "Project",
+    Position: "Position",
+    Date: "Date",
+    timeDuration: "Time duration (hour)",
+    Type: "Type",
+    start_time: "Start time",
+    Note: "Note",
+    Cancel: "Cancel",
+    Confirm: "Confirm",
+    Delete: "Delete",
+    edit_time: "Edit time",
+    add_time: "Add time",
+   }
 };
