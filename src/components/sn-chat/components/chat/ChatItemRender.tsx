@@ -124,7 +124,11 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
           color="#999999"
           sx={{
             display: "flex",
+            WebkitLineClamp: "1",
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
             "& *": {
+              display: "flex",
               margin: 0,
               padding: 0,
               fontSize: "14px",
@@ -137,6 +141,10 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
               }),
             },
             "& p": {
+              overflowWrap: "anywhere",
+              display: "-webkit-box",
+              WebkitLineClamp: "1",
+              WebkitBoxOrient: "vertical",
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",

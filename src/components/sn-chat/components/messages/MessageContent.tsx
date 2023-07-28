@@ -103,9 +103,6 @@ const MessageContent = ({
             <Box
               ref={textRef}
               sx={{
-                "& pre": {
-                  whiteSpace: "pre-wrap",
-                },
                 "& *": {
                   margin: "0",
                 },

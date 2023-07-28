@@ -79,27 +79,17 @@ const MessageItemRender = ({
               fontSize: "14px",
               lineHeight: "22px",
               "& *": {
+                display: "flex",
                 margin: 0,
                 padding: 0,
-              },
-              "& p": {
-                overflowWrap: "anywhere",
-                ...(isCurrentAcc && {
-                  "&:nth-of-type(1)": {
-                    overflowWrap: "unset",
-                    marginRight: "0.3rem",
-                  },
-                }),
               },
               "& mark": {
                 display: "inline",
                 color: "#3699FF",
                 backgroundColor: "transparent",
               },
-              "& ol": {
-                marginLeft: "1rem",
-              },
-              "& pre": {
+              "& p": {
+                overflowWrap: "anywhere",
                 display: "-webkit-box",
                 WebkitLineClamp: "2",
                 WebkitBoxOrient: "vertical",
