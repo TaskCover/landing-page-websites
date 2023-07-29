@@ -41,6 +41,7 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
   company_time: {
     this_week: "Tuần này",
     timesheet: "Thời gian biểu",
+    searchButton: "Tìm kiếm nhân viên",
     timesheet_tab: {
       weekly_summary: "Tóm tắt hàng tuần",
       total: "Tổng",

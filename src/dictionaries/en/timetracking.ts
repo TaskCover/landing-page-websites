@@ -41,6 +41,7 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
   company_time: {
     this_week: "This week",
     timesheet: "Timesheet",
+    searchButton: "Search employee",
     timesheet_tab: {
       weekly_summary: "Weekly summary",
       total: "Total",
