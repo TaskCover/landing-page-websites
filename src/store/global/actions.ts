@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { client, Endpoint } from "api";
 import { HttpStatusCode } from "constant/enums";
-import { COMPANY_API_URL, AN_ERROR_TRY_AGAIN } from "constant/index";
+import { COMPANY_API_URL, AN_ERROR_TRY_AGAIN, API_URL } from "constant/index";
 import { BaseQueries } from "constant/types";
 import { serverQueries, refactorRawItemListResponse } from "utils/index";
 
@@ -47,6 +47,22 @@ export const getProjectTypes = async (queries: BaseQueries) => {
   }
 };
 
+export const getCurrencies = async (queries: BaseQueries) => {
+
+  try {
+    const response = await client.get(Endpoint.CURRENCY, {}, {
+      baseURL: API_URL,
+    });
+
+    if (response?.status === HttpStatusCode.OK) {
+      return response.data;
+    }
+    throw AN_ERROR_TRY_AGAIN;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getPositionOptions = createAsyncThunk(
   "global/getPositionOptions",
   getPositions,
@@ -55,4 +71,9 @@ export const getPositionOptions = createAsyncThunk(
 export const getProjectTypeOptions = createAsyncThunk(
   "global/getProjectTypeOptions",
   getProjectTypes,
+);
+
+export const getCurrencyOptions = createAsyncThunk(
+  "global/getCurrencyOptions",
+  getCurrencies,
 );

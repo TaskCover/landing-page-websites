@@ -94,6 +94,11 @@ export interface Project {
   };
 }
 
+export interface Currency {
+  code: string;
+  name: string;
+}
+
 export interface Todo {
   id: string;
   name: string;

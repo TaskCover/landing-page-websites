@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { MenuItem, Stack } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
 import {
@@ -31,6 +31,7 @@ import { useEmployeeOptions } from "store/company/selectors";
 import { SelectMembers } from "./components";
 import { Member } from "./components/helpers";
 import {
+  useCurrencyOptions,
   usePositionOptions,
   useProjectTypeOptions,
 } from "store/global/selectors";
@@ -60,6 +61,14 @@ const Form = (props: FormProps) => {
     onGetOptions: onGetProjectTypeOptions,
     pageSize: projectTypeOptionsPageSize,
   } = useProjectTypeOptions();
+  const {
+    isFetching: currencyOptionsIsFetching,
+    totalPages: currencyOptionsTotalPages,
+    pageIndex: currencyOptionsPageIndex,
+    options: currencyOptions,
+    onGetOptions: onGetCurrencyOptions,
+    pageSize: currencyOptionsPageSize,
+  } = useCurrencyOptions();
   const { options: positionOptions } = usePositionOptions();
   const {
     options: employeeOptions,
@@ -203,6 +212,19 @@ const Form = (props: FormProps) => {
     });
   };
 
+  const onCurrencyOptionsEndReached = () => {
+    if (
+      currencyOptionsIsFetching ||
+      (currencyOptionsTotalPages &&
+        currencyOptionsPageIndex >= currencyOptionsTotalPages)
+    )
+      return;
+    onGetOptions({
+      pageSize: currencyOptionsPageSize,
+      pageIndex: currencyOptionsPageIndex + 1,
+    });
+  };
+
   const onChangeSearch = (name: string, newValue?: string | number) => {
     onGetOptions({ pageIndex: 1, pageSize: 20, [name]: newValue });
   };
@@ -214,6 +236,10 @@ const Form = (props: FormProps) => {
   useEffect(() => {
     onGetProjectTypeOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetProjectTypeOptions]);
+
+  useEffect(() => {
+    onGetCurrencyOptions({ pageIndex: 1, pageSize: 20 });
+  }, [onGetCurrencyOptions]);
 
   useEffect(() => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
@@ -320,7 +346,7 @@ const Form = (props: FormProps) => {
             }}
           />
         </Stack>
-        <Stack direction={{ sm: "row" }} spacing={2}>
+        <Stack direction={{ sm: "row" }} spacing={0}>
           <InputNumber
             title={projectT("list.form.title.estimatedCost")}
             name="expected_cost"
@@ -331,8 +357,24 @@ const Form = (props: FormProps) => {
               name: projectT("list.form.title.estimatedCost"),
             })}
             rootSx={sxConfig.input}
-            fullWidth
+            sx={{ width: '65%' }}
             numberType="integer"
+          />
+          <Select
+            options={currencyOptions}
+            title={projectT("list.form.title.currency")}
+            name="currency"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values?.currency}
+            error={commonT(touchedErrors?.currency, {
+              name: projectT("list.form.title.currency"),
+            })}
+            rootSx={sxConfig.input}
+            onEndReached={onCurrencyOptionsEndReached}
+            sx={{
+              mt: { xs: 2, sm: 0 }, width: '35%', ml: 0
+            }}
           />
           <InputNumber
             title={projectT("list.form.title.estimatedWorkingHours")}
@@ -347,7 +389,7 @@ const Form = (props: FormProps) => {
             fullWidth
             numberType="integer"
             sx={{
-              mt: { xs: 2, sm: 0 },
+              mt: { xs: 2, sm: 0 }, ml: 2
             }}
           />
         </Stack>
