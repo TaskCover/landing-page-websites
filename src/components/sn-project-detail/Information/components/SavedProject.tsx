@@ -42,7 +42,7 @@ const SavedProject = () => {
         sx={{ bgcolor: "grey.50", p: 0.5, borderRadius: 1 }}
       >
         <BookmarkIcon
-          sx={{ fontSize: 24 }}
+          sx={{ fontSize: 20 }}
           color="primary"
           active={item.saved}
         />

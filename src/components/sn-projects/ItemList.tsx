@@ -67,16 +67,33 @@ const ItemList = () => {
     ],
     [commonT],
   );
+  const mobileHeaderList: CellProps[] = useMemo(
+    () => [
+      {
+        value: commonT("name"),
+        width: "25%",
+        align: "left",
+      },
+      {
+        value: commonT("assigner"),
+        width: "25%",
+        align: "left",
+      },
+      { value: commonT("status"), width: "30%" },
+      { value: "", width: "10%" },
+    ],
+    [commonT],
+  );
 
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
-      ? MOBILE_HEADER_LIST
+      ? mobileHeaderList
       : desktopHeaderList;
     return [
       ...additionalHeaderList,
-      { value: "", width: isMdSmaller ? "25%" : "10%" },
+      { value: "", width: "10%" },
     ] as CellProps[];
-  }, [desktopHeaderList, isMdSmaller]);
+  }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
 
   const initValues = useMemo(
     () =>
@@ -150,9 +167,12 @@ const ItemList = () => {
         <TableLayout
           headerList={headerList}
           pending={isFetching}
+          headerProps={{
+            sx: { px: { xs: 0.5, md: 2 } },
+          }}
           error={error as string}
           noData={!isIdle && totalItems === 0}
-          px={{ xs: 1, md: 3 }}
+          px={{ md: 3 }}
         >
           {items.map((item, index) => {
             return (
@@ -165,7 +185,7 @@ const ItemList = () => {
                     order={(pageIndex - 1) * pageSize + (index + 1)}
                   />
                 )}
-                <BodyCell align="left">
+                <BodyCell align="left" sx={{ px: { xs: 0.5, md: 2 } }}>
                   <IconButton
                     onClick={onActionToItem(DataAction.UPDATE, item)}
                     tooltip={commonT("edit")}
@@ -174,13 +194,13 @@ const ItemList = () => {
                     sx={{
                       backgroundColor: isDarkMode ? "grey.50" : "primary.light",
                       color: "text.primary",
-                      p: 1,
+                      p: { xs: "4px!important", md: 1 },
                       "&:hover svg": {
                         color: "common.white",
                       },
                     }}
                   >
-                    <PencilUnderlineIcon />
+                    <PencilUnderlineIcon sx={{ fontSize: 24 }} />
                   </IconButton>
                 </BodyCell>
               </TableRow>
@@ -192,7 +212,7 @@ const ItemList = () => {
           totalPages={totalPages}
           page={pageIndex}
           pageSize={pageSize}
-          containerProps={{ px: 3, py: 1 }}
+          containerProps={{ px: { md: 3 }, py: 1 }}
           onChangePage={onChangePage}
           onChangeSize={onChangeSize}
         />

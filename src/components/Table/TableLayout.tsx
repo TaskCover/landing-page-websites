@@ -179,7 +179,11 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
           <TableBody sx={bodySx}>
             {hasAdditionalRow ? (
               <TableRow>
-                <CellBody colSpan={headerList.length} align="center">
+                <CellBody
+                  colSpan={headerList.length}
+                  align="center"
+                  sx={{ border: "none" }}
+                >
                   {pending ? (
                     <CircularProgress size={20} color="primary" />
                   ) : Boolean(error) ? (

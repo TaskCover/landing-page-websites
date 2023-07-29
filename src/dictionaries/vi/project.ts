@@ -144,7 +144,7 @@ export const ProjectLang: ProjectDictionary = {
     addSubTasks: "Thêm công việc con",
     addToDos: "Thêm các điều cần làm",
     attachments: "Tệp đính kèm",
-    clickToUploadFile: "Nhấn để tải lên các tệp",
+    clickToUploadFile: "Nhấn hoặc kéo thả để tải lên các tệp",
     subTasks: "Công việc con",
     setDueDate: "Đặt ngày đến hạn",
     convertToTask: "Chuyển đổi thành công việc",

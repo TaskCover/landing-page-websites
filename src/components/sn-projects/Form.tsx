@@ -351,7 +351,7 @@ const Form = (props: FormProps) => {
             }}
           />
         </Stack>
-        <Stack direction={{ sm: "row" }} spacing={2}>
+        <Stack direction={{ xs: "column-reverse", sm: "row" }} spacing={2}>
           <Upload
             title="Logo"
             name="avatar"

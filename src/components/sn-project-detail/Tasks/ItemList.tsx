@@ -111,8 +111,13 @@ const ItemList = () => {
     [dataIds?.taskId, dataIds?.taskListId],
   );
 
+  const noData = useMemo(
+    () => !isIdle && totalItems === 0,
+    [isIdle, totalItems],
+  );
+
   const baseTop = useMemo(
-    () => (selectedList.length ? 60 : 16),
+    () => (selectedList.length ? 106 : 62),
     [selectedList.length],
   );
 
@@ -596,7 +601,7 @@ const ItemList = () => {
   }, [initQuery, isReady, onGetTasksOfProject, projectId]);
 
   return (
-    <Stack flex={1}>
+    <Stack flex={1} order={3}>
       {!!selectedList.length && (
         <ActionsSelected
           selectedList={selectedList}
@@ -605,8 +610,8 @@ const ItemList = () => {
       )}
       <Stack
         position="sticky"
-        top={baseTop + 44}
-        zIndex={1}
+        top={baseTop + 28}
+        zIndex={12}
         display={{ xs: "none", md: "flex" }}
         bgcolor="background.default"
       >
@@ -615,10 +620,11 @@ const ItemList = () => {
           headerList={headerList}
           flex="unset"
           error={error as string}
-          noData={!isIdle && totalItems === 0}
+          noData={noData}
           maxWidth={1349}
           mx="auto"
           width="100%"
+          bgcolor={noData ? "background.paper" : "background.default"}
         >
           <></>
         </TableLayout>

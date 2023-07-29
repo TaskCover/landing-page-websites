@@ -27,6 +27,9 @@ const Switch = (props: SwitchProps) => {
       name={name}
       onChange={onChangeSwitch}
       value={value}
+      labelProps={{
+        whiteSpace: "nowrap",
+      }}
       {...rest}
     />
   );

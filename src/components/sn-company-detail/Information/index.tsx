@@ -58,7 +58,7 @@ const InformationProjectPage = () => {
   return (
     <StatusServer isFetching={isFetching} error={error} noData={!item}>
       <FixedLayout flex={1}>
-        <Stack px={{ xs: 1, sm: 3 }} py={3} spacing={3}>
+        <Stack px={{ sm: 3 }} py={{ md: 3 }} spacing={3}>
           <Stack direction="row" spacing={2} justifyContent="space-between">
             <Stack>
               <Text variant="h4">{item?.name ?? "--"}</Text>
@@ -79,11 +79,17 @@ const InformationProjectPage = () => {
               alignItems="center"
               spacing={{ xs: 2, sm: 5, lg: 10 }}
             >
-              <InformationItem label={companyT("information.ownerOfCompany")}>
+              <InformationItem
+                flex={1}
+                label={companyT("information.ownerOfCompany")}
+              >
                 {item?.owner?.fullname}
               </InformationItem>
 
-              <InformationItem label={companyT("information.ownerEmail")}>
+              <InformationItem
+                flex={1}
+                label={companyT("information.ownerEmail")}
+              >
                 {item?.owner?.email}
               </InformationItem>
             </Stack>
@@ -92,11 +98,12 @@ const InformationProjectPage = () => {
               alignItems="center"
               spacing={{ xs: 2, sm: 5, lg: 10 }}
             >
-              <InformationItem label={commonT("phone")}>
+              <InformationItem flex={1} label={commonT("phone")}>
                 {item?.phone}
               </InformationItem>
 
               <InformationItem
+                flex={1}
                 label={companyT("information.form.title.address")}
               >
                 {item?.address}
@@ -112,6 +119,7 @@ const InformationProjectPage = () => {
               spacing={{ xs: 2, sm: 5, lg: 10 }}
             >
               <InformationItem
+                flex={1}
                 label={companyT("information.numberOfEmployees")}
               >
                 <Link
@@ -130,6 +138,7 @@ const InformationProjectPage = () => {
               </InformationItem>
 
               <InformationItem
+                flex={1}
                 label={companyT("information.numberOfPositions")}
               >
                 <Link
@@ -152,7 +161,10 @@ const InformationProjectPage = () => {
               alignItems="center"
               spacing={{ xs: 2, sm: 5, lg: 10 }}
             >
-              <InformationItem label={companyT("information.numberOfProjects")}>
+              <InformationItem
+                flex={1}
+                label={companyT("information.numberOfProjects")}
+              >
                 <Link
                   href={PROJECTS_PATH}
                   underline="none"
@@ -168,7 +180,7 @@ const InformationProjectPage = () => {
                 </Link>
               </InformationItem>
 
-              <InformationItem label={commonT("creationDate")}>
+              <InformationItem flex={1} label={commonT("creationDate")}>
                 {formatDate(item?.created_time, undefined, "--")}
               </InformationItem>
             </Stack>

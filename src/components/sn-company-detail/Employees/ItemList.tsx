@@ -34,6 +34,7 @@ import { useTranslations } from "next-intl";
 import { PayStatus } from "constant/enums";
 import { CompanyStatus } from "store/manager/actions";
 import FixedLayout from "components/FixedLayout";
+import { HEADER_HEIGHT } from "layouts/Header";
 
 const ItemList = () => {
   const {
@@ -203,10 +204,18 @@ const ItemList = () => {
           <Stack
             direction="row"
             alignItems="center"
-            spacing={3}
-            p={3}
-            pb={0.25}
+            spacing={{ xs: 2, md: 3 }}
+            px={{ xs: 0.75, md: 3 }}
+            py={{ xs: 1.125, md: 3 }}
+            pb={{ md: 0.25 }}
+            justifyContent={{ xs: "flex-end", md: "flex-start" }}
+            bgcolor={{ xs: "grey.50", md: "transparent" }}
           >
+            <Checkbox
+              checked={isCheckedAll}
+              onChange={onChangeAll}
+              sx={{ mr: "auto", display: { md: "none" } }}
+            />
             <IconButton
               size="small"
               onClick={onApproveOrReject(CompanyStatus.APPROVE)}
@@ -214,7 +223,7 @@ const ItemList = () => {
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
-                p: 1,
+                p: { xs: "4px!important", md: 1 },
                 "&:hover svg": {
                   color: "common.white",
                 },
@@ -230,7 +239,7 @@ const ItemList = () => {
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
-                p: 1,
+                p: { xs: "4px!important", md: 1 },
                 "&:hover svg": {
                   color: "common.white",
                 },
@@ -247,6 +256,15 @@ const ItemList = () => {
           error={error as string}
           noData={!isIdle && totalItems === 0}
           px={{ xs: 0, md: 3 }}
+          headerProps={{ sx: { px: { xs: 0.5, md: 2 } } }}
+          containerHeaderProps={{
+            sx: selectedList.length
+              ? {
+                  maxHeight: { xs: 0, md: undefined },
+                  minHeight: { xs: 0, md: HEADER_HEIGHT },
+                }
+              : {},
+          }}
         >
           {items.map((item) => {
             const indexSelected = selectedList.findIndex(
@@ -254,7 +272,7 @@ const ItemList = () => {
             );
             return (
               <TableRow key={item.id}>
-                <BodyCell>
+                <BodyCell sx={{ px: { xs: 0.5, md: 2 } }}>
                   {item.approve === undefined &&
                     item.status === PayStatus.PAID && (
                       <Checkbox
@@ -270,6 +288,16 @@ const ItemList = () => {
                 )}
 
                 <ActionsCell
+                  sx={{
+                    pl: { xs: 0.5, md: 0 },
+                    verticalAlign: { xs: "top", md: "middle" },
+                    pt: { xs: 2, md: 0 },
+                  }}
+                  iconProps={{
+                    sx: {
+                      p: { xs: "4px!important", md: 1 },
+                    },
+                  }}
                   options={
                     item.approve === undefined && item.status === PayStatus.PAID
                       ? [
@@ -305,7 +333,7 @@ const ItemList = () => {
           totalPages={totalPages}
           page={pageIndex}
           pageSize={pageSize}
-          containerProps={{ px: 3, py: 1 }}
+          containerProps={{ px: { md: 3 }, py: 1 }}
           onChangePage={onChangePage}
           onChangeSize={onChangeSize}
         />
@@ -329,7 +357,7 @@ const ItemList = () => {
 
 export default memo(ItemList);
 
-const MOBILE_HEADER_LIST = [{ value: "#", width: "70%", align: "left" }];
+const MOBILE_HEADER_LIST = [{ value: "", width: "70%", align: "left" }];
 
 const TEXT_ACTION: { [key in CompanyStatus]: string } = {
   [CompanyStatus.APPROVE]: "approve",

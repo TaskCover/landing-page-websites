@@ -228,7 +228,7 @@ export const useProjectTypes = () => {
   const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
   const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
-    (state) => state.company.positionsPaging,
+    (state) => state.company.projectTypesPaging,
     shallowEqual,
   );
 

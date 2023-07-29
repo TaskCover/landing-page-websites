@@ -105,9 +105,10 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                 direction="row"
                 alignItems="center"
                 height={38}
-                pl={{ xs: 1, md: 2 }}
+                pl={{ xs: 0, md: 2 }}
                 width="100%"
-                justifyContent="space-between"
+                // justifyContent="space-between"
+                spacing={3}
                 borderTop={index !== 0 ? { md: "1px solid" } : undefined}
                 borderBottom={{ md: "1px solid" }}
                 borderColor={{ md: "grey.100" }}

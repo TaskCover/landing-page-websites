@@ -7,7 +7,7 @@ import {
   Stack,
   popoverClasses,
 } from "@mui/material";
-import { IconButton, Text, Tooltip } from "components/shared";
+import { IconButton, IconButtonProps, Text, Tooltip } from "components/shared";
 import {
   AN_ERROR_TRY_AGAIN,
   DATE_FORMAT_FORM,
@@ -40,7 +40,7 @@ import ConfirmDialog from "components/ConfirmDialog";
 type MoreListProps = {
   selectedList: Selected[];
   onReset: () => void;
-};
+} & IconButtonProps;
 
 enum Action {
   RENAME,
@@ -50,7 +50,7 @@ enum Action {
 }
 
 const MoreList = (props: MoreListProps) => {
-  const { selectedList, onReset } = props;
+  const { selectedList, onReset, ...rest } = props;
 
   const {
     items,
@@ -469,7 +469,12 @@ const MoreList = (props: MoreListProps) => {
 
   return (
     <>
-      <IconButton disabled={!selectedList.length} noPadding onClick={onOpen}>
+      <IconButton
+        disabled={!selectedList.length}
+        noPadding
+        onClick={onOpen}
+        {...rest}
+      >
         <MoreDotIcon fontSize="medium" sx={{ color: "grey.300" }} />
       </IconButton>
       <Popover

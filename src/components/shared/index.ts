@@ -11,6 +11,7 @@ import Checkbox from "./Checkbox";
 import Upload from "./Upload";
 import Editor from "./Editor";
 import Collapse from "./Collapse";
+import SvgIcon from "./SvgIcon";
 
 export {
   Button,
@@ -26,6 +27,7 @@ export {
   Upload,
   Editor,
   Collapse,
+  SvgIcon,
 };
 
 export type {
