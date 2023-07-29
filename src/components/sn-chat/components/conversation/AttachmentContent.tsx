@@ -103,7 +103,7 @@ const AttachmentContent = ({
                     size={112}
                     src={image || undefined}
                     style={{
-                      borderRadius: "10px",
+                      borderRadius: "20px",
                       border: "1px solid #efefef",
                       objectFit: "cover",
                     }}
@@ -172,13 +172,8 @@ const AttachmentContent = ({
             <Box
               display="flex"
               flexDirection="column"
-              sx={{
-                "&& ": {
-                  backgroundColor: "#EBF5FF",
-                  padding: "0.5rem 1rem",
-                  borderRadius: "10px",
-                },
-              }}
+              gap="0.5rem"
+              alignItems="flex-end"
             >
               {files.map((file, index) => {
                 const Icon = styleForFile(file?.title || "");
@@ -189,6 +184,11 @@ const AttachmentContent = ({
                     flexDirection="column"
                     alignItems="flex-end"
                     key={index}
+                    sx={{
+                      backgroundColor: "#EBF5FF",
+                      padding: "0.5rem 1rem",
+                      borderRadius: "20px",
+                    }}
                   >
                     <Box display="flex" alignItems="center" gap={1}>
                       <SvgIcon

@@ -1,48 +1,55 @@
 import Box from "@mui/material/Box";
 import {
+  MutableRefObject,
   forwardRef,
   useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from "react";
-import { MessageInfo } from "store/chat/type";
+import { MessageInfo, MessageSearchInfo } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 import Skeleton from "@mui/material/Skeleton";
 import MessageLayout from "../messages/MessageLayout";
 import MessageContent from "./MessageContent";
+import { sleep } from "utils/index";
 
 interface MessagesProps {
   sessionId: string;
   avatarPartner: string | undefined;
-  pageNumber: number;
+  pageIndex: number;
   pageSize: number;
   initialMessage: MessageInfo[];
   stateMessage?: {
     filePreview?: File | File[] | null;
     status: DataStatus;
   };
+  focusMessage: MessageSearchInfo | null;
   onRefetch: (page: number) => void;
 }
 
 type MessageHandle = {
+  pageRef: MutableRefObject<number>;
   scrollBottom: () => void;
+  scrollMessage: () => void;
 };
 
 const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   {
     sessionId,
     avatarPartner,
-    pageNumber,
+    pageIndex,
     pageSize,
     initialMessage: messages,
     stateMessage,
+    focusMessage,
     onRefetch,
   }: MessagesProps,
   ref,
 ) => {
   const [firstElement, setFirstElement] = useState(null);
-  const pageRef = useRef(pageNumber);
+
+  const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
   const scrollHeightRef = useRef(0);
@@ -51,26 +58,49 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
       const first = entries[0];
       if (first.isIntersecting) {
         pageRef.current = pageRef.current + pageSize;
-
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         onRefetch(pageRef.current);
       }
     }),
   );
+  const focusMessageRef = useRef<HTMLDivElement>(null);
 
-  const scrollBottom = () => {
+  const scrollBottom = async () => {
+    scrollHeightRef.current = 0;
+    await sleep(1);
     if (messageEndRef?.current) {
       messageEndRef?.current.scrollIntoView({
         behavior: "smooth",
       });
-      scrollHeightRef.current = 0;
+    }
+  };
+
+  const scrollMessage = async () => {
+    await sleep(500);
+    if (focusMessageRef.current) {
+      focusMessageRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      if (focusMessageRef.current.hasChildNodes()) {
+        (
+          focusMessageRef.current?.childNodes[0] as HTMLDivElement
+        ).style.border = "1px solid gray";
+
+        setTimeout(() => {
+          (
+            focusMessageRef.current?.childNodes[0] as HTMLDivElement
+          ).style.border = "1px solid transparent";
+        }, 2000);
+      }
     }
   };
 
   useImperativeHandle(
     ref,
     () => {
-      return { scrollBottom };
+      return { pageRef, scrollBottom, scrollMessage };
     },
     [],
   );
@@ -131,6 +161,9 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
               messageProps={{
                 ...(index === 0 && {
                   ref: setFirstElement,
+                }),
+                ...(message._id === focusMessage?.messageId && {
+                  ref: focusMessageRef,
                 }),
               }}
             >

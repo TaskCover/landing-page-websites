@@ -17,7 +17,7 @@ const ChatItemLayout = ({
   onClickConvention,
 }: ChatItemProp) => {
   const { sx, ...props } = chatItemProps || {};
-  const { lastMessage } = chatInfo;
+  const { lastMessage } = chatInfo || {};
 
   return (
     <Box

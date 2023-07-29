@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
+import Typography from "@mui/material/Typography";
 import Media from "components/Media";
 import Preview from "components/Preview";
 import { DataStatus } from "constant/enums";
@@ -137,7 +138,7 @@ const MediaContent = () => {
 
   const mediaClone = useMemo(() => {
     return mediaList
-      ?.filter((file) => file.url && !file.path)
+      ?.filter((file) => file.url)
       .map((item) => {
         if (item.url.indexOf("mp4") > -1) {
           return { ...item, type: "video_url" as MediaType };
@@ -151,7 +152,7 @@ const MediaContent = () => {
     <>
       {mediaListStatus === DataStatus.LOADING ||
       mediaListStatus === DataStatus.FAILED ? (
-        <>Loading...</>
+        <Typography textAlign="center">Loading...</Typography>
       ) : (
         <Box
           sx={{

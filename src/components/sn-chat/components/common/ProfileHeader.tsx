@@ -8,25 +8,55 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface ProfileHeaderProps {
+  textSearch?: string;
+  isSearch?: boolean;
   avatar?: string | undefined;
   name: string;
   statusOnline?: string;
   onPrevious: () => void;
   onShowProfile?: () => void;
-  onSearch?: (text: string) => void;
+  onSearch?: (text: string, isSearch: boolean) => void;
+  onChangeText?: (text: string) => void;
 }
 const ProfileHeader = ({
+  textSearch,
+  isSearch,
   avatar,
   name,
   statusOnline,
   onPrevious,
   onShowProfile,
   onSearch,
+  onChangeText,
 }: ProfileHeaderProps) => {
   const [openSearch, setOpenSearch] = useState(false);
+
+  useEffect(() => {
+    setOpenSearch(isSearch || false);
+    return () => {
+      setOpenSearch(false);
+    };
+  }, [isSearch]);
+  const handleKeyDown = useCallback(
+    (event) => {
+      if (event.key === "Enter") {
+        onSearch?.(event.target.value, true);
+      }
+    },
+    [onSearch],
+  );
+
+  const handleGoPrevious = () => {
+    if (openSearch && onSearch) {
+      setOpenSearch(false);
+      onSearch("", false);
+    } else {
+      onPrevious();
+    }
+  };
 
   const groupButton = useCallback(() => {
     return (
@@ -91,19 +121,6 @@ const ProfileHeader = ({
                 <Typography variant="inherit" fontWeight="bold">
                   {name}
                 </Typography>
-                <Box
-                  component="span"
-                  sx={{
-                    transform: "rotate(180deg)",
-                    display: "flex",
-                    "& .MuiSvgIcon-root": {
-                      width: "20px",
-                      height: "20px",
-                    },
-                  }}
-                >
-                  <ArrowDownIcon />
-                </Box>
               </Box>
             ) : (
               <Typography variant="inherit" fontWeight="bold">
@@ -123,6 +140,7 @@ const ProfileHeader = ({
       return (
         <>
           <TextField
+            autoFocus
             size="small"
             fullWidth
             sx={{
@@ -152,13 +170,37 @@ const ProfileHeader = ({
                 />
               ),
             }}
+            value={textSearch}
             placeholder="Search in conversation"
+            onKeyDown={handleKeyDown}
+            onChange={(e) => onChangeText?.(e.target.value)}
           />
-          <Button onClick={() => setOpenSearch(false)}>Hủy</Button>
+          <Button
+            onClick={() => {
+              setOpenSearch(false);
+              onSearch?.("", false);
+            }}
+            sx={{
+              color: "#1BC5BD",
+            }}
+          >
+            Hủy
+          </Button>
         </>
       );
     }
-  }, [avatar, groupButton, name, onShowProfile, openSearch, statusOnline]);
+  }, [
+    avatar,
+    groupButton,
+    handleKeyDown,
+    name,
+    onChangeText,
+    onSearch,
+    onShowProfile,
+    openSearch,
+    statusOnline,
+    textSearch,
+  ]);
 
   return (
     <>
@@ -175,7 +217,7 @@ const ProfileHeader = ({
           sx={{
             cursor: "pointer",
           }}
-          onClick={onPrevious}
+          onClick={handleGoPrevious}
         >
           <ArrowDownIcon />
         </IconButton>

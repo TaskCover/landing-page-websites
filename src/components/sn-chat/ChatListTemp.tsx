@@ -39,58 +39,63 @@ const ChatListTemp = () => {
       ...pre,
       statusPopup: true,
       title: "Message",
-      content: <>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "center",
-          fontSize: "0.875rem",
-          fontWeight: 400,
-          padding: "15px 0"
-        }}>
-          <Typography>Bạn có muốn chuyển sang message?</Typography>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 1,
-            padding: 2,
-          }}
-        >
-          <Button
-            type="button"
-            variant="primaryOutlined"
-            size="small"
-            sx={defaultSx.buttonCancel}
-            onClick={() => { 
-              setShowPopup(init) 
-              setOpen(false)
+      content: (
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              fontSize: "0.875rem",
+              fontWeight: 400,
+              padding: "15px 0",
             }}
           >
-            {commonT("form.cancel")}
-          </Button>
-          <Button
-            variant="primary"
-            sx={defaultSx.buttonConfirm}
-            type="button"
-            size="small"
-            onClick={() => { 
-              setShowPopup(init)
-              setOpen(false)
+            <Typography>Bạn có muốn chuyển sang message?</Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+              padding: 2,
             }}
           >
-            {commonT("form.confirm")}
-          </Button>
-        </Box>
-      </>,
+            <Button
+              type="button"
+              variant="primaryOutlined"
+              size="small"
+              sx={defaultSx.buttonCancel}
+              onClick={() => {
+                setShowPopup(init);
+                setOpen(false);
+              }}
+            >
+              {commonT("form.cancel")}
+            </Button>
+            <Button
+              variant="primary"
+              sx={defaultSx.buttonConfirm}
+              type="button"
+              size="small"
+              onClick={() => {
+                setShowPopup(init);
+                setOpen(false);
+              }}
+            >
+              {commonT("form.confirm")}
+            </Button>
+          </Box>
+        </>
+      ),
     }));
-  }
+  };
 
   window.addEventListener("resize", () => {
     browserWidth = window.innerWidth;
-    if(browserWidth < 768) {
-      setOpen(false)
+    if (browserWidth < 768) {
+      popperRef.current = false;
+      setOpen(false);
     } else {
       setShowPopup(init);
     }
@@ -100,9 +105,9 @@ const ChatListTemp = () => {
     setAnchorEl(e.currentTarget);
     popperRef.current = !popperRef.current;
     if (browserWidth < 768) {
-      setOpen(false)
+      setOpen(false);
       setShow(true);
-      handleShowPopup()
+      handleShowPopup();
     } else {
       setShow(false);
       setShowPopup(init);
@@ -131,48 +136,47 @@ const ChatListTemp = () => {
         zIndex: 1,
       }}
     >
-      {
-        show ?
-          <DefaultPopupLayout
-            title={showPopup?.title}
-            content={showPopup?.content}
-            open={showPopup?.statusPopup}
-            onClose={() => {
-              setShowPopup(init)
-              setOpen(false)
-            }}
-            sx={{ width: showPopup?.widthPopup }}
-          />
-          :
-          <Popper
-            open={open}
-            anchorEl={anchorEl}
-            placement="top-start"
-            transition
-            sx={{
-              zIndex: 10,
-            }}
-          >
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={350}>
-                <Box paddingBottom={2}>
-                  <Paper
-                    sx={{
-                      width: "400px",
-                      minHeight: "600px",
-                      height: "600px",
-                      overflow: "hidden",
-                      borderTopLeftRadius: "15px",
-                      borderTopRightRadius: "15px",
-                    }}
-                  >
-                    <SwitchChat />
-                  </Paper>
-                </Box>
-              </Fade>
-            )}
-          </Popper>
-      }
+      {show ? (
+        <DefaultPopupLayout
+          title={showPopup?.title}
+          content={showPopup?.content}
+          open={showPopup?.statusPopup}
+          onClose={() => {
+            setShowPopup(init);
+            setOpen(false);
+          }}
+          sx={{ width: showPopup?.widthPopup }}
+        />
+      ) : (
+        <Popper
+          open={open}
+          anchorEl={anchorEl}
+          placement="top-start"
+          transition
+          sx={{
+            zIndex: 10,
+          }}
+        >
+          {({ TransitionProps }) => (
+            <Fade {...TransitionProps} timeout={350}>
+              <Box paddingBottom={2}>
+                <Paper
+                  sx={{
+                    width: "400px",
+                    minHeight: "600px",
+                    height: "600px",
+                    overflow: "hidden",
+                    borderTopLeftRadius: "15px",
+                    borderTopRightRadius: "15px",
+                  }}
+                >
+                  <SwitchChat />
+                </Paper>
+              </Box>
+            </Fade>
+          )}
+        </Popper>
+      )}
 
       <Box
         sx={{
@@ -194,7 +198,6 @@ const ChatListTemp = () => {
             }}
           />
         ) : (
-
           <ChatMessageIcon />
         )}
       </Box>

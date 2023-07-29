@@ -2,14 +2,14 @@ import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
 import { Typography } from "@mui/material";
 import { IChatItemInfo } from "store/chat/type";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface ChatItemRenderProps {
   sessionId: string;
   chatInfo: IChatItemInfo;
 }
 const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
-  const { lastMessage, name, avatar, t } = chatInfo;
+  const { lastMessage, name, avatar, t } = chatInfo || {};
   const [avatarClone, setAvatarClone] = useState<string | undefined>(avatar);
   const isDirectMessage = useMemo(() => t === "d", [t]);
   const isMessageNotConnect = useMemo(() => lastMessage == null, [lastMessage]);
@@ -22,9 +22,21 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
     if (sendAttachment) {
       return isCurrentAcc ? "You sent a file." : "Sent a file.";
     } else {
-      return isCurrentAcc ? `You: ${lastMessage?.msg}` : lastMessage?.msg;
+      return isCurrentAcc
+        ? `<p>You: ${lastMessage?.msg}</p>`
+        : lastMessage?.msg;
     }
   }, [isCurrentAcc, lastMessage]);
+
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (lastMessageContent && lastMessageRef.current) {
+      lastMessageRef.current.innerHTML = !isMessageNotConnect
+        ? lastMessageContent
+        : "";
+    }
+  }, [isMessageNotConnect, lastMessageContent]);
 
   const switchChat = useMemo(() => {
     return (
@@ -33,29 +45,45 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
           {name}
         </Typography>
         <Typography
+          ref={lastMessageRef}
           variant="caption"
           color="#999999"
           sx={{
-            display: "-webkit-box",
-            WebkitLineClamp: "1",
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
-          <Box
-            sx={{
+            display: "flex",
+            "& *": {
+              margin: 0,
+              padding: 0,
+            },
+            "& p": {
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              fontWeight: "normal",
+              lineHeight: "16px",
+              ...(isCurrentAcc && {
+                "&:nth-of-type(1)": {
+                  overflowWrap: "unset",
+                  overflow: "initial",
+                  marginRight: "0.3rem",
+                },
+              }),
+            },
+            "& ol": {
+              marginLeft: "1rem",
               display: "flex",
-              alignItems: "center",
-              gap: "0.2rem",
-            }}
-            dangerouslySetInnerHTML={{
-              __html: !isMessageNotConnect ? lastMessageContent : "",
-            }}
-          />
-        </Typography>
+              gap: "1rem",
+            },
+            "& pre": {
+              display: "-webkit-box",
+              WebkitLineClamp: "2",
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            },
+          }}
+        />
       </>
     );
-  }, [isMessageNotConnect, lastMessageContent, name]);
+  }, [isCurrentAcc, name]);
 
   return (
     <>
@@ -95,6 +123,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
         sx={{
           display: "flex",
           flexDirection: "column",
+          overflow: "hidden",
         }}
       >
         {switchChat}

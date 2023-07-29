@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import { MessageInfo } from "store/chat/type";
 import { formatDate } from "utils/index";
 import Linkify from "linkify-react";
+import linkifyHtml from "linkify-html";
 import AttachmentContent from "../conversation/AttachmentContent";
 import { useEffect, useRef } from "react";
 
@@ -13,6 +14,14 @@ interface MessageContentProps {
 const MessageContent = ({ message, isCurrentUser }: MessageContentProps) => {
   const textRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (message.msg && textRef.current) {
+      textRef.current.innerHTML = linkifyHtml(message.msg, {
+        target: "_blank",
+      });
+    }
+  }, [message]);
+
   if (message.msg) {
     return (
       <Box
@@ -22,13 +31,14 @@ const MessageContent = ({ message, isCurrentUser }: MessageContentProps) => {
           gap: "0.5rem",
           alignItems: "flex-end",
           padding: "0.5rem 1rem",
-          borderRadius: "10px",
+          borderRadius: "20px",
           backgroundColor: isCurrentUser ? "#EBF5FF" : "#F7F7FD",
           maxWidth: "270px",
         }}
         order={2}
       >
         <Typography
+          component="div"
           sx={{
             overflowWrap: "anywhere",
             color: isCurrentUser ? "#3699FF" : "inherit",
@@ -44,12 +54,18 @@ const MessageContent = ({ message, isCurrentUser }: MessageContentProps) => {
             }}
           >
             <Box
+              ref={textRef}
               sx={{
-                "& p": {
-                  display: "initial",
+                "& pre": {
+                  whiteSpace: "pre-wrap",
                 },
+                "& *": {
+                  margin: "0",
+                },
+                // "& p": {
+                //   display: "initial",
+                // },
               }}
-              dangerouslySetInnerHTML={{ __html: message.msg }}
             />
           </Linkify>
         </Typography>
