@@ -132,7 +132,7 @@ const AttachmentsTask = (props: AttachmentsTaskProps) => {
                 size={40}
                 showName
                 containerProps={{
-                  bgcolor: "grey.50",
+                  bgcolor: "grey.100",
                   p: 1.25,
                 }}
               />

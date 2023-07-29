@@ -49,7 +49,10 @@ const CommentEditor = forwardRef(
     };
 
     const disabled = useMemo(
-      () => !content?.trim()?.length && !files.length,
+      () =>
+        (!content?.trim()?.length ||
+          !editorRef.current?.getText()?.trim()?.length) &&
+        !files.length,
       [content, files.length],
     );
 

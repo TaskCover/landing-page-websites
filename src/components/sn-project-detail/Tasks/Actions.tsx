@@ -1,7 +1,13 @@
 "use client";
 
 import { memo, useState, useEffect, useRef, use, useMemo } from "react";
-import { Stack, Theme, selectClasses } from "@mui/material";
+import {
+  Stack,
+  Theme,
+  selectClasses,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import {
@@ -49,6 +55,8 @@ const Actions = () => {
   const { onGetOptions } = useMemberOptions();
   const { title, prevPath } = useHeaderConfig();
   const { isMdSmaller } = useBreakpoint();
+  const { breakpoints } = useTheme();
+  const is1440Larger = useMediaQuery(breakpoints.up(1440));
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
@@ -197,8 +205,8 @@ const Actions = () => {
             onChange={onChangeQueries}
             value={queries?.["tasks.name"]}
             sx={{
-              width: { xs: 160, xlg: 220 },
-              minWidth: { xs: 160, xlg: 220 },
+              width: { xs: is1440Larger ? 220 : 160 },
+              minWidth: { xs: is1440Larger ? 220 : 160 },
             }}
           />
           <AssignerFilter
