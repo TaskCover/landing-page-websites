@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Link from "components/Link";
 import Media from "components/Media";
 import { DataStatus } from "constant/enums";
@@ -33,7 +34,7 @@ const LinkContent = () => {
     >
       {chatLinksStatus === DataStatus.LOADING ||
       chatLinksStatus === DataStatus.FAILED ? (
-        <>Loading...</>
+        <Typography textAlign="center">Loading...</Typography>
       ) : (
         chatLinkClone?.map((item, index) => {
           return (

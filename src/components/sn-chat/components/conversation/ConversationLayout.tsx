@@ -18,6 +18,7 @@ const ConversationLayout = () => {
     onSetRoomId,
     onSetConversationInfo,
     onClearMessageList,
+    onSetStateSearchMessage,
   } = useChat();
   const [displayUserInfo, setDisplayUserInfo] = useState(false);
   const [stepMedia, setStepMedia] = useState<STEP_INFO>(STEP_INFO.IDLE);
@@ -60,6 +61,7 @@ const ConversationLayout = () => {
           onClearMessageList();
           onSetConversationInfo(null);
           onSetRoomId("");
+          onSetStateSearchMessage(null);
         }}
         onShowProfile={() => {
           setDisplayUserInfo((prev) => !prev);

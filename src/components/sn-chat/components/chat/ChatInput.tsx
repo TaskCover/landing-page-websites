@@ -34,7 +34,7 @@ const ChatInput = ({
       >
         <ChatEditor
           isLoading={isLoading}
-          initalValue={initalMessage || ""}
+          initalValue={initalMessage}
           files={files}
           onEnterText={onEnterMessage}
           onChangeFiles={onChangeFiles}

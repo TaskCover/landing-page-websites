@@ -10,6 +10,8 @@ export const renderTimeDiff = (ts: Date | string) => {
   } else if (timePositive < 1440) {
     return (timePositive / 60).toFixed(0) + "h";
   } else if (timePositive < 4320) {
-    return (timePositive / 60 / 24).toFixed(0);
+    return (timePositive / 60 / 24).toFixed(0) + "d";
+  } else {
+    return;
   }
 };

@@ -11,18 +11,23 @@ import {
   getChatAttachments,
   deleteConversation,
   sendMessages,
+  searchChatText,
+  getUnreadMessages,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import {
   ChatGroup,
   ChatState,
   MessageInfo,
+  MessageSearchInfo,
+  ReadMessageInfo,
   STEP,
   TYPE_LIST,
   UserInfo,
 } from "./type";
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
+import { Paging } from "constant/types";
 
 const initalPage = { pageIndex: 0, pageSize: 10 };
 const initialState: ChatState = {
@@ -34,7 +39,6 @@ const initialState: ChatState = {
   conversationInfo: null,
   currStep: STEP.CONVENTION,
   prevStep: STEP.CONVENTION,
-  backFallStep: STEP.IDLE,
   messageInfo: [],
   messageStatus: DataStatus.IDLE,
   messagePaging: initalPage,
@@ -44,6 +48,9 @@ const initialState: ChatState = {
   //chatLinks
   chatLinks: [],
   chatLinksStatus: DataStatus.IDLE,
+  //ListSearchConversation
+  listSearchMessage: [],
+  statusListSearchMessage: DataStatus.IDLE,
   //media list
   mediaList: [],
   mediaListStatus: DataStatus.IDLE,
@@ -52,6 +59,9 @@ const initialState: ChatState = {
     filePreview: null,
     status: DataStatus.IDLE,
   },
+  stateSearchMessage: null,
+  stateReadMessage: null,
+  statusReadMessage: DataStatus.IDLE,
 
   newGroupData: {},
   createGroupStatus: DataStatus.IDLE,
@@ -75,8 +85,6 @@ const chatSlice = createSlice({
     reset: () => initialState,
     setStep: (state, action) => {
       const prevStep = Number(action.payload.step) - 1;
-      state.backFallStep = state.currStep;
-
       state.prevStep = prevStep === STEP.IDLE ? STEP.CONVENTION : prevStep;
       state.currStep = action.payload.step;
 
@@ -130,6 +138,15 @@ const chatSlice = createSlice({
         return item;
       });
       state.convention = newConversation;
+    },
+    setStateSearchMessage: (
+      state,
+      action: PayloadAction<MessageSearchInfo | null>,
+    ) => {
+      state.messagePaging.pageIndex = 0;
+      state.messagePaging.pageSize = (action.payload?.offset || 0) + 10;
+      state.stateSearchMessage = action.payload;
+      state.messageInfo = [];
     },
     clearConversation: (state) => {
       state.convention = [];
@@ -247,6 +264,34 @@ const chatSlice = createSlice({
       .addCase(getChatUrls.rejected, (state, action) => {
         state.chatLinksStatus = DataStatus.FAILED;
       })
+      //searchChatText
+      .addCase(searchChatText.pending, (state) => {
+        state.statusListSearchMessage = DataStatus.LOADING;
+      })
+      .addCase(
+        searchChatText.fulfilled,
+        (state, action: PayloadAction<{ matches: MessageSearchInfo[] }>) => {
+          state.listSearchMessage = action.payload.matches;
+          state.statusListSearchMessage = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(searchChatText.rejected, (state, action) => {
+        state.statusListSearchMessage = DataStatus.FAILED;
+      })
+      // getUnreadMessages
+      .addCase(getUnreadMessages.pending, (state) => {
+        state.statusReadMessage = DataStatus.LOADING;
+      })
+      .addCase(
+        getUnreadMessages.fulfilled,
+        (state, action: PayloadAction<ReadMessageInfo>) => {
+          state.stateReadMessage = action.payload;
+          state.statusReadMessage = DataStatus.SUCCEEDED;
+        },
+      )
+      .addCase(getUnreadMessages.rejected, (state, action) => {
+        state.statusReadMessage = DataStatus.FAILED;
+      })
       // createDirectMessageGroup
       .addCase(createDirectMessageGroup.pending, (state, action) => {
         state.createGroupStatus = DataStatus.LOADING;
@@ -333,6 +378,7 @@ export const {
   setLastMessage,
   clearConversation,
   clearMessageList,
+  setStateSearchMessage,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
