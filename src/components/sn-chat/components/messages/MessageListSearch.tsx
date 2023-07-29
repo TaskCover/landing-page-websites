@@ -96,6 +96,12 @@ const MessageItemRender = ({
                 overflow: "hidden",
                 whiteSpace: "pre-wrap",
               },
+              "& pre": {
+                display: "-webkit-box",
+                WebkitLineClamp: "2",
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              },
             }}
           />
         </>
