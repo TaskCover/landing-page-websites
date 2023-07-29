@@ -296,7 +296,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
               {activeTab === "timeSheet" && (
                 <CustomizedInputBase
                   value={filters.search_key}
-                  placeholder={timeT("myTime.searchButton")}
+                  placeholder={timeT("company_time.searchButton")}
                   onChange={(event) => {
                     const searchKey = event.target.value;
                     setFilters({ ...filters, search_key: searchKey });
