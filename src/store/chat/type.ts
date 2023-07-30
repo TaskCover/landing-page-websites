@@ -173,7 +173,11 @@ export interface ChatState {
     status: DataStatus;
   };
   stateSearchMessage: MessageSearchInfo | null;
+<<<<<<< HEAD
   unReadMessage: UnReadMessageInfo | null;
+=======
+  unReadMessage: ReadMessageInfo | null;
+>>>>>>> 2213c9f6 (add unread message)
   //UnReadMessage
   statusUnReadMessage: DataStatus;
 
