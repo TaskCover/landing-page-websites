@@ -366,7 +366,7 @@ const Form = (props: FormProps) => {
             name="currency"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values?.currency}
+            value={formik.values?.currency ?? currencyOptions?.[0]?.value ?? 'USD'}
             error={commonT(touchedErrors?.currency, {
               name: projectT("list.form.title.currency"),
             })}
