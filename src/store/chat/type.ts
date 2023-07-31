@@ -16,6 +16,7 @@ export interface IChatInfo {
   default: boolean;
   sysMes: boolean;
   avatar: string;
+  unreadCount: number;
 }
 
 export interface IChatGroup {
@@ -175,8 +176,9 @@ export interface ChatState {
     status: DataStatus;
   };
   stateSearchMessage: MessageSearchInfo | null;
-  stateReadMessage: ReadMessageInfo | null;
-  statusReadMessage: DataStatus;
+  unReadMessage: UnReadMessageInfo | null;
+  //UnReadMessage
+  statusUnReadMessage: DataStatus;
 
   newGroupData: ChatGroup | {};
   createGroupStatus: DataStatus;
@@ -314,12 +316,12 @@ export interface MessageSearchInfoRequest extends AuthenRequestCommon {
   type: RoomType;
 }
 
-export interface ReadMessageRequest extends AuthenRequestCommon {
+export interface UnReadMessageRequest extends AuthenRequestCommon {
   roomId: string;
   type: RoomType;
 }
 
-export interface ReadMessageInfo {
+export interface UnReadMessageInfo {
   roomId: string;
   unreadCount: number;
   unreadsFrom: string;

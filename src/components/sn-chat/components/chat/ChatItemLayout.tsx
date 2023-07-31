@@ -28,6 +28,7 @@ const ChatItemLayout = ({
         gap: "1rem",
         marginBottom: 1,
         cursor: "pointer",
+        position: "relative",
         ":hover": {
           backgroundColor: "#F7F7FD",
         },

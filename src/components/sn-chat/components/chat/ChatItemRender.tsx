@@ -9,8 +9,9 @@ interface ChatItemRenderProps {
   chatInfo: IChatItemInfo;
 }
 const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
-  const { lastMessage, name, avatar, t } = chatInfo || {};
+  const { lastMessage, name, avatar, t, unreadCount } = chatInfo || {};
   const [avatarClone, setAvatarClone] = useState<string | undefined>(avatar);
+  const isUnReadMessage = useMemo(() => unreadCount > 0, [unreadCount]);
   const isDirectMessage = useMemo(() => t === "d", [t]);
   const isMessageNotConnect = useMemo(() => lastMessage == null, [lastMessage]);
   const isCurrentAcc = useMemo(
@@ -41,7 +42,13 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
   const switchChat = useMemo(() => {
     return (
       <>
-        <Typography variant="inherit" fontWeight="bold">
+        <Typography
+          variant="inherit"
+          fontWeight={isUnReadMessage ? 700 : 600}
+          fontSize="14px"
+          lineHeight="18px"
+          color="black"
+        >
           {name}
         </Typography>
         <Typography
@@ -53,13 +60,18 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
             "& *": {
               margin: 0,
               padding: 0,
+              fontSize: "14px",
+              lineHeight: "22px",
+              fontWeight: "normal",
+              ...(isUnReadMessage && {
+                fontWeight: 700,
+                color: "black",
+              }),
             },
             "& p": {
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
-              fontWeight: "normal",
-              lineHeight: "16px",
               ...(isCurrentAcc && {
                 "&:nth-of-type(1)": {
                   overflowWrap: "unset",
@@ -83,10 +95,24 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
         />
       </>
     );
-  }, [isCurrentAcc, name]);
+  }, [isCurrentAcc, isUnReadMessage, name]);
 
   return (
     <>
+      <Box
+        position="absolute"
+        display={isUnReadMessage ? "block" : "none"}
+        sx={{
+          position: "absolute",
+          left: "5px",
+          top: "50%",
+          width: "8px",
+          height: "8px",
+          backgroundColor: "#3699FF",
+          borderRadius: "50%",
+          transform: "translateY(-50%)",
+        }}
+      />
       <Box
         position="relative"
         sx={{
@@ -124,6 +150,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
+          gap: ".3rem",
         }}
       >
         {switchChat}

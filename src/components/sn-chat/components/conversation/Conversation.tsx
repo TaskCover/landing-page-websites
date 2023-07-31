@@ -15,6 +15,8 @@ const Conversation = () => {
     stateSendMessage,
     dataTransfer,
     stateSearchMessage,
+    unReadMessage,
+    onGetUnReadMessages,
     onGetLastMessages,
     onUploadAndSendFile,
   } = useChat();
@@ -36,6 +38,12 @@ const Conversation = () => {
     [dataTransfer?._id, dataTransfer?.t, onGetLastMessages, roomId],
   );
 
+  const getUnReadMessage = useCallback(async () => {
+    await onGetUnReadMessages({
+      type: dataTransfer?.t ?? "d",
+    });
+  }, [dataTransfer?.t, onGetUnReadMessages]);
+
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
       ? stateSearchMessage?.offset + 10
@@ -52,6 +60,10 @@ const Conversation = () => {
       setFiles([]);
     }
   }, [stateSendMessage.status]);
+
+  useEffect(() => {
+    getUnReadMessage();
+  }, [getUnReadMessage]);
 
   type MessageHandle = React.ElementRef<typeof Messages>;
   const inputRef = useRef<MessageHandle>(null);
@@ -80,6 +92,7 @@ const Conversation = () => {
         initialMessage={messageInfo}
         stateMessage={stateSendMessage}
         focusMessage={stateSearchMessage}
+        unReadMessage={unReadMessage}
         onRefetch={(page) => {
           getLastMessage(page, 10);
         }}

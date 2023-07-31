@@ -38,7 +38,7 @@ import {
   RoomType,
   MessageSearchInfoRequest,
   MessageSearchInfo,
-  ReadMessageRequest,
+  UnReadMessageRequest,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -84,6 +84,9 @@ export const useChat = () => {
     //ListSearchTextMessage
     listSearchMessage,
     statusListSearchMessage,
+    //StateUnReadMessage
+    unReadMessage,
+    statusUnReadMessage,
 
     mediaList,
     mediaListStatus,
@@ -207,10 +210,10 @@ export const useChat = () => {
     [dispatch, roomId, user],
   );
 
-  const onGetReadMessages = useCallback(
+  const onGetUnReadMessages = useCallback(
     async ({
       type = "d",
-    }: Omit<ReadMessageRequest, "authToken" | "userId" | "roomId">) => {
+    }: Omit<UnReadMessageRequest, "authToken" | "userId" | "roomId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       await dispatch(
@@ -507,6 +510,7 @@ export const useChat = () => {
 
     stateSendMessage,
     stateSearchMessage,
+    unReadMessage,
 
     createGroupStatus,
     newGroupData,
@@ -543,6 +547,6 @@ export const useChat = () => {
     onSetLastMessage,
     onSearchChatText,
     onSetStateSearchMessage,
-    onGetReadMessages,
+    onGetUnReadMessages,
   };
 };

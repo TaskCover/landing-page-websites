@@ -7,7 +7,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { MessageInfo, MessageSearchInfo } from "store/chat/type";
+import {
+  MessageInfo,
+  MessageSearchInfo,
+  UnReadMessageInfo,
+} from "store/chat/type";
 import { DataStatus } from "constant/enums";
 import Skeleton from "@mui/material/Skeleton";
 import MessageLayout from "../messages/MessageLayout";
@@ -25,6 +29,7 @@ interface MessagesProps {
     status: DataStatus;
   };
   focusMessage: MessageSearchInfo | null;
+  unReadMessage: UnReadMessageInfo | null;
   onRefetch: (page: number) => void;
 }
 
@@ -43,6 +48,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     initialMessage: messages,
     stateMessage,
     focusMessage,
+    unReadMessage,
     onRefetch,
   }: MessagesProps,
   ref,
@@ -167,7 +173,11 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                 }),
               }}
             >
-              <MessageContent message={message} isCurrentUser={isCurrentUser} />
+              <MessageContent
+                message={message}
+                isCurrentUser={isCurrentUser}
+                unReadMessage={unReadMessage}
+              />
             </MessageLayout>
           );
         })}

@@ -1,18 +1,66 @@
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { MessageInfo } from "store/chat/type";
+import Typography, { TypographyProps } from "@mui/material/Typography";
+import { MessageInfo, UnReadMessageInfo } from "store/chat/type";
 import { formatDate } from "utils/index";
 import Linkify from "linkify-react";
 import linkifyHtml from "linkify-html";
 import AttachmentContent from "../conversation/AttachmentContent";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import ReadedIcon from "icons/ReadedIcon";
+import UnReadIcon from "icons/UnReadIcon";
 
+export const TimeMessage = ({
+  time,
+  isRead,
+  isCurrentUser,
+  timeMessageProps,
+}: {
+  time: string;
+  isRead: boolean;
+  isCurrentUser: boolean;
+  timeMessageProps?: TypographyProps;
+}) => {
+  const { sx, ...props } = timeMessageProps || {};
+  return (
+    <Typography
+      variant="caption"
+      color="#999999"
+      display="flex"
+      alignItems="center"
+      gap=".5rem"
+      sx={sx}
+      {...props}
+    >
+      {formatDate(time, "HH:mm")}
+      {isCurrentUser &&
+        (isRead ? (
+          <ReadedIcon sx={{ fontSize: "14px" }} />
+        ) : (
+          <UnReadIcon sx={{ fontSize: "14px" }} />
+        ))}
+    </Typography>
+  );
+};
 interface MessageContentProps {
   message: MessageInfo;
   isCurrentUser: boolean;
+  unReadMessage: UnReadMessageInfo | null;
 }
-const MessageContent = ({ message, isCurrentUser }: MessageContentProps) => {
+const MessageContent = ({
+  message,
+  isCurrentUser,
+  unReadMessage,
+}: MessageContentProps) => {
   const textRef = useRef<HTMLDivElement>(null);
+  const isRead = useMemo(() => {
+    const timeMessage = new Date(message.ts);
+    const timeRead = new Date(unReadMessage?.unreadsFrom || "");
+    if (unReadMessage?.unreadsFrom) {
+      return timeMessage.getTime() < timeRead.getTime();
+    } else {
+      return true;
+    }
+  }, [message.ts, unReadMessage]);
 
   useEffect(() => {
     if (message.msg && textRef.current) {
@@ -69,9 +117,11 @@ const MessageContent = ({ message, isCurrentUser }: MessageContentProps) => {
             />
           </Linkify>
         </Typography>
-        <Typography variant="caption" color="#999999">
-          {formatDate(message.ts, "HH:mm")}
-        </Typography>
+        <TimeMessage
+          isCurrentUser={isCurrentUser}
+          isRead={isRead}
+          time={message.ts}
+        />
       </Box>
     );
   } else if (message.attachments?.length > 0) {
@@ -88,6 +138,8 @@ const MessageContent = ({ message, isCurrentUser }: MessageContentProps) => {
       >
         <AttachmentContent
           message={message}
+          isCurrentUser={isCurrentUser}
+          isRead={isRead}
           attachmentProps={{
             sx: {
               justifyContent: isCurrentUser ? "flex-end" : "flex-start",

@@ -16,7 +16,7 @@ import {
   DeleteConversationGroup,
   MessageBodyRequest,
   MessageSearchInfoRequest,
-  ReadMessageRequest,
+  UnReadMessageRequest,
 } from "./type";
 
 export const getAllConvention = createAsyncThunk(
@@ -115,7 +115,7 @@ export const searchChatText = createAsyncThunk(
 
 export const getUnreadMessages = createAsyncThunk(
   "chat/getUnreadMessages",
-  async (paramReq: ReadMessageRequest) => {
+  async (paramReq: UnReadMessageRequest) => {
     try {
       const response = await client.post("getUnreadMessages", paramReq, {
         baseURL: CHAT_API_URL,

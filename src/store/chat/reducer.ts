@@ -20,14 +20,13 @@ import {
   ChatState,
   MessageInfo,
   MessageSearchInfo,
-  ReadMessageInfo,
+  UnReadMessageInfo,
   STEP,
   TYPE_LIST,
   UserInfo,
 } from "./type";
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
-import { Paging } from "constant/types";
 
 const initalPage = { pageIndex: 0, pageSize: 10 };
 const initialState: ChatState = {
@@ -60,8 +59,8 @@ const initialState: ChatState = {
     status: DataStatus.IDLE,
   },
   stateSearchMessage: null,
-  stateReadMessage: null,
-  statusReadMessage: DataStatus.IDLE,
+  unReadMessage: null,
+  statusUnReadMessage: DataStatus.IDLE,
 
   newGroupData: {},
   createGroupStatus: DataStatus.IDLE,
@@ -280,17 +279,23 @@ const chatSlice = createSlice({
       })
       // getUnreadMessages
       .addCase(getUnreadMessages.pending, (state) => {
-        state.statusReadMessage = DataStatus.LOADING;
+        state.statusUnReadMessage = DataStatus.LOADING;
       })
       .addCase(
         getUnreadMessages.fulfilled,
-        (state, action: PayloadAction<ReadMessageInfo>) => {
-          state.stateReadMessage = action.payload;
-          state.statusReadMessage = DataStatus.SUCCEEDED;
+        (state, action: PayloadAction<UnReadMessageInfo>) => {
+          state.unReadMessage = action.payload;
+          // state.unReadMessage = {
+          //   roomId: "ddwqCMbfrpzXBWPSZkR3oGad8C6wF3wwPk",
+          //   unreadCount: 6,
+          //   unreadsFrom: "2023-07-30T10:56:06.349Z",
+          //   success: true,
+          // };
+          state.statusUnReadMessage = DataStatus.SUCCEEDED;
         },
       )
       .addCase(getUnreadMessages.rejected, (state, action) => {
-        state.statusReadMessage = DataStatus.FAILED;
+        state.statusUnReadMessage = DataStatus.FAILED;
       })
       // createDirectMessageGroup
       .addCase(createDirectMessageGroup.pending, (state, action) => {

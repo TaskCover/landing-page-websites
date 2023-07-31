@@ -14,7 +14,7 @@ import PlayIcon from "icons/PlayIcon";
 import { useMemo, useRef, useState } from "react";
 import { Attachment } from "store/chat/media/typeMedia";
 import { MessageInfo } from "store/chat/type";
-import { formatDate } from "utils/index";
+import { TimeMessage } from "../messages/MessageContent";
 
 const IconFile = {
   [FILE_MAP.DOC]: FileDocIcon,
@@ -25,9 +25,13 @@ const IconFile = {
 
 const AttachmentContent = ({
   message,
+  isCurrentUser,
+  isRead,
   attachmentProps,
 }: {
   message: MessageInfo;
+  isCurrentUser: boolean;
+  isRead: boolean;
   attachmentProps?: BoxProps;
 }) => {
   const { sx, ...props } = attachmentProps || {};
@@ -116,15 +120,18 @@ const AttachmentContent = ({
                       }))
                     }
                   />
-                  <Typography
-                    variant="caption"
-                    color="#999999"
-                    position="absolute"
-                    bottom=".8rem"
-                    right=".7rem"
-                  >
-                    {formatDate(message.ts, "HH:mm")}
-                  </Typography>
+                  <TimeMessage
+                    time={message.ts}
+                    isRead={isRead}
+                    isCurrentUser={isCurrentUser}
+                    timeMessageProps={{
+                      sx: {
+                        position: "absolute",
+                        bottom: ".8rem",
+                        right: ".7rem",
+                      },
+                    }}
+                  />
                 </Box>
               );
             })}
@@ -156,15 +163,18 @@ const AttachmentContent = ({
                       <source src={url} />
                     </Box>
                   </>
-                  <Typography
-                    variant="caption"
-                    color="#999999"
-                    position="absolute"
-                    bottom=".8rem"
-                    right=".7rem"
-                  >
-                    {formatDate(message.ts, "HH:mm")}
-                  </Typography>
+                  <TimeMessage
+                    time={message.ts}
+                    isRead={isRead}
+                    isCurrentUser={isCurrentUser}
+                    timeMessageProps={{
+                      sx: {
+                        position: "absolute",
+                        bottom: ".8rem",
+                        right: ".7rem",
+                      },
+                    }}
+                  />
                 </Box>
               );
             })}
@@ -210,9 +220,11 @@ const AttachmentContent = ({
                         {file?.title}
                       </Link>
                     </Box>
-                    <Typography variant="caption" color="#999999">
-                      {formatDate(message.ts, "HH:mm")}
-                    </Typography>
+                    <TimeMessage
+                      time={message.ts}
+                      isRead={isRead}
+                      isCurrentUser={isCurrentUser}
+                    />
                   </Box>
                 );
               })}
