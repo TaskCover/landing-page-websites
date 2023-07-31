@@ -13,6 +13,7 @@ import {
   getChatAttachments,
   deleteConversation,
   sendMessages,
+  renameGroup,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -34,6 +35,7 @@ import {
   DeleteConversationGroup,
   MessageBodyRequest,
   RoomType,
+  RenameGroupRequest,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -42,6 +44,7 @@ import {
   setMessage,
   setConversationInfo,
   setTypeList,
+  setDataTransfer,
   setStateSendMessage,
   setLastMessage,
   clearConversation,
@@ -199,6 +202,13 @@ export const useChat = () => {
     [dispatch],
   );
 
+  const onSetDataTransfer= useCallback(
+    (data: any) => {
+      dispatch(setDataTransfer(data));
+    },
+    [dispatch],
+  );
+
   const onSetRoomId = (id: string) => {
     dispatch(setRoomId(id));
   };
@@ -228,6 +238,21 @@ export const useChat = () => {
       const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
         addMembersToDirectMessageGroup({
+          authToken,
+          userId,
+          ...params,
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
+  const onRenameGroup = useCallback(
+    async (params: Omit<RenameGroupRequest, "authToken" | "userId">) => {
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
+      return await dispatch(
+        renameGroup({
           authToken,
           userId,
           ...params,
@@ -468,8 +493,10 @@ export const useChat = () => {
     onCreateDirectMessageGroup,
     onAddMembers2Group,
     onLeftGroup,
+    onRenameGroup,
     onRemoveGroupMember,
     onSetTypeList,
+    onSetDataTransfer,
     onFetchGroupMembersMember,
     onChangeGroupRole,
     onGetChatAttachments,
