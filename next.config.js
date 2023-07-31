@@ -8,6 +8,7 @@ const withNextIntl = require("next-intl/plugin")(
 
 const nextConfig = {
   reactStrictMode: false,
+  swcMinify: false,
   env: {
     API_URL: process.env.API_URL,
     AUTH_API_URL: process.env.AUTH_API_URL,

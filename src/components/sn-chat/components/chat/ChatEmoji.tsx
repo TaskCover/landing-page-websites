@@ -1,9 +1,12 @@
 import Popover from "@mui/material/Popover";
 import { useState } from "react";
 import data from "@emoji-mart/data";
-import Picker from "@emoji-mart/react";
+// import Picker from "@emoji-mart/react";
 import Box from "@mui/material/Box";
 import ImojiImportIcon from "icons/ImojiImportIcon";
+import dynamic from "next/dynamic";
+
+const Picker = dynamic(() => import("@emoji-mart/react"), { ssr: false });
 
 export interface Emoji {
   id: string;
@@ -49,7 +52,8 @@ const ChatEmoji = ({ onChange }: ChatEmojiProps) => {
         sx={{
           "& .MuiPaper-root": {
             boxShadow: "none",
-            paddingBottom: "1rem",
+            paddingBottom: ".5rem",
+            backgroundColor: "transparent",
           },
         }}
       >
