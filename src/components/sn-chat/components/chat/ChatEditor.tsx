@@ -240,7 +240,7 @@ const ChatEditor = (props: EditorProps) => {
           },
           "& .ql-tooltip": {
             right: "0",
-            zIndex: 10,
+            zIndex: 100,
             left: "0!important",
             width: "fit-content",
           },

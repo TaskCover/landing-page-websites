@@ -132,7 +132,7 @@ const UserLanding = ({
       sx={{
         position: "absolute",
         top: 0,
-        zIndex: 15,
+        zIndex: 100,
         width: "100%",
         height: "600px",
         minHeight: "600px",

@@ -154,7 +154,7 @@ const ChatListTemp = () => {
           placement="top-start"
           transition
           sx={{
-            zIndex: 10,
+            zIndex: 200,
           }}
         >
           {({ TransitionProps }) => (
