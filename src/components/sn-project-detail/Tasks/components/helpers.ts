@@ -26,6 +26,7 @@ export type Selected = {
 
   subTaskId?: string;
   subTaskName?: string;
+  checked?:boolean;
 };
 
 export const genName = (

@@ -3,7 +3,7 @@ import {
   Stack,
   StackProps,
   switchClasses,
-  SxProps,
+  SxProps, Select, MenuItem,
 } from "@mui/material";
 import { Locale } from "constant/types";
 import { useLocale } from "next-intl";
@@ -25,27 +25,44 @@ const SwitchLanguage = (props: StackProps) => {
   };
 
   return (
-    <Stack {...props}>
-      <MuiSwitch
-        disableRipple
-        sx={defaultSx as SxProps}
-        checked={locale === "vi"}
-        onChange={onChangeValue}
-      />
-      <Link
-        ref={linkRef}
-        href={fullPath}
-        locale={locale === "vi" ? "en" : "vi"}
-        sx={{ display: "none" }}
-      />
-    </Stack>
+      <Stack {...props}>
+        <Select
+            value={locale}
+            onChange={onChangeValue}
+            disableUnderline
+            sx={defaultSx as SxProps}
+        >
+          <MenuItem value="vi">
+            <div style={{display:"flex"}}>
+              <img src="/images/img-vn-flag.png" alt="Vietnamese Flag" style={{marginTop:"16px",marginRight:"5px", width:"24px", height:"24px"}} />
+              <p>Vietnamese</p>
+            </div>
+
+          </MenuItem>
+          <MenuItem value="en">
+            <div style={{display:"flex"}}>
+              <img src="/images/img-usa-flag.png" alt="USA Flag" style={{marginTop:"16px",marginRight:"5px", width:"24px", height:"24px"}} />
+              <p>English</p>
+            </div>
+
+          </MenuItem>
+
+        </Select>
+        <Link
+            ref={linkRef}
+            href={fullPath}
+            locale={locale === "vi" ? "en" : "vi"}
+            sx={{ display: "none" }}
+        />
+      </Stack>
+
   );
 };
 
 export default memo(SwitchLanguage);
 
 const defaultSx = {
-  width: 62,
+  width: 162,
   height: 28,
   p: 0,
   borderRadius: 4,

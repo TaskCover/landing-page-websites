@@ -54,6 +54,7 @@ export type ProjectData = {
   status?: ProjectStatus;
   saved?: boolean;
   avatar?: string[];
+  currency?: string;
 };
 
 export type TaskListData = {
