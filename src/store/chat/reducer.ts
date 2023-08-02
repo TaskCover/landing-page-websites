@@ -62,6 +62,7 @@ const initialState: ChatState = {
   groupMembers: [],
   chatAttachments: [],
   deleteConversationStatus: DataStatus.IDLE,
+  dataTransfer: {}
 };
 
 const isConversation = (type: string) => {
@@ -89,6 +90,11 @@ const chatSlice = createSlice({
     },
     setTypeList: (state, action) => {
       state.typeList = action.payload;
+    },
+    setDataTransfer: (state, action) => {
+      console.log('action.payload', action.payload);
+      
+      state.dataTransfer = action.payload;
     },
     setConversationInfo: (state, action) => {
       const { conversationInfo, sessionId } = action.payload;
@@ -329,6 +335,7 @@ export const {
   setMessage,
   setConversationInfo,
   setTypeList,
+  setDataTransfer,
   setStateSendMessage,
   setLastMessage,
   clearConversation,

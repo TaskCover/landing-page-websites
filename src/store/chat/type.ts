@@ -217,6 +217,11 @@ export interface LeftGroupRequest extends AuthenRequestCommon {
   roomId: string;
 }
 
+export interface RenameGroupRequest extends AuthenRequestCommon {
+  roomId: string;
+  name: string;
+}
+
 export interface FetchGroupMemberRequest extends AuthenRequestCommon {
   roomId: string;
 }

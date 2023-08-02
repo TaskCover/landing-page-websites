@@ -14,7 +14,8 @@ import {
   FetchGroupMemberRequest,
   RemoveMemberRequest,
   DeleteConversationGroup,
-  MessageBodyRequest
+  MessageBodyRequest,
+  RenameGroupRequest
 } from "./type";
 
 export const getAllConvention = createAsyncThunk(
@@ -134,6 +135,24 @@ export const leftDirectMessageGroup = createAsyncThunk(
   async (paramReq: LeftGroupRequest) => {
     try {
       const response = await client.post("leaveGroup", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const renameGroup = createAsyncThunk(
+  "chat/renameGroup",
+  async (paramReq: RenameGroupRequest) => {
+    try {
+      const response = await client.post("renameGroup", paramReq, {
         baseURL: CHAT_API_URL,
       });
 
