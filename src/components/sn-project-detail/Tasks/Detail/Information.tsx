@@ -1,6 +1,6 @@
-import {ReactNode, memo, useEffect, useMemo, useState} from "react";
+import React, {ReactNode, memo, useEffect, useMemo, useState} from "react";
 import {Box, Stack, StackProps, TextField} from "@mui/material";
-import { Text } from "components/shared";
+import {IconButton, Text} from "components/shared";
 import { useTranslations } from "next-intl";
 import {
   AN_ERROR_TRY_AGAIN,
@@ -33,6 +33,8 @@ import { DEPENDENCIES_ID } from "./components/Dependencies";
 import hljs from "highlight.js";
 import { TASK_TEXT_STATUS } from "../components";
 import {useSnackbar} from "store/app/selectors";
+import PencilUnderlineIcon from "../../../../icons/PencilUnderlineIcon";
+import useTheme from "hooks/useTheme";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -64,11 +66,14 @@ const Information = () => {
     !!task?.dependencies?.length,
   );
   const { onAddSnackbar } = useSnackbar();
+  const { isDarkMode } = useTheme();
 
   const [files, setFiles] = useState<FileList | null>(null);
   const [isDragging, onDraggingTrue, onDraggingFalse] = useToggle(false);
   const [readMore, setReadMore] = useState(false);
   const [editName, setEditName] = useState(false);
+  const [editDescription, setEditDescription] = useState(false);
+  const [description, setDescription] = useState(task?.description);
   const [taskName, setTaskName] = useState(task?.name);
   const [error, setError] = useState<string>("");
   const {
@@ -186,6 +191,76 @@ const Information = () => {
     }
   }
 
+  const changeDescription = (event) => {
+    setDescription(event.target.value)
+  }
+
+  const labelEdit = useMemo(() => {
+    return commonT("update");
+  }, [commonT]);
+
+  const onKeyDownDescription = async (event: React.KeyboardEvent<HTMLDivElement>, description) => {
+    if (event.key !== "Enter") return;
+    const descriptionTrimmed = description?.trim();
+    if (descriptionTrimmed) {
+      await submitNameTask(task?.id, {
+        description : descriptionTrimmed
+      });
+      setEditDescription(false)
+    }
+  };
+  const renderDescription = () => {
+    if (editDescription) {
+      return (
+          <TextField
+              value={description}
+              onKeyDown={(e) => onKeyDownDescription(e, description)}
+              fullWidth
+              variant="filled"
+              size="small"
+              onChange={changeDescription}
+              multiline
+              maxRows={10}
+              sx={{
+                "& >div": {
+                  bgcolor: "transparent!important",
+                },
+                "& input": {
+                  fontSize: 15,
+                },
+                "& >label": {
+                  fontSize: "14px !important",
+                },
+              }}
+          />
+      )
+    } else if (!!task?.description) {
+        return (
+            <>
+              <Box
+                  sx={{
+                    fontSize: 14,
+                    "& *": {
+                      wordBreak: "break-all",
+                    },
+                  }}
+                  className="html"
+                  dangerouslySetInnerHTML={{
+                    __html: readMore || task.description.length < 400 ? task.description : `${task.description.substring(0, 400)}...`,
+                  }}
+              />
+              {
+                  task.description.length > 400 && (
+                      <p className="btn" onClick={() => setReadMore(!readMore)} style={{ cursor: "pointer", color: "#1BC5BD", fontSize: "14px", fontWeight: "600"}}>
+                        {readMore ? projectT("taskDetail.seeLess") : projectT("taskDetail.seeMore")}
+                      </p>
+                  )
+              }
+            </>
+        )
+    }
+  }
+
   useEffect(() => {
     setShowAddSubTask(!!task?.sub_tasks?.length);
   }, [setShowAddSubTask, task?.sub_tasks?.length]);
@@ -197,6 +272,10 @@ const Information = () => {
   useEffect(() => {
     setShowAddDepen(!!task?.dependencies?.length);
   }, [setShowAddDepen, task?.dependencies?.length]);
+
+  useEffect(() => {
+    setDescription(task?.description);
+  }, [task?.description]);
 
   if (!task) return null;
 
@@ -396,29 +475,32 @@ const Information = () => {
         p={2}
         borderRadius={1}
       >
-        {!!task?.description && (
-            <>
-              <Box
-                  sx={{
-                    fontSize: 14,
-                    "& *": {
-                      wordBreak: "break-all",
-                    },
-                  }}
-                  className="html"
-                  dangerouslySetInnerHTML={{
-                    __html: readMore || task.description.length < 400 ? task.description : `${task.description.substring(0, 400)}...`,
-                  }}
-              />
-              {
-                  task.description.length > 400 && (
-                      <p className="btn" onClick={() => setReadMore(!readMore)} style={{ cursor: "pointer", color: "#1BC5BD", fontSize: "14px", fontWeight: "600"}}>
-                        {readMore ? projectT("taskDetail.seeLess") : projectT("taskDetail.seeMore")}
-                      </p>
-                  )
-              }
-            </>
-        )}
+        {
+          !!task?.description && (
+                <Stack direction="row" justifyContent="end">
+                  <IconButton
+                      onClick={() => setEditDescription(!editDescription)}
+                      variant="contained"
+                      size="small"
+                      sx={{
+                        backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+                        color: "text.primary",
+                        p: 1,
+                        "&:hover svg": {
+                          color: "common.white",
+                        },
+                        justifyContent: "end",
+                        maxWidth: "50px"
+                      }}
+                  >
+                    <PencilUnderlineIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
+                </Stack>
+            )
+        }
+        {
+          renderDescription()
+        }
       </InformationItem>
       <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
       <AttachmentsTask id={ATTACHMENT_ID} files={files} setFiles={setFiles} />

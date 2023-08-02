@@ -972,6 +972,9 @@ const ItemList = () => {
                                 "& label.Mui-focused": {
                                   color: "green",
                                 },
+                                "& >label": {
+                                  fontSize: "14px !important",
+                                },
                               }}
                             />
                           </Stack>
