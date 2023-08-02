@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import Avatar from "components/Avatar";
-import { Box, Button, Fab, Typography } from "@mui/material";
+import { Box, Button, Fab, InputAdornment, TextField, Typography } from "@mui/material";
 import ItemMemberDetail from "./ItemMemberDetail";
 import GroupNameIcon from "icons/GroupNameIcon";
 import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/DefaultPopupLayout";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import MediaFileIcon from "icons/MediaFileIcon";
@@ -28,12 +28,15 @@ const ChatDetailGroup = (props) => {
     groupMembers,
     onSetStep,
     onLeftGroup,
+    onRenameGroup,
     onSetTypeList,
+    onSetDataTransfer,
     onFetchGroupMembersMember,
     onChangeGroupRole,
     onRemoveGroupMember,
     onSetConversationInfo,
     onDeleteConversationGroup,
+    onGetAllConvention
   } = useChat();
   const { user } = useAuth();
   //check owner
@@ -49,6 +52,7 @@ const ChatDetailGroup = (props) => {
     LEAVE_OWNER: "LEAVE_OWNER",
     LEAVE_MEMBER: "LEAVE_MEMBER",
     NEW_ADMIN: "NEW_ADMIN",
+    RENAME_GROUP: "RENAME_GROUP",
   };
   const init = {
     type: "",
@@ -60,11 +64,18 @@ const ChatDetailGroup = (props) => {
   };
 
   const [showPopup, setShowPopup] = useState(init);
+  const [renameGroup, setRenameGroup] = useState("");
   const [userId, setUserId] = useState("");
   const { onAddSnackbar } = useSnackbar();
   const handleClosePopup = () => {
+    setRenameGroup(dataTransfer?.name)
     setShowPopup(init);
   };
+
+  useEffect(() => {
+    setRenameGroup(dataTransfer?.name)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataTransfer]);
 
   useEffect(() => {
     onFetchGroupMembersMember({
@@ -74,8 +85,6 @@ const ChatDetailGroup = (props) => {
   }, []);
 
   const handleManageMember = async (action: "addAdmin" | "remove", member) => {
-    console.log({ user });
-
     if (action === "addAdmin") {
       const result = (await onChangeGroupRole({
         groupId: dataTransfer?._id,
@@ -116,75 +125,75 @@ const ChatDetailGroup = (props) => {
         <Box sx={{ width: "100%", margin: "0 50px" }}>
           {groupMembers?.length > 0
             ? groupMembers
-                .filter((m) => m._id !== user?.id_rocket)
-                .map((item, index) => {
-                  return (
+              .filter((m) => m._id !== user?.id_rocket)
+              .map((item, index) => {
+                return (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      marginBottom: 1,
+                      // cursor: "pointer",
+                      ":hover": {
+                        backgroundColor: "#F7F7FD",
+                      },
+                    }}
+                    p={1}
+                    onClick={() => {
+                      setUserId(item?._id);
+                      setShowPopup((pre) => ({
+                        ...pre,
+                        type: TYPE_POPUP.LEAVE_AND_NEW_ADD,
+                        statusPopup: true,
+                        title: "Leave Group",
+                        content: (
+                          <Box
+                            sx={{
+                              textAlign: "center",
+                            }}
+                          >
+                            <Typography>
+                              Leave group and select{" "}
+                              <span
+                                style={{
+                                  color: "var(--brand-primary, #3699FF)",
+                                }}
+                              >
+                                {item?.fullname}
+                              </span>{" "}
+                              as new admin?
+                            </Typography>
+                          </Box>
+                        ),
+                      }));
+                    }}
+                    key={index}
+                  >
+                    <Avatar
+                      src={item?.avatar}
+                      alt="Avatar"
+                      size={42}
+                      style={{
+                        borderRadius: "50%",
+                      }}
+                    />
                     <Box
                       sx={{
                         display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        marginBottom: 1,
-                        // cursor: "pointer",
-                        ":hover": {
-                          backgroundColor: "#F7F7FD",
-                        },
+                        flexDirection: "column",
                       }}
-                      p={1}
-                      onClick={() => {
-                        setUserId(item?._id);
-                        setShowPopup((pre) => ({
-                          ...pre,
-                          type: TYPE_POPUP.LEAVE_AND_NEW_ADD,
-                          statusPopup: true,
-                          title: "Leave Group",
-                          content: (
-                            <Box
-                              sx={{
-                                textAlign: "center",
-                              }}
-                            >
-                              <Typography>
-                                Leave group and select{" "}
-                                <span
-                                  style={{
-                                    color: "var(--brand-primary, #3699FF)",
-                                  }}
-                                >
-                                  {item?.fullname}
-                                </span>{" "}
-                                as new admin?
-                              </Typography>
-                            </Box>
-                          ),
-                        }));
-                      }}
-                      key={index}
                     >
-                      <Avatar
-                        src={item?.avatar}
-                        alt="Avatar"
-                        size={42}
-                        style={{
-                          borderRadius: "50%",
-                        }}
-                      />
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <Typography variant="inherit" fontWeight="bold">
-                          {item?.fullname}
-                        </Typography>
-                        <Typography variant="caption" color="#999999">
-                          {item?.email}
-                        </Typography>
-                      </Box>
+                      <Typography variant="inherit" fontWeight="bold">
+                        {item?.fullname}
+                      </Typography>
+                      <Typography variant="caption" color="#999999">
+                        {item?.email}
+                      </Typography>
                     </Box>
-                  );
-                })
+                  </Box>
+                );
+              })
             : null}
         </Box>
       </>
@@ -205,7 +214,25 @@ const ChatDetailGroup = (props) => {
             justifyContent: "center",
           }}
         >
-          {showPopup?.content}
+          {showPopup?.type === TYPE_POPUP.RENAME_GROUP ?
+            <TextField
+              size="small"
+              sx={{
+                backgroundColor: "white",
+                borderRadius: "10px",
+                "& .MuiInputBase-root": {
+                  color: "black",
+                  borderRadius: "10px",
+                  border: "1px solid transparent",
+                },
+                margin: "0 50px"
+              }}
+              placeholder="Enter name"
+              fullWidth
+              value={renameGroup}
+              onChange={handleChangeName}
+            />
+            : showPopup?.content}
         </Box>
         {showPopup?.type !== TYPE_POPUP.NEW_ADMIN && (
           <Box
@@ -242,6 +269,31 @@ const ChatDetailGroup = (props) => {
   };
 
   const handlePopup = async () => {
+    const renameGroupApi = async () => {
+      const dataTransferNew = {
+        ...dataTransfer,
+        name: renameGroup,
+        fname: renameGroup,
+      };
+      const renameResult = (await onRenameGroup({
+        roomId: dataTransfer?._id,
+        name: renameGroup,
+      })) as any;
+      
+      if (renameResult?.error) {
+        return onAddSnackbar(renameResult?.error?.message, "error");
+      } else {
+        
+        onGetAllConvention({
+          type: "a",
+          text: "",
+          offset: 0,
+          count: 10,
+        });
+        onSetDataTransfer(dataTransferNew);
+        onAddSnackbar("Successfully!", "success");
+      }
+    };
     const left = async () => {
       const leftResult = (await onLeftGroup({
         roomId: dataTransfer?._id,
@@ -296,11 +348,15 @@ const ChatDetailGroup = (props) => {
         await addAndRemove(random, user?.id_rocket ?? "");
         await left();
         break;
+      case TYPE_POPUP.RENAME_GROUP:
+        await renameGroupApi();
+        break;
       default:
         break;
     }
     setShowPopup(init);
   };
+
   const handleNewAdd = () => {
     setShowPopup((pre) => ({
       ...pre,
@@ -310,6 +366,11 @@ const ChatDetailGroup = (props) => {
       content: <>{_renderNewAdmin()}</>,
     }));
   };
+
+  const handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
+    setRenameGroup(event.target.value);
+  };
+
   return (
     <>
       <Box
@@ -382,6 +443,16 @@ const ChatDetailGroup = (props) => {
             text={`Group name: ${dataTransfer?.name}`}
             icon={<GroupNameIcon />}
             iconClick={<EditGroupNameIcon />}
+            onClick={() => {
+              setShowPopup((pre) => ({
+                ...pre,
+                type: TYPE_POPUP.RENAME_GROUP,
+                statusPopup: true,
+                title: "Change name",
+                content: <></>,
+                actionType: 0,
+              }));
+            }}
           />
           <ItemDetail
             text={"Media"}
@@ -451,7 +522,7 @@ const ChatDetailGroup = (props) => {
               callbackRemove={() => {
                 handleManageMember("remove", member);
               }}
-              onClick={()=>{
+              onClick={() => {
                 handleClickMember(member)
               }}
               admin
