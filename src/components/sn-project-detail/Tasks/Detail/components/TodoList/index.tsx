@@ -121,7 +121,7 @@ const TodoList = ({ open }: { open: boolean }) => {
           </Text>
         }
       >
-        <Stack mt={2}>
+        <Stack mt={2} maxWidth="100%" overflow="auto">
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppableId">
               {(provided) => (

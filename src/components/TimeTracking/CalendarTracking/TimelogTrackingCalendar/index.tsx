@@ -28,21 +28,12 @@ import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import { WorkLogItem } from "store/timeTracking/reducer";
 import useTheme from "hooks/useTheme";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { NS_TIME_TRACKING } from "constant/index";
 
 const { TASK_ACTION } = ENUMS;
 
-const taskActionStrings = {
-  [TASK_ACTION.CREATE_TASK_LIST]: "Create task list",
-  [TASK_ACTION.MOVE_TASK]: "Move task",
-  [TASK_ACTION.UPDATE_INACTIVE_TASK_LIST]: "Update inactive task list",
-  [TASK_ACTION.UPDATE_TASK_LIST]: "Update task list",
-  [TASK_ACTION.UPDATE_TASK]: "Update task",
-  [TASK_ACTION.UPDATE_SUB_TASK]: "Update sub task",
-  [TASK_ACTION.UPDATE_INACTIVE_TASK]: "Update inactive task",
-  [TASK_ACTION.UPDATE_INACTIVE_SUB_TASK]: "Update tnactive sub task",
-  [TASK_ACTION.CREATE_TASK]: "Create task",
-  [TASK_ACTION.CREATE_SUB_TASK]: "Create sub task",
-};
+
 interface IProps {
   events: any[];
   onClick(action: "create" | "edit", item?: any): void;
@@ -74,6 +65,20 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
     search_key: "",
     date: dayjs().format("YYYY-MM-DD"),
   });
+  const timeT = useTranslations(NS_TIME_TRACKING);
+
+  const taskActionStrings = {
+    [TASK_ACTION.CREATE_TASK_LIST]: timeT("timeLog.createTL"),
+    [TASK_ACTION.MOVE_TASK]: timeT("timeLog.moveT"),
+    [TASK_ACTION.UPDATE_INACTIVE_TASK_LIST]: timeT("timeLog.upITL"),
+    [TASK_ACTION.UPDATE_TASK_LIST]: timeT("timeLog.upTL"),
+    [TASK_ACTION.UPDATE_TASK]: timeT("timeLog.upT"),
+    [TASK_ACTION.UPDATE_SUB_TASK]: timeT("timeLog.upST"),
+    [TASK_ACTION.UPDATE_INACTIVE_TASK]: timeT("timeLog.upIT"),
+    [TASK_ACTION.UPDATE_INACTIVE_SUB_TASK]: timeT("timeLog.upIST"),
+    [TASK_ACTION.CREATE_TASK]: timeT("timeLog.creT"),
+    [TASK_ACTION.CREATE_SUB_TASK]: timeT("timeLog.creST"),
+  };
 
   const scrollRef = useRef<HTMLDivElement>(null);
   function scrollToTop() {

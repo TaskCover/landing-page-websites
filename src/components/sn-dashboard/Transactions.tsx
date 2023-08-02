@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { Stack, TableRow } from "@mui/material";
 import { Text } from "components/shared";
 import Link from "components/Link";
@@ -8,9 +8,19 @@ import { HOME_PATH } from "constant/paths";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
 import { formatDate, formatNumber } from "utils/index";
 import useTheme from "hooks/useTheme";
+import { Permission } from "constant/enums";
+import { useAuth } from "store/app/selectors";
 
 const Transactions = () => {
   const { isDarkMode } = useTheme();
+  const { user } = useAuth();
+
+  const isSARole = useMemo(
+    () => user?.roles?.includes(Permission.SA),
+    [user?.roles],
+  );
+
+  if (!isSARole) return null;
 
   return (
     <Stack

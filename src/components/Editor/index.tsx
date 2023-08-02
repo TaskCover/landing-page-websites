@@ -19,7 +19,7 @@ import dynamic from "next/dynamic";
 import hljs from "highlight.js";
 
 const ReactQuill = dynamic(
-  async () => {
+  () => {
     hljs.configure({
       // optionally configure hljs
       languages: [
@@ -52,12 +52,7 @@ const ReactQuill = dynamic(
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).hljs = hljs;
-    const { default: RQ } = await import("react-quill");
-
-    // eslint-disable-next-line react/display-name,  @typescript-eslint/no-explicit-any
-    return ({ forwardedRef, ...props }: any) => (
-      <RQ ref={forwardedRef} {...props} />
-    );
+    return import("react-quill");
   },
   { ssr: false },
 );
@@ -122,6 +117,7 @@ const Editor = (props: EditorProps) => {
         [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
         [{ color: [] }, { background: [] }], // dropdown with defaults from theme
         ["attachment"],
+        ["clean"],
       ],
       handlers: {
         attachment: () => {

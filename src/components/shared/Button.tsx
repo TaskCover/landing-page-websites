@@ -101,7 +101,8 @@ const getDefaultSx = (isDarkMode: boolean, sx) => {
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
-    display: "inline-block",
+    display: "inline-flex",
+    alignItems: "center",
 
     [`&.${buttonClasses.fullWidth}`]: {
       width: "100%",
@@ -110,6 +111,9 @@ const getDefaultSx = (isDarkMode: boolean, sx) => {
     [`& .${buttonClasses.startIcon}, & .${buttonClasses.endIcon}`]: {
       display: "inline-block",
       verticalAlign: "middle",
+      "&>*:nth-of-type(1)": {
+        fontSize: "1.125rem",
+      },
       "&>*": {
         pt: 0.25,
       },
@@ -173,28 +177,28 @@ const getDefaultSx = (isDarkMode: boolean, sx) => {
 
     // Size
     [`&.${buttonClasses.sizeLarge}`]: {
-      py: 2.5,
+      // py: 2.5,
       px: 4,
       fontSize: 20,
       lineHeight: 1.2,
       minHeight: 64,
     },
     [`&.${matchClass(PREFIX_BUTTON_CLASS, NORMAL, "size")}`]: {
-      py: 2,
+      // py: 2,
       px: 4,
       fontSize: 20,
       lineHeight: 1.2,
       minHeight: 56,
     },
     [`&.${buttonClasses.sizeMedium}`]: {
-      py: 1.75,
+      // py: 1.75,
       px: 4,
       fontSize: 16,
       lineHeight: 1.25,
       minHeight: 48,
     },
     [`&.${buttonClasses.sizeSmall}`]: {
-      py: 1.5,
+      // py: 1.5,
       px: 3,
       fontSize: 14,
       lineHeight: 1.14,
@@ -202,7 +206,7 @@ const getDefaultSx = (isDarkMode: boolean, sx) => {
       ...sx,
     },
     [`&.${matchClass(PREFIX_BUTTON_CLASS, EXTRA_SMALL, "size")}`]: {
-      py: 1,
+      // py: 1,
       px: 3,
       fontSize: 14,
       lineHeight: 1.14,

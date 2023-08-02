@@ -8,6 +8,8 @@ export type TimeTrackingDictionary = {
       breakTime: string;
       weekly_total: string;
     };
+    timeTracking: string;
+    noData: string;
   };
   myTime: {
     addButton: string;
@@ -37,6 +39,7 @@ export type TimeTrackingDictionary = {
   company_time: {
     this_week: string;
     timesheet: string;
+    searchButton: string;
     timesheet_tab: {
       weekly_summary: string;
       total: string;
@@ -53,4 +56,30 @@ export type TimeTrackingDictionary = {
       note: string;
     };
   };
+  timeLog: {
+    createTL: string;
+    moveT: string;
+    upITL: string;
+    upTL: string;
+    upT: string;
+    upST: string;
+    upIT: string;
+    upIST: string;
+    creT: string;
+    creST: string;
+  };
+  modal: {
+    Project: string;
+    Position: string;
+    Date: string;
+    timeDuration: string;
+    Type: string;
+    start_time: string;
+    Note: string;
+    Cancel: string;
+    Confirm: string;
+    Delete: string;
+    edit_time: string;
+    add_time: string;
+   }
 };

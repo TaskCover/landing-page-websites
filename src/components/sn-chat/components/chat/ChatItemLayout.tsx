@@ -17,7 +17,7 @@ const ChatItemLayout = ({
   onClickConvention,
 }: ChatItemProp) => {
   const { sx, ...props } = chatItemProps || {};
-  const { lastMessage } = chatInfo;
+  const { lastMessage } = chatInfo || {};
 
   return (
     <Box
@@ -28,6 +28,7 @@ const ChatItemLayout = ({
         gap: "1rem",
         marginBottom: 1,
         cursor: "pointer",
+        position: "relative",
         ":hover": {
           backgroundColor: "#F7F7FD",
         },

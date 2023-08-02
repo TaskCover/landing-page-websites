@@ -9,6 +9,11 @@ body {
   bottom: 0;
   width: 100vw;
   height: calc(var(--vh, 1vh) * 100);
+  background-color: transparent!important;
+}
+
+body.not-auth {
+  background-color: var(--mui-palette-background-default)!important;
 }
 
 input:-webkit-autofill,
@@ -60,7 +65,9 @@ a {
   .only-mobile {
     display: initial !important;
   }
+
 }
+
 
 @supports (font: -apple-system-body) and (-webkit-appearance: none) {
   img[loading="lazy"] {

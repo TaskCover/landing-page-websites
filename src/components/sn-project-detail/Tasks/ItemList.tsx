@@ -16,6 +16,7 @@ import {
   CircularProgress,
   Stack,
   StackProps,
+  TextField,
 } from "@mui/material";
 import Avatar from "components/Avatar";
 import {
@@ -23,6 +24,7 @@ import {
   getMessageErrorByAPI,
   debounce,
   formatDate,
+  checkIsMobile,
 } from "utils/index";
 import TextStatus from "components/TextStatus";
 import { CellProps, TableLayout } from "components/Table";
@@ -53,6 +55,8 @@ import { SCROLL_ID } from "constant/index";
 import ActionsSelected from "./ActionsSelected";
 import Loading from "components/Loading";
 import useToggle from "hooks/useToggle";
+import FixedLayout from "components/FixedLayout";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 const ItemList = () => {
   const {
@@ -70,7 +74,7 @@ const ItemList = () => {
     onResetTasks,
   } = useTasksOfProject();
   const { onUpdateTaskDetail, onGetTaskList } = useTaskDetail();
-
+  const [isAllChecked, setIsAllChecked] = useState(false);
   const filtersRef = useRef<Params>({});
   const pageIndexRef = useRef<number>(pageIndex);
   const isFetchingRef = useRef<boolean>(isFetching);
@@ -98,6 +102,7 @@ const ItemList = () => {
   });
   const [hideIds, setHideIds] = useState<string[]>([]);
 
+  const [hoveredId, setHoveredId] = useState<string | undefined>(undefined);
   const [dataIds, setDataIds] = useState<{
     taskId?: string;
     taskListId?: string;
@@ -108,8 +113,74 @@ const ItemList = () => {
     [dataIds?.taskId, dataIds?.taskListId],
   );
 
-  const baseTop = useMemo(() => 97, []);
+  const [taskName, setTaskName] = useState<string>("");
+  const [errorTaskName, setErrorTaskName] = useState<string>("");
 
+  const noData = useMemo(
+    () => !isIdle && totalItems === 0,
+    [isIdle, totalItems],
+  );
+
+  const baseTop = useMemo(
+    () => (selectedList.length ? 106 : 62),
+    [selectedList.length],
+  );
+  // const baseTop = useMemo(() => 97, []);
+
+  const handleAllChecked = () => {
+    setIsAllChecked((prevIsAllChecked) => !prevIsAllChecked);
+
+    setSelectedList((prevSelectedList) => {
+      const newSelectedList: Selected[] = [];
+      if (isAllChecked) {
+        // If the new checkbox is checked, uncheck all task lists and tasks
+        return [];
+      } else {
+        // If the new checkbox is unchecked, check all task lists and tasks
+        dataList.forEach((taskListItem) => {
+          // Select task list and check it
+          newSelectedList.push({
+            taskListId: taskListItem.id,
+            taskListName: taskListItem.name,
+            checked: true,
+          });
+
+          // Select tasks within the task list and check them
+          taskListItem.tasks.forEach((task) => {
+            newSelectedList.push({
+              taskListId: taskListItem.id,
+              taskId: task.id,
+              taskName: task.name,
+              taskListName: taskListItem.name,
+              checked: true,
+            });
+
+            // Select sub tasks of the task and check them
+            if (task.sub_tasks?.length) {
+              task.sub_tasks.forEach((subTask) => {
+                newSelectedList.push({
+                  taskListId: taskListItem.id,
+                  taskId: task.id,
+                  taskName: task.name,
+                  taskListName: taskListItem.name,
+                  subTaskId: subTask.id,
+                  subTaskName: subTask.name,
+                  checked: true,
+                });
+              });
+            }
+          });
+        });
+      }
+      return newSelectedList;
+    });
+  };
+
+  const checkboxLabel = "Select All";
+  const checkboxProps = {
+    checked: isAllChecked,
+    onChange: handleAllChecked,
+  };
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
       {
@@ -146,6 +217,22 @@ const ItemList = () => {
           : undefined,
       );
     };
+  };
+
+  const onCreateSubTaskQuick = async (
+    data: TaskFormData,
+    taskListId,
+    taskId,
+  ) => {
+    try {
+      //TODO: CREATE SUB TASK
+      if (!taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      return await onCreateTaskAction(data, taskListId, taskId);
+    } catch (error) {
+      throw error;
+    }
   };
 
   const onCreateTask = async (data: TaskFormData) => {
@@ -543,6 +630,50 @@ const ItemList = () => {
     250,
   );
 
+  const changeNameTask = (event) => {
+    setTaskName(event.target.value);
+    setErrorTaskName("");
+  };
+
+  const label = useMemo(() => {
+    return commonT("createNew");
+  }, [commonT]);
+
+  const onKeyDownTaskName = async (
+    event: React.KeyboardEvent<HTMLDivElement>,
+    taskListId,
+    taskId,
+  ) => {
+    if (event.key !== "Enter") return;
+    const nameTrimmed = taskName?.trim();
+    if (nameTrimmed) {
+      const newItem = await onCreateSubTaskQuick(
+        {
+          task_list: "",
+          name: nameTrimmed,
+          description: "",
+          end_date: "",
+          start_date: "",
+        },
+        taskListId,
+        taskId,
+      );
+      if (newItem) {
+        setTaskName("");
+        onAddSnackbar(
+          projectT("detailTasks.notification.taskSuccess", { label }),
+          "success",
+        );
+      }
+    } else {
+      setErrorTaskName(
+        commonT("form.error.required", {
+          name: projectT("detailTasks.form.title.name"),
+        }),
+      );
+    }
+  };
+
   useEventListener("scroll", onScroll, undefined, SCROLL_ID);
 
   useEffect(() => {
@@ -595,7 +726,13 @@ const ItemList = () => {
         top={{ xs: baseTop + 8 }}
         zIndex={1}
       >
-        <></>
+        <>
+          <FormControlLabel
+            control={<Checkbox {...checkboxProps} />}
+            label={checkboxLabel}
+            style={{ margin: "15px" }}
+          />
+        </>
       </TableLayout>
 
       <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
@@ -640,6 +777,7 @@ const ItemList = () => {
                       task?.sub_tasks,
                     )}
                     isHide={isHide}
+                    isHovered={hoveredId === task.id}
                     setHideIds={setHideIds}
                   >
                     <Stack
@@ -652,7 +790,10 @@ const ItemList = () => {
                     >
                       <Stack
                         direction={{ md: "row" }}
-                        alignItems={{ xs: "flex-start", md: "center" }}
+                        alignItems={{
+                          xs: "flex-start",
+                          md: "center",
+                        }}
                         minHeight={38}
                         maxHeight={{ md: 38 }}
                         width="100%"
@@ -706,8 +847,12 @@ const ItemList = () => {
                                       alignItems="center"
                                       minHeight={38}
                                       overflow="hidden"
-                                      borderBottom={{ md: "1px solid" }}
-                                      borderColor={{ md: "grey.100" }}
+                                      borderBottom={{
+                                        md: "1px solid",
+                                      }}
+                                      borderColor={{
+                                        md: "grey.100",
+                                      }}
                                       maxHeight={{ md: 38 }}
                                       sx={{
                                         "& >.checkbox": {
@@ -732,7 +877,9 @@ const ItemList = () => {
                                         )}
                                       />
                                       <Stack
-                                        direction={{ md: "row" }}
+                                        direction={{
+                                          md: "row",
+                                        }}
                                         alignItems={{
                                           xs: "flex-start",
                                           md: "center",
@@ -789,16 +936,51 @@ const ItemList = () => {
                               </div>
                             )}
                           </Droppable>
-                          <Button
-                            onClick={onSetDataIds(taskListItem.id, task.id)}
-                            startIcon={<PlusIcon />}
-                            variant="text"
-                            size="extraSmall"
-                            color="secondary"
-                            sx={{ mr: 4 }}
+                          <Stack
+                            width="100%"
+                            direction="row"
+                            alignItems="center"
+                            spacing={1}
                           >
-                            {projectT("detailTasks.addNewTask")}
-                          </Button>
+                            <PlusIcon />
+                            <TextField
+                              label={projectT(
+                                "detailTasks.addNewSubTaskPlaceholder",
+                              )}
+                              value={taskName}
+                              onKeyDown={(e) =>
+                                onKeyDownTaskName(e, taskListItem.id, task.id)
+                              }
+                              fullWidth
+                              variant="filled"
+                              size="small"
+                              onChange={changeNameTask}
+                              sx={{
+                                "& >div": {
+                                  bgcolor: "transparent!important",
+                                  "&:after": {
+                                    borderBottomColor: "green !important",
+                                  },
+                                  "&:before": {
+                                    borderBottomColor: "green !important",
+                                  },
+                                },
+                                "& input": {
+                                  fontSize: 15,
+                                },
+                                width: "70% !important",
+                                "& label.Mui-focused": {
+                                  color: "green",
+                                },
+                              }}
+                            />
+                          </Stack>
+
+                          {!!errorTaskName && (
+                            <Text variant="caption" color="error">
+                              {errorTaskName}
+                            </Text>
+                          )}
                         </>
                       )}
                     </Stack>

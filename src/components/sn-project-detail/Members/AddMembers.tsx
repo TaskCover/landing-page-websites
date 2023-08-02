@@ -31,9 +31,10 @@ const AddMembers = () => {
       <Button
         onClick={onShow}
         startIcon={<PlusIcon />}
-        size="small"
+        size="extraSmall"
         variant="primary"
-        sx={{ height: 40 }}
+        id="add_new_id"
+        sx={{ height: { xs: 32, lg: 40 } }}
       >
         {projectT("detailMembers.addMember")}
       </Button>
@@ -156,7 +157,8 @@ const HeaderForm = () => {
       <Search
         name="email"
         placeholder={commonT("searchBy", { name: "email" })}
-        sx={{ maxWidth: 300 }}
+        sx={{ maxWidth: { xs: "100%", md: 300 } }}
+        rootSx={{ height: { xs: 40, md: 32 } }}
         emitWhenEnter
         value={filters?.email}
         search={filters?.email}

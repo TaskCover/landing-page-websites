@@ -6,6 +6,7 @@ import { IChatItemInfo, STEP } from "store/chat/type";
 import { useAuth } from "store/app/selectors";
 import { useEffect, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
+import SearchRoundIcon from "icons/SearchRoundIcon";
 
 const ChatList = () => {
   const { user } = useAuth();
@@ -36,7 +37,7 @@ const ChatList = () => {
         });
       }
     }),
-  );  
+  );
 
   useEffect(() => {
     pageRef.current = pageIndex;
@@ -110,14 +111,36 @@ const ChatList = () => {
               borderRadius: "10px",
               border: "1px solid transparent",
             },
+            "& fieldset": {
+              border: "unset",
+            },
+          }}
+          inputProps={{
+            style: {
+              paddingLeft: "5px",
+            },
+          }}
+          InputProps={{
+            startAdornment: (
+              <SearchRoundIcon
+                sx={{
+                  fill: "none",
+                  filter: "opacity(0.8)",
+                  height: "20px",
+                  width: "20px",
+                }}
+              />
+            ),
           }}
           placeholder="Search name"
           fullWidth
           onKeyDown={handleKeyDown}
         />
-        <Box onClick={() => {
-          onSetStep(STEP.ADD_GROUP, { isNew: true });
-        }}>
+        <Box
+          onClick={() => {
+            onSetStep(STEP.ADD_GROUP, { isNew: true });
+          }}
+        >
           <NewGroupIcon />
         </Box>
       </Box>

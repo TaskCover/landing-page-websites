@@ -1,11 +1,12 @@
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { Checkbox, IconButton } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 import useToggle from "hooks/useToggle";
 import CaretIcon from "icons/CaretIcon";
 import MoveDotIcon from "icons/MoveDotIcon";
-import { Dispatch, memo, SetStateAction } from "react";
+import { Dispatch, memo, SetStateAction, useMemo } from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { checkIsMobile } from "utils/index";
 
 type DraggableTaskProps = {
   id: string;
@@ -14,6 +15,7 @@ type DraggableTaskProps = {
   onChange: () => void;
   children: React.ReactNode;
   isHide: boolean;
+  isHovered: boolean;
   setHideIds: Dispatch<SetStateAction<string[]>>;
 };
 
@@ -25,11 +27,14 @@ const DraggableTask = (props: DraggableTaskProps) => {
     onChange,
     children,
     isHide,
+    isHovered,
     setHideIds,
     ...rest
   } = props;
 
   const { isXlSmaller } = useBreakpoint();
+
+  const isMobile = useMemo(() => checkIsMobile(), []);
 
   const onToggle = () => {
     setHideIds((prevIds) => {
@@ -48,7 +53,7 @@ const DraggableTask = (props: DraggableTaskProps) => {
     <Draggable draggableId={id} index={index}>
       {(provided, snapshot) => {
         return (
-          <div
+          <Box
             ref={provided.innerRef}
             {...provided.draggableProps}
             style={{
@@ -68,8 +73,9 @@ const DraggableTask = (props: DraggableTaskProps) => {
               borderColor={{ md: "grey.100" }}
               sx={{
                 "& >.checkbox": {
-                  opacity: checked ? 1 : 0,
-                  userSelect: checked ? undefined : "none",
+                  opacity: isMobile || checked || isHovered ? 1 : 0,
+                  userSelect:
+                    isMobile || checked || isHovered ? undefined : "none",
                 },
                 "&:hover >.checkbox": {
                   opacity: 1,
@@ -105,7 +111,7 @@ const DraggableTask = (props: DraggableTaskProps) => {
             </Stack>
 
             {children}
-          </div>
+          </Box>
         );
       }}
     </Draggable>

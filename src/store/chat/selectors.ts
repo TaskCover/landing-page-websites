@@ -14,6 +14,8 @@ import {
   deleteConversation,
   sendMessages,
   renameGroup,
+  searchChatText,
+  getUnreadMessages,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -36,6 +38,9 @@ import {
   MessageBodyRequest,
   RoomType,
   RenameGroupRequest,
+  MessageSearchInfoRequest,
+  MessageSearchInfo,
+  UnReadMessageRequest,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -50,10 +55,12 @@ import {
   clearConversation,
   clearMessageList,
   reset,
+  setStateSearchMessage,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
 import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
+import { Paging } from "constant/types";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
@@ -72,18 +79,23 @@ export const useChat = () => {
 
     currStep,
     prevStep,
-    backFallStep,
-
     partnerInfo,
     partnerInfoStatus,
 
     chatLinks,
     chatLinksStatus,
+    //ListSearchTextMessage
+    listSearchMessage,
+    statusListSearchMessage,
+    //StateUnReadMessage
+    unReadMessage,
+    statusUnReadMessage,
 
     mediaList,
     mediaListStatus,
 
     stateSendMessage,
+    stateSearchMessage,
 
     createGroupStatus,
     newGroupData,
@@ -127,16 +139,16 @@ export const useChat = () => {
 
   const onGetLastMessages = useCallback(
     async ({
-      count = 20,
-      offset = 0,
+      count,
+      offset,
       ...rest
     }: Omit<LastMessagesRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       await dispatch(
         getLatestMessages({
-          count,
-          offset,
+          count: count ?? 10,
+          offset: offset ?? 0,
           authToken,
           userId,
           ...rest,
@@ -181,6 +193,44 @@ export const useChat = () => {
     [conversationInfo?.partnerUsername, dispatch, user],
   );
 
+  const onSearchChatText = useCallback(
+    async ({
+      text,
+      type = "d",
+    }: Omit<MessageSearchInfoRequest, "authToken" | "userId" | "roomId">) => {
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
+      await dispatch(
+        searchChatText({
+          authToken,
+          userId,
+          roomId,
+          text,
+          type,
+        }),
+      );
+    },
+    [dispatch, roomId, user],
+  );
+
+  const onGetUnReadMessages = useCallback(
+    async ({
+      type = "d",
+    }: Omit<UnReadMessageRequest, "authToken" | "userId" | "roomId">) => {
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
+      await dispatch(
+        getUnreadMessages({
+          authToken,
+          userId,
+          roomId,
+          type,
+        }),
+      );
+    },
+    [dispatch, roomId, user],
+  );
+
   const onGetUserInfo = useCallback(
     async (username: string) => {
       await dispatch(getUserInfoById(username));
@@ -212,6 +262,13 @@ export const useChat = () => {
   const onSetRoomId = (id: string) => {
     dispatch(setRoomId(id));
   };
+
+  const onSetStateSearchMessage = useCallback(
+    (message: MessageSearchInfo | null) => {
+      dispatch(setStateSearchMessage(message));
+    },
+    [dispatch],
+  );
 
   const onCreateDirectMessageGroup = useCallback(
     async ({
@@ -465,17 +522,20 @@ export const useChat = () => {
     conversationInfo,
     currStep,
     prevStep,
-    backFallStep,
     partnerInfo,
     partnerInfoStatus,
 
     chatLinks,
     chatLinksStatus,
+    listSearchMessage,
+    statusListSearchMessage,
 
     mediaList,
     mediaListStatus,
 
     stateSendMessage,
+    stateSearchMessage,
+    unReadMessage,
 
     createGroupStatus,
     newGroupData,
@@ -512,5 +572,8 @@ export const useChat = () => {
     onSendMessage,
     onSetStateSendMessage,
     onSetLastMessage,
+    onSearchChatText,
+    onSetStateSearchMessage,
+    onGetUnReadMessages,
   };
 };

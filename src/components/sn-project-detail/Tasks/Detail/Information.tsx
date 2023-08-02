@@ -1,8 +1,9 @@
-import { ReactNode, memo, useEffect } from "react";
-import { Box, Stack, StackProps } from "@mui/material";
+import {ReactNode, memo, useEffect, useMemo, useState} from "react";
+import {Box, Stack, StackProps, TextField} from "@mui/material";
 import { Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import {
+  AN_ERROR_TRY_AGAIN,
   COLOR_STATUS,
   NS_COMMON,
   NS_PROJECT,
@@ -11,7 +12,7 @@ import {
 import TextStatus from "components/TextStatus";
 import Avatar from "components/Avatar";
 import { formatDate, formatNumber } from "utils/index";
-import { useTaskDetail } from "store/project/selectors";
+import {useTaskDetail} from "store/project/selectors";
 import ArrowTriangleIcon from "icons/ArrowTriangleIcon";
 import AlignLeftIcon from "icons/AlignLeftIcon";
 import LinkSquareIcon from "icons/LinkSquareIcon";
@@ -31,6 +32,7 @@ import { TODO_LIST_ID } from "./components/TodoList";
 import { DEPENDENCIES_ID } from "./components/Dependencies";
 import hljs from "highlight.js";
 import { TASK_TEXT_STATUS } from "../components";
+import {useSnackbar} from "store/app/selectors";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -61,6 +63,39 @@ const Information = () => {
   const [isAddDepen, onShowAddDepen, , , setShowAddDepen] = useToggle(
     !!task?.dependencies?.length,
   );
+  const { onAddSnackbar } = useSnackbar();
+
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [isDragging, onDraggingTrue, onDraggingFalse] = useToggle(false);
+  const [readMore, setReadMore] = useState(false);
+  const [editName, setEditName] = useState(false);
+  const [taskName, setTaskName] = useState(task?.name);
+  const [error, setError] = useState<string>("");
+  const {
+    taskListId,
+    taskId,
+    onUpdateTask: onUpdateTaskAction,
+  } = useTaskDetail();
+
+  const isHideActions = useMemo(
+    () =>
+      Boolean(
+        task?.description &&
+          task.description !== VALUE_AS_EMPTY &&
+          task?.attachments?.length &&
+          task?.dependencies?.length &&
+          task?.todo_list?.length &&
+          (subTaskId || task?.sub_tasks?.length),
+      ),
+    [
+      subTaskId,
+      task?.attachments?.length,
+      task?.dependencies?.length,
+      task?.description,
+      task?.sub_tasks?.length,
+      task?.todo_list?.length,
+    ],
+  );
 
   const onShowAddSub = () => {
     onShowAddSubTask();
@@ -80,6 +115,77 @@ const Information = () => {
     document.getElementById(ATTACHMENT_ID)?.click();
   };
 
+  const onDragOver = (event) => {
+    event.preventDefault();
+    onDraggingTrue();
+  };
+  const onDrop = (event) => {
+    event.preventDefault();
+    onDraggingFalse();
+
+    const { files } = event.dataTransfer;
+    setFiles(files);
+  };
+
+  const changeNameTask = (event) => {
+    setTaskName(event.target.value)
+    setError("")
+  }
+
+  const onKeyDownTaskName = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== "Enter") return;
+    const nameTrimmed = taskName?.trim();
+    if (nameTrimmed) {
+      setEditName(false)
+      await submitNameTask(task?.id, {
+        name : nameTrimmed
+      });
+    } else {
+      setEditName(true)
+      setError(
+          commonT("form.error.required", {
+            name: projectT("detailTasks.form.title.name"),
+          }),
+      );
+    }
+  };
+
+  const removeEditable = async () => {
+    const nameTrimmed = taskName?.trim();
+    if (nameTrimmed) {
+      setEditName(false)
+    } else {
+      setEditName(true)
+      setError(
+          commonT("form.error.required", {
+            name: projectT("detailTasks.form.title.name"),
+          }),
+      );
+    }
+  }
+  const label = useMemo(() => {
+    return commonT("update");
+  }, [commonT]);
+
+  const submitNameTask = async (id, data) => {
+    try {
+      if (!taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      const updateTask = await onUpdateTaskAction(data, taskListId, taskId, subTaskId);
+      if (updateTask) {
+        onAddSnackbar(
+            projectT("detailTasks.notification.taskSuccess", { label }),
+            "success",
+        );
+      } else {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   useEffect(() => {
     setShowAddSubTask(!!task?.sub_tasks?.length);
   }, [setShowAddSubTask, task?.sub_tasks?.length]);
@@ -95,20 +201,69 @@ const Information = () => {
   if (!task) return null;
 
   return (
-    <Stack spacing={2} flex={1}>
+    <Stack
+      width="100%"
+      onDrop={onDrop}
+      onDragOver={onDragOver}
+      onDragLeave={onDraggingFalse}
+      position="relative"
+      spacing={2}
+    >
+      {isDragging && (
+        <Box
+          width="100%"
+          height="100%"
+          border="3px dashed"
+          borderColor="grey.100"
+          position="absolute"
+          top={0}
+          left={0}
+          zIndex={52}
+          bgcolor="text.primary"
+          sx={{ opacity: 0.2 }}
+        />
+      )}
+
       <Stack
         direction="row"
         alignItems="center"
         justifyContent="space-between"
         spacing={2}
       >
-        <Text
-          variant="h5"
-          color="text.primary"
-          sx={{ wordBreak: "break-word" }}
-        >
-          {task.name}
-        </Text>
+        {
+          editName ? (
+              <TextField
+                  onBlur={removeEditable}
+                  onMouseLeave={removeEditable}
+                  value={taskName}
+                  onKeyDown={onKeyDownTaskName}
+                  fullWidth
+                  variant="filled"
+                  size="small"
+                  onChange={changeNameTask}
+                  sx={{
+                    "& >div": {
+                      bgcolor: "transparent!important",
+                    },
+                    "& input": {
+                      fontSize: 15,
+                    },
+                    width: '60% !important'
+                  }}
+              />
+          ) : (
+              <Text
+                  variant="h5"
+                  color="text.primary"
+                  sx={{ wordBreak: "break-word" }}
+                  onMouseEnter={() => {
+                    setEditName(true)
+                  }}
+              >
+                {taskName}
+              </Text>
+          )
+        }
 
         <Stack direction="row" alignItems="center" spacing={1}>
           <Text variant="caption" color="grey.400">
@@ -120,58 +275,64 @@ const Information = () => {
           />
         </Stack>
       </Stack>
-      <Stack
-        display="grid"
-        gap={1}
-        gridTemplateColumns="repeat(auto-fill, 190px)"
-        pb={3}
-      >
-        {!task?.description && (
-          <ActionItem
-            onClick={onShowAddDescription}
-            icon={<AlignLeftIcon sx={{ color: "grey.400" }} />}
-          >
-            {projectT("taskDetail.addDescription")}
-          </ActionItem>
-        )}
-        {!task?.attachments_down?.length && (
-          <ActionItem
-            onClick={onAddAttachments}
-            icon={<LinkSquareIcon sx={{ color: "grey.400" }} />}
-          >
-            {projectT("taskDetail.addAttachments")}
-          </ActionItem>
-        )}
-        {!task?.dependencies?.length && (
-          <ActionItem
-            onClick={onShowAddDependencies}
-            icon={<FatrowIcon sx={{ color: "grey.400" }} />}
-          >
-            {projectT("taskDetail.addDependencies")}
-          </ActionItem>
-        )}
-        {!task?.sub_tasks?.length && !subTaskId && (
-          <ActionItem
-            onClick={onShowAddSub}
-            icon={<HierarchyIcon sx={{ color: "grey.400" }} />}
-          >
-            {projectT("taskDetail.addSubTasks")}
-          </ActionItem>
-        )}
-        {!task?.todo_list?.length && (
-          <ActionItem
-            onClick={onShowAddTodoList}
-            icon={<TaskSquareIcon sx={{ color: "grey.400" }} />}
-          >
-            {projectT("taskDetail.addToDos")}
-          </ActionItem>
-        )}
-      </Stack>
-      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
-      <AttachmentsTask id={ATTACHMENT_ID} />
-      {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
-      <TodoList open={isAddTodo} />
-      <Dependencies open={isAddDepen} />
+
+      {!!error && (
+          <Text variant="caption" color="error">
+            {error}
+          </Text>
+      )}
+
+      {!isHideActions && (
+        <Stack
+          display="grid"
+          gap={1}
+          gridTemplateColumns="repeat(auto-fill, 190px)"
+          bgcolor="grey.50"
+          p={2}
+          borderRadius={1}
+        >
+          {(!task?.description || task?.description === VALUE_AS_EMPTY) && (
+            <ActionItem
+              onClick={onShowAddDescription}
+              icon={<AlignLeftIcon sx={{ color: "grey.400" }} />}
+            >
+              {projectT("taskDetail.addDescription")}
+            </ActionItem>
+          )}
+          {!task?.attachments_down?.length && (
+            <ActionItem
+              onClick={onAddAttachments}
+              icon={<LinkSquareIcon sx={{ color: "grey.400" }} />}
+            >
+              {projectT("taskDetail.addAttachments")}
+            </ActionItem>
+          )}
+          {!task?.dependencies?.length && (
+            <ActionItem
+              onClick={onShowAddDependencies}
+              icon={<FatrowIcon sx={{ color: "grey.400" }} />}
+            >
+              {projectT("taskDetail.addDependencies")}
+            </ActionItem>
+          )}
+          {!task?.sub_tasks?.length && !subTaskId && (
+            <ActionItem
+              onClick={onShowAddSub}
+              icon={<HierarchyIcon sx={{ color: "grey.400" }} />}
+            >
+              {projectT("taskDetail.addSubTasks")}
+            </ActionItem>
+          )}
+          {!task?.todo_list?.length && (
+            <ActionItem
+              onClick={onShowAddTodoList}
+              icon={<TaskSquareIcon sx={{ color: "grey.400" }} />}
+            >
+              {projectT("taskDetail.addToDos")}
+            </ActionItem>
+          )}
+        </Stack>
+      )}
       <InformationItem label={commonT("assigner")}>
         {!!task?.owner?.id ? (
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -229,27 +390,41 @@ const Information = () => {
       </Stack>
 
       <InformationItem
-        label={`${commonT("form.title.note")}:`}
+        label={`${commonT("form.title.description")}:`}
         minHeight={150}
         bgcolor="grey.50"
         p={2}
         borderRadius={1}
       >
         {!!task?.description && (
-          <Box
-            sx={{
-              fontSize: 14,
-              "& *": {
-                wordBreak: "break-all",
-              },
-            }}
-            className="html"
-            dangerouslySetInnerHTML={{
-              __html: task.description,
-            }}
-          />
+            <>
+              <Box
+                  sx={{
+                    fontSize: 14,
+                    "& *": {
+                      wordBreak: "break-all",
+                    },
+                  }}
+                  className="html"
+                  dangerouslySetInnerHTML={{
+                    __html: readMore || task.description.length < 400 ? task.description : `${task.description.substring(0, 400)}...`,
+                  }}
+              />
+              {
+                  task.description.length > 400 && (
+                      <p className="btn" onClick={() => setReadMore(!readMore)} style={{ cursor: "pointer", color: "#1BC5BD", fontSize: "14px", fontWeight: "600"}}>
+                        {readMore ? projectT("taskDetail.seeLess") : projectT("taskDetail.seeMore")}
+                      </p>
+                  )
+              }
+            </>
         )}
       </InformationItem>
+      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
+      <AttachmentsTask id={ATTACHMENT_ID} files={files} setFiles={setFiles} />
+      {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
+      <TodoList open={isAddTodo} />
+      <Dependencies open={isAddDepen} />
     </Stack>
   );
 };

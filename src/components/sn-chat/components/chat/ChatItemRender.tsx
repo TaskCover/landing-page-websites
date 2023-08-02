@@ -2,15 +2,16 @@ import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
 import { Typography } from "@mui/material";
 import { IChatItemInfo } from "store/chat/type";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface ChatItemRenderProps {
   sessionId: string;
   chatInfo: IChatItemInfo;
 }
 const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
-  const { lastMessage, name, avatar, t } = chatInfo;
+  const { lastMessage, name, avatar, t, unreadCount } = chatInfo || {};
   const [avatarClone, setAvatarClone] = useState<string | undefined>(avatar);
+  const isUnReadMessage = useMemo(() => unreadCount > 0, [unreadCount]);
   const isDirectMessage = useMemo(() => t === "d", [t]);
   const isMessageNotConnect = useMemo(() => lastMessage == null, [lastMessage]);
   const isCurrentAcc = useMemo(
@@ -22,43 +23,96 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
     if (sendAttachment) {
       return isCurrentAcc ? "You sent a file." : "Sent a file.";
     } else {
-      return isCurrentAcc ? `You: ${lastMessage?.msg}` : lastMessage?.msg;
+      return isCurrentAcc
+        ? `<p>You: ${lastMessage?.msg}</p>`
+        : lastMessage?.msg;
     }
   }, [isCurrentAcc, lastMessage]);
+
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (lastMessageContent && lastMessageRef.current) {
+      lastMessageRef.current.innerHTML = !isMessageNotConnect
+        ? lastMessageContent
+        : "";
+    }
+  }, [isMessageNotConnect, lastMessageContent]);
 
   const switchChat = useMemo(() => {
     return (
       <>
-        <Typography variant="inherit" fontWeight="bold">
+        <Typography
+          variant="inherit"
+          fontWeight={isUnReadMessage ? 700 : 600}
+          fontSize="14px"
+          lineHeight="18px"
+          color="black"
+        >
           {name}
         </Typography>
         <Typography
+          ref={lastMessageRef}
           variant="caption"
           color="#999999"
           sx={{
-            display: "-webkit-box",
-            WebkitLineClamp: "1",
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
-          <Box
-            sx={{
+            display: "flex",
+            "& *": {
+              margin: 0,
+              padding: 0,
+              fontSize: "14px",
+              lineHeight: "22px",
+              fontWeight: "normal",
+              ...(isUnReadMessage && {
+                fontWeight: 700,
+                color: "black",
+              }),
+            },
+            "& p": {
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              ...(isCurrentAcc && {
+                "&:nth-of-type(1)": {
+                  overflowWrap: "unset",
+                  overflow: "initial",
+                  marginRight: "0.3rem",
+                },
+              }),
+            },
+            "& ol": {
+              marginLeft: "1rem",
               display: "flex",
-              alignItems: "center",
-              gap: "0.2rem",
-            }}
-            dangerouslySetInnerHTML={{
-              __html: !isMessageNotConnect ? lastMessageContent : "",
-            }}
-          />
-        </Typography>
+              gap: "1rem",
+            },
+            "& pre": {
+              display: "-webkit-box",
+              WebkitLineClamp: "2",
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            },
+          }}
+        />
       </>
     );
-  }, [isMessageNotConnect, lastMessageContent, name]);
+  }, [isCurrentAcc, isUnReadMessage, name]);
 
   return (
     <>
+      <Box
+        position="absolute"
+        display={isUnReadMessage ? "block" : "none"}
+        sx={{
+          position: "absolute",
+          left: "5px",
+          top: "50%",
+          width: "8px",
+          height: "8px",
+          backgroundColor: "#3699FF",
+          borderRadius: "50%",
+          transform: "translateY(-50%)",
+        }}
+      />
       <Box
         position="relative"
         sx={{
@@ -95,6 +149,8 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
         sx={{
           display: "flex",
           flexDirection: "column",
+          overflow: "hidden",
+          gap: ".3rem",
         }}
       >
         {switchChat}

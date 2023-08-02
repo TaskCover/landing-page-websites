@@ -90,6 +90,8 @@ export const ProjectLang: ProjectDictionary = {
       },
     },
     addNewTask: "Add new task",
+    addNewSubTask: "New subtask",
+    addNewSubTaskPlaceholder: "Add New Subtask",
     createNewTaskList: "Create new list",
     newMove: "Move to",
     taskList: "Task list",
@@ -143,7 +145,7 @@ export const ProjectLang: ProjectDictionary = {
     addSubTasks: "Add sub tasks",
     addToDos: "Add to-dos",
     attachments: "Attachments",
-    clickToUploadFile: "Click to upload files",
+    clickToUploadFile: "Click or drag & drop to upload files",
     subTasks: "Sub tasks",
     setDueDate: "Set due date",
     convertToTask: "Convert to task",
@@ -158,6 +160,8 @@ export const ProjectLang: ProjectDictionary = {
     addDependencyTask: "Add dependency task",
     manual: "Manual",
     commentList: "Comments",
+    seeMore: "See more",
+    seeLess: "See less",
     form: {
       title: {
         newTask: "Move to task",

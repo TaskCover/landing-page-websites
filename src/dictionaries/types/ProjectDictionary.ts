@@ -86,6 +86,8 @@ export type ProjectDictionary = {
       };
     };
     addNewTask: string;
+    addNewSubTask: string;
+    addNewSubTaskPlaceholder: string;
     createNewTaskList: string;
     newMove: string;
     taskList: string;
@@ -153,6 +155,8 @@ export type ProjectDictionary = {
     addDependencyTask: string;
     manual: string;
     commentList: string;
+    seeMore: string;
+    seeLess: string;
     form: {
       title: {
         newTask: string;

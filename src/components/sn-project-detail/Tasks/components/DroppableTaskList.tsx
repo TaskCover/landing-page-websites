@@ -39,7 +39,7 @@ import { Selected, TaskFormData, genName } from "./helpers";
 import { useParams } from "next/navigation";
 import { Task } from "store/project/reducer";
 import { useSnackbar } from "store/app/selectors";
-import { getMessageErrorByAPI } from "utils/index";
+import { checkIsMobile, getMessageErrorByAPI } from "utils/index";
 import ConfirmDialog from "components/ConfirmDialog";
 import DialogLayout from "components/DialogLayout";
 import Loading from "components/Loading";
@@ -79,6 +79,8 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
   const projectT = useTranslations(NS_PROJECT);
   const { onCreateTask: onCreateTaskAction } = useTasksOfProject();
 
+  const isMobile = useMemo(() => checkIsMobile(), []);
+
   const [isShow, , , onToggle] = useToggle(true);
   const [isShowCreate, onShowCreate, onHideCreate] = useToggle();
   const [isPreviewName, onShowPreviewName, onHidePreviewName] = useToggle();
@@ -103,9 +105,10 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                 direction="row"
                 alignItems="center"
                 height={38}
-                pl={{ xs: 1, md: 2 }}
+                pl={{ xs: 0, md: 2 }}
                 width="100%"
-                justifyContent="space-between"
+                // justifyContent="space-between"
+                spacing={3}
                 borderTop={index !== 0 ? { md: "1px solid" } : undefined}
                 borderBottom={{ md: "1px solid" }}
                 borderColor={{ md: "grey.100" }}
@@ -114,8 +117,8 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   direction="row"
                   sx={{
                     "& >.checkbox": {
-                      opacity: checked ? 1 : 0,
-                      userSelect: checked ? undefined : "none",
+                      opacity: isMobile || checked ? 1 : 0,
+                      userSelect: isMobile || checked ? undefined : "none",
                     },
                     "&:hover >.checkbox": {
                       opacity: 1,

@@ -23,21 +23,6 @@ interface ITab {
   value: string;
 }
 
-const timeTabs: ITab[] = [
-  {
-    label: "My time",
-    value: "myTime",
-  },
-  {
-    label: "Company time",
-    value: "companyTime",
-  },
-  {
-    label: "Work log",
-    value: "timeLog",
-  },
-];
-
 const tabStyles = {
   width: "216px",
   fontSize: "16px",
@@ -57,10 +42,19 @@ const TimeTrackingPage: React.FC = () => {
   const [tab, setTab] = React.useState<string>("myTime");
   const timeT = useTranslations(NS_TIME_TRACKING);
 
-  const timeTabLabels = [
-    timeT("header.tab.myTime"),
-    timeT("header.tab.companyTime"),
-    timeT("header.tab.workLog"),
+  const timeTabs: ITab[] = [
+    {
+      label: timeT("header.tab.myTime"),
+      value: "myTime",
+    },
+    {
+      label: timeT("header.tab.companyTime"),
+      value: "companyTime",
+    },
+    {
+      label: timeT("header.tab.workLog"),
+      value: "timeLog",
+    },
   ];
 
   return (
@@ -78,7 +72,7 @@ const TimeTrackingPage: React.FC = () => {
           <Typography
             sx={{ fontWeight: 600, fontSize: "20px", lineHeight: "24px" }}
           >
-            Time tracking
+            {timeT("header.timeTracking")}
           </Typography>
         </Grid>
       </Grid>
@@ -94,7 +88,7 @@ const TimeTrackingPage: React.FC = () => {
               ? "inherit"
               : isDarkMode
               ? "#565656"
-              : "#F7F7FD",
+              : "#FFFFFF",
             // display: "flex",
             height: isSmSmaller ? "110px" : "auto",
             alignItems: "center",
@@ -113,7 +107,7 @@ const TimeTrackingPage: React.FC = () => {
                 "& .MuiTabs-flexContainer": {
                   gap: "16px",
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)'
+                  gridTemplateColumns: isSmSmaller ? "0.9fr 1.2fr 0.9fr" : 'repeat(3, 1fr)',
                 },
                 "& .MuiTab-root": {
                   textTransform: "unset",
@@ -140,56 +134,58 @@ const TimeTrackingPage: React.FC = () => {
               ))}
             </TabList>
           </Grid>
-          <Grid item md={6} sm={12} sx={{ padding: "15px" }}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                gap: 3,
-                //mr: 3,
-              }}
-            >
-              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                <Box
-                  sx={{
-                    width: "8px",
-                    height: "8px",
-                    background: "#3699FF",
-                  }}
-                />
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    lineHeight: "20px",
-                    fontWeight: 600,
-                    color: "#999999",
-                  }}
-                >
-                  {timeT("header.tab.workTime")}
-                </Typography>
+          {tab !== "timeLog" && (
+            <Grid item md={6} sm={12} sx={{ padding: "15px" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: 3,
+                  //mr: 3,
+                }}
+              >
+                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                  <Box
+                    sx={{
+                      width: "8px",
+                      height: "8px",
+                      background: "#3699FF",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontSize: "16px",
+                      lineHeight: "20px",
+                      fontWeight: 600,
+                      color: "#999999",
+                    }}
+                  >
+                    {timeT("header.tab.workTime")}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                  <Box
+                    sx={{
+                      width: "8px",
+                      height: "8px",
+                      background: "#F64E60",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontSize: "16px",
+                      lineHeight: "20px",
+                      fontWeight: 600,
+                      color: "#999999",
+                    }}
+                  >
+                  {timeT("header.tab.breakTime")}
+                  </Typography>
+                </Box>
               </Box>
-              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                <Box
-                  sx={{
-                    width: "8px",
-                    height: "8px",
-                    background: "#F64E60",
-                  }}
-                />
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    lineHeight: "20px",
-                    fontWeight: 600,
-                    color: "#999999",
-                  }}
-                >
-                 {timeT("header.tab.breakTime")}
-                </Typography>
-              </Box>
-            </Box>
-          </Grid>
+            </Grid>
+          )}
         </Grid>
 
         {/* </Stack> */}

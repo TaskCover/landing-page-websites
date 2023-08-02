@@ -90,6 +90,8 @@ export const ProjectLang: ProjectDictionary = {
       },
     },
     addNewTask: "Thêm công việc mới",
+    addNewSubTask: "Thêm công việc con mới",
+    addNewSubTaskPlaceholder: "Thêm công việc con mới",
     createNewTaskList: "Thêm mới danh mục",
     newMove: "Di chuyển tới",
     taskList: "Danh mục công việc",
@@ -143,7 +145,7 @@ export const ProjectLang: ProjectDictionary = {
     addSubTasks: "Thêm công việc con",
     addToDos: "Thêm các điều cần làm",
     attachments: "Tệp đính kèm",
-    clickToUploadFile: "Nhấn để tải lên các tệp",
+    clickToUploadFile: "Nhấn hoặc kéo thả để tải lên các tệp",
     subTasks: "Công việc con",
     setDueDate: "Đặt ngày đến hạn",
     convertToTask: "Chuyển đổi thành công việc",
@@ -158,6 +160,8 @@ export const ProjectLang: ProjectDictionary = {
     addDependencyTask: "Thêm công việc phụ thuộc",
     manual: "Ban đầu",
     commentList: "Danh sách bình luận",
+    seeMore: "Hiện thêm",
+    seeLess: "Ẩn bớt",
     form: {
       title: {
         newTask: "Công việc chuyển đến",

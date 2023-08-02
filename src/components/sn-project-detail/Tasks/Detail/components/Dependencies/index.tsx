@@ -40,7 +40,7 @@ const Dependencies = ({ open }: { open: boolean }) => {
           </Text>
         }
       >
-        <Stack mt={2}>
+        <Stack mt={2} maxWidth="100%" overflow="auto">
           {task?.dependencies?.map((dependency, index) => (
             <SubItem key={index} {...dependency} dependencyId={dependency.id} />
           ))}

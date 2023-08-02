@@ -15,7 +15,9 @@ import {
   RemoveMemberRequest,
   DeleteConversationGroup,
   MessageBodyRequest,
-  RenameGroupRequest
+  RenameGroupRequest,
+  MessageSearchInfoRequest,
+  UnReadMessageRequest,
 } from "./type";
 
 export const getAllConvention = createAsyncThunk(
@@ -81,6 +83,42 @@ export const sendMessages = createAsyncThunk(
   async (paramReq: MessageBodyRequest) => {
     try {
       const response = await client.post("sendDirectMessage", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const searchChatText = createAsyncThunk(
+  "chat/searchChatText",
+  async (paramReq: MessageSearchInfoRequest) => {
+    try {
+      const response = await client.post("searchChatText", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getUnreadMessages = createAsyncThunk(
+  "chat/getUnreadMessages",
+  async (paramReq: UnReadMessageRequest) => {
+    try {
+      const response = await client.post("getUnreadMessages", paramReq, {
         baseURL: CHAT_API_URL,
       });
 

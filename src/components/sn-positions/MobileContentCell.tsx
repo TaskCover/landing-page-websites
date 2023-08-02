@@ -23,25 +23,28 @@ const MobileContentCell = (props: MobileContentCellProps) => {
   const companyT = useTranslations(NS_COMPANY);
 
   return (
-    <BodyCell align="left">
-      <Stack spacing={2} py={1.5}>
-        <InformationItem label={commonT("name")}>{item?.name}</InformationItem>
-        <InformationItem label={commonT("creator")}>
-          {item?.created_by?.id ? (
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Avatar size={32} src={item.created_by?.avatar?.link} />
-              <Text variant="h6">{item.created_by?.fullname}</Text>
-            </Stack>
-          ) : undefined}
-        </InformationItem>
-        <InformationItem label={commonT("creationDate")}>
-          {formatDate(item.created_time, DATE_TIME_FORMAT_SLASH)}
-        </InformationItem>
-        <InformationItem label={companyT("positions.numberOfEmployees")}>
-          {formatNumber()}
-        </InformationItem>
-      </Stack>
-    </BodyCell>
+    <>
+      <BodyCell align="left" sx={{ px: 0.5 }} textProps={{ variant: "h6" }}>
+        {item?.name}
+      </BodyCell>
+      <BodyCell align="left" sx={{ px: 0.5 }}>
+        {item?.created_by?.fullname}
+      </BodyCell>
+      <BodyCell
+        tooltip={formatDate(item.created_time, DATE_TIME_FORMAT_SLASH)}
+        sx={{ px: 0.5 }}
+        textProps={{
+          sx: {
+            wordBreak: "break-all",
+          },
+        }}
+      >
+        {formatDate(item.created_time)}
+      </BodyCell>
+      <BodyCell sx={{ px: 0.5 }}>
+        {formatNumber(item?.total_member_of_position)}
+      </BodyCell>
+    </>
   );
 };
 

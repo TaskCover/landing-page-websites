@@ -14,7 +14,7 @@ import PlayIcon from "icons/PlayIcon";
 import { useMemo, useRef, useState } from "react";
 import { Attachment } from "store/chat/media/typeMedia";
 import { MessageInfo } from "store/chat/type";
-import { formatDate } from "utils/index";
+import { TimeMessage } from "../messages/MessageContent";
 
 const IconFile = {
   [FILE_MAP.DOC]: FileDocIcon,
@@ -25,9 +25,13 @@ const IconFile = {
 
 const AttachmentContent = ({
   message,
+  isCurrentUser,
+  isRead,
   attachmentProps,
 }: {
   message: MessageInfo;
+  isCurrentUser: boolean;
+  isRead: boolean;
   attachmentProps?: BoxProps;
 }) => {
   const { sx, ...props } = attachmentProps || {};
@@ -103,7 +107,7 @@ const AttachmentContent = ({
                     size={112}
                     src={image || undefined}
                     style={{
-                      borderRadius: "10px",
+                      borderRadius: "20px",
                       border: "1px solid #efefef",
                       objectFit: "cover",
                     }}
@@ -116,15 +120,18 @@ const AttachmentContent = ({
                       }))
                     }
                   />
-                  <Typography
-                    variant="caption"
-                    color="#999999"
-                    position="absolute"
-                    bottom=".8rem"
-                    right=".7rem"
-                  >
-                    {formatDate(message.ts, "HH:mm")}
-                  </Typography>
+                  <TimeMessage
+                    time={message.ts}
+                    isRead={isRead}
+                    isCurrentUser={isCurrentUser}
+                    timeMessageProps={{
+                      sx: {
+                        position: "absolute",
+                        bottom: ".8rem",
+                        right: ".7rem",
+                      },
+                    }}
+                  />
                 </Box>
               );
             })}
@@ -156,15 +163,18 @@ const AttachmentContent = ({
                       <source src={url} />
                     </Box>
                   </>
-                  <Typography
-                    variant="caption"
-                    color="#999999"
-                    position="absolute"
-                    bottom=".8rem"
-                    right=".7rem"
-                  >
-                    {formatDate(message.ts, "HH:mm")}
-                  </Typography>
+                  <TimeMessage
+                    time={message.ts}
+                    isRead={isRead}
+                    isCurrentUser={isCurrentUser}
+                    timeMessageProps={{
+                      sx: {
+                        position: "absolute",
+                        bottom: ".8rem",
+                        right: ".7rem",
+                      },
+                    }}
+                  />
                 </Box>
               );
             })}
@@ -172,13 +182,8 @@ const AttachmentContent = ({
             <Box
               display="flex"
               flexDirection="column"
-              sx={{
-                "&& ": {
-                  backgroundColor: "#EBF5FF",
-                  padding: "0.5rem 1rem",
-                  borderRadius: "10px",
-                },
-              }}
+              gap="0.5rem"
+              alignItems="flex-end"
             >
               {files.map((file, index) => {
                 const Icon = styleForFile(file?.title || "");
@@ -189,6 +194,11 @@ const AttachmentContent = ({
                     flexDirection="column"
                     alignItems="flex-end"
                     key={index}
+                    sx={{
+                      backgroundColor: "#EBF5FF",
+                      padding: "0.5rem 1rem",
+                      borderRadius: "20px",
+                    }}
                   >
                     <Box display="flex" alignItems="center" gap={1}>
                       <SvgIcon
@@ -210,9 +220,11 @@ const AttachmentContent = ({
                         {file?.title}
                       </Link>
                     </Box>
-                    <Typography variant="caption" color="#999999">
-                      {formatDate(message.ts, "HH:mm")}
-                    </Typography>
+                    <TimeMessage
+                      time={message.ts}
+                      isRead={isRead}
+                      isCurrentUser={isCurrentUser}
+                    />
                   </Box>
                 );
               })}

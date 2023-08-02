@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Link from "components/Link";
 import { DataStatus } from "constant/enums";
 import FileBasicIcon from "icons/FileBasicIcon";
@@ -28,7 +29,7 @@ const FileContent = () => {
     >
       {mediaListStatus === DataStatus.LOADING ||
       mediaListStatus === DataStatus.FAILED ? (
-        <>Loading...</>
+        <Typography textAlign="center">Loading...</Typography>
       ) : (
         fileClone?.map((item, index) => {
           return (

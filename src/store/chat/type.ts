@@ -16,6 +16,7 @@ export interface IChatInfo {
   default: boolean;
   sysMes: boolean;
   avatar: string;
+  unreadCount: number;
 }
 
 export interface IChatGroup {
@@ -152,7 +153,6 @@ export interface ChatState {
 
   currStep: STEP;
   prevStep: STEP;
-  backFallStep: STEP;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataTransfer?: any;
   messageInfo: MessageInfo[];
@@ -164,6 +164,9 @@ export interface ChatState {
   //chat links
   chatLinks: ChatLinkType[];
   chatLinksStatus: DataStatus;
+  //ListSearchConversation
+  listSearchMessage: MessageSearchInfo[];
+  statusListSearchMessage: DataStatus;
   //media list
   mediaList: MediaType[];
   mediaListStatus: DataStatus;
@@ -172,6 +175,10 @@ export interface ChatState {
     filePreview?: File | File[] | null;
     status: DataStatus;
   };
+  stateSearchMessage: MessageSearchInfo | null;
+  unReadMessage: UnReadMessageInfo | null;
+  //UnReadMessage
+  statusUnReadMessage: DataStatus;
 
   newGroupData: ChatGroup | {};
   createGroupStatus: DataStatus;
@@ -295,6 +302,35 @@ export interface MessageBodyRequest {
   receiverUsername: string;
   message?: string;
   attachments?: Attachment[];
+}
+
+export interface MessageSearchInfo {
+  roomId: string;
+  messageId: string;
+  matchedText: string;
+  ts: string;
+  userId: string;
+  fullname: string;
+  avatar: string;
+  offset: number;
+}
+
+export interface MessageSearchInfoRequest extends AuthenRequestCommon {
+  roomId: string;
+  text: string;
+  type: RoomType;
+}
+
+export interface UnReadMessageRequest extends AuthenRequestCommon {
+  roomId: string;
+  type: RoomType;
+}
+
+export interface UnReadMessageInfo {
+  roomId: string;
+  unreadCount: number;
+  unreadsFrom: string;
+  success: boolean;
 }
 
 export enum STEP {

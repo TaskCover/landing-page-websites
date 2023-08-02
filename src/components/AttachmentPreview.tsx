@@ -51,94 +51,106 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
   );
 
   return (
-    <Tooltip title={type && !isPreview ? commonT("clickToViewLarge") : ""}>
-      <Stack direction="row" alignItems="center">
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          width={size}
-          height={size}
-          borderRadius={1}
-          overflow="hidden"
-          position="relative"
-          p={onRemove ? 1.25 : 0}
-          sx={{
-            cursor: "pointer",
-          }}
-        >
-          {!!onRemove && (
-            <IconButton
-              noPadding
-              onClick={onRemove}
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                bgcolor: "background.paper",
-                "&:hover": {
-                  bgcolor: "background.paper",
-                },
-                zIndex: 20,
-              }}
-            >
-              <CircleCloseIcon sx={{ color: "grey.400", fontSize: 20 }} />
-            </IconButton>
-          )}
-
-          {IMAGES_EXTENSION.includes(extension) ? (
-            <Box
-              component="img"
-              {...previewProps}
-              alt={name ?? "Image"}
-              ref={ref}
-              onClick={onPreviewTrue}
-              {...rest}
-            />
-          ) : VIDEOS_EXTENSION.includes(extension) ? (
-            <>
-              <PlayIcon
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  color: "common.white",
-                  fontSize: 24,
-                  zIndex: 1,
-                }}
-                onClick={onPreviewTrue}
-              />
-              <Box component="video" ref={ref} {...previewProps}>
-                <source {...rest} type={type} />
-              </Box>
-            </>
-          ) : (
-            <Link
-              href={props.src}
-              download
-              target="_blank"
-              underline="none"
-              color="inherit"
-            >
-              <FileIcon sx={{ fontSize: 50 }} />
-            </Link>
-          )}
-        </Stack>
-        {!!showName && (
-          <Text variant="caption" maxWidth={69} noWrap>
-            {name}
-          </Text>
-        )}
-        {Boolean(isPreview && props?.src && type) && (
-          <Preview
-            open={isPreview}
-            onClose={onPreviewFalse}
-            type={type as string}
-            src={props.src as string}
+    // <Tooltip title={type && !isPreview ? commonT("clickToViewLarge") : ""}>
+    <Stack direction="row" alignItems="center">
+      <Stack
+        alignItems="center"
+        justifyContent="center"
+        width={size}
+        height={size}
+        borderRadius={1}
+        overflow="hidden"
+        position="relative"
+        p={onRemove ? 1.25 : 0}
+        sx={{
+          cursor: "pointer",
+        }}
+      >
+        {VIDEOS_EXTENSION.includes(extension) && (
+          <Box
+            bgcolor="rgba(0, 0, 0, .2)"
+            width={size}
+            height={size}
+            position="absolute"
+            top={onRemove ? 10 : 0}
+            left={onRemove ? 10 : 0}
+            borderRadius={1}
+            zIndex={1}
           />
         )}
+        {!!onRemove && (
+          <IconButton
+            noPadding
+            onClick={onRemove}
+            sx={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              bgcolor: "background.paper",
+              "&:hover": {
+                bgcolor: "background.paper",
+              },
+              zIndex: 20,
+            }}
+          >
+            <CircleCloseIcon sx={{ color: "grey.400", fontSize: 20 }} />
+          </IconButton>
+        )}
+
+        {IMAGES_EXTENSION.includes(extension) ? (
+          <Box
+            component="img"
+            {...previewProps}
+            alt={name ?? "Image"}
+            ref={ref}
+            onClick={onPreviewTrue}
+            {...rest}
+          />
+        ) : VIDEOS_EXTENSION.includes(extension) ? (
+          <>
+            <PlayIcon
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                color: "common.white",
+                fontSize: 24,
+                zIndex: 1,
+              }}
+              onClick={onPreviewTrue}
+            />
+            <Box component="video" ref={ref} {...previewProps}>
+              <source {...rest} type={type} />
+            </Box>
+          </>
+        ) : (
+          <Link
+            href={props.src}
+            download
+            target="_blank"
+            underline="none"
+            color="inherit"
+          >
+            <FileIcon sx={{ fontSize: 50 }} />
+          </Link>
+        )}
       </Stack>
-    </Tooltip>
+      {!!showName && (
+        <Text variant="caption" maxWidth={69} noWrap>
+          {name}
+        </Text>
+      )}
+      {Boolean(isPreview && props?.src && type) && (
+        <Preview
+          open={isPreview}
+          onClose={onPreviewFalse}
+          type={type as string}
+          src={props.src as string}
+        />
+      )}
+    </Stack>
+    // </Tooltip>
   );
 };
 

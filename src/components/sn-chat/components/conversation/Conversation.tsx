@@ -1,14 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { useAuth } from "store/app/selectors";
 import { useWSChat } from "store/chat/helpers";
 import ChatInput from "../chat/ChatInput";
-import { STEP } from "store/chat/type";
 import Messages from "../messages/Messages";
 
 const Conversation = () => {
   const {
-    backFallStep,
     roomId,
     conversationInfo,
     convention,
@@ -16,6 +14,9 @@ const Conversation = () => {
     messagePaging: { pageIndex, pageSize },
     stateSendMessage,
     dataTransfer,
+    stateSearchMessage,
+    unReadMessage,
+    onGetUnReadMessages,
     onGetLastMessages,
     onUploadAndSendFile,
   } = useChat();
@@ -25,11 +26,34 @@ const Conversation = () => {
 
   const account = convention?.find((item) => item._id === roomId);
 
-  useEffect(() => {    
-    if (backFallStep !== STEP.VIEW_DETAIL_USER) {
-      onGetLastMessages({ roomId: dataTransfer?._id ?? roomId, type: dataTransfer?.t ?? 'd', offset: 0, count: 10 });
+  const getLastMessage = useCallback(
+    async (page?: number, size?: number) => {
+      await onGetLastMessages({
+        roomId: dataTransfer?._id ?? roomId,
+        type: dataTransfer?.t ?? "d",
+        offset: page,
+        count: size,
+      });
+    },
+    [dataTransfer?._id, dataTransfer?.t, onGetLastMessages, roomId],
+  );
+
+  const getUnReadMessage = useCallback(async () => {
+    await onGetUnReadMessages({
+      type: dataTransfer?.t ?? "d",
+    });
+  }, [dataTransfer?.t, onGetUnReadMessages]);
+
+  useEffect(() => {
+    const countNew = stateSearchMessage?.offset
+      ? stateSearchMessage?.offset + 10
+      : 10;
+    getLastMessage(0, countNew);
+    if (inputRef.current) {
+      inputRef.current.pageRef.current = countNew;
+      inputRef.current.scrollMessage();
     }
-  }, [roomId, onGetLastMessages, backFallStep, dataTransfer?._id, dataTransfer?.t]);
+  }, [roomId, dataTransfer, getLastMessage, stateSearchMessage]);
 
   useEffect(() => {
     if (stateSendMessage.status) {
@@ -37,13 +61,17 @@ const Conversation = () => {
     }
   }, [stateSendMessage.status]);
 
+  useEffect(() => {
+    getUnReadMessage();
+  }, [getUnReadMessage]);
+
   type MessageHandle = React.ElementRef<typeof Messages>;
   const inputRef = useRef<MessageHandle>(null);
 
   const handleSendMessage = useCallback(
     async (message: string) => {
-      inputRef?.current?.scrollBottom();
       sendMessage({ message });
+      inputRef?.current?.scrollBottom();
       if (files.length > 0) {
         await onUploadAndSendFile({
           endpoint: "files/upload-link",
@@ -54,24 +82,19 @@ const Conversation = () => {
     [files, onUploadAndSendFile, sendMessage],
   );
 
-  const fetchLastMessage = useCallback(
-    (page: number) => {
-      onGetLastMessages({ roomId: dataTransfer?._id ?? roomId, type: dataTransfer?.t ?? 'd', offset: page, count: 10 });
-    },
-    [dataTransfer?._id, dataTransfer?.t, onGetLastMessages, roomId],
-  );
-
   return (
     <>
       <Messages
+        pageIndex={pageIndex}
+        pageSize={pageSize}
         sessionId={user?.["username"]}
         avatarPartner={conversationInfo?.avatar ?? account?.avatar ?? undefined}
-        pageNumber={pageIndex}
-        pageSize={pageSize}
         initialMessage={messageInfo}
         stateMessage={stateSendMessage}
+        focusMessage={stateSearchMessage}
+        unReadMessage={unReadMessage}
         onRefetch={(page) => {
-          fetchLastMessage(page);
+          getLastMessage(page, 10);
         }}
         ref={inputRef}
       />

@@ -10,6 +10,8 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
       breakTime: "Thời gian nghỉ",
       weekly_total: "Tổng số hàng tuần",
     },
+    timeTracking: "Theo dõi thời gian",
+    noData: "Không có dữ liệu",
   },
   myTime: {
     addButton: "Thêm",
@@ -39,6 +41,7 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
   company_time: {
     this_week: "Tuần này",
     timesheet: "Thời gian biểu",
+    searchButton: "Tìm kiếm nhân viên",
     timesheet_tab: {
       weekly_summary: "Tóm tắt hàng tuần",
       total: "Tổng",
@@ -55,4 +58,30 @@ export const TimeTrackingLang: TimeTrackingDictionary = {
       note: "Ghi chú",
     },
   },
+  timeLog: {
+    createTL: "Tạo danh sách nhiệm vụ",
+    moveT: "Chuyển nhiệm vụ",
+    upITL: "Cập nhật danh sách nhiệm vụ không hoạt động",
+    upTL: "Cập nhật danh sách nhiệm vụ",
+    upT: "Cập nhật nhiệm vụ",
+    upST: "Cập nhật nhiệm vụ con",
+    upIT: "Cập nhật nhiệm vụ không hoạt động",
+    upIST: "Cập nhật nhiệm vụ con không hoạt động",
+    creT: "Tạo nhiệm vụ",
+    creST: "Tạo nhiệm vụ con",
+  },
+  modal: {
+    Project: "Dự án ",
+    Position: "Vị trí",
+    Date: "Ngày",
+    timeDuration: "Khoảng thời gian (giờ)",
+    Type: "Loại",
+    start_time: "Thời gian bắt đầu",
+    Note: "Ghi chú",
+    Cancel: "Thoát",
+    Confirm: "Xác nhận",
+    Delete: "Xóa",
+    edit_time: "Điều chỉnh thời gian",
+    add_time: "Thêm thời gian",
+   }
 };

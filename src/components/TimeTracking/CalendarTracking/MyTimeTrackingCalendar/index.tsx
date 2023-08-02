@@ -553,7 +553,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                   dayjs().format("YYYY-MM-DD")
                 }
               >
-                This week
+                {timeT("company_time.this_week")}
               </Button>
               <Button
                 sx={{
@@ -1344,9 +1344,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
                             fontWeight: 400,
                             p: 1,
                             widtH: 1,
+                            textAlign: "center",
                           }}
                         >
-                          No data were found
+                          {timeT("header.noData")}
                         </StyledTableCell>
                       </StyledTableRow>
                     )}

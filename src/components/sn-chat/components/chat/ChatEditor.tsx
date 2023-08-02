@@ -17,6 +17,41 @@ import "quill/dist/quill.snow.css";
 import ImageImportIcon from "icons/ImageImportIcon";
 import UploadFileIcon from "icons/UploadFileIcon";
 import ChatEmoji, { Emoji } from "./ChatEmoji";
+import { Quill } from "react-quill";
+import hljs from "highlight.js";
+// import "highlight.js/styles/github.css";
+
+// hljs.registerLanguage('javascript', javascript);
+
+hljs.configure({
+  // optionally configure hljs
+  languages: [
+    "javascript",
+    "php",
+    "go",
+    "typescript",
+    "css",
+    "xml",
+    "yaml",
+    "swift",
+    "sql",
+    "shell",
+    "scss",
+    "scala",
+    "rust",
+    "ruby",
+    "python",
+    "perl",
+    "nginx",
+    "markdown",
+    "less",
+    "kotlin",
+    "cpp",
+    "csharp",
+    "c",
+    "bash",
+  ],
+});
 
 export type EditorProps = {
   hasAttachment?: boolean;
@@ -24,7 +59,7 @@ export type EditorProps = {
   files?: File[];
   noCss?: boolean;
   isLoading: boolean;
-  initalValue: string;
+  initalValue: string | undefined;
   onChangeFiles?: (files: File[]) => void;
   onEnterText?: (text: string) => void;
 };
@@ -46,7 +81,6 @@ const ChatEditor = (props: EditorProps) => {
     noCss,
     initalValue,
     isLoading,
-    ...rest
   } = props;
 
   const [value, setValue] = useState(initalValue);
@@ -109,30 +143,55 @@ const ChatEditor = (props: EditorProps) => {
     [hasAttachment, toolbarAttachment],
   );
 
-  const { quill, quillRef } = useQuill({
+  const { quill, quillRef, editor } = useQuill({
     strict: true,
     modules: {
+      syntax: {
+        highlight: (text) => hljs.highlightAuto(text).value,
+      },
       toolbar,
       keyboard: {
         bindings: {
           shift_enter: {
             key: 13,
+            shiftKey: true,
             handler: function (range, context) {
-              quill?.insertText(range.index, "\n");
+              // quill?.insertText(range.index - 1, "\n");
+              return true;
             },
           },
         },
       },
     },
     placeholder: "Type Message...",
+    formats: [
+      "bold",
+      "italic",
+      "underline",
+      "strike",
+      "link",
+      "code-block",
+      "list",
+      "ordered",
+      "bullet",
+    ],
   });
 
   const quillRefCurr = quillRef.current;
 
   const handleKeyDown = useCallback(
     (event) => {
+      const listText = quill?.getContents().ops || [];
+      const lastText = listText[listText.length - 1];
+      const lastUpdate = {
+        ...lastText,
+        insert: lastText.insert.trim() + "\n",
+      };
       if (event.key === "Enter" && !event.shiftKey) {
-        onEnterText?.(quill?.root.innerHTML || "");
+        listText.splice(listText.length - 1, 1, lastUpdate);
+        quill?.setContents({ ...quill?.getContents(), ops: listText });
+        const text = quill?.getText().trim() ? quill.root.innerHTML : "";
+        onEnterText?.(text);
         quill?.setText("");
         setValue("");
       }
@@ -141,7 +200,7 @@ const ChatEditor = (props: EditorProps) => {
   );
 
   const handleChaneEmoji = (emoji: Emoji) => {
-    const newText = `${value}${emoji.native}`;
+    const newText = `${emoji.native}`;
     quill?.insertText(quill?.getLength() - 1, newText);
     quill?.root.focus();
   };
@@ -181,6 +240,7 @@ const ChatEditor = (props: EditorProps) => {
           },
           "& .ql-tooltip": {
             right: "0",
+            zIndex: 100,
             left: "0!important",
             width: "fit-content",
           },
@@ -190,7 +250,7 @@ const ChatEditor = (props: EditorProps) => {
       {isLoading ? "loading..." : null}
       <Box position="relative">
         <Box
-          component={"span"}
+          component={"div"}
           ref={quillRef}
           sx={{
             color: "black",

@@ -43,7 +43,7 @@ const TabList = (props: TabListProps) => {
         borderTop="1px solid"
         borderBottom="1px solid"
         borderColor="grey.100"
-        px={3}
+        px={{ xs: 2, md: 3 }}
       >
         <Stack direction="row" alignItems="center">
           {TABS.map((tab) => (
@@ -55,7 +55,12 @@ const TabList = (props: TabListProps) => {
             />
           ))}
         </Stack>
-        <Stack direction="row" alignItems="center" spacing={2}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={2}
+          display={{ xs: "none", md: "flex" }}
+        >
           <AssignTask />
           <StatusTask />
           <EditTask />

@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "store/app/selectors";
 import { useChat } from "./selectors";
 import { MessageBodyRequest } from "./type";
@@ -67,6 +66,7 @@ export const useWSChat = () => {
 
   useEffect(() => {
     connectSocket();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -88,6 +88,7 @@ export const useWSChat = () => {
       openSocketFlag = false;
       ws?.close();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, ws, dataTransfer?._id]);
 
   const appendMessage = useCallback(
@@ -96,32 +97,35 @@ export const useWSChat = () => {
       onSetMessage(newMessage);
       onSetLastMessage({ roomId, lastMessage: newMessage });
     },
-    [onSetMessage, onSetLastMessage],
+    [onSetMessage, onSetLastMessage, roomId],
   );
 
-  const sendMessage = (
-    message: Omit<
-      MessageBodyRequest,
-      "sender_userId" | "sender_authToken" | "receiverUsername"
-    >,
-  ) => {
-    if (message.message && message.message.trim()?.length > 0) {
-      ws?.send(
-        JSON.stringify({
-          msg: "method",
-          id: "3",
-          method: "sendMessage",
-          params: [
-            {
-              _id: Math.random().toString(36).substr(2, 10),
-              rid: roomId,
-              msg: message.message,
-            },
-          ],
-        }),
-      );
-    }
-  };
+  const sendMessage = useCallback(
+    (
+      message: Omit<
+        MessageBodyRequest,
+        "sender_userId" | "sender_authToken" | "receiverUsername"
+      >,
+    ) => {
+      if (message.message && message.message.trim()?.length > 0) {
+        ws?.send(
+          JSON.stringify({
+            msg: "method",
+            id: "3",
+            method: "sendMessage",
+            params: [
+              {
+                _id: Math.random().toString(36).substr(2, 10),
+                rid: roomId,
+                msg: message.message,
+              },
+            ],
+          }),
+        );
+      }
+    },
+    [roomId, ws],
+  );
 
   return { sendMessage };
 };
