@@ -91,6 +91,7 @@ export const ProjectLang: ProjectDictionary = {
     },
     addNewTask: "Add new task",
     addNewSubTask: "New subtask",
+    addNewSubTaskPlaceholder: "Add New Subtask",
     createNewTaskList: "Create new list",
     newMove: "Move to",
     taskList: "Task list",

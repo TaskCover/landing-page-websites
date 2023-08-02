@@ -16,6 +16,7 @@ import {
   CircularProgress,
   Stack,
   StackProps,
+  TextField
 } from "@mui/material";
 import Avatar from "components/Avatar";
 import {
@@ -106,6 +107,9 @@ const ItemList = () => {
     taskListId?: string;
   }>({});
 
+  const [taskName, setTaskName] = useState<string>("");
+  const [errorTaskName, setErrorTaskName] = useState<string>("");
+
   const isShow = useMemo(
     () => Boolean(dataIds?.taskId && dataIds?.taskListId),
     [dataIds?.taskId, dataIds?.taskListId],
@@ -160,6 +164,23 @@ const ItemList = () => {
       );
     };
   };
+
+  const onCreateSubTaskQuick = async (data: TaskFormData, taskListId, taskId) => {
+    try {
+      //TODO: CREATE SUB TASK
+      if (!taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      return await onCreateTaskAction(
+          data,
+          taskListId,
+          taskId,
+      );
+    } catch (error) {
+      throw error;
+    }
+  };
+
 
   const onCreateTask = async (data: TaskFormData) => {
     try {
@@ -562,6 +583,42 @@ const ItemList = () => {
     };
   };
 
+  const changeNameTask = (event) => {
+    setTaskName(event.target.value)
+    setErrorTaskName("")
+  }
+
+  const label = useMemo(() => {
+    return commonT("createNew");
+  }, [commonT]);
+
+  const onKeyDownTaskName = async (event: React.KeyboardEvent<HTMLDivElement>, taskListId, taskId) => {
+    if (event.key !== "Enter") return;
+    const nameTrimmed = taskName?.trim();
+    if (nameTrimmed) {
+      const newItem = await onCreateSubTaskQuick({
+        task_list: "",
+        name: nameTrimmed,
+        description: "",
+        end_date: "",
+        start_date: ""
+      }, taskListId, taskId);
+      if (newItem) {
+        setTaskName("")
+        onAddSnackbar(
+            projectT("detailTasks.notification.taskSuccess", {label}),
+            "success",
+        );
+      }
+    } else {
+      setErrorTaskName(
+          commonT("form.error.required", {
+            name: projectT("detailTasks.form.title.name"),
+          }),
+      );
+    }
+  };
+
   useEventListener("scroll", onScroll, undefined, SCROLL_ID);
 
   useEffect(() => {
@@ -829,16 +886,42 @@ const ItemList = () => {
                                 </div>
                               )}
                             </Droppable>
-                            <Button
-                              onClick={onSetDataIds(taskListItem.id, task.id)}
-                              startIcon={<PlusIcon />}
-                              variant="text"
-                              size="extraSmall"
-                              color="secondary"
-                              sx={{ mr: 4 }}
-                            >
-                              {projectT("detailTasks.addNewSubTask")}
-                            </Button>
+                            <Stack width="100%" direction="row" alignItems="center" spacing={1}>
+                              <PlusIcon />
+                              <TextField
+                                  label={projectT("detailTasks.addNewSubTaskPlaceholder")}
+                                  value={taskName}
+                                  onKeyDown={(e) => onKeyDownTaskName(e, taskListItem.id, task.id)}
+                                  fullWidth
+                                  variant="filled"
+                                  size="small"
+                                  onChange={changeNameTask}
+                                  sx={{
+                                    "& >div": {
+                                      bgcolor: "transparent!important",
+                                      "&:after": {
+                                        borderBottomColor: "green !important"
+                                      },
+                                      "&:before": {
+                                        borderBottomColor: "green !important"
+                                      },
+                                    },
+                                    "& input": {
+                                      fontSize: 15,
+                                    },
+                                    width: '70% !important',
+                                    "& label.Mui-focused": {
+                                      color: "green"
+                                    },
+                                  }}
+                              />
+                            </Stack>
+
+                            {!!errorTaskName && (
+                                <Text variant="caption" color="error">
+                                  {errorTaskName}
+                                </Text>
+                            )}
                           </>
                         )}
                       </Stack>
