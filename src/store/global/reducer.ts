@@ -1,10 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { DataStatus } from "constant/enums";
-import { getPositionOptions, getProjectTypeOptions } from "./actions";
+import { getPositionOptions, getProjectTypeOptions, getCurrencyOptions } from "./actions";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { ItemListResponse, Option, Paging } from "constant/types";
 import { Position, ProjectType } from "store/company/reducer";
 import { removeDuplicateItem } from "utils/index";
+import { Currency } from "store/project/reducer";
 
 export interface GlobalState {
   positionOptions: Option[];
@@ -16,6 +17,11 @@ export interface GlobalState {
   projectTypeOptionsStatus: DataStatus;
   projectTypeOptionsPaging: Paging;
   projectTypeOptionsError?: string;
+
+  currencyOptions: Option[];
+  currencyOptionsStatus: DataStatus;
+  currencyOptionsPaging: Paging;
+  currencyOptionsError?: string;
 }
 
 const initialState: GlobalState = {
@@ -26,6 +32,10 @@ const initialState: GlobalState = {
   projectTypeOptions: [],
   projectTypeOptionsStatus: DataStatus.IDLE,
   projectTypeOptionsPaging: DEFAULT_PAGING,
+
+  currencyOptions: [],
+  currencyOptionsStatus: DataStatus.IDLE,
+  currencyOptionsPaging: DEFAULT_PAGING,
 };
 
 const globalSlice = createSlice({
@@ -107,6 +117,38 @@ const globalSlice = createSlice({
       .addCase(getProjectTypeOptions.rejected, (state, action) => {
         state.projectTypeOptionsStatus = DataStatus.FAILED;
         state.projectTypeOptionsError =
+          action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+
+      // currency
+      .addCase(getCurrencyOptions.pending, (state, action) => {
+        state.currencyOptionsStatus = DataStatus.LOADING;
+        state.currencyOptionsPaging.pageIndex =
+          action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex;
+        state.currencyOptionsPaging.pageSize =
+          action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize;
+
+        if (action.meta.arg.pageIndex === 1) {
+          state.currencyOptions = [];
+        }
+      })
+      .addCase(
+        getCurrencyOptions.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          const items = action.payload;
+          const newOptions = Object.entries(items).map(entry => ({value: entry[0], label: entry[0]}));
+
+          state.currencyOptions = removeDuplicateItem(
+            state.currencyOptions.concat(newOptions),
+            "value",
+          );
+          state.currencyOptionsStatus = DataStatus.SUCCEEDED;
+          state.currencyOptionsError = undefined;
+        },
+      )
+      .addCase(getCurrencyOptions.rejected, (state, action) => {
+        state.currencyOptionsStatus = DataStatus.FAILED;
+        state.currencyOptionsError =
           action.error?.message ?? AN_ERROR_TRY_AGAIN;
       }),
 });
