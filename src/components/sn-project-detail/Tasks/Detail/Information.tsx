@@ -1,8 +1,9 @@
-import { ReactNode, memo, useEffect, useMemo, useState } from "react";
-import { Box, Stack, StackProps } from "@mui/material";
+import {ReactNode, memo, useEffect, useMemo, useState} from "react";
+import {Box, Stack, StackProps, TextField} from "@mui/material";
 import { Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import {
+  AN_ERROR_TRY_AGAIN,
   COLOR_STATUS,
   NS_COMMON,
   NS_PROJECT,
@@ -11,7 +12,7 @@ import {
 import TextStatus from "components/TextStatus";
 import Avatar from "components/Avatar";
 import { formatDate, formatNumber } from "utils/index";
-import { useTaskDetail } from "store/project/selectors";
+import {useTaskDetail} from "store/project/selectors";
 import ArrowTriangleIcon from "icons/ArrowTriangleIcon";
 import AlignLeftIcon from "icons/AlignLeftIcon";
 import LinkSquareIcon from "icons/LinkSquareIcon";
@@ -31,6 +32,7 @@ import { TODO_LIST_ID } from "./components/TodoList";
 import { DEPENDENCIES_ID } from "./components/Dependencies";
 import hljs from "highlight.js";
 import { TASK_TEXT_STATUS } from "../components";
+import {useSnackbar} from "store/app/selectors";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -61,9 +63,19 @@ const Information = () => {
   const [isAddDepen, onShowAddDepen, , , setShowAddDepen] = useToggle(
     !!task?.dependencies?.length,
   );
+  const { onAddSnackbar } = useSnackbar();
 
   const [files, setFiles] = useState<FileList | null>(null);
   const [isDragging, onDraggingTrue, onDraggingFalse] = useToggle(false);
+  const [readMore, setReadMore] = useState(false);
+  const [editName, setEditName] = useState(false);
+  const [taskName, setTaskName] = useState(task?.name);
+  const [error, setError] = useState<string>("");
+  const {
+    taskListId,
+    taskId,
+    onUpdateTask: onUpdateTaskAction,
+  } = useTaskDetail();
 
   const isHideActions = useMemo(
     () =>
@@ -115,6 +127,65 @@ const Information = () => {
     setFiles(files);
   };
 
+  const changeNameTask = (event) => {
+    setTaskName(event.target.value)
+    setError("")
+  }
+
+  const onKeyDownTaskName = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== "Enter") return;
+    const nameTrimmed = taskName?.trim();
+    if (nameTrimmed) {
+      setEditName(false)
+      await submitNameTask(task?.id, {
+        name : nameTrimmed
+      });
+    } else {
+      setEditName(true)
+      setError(
+          commonT("form.error.required", {
+            name: projectT("detailTasks.form.title.name"),
+          }),
+      );
+    }
+  };
+
+  const removeEditable = async () => {
+    const nameTrimmed = taskName?.trim();
+    if (nameTrimmed) {
+      setEditName(false)
+    } else {
+      setEditName(true)
+      setError(
+          commonT("form.error.required", {
+            name: projectT("detailTasks.form.title.name"),
+          }),
+      );
+    }
+  }
+  const label = useMemo(() => {
+    return commonT("update");
+  }, [commonT]);
+
+  const submitNameTask = async (id, data) => {
+    try {
+      if (!taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      const updateTask = await onUpdateTaskAction(data, taskListId, taskId, subTaskId);
+      if (updateTask) {
+        onAddSnackbar(
+            projectT("detailTasks.notification.taskSuccess", { label }),
+            "success",
+        );
+      } else {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   useEffect(() => {
     setShowAddSubTask(!!task?.sub_tasks?.length);
   }, [setShowAddSubTask, task?.sub_tasks?.length]);
@@ -159,13 +230,40 @@ const Information = () => {
         justifyContent="space-between"
         spacing={2}
       >
-        <Text
-          variant="h5"
-          color="text.primary"
-          sx={{ wordBreak: "break-word" }}
-        >
-          {task.name}
-        </Text>
+        {
+          editName ? (
+              <TextField
+                  onBlur={removeEditable}
+                  onMouseLeave={removeEditable}
+                  value={taskName}
+                  onKeyDown={onKeyDownTaskName}
+                  fullWidth
+                  variant="filled"
+                  size="small"
+                  onChange={changeNameTask}
+                  sx={{
+                    "& >div": {
+                      bgcolor: "transparent!important",
+                    },
+                    "& input": {
+                      fontSize: 15,
+                    },
+                    width: '60% !important'
+                  }}
+              />
+          ) : (
+              <Text
+                  variant="h5"
+                  color="text.primary"
+                  sx={{ wordBreak: "break-word" }}
+                  onMouseEnter={() => {
+                    setEditName(true)
+                  }}
+              >
+                {taskName}
+              </Text>
+          )
+        }
 
         <Stack direction="row" alignItems="center" spacing={1}>
           <Text variant="caption" color="grey.400">
@@ -177,6 +275,13 @@ const Information = () => {
           />
         </Stack>
       </Stack>
+
+      {!!error && (
+          <Text variant="caption" color="error">
+            {error}
+          </Text>
+      )}
+
       {!isHideActions && (
         <Stack
           display="grid"
@@ -292,18 +397,27 @@ const Information = () => {
         borderRadius={1}
       >
         {!!task?.description && (
-          <Box
-            sx={{
-              fontSize: 14,
-              "& *": {
-                wordBreak: "break-all",
-              },
-            }}
-            className="html"
-            dangerouslySetInnerHTML={{
-              __html: task.description,
-            }}
-          />
+            <>
+              <Box
+                  sx={{
+                    fontSize: 14,
+                    "& *": {
+                      wordBreak: "break-all",
+                    },
+                  }}
+                  className="html"
+                  dangerouslySetInnerHTML={{
+                    __html: readMore || task.description.length < 400 ? task.description : `${task.description.substring(0, 400)}...`,
+                  }}
+              />
+              {
+                  task.description.length > 400 && (
+                      <p className="btn" onClick={() => setReadMore(!readMore)} style={{ cursor: "pointer", color: "#1BC5BD", fontSize: "14px", fontWeight: "600"}}>
+                        {readMore ? projectT("taskDetail.seeLess") : projectT("taskDetail.seeMore")}
+                      </p>
+                  )
+              }
+            </>
         )}
       </InformationItem>
       <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
