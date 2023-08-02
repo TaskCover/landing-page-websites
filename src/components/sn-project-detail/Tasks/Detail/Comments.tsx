@@ -73,6 +73,7 @@ const CommentItem = (props: CommentItemProps) => {
             key={attachment.link}
             src={attachment.link}
             name={attachment.name}
+            listData={attachments_down}
           />
         ))}
       </Stack>

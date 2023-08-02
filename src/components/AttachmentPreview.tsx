@@ -10,16 +10,23 @@ import Link from "./Link";
 import Preview from "./Preview";
 import useToggle from "hooks/useToggle";
 
+interface AttachmentList {
+    link: string;
+    name: string;
+    object: string;
+}
+
 type AttachmentPreviewProps = {
   name: string;
   onRemove?: () => void;
   src: string;
   size?: number;
   showName?: boolean;
+  listData: AttachmentList[];
 };
 
 const AttachmentPreview = (props: AttachmentPreviewProps) => {
-  const { name, onRemove, size = 64, showName, ...rest } = props;
+  const { name, onRemove, size = 64, showName, listData, ...rest } = props;
   const ref = useRef<HTMLVideoElement | HTMLImageElement | null>(null);
   const commonT = useTranslations(NS_COMMON);
 
@@ -147,6 +154,7 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
           onClose={onPreviewFalse}
           type={type as string}
           src={props.src as string}
+          listData={listData}
         />
       )}
     </Stack>
