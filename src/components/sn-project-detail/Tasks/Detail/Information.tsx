@@ -191,76 +191,6 @@ const Information = () => {
     }
   }
 
-  const changeDescription = (event) => {
-    setDescription(event.target.value)
-  }
-
-  const labelEdit = useMemo(() => {
-    return commonT("update");
-  }, [commonT]);
-
-  const onKeyDownDescription = async (event: React.KeyboardEvent<HTMLDivElement>, description) => {
-    if (event.key !== "Enter") return;
-    const descriptionTrimmed = description?.trim();
-    if (descriptionTrimmed) {
-      await submitNameTask(task?.id, {
-        description : descriptionTrimmed
-      });
-      setEditDescription(false)
-    }
-  };
-  const renderDescription = () => {
-    if (editDescription) {
-      return (
-          <TextField
-              value={description}
-              onKeyDown={(e) => onKeyDownDescription(e, description)}
-              fullWidth
-              variant="filled"
-              size="small"
-              onChange={changeDescription}
-              multiline
-              maxRows={10}
-              sx={{
-                "& >div": {
-                  bgcolor: "transparent!important",
-                },
-                "& input": {
-                  fontSize: 15,
-                },
-                "& >label": {
-                  fontSize: "14px !important",
-                },
-              }}
-          />
-      )
-    } else if (!!task?.description) {
-        return (
-            <>
-              <Box
-                  sx={{
-                    fontSize: 14,
-                    "& *": {
-                      wordBreak: "break-all",
-                    },
-                  }}
-                  className="html"
-                  dangerouslySetInnerHTML={{
-                    __html: readMore || task.description.length < 400 ? task.description : `${task.description.substring(0, 400)}...`,
-                  }}
-              />
-              {
-                  task.description.length > 400 && (
-                      <p className="btn" onClick={() => setReadMore(!readMore)} style={{ cursor: "pointer", color: "#1BC5BD", fontSize: "14px", fontWeight: "600"}}>
-                        {readMore ? projectT("taskDetail.showLess") : projectT("taskDetail.showMore")}
-                      </p>
-                  )
-              }
-            </>
-        )
-    }
-  }
-
   useEffect(() => {
     setShowAddSubTask(!!task?.sub_tasks?.length);
   }, [setShowAddSubTask, task?.sub_tasks?.length]);
@@ -274,8 +204,8 @@ const Information = () => {
   }, [setShowAddDepen, task?.dependencies?.length]);
 
   useEffect(() => {
-    setDescription(task?.description);
-  }, [task?.description]);
+    setTaskName(task?.name);
+  }, [task?.name]);
 
   if (!task) return null;
 
@@ -479,7 +409,10 @@ const Information = () => {
           !!task?.description && (
                 <Stack direction="row" justifyContent="end">
                   <IconButton
-                      onClick={() => setEditDescription(!editDescription)}
+                      onClick={() => {
+                        onShowAddDescription();
+                        setDescription(task?.description)
+                      }}
                       variant="contained"
                       size="small"
                       sx={{
@@ -498,11 +431,31 @@ const Information = () => {
                 </Stack>
             )
         }
-        {
-          renderDescription()
-        }
+        {!!task?.description && (
+            <>
+              <Box
+                  sx={{
+                    fontSize: 14,
+                    "& *": {
+                      wordBreak: "break-all",
+                    },
+                  }}
+                  className="html"
+                  dangerouslySetInnerHTML={{
+                    __html: readMore || task.description.length < 400 ? task.description : `${task.description.substring(0, 400)}...`,
+                  }}
+              />
+              {
+                  task.description.length > 400 && (
+                      <p className="btn" onClick={() => setReadMore(!readMore)} style={{ cursor: "pointer", color: "#1BC5BD", fontSize: "14px", fontWeight: "600"}}>
+                        {readMore ? projectT("taskDetail.seeLess") : projectT("taskDetail.seeMore")}
+                      </p>
+                  )
+              }
+            </>
+        )}
       </InformationItem>
-      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} />
+      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} textEdit={description}/>
       <AttachmentsTask id={ATTACHMENT_ID} files={files} setFiles={setFiles} />
       {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
       <TodoList open={isAddTodo} />
