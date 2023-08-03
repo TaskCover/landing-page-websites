@@ -25,7 +25,17 @@ const ItemProfile = ({
   onClick: () => void;
 }) => {
   return (
-    <Box display="flex" gap="1rem" ml="1rem" mr="1.5rem" alignItems="center">
+    <Box
+      display="flex"
+      gap="1rem"
+      ml="1rem"
+      mr="1.5rem"
+      alignItems="center"
+      sx={{
+        cursor: "pointer",
+      }}
+      onClick={onClick}
+    >
       <Icon
         sx={{
           fill: "none",
@@ -35,7 +45,6 @@ const ItemProfile = ({
       />
       <Typography>{title}</Typography>
       <ArrowDownIcon
-        onClick={onClick}
         sx={{
           ml: "auto",
           transform: "rotate(180deg)",
@@ -96,16 +105,19 @@ const UserLanding = ({
     handleSearchChatText();
   }, [handleSearchChatText]);
 
-  const handleSelectMessage = (message: MessageSearchInfo) => {
-    if (
-      !stateSearchMessage ||
-      stateSearchMessage.messageId !== message.messageId
-    ) {
-      onSetStateSearchMessage(message);
-    }
-    setStateSearch({ isSearch: false, text: "" });
-    onPrevious();
-  };
+  const handleSelectMessage = useCallback(
+    (message: MessageSearchInfo) => {
+      if (
+        !stateSearchMessage ||
+        stateSearchMessage.messageId !== message.messageId
+      ) {
+        onSetStateSearchMessage(message);
+      }
+      setStateSearch({ isSearch: false, text: "" });
+      onPrevious();
+    },
+    [onPrevious, onSetStateSearchMessage, stateSearchMessage],
+  );
 
   const renderContent = useMemo(() => {
     if (stateSearch.isSearch) {
@@ -155,7 +167,13 @@ const UserLanding = ({
         </Box>
       );
     }
-  }, [avatar, onPrevious, onSetMediaStep, stateSearch]);
+  }, [
+    avatar,
+    handleSelectMessage,
+    onSetMediaStep,
+    stateSearch.isSearch,
+    stateSearch.text,
+  ]);
   return (
     <Box
       sx={{

@@ -28,7 +28,6 @@ const Conversation = () => {
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
   const [files, setFiles] = useState<File[]>([]);
-
   const account = convention?.find((item) => item._id === roomId);
 
   const getLastMessage = useCallback(

@@ -12,14 +12,11 @@ export const useWSChat = () => {
   const token = user?.["authToken"];
 
   // Connect websocket
-  const connectMessage = () => {
+  const connectMessage = (ws: WebSocket | null) => {
     if (ws) {
-      console.log("reConnect message");
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.msg === "connected") {
-          console.log("affter recie connected", ws);
-
           ws.send(
             JSON.stringify({
               msg: "method",
@@ -65,7 +62,9 @@ export const useWSChat = () => {
           }),
         );
       };
+      return wsClient;
     }
+    return null;
   };
 
   useEffect(() => {
@@ -75,14 +74,14 @@ export const useWSChat = () => {
 
   useEffect(() => {
     let openSocketFlag = true;
-    connectMessage();
+    connectMessage(ws);
     if (ws) {
       ws.onclose = () => {
         if (openSocketFlag) {
           setTimeout(() => {
             console.log("reConnect");
-            connectSocket();
-            connectMessage();
+            const wsNew = connectSocket();
+            connectMessage(wsNew);
           }, 100);
         }
       };
