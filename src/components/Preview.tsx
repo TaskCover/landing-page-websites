@@ -81,8 +81,8 @@ const Preview = (props: PreviewProps) => {
           {commonT("close")}
         </Text>
       </DialogTitle>
-        <div className="slide-container">
-            <Slide defaultIndex={indexSlide}>
+        <div className="slide-container slider-comment-attachment">
+            <Slide defaultIndex={indexSlide} autoplay={false}>
                 {
                     listData?.map((data, index) => (
                         <div key={index} style={{ display:'flex', alignItems: "center", justifyContent: "center" }}>

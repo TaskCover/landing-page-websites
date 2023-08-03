@@ -115,3 +115,14 @@ a {
   align-items: flex-start;
   flex-direction: column;
 }
+
+.attachment-filter button.active {
+  border: 1px solid #3699FF;
+  background: #E1F0FF;
+}
+
+.slider-comment-attachment .react-slideshow-wrapper .images-wrap > div {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
