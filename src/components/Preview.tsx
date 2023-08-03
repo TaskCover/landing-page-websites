@@ -25,12 +25,12 @@ interface Attachment {
 type PreviewProps = {
   type: string;
   src: string;
-  listData: Attachment[];
+  listData?: Attachment[];
 } & Omit<DialogProps, "children">;
 
 const Preview = (props: PreviewProps) => {
   const { type, src, listData, ...rest } = props;
-  const indexSlide = listData.findIndex(el => el.link == src);
+  const indexSlide = listData?.findIndex(el => el.link == src);
   const commonT = useTranslations(NS_COMMON);
 
   const onClose = () => {
@@ -84,7 +84,7 @@ const Preview = (props: PreviewProps) => {
         <div className="slide-container">
             <Slide defaultIndex={indexSlide}>
                 {
-                    listData.map((data, index) => (
+                    listData?.map((data, index) => (
                         <div key={index} style={{ display:'flex', alignItems: "center", justifyContent: "center" }}>
                             {
                                 getExtension(data?.name)?.startsWith("video") ? (
