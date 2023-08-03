@@ -26,11 +26,12 @@ type PreviewProps = {
   type: string;
   src: string;
   listData?: Attachment[];
+  listAttachmentsDown?: Attachment[];
 } & Omit<DialogProps, "children">;
 
 const Preview = (props: PreviewProps) => {
-  const { type, src, listData, ...rest } = props;
-  const indexSlide = listData?.findIndex(el => el.link == src);
+  const { type, src, listData, listAttachmentsDown, ...rest } = props;
+  const indexSlide = listAttachmentsDown?.findIndex(el => el.link == src);
   const commonT = useTranslations(NS_COMMON);
 
   const onClose = () => {
@@ -82,9 +83,9 @@ const Preview = (props: PreviewProps) => {
         </Text>
       </DialogTitle>
         <div className="slide-container slider-comment-attachment">
-            <Slide defaultIndex={indexSlide} autoplay={false}>
+            <Slide defaultIndex={indexSlide} autoplay={false} duration={1000} transitionDuration={500}>
                 {
-                    listData?.map((data, index) => (
+                    listAttachmentsDown?.map((data, index) => (
                         <div key={index} style={{ display:'flex', alignItems: "center", justifyContent: "center" }}>
                             {
                                 getExtension(data?.name)?.startsWith("video") ? (

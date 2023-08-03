@@ -23,10 +23,11 @@ type AttachmentPreviewProps = {
   size?: number;
   showName?: boolean;
   listData?: AttachmentList[];
+  listAttachmentsDown?: [];
 };
 
 const AttachmentPreview = (props: AttachmentPreviewProps) => {
-  const { name, onRemove, size = 64, showName, listData, ...rest } = props;
+  const { name, onRemove, size = 64, showName, listData, listAttachmentsDown, ...rest } = props;
   const ref = useRef<HTMLVideoElement | HTMLImageElement | null>(null);
   const commonT = useTranslations(NS_COMMON);
 
@@ -155,6 +156,7 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
           type={type as string}
           src={props.src as string}
           listData={listData}
+          listAttachmentsDown={listAttachmentsDown}
         />
       )}
     </Stack>

@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import { Stack, Box } from "@mui/material";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
@@ -8,6 +8,9 @@ import { formatDate } from "utils/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import { useTranslations } from "next-intl";
 import { NS_PROJECT } from "constant/index";
+import {
+  Attachment,
+} from "constant/types";
 
 type CommentsProps = {
   comments?: Comment[];
@@ -18,6 +21,14 @@ type CommentItemProps = {} & Comment;
 const Comments = (props: CommentsProps) => {
   const { comments = [] } = props;
   const projectT = useTranslations(NS_PROJECT);
+  const [listAttachmentsDown, setListAttachmentsDown] = useState<Attachment[] | any>([])
+  useEffect(() => {
+    comments.map((comment) => {
+      comment.attachments_down.map((item) => {
+        setListAttachmentsDown(current => [...current, item]);
+      })
+    })
+  }, [comments]);
 
   return (
     <Stack spacing={2}>
@@ -25,7 +36,7 @@ const Comments = (props: CommentsProps) => {
         {projectT("taskDetail.commentList")}
       </Text>
       {comments.map((comment) => (
-        <CommentItem key={comment.id} {...comment} />
+        <CommentItem key={comment.id} {...comment} listAttachmentsDown={listAttachmentsDown}/>
       ))}
     </Stack>
   );
@@ -34,7 +45,7 @@ const Comments = (props: CommentsProps) => {
 export default memo(Comments);
 
 const CommentItem = (props: CommentItemProps) => {
-  const { creator, content, attachments_down = [], created_time } = props;
+  const { creator, content, attachments_down = [], created_time, listAttachmentsDown } = props;
 
   return (
     <Stack flex={1} spacing={1} bgcolor="grey.50" p={2} borderRadius={1}>
@@ -74,6 +85,7 @@ const CommentItem = (props: CommentItemProps) => {
             src={attachment.link}
             name={attachment.name}
             listData={attachments_down}
+            listAttachmentsDown={listAttachmentsDown}
           />
         ))}
       </Stack>
