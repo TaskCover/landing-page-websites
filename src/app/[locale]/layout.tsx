@@ -29,6 +29,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: Locale };
 }) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const locale = useLocale();
 
   // Show a 404 error if the user requests an unknown locale
