@@ -3,10 +3,12 @@ import Box from "@mui/material/Box";
 import ChatItemLayout from "./ChatItemLayout";
 import { useChat } from "store/chat/selectors";
 import { IChatItemInfo, STEP } from "store/chat/type";
-import { useAuth } from "store/app/selectors";
-import { useEffect, useRef, useState } from "react";
+import { useAuth, useSnackbar } from "store/app/selectors";
+import { useEffect, useMemo, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const ChatList = () => {
   const { user } = useAuth();
@@ -21,6 +23,8 @@ const ChatList = () => {
     onSetStep,
   } = useChat();
 
+  const { onAddSnackbar } = useSnackbar();
+  const t = useTranslations(NS_COMMON);
   const [textSearch, setTextSearch] = useState("");
   const [lastElement, setLastElement] = useState(null);
   const pageRef = useRef(pageIndex);
@@ -29,29 +33,31 @@ const ChatList = () => {
       const first = entries[0];
       if (first.isIntersecting) {
         pageRef.current = pageRef.current + pageSize;
-        onGetAllConvention({
-          type: "a",
-          text: textSearch,
-          offset: pageRef.current,
-          count: pageSize,
-        });
+        handleGetConversation(textSearch, pageRef.current, pageSize);
       }
     }),
   );
+  const conversationList = useMemo(() => {
+    return convention.filter((item) => item.username !== user?.["username"]);
+  }, [convention, user]);
 
-  useEffect(() => {
-    pageRef.current = pageIndex;
-  }, [pageIndex]);
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      setTextSearch(event.target.value);
-      onGetAllConvention({
+  const handleGetConversation = async (
+    text: string,
+    offset?: number,
+    count?: number,
+  ) => {
+    try {
+      await onGetAllConvention({
         type: "a",
-        text: event.target.value,
-        offset: 0,
-        count: 10,
+        text,
+        offset: offset || 0,
+        count: count || 10,
       });
+    } catch (error) {
+      onAddSnackbar(
+        typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+        "error",
+      );
     }
   };
 
@@ -65,6 +71,17 @@ const ChatList = () => {
       } else {
         onSetStep(STEP.CHAT_ONE, chatInfo);
       }
+  };
+
+  useEffect(() => {
+    pageRef.current = pageIndex;
+  }, [pageIndex]);
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      setTextSearch(event.target.value);
+      handleGetConversation(event.target.value);
+    }
   };
 
   useEffect(() => {
@@ -105,10 +122,9 @@ const ChatList = () => {
           size="small"
           sx={{
             backgroundColor: "white",
-            borderRadius: "10px",
+            borderRadius: "8px",
             "& .MuiInputBase-root": {
               color: "black",
-              borderRadius: "10px",
               border: "1px solid transparent",
             },
             "& fieldset": {
@@ -116,8 +132,14 @@ const ChatList = () => {
             },
           }}
           inputProps={{
-            style: {
+            sx: {
               paddingLeft: "5px",
+              fontSize: "14px",
+              fontWeight: 400,
+              lineHeight: "22px",
+              "&::-webkit-input-placeholder": {
+                color: "#999999",
+              },
             },
           }}
           InputProps={{
@@ -145,7 +167,7 @@ const ChatList = () => {
         </Box>
       </Box>
       <Box overflow="auto" maxHeight="calc(600px - 74px - 15px)">
-        {(isFetching || isError) && convention?.length < 1 ? (
+        {(isFetching || isError) && conversationList?.length < 1 ? (
           Array.from({ length: 5 }, (_, i) => (
             <Box
               key={i}
@@ -169,8 +191,8 @@ const ChatList = () => {
           ))
         ) : (
           <>
-            {convention?.length > 0
-              ? convention.map((item, index) => {
+            {conversationList?.length > 0
+              ? conversationList.map((item, index) => {
                   return (
                     <ChatItemLayout
                       chatInfo={item}
@@ -178,7 +200,7 @@ const ChatList = () => {
                       key={index}
                       onClickConvention={handleClickConversation}
                       chatItemProps={{
-                        ...(index === convention?.length - 1 && {
+                        ...(index === conversationList?.length - 1 && {
                           ref: setLastElement,
                         }),
                       }}

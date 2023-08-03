@@ -145,7 +145,7 @@ export interface ChatState {
   convention: IChatItemInfo[];
   userOnlinePage: UserOnlinePage[];
   status: DataStatus;
-  conversationPaging: Paging;
+  conversationPaging: Paging & { isRefetchPage?: boolean };
   conversationInfo:
     | (IChatItemInfo & { partnerUsername: string; statusOnline: string })
     | null;
@@ -157,7 +157,7 @@ export interface ChatState {
   dataTransfer?: any;
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
-  messagePaging: Paging;
+  messagePaging: Paging & { isRefetchPage?: boolean };
   //partner info
   partnerInfo: UserInfo | null;
   partnerInfoStatus: DataStatus;

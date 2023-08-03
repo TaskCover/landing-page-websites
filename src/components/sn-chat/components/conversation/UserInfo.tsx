@@ -6,23 +6,35 @@ import { SxProps, Typography } from "@mui/material";
 import { STEP, STEP_INFO } from "store/chat/type";
 import { useEffect } from "react";
 import { DataStatus } from "constant/enums";
+import { useSnackbar } from "store/app/selectors";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 interface UserInfoProps {
   onPrevious: (step) => void;
 }
 const UserInfo = ({ onPrevious }: UserInfoProps) => {
-  const {
-    conversationInfo,
-    partnerInfo,
-    partnerInfoStatus,
-    onGetUserInfo,
-  } = useChat();
+  const { conversationInfo, partnerInfo, partnerInfoStatus, onGetUserInfo } =
+    useChat();
+  const { onAddSnackbar } = useSnackbar();
   const { avatar, name, partnerUsername } = conversationInfo || {};
+  const t = useTranslations(NS_COMMON);
+
   useEffect(() => {
-    if (partnerUsername) {
-      onGetUserInfo(partnerUsername);
-    }
-  }, [onGetUserInfo, partnerUsername]);
+    const handleGetUserInfo = async () => {
+      try {
+        if (partnerUsername) {
+          await onGetUserInfo(partnerUsername);
+        }
+      } catch (error) {
+        onAddSnackbar(
+          typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+          "error",
+        );
+      }
+    };
+    handleGetUserInfo();
+  }, [onAddSnackbar, onGetUserInfo, partnerUsername, t]);
 
   const styleFormItem: SxProps = {
     display: "flex",

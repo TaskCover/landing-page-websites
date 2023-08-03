@@ -92,6 +92,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
               overflow: "hidden",
             },
           }}
+          fontWeight={isUnReadMessage ? "900" : "normal"}
         />
       </>
     );

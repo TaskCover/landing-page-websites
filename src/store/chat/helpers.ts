@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "store/app/selectors";
 import { useChat } from "./selectors";
 import { MessageBodyRequest } from "./type";
+import { sleep } from "utils/index";
 
 export const useWSChat = () => {
   const { user } = useAuth();
@@ -13,9 +14,12 @@ export const useWSChat = () => {
   // Connect websocket
   const connectMessage = () => {
     if (ws) {
+      console.log("reConnect message");
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.msg === "connected") {
+          console.log("affter recie connected", ws);
+
           ws.send(
             JSON.stringify({
               msg: "method",
@@ -79,7 +83,7 @@ export const useWSChat = () => {
             console.log("reConnect");
             connectSocket();
             connectMessage();
-          }, 10);
+          }, 100);
         }
       };
     }

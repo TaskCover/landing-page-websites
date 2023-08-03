@@ -28,7 +28,7 @@ import {
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
 
-const initalPage = { pageIndex: 0, pageSize: 10 };
+const initalPage = { pageIndex: 0, pageSize: 10, isRefetchPage: false };
 const initialState: ChatState = {
   convention: [],
   status: DataStatus.IDLE,
@@ -168,6 +168,7 @@ const chatSlice = createSlice({
       .addCase(getAllConvention.pending, (state, action) => {
         state.status = DataStatus.LOADING;
         state.conversationPaging = {
+          ...state.conversationPaging,
           pageIndex: action.meta.arg.offset || 0,
           pageSize: action.meta.arg.count || 20,
         };
@@ -176,7 +177,10 @@ const chatSlice = createSlice({
         getAllConvention.fulfilled,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (state, action: PayloadAction<any[]>) => {
-          if (action.payload.length > 0) {
+          if (
+            action.payload.length > 0 &&
+            !state.conversationPaging.isRefetchPage
+          ) {
             const conversationNew = action.payload.filter((item) =>
               isConversation(item["t"]) ? item : undefined,
             );
@@ -190,6 +194,16 @@ const chatSlice = createSlice({
               ...userOnlinePageNew,
             ];
           }
+          if (action.payload?.length < state.conversationPaging.pageSize) {
+            state.conversationPaging.pageIndex =
+              state.conversationPaging.pageIndex -
+              state.conversationPaging.pageSize +
+              action.payload?.length;
+            state.conversationPaging.isRefetchPage = true;
+          } else {
+            state.conversationPaging.isRefetchPage = false;
+          }
+          state.conversationPaging.pageSize = state.conversationPaging.pageSize;
           state.status = DataStatus.SUCCEEDED;
         },
       )
@@ -208,6 +222,7 @@ const chatSlice = createSlice({
       .addCase(getLatestMessages.pending, (state, action) => {
         state.messageStatus = DataStatus.LOADING;
         state.messagePaging = {
+          ...state.messagePaging,
           pageIndex: action.meta.arg.offset || 0,
           pageSize: action.meta.arg.count || 20,
         };
@@ -215,10 +230,20 @@ const chatSlice = createSlice({
       .addCase(
         getLatestMessages.fulfilled,
         (state, action: PayloadAction<MessageInfo[]>) => {
-          if (action.payload.length > 0) {
-            const messageOld = action.payload.reverse();
-            state.messageInfo = [...messageOld, ...state.messageInfo];
+          if (action.payload.length > 0 && !state.messagePaging.isRefetchPage) {
+            const messageNew = action.payload.reverse();
+            state.messageInfo = [...messageNew, ...state.messageInfo];
           }
+          if (action.payload?.length < state.messagePaging.pageSize) {
+            state.messagePaging.pageIndex =
+              state.messagePaging.pageIndex -
+              state.messagePaging.pageSize +
+              action.payload?.length;
+            state.messagePaging.isRefetchPage = true;
+          } else {
+            state.messagePaging.isRefetchPage = false;
+          }
+          state.messagePaging.pageSize = state.messagePaging.pageSize;
           state.messageStatus = DataStatus.SUCCEEDED;
         },
       )
@@ -229,6 +254,7 @@ const chatSlice = createSlice({
             ? 0
             : state.messagePaging.pageIndex - state.messagePaging.pageSize;
         state.messagePaging.pageSize = state.messagePaging.pageSize;
+        state.messagePaging.isRefetchPage = false;
       })
       // sendMessages
       .addCase(sendMessages.pending, (state, action) => {

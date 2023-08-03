@@ -8,10 +8,11 @@ import {
   UPLOAD_API_URL,
 } from "constant/index";
 import { UrlsQuery, MediaQuery } from "./typeMedia";
+import { AxiosError } from "axios";
 
 export const getChatUrls = createAsyncThunk(
   "chat/getChatUrls",
-  async (params: UrlsQuery) => {
+  async (params: UrlsQuery, { rejectWithValue }) => {
     try {
       const response = await client.post("getChatUrls", params, {
         baseURL: CHAT_API_URL,
@@ -22,7 +23,11 @@ export const getChatUrls = createAsyncThunk(
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
-      throw error;
+      if (error instanceof AxiosError) {
+        return rejectWithValue(error.response?.data["error"]);
+      } else {
+        throw error;
+      }
     }
   },
 );

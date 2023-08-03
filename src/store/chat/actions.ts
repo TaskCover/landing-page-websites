@@ -18,29 +18,35 @@ import {
   RenameGroupRequest,
   MessageSearchInfoRequest,
   UnReadMessageRequest,
+  MessageInfo,
 } from "./type";
+import { AxiosError } from "axios";
 
 export const getAllConvention = createAsyncThunk(
   "chat/getAllConvention",
-  async (paramReq: ChatConventionItemRequest) => {
+  async (paramReq: ChatConventionItemRequest, { rejectWithValue }) => {
     try {
       const response = await client.post("getAllConversations", paramReq, {
         baseURL: CHAT_API_URL,
       });
-
       if (response?.status === HttpStatusCode.OK) {
         return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
-      throw error;
+      if (error instanceof AxiosError) {
+        const message = error.response?.data["error"];
+        return rejectWithValue(message);
+      } else {
+        throw error;
+      }
     }
   },
 );
 
 export const getLatestMessages = createAsyncThunk(
   "chat/getLatestMessages",
-  async (paramReq: LastMessagesRequest) => {
+  async (paramReq: LastMessagesRequest, { rejectWithValue }) => {
     try {
       const response = await client.post("getLatestMessages", paramReq, {
         baseURL: CHAT_API_URL,
@@ -51,14 +57,19 @@ export const getLatestMessages = createAsyncThunk(
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
-      throw error;
+      if (error instanceof AxiosError) {
+        const message = error.response?.data["error"];
+        return rejectWithValue(message);
+      } else {
+        throw error;
+      }
     }
   },
 );
 
 export const getUserInfoById = createAsyncThunk(
   "chat/getUserInfoById",
-  async (username: string) => {
+  async (username: string, { rejectWithValue }) => {
     try {
       const response = await client.get(
         `in/users/${username}`,
@@ -73,7 +84,12 @@ export const getUserInfoById = createAsyncThunk(
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
-      throw error;
+      if (error instanceof AxiosError) {
+        const message = error.response?.data["error"];
+        return rejectWithValue(message);
+      } else {
+        throw error;
+      }
     }
   },
 );
@@ -98,7 +114,7 @@ export const sendMessages = createAsyncThunk(
 
 export const searchChatText = createAsyncThunk(
   "chat/searchChatText",
-  async (paramReq: MessageSearchInfoRequest) => {
+  async (paramReq: MessageSearchInfoRequest, { rejectWithValue }) => {
     try {
       const response = await client.post("searchChatText", paramReq, {
         baseURL: CHAT_API_URL,
@@ -109,7 +125,12 @@ export const searchChatText = createAsyncThunk(
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
-      throw error;
+      if (error instanceof AxiosError) {
+        const message = error.response?.data["error"];
+        return rejectWithValue(message);
+      } else {
+        throw error;
+      }
     }
   },
 );
@@ -260,7 +281,7 @@ export const changeGroupRole = createAsyncThunk(
 
 export const getChatAttachments = createAsyncThunk(
   "chat/roomFiles",
-  async (paramReq: ChatAttachmentsRequest) => {
+  async (paramReq: ChatAttachmentsRequest, { rejectWithValue }) => {
     try {
       const response = await client.post("roomFiles", paramReq, {
         baseURL: CHAT_API_URL,
@@ -271,7 +292,12 @@ export const getChatAttachments = createAsyncThunk(
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
-      throw error;
+      if (error instanceof AxiosError) {
+        const message = error.response?.data["error"];
+        return rejectWithValue(message);
+      } else {
+        throw error;
+      }
     }
   },
 );

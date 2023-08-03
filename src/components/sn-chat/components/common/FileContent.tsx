@@ -2,16 +2,32 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "components/Link";
 import { DataStatus } from "constant/enums";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import FileBasicIcon from "icons/FileBasicIcon";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
+import { useSnackbar } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
 
 const FileContent = () => {
   const { mediaList, mediaListStatus, onGetChatAttachments } = useChat();
+  const { onAddSnackbar } = useSnackbar();
+  const t = useTranslations(NS_COMMON);
 
   useEffect(() => {
-    onGetChatAttachments({ fileType: "file" });
-  }, [onGetChatAttachments]);
+    const handleGetAttachment = async () => {
+      try {
+        await onGetChatAttachments({ fileType: "file" });
+      } catch (error) {
+        onAddSnackbar(
+          typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+          "error",
+        );
+      }
+    };
+
+    handleGetAttachment();
+  }, [onAddSnackbar, onGetChatAttachments, t]);
 
   const fileClone = useMemo(() => {
     return mediaList?.filter((file) => file.path);

@@ -124,7 +124,7 @@ export const useChat = () => {
     }: Omit<ChatConventionItemRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
-      await dispatch(
+      return await dispatch(
         getAllConvention({
           count,
           offset,
@@ -132,7 +132,7 @@ export const useChat = () => {
           userId,
           ...rest,
         }),
-      );
+      ).unwrap();
     },
     [dispatch, user],
   );
@@ -145,7 +145,7 @@ export const useChat = () => {
     }: Omit<LastMessagesRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
-      await dispatch(
+      return await dispatch(
         getLatestMessages({
           count: count ?? 10,
           offset: offset ?? 0,
@@ -153,7 +153,7 @@ export const useChat = () => {
           userId,
           ...rest,
         }),
-      );
+      ).unwrap();
     },
     [dispatch, user],
   );
@@ -169,7 +169,7 @@ export const useChat = () => {
           authToken,
           userId,
         }),
-      );
+      ).unwrap();
     },
     [conversationInfo?.t, dispatch, roomId, user],
   );
@@ -200,7 +200,7 @@ export const useChat = () => {
     }: Omit<MessageSearchInfoRequest, "authToken" | "userId" | "roomId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
-      await dispatch(
+      return await dispatch(
         searchChatText({
           authToken,
           userId,
@@ -208,7 +208,7 @@ export const useChat = () => {
           text,
           type,
         }),
-      );
+      ).unwrap();
     },
     [dispatch, roomId, user],
   );
@@ -233,7 +233,7 @@ export const useChat = () => {
 
   const onGetUserInfo = useCallback(
     async (username: string) => {
-      await dispatch(getUserInfoById(username));
+      await dispatch(getUserInfoById(username)).unwrap();
     },
     [dispatch],
   );
@@ -252,7 +252,7 @@ export const useChat = () => {
     [dispatch],
   );
 
-  const onSetDataTransfer= useCallback(
+  const onSetDataTransfer = useCallback(
     (data: any) => {
       dispatch(setDataTransfer(data));
     },
@@ -392,7 +392,7 @@ export const useChat = () => {
             params?.roomType ?? (conversationInfo?.t as RoomType) ?? "c",
           fileType: params?.fileType ?? "media",
         }),
-      );
+      ).unwrap();
     },
     [conversationInfo, dispatch, roomId, user],
   );

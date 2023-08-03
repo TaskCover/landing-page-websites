@@ -115,20 +115,9 @@ const MessageListSearch = ({
   onSelectMessage,
 }: MesageListSearchProps) => {
   const { sx, ...props } = messageItemProps || {};
-  const {
-    listSearchMessage,
-    statusListSearchMessage,
-    stateSearchMessage,
-    onSetStateSearchMessage,
-  } = useChat();
+  const { listSearchMessage, statusListSearchMessage } = useChat();
 
   const handleShowConversation = (message: MessageSearchInfo) => {
-    if (
-      !stateSearchMessage ||
-      stateSearchMessage.messageId !== message.messageId
-    ) {
-      onSetStateSearchMessage(message);
-    }
     onSelectMessage(message);
   };
 

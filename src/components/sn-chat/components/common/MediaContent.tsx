@@ -4,8 +4,11 @@ import Typography from "@mui/material/Typography";
 import Media from "components/Media";
 import Preview from "components/Preview";
 import { DataStatus } from "constant/enums";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import PlayIcon from "icons/PlayIcon";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSnackbar } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
 
 export type MediaType = "image_url" | "video_url";
@@ -131,10 +134,22 @@ export const MediaClone = ({ src, type }: { src: string; type: MediaType }) => {
 
 const MediaContent = () => {
   const { mediaList, mediaListStatus, onGetChatAttachments } = useChat();
+  const { onAddSnackbar } = useSnackbar();
+  const t = useTranslations(NS_COMMON);
 
   useEffect(() => {
-    onGetChatAttachments({ fileType: "media" });
-  }, [onGetChatAttachments]);
+    const handleGetAttachment = async () => {
+      try {
+        await onGetChatAttachments({ fileType: "media" });
+      } catch (error) {
+        onAddSnackbar(
+          typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+          "error",
+        );
+      }
+    };
+    handleGetAttachment();
+  }, [onAddSnackbar, onGetChatAttachments, t]);
 
   const mediaClone = useMemo(() => {
     return mediaList

@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
-import { useAuth } from "store/app/selectors";
+import { useAuth, useSnackbar } from "store/app/selectors";
 import { useWSChat } from "store/chat/helpers";
 import ChatInput from "../chat/ChatInput";
 import Messages from "../messages/Messages";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
+const initPageIndex = 10;
 const Conversation = () => {
   const {
     roomId,
@@ -22,20 +25,36 @@ const Conversation = () => {
   } = useChat();
   const { user } = useAuth();
   const { sendMessage } = useWSChat();
+  const { onAddSnackbar } = useSnackbar();
+  const t = useTranslations(NS_COMMON);
   const [files, setFiles] = useState<File[]>([]);
 
   const account = convention?.find((item) => item._id === roomId);
 
   const getLastMessage = useCallback(
     async (page?: number, size?: number) => {
-      await onGetLastMessages({
-        roomId: dataTransfer?._id ?? roomId,
-        type: dataTransfer?.t ?? "d",
-        offset: page,
-        count: size,
-      });
+      try {
+        await onGetLastMessages({
+          roomId: dataTransfer?._id ?? roomId,
+          type: dataTransfer?.t ?? "d",
+          offset: page,
+          count: size,
+        });
+      } catch (error) {
+        onAddSnackbar(
+          typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+          "error",
+        );
+      }
     },
-    [dataTransfer?._id, dataTransfer?.t, onGetLastMessages, roomId],
+    [
+      dataTransfer?._id,
+      dataTransfer?.t,
+      onAddSnackbar,
+      onGetLastMessages,
+      roomId,
+      t,
+    ],
   );
 
   const getUnReadMessage = useCallback(async () => {
@@ -46,14 +65,14 @@ const Conversation = () => {
 
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
-      ? stateSearchMessage?.offset + 10
-      : 10;
+      ? stateSearchMessage?.offset + initPageIndex
+      : initPageIndex;
     getLastMessage(0, countNew);
     if (inputRef.current) {
-      inputRef.current.pageRef.current = countNew;
+      inputRef.current.pageRef.current = countNew - initPageIndex;
       inputRef.current.scrollMessage();
     }
-  }, [roomId, dataTransfer, getLastMessage, stateSearchMessage]);
+  }, [roomId, dataTransfer, getLastMessage, stateSearchMessage, t]);
 
   useEffect(() => {
     if (stateSendMessage.status) {

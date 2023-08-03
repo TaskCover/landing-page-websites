@@ -8,9 +8,12 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 import MediaFileIcon from "icons/MediaFileIcon";
 import LinkIcon from "icons/LinkIcon";
 import FileBasicIcon from "icons/FileBasicIcon";
-import { STEP_INFO } from "store/chat/type";
-import React, { useEffect, useMemo, useState } from "react";
+import { MessageSearchInfo, STEP_INFO } from "store/chat/type";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import MessageListSearch from "../messages/MessageListSearch";
+import { useSnackbar } from "store/app/selectors";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 const ItemProfile = ({
   Icon,
@@ -56,7 +59,14 @@ const UserLanding = ({
   onPrevious,
   onSetMediaStep,
 }: UserLandingProps) => {
-  const { conversationInfo, onSearchChatText } = useChat();
+  const {
+    conversationInfo,
+    stateSearchMessage,
+    onSetStateSearchMessage,
+    onSearchChatText,
+  } = useChat();
+  const { onAddSnackbar } = useSnackbar();
+  const t = useTranslations(NS_COMMON);
   const { avatar, name } = conversationInfo || {};
   const [stateSearch, setStateSearch] = useState<{
     isSearch: boolean;
@@ -68,12 +78,34 @@ const UserLanding = ({
   const isToggle = stateSearch.isToggle;
   const isSearch = stateSearch.isSearch;
 
-  useEffect(() => {
-    if (text && isSearch) {
-      onSearchChatText({ text: stateSearch.text, type: "d" });
+  const handleSearchChatText = useCallback(async () => {
+    try {
+      if (text && isSearch) {
+        await onSearchChatText({ text: stateSearch.text, type: "d" });
+      }
+    } catch (error) {
+      onAddSnackbar(
+        typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+        "error",
+      );
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onSearchChatText, isToggle]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isToggle, onSearchChatText, t]);
+
+  useEffect(() => {
+    handleSearchChatText();
+  }, [handleSearchChatText]);
+
+  const handleSelectMessage = (message: MessageSearchInfo) => {
+    if (
+      !stateSearchMessage ||
+      stateSearchMessage.messageId !== message.messageId
+    ) {
+      onSetStateSearchMessage(message);
+    }
+    setStateSearch({ isSearch: false, text: "" });
+    onPrevious();
+  };
 
   const renderContent = useMemo(() => {
     if (stateSearch.isSearch) {
@@ -82,10 +114,7 @@ const UserLanding = ({
           <MessageListSearch
             text={stateSearch.text}
             type="d"
-            onSelectMessage={(message) => {
-              setStateSearch({ isSearch: false, text: "" });
-              onPrevious();
-            }}
+            onSelectMessage={handleSelectMessage}
           />
         </Box>
       );

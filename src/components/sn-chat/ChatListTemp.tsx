@@ -13,7 +13,8 @@ import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/Defaul
 import { Typography } from "@mui/material";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";
-import { NS_COMMON } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { useSnackbar } from "store/app/selectors";
 
 const ChatListTemp = () => {
   const { onGetAllConvention, onClearConversation, onReset } = useChat();
@@ -22,6 +23,7 @@ const ChatListTemp = () => {
   const [show, setShow] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const commonT = useTranslations(NS_COMMON);
+  const { onAddSnackbar } = useSnackbar();
 
   const init = {
     type: "",
@@ -101,6 +103,22 @@ const ChatListTemp = () => {
     }
   });
 
+  const handleGetConversation = async () => {
+    try {
+      await onGetAllConvention({
+        type: "a",
+        text: "",
+        offset: 0,
+        count: 10,
+      });
+    } catch (error) {
+      onAddSnackbar(
+        typeof error === "string" ? error : commonT(AN_ERROR_TRY_AGAIN),
+        "error",
+      );
+    }
+  };
+
   const handleTrigger = (e: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(e.currentTarget);
     popperRef.current = !popperRef.current;
@@ -114,12 +132,7 @@ const ChatListTemp = () => {
       setOpen((state) => !state);
     }
     if (popperRef.current) {
-      onGetAllConvention({
-        type: "a",
-        text: "",
-        offset: 0,
-        count: 10,
-      });
+      handleGetConversation();
     } else {
       onClearConversation();
       onReset();
@@ -133,7 +146,7 @@ const ChatListTemp = () => {
         bottom: "4rem",
         right: "5rem",
         cursor: "pointer",
-        zIndex: 1,
+        zIndex: 100,
       }}
     >
       {show ? (
@@ -166,8 +179,8 @@ const ChatListTemp = () => {
                     minHeight: "600px",
                     height: "600px",
                     overflow: "hidden",
-                    borderTopLeftRadius: "15px",
-                    borderTopRightRadius: "15px",
+                    borderRadius: "16px",
+                    boxShadow: "2px 2px 24px 0px #0000001A",
                   }}
                 >
                   <SwitchChat />
@@ -187,6 +200,7 @@ const ChatListTemp = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          boxShadow: "2px 2px 24px 0px #0000001A",
         }}
         component={"div"}
         onClick={handleTrigger}
