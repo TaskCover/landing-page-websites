@@ -967,6 +967,7 @@ const ItemList = () => {
                                 },
                                 "& input": {
                                   fontSize: 15,
+                                  paddingTop: "17px !important"
                                 },
                                 width: "35% !important",
                                 "& label.Mui-focused": {

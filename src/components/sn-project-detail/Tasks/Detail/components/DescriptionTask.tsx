@@ -12,11 +12,12 @@ import { UnprivilegedEditor } from "react-quill";
 type DescriptionTaskProps = {
   onClose: () => void;
   open: boolean;
+  textEdit?: string;
 };
 
 const DescriptionTask = (props: DescriptionTaskProps) => {
-  const { open, onClose: onCloseProps } = props;
-  const [text, setText] = useState<string | undefined>();
+  const { open, onClose: onCloseProps, textEdit } = props;
+  const [text, setText] = useState<string | undefined>(textEdit ?? "");
 
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
@@ -58,7 +59,7 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
 
   useEffect(() => {
     setText(task?.description);
-  }, [task?.description]);
+  }, [task?.description, textEdit]);
 
   if (!open) return null;
 
