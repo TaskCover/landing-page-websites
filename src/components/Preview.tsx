@@ -11,19 +11,39 @@ import {
 import { Text } from "./shared";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
+import { Slide } from 'react-slideshow-image';
+import 'react-slideshow-image/dist/styles.css'
+
+const IMAGES_EXTENSION = ["png", "jpeg", "jpg", "ico", "gif"];
+const VIDEOS_EXTENSION = ["mp4", "mov", "wmv", "flv", "avi", "webm", "mkv"];
+interface Attachment {
+    link: string;
+    name: string;
+    object: string;
+}
 
 type PreviewProps = {
   type: string;
   src: string;
+  listData: Attachment[];
 } & Omit<DialogProps, "children">;
 
 const Preview = (props: PreviewProps) => {
-  const { type, src, ...rest } = props;
+  const { type, src, listData, ...rest } = props;
+  const indexSlide = listData.findIndex(el => el.link == src);
   const commonT = useTranslations(NS_COMMON);
 
   const onClose = () => {
     props?.onClose && props.onClose({}, "escapeKeyDown");
   };
+
+  const getExtension = (name: String) => {
+    if(!name) return;
+    const arr = name.split(".");
+    const extension = arr[arr.length - 1];
+    if (IMAGES_EXTENSION.includes(extension)) return `image/${extension}`;
+    if (VIDEOS_EXTENSION.includes(extension)) return `video/${extension}`;
+  }
 
   return (
     <Dialog
@@ -61,29 +81,33 @@ const Preview = (props: PreviewProps) => {
           {commonT("close")}
         </Text>
       </DialogTitle>
-      <DialogContent
-        sx={{
-          p: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          m: 2,
-        }}
-      >
-        {type.startsWith("video") ? (
-          <Box component="video" height="100%" width="auto" controls>
-            <source src={src} />
-          </Box>
-        ) : (
-          <Box
-            component="img"
-            src={src}
-            height="100%"
-            width="auto"
-            alt="Image"
-          />
-        )}
-      </DialogContent>
+        <div className="slide-container">
+            <Slide defaultIndex={indexSlide}>
+                {
+                    listData.map((data, index) => (
+                        <div key={index} style={{ display:'flex', alignItems: "center", justifyContent: "center" }}>
+                            {
+                                getExtension(data?.name)?.startsWith("video") ? (
+                                    <Box component="video" height="100%" width="100%" controls>
+                                        <source src={data.link}/>
+                                    </Box>
+                                ) : (
+                                    <Box
+                                        component="img"
+                                        src={data.link}
+                                        height="auto"
+                                        width="auto"
+                                        alt="Image"
+                                        sx={{
+                                            maxWidth: '600px'
+                                        }}
+                                    />
+                                )}
+                        </div>
+                    ))
+                }
+            </Slide>
+        </div>
     </Dialog>
   );
 };

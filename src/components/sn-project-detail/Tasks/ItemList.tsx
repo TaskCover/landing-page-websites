@@ -968,9 +968,12 @@ const ItemList = () => {
                                 "& input": {
                                   fontSize: 15,
                                 },
-                                width: "70% !important",
+                                width: "35% !important",
                                 "& label.Mui-focused": {
                                   color: "green",
+                                },
+                                "& >label": {
+                                  fontSize: "14px !important",
                                 },
                               }}
                             />

@@ -155,8 +155,8 @@ export type ProjectDictionary = {
     addDependencyTask: string;
     manual: string;
     commentList: string;
-    seeMore: string;
-    seeLess: string;
+    showMore: string;
+    showLess: string;
     form: {
       title: {
         newTask: string;
