@@ -160,8 +160,8 @@ export const ProjectLang: ProjectDictionary = {
     addDependencyTask: "Thêm công việc phụ thuộc",
     manual: "Ban đầu",
     commentList: "Danh sách bình luận",
-    seeMore: "Hiện thêm",
-    seeLess: "Ẩn bớt",
+    showMore: "Hiện thêm",
+    showLess: "Ẩn bớt",
     form: {
       title: {
         newTask: "Công việc chuyển đến",

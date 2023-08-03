@@ -252,7 +252,7 @@ const Information = () => {
               {
                   task.description.length > 400 && (
                       <p className="btn" onClick={() => setReadMore(!readMore)} style={{ cursor: "pointer", color: "#1BC5BD", fontSize: "14px", fontWeight: "600"}}>
-                        {readMore ? projectT("taskDetail.seeLess") : projectT("taskDetail.seeMore")}
+                        {readMore ? projectT("taskDetail.showLess") : projectT("taskDetail.showMore")}
                       </p>
                   )
               }

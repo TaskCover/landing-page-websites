@@ -160,8 +160,8 @@ export const ProjectLang: ProjectDictionary = {
     addDependencyTask: "Add dependency task",
     manual: "Manual",
     commentList: "Comments",
-    seeMore: "See more",
-    seeLess: "See less",
+    showMore: "Show more",
+    showLess: "Show less",
     form: {
       title: {
         newTask: "Move to task",
