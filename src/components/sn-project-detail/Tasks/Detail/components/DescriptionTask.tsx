@@ -18,12 +18,10 @@ type DescriptionTaskProps = {
 const DescriptionTask = (props: DescriptionTaskProps) => {
   const { open, onClose: onCloseProps, textEdit } = props;
   const [text, setText] = useState<string | undefined>(textEdit ?? "");
-
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
 
   const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
-
   const onChangeText = (_, newValue?: string) => {
     setText(newValue);
   };
@@ -59,7 +57,7 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
 
   useEffect(() => {
     setText(task?.description);
-  }, [task?.description, textEdit]);
+  }, [task?.description, textEdit, open]);
 
   if (!open) return null;
 

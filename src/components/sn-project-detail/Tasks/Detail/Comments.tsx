@@ -28,7 +28,7 @@ const Comments = (props: CommentsProps) => {
         setListAttachmentsDown(current => [...current, item]);
       })
     })
-  }, [comments]);
+  }, []);
 
   return (
     <Stack spacing={2}>
