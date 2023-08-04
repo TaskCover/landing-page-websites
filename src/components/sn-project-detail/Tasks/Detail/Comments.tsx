@@ -24,11 +24,13 @@ const Comments = (props: CommentsProps) => {
   const [listAttachmentsDown, setListAttachmentsDown] = useState<Attachment[] | any>([])
   useEffect(() => {
     comments.map((comment) => {
-      comment.attachments_down.map((item) => {
-        setListAttachmentsDown(current => [...current, item]);
-      })
+      if (comment.attachments_down) {
+        comment.attachments_down.map((item) => {
+          setListAttachmentsDown(current => [...current, item]);
+        })
+      }
     })
-  }, []);
+  }, [comments]);
 
   return (
     <Stack spacing={2}>
