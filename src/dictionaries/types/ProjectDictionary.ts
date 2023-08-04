@@ -51,6 +51,14 @@ export type ProjectDictionary = {
     };
     workingHoursActual: string;
     costSpent: string;
+    listFile: {
+      title: string;
+      filter: {
+        all: string;
+        file: string;
+        image: string;
+      }
+    }
   };
   detailMembers: {
     head: {

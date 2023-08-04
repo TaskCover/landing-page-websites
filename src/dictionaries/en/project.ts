@@ -55,6 +55,14 @@ export const ProjectLang: ProjectDictionary = {
     },
     workingHoursActual: "Working hours (actual)",
     costSpent: "Cost spent",
+    listFile: {
+      title: "List Files",
+      filter: {
+        all: "All",
+        file: "File",
+        image: "Image"
+      }
+    }
   },
   detailMembers: {
     head: {

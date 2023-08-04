@@ -1,15 +1,16 @@
 "use client";
 
-import { memo } from "react";
-import { Divider, Stack, StackProps } from "@mui/material";
-import { Text } from "components/shared";
-import { useProject } from "store/project/selectors";
+import React, {memo, useEffect, useState} from "react";
+import {Box, Stack, StackProps} from "@mui/material";
+import {Button, Text} from "components/shared";
+import {useProject, useProjectAttachment} from "store/project/selectors";
 import TextStatus from "components/TextStatus";
 import {
   COLOR_STATUS,
   TEXT_STATUS,
+  ATTACHMENT_TYPE,
 } from "components/sn-projects/components/helpers";
-import { formatDate, formatNumber } from "utils/index";
+import {formatBytes, formatDate, formatNumber} from "utils/index";
 import Avatar from "components/Avatar";
 import StatusServer from "components/StatusServer";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
@@ -18,6 +19,15 @@ import useBreakpoint from "hooks/useBreakpoint";
 import ArrowTriangleIcon from "icons/ArrowTriangleIcon";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
 import FixedLayout from "components/FixedLayout";
+import { experimentalStyled as styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import FilePdfIcon from "../../../icons/FilePdfIcon";
+import FileDocIcon from "../../../icons/FileDocIcon";
+import FileExcelIcon from "../../../icons/FileExcelIcon";
+import FileIcon from "../../../icons/FileIcon";
+import {useParams} from "next/navigation";
+import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -27,14 +37,17 @@ type InformationItemProps = StackProps & {
 
 const InformationProjectPage = () => {
   const { item, isFetching, error } = useProject();
-
+  const { items, onGetProjectAttachment } = useProjectAttachment();
+  const params = useParams();
   const { isSmSmaller } = useBreakpoint();
-
+  useEffect(() => {
+      onGetProjectAttachment(params.id)
+  }, [onGetProjectAttachment, params.id]);
   return (
     <StatusServer isFetching={isFetching} error={error} noData={!item}>
       <FixedLayout flex={1}>
         <Stack p={{ xs: 1, sm: 3 }} spacing={3}>
-          {isSmSmaller ? <MobileInformation /> : <DesktopInformation />}
+          {isSmSmaller ? <MobileInformation attachments={items}/> : <DesktopInformation attachments={items}/>}
         </Stack>
       </FixedLayout>
     </StatusServer>
@@ -43,11 +56,67 @@ const InformationProjectPage = () => {
 
 export default memo(InformationProjectPage);
 
-const DesktopInformation = () => {
+const DesktopInformation = (props) => {
+  const {attachments} = props;
   const { item } = useProject();
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
+  const [active, setActive] = useState("");
+  const [dataFilter, setDataFilter] = useState(attachments);
+  const handleFilterAttachment = (event) => {
+      setActive(event.target.id);
+      if (event.target.id == ATTACHMENT_TYPE.IMAGE) {
+          const filtered = attachments.filter(attachment => {
+              return IMAGES_ACCEPT.indexOf(attachment.type) !== -1;
+          });
+          setDataFilter(filtered);
+      } else if (event.target.id == ATTACHMENT_TYPE.FILE) {
+          const filtered = attachments.filter(attachment => {
+              return FILE_ACCEPT.indexOf(attachment.type) !== -1;
+          });
+          setDataFilter(filtered);
+      } else {
+          setDataFilter(attachments);
+      }
+  }
+  const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    padding: "12px",
+    textAlign: 'center',
+    color: "#000000",
+    borderRadius: "4px",
+    background: "#F7F7FD",
+    height: "70px",
+    display: "flex",
+    gap: "15px"
+  }));
+
+  const fileIcon = (extension, url) => {
+    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1) {
+        return <Box
+            component="img"
+            src={url}
+            height="auto"
+            width="auto"
+            alt="Image"
+            sx={{
+                maxWidth: '50px',
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+            }}
+        />
+    } else if (extension == '.docx' || extension == '.doc') {
+        return <FileDocIcon sx={{fontSize: 40}}/>;
+    } else if (extension == '.pdf') {
+        return <FilePdfIcon sx={{fontSize: 40}}/>;
+    } else if (extension == '.xls' || extension == '.xlsx') {
+        return <FileExcelIcon sx={{fontSize: 40}}/>;
+    } else {
+        return <FileIcon sx={{fontSize: 40}}/>
+    }
+  }
 
   return (
     <>
@@ -131,17 +200,170 @@ const DesktopInformation = () => {
       <InformationItem label={commonT("form.title.description")} maxWidth={700}>
         {item?.description || "--"}
       </InformationItem>
+
+      <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} className='attachment-filter'>
+            <Text variant="body2" sx={{
+                fontWeight: "600"
+            }}>{projectT("detail.listFile.title")}</Text>
+
+            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px"
+                    }}
+                    id={ATTACHMENT_TYPE.ALL}
+                    className={active === ATTACHMENT_TYPE.ALL ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.all")}
+                </Button>
+
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px"
+                    }}
+                    id={ATTACHMENT_TYPE.IMAGE}
+                    className={active === ATTACHMENT_TYPE.IMAGE ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.image")}
+                </Button>
+
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px"
+                    }}
+                    id={ATTACHMENT_TYPE.FILE}
+                    className={active === ATTACHMENT_TYPE.FILE ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.file")}
+                </Button>
+            </Stack>
+      </Stack>
+
+      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {dataFilter?.map((data, index) => (
+                <Grid item xs={2} sm={4} md={4} key={index} sx={{
+                    paddingRight: "16px",
+                }}>
+                    <Item>
+                        {
+                            fileIcon(data.extension, data.link)
+                        }
+                        <Stack className="description-file">
+                            <Text sx={{
+                                color: "#000",
+                                fontWeight: 500,
+                                textAlign: "left",
+                                width: "160px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "pre",
+                            }}>{data.name}</Text>
+
+                            <Text sx={{
+                                color: "#666",
+                                fontSize: "12px",
+                                fontWeight: 400,
+                                display: "flex",
+                                gap: "10px"
+                            }}>
+                                <span>{formatBytes(data.size)}</span>
+                                <span>{formatDate(data.created_time, "HH:mm")}</span>
+                                <span>{data.uploaded_by}</span>
+                            </Text>
+                        </Stack>
+
+                    </Item>
+                </Grid>
+            ))}
+        </Grid>
+
     </>
   );
 };
 
-const MobileInformation = () => {
+const MobileInformation = (props) => {
+  const {attachments} = props;
   const { item } = useProject();
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
 
-  return (
+  const [active, setActive] = useState("");
+  const [dataFilter, setDataFilter] = useState(attachments);
+
+  const handleFilterAttachment = (event) => {
+      setActive(event.target.id);
+      if (event.target.id == ATTACHMENT_TYPE.IMAGE) {
+          const filtered = attachments.filter(attachment => {
+              return IMAGES_ACCEPT.indexOf(attachment.type) !== -1;
+          });
+          setDataFilter(filtered);
+      } else if (event.target.id == ATTACHMENT_TYPE.FILE) {
+          const filtered = attachments.filter(attachment => {
+              return FILE_ACCEPT.indexOf(attachment.type) !== -1;
+          });
+          setDataFilter(filtered);
+      } else {
+          setDataFilter(attachments);
+      }
+  }
+
+  const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    padding: "12px",
+    textAlign: 'center',
+    color: "#000000",
+    borderRadius: "4px",
+    background: "#F7F7FD",
+    height: "70px",
+    display: "flex",
+    gap: "15px"
+  }));
+
+  const fileIcon = (extension, url) => {
+    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1) {
+        return <Box
+            component="img"
+            src={url}
+            height="auto"
+            width="auto"
+            alt="Image"
+            sx={{
+                maxWidth: '50px',
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+            }}
+        />
+    } else if (extension == '.docx' || extension == '.doc') {
+        return <FileDocIcon sx={{fontSize: 40}}/>;
+    } else if (extension == '.pdf') {
+        return <FilePdfIcon sx={{fontSize: 40}}/>;
+    } else if (extension == '.xls' || extension == '.xlsx') {
+        return <FileExcelIcon sx={{fontSize: 40}}/>;
+    } else {
+        return <FileIcon sx={{fontSize: 40}}/>
+    }
+  }
+    return (
     <>
       <InformationItem label={projectT("list.projectCode")}>
         {item?.number}
@@ -193,6 +415,100 @@ const MobileInformation = () => {
           <Text variant="body2">{"--"}</Text>
         )}
       </InformationItem>
+
+        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} className='attachment-filter'>
+            <Text variant="body2" sx={{
+                fontWeight: "600"
+            }}>{projectT("detail.listFile.title")}</Text>
+
+            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px"
+                    }}
+                    id={ATTACHMENT_TYPE.ALL}
+                    className={active === ATTACHMENT_TYPE.ALL ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.all")}
+                </Button>
+
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px"
+                    }}
+                    id={ATTACHMENT_TYPE.IMAGE}
+                    className={active === ATTACHMENT_TYPE.IMAGE ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.image")}
+                </Button>
+
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px"
+                    }}
+                    id={ATTACHMENT_TYPE.FILE}
+                    className={active === ATTACHMENT_TYPE.FILE ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.file")}
+                </Button>
+            </Stack>
+        </Stack>
+
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 1, sm: 2, md: 3 }}>
+            {dataFilter?.map((data, index) => (
+                <Grid item xs={2} sm={4} md={4} key={index} sx={{
+                    paddingRight: "16px",
+                }}>
+                    <Item>
+                        {
+                            fileIcon(data.extension, data.link)
+                        }
+                        <Stack className="description-file">
+                            <Text sx={{
+                                color: "#000",
+                                fontWeight: 500,
+                                textAlign: "left",
+                                width: "160px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "pre",
+                            }}>{data.name}</Text>
+
+                            <Text sx={{
+                                color: "#666",
+                                fontSize: "12px",
+                                fontWeight: 400,
+                                display: "flex",
+                                gap: "10px"
+                            }}>
+                                <span>{formatBytes(data.size)}</span>
+                                <span>{formatDate(data.created_time, "HH:mm")}</span>
+                                <span>{data.uploaded_by}</span>
+                            </Text>
+                        </Stack>
+
+                    </Item>
+                </Grid>
+            ))}
+        </Grid>
     </>
   );
 };
