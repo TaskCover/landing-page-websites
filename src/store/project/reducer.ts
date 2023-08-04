@@ -150,6 +150,7 @@ export interface Comment {
   creator: User;
   activities: ActivityTask[];
   attachments_down: Attachment[];
+  listAttachmentsDown?: [];
 }
 export interface ActivityTask {
   id: string;
