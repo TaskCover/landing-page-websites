@@ -21,14 +21,16 @@ type CommentItemProps = {} & Comment;
 const Comments = (props: CommentsProps) => {
   const { comments = [] } = props;
   const projectT = useTranslations(NS_PROJECT);
-  const [listAttachmentsDown, setListAttachmentsDown] = useState<Attachment[] | any>([])
+  const [listAttachmentsDown, setListAttachmentsDown] = useState<Attachment[]>([])
   useEffect(() => {
     comments.map((comment) => {
-      comment.attachments_down.map((item) => {
-        setListAttachmentsDown(current => [...current, item]);
-      })
+      if (comment.attachments_down) {
+        comment.attachments_down.map((item) => {
+          setListAttachmentsDown(current => [...current, item]);
+        })
+      }
     })
-  }, []);
+  }, [comments]);
 
   return (
     <Stack spacing={2}>
