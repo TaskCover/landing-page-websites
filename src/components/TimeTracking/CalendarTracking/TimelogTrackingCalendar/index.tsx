@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import _ from "lodash";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
@@ -91,13 +91,18 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
   }, []);
 
   useEffect(() => {
-    if (workLog?.data?.length) setTimeLogs(workLog.data);
+    if (workLog?.data?.length) {
+      setTimeLogs(workLog.data) 
+    } else {
+      setTimeLogs([])
+    }
+      ;
   }, [workLog]);
 
   const getTaskActionString = (action: string) => {
     return taskActionStrings[action as keyof typeof taskActionStrings] || "";
   };
-  const _renderItem = () => {
+  const _renderItem = useCallback(() => {
     if (_.isEmpty(timeLogs) && !isGetLoading)
       return (
         <Typography
@@ -195,7 +200,7 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
         </Box>
       );
     });
-  };
+  }, [timeLogs]);
 
   const _renderCalendarModule = () => {
     return (
@@ -205,16 +210,7 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
         justifyContent="space-between"
         sx={{ my: "16px" }}
       >
-        <Stack
-          direction="row"
-          alignItems="center"
-          sx={{
-            ":hover": {
-              cursor: "pointer",
-            },
-          }}
-          onClick={() => setIsOpen(!isOpen)}
-        >
+        
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <MobileDatePicker
               open={ isOpen }
@@ -231,6 +227,7 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
                 });
               }}
               sx={{ display: "none" }}
+              closeOnSelect
               slotProps={{
                 actionBar: {
                   actions: [],
@@ -263,7 +260,16 @@ const TimelogTrackingCalendar: React.FC<IProps> = ({}) => {
               }}
             />
           </LocalizationProvider>
-
+          <Stack
+          direction="row"
+          alignItems="center"
+          sx={{
+            ":hover": {
+              cursor: "pointer",
+            },
+          }}
+          onClick={() => setIsOpen(!isOpen)}
+        >
           <Typography
             sx={{
               fontSize: "14px",
