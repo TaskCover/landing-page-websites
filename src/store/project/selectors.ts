@@ -42,6 +42,7 @@ import {
   deleteDependency,
   orderTodo,
   OrderTodoData,
+  getProjectAttachment,
 } from "./actions";
 import { DataStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -138,6 +139,30 @@ export const useProject = () => {
     onGetProject,
   };
 };
+
+export const useProjectAttachment = () => {
+  const dispatch = useAppDispatch();
+  const {
+    attachments: items,
+    itemStatus: status,
+    itemError: error,
+  } = useAppSelector((state) => state.project, shallowEqual);
+  const onGetProjectAttachment = useCallback(
+      async (id: string | string[]) => {
+        await dispatch(getProjectAttachment(id));
+      },
+      [dispatch],
+  )
+
+  return {
+    items,
+    status,
+    error,
+    onGetProjectAttachment,
+  };
+};
+
+
 
 export const useMembersOfProject = () => {
   const dispatch = useAppDispatch();

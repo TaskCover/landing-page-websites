@@ -22,6 +22,7 @@ export const Endpoint = {
   COMPANY_ITEM: "/companies/{id}",
   PROJECTS: "/projects",
   PROJECT_ITEM: "/projects/{id}",
+  PROJECT_FILE: "/projects/{id}/files",
   PROJECT_MEMBERS: "/projects/{id}/members",
   PROJECT_TASKS: "/tasks",
   PROJECT_ACTIVITIES: "/activities",

@@ -215,6 +215,24 @@ export const getProject = createAsyncThunk(
   },
 );
 
+export const getProjectAttachment = createAsyncThunk(
+  "project/getProjectAttachment",
+  async (id: string | string[]) => {
+    try {
+      const response = await client.get(
+        StringFormat(Endpoint.PROJECT_FILE, { id }),
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
 export const createProject = createAsyncThunk(
   "project/createProject",
   async (data: ProjectData) => {

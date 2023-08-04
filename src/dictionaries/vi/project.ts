@@ -55,6 +55,14 @@ export const ProjectLang: ProjectDictionary = {
     },
     workingHoursActual: "Số giờ làm việc thực tế",
     costSpent: "Chi phí chi trả thực tế",
+    listFile: {
+      title: "Danh sách các tệp",
+      filter: {
+        all: "Tất cả",
+        file: "Tệp",
+        image: "Ảnh"
+      }
+    }
   },
   detailMembers: {
     head: {
