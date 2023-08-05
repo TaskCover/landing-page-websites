@@ -232,7 +232,17 @@ const chatSlice = createSlice({
         (state, action: PayloadAction<MessageInfo[]>) => {
           if (action.payload.length > 0 && !state.messagePaging.isRefetchPage) {
             const messageNew = action.payload.reverse();
-            state.messageInfo = [...messageNew, ...state.messageInfo];
+            /* The above code is checking if the last element of the `action.payload` array has the
+            same `rid` value as the last element of the `state.messageInfo` array. If they have the
+            same `rid` value, it appends the `messageNew` array to the `state.messageInfo` array.
+            Otherwise, it assigns the `messageNew` array to the `state.messageInfo` array. 
+            
+            - Fix bug duplicate messages when switch from single chat to group chat */
+            if ([...action?.payload]?.pop()?.rid == [...state?.messageInfo]?.pop()?.rid) {
+              state.messageInfo = [...messageNew, ...state.messageInfo];
+            } else {
+              state.messageInfo = messageNew;
+            }
           }
           if (action.payload?.length < state.messagePaging.pageSize) {
             state.messagePaging.pageIndex =

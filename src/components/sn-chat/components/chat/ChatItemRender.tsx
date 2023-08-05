@@ -142,7 +142,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
         <Avatar
           alt="Avatar"
           size={56}
-          src={avatarClone}
+          src={undefined}
           style={{
             borderRadius: "10px",
           }}
