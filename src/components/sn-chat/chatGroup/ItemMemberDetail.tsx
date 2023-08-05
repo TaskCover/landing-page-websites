@@ -167,6 +167,7 @@ const ItemMemberDetail = ({
             {commonT("form.admin")}
           </Button>
         ) : (
+          admin &&
           <>
             <IconButton noPadding size="normal">
               <MoreSquareIcon onClick={handleClick} />
