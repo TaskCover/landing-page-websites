@@ -94,3 +94,27 @@ export const mapType = {
   [FILE_MAP.CSV]: ["csv"],
   [FILE_MAP.PDF]: ["pdf"],
 };
+
+export const nameDayList = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+export const nameMonthList = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];

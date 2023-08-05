@@ -14,6 +14,8 @@ import MessageListSearch from "../messages/MessageListSearch";
 import { useSnackbar } from "store/app/selectors";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
+import UserInfo from "./UserInfo";
+import GroupMediaProfile from "./GroupMediaProfile";
 
 const ItemProfile = ({
   Icon,
@@ -58,16 +60,9 @@ const ItemProfile = ({
 
 interface UserLandingProps {
   displayUserInfo: boolean;
-  children?: React.ReactNode;
   onPrevious: () => void;
-  onSetMediaStep: (step: STEP_INFO) => void;
 }
-const UserLanding = ({
-  displayUserInfo,
-  children,
-  onPrevious,
-  onSetMediaStep,
-}: UserLandingProps) => {
+const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
   const {
     conversationInfo,
     stateSearchMessage,
@@ -82,6 +77,8 @@ const UserLanding = ({
     isToggle?: boolean;
     text: string;
   }>({ isSearch: false, isToggle: false, text: "" });
+  const [stepMedia, setStepMedia] = useState<STEP_INFO>(STEP_INFO.IDLE);
+  const [isShowMedia, setShowMedia] = useState(false);
 
   const text = stateSearch.text;
   const isToggle = stateSearch.isToggle;
@@ -139,77 +136,129 @@ const UserLanding = ({
             size={80}
             style={{
               borderRadius: "10px",
-              border: "1px solid #efefef",
+              objectFit: "cover",
             }}
           />
           <Box display="flex" flexDirection="column" gap={2} mt={5}>
             <ItemProfile
               Icon={ProfileCircleIcon}
               title="Account infomation"
-              onClick={() => onSetMediaStep(STEP_INFO.USER)}
+              onClick={() => {
+                setStepMedia(STEP_INFO.USER);
+                setShowMedia(true);
+              }}
             />
             <ItemProfile
               Icon={MediaFileIcon}
               title="Media file"
-              onClick={() => onSetMediaStep(STEP_INFO.MEDIA)}
+              onClick={() => {
+                setStepMedia(STEP_INFO.MEDIA);
+                setShowMedia(true);
+              }}
             />
             <ItemProfile
               Icon={LinkIcon}
               title="Link"
-              onClick={() => onSetMediaStep(STEP_INFO.LINK)}
+              onClick={() => {
+                setStepMedia(STEP_INFO.LINK);
+                setShowMedia(true);
+              }}
             />
             <ItemProfile
               Icon={FileBasicIcon}
               title="File"
-              onClick={() => onSetMediaStep(STEP_INFO.FILE)}
+              onClick={() => {
+                setStepMedia(STEP_INFO.FILE);
+                setShowMedia(true);
+              }}
             />
           </Box>
         </Box>
       );
     }
-  }, [
-    avatar,
-    handleSelectMessage,
-    onSetMediaStep,
-    stateSearch.isSearch,
-    stateSearch.text,
-  ]);
+  }, [avatar, handleSelectMessage, stateSearch.isSearch, stateSearch.text]);
+
+  const renderMediaContent = useMemo(() => {
+    switch (stepMedia) {
+      case STEP_INFO.USER:
+        return (
+          <UserInfo
+            onPrevious={() => {
+              setShowMedia(false);
+            }}
+          />
+        );
+      case STEP_INFO.MEDIA:
+      case STEP_INFO.LINK:
+      case STEP_INFO.FILE:
+        return (
+          <GroupMediaProfile
+            type={stepMedia}
+            onPrevious={() => {
+              setShowMedia(false);
+            }}
+          />
+        );
+      default:
+        return null;
+    }
+  }, [stepMedia]);
+
   return (
     <Box
       sx={{
-        position: "absolute",
-        top: 0,
-        zIndex: 100,
         width: "100%",
         height: "600px",
         minHeight: "600px",
         backgroundColor: "white",
-        display: displayUserInfo ? "block" : "none",
+        transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+        transform: `translate(${displayUserInfo ? "0" : "100%"}, -100%)`,
+        position: "relative",
       }}
     >
-      {!children ? (
-        <>
-          <ProfileHeader
-            name={name || ""}
-            onPrevious={onPrevious}
-            textSearch={stateSearch.text}
-            isSearch={stateSearch.isSearch}
-            onChangeText={(value) =>
-              setStateSearch((prev) => ({ ...prev, text: value }))
-            }
-            onSearch={(text: string, isSearch: boolean) => {
-              setStateSearch((prev) => ({
-                text,
-                isSearch,
-                isToggle: !prev.isToggle,
-              }));
-            }}
-          />
-          {renderContent}
-        </>
-      ) : (
-        children
-      )}
+      <>
+        <ProfileHeader
+          name={name || ""}
+          onPrevious={onPrevious}
+          textSearch={stateSearch.text}
+          isSearch={stateSearch.isSearch}
+          onChangeText={(value) =>
+            setStateSearch((prev) => ({ ...prev, text: value }))
+          }
+          onSearch={(text: string, isSearch: boolean) => {
+            setStateSearch((prev) => ({
+              text,
+              isSearch,
+              isToggle: !prev.isToggle,
+            }));
+          }}
+          nameProps={{
+            sx: {
+              maxWidth: "100%",
+              width: "200px",
+              display: "-webkit-box",
+              WebkitLineClamp: "2",
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            },
+          }}
+        />
+        {renderContent}
+        <Box
+          sx={{
+            width: "100%",
+            height: "600px",
+            minHeight: "600px",
+            backgroundColor: "white",
+            transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+            transform: `translate(${isShowMedia ? "0" : "100%"}, -100%)`,
+            position: "absolute",
+            top: "100%",
+          }}
+        >
+          {renderMediaContent}
+        </Box>
+      </>
     </Box>
   );
 };

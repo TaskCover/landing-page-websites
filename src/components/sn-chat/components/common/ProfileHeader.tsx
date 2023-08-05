@@ -1,13 +1,15 @@
-import Box from "@mui/material/Box";
+import { SxProps } from "@mui/material";
+import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
+import Typography, { TypographyProps } from "@mui/material/Typography";
 import Avatar from "components/Avatar";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
+import VideoCallIcon from "icons/VideoCallIcon";
 import { useCallback, useEffect, useState } from "react";
 
 interface ProfileHeaderProps {
@@ -16,6 +18,8 @@ interface ProfileHeaderProps {
   avatar?: string | undefined;
   name: string;
   statusOnline?: string;
+  containerProps?: BoxProps;
+  nameProps?: TypographyProps;
   onPrevious: () => void;
   onShowProfile?: () => void;
   onSearch?: (text: string, isSearch: boolean) => void;
@@ -27,12 +31,16 @@ const ProfileHeader = ({
   avatar,
   name,
   statusOnline,
+  containerProps,
+  nameProps,
   onPrevious,
   onShowProfile,
   onSearch,
   onChangeText,
 }: ProfileHeaderProps) => {
   const [openSearch, setOpenSearch] = useState(false);
+  const { sx: containerSx, ...containerProp } = containerProps || {};
+  const { sx: nameSx, ...nameProp } = nameProps || {};
 
   useEffect(() => {
     setOpenSearch(isSearch || false);
@@ -107,23 +115,29 @@ const ProfileHeader = ({
             sx={{
               display: "flex",
               flexDirection: "column",
+              justifyContent: "center",
             }}
           >
             {onShowProfile ? (
-              <Box
+              <Typography
+                variant="inherit"
+                fontWeight="bold"
+                onClick={onShowProfile}
                 sx={{
                   cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
+                  ...nameSx,
                 }}
-                onClick={onShowProfile}
+                {...nameProp}
               >
-                <Typography variant="inherit" fontWeight="bold">
-                  {name}
-                </Typography>
-              </Box>
+                {name}
+              </Typography>
             ) : (
-              <Typography variant="inherit" fontWeight="bold">
+              <Typography
+                variant="inherit"
+                fontWeight="bold"
+                sx={nameSx}
+                {...nameProp}
+              >
                 {name}
               </Typography>
             )}
@@ -194,6 +208,8 @@ const ProfileHeader = ({
     groupButton,
     handleKeyDown,
     name,
+    nameProp,
+    nameSx,
     onChangeText,
     onSearch,
     onShowProfile,
@@ -211,7 +227,9 @@ const ProfileHeader = ({
           gap: 1,
           padding: 2,
           borderBottom: "1px solid #ECECF3",
+          ...containerSx,
         }}
+        {...containerProp}
       >
         <IconButton
           sx={{
@@ -219,7 +237,11 @@ const ProfileHeader = ({
           }}
           onClick={handleGoPrevious}
         >
-          <ArrowDownIcon />
+          <ArrowDownIcon
+            sx={{
+              fontSize: "32px",
+            }}
+          />
         </IconButton>
         {groupUserProfile()}
       </Box>
