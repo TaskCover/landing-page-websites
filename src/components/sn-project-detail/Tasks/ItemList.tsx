@@ -714,7 +714,12 @@ const ItemList = () => {
 
   return (
     <Stack flex={1} pb={3}>
-      <ActionsSelected selectedList={selectedList} onReset={onResetSelected} />
+      {!!selectedList.length && (
+        <ActionsSelected
+          selectedList={selectedList}
+          onReset={onResetSelected}
+        />
+      )}
       <TableLayout
         onLayout={onLayout}
         headerList={headerList}
