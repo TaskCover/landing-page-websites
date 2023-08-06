@@ -116,6 +116,13 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
     [onPrevious, onSetStateSearchMessage, stateSearchMessage],
   );
 
+  const resetForm = (step: STEP_INFO) => {
+    setShowMedia(false);
+    setTimeout(() => {
+      setStepMedia(step);
+    }, 200);
+  };
+
   const renderContent = useMemo(() => {
     if (stateSearch.isSearch) {
       return (
@@ -181,24 +188,11 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
   const renderMediaContent = useMemo(() => {
     switch (stepMedia) {
       case STEP_INFO.USER:
-        return (
-          <UserInfo
-            onPrevious={() => {
-              setShowMedia(false);
-            }}
-          />
-        );
+        return <UserInfo onPrevious={resetForm} />;
       case STEP_INFO.MEDIA:
       case STEP_INFO.LINK:
       case STEP_INFO.FILE:
-        return (
-          <GroupMediaProfile
-            type={stepMedia}
-            onPrevious={() => {
-              setShowMedia(false);
-            }}
-          />
-        );
+        return <GroupMediaProfile type={stepMedia} onPrevious={resetForm} />;
       default:
         return null;
     }
@@ -214,6 +208,7 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
         transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
         transform: `translate(${displayUserInfo ? "0" : "100%"}, -100%)`,
         position: "relative",
+        zIndex: 1,
       }}
     >
       <>
