@@ -41,18 +41,6 @@ const ChatList = () => {
     return convention
       .filter((item) => item.username !== user?.["username"])
       .map((item) => {
-        if (item._id === "vuGLLHJQuxZkMtoEXy6ZBkjwfbe3yhS5BG") {
-          return {
-            ...item,
-            statuses: [
-              { username: "eu", status: "offline" },
-              { username: "am", status: "online" },
-            ],
-          };
-        }
-        return item;
-      })
-      .map((item) => {
         if (item.t === "d") {
           const itemClone = { ...item };
           if (item.statuses && item.statuses.length > 0) {
