@@ -5,6 +5,10 @@ export const CommonLang: CommonDictionary = {
     title: "Taskcover",
     description: "Mô tả cho Taskcover",
   },
+  i18n: {
+    vn: "Tiếng việt",
+    en: "Tiếng anh",
+  },
   form: {
     error: {
       required: "{name} là bắt buộc.",
