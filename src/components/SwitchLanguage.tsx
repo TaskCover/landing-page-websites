@@ -11,12 +11,15 @@ import { useRouter } from "next-intl/client";
 import { memo, useRef } from "react";
 import Link from "./Link";
 import useQueryParams from "hooks/useQueryParams";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 const SwitchLanguage = (props: StackProps) => {
   const { replace } = useRouter();
   const { fullPath } = useQueryParams();
   const locale = useLocale() as Locale;
   const linkRef = useRef<HTMLLinkElement | null>(null);
+  const commonT = useTranslations(NS_COMMON);
 
   const onChangeValue = () => {
     if (linkRef?.current?.href) {
@@ -30,19 +33,24 @@ const SwitchLanguage = (props: StackProps) => {
             value={locale}
             onChange={onChangeValue}
             disableUnderline
-            sx={defaultSx as SxProps}
+            sx = {{
+              ...defaultSx,
+              boxShadow: 'none',
+              '.MuiOutlinedInput-notchedOutline': { border: 0 }
+            }
+          }
         >
           <MenuItem value="vi">
-            <div style={{display:"flex"}}>
+            <div style={{display:"flex", padding:"5px"}}>
               <img src="/images/img-vn-flag.png" alt="Vietnamese Flag" style={{marginTop:"16px",marginRight:"5px", width:"24px", height:"24px"}} />
-              <p>Vietnamese</p>
+              <p>{commonT("i18n.vn")}</p>
             </div>
 
           </MenuItem>
           <MenuItem value="en">
-            <div style={{display:"flex"}}>
+            <div style={{display:"flex",  padding:"5px"}}>
               <img src="/images/img-usa-flag.png" alt="USA Flag" style={{marginTop:"16px",marginRight:"5px", width:"24px", height:"24px"}} />
-              <p>English</p>
+              <p>{commonT("i18n.en")}</p>
             </div>
 
           </MenuItem>

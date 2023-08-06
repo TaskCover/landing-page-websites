@@ -3,6 +3,10 @@ export type CommonDictionary = {
     title: string;
     description: string;
   };
+  i18n: {
+    vn: string;
+    en: string;
+  };
   form: {
     error: {
       required: string;
