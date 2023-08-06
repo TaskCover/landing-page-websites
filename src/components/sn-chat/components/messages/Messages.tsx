@@ -4,6 +4,7 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -16,7 +17,10 @@ import { DataStatus } from "constant/enums";
 import Skeleton from "@mui/material/Skeleton";
 import MessageLayout from "../messages/MessageLayout";
 import MessageContent from "./MessageContent";
-import { sleep } from "utils/index";
+import { formatDate, sleep } from "utils/index";
+import Typography from "@mui/material/Typography";
+import { nameMonthList } from "constant/index";
+import React from "react";
 
 interface MessagesProps {
   sessionId: string;
@@ -63,7 +67,6 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     new IntersectionObserver((entries) => {
       const first = entries[0];
       if (first.isIntersecting) {
-        console.log(pageRef.current, pageSize);
         pageRef.current = pageRef.current + pageSize;
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         const clientHeight =
@@ -167,28 +170,50 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           const isCurrentUser = message.u.username === sessionId;
           const hasNextMessageFromSameUser =
             messages[index + 1]?.u?.username === messages[index]?.u?.username;
+          const currentTimeMessage = new Date(
+            formatDate(messages[index]?.ts, "MM/dd/yyyy"),
+          );
+          const nextTimeMessage = new Date(
+            formatDate(messages[index + 1]?.ts, "MM/dd/yyyy"),
+          );
+          const hasNextDay =
+            index !== messages.length - 1
+              ? currentTimeMessage.getTime() - nextTimeMessage.getTime() !== 0
+              : false;
           return (
-            <MessageLayout
-              key={index}
-              sessionId={sessionId}
-              message={message}
-              avatarPartner={avatarPartner || undefined}
-              hasNextMessageFromSameUser={hasNextMessageFromSameUser}
-              messageProps={{
-                ...(index === 0 && {
-                  ref: setFirstElement,
-                }),
-                ...(message._id === focusMessage?.messageId && {
-                  ref: focusMessageRef,
-                }),
-              }}
-            >
-              <MessageContent
+            <React.Fragment key={index}>
+              <MessageLayout
+                sessionId={sessionId}
                 message={message}
-                isCurrentUser={isCurrentUser}
-                unReadMessage={unReadMessage}
-              />
-            </MessageLayout>
+                avatarPartner={avatarPartner || undefined}
+                hasNextMessageFromSameUser={hasNextMessageFromSameUser}
+                messageProps={{
+                  ...(index === 0 && {
+                    ref: setFirstElement,
+                  }),
+                  ...(message._id === focusMessage?.messageId && {
+                    ref: focusMessageRef,
+                  }),
+                }}
+              >
+                <MessageContent
+                  message={message}
+                  isCurrentUser={isCurrentUser}
+                  unReadMessage={unReadMessage}
+                />
+              </MessageLayout>
+              {hasNextDay && (
+                <Typography
+                  textAlign="center"
+                  color="#999999"
+                  fontSize="12px"
+                  lineHeight="18px"
+                >
+                  {nextTimeMessage.getDate()}{" "}
+                  {nameMonthList[Number(nextTimeMessage.getMonth())]}
+                </Typography>
+              )}
+            </React.Fragment>
           );
         })}
         {stateMessage?.status === DataStatus.LOADING && (

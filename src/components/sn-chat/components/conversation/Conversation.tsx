@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { useWSChat } from "store/chat/helpers";

@@ -3,7 +3,7 @@ import ProfileHeader from "../common/ProfileHeader";
 import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
 import { SxProps, Typography } from "@mui/material";
-import { STEP, STEP_INFO } from "store/chat/type";
+import { STEP_INFO } from "store/chat/type";
 import { useEffect } from "react";
 import { DataStatus } from "constant/enums";
 import { useSnackbar } from "store/app/selectors";
@@ -55,6 +55,25 @@ const UserInfo = ({ onPrevious }: UserInfoProps) => {
         onPrevious={() => {
           onPrevious(STEP_INFO.IDLE);
         }}
+        containerProps={{
+          sx: {
+            position: "relative",
+          },
+        }}
+        nameProps={{
+          sx: {
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+            maxWidth: "100%",
+            width: "200px",
+            display: "-webkit-box",
+            WebkitLineClamp: "2",
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textAlign: "center",
+          },
+        }}
       />
       <Box textAlign="center" mt={2}>
         {partnerInfoStatus === DataStatus.LOADING ||
@@ -68,7 +87,7 @@ const UserInfo = ({ onPrevious }: UserInfoProps) => {
               size={120}
               style={{
                 borderRadius: "10px",
-                border: "1px solid #efefef",
+                objectFit: "cover",
               }}
             />
             <Box display="flex" flexDirection="column" gap={2} mt={5} p="1rem">
@@ -78,7 +97,7 @@ const UserInfo = ({ onPrevious }: UserInfoProps) => {
               </Box>
               <Box sx={styleFormItem}>
                 <Typography color="#666666">Chức vụ</Typography>
-                <Typography>{partnerInfo?.position.name}</Typography>
+                <Typography>{partnerInfo?.position?.name}</Typography>
               </Box>
               <Box sx={styleFormItem}>
                 <Typography color="#666666">Số điện thoại</Typography>

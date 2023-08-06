@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { useMemo, useState } from "react";
-import { STEP, STEP_INFO } from "store/chat/type";
+import { memo, useEffect, useMemo, useState } from "react";
+import { STEP_INFO } from "store/chat/type";
 import ProfileHeader from "../common/ProfileHeader";
 import { useChat } from "store/chat/selectors";
 import { SxProps } from "@mui/material";
@@ -13,8 +13,11 @@ interface GroupMediaProfileProps {
   type?: STEP_INFO;
   onPrevious: (step) => void;
 }
-const GroupMediaProfile = ({ type, onPrevious }: GroupMediaProfileProps) => {
-  const [tab, setTab] = useState<STEP_INFO>(type || STEP_INFO.MEDIA);
+const GroupMediaProfile = ({
+  type = STEP_INFO.MEDIA,
+  onPrevious,
+}: GroupMediaProfileProps) => {
+  const [tab, setTab] = useState<STEP_INFO>(type);
   const { conversationInfo } = useChat();
   const { name } = conversationInfo || {};
 
@@ -28,6 +31,10 @@ const GroupMediaProfile = ({ type, onPrevious }: GroupMediaProfileProps) => {
         return <FileContent />;
     }
   }, [tab]);
+
+  useEffect(() => {
+    setTab(type);
+  }, [type]);
 
   const styleButtonTab: SxProps = {
     width: "100px",
@@ -45,6 +52,25 @@ const GroupMediaProfile = ({ type, onPrevious }: GroupMediaProfileProps) => {
         name={name || ""}
         onPrevious={() => {
           onPrevious(STEP_INFO.IDLE);
+        }}
+        containerProps={{
+          sx: {
+            position: "relative",
+          },
+        }}
+        nameProps={{
+          sx: {
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+            maxWidth: "100%",
+            width: "200px",
+            display: "-webkit-box",
+            WebkitLineClamp: "2",
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textAlign: "center",
+          },
         }}
       />
       <Box>
@@ -93,4 +119,4 @@ const GroupMediaProfile = ({ type, onPrevious }: GroupMediaProfileProps) => {
   );
 };
 
-export default GroupMediaProfile;
+export default memo(GroupMediaProfile);

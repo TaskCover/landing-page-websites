@@ -10,7 +10,7 @@ import CloseIcon from "icons/CloseIcon";
 import { useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/DefaultPopupLayout";
-import { Typography } from "@mui/material";
+import { Grow, Typography } from "@mui/material";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
@@ -171,7 +171,7 @@ const ChatListTemp = () => {
           }}
         >
           {({ TransitionProps }) => (
-            <Fade {...TransitionProps} timeout={350}>
+            <Grow {...TransitionProps} timeout={350}>
               <Box paddingBottom={2}>
                 <Paper
                   sx={{
@@ -186,7 +186,7 @@ const ChatListTemp = () => {
                   <SwitchChat />
                 </Paper>
               </Box>
-            </Fade>
+            </Grow>
           )}
         </Popper>
       )}

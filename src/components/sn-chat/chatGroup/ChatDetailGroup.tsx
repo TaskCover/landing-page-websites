@@ -8,8 +8,6 @@ import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/Defaul
 import { useEffect, useState, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
-import MediaFileIcon from "icons/MediaFileIcon";
-import LinkIcon from "icons/LinkIcon";
 import FileGroupIcon from "icons/FileGroupIcon";
 import ArrowRightIcon from "icons/ArrowRightIcon";
 import EditGroupNameIcon from "icons/EditGroupNameIcon";
@@ -20,6 +18,8 @@ import { STEP, TYPE_LIST } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import ItemDetail from "../components/ItemDetail";
+import MediaFileIconGroup from "icons/MediaFileIconGroup";
+import LinkIconGroup from "icons/LinkIconGroup";
 
 const ChatDetailGroup = (props) => {
   const {
@@ -456,7 +456,7 @@ const ChatDetailGroup = (props) => {
           />
           <ItemDetail
             text={"Media"}
-            icon={<MediaFileIcon />}
+            icon={<MediaFileIconGroup />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
               onSetStep(STEP.LIST);
@@ -465,7 +465,7 @@ const ChatDetailGroup = (props) => {
           />
           <ItemDetail
             text={"Link"}
-            icon={<LinkIcon />}
+            icon={<LinkIconGroup />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
               onSetStep(STEP.LIST);
@@ -525,7 +525,7 @@ const ChatDetailGroup = (props) => {
               onClick={() => {
                 handleClickMember(member)
               }}
-              admin
+              admin = {owner}
             />
           ))}
         </Box>
@@ -559,6 +559,7 @@ const ChatDetailGroup = (props) => {
                 </Typography>
               </Box>
             )}
+            {groupMembers.length > 1 &&
             <Box sx={{ textAlign: "center" }}>
               <Typography
                 variant="caption"
@@ -615,6 +616,7 @@ const ChatDetailGroup = (props) => {
                 {"Leave group"}
               </Typography>
             </Box>
+            }
           </Box>
         </Box>
       </Box>

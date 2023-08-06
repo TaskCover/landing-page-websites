@@ -175,6 +175,7 @@ const MediaContent = () => {
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: "4px",
             overflow: "auto",
+            margin: "0 4px",
             maxHeight: "calc(600px - 73px - 37px - 35px)",
           }}
         >

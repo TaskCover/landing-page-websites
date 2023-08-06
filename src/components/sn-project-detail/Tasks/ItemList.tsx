@@ -57,6 +57,7 @@ import Loading from "components/Loading";
 import useToggle from "hooks/useToggle";
 import FixedLayout from "components/FixedLayout";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import useTheme from "hooks/useTheme";
 
 const ItemList = () => {
   const {
@@ -89,7 +90,7 @@ const ItemList = () => {
   const [isDragging, onDraggingTrue, onDraggingFalse] = useToggle();
 
   const params = useParams();
-
+  const { isDarkMode } = useTheme();
   const { onAddSnackbar } = useSnackbar();
 
   const projectId = useMemo(() => params.id, [params.id]) as string;
@@ -115,7 +116,7 @@ const ItemList = () => {
 
   const [taskName, setTaskName] = useState<string>("");
   const [errorTaskName, setErrorTaskName] = useState<string>("");
-
+  const [taskIdSelected, setTaskIdSelected] = useState<string>("");
   const noData = useMemo(
     () => !isIdle && totalItems === 0,
     [isIdle, totalItems],
@@ -632,6 +633,7 @@ const ItemList = () => {
 
   const changeNameTask = (event) => {
     setTaskName(event.target.value);
+    setTaskIdSelected(event.target.name);
     setErrorTaskName("");
   };
 
@@ -949,10 +951,11 @@ const ItemList = () => {
                           >
                             <PlusIcon />
                             <TextField
+                              name={task.id}
                               label={projectT(
                                 "detailTasks.addNewSubTaskPlaceholder",
                               )}
-                              value={taskName}
+                              value={task.id == taskIdSelected ? taskName : ''}
                               onKeyDown={(e) =>
                                 onKeyDownTaskName(e, taskListItem.id, task.id)
                               }
@@ -979,7 +982,8 @@ const ItemList = () => {
                                   color: "green",
                                 },
                                 "& >label": {
-                                  fontSize: "14px !important",
+                                  fontWeight: "600 !important",
+                                  color: isDarkMode ? "#ffffff" : "green !important"
                                 },
                               }}
                             />

@@ -63,6 +63,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
               fontSize: "14px",
               lineHeight: "22px",
               fontWeight: "normal",
+              pointerEvents: "none",
               ...(isUnReadMessage && {
                 fontWeight: 700,
                 color: "black",
@@ -79,6 +80,9 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
                   marginRight: "0.3rem",
                 },
               }),
+            },
+            "& a": {
+              color: "#999999",
             },
             "& ol": {
               marginLeft: "1rem",
@@ -101,7 +105,6 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
   return (
     <>
       <Box
-        position="absolute"
         display={isUnReadMessage ? "block" : "none"}
         sx={{
           position: "absolute",
@@ -139,7 +142,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
         <Avatar
           alt="Avatar"
           size={56}
-          src={avatarClone}
+          src={undefined}
           style={{
             borderRadius: "10px",
           }}
