@@ -62,7 +62,7 @@ const DesktopInformation = (props) => {
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
-  const [active, setActive] = useState("");
+  const [active, setActive] = useState("0");
   const [dataFilter, setDataFilter] = useState(attachments);
   const handleFilterAttachment = (event) => {
       setActive(event.target.id);
@@ -215,7 +215,9 @@ const DesktopInformation = (props) => {
                     sx={{
                         minWidth: "100px",
                         borderRadius: "30px",
-                        minHeight: "32px"
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
                     }}
                     id={ATTACHMENT_TYPE.ALL}
                     className={active === ATTACHMENT_TYPE.ALL ? "active" : undefined}
@@ -231,7 +233,9 @@ const DesktopInformation = (props) => {
                     sx={{
                         minWidth: "100px",
                         borderRadius: "30px",
-                        minHeight: "32px"
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
                     }}
                     id={ATTACHMENT_TYPE.IMAGE}
                     className={active === ATTACHMENT_TYPE.IMAGE ? "active" : undefined}
@@ -247,7 +251,9 @@ const DesktopInformation = (props) => {
                     sx={{
                         minWidth: "100px",
                         borderRadius: "30px",
-                        minHeight: "32px"
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
                     }}
                     id={ATTACHMENT_TYPE.FILE}
                     className={active === ATTACHMENT_TYPE.FILE ? "active" : undefined}
@@ -306,7 +312,7 @@ const MobileInformation = (props) => {
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
 
-  const [active, setActive] = useState("");
+  const [active, setActive] = useState("0");
   const [dataFilter, setDataFilter] = useState(attachments);
 
   const handleFilterAttachment = (event) => {
@@ -430,7 +436,9 @@ const MobileInformation = (props) => {
                     sx={{
                         minWidth: "100px",
                         borderRadius: "30px",
-                        minHeight: "32px"
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
                     }}
                     id={ATTACHMENT_TYPE.ALL}
                     className={active === ATTACHMENT_TYPE.ALL ? "active" : undefined}
@@ -446,7 +454,9 @@ const MobileInformation = (props) => {
                     sx={{
                         minWidth: "100px",
                         borderRadius: "30px",
-                        minHeight: "32px"
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
                     }}
                     id={ATTACHMENT_TYPE.IMAGE}
                     className={active === ATTACHMENT_TYPE.IMAGE ? "active" : undefined}
@@ -462,7 +472,9 @@ const MobileInformation = (props) => {
                     sx={{
                         minWidth: "100px",
                         borderRadius: "30px",
-                        minHeight: "32px"
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
                     }}
                     id={ATTACHMENT_TYPE.FILE}
                     className={active === ATTACHMENT_TYPE.FILE ? "active" : undefined}
