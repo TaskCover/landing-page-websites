@@ -117,8 +117,9 @@ a {
 }
 
 .attachment-filter button.active {
-  border: 1px solid #3699FF;
-  background: #E1F0FF;
+  border: 1px solid #3699FF !important;
+  background: #a5caef !important;
+  color: #3699FF !important;
 }
 
 .slider-comment-attachment .react-slideshow-wrapper .images-wrap > div {

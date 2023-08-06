@@ -57,6 +57,7 @@ import Loading from "components/Loading";
 import useToggle from "hooks/useToggle";
 import FixedLayout from "components/FixedLayout";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import useTheme from "hooks/useTheme";
 
 const ItemList = () => {
   const {
@@ -89,7 +90,7 @@ const ItemList = () => {
   const [isDragging, onDraggingTrue, onDraggingFalse] = useToggle();
 
   const params = useParams();
-
+  const { isDarkMode } = useTheme();
   const { onAddSnackbar } = useSnackbar();
 
   const projectId = useMemo(() => params.id, [params.id]) as string;
@@ -979,7 +980,8 @@ const ItemList = () => {
                                   color: "green",
                                 },
                                 "& >label": {
-                                  fontSize: "14px !important",
+                                  fontWeight: "600 !important",
+                                  color: isDarkMode ? "#ffffff" : "green !important"
                                 },
                               }}
                             />
