@@ -983,7 +983,8 @@ const ItemList = () => {
                                 },
                                 "& >label": {
                                   fontWeight: "600 !important",
-                                  color: isDarkMode ? "#ffffff" : "green !important"
+                                  fontSize: "14px",
+                                  color: isDarkMode ? "#ffffff" : "#999999 !important"
                                 },
                               }}
                             />
