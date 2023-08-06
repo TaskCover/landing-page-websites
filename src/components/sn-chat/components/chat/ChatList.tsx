@@ -46,8 +46,8 @@ const ChatList = () => {
           if (item.statuses && item.statuses.length > 0) {
             const statusPartner =
               item.statuses?.[0].username === user?.["username"]
-                ? item.statuses?.[1].status
-                : item.statuses?.[0].status;
+                ? item.statuses?.[1]?.status
+                : item.statuses?.[0]?.status;
             itemClone.status = statusPartner;
           }
 
