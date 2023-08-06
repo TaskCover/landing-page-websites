@@ -15,6 +15,7 @@ const Conversation = () => {
     convention,
     messageInfo,
     messagePaging: { pageIndex, pageSize },
+    messageStatus,
     stateSendMessage,
     dataTransfer,
     stateSearchMessage,
@@ -89,7 +90,7 @@ const Conversation = () => {
   const handleSendMessage = useCallback(
     async (message: string) => {
       sendMessage({ message });
-      inputRef?.current?.scrollBottom();
+      inputRef?.current?.clearScrollContentMessage();
       if (files.length > 0) {
         await onUploadAndSendFile({
           endpoint: "files/upload-link",
@@ -109,6 +110,7 @@ const Conversation = () => {
         avatarPartner={conversationInfo?.avatar ?? account?.avatar ?? undefined}
         initialMessage={messageInfo}
         stateMessage={stateSendMessage}
+        statusLoadMessage={messageStatus}
         focusMessage={stateSearchMessage}
         unReadMessage={unReadMessage}
         onRefetch={(page) => {

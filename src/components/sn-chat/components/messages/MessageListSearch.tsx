@@ -72,10 +72,11 @@ const MessageItemRender = ({
           </Typography>
           <Typography
             ref={lastMessageRef}
-            variant="caption"
             color="#999999"
             sx={{
               display: "flex",
+              fontSize: "14px",
+              lineHeight: "22px",
               "& *": {
                 margin: 0,
                 padding: 0,
@@ -91,6 +92,8 @@ const MessageItemRender = ({
               },
               "& mark": {
                 display: "inline",
+                color: "#3699FF",
+                backgroundColor: "transparent",
               },
               "& ol": {
                 marginLeft: "1rem",

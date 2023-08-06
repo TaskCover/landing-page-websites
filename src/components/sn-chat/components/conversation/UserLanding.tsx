@@ -119,7 +119,7 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
   const renderContent = useMemo(() => {
     if (stateSearch.isSearch) {
       return (
-        <Box overflow="auto" maxHeight="calc(600px - 74px)">
+        <Box overflow="auto" maxHeight="calc(600px - 65px)">
           <MessageListSearch
             text={stateSearch.text}
             type="d"

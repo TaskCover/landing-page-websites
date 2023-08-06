@@ -9,25 +9,32 @@ interface ChatItemRenderProps {
   chatInfo: IChatItemInfo;
 }
 const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
-  const { lastMessage, name, avatar, t, unreadCount } = chatInfo || {};
+  const {
+    lastMessage,
+    name,
+    avatar,
+    t,
+    unreadCount,
+    status: statusPartner,
+  } = chatInfo || {};
   const [avatarClone, setAvatarClone] = useState<string | undefined>(avatar);
   const isUnReadMessage = useMemo(() => unreadCount > 0, [unreadCount]);
   const isDirectMessage = useMemo(() => t === "d", [t]);
   const isMessageNotConnect = useMemo(() => lastMessage == null, [lastMessage]);
-  const isCurrentAcc = useMemo(
+  const isCurrentAccByLastMessage = useMemo(
     () => sessionId === lastMessage?.u?.username,
     [lastMessage, sessionId],
   );
   const lastMessageContent = useMemo(() => {
     const sendAttachment = lastMessage?.attachments?.length > 0;
     if (sendAttachment) {
-      return isCurrentAcc ? "You sent a file." : "Sent a file.";
+      return isCurrentAccByLastMessage ? "You sent a file." : "Sent a file.";
     } else {
-      return isCurrentAcc
+      return isCurrentAccByLastMessage
         ? `<p>You: ${lastMessage?.msg}</p>`
         : lastMessage?.msg;
     }
-  }, [isCurrentAcc, lastMessage]);
+  }, [isCurrentAccByLastMessage, lastMessage]);
 
   const lastMessageRef = useRef<HTMLDivElement>(null);
 
@@ -73,7 +80,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
-              ...(isCurrentAcc && {
+              ...(isCurrentAccByLastMessage && {
                 "&:nth-of-type(1)": {
                   overflowWrap: "unset",
                   overflow: "initial",
@@ -100,7 +107,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
         />
       </>
     );
-  }, [isCurrentAcc, isUnReadMessage, name]);
+  }, [isCurrentAccByLastMessage, isUnReadMessage, name]);
 
   return (
     <>
@@ -131,9 +138,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
             backgroundColor: "#55C000",
             borderRadius: "50%",
             visibility:
-              isDirectMessage &&
-              isMessageNotConnect &&
-              chatInfo?.status === "online"
+              isDirectMessage && statusPartner === "online"
                 ? "visible"
                 : "hidden",
           },

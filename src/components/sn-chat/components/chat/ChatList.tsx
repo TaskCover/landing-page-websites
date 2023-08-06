@@ -38,7 +38,43 @@ const ChatList = () => {
     }),
   );
   const conversationList = useMemo(() => {
-    return convention.filter((item) => item.username !== user?.["username"]);
+    return convention
+      .filter((item) => item.username !== user?.["username"])
+      .map((item) => {
+        if (item._id === "vuGLLHJQuxZkMtoEXy6ZBkjwfbe3yhS5BG") {
+          return {
+            ...item,
+            statuses: [
+              { username: "eu", status: "offline" },
+              { username: "am", status: "online" },
+            ],
+          };
+        }
+        return item;
+      })
+      .map((item) => {
+        if (item.t === "d") {
+          const itemClone = { ...item };
+          if (item.statuses && item.statuses.length > 0) {
+            const statusPartner =
+              item.statuses?.[0].username === user?.["username"]
+                ? item.statuses?.[1].status
+                : item.statuses?.[0].status;
+            itemClone.status = statusPartner;
+          }
+
+          if (item.usernames && item.usernames.length > 0) {
+            const usernamePartner =
+              item.usernames?.[0] === user?.["username"]
+                ? item.usernames?.[1]
+                : item.usernames?.[0];
+            itemClone.username = usernamePartner;
+          }
+
+          return itemClone;
+        }
+        return item;
+      });
   }, [convention, user]);
 
   const handleGetConversation = async (

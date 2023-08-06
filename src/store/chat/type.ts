@@ -143,12 +143,9 @@ export interface SetStepAction<T> {
 
 export interface ChatState {
   convention: IChatItemInfo[];
-  userOnlinePage: UserOnlinePage[];
   status: DataStatus;
   conversationPaging: Paging & { isRefetchPage?: boolean };
-  conversationInfo:
-    | (IChatItemInfo & { partnerUsername: string; statusOnline: string })
-    | null;
+  conversationInfo: IChatItemInfo | null;
   roomId: string;
 
   currStep: STEP;

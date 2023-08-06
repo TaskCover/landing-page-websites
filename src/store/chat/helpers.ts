@@ -68,13 +68,13 @@ export const useWSChat = () => {
   };
 
   useEffect(() => {
-    connectSocket();
+    const wsNew = connectSocket();
+    connectMessage(wsNew);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     let openSocketFlag = true;
-    connectMessage(ws);
     if (ws) {
       ws.onclose = () => {
         if (openSocketFlag) {

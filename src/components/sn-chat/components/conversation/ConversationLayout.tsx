@@ -32,7 +32,7 @@ const ConversationLayout = () => {
         <ProfileHeader
           avatar={accountInfo?.avatar}
           name={accountInfo?.name || "123"}
-          statusOnline={conversationInfo?.statusOnline || ""}
+          statusOnline={conversationInfo?.status || ""}
           onPrevious={() => {
             onSetStep(prevStep);
             onClearMessageList();
@@ -50,13 +50,14 @@ const ConversationLayout = () => {
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
             },
+            variant: "h6",
           }}
         />
         <Box
           display="flex"
           flexDirection="column"
           overflow="hidden"
-          height="calc(600px - 81px)"
+          height="calc(600px - 72px)"
         >
           <Conversation />
         </Box>

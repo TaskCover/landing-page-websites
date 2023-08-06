@@ -33,7 +33,6 @@ const initialState: ChatState = {
   convention: [],
   status: DataStatus.IDLE,
   conversationPaging: initalPage,
-  userOnlinePage: [],
   roomId: "",
   conversationInfo: null,
   currStep: STEP.CONVENTION,
@@ -71,7 +70,7 @@ const initialState: ChatState = {
   groupMembers: [],
   chatAttachments: [],
   deleteConversationStatus: DataStatus.IDLE,
-  dataTransfer: {}
+  dataTransfer: {},
 };
 
 const isConversation = (type: string) => {
@@ -99,26 +98,12 @@ const chatSlice = createSlice({
       state.typeList = action.payload;
     },
     setDataTransfer: (state, action) => {
-      console.log('action.payload', action.payload);
-      
+      console.log("action.payload", action.payload);
+
       state.dataTransfer = action.payload;
     },
     setConversationInfo: (state, action) => {
-      const { conversationInfo, sessionId } = action.payload;
-      if (conversationInfo) {
-        const { usernames } = conversationInfo || {};
-        const partnerUsername =
-          sessionId === usernames?.[0] ? usernames?.[1] : usernames?.[0];
-        const statusOnline = conversationInfo.statuses?.find(
-          (item) => item.username === partnerUsername,
-        )?.status;
-
-        state.conversationInfo = {
-          ...conversationInfo,
-          partnerUsername,
-          statusOnline,
-        };
-      }
+      state.conversationInfo = action.payload;
     },
     setMessage: (state, action) => {
       state.messageInfo.push(action.payload);
@@ -184,15 +169,7 @@ const chatSlice = createSlice({
             const conversationNew = action.payload.filter((item) =>
               isConversation(item["t"]) ? item : undefined,
             );
-            const userOnlinePageNew = action.payload.filter((item) =>
-              !isConversation(item["t"]) ? item : undefined,
-            );
-
             state.convention = [...state.convention, ...conversationNew];
-            state.userOnlinePage = [
-              ...state.userOnlinePage,
-              ...userOnlinePageNew,
-            ];
           }
           if (action.payload?.length < state.conversationPaging.pageSize) {
             state.conversationPaging.pageIndex =

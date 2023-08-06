@@ -50,8 +50,8 @@ const LinkContent = () => {
       {chatLinksStatus === DataStatus.LOADING ||
       chatLinksStatus === DataStatus.FAILED ? (
         <Typography textAlign="center">Loading...</Typography>
-      ) : (
-        chatLinkClone?.map((item, index) => {
+      ) : chatLinkClone?.length > 0 ? (
+        chatLinkClone.map((item, index) => {
           return (
             <Box
               key={index}
@@ -81,6 +81,10 @@ const LinkContent = () => {
             </Box>
           );
         })
+      ) : (
+        <Typography textAlign="center">
+          No Data...
+        </Typography>
       )}
     </Box>
   );

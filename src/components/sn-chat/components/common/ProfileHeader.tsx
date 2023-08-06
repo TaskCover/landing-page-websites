@@ -102,20 +102,40 @@ const ProfileHeader = ({
       return (
         <>
           {avatar && (
-            <Avatar
-              alt="Avatar"
-              src={avatar}
-              size={40}
-              style={{
-                borderRadius: "10px",
+            <Box
+              position="relative"
+              display="flex"
+              sx={{
+                "&::before": {
+                  content: `''`,
+                  position: "absolute",
+                  right: "-5px",
+                  top: "-4px",
+                  width: "14px",
+                  height: "14px",
+                  border: "2px solid #ffffff",
+                  backgroundColor: "#55C000",
+                  borderRadius: "50%",
+                  visibility: statusOnline === "online" ? "visible" : "hidden",
+                },
               }}
-            />
+            >
+              <Avatar
+                alt="Avatar"
+                src={avatar}
+                size={40}
+                style={{
+                  borderRadius: "10px",
+                }}
+              />
+            </Box>
           )}
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
+              marginLeft: "11px",
             }}
           >
             {onShowProfile ? (
@@ -142,8 +162,13 @@ const ProfileHeader = ({
               </Typography>
             )}
             {statusOnline && (
-              <Typography variant="caption" color="#999999">
-                {statusOnline}
+              <Typography
+                variant="caption"
+                color="#999999"
+                fontSize="14px"
+                lineHeight="22px"
+              >
+                {statusOnline === "online" ? "Active" : ""}
               </Typography>
             )}
           </Box>
@@ -224,8 +249,7 @@ const ProfileHeader = ({
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: 1,
-          padding: 2,
+          padding: "11.5px",
           borderBottom: "1px solid #ECECF3",
           ...containerSx,
         }}
