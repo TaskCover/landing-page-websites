@@ -59,10 +59,10 @@ const ItemList = () => {
       },
       {
         value: commonT("assigner"),
-        width: "30%",
+        width: "25%",
         align: "left",
       },
-      { value: commonT("status"), width: "20%" },
+      { value: commonT("status"), width: "25%" },
       { value: "", width: "5%" },
     ],
     [commonT],

@@ -8,7 +8,7 @@ import { Stack } from "@mui/material";
 import { Text } from "components/shared";
 import { TEXT_STATUS, COLOR_STATUS } from "./components/helpers";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
-import { Saved } from "./components";
+import { Saved, SelectStatus, SelectMembers } from "./components";
 
 type DesktopCellsProps = {
   item: Project;
@@ -42,11 +42,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
       </BodyCell>
       <BodyCell align="left">{item?.owner?.fullname}</BodyCell>
       {item.status ? (
-        <StatusCell
-          text={TEXT_STATUS[item.status]}
-          color={COLOR_STATUS[item.status]}
-          width={93}
-        />
+        <SelectStatus value={item.status} id={item.id} />
       ) : (
         <BodyCell />
       )}
