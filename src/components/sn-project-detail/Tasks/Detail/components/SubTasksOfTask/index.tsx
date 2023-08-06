@@ -92,7 +92,7 @@ const SubTasksOfTask = ({ open }: SubTasksOfTaskProps) => {
           </Text>
         }
       >
-        <Stack mt={2} position="relative" maxWidth="100%" overflow="auto">
+        <Stack mt={2} position="relative" maxWidth="100%" height="100%">
           {subTasks.map((subTask) => (
             <SubTaskItem key={subTask.id} subId={subTask.id} {...subTask} />
           ))}
