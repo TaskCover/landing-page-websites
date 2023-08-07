@@ -15,7 +15,7 @@ import { useCallback, useEffect, useState } from "react";
 interface ProfileHeaderProps {
   textSearch?: string;
   isSearch?: boolean;
-  avatar?: string | undefined;
+  avatar?: { url: string | undefined; isShow: boolean };
   name: string;
   statusOnline?: string;
   containerProps?: BoxProps;
@@ -39,6 +39,9 @@ const ProfileHeader = ({
   onChangeText,
 }: ProfileHeaderProps) => {
   const [openSearch, setOpenSearch] = useState(false);
+  const [avatarClone, setAvatarClone] = useState<string | undefined>(
+    avatar?.url,
+  );
   const { sx: containerSx, ...containerProp } = containerProps || {};
   const { sx: nameSx, ...nameProp } = nameProps || {};
 
@@ -48,6 +51,7 @@ const ProfileHeader = ({
       setOpenSearch(false);
     };
   }, [isSearch]);
+
   const handleKeyDown = useCallback(
     (event) => {
       if (event.key === "Enter") {
@@ -101,7 +105,7 @@ const ProfileHeader = ({
     if (!openSearch) {
       return (
         <>
-          {avatar && (
+          {avatar?.isShow && (
             <Box
               position="relative"
               display="flex"
@@ -122,11 +126,12 @@ const ProfileHeader = ({
             >
               <Avatar
                 alt="Avatar"
-                src={avatar}
+                src={avatarClone}
                 size={40}
                 style={{
                   borderRadius: "10px",
                 }}
+                onError={() => setAvatarClone(undefined)}
               />
             </Box>
           )}

@@ -73,7 +73,7 @@ export const useChat = () => {
     conversationInfo,
     conversationPaging,
     messagePaging,
-    status,
+    conversationStatus,
 
     currStep,
     prevStep,
@@ -110,9 +110,9 @@ export const useChat = () => {
     shallowEqual,
   );
 
-  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
-  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
-  const isError = useMemo(() => status === DataStatus.FAILED, [status]);
+  const isIdle = useMemo(() => conversationStatus === DataStatus.IDLE, [conversationStatus]);
+  const isFetching = useMemo(() => conversationStatus === DataStatus.LOADING, [conversationStatus]);
+  const isError = useMemo(() => conversationStatus === DataStatus.FAILED, [conversationStatus]);
 
   const onGetAllConvention = useCallback(
     async ({

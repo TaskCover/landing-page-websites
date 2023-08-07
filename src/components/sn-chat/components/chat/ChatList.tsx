@@ -2,9 +2,9 @@ import { Skeleton, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import ChatItemLayout from "./ChatItemLayout";
 import { useChat } from "store/chat/selectors";
-import { IChatItemInfo, STEP } from "store/chat/type";
+import { DirectionChat, IChatItemInfo, STEP } from "store/chat/type";
 import { useAuth, useSnackbar } from "store/app/selectors";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
@@ -28,15 +28,29 @@ const ChatList = () => {
   const [textSearch, setTextSearch] = useState("");
   const [lastElement, setLastElement] = useState(null);
   const pageRef = useRef(pageIndex);
-  const observer = useRef(
-    new IntersectionObserver((entries) => {
+  const chatListRef = useRef<HTMLDivElement>(null);
+  const scrollHeightRef = useRef(0);
+  // const observer = useRef(
+  // );
+
+  const observer = useMemo(() => {
+    return new IntersectionObserver((entries) => {
       const first = entries[0];
       if (first.isIntersecting) {
         pageRef.current = pageRef.current + pageSize;
-        handleGetConversation(textSearch, pageRef.current, pageSize);
+
+        scrollHeightRef.current = chatListRef.current?.scrollHeight || 0;
+        const clientHeight = (chatListRef.current?.clientHeight || 0) + 100;
+
+        if (scrollHeightRef.current > clientHeight) {
+          console.log("triggle load page", textSearch);
+          handleGetConversation(textSearch, "a", pageRef.current, pageSize);
+        }
       }
-    }),
-  );
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageSize, textSearch]);
+
   const conversationList = useMemo(() => {
     return convention
       .filter((item) => item.username !== user?.["username"])
@@ -67,12 +81,13 @@ const ChatList = () => {
 
   const handleGetConversation = async (
     text: string,
+    type: DirectionChat,
     offset?: number,
     count?: number,
   ) => {
     try {
       await onGetAllConvention({
-        type: "a",
+        type,
         text,
         offset: offset || 0,
         count: count || 10,
@@ -97,20 +112,21 @@ const ChatList = () => {
       }
   };
 
-  useEffect(() => {
-    pageRef.current = pageIndex;
-  }, [pageIndex]);
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      setTextSearch(event.target.value);
-      handleGetConversation(event.target.value);
+      console.log("triggle key down");
+
+      handleGetConversation(event.target.value, "a");
     }
   };
 
   useEffect(() => {
+    pageRef.current = pageIndex;
+  }, [pageIndex]);
+
+  useEffect(() => {
     const currentElement = lastElement;
-    const currentObserver = observer.current;
+    const currentObserver = observer;
 
     if (currentElement) {
       currentObserver.observe(currentElement);
@@ -121,7 +137,7 @@ const ChatList = () => {
         currentObserver.unobserve(currentElement);
       }
     };
-  }, [lastElement]);
+  }, [lastElement, observer]);
 
   return (
     <Box
@@ -163,6 +179,7 @@ const ChatList = () => {
               lineHeight: "22px",
               "&::-webkit-input-placeholder": {
                 color: "#999999",
+                opacity: 1,
               },
             },
           }}
@@ -180,6 +197,7 @@ const ChatList = () => {
           }}
           placeholder="Search name"
           fullWidth
+          onChange={(e) => setTextSearch(e.target.value)}
           onKeyDown={handleKeyDown}
         />
         <Box
@@ -190,8 +208,12 @@ const ChatList = () => {
           <NewGroupIcon />
         </Box>
       </Box>
-      <Box overflow="auto" maxHeight="calc(600px - 74px - 15px)">
-        {(isFetching || isError) && conversationList?.length < 1 ? (
+      <Box
+        ref={chatListRef}
+        overflow="auto"
+        maxHeight="calc(600px - 74px - 15px)"
+      >
+        {(isFetching || isError) && pageIndex === 0 ? (
           Array.from({ length: 5 }, (_, i) => (
             <Box
               key={i}

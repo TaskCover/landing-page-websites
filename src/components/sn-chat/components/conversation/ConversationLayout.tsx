@@ -30,7 +30,7 @@ const ConversationLayout = () => {
     <Box height="inherit">
       <Box display="flex" flexDirection="column">
         <ProfileHeader
-          avatar={accountInfo?.avatar}
+          avatar={{ url: accountInfo?.avatar, isShow: true }}
           name={accountInfo?.name || "123"}
           statusOnline={conversationInfo?.status || ""}
           onPrevious={() => {

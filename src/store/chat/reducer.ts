@@ -31,7 +31,7 @@ import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
 const initalPage = { pageIndex: 0, pageSize: 10, isRefetchPage: false };
 const initialState: ChatState = {
   convention: [],
-  status: DataStatus.IDLE,
+  conversationStatus: DataStatus.IDLE,
   conversationPaging: initalPage,
   roomId: "",
   conversationInfo: null,
@@ -151,7 +151,7 @@ const chatSlice = createSlice({
     builder
       //getAllConvention
       .addCase(getAllConvention.pending, (state, action) => {
-        state.status = DataStatus.LOADING;
+        state.conversationStatus = DataStatus.LOADING;
         state.conversationPaging = {
           ...state.conversationPaging,
           pageIndex: action.meta.arg.offset || 0,
@@ -162,13 +162,14 @@ const chatSlice = createSlice({
         getAllConvention.fulfilled,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (state, action: PayloadAction<any[]>) => {
-          if (
-            action.payload.length > 0 &&
-            !state.conversationPaging.isRefetchPage
-          ) {
-            const conversationNew = action.payload.filter((item) =>
+          const conversationNew =
+            action.payload?.filter((item) =>
               isConversation(item["t"]) ? item : undefined,
-            );
+            ) || [];
+
+          if (state.conversationPaging.pageIndex === 0) {
+            state.convention = conversationNew;
+          } else if (!state.conversationPaging.isReloadPageCurrent) {
             state.convention = [...state.convention, ...conversationNew];
           }
           if (action.payload?.length < state.conversationPaging.pageSize) {
@@ -176,16 +177,16 @@ const chatSlice = createSlice({
               state.conversationPaging.pageIndex -
               state.conversationPaging.pageSize +
               action.payload?.length;
-            state.conversationPaging.isRefetchPage = true;
+            state.conversationPaging.isReloadPageCurrent = true;
           } else {
-            state.conversationPaging.isRefetchPage = false;
+            state.conversationPaging.isReloadPageCurrent = false;
           }
           state.conversationPaging.pageSize = state.conversationPaging.pageSize;
-          state.status = DataStatus.SUCCEEDED;
+          state.conversationStatus = DataStatus.SUCCEEDED;
         },
       )
       .addCase(getAllConvention.rejected, (state, action) => {
-        state.status = DataStatus.FAILED;
+        state.conversationStatus = DataStatus.FAILED;
         state.conversationPaging.pageIndex =
           state.conversationPaging.pageIndex -
             state.conversationPaging.pageSize ===
@@ -215,7 +216,10 @@ const chatSlice = createSlice({
             Otherwise, it assigns the `messageNew` array to the `state.messageInfo` array. 
             
             - Fix bug duplicate messages when switch from single chat to group chat */
-            if ([...action?.payload]?.pop()?.rid == [...state?.messageInfo]?.pop()?.rid) {
+            if (
+              [...action?.payload]?.pop()?.rid ==
+              [...state?.messageInfo]?.pop()?.rid
+            ) {
               state.messageInfo = [...messageNew, ...state.messageInfo];
             } else {
               state.messageInfo = messageNew;

@@ -7,16 +7,18 @@ import Popper from "@mui/material/Popper";
 import SwitchChat from "components/sn-chat/SwitchChat";
 import ChatMessageIcon from "icons/ChatMessageIcon";
 import CloseIcon from "icons/CloseIcon";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/DefaultPopupLayout";
 import { Grow, Typography } from "@mui/material";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
-import { useSnackbar } from "store/app/selectors";
+import { useAuth, useSnackbar } from "store/app/selectors";
+import { Permission } from "constant/enums";
 
 const ChatListTemp = () => {
+  const { user } = useAuth();
   const { onGetAllConvention, onClearConversation, onReset } = useChat();
   const popperRef = useRef(false);
   const [open, setOpen] = useState(false);
@@ -34,6 +36,13 @@ const ChatListTemp = () => {
   };
 
   const [showPopup, setShowPopup] = useState(init);
+  const roleChatAccept = useMemo(() => {
+    const role =
+      user?.roles?.findIndex(
+        (i) => i === Permission.AM || i === Permission.ST,
+      ) || 0;
+    return role > -1;
+  }, [user]);
   let browserWidth = window.innerWidth;
 
   const handleShowPopup = () => {
@@ -139,6 +148,9 @@ const ChatListTemp = () => {
     }
   };
 
+  if (!roleChatAccept) {
+    return null;
+  }
   return (
     <Box
       sx={{
