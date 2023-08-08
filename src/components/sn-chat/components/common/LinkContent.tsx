@@ -41,7 +41,7 @@ const LinkContent = () => {
     <Box
       sx={{
         overflow: "auto",
-        maxHeight: "calc(600px - 77px - 59px - 16px)",
+        maxHeight: "100%",
         height: "100%",
         paddingLeft: "1rem",
         paddingRight: "0.3rem",
@@ -82,9 +82,7 @@ const LinkContent = () => {
           );
         })
       ) : (
-        <Typography textAlign="center">
-          No Data...
-        </Typography>
+        <Typography textAlign="center">No Data...</Typography>
       )}
     </Box>
   );

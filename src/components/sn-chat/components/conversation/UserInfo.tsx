@@ -75,7 +75,7 @@ const UserInfo = ({ onPrevious }: UserInfoProps) => {
           },
         }}
       />
-      <Box textAlign="center" mt={2}>
+      <Box textAlign="center" pt={2} pb={4} overflow="auto">
         {partnerInfoStatus === DataStatus.LOADING ||
         partnerInfoStatus === DataStatus.FAILED ? (
           <>Loading...</>

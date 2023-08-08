@@ -154,7 +154,7 @@ export interface ChatState {
   dataTransfer?: any;
   messageInfo: MessageInfo[];
   messageStatus: DataStatus;
-  messagePaging: Paging & { isRefetchPage?: boolean };
+  messagePaging: Paging & { isRefetchPage?: boolean; pageSizeDefault: number };
   //partner info
   partnerInfo: UserInfo | null;
   partnerInfoStatus: DataStatus;

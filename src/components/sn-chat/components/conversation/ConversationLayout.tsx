@@ -28,7 +28,7 @@ const ConversationLayout = () => {
 
   return (
     <Box height="inherit">
-      <Box display="flex" flexDirection="column">
+      <Box height="inherit" display="flex" flexDirection="column">
         <ProfileHeader
           avatar={{ url: accountInfo?.avatar, isShow: true }}
           name={accountInfo?.name || "123"}

@@ -73,7 +73,6 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         const clientHeight =
           (messagesContentRef.current?.clientHeight || 0) + 100;
-
         if (scrollHeightRef.current > clientHeight) {
           onRefetch(pageRef.current);
         }
@@ -87,6 +86,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   };
 
   const scrollMessage = async () => {
+    clearScrollContentMessage();
     await sleep(500);
     if (focusMessageRef.current) {
       focusMessageRef.current.scrollIntoView({

@@ -177,7 +177,7 @@ const MediaContent = () => {
             overflow: "auto",
             margin: "0 4px",
             paddingRight: "0.2rem",
-            maxHeight: "calc(600px - 73px - 37px - 35px)",
+            maxHeight: "100%",
           }}
         >
           {mediaClone?.map((item, index) => (

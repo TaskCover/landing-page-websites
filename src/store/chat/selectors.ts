@@ -110,9 +110,18 @@ export const useChat = () => {
     shallowEqual,
   );
 
-  const isIdle = useMemo(() => conversationStatus === DataStatus.IDLE, [conversationStatus]);
-  const isFetching = useMemo(() => conversationStatus === DataStatus.LOADING, [conversationStatus]);
-  const isError = useMemo(() => conversationStatus === DataStatus.FAILED, [conversationStatus]);
+  const isIdle = useMemo(
+    () => conversationStatus === DataStatus.IDLE,
+    [conversationStatus],
+  );
+  const isFetching = useMemo(
+    () => conversationStatus === DataStatus.LOADING,
+    [conversationStatus],
+  );
+  const isError = useMemo(
+    () => conversationStatus === DataStatus.FAILED,
+    [conversationStatus],
+  );
 
   const onGetAllConvention = useCallback(
     async ({
@@ -262,8 +271,9 @@ export const useChat = () => {
   };
 
   const onSetStateSearchMessage = useCallback(
-    (message: MessageSearchInfo | null) => {
-      dispatch(setStateSearchMessage(message));
+    async (message: MessageSearchInfo | null) => {
+      const messageSearch = message ? { ...message } : null;
+      dispatch(setStateSearchMessage(messageSearch));
     },
     [dispatch],
   );

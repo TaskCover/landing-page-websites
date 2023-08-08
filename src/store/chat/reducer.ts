@@ -28,7 +28,12 @@ import {
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
 
-const initalPage = { pageIndex: 0, pageSize: 10, isRefetchPage: false };
+const initalPage = {
+  pageIndex: 0,
+  pageSize: 10,
+  isRefetchPage: false,
+  pageSizeDefault: 10,
+};
 const initialState: ChatState = {
   convention: [],
   conversationStatus: DataStatus.IDLE,
@@ -169,7 +174,7 @@ const chatSlice = createSlice({
 
           if (state.conversationPaging.pageIndex === 0) {
             state.convention = conversationNew;
-          } else if (!state.conversationPaging.isReloadPageCurrent) {
+          } else {
             state.convention = [...state.convention, ...conversationNew];
           }
           if (action.payload?.length < state.conversationPaging.pageSize) {
@@ -177,9 +182,6 @@ const chatSlice = createSlice({
               state.conversationPaging.pageIndex -
               state.conversationPaging.pageSize +
               action.payload?.length;
-            state.conversationPaging.isReloadPageCurrent = true;
-          } else {
-            state.conversationPaging.isReloadPageCurrent = false;
           }
           state.conversationPaging.pageSize = state.conversationPaging.pageSize;
           state.conversationStatus = DataStatus.SUCCEEDED;
@@ -202,39 +204,38 @@ const chatSlice = createSlice({
         state.messagePaging = {
           ...state.messagePaging,
           pageIndex: action.meta.arg.offset || 0,
-          pageSize: action.meta.arg.count || 20,
+          pageSize: action.meta.arg.count || 10,
         };
       })
       .addCase(
         getLatestMessages.fulfilled,
         (state, action: PayloadAction<MessageInfo[]>) => {
-          if (action.payload.length > 0 && !state.messagePaging.isRefetchPage) {
-            const messageNew = action.payload.reverse();
+          if (action.payload?.length > 0) {
+            const messageNew = action.payload?.reverse() || [];
             /* The above code is checking if the last element of the `action.payload` array has the
             same `rid` value as the last element of the `state.messageInfo` array. If they have the
             same `rid` value, it appends the `messageNew` array to the `state.messageInfo` array.
             Otherwise, it assigns the `messageNew` array to the `state.messageInfo` array. 
             
             - Fix bug duplicate messages when switch from single chat to group chat */
-            if (
+            if (state.messagePaging.pageIndex === 0) {
+              state.messageInfo = messageNew;
+            } else if (
               [...action?.payload]?.pop()?.rid ==
               [...state?.messageInfo]?.pop()?.rid
             ) {
               state.messageInfo = [...messageNew, ...state.messageInfo];
-            } else {
-              state.messageInfo = messageNew;
             }
-          }
-          if (action.payload?.length < state.messagePaging.pageSize) {
-            state.messagePaging.pageIndex =
-              state.messagePaging.pageIndex -
-              state.messagePaging.pageSize +
-              action.payload?.length;
-            state.messagePaging.isRefetchPage = true;
+            if (action.payload?.length < state.messagePaging.pageSize) {
+              state.messagePaging.pageIndex =
+                state.messagePaging.pageIndex +
+                action.payload?.length -
+                state.messagePaging.pageSizeDefault;
+            }
           } else {
-            state.messagePaging.isRefetchPage = false;
+            state.messagePaging.pageIndex =
+              state.messagePaging.pageIndex - state.messagePaging.pageSizeDefault;
           }
-          state.messagePaging.pageSize = state.messagePaging.pageSize;
           state.messageStatus = DataStatus.SUCCEEDED;
         },
       )

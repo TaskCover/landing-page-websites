@@ -4,7 +4,7 @@ import ChatItemLayout from "./ChatItemLayout";
 import { useChat } from "store/chat/selectors";
 import { DirectionChat, IChatItemInfo, STEP } from "store/chat/type";
 import { useAuth, useSnackbar } from "store/app/selectors";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
@@ -30,9 +30,6 @@ const ChatList = () => {
   const pageRef = useRef(pageIndex);
   const chatListRef = useRef<HTMLDivElement>(null);
   const scrollHeightRef = useRef(0);
-  // const observer = useRef(
-  // );
-
   const observer = useMemo(() => {
     return new IntersectionObserver((entries) => {
       const first = entries[0];
@@ -43,7 +40,6 @@ const ChatList = () => {
         const clientHeight = (chatListRef.current?.clientHeight || 0) + 100;
 
         if (scrollHeightRef.current > clientHeight) {
-          console.log("triggle load page", textSearch);
           handleGetConversation(textSearch, "a", pageRef.current, pageSize);
         }
       }
@@ -114,8 +110,6 @@ const ChatList = () => {
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      console.log("triggle key down");
-
       handleGetConversation(event.target.value, "a");
     }
   };
@@ -141,6 +135,7 @@ const ChatList = () => {
 
   return (
     <Box
+      height="inherit"
       sx={{
         display: "flex",
         flexDirection: "column",
