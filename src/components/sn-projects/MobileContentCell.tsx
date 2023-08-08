@@ -12,7 +12,7 @@ import Avatar from "components/Avatar";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
-import { Saved } from "./components";
+import { Saved, SelectStatus } from "./components";
 
 type MobileContentCellProps = {
   item: Project;
@@ -54,12 +54,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         {item?.owner?.fullname}
       </BodyCell>
       {item.status ? (
-        <StatusCell
-          sx={{ px: 0.5 }}
-          text={TEXT_STATUS[item.status]}
-          color={COLOR_STATUS[item.status]}
-          width={{ md: 93 }}
-        />
+        <SelectStatus value={item.status} id={item.id} />
       ) : (
         <BodyCell />
       )}

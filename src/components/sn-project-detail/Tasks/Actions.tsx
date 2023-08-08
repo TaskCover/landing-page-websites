@@ -128,6 +128,8 @@ const Actions = () => {
         alignItems={{ lg: "center" }}
         justifyContent="space-between"
         borderBottom="1px solid"
+        paddingLeft={"10px"}
+        paddingRight={"10px"}
         borderColor="grey.100"
         spacing={{ xs: 1, md: 3 }}
         py={{ xs: 0.75 }}
