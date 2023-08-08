@@ -99,7 +99,7 @@ const Assigner = (props: AssignerProps) => {
           {/* Render your popover content here */}
           {employeeOptionsWithLabel.map((item) => (
             <div
-              key={item.id}
+              key={item.value}
               onClick={() => {
                 handleAssigner(item);
                 handleClose();
@@ -117,10 +117,14 @@ const Assigner = (props: AssignerProps) => {
                 fontSize: "14px",
                 transition: "background-color 0.2s ease",
               }}
-              onMouseEnter={(e) => (e.target.style.backgroundColor = "#f5f5f5")}
-              onMouseLeave={(e) =>
-                (e.target.style.backgroundColor = "transparent")
-              }
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.backgroundColor = "#f5f5f5";
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.backgroundColor = "transparent";
+              }}
             >
               {item.label}
             </div>

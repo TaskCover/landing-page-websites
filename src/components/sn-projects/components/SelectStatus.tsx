@@ -25,7 +25,7 @@ const SelectStatus = (props: SelectStatusProps) => {
   const { onAddSnackbar } = useSnackbar();
   const projectT = useTranslations(NS_PROJECT);
   const commonT = useTranslations(NS_COMMON);
-  const [status, setStatus] = useState(value);
+  const [status, setStatus] = useState(value || ProjectStatus.ACTIVE);
   const { initQuery, isReady, query } = useQueryParams();
   const [anchorEl, setAnchorEl] = useState(null);
 
