@@ -73,7 +73,7 @@ const GroupMediaProfile = ({
           },
         }}
       />
-      <Box>
+      <Box height="calc(100% - 72px)" display="flex" flexDirection="column">
         <Box
           display="flex"
           alignItems="center"

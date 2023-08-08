@@ -15,7 +15,7 @@ import { useCallback, useEffect, useState } from "react";
 interface ProfileHeaderProps {
   textSearch?: string;
   isSearch?: boolean;
-  avatar?: string | undefined;
+  avatar?: { url: string | undefined; isShow: boolean };
   name: string;
   statusOnline?: string;
   containerProps?: BoxProps;
@@ -39,6 +39,9 @@ const ProfileHeader = ({
   onChangeText,
 }: ProfileHeaderProps) => {
   const [openSearch, setOpenSearch] = useState(false);
+  const [avatarClone, setAvatarClone] = useState<string | undefined>(
+    avatar?.url,
+  );
   const { sx: containerSx, ...containerProp } = containerProps || {};
   const { sx: nameSx, ...nameProp } = nameProps || {};
 
@@ -48,6 +51,7 @@ const ProfileHeader = ({
       setOpenSearch(false);
     };
   }, [isSearch]);
+
   const handleKeyDown = useCallback(
     (event) => {
       if (event.key === "Enter") {
@@ -101,21 +105,42 @@ const ProfileHeader = ({
     if (!openSearch) {
       return (
         <>
-          {avatar && (
-            <Avatar
-              alt="Avatar"
-              src={avatar}
-              size={40}
-              style={{
-                borderRadius: "10px",
+          {avatar?.isShow && (
+            <Box
+              position="relative"
+              display="flex"
+              sx={{
+                "&::before": {
+                  content: `''`,
+                  position: "absolute",
+                  right: "-5px",
+                  top: "-4px",
+                  width: "14px",
+                  height: "14px",
+                  border: "2px solid #ffffff",
+                  backgroundColor: "#55C000",
+                  borderRadius: "50%",
+                  visibility: statusOnline === "online" ? "visible" : "hidden",
+                },
               }}
-            />
+            >
+              <Avatar
+                alt="Avatar"
+                src={avatarClone}
+                size={40}
+                style={{
+                  borderRadius: "10px",
+                }}
+                onError={() => setAvatarClone(undefined)}
+              />
+            </Box>
           )}
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
+              marginLeft: "11px",
             }}
           >
             {onShowProfile ? (
@@ -142,8 +167,13 @@ const ProfileHeader = ({
               </Typography>
             )}
             {statusOnline && (
-              <Typography variant="caption" color="#999999">
-                {statusOnline}
+              <Typography
+                variant="caption"
+                color="#999999"
+                fontSize="14px"
+                lineHeight="22px"
+              >
+                {statusOnline === "online" ? "Active" : ""}
               </Typography>
             )}
           </Box>
@@ -224,8 +254,7 @@ const ProfileHeader = ({
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: 1,
-          padding: 2,
+          padding: "11.5px",
           borderBottom: "1px solid #ECECF3",
           ...containerSx,
         }}

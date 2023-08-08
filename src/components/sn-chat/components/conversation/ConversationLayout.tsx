@@ -28,11 +28,11 @@ const ConversationLayout = () => {
 
   return (
     <Box height="inherit">
-      <Box display="flex" flexDirection="column">
+      <Box height="inherit" display="flex" flexDirection="column">
         <ProfileHeader
-          avatar={accountInfo?.avatar}
+          avatar={{ url: accountInfo?.avatar, isShow: true }}
           name={accountInfo?.name || "123"}
-          statusOnline={conversationInfo?.statusOnline || ""}
+          statusOnline={conversationInfo?.status || ""}
           onPrevious={() => {
             onSetStep(prevStep);
             onClearMessageList();
@@ -50,13 +50,14 @@ const ConversationLayout = () => {
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
             },
+            variant: "h6",
           }}
         />
         <Box
           display="flex"
           flexDirection="column"
           overflow="hidden"
-          height="calc(600px - 81px)"
+          height="calc(600px - 72px)"
         >
           <Conversation />
         </Box>

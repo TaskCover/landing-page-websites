@@ -2,7 +2,7 @@ import { useChat } from "store/chat/selectors";
 import ProfileHeader from "../common/ProfileHeader";
 import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { Typography } from "@mui/material";
+import { SxProps, Typography } from "@mui/material";
 import ProfileCircleIcon from "icons/ProfileCircleIcon";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import MediaFileIcon from "icons/MediaFileIcon";
@@ -63,12 +63,8 @@ interface UserLandingProps {
   onPrevious: () => void;
 }
 const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
-  const {
-    conversationInfo,
-    stateSearchMessage,
-    onSetStateSearchMessage,
-    onSearchChatText,
-  } = useChat();
+  const { conversationInfo, onSetStateSearchMessage, onSearchChatText } =
+    useChat();
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
   const { avatar, name } = conversationInfo || {};
@@ -104,22 +100,24 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
 
   const handleSelectMessage = useCallback(
     (message: MessageSearchInfo) => {
-      if (
-        !stateSearchMessage ||
-        stateSearchMessage.messageId !== message.messageId
-      ) {
-        onSetStateSearchMessage(message);
-      }
+      onSetStateSearchMessage(message);
       setStateSearch({ isSearch: false, text: "" });
       onPrevious();
     },
-    [onPrevious, onSetStateSearchMessage, stateSearchMessage],
+    [onPrevious, onSetStateSearchMessage],
   );
+
+  const resetForm = (step: STEP_INFO) => {
+    setShowMedia(false);
+    setTimeout(() => {
+      setStepMedia(step);
+    }, 200);
+  };
 
   const renderContent = useMemo(() => {
     if (stateSearch.isSearch) {
       return (
-        <Box overflow="auto" maxHeight="calc(600px - 74px)">
+        <Box overflow="auto" maxHeight="calc(600px - 65px)">
           <MessageListSearch
             text={stateSearch.text}
             type="d"
@@ -129,7 +127,7 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
       );
     } else {
       return (
-        <Box textAlign="center" mt={2}>
+        <Box textAlign="center" pt={2} pb={4} overflow="auto">
           <Avatar
             alt="Avatar"
             src={avatar || undefined}
@@ -181,39 +179,32 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
   const renderMediaContent = useMemo(() => {
     switch (stepMedia) {
       case STEP_INFO.USER:
-        return (
-          <UserInfo
-            onPrevious={() => {
-              setShowMedia(false);
-            }}
-          />
-        );
+        return <UserInfo onPrevious={resetForm} />;
       case STEP_INFO.MEDIA:
       case STEP_INFO.LINK:
       case STEP_INFO.FILE:
-        return (
-          <GroupMediaProfile
-            type={stepMedia}
-            onPrevious={() => {
-              setShowMedia(false);
-            }}
-          />
-        );
+        return <GroupMediaProfile type={stepMedia} onPrevious={resetForm} />;
       default:
         return null;
     }
   }, [stepMedia]);
 
+  const defaultSxContent: SxProps = {
+    width: "100%",
+    height: "inherit",
+    overflow: "hidden",
+    backgroundColor: "white",
+    display: "flex",
+    flexDirection: "column",
+  };
   return (
     <Box
       sx={{
-        width: "100%",
-        height: "600px",
-        minHeight: "600px",
-        backgroundColor: "white",
+        ...defaultSxContent,
+        position: "relative",
         transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
         transform: `translate(${displayUserInfo ? "0" : "100%"}, -100%)`,
-        position: "relative",
+        zIndex: 1,
       }}
     >
       <>
@@ -246,10 +237,7 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
         {renderContent}
         <Box
           sx={{
-            width: "100%",
-            height: "600px",
-            minHeight: "600px",
-            backgroundColor: "white",
+            ...defaultSxContent,
             transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
             transform: `translate(${isShowMedia ? "0" : "100%"}, -100%)`,
             position: "absolute",

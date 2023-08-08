@@ -7,21 +7,22 @@ import Popper from "@mui/material/Popper";
 import SwitchChat from "components/sn-chat/SwitchChat";
 import ChatMessageIcon from "icons/ChatMessageIcon";
 import CloseIcon from "icons/CloseIcon";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/DefaultPopupLayout";
-import { Grow, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
-import { useSnackbar } from "store/app/selectors";
+import { useAuth, useSnackbar } from "store/app/selectors";
+import { Permission } from "constant/enums";
 
 const ChatListTemp = () => {
+  const { user } = useAuth();
   const { onGetAllConvention, onClearConversation, onReset } = useChat();
   const popperRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
 
@@ -34,6 +35,13 @@ const ChatListTemp = () => {
   };
 
   const [showPopup, setShowPopup] = useState(init);
+  const roleChatAccept = useMemo(() => {
+    const role =
+      user?.roles?.findIndex(
+        (i) => i === Permission.AM || i === Permission.ST,
+      ) || 0;
+    return role > -1;
+  }, [user]);
   let browserWidth = window.innerWidth;
 
   const handleShowPopup = () => {
@@ -120,7 +128,6 @@ const ChatListTemp = () => {
   };
 
   const handleTrigger = (e: React.MouseEvent<HTMLDivElement>) => {
-    setAnchorEl(e.currentTarget);
     popperRef.current = !popperRef.current;
     if (browserWidth < 768) {
       setOpen(false);
@@ -139,14 +146,17 @@ const ChatListTemp = () => {
     }
   };
 
+  if (!roleChatAccept) {
+    return null;
+  }
   return (
     <Box
       sx={{
         position: "fixed",
-        bottom: "4rem",
-        right: "5rem",
-        cursor: "pointer",
-        zIndex: 100,
+        top: 0,
+        bottom: 0,
+        right: 0,
+        zIndex: 200,
       }}
     >
       {show ? (
@@ -161,37 +171,35 @@ const ChatListTemp = () => {
           sx={{ width: showPopup?.widthPopup }}
         />
       ) : (
-        <Popper
-          open={open}
-          anchorEl={anchorEl}
-          placement="top-start"
-          transition
-          sx={{
-            zIndex: 200,
-          }}
-        >
-          {({ TransitionProps }) => (
-            <Grow {...TransitionProps} timeout={350}>
-              <Box paddingBottom={2}>
-                <Paper
-                  sx={{
-                    width: "400px",
-                    minHeight: "600px",
-                    height: "600px",
-                    overflow: "hidden",
-                    borderRadius: "16px",
-                    boxShadow: "2px 2px 24px 0px #0000001A",
-                  }}
-                >
-                  <SwitchChat />
-                </Paper>
-              </Box>
-            </Grow>
-          )}
-        </Popper>
+        open && (
+          <Box
+            sx={{
+              position: "absolute",
+              width: "400px",
+              height: "calc(100% - 7rem)",
+              maxHeight: "600px",
+              overflow: "hidden",
+              bottom: "7rem",
+              right: "5rem",
+              borderRadius: "16px",
+              boxShadow: "2px 2px 24px 0px #0000001A",
+            }}
+          >
+            <Paper
+              sx={{
+                height: "100%",
+                overflow: "hidden",
+              }}
+            >
+              <SwitchChat />
+            </Paper>
+          </Box>
+        )
       )}
-
       <Box
+        position="fixed"
+        bottom="3rem"
+        right="5rem"
         sx={{
           backgroundColor: "#3699FF",
           width: "50px",
@@ -201,6 +209,7 @@ const ChatListTemp = () => {
           alignItems: "center",
           justifyContent: "center",
           boxShadow: "2px 2px 24px 0px #0000001A",
+          cursor: "pointer",
         }}
         component={"div"}
         onClick={handleTrigger}

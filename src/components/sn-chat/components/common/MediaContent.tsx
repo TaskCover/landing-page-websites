@@ -153,7 +153,7 @@ const MediaContent = () => {
 
   const mediaClone = useMemo(() => {
     return mediaList
-      ?.filter((file) => file.url)
+      ?.filter((file) => !file?.name && file.url)
       .map((item) => {
         if (item.url.indexOf("mp4") > -1) {
           return { ...item, type: "video_url" as MediaType };
@@ -176,7 +176,8 @@ const MediaContent = () => {
             gap: "4px",
             overflow: "auto",
             margin: "0 4px",
-            maxHeight: "calc(600px - 73px - 37px - 35px)",
+            paddingRight: "0.2rem",
+            maxHeight: "100%",
           }}
         >
           {mediaClone?.map((item, index) => (

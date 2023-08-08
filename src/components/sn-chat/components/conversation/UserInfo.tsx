@@ -17,14 +17,14 @@ const UserInfo = ({ onPrevious }: UserInfoProps) => {
   const { conversationInfo, partnerInfo, partnerInfoStatus, onGetUserInfo } =
     useChat();
   const { onAddSnackbar } = useSnackbar();
-  const { avatar, name, partnerUsername } = conversationInfo || {};
+  const { avatar, name, username } = conversationInfo || {};
   const t = useTranslations(NS_COMMON);
 
   useEffect(() => {
     const handleGetUserInfo = async () => {
       try {
-        if (partnerUsername) {
-          await onGetUserInfo(partnerUsername);
+        if (username) {
+          await onGetUserInfo(username);
         }
       } catch (error) {
         onAddSnackbar(
@@ -34,7 +34,7 @@ const UserInfo = ({ onPrevious }: UserInfoProps) => {
       }
     };
     handleGetUserInfo();
-  }, [onAddSnackbar, onGetUserInfo, partnerUsername, t]);
+  }, [onAddSnackbar, onGetUserInfo, username, t]);
 
   const styleFormItem: SxProps = {
     display: "flex",
@@ -75,7 +75,7 @@ const UserInfo = ({ onPrevious }: UserInfoProps) => {
           },
         }}
       />
-      <Box textAlign="center" mt={2}>
+      <Box textAlign="center" pt={2} pb={4} overflow="auto">
         {partnerInfoStatus === DataStatus.LOADING ||
         partnerInfoStatus === DataStatus.FAILED ? (
           <>Loading...</>

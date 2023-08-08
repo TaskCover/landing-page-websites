@@ -9,19 +9,15 @@ interface ConversationLayoutProp {
   viewStep?: STEP;
 }
 const ConversationLayout = ({ children, viewStep }: ConversationLayoutProp) => {
-  const { roomId, convention, userOnlinePage, prevStep, onSetStep, currStep } = useChat();
+  const { roomId, convention, prevStep, onSetStep, currStep } = useChat();
 
   const accountInfo = useMemo(() => {
     const account = convention?.find(
       (item) => item._id === roomId,
     ) as IChatItemInfo & { stateOnPage: string };
 
-    const stateOnPage =
-      userOnlinePage?.find((item) => item.username === account?.usernames?.[1])
-        ?.status || "";
-
-    return { ...account, stateOnPage };
-  }, [convention, roomId, userOnlinePage]);
+    return { ...account };
+  }, [convention, roomId]);
 
   return (
     <>
@@ -36,7 +32,7 @@ const ConversationLayout = ({ children, viewStep }: ConversationLayoutProp) => {
               onSetStep(STEP.CHAT_GROUP);
               break;
             default:
-              onSetStep(prevStep)
+              onSetStep(prevStep);
               break;
           }
         }}

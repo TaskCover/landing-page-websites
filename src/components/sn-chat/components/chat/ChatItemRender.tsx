@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { Typography } from "@mui/material";
+import { ImageList, Typography } from "@mui/material";
 import { IChatItemInfo } from "store/chat/type";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -9,25 +9,34 @@ interface ChatItemRenderProps {
   chatInfo: IChatItemInfo;
 }
 const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
-  const { lastMessage, name, avatar, t, unreadCount } = chatInfo || {};
+  const {
+    lastMessage,
+    name,
+    avatar,
+    t,
+    usersCount,
+    unreadCount,
+    status: statusPartner,
+  } = chatInfo || {};
   const [avatarClone, setAvatarClone] = useState<string | undefined>(avatar);
   const isUnReadMessage = useMemo(() => unreadCount > 0, [unreadCount]);
   const isDirectMessage = useMemo(() => t === "d", [t]);
   const isMessageNotConnect = useMemo(() => lastMessage == null, [lastMessage]);
-  const isCurrentAcc = useMemo(
+  const isGroup = useMemo(() => t !== "d", [t]);
+  const isCurrentAccByLastMessage = useMemo(
     () => sessionId === lastMessage?.u?.username,
     [lastMessage, sessionId],
   );
   const lastMessageContent = useMemo(() => {
     const sendAttachment = lastMessage?.attachments?.length > 0;
     if (sendAttachment) {
-      return isCurrentAcc ? "You sent a file." : "Sent a file.";
+      return isCurrentAccByLastMessage ? "You sent a file." : "Sent a file.";
     } else {
-      return isCurrentAcc
+      return isCurrentAccByLastMessage
         ? `<p>You: ${lastMessage?.msg}</p>`
         : lastMessage?.msg;
     }
-  }, [isCurrentAcc, lastMessage]);
+  }, [isCurrentAccByLastMessage, lastMessage]);
 
   const lastMessageRef = useRef<HTMLDivElement>(null);
 
@@ -38,6 +47,64 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
         : "";
     }
   }, [isMessageNotConnect, lastMessageContent]);
+
+  const groupAvatar = useMemo(() => {
+    if (isGroup && usersCount > 3) {
+      return (
+        <ImageList
+          sx={{ width: 56, height: 56, margin: 0 }}
+          cols={2}
+          rowHeight={164}
+        >
+          <Avatar
+            alt="Avatar"
+            size={25}
+            style={{
+              borderRadius: "5px",
+            }}
+          />
+          <Avatar
+            alt="Avatar"
+            size={25}
+            style={{
+              borderRadius: "5px",
+            }}
+          />
+          <Avatar
+            alt="Avatar"
+            size={25}
+            style={{
+              borderRadius: "5px",
+            }}
+          />
+          {usersCount - 3 > 0 ? (
+            <Box
+              sx={{
+                textAlign: "center",
+                borderRadius: "5px",
+                backgroundColor: "#3078F1",
+                color: "white",
+              }}
+            >
+              <Typography variant="caption">+ {usersCount - 3}</Typography>
+            </Box>
+          ) : null}
+        </ImageList>
+      );
+    } else {
+      return (
+        <Avatar
+          alt="Avatar"
+          size={56}
+          src={avatarClone || undefined}
+          style={{
+            borderRadius: "10px",
+          }}
+          onError={() => setAvatarClone(undefined)}
+        />
+      );
+    }
+  }, [avatarClone, isGroup, usersCount]);
 
   const switchChat = useMemo(() => {
     return (
@@ -73,7 +140,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
-              ...(isCurrentAcc && {
+              ...(isCurrentAccByLastMessage && {
                 "&:nth-of-type(1)": {
                   overflowWrap: "unset",
                   overflow: "initial",
@@ -100,7 +167,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
         />
       </>
     );
-  }, [isCurrentAcc, isUnReadMessage, name]);
+  }, [isCurrentAccByLastMessage, isUnReadMessage, name]);
 
   return (
     <>
@@ -131,23 +198,13 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
             backgroundColor: "#55C000",
             borderRadius: "50%",
             visibility:
-              isDirectMessage &&
-              isMessageNotConnect &&
-              chatInfo?.status === "online"
+              isDirectMessage && statusPartner === "online"
                 ? "visible"
                 : "hidden",
           },
         }}
       >
-        <Avatar
-          alt="Avatar"
-          size={56}
-          src={undefined}
-          style={{
-            borderRadius: "10px",
-          }}
-          onError={() => setAvatarClone(undefined)}
-        />
+        {groupAvatar}
       </Box>
       <Box
         sx={{

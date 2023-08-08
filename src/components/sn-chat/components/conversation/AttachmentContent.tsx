@@ -183,7 +183,7 @@ const AttachmentContent = ({
               display="flex"
               flexDirection="column"
               gap="0.5rem"
-              alignItems="flex-end"
+              alignItems={isCurrentUser ? "flex-end" : "flex-start"}
             >
               {files.map((file, index) => {
                 const Icon = styleForFile(file?.title || "");

@@ -30,7 +30,7 @@ const FileContent = () => {
   }, [onAddSnackbar, onGetChatAttachments, t]);
 
   const fileClone = useMemo(() => {
-    return mediaList?.filter((file) => file.path);
+    return mediaList?.filter((file) => file.name && file.path);
   }, [mediaList]);
 
   return (

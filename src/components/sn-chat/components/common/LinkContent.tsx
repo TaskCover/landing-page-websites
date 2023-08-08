@@ -41,7 +41,7 @@ const LinkContent = () => {
     <Box
       sx={{
         overflow: "auto",
-        maxHeight: "calc(600px - 77px - 59px - 16px)",
+        maxHeight: "100%",
         height: "100%",
         paddingLeft: "1rem",
         paddingRight: "0.3rem",
@@ -50,8 +50,8 @@ const LinkContent = () => {
       {chatLinksStatus === DataStatus.LOADING ||
       chatLinksStatus === DataStatus.FAILED ? (
         <Typography textAlign="center">Loading...</Typography>
-      ) : (
-        chatLinkClone?.map((item, index) => {
+      ) : chatLinkClone?.length > 0 ? (
+        chatLinkClone.map((item, index) => {
           return (
             <Box
               key={index}
@@ -81,6 +81,8 @@ const LinkContent = () => {
             </Box>
           );
         })
+      ) : (
+        <Typography textAlign="center">No Data...</Typography>
       )}
     </Box>
   );

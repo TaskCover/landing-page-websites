@@ -60,7 +60,6 @@ import {
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
 import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
-import { Paging } from "constant/types";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
@@ -70,12 +69,11 @@ export const useChat = () => {
     messageInfo,
     messageStatus,
 
-    userOnlinePage,
     roomId,
     conversationInfo,
     conversationPaging,
     messagePaging,
-    status,
+    conversationStatus,
 
     currStep,
     prevStep,
@@ -112,9 +110,18 @@ export const useChat = () => {
     shallowEqual,
   );
 
-  const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
-  const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
-  const isError = useMemo(() => status === DataStatus.FAILED, [status]);
+  const isIdle = useMemo(
+    () => conversationStatus === DataStatus.IDLE,
+    [conversationStatus],
+  );
+  const isFetching = useMemo(
+    () => conversationStatus === DataStatus.LOADING,
+    [conversationStatus],
+  );
+  const isError = useMemo(
+    () => conversationStatus === DataStatus.FAILED,
+    [conversationStatus],
+  );
 
   const onGetAllConvention = useCallback(
     async ({
@@ -185,12 +192,12 @@ export const useChat = () => {
         sendMessages({
           sender_userId: user?.["id_rocket"] || "",
           sender_authToken: user?.["authToken"] || "",
-          receiverUsername: conversationInfo?.partnerUsername || "",
+          receiverUsername: conversationInfo?.username || "",
           ...message,
         }),
       );
     },
-    [conversationInfo?.partnerUsername, dispatch, user],
+    [conversationInfo?.username, dispatch, user],
   );
 
   const onSearchChatText = useCallback(
@@ -264,8 +271,9 @@ export const useChat = () => {
   };
 
   const onSetStateSearchMessage = useCallback(
-    (message: MessageSearchInfo | null) => {
-      dispatch(setStateSearchMessage(message));
+    async (message: MessageSearchInfo | null) => {
+      const messageSearch = message ? { ...message } : null;
+      dispatch(setStateSearchMessage(messageSearch));
     },
     [dispatch],
   );
@@ -403,9 +411,7 @@ export const useChat = () => {
   };
 
   const onSetConversationInfo = (conversationInfo: IChatItemInfo | null) => {
-    dispatch(
-      setConversationInfo({ conversationInfo, sessionId: user?.["username"] }),
-    );
+    dispatch(setConversationInfo(conversationInfo));
   };
 
   const onSetLastMessage = (newMessage: {
@@ -510,7 +516,6 @@ export const useChat = () => {
     messagePaging,
     messageInfo,
     messageStatus,
-    userOnlinePage,
     isError,
     isIdle,
     isFetching,

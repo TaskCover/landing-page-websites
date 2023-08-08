@@ -57,9 +57,8 @@ const MessageContent = ({
     const timeRead = new Date(unReadMessage?.unreadsFrom || "");
     if (unReadMessage?.unreadsFrom) {
       return timeMessage.getTime() < timeRead.getTime();
-    } else {
-      return true;
     }
+    return true;
   }, [message.ts, unReadMessage]);
 
   useEffect(() => {
@@ -110,9 +109,6 @@ const MessageContent = ({
                 "& *": {
                   margin: "0",
                 },
-                // "& p": {
-                //   display: "initial",
-                // },
               }}
             />
           </Linkify>

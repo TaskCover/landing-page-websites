@@ -2,7 +2,7 @@ import { Skeleton, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import ChatItemLayout from "./ChatItemLayout";
 import { useChat } from "store/chat/selectors";
-import { IChatItemInfo, STEP } from "store/chat/type";
+import { DirectionChat, IChatItemInfo, STEP } from "store/chat/type";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { useEffect, useMemo, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
@@ -28,27 +28,62 @@ const ChatList = () => {
   const [textSearch, setTextSearch] = useState("");
   const [lastElement, setLastElement] = useState(null);
   const pageRef = useRef(pageIndex);
-  const observer = useRef(
-    new IntersectionObserver((entries) => {
+  const chatListRef = useRef<HTMLDivElement>(null);
+  const scrollHeightRef = useRef(0);
+  const observer = useMemo(() => {
+    return new IntersectionObserver((entries) => {
       const first = entries[0];
       if (first.isIntersecting) {
         pageRef.current = pageRef.current + pageSize;
-        handleGetConversation(textSearch, pageRef.current, pageSize);
+
+        scrollHeightRef.current = chatListRef.current?.scrollHeight || 0;
+        const clientHeight = (chatListRef.current?.clientHeight || 0) + 100;
+
+        if (scrollHeightRef.current > clientHeight) {
+          handleGetConversation(textSearch, "a", pageRef.current, pageSize);
+        }
       }
-    }),
-  );
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageSize, textSearch]);
+
   const conversationList = useMemo(() => {
-    return convention.filter((item) => item.username !== user?.["username"]);
+    return convention
+      .filter((item) => item.username !== user?.["username"])
+      .map((item) => {
+        if (item.t === "d") {
+          const itemClone = { ...item };
+          if (item.statuses && item.statuses.length > 0) {
+            const statusPartner =
+              item.statuses?.[0].username === user?.["username"]
+                ? item.statuses?.[1]?.status
+                : item.statuses?.[0]?.status;
+            itemClone.status = statusPartner;
+          }
+
+          if (item.usernames && item.usernames.length > 0) {
+            const usernamePartner =
+              item.usernames?.[0] === user?.["username"]
+                ? item.usernames?.[1]
+                : item.usernames?.[0];
+            itemClone.username = usernamePartner;
+          }
+
+          return itemClone;
+        }
+        return item;
+      });
   }, [convention, user]);
 
   const handleGetConversation = async (
     text: string,
+    type: DirectionChat,
     offset?: number,
     count?: number,
   ) => {
     try {
       await onGetAllConvention({
-        type: "a",
+        type,
         text,
         offset: offset || 0,
         count: count || 10,
@@ -73,20 +108,19 @@ const ChatList = () => {
       }
   };
 
-  useEffect(() => {
-    pageRef.current = pageIndex;
-  }, [pageIndex]);
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      setTextSearch(event.target.value);
-      handleGetConversation(event.target.value);
+      handleGetConversation(event.target.value, "a");
     }
   };
 
   useEffect(() => {
+    pageRef.current = pageIndex;
+  }, [pageIndex]);
+
+  useEffect(() => {
     const currentElement = lastElement;
-    const currentObserver = observer.current;
+    const currentObserver = observer;
 
     if (currentElement) {
       currentObserver.observe(currentElement);
@@ -97,10 +131,11 @@ const ChatList = () => {
         currentObserver.unobserve(currentElement);
       }
     };
-  }, [lastElement]);
+  }, [lastElement, observer]);
 
   return (
     <Box
+      height="inherit"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -139,6 +174,7 @@ const ChatList = () => {
               lineHeight: "22px",
               "&::-webkit-input-placeholder": {
                 color: "#999999",
+                opacity: 1,
               },
             },
           }}
@@ -156,6 +192,7 @@ const ChatList = () => {
           }}
           placeholder="Search name"
           fullWidth
+          onChange={(e) => setTextSearch(e.target.value)}
           onKeyDown={handleKeyDown}
         />
         <Box
@@ -166,8 +203,12 @@ const ChatList = () => {
           <NewGroupIcon />
         </Box>
       </Box>
-      <Box overflow="auto" maxHeight="calc(600px - 74px - 15px)">
-        {(isFetching || isError) && conversationList?.length < 1 ? (
+      <Box
+        ref={chatListRef}
+        overflow="auto"
+        maxHeight="calc(600px - 74px - 15px)"
+      >
+        {(isFetching || isError) && pageIndex === 0 ? (
           Array.from({ length: 5 }, (_, i) => (
             <Box
               key={i}

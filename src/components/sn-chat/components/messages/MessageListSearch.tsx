@@ -32,10 +32,11 @@ const MessageItemRender = ({
     [message, user],
   );
 
+  const strippedHtml = message.matchedText.replace(/<[^>]+>/g, '');
   const messageMatched = useMemo(
     () =>
-      isCurrentAcc ? `<p>You: ${message.matchedText}</p>` : message.matchedText,
-    [isCurrentAcc, message],
+      isCurrentAcc ? `<p>You: ${strippedHtml}</p>` : strippedHtml,
+    [isCurrentAcc, strippedHtml],
   );
 
   useEffect(() => {
@@ -72,10 +73,11 @@ const MessageItemRender = ({
           </Typography>
           <Typography
             ref={lastMessageRef}
-            variant="caption"
-            color="#999999"
+            color="#828282"
             sx={{
               display: "flex",
+              fontSize: "14px",
+              lineHeight: "22px",
               "& *": {
                 margin: 0,
                 padding: 0,
@@ -91,6 +93,8 @@ const MessageItemRender = ({
               },
               "& mark": {
                 display: "inline",
+                color: "#3699FF",
+                backgroundColor: "transparent",
               },
               "& ol": {
                 marginLeft: "1rem",
@@ -100,6 +104,7 @@ const MessageItemRender = ({
                 WebkitLineClamp: "2",
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
+                whiteSpace: "pre-wrap",
               },
             }}
           />
