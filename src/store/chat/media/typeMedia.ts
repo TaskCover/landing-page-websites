@@ -42,6 +42,8 @@ export type MediaQuery = ChatQueryParam & {
   roomType?: string;
 };
 
+export type TypeMedia = "image_url" | "video_url";
+
 export interface Attachment {
   audio_url?: string;
   author_icon?: string;
@@ -50,7 +52,6 @@ export interface Attachment {
   collapsed?: boolean;
   color?: string;
   fields?: AttachmentFields[];
-  image_url?: string;
   message_link?: string;
   text?: string;
   thumb_url?: string;
@@ -58,7 +59,10 @@ export interface Attachment {
   title_link?: string;
   title_link_download?: boolean;
   ts?: string;
+  name?: string;
+  image_url?: string;
   video_url?: string;
+  downloadlink?: string
 }
 
 export interface AttachmentFields {
@@ -79,13 +83,13 @@ export interface MediaTypeCommon {
   _updatedAt: Date | string;
   uploadedAt: Date | string;
   user: User;
+  name: string;
 }
 export interface MediaHistoryType extends MediaTypeCommon {
   url: string;
 }
 
 export interface FileHistoryType extends MediaTypeCommon {
-  name: string;
   path: string;
 }
 

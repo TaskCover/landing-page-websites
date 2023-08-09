@@ -37,6 +37,13 @@ const LinkContent = () => {
     }, [] as unknown as { url: string; meta: {}; messageId: string; ts: string }[]);
   }, [chatLinks]);
 
+  if (
+    chatLinksStatus === DataStatus.LOADING ||
+    chatLinksStatus === DataStatus.FAILED
+  ) {
+    return <Typography textAlign="center">Loading...</Typography>;
+  }
+
   return (
     <Box
       sx={{
@@ -47,10 +54,7 @@ const LinkContent = () => {
         paddingRight: "0.3rem",
       }}
     >
-      {chatLinksStatus === DataStatus.LOADING ||
-      chatLinksStatus === DataStatus.FAILED ? (
-        <Typography textAlign="center">Loading...</Typography>
-      ) : chatLinkClone?.length > 0 ? (
+      {chatLinkClone?.length > 0 ? (
         chatLinkClone.map((item, index) => {
           return (
             <Box

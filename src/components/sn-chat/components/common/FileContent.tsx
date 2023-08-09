@@ -33,6 +33,13 @@ const FileContent = () => {
     return mediaList?.filter((file) => file.name && file.path);
   }, [mediaList]);
 
+  if (
+    mediaListStatus === DataStatus.LOADING ||
+    mediaListStatus === DataStatus.FAILED
+  ) {
+    return <Typography textAlign="center">Loading...</Typography>;
+  }
+
   return (
     <Box
       sx={{
@@ -43,10 +50,7 @@ const FileContent = () => {
         paddingRight: "0.3rem",
       }}
     >
-      {mediaListStatus === DataStatus.LOADING ||
-      mediaListStatus === DataStatus.FAILED ? (
-        <Typography textAlign="center">Loading...</Typography>
-      ) : (
+      {fileClone.length > 0 ? (
         fileClone?.map((item, index) => {
           return (
             <Box
@@ -78,6 +82,8 @@ const FileContent = () => {
             </Box>
           );
         })
+      ) : (
+        <Typography textAlign="center">No Data...</Typography>
       )}
     </Box>
   );

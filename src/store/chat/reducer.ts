@@ -24,6 +24,7 @@ import {
   STEP,
   TYPE_LIST,
   UserInfo,
+  MediaPreviewItem,
 } from "./type";
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
@@ -36,8 +37,9 @@ const initalPage = {
 };
 const initialState: ChatState = {
   convention: [],
+  mediaListConversation: [],
   conversationStatus: DataStatus.IDLE,
-  conversationPaging: initalPage,
+  conversationPaging: { ...initalPage, textSearch: "" },
   roomId: "",
   conversationInfo: null,
   currStep: STEP.CONVENTION,
@@ -145,7 +147,7 @@ const chatSlice = createSlice({
     },
     clearConversation: (state) => {
       state.convention = [];
-      state.conversationPaging = initalPage;
+      state.conversationPaging = { ...initalPage, textSearch: "" };
     },
     clearMessageList: (state) => {
       state.messageInfo = [];
@@ -161,6 +163,7 @@ const chatSlice = createSlice({
           ...state.conversationPaging,
           pageIndex: action.meta.arg.offset || 0,
           pageSize: action.meta.arg.count || 20,
+          textSearch: action.meta.arg.text,
         };
       })
       .addCase(
@@ -212,6 +215,26 @@ const chatSlice = createSlice({
         (state, action: PayloadAction<MessageInfo[]>) => {
           if (action.payload?.length > 0) {
             const messageNew = action.payload?.reverse() || [];
+
+            //Save media message
+            const attachments = messageNew
+              .filter((item) => item?.attachments?.length > 0)
+              .map((item) => item.attachments)
+              .flat();
+            const mediaMessages: MediaPreviewItem[] = attachments
+              .filter(
+                (item) =>
+                  item.hasOwnProperty("video_url") ||
+                  item.hasOwnProperty("image_url"),
+              )
+              .map((item) => {
+                return {
+                  link: item.downloadlink || "",
+                  name: item.name || "",
+                  object: "",
+                };
+              });
+
             /* The above code is checking if the last element of the `action.payload` array has the
             same `rid` value as the last element of the `state.messageInfo` array. If they have the
             same `rid` value, it appends the `messageNew` array to the `state.messageInfo` array.
@@ -220,11 +243,16 @@ const chatSlice = createSlice({
             - Fix bug duplicate messages when switch from single chat to group chat */
             if (state.messagePaging.pageIndex === 0) {
               state.messageInfo = messageNew;
+              state.mediaListConversation = mediaMessages;
             } else if (
               [...action?.payload]?.pop()?.rid ==
               [...state?.messageInfo]?.pop()?.rid
             ) {
               state.messageInfo = [...messageNew, ...state.messageInfo];
+              state.mediaListConversation = [
+                ...mediaMessages,
+                ...state.mediaListConversation,
+              ];
             }
             if (action.payload?.length < state.messagePaging.pageSize) {
               state.messagePaging.pageIndex =
@@ -234,7 +262,8 @@ const chatSlice = createSlice({
             }
           } else {
             state.messagePaging.pageIndex =
-              state.messagePaging.pageIndex - state.messagePaging.pageSizeDefault;
+              state.messagePaging.pageIndex -
+              state.messagePaging.pageSizeDefault;
           }
           state.messageStatus = DataStatus.SUCCEEDED;
         },

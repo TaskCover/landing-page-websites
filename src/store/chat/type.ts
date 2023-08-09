@@ -141,10 +141,20 @@ export interface SetStepAction<T> {
   dataTransfer?: T;
 }
 
+export interface MediaPreviewItem {
+  link: string;
+  name: string;
+  object: string;
+}
+
 export interface ChatState {
   convention: IChatItemInfo[];
+  mediaListConversation: MediaPreviewItem[];
   conversationStatus: DataStatus;
-  conversationPaging: Paging & { isReloadPageCurrent?: boolean };
+  conversationPaging: Paging & {
+    isReloadPageCurrent?: boolean;
+    textSearch: string;
+  };
   conversationInfo: IChatItemInfo | null;
   roomId: string;
 
