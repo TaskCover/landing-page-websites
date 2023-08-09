@@ -9,17 +9,38 @@ import PlayIcon from "icons/PlayIcon";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSnackbar } from "store/app/selectors";
+import { MediaType, TypeMedia } from "store/chat/media/typeMedia";
 import { useChat } from "store/chat/selectors";
-
-export type MediaType = "image_url" | "video_url";
-export const MediaClone = ({ src, type }: { src: string; type: MediaType }) => {
+export interface MediaPreview extends Partial<MediaType> {
+  link: string;
+  object: string;
+}
+export const MediaClone = ({
+  src,
+  type,
+  listMedia,
+}: {
+  src: string;
+  type: TypeMedia;
+  listMedia: MediaPreview[];
+}) => {
   const ref = useRef<HTMLVideoElement | HTMLImageElement | null>(null);
   const [isError, setError] = useState<boolean>(false);
   const [mediaPreview, setMediaPreview] = useState<{
     isPreview;
     src: string;
-    type: MediaType;
+    type: TypeMedia;
   }>({ isPreview: false, src: "", type: "image_url" });
+  const listMediaClone = useMemo(() => {
+    return listMedia.map((item) => {
+      return {
+        link: item.url || "",
+        name: item.name || "",
+        object: item.object,
+      } as { link: string; name: string; object: string };
+    });
+  }, [listMedia]);
+
   const switchMedia = useMemo(() => {
     switch (type) {
       case "image_url": {
@@ -85,7 +106,15 @@ export const MediaClone = ({ src, type }: { src: string; type: MediaType }) => {
               }
             />
             {!isError ? (
-              <Box component="video" ref={ref} width={92} height={92}>
+              <Box
+                component="video"
+                ref={ref}
+                width="100%"
+                height={92}
+                style={{
+                  objectFit: "cover",
+                }}
+              >
                 <source src={src} onError={() => setError(true)} />
               </Box>
             ) : (
@@ -122,6 +151,7 @@ export const MediaClone = ({ src, type }: { src: string; type: MediaType }) => {
         <Preview
           open={true}
           type={mediaPreview.type || ""}
+          listAttachmentsDown={listMediaClone}
           onClose={() =>
             setMediaPreview((state) => ({ ...state, isPreview: false }))
           }
@@ -153,39 +183,55 @@ const MediaContent = () => {
 
   const mediaClone = useMemo(() => {
     return mediaList
-      ?.filter((file) => !file?.name && file.url)
+      ?.filter((file) => file.url)
       .map((item) => {
         if (item.url.indexOf("mp4") > -1) {
-          return { ...item, type: "video_url" as MediaType };
+          return {
+            ...item,
+            type: "video_url" as TypeMedia,
+          };
         } else {
-          return { ...item, type: "image_url" as MediaType };
+          return {
+            ...item,
+            type: "image_url" as TypeMedia,
+          };
         }
       });
   }, [mediaList]);
 
+  if (
+    mediaListStatus === DataStatus.LOADING ||
+    mediaListStatus === DataStatus.FAILED
+  ) {
+    return <Typography textAlign="center">Loading...</Typography>;
+  }
+
   return (
-    <>
-      {mediaListStatus === DataStatus.LOADING ||
-      mediaListStatus === DataStatus.FAILED ? (
-        <Typography textAlign="center">Loading...</Typography>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        gap: "4px",
+        overflow: "auto",
+        margin: "0 4px",
+        paddingRight: "0.2rem",
+        paddingBottom: ".5rem",
+        maxHeight: "100%",
+      }}
+    >
+      {mediaClone?.length > 0 ? (
+        mediaClone?.map((item, index) => (
+          <MediaClone
+            key={index}
+            src={item.url}
+            type={item.type}
+            listMedia={mediaClone as unknown as MediaPreview[]}
+          />
+        ))
       ) : (
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "4px",
-            overflow: "auto",
-            margin: "0 4px",
-            paddingRight: "0.2rem",
-            maxHeight: "100%",
-          }}
-        >
-          {mediaClone?.map((item, index) => (
-            <MediaClone key={index} src={item.url} type={item.type} />
-          ))}
-        </Box>
+        <Typography textAlign="center">No Data...</Typography>
       )}
-    </>
+    </Box>
   );
 };
 

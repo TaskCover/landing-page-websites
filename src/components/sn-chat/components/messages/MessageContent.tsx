@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography, { TypographyProps } from "@mui/material/Typography";
-import { MessageInfo, UnReadMessageInfo } from "store/chat/type";
+import { MediaPreviewItem, MessageInfo, UnReadMessageInfo } from "store/chat/type";
 import { formatDate } from "utils/index";
 import Linkify from "linkify-react";
 import linkifyHtml from "linkify-html";
@@ -43,11 +43,13 @@ export const TimeMessage = ({
 };
 interface MessageContentProps {
   message: MessageInfo;
+  mediaListPreview: MediaPreviewItem[];
   isCurrentUser: boolean;
   unReadMessage: UnReadMessageInfo | null;
 }
 const MessageContent = ({
   message,
+  mediaListPreview,
   isCurrentUser,
   unReadMessage,
 }: MessageContentProps) => {
@@ -136,6 +138,7 @@ const MessageContent = ({
           message={message}
           isCurrentUser={isCurrentUser}
           isRead={isRead}
+          mediaListPreview={mediaListPreview}
           attachmentProps={{
             sx: {
               justifyContent: isCurrentUser ? "flex-end" : "flex-start",

@@ -13,7 +13,7 @@ import FilePdfIcon from "icons/FilePdfIcon";
 import PlayIcon from "icons/PlayIcon";
 import { useMemo, useRef, useState } from "react";
 import { Attachment } from "store/chat/media/typeMedia";
-import { MessageInfo } from "store/chat/type";
+import { MediaPreviewItem, MessageInfo } from "store/chat/type";
 import { TimeMessage } from "../messages/MessageContent";
 
 const IconFile = {
@@ -25,11 +25,13 @@ const IconFile = {
 
 const AttachmentContent = ({
   message,
+  mediaListPreview,
   isCurrentUser,
   isRead,
   attachmentProps,
 }: {
   message: MessageInfo;
+  mediaListPreview: MediaPreviewItem[];
   isCurrentUser: boolean;
   isRead: boolean;
   attachmentProps?: BoxProps;
@@ -239,6 +241,7 @@ const AttachmentContent = ({
         <Preview
           open={true}
           type={mediaPreview.type || ""}
+          listAttachmentsDown={mediaListPreview}
           onClose={() =>
             setMediaPreview((state) => ({ ...state, isPreview: false }))
           }

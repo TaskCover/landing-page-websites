@@ -15,7 +15,7 @@ const ChatList = () => {
   const {
     isError,
     convention,
-    conversationPaging: { pageIndex, pageSize },
+    conversationPaging: { pageIndex, pageSize, textSearch: initText },
     isFetching,
     onSetRoomId,
     onSetConversationInfo,
@@ -25,7 +25,7 @@ const ChatList = () => {
 
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
-  const [textSearch, setTextSearch] = useState("");
+  const [textSearch, setTextSearch] = useState(initText);
   const [lastElement, setLastElement] = useState(null);
   const pageRef = useRef(pageIndex);
   const chatListRef = useRef<HTMLDivElement>(null);
@@ -192,6 +192,7 @@ const ChatList = () => {
           }}
           placeholder="Search name"
           fullWidth
+          value={textSearch}
           onChange={(e) => setTextSearch(e.target.value)}
           onKeyDown={handleKeyDown}
         />
