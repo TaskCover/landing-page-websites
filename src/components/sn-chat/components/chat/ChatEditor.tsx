@@ -299,7 +299,6 @@ const ChatEditor = (props: EditorProps) => {
           noCss
             ? {}
             : {
-                border: "1px solid",
                 borderColor: "grey.A200",
                 borderBottomLeftRadius: 4,
                 borderBottomRightRadius: 4,

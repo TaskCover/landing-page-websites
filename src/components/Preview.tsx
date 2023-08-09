@@ -138,7 +138,6 @@ const Preview = (props: PreviewProps) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            m: 2,
           }}
         >
           {type.startsWith("video") ? (
