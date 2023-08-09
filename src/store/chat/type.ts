@@ -333,10 +333,15 @@ export interface UnReadMessageRequest extends AuthenRequestCommon {
   type: RoomType;
 }
 
-export interface UnReadMessageInfo {
-  roomId: string;
+export interface UnreadUserInfo {
   unreadCount: number;
   unreadsFrom: string;
+  userId: string;
+  username: string;
+}
+export interface UnReadMessageInfo {
+  roomId: string;
+  info: UnreadUserInfo[];
   success: boolean;
 }
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { useWSChat } from "store/chat/helpers";
@@ -31,6 +31,17 @@ const Conversation = () => {
   const t = useTranslations(NS_COMMON);
   const [files, setFiles] = useState<File[]>([]);
   const account = convention?.find((item) => item._id === roomId);
+  const isGroup = useMemo(
+    () => conversationInfo?.t !== "d",
+    [conversationInfo?.t],
+  );
+  const unReadMessageClone = useMemo(
+    () =>
+      unReadMessage?.info.filter(
+        (item) => item.username !== user?.["username"],
+      ) || [],
+    [unReadMessage?.info, user],
+  );
 
   const getLastMessage = useCallback(
     async (page?: number, size?: number) => {
@@ -108,13 +119,14 @@ const Conversation = () => {
         pageIndex={pageIndex}
         pageSize={pageSize}
         sessionId={user?.["username"]}
+        isGroup={isGroup}
         avatarPartner={conversationInfo?.avatar ?? account?.avatar ?? undefined}
         initialMessage={messageInfo}
         mediaListPreview={mediaListConversation}
         stateMessage={stateSendMessage}
         statusLoadMessage={messageStatus}
         focusMessage={stateSearchMessage}
-        unReadMessage={unReadMessage}
+        unReadMessage={unReadMessageClone}
         onRefetch={(page) => {
           getLastMessage(page, 10);
         }}

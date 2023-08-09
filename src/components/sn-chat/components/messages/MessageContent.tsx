@@ -1,6 +1,11 @@
 import Box from "@mui/material/Box";
 import Typography, { TypographyProps } from "@mui/material/Typography";
-import { MediaPreviewItem, MessageInfo, UnReadMessageInfo } from "store/chat/type";
+import {
+  MediaPreviewItem,
+  MessageInfo,
+  UnReadMessageInfo,
+  UnreadUserInfo,
+} from "store/chat/type";
 import { formatDate } from "utils/index";
 import Linkify from "linkify-react";
 import linkifyHtml from "linkify-html";
@@ -45,23 +50,30 @@ interface MessageContentProps {
   message: MessageInfo;
   mediaListPreview: MediaPreviewItem[];
   isCurrentUser: boolean;
-  unReadMessage: UnReadMessageInfo | null;
+  isGroup: boolean;
+  unReadMessage: UnreadUserInfo[];
 }
 const MessageContent = ({
   message,
   mediaListPreview,
   isCurrentUser,
+  isGroup,
   unReadMessage,
 }: MessageContentProps) => {
   const textRef = useRef<HTMLDivElement>(null);
-  const isRead = useMemo(() => {
+
+  const isUnReadCheck = unReadMessage.some((item) => item.unreadCount === 0);
+  const isReadMessage = useMemo(() => {
     const timeMessage = new Date(message.ts);
-    const timeRead = new Date(unReadMessage?.unreadsFrom || "");
-    if (unReadMessage?.unreadsFrom) {
-      return timeMessage.getTime() < timeRead.getTime();
+    if (isGroup) {
+      return isUnReadCheck;
+    } else {
+      const timeRead = new Date(unReadMessage?.[0]?.unreadsFrom || "");
+      return unReadMessage?.[0]?.unreadsFrom
+        ? timeMessage.getTime() < timeRead.getTime()
+        : false;
     }
-    return true;
-  }, [message.ts, unReadMessage]);
+  }, [isGroup, isUnReadCheck, message.ts, unReadMessage]);
 
   useEffect(() => {
     if (message.msg && textRef.current) {
@@ -117,7 +129,7 @@ const MessageContent = ({
         </Typography>
         <TimeMessage
           isCurrentUser={isCurrentUser}
-          isRead={isRead}
+          isRead={isReadMessage}
           time={message.ts}
         />
       </Box>
@@ -137,7 +149,7 @@ const MessageContent = ({
         <AttachmentContent
           message={message}
           isCurrentUser={isCurrentUser}
-          isRead={isRead}
+          isRead={isReadMessage}
           mediaListPreview={mediaListPreview}
           attachmentProps={{
             sx: {
