@@ -302,14 +302,12 @@ const Form = (props: FormProps) => {
             onOpen={onGetEmployeeOptions}
           />
           <Autocomplete
-            title="Select project type"
             options={projectTypeOptions}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
               <TextField
                 {...params}
-                title={projectT("list.form.title.projectType")}
-                name="type_project"
+                label={projectT("list.form.title.projectType")}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values?.type_project}
@@ -317,22 +315,22 @@ const Form = (props: FormProps) => {
                 helperText={commonT(touchedErrors?.type_project, { name: projectT("list.form.title.projectType") })}
                 variant="outlined"
                 fullWidth
+                style={{ backgroundColor: '#f7f7fd' }}
                 sx={{
                   mt: { xs: 2, sm: 0 },
                 }}
               />
             )}
             noOptionsText={
-              <>
+              <div style={{ textAlign: "center", cursor: "pointer" }}>
                 <p style={{ color: "black" }}>This types of project doesn't exits</p>
-                <Button
-                  variant="contained"
-                  color="primary"
+                <div
+                  style={{ color: '#0bb79f', backgroundColor: 'transparent', cursor: "pointer" }}
                   onClick={() => onCreateProjectType}
                 >
-                  Add to new project type
-                </Button>
-              </>
+                  + Add to new project type
+                </div>
+              </div>
             }
             renderOption={(props, option, { selected }) => (
               <li {...props}>
