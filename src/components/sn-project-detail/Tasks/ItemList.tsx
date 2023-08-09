@@ -998,6 +998,10 @@ const ItemList = () => {
                         </>
                       )}
                     </Stack>
+                    <ActionsSelected
+                      selectedList={selectedList}
+                      onReset={onResetSelected}
+                    />
                   </DraggableTask>
                 );
               })}

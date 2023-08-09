@@ -1,4 +1,5 @@
-import { MenuItem, Stack } from "@mui/material";
+/* eslint-disable react/no-unescaped-entities */
+import { Autocomplete, MenuItem, Stack, TextField } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
 import {
@@ -21,6 +22,7 @@ import {
 import { ProjectData } from "store/project/actions";
 import { DataAction } from "constant/enums";
 import {
+  Button,
   DatePicker,
   Input,
   InputNumber,
@@ -37,6 +39,10 @@ import {
 } from "store/global/selectors";
 import { Endpoint, client } from "api";
 import { useTranslations } from "next-intl";
+import { createProjectType } from "store/company/actions";
+import { useDispatch } from 'react-redux';
+import { useProjectTypes } from "store/company/selectors";
+import { useProjects } from "store/project/selectors";
 
 export type ProjectDataForm = Omit<ProjectData, "members" | "avatar"> & {
   members?: Member[];
@@ -97,6 +103,7 @@ const Form = (props: FormProps) => {
     if (isFetching || (totalPages && pageIndex >= totalPages)) return;
     onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
   };
+  const dispatch = useDispatch();
 
   const onSubmit = async (values: ProjectDataForm) => {
     try {
@@ -244,6 +251,8 @@ const Form = (props: FormProps) => {
   useEffect(() => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetOptions]);
+  const { onCreateProjectType } =
+    useProjectTypes();
 
   return (
     <FormLayout
@@ -292,22 +301,45 @@ const Form = (props: FormProps) => {
             }}
             onOpen={onGetEmployeeOptions}
           />
-          <Select
+          <Autocomplete
+            title="Select project type"
             options={projectTypeOptions}
-            title={projectT("list.form.title.projectType")}
-            name="type_project"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values?.type_project}
-            error={commonT(touchedErrors?.type_project, {
-              name: projectT("list.form.title.projectType"),
-            })}
-            rootSx={sxConfig.input}
+            getOptionLabel={(option) => option.label}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                title={projectT("list.form.title.projectType")}
+                name="type_project"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values?.type_project}
+                error={!!commonT(touchedErrors?.type_project, { name: projectT("list.form.title.projectType") })}
+                helperText={commonT(touchedErrors?.type_project, { name: projectT("list.form.title.projectType") })}
+                variant="outlined"
+                fullWidth
+                sx={{
+                  mt: { xs: 2, sm: 0 },
+                }}
+              />
+            )}
+            noOptionsText={
+              <>
+                <p style={{ color: "black" }}>This types of project doesn't exits</p>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => onCreateProjectType}
+                >
+                  Add to new project type
+                </Button>
+              </>
+            }
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                {option.label}
+              </li>
+            )}
             fullWidth
-            onEndReached={onProjectTypeOptionsEndReached}
-            sx={{
-              mt: { xs: 2, sm: 0 },
-            }}
           />
         </Stack>
         <SelectMembers
