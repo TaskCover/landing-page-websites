@@ -8,6 +8,7 @@ import {
   DroppableTaskList,
   DraggableTask,
   TASK_TEXT_STATUS,
+  MoreList,
 } from "./components";
 import { Button, Checkbox, Text, TextProps } from "components/shared";
 import {
@@ -936,12 +937,17 @@ const ItemList = () => {
                                           {subTask.description}
                                         </Description>
                                       </Stack>
+                                      <MoreList sx={{ display: { xs: "none", md: "flex" } }} selectedList={selectedList}
+                                        onReset={onResetSelected} />
+
                                     </Stack>
                                   );
                                 })}
                                 {taskDropProvided.placeholder}
                               </div>
+
                             )}
+
                           </Droppable>
                           <Stack
                             width="100%"
@@ -998,11 +1004,11 @@ const ItemList = () => {
                         </>
                       )}
                     </Stack>
-                    <ActionsSelected
-                      selectedList={selectedList}
-                      onReset={onResetSelected}
-                    />
+                    <MoreList sx={{ display: { xs: "none", md: "flex" } }} selectedList={selectedList}
+                      onReset={onResetSelected} />
+
                   </DraggableTask>
+
                 );
               })}
             </DroppableTaskList>
@@ -1016,6 +1022,7 @@ const ItemList = () => {
           />
         )}
       </DragDropContext>
+
       <Loading open={isProcessing} />
 
       {isShow && (
