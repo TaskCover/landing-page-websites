@@ -338,12 +338,6 @@ const chatSlice = createSlice({
         getUnreadMessages.fulfilled,
         (state, action: PayloadAction<UnReadMessageInfo>) => {
           state.unReadMessage = action.payload;
-          // state.unReadMessage = {
-          //   roomId: "ddwqCMbfrpzXBWPSZkR3oGad8C6wF3wwPk",
-          //   unreadCount: 6,
-          //   unreadsFrom: "2023-07-30T10:56:06.349Z",
-          //   success: true,
-          // };
           state.statusUnReadMessage = DataStatus.SUCCEEDED;
         },
       )

@@ -28,12 +28,6 @@ const nextConfig = {
         protocol: "http",
         hostname: "103.196.145.232",
       },
-      {
-        protocol: "http",
-        hostname: "103.196.145.232",
-        port: '3333',
-        pathname: '/avatar/...1048',
-      },
     ],
   },
   eslint: {

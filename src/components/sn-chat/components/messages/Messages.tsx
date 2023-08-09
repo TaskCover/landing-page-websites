@@ -13,6 +13,7 @@ import {
   MessageInfo,
   MessageSearchInfo,
   UnReadMessageInfo,
+  UnreadUserInfo,
 } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 import Skeleton from "@mui/material/Skeleton";
@@ -28,6 +29,7 @@ interface MessagesProps {
   avatarPartner: string | undefined;
   pageIndex: number;
   pageSize: number;
+  isGroup: boolean;
   initialMessage: MessageInfo[];
   mediaListPreview: MediaPreviewItem[];
   statusLoadMessage: DataStatus;
@@ -36,7 +38,7 @@ interface MessagesProps {
     status: DataStatus;
   };
   focusMessage: MessageSearchInfo | null;
-  unReadMessage: UnReadMessageInfo | null;
+  unReadMessage: UnreadUserInfo[];
   onRefetch: (page: number) => void;
 }
 
@@ -52,6 +54,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     avatarPartner,
     pageIndex,
     pageSize,
+    isGroup,
     initialMessage: messages,
     mediaListPreview,
     statusLoadMessage,
@@ -170,6 +173,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         }}
       >
         {messages.map((message, index) => {
+          // Need to separate this cluster into a separate component
           const isCurrentUser = message.u.username === sessionId;
           const hasNextMessageFromSameUser =
             messages[index + 1]?.u?.username === messages[index]?.u?.username;
@@ -203,6 +207,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                   message={message}
                   mediaListPreview={mediaListPreview}
                   isCurrentUser={isCurrentUser}
+                  isGroup={isGroup}
                   unReadMessage={unReadMessage}
                 />
               </MessageLayout>

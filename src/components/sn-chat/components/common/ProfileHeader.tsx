@@ -173,7 +173,7 @@ const ProfileHeader = ({
                 fontSize="14px"
                 lineHeight="22px"
               >
-                {statusOnline === "online" ? "Active" : ""}
+                {statusOnline}
               </Typography>
             )}
           </Box>
