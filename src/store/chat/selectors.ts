@@ -66,6 +66,7 @@ export const useChat = () => {
   const { user } = useAuth();
   const {
     convention,
+    mediaListConversation,
     messageInfo,
     messageStatus,
 
@@ -512,6 +513,7 @@ export const useChat = () => {
 
   return {
     convention,
+    mediaListConversation,
     conversationPaging,
     messagePaging,
     messageInfo,

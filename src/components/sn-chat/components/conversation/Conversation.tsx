@@ -16,6 +16,7 @@ const Conversation = () => {
     messageInfo,
     messagePaging: { pageIndex, pageSize },
     messageStatus,
+    mediaListConversation,
     stateSendMessage,
     dataTransfer,
     stateSearchMessage,
@@ -109,6 +110,7 @@ const Conversation = () => {
         sessionId={user?.["username"]}
         avatarPartner={conversationInfo?.avatar ?? account?.avatar ?? undefined}
         initialMessage={messageInfo}
+        mediaListPreview={mediaListConversation}
         stateMessage={stateSendMessage}
         statusLoadMessage={messageStatus}
         focusMessage={stateSearchMessage}

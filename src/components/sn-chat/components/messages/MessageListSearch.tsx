@@ -104,7 +104,6 @@ const MessageItemRender = ({
                 WebkitLineClamp: "2",
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
-                whiteSpace: "pre-wrap",
               },
             }}
           />

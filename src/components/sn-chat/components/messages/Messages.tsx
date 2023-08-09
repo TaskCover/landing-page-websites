@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import {
+  MediaPreviewItem,
   MessageInfo,
   MessageSearchInfo,
   UnReadMessageInfo,
@@ -28,6 +29,7 @@ interface MessagesProps {
   pageIndex: number;
   pageSize: number;
   initialMessage: MessageInfo[];
+  mediaListPreview: MediaPreviewItem[];
   statusLoadMessage: DataStatus;
   stateMessage?: {
     filePreview?: File | File[] | null;
@@ -51,6 +53,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     pageIndex,
     pageSize,
     initialMessage: messages,
+    mediaListPreview,
     statusLoadMessage,
     stateMessage,
     focusMessage,
@@ -198,6 +201,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
               >
                 <MessageContent
                   message={message}
+                  mediaListPreview={mediaListPreview}
                   isCurrentUser={isCurrentUser}
                   unReadMessage={unReadMessage}
                 />
