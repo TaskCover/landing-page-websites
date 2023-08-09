@@ -1,4 +1,4 @@
-import { MenuItem, Stack } from "@mui/material";
+import { Autocomplete, MenuItem, Stack, TextField } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
 import {
@@ -21,6 +21,7 @@ import {
 import { ProjectData } from "store/project/actions";
 import { DataAction } from "constant/enums";
 import {
+  Button,
   DatePicker,
   Input,
   InputNumber,
@@ -292,23 +293,7 @@ const Form = (props: FormProps) => {
             }}
             onOpen={onGetEmployeeOptions}
           />
-          <Select
-            options={projectTypeOptions}
-            title={projectT("list.form.title.projectType")}
-            name="type_project"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values?.type_project}
-            error={commonT(touchedErrors?.type_project, {
-              name: projectT("list.form.title.projectType"),
-            })}
-            rootSx={sxConfig.input}
-            fullWidth
-            onEndReached={onProjectTypeOptionsEndReached}
-            sx={{
-              mt: { xs: 2, sm: 0 },
-            }}
-          />
+         b
         </Stack>
         <SelectMembers
           name="members"
