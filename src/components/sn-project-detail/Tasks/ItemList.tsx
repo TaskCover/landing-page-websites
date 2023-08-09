@@ -8,6 +8,7 @@ import {
   DroppableTaskList,
   DraggableTask,
   TASK_TEXT_STATUS,
+  MoreList,
 } from "./components";
 import { Button, Checkbox, Text, TextProps } from "components/shared";
 import {
@@ -848,105 +849,113 @@ const ItemList = () => {
                                     (item) => item?.subTaskId === subTask.id,
                                   );
                                   return (
-                                    <Stack
-                                      key={subTask.id}
-                                      direction="row"
-                                      alignItems="center"
-                                      minHeight={38}
-                                      overflow="hidden"
-                                      borderBottom={{
-                                        md: "1px solid",
-                                      }}
-                                      borderColor={{
-                                        md: "grey.100",
-                                      }}
-                                      maxHeight={{ md: 38 }}
-                                      sx={{
-                                        "& >.checkbox": {
-                                          opacity: isChecked ? 1 : 0,
-                                          userSelect: isChecked
-                                            ? undefined
-                                            : "none",
-                                        },
-                                        "&:hover >.checkbox": {
-                                          opacity: 1,
-                                        },
-                                      }}
-                                    >
-                                      <Checkbox
-                                        className="checkbox"
-                                        size="small"
-                                        checked={isChecked}
-                                        onChange={onToggleSubTask(
-                                          taskListItem,
-                                          task,
-                                          subTask,
-                                        )}
-                                      />
+                                    <>
                                       <Stack
-                                        direction={{
-                                          md: "row",
-                                        }}
-                                        alignItems={{
-                                          xs: "flex-start",
-                                          md: "center",
-                                        }}
-                                        sx={sx.subTask}
+                                        key={subTask.id}
+                                        direction="row"
+                                        alignItems="center"
+                                        minHeight={38}
                                         overflow="hidden"
+                                        borderBottom={{
+                                          md: "1px solid",
+                                        }}
+                                        borderColor={{
+                                          md: "grey.100",
+                                        }}
+                                        maxHeight={{ md: 38 }}
+                                        sx={{
+                                          "& >.checkbox": {
+                                            opacity: isChecked ? 1 : 0,
+                                            userSelect: isChecked
+                                              ? undefined
+                                              : "none",
+                                          },
+                                          "&:hover >.checkbox": {
+                                            opacity: 1,
+                                          },
+                                        }}
                                       >
-                                        <Content
-                                          color="text.primary"
-                                          textAlign="left"
-                                          noWrap
-                                          tooltip={subTask.name}
-                                          onClick={onSetTask(
+                                        <Checkbox
+                                          className="checkbox"
+                                          size="small"
+                                          checked={isChecked}
+                                          onChange={onToggleSubTask(
+                                            taskListItem,
+                                            task,
                                             subTask,
-                                            taskListItem.id,
-                                            task.id,
-                                            subTask.id,
                                           )}
+                                        />
+                                        <Stack
+                                          direction={{
+                                            md: "row",
+                                          }}
+                                          alignItems={{
+                                            xs: "flex-start",
+                                            md: "center",
+                                          }}
+                                          sx={sx.subTask}
+                                          overflow="hidden"
                                         >
-                                          {subTask.name}
-                                        </Content>
-                                        <Assigner
-                                          src={subTask?.owner?.avatar?.link}
-                                        >
-                                          {subTask?.owner?.fullname}
-                                        </Assigner>
-                                        <Content>
-                                          {formatDate(subTask?.start_date)}
-                                        </Content>
-                                        <Content>
-                                          {formatDate(subTask?.end_date)}
-                                        </Content>
-                                        <Content
-                                          noWrap={false}
-                                          whiteSpace="nowrap"
-                                        >
-                                          <TextStatus
-                                            color={COLOR_STATUS[subTask.status]}
-                                            text={
-                                              TASK_TEXT_STATUS[subTask.status]
-                                            }
-                                            width={121}
-                                          />
-                                        </Content>
+                                          <Content
+                                            color="text.primary"
+                                            textAlign="left"
+                                            noWrap
+                                            tooltip={subTask.name}
+                                            onClick={onSetTask(
+                                              subTask,
+                                              taskListItem.id,
+                                              task.id,
+                                              subTask.id,
+                                            )}
+                                          >
+                                            {subTask.name}
+                                          </Content>
+                                          <Assigner
+                                            src={subTask?.owner?.avatar?.link}
+                                          >
+                                            {subTask?.owner?.fullname}
+                                          </Assigner>
+                                          <Content>
+                                            {formatDate(subTask?.start_date)}
+                                          </Content>
+                                          <Content>
+                                            {formatDate(subTask?.end_date)}
+                                          </Content>
+                                          <Content
+                                            noWrap={false}
+                                            whiteSpace="nowrap"
+                                          >
+                                            <TextStatus
+                                              color={COLOR_STATUS[subTask.status]}
+                                              text={
+                                                TASK_TEXT_STATUS[subTask.status]
+                                              }
+                                              width={121}
+                                            />
+                                          </Content>
 
-                                        <Description>
-                                          {subTask.description}
-                                        </Description>
+                                          <Description>
+                                            {subTask.description}
+                                          </Description>
+                                        </Stack>
+                                        <MoreList sx={{ display: { xs: "none", md: "flex" } }} selectedList={selectedList}
+                                          onReset={onResetSelected} />
+
                                       </Stack>
-                                    </Stack>
+
+                                    </>
                                   );
                                 })}
                                 {taskDropProvided.placeholder}
+
                               </div>
+
                             )}
+
                           </Droppable>
                           <Stack
                             width="100%"
                             direction="row"
-                            alignItems="center"
                             spacing={1}
                           >
                             <PlusIcon />
@@ -995,16 +1004,20 @@ const ItemList = () => {
                               {errorTaskName}
                             </Text>
                           )}
+
                         </>
                       )}
                     </Stack>
-                    <ActionsSelected
-                      selectedList={selectedList}
-                      onReset={onResetSelected}
-                    />
+                    <MoreList sx={{ display: { xs: "none", md: "flex" } }} selectedList={selectedList}
+                      onReset={onResetSelected} />
                   </DraggableTask>
+
+
                 );
+
               })}
+
+
             </DroppableTaskList>
           );
         })}
@@ -1016,6 +1029,7 @@ const ItemList = () => {
           />
         )}
       </DragDropContext>
+
       <Loading open={isProcessing} />
 
       {isShow && (
