@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "store/app/selectors";
 import { useChat } from "./selectors";
-import { MessageBodyRequest } from "./type";
+import { MessageBodyRequest, MessageInfo } from "./type";
 import { sleep } from "utils/index";
 
 export const useWSChat = () => {
@@ -96,7 +96,10 @@ export const useWSChat = () => {
 
   const appendMessage = useCallback(
     (message) => {
-      const newMessage = { ...message, ts: new Date(message?.ts?.["$date"]) };
+      const newMessage = {
+        ...message,
+        ts: new Date(message?.ts?.["$date"]),
+      } as unknown as MessageInfo;
       onSetMessage(newMessage);
       onSetLastMessage({ roomId, lastMessage: newMessage });
     },

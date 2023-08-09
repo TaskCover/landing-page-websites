@@ -498,7 +498,7 @@ export const useChat = () => {
               obj.title_link = item.download;
               obj.title_link_download = true;
             }
-
+            obj.name = item.title;
             return obj;
           });
           await onSendMessage({ attachments });
