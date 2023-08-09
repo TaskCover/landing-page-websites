@@ -82,54 +82,80 @@ const Preview = (props: PreviewProps) => {
           {commonT("close")}
         </Text>
       </DialogTitle>
-      <Box
-        className="slide-container slider-comment-attachment"
-        sx={{
-          "& .react-slideshow-container .react-slideshow-wrapper .images-wrap":
-            {
-              "& div": {
-                height: "calc(100vh - 72px)",
+      {listAttachmentsDown && listAttachmentsDown?.length > 0 ? (
+        <Box
+          className="slide-container slider-comment-attachment"
+          sx={{
+            "& .react-slideshow-container .react-slideshow-wrapper .images-wrap":
+              {
+                "& div": {
+                  height: "calc(100vh - 72px)",
+                },
               },
-            },
-        }}
-      >
-        <Slide
-          defaultIndex={indexSlide}
-          infinite={false}
-          autoplay={false}
-          duration={5000}
-          transitionDuration={500}
-          easing="ease"
+          }}
         >
-          {listAttachmentsDown?.map((data, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {getExtension(data?.name)?.startsWith("video") ? (
-                <Box component="video" height="100%" width="100%" controls>
-                  <source src={data.link} />
-                </Box>
-              ) : (
-                <Box
-                  component="img"
-                  src={data.link}
-                  height="auto"
-                  width="auto"
-                  alt="Image"
-                  sx={{
-                    maxWidth: "600px",
-                  }}
-                />
-              )}
-            </div>
-          ))}
-        </Slide>
-      </Box>
+          <Slide
+            defaultIndex={indexSlide}
+            infinite={false}
+            autoplay={false}
+            duration={5000}
+            transitionDuration={500}
+            easing="ease"
+          >
+            {listAttachmentsDown?.map((data, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {getExtension(data?.name)?.startsWith("video") ? (
+                  <Box component="video" height="100%" width="100%" controls>
+                    <source src={data.link} />
+                  </Box>
+                ) : (
+                  <Box
+                    component="img"
+                    src={data.link}
+                    height="auto"
+                    width="auto"
+                    alt="Image"
+                    sx={{
+                      maxWidth: "600px",
+                    }}
+                  />
+                )}
+              </div>
+            ))}
+          </Slide>
+        </Box>
+      ) : (
+        <DialogContent
+          sx={{
+            p: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            m: 2,
+          }}
+        >
+          {type.startsWith("video") ? (
+            <Box component="video" height="100%" width="auto" controls>
+              <source src={src} />
+            </Box>
+          ) : (
+            <Box
+              component="img"
+              src={src}
+              height="100%"
+              width="auto"
+              alt="Image"
+            />
+          )}
+        </DialogContent>
+      )}
     </Dialog>
   );
 };

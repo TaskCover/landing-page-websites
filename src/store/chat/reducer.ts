@@ -112,8 +112,30 @@ const chatSlice = createSlice({
     setConversationInfo: (state, action) => {
       state.conversationInfo = action.payload;
     },
-    setMessage: (state, action) => {
-      state.messageInfo.push(action.payload);
+    setMessage: (state, action: PayloadAction<MessageInfo | null>) => {
+      if (action.payload) {
+        state.messageInfo.push(action.payload);
+        if (action.payload.attachments?.length > 0) {
+          const mediaMessages: MediaPreviewItem[] = action.payload.attachments
+            .filter(
+              (item) =>
+                item.hasOwnProperty("video_url") ||
+                item.hasOwnProperty("image_url"),
+            )
+            .map((item) => {
+              return {
+                link: item.image_url ?? item.video_url ?? "",
+                name: item.name || "",
+                object: "",
+              };
+            });
+
+          state.mediaListConversation = state.mediaListConversation = [
+            ...state.mediaListConversation,
+            ...mediaMessages,
+          ];
+        }
+      }
     },
     setStateSendMessage: (
       state,
