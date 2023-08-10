@@ -21,6 +21,7 @@ export type CommonDictionary = {
       overMax: string;
       datePast: string;
       gte: string;
+      renameGroup: string;
     };
     title: {
       upload: string;

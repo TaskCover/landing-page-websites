@@ -23,6 +23,7 @@ export const CommonLang: CommonDictionary = {
       overMax: "{name} quá dài, tối đa {max} ký tự.",
       datePast: "{name} không thể là một ngày trong quá khứ.",
       gte: "{name} phải lớn hơn hoặc bằng {name2}",
+      renameGroup: "{name} là tên phòng không hợp lệ",
     },
     title: {
       upload: "Tải lên",

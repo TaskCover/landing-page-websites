@@ -295,7 +295,7 @@ const ChatDetailGroup = (props) => {
       })) as any;
       
       if (renameResult?.error) {
-        return onAddSnackbar(`${renameResult?.meta?.arg?.name} is not a valid room name`, "error");
+        return onAddSnackbar(commonT("form.error.renameGroup", { name: renameResult?.meta?.arg?.name }), "error");
       } else {
         
         onGetAllConvention({
