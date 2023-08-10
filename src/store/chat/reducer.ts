@@ -225,6 +225,7 @@ const chatSlice = createSlice({
       })
       // getLatestMessages
       .addCase(getLatestMessages.pending, (state, action) => {
+        state.messageInfo = []
         state.messageStatus = DataStatus.LOADING;
         state.messagePaging = {
           ...state.messagePaging,
@@ -235,6 +236,7 @@ const chatSlice = createSlice({
       .addCase(
         getLatestMessages.fulfilled,
         (state, action: PayloadAction<MessageInfo[]>) => {
+          state.messageInfo = []
           if (action.payload?.length > 0) {
             const messageNew = action.payload?.reverse() || [];
 
@@ -383,6 +385,7 @@ const chatSlice = createSlice({
       })
       // addMembersToDirectMessageGroup
       .addCase(addMembersToDirectMessageGroup.pending, (state, action) => {
+        state.messageInfo = []
         state.addMembers2GroupStatus = DataStatus.LOADING;
       })
       .addCase(
