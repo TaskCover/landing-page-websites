@@ -79,6 +79,12 @@ const AddGroup = () => {
       return;
     }
     onAddSnackbar("Successfully!", "success");
+    onGetAllConvention({
+      type: "a",
+      text: "",
+      offset: 0,
+      count: 1000,
+    });
     onSetStep(STEP.CHAT_GROUP, !dataTransfer?.isNew ? dataTransfer : result?.payload?.group);
     onSetRoomId(dataTransfer?.isNew ? result?.payload?.group?._id : dataTransfer?._id)
   };
