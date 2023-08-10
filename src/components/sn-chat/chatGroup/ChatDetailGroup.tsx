@@ -267,6 +267,20 @@ const ChatDetailGroup = (props) => {
       </Box>
     );
   };
+  const handleSuccess = (result) => {
+    if (result?.error) {
+      onAddSnackbar(result?.error?.message, "error");
+      return;
+    }
+    onAddSnackbar("Successfully!", "success");
+    onGetAllConvention({
+      type: "a",
+      text: "",
+      offset: 0,
+      count: 1000,
+    });
+    onSetStep(STEP.CONVENTION);
+  };
 
   const handlePopup = async () => {
     const renameGroupApi = async () => {
@@ -281,7 +295,7 @@ const ChatDetailGroup = (props) => {
       })) as any;
       
       if (renameResult?.error) {
-        return onAddSnackbar(renameResult?.error?.message, "error");
+        return onAddSnackbar(`${renameResult?.meta?.arg?.name} is not a valid room name`, "error");
       } else {
         
         onGetAllConvention({
@@ -301,8 +315,7 @@ const ChatDetailGroup = (props) => {
       if (leftResult?.error) {
         return onAddSnackbar(leftResult?.error?.message, "error");
       } else {
-        onAddSnackbar("Successfully!", "success");
-        onSetStep(STEP.CONVENTION);
+        handleSuccess(leftResult)
       }
     };
     const addAndRemove = async (add: string, remove: string) => {
@@ -326,11 +339,12 @@ const ChatDetailGroup = (props) => {
     switch (showPopup?.type) {
       case TYPE_POPUP.DELETE:
         //CALL API DELETE
-        onDeleteConversationGroup({
+        const result = onDeleteConversationGroup({
           type: 'p',
           roomId: dataTransfer?._id,
         })
         onSetStep(STEP.CONVENTION);
+        handleSuccess(result)
         break;
       case TYPE_POPUP.LEAVE_MEMBER:
         await left();
