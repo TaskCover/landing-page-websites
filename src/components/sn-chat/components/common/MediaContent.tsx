@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Media from "components/Media";
 import Preview from "components/Preview";
 import { DataStatus } from "constant/enums";
-import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { ACCEPT_MEDIA, AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import PlayIcon from "icons/PlayIcon";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -91,10 +91,15 @@ export const MediaClone = ({
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                color: "common.white",
                 cursor: "pointer",
+                color: "common.white",
                 fontSize: 24,
                 zIndex: 1,
+
+                backgroundColor: "#FFFFFF4D",
+                borderRadius: "50px",
+                width: "30px",
+                height: "30px",
               }}
               onClick={() =>
                 setMediaPreview((state) => ({
@@ -182,8 +187,12 @@ const MediaContent = () => {
   }, [onAddSnackbar, onGetChatAttachments, t]);
 
   const mediaClone = useMemo(() => {
+    const acceptType = ACCEPT_MEDIA.map((item) => item.split("/")?.[1]);
     return mediaList
-      ?.filter((file) => file.url)
+      ?.filter((file) => {
+        const typeByNameFile = file.name.split(".")?.[1];
+        return file.url && acceptType.includes(typeByNameFile);
+      })
       .map((item) => {
         if (item.url.indexOf("mp4") > -1) {
           return {

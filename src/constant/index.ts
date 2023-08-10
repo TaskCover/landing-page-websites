@@ -67,6 +67,8 @@ export const NS_MANAGER = "manager";
 export const NS_TIME_TRACKING = "timeTracking";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
+export const VIDEO_ACCEPT = ["video/mp4"];
+export const ACCEPT_MEDIA = [...IMAGES_ACCEPT, ...VIDEO_ACCEPT];
 export const FILE_ACCEPT = [
   "application/zip",
   "application/vnd.ms-powerpoint",
