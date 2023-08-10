@@ -10,18 +10,14 @@ import {
   useState,
 } from "react";
 import "react-quill/dist/quill.snow.css";
-import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
+import { ACCEPT_MEDIA, FILE_ACCEPT } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
 import ImageImportIcon from "icons/ImageImportIcon";
 import UploadFileIcon from "icons/UploadFileIcon";
 import ChatEmoji, { Emoji } from "./ChatEmoji";
-import { Quill } from "react-quill";
 import hljs from "highlight.js";
-// import "highlight.js/styles/github.css";
-
-// hljs.registerLanguage('javascript', javascript);
 
 hljs.configure({
   // optionally configure hljs
@@ -64,7 +60,7 @@ export type EditorProps = {
   onEnterText?: (text: string) => void;
 };
 
-const ACCEPT_MEDIA = [...IMAGES_ACCEPT, "video/mp4"];
+const ACCEPT_ALL = [...FILE_ACCEPT, ...ACCEPT_MEDIA];
 const TOOLBAR = [
   ["bold", "italic", "underline", "strike"],
   ["link", "code-block"],
@@ -108,6 +104,9 @@ const ChatEditor = (props: EditorProps) => {
       [...files],
     );
     onChangeFiles && onChangeFiles(newFiles);
+    if (inputMediaRef.current) {
+      inputMediaRef.current.value = "";
+    }
   };
 
   const onRemove = (index: number) => {
@@ -322,7 +321,7 @@ const ChatEditor = (props: EditorProps) => {
         accept={ACCEPT_MEDIA.join(",")}
         display="none"
         ref={inputMediaRef}
-        onChange={(e) => onChangeFile(e, ACCEPT_MEDIA)}
+        onChange={(e) => onChangeFile(e, ACCEPT_ALL)}
       />
       <Box
         multiple
@@ -331,7 +330,7 @@ const ChatEditor = (props: EditorProps) => {
         accept={FILE_ACCEPT.join(",")}
         display="none"
         ref={inputFileRef}
-        onChange={(e) => onChangeFile(e, FILE_ACCEPT)}
+        onChange={(e) => onChangeFile(e, ACCEPT_ALL)}
       />
       {children}
     </Stack>

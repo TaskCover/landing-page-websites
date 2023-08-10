@@ -104,12 +104,12 @@ const AttachmentContent = ({
           {media &&
             media?.image_url?.map((image, index) => {
               return (
-                <Box position="relative" key={index}>
+                <Box position="relative" key={index} height={112}>
                   <Avatar
                     size={112}
                     src={image || undefined}
                     style={{
-                      borderRadius: "20px",
+                      borderRadius: "8px",
                       border: "1px solid #efefef",
                       objectFit: "cover",
                     }}
@@ -129,8 +129,12 @@ const AttachmentContent = ({
                     timeMessageProps={{
                       sx: {
                         position: "absolute",
-                        bottom: ".8rem",
-                        right: ".7rem",
+                        bottom: ".4rem",
+                        right: ".3rem",
+                        gap: "0.2rem",
+                        padding: "0 6px",
+                        borderRadius: "15px",
+                        backgroundColor: "#00000080",
                       },
                     }}
                   />
@@ -140,7 +144,7 @@ const AttachmentContent = ({
           {media &&
             media?.video_url?.map((url, index) => {
               return (
-                <Box position="relative" key={index}>
+                <Box position="relative" key={index} height={112}>
                   <>
                     <PlayIcon
                       sx={{
@@ -148,9 +152,15 @@ const AttachmentContent = ({
                         top: "50%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
+                        cursor: "pointer",
                         color: "common.white",
                         fontSize: 24,
                         zIndex: 1,
+
+                        backgroundColor: "#FFFFFF4D",
+                        borderRadius: "50px",
+                        width: "30px",
+                        height: "30px",
                       }}
                       onClick={() =>
                         setMediaPreview((state) => ({
@@ -161,7 +171,13 @@ const AttachmentContent = ({
                         }))
                       }
                     />
-                    <Box component="video" ref={ref} width={112} height={112}>
+                    <Box
+                      component="video"
+                      ref={ref}
+                      width={112}
+                      height={112}
+                      sx={{ objectFit: "cover", borderRadius: "8px" }}
+                    >
                       <source src={url} />
                     </Box>
                   </>
@@ -172,8 +188,12 @@ const AttachmentContent = ({
                     timeMessageProps={{
                       sx: {
                         position: "absolute",
-                        bottom: ".8rem",
-                        right: ".7rem",
+                        bottom: ".4rem",
+                        right: ".3rem",
+                        gap: "0.2rem",
+                        padding: "0 6px",
+                        borderRadius: "15px",
+                        backgroundColor: "#00000080",
                       },
                     }}
                   />
@@ -197,12 +217,12 @@ const AttachmentContent = ({
                     alignItems="flex-end"
                     key={index}
                     sx={{
-                      backgroundColor: "#EBF5FF",
+                      backgroundColor: isCurrentUser ? "#EBF5FF" : "#F7F7FD",
                       padding: "0.5rem 1rem",
                       borderRadius: "20px",
                     }}
                   >
-                    <Box display="flex" alignItems="center" gap={1}>
+                    <Box display="flex" alignItems="center">
                       <SvgIcon
                         component={Icon}
                         sx={{
@@ -213,7 +233,7 @@ const AttachmentContent = ({
                         href={file?.title_link || ""}
                         target="_blank"
                         sx={{
-                          color: "#3699FF",
+                          color: isCurrentUser ? "#3699FF" : "black",
                           overflowWrap: "anywhere",
                           fontWeight: 600,
                           textDecoration: "auto",

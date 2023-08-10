@@ -26,6 +26,23 @@ export const TimeMessage = ({
   timeMessageProps?: TypographyProps;
 }) => {
   const { sx, ...props } = timeMessageProps || {};
+
+  const getTimeStamp = useMemo(() => {
+    const date = new Date(time);
+    const lastHours = date.getHours();
+    let half = "AM";
+    if (lastHours === undefined) {
+      return "";
+    }
+    if (lastHours > 12) {
+      date.setHours(lastHours - 12);
+      half = "PM";
+    }
+    if (lastHours === 0) date.setHours(12);
+    if (lastHours === 12) half = "PM";
+
+    return `${formatDate(date.toLocaleString(), "HH:mm")}${half}`;
+  }, [time]);
   return (
     <Typography
       variant="caption"
@@ -36,7 +53,7 @@ export const TimeMessage = ({
       sx={sx}
       {...props}
     >
-      {formatDate(time, "HH:mm")}
+      {getTimeStamp}
       {isCurrentUser &&
         (isRead ? (
           <ReadedIcon sx={{ fontSize: "14px" }} />
@@ -102,6 +119,7 @@ const MessageContent = ({
           component="div"
           sx={{
             overflowWrap: "anywhere",
+            marginRight: isCurrentUser ? "unset" : "auto",
             color: isCurrentUser ? "#3699FF" : "inherit",
             "& a": {
               textDecoration: "underline",
