@@ -43,7 +43,7 @@ import { useGetMyTimeSheet } from "store/timeTracking/selectors";
 import TimeCreate from "../../TimeTrackingModal/TimeCreate";
 import moment from "moment";
 import interactionPlugin from "@fullcalendar/interaction";
-import { useAuth } from "store/app/selectors";
+import { useAuth, useSnackbar } from "store/app/selectors";
 import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import useTheme from "hooks/useTheme";
@@ -151,8 +151,13 @@ const StyledDay = styled(Box)(() => ({
 }));
 
 const TrackingCalendar: React.FC<IProps> = () => {
-  const { items: myTime, onGetMyTimeSheet } = useGetMyTimeSheet();
+  const {
+    items: myTime,
+    onGetMyTimeSheet,
+    onUpdateTimeSheet,
+  } = useGetMyTimeSheet();
   const { isDarkMode } = useTheme();
+  const { onAddSnackbar } = useSnackbar();
   const timeT = useTranslations(NS_TIME_TRACKING);
   const { isSmSmaller } = useBreakpoint();
   const isGetLoading: any = false;
@@ -683,11 +688,37 @@ const TrackingCalendar: React.FC<IProps> = () => {
                 eventClick={(eventInfo) => {
                   setIsEdit(true);
                   setSelectedEvent(eventInfo?.event);
-                  
+
                   setIsOpenCreatePopup(true);
                 }}
                 initialView={"timeGridWeek"}
                 //weekends={true}
+                editable={true}
+                droppable={true}
+                eventDrop={({ event }) => {
+                  const date = dayjs(event.start).format("YYYY-MM-DD") || "";
+                  const time =
+                    dayjs(event.start).format("YYYY-MM-DD HH:mm") || "";
+                  const dataUpdate = {
+                    day: date,
+                    duration: event?._def?.extendedProps?.hour,
+                    id: event?._def?.extendedProps?.id,
+                    note: event?._def?.extendedProps?.note,
+                    position: event?._def?.extendedProps?.position?.id,
+                    project_id: event?._def?.extendedProps?.project?.id,
+                    start_time: time,
+                    type: event?._def?.extendedProps?.type === "working_time" ? "Work time" : "Break time",
+                  };
+                  onUpdateTimeSheet({
+                    ...dataUpdate,
+                  })
+                    .then((res) => {
+                      onAddSnackbar("Update timesheet success", "success");        
+                    })
+                    .catch((err) => {
+                      onAddSnackbar("Update timesheet failure", "error");
+                    });
+                }}
                 headerToolbar={false}
                 allDaySlot={false}
                 events={events}
@@ -1292,7 +1323,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                               onClick={() => {
                                 setIsEdit(true);
                                 setSelectedEvent(event);
-                               
+
                                 setIsOpenCreatePopup(true);
                               }}
                             >

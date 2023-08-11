@@ -128,7 +128,7 @@ const TimeCreate: React.FC<IProps> = ({
         project_id: selectedEvent?.extendedProps?.project?.id,
         type: selectedEvent?.extendedProps?.typeDefault,
         position: selectedEvent?.extendedProps?.position?.id,
-        day: dayjs(selectedEvent?.extendedProps?.day).format("YYYY-MM-DD"),
+        day: dayjs(selectedEvent?.start).format("YYYY-MM-DD"),
         start_time: selectedEvent?.start,
         duration: selectedEvent?.extendedProps?.hour,
         note: selectedEvent?.extendedProps?.note,
