@@ -41,6 +41,7 @@ type TableLayoutProps = {
   pending?: boolean;
   error?: string;
   noData?: boolean;
+  hasSelectAll?: boolean;
   onCreate?: () => void;
   onEdit?: () => void;
   headerProps?: TableCellProps;
@@ -57,6 +58,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     pending,
     error,
     noData,
+    hasSelectAll,
     onCreate,
     onEdit,
     headerProps = {},
@@ -140,6 +142,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
         <Table>
           <TableHead>
             <TableRow>
+              {hasSelectAll ? children : ""}
               {headerList.map(({ sx: sxItem, ...item }, index) => (
                 <CellHeader
                   key={index}
@@ -193,9 +196,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                   ) : null}
                 </CellBody>
               </TableRow>
-            ) : (
-              children
-            )}
+            ) : (hasSelectAll ? "" : children)}
           </TableBody>
         </Table>
       </Box>
