@@ -5,6 +5,10 @@ export const CommonLang: CommonDictionary = {
     title: "Taskcover",
     description: "Mô tả cho Taskcover",
   },
+  i18n: {
+    vn: "Tiếng việt",
+    en: "Tiếng anh",
+  },
   form: {
     error: {
       required: "{name} là bắt buộc.",
@@ -19,6 +23,7 @@ export const CommonLang: CommonDictionary = {
       overMax: "{name} quá dài, tối đa {max} ký tự.",
       datePast: "{name} không thể là một ngày trong quá khứ.",
       gte: "{name} phải lớn hơn hoặc bằng {name2}",
+      renameGroup: "{name} là tên phòng không hợp lệ",
     },
     title: {
       upload: "Tải lên",
@@ -34,6 +39,8 @@ export const CommonLang: CommonDictionary = {
     confirm: "Xác nhận",
     save: "Lưu",
     cancel: "Hủy bỏ",
+    add: "Thêm",
+    admin: "Quản lý",
   },
   notification: {
     imageTypeInvalid:
@@ -70,6 +77,7 @@ export const CommonLang: CommonDictionary = {
     outOf: "mỗi trang trên tổng số {count}",
   },
   statusEnum: {
+    inprogress: "Đang thực hiện",
     active: "Hoạt động",
     close: "Kết thúc",
     pause: "Tạm dừng",

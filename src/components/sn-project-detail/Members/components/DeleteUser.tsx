@@ -47,7 +47,6 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
       newMembers.splice(indexSelected, 1);
       const members = newMembers.map((member) => ({
         id: member.id,
-        position_project: member?.position_project?.id,
       }));
       const newData = await onUpdateProject(item.id, { members });
       if (newData) {
@@ -70,9 +69,19 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
         tooltip={projectT("detailMembers.removeFromProject")}
         variant="contained"
         size="small"
-        sx={{ bgcolor: isDarkMode ? "error.main" : "error.light" }}
+        sx={{
+          backgroundColor: {
+            xs: "#FFE2E5",
+            md: isDarkMode ? "grey.50" : "primary.light",
+          },
+          color: "text.primary",
+          p: 1,
+          "&:hover svg": {
+            color: "common.white",
+          },
+        }}
       >
-        <DeleteUserIcon sx={{ color: "text.primary" }} />
+        <DeleteUserIcon sx={{ color: { xs: "#212121", md: "text.primary" } }} />
       </IconButton>
 
       <ConfirmDialog

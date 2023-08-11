@@ -49,12 +49,12 @@ export type ProjectData = {
   description: string;
   members?: {
     id: string;
-    position_project: string;
   }[];
   type_project: string;
   status?: ProjectStatus;
   saved?: boolean;
   avatar?: string[];
+  currency?: string;
 };
 
 export type TaskListData = {
@@ -62,28 +62,31 @@ export type TaskListData = {
   project: string;
 };
 
+export type TaskDataDependency = {
+  task_current: string;
+  task_list_current: string;
+  task_list_update: string;
+  task_update: string;
+
+  sub_task_current?: string;
+  sub_task_update?: string;
+  sub_task?: string;
+  status: DependencyStatus;
+};
+
 export type TaskData = {
   name: string;
   task_list: string;
   task?: string;
   sub_task?: string;
-  start_date?: string;
-  end_date?: string;
-  estimated_hours?: number;
+  start_date?: string | null;
+  end_date?: string | null;
+  estimated_hours?: number | null;
   description?: string;
-  owner?: string;
+  owner?: string | null;
   status?: Status;
   attachments?: string[];
-  dependencies?: {
-    task_current: string;
-    task_list_current: string;
-    task_list_update: string;
-    task_update: string;
-
-    sub_task_current?: string;
-    sub_task_update?: string;
-    status: DependencyStatus;
-  }[];
+  dependencies?: TaskDataDependency[];
   todo_list?: {
     name: string;
     owner?: string;
@@ -212,6 +215,24 @@ export const getProject = createAsyncThunk(
   },
 );
 
+export const getProjectAttachment = createAsyncThunk(
+  "project/getProjectAttachment",
+  async (id: string | string[]) => {
+    try {
+      const response = await client.get(
+        StringFormat(Endpoint.PROJECT_FILE, { id }),
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
 export const createProject = createAsyncThunk(
   "project/createProject",
   async (data: ProjectData) => {
@@ -280,7 +301,7 @@ export const getTasksOfProject = createAsyncThunk(
     ...queries
   }: GetTasksOfProjectQueries & { prefixKey: "taskOptions" | "tasks" }) => {
     queries = serverQueries(queries, ["tasks.name"], undefined, undefined, {
-      "tasks.created_time": "gte",
+      "tasks.start_date": "gte",
     }) as GetTasksOfProjectQueries;
     try {
       const response = await client.get(

@@ -7,7 +7,7 @@ import { NS_COMMON } from "constant/index";
 type TextStatusProps = {
   text: string;
   color: AlertColor;
-  width?: number;
+  width?: TextProps["minWidth"];
   namespace?: string;
 } & Omit<TextProps, "color">;
 
@@ -23,7 +23,7 @@ const TextStatus = (props: TextStatusProps) => {
       variant="caption"
       fontWeight={600}
       py={0.5}
-      px={2}
+      px={{ xs: 0.5, md: 2 }}
       borderRadius={1.5}
       textAlign="center"
       display="inline-block"

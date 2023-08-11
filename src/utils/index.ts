@@ -11,6 +11,7 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import StringFormat from "string-format";
 import { clientStorage } from "./storage";
+import dayjs, { OpUnitType, QUnitType } from "dayjs";
 
 export const parseHashURL = (value: string) => `#${value}`;
 
@@ -309,3 +310,26 @@ export const getThemeSystem = (e?: MediaQueryList): ThemeMode => {
   const themeSystem = isDark ? ThemeMode.DARK : ThemeMode.LIGHT;
   return themeSystem;
 };
+
+export const getDaysDiff = (
+  date_1: Date,
+  date_2: Date,
+  trick: QUnitType | OpUnitType = "minutes",
+) => {
+  return dayjs(date_2).diff(dayjs(date_1), trick);
+};
+
+export const hasValue = (value?) => {
+  return value !== null && value !== "" && value !== undefined;
+};
+
+export const checkIsMobile = () => /Android|iPhone/i.test(navigator?.userAgent);
+
+export const formatBytes = (bytes, decimals = 2) => {
+  if (!+bytes) return '0 Bytes'
+  const k = 1024
+  const dm = decimals < 0 ? 0 : decimals
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+}

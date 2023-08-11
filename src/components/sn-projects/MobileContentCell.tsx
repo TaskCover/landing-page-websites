@@ -3,7 +3,7 @@ import { Stack } from "@mui/material";
 import { Text } from "components/shared";
 import TextStatus from "components/TextStatus";
 import { COLOR_STATUS, TEXT_STATUS } from "./components/helpers";
-import { BodyCell } from "components/Table";
+import { BodyCell, StatusCell } from "components/Table";
 import { Project } from "store/project/reducer";
 import { PROJECT_TASKS_PATH } from "constant/paths";
 import { getPath } from "utils/index";
@@ -12,7 +12,7 @@ import Avatar from "components/Avatar";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
-import { Saved } from "./components";
+import { Saved, SelectStatus } from "./components";
 
 type MobileContentCellProps = {
   item: Project;
@@ -28,40 +28,41 @@ const MobileContentCell = (props: MobileContentCellProps) => {
   const { item } = props;
   const t = useTranslations(NS_COMMON);
   return (
-    <BodyCell align="left">
-      <Stack spacing={2} py={1.5}>
-        <InformationItem
-          label={t("name")}
-          href={getPath(PROJECT_TASKS_PATH, undefined, { id: item.id })}
-        >
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar
-              size={32}
-              src={item.avatar?.link ?? ProjectPlaceholderImage}
-            />
-            <Text variant="body2" color="text.primary">
-              {item.name}
-            </Text>
-          </Stack>
-        </InformationItem>
-        <InformationItem label={t("assigner")}>
-          {item?.owner?.fullname}
-        </InformationItem>
+    <>
+      <BodyCell
+        href={getPath(PROJECT_TASKS_PATH, undefined, { id: item.id })}
+        align="left"
+        sx={{ px: 0.5 }}
+      >
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Avatar
+            size={24}
+            src={item.avatar?.link ?? ProjectPlaceholderImage}
+          />
+          <Text
+            variant="body2"
+            color="text.primary"
+            fontWeight={600}
+            lineHeight={1.28}
+            sx={{ "&:hover": { color: "primary.main" } }}
+          >
+            {item.name}
+          </Text>
+        </Stack>
+      </BodyCell>
+      <BodyCell align="left" sx={{ px: 0.5 }}>
+        {item?.owner?.fullname}
+      </BodyCell>
+      {item.status ? (
+        <SelectStatus value={item.status} id={item.id} />
+      ) : (
+        <BodyCell />
+      )}
 
-        <InformationItem label={t("status")}>
-          {!!item?.status && (
-            <TextStatus
-              text={TEXT_STATUS[item.status]}
-              color={COLOR_STATUS[item.status]}
-              width={93}
-            />
-          )}
-        </InformationItem>
-        <InformationItem label="">
-          <Saved id={item.id} value={item.saved} />
-        </InformationItem>
-      </Stack>
-    </BodyCell>
+      <BodyCell align="center" sx={{ px: 0.5 }}>
+        <Saved id={item.id} value={item.saved} />
+      </BodyCell>
+    </>
   );
 };
 

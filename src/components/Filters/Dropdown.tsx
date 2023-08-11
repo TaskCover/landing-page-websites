@@ -29,6 +29,10 @@ const Dropdown = (props: DropdownProps) => {
         color: hasValue ? "primary.main" : "grey.400",
         fontWeight: 600,
         height: 32,
+        "& .text-option": {
+          fontWeight: 600,
+          color: "grey.400",
+        },
         "& >svg": { fontSize: 20 },
         ...rootSx,
       }}
@@ -37,7 +41,9 @@ const Dropdown = (props: DropdownProps) => {
       value={value}
       showPlaceholder
       sx={{
+        minWidth: "fit-content",
         height: 32,
+        fontWeight: 600,
         ...sx,
       }}
       options={options}

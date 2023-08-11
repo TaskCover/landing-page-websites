@@ -3,9 +3,11 @@ import appReducer, { AppState } from "store/app/reducer";
 import globalReducer, { GlobalState } from "store/global/reducer";
 import projectReducer, { ProjectState } from "store/project/reducer";
 import companyReducer, { CompanyState } from "store/company/reducer";
+import timeTrackingReducer, {
+  TimeTrackingState,
+} from "store/timeTracking/reducer";
 import managerReducer, { ManagerState } from "store/manager/reducer";
 import chatReducer from "store/chat/reducer";
-import { ChatState } from "./chat/type";
 
 export interface State {
   app: AppState;
@@ -13,7 +15,7 @@ export interface State {
   project: ProjectState;
   company: CompanyState;
   manager: ManagerState;
-  chat: ChatState;
+  timeTracking: TimeTrackingState;
 }
 
 export const store = configureStore({
@@ -22,9 +24,14 @@ export const store = configureStore({
     global: globalReducer,
     project: projectReducer,
     company: companyReducer,
+    timeTracking: timeTrackingReducer,
     manager: managerReducer,
-    chat: chatReducer,
+    chat: chatReducer
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

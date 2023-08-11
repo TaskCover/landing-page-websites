@@ -15,6 +15,7 @@ import {
   PROJECTS_PATH,
   PROJECT_TYPES_PATH,
   STATEMENT_HISTORY_PATH,
+  TIME_TRACKING_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -28,6 +29,7 @@ import { useTranslations } from "next-intl";
 import { NS_LAYOUT } from "constant/index";
 import { Permission } from "constant/enums";
 import useTheme from "hooks/useTheme";
+import MenuTimeTrackingIcon from "icons/MenuTimeTrackingIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -35,7 +37,7 @@ const Menu = () => {
   return (
     <Stack
       width="100%"
-      spacing={1.5}
+      spacing={{ xs: 1, xl: 1.5 }}
       sx={{
         overflowX: "hidden",
         overflowY: "auto",
@@ -124,12 +126,12 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
         width: "100%",
         color: "grey.400",
         borderRadius: 1,
-        px: isShowLarge || isSmSmaller ? 2.5 : 1,
-        py: isShowLarge || isSmSmaller ? 1.5 : 1,
-        backgroundColor: {
-          xs: isDarkMode ? "background.default" : "grey.50",
-          sm: undefined,
-        },
+        px: isShowLarge || isSmSmaller ? { xs: 1.5, xl: 2.5 } : 1,
+        py: isShowLarge || isSmSmaller ? { xs: 1, xl: 1.5 } : 1,
+        // backgroundColor: {
+        //   xs: isDarkMode ? "background.default" : "grey.50",
+        //   sm: undefined,
+        // },
         "&:hover, &.active": {
           backgroundColor: isDarkMode ? "grey.50" : "primary.light",
         },
@@ -154,7 +156,7 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
         {(isShowLarge || isSmSmaller) && (
           <Text
             color="grey.400"
-            variant={{ xs: "body2", sm: "body1" }}
+            variant={{ xs: "body2", xl: "body1" }}
             ml={icon ? undefined : 4.5}
             noWrap
             textTransform="capitalize"
@@ -236,6 +238,12 @@ const DATA: MenuItemProps[] = [
       },
     ],
     roles: [Permission.SA],
+  },
+  {
+    label: "menu.timeTracking",
+    href: TIME_TRACKING_PATH,
+    icon: <MenuTimeTrackingIcon />,
+    roles: [Permission.AM, Permission.ST],
   },
 ];
 

@@ -1,6 +1,13 @@
 "use client";
 
-import { ForwardedRef, forwardRef, memo, useState } from "react";
+import {
+  ForwardedRef,
+  forwardRef,
+  memo,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Editor from "components/Editor";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
@@ -11,6 +18,7 @@ import { useTaskDetail } from "store/project/selectors";
 import { getMessageErrorByAPI } from "utils/index";
 import { useSnackbar } from "store/app/selectors";
 import { CommentTaskData } from "store/project/actions";
+import { UnprivilegedEditor } from "react-quill";
 
 const CommentEditor = forwardRef(
   (_, ref: ForwardedRef<HTMLDivElement | null>) => {
@@ -26,15 +34,27 @@ const CommentEditor = forwardRef(
     } = useTaskDetail();
     const { onAddSnackbar } = useSnackbar();
 
+    const editorRef = useRef<UnprivilegedEditor | undefined>();
+
     const [content, setContent] = useState<string>("");
     const [files, setFiles] = useState<File[]>([]);
 
-    const onChange = (value: string) => {
-      setContent(value);
+    const onChange = (value: string, delta, _, editor: UnprivilegedEditor) => {
+      const isEmpty = value === VALUE_AS_EMPTY;
+      setContent(isEmpty ? "" : value);
+      editorRef.current = editor;
     };
     const onChangeFiles = (files: File[]) => {
       setFiles(files);
     };
+
+    const disabled = useMemo(
+      () =>
+        (!content?.trim()?.length ||
+          !editorRef.current?.getText()?.trim()?.length) &&
+        !files.length,
+      [content, files.length],
+    );
 
     const onSubmit = async () => {
       if (!taskListId || !taskId) return;
@@ -44,7 +64,7 @@ const CommentEditor = forwardRef(
           task: taskId,
           task_list: taskListId,
           sub_task: subTaskId,
-          content,
+          content: editorRef.current?.getHTML() ?? content,
         } as CommentTaskData;
         if (files.length) {
           data.attachments = [];
@@ -87,7 +107,12 @@ const CommentEditor = forwardRef(
           justifyContent="space-between"
           mt={2}
         >
-          <Button onClick={onSubmit} variant="primary" size="small">
+          <Button
+            disabled={disabled}
+            onClick={onSubmit}
+            variant="primary"
+            size="small"
+          >
             {projectT("taskDetail.sendComment")}
           </Button>
         </Stack>
@@ -99,3 +124,5 @@ const CommentEditor = forwardRef(
 CommentEditor.displayName = "CommentEditor";
 
 export default memo(CommentEditor);
+
+const VALUE_AS_EMPTY = "<p><br></p>";

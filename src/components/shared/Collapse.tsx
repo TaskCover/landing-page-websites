@@ -18,9 +18,11 @@ const Collapse = (props: CollapseProps) => {
     <Accordion
       defaultExpanded={initCollapse}
       sx={{
-        backgroundColor: "transparent",
+        backgroundColor: "grey.50",
         backgroundImage: "none",
         boxShadow: "none",
+        p: 2,
+        borderRadius: 1,
         "&.Mui-expanded": {
           mx: 0,
           my: 1.5,

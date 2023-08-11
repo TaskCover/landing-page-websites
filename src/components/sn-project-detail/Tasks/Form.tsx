@@ -11,7 +11,12 @@ import { FormikErrors, useFormik } from "formik";
 import { memo, useEffect, useMemo } from "react";
 import { useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
-import { cleanObject, formatDate, getMessageErrorByAPI } from "utils/index";
+import {
+  cleanObject,
+  formatDate,
+  getMessageErrorByAPI,
+  hasValue,
+} from "utils/index";
 import { TaskData } from "store/project/actions";
 import { DataAction } from "constant/enums";
 import {
@@ -26,6 +31,8 @@ import { useTranslations } from "next-intl";
 import { TaskFormData } from "./components";
 import { useMemberOptions } from "store/project/selectors";
 import { useParams } from "next/navigation";
+import { getEditorName } from "components/shared/Editor";
+import { UnprivilegedEditor } from "react-quill";
 
 type FormProps = {
   initialValues?: Partial<TaskFormData>;
@@ -57,7 +64,7 @@ const Form = (props: FormProps) => {
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
 
-  const { id: projectId } = useParams();
+  const { id: projectId } = useParams() as { id: string };
 
   const label = useMemo(() => {
     switch (type) {
@@ -84,7 +91,7 @@ const Form = (props: FormProps) => {
 
   const onSubmit = async (values: TaskData) => {
     try {
-      let dataParsed = { ...values } as TaskData;
+      const dataParsed = { ...values } as TaskData;
       if (dataParsed.start_date) {
         dataParsed.start_date = formatDate(
           dataParsed.start_date,
@@ -92,10 +99,24 @@ const Form = (props: FormProps) => {
         );
       }
       if (values.end_date) {
-        dataParsed.end_date = formatDate(dataParsed.end_date, DATE_FORMAT_FORM);
+        dataParsed.end_date = formatDate(
+          dataParsed.end_date as string | number,
+          DATE_FORMAT_FORM,
+        );
       }
 
-      dataParsed = cleanObject(dataParsed) as TaskData;
+      if (hasValue(initialValues?.estimated_hours)) {
+        dataParsed["estimated_hours"] = dataParsed["estimated_hours"] ?? null;
+      }
+
+      if (values?.description) {
+        dataParsed["description"] = (
+          window[getEditorName(TASK_EDITOR)] as UnprivilegedEditor
+        ).getHTML();
+      }
+
+      // dataParsed = cleanObject(dataParsed) as TaskData;
+
       const newItem = await onSubmitProps(dataParsed);
 
       if (newItem) {
@@ -141,7 +162,7 @@ const Form = (props: FormProps) => {
   };
 
   const onChangeDate = (name: string, newDate?: Date) => {
-    formik.setFieldValue(name, newDate ? newDate.getTime() : undefined);
+    formik.setFieldValue(name, newDate ? newDate.getTime() : null);
     formik.setFieldTouched(name, true);
 
     // Fix validate failed when change network
@@ -257,6 +278,7 @@ const Form = (props: FormProps) => {
           onChange={onChangeField}
           title={commonT("form.title.note")}
           name="description"
+          editorKey={TASK_EDITOR}
         />
       </Stack>
     </FormLayout>
@@ -286,3 +308,5 @@ const INITIAL_VALUES = {
   end_date: "",
   description: "",
 } as Partial<TaskData>;
+
+const TASK_EDITOR = "taskEditor";

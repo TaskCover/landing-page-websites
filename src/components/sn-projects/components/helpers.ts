@@ -15,7 +15,6 @@ export const COLOR_STATUS: { [key in ProjectStatus]: AlertColor } = {
 
 export type Member = {
   id: string;
-  position_project: string;
   fullname: string;
 };
 
@@ -36,3 +35,9 @@ export const STATUS_OPTIONS = [
   { label: TEXT_STATUS.PAUSE, value: ProjectStatus.PAUSE },
   { label: TEXT_STATUS.CLOSE, value: ProjectStatus.CLOSE },
 ];
+
+export enum ATTACHMENT_TYPE {
+  ALL = '0',
+  IMAGE = '1',
+  FILE = '2',
+}

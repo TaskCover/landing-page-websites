@@ -123,7 +123,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
 
   return (
     <Stack
-      flex={1}
+      // flex={1}
       // maxHeight={HEIGHT_ROW * (numberOfRows + 1) + HEIGHT_HEADER + 10}
       overflow="hidden"
       {...rest}
@@ -154,6 +154,8 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                       ...sxHeaderProps,
                     } as CellProps["sx"]
                   }
+                  isStart={index === 0}
+                  isEnd={index === headerList.length - 1}
                   {...restHeaderProps}
                   ref={refs[index]}
                 >
@@ -177,7 +179,11 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
           <TableBody sx={bodySx}>
             {hasAdditionalRow ? (
               <TableRow>
-                <CellBody colSpan={headerList.length} align="center">
+                <CellBody
+                  colSpan={headerList.length}
+                  align="center"
+                  sx={{ border: "none" }}
+                >
                   {pending ? (
                     <CircularProgress size={20} color="primary" />
                   ) : Boolean(error) ? (

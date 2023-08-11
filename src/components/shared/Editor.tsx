@@ -1,20 +1,32 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { Stack } from "@mui/material";
 import AppEditor, { EditorProps as AppEditorProps } from "components/Editor";
 import Text from "./Text";
+import { UnprivilegedEditor } from "react-quill";
 
 type EditorProps = {
   title: string;
   name: string;
   required?: boolean;
   onChange: (name: string, value?: string) => void;
+  editorKey?: string;
 } & Omit<AppEditorProps, "onChange">;
 
 const Editor = (props: EditorProps) => {
-  const { title, name, required, onChange, ...rest } = props;
+  const { title, name, required, onChange, editorKey, ...rest } = props;
 
-  const onChangeEditor = (value?: string) => {
-    onChange(name, value ?? "");
+  const onChangeEditor = (
+    value: string,
+    delta,
+    _source,
+    editor: UnprivilegedEditor,
+  ) => {
+    const isEmpty = "<p><br></p>" === value;
+    const newValue = isEmpty ? "" : value ?? "";
+    onChange(name, newValue);
+    if (editorKey) {
+      window[getEditorName(editorKey)] = editor;
+    }
   };
 
   return (
@@ -37,3 +49,5 @@ const Editor = (props: EditorProps) => {
 };
 
 export default memo(Editor);
+
+export const getEditorName = (name: string) => `editor-${name}`;

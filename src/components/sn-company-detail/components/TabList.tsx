@@ -23,19 +23,26 @@ const TabList = () => {
   return (
     <Stack
       direction={{ md: "row" }}
-      borderBottom="1px solid"
+      borderBottom={{ md: "1px solid" }}
       justifyContent="space-between"
-      borderColor="grey.100"
+      borderColor={{ md: "grey.100" }}
       width="100%"
       overflow="auto"
       spacing={4}
       position="sticky"
-      top={0}
+      top={{ xs: 0, md: 24 }}
       bgcolor="background.paper"
       zIndex={1}
+      mb={{ xs: 2, md: 0 }}
     >
       {!!isSmSmaller && (
-        <Stack direction="row" alignItems="center" spacing={0.5} py={2}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={0.5}
+          pb={2}
+          pt={{ md: 2 }}
+        >
           {!!prevPath && (
             <Link href={prevPath} sx={{ height: 24 }}>
               <ChevronIcon
@@ -73,7 +80,7 @@ const TabItem = (props: TabItemProps) => {
 
   return (
     <Link
-      href={getPath(href, undefined, { id: params.id })}
+      href={getPath(href, undefined, { id: params.id as string })}
       underline="none"
       sx={{
         minWidth: 120,
@@ -90,7 +97,12 @@ const TabItem = (props: TabItemProps) => {
         borderRadius: 1,
       }}
     >
-      <Text variant="body2" fontWeight={600} whiteSpace="nowrap">
+      <Text
+        variant="body2"
+        color={isActiveLink ? "text.primary" : "grey.300"}
+        fontWeight={600}
+        whiteSpace="nowrap"
+      >
         {label}
       </Text>
     </Link>

@@ -5,7 +5,7 @@ export const SIGNIN_PATH = "/signin";
 export const SIGNUP_PATH = "/signup";
 export const JOIN_WORKSPACE_PATH = "/join-workspace";
 export const FORGOT_PASSWORD_PATH = "/forgot-password";
-export const RESET_PASSWORD_PATH = "/reset-password/";
+export const RESET_PASSWORD_PATH = "/reset-password";
 export const CHANGE_PASSWORD_PATH = "/change-password";
 export const PROJECTS_PATH = "/projects";
 export const EMPLOYEES_PATH = "/employees";
@@ -24,6 +24,8 @@ export const PROJECT_ACTIVITIES_PATH = "/projects/{id}/activities";
 export const PROJECT_COST_HISTORY_PATH = "/projects/{id}/cost-history";
 export const PROJECT_MEMBERS_PATH = "/projects/{id}/members";
 export const PROJECT_INFORMATION_PATH = "/projects/{id}";
+
+export const TIME_TRACKING_PATH = "/time-tracking";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -50,6 +52,7 @@ export const AUTHORIZED_PATHS = {
     PROJECT_ACTIVITIES_PATH,
     MY_COMPANY_PATH,
     HOME_PATH,
+    TIME_TRACKING_PATH,
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -71,6 +74,7 @@ export const AUTHORIZED_PATHS = {
     PROJECT_ACTIVITIES_PATH,
     MY_COMPANY_PATH,
     HOME_PATH,
+    TIME_TRACKING_PATH,
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };

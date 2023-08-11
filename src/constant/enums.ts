@@ -48,3 +48,10 @@ export enum PayStatus {
   UNPAID,
   WAITING,
 }
+
+export enum FILE_MAP {
+  DOC,
+  EXCEL,
+  CSV,
+  PDF,
+}

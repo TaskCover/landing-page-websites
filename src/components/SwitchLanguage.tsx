@@ -3,7 +3,7 @@ import {
   Stack,
   StackProps,
   switchClasses,
-  SxProps,
+  SxProps, Select, MenuItem,
 } from "@mui/material";
 import { Locale } from "constant/types";
 import { useLocale } from "next-intl";
@@ -11,12 +11,15 @@ import { useRouter } from "next-intl/client";
 import { memo, useRef } from "react";
 import Link from "./Link";
 import useQueryParams from "hooks/useQueryParams";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 const SwitchLanguage = (props: StackProps) => {
   const { replace } = useRouter();
   const { fullPath } = useQueryParams();
   const locale = useLocale() as Locale;
   const linkRef = useRef<HTMLLinkElement | null>(null);
+  const commonT = useTranslations(NS_COMMON);
 
   const onChangeValue = () => {
     if (linkRef?.current?.href) {
@@ -25,27 +28,49 @@ const SwitchLanguage = (props: StackProps) => {
   };
 
   return (
-    <Stack {...props}>
-      <MuiSwitch
-        disableRipple
-        sx={defaultSx as SxProps}
-        checked={locale === "vi"}
-        onChange={onChangeValue}
-      />
-      <Link
-        ref={linkRef}
-        href={fullPath}
-        locale={locale === "vi" ? "en" : "vi"}
-        sx={{ display: "none" }}
-      />
-    </Stack>
+      <Stack {...props}>
+        <Select
+            value={locale}
+            onChange={onChangeValue}
+            disableUnderline
+            sx = {{
+              ...defaultSx,
+              boxShadow: 'none',
+              '.MuiOutlinedInput-notchedOutline': { border: 0 }
+            }
+          }
+        >
+          <MenuItem value="vi">
+            <div style={{display:"flex", padding:"5px"}}>
+              <img src="/images/img-vn-flag.png" alt="Vietnamese Flag" style={{marginTop:"16px",marginRight:"5px", width:"24px", height:"24px"}} />
+              <p>{commonT("i18n.vn")}</p>
+            </div>
+
+          </MenuItem>
+          <MenuItem value="en">
+            <div style={{display:"flex",  padding:"5px"}}>
+              <img src="/images/img-usa-flag.png" alt="USA Flag" style={{marginTop:"16px",marginRight:"5px", width:"24px", height:"24px"}} />
+              <p>{commonT("i18n.en")}</p>
+            </div>
+
+          </MenuItem>
+
+        </Select>
+        <Link
+            ref={linkRef}
+            href={fullPath}
+            locale={locale === "vi" ? "en" : "vi"}
+            sx={{ display: "none" }}
+        />
+      </Stack>
+
   );
 };
 
 export default memo(SwitchLanguage);
 
 const defaultSx = {
-  width: 62,
+  width: 162,
   height: 28,
   p: 0,
   borderRadius: 4,

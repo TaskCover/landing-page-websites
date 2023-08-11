@@ -49,7 +49,7 @@ const Header = () => {
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      px={3}
+      px={{ xs: 2, md: 3 }}
       width="100%"
     >
       <Link href={HOME_PATH} underline="none">
@@ -62,7 +62,7 @@ const Header = () => {
         overflow="hidden"
         flex={1}
       >
-        {!!prevPath && (
+        {prevPath ? (
           <Link
             href={prevPath}
             sx={{ height: 24, display: { xs: "none", sm: "initial" } }}
@@ -71,14 +71,25 @@ const Header = () => {
               sx={{ color: "text.primary", transform: "rotate(90deg)" }}
               fontSize="medium"
             />
+            {!!title && (
+              <Text
+                variant="h5"
+                sx={{ verticalAlign: "super" }}
+                display={{ xs: "none", sm: "initial" }}
+                noWrap
+              >
+                {title ?? ""}
+              </Text>
+            )}
           </Link>
+        ) : (
+          <Text variant="h5" display={{ xs: "none", sm: "initial" }} noWrap>
+            {title ?? ""}
+          </Text>
         )}
-        <Text variant="h5" display={{ xs: "none", sm: "initial" }} noWrap>
-          {title ?? ""}
-        </Text>
       </Stack>
       {/* {breakpoint}-{width} */}
-      <Stack direction="row" alignItems="center" spacing={8}>
+      <Stack direction="row" alignItems="center" spacing={3}>
         {Boolean(searchPlaceholder && key) && (
           <Search
             sx={{ display: { xs: "none", sm: "initial" } }}

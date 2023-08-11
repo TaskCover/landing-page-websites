@@ -39,10 +39,11 @@ import { Selected, TaskFormData, genName } from "./helpers";
 import { useParams } from "next/navigation";
 import { Task } from "store/project/reducer";
 import { useSnackbar } from "store/app/selectors";
-import { getMessageErrorByAPI } from "utils/index";
+import { checkIsMobile, getMessageErrorByAPI } from "utils/index";
 import ConfirmDialog from "components/ConfirmDialog";
 import DialogLayout from "components/DialogLayout";
 import Loading from "components/Loading";
+import useBreakpoint from "hooks/useBreakpoint";
 
 type DroppableTaskListProps = {
   id: string;
@@ -52,6 +53,7 @@ type DroppableTaskListProps = {
   isDragging: boolean;
   onChange: () => void;
   setSelectedList: Dispatch<SetStateAction<Selected[]>>;
+  index: number;
 } & HTMLAttributes<HTMLDivElement>;
 
 type MoreListProps = {
@@ -69,10 +71,15 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
     onChange,
     setSelectedList,
     isDragging,
+    index,
     ...rest
   } = props;
+  const { isXlSmaller } = useBreakpoint();
+
   const projectT = useTranslations(NS_PROJECT);
   const { onCreateTask: onCreateTaskAction } = useTasksOfProject();
+
+  const isMobile = useMemo(() => checkIsMobile(), []);
 
   const [isShow, , , onToggle] = useToggle(true);
   const [isShowCreate, onShowCreate, onHideCreate] = useToggle();
@@ -97,17 +104,39 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
               <Stack
                 direction="row"
                 alignItems="center"
-                height={48}
-                pl={{ xs: 1, md: 2 }}
+                height={38}
+                pl={{ xs: 0, md: 2 }}
                 width="100%"
-                justifyContent="space-between"
+                // justifyContent="space-between"
+                spacing={3}
+                borderTop={index !== 0 ? { md: "1px solid" } : undefined}
+                borderBottom={{ md: "1px solid" }}
+                borderColor={{ md: "grey.100" }}
               >
-                <Stack direction="row" alignItems="center" overflow="hidden">
-                  <Checkbox checked={checked} onChange={onChange} />
+                <Stack
+                  direction="row"
+                  sx={{
+                    "& >.checkbox": {
+                      opacity: isMobile || checked ? 1 : 0,
+                      userSelect: isMobile || checked ? undefined : "none",
+                    },
+                    "&:hover >.checkbox": {
+                      opacity: 1,
+                    },
+                  }}
+                  alignItems="center"
+                  overflow="hidden"
+                >
+                  <Checkbox
+                    size="small"
+                    className="checkbox"
+                    checked={checked}
+                    onChange={onChange}
+                  />
                   <IconButton
                     noPadding
                     sx={{
-                      ml: { md: 6 },
+                      ml: { md: 1.5 },
                       transform: isShow ? undefined : "rotate(180deg)",
                     }}
                     onClick={onToggle}
@@ -115,7 +144,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                     <CaretIcon sx={{ color: "grey.300" }} />
                   </IconButton>
                   <Text
-                    variant="h5"
+                    variant={isXlSmaller ? "h6" : "h5"}
                     color="grey.300"
                     onClick={onShowPreviewName}
                     noWrap
@@ -142,9 +171,11 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   onClick={onShowCreate}
                   startIcon={<PlusIcon />}
                   variant="text"
-                  size="small"
+                  size="extraSmall"
                   color="secondary"
-                  sx={{ mr: { xs: 1.5, md: 4 } }}
+                  sx={{
+                    mr: { xs: 1.5, md: 4 },
+                  }}
                 >
                   {projectT("detailTasks.addNewTask")}
                 </Button>
@@ -197,7 +228,7 @@ export const MoreList = (props: MoreListProps) => {
   const params = useParams();
   const { onAddSnackbar } = useSnackbar();
 
-  const projectId = useMemo(() => params?.id, [params?.id]);
+  const projectId = useMemo(() => params?.id, [params?.id]) as string;
 
   const taskListNameList = useMemo(
     () => items.map((task) => task.name),
@@ -329,7 +360,7 @@ export const MoreList = (props: MoreListProps) => {
   return (
     <>
       <IconButton noPadding onClick={onOpen}>
-        <MoreDotIcon fontSize="medium" sx={{ color: "grey.300" }} />
+        <MoreDotIcon fontSize="small" sx={{ color: "grey.300" }} />
       </IconButton>
       <Popover
         id={popoverId}

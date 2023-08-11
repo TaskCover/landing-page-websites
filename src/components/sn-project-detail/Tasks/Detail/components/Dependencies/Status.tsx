@@ -1,14 +1,7 @@
 import { memo, useMemo, useRef } from "react";
 import { Box, ButtonBase, MenuItem, MenuList, Stack } from "@mui/material";
-import { Status } from "constant/enums";
 import PopoverLayout from "./PopoverLayout";
-import {
-  AN_ERROR_TRY_AGAIN,
-  COLOR_STATUS,
-  NS_COMMON,
-  NS_PROJECT,
-  STATUS_OPTIONS,
-} from "constant/index";
+import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
 import { Text } from "components/shared";
 import { useSnackbar } from "store/app/selectors";
@@ -75,7 +68,7 @@ const StatusDependency = (props: StatusDependencyProps) => {
           status: item.status,
 
           sub_task_current: subTaskId,
-          sub_task_update: item?.sub_task,
+          [subTaskId ? "sub_task_update" : "sub_task"]: item?.sub_task,
         }));
         await onUpdateTask({ dependencies }, taskListId, taskId, subTaskId);
         buttonRef?.current?.click();

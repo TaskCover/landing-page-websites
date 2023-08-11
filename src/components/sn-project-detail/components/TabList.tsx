@@ -27,31 +27,36 @@ type TabItemProps = {
 };
 
 const TabList = () => {
+  const { id } = useParams() as { id: string };
+  const pathname = usePathname();
+
+  const isMembersOfProjectPath = useMemo(
+    () => pathname.replace(id, "{id}") === PROJECT_MEMBERS_PATH,
+    [id, pathname],
+  );
+
   return (
     <>
       <Stack
-        direction={{ md: "row" }}
+        direction="row"
         alignItems="center"
-        borderBottom="1px solid"
+        borderBottom={{ md: "1px solid" }}
         justifyContent="space-between"
-        borderColor="grey.100"
+        borderColor={{ md: "grey.100" }}
         width="100%"
         overflow="auto"
-        spacing={4}
-        position="sticky"
-        top={0}
+        // position="sticky"
+        // top={isMembersOfProjectPath ? undefined : { xs: 8, sm: 16 }}
         bgcolor="background.paper"
-        zIndex={1}
       >
-        <Stack direction="row" alignItems="center" flex={1} width="100%">
+        <Stack direction="row" alignItems="center">
           {TABS.map((tab) => (
             <TabItem key={tab.label} {...tab} />
           ))}
         </Stack>
 
-        <TabActions display={{ xs: "none", md: "flex" }} />
+        <TabActions />
       </Stack>
-      <TabActions display={{ md: "none" }} justifyContent="center" />
     </>
   );
 };
@@ -75,7 +80,7 @@ const TabItem = (props: TabItemProps) => {
 
   return (
     <Link
-      href={getPath(href, undefined, { id: params.id })}
+      href={getPath(href, undefined, { id: params.id as string })}
       underline="none"
       sx={{
         minWidth: 120,
@@ -87,12 +92,17 @@ const TabItem = (props: TabItemProps) => {
         "&:hover": {
           bgcolor: isDarkMode ? "grey.50" : "primary.light",
         },
-        py: { xs: 2, sm: 2.5 },
+        py: { xs: 2, sm: 1.5 },
         px: { xs: 2, sm: 3.5 },
         borderRadius: 1,
       }}
     >
-      <Text variant="body2" fontWeight={600} whiteSpace="nowrap">
+      <Text
+        variant="body2"
+        color={isActiveLink ? "text.primary" : "grey.300"}
+        fontWeight={600}
+        whiteSpace="nowrap"
+      >
         {projectT(label)}
       </Text>
     </Link>
@@ -111,7 +121,7 @@ const TabActions = (props: StackProps) => {
   if (!isDetailPath) return null;
 
   return (
-    <Stack direction="row" alignItems="center" spacing={3} pr={3} {...props}>
+    <Stack direction="row" alignItems="center" spacing={3} px={3} {...props}>
       <StatusProject />
       <SavedProject />
       <EditProject />

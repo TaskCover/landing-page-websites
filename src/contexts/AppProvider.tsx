@@ -96,6 +96,15 @@ export default AppProvider;
 
 const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   const appReady = useAppSelector((state) => state.app.appReady);
+  const token = useAppSelector((state) => state.app.token);
+
+  useEffect(() => {
+    if (token) {
+      document.body.classList.remove("not-auth");
+    } else {
+      document.body.classList.add("not-auth");
+    }
+  }, [token]);
 
   if (!appReady) return <AppLoading />;
 

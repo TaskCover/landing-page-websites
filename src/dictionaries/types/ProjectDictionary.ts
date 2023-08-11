@@ -18,6 +18,7 @@ export type ProjectDictionary = {
       };
     };
     title: string;
+    projectCode: string;
     key: string;
     notification: {
       success: string;
@@ -50,6 +51,14 @@ export type ProjectDictionary = {
     };
     workingHoursActual: string;
     costSpent: string;
+    listFile: {
+      title: string;
+      filter: {
+        all: string;
+        file: string;
+        image: string;
+      }
+    }
   };
   detailMembers: {
     head: {
@@ -85,6 +94,9 @@ export type ProjectDictionary = {
       };
     };
     addNewTask: string;
+    addNewSubTask: string;
+    addNewSubTaskPlaceholder: string;
+    createNewTaskList: string;
     newMove: string;
     taskList: string;
     key: string;
@@ -150,6 +162,9 @@ export type ProjectDictionary = {
     linkedTo: string;
     addDependencyTask: string;
     manual: string;
+    commentList: string;
+    showMore: string;
+    showLess: string;
     form: {
       title: {
         newTask: string;

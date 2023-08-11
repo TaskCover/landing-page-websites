@@ -23,5 +23,6 @@ export type LayoutDictionary = {
     manager: string;
     companyList: string;
     statementHistory: string;
+    timeTracking: string;
   };
 };

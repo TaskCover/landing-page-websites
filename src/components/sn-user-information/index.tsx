@@ -22,6 +22,7 @@ import { UpdateUserInfoData } from "store/app/actions";
 import { client, Endpoint } from "api";
 import { useTranslations } from "next-intl";
 import useBreakpoint from "hooks/useBreakpoint";
+import FixedLayout from "components/FixedLayout";
 
 const UserInformation = () => {
   const { user } = useAuth();
@@ -131,143 +132,145 @@ const UserInformation = () => {
   }
 
   return (
-    <Stack
-      flex={1}
-      justifyContent="center"
-      alignItems="center"
-      spacing={3}
-      maxWidth={({ spacing }) => ({
-        xs: `calc(100vw - ${spacing(3 * 2)})`,
-        sm: 700,
-      })}
-      alignSelf="center"
-      width="100%"
-      py={3}
-      component="form"
-      noValidate
-      onSubmit={formik.handleSubmit}
-    >
-      <Text variant="subtitle1" fontWeight={700}>
-        {accountT("accountInformation.title")}
-      </Text>
-      <Stack width={90} height={90} borderRadius="50%" position="relative">
-        <Avatar size={90} src={previewImage} alt={user.fullname} />
-        {isEdit && (
-          <>
-            <IconButton
-              onClick={onChooseFile}
-              noPadding
-              sx={{
-                width: 24,
-                height: 24,
-                backgroundColor: "grey.50",
-                "&:hover": {
+    <FixedLayout flex={1}>
+      <Stack
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        spacing={3}
+        maxWidth={({ spacing }) => ({
+          xs: `calc(100vw - ${spacing(3 * 2)})`,
+          sm: 700,
+        })}
+        alignSelf="center"
+        width="100%"
+        py={3}
+        component="form"
+        noValidate
+        onSubmit={formik.handleSubmit}
+      >
+        <Text variant="subtitle1" fontWeight={700}>
+          {accountT("accountInformation.title")}
+        </Text>
+        <Stack width={90} height={90} borderRadius="50%" position="relative">
+          <Avatar size={90} src={previewImage} alt={user.fullname} />
+          {isEdit && (
+            <>
+              <IconButton
+                onClick={onChooseFile}
+                noPadding
+                sx={{
+                  width: 24,
+                  height: 24,
                   backgroundColor: "grey.50",
-                },
-                borderRadius: "50%",
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-              }}
+                  "&:hover": {
+                    backgroundColor: "grey.50",
+                  },
+                  borderRadius: "50%",
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                }}
+              >
+                <PencilIcon sx={{ color: "grey.400", fontSize: 24 }} />
+              </IconButton>
+              <Box
+                component="input"
+                type="file"
+                accept={IMAGES_ACCEPT.join(", ")}
+                display="none"
+                ref={inputFileRef}
+                onChange={onChangeFile}
+              />
+            </>
+          )}
+        </Stack>
+
+        <Stack direction="row" alignItems="center" spacing={0.5}>
+          <BagIcon sx={{ color: "grey.400" }} fontSize="medium" />
+          <Text color="grey.400">{`${commonT("position")}: ${
+            user?.position?.name ?? "--"
+          }`}</Text>
+        </Stack>
+        {!isEdit && (
+          <Button onClick={onEditTrue} variant="secondary" size="small">
+            {accountT("accountInformation.updateAccount")}
+          </Button>
+        )}
+
+        <Input
+          rootSx={sxConfig.input}
+          title={commonT("fullName")}
+          fullWidth
+          name="fullname"
+          disabled={!isEdit}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values?.fullname}
+          error={commonT(touchedErrors?.fullname, {
+            name: commonT("fullName"),
+            min: 6,
+          })}
+          required={isEdit}
+        />
+        <Input
+          rootSx={sxConfig.input}
+          title={commonT("phone")}
+          fullWidth
+          name="phone"
+          disabled={!isEdit}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values?.phone}
+          error={commonT(touchedErrors?.phone, {
+            name: commonT("phone"),
+          })}
+        />
+        <Input
+          rootSx={sxConfig.input}
+          title="Email"
+          fullWidth
+          name="email"
+          disabled
+          value={user.email}
+          tooltip={
+            isEdit
+              ? accountT("accountInformation.notAllowUpdate", { name: "Email" })
+              : undefined
+          }
+        />
+        {isEdit && (
+          <Stack
+            direction={{ xs: "column-reverse", sm: "row" }}
+            alignItems="center"
+            spacing={{ xs: 2, sm: 3 }}
+            width="100%"
+          >
+            <Button
+              type="button"
+              onClick={onCancel}
+              sx={sxConfig.button}
+              variant="primaryOutlined"
+              size={isSmSmaller ? "medium" : "small"}
+              fullWidth
             >
-              <PencilIcon sx={{ color: "grey.400", fontSize: 24 }} />
-            </IconButton>
-            <Box
-              component="input"
-              type="file"
-              accept={IMAGES_ACCEPT.join(", ")}
-              display="none"
-              ref={inputFileRef}
-              onChange={onChangeFile}
-            />
-          </>
+              {commonT("form.cancel")}
+            </Button>
+            <Button
+              disabled={disabled}
+              pending={formik.isSubmitting}
+              sx={{ ...sxConfig.button }}
+              variant="primary"
+              size={isSmSmaller ? "medium" : "small"}
+              type="submit"
+              fullWidth
+            >
+              {commonT("form.confirm")}
+            </Button>
+          </Stack>
         )}
       </Stack>
-
-      <Stack direction="row" alignItems="center" spacing={0.5}>
-        <BagIcon sx={{ color: "grey.400" }} fontSize="medium" />
-        <Text color="grey.400">{`${commonT("position")}: ${
-          user?.position?.name ?? "--"
-        }`}</Text>
-      </Stack>
-      {!isEdit && (
-        <Button onClick={onEditTrue} variant="secondary" size="small">
-          {accountT("accountInformation.updateAccount")}
-        </Button>
-      )}
-
-      <Input
-        rootSx={sxConfig.input}
-        title={commonT("fullName")}
-        fullWidth
-        name="fullname"
-        disabled={!isEdit}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values?.fullname}
-        error={commonT(touchedErrors?.fullname, {
-          name: commonT("fullName"),
-          min: 6,
-        })}
-        required={isEdit}
-      />
-      <Input
-        rootSx={sxConfig.input}
-        title={commonT("phone")}
-        fullWidth
-        name="phone"
-        disabled={!isEdit}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values?.phone}
-        error={commonT(touchedErrors?.phone, {
-          name: commonT("phone"),
-        })}
-      />
-      <Input
-        rootSx={sxConfig.input}
-        title="Email"
-        fullWidth
-        name="email"
-        disabled
-        value={user.email}
-        tooltip={
-          isEdit
-            ? accountT("accountInformation.notAllowUpdate", { name: "Email" })
-            : undefined
-        }
-      />
-      {isEdit && (
-        <Stack
-          direction={{ xs: "column-reverse", sm: "row" }}
-          alignItems="center"
-          spacing={{ xs: 2, sm: 3 }}
-          width="100%"
-        >
-          <Button
-            type="button"
-            onClick={onCancel}
-            sx={sxConfig.button}
-            variant="primaryOutlined"
-            size={isSmSmaller ? "medium" : "small"}
-            fullWidth
-          >
-            {commonT("form.cancel")}
-          </Button>
-          <Button
-            disabled={disabled}
-            pending={formik.isSubmitting}
-            sx={{ ...sxConfig.button }}
-            variant="primary"
-            size={isSmSmaller ? "medium" : "small"}
-            type="submit"
-            fullWidth
-          >
-            {commonT("form.confirm")}
-          </Button>
-        </Stack>
-      )}
-    </Stack>
+    </FixedLayout>
   );
 };
 

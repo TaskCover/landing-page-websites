@@ -1,3 +1,4 @@
+import { Status } from "constant/enums";
 import { TaskData } from "store/project/actions";
 import { formatDate } from "utils/index";
 
@@ -25,6 +26,7 @@ export type Selected = {
 
   subTaskId?: string;
   subTaskName?: string;
+  checked?:boolean;
 };
 
 export const genName = (
@@ -42,3 +44,15 @@ export const genName = (
 
   return name + `(${count})`;
 };
+
+export const TASK_TEXT_STATUS: { [key in Status]: string } = {
+  [Status.ACTIVE]: "statusEnum.inprogress",
+  [Status.CLOSE]: "statusEnum.close",
+  [Status.PAUSE]: "statusEnum.pause",
+};
+
+export const TASK_STATUS_OPTIONS = [
+  { label: TASK_TEXT_STATUS.ACTIVE, value: Status.ACTIVE },
+  { label: TASK_TEXT_STATUS.PAUSE, value: Status.PAUSE },
+  { label: TASK_TEXT_STATUS.CLOSE, value: Status.CLOSE },
+];

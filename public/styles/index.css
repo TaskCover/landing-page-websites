@@ -9,6 +9,11 @@ body {
   bottom: 0;
   width: 100vw;
   height: calc(var(--vh, 1vh) * 100);
+  background-color: transparent!important;
+}
+
+body.not-auth {
+  background-color: var(--mui-palette-background-default)!important;
 }
 
 input:-webkit-autofill,
@@ -60,11 +65,13 @@ a {
   .only-mobile {
     display: initial !important;
   }
+
 }
+
 
 @supports (font: -apple-system-body) and (-webkit-appearance: none) {
   img[loading="lazy"] {
-    clip-path: inset(0.6px);
+    clipPath: inset(0.6px);
   }
 }
 
@@ -107,4 +114,16 @@ a {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+}
+
+.attachment-filter button.active {
+  border: 1px solid #3699FF !important;
+  background: #E1F0FF !important;
+  color: #3699FF !important;
+}
+
+.slider-comment-attachment .react-slideshow-wrapper .images-wrap > div {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }

@@ -31,6 +31,7 @@ import {
   convertSubTaskToTask,
   DependencyStatus,
   deleteDependency,
+  getProjectAttachment
 } from "./actions";
 import {
   Attachment,
@@ -67,7 +68,16 @@ export interface Member {
     link: string;
   };
 }
-
+export interface AttachmentOfProject {
+  id?: string;
+  name: string;
+  type: string;
+  uploaded_by: string;
+  created_time: string;
+  link: string;
+  size: string;
+  extension: string;
+}
 export interface Project {
   id: string;
   name: string;
@@ -92,6 +102,11 @@ export interface Project {
   avatar?: {
     link?: string;
   };
+}
+
+export interface Currency {
+  code: string;
+  name: string;
 }
 
 export interface Todo {
@@ -145,6 +160,7 @@ export interface Comment {
   creator: User;
   activities: ActivityTask[];
   attachments_down: Attachment[];
+  listAttachmentsDown?: Attachment[];
 }
 export interface ActivityTask {
   id: string;
@@ -213,6 +229,7 @@ export interface ProjectState {
   activitiesStatus: DataStatus;
   activitiesError?: string;
   activitiesFilters: GetActivitiesQueries;
+  attachments?: AttachmentOfProject[];
 }
 
 export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {
@@ -251,6 +268,8 @@ const initialState: ProjectState = {
   activities: [],
   activitiesStatus: DataStatus.IDLE,
   activitiesFilters: DEFAULT_RANGE_ACTIVITIES,
+
+  attachments: [],
 };
 
 const projectSlice = createSlice({
@@ -268,6 +287,12 @@ const projectSlice = createSlice({
           state.membersPaging.totalItems -= 1;
         }
       }
+    },
+    resetTasks: (state) => {
+      state.tasks = [];
+      state.tasksStatus = DataStatus.IDLE;
+      state.tasksPaging = DEFAULT_PAGING;
+      state.tasksFilters = {};
     },
     updateTaskDetail: (
       state,
@@ -349,6 +374,22 @@ const projectSlice = createSlice({
       )
       .addCase(getProject.rejected, (state, action) => {
         state.item = undefined;
+        state.itemStatus = DataStatus.FAILED;
+        state.itemError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(getProjectAttachment.pending, (state) => {
+        state.itemStatus = DataStatus.LOADING;
+      })
+      .addCase(
+          getProjectAttachment.fulfilled,
+          (state, action: PayloadAction<any>) => {
+            state.attachments = action.payload;
+            state.itemStatus = DataStatus.SUCCEEDED;
+            state.itemError = undefined;
+          },
+      )
+      .addCase(getProjectAttachment.rejected, (state, action) => {
+        state.attachments = undefined;
         state.itemStatus = DataStatus.FAILED;
         state.itemError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
       })
@@ -594,7 +635,7 @@ const projectSlice = createSlice({
               );
 
               if (indexTask !== -1) {
-                state.tasks[indexTaskList].tasks[indexTask].comments?.push(
+                state.tasks[indexTaskList].tasks[indexTask].comments?.unshift(
                   comment,
                 );
               }
@@ -602,7 +643,7 @@ const projectSlice = createSlice({
           }
 
           if (state?.task) {
-            state.task.comments?.push(comment);
+            state.task.comments?.unshift(comment);
           }
         },
       )
@@ -808,6 +849,7 @@ const projectSlice = createSlice({
       }),
 });
 
-export const { removeMember, updateTaskDetail, reset } = projectSlice.actions;
+export const { removeMember, updateTaskDetail, resetTasks, reset } =
+  projectSlice.actions;
 
 export default projectSlice.reducer;

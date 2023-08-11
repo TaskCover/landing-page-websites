@@ -8,6 +8,7 @@ export const ManagerLang: ManagerDictionary = {
       title: "Danh sách công ty | Taskcover",
     },
     title: "Danh sách công ty",
+    accountList: "Danh sách tài khoản",
     staffPaid: "Số nhân viên đã thanh toán",
     totalStaff: "Tổng số nhân viên",
     approved: "Đã chấp nhận",

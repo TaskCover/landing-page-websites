@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { TableRow } from "@mui/material";
+import { Stack, TableRow } from "@mui/material";
 import { TableLayout, BodyCell, CellProps } from "components/Table";
 import { useProjects } from "store/project/selectors";
 import { DEFAULT_PAGING, NS_COMMON } from "constant/index";
@@ -21,6 +21,9 @@ import { useAppDispatch } from "store/hooks";
 import DesktopCells from "./DesktopCells";
 import MobileContentCell from "./MobileContentCell";
 import { useTranslations } from "next-intl";
+import useTheme from "hooks/useTheme";
+import PencilUnderlineIcon from "icons/PencilUnderlineIcon";
+import FixedLayout from "components/FixedLayout";
 
 const ItemList = () => {
   const {
@@ -41,6 +44,7 @@ const ItemList = () => {
   const pathname = usePathname();
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
+  const { isDarkMode } = useTheme();
 
   const [item, setItem] = useState<Project | undefined>();
   const [action, setAction] = useState<DataAction | undefined>();
@@ -55,24 +59,41 @@ const ItemList = () => {
       },
       {
         value: commonT("assigner"),
-        width: "30%",
+        width: "25%",
         align: "left",
       },
-      { value: commonT("status"), width: "20%" },
+      { value: commonT("status"), width: "25%" },
       { value: "", width: "5%" },
+    ],
+    [commonT],
+  );
+  const mobileHeaderList: CellProps[] = useMemo(
+    () => [
+      {
+        value: commonT("name"),
+        width: "25%",
+        align: "left",
+      },
+      {
+        value: commonT("assigner"),
+        width: "25%",
+        align: "left",
+      },
+      { value: commonT("status"), width: "30%" },
+      { value: "", width: "10%" },
     ],
     [commonT],
   );
 
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
-      ? MOBILE_HEADER_LIST
+      ? mobileHeaderList
       : desktopHeaderList;
     return [
       ...additionalHeaderList,
-      { value: "", width: isMdSmaller ? "25%" : "10%" },
+      { value: "", width: "10%" },
     ] as CellProps[];
-  }, [desktopHeaderList, isMdSmaller]);
+  }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
 
   const initValues = useMemo(
     () =>
@@ -94,7 +115,6 @@ const ItemList = () => {
             members: item?.members.map(({ id, fullname, ...rest }) => ({
               id,
               fullname,
-              position_project: rest?.position_project?.id,
             })),
           }
         : INITIAL_VALUES,
@@ -143,48 +163,60 @@ const ItemList = () => {
 
   return (
     <>
-      <TableLayout
-        headerList={headerList}
-        pending={isFetching}
-        error={error as string}
-        noData={!isIdle && totalItems === 0}
-        px={{ xs: 1, md: 3 }}
-      >
-        {items.map((item, index) => {
-          return (
-            <TableRow key={item.id}>
-              {isMdSmaller ? (
-                <MobileContentCell item={item} />
-              ) : (
-                <DesktopCells
-                  item={item}
-                  order={(pageIndex - 1) * pageSize + (index + 1)}
-                />
-              )}
-              <BodyCell align="left">
-                <IconButton
-                  onClick={onActionToItem(DataAction.UPDATE, item)}
-                  tooltip={commonT("edit")}
-                  variant="contained"
-                  size="small"
-                >
-                  <PencilIcon />
-                </IconButton>
-              </BodyCell>
-            </TableRow>
-          );
-        })}
-      </TableLayout>
-
-      <Pagination
-        totalItems={totalItems}
-        totalPages={totalPages}
-        page={pageIndex}
-        pageSize={pageSize}
-        containerProps={{ px: 3, pt: 2.5 }}
-        onChangePage={onChangePage}
-        onChangeSize={onChangeSize}
-      />
+      <FixedLayout>
+        <TableLayout
+          headerList={headerList}
+          pending={isFetching}
+          headerProps={{
+            sx: { px: { xs: 0.5, md: 2 } },
+          }}
+          error={error as string}
+          noData={!isIdle && totalItems === 0}
+          px={{ md: 3 }}
+        >
+          {items.map((item, index) => {
+            return (
+              <TableRow key={item.id}>
+                {isMdSmaller ? (
+                  <MobileContentCell item={item} />
+                ) : (
+                  <DesktopCells
+                    item={item}
+                    order={(pageIndex - 1) * pageSize + (index + 1)}
+                  />
+                )}
+                <BodyCell align="left" sx={{ px: { xs: 0.5, md: 2 } }}>
+                  <IconButton
+                    onClick={onActionToItem(DataAction.UPDATE, item)}
+                    tooltip={commonT("edit")}
+                    variant="contained"
+                    size="small"
+                    sx={{
+                      backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+                      color: "text.primary",
+                      p: { xs: "4px!important", md: 1 },
+                      "&:hover svg": {
+                        color: "common.white",
+                      },
+                    }}
+                  >
+                    <PencilUnderlineIcon sx={{ fontSize: 24 }} />
+                  </IconButton>
+                </BodyCell>
+              </TableRow>
+            );
+          })}
+        </TableLayout>
+        <Pagination
+          totalItems={totalItems}
+          totalPages={totalPages}
+          page={pageIndex}
+          pageSize={pageSize}
+          containerProps={{ px: { md: 3 }, py: 1 }}
+          onChangePage={onChangePage}
+          onChangeSize={onChangeSize}
+        />
+      </FixedLayout>
 
       {action === DataAction.UPDATE && (
         <Form

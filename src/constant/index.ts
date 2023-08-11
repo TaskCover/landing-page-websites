@@ -1,11 +1,12 @@
 import { AlertColor } from "@mui/material";
-import { Status, ThemeMode } from "./enums";
+import { FILE_MAP, Status, ThemeMode } from "./enums";
 import { Mode, Paging } from "./types";
 
 export const AUTH_API_URL = process.env.AUTH_API_URL as string;
 export const API_URL = process.env.API_URL as string;
 export const COMPANY_API_URL = process.env.COMPANY_API_URL as string;
 export const UPLOAD_API_URL = process.env.UPLOAD_API_URL as string;
+export const TIME_SHEET_API_URL = process.env.TIME_SHEET_API_URL as string;
 export const CHAT_API_URL = process.env.CHAT_API_URL as string;
 
 export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
@@ -63,8 +64,23 @@ export const NS_ACCOUNT = "account";
 export const NS_PROJECT = "project";
 export const NS_COMPANY = "company";
 export const NS_MANAGER = "manager";
+export const NS_TIME_TRACKING = "timeTracking";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
+export const VIDEO_ACCEPT = ["video/mp4"];
+export const ACCEPT_MEDIA = [...IMAGES_ACCEPT, ...VIDEO_ACCEPT];
+export const FILE_ACCEPT = [
+  "application/zip",
+  "application/vnd.ms-powerpoint",
+  "text/csv",
+  "application/java-archive",
+  "application/pdf",
+  "application/vnd.ms-excel",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+];
 
 export const ACCESS_TOKEN_STORAGE_KEY = "aT";
 export const REFRESH_TOKEN_STORAGE_KEY = "rT";
@@ -73,3 +89,34 @@ export const API_TIMEOUT = 30_000; //s
 
 export const AN_ERROR_TRY_RELOAD_PAGE = "error.anErrorTryReload";
 export const AN_ERROR_TRY_AGAIN = "error.anErrorTryAgain";
+
+export const mapType = {
+  [FILE_MAP.DOC]: ["doc", "docx", "dot", "dotx"],
+  [FILE_MAP.EXCEL]: ["xls", "xlsx", "xlsm"],
+  [FILE_MAP.CSV]: ["csv"],
+  [FILE_MAP.PDF]: ["pdf"],
+};
+
+export const nameDayList = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+export const nameMonthList = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];

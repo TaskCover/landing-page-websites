@@ -1,5 +1,5 @@
-import { memo } from "react";
-import { Stack } from "@mui/material";
+import { memo, useRef } from "react";
+import { Stack, SvgIconProps } from "@mui/material";
 import { Text } from "components/shared";
 import DatePicker, {
   ReactDatePickerProps,
@@ -21,6 +21,7 @@ type DateProps = Omit<ReactDatePickerProps, "name" | "onChange"> & {
   name: string;
   value?: string | number;
   format?: string;
+  iconProps?: SvgIconProps;
 };
 
 const FDate = (props: DateProps) => {
@@ -30,13 +31,20 @@ const FDate = (props: DateProps) => {
     onChange,
     name,
     format = DATE_FORMAT_FORM,
+    iconProps,
     ...rest
   } = props;
 
   const locale = useLocale();
 
+  const ref = useRef<DatePicker | null>(null);
+
   const onChangeDate = (date: Date | null) => {
     onChange(name, date ? formatDate(date.getTime(), format) : undefined);
+  };
+
+  const onClick = () => {
+    ref?.current?.setOpen(true);
   };
 
   return (
@@ -51,12 +59,15 @@ const FDate = (props: DateProps) => {
         fontWeight={600}
         color={value ? "primary.main" : "grey.400"}
         whiteSpace="nowrap"
+        onClick={onClick}
+        sx={{ cursor: "pointer" }}
       >
         {value
           ? formatDate(refactorDate(value, format)?.getTime() as number)
           : label}
       </Text>
       <DatePicker
+        ref={ref}
         selected={value ? refactorDate(value, format) : null}
         onChange={onChangeDate}
         locale={locale}
@@ -67,6 +78,7 @@ const FDate = (props: DateProps) => {
               fontSize: 20,
               mt: 0.675,
               cursor: "pointer",
+              ...iconProps?.sx,
             }}
           />
         }

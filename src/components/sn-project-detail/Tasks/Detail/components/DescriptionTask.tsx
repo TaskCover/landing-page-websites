@@ -6,21 +6,22 @@ import { useTranslations } from "next-intl";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
+import { getEditorName } from "components/shared/Editor";
+import { UnprivilegedEditor } from "react-quill";
 
 type DescriptionTaskProps = {
   onClose: () => void;
   open: boolean;
+  textEdit?: string;
 };
 
 const DescriptionTask = (props: DescriptionTaskProps) => {
-  const { open, onClose: onCloseProps } = props;
-  const [text, setText] = useState<string | undefined>();
-
+  const { open, onClose: onCloseProps, textEdit } = props;
+  const [text, setText] = useState<string | undefined>(textEdit ?? "");
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
 
   const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
-
   const onChangeText = (_, newValue?: string) => {
     setText(newValue);
   };
@@ -35,12 +36,13 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
       if (!taskListId || !taskId) {
         throw AN_ERROR_TRY_AGAIN;
       }
-      const newData = await onUpdateTask(
-        { description: text },
-        taskListId,
-        taskId,
-        subTaskId,
-      );
+      const data = { description: text };
+      if (text) {
+        data.description = (
+          window[getEditorName(DESCRIPTION_EDITOR)] as UnprivilegedEditor
+        ).getHTML();
+      }
+      const newData = await onUpdateTask(data, taskListId, taskId, subTaskId);
       if (newData) {
         onAddSnackbar(
           commonT("notification.success", { label: commonT("form.save") }),
@@ -55,7 +57,7 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
 
   useEffect(() => {
     setText(task?.description);
-  }, [task?.description]);
+  }, [task?.description, textEdit, open]);
 
   if (!open) return null;
 
@@ -66,6 +68,7 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
         onChange={onChangeText}
         title=""
         name="description"
+        editorKey={DESCRIPTION_EDITOR}
       />
       <Stack direction="row" alignItems="center" spacing={3}>
         <Button
@@ -92,3 +95,5 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
 };
 
 export default memo(DescriptionTask);
+
+const DESCRIPTION_EDITOR = "descriptionEditor";

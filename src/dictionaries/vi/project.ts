@@ -20,6 +20,7 @@ export const ProjectLang: ProjectDictionary = {
       },
     },
     title: "Quản lý dự án",
+    projectCode: "Mã dự án",
     key: "dự án",
     notification: {
       success: "{label} dự án thành công!",
@@ -54,6 +55,14 @@ export const ProjectLang: ProjectDictionary = {
     },
     workingHoursActual: "Số giờ làm việc thực tế",
     costSpent: "Chi phí chi trả thực tế",
+    listFile: {
+      title: "Danh sách các tệp",
+      filter: {
+        all: "Tất cả",
+        file: "Tệp",
+        image: "Ảnh"
+      }
+    }
   },
   detailMembers: {
     head: {
@@ -89,6 +98,9 @@ export const ProjectLang: ProjectDictionary = {
       },
     },
     addNewTask: "Thêm công việc mới",
+    addNewSubTask: "Thêm công việc con mới",
+    addNewSubTaskPlaceholder: "Thêm công việc con mới",
+    createNewTaskList: "Thêm mới danh mục",
     newMove: "Di chuyển tới",
     taskList: "Danh mục công việc",
     key: "công việc",
@@ -141,7 +153,7 @@ export const ProjectLang: ProjectDictionary = {
     addSubTasks: "Thêm công việc con",
     addToDos: "Thêm các điều cần làm",
     attachments: "Tệp đính kèm",
-    clickToUploadFile: "Nhấn để tải lên các tệp",
+    clickToUploadFile: "Nhấn hoặc kéo thả để tải lên các tệp",
     subTasks: "Công việc con",
     setDueDate: "Đặt ngày đến hạn",
     convertToTask: "Chuyển đổi thành công việc",
@@ -155,6 +167,9 @@ export const ProjectLang: ProjectDictionary = {
     linkedTo: "Liên kết tới",
     addDependencyTask: "Thêm công việc phụ thuộc",
     manual: "Ban đầu",
+    commentList: "Danh sách bình luận",
+    showMore: "Hiện thêm",
+    showLess: "Ẩn bớt",
     form: {
       title: {
         newTask: "Công việc chuyển đến",

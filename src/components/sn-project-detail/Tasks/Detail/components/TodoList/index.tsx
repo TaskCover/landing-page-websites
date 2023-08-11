@@ -121,7 +121,7 @@ const TodoList = ({ open }: { open: boolean }) => {
           </Text>
         }
       >
-        <Stack mt={2}>
+        <Stack mt={2} maxWidth="100%" overflow="auto">
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppableId">
               {(provided) => (
@@ -406,7 +406,15 @@ const SubItem = (props: Todo & { todoId: string; index: number }) => {
                 {action === Action.RENAME ? (
                   <TodoName onSubmit={onChangeName} value={name} />
                 ) : (
-                  <Text variant="body2" noWrap onClick={onEditName} mt={0.25}>
+                  <Text
+                    variant="body2"
+                    sx={{
+                      textDecoration: is_done ? "line-through" : undefined,
+                    }}
+                    noWrap
+                    onClick={onEditName}
+                    mt={0.25}
+                  >
                     {name}
                   </Text>
                 )}

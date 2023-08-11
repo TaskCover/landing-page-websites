@@ -1,54 +1,141 @@
 "use client";
 
-import { memo } from "react";
-import { Divider, Stack, StackProps } from "@mui/material";
-import { Text } from "components/shared";
-import { useProject } from "store/project/selectors";
+import React, {memo, useEffect, useState} from "react";
+import {Box, Stack, StackProps} from "@mui/material";
+import {Button, Text} from "components/shared";
+import {useProject, useProjectAttachment} from "store/project/selectors";
 import TextStatus from "components/TextStatus";
 import {
   COLOR_STATUS,
   TEXT_STATUS,
+  ATTACHMENT_TYPE,
 } from "components/sn-projects/components/helpers";
-import { formatDate, formatNumber } from "utils/index";
+import {formatBytes, formatDate, formatNumber} from "utils/index";
 import Avatar from "components/Avatar";
 import StatusServer from "components/StatusServer";
 import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
 import useBreakpoint from "hooks/useBreakpoint";
 import ArrowTriangleIcon from "icons/ArrowTriangleIcon";
+import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
+import FixedLayout from "components/FixedLayout";
+import { experimentalStyled as styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import FilePdfIcon from "../../../icons/FilePdfIcon";
+import FileDocIcon from "../../../icons/FileDocIcon";
+import FileExcelIcon from "../../../icons/FileExcelIcon";
+import FileIcon from "../../../icons/FileIcon";
+import {useParams} from "next/navigation";
+import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
 
 type InformationItemProps = StackProps & {
   label: string;
   children?: string | number | React.ReactNode;
+  color?: string;
 };
 
 const InformationProjectPage = () => {
   const { item, isFetching, error } = useProject();
-
+  const { items, onGetProjectAttachment } = useProjectAttachment();
+  const params = useParams();
   const { isSmSmaller } = useBreakpoint();
-
+  useEffect(() => {
+      onGetProjectAttachment(params.id)
+  }, [onGetProjectAttachment, params.id]);
   return (
     <StatusServer isFetching={isFetching} error={error} noData={!item}>
-      <Stack p={{ xs: 1, sm: 3 }} spacing={3}>
-        {isSmSmaller ? <MobileInformation /> : <DesktopInformation />}
-      </Stack>
+      <FixedLayout flex={1}>
+        <Stack p={{ xs: 1, sm: 3 }} spacing={3}>
+          {isSmSmaller ? <MobileInformation attachments={items}/> : <DesktopInformation attachments={items}/>}
+        </Stack>
+      </FixedLayout>
     </StatusServer>
   );
 };
 
 export default memo(InformationProjectPage);
 
-const DesktopInformation = () => {
+const DesktopInformation = (props) => {
+  const {attachments} = props;
   const { item } = useProject();
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
+  const [active, setActive] = useState("0");
+  const [dataFilter, setDataFilter] = useState(attachments);
+  const handleFilterAttachment = (event) => {
+      setActive(event.target.id);
+      if (event.target.id == ATTACHMENT_TYPE.IMAGE) {
+          const filtered = attachments.filter(attachment => {
+              return IMAGES_ACCEPT.indexOf(attachment.type) !== -1;
+          });
+          setDataFilter(filtered);
+      } else if (event.target.id == ATTACHMENT_TYPE.FILE) {
+          const filtered = attachments.filter(attachment => {
+              return FILE_ACCEPT.indexOf(attachment.type) !== -1;
+          });
+          setDataFilter(filtered);
+      } else {
+          setDataFilter(attachments);
+      }
+  }
+  const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    padding: "12px",
+    textAlign: 'center',
+    color: "#000000",
+    borderRadius: "4px",
+    background: "#F7F7FD",
+    height: "70px",
+    display: "flex",
+    gap: "15px"
+  }));
+
+  const fileIcon = (extension, url) => {
+    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1) {
+        return <Box
+            component="img"
+            src={url}
+            height="auto"
+            width="auto"
+            alt="Image"
+            sx={{
+                maxWidth: '50px',
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+            }}
+        />
+    } else if (extension == '.docx' || extension == '.doc') {
+        return <FileDocIcon sx={{fontSize: 40}}/>;
+    } else if (extension == '.pdf') {
+        return <FilePdfIcon sx={{fontSize: 40}}/>;
+    } else if (extension == '.xls' || extension == '.xlsx') {
+        return <FileExcelIcon sx={{fontSize: 40}}/>;
+    } else {
+        return <FileIcon sx={{fontSize: 40}}/>
+    }
+  }
 
   return (
     <>
       <Stack>
         <Stack direction="row" spacing={2} justifyContent="space-between">
-          <Text variant="h4">{item?.name}</Text>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar
+              src={item?.avatar?.link ?? ProjectPlaceholderImage}
+              size={40}
+            />
+
+            <Stack>
+              <Text variant="h4">{item?.name}</Text>
+              <Text variant="h6" color="grey.400">{`#${
+                item?.number ?? item?.id
+              }`}</Text>
+            </Stack>
+          </Stack>
+
           <Stack direction="row" alignItems="center" spacing={1}>
             <Text variant="caption" color="grey.400">
               {commonT("status")}
@@ -63,13 +150,10 @@ const DesktopInformation = () => {
             )}
           </Stack>
         </Stack>
-        <Text variant="h6" color="grey.400">{`#${
-          item?.number ?? item?.id
-        }`}</Text>
       </Stack>
 
       <InformationItem label={commonT("assigner")}>
-        {item?.owner?.avatar?.link ? (
+        {item?.owner?.fullname ? (
           <Stack direction="row" alignItems="center" spacing={1}>
             <Avatar size={32} src={item?.owner?.avatar?.link} />
             <Text variant="body2">{item?.owner?.fullname ?? "--"}</Text>
@@ -78,80 +162,242 @@ const DesktopInformation = () => {
       </InformationItem>
       <Stack direction="row" alignItems="center" spacing={2}>
         <InformationItem label={commonT("form.title.startDate")}>
-          {formatDate(item?.start_date)}
+          {formatDate(item?.start_date, undefined, "--")}
         </InformationItem>
-        <ArrowTriangleIcon sx={{ width: 100, borderColor: "grey.300" }} />
+        <ArrowTriangleIcon sx={{ width: 100, color: "grey.400" }} />
         <InformationItem label={commonT("form.title.endDate")}>
-          {formatDate(item?.end_date)}
+          {formatDate(item?.end_date, undefined, "--")}
         </InformationItem>
       </Stack>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: 2, sm: 5, lg: 10 }}
-      >
+      <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 16.5 }}>
         <InformationItem
           label={projectT("list.form.title.estimatedWorkingHours")}
-          width={135}
+          width={170}
         >
           {formatNumber(item?.working_hours)}
         </InformationItem>
-        <InformationItem label={projectT("detail.workingHoursActual")}>
+        <InformationItem
+          color="secondary.main"
+          label={projectT("detail.workingHoursActual")}
+        >
           {formatNumber()}
         </InformationItem>
       </Stack>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: 2, sm: 5, lg: 10 }}
-      >
+      <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 16.5 }}>
         <InformationItem
           label={projectT("list.form.title.estimatedCost")}
-          width={135}
+          width={170}
         >
           {formatNumber(item?.expected_cost)}
         </InformationItem>
-        <InformationItem label={projectT("detail.costSpent")}>
+        <InformationItem
+          color="secondary.main"
+          label={projectT("detail.costSpent")}
+        >
           {formatNumber()}
         </InformationItem>
       </Stack>
       <InformationItem label={commonT("form.title.description")} maxWidth={700}>
-        {item?.description}
+        {item?.description || "--"}
       </InformationItem>
+
+      <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} className='attachment-filter'>
+            <Text variant="body2" sx={{
+                fontWeight: "600"
+            }}>{projectT("detail.listFile.title")}</Text>
+
+            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
+                    }}
+                    id={ATTACHMENT_TYPE.ALL}
+                    className={active === ATTACHMENT_TYPE.ALL ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.all")}
+                </Button>
+
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
+                    }}
+                    id={ATTACHMENT_TYPE.IMAGE}
+                    className={active === ATTACHMENT_TYPE.IMAGE ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.image")}
+                </Button>
+
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
+                    }}
+                    id={ATTACHMENT_TYPE.FILE}
+                    className={active === ATTACHMENT_TYPE.FILE ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.file")}
+                </Button>
+            </Stack>
+      </Stack>
+
+      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {dataFilter?.map((data, index) => (
+                <Grid item xs={2} sm={4} md={4} key={index} sx={{
+                    paddingRight: "16px",
+                }}>
+                    <Item>
+                        {
+                            fileIcon(data.extension, data.link)
+                        }
+                        <Stack className="description-file">
+                            <Text sx={{
+                                color: "#000",
+                                fontWeight: 500,
+                                textAlign: "left",
+                                width: "160px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "pre",
+                            }}>{data.name}</Text>
+
+                            <Text sx={{
+                                color: "#666",
+                                fontSize: "12px",
+                                fontWeight: 400,
+                                display: "flex",
+                                gap: "10px"
+                            }}>
+                                <span>{formatBytes(data.size)}</span>
+                                <span>{formatDate(data.created_time, "HH:mm")}</span>
+                                <span>{data.uploaded_by}</span>
+                            </Text>
+                        </Stack>
+
+                    </Item>
+                </Grid>
+            ))}
+        </Grid>
+
     </>
   );
 };
 
-const MobileInformation = () => {
+const MobileInformation = (props) => {
+  const {attachments} = props;
   const { item } = useProject();
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
 
-  return (
+  const [active, setActive] = useState("0");
+  const [dataFilter, setDataFilter] = useState(attachments);
+
+  const handleFilterAttachment = (event) => {
+      setActive(event.target.id);
+      if (event.target.id == ATTACHMENT_TYPE.IMAGE) {
+          const filtered = attachments.filter(attachment => {
+              return IMAGES_ACCEPT.indexOf(attachment.type) !== -1;
+          });
+          setDataFilter(filtered);
+      } else if (event.target.id == ATTACHMENT_TYPE.FILE) {
+          const filtered = attachments.filter(attachment => {
+              return FILE_ACCEPT.indexOf(attachment.type) !== -1;
+          });
+          setDataFilter(filtered);
+      } else {
+          setDataFilter(attachments);
+      }
+  }
+
+  const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    padding: "12px",
+    textAlign: 'center',
+    color: "#000000",
+    borderRadius: "4px",
+    background: "#F7F7FD",
+    height: "70px",
+    display: "flex",
+    gap: "15px"
+  }));
+
+  const fileIcon = (extension, url) => {
+    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1) {
+        return <Box
+            component="img"
+            src={url}
+            height="auto"
+            width="auto"
+            alt="Image"
+            sx={{
+                maxWidth: '50px',
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+            }}
+        />
+    } else if (extension == '.docx' || extension == '.doc') {
+        return <FileDocIcon sx={{fontSize: 40}}/>;
+    } else if (extension == '.pdf') {
+        return <FilePdfIcon sx={{fontSize: 40}}/>;
+    } else if (extension == '.xls' || extension == '.xlsx') {
+        return <FileExcelIcon sx={{fontSize: 40}}/>;
+    } else {
+        return <FileIcon sx={{fontSize: 40}}/>
+    }
+  }
+    return (
     <>
-      <InformationItem label={commonT("form.title.startDate")}>
-        {item?.id}
+      <InformationItem label={projectT("list.projectCode")}>
+        {item?.number}
       </InformationItem>
-      <InformationItem label={commonT("form.title.startDate")}>
+      <InformationItem label={projectT("list.form.title.name")}>
         {item?.name}
       </InformationItem>
-      <InformationItem label={commonT("status")}>
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} src={item?.owner?.avatar?.link} />
-          <Text variant="body2">{item?.owner?.fullname ?? "--"}</Text>
-        </Stack>
+      <InformationItem label={commonT("assigner")}>
+        {item?.owner?.fullname ? (
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar size={32} src={item?.owner?.avatar?.link} />
+            <Text variant="body2">{item?.owner?.fullname ?? "--"}</Text>
+          </Stack>
+        ) : undefined}
       </InformationItem>
       <InformationItem label={commonT("form.title.startDate")}>
-        {formatDate(item?.start_date)}
+        {formatDate(item?.start_date, undefined, "--")}
       </InformationItem>
       <InformationItem label={commonT("form.title.endDate")}>
-        {formatDate(item?.end_date)}
+        {formatDate(item?.end_date, undefined, "--")}
       </InformationItem>
       <InformationItem label={projectT("list.form.title.estimatedCost")}>
         {formatNumber(item?.expected_cost)}
       </InformationItem>
-      <InformationItem label={projectT("detail.costSpent")}>
+      <InformationItem
+        color="secondary.main"
+        label={projectT("detail.costSpent")}
+      >
         {formatNumber()}
       </InformationItem>
       <InformationItem
@@ -159,7 +405,10 @@ const MobileInformation = () => {
       >
         {formatNumber(item?.working_hours)}
       </InformationItem>
-      <InformationItem label={projectT("detail.workingHoursActual")}>
+      <InformationItem
+        color="secondary.main"
+        label={projectT("detail.workingHoursActual")}
+      >
         {formatNumber()}
       </InformationItem>
       <InformationItem label={commonT("status")}>
@@ -172,12 +421,112 @@ const MobileInformation = () => {
           <Text variant="body2">{"--"}</Text>
         )}
       </InformationItem>
+
+        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} className='attachment-filter'>
+            <Text variant="body2" sx={{
+                fontWeight: "600"
+            }}>{projectT("detail.listFile.title")}</Text>
+
+            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
+                    }}
+                    id={ATTACHMENT_TYPE.ALL}
+                    className={active === ATTACHMENT_TYPE.ALL ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.all")}
+                </Button>
+
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
+                    }}
+                    id={ATTACHMENT_TYPE.IMAGE}
+                    className={active === ATTACHMENT_TYPE.IMAGE ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.image")}
+                </Button>
+
+                <Button
+                    type="button"
+                    onClick={handleFilterAttachment}
+                    variant="primaryOutlined"
+                    size="small"
+                    sx={{
+                        minWidth: "100px",
+                        borderRadius: "30px",
+                        minHeight: "32px",
+                        border: "1px solid #BABCC6",
+                        color: "#666"
+                    }}
+                    id={ATTACHMENT_TYPE.FILE}
+                    className={active === ATTACHMENT_TYPE.FILE ? "active" : undefined}
+                >
+                    {projectT("detail.listFile.filter.file")}
+                </Button>
+            </Stack>
+        </Stack>
+
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 1, sm: 2, md: 3 }}>
+            {dataFilter?.map((data, index) => (
+                <Grid item xs={2} sm={4} md={4} key={index} sx={{
+                    paddingRight: "16px",
+                }}>
+                    <Item>
+                        {
+                            fileIcon(data.extension, data.link)
+                        }
+                        <Stack className="description-file">
+                            <Text sx={{
+                                color: "#000",
+                                fontWeight: 500,
+                                textAlign: "left",
+                                width: "160px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "pre",
+                            }}>{data.name}</Text>
+
+                            <Text sx={{
+                                color: "#666",
+                                fontSize: "12px",
+                                fontWeight: 400,
+                                display: "flex",
+                                gap: "10px"
+                            }}>
+                                <span>{formatBytes(data.size)}</span>
+                                <span>{formatDate(data.created_time, "HH:mm")}</span>
+                                <span>{data.uploaded_by}</span>
+                            </Text>
+                        </Stack>
+
+                    </Item>
+                </Grid>
+            ))}
+        </Grid>
     </>
   );
 };
 
 const InformationItem = (props: InformationItemProps) => {
-  const { label, children = "--", ...rest } = props;
+  const { label, children = "--", color = "text.primary", ...rest } = props;
   const { isSmSmaller } = useBreakpoint();
   return (
     <Stack
@@ -186,7 +535,8 @@ const InformationItem = (props: InformationItemProps) => {
       {...rest}
     >
       <Text
-        color={isSmSmaller ? "grey.300" : "grey.400"}
+        color={{ xs: "grey.300", md: "grey.400" }}
+        lineHeight={1.33}
         variant={{ xs: "h6", sm: "caption" }}
         width={170}
         minWidth={170}
@@ -194,7 +544,12 @@ const InformationItem = (props: InformationItemProps) => {
         {label}
       </Text>
       {typeof children === "string" ? (
-        <Text variant="body2" sx={{ wordBreak: "break-all" }}>
+        <Text
+          variant="body2"
+          lineHeight={1.57}
+          color={color}
+          sx={{ wordBreak: "break-all" }}
+        >
           {children}
         </Text>
       ) : (

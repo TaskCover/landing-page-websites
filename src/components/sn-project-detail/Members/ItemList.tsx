@@ -14,6 +14,8 @@ import MobileContentCell from "./MobileContentCell";
 import DesktopCells from "./DesktopCells";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import FixedLayout from "components/FixedLayout";
+import { HEADER_HEIGHT } from "layouts/Header";
 
 const ItemList = () => {
   const {
@@ -38,7 +40,7 @@ const ItemList = () => {
 
   const params = useParams();
 
-  const projectId = useMemo(() => params.id, [params.id]);
+  const projectId = useMemo(() => params.id, [params.id]) as string;
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -89,38 +91,46 @@ const ItemList = () => {
 
   return (
     <>
-      <TableLayout
-        headerList={headerList}
-        pending={isFetching}
-        error={error as string}
-        noData={!isIdle && totalItems === 0}
-        px={{ xs: 1, md: 3 }}
-      >
-        {items.map((item, index) => {
-          return (
-            <TableRow key={item.id}>
-              {isMdSmaller ? (
-                <MobileContentCell item={item} />
-              ) : (
-                <DesktopCells
-                  item={item}
-                  order={(pageIndex - 1) * pageSize + (index + 1)}
-                />
-              )}
-            </TableRow>
-          );
-        })}
-      </TableLayout>
+      <FixedLayout>
+        <TableLayout
+          headerList={headerList}
+          pending={isFetching}
+          error={error as string}
+          noData={!isIdle && totalItems === 0}
+          px={{ xs: 0, md: 3 }}
+          containerHeaderProps={{
+            sx: {
+              maxHeight: { xs: 0, md: undefined },
+              minHeight: { xs: 0, md: HEADER_HEIGHT },
+            },
+          }}
+        >
+          {items.map((item, index) => {
+            return (
+              <TableRow key={item.id}>
+                {isMdSmaller ? (
+                  <MobileContentCell item={item} />
+                ) : (
+                  <DesktopCells
+                    item={item}
+                    order={(pageIndex - 1) * pageSize + (index + 1)}
+                  />
+                )}
+              </TableRow>
+            );
+          })}
+        </TableLayout>
 
-      <Pagination
-        totalItems={totalItems}
-        totalPages={totalPages}
-        page={pageIndex}
-        pageSize={pageSize}
-        containerProps={{ px: 3, pt: 2.5 }}
-        onChangePage={onChangePage}
-        onChangeSize={onChangeSize}
-      />
+        <Pagination
+          totalItems={totalItems}
+          totalPages={totalPages}
+          page={pageIndex}
+          pageSize={pageSize}
+          containerProps={{ px: { md: 3 }, py: 1 }}
+          onChangePage={onChangePage}
+          onChangeSize={onChangeSize}
+        />
+      </FixedLayout>
     </>
   );
 };

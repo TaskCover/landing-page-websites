@@ -17,6 +17,8 @@ import { getDataFromKeys, getPath } from "utils/index";
 import { DEFAULT_PAGING, NS_COMMON, NS_COMPANY } from "constant/index";
 import Pagination from "components/Pagination";
 import { useTranslations } from "next-intl";
+import { useAuth } from "store/app/selectors";
+import FixedLayout from "components/FixedLayout";
 
 const ItemList = () => {
   const {
@@ -37,6 +39,7 @@ const ItemList = () => {
 
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
+  const { onGetProfile, user } = useAuth();
 
   const pathname = usePathname();
   const { initQuery, isReady, query } = useQueryParams();
@@ -63,17 +66,34 @@ const ItemList = () => {
     ],
     [commonT, companyT],
   );
+  const mobileHeaderList: CellProps[] = useMemo(
+    () => [
+      {
+        value: commonT("name"),
+        width: "20%",
+        align: "left",
+      },
+      {
+        value: commonT("creator"),
+        width: "25%",
+        align: "left",
+      },
+      { value: commonT("creationDate"), width: "20%" },
+      { value: companyT("positions.numberOfEmployees"), width: "20%" },
+    ],
+    [commonT, companyT],
+  );
 
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
-      ? MOBILE_HEADER_LIST
+      ? mobileHeaderList
       : desktopHeaderList;
 
     return [
       ...additionalHeaderList,
-      { value: "", width: isMdSmaller ? "25%" : "10%" },
+      { value: "", width: isMdSmaller ? "15%" : "10%" },
     ] as CellProps[];
-  }, [desktopHeaderList, isMdSmaller]);
+  }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
 
   const onActionToItem = (action: DataAction, item?: Position) => {
     return () => {
@@ -106,7 +126,11 @@ const ItemList = () => {
 
   const onUpdate = async (data: PositionData) => {
     if (!item) return;
-    return await onUpdatePosition(item.id, data.name);
+    const result = await onUpdatePosition(item.id, data.name);
+    if (result && item.id === user?.position?.id) {
+      onGetProfile();
+    }
+    return result;
   };
 
   const onDelete = (id: string) => {
@@ -122,42 +146,54 @@ const ItemList = () => {
 
   return (
     <>
-      <TableLayout
-        headerList={headerList}
-        pending={isFetching}
-        error={error as string}
-        noData={!isIdle && items.length === 0}
-        px={{ xs: 0, md: 3 }}
-      >
-        {items.map((item, index) => {
-          return (
-            <TableRow key={item.id}>
-              {isMdSmaller ? (
-                <MobileContentCell item={item} />
-              ) : (
-                <DesktopCells
-                  item={item}
-                  order={(pageIndex - 1) * pageSize + (index + 1)}
+      <FixedLayout>
+        <TableLayout
+          headerList={headerList}
+          pending={isFetching}
+          error={error as string}
+          noData={!isIdle && items.length === 0}
+          px={{ xs: 0, md: 3 }}
+          headerProps={{
+            sx: { px: { xs: 0.5, md: 2 }, wordBreak: "break-all" },
+          }}
+        >
+          {items.map((item, index) => {
+            return (
+              <TableRow key={item.id}>
+                {isMdSmaller ? (
+                  <MobileContentCell item={item} />
+                ) : (
+                  <DesktopCells
+                    item={item}
+                    order={(pageIndex - 1) * pageSize + (index + 1)}
+                  />
+                )}
+                <ActionsCell
+                  onEdit={onActionToItem(DataAction.UPDATE, item)}
+                  onDelete={onDelete(item.id)}
+                  sx={{ px: { xs: 0.5, md: 2 } }}
+                  iconProps={{
+                    sx: {
+                      p: { xs: "4px!important", md: 1 },
+                    },
+                  }}
                 />
-              )}
-              <ActionsCell
-                onEdit={onActionToItem(DataAction.UPDATE, item)}
-                onDelete={onDelete(item.id)}
-              />
-            </TableRow>
-          );
-        })}
-      </TableLayout>
+              </TableRow>
+            );
+          })}
+        </TableLayout>
 
-      <Pagination
-        totalItems={totalItems}
-        totalPages={totalPages}
-        page={pageIndex}
-        pageSize={pageSize}
-        containerProps={{ px: 3, pt: 2.5 }}
-        onChangePage={onChangePage}
-        onChangeSize={onChangeSize}
-      />
+        <Pagination
+          totalItems={totalItems}
+          totalPages={totalPages}
+          page={pageIndex}
+          pageSize={pageSize}
+          containerProps={{ px: { md: 3 }, py: 1 }}
+          onChangePage={onChangePage}
+          onChangeSize={onChangeSize}
+        />
+      </FixedLayout>
+
       {action === DataAction.UPDATE && (
         <Form
           open

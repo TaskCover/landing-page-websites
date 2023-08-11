@@ -26,7 +26,7 @@ const Reset = () => {
   const commonT = useTranslations(NS_COMMON);
 
   const params = useParams();
-  const token = useMemo(() => params.token, [params.token]);
+  const token = useMemo(() => params.token, [params.token]) as string;
 
   const onSubmit = async (values: typeof INITIAL_VALUES) => {
     try {

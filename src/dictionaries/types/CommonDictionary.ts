@@ -3,6 +3,10 @@ export type CommonDictionary = {
     title: string;
     description: string;
   };
+  i18n: {
+    vn: string;
+    en: string;
+  };
   form: {
     error: {
       required: string;
@@ -17,6 +21,7 @@ export type CommonDictionary = {
       overMax: string;
       datePast: string;
       gte: string;
+      renameGroup: string;
     };
     title: {
       upload: string;
@@ -32,6 +37,8 @@ export type CommonDictionary = {
     confirm: string;
     save: string;
     cancel: string;
+    add: string;
+    admin: string;
   };
   notification: {
     imageTypeInvalid: string;
@@ -67,6 +74,7 @@ export type CommonDictionary = {
     outOf: string;
   };
   statusEnum: {
+    inprogress: string;
     active: string;
     close: string;
     pause: string;

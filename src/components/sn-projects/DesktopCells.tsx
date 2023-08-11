@@ -1,14 +1,14 @@
-import { memo } from "react";
+import { memo, useCallback, useState } from "react";
 import { BodyCell, StatusCell } from "components/Table";
 import { Project } from "store/project/reducer";
 import { getPath } from "utils/index";
 import { PROJECT_TASKS_PATH } from "constant/paths";
 import Avatar from "components/Avatar";
-import { Stack } from "@mui/material";
+import { Stack, Theme, selectClasses } from "@mui/material";
 import { Text } from "components/shared";
-import { TEXT_STATUS, COLOR_STATUS } from "./components/helpers";
+import { TEXT_STATUS, COLOR_STATUS, Member } from "./components/helpers";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
-import { Saved } from "./components";
+import { Saved, SelectStatus, SelectMembers, Assigner } from "./components";
 
 type DesktopCellsProps = {
   item: Project;
@@ -17,6 +17,7 @@ type DesktopCellsProps = {
 
 const DesktopCells = (props: DesktopCellsProps) => {
   const { item, order } = props;
+
   return (
     <>
       <BodyCell align="center">{order}</BodyCell>
@@ -32,23 +33,26 @@ const DesktopCells = (props: DesktopCellsProps) => {
           <Text
             variant="body2"
             color="text.primary"
+            fontWeight={600}
+            lineHeight={1.28}
             sx={{ "&:hover": { color: "primary.main" } }}
           >
             {item.name}
           </Text>
         </Stack>
       </BodyCell>
-      <BodyCell align="left">{item?.owner?.fullname}</BodyCell>
+      {item.owner ? (
+        <BodyCell align="left">
+          <Assigner value={item?.owner?.fullname} id={item.id} />
+        </BodyCell>
+      ) : (
+        <BodyCell align="left" />
+      )}
       {item.status ? (
-        <StatusCell
-          text={TEXT_STATUS[item.status]}
-          color={COLOR_STATUS[item.status]}
-          width={93}
-        />
+        <SelectStatus value={item.status} id={item.id} />
       ) : (
         <BodyCell />
       )}
-
       <BodyCell align="center">
         <Saved id={item.id} value={item.saved} />
       </BodyCell>

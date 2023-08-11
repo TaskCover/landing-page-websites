@@ -20,6 +20,7 @@ export const ProjectLang: ProjectDictionary = {
       },
     },
     title: "Projects Management",
+    projectCode: "Project code",
     key: "project",
     notification: {
       success: "{label} project successfully!",
@@ -54,6 +55,14 @@ export const ProjectLang: ProjectDictionary = {
     },
     workingHoursActual: "Working hours (actual)",
     costSpent: "Cost spent",
+    listFile: {
+      title: "List Files",
+      filter: {
+        all: "All",
+        file: "File",
+        image: "Image"
+      }
+    }
   },
   detailMembers: {
     head: {
@@ -80,8 +89,8 @@ export const ProjectLang: ProjectDictionary = {
     },
     form: {
       title: {
-        expectCompletionTime: "Expect completion time(h)",
-        timeTaken: "Time taken(h)",
+        expectCompletionTime: "Working hours (expected)",
+        timeTaken: "Hours worked (done)",
         name: "Task name",
         oldTaskList: "Current task list",
         newTaskList: "New task list",
@@ -89,6 +98,9 @@ export const ProjectLang: ProjectDictionary = {
       },
     },
     addNewTask: "Add new task",
+    addNewSubTask: "New subtask",
+    addNewSubTaskPlaceholder: "Add New Subtask",
+    createNewTaskList: "Create new list",
     newMove: "Move to",
     taskList: "Task list",
     key: "task",
@@ -141,7 +153,7 @@ export const ProjectLang: ProjectDictionary = {
     addSubTasks: "Add sub tasks",
     addToDos: "Add to-dos",
     attachments: "Attachments",
-    clickToUploadFile: "Click to upload files",
+    clickToUploadFile: "Click or drag & drop to upload files",
     subTasks: "Sub tasks",
     setDueDate: "Set due date",
     convertToTask: "Convert to task",
@@ -155,6 +167,9 @@ export const ProjectLang: ProjectDictionary = {
     linkedTo: "Linked to",
     addDependencyTask: "Add dependency task",
     manual: "Manual",
+    commentList: "Comments",
+    showMore: "Show more",
+    showLess: "Show less",
     form: {
       title: {
         newTask: "Move to task",

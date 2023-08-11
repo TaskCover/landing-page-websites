@@ -1,7 +1,13 @@
 "use client";
 
 import { memo, useState, useEffect, useRef, use, useMemo } from "react";
-import { Stack } from "@mui/material";
+import {
+  Stack,
+  Theme,
+  selectClasses,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import {
@@ -30,13 +36,14 @@ import {
   NS_PROJECT,
   STATUS_OPTIONS,
 } from "constant/index";
-import { AssignerFilter } from "./components";
+import { AssignerFilter, TASK_STATUS_OPTIONS } from "./components";
 import TaskListForm from "./TaskListForm";
 import { useParams } from "next/navigation";
 import { TaskListData } from "store/project/actions";
 import { useHeaderConfig } from "store/app/selectors";
 import Link from "components/Link";
 import ChevronIcon from "icons/ChevronIcon";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const Actions = () => {
   const {
@@ -47,6 +54,9 @@ const Actions = () => {
   } = useTasksOfProject();
   const { onGetOptions } = useMemberOptions();
   const { title, prevPath } = useHeaderConfig();
+  const { isMdSmaller } = useBreakpoint();
+  const { breakpoints } = useTheme();
+  const is1440Larger = useMediaQuery(breakpoints.up(1440));
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
@@ -58,11 +68,14 @@ const Actions = () => {
   const [queries, setQueries] = useState<Params>({});
   const params = useParams();
 
-  const projectId = useMemo(() => params.id, [params.id]);
+  const projectId = useMemo(() => params.id, [params.id]) as string;
 
   const statusOptions = useMemo(
     () =>
-      STATUS_OPTIONS.map((item) => ({ ...item, label: commonT(item.label) })),
+      TASK_STATUS_OPTIONS.map((item) => ({
+        ...item,
+        label: commonT(item.label),
+      })),
     [commonT],
   );
 
@@ -115,10 +128,16 @@ const Actions = () => {
         alignItems={{ lg: "center" }}
         justifyContent="space-between"
         borderBottom="1px solid"
+        paddingLeft={"10px"}
+        paddingRight={"10px"}
         borderColor="grey.100"
         spacing={{ xs: 1, md: 3 }}
-        px={{ xs: 1, md: 3 }}
-        py={1.5}
+        py={{ xs: 0.75 }}
+        mt={{ sm: 1.25, md: 0 }}
+        position="sticky"
+        top={{ xs: 108, md: 45 }}
+        zIndex={12}
+        bgcolor="background.paper"
       >
         {/* <Button
           onClick={onShow}
@@ -136,108 +155,135 @@ const Actions = () => {
           justifyContent="space-between"
           spacing={{ xs: 2, sm: 0 }}
           width={{ xs: "100%", sm: "fit-content" }}
+          display={{ xs: "none", md: "flex" }}
         >
-          <Stack direction="row" alignItems="center" spacing={0.5} flex={1}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={0.5}
+            flex={1}
+            width="50%"
+          >
             {!!prevPath && (
               <Link
                 href={prevPath}
-                sx={{ height: 24, display: { sm: "none" } }}
+                sx={{ height: isMdSmaller ? 16 : 24, display: { sm: "none" } }}
               >
                 <ChevronIcon
-                  sx={{ color: "text.primary", transform: "rotate(90deg)" }}
-                  fontSize="medium"
+                  sx={{
+                    color: "text.primary",
+                    transform: "rotate(90deg)",
+                  }}
+                  fontSize={isMdSmaller ? "small" : "medium"}
                 />
               </Link>
             )}
-            <Text variant="h4" display={{ sm: "none" }} noWrap>
+            <Text variant={{ xs: "body2", md: "h4" }} display={{ sm: "none" }}>
               {title ?? ""}
             </Text>
           </Stack>
 
           <Button
             onClick={onShow}
+            id="add_new_id"
             startIcon={<PlusIcon />}
-            size="small"
+            size="extraSmall"
             variant="primary"
+            sx={{ height: 32, px: ({ spacing }) => `${spacing(2)}!important` }}
           >
-            {commonT("createNew")}
+            {projectT("detailTasks.createNewTaskList")}
           </Button>
         </Stack>
 
         <Stack
-          direction={{ xs: "column", lg: "row" }}
+          direction="row"
           alignItems="center"
-          spacing={{ xs: 1, md: 3 }}
-          px={{ sm: 2 }}
-          width={{ xs: "100%", md: "fit-content" }}
-          justifyContent="flex-end"
+          spacing={3}
+          justifyContent={{ xs: "flex-start", md: "flex-end" }}
+          overflow="auto"
+          width="100%"
         >
-          <Stack
-            direction={{ xs: "column", lg: "row" }}
-            alignItems="center"
-            spacing={{ xs: 1.5, md: 3 }}
-          >
-            <Stack
-              direction={{ xs: "column", sm: "row" }}
-              alignItems="center"
-              spacing={{ xs: 1.5, md: 3 }}
-            >
-              <Search
-                placeholder={commonT("searchBy", {
-                  name: projectT("detailTasks.key"),
-                })}
-                name="tasks.name"
-                onChange={onChangeQueries}
-                value={queries?.["tasks.name"]}
-                sx={{ width: 220 }}
-              />
-              <AssignerFilter
-                onChange={onChangeQueries}
-                value={queries?.["tasks.owner"]}
-                hasAvatar
-                sx={{ display: { xs: "none", md: "initial" } }}
-              />
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={{ xs: 1.5, md: 3 }}
-            >
-              <Date
-                label={commonT("form.title.startDate")}
-                name="tasks.created_time"
-                onChange={onChangeQueries}
-                value={queries?.["tasks.created_time"]}
-                format={DATE_FORMAT_HYPHEN}
-              />
-              <Dropdown
-                placeholder={commonT("status")}
-                options={statusOptions}
-                name="tasks.status"
-                onChange={onChangeQueries}
-                value={queries?.["tasks.status"]}
-              />
-            </Stack>
-          </Stack>
+          <Search
+            placeholder={commonT("searchBy", {
+              name: projectT("detailTasks.key"),
+            })}
+            name="tasks.name"
+            onChange={onChangeQueries}
+            value={queries?.["tasks.name"]}
+            sx={{
+              width: { xs: is1440Larger ? 220 : 160 },
+              minWidth: { xs: is1440Larger ? 220 : 160 },
+            }}
+          />
+          <AssignerFilter
+            onChange={onChangeQueries}
+            value={queries?.["tasks.owner"]}
+            hasAvatar
+            sx={{ display: { xs: "none", md: "initial" } }}
+            rootSx={{
+              "& >svg": { fontSize: 16 },
+              px: "0px!important",
+              [`& .${selectClasses.outlined}`]: {
+                pr: "0!important",
+                mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                  `${spacing(4)}!important`,
+                "& .sub": {
+                  display: "none",
+                },
+              },
+            }}
+          />
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{ xs: 1.5, sm: 3 }}
+          <Date
+            label={commonT("form.title.startDate")}
+            name="tasks.start_date"
+            onChange={onChangeQueries}
+            value={queries?.["tasks.start_date"]}
+            format={DATE_FORMAT_HYPHEN}
+            iconProps={{
+              sx: { fontSize: 16 },
+            }}
+          />
+          <Dropdown
+            placeholder={commonT("status")}
+            options={statusOptions}
+            name="tasks.status"
+            onChange={onChangeQueries}
+            value={queries?.["tasks.status"]}
+            rootSx={{
+              "& >svg": { fontSize: 16 },
+              px: "0px!important",
+              [`& .${selectClasses.outlined}`]: {
+                pr: "0!important",
+                mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                  `${spacing(4)}!important`,
+                "& .sub": {
+                  display: "none",
+                },
+              },
+            }}
+          />
+
+          <Button
+            size="extraSmall"
+            sx={{ height: 32, display: { xs: "none", md: "flex" } }}
+            onClick={onSearch}
+            variant="secondary"
           >
-            <AssignerFilter
-              onChange={onChangeQueries}
-              value={queries?.["tasks.owner"]}
-              hasAvatar
-              sx={{ display: { md: "none" } }}
-            />
-            <Button size="small" onClick={onSearch} variant="secondary">
-              {commonT("search")}
-            </Button>
-            <Refresh onClick={onRefresh} />
-            {!!Object.keys(queries).length && <Clear onClick={onClear} />}
-          </Stack>
+            {commonT("search")}
+          </Button>
+          {/* <Refresh onClick={onRefresh} />
+            {!!Object.keys(queries).length && <Clear onClick={onClear} />} */}
         </Stack>
+
+        <Button
+          size="small"
+          sx={{ height: 40, display: { md: "none" }, width: "fit-content" }}
+          onClick={onSearch}
+          variant="secondary"
+        >
+          {commonT("search")}
+        </Button>
       </Stack>
       {isShow && (
         <TaskListForm

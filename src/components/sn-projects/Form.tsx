@@ -1,4 +1,5 @@
-import { Stack } from "@mui/material";
+/* eslint-disable react/no-unescaped-entities */
+import { Autocomplete, MenuItem, Stack, TextField } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
 import {
@@ -12,10 +13,16 @@ import { FormikErrors, useFormik } from "formik";
 import { memo, useEffect, useMemo } from "react";
 import { useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
-import { cleanObject, formatDate, getMessageErrorByAPI } from "utils/index";
+import {
+  cleanObject,
+  formatDate,
+  getMessageErrorByAPI,
+  hasValue,
+} from "utils/index";
 import { ProjectData } from "store/project/actions";
 import { DataAction } from "constant/enums";
 import {
+  Button,
   DatePicker,
   Input,
   InputNumber,
@@ -26,11 +33,16 @@ import { useEmployeeOptions } from "store/company/selectors";
 import { SelectMembers } from "./components";
 import { Member } from "./components/helpers";
 import {
+  useCurrencyOptions,
   usePositionOptions,
   useProjectTypeOptions,
 } from "store/global/selectors";
 import { Endpoint, client } from "api";
 import { useTranslations } from "next-intl";
+import { createProjectType } from "store/company/actions";
+import { useDispatch } from 'react-redux';
+import { useProjectTypes } from "store/company/selectors";
+import { useProjects } from "store/project/selectors";
 
 export type ProjectDataForm = Omit<ProjectData, "members" | "avatar"> & {
   members?: Member[];
@@ -55,6 +67,14 @@ const Form = (props: FormProps) => {
     onGetOptions: onGetProjectTypeOptions,
     pageSize: projectTypeOptionsPageSize,
   } = useProjectTypeOptions();
+  const {
+    isFetching: currencyOptionsIsFetching,
+    totalPages: currencyOptionsTotalPages,
+    pageIndex: currencyOptionsPageIndex,
+    options: currencyOptions,
+    onGetOptions: onGetCurrencyOptions,
+    pageSize: currencyOptionsPageSize,
+  } = useCurrencyOptions();
   const { options: positionOptions } = usePositionOptions();
   const {
     options: employeeOptions,
@@ -83,11 +103,12 @@ const Form = (props: FormProps) => {
     if (isFetching || (totalPages && pageIndex >= totalPages)) return;
     onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
   };
+  const dispatch = useDispatch();
 
   const onSubmit = async (values: ProjectDataForm) => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let dataParsed: any = { ...values };
+      const dataParsed: any = { ...values };
       if (dataParsed?.start_date) {
         dataParsed.start_date = formatDate(
           dataParsed.start_date,
@@ -97,19 +118,22 @@ const Form = (props: FormProps) => {
       if (values?.end_date) {
         dataParsed.end_date = formatDate(dataParsed.end_date, DATE_FORMAT_FORM);
       }
+      // if (values?.owner) {
+      //   const newMembers = [...(dataParsed?.members ?? [])];
+      //   if (newMembers.every((item) => item.id !== values.owner)) {
+      //     const mem = employeeOptions.find(
+      //       (item) => item.value === values.owner,
+      //     );
+      //     if (mem) {
+      //       newMembers.push({ id: mem.value as string, fullname: mem.label });
+      //       dataParsed.members = newMembers;
+      //     }
+      //   }
+      // }
       if (dataParsed?.members?.length) {
         dataParsed.members = dataParsed.members.map(
           ({ fullname, ...rest }) => rest,
         );
-
-        const positionIds = positionOptions.map((posItem) => posItem.value);
-        const isMissingPosition = dataParsed.members.some(
-          (member: Member) => !positionIds.includes(member.position_project),
-        );
-
-        if (isMissingPosition) {
-          throw projectT("list.notification.invalidPositions");
-        }
       }
       if (typeof values["avatar"] === "object") {
         const logoUrl = await client.upload(Endpoint.UPLOAD, values["avatar"]);
@@ -118,7 +142,13 @@ const Form = (props: FormProps) => {
         delete dataParsed["avatar"];
       }
 
-      dataParsed = cleanObject(dataParsed) as ProjectData;
+      if (hasValue(initialValues?.expected_cost)) {
+        dataParsed["expected_cost"] = dataParsed["expected_cost"] ?? null;
+      }
+      if (hasValue(initialValues?.working_hours)) {
+        dataParsed["working_hours"] = dataParsed["working_hours"] ?? null;
+      }
+
       const newItem = await onSubmitProps(dataParsed);
 
       if (newItem) {
@@ -160,7 +190,7 @@ const Form = (props: FormProps) => {
   );
 
   const onChangeDate = (name: string, newDate?: Date) => {
-    formik.setFieldValue(name, newDate ? newDate.getTime() : undefined);
+    formik.setFieldValue(name, newDate ? newDate.getTime() : null);
     formik.setFieldTouched(name, true);
 
     // Fix validate failed when change network
@@ -189,11 +219,24 @@ const Form = (props: FormProps) => {
     });
   };
 
+  const onCurrencyOptionsEndReached = () => {
+    if (
+      currencyOptionsIsFetching ||
+      (currencyOptionsTotalPages &&
+        currencyOptionsPageIndex >= currencyOptionsTotalPages)
+    )
+      return;
+    onGetOptions({
+      pageSize: currencyOptionsPageSize,
+      pageIndex: currencyOptionsPageIndex + 1,
+    });
+  };
+
   const onChangeSearch = (name: string, newValue?: string | number) => {
     onGetOptions({ pageIndex: 1, pageSize: 20, [name]: newValue });
   };
 
-  const onGetEmployeeOptions = (name: string, newValue?: string | number) => {
+  const onGetEmployeeOptions = () => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   };
 
@@ -202,8 +245,14 @@ const Form = (props: FormProps) => {
   }, [onGetProjectTypeOptions]);
 
   useEffect(() => {
+    onGetCurrencyOptions({ pageIndex: 1, pageSize: 20 });
+  }, [onGetCurrencyOptions]);
+
+  useEffect(() => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetOptions]);
+  const { onCreateProjectType } =
+    useProjectTypes();
 
   return (
     <FormLayout
@@ -252,28 +301,50 @@ const Form = (props: FormProps) => {
             }}
             onOpen={onGetEmployeeOptions}
           />
-          <Select
+          <Autocomplete
             options={projectTypeOptions}
-            title={projectT("list.form.title.projectType")}
-            name="type_project"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values?.type_project}
-            error={commonT(touchedErrors?.type_project, {
-              name: projectT("list.form.title.projectType"),
-            })}
-            rootSx={sxConfig.input}
+            getOptionLabel={(option) => option.label}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={projectT("list.form.title.projectType")}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values?.type_project}
+                error={!!commonT(touchedErrors?.type_project, { name: projectT("list.form.title.projectType") })}
+                helperText={commonT(touchedErrors?.type_project, { name: projectT("list.form.title.projectType") })}
+                variant="outlined"
+                fullWidth
+                style={{ backgroundColor: '#f7f7fd' }}
+                sx={{
+                  mt: { xs: 2, sm: 0 },
+                }}
+              />
+            )}
+            noOptionsText={
+              <div style={{ textAlign: "center", cursor: "pointer" }}>
+                <p style={{ color: "black" }}>This types of project doesn't exits</p>
+                <div
+                  style={{ color: '#0bb79f', backgroundColor: 'transparent', cursor: "pointer" }}
+                  onClick={() => onCreateProjectType}
+                >
+                  + Add to new project type
+                </div>
+              </div>
+            }
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                {option.label}
+              </li>
+            )}
             fullWidth
-            onEndReached={onProjectTypeOptionsEndReached}
-            sx={{
-              mt: { xs: 2, sm: 0 },
-            }}
           />
         </Stack>
         <SelectMembers
           name="members"
           value={formik.values?.members}
           onChange={onChangeField}
+          ignoreId={formik.values?.owner}
         />
         <Stack direction={{ sm: "row" }} spacing={2}>
           <DatePicker
@@ -305,7 +376,7 @@ const Form = (props: FormProps) => {
             }}
           />
         </Stack>
-        <Stack direction={{ sm: "row" }} spacing={2}>
+        <Stack direction={{ sm: "row" }} spacing={0}>
           <InputNumber
             title={projectT("list.form.title.estimatedCost")}
             name="expected_cost"
@@ -316,8 +387,24 @@ const Form = (props: FormProps) => {
               name: projectT("list.form.title.estimatedCost"),
             })}
             rootSx={sxConfig.input}
-            fullWidth
+            sx={{ width: '65%' }}
             numberType="integer"
+          />
+          <Select
+            options={currencyOptions}
+            title={projectT("list.form.title.currency")}
+            name="currency"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values?.currency ?? currencyOptions?.[0]?.value ?? 'USD'}
+            error={commonT(touchedErrors?.currency, {
+              name: projectT("list.form.title.currency"),
+            })}
+            rootSx={sxConfig.input}
+            onEndReached={onCurrencyOptionsEndReached}
+            sx={{
+              mt: { xs: 2, sm: 0 }, width: '35%', ml: 0
+            }}
           />
           <InputNumber
             title={projectT("list.form.title.estimatedWorkingHours")}
@@ -332,11 +419,11 @@ const Form = (props: FormProps) => {
             fullWidth
             numberType="integer"
             sx={{
-              mt: { xs: 2, sm: 0 },
+              mt: { xs: 2, sm: 0 }, ml: 2
             }}
           />
         </Stack>
-        <Stack direction={{ sm: "row" }} spacing={2}>
+        <Stack direction={{ xs: "column-reverse", sm: "row" }} spacing={2}>
           <Upload
             title="Logo"
             name="avatar"

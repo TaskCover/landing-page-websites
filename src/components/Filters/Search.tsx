@@ -29,16 +29,16 @@ const Search = (props: SearchProps) => {
   const commonT = useTranslations(NS_COMMON);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const prevTextRef = useRef<string | number>(value);
+  const prevTextRef = useRef<string | number | null>(value);
 
-  const [text, setText] = useState<string | number>(value);
+  const [text, setText] = useState<string | number | null>(value);
 
   const onEnterClicked = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key !== "Enter" || !emitWhenEnter) return;
       const searchValue = typeof text === "number" ? text.toString() : text;
       prevTextRef.current = searchValue;
-      onChange && onChange(name, searchValue);
+      onChange && onChange(name, searchValue as string | undefined);
     },
     [name, onChange, text, emitWhenEnter],
   );

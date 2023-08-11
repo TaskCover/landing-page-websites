@@ -9,8 +9,9 @@ import Information from "./Information";
 import { Task } from "store/project/reducer";
 import Comments from "./Comments";
 import { useTaskDetail } from "store/project/selectors";
-import { CommentEditor } from "./components";
+import { AssignTask, CommentEditor, StatusTask } from "./components";
 import Activities from "./Activities";
+import EditTask from "./components/EditTask";
 
 const Detail = () => {
   const { task, onUpdateTaskDetail } = useTaskDetail();
@@ -34,6 +35,7 @@ const Detail = () => {
           backgroundColor: "background.paper",
           backgroundImage: "none",
           width: { xs: "100%", md: "70%", lg: "50%" },
+          maxWidth: 720,
           overflow: "hidden",
         },
       }}
@@ -44,7 +46,7 @@ const Detail = () => {
         direction="row"
         alignItems="center"
         justifyContent="space-between"
-        p={3}
+        p={{ xs: 2, md: 3 }}
       >
         <Text variant="h5" color="text.primary" textTransform="capitalize">
           {projectT("taskDetail.title")}
@@ -54,7 +56,24 @@ const Detail = () => {
         </IconButton>
       </Stack>
       <TabList value={tab} onChange={setTab} />
-      <Stack flex={1} overflow="auto" p={3}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={2}
+        display={{ md: "none" }}
+        my={2}
+        justifyContent="center"
+      >
+        <AssignTask />
+        <StatusTask />
+        <EditTask />
+      </Stack>
+      <Stack
+        flex={1}
+        overflow="auto"
+        p={{ xs: 2, md: 3 }}
+        spacing={{ xs: 2, md: 3 }}
+      >
         {tab === TabDetail.DETAIL ? (
           <>
             <Information />
