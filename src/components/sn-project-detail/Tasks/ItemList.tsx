@@ -178,7 +178,7 @@ const ItemList = () => {
     });
   };
 
-  const checkboxLabel = "Select All";
+  const checkboxLabel = "";
   const checkboxProps = {
     checked: isAllChecked,
     onChange: handleAllChecked,
@@ -733,14 +733,18 @@ const ItemList = () => {
         position="sticky"
         top={{ xs: baseTop + 8 }}
         zIndex={1}
+        hasSelectAll
       >
-        <>
+        <Box sx={{
+          backgroundColor: "grey.50",
+          py: 0
+        }}>
           <FormControlLabel
             control={<Checkbox {...checkboxProps} />}
             label={checkboxLabel}
             style={{ margin: "15px" }}
           />
-        </>
+        </Box>
       </TableLayout>
 
       <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
