@@ -60,13 +60,18 @@ const InformationProjectPage = () => {
       <FixedLayout flex={1}>
         <Stack px={{ sm: 3 }} py={{ md: 3 }} spacing={3}>
           <Stack direction="row" spacing={2} justifyContent="space-between">
-            <Stack>
-              <Text variant="h4">{item?.name ?? "--"}</Text>
-              <Text variant="h6" color="grey.400">{`${companyT(
-                "information.form.title.taxCode",
-              )}: ${item?.tax_code}`}</Text>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Avatar
+                src={item?.owner?.avatar?.link ?? ProjectPlaceholderImage}
+                size={40}
+              />
+              <Stack>
+                <Text variant="h4">{item?.name ?? "--"}</Text>
+                <Text variant="h6" color="grey.400">{`${companyT(
+                  "information.form.title.taxCode",
+                )}: ${item?.tax_code}`}</Text>
+              </Stack>
             </Stack>
-
             <EditCompany />
           </Stack>
           <Stack spacing={3} width={{ xs: "fit-content", md: 600 }}>
