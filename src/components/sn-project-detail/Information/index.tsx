@@ -203,7 +203,7 @@ const DesktopInformation = (props) => {
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} className='attachment-filter'
         style={{
-          borderTop: "2px solid #666666",
+          borderTop: "1px solid #5e5e5e",
           paddingTop: "20px",
         }}
       >
