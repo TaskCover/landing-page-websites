@@ -256,7 +256,6 @@ const ItemList = () => {
   const onToggleTaskList = (newChecked: boolean, taskList: TaskList) => {
     return () => {
       let newSelectedList = [...selectedList];
-
       if (newChecked) {
         newSelectedList.push({
           taskListId: taskList.id,
@@ -299,6 +298,7 @@ const ItemList = () => {
 
         newSelectedList = [...newSelectedList, ...additionalSelectedList];
       } else {
+        setIsAllChecked(false);
         newSelectedList = newSelectedList.filter(
           (item) => item.taskListId !== taskList.id,
         );
@@ -315,6 +315,7 @@ const ItemList = () => {
   ) => {
     return () => {
       const newSelectedList = [...selectedList];
+      console.log(newChecked)
       if (newChecked) {
         newSelectedList.push({
           taskId: task.id,
@@ -323,6 +324,7 @@ const ItemList = () => {
           taskListName: taskList.name,
         });
       } else {
+        setIsAllChecked(false);
         const indexDeleted = newSelectedList.findIndex(
           (selected) => !selected?.subTaskId && selected.taskId === task.id,
         );
@@ -742,7 +744,7 @@ const ItemList = () => {
           <FormControlLabel
             control={<Checkbox {...checkboxProps} />}
             label={checkboxLabel}
-            style={{ margin: "15px" }}
+            style={{ marginLeft: 0 }}
           />
         </Box>
       </TableLayout>

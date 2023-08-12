@@ -7,7 +7,7 @@ import {
   SxProps,
   Table,
   TableBody,
-  TableCell,
+  Grid,
   TableCellProps,
   TableHead,
   TableRow,
@@ -101,12 +101,12 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     timeout = setTimeout(() => {
       const newBodySx = refs?.reduce((out, item, index) => {
         out[`& td:nth-of-type(${index + 1}), & th:nth-of-type(${index + 1})`] =
-          {
-            minWidth: item?.current?.offsetWidth,
-            width: item?.current?.offsetWidth,
-            maxWidth: item?.current?.offsetWidth,
-            overflowX: "hidden",
-          };
+        {
+          minWidth: item?.current?.offsetWidth,
+          width: item?.current?.offsetWidth,
+          maxWidth: item?.current?.offsetWidth,
+          overflowX: "hidden",
+        };
         return out;
       }, {});
       setBodySx(newBodySx);
@@ -142,7 +142,6 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
         <Table>
           <TableHead>
             <TableRow>
-              {hasSelectAll ? children : ""}
               {headerList.map(({ sx: sxItem, ...item }, index) => (
                 <CellHeader
                   key={index}
@@ -162,7 +161,21 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                   {...restHeaderProps}
                   ref={refs[index]}
                 >
-                  {item.value}
+                  {hasSelectAll && index == 0 ? <Box>
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Grid item xs={2}>
+                        {children}
+                      </Grid>
+                      <Grid xs={10}>
+                        {item.value}
+                      </Grid>
+                    </Grid>
+                  </Box> : item.value}
                 </CellHeader>
               ))}
             </TableRow>
