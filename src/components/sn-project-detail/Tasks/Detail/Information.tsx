@@ -397,14 +397,7 @@ const Information = () => {
         </InformationItem>
       </Stack>
 
-      <InformationItem
-        label={`${commonT("form.title.description")}:`}
-        minHeight={!isAddDescription ? 150 : ''}
-        bgcolor="grey.50"
-        p={2}
-        borderRadius={1}
-      >
-        {
+      {
           (!!task?.description && !isAddDescription) && (
                 <Stack direction="row" justifyContent="end">
                   <IconButton
@@ -430,6 +423,14 @@ const Information = () => {
                 </Stack>
             )
         }
+      <InformationItem
+        label={`${commonT("form.title.description")}:`}
+        minHeight={!isAddDescription ? 150 : ''}
+        bgcolor="grey.50"
+        p={2}
+        borderRadius={1}
+        marginTop="8px !important"
+      >
         {(!!task?.description && !isAddDescription) && (
             <>
               <Box
