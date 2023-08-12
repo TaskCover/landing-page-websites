@@ -90,7 +90,6 @@ const DesktopInformation = (props) => {
     height: "70px",
     display: "flex",
     gap: "15px",
-    marginBottom: "10px"
   }));
 
   const fileIcon = (extension, url) => {
@@ -202,7 +201,12 @@ const DesktopInformation = (props) => {
         {item?.description || "--"}
       </InformationItem>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} className='attachment-filter'>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} className='attachment-filter'
+        style={{
+          borderTop: "2px solid #666666",
+          paddingTop: "20px",
+        }}
+      >
             <Text variant="body2" sx={{
                 fontWeight: "600"
             }}>{projectT("detail.listFile.title")}</Text>
@@ -273,7 +277,6 @@ const DesktopInformation = (props) => {
             {dataFilter?.map((data, index) => (
                 <Grid item xs={2} sm={4} md={4} key={index} sx={{
                     paddingRight: "16px",
-                    borderBottom: "1px solid #ECECF3",
                 }}>
                     <Item>
                         {
