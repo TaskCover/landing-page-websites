@@ -315,7 +315,7 @@ const ItemList = () => {
   ) => {
     return () => {
       const newSelectedList = [...selectedList];
-      console.log(newChecked)
+      console.log(newChecked);
       if (newChecked) {
         newSelectedList.push({
           taskId: task.id,
@@ -358,6 +358,7 @@ const ItemList = () => {
           subTaskName: subTask.name,
         });
       } else {
+        setIsAllChecked(false);
         newSelectedList.splice(indexSelected, 1);
       }
       setSelectedList(newSelectedList);
@@ -737,10 +738,12 @@ const ItemList = () => {
         zIndex={1}
         hasSelectAll
       >
-        <Box sx={{
-          backgroundColor: "grey.50",
-          py: 0
-        }}>
+        <Box
+          sx={{
+            backgroundColor: "grey.50",
+            py: 0,
+          }}
+        >
           <FormControlLabel
             control={<Checkbox {...checkboxProps} />}
             label={checkboxLabel}
@@ -932,7 +935,9 @@ const ItemList = () => {
                                             whiteSpace="nowrap"
                                           >
                                             <TextStatus
-                                              color={COLOR_STATUS[subTask.status]}
+                                              color={
+                                                COLOR_STATUS[subTask.status]
+                                              }
                                               text={
                                                 TASK_TEXT_STATUS[subTask.status]
                                               }
@@ -944,20 +949,20 @@ const ItemList = () => {
                                             {subTask.description}
                                           </Description>
                                         </Stack>
-                                        <MoreList sx={{ display: { xs: "none", md: "flex" } }} selectedList={selectedList}
-                                          onReset={onResetSelected} />
-
+                                        <MoreList
+                                          sx={{
+                                            display: { xs: "none", md: "flex" },
+                                          }}
+                                          selectedList={selectedList}
+                                          onReset={onResetSelected}
+                                        />
                                       </Stack>
-
                                     </>
                                   );
                                 })}
                                 {taskDropProvided.placeholder}
-
                               </div>
-
                             )}
-
                           </Droppable>
                           <Stack
                             width="100%"
@@ -971,7 +976,7 @@ const ItemList = () => {
                               label={projectT(
                                 "detailTasks.addNewSubTaskPlaceholder",
                               )}
-                              value={task.id == taskIdSelected ? taskName : ''}
+                              value={task.id == taskIdSelected ? taskName : ""}
                               onKeyDown={(e) =>
                                 onKeyDownTaskName(e, taskListItem.id, task.id)
                               }
@@ -991,7 +996,7 @@ const ItemList = () => {
                                 },
                                 "& input": {
                                   fontSize: 15,
-                                  paddingTop: "17px !important"
+                                  paddingTop: "17px !important",
                                 },
                                 width: "35% !important",
                                 "& label.Mui-focused": {
@@ -1000,7 +1005,9 @@ const ItemList = () => {
                                 "& >label": {
                                   fontWeight: "600 !important",
                                   fontSize: "14px",
-                                  color: isDarkMode ? "#ffffff" : "#999999 !important"
+                                  color: isDarkMode
+                                    ? "#ffffff"
+                                    : "#999999 !important",
                                 },
                               }}
                             />
@@ -1011,20 +1018,17 @@ const ItemList = () => {
                               {errorTaskName}
                             </Text>
                           )}
-
                         </>
                       )}
                     </Stack>
-                    <MoreList sx={{ display: { xs: "none", md: "flex" } }} selectedList={selectedList}
-                      onReset={onResetSelected} />
+                    <MoreList
+                      sx={{ display: { xs: "none", md: "flex" } }}
+                      selectedList={selectedList}
+                      onReset={onResetSelected}
+                    />
                   </DraggableTask>
-
-
                 );
-
               })}
-
-
             </DroppableTaskList>
           );
         })}
