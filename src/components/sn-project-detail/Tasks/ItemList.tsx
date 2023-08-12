@@ -839,7 +839,7 @@ const ItemList = () => {
                           <TextStatus
                             color={COLOR_STATUS[task.status]}
                             text={TASK_TEXT_STATUS[task.status]}
-                            width={121}
+                            width={110}
                           />
                         </Content>
                         <Description>{task?.description}</Description>
@@ -941,7 +941,7 @@ const ItemList = () => {
                                               text={
                                                 TASK_TEXT_STATUS[subTask.status]
                                               }
-                                              width={121}
+                                              width={110}
                                             />
                                           </Content>
 
