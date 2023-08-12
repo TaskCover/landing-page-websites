@@ -963,6 +963,7 @@ const ItemList = () => {
                             width="100%"
                             direction="row"
                             spacing={1}
+                            alignItems="center"
                           >
                             <PlusIcon />
                             <TextField
