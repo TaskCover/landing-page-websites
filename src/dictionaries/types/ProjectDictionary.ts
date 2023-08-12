@@ -57,7 +57,8 @@ export type ProjectDictionary = {
         all: string;
         file: string;
         image: string;
-      }
+      },
+      noData: string;
     }
   };
   detailMembers: {

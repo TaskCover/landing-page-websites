@@ -964,7 +964,12 @@ const ItemList = () => {
                               </div>
                             )}
                           </Droppable>
-                          <Stack width="100%" direction="row" spacing={1}>
+                          <Stack
+                            width="100%"
+                            direction="row"
+                            spacing={1}
+                            alignItems="center"
+                          >
                             <PlusIcon />
                             <TextField
                               name={task.id}
