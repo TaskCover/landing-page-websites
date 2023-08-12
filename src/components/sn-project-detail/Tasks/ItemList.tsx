@@ -75,7 +75,7 @@ const ItemList = () => {
     totalPages,
     onResetTasks,
   } = useTasksOfProject();
-  const { onUpdateTaskDetail, onGetTaskList } = useTaskDetail();
+  const { onUpdateTaskDetail, onUpdateTaskParent, onGetTaskList } = useTaskDetail();
   const [isAllChecked, setIsAllChecked] = useState(false);
   const filtersRef = useRef<Params>({});
   const pageIndexRef = useRef<number>(pageIndex);
@@ -211,6 +211,8 @@ const ItemList = () => {
     taskListId?: string,
     taskId?: string,
     subTaskId?: string,
+    taskListName?: string,
+    taskName?: string
   ) => {
     return () => {
       onUpdateTaskDetail(
@@ -218,6 +220,9 @@ const ItemList = () => {
           ? { ...taskData, taskListId, taskId, subTaskId }
           : undefined,
       );
+      onUpdateTaskParent(
+        taskListName && taskName ? {taskListName, taskName} : undefined
+      )
     };
   };
 
@@ -315,7 +320,6 @@ const ItemList = () => {
   ) => {
     return () => {
       const newSelectedList = [...selectedList];
-      console.log(newChecked)
       if (newChecked) {
         newSelectedList.push({
           taskId: task.id,
@@ -823,7 +827,7 @@ const ItemList = () => {
                           textAlign="left"
                           noWrap
                           tooltip={task.name}
-                          onClick={onSetTask(task, taskListItem.id, task.id)}
+                          onClick={onSetTask(task, taskListItem.id, task.id, undefined, taskListItem.name, task.name)}
                         >
                           {task.name}
                         </Content>
@@ -912,6 +916,8 @@ const ItemList = () => {
                                               taskListItem.id,
                                               task.id,
                                               subTask.id,
+                                              taskListItem.name,
+                                              task.name
                                             )}
                                           >
                                             {subTask.name}

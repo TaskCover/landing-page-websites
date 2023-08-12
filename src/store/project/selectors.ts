@@ -51,9 +51,11 @@ import { BaseQueries, Option } from "constant/types";
 import { getFiltersIgnoreId } from "utils/index";
 import {
   TaskDetail,
+  TaskParent,
   removeMember,
   resetTasks,
   updateTaskDetail,
+  updateTaskParent
 } from "./reducer";
 
 export const useProjects = () => {
@@ -465,9 +467,14 @@ export const useTaskDetail = () => {
   const dispatch = useAppDispatch();
 
   const task = useAppSelector((state) => state.project.task);
+  const taskParent = useAppSelector((state) => state.project.taskParent);
 
   const onUpdateTaskDetail = (task?: TaskDetail) => {
     dispatch(updateTaskDetail(task));
+  };
+
+  const onUpdateTaskParent = (taskParent?: TaskParent) => {
+    dispatch(updateTaskParent(taskParent));
   };
 
   const onCommentTask = async (data: CommentTaskData) => {
@@ -569,10 +576,12 @@ export const useTaskDetail = () => {
   };
   return {
     task,
+    taskParent,
     taskListId: task?.taskListId,
     taskId: task?.taskId,
     subTaskId: task?.subTaskId,
     onUpdateTaskDetail,
+    onUpdateTaskParent,
     onCommentTask,
     onUpdateTask,
     onChangeParentTask,
