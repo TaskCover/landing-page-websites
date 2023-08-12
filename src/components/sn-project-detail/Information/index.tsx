@@ -94,7 +94,7 @@ const DesktopInformation = (props) => {
   }));
 
   const fileIcon = (extension, url) => {
-    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1) {
+    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1 || extension.indexOf('png') !== -1) {
         return <Box
             component="img"
             src={url}
@@ -357,7 +357,7 @@ const MobileInformation = (props) => {
   }));
 
   const fileIcon = (extension, url) => {
-    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1) {
+    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1 || extension.indexOf('png') !== -1) {
         return <Box
             component="img"
             src={url}
