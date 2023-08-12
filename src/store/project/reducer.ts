@@ -177,6 +177,11 @@ export type TaskDetail = Omit<Task, "task_list" | "task" | "sub_task"> & {
   subTaskId?: string;
 };
 
+export type TaskParent = {
+  taskListName: string;
+  taskName: string;
+};
+
 export interface Activity {
   id: string;
   created_time: string;
@@ -224,6 +229,7 @@ export interface ProjectState {
   taskOptionsFilters: Omit<GetTasksOfProjectQueries, "pageIndex" | "pageSize">;
 
   task?: TaskDetail;
+  taskParent?: TaskParent;
 
   activities: Activity[];
   activitiesStatus: DataStatus;
@@ -299,6 +305,12 @@ const projectSlice = createSlice({
       action: PayloadAction<TaskDetail | undefined>,
     ) => {
       state.task = action.payload;
+    },
+    updateTaskParent: (
+      state,
+      action: PayloadAction<TaskParent | undefined>,
+    ) => {
+      state.taskParent = action.payload;
     },
     reset: () => initialState,
   },
@@ -849,7 +861,7 @@ const projectSlice = createSlice({
       }),
 });
 
-export const { removeMember, updateTaskDetail, resetTasks, reset } =
+export const { removeMember, updateTaskDetail, updateTaskParent, resetTasks, reset } =
   projectSlice.actions;
 
 export default projectSlice.reducer;

@@ -1,5 +1,5 @@
 import { memo, useEffect, useState, useRef, useMemo } from "react";
-import { DrawerProps, Drawer, drawerClasses, Stack, Box } from "@mui/material";
+import { DrawerProps, Drawer, drawerClasses, Stack, Box, Typography, Breadcrumbs, OutlinedInput } from "@mui/material";
 import { IconButton, Input, Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import { NS_PROJECT } from "constant/index";
@@ -12,20 +12,64 @@ import { useTaskDetail } from "store/project/selectors";
 import { AssignTask, CommentEditor, StatusTask } from "./components";
 import Activities from "./Activities";
 import EditTask from "./components/EditTask";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Detail = () => {
-  const { task, onUpdateTaskDetail } = useTaskDetail();
+  const { task, taskParent, onUpdateTaskDetail, onUpdateTask } = useTaskDetail();
   const scrollEndRef = useRef<HTMLDivElement | null>(null);
 
   const projectT = useTranslations(NS_PROJECT);
 
   const [tab, setTab] = useState<TabDetail>(TabDetail.DETAIL);
-
+  const [newTaskName, setNewTaskName] = useState("");
+  const [editName, setEditName] = useState(false);
   const onClose = () => {
     onUpdateTaskDetail();
   };
 
-  if (!task) return null;
+  if (!task || !taskParent) return null;
+
+  const updateTaskName = (e) => {
+    if (e.keyCode == 13) {
+      e.preventDefault();
+      onUpdateTask({ name: newTaskName }, task.taskListId, task.taskId, task.subTaskId);
+      setEditName(false);
+    }
+  }
+
+  const setDefaultValue = (name) => {
+    setNewTaskName(name);
+    setEditName(true)
+  }
+
+  const breadcrumbs_values = [taskParent.taskListName, taskParent.taskName];
+  if (task.subTaskId) {
+    breadcrumbs_values.push(task.name);
+  }
+
+  const breadcrumbs = breadcrumbs_values.map((item, idx) => {
+    if (idx == breadcrumbs_values.length - 1) {
+      return !editName ? (
+          <Typography onMouseEnter={() => setDefaultValue(item)} key={idx+1} color="text.primary">{item}</Typography>
+        ) : (
+          <OutlinedInput
+            key={idx+1}
+            size="small"
+            id="outlined-adornment-weight"
+            endAdornment={<EditIcon />}
+            aria-describedby="outlined-weight-helper-text"
+            onChange={(e) => setNewTaskName(e.target.value)}
+            onBlur={() => setEditName(false)}
+            onMouseLeave={() => setEditName(false)}
+            onKeyDown={updateTaskName}
+            value={newTaskName}
+          />
+        )
+    } else {
+      return <Typography key={idx+1} color="text.primary">{item}</Typography>
+    }
+  })
 
   return (
     <Drawer
@@ -48,9 +92,12 @@ const Detail = () => {
         justifyContent="space-between"
         p={{ xs: 2, md: 3 }}
       >
-        <Text variant="h5" color="text.primary" textTransform="capitalize">
-          {projectT("taskDetail.title")}
-        </Text>
+        <Breadcrumbs
+          separator={<NavigateNextIcon color="disabled" fontSize="small" />}
+          aria-label="breadcrumb"
+        >
+          {breadcrumbs}
+        </Breadcrumbs>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
