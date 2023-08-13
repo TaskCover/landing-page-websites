@@ -98,7 +98,7 @@ export const sendMessages = createAsyncThunk(
   "chat/sendMessages",
   async (paramReq: MessageBodyRequest) => {
     try {
-      const response = await client.post("sendDirectMessage", paramReq, {
+      const response = await client.post(paramReq.roomId ? "sendMessageToGroup" : "sendDirectMessage", paramReq, {
         baseURL: CHAT_API_URL,
       });
 
