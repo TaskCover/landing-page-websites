@@ -61,7 +61,8 @@ export const ProjectLang: ProjectDictionary = {
         all: "Tất cả",
         file: "Tệp",
         image: "Ảnh"
-      }
+      },
+      noData: "Không có tệp nào",
     }
   },
   detailMembers: {

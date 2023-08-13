@@ -21,7 +21,7 @@ const TextStatus = (props: TextStatusProps) => {
       color={({ palette }) => palette?.[color]?.main}
       bgcolor={({ palette }) => palette?.[color]?.light}
       variant="caption"
-      fontWeight={600}
+      fontWeight={500}
       py={0.5}
       px={{ xs: 0.5, md: 2 }}
       borderRadius={1.5}
