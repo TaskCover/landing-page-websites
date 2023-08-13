@@ -43,6 +43,7 @@ import { createProjectType } from "store/company/actions";
 import { useDispatch } from 'react-redux';
 import { useProjectTypes } from "store/company/selectors";
 import { useProjects } from "store/project/selectors";
+import useTheme from "hooks/useTheme";
 
 export type ProjectDataForm = Omit<ProjectData, "members" | "avatar"> & {
   members?: Member[];
@@ -58,6 +59,7 @@ type FormProps = {
 
 const Form = (props: FormProps) => {
   const { initialValues, type, onSubmit: onSubmitProps, ...rest } = props;
+  const { isDarkMode } = useTheme();
   const { onAddSnackbar } = useSnackbar();
   const {
     isFetching: projectTypeOptionsIsFetching,
@@ -69,6 +71,9 @@ const Form = (props: FormProps) => {
   } = useProjectTypeOptions();
 
   const [filteredProjectType, setFilteredProjectType] = useState<any>([]);
+  const [newProjectType, setNewProjectType] = useState<any>("");
+  const { onCreateProjectType } = useProjectTypes();
+
 
   const {
     isFetching: currencyOptionsIsFetching,
@@ -210,13 +215,18 @@ const Form = (props: FormProps) => {
   };
 
   const onChangeSearchProjectType = (name: string, newValue?: string | number) => {
-    console.log(name, newValue);
     const query = newValue?.toString();
     if (query) {
       const filtered = projectTypeOptions.filter(item => item.label && item.label.includes(query));
       setFilteredProjectType(filtered);
+      if (filtered.length == 0) setNewProjectType(query);
     }
   };
+
+  const createObjectType = async () => {
+    await onCreateProjectType({ name: newProjectType })
+    onOpenProjectTypesOption();
+  }
 
   const onProjectTypeOptionsEndReached = () => {
     if (
@@ -252,7 +262,12 @@ const Form = (props: FormProps) => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   };
 
+  const onOpenProjectTypesOption = () => {
+    onGetProjectTypeOptions({ pageIndex: 1, pageSize: 1000 });
+  }
+
   useEffect(() => {
+    console.log(projectTypeOptions);
     if (projectTypeOptions && projectTypeOptions.length) {
       setFilteredProjectType(projectTypeOptions);
     }
@@ -269,8 +284,6 @@ const Form = (props: FormProps) => {
   useEffect(() => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetOptions]);
-  const { onCreateProjectType } =
-    useProjectTypes();
 
   return (
     <FormLayout
@@ -319,8 +332,8 @@ const Form = (props: FormProps) => {
             }}
             onOpen={onGetEmployeeOptions}
           />
-          <Select
-            options={filteredProjectType}
+          {filteredProjectType && <Select
+            options={filteredProjectType ? filteredProjectType : projectTypeOptions}
             title={projectT("list.form.title.projectType")}
             name="type_project"
             onChange={formik.handleChange}
@@ -331,8 +344,22 @@ const Form = (props: FormProps) => {
             fullWidth
             // onEndReached={onProjectTypeOptionsEndReached}
             onChangeSearch={onChangeSearchProjectType}
-            onOpen={onGetProjectTypeOptions}
-          />
+            onOpen={onOpenProjectTypesOption}
+            onNotFoundCallback={createObjectType}
+            setTemplateNotFound={<div style={{ textAlign: "center", cursor: "pointer" }}>
+              <p style={{ color: !isDarkMode ? "black" : "white" }}>This types of project doesn't exits</p>
+              <div
+                style={{
+                  color: '#0bb79f',
+                  backgroundColor: !isDarkMode ? "transparent" : "background.default",
+                  cursor: "pointer"
+                }}
+                onClick={createObjectType}
+              >
+                + Add to new project type
+              </div>
+            </div>}
+          />}
           {/* <Autocomplete
             options={projectTypeOptions}
             getOptionLabel={(option) => option.label}
