@@ -10,7 +10,7 @@ import {
   NS_PROJECT,
 } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
-import { memo, useEffect, useMemo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
 import {
@@ -67,6 +67,9 @@ const Form = (props: FormProps) => {
     onGetOptions: onGetProjectTypeOptions,
     pageSize: projectTypeOptionsPageSize,
   } = useProjectTypeOptions();
+
+  const [filteredProjectType, setFilteredProjectType] = useState<any>([]);
+
   const {
     isFetching: currencyOptionsIsFetching,
     totalPages: currencyOptionsTotalPages,
@@ -206,6 +209,15 @@ const Form = (props: FormProps) => {
     formik.setFieldValue(name, newValue);
   };
 
+  const onChangeSearchProjectType = (name: string, newValue?: string | number) => {
+    console.log(name, newValue);
+    const query = newValue?.toString();
+    if (query) {
+      const filtered = projectTypeOptions.filter(item => item.label && item.label.includes(query));
+      setFilteredProjectType(filtered);
+    }
+  };
+
   const onProjectTypeOptionsEndReached = () => {
     if (
       projectTypeOptionsIsFetching ||
@@ -241,7 +253,13 @@ const Form = (props: FormProps) => {
   };
 
   useEffect(() => {
-    onGetProjectTypeOptions({ pageIndex: 1, pageSize: 20 });
+    if (projectTypeOptions && projectTypeOptions.length) {
+      setFilteredProjectType(projectTypeOptions);
+    }
+  }, [projectTypeOptions])
+
+  useEffect(() => {
+    onGetProjectTypeOptions({ pageIndex: 1, pageSize: 1000 });
   }, [onGetProjectTypeOptions]);
 
   useEffect(() => {
@@ -301,7 +319,21 @@ const Form = (props: FormProps) => {
             }}
             onOpen={onGetEmployeeOptions}
           />
-          <Autocomplete
+          <Select
+            options={filteredProjectType}
+            title={projectT("list.form.title.projectType")}
+            name="type_project"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values?.type_project}
+            error={commonT(touchedErrors?.type_project, { name: projectT("list.form.title.projectType") })}
+            rootSx={sxConfig.input}
+            fullWidth
+            // onEndReached={onProjectTypeOptionsEndReached}
+            onChangeSearch={onChangeSearchProjectType}
+            onOpen={onGetProjectTypeOptions}
+          />
+          {/* <Autocomplete
             options={projectTypeOptions}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
@@ -338,7 +370,7 @@ const Form = (props: FormProps) => {
               </li>
             )}
             fullWidth
-          />
+          /> */}
         </Stack>
         <SelectMembers
           name="members"
