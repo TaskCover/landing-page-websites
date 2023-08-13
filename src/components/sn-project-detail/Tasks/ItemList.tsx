@@ -27,7 +27,6 @@ import {
   formatDate,
   checkIsMobile,
 } from "utils/index";
-import TextStatus from "components/TextStatus";
 import { CellProps, TableLayout } from "components/Table";
 import React from "react";
 import PlusIcon from "icons/PlusIcon";
@@ -59,6 +58,8 @@ import useToggle from "hooks/useToggle";
 import FixedLayout from "components/FixedLayout";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import useTheme from "hooks/useTheme";
+import SelectStatusTask from "components/sn-projects/components/SelectStatusTask";
+import AssignerTask from "components/sn-projects/components/AssignerTask";
 
 const ItemList = () => {
   const {
@@ -75,7 +76,7 @@ const ItemList = () => {
     totalPages,
     onResetTasks,
   } = useTasksOfProject();
-  const { onUpdateTaskDetail, onUpdateTaskParent, onGetTaskList } = useTaskDetail();
+  const { onUpdateTaskDetail, onUpdateTaskParent, onGetTaskList, onUpdateTask } = useTaskDetail();
   const [isAllChecked, setIsAllChecked] = useState(false);
   const filtersRef = useRef<Params>({});
   const pageIndexRef = useRef<number>(pageIndex);
@@ -372,6 +373,18 @@ const ItemList = () => {
   const onResetSelected = () => {
     setSelectedList([]);
   };
+
+  const directlySelected = (taskListItem: TaskList, task: Task, subTask?: Task): Selected => {
+    return {
+      taskListId: taskListItem.id,
+      taskListName: taskListItem.name,
+      taskId: task.id,
+      taskName: task.name,
+      subTaskId: subTask?.id,
+      subTaskName: subTask?.name,
+      checked: true,
+    }
+  }
 
   const onMoveTaskList = async (
     sourceTaskListId: string,
@@ -684,6 +697,51 @@ const ItemList = () => {
     }
   };
 
+  const changeAssignerTask = async ({ taskListId, taskId, subTaskId, newValue }) => {
+    try {
+      if (!taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      const newData = await onUpdateTask(
+        { owner: newValue },
+        taskListId,
+        taskId,
+        subTaskId,
+      );
+      if (newData) {
+        onAddSnackbar(
+          projectT("taskDetail.notification.assignSuccess"),
+          "success",
+        );
+      }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
+  }
+
+  const changeStatusTask = async ({ taskListId, taskId, subTaskId, newValue }) => {
+    try {
+      if (!newValue || !taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      const newData = await onUpdateTask(
+        { status: newValue },
+        taskListId,
+        taskId,
+        subTaskId,
+      );
+      if (newData) {
+        onAddSnackbar(
+          projectT("detail.notification.changeStatusSuccess"),
+          "success",
+        );
+        // setStatus(newValue)
+      }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
+  }
+
   useEventListener("scroll", onScroll, undefined, SCROLL_ID);
 
   useEffect(() => {
@@ -834,17 +892,11 @@ const ItemList = () => {
                         >
                           {task.name}
                         </Content>
-                        <Assigner src={task?.owner?.avatar?.link}>
-                          {task?.owner?.fullname}
-                        </Assigner>
+                        <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         <Content>{formatDate(task?.start_date)}</Content>
                         <Content>{formatDate(task?.end_date)}</Content>
                         <Content noWrap={false} whiteSpace="nowrap">
-                          <TextStatus
-                            color={COLOR_STATUS[task.status]}
-                            text={TASK_TEXT_STATUS[task.status]}
-                            width={110}
-                          />
+                          <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         </Content>
                         <Description>{task?.description}</Description>
                       </Stack>
@@ -925,11 +977,7 @@ const ItemList = () => {
                                           >
                                             {subTask.name}
                                           </Content>
-                                          <Assigner
-                                            src={subTask?.owner?.avatar?.link}
-                                          >
-                                            {subTask?.owner?.fullname}
-                                          </Assigner>
+                                          <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           <Content>
                                             {formatDate(subTask?.start_date)}
                                           </Content>
@@ -940,15 +988,7 @@ const ItemList = () => {
                                             noWrap={false}
                                             whiteSpace="nowrap"
                                           >
-                                            <TextStatus
-                                              color={
-                                                COLOR_STATUS[subTask.status]
-                                              }
-                                              text={
-                                                TASK_TEXT_STATUS[subTask.status]
-                                              }
-                                              width={110}
-                                            />
+                                            <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           </Content>
 
                                           <Description>
@@ -959,7 +999,7 @@ const ItemList = () => {
                                           sx={{
                                             display: { xs: "none", md: "flex" },
                                           }}
-                                          selectedList={selectedList}
+                                          selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task, subTask)]}
                                           onReset={onResetSelected}
                                         />
                                       </Stack>
@@ -1029,7 +1069,7 @@ const ItemList = () => {
                     </Stack>
                     <MoreList
                       sx={{ display: { xs: "none", md: "flex" } }}
-                      selectedList={selectedList}
+                      selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task)]}
                       onReset={onResetSelected}
                     />
                   </DraggableTask>
@@ -1064,28 +1104,7 @@ const ItemList = () => {
 
 export default memo(ItemList);
 
-const Assigner = ({
-  children,
-  src,
-  ...rest
-}: StackProps & { src?: string }) => {
-  if (!children) return <Content textAlign="left" />;
-  return (
-    <Stack
-      component="p"
-      direction="row"
-      alignItems="center"
-      spacing={1.25}
-      px={2}
-      {...rest}
-    >
-      <Avatar size={24} src={src} />
-      <Text variant="body2" component="span" overflow="hidden" color="grey.400">
-        {children}
-      </Text>
-    </Stack>
-  );
-};
+
 
 const Content = (props: TextProps) => {
   const { children = "--", sx, onClick, ...rest } = props;
