@@ -76,7 +76,7 @@ const ItemList = () => {
     totalPages,
     onResetTasks,
   } = useTasksOfProject();
-  const { onUpdateTaskDetail, onUpdateTaskParent, onGetTaskList } = useTaskDetail();
+  const { onUpdateTaskDetail, onUpdateTaskParent, onGetTaskList, onUpdateTask } = useTaskDetail();
   const [isAllChecked, setIsAllChecked] = useState(false);
   const filtersRef = useRef<Params>({});
   const pageIndexRef = useRef<number>(pageIndex);
@@ -697,6 +697,51 @@ const ItemList = () => {
     }
   };
 
+  const changeAssignerTask = async ({ taskListId, taskId, subTaskId, newValue }) => {
+    try {
+      if (!taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      const newData = await onUpdateTask(
+        { owner: newValue },
+        taskListId,
+        taskId,
+        subTaskId,
+      );
+      if (newData) {
+        onAddSnackbar(
+          projectT("taskDetail.notification.assignSuccess"),
+          "success",
+        );
+      }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
+  }
+
+  const changeStatusTask = async ({ taskListId, taskId, subTaskId, newValue }) => {
+    try {
+      if (!newValue || !taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+      const newData = await onUpdateTask(
+        { status: newValue },
+        taskListId,
+        taskId,
+        subTaskId,
+      );
+      if (newData) {
+        onAddSnackbar(
+          projectT("detail.notification.changeStatusSuccess"),
+          "success",
+        );
+        // setStatus(newValue)
+      }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
+  }
+
   useEventListener("scroll", onScroll, undefined, SCROLL_ID);
 
   useEffect(() => {
@@ -847,11 +892,11 @@ const ItemList = () => {
                         >
                           {task.name}
                         </Content>
-                        <AssignerTask value={task?.owner?.fullname} taskListId={taskListItem.id} taskId={task.id} />
+                        <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         <Content>{formatDate(task?.start_date)}</Content>
                         <Content>{formatDate(task?.end_date)}</Content>
                         <Content noWrap={false} whiteSpace="nowrap">
-                          <SelectStatusTask value={task.status} taskListId={taskListItem.id} taskId={task.id} />
+                          <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         </Content>
                         <Description>{task?.description}</Description>
                       </Stack>
@@ -932,7 +977,7 @@ const ItemList = () => {
                                           >
                                             {subTask.name}
                                           </Content>
-                                          <AssignerTask value={subTask?.owner?.fullname} taskListId={taskListItem.id} taskId={task.id} subTaskId={subTask.id} />
+                                          <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           <Content>
                                             {formatDate(subTask?.start_date)}
                                           </Content>
@@ -943,7 +988,7 @@ const ItemList = () => {
                                             noWrap={false}
                                             whiteSpace="nowrap"
                                           >
-                                            <SelectStatusTask value={subTask.status} taskListId={taskListItem.id} taskId={task.id} subTaskId={subTask.id} />
+                                            <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           </Content>
 
                                           <Description>

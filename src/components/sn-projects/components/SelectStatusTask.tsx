@@ -1,9 +1,4 @@
 import { memo, useState } from "react";
-import { useTaskDetail } from "store/project/selectors";
-import { getMessageErrorByAPI } from "utils/index";
-import { useSnackbar } from "store/app/selectors";
-import { useTranslations } from "next-intl";
-import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import { StatusCell } from "components/Table";
 import { COLOR_STATUS } from "./helpers";
 import MenuItem from "@mui/material/MenuItem";
@@ -12,44 +7,21 @@ import Popover from "@mui/material/Popover";
 import { Status } from "constant/enums";
 import TextStatus from "components/TextStatus";
 import { TASK_TEXT_STATUS } from "components/sn-project-detail/Tasks/components";
+import { ArrowDropDownIcon } from "@mui/x-date-pickers";
 
 type SelectStatusTaskProps = {
   value: Status;
-  taskListId: string;
-  taskId: string;
-  subTaskId?: string;
+  onHandler: (newValue: string) => void
 };
 
 const SelectStatusTask = (props: SelectStatusTaskProps) => {
-  const { value, taskListId, taskId, subTaskId } = props;
-  const { onAddSnackbar } = useSnackbar();
-  const projectT = useTranslations(NS_PROJECT);
-  const commonT = useTranslations(NS_COMMON);
+  const { value, onHandler } = props;
   const [status, setStatus] = useState(value || Status.ACTIVE);
   const [anchorEl, setAnchorEl] = useState(null);
-  const { onUpdateTask } = useTaskDetail();
 
   const handleChange = async (newStatus: Status) => {
-    try {
-      if (!newStatus || !taskListId || !taskId) {
-        throw AN_ERROR_TRY_AGAIN;
-      }
-      const newData = await onUpdateTask(
-        { status: newStatus },
-        taskListId,
-        taskId,
-        subTaskId,
-      );
-      if (newData) {
-        onAddSnackbar(
-          projectT("detail.notification.changeStatusSuccess"),
-          "success",
-        );
-        setStatus(newStatus)
-      }
-    } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-    }
+    onHandler(newStatus)
+    setStatus(newStatus)
   };
 
   const handleStatusCellClick = (event) => {
@@ -64,13 +36,20 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
 
   return (
     <>
-      <TextStatus
-        color={COLOR_STATUS[status]}
-        text={TASK_TEXT_STATUS[status]}
-        width={110}
+      <div
         onClick={handleStatusCellClick}
-        style={{ cursor: "pointer" }}
-      />
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          cursor: 'pointer',
+        }}>
+        <TextStatus
+          color={COLOR_STATUS[status]}
+          text={TASK_TEXT_STATUS[status]}
+          width={110}
+        />
+        <ArrowDropDownIcon />
+      </div>
 
       <Popover
         open={open}
