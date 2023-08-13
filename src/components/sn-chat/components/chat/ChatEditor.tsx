@@ -252,7 +252,7 @@ const ChatEditor = (props: EditorProps) => {
           component={"div"}
           ref={quillRef}
           sx={{
-            color: "black",
+            color: "black !important",
             flexDirection: "column",
           }}
         />

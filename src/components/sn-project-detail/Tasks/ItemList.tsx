@@ -373,6 +373,18 @@ const ItemList = () => {
     setSelectedList([]);
   };
 
+  const directlySelected = (taskListItem: TaskList, task: Task, subTask?: Task): Selected => {
+    return {
+      taskListId: taskListItem.id,
+      taskListName: taskListItem.name,
+      taskId: task.id,
+      taskName: task.name,
+      subTaskId: subTask?.id,
+      subTaskName: subTask?.name,
+      checked: true,
+    }
+  }
+
   const onMoveTaskList = async (
     sourceTaskListId: string,
     destinationTaskListId: string,
@@ -959,7 +971,7 @@ const ItemList = () => {
                                           sx={{
                                             display: { xs: "none", md: "flex" },
                                           }}
-                                          selectedList={selectedList}
+                                          selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task, subTask)]}
                                           onReset={onResetSelected}
                                         />
                                       </Stack>
@@ -1029,7 +1041,7 @@ const ItemList = () => {
                     </Stack>
                     <MoreList
                       sx={{ display: { xs: "none", md: "flex" } }}
-                      selectedList={selectedList}
+                      selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task)]}
                       onReset={onResetSelected}
                     />
                   </DraggableTask>
