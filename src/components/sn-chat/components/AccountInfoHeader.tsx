@@ -111,16 +111,6 @@ const AccountInfoHeader = ({
               Active
             </Typography>
           </Box>
-          {/* <IconButton
-            sx={{
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              onSetStep(STEP.CHAT_DETAIL_GROUP);
-            }}
-          >
-            <ArrowRightIcon />
-          </IconButton> */}
         </>
       );
     }
@@ -182,7 +172,7 @@ const AccountInfoHeader = ({
             </Typography>
             <IconButton
               onClick={() => {
-                onSetStep(STEP.ADD_GROUP, { ...dataTransfer, isNew: !isGroup });
+                onSetStep(STEP.ADD_GROUP, { ...dataTransfer, isNew: !isGroup }, { prevStep: STEP.CHAT_GROUP });
               }}
               sx={{
                 width: "26px",
@@ -263,18 +253,11 @@ const AccountInfoHeader = ({
                   color: "white",
                 }}
                 onClick={() => {
-                  onSetStep(STEP.ADD_GROUP);
+                  onSetStep(STEP.ADD_GROUP, { ...dataTransfer, isNew: !isGroup }, { prevStep: STEP.CHAT_GROUP });
                 }}
               >
                 <ProfileAdd />
               </IconButton>
-              {/* <IconButton
-                sx={{
-                  color: "white",
-                }}
-              >
-                <VideoCallIcon />
-              </IconButton> */}
             </Box>
           </Box>
         );

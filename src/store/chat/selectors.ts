@@ -247,8 +247,8 @@ export const useChat = () => {
   );
 
   const onSetStep = useCallback(
-    (step: STEP, dataTransfer?: any) => {
-      dispatch(setStep({ step, dataTransfer }));
+    (step: STEP, dataTransfer?: any, historyOption?: any) => {      
+      dispatch(setStep({ step, dataTransfer, historyOption }));
     },
     [dispatch],
   );
