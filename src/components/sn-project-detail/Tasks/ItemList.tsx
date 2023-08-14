@@ -902,7 +902,9 @@ const ItemList = () => {
                         <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'end', width: '100%' }}>
                           <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         </Content>
-                        <Description>{task?.description}</Description>
+                        <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                          <Description>{task?.description}</Description>
+                        </Content>
                       </Stack>
                       {!isHide && (
                         <>
@@ -998,9 +1000,11 @@ const ItemList = () => {
                                             <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           </Content>
 
-                                          <Description>
-                                            {subTask.description}
-                                          </Description>
+                                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                                            <Description>
+                                              {subTask.description}
+                                            </Description>
+                                          </Content>
                                         </Stack>
                                         <MoreList
                                           sx={{
@@ -1075,7 +1079,7 @@ const ItemList = () => {
                       )}
                     </Stack>
                     <MoreList
-                      sx={{ display: { xs: "none", md: "flex" } }}
+                      sx={{ display: { xs: "none", md: "flex", position: 'relative', right: '26px' } }}
                       selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task)]}
                       onReset={onResetSelected}
                     />
