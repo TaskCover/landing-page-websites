@@ -857,6 +857,8 @@ const ItemList = () => {
                     )}
                     isHide={isHide}
                     isHovered={hoveredId === task.id}
+                    onMouseEnter={() => setHoveredId(task.id)}
+                    onMouseLeave={() => setHoveredId(undefined)}
                     setHideIds={setHideIds}
                   >
                     <Stack
