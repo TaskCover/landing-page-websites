@@ -899,7 +899,7 @@ const ItemList = () => {
                         </Content>
                         <Content>{formatDate(task?.start_date)}</Content>
                         <Content>{formatDate(task?.end_date)}</Content>
-                        <Content noWrap={false} whiteSpace="nowrap">
+                        <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'end', width: '100%' }}>
                           <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         </Content>
                         <Description>{task?.description}</Description>
@@ -993,6 +993,7 @@ const ItemList = () => {
                                           <Content
                                             noWrap={false}
                                             whiteSpace="nowrap"
+                                            sx={{ display: 'flex', justifyContent: 'end', width: '100%' }}
                                           >
                                             <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           </Content>
