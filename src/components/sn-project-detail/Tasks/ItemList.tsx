@@ -796,8 +796,8 @@ const ItemList = () => {
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
         position="sticky"
-        top={{ xs: baseTop + 8 }}
-        zIndex={1}
+        top={{ xs: baseTop + 28 }}
+        zIndex={1000}
         hasSelectAll
       >
         <Box
@@ -857,6 +857,8 @@ const ItemList = () => {
                     )}
                     isHide={isHide}
                     isHovered={hoveredId === task.id}
+                    onMouseEnter={() => setHoveredId(task.id)}
+                    onMouseLeave={() => setHoveredId(undefined)}
                     setHideIds={setHideIds}
                   >
                     <Stack
@@ -892,15 +894,17 @@ const ItemList = () => {
                         >
                           {task.name}
                         </Content>
-                        <Content flex={1} width='full' tooltip={task?.owner?.fullname}>
+                        <Content tooltip={task?.owner?.fullname} sx={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
                           <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         </Content>
                         <Content>{formatDate(task?.start_date)}</Content>
                         <Content>{formatDate(task?.end_date)}</Content>
-                        <Content noWrap={false} whiteSpace="nowrap">
+                        <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'end', width: '100%' }}>
                           <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         </Content>
-                        <Description>{task?.description}</Description>
+                        <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                          <Description>{task?.description}</Description>
+                        </Content>
                       </Stack>
                       {!isHide && (
                         <>
@@ -979,7 +983,7 @@ const ItemList = () => {
                                           >
                                             {subTask.name}
                                           </Content>
-                                          <Content flex={1} width='full' tooltip={subTask?.owner?.fullname}>
+                                          <Content tooltip={subTask?.owner?.fullname} sx={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
                                             <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           </Content>
                                           <Content>
@@ -991,13 +995,16 @@ const ItemList = () => {
                                           <Content
                                             noWrap={false}
                                             whiteSpace="nowrap"
+                                            sx={{ display: 'flex', justifyContent: 'end', width: '100%' }}
                                           >
                                             <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           </Content>
 
-                                          <Description>
-                                            {subTask.description}
-                                          </Description>
+                                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                                            <Description>
+                                              {subTask.description}
+                                            </Description>
+                                          </Content>
                                         </Stack>
                                         <MoreList
                                           sx={{
@@ -1072,7 +1079,7 @@ const ItemList = () => {
                       )}
                     </Stack>
                     <MoreList
-                      sx={{ display: { xs: "none", md: "flex" } }}
+                      sx={{ display: { xs: "none", md: "flex", position: 'relative', right: '26px' } }}
                       selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task)]}
                       onReset={onResetSelected}
                     />

@@ -29,11 +29,26 @@ const Dropdown = (props: DropdownProps) => {
         color: hasValue ? "primary.main" : "grey.400",
         fontWeight: 600,
         height: 32,
+        "&": {
+          position: 'relative',
+          width: '100%'
+        },
         "& .text-option": {
           fontWeight: 600,
           color: "grey.400",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+          position: 'relative',
         },
-        "& >svg": { fontSize: 20 },
+        "& >svg": {
+          fontSize: 20,
+          position: "absolute",
+          top: "50%",
+          right: 0,
+          zIndex: 100,
+          transform: "translateY(-50%)",
+        },
         ...rootSx,
       }}
       name={name}
