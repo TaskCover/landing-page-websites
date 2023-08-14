@@ -894,7 +894,7 @@ const ItemList = () => {
                         >
                           {task.name}
                         </Content>
-                        <Content flex={1} width='full' tooltip={task?.owner?.fullname}>
+                        <Content tooltip={task?.owner?.fullname} sx={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
                           <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         </Content>
                         <Content>{formatDate(task?.start_date)}</Content>
@@ -981,7 +981,7 @@ const ItemList = () => {
                                           >
                                             {subTask.name}
                                           </Content>
-                                          <Content flex={1} width='full' tooltip={subTask?.owner?.fullname}>
+                                          <Content tooltip={subTask?.owner?.fullname} sx={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
                                             <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           </Content>
                                           <Content>
