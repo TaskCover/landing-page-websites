@@ -20,6 +20,7 @@ import SelectItem from "../components/SelectItem";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { STEP } from "store/chat/type";
 import { DataStatus } from "constant/enums";
+import { boolean } from "yup";
 
 const AddGroup = () => {
   const [textSearch, setTextSearch] = useState("");
@@ -73,9 +74,9 @@ const AddGroup = () => {
     });
   }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
 
-  const handleSuccess = (result) => {
+  const handleSuccess = (result, message?: string) => {
     if (result?.error) {
-      onAddSnackbar(result?.error?.message, "error");
+      onAddSnackbar(message ?? 'This user cannot be added to the group.', "error");
       return;
     }
     onAddSnackbar("Successfully!", "success");
@@ -114,6 +115,7 @@ const AddGroup = () => {
   };
 
   const handleCreateGroup = async () => {
+    if (Object.keys(employeeSelected).length <= 0) return onAddSnackbar('No user selected.', "error");
     if (dataTransfer?.isNew) {
       const result = await onCreateDirectMessageGroup({
         groupName: (() => {
@@ -277,7 +279,6 @@ const AddGroup = () => {
           type="button"
           size="small"
           onClick={handleCreateGroup}
-          // pending={pending}
         >
           {commonT("form.add")}
         </Button>
