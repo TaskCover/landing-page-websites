@@ -892,7 +892,9 @@ const ItemList = () => {
                         >
                           {task.name}
                         </Content>
-                        <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
+                        <Content flex={1} width='full'>
+                          <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
+                        </Content>
                         <Content>{formatDate(task?.start_date)}</Content>
                         <Content>{formatDate(task?.end_date)}</Content>
                         <Content noWrap={false} whiteSpace="nowrap">
@@ -977,7 +979,9 @@ const ItemList = () => {
                                           >
                                             {subTask.name}
                                           </Content>
-                                          <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
+                                          <Content flex={1} width='full'>
+                                            <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
+                                          </Content>
                                           <Content>
                                             {formatDate(subTask?.start_date)}
                                           </Content>
