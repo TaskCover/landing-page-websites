@@ -41,6 +41,7 @@ export const CommonLang: CommonDictionary = {
     cancel: "Hủy bỏ",
     add: "Thêm",
     admin: "Quản lý",
+    notAssigned: "Không có ai",
   },
   notification: {
     imageTypeInvalid:

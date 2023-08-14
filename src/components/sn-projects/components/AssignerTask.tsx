@@ -5,30 +5,32 @@ import { useTranslations } from "next-intl";
 import { Dropdown, DropdownProps } from "components/Filters";
 import { useMemberOptions } from "store/project/selectors";
 
-type AssignerTaskProps = Omit<DropdownProps, "options" | "name" | "onChange"> & {
-  onHandler: (newValue: string) => void
+type AssignerTaskProps = Omit<
+  DropdownProps,
+  "options" | "name" | "onChange"
+> & {
+  onHandler: (newValue: string) => void;
 };
 
 const AssignerTask = (props: AssignerTaskProps) => {
-  const {
-    options,
-  } = useMemberOptions();
+  const { options } = useMemberOptions();
   const commonT = useTranslations(NS_COMMON);
 
   const [filteredOptions, setFilteredOptions] = useState(options);
 
   const { onHandler } = props;
   const handleAssigner = async (owner, newValue) => {
-    onHandler(newValue)
+    onHandler(newValue);
   };
 
   const onChangeSearch = (name: string, newValue?: string | number) => {
     const searchTerm = newValue?.toString().toLowerCase();
 
     if (searchTerm) {
-      const filtered = options.filter((option) =>
-        option?.label.toLowerCase().includes(searchTerm) ||
-        option?.subText?.toLowerCase()?.includes(searchTerm)
+      const filtered = options.filter(
+        (option) =>
+          option?.label.toLowerCase().includes(searchTerm) ||
+          option?.subText?.toLowerCase()?.includes(searchTerm),
       );
       setFilteredOptions(filtered);
     } else {
@@ -55,7 +57,7 @@ const AssignerTask = (props: AssignerTaskProps) => {
         overflowX: "unset !important",
       }}
       onChange={handleAssigner}
-      placeholder={commonT("form.title.assigner")}
+      placeholder={commonT("form.notAssigned")}
       {...props}
     />
   );
