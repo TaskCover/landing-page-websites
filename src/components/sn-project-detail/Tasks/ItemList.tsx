@@ -796,8 +796,8 @@ const ItemList = () => {
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex" }}
         position="sticky"
-        top={{ xs: baseTop + 8 }}
-        zIndex={1}
+        top={{ xs: baseTop + 28 }}
+        zIndex={1000}
         hasSelectAll
       >
         <Box
