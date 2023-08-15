@@ -17,6 +17,7 @@ import { Dropdown } from "components/Filters";
 type AssignerProps = {
   value?: string;
   id: string;
+  rootSx?: object
 };
 
 const Assigner = (props: AssignerProps) => {
