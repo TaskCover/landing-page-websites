@@ -7,7 +7,7 @@ import Popover from "@mui/material/Popover";
 import { Status } from "constant/enums";
 import TextStatus from "components/TextStatus";
 import { TASK_TEXT_STATUS } from "components/sn-project-detail/Tasks/components";
-import { ArrowDropDownIcon } from "@mui/x-date-pickers";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 type SelectStatusTaskProps = {
   value: Status;
@@ -48,7 +48,7 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
           text={TASK_TEXT_STATUS[status]}
           width={110}
         />
-        <ArrowDropDownIcon />
+        <KeyboardArrowDownIcon />
       </div>
 
       <Popover
@@ -73,6 +73,13 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
               onClick={() => {
                 handleChange(statusValue);
                 handleClose();
+              }}
+              sx={{
+                '& td': {
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }
               }}
             >
               <StatusCell

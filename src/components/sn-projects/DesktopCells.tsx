@@ -49,7 +49,9 @@ const DesktopCells = (props: DesktopCellsProps) => {
         <BodyCell align="center" />
       )}
       {item.status ? (
-        <SelectStatus value={item.status} id={item.id} />
+        <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
+          <SelectStatus value={item.status} id={item.id} />
+        </BodyCell>
       ) : (
         <BodyCell />
       )}

@@ -54,7 +54,9 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         {item?.owner?.fullname}
       </BodyCell>
       {item.status ? (
-        <SelectStatus value={item.status} id={item.id} />
+        <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
+          <SelectStatus value={item.status} id={item.id} />
+        </BodyCell>
       ) : (
         <BodyCell />
       )}
