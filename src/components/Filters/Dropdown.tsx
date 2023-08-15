@@ -31,22 +31,21 @@ const Dropdown = (props: DropdownProps) => {
         height: 32,
         "&": {
           position: 'relative',
-          width: '100%'
+          width: '100%',
         },
         "& .text-option": {
           fontWeight: 600,
           color: "grey.400",
-          overflow: "hidden",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          position: 'relative',
+          whiteSpace: "wrap",
+          textAlign: 'left',
+          width: '100% important'
         },
         "& >svg": {
           fontSize: 20,
           position: "absolute",
           top: "50%",
           right: 0,
-          zIndex: 100,
+          zIndex: 0,
           transform: "translateY(-50%)",
         },
         ...rootSx,
