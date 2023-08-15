@@ -43,13 +43,15 @@ const DesktopCells = (props: DesktopCellsProps) => {
       </BodyCell>
       {item.owner ? (
         <BodyCell align="left">
-          <Assigner value={item?.owner?.fullname} id={item.id} />
+          <Assigner value={item?.owner?.id} id={item.id} />
         </BodyCell>
       ) : (
-        <BodyCell align="left" />
+        <BodyCell align="center" />
       )}
       {item.status ? (
-        <SelectStatus value={item.status} id={item.id} />
+        <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
+          <SelectStatus value={item.status} id={item.id} />
+        </BodyCell>
       ) : (
         <BodyCell />
       )}

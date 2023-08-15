@@ -12,6 +12,7 @@ import { DEFAULT_PAGING } from "constant/index";
 import { Popover, Stack, Typography } from "@mui/material"; // Replace with the correct imports
 import { BodyCell } from "components/Table";
 import useQueryParams from "hooks/useQueryParams";
+import { Dropdown } from "components/Filters";
 
 type AssignerProps = {
   value?: string;
@@ -37,130 +38,52 @@ const Assigner = (props: AssignerProps) => {
   const { onUpdateProject, onGetProjects } = useProjects();
   const { onAddSnackbar } = useSnackbar();
 
-  const { id: projectId } = useParams() as { id: string };
-
   useEffect(() => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetOptions]);
 
-  const onEndReached = () => {
-    if (isFetching || (totalPages && pageIndex >= totalPages)) return;
-    onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
-  };
+  const [filteredOptions, setFilteredOptions] = useState(employeeOptions);
 
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-
-  const handleAssigner = async (newAssigner) => {
+  const handleAssigner = async (newAssigner, value) => {
     try {
-      await onUpdateProject(id, { owner: newAssigner.value });
+      await onUpdateProject(id, { owner: value });
       onGetProjects({ ...DEFAULT_PAGING, ...initQuery });
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
   };
 
-  const employeeOptionsWithLabel = useMemo(
-    () =>
-      employeeOptions.map((item) => ({
-        ...item,
-        label: item.label,
-        subText: item.subText,
-      })),
-    [employeeOptions],
-  );
+  const onChangeSearch = (name: string, newValue?: string | number) => {
+    const searchTerm = newValue?.toString().toLowerCase();
+
+    if (searchTerm) {
+      const filtered = employeeOptions.filter((option) =>
+        option?.label.toLowerCase().includes(searchTerm) ||
+        option?.subText?.toLowerCase()?.includes(searchTerm)
+      );
+      setFilteredOptions(filtered);
+    } else {
+      setFilteredOptions(employeeOptions);
+    }
+  };
+
   return (
-    <>
-      <AssignerLabel onClick={handleClick}>{value}</AssignerLabel>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        <div style={{ minWidth: "200px" }}>
-          {/* Render your popover content here */}
-          {employeeOptionsWithLabel.map((item) => (
-            <div
-              key={item.value}
-              onClick={() => {
-                handleAssigner(item);
-                handleClose();
-              }}
-              style={{
-                padding: "8px",
-                cursor: "pointer",
-                borderBottom: "1px solid #e0e0e0",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingLeft: "12px",
-                paddingRight: "12px",
-                color: "grey.600",
-                fontSize: "14px",
-                transition: "background-color 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.backgroundColor = "#f5f5f5";
-              }}
-              onMouseLeave={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.backgroundColor = "transparent";
-              }}
-            >
-              {item.label}
-            </div>
-          ))}
-        </div>
-      </Popover>
-    </>
+    <Dropdown
+      hasAll={false}
+      options={filteredOptions}
+      hasAvatar
+      name="owner.id"
+      onChangeSearch={onChangeSearch}
+      sx={{
+        display: { xs: "none", md: "initial" },
+        minWidth: "0 !important",
+        overflowX: "unset !important",
+      }}
+      onChange={handleAssigner}
+      placeholder={commonT("form.title.assigner")}
+      {...props}
+    />
   );
 };
 
 export default memo(Assigner);
-
-const AssignerLabel = ({ children, onClick, ...rest }) => {
-  if (!children) return <BodyCell />;
-  return (
-    <Stack
-      component="p"
-      direction="row"
-      alignItems="center"
-      spacing={1.25}
-      px={2}
-      onClick={onClick}
-      style={{
-        cursor: "pointer",
-        transition: "background-color 0.2s ease",
-      }}
-      {...rest}
-    >
-      <Typography
-        variant="body2"
-        component="span"
-        overflow="hidden"
-        color="grey.400"
-      >
-        {children}
-      </Typography>
-    </Stack>
-  );
-};

@@ -7,9 +7,11 @@ import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { StatusCell } from "components/Table";
 import { COLOR_STATUS, TEXT_STATUS, STATUS_OPTIONS } from "./helpers";
 import MenuItem from "@mui/material/MenuItem";
+import TextStatus from "components/TextStatus";
 import Popover from "@mui/material/Popover";
 import useQueryParams from "hooks/useQueryParams";
 import { DEFAULT_PAGING } from "constant/index";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { ProjectStatus } from "store/project/actions";
 import { Button, Typography, Select } from "@mui/material";
@@ -56,13 +58,20 @@ const SelectStatus = (props: SelectStatusProps) => {
 
   return (
     <>
-      <StatusCell
-        text={TEXT_STATUS[status]}
-        color={COLOR_STATUS[status]}
-        width={93}
+      <div
         onClick={handleStatusCellClick}
-        style={{ cursor: "pointer" }}
-      />
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          cursor: 'pointer',
+        }}>
+        <TextStatus
+          text={TEXT_STATUS[status]}
+          color={COLOR_STATUS[status]}
+          width={93}
+        />
+        <KeyboardArrowDownIcon />
+      </div>
 
       <Popover
         open={open}
@@ -77,45 +86,34 @@ const SelectStatus = (props: SelectStatusProps) => {
           horizontal: "center",
         }}
       >
-        <MenuItem
-          value={ProjectStatus.ACTIVE}
-          onClick={() => {
-            handleChange({ target: { value: ProjectStatus.ACTIVE } });
-            handleClose();
-          }}
-        >
-          <StatusCell
-            text={TEXT_STATUS[ProjectStatus.ACTIVE]}
-            color={COLOR_STATUS[ProjectStatus.ACTIVE]}
-            width={90}
-          />
-        </MenuItem>
-        <MenuItem
-          value={ProjectStatus.PAUSE}
-          onClick={() => {
-            handleChange({ target: { value: ProjectStatus.PAUSE } });
-            handleClose();
-          }}
-        >
-          <StatusCell
-            text={TEXT_STATUS[ProjectStatus.PAUSE]}
-            color={COLOR_STATUS[ProjectStatus.PAUSE]}
-            width={90}
-          />
-        </MenuItem>
-        <MenuItem
-          value={ProjectStatus.CLOSE}
-          onClick={() => {
-            handleChange({ target: { value: ProjectStatus.CLOSE } });
-            handleClose();
-          }}
-        >
-          <StatusCell
-            text={TEXT_STATUS[ProjectStatus.CLOSE]}
-            color={COLOR_STATUS[ProjectStatus.CLOSE]}
-            width={90}
-          />
-        </MenuItem>
+        {
+          Object.keys(ProjectStatus).map((statusKey) => {
+            const statusValue = ProjectStatus[statusKey] as ProjectStatus;
+            return (
+              <MenuItem
+                key={statusValue}
+                value={statusValue}
+                onClick={() => {
+                  handleChange({ target: { value: statusValue } });
+                  handleClose();
+                }}
+                sx={{
+                  '& td': {
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }
+                }}
+              >
+                <StatusCell
+                  text={TEXT_STATUS[statusValue]}
+                  color={COLOR_STATUS[statusValue]}
+                  width={90}
+                />
+              </MenuItem>
+            )
+          })
+        }
       </Popover>
     </>
   );
