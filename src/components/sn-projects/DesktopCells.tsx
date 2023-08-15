@@ -9,6 +9,8 @@ import { Text } from "components/shared";
 import { TEXT_STATUS, COLOR_STATUS, Member } from "./components/helpers";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
 import { Saved, SelectStatus, SelectMembers, Assigner } from "./components";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 type DesktopCellsProps = {
   item: Project;
@@ -17,6 +19,7 @@ type DesktopCellsProps = {
 
 const DesktopCells = (props: DesktopCellsProps) => {
   const { item, order } = props;
+  const commonT = useTranslations(NS_COMMON);
 
   return (
     <>
@@ -43,10 +46,10 @@ const DesktopCells = (props: DesktopCellsProps) => {
       </BodyCell>
       {item.owner ? (
         <BodyCell align="left">
-          <Assigner value={item?.owner?.id} id={item.id} />
+          <Assigner value={item?.owner?.id} id={item.id} rootSx={{ "& > svg": { display: 'none' } }} />
         </BodyCell>
       ) : (
-        <BodyCell align="center" />
+        <BodyCell align="left" sx={{ '& > p': { marginLeft: '16px' } }} fallback={commonT("form.title.noAssigner")} />
       )}
       {item.status ? (
         <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>

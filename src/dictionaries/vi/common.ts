@@ -29,6 +29,7 @@ export const CommonLang: CommonDictionary = {
       upload: "Tải lên",
       uploadImage: "Tải ảnh lên",
       assigner: "Người phụ trách",
+      noAssigner: "Không có ai",
       startDate: "Ngày bắt đầu",
       endDate: "Ngày kết thúc",
       dueDate: "Ngày đến hạn",

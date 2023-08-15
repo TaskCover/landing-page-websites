@@ -55,6 +55,7 @@ const AssignerTask = (props: AssignerTaskProps) => {
         display: { xs: "none", md: "initial" },
         minWidth: "0 !important",
         overflowX: "unset !important",
+        width: "100% !important"
       }}
       onChange={handleAssigner}
       placeholder={commonT("form.notAssigned")}
