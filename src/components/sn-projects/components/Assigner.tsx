@@ -48,7 +48,10 @@ const Assigner = (props: AssignerProps) => {
   const handleAssigner = async (newAssigner, value) => {
     try {
       await onUpdateProject(id, { owner: value });
-      onGetProjects({ ...DEFAULT_PAGING, ...initQuery });
+      onAddSnackbar(
+        projectT("taskDetail.notification.assignSuccess"),
+        "success",
+      );
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }

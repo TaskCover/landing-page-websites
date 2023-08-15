@@ -35,7 +35,10 @@ const SelectStatus = (props: SelectStatusProps) => {
     try {
       await onUpdateProject(id, { status: newStatus });
       setStatus(newStatus);
-      onGetProjects({ ...DEFAULT_PAGING, ...initQuery });
+      onAddSnackbar(
+        projectT("detail.notification.changeStatusSuccess"),
+        "success",
+      );
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
