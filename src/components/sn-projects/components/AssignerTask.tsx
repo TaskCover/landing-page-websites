@@ -11,11 +11,11 @@ type AssignerTaskProps = Omit<DropdownProps, "options" | "name" | "onChange"> & 
 
 const AssignerTask = (props: AssignerTaskProps) => {
   const {
-    options,
+    options: initialOptions,
   } = useMemberOptions();
   const commonT = useTranslations(NS_COMMON);
 
-  const [filteredOptions, setFilteredOptions] = useState(options);
+  const [options, setOptions] = useState(initialOptions);
 
   const { onHandler } = props;
   const handleAssigner = async (owner, newValue) => {
@@ -25,27 +25,22 @@ const AssignerTask = (props: AssignerTaskProps) => {
   const onChangeSearch = (name: string, newValue?: string | number) => {
     const searchTerm = newValue?.toString().toLowerCase();
 
-    if (searchTerm) {
-      const filtered = options.filter((option) =>
-        option?.label.toLowerCase().includes(searchTerm) ||
-        option?.subText?.toLowerCase()?.includes(searchTerm)
-      );
-      setFilteredOptions(filtered);
-    } else {
-      setFilteredOptions(options);
+    if (!searchTerm) {
+      setOptions(initialOptions);
+      return;
     }
-  };
 
-  useEffect(() => {
-    return () => {
-      setFilteredOptions(options);
-    };
-  }, [options]);
+    const filtered = initialOptions.filter((option) =>
+      option?.label.toLowerCase().includes(searchTerm) ||
+      option?.subText?.toLowerCase()?.includes(searchTerm)
+    );
+    setOptions(filtered);
+  };
 
   return (
     <Dropdown
       hasAll={false}
-      options={filteredOptions}
+      options={options}
       hasAvatar
       name="owner.id"
       onChangeSearch={onChangeSearch}
