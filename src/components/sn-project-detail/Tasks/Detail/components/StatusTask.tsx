@@ -85,6 +85,7 @@ const StatusTask = () => {
             },
           },
         }}
+        zIndex={1200}
       >
         <Stack>
           {TASK_STATUS_OPTIONS.map((item) => (
