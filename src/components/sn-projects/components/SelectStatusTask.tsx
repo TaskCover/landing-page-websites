@@ -46,7 +46,7 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
         <TextStatus
           color={COLOR_STATUS[status]}
           text={TASK_TEXT_STATUS[status]}
-          width={110}
+          width={120}
         />
         <KeyboardArrowDownIcon />
       </div>
