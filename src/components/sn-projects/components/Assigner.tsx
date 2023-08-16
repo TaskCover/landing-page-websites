@@ -85,7 +85,6 @@ const Assigner = (props: AssignerProps) => {
         overflowX: "unset !important",
       }}
       onChange={handleAssigner}
-      placeholder={commonT("form.title.assigner")}
       {...props}
     />
   );

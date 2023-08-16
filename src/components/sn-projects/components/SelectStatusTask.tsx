@@ -85,7 +85,7 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
               <StatusCell
                 text={TASK_TEXT_STATUS[statusValue]}
                 color={COLOR_STATUS[statusValue]}
-                width={90}
+                width={120}
               />
             </MenuItem>
           );
