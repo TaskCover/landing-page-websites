@@ -56,7 +56,6 @@ const AssignerTask = (props: AssignerTaskProps) => {
         width: "100% !important"
       }}
       onChange={handleAssigner}
-      placeholder={commonT("form.title.assigner")}
       {...props}
     />
   );

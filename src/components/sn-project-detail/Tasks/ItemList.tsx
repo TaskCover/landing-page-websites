@@ -895,7 +895,7 @@ const ItemList = () => {
                           {task.name}
                         </Content>
                         <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
-                          <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
+                          <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} placeholder={task?.owner ? '' : commonT("form.title.noAssigner")} />
                         </Content>
                         <Content>{formatDate(task?.start_date)}</Content>
                         <Content>{formatDate(task?.end_date)}</Content>
@@ -984,7 +984,7 @@ const ItemList = () => {
                                             {subTask.name}
                                           </Content>
                                           <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
-                                            <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
+                                            <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} placeholder={subTask?.owner ? '' : commonT("form.title.noAssigner")} />
                                           </Content>
                                           <Content>
                                             {formatDate(subTask?.start_date)}
