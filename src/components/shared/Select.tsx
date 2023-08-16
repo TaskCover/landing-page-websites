@@ -1,4 +1,4 @@
-import { KeyboardEventHandler, memo, useId, useMemo } from "react";
+import { KeyboardEventHandler, ReactElement, memo, useId, useMemo } from "react";
 import Input, { InputProps } from "./Input";
 import {
   ButtonBase,
@@ -38,6 +38,8 @@ export type SelectProps = InputProps & {
   hasIcon?: boolean;
   showSubText?: boolean;
   onOpen?: Function;
+  setTemplateNotFound?: ReactElement;
+  onNotFoundCallback?: Function;
 };
 
 const ID_PLACEHOLDER = uuid();
@@ -58,6 +60,8 @@ const Select = (props: SelectProps) => {
     hasAvatar,
     showSubText = true,
     hasIcon,
+    setTemplateNotFound,
+    onNotFoundCallback,
     ...rest
   } = props;
 
@@ -101,6 +105,9 @@ const Select = (props: SelectProps) => {
   const onKeyDown = (event) => {
     if (!["Enter", "Escape"].includes(event.key)) {
       event.stopPropagation();
+    }
+    if (event.key == "Enter" && onNotFoundCallback && optionList && optionList.length == 0) {
+      onNotFoundCallback();
     }
   };
 
@@ -156,7 +163,7 @@ const Select = (props: SelectProps) => {
             ...defaultSx.item,
             display:
               (!hasValue && option.value === ID_PLACEHOLDER) ||
-              value === ID_PLACEHOLDER
+                value === ID_PLACEHOLDER
                 ? "none"
                 : undefined,
           }}
@@ -188,6 +195,8 @@ const Select = (props: SelectProps) => {
           </Stack>
         </MenuItem>
       ))}
+
+      {setTemplateNotFound && optionList && optionList.length == 0 ? setTemplateNotFound : ""}
 
       {pending && (
         <MenuItem sx={defaultSx.item} value={ID_PENDING}>

@@ -40,6 +40,7 @@ export type CommonDictionary = {
     cancel: string;
     add: string;
     admin: string;
+    notAssigned: string;
   };
   notification: {
     imageTypeInvalid: string;

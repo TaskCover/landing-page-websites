@@ -198,7 +198,7 @@ const ChatList = () => {
         />
         <Box
           onClick={() => {
-            onSetStep(STEP.ADD_GROUP, { isNew: true });
+            onSetStep(STEP.ADD_GROUP, { isNew: true }, { prevStep: STEP.CONVENTION });
           }}
         >
           <NewGroupIcon />
