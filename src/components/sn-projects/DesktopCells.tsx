@@ -44,13 +44,9 @@ const DesktopCells = (props: DesktopCellsProps) => {
           </Text>
         </Stack>
       </BodyCell>
-      {item.owner ? (
-        <BodyCell align="left">
-          <Assigner value={item?.owner?.id} id={item.id} rootSx={{ "& > svg": { display: 'none' } }} />
-        </BodyCell>
-      ) : (
-        <BodyCell align="left" sx={{ '& > p': { marginLeft: '16px' } }} fallback={commonT("form.title.noAssigner")} />
-      )}
+      <BodyCell align="left">
+        <Assigner value={item?.owner?.id} id={item.id} rootSx={{ "& > svg": { display: 'none' } }} placeholder={item?.owner ? '' : commonT("form.title.noAssigner")} />
+      </BodyCell>
       {item.status ? (
         <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
           <SelectStatus value={item.status} id={item.id} />

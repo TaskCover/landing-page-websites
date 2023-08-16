@@ -98,8 +98,6 @@ const Actions = () => {
         justifyContent="space-between"
         spacing={{ xs: 1, md: 3 }}
         px={{ xs: 0, md: 3 }}
-        pt={{ md: 1.5 }}
-        pb={1.5}
       >
         <Stack
           direction="row"
@@ -114,13 +112,9 @@ const Actions = () => {
           <Button
             onClick={onShow}
             startIcon={<PlusIcon />}
-            size="small"
+            size="extraSmall"
             variant="primary"
-            sx={{
-              height: { xs: 32, lg: 40 },
-              minHeight: { xs: 32, lg: 40 },
-              px: { xs: 2, md: 3 },
-            }}
+            sx={{ height: 32, px: ({ spacing }) => `${spacing(2)}!important` }}
           >
             {commonT("createNew")}
           </Button>
@@ -134,8 +128,6 @@ const Actions = () => {
           px={{ md: 1, lg: 2 }}
           borderRadius={1}
           width={{ xs: "100%", md: undefined }}
-          border={{ md: "1px solid" }}
-          borderColor={{ md: "grey.100" }}
           justifyContent={{ xs: "flex-start", md: "flex-end" }}
           maxWidth={{ xs: "100%", md: "fit-content" }}
           overflow="auto"

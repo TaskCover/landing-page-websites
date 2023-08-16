@@ -191,13 +191,13 @@ const ItemList = () => {
         width: "30%",
         align: "left",
       },
-      { value: commonT("form.title.assigner"), width: "15%", align: "left" },
+      { value: commonT("form.title.assigner"), width: "22.5%", align: "left" },
       {
         value: commonT("form.title.startDate"),
-        width: "12.5%",
+        width: "10%",
       },
-      { value: commonT("form.title.endDate"), width: "12.5%" },
-      { value: commonT("status"), width: "15%" },
+      { value: commonT("form.title.endDate"), width: "10%" },
+      { value: commonT("status"), width: "12.5%" },
       { value: commonT("form.title.note"), width: "15%" },
     ],
     [commonT, projectT],
@@ -894,12 +894,12 @@ const ItemList = () => {
                         >
                           {task.name}
                         </Content>
-                        <Content tooltip={task?.owner?.fullname} sx={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
-                          <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
+                        <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
+                          <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} placeholder={task?.owner ? '' : commonT("form.title.noAssigner")} />
                         </Content>
                         <Content>{formatDate(task?.start_date)}</Content>
                         <Content>{formatDate(task?.end_date)}</Content>
-                        <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'end', width: '100%' }}>
+                        <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'end', width: '100%', paddingX: '0' }}>
                           <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         </Content>
                         <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -983,8 +983,8 @@ const ItemList = () => {
                                           >
                                             {subTask.name}
                                           </Content>
-                                          <Content tooltip={subTask?.owner?.fullname} sx={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
-                                            <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
+                                          <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
+                                            <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} placeholder={subTask?.owner ? '' : commonT("form.title.noAssigner")} />
                                           </Content>
                                           <Content>
                                             {formatDate(subTask?.start_date)}
@@ -995,7 +995,7 @@ const ItemList = () => {
                                           <Content
                                             noWrap={false}
                                             whiteSpace="nowrap"
-                                            sx={{ display: 'flex', justifyContent: 'end', width: '100%' }}
+                                            sx={{ display: 'flex', justifyContent: 'end', width: '100%', paddingX: '0' }}
                                           >
                                             <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           </Content>

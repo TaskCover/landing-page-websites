@@ -17,7 +17,8 @@ import { Dropdown } from "components/Filters";
 type AssignerProps = {
   value?: string;
   id: string;
-  rootSx?: object
+  rootSx?: object;
+  placeholder?: string;
 };
 
 const Assigner = (props: AssignerProps) => {
@@ -48,7 +49,10 @@ const Assigner = (props: AssignerProps) => {
   const handleAssigner = async (newAssigner, value) => {
     try {
       await onUpdateProject(id, { owner: value });
-      onGetProjects({ ...DEFAULT_PAGING, ...initQuery });
+      onAddSnackbar(
+        projectT("taskDetail.notification.assignSuccess"),
+        "success",
+      );
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
@@ -81,7 +85,6 @@ const Assigner = (props: AssignerProps) => {
         overflowX: "unset !important",
       }}
       onChange={handleAssigner}
-      placeholder={commonT("form.title.assigner")}
       {...props}
     />
   );
