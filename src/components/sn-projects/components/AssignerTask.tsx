@@ -31,7 +31,7 @@ const AssignerTask = (props: AssignerTaskProps) => {
     }
 
     const filtered = initialOptions.filter((option) =>
-      option?.label.toLowerCase().includes(searchTerm) ||
+      option?.label?.toLowerCase().includes(searchTerm) ||
       option?.subText?.toLowerCase()?.includes(searchTerm)
     );
     setOptions(filtered);
