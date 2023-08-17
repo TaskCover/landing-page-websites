@@ -44,7 +44,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
           </Text>
         </Stack>
       </BodyCell>
-      <BodyCell align="left">
+      <BodyCell align="left" sx={{ paddingLeft: 0 }}>
         <Assigner value={item?.owner?.id} id={item.id} rootSx={{ "& > svg": { display: 'none' } }} placeholder={item?.owner ? '' : commonT("form.title.noAssigner")} />
       </BodyCell>
       {item.status ? (

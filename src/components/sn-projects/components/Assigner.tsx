@@ -44,6 +44,10 @@ const Assigner = (props: AssignerProps) => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetOptions]);
 
+  useEffect(() => {
+    setFilteredOptions(employeeOptions)
+  }, [employeeOptions])
+
   const [filteredOptions, setFilteredOptions] = useState(employeeOptions);
 
   const handleAssigner = async (newAssigner, value) => {
