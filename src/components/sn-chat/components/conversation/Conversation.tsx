@@ -107,9 +107,7 @@ const Conversation = () => {
         await onUploadAndSendFile({
           endpoint: "files/upload-link",
           files,
-        },
-          roomId
-        );
+        });
       }
     },
     [files, onUploadAndSendFile, sendMessage],

@@ -5,11 +5,8 @@ import { useTranslations } from "next-intl";
 import { Dropdown, DropdownProps } from "components/Filters";
 import { useMemberOptions } from "store/project/selectors";
 
-type AssignerTaskProps = Omit<
-  DropdownProps,
-  "options" | "name" | "onChange"
-> & {
-  onHandler: (newValue: string) => void;
+type AssignerTaskProps = Omit<DropdownProps, "options" | "name" | "onChange"> & {
+  onHandler: (newValue: string) => void
 };
 
 const AssignerTask = (props: AssignerTaskProps) => {
@@ -22,7 +19,7 @@ const AssignerTask = (props: AssignerTaskProps) => {
 
   const { onHandler } = props;
   const handleAssigner = async (owner, newValue) => {
-    onHandler(newValue);
+    onHandler(newValue)
   };
 
   const onChangeSearch = (name: string, newValue?: string | number) => {

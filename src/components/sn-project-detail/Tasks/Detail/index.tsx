@@ -51,7 +51,7 @@ const Detail = () => {
   const breadcrumbs = breadcrumbs_values.map((item, idx) => {
     if (idx == breadcrumbs_values.length - 1) {
       return !editName ? (
-          <Typography onMouseEnter={() => setDefaultValue(task.name)} key={idx+1} color="text.primary">{task.name}</Typography>
+          <Typography onMouseEnter={() => setDefaultValue(item)} key={idx+1} color="text.primary">{item}</Typography>
         ) : (
           <OutlinedInput
             key={idx+1}

@@ -173,7 +173,6 @@ const ItemList = () => {
           error={error as string}
           noData={!isIdle && totalItems === 0}
           px={{ md: 3 }}
-          display={{ maxHeight: '38px !important', justifyContent: 'center' }}
         >
           {items.map((item, index) => {
             return (

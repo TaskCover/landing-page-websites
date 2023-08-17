@@ -91,17 +91,12 @@ const chatSlice = createSlice({
     reset: () => initialState,
     setStep: (state, action) => {
       const prevStep = Number(action.payload.step) - 1;
-      if (action?.payload?.historyOption?.skipHistory) {
-        state.prevStep = prevStep === STEP.IDLE ? STEP.CONVENTION : prevStep;
-      }
-      if (action?.payload?.historyOption?.prevStep !== undefined) {
-        state.prevStep = action?.payload?.historyOption?.prevStep;
-      }
+      state.prevStep = prevStep === STEP.IDLE ? STEP.CONVENTION : prevStep;
       state.currStep = action.payload.step;
+
       if (action.payload.dataTransfer !== undefined) {
         state.dataTransfer = action.payload.dataTransfer;
       }
-      console.log({ ...state, set: action?.payload?.historyOption?.prevStep });
     },
     setRoomId: (state, action) => {
       state.roomId = action.payload;
@@ -110,6 +105,8 @@ const chatSlice = createSlice({
       state.typeList = action.payload;
     },
     setDataTransfer: (state, action) => {
+      console.log("action.payload", action.payload);
+
       state.dataTransfer = action.payload;
     },
     setConversationInfo: (state, action) => {

@@ -309,10 +309,6 @@ export interface MessageBodyRequest {
   receiverUsername: string;
   message?: string;
   attachments?: Attachment[];
-  roomId?: string,
-  text?: string,
-  authToken?: string,
-  userId?: string,
 }
 
 export interface MessageSearchInfo {

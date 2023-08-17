@@ -188,7 +188,6 @@ export const useChat = () => {
         MessageBodyRequest,
         "sender_userId" | "sender_authToken" | "receiverUsername"
       >,
-      roomId?: string
     ) => {
       await dispatch(
         sendMessages({
@@ -196,10 +195,6 @@ export const useChat = () => {
           sender_authToken: user?.["authToken"] || "",
           receiverUsername: conversationInfo?.username || "",
           ...message,
-          userId: user?.["id_rocket"] || "",
-          authToken: user?.["authToken"] || "",
-          text: message.message,
-          roomId,
         }),
       );
     },
@@ -252,8 +247,8 @@ export const useChat = () => {
   );
 
   const onSetStep = useCallback(
-    (step: STEP, dataTransfer?: any, historyOption?: any) => {      
-      dispatch(setStep({ step, dataTransfer, historyOption }));
+    (step: STEP, dataTransfer?: any) => {
+      dispatch(setStep({ step, dataTransfer }));
     },
     [dispatch],
   );
@@ -462,7 +457,7 @@ export const useChat = () => {
   };
 
   const onUploadAndSendFile = useCallback(
-    async ({ endpoint, files }: { endpoint: string; files: File[] }, roomId?: string) => {
+    async ({ endpoint, files }: { endpoint: string; files: File[] }) => {
       onSetStateSendMessage({ files, status: DataStatus.LOADING });
       try {
         const promises: Promise<any>[] = [];
@@ -506,7 +501,7 @@ export const useChat = () => {
             obj.name = item.title;
             return obj;
           });
-          await onSendMessage({ attachments }, roomId);
+          await onSendMessage({ attachments });
           onSetStateSendMessage({ files: [], status: DataStatus.SUCCEEDED });
         }
       } catch (error) {

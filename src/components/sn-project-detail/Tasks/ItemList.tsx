@@ -794,7 +794,7 @@ const ItemList = () => {
         flex="unset"
         error={error as string}
         noData={!isIdle && totalItems === 0}
-        display={{ xs: "none", md: "flex", maxHeight: '38px !important', justifyContent: 'center' }}
+        display={{ xs: "none", md: "flex" }}
         position="sticky"
         top={{ xs: baseTop + 22 }}
         zIndex={12}
