@@ -11,7 +11,6 @@ import TextStatus from "components/TextStatus";
 import Popover from "@mui/material/Popover";
 import useQueryParams from "hooks/useQueryParams";
 import { DEFAULT_PAGING } from "constant/index";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { ProjectStatus } from "store/project/actions";
 import { Button, Typography, Select } from "@mui/material";
@@ -64,16 +63,16 @@ const SelectStatus = (props: SelectStatusProps) => {
       <div
         onClick={handleStatusCellClick}
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          cursor: 'pointer',
-        }}>
+          display: "flex",
+          alignItems: "center",
+          cursor: "pointer",
+        }}
+      >
         <TextStatus
           text={TEXT_STATUS[status]}
           color={COLOR_STATUS[status]}
           width={93}
         />
-        <KeyboardArrowDownIcon />
       </div>
 
       <Popover
@@ -89,34 +88,32 @@ const SelectStatus = (props: SelectStatusProps) => {
           horizontal: "center",
         }}
       >
-        {
-          Object.keys(ProjectStatus).map((statusKey) => {
-            const statusValue = ProjectStatus[statusKey] as ProjectStatus;
-            return (
-              <MenuItem
-                key={statusValue}
-                value={statusValue}
-                onClick={() => {
-                  handleChange({ target: { value: statusValue } });
-                  handleClose();
-                }}
-                sx={{
-                  '& td': {
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }
-                }}
-              >
-                <StatusCell
-                  text={TEXT_STATUS[statusValue]}
-                  color={COLOR_STATUS[statusValue]}
-                  width={90}
-                />
-              </MenuItem>
-            )
-          })
-        }
+        {Object.keys(ProjectStatus).map((statusKey) => {
+          const statusValue = ProjectStatus[statusKey] as ProjectStatus;
+          return (
+            <MenuItem
+              key={statusValue}
+              value={statusValue}
+              onClick={() => {
+                handleChange({ target: { value: statusValue } });
+                handleClose();
+              }}
+              sx={{
+                "& td": {
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                },
+              }}
+            >
+              <StatusCell
+                text={TEXT_STATUS[statusValue]}
+                color={COLOR_STATUS[statusValue]}
+                width={90}
+              />
+            </MenuItem>
+          );
+        })}
       </Popover>
     </>
   );

@@ -7,11 +7,10 @@ import Popover from "@mui/material/Popover";
 import { Status } from "constant/enums";
 import TextStatus from "components/TextStatus";
 import { TASK_TEXT_STATUS } from "components/sn-project-detail/Tasks/components";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 type SelectStatusTaskProps = {
   value: Status;
-  onHandler: (newValue: string) => void
+  onHandler: (newValue: string) => void;
 };
 
 const SelectStatusTask = (props: SelectStatusTaskProps) => {
@@ -20,8 +19,8 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleChange = async (newStatus: Status) => {
-    onHandler(newStatus)
-    setStatus(newStatus)
+    onHandler(newStatus);
+    setStatus(newStatus);
   };
 
   const handleStatusCellClick = (event) => {
@@ -35,20 +34,20 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
   const open = Boolean(anchorEl);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       <div
         onClick={handleStatusCellClick}
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          cursor: 'pointer',
-        }}>
+          display: "flex",
+          alignItems: "center",
+          cursor: "pointer",
+        }}
+      >
         <TextStatus
           color={COLOR_STATUS[status]}
           text={TASK_TEXT_STATUS[status]}
           width={120}
         />
-        <KeyboardArrowDownIcon />
       </div>
 
       <Popover
@@ -75,11 +74,11 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
                 handleClose();
               }}
               sx={{
-                '& td': {
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }
+                "& td": {
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                },
               }}
             >
               <StatusCell
