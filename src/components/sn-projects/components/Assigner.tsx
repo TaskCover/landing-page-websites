@@ -63,7 +63,7 @@ const Assigner = (props: AssignerProps) => {
 
     if (searchTerm) {
       const filtered = employeeOptions.filter((option) =>
-        option?.label.toLowerCase().includes(searchTerm) ||
+        option?.label?.toLowerCase().includes(searchTerm) ||
         option?.subText?.toLowerCase()?.includes(searchTerm)
       );
       setFilteredOptions(filtered);

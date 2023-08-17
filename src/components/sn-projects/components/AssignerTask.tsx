@@ -48,7 +48,10 @@ const AssignerTask = (props: AssignerTaskProps) => {
         display: { xs: "none", md: "initial" },
         minWidth: "0 !important",
         overflowX: "unset !important",
-        width: "100% !important"
+        width: "100% !important",
+        '* > svg': {
+          display: 'none'
+        }
       }}
       onChange={handleAssigner}
       {...props}

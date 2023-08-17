@@ -92,7 +92,7 @@ const TabItem = (props: TabItemProps) => {
         "&:hover": {
           bgcolor: isDarkMode ? "grey.50" : "primary.light",
         },
-        py: { xs: 2, sm: 1.5 },
+        py: { xs: 1, sm: 1 },
         px: { xs: 2, sm: 3.5 },
         borderRadius: 1,
       }}

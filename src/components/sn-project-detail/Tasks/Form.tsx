@@ -195,6 +195,7 @@ const Form = (props: FormProps) => {
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
+      zIndex={1200}
       {...rest}
     >
       <Stack spacing={2} py={3}>
