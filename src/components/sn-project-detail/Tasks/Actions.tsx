@@ -135,7 +135,7 @@ const Actions = () => {
         py={{ xs: 0.75 }}
         mt={{ sm: 1.25, md: 0 }}
         position="sticky"
-        top={{ xs: 108, md: 45 }}
+        top={{ xs: 108, md: 38 }}
         zIndex={12}
         bgcolor="background.paper"
       >

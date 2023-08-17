@@ -159,9 +159,8 @@ const Actions = () => {
           <Button
             size="extraSmall"
             sx={{
-              height: { xs: 32, lg: 40 },
-              minHeight: { xs: 32, lg: 40 },
               display: { xs: "none", md: "flex" },
+              height: 32, px: ({ spacing }) => `${spacing(2)}!important`
             }}
             onClick={onSearch}
             variant="secondary"

@@ -796,8 +796,8 @@ const ItemList = () => {
         noData={!isIdle && totalItems === 0}
         display={{ xs: "none", md: "flex", maxHeight: '38px !important', justifyContent: 'center' }}
         position="sticky"
-        top={{ xs: baseTop + 28 }}
-        zIndex={1000}
+        top={{ xs: baseTop + 22 }}
+        zIndex={12}
         hasSelectAll
       >
         <Box

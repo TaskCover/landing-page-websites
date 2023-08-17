@@ -135,6 +135,8 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
           overflowX: "auto",
           overflowY: "hidden",
           minHeight: HEIGHT_HEADER,
+          display: 'flex',
+          alignItem: 'center',
           ...sxContainerHeaderProps,
         }}
         {...restContainerHeaderProps}
