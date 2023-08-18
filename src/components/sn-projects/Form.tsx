@@ -40,7 +40,7 @@ import {
 import { Endpoint, client } from "api";
 import { useTranslations } from "next-intl";
 import { createProjectType } from "store/company/actions";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { useProjectTypes } from "store/company/selectors";
 import { useProjects } from "store/project/selectors";
 
@@ -251,8 +251,7 @@ const Form = (props: FormProps) => {
   useEffect(() => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   }, [onGetOptions]);
-  const { onCreateProjectType } =
-    useProjectTypes();
+  const { onCreateProjectType } = useProjectTypes();
 
   return (
     <FormLayout
@@ -311,21 +310,40 @@ const Form = (props: FormProps) => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values?.type_project}
-                error={!!commonT(touchedErrors?.type_project, { name: projectT("list.form.title.projectType") })}
-                helperText={commonT(touchedErrors?.type_project, { name: projectT("list.form.title.projectType") })}
+                error={
+                  !!commonT(touchedErrors?.type_project, {
+                    name: projectT("list.form.title.projectType"),
+                  })
+                }
+                helperText={commonT(touchedErrors?.type_project, {
+                  name: projectT("list.form.title.projectType"),
+                })}
                 variant="outlined"
                 fullWidth
-                style={{ backgroundColor: '#f7f7fd' }}
+                style={{ backgroundColor: "#f7f7fd" }}
                 sx={{
                   mt: { xs: 2, sm: 0 },
+                  label: {
+                    color: "#a3a3a3",
+                    fontFamily:
+                      "'__Open_Sans_b8d98e','__Open_Sans_Fallback_b8d98e',Arial,sans-serif",
+                    fontSize: 13,
+                  },
+                  "& fieldset": { border: "none" },
                 }}
               />
             )}
             noOptionsText={
               <div style={{ textAlign: "center", cursor: "pointer" }}>
-                <p style={{ color: "black" }}>This types of project doesn't exits</p>
+                <p style={{ color: "black" }}>
+                  This types of project doesn't exits
+                </p>
                 <div
-                  style={{ color: '#0bb79f', backgroundColor: 'transparent', cursor: "pointer" }}
+                  style={{
+                    color: "#0bb79f",
+                    backgroundColor: "transparent",
+                    cursor: "pointer",
+                  }}
                   onClick={() => onCreateProjectType}
                 >
                   + Add to new project type
@@ -333,9 +351,7 @@ const Form = (props: FormProps) => {
               </div>
             }
             renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                {option.label}
-              </li>
+              <li {...props}>{option.label}</li>
             )}
             fullWidth
           />
@@ -387,7 +403,7 @@ const Form = (props: FormProps) => {
               name: projectT("list.form.title.estimatedCost"),
             })}
             rootSx={sxConfig.input}
-            sx={{ width: '65%' }}
+            sx={{ width: "65%" }}
             numberType="integer"
           />
           <Select
@@ -396,14 +412,18 @@ const Form = (props: FormProps) => {
             name="currency"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values?.currency ?? currencyOptions?.[0]?.value ?? 'USD'}
+            value={
+              formik.values?.currency ?? currencyOptions?.[0]?.value ?? "USD"
+            }
             error={commonT(touchedErrors?.currency, {
               name: projectT("list.form.title.currency"),
             })}
             rootSx={sxConfig.input}
             onEndReached={onCurrencyOptionsEndReached}
             sx={{
-              mt: { xs: 2, sm: 0 }, width: '35%', ml: 0
+              mt: { xs: 2, sm: 0 },
+              width: "35%",
+              ml: 0,
             }}
           />
           <InputNumber
@@ -419,7 +439,8 @@ const Form = (props: FormProps) => {
             fullWidth
             numberType="integer"
             sx={{
-              mt: { xs: 2, sm: 0 }, ml: 2
+              mt: { xs: 2, sm: 0 },
+              ml: 2,
             }}
           />
         </Stack>
