@@ -255,6 +255,7 @@ const Information = () => {
                     },
                     "& input": {
                       fontSize: 15,
+                      paddingTop: '0px !important',
                     },
                     width: '60% !important'
                   }}
