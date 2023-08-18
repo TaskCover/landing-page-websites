@@ -411,7 +411,7 @@ const Information = () => {
               >
                 {
                     (!!task?.description && !isAddDescription) && (
-                        <Stack direction="row" justifyContent="end" sx={{ position: 'absolute', top: '0', right: '0' }}>
+                        <Stack direction="row" justifyContent="end" sx={{ position: 'absolute', top: '2px', right: '14px' }}>
                           <IconButton
                               onClick={() => {
                                 onShowAddDescription();
