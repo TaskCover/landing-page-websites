@@ -462,7 +462,7 @@ const Information = () => {
           )
       }
 
-      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} textEdit={description}/>
+      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} textEdit={description} title={commonT("form.title.description")}/>
       <AttachmentsTask id={ATTACHMENT_ID} files={files} setFiles={setFiles} />
       {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
       <TodoList open={isAddTodo} />
