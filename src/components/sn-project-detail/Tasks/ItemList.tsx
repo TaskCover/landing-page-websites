@@ -198,7 +198,7 @@ const ItemList = () => {
       },
       { value: commonT("form.title.endDate"), width: "10%" },
       { value: commonT("status"), width: "12.5%" },
-      { value: commonT("form.title.note"), width: "15%" },
+      { value: commonT("form.title.description"), width: "15%" },
     ],
     [commonT, projectT],
   );
