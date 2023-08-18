@@ -1045,10 +1045,10 @@ const ItemList = () => {
                                 "& >div": {
                                   bgcolor: "transparent!important",
                                   "&:after": {
-                                    borderBottomColor: "green !important",
+                                    borderBottom: "unset !important",
                                   },
                                   "&:before": {
-                                    borderBottomColor: "green !important",
+                                    borderBottom: "unset !important",
                                   },
                                 },
                                 "& input": {
