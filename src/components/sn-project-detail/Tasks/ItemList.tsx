@@ -1027,7 +1027,7 @@ const ItemList = () => {
                             spacing={1}
                             alignItems="center"
                           >
-                            <PlusIcon />
+                            <PlusIcon sx={{ color: '#0bb783'}}/>
                             <TextField
                               name={task.id}
                               label={projectT(
@@ -1045,14 +1045,14 @@ const ItemList = () => {
                                 "& >div": {
                                   bgcolor: "transparent!important",
                                   "&:after": {
-                                    borderBottomColor: "green !important",
+                                    borderBottomColor: "#0bb783 !important",
                                   },
                                   "&:before": {
-                                    borderBottomColor: "#999999 !important",
+                                    borderBottom: "unset !important",
                                   },
                                 },
                                 "& input": {
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   paddingTop: "17px !important",
                                 },
                                 width: "35% !important",
@@ -1061,10 +1061,8 @@ const ItemList = () => {
                                 },
                                 "& >label": {
                                   fontWeight: "600 !important",
-                                  fontSize: "14px",
-                                  color: isDarkMode
-                                    ? "#ffffff"
-                                    : "#999999 !important",
+                                  fontSize: "13px",
+                                  color: "#0bb783 !important",
                                 },
                               }}
                             />
