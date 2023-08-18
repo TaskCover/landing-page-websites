@@ -43,6 +43,7 @@ import { createProjectType } from "store/company/actions";
 import { useDispatch } from "react-redux";
 import { useProjectTypes } from "store/company/selectors";
 import { useProjects } from "store/project/selectors";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export type ProjectDataForm = Omit<ProjectData, "members" | "avatar"> & {
   members?: Member[];
@@ -301,6 +302,7 @@ const Form = (props: FormProps) => {
             onOpen={onGetEmployeeOptions}
           />
           <Autocomplete
+            popupIcon={<KeyboardArrowDownIcon />}
             options={projectTypeOptions}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
