@@ -44,8 +44,8 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
         }}
       >
         <TextStatus
-          color={COLOR_STATUS[status]}
-          text={TASK_TEXT_STATUS[status]}
+          color={COLOR_STATUS[value]}
+          text={TASK_TEXT_STATUS[value]}
           width={120}
         />
       </div>
