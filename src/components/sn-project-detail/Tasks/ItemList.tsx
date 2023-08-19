@@ -1,32 +1,26 @@
 "use client";
 
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   reorder,
   TaskFormData,
   Selected,
   DroppableTaskList,
   DraggableTask,
-  TASK_TEXT_STATUS,
   MoreList,
 } from "./components";
 import { Button, Checkbox, Text, TextProps } from "components/shared";
 import {
-  Box,
-  BoxProps,
   CircularProgress,
   Stack,
-  StackProps,
   TextField,
 } from "@mui/material";
 import {
-  formatNumber,
   getMessageErrorByAPI,
   debounce,
   formatDate,
 } from "utils/index";
 import { CellProps, TableLayout } from "components/Table";
-import React from "react";
 import PlusIcon from "icons/PlusIcon";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import {
@@ -56,6 +50,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import useTheme from "hooks/useTheme";
 import SelectStatusTask from "components/sn-projects/components/SelectStatusTask";
 import AssignerTask from "components/sn-projects/components/AssignerTask";
+import Content from "./components/Content";
+import Description from "./components/Description";
 
 const ItemList = () => {
   const {
@@ -124,7 +120,6 @@ const ItemList = () => {
     () => (selectedList.length ? 106 : 62),
     [selectedList.length],
   );
-  // const baseTop = useMemo(() => 97, []);
 
   const handleAllChecked = () => {
     setIsAllChecked((prevIsAllChecked) => !prevIsAllChecked);
@@ -1113,98 +1108,5 @@ const ItemList = () => {
 
 export default memo(ItemList);
 
-
-
-const Content = (props: TextProps) => {
-  const { children = "--", sx, onClick, ...rest } = props;
-
-  const additionalSx = useMemo(() => (onClick ? sxLink : {}), [onClick]);
-
-  return (
-    <Text
-      px={2}
-      onClick={onClick}
-      variant="body2"
-      color="grey.400"
-      textAlign={{ md: "center" }}
-      overflow="hidden"
-      sx={{ ...additionalSx, ...sx }}
-      width="100%"
-      noWrap
-      {...rest}
-    >
-      {typeof children === "number" ? formatNumber(children) : children}
-    </Text>
-  );
-};
-
-const Description = (props: BoxProps) => {
-  const { children = "--" } = props;
-  const ref = useRef<HTMLElement | null>(null);
-  const [isOverflow, setIsOverflow] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsOverflow((ref.current?.scrollHeight ?? 0) > 38);
-  }, []);
-
-  if (!children) return <Content />;
-
-  return (
-    <Box
-      component="p"
-      ref={ref}
-      sx={{
-        fontSize: 14,
-        px: 2,
-        m: 0,
-        py: '3px',
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        width: "100%",
-        whiteSpace: "nowrap",
-        height: 30,
-        "& > p": {
-          m: 0,
-        },
-        "& *": {
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          maxWidth: "100%",
-        },
-      }}
-      className="html"
-      dangerouslySetInnerHTML={{
-        __html: children,
-      }}
-    />
-  );
-};
-
-const sxLink = {
-  cursor: "pointer",
-  color: "text.primary",
-  "&:hover": {
-    color: "primary.main",
-  },
-};
 const WRONG_NUMBER = 10;
 const PAGE_SIZE = 20;
-
-const getArrayTagsHtmlString = (str) => {
-  const doc = new DOMParser().parseFromString(str, "text/html");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const arr = [...(doc.body.childNodes as unknown as any[])].map(
-    (child) => child.outerHTML || child.textContent,
-  );
-  return arr;
-};
-
-const getChild = (children: string, isOverflow: boolean) => {
-  if (!isOverflow) return children;
-  const rawFirst = getArrayTagsHtmlString(children)?.[0] as string | undefined;
-  if (!rawFirst) return children;
-
-  const first = rawFirst[0] + rawFirst.slice(1).replace("<", "...<");
-
-  return children.replace(rawFirst, first);
-};
