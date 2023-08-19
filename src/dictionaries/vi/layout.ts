@@ -26,5 +26,6 @@ export const LayoutLang: LayoutDictionary = {
     companyList: "Danh sách công ty",
     statementHistory: "Lịch sử báo cáo",
     timeTracking: "Theo dõi thời gian",
+    resourcePlaning: "Kế hoạch tài nguyên",
   },
 };
