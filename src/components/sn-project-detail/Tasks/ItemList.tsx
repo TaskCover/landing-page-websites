@@ -197,8 +197,9 @@ const ItemList = () => {
         width: "10%",
       },
       { value: commonT("form.title.endDate"), width: "10%" },
-      { value: commonT("status"), width: "12.5%" },
+      { value: commonT("status"), width: "10.5%" },
       { value: commonT("form.title.description"), width: "15%" },
+      { value: "", width: "2%", align: 'center' },
     ],
     [commonT, projectT],
   );
@@ -222,7 +223,7 @@ const ItemList = () => {
           : undefined,
       );
       onUpdateTaskParent(
-        taskListName && taskName ? {taskListName, taskName} : undefined
+        taskListName && taskName ? { taskListName, taskName } : undefined
       )
     };
   };
@@ -899,11 +900,17 @@ const ItemList = () => {
                         </Content>
                         <Content>{formatDate(task?.start_date)}</Content>
                         <Content>{formatDate(task?.end_date)}</Content>
-                        <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'end', width: '100%', paddingX: '0' }}>
+                        <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}>
                           <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         </Content>
-                        <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center' }}>
+                        <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center', overflow: 'hidden', '& > p': { lineHeight: '30px'} }}>
                           <Description>{task?.description}</Description>
+                        </Content>
+                        <Content sx={{ display: { xs: "none", md: "flex", alignItem: 'center', position: 'relative', right: '16px'  } }}>
+                          <MoreList
+                            selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task)]}
+                            onReset={onResetSelected}
+                          />
                         </Content>
                       </Stack>
                       {!isHide && (
@@ -995,12 +1002,12 @@ const ItemList = () => {
                                           <Content
                                             noWrap={false}
                                             whiteSpace="nowrap"
-                                            sx={{ display: 'flex', justifyContent: 'end', width: '100%', paddingX: '0' }}
+                                            sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}
                                           >
                                             <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           </Content>
 
-                                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center' }}>
+                                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center', overflow: 'hidden', '& > p': { lineHeight: '30px'} }}>
                                             <Description>
                                               {subTask.description}
                                             </Description>
@@ -1076,11 +1083,6 @@ const ItemList = () => {
                         </>
                       )}
                     </Stack>
-                    <MoreList
-                      sx={{ display: { xs: "none", md: "flex", position: 'relative', right: '24px' } }}
-                      selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task)]}
-                      onReset={onResetSelected}
-                    />
                   </DraggableTask>
                 );
               })}
@@ -1157,11 +1159,12 @@ const Description = (props: BoxProps) => {
         fontSize: 14,
         px: 2,
         m: 0,
+        py: '3px',
         overflow: "hidden",
         textOverflow: "ellipsis",
         width: "100%",
         whiteSpace: "nowrap",
-        maxHeight: 34,
+        height: 30,
         "& > p": {
           m: 0,
         },

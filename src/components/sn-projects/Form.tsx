@@ -43,7 +43,7 @@ import { createProjectType } from "store/company/actions";
 import { useDispatch } from "react-redux";
 import { useProjectTypes } from "store/company/selectors";
 import { useProjects } from "store/project/selectors";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import ChevronIcon from "icons/ChevronIcon";
 
 export type ProjectDataForm = Omit<ProjectData, "members" | "avatar"> & {
   members?: Member[];
@@ -302,7 +302,7 @@ const Form = (props: FormProps) => {
             onOpen={onGetEmployeeOptions}
           />
           <Autocomplete
-            popupIcon={<KeyboardArrowDownIcon />}
+            popupIcon={<ChevronIcon sx={{ fontSize: 16 }} />}
             options={projectTypeOptions}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
@@ -330,6 +330,7 @@ const Form = (props: FormProps) => {
                     fontFamily:
                       "'__Open_Sans_b8d98e','__Open_Sans_Fallback_b8d98e',Arial,sans-serif",
                     fontSize: 13,
+                    top: '5px'
                   },
                   "& fieldset": { border: "none" },
                 }}
