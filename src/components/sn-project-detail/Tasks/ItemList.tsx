@@ -899,10 +899,10 @@ const ItemList = () => {
                         </Content>
                         <Content>{formatDate(task?.start_date)}</Content>
                         <Content>{formatDate(task?.end_date)}</Content>
-                        <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'end', width: '100%', paddingX: '0' }}>
+                        <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}>
                           <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                         </Content>
-                        <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center' }}>
+                        <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center', overflow: 'hidden', paddingY: '4px !important' }}>
                           <Description>{task?.description}</Description>
                         </Content>
                       </Stack>
@@ -995,12 +995,12 @@ const ItemList = () => {
                                           <Content
                                             noWrap={false}
                                             whiteSpace="nowrap"
-                                            sx={{ display: 'flex', justifyContent: 'end', width: '100%', paddingX: '0' }}
+                                            sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}
                                           >
                                             <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
                                           </Content>
 
-                                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center' }}>
+                                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center', overflow: 'hidden' }}>
                                             <Description>
                                               {subTask.description}
                                             </Description>
@@ -1159,11 +1159,12 @@ const Description = (props: BoxProps) => {
         fontSize: 14,
         px: 2,
         m: 0,
+        py: '3px',
         overflow: "hidden",
         textOverflow: "ellipsis",
         width: "100%",
         whiteSpace: "nowrap",
-        maxHeight: 34,
+        height: 30,
         "& > p": {
           m: 0,
         },

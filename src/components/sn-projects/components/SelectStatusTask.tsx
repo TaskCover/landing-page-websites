@@ -35,7 +35,7 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
   const open = Boolean(anchorEl);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', width: 'full' }}>
       <div
         onClick={handleStatusCellClick}
         style={{
