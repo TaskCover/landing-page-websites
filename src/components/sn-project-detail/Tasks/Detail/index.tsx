@@ -13,35 +13,17 @@ import { AssignTask, CommentEditor, StatusTask } from "./components";
 import Activities from "./Activities";
 import EditTask from "./components/EditTask";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import EditIcon from '@mui/icons-material/Edit';
 
 const Detail = () => {
   const { task, taskParent, onUpdateTaskDetail, onUpdateTask } = useTaskDetail();
   const scrollEndRef = useRef<HTMLDivElement | null>(null);
 
-  const projectT = useTranslations(NS_PROJECT);
-
   const [tab, setTab] = useState<TabDetail>(TabDetail.DETAIL);
-  const [newTaskName, setNewTaskName] = useState("");
-  const [editName, setEditName] = useState(false);
   const onClose = () => {
     onUpdateTaskDetail();
   };
 
   if (!task || !taskParent) return null;
-
-  const updateTaskName = (e) => {
-    if (e.keyCode == 13) {
-      e.preventDefault();
-      onUpdateTask({ name: newTaskName }, task.taskListId, task.taskId, task.subTaskId);
-      setEditName(false);
-    }
-  }
-
-  const setDefaultValue = (name) => {
-    setNewTaskName(name);
-    setEditName(true)
-  }
 
   const breadcrumbs_values = [taskParent.taskListName, taskParent.taskName];
   if (task.subTaskId) {
@@ -51,26 +33,7 @@ const Detail = () => {
   }
 
   const breadcrumbs = breadcrumbs_values.map((item, idx) => {
-    if (idx == breadcrumbs_values.length - 1) {
-      return !editName ? (
-          <Typography onMouseEnter={() => setDefaultValue(item)} key={idx+1} color="text.primary">{item}</Typography>
-        ) : (
-          <OutlinedInput
-            key={idx+1}
-            size="small"
-            id="outlined-adornment-weight"
-            endAdornment={<EditIcon />}
-            aria-describedby="outlined-weight-helper-text"
-            onChange={(e) => setNewTaskName(e.target.value)}
-            onBlur={() => setEditName(false)}
-            onMouseLeave={() => setEditName(false)}
-            onKeyDown={updateTaskName}
-            value={newTaskName}
-          />
-        )
-    } else {
-      return <Typography key={idx+1} color="text.primary">{item}</Typography>
-    }
+    return <Typography key={idx+1} color="text.primary">{item}</Typography>
   })
 
   return (

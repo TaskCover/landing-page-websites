@@ -119,7 +119,7 @@ const Assign = (props: AssignProps) => {
             <Stack direction="row" alignItems="center" spacing={1} width="100%">
               <Avatar src={option?.avatar ?? UserPlaceholderImage} size={24} />
               <Stack alignItems="flex-start" sx={{
-                '&': { width: '100%' },
+                '&': { maxWidth: '90%' },
                 '& > p ': {
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',

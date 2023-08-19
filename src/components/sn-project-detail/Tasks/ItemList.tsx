@@ -1171,7 +1171,7 @@ const Description = (props: BoxProps) => {
         "& *": {
           overflow: "hidden",
           textOverflow: "ellipsis",
-          maxWidth: "85%",
+          maxWidth: "100%",
         },
       }}
       className="html"
