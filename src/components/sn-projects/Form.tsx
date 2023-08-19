@@ -487,6 +487,8 @@ const validationSchema = Yup.object().shape({
   type_project: Yup.string(),
   start_date: Yup.number(),
   end_date: Yup.number().min(Yup.ref("start_date"), "form.error.gte"),
+  expected_cost: Yup.number().min(0, "form.error.nonNegative"), 
+  working_hours: Yup.number().min(0, "form.error.nonNegative"), 
 });
 
 const sxConfig = {
