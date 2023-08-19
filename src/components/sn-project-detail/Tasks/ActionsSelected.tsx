@@ -100,7 +100,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
         alignItems="center"
         spacing={{ md: 3 }}
         width="100%"
-        justifyContent={{ xs: "space-between", md: "flex-start" }}
+        justifyContent={{ xs: "space-between", md: "flex-end" }}
         display={{ xs: "grid", md: "flex" }}
         gridTemplateColumns={{ xs: "repeat(2, 1fr)", md: "unset" }}
       >
