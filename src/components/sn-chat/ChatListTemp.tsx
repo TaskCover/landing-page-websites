@@ -9,7 +9,7 @@ import ChatMessageIcon from "icons/ChatMessageIcon";
 import CloseIcon from "icons/CloseIcon";
 import { useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
-import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/DefaultPopupLayout";
+import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
 import { Grow, Typography } from "@mui/material";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";

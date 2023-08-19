@@ -1,4 +1,4 @@
-import TimeTrackingPage from "components/TimeTracking";
+import TimeTrackingPage from "components/sn-time-tracking";
 import Wrapper from "components/Wrapper";
 
 export const metadata = {

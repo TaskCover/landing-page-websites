@@ -4,7 +4,7 @@ import Avatar from "components/Avatar";
 import { Box, Button, Fab, InputAdornment, TextField, Typography } from "@mui/material";
 import ItemMemberDetail from "./ItemMemberDetail";
 import GroupNameIcon from "icons/GroupNameIcon";
-import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/DefaultPopupLayout";
+import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
 import { useEffect, useState, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
