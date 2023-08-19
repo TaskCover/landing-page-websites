@@ -16,6 +16,7 @@ import {
   PROJECT_TYPES_PATH,
   STATEMENT_HISTORY_PATH,
   TIME_TRACKING_PATH,
+  RESOURCE_PLANING_PATH
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -30,6 +31,7 @@ import { NS_LAYOUT } from "constant/index";
 import { Permission } from "constant/enums";
 import useTheme from "hooks/useTheme";
 import MenuTimeTrackingIcon from "icons/MenuTimeTrackingIcon";
+import MenuResourcePlaningIcon from "icons/MenuResourcePlaningIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -243,6 +245,12 @@ const DATA: MenuItemProps[] = [
     label: "menu.timeTracking",
     href: TIME_TRACKING_PATH,
     icon: <MenuTimeTrackingIcon />,
+    roles: [Permission.AM, Permission.ST],
+  },
+  {
+    label: "menu.resourcePlaning",
+    href: RESOURCE_PLANING_PATH,
+    icon: <MenuResourcePlaningIcon />,
     roles: [Permission.AM, Permission.ST],
   },
 ];
