@@ -1,14 +1,13 @@
-import { memo, useCallback, useState } from "react";
-import { BodyCell, StatusCell } from "components/Table";
+import { memo } from "react";
+import { BodyCell } from "components/Table";
 import { Project } from "store/project/reducer";
 import { getPath } from "utils/index";
 import { PROJECT_TASKS_PATH } from "constant/paths";
 import Avatar from "components/Avatar";
-import { Stack, Theme, selectClasses } from "@mui/material";
+import { Stack } from "@mui/material";
 import { Text } from "components/shared";
-import { TEXT_STATUS, COLOR_STATUS, Member } from "./components/helpers";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
-import { Saved, SelectStatus, SelectMembers, Assigner } from "./components";
+import { Saved, SelectStatus, Assigner } from "./components";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 
