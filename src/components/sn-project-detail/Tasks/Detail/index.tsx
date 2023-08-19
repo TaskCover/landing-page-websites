@@ -46,6 +46,8 @@ const Detail = () => {
   const breadcrumbs_values = [taskParent.taskListName, taskParent.taskName];
   if (task.subTaskId) {
     breadcrumbs_values.push(task.name);
+  } else if (task.taskId) {
+    breadcrumbs_values[1] = task.name;
   }
 
   const breadcrumbs = breadcrumbs_values.map((item, idx) => {
