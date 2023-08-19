@@ -116,7 +116,7 @@ const SelectMembers = (props: SelectMembersProps) => {
         </Stack>
 
         <ChevronIcon
-          sx={{ color: "grey.400", fontSize: 24, alignSelf: "center" }}
+          sx={{ color: "grey.400", fontSize: 16, alignSelf: "center" }}
         />
       </Stack>
       <Popover
