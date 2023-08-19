@@ -19,13 +19,11 @@ import {
   StackProps,
   TextField,
 } from "@mui/material";
-import Avatar from "components/Avatar";
 import {
   formatNumber,
   getMessageErrorByAPI,
   debounce,
   formatDate,
-  checkIsMobile,
 } from "utils/index";
 import { CellProps, TableLayout } from "components/Table";
 import React from "react";
@@ -33,10 +31,8 @@ import PlusIcon from "icons/PlusIcon";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import {
   AN_ERROR_TRY_AGAIN,
-  COLOR_STATUS,
   NS_COMMON,
   NS_PROJECT,
-  TEXT_STATUS,
 } from "constant/index";
 import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
 import useQueryParams from "hooks/useQueryParams";
@@ -782,321 +778,323 @@ const ItemList = () => {
   }, [initQuery, isReady, onGetTasksOfProject, projectId]);
 
   return (
-    <Stack flex={1} pb={3}>
+    <Stack flex={1} pb={3} order={3}>
       {!!selectedList.length && (
         <ActionsSelected
           selectedList={selectedList}
           onReset={onResetSelected}
         />
       )}
-      <TableLayout
-        onLayout={onLayout}
-        headerList={headerList}
-        flex="unset"
-        error={error as string}
-        noData={!isIdle && totalItems === 0}
-        display={{ xs: "none", md: "flex" }}
+      <Stack
         position="sticky"
-        top={{ xs: baseTop + 18 }}
+        top={baseTop + 18}
         zIndex={12}
-        hasSelectAll
+        display={{ xs: "none", md: "flex" }}
+        bgcolor="background.default"
       >
-        <Box
-          sx={{
-            backgroundColor: "grey.50",
-            py: 0,
-          }}
+        <TableLayout
+          onLayout={onLayout}
+          headerList={headerList}
+          flex="unset"
+          error={error as string}
+          noData={!isIdle && totalItems === 0}
+          hasSelectAll
+          maxWidth={1349}
+          mx="auto"
+          width="100%"
+          bgcolor={noData ? "background.paper" : "background.default"}
         >
           <FormControlLabel
             control={<Checkbox {...checkboxProps} />}
             label={checkboxLabel}
             style={{ marginLeft: 0 }}
           />
-        </Box>
-      </TableLayout>
+        </TableLayout>
+      </Stack>
+      <FixedLayout flex={1}>
+        <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
+          {dataList.map((taskListItem, indexTaskList) => {
+            const isChecked = selectedList.some(
+              (selected) =>
+                !selected?.subTaskId &&
+                !selected.taskId &&
+                selected?.taskListId === taskListItem.id,
+            );
 
-      <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
-        {dataList.map((taskListItem, indexTaskList) => {
-          const isChecked = selectedList.some(
-            (selected) =>
-              !selected?.subTaskId &&
-              !selected.taskId &&
-              selected?.taskListId === taskListItem.id,
-          );
+            return (
+              <DroppableTaskList
+                key={taskListItem.id}
+                id={taskListItem.id}
+                name={taskListItem.name}
+                count={taskListItem.tasks.length}
+                checked={isChecked}
+                onChange={onToggleTaskList(!isChecked, taskListItem)}
+                setSelectedList={setSelectedList}
+                isDragging={isDragging}
+                index={indexTaskList}
+              >
+                {taskListItem.tasks.map((task, taskIndex) => {
+                  const isChecked = selectedList.some(
+                    (selected) =>
+                      !selected?.subTaskId && selected?.taskId === task.id,
+                  );
 
-          return (
-            <DroppableTaskList
-              key={taskListItem.id}
-              id={taskListItem.id}
-              name={taskListItem.name}
-              count={taskListItem.tasks.length}
-              checked={isChecked}
-              onChange={onToggleTaskList(!isChecked, taskListItem)}
-              setSelectedList={setSelectedList}
-              isDragging={isDragging}
-              index={indexTaskList}
-            >
-              {taskListItem.tasks.map((task, taskIndex) => {
-                const isChecked = selectedList.some(
-                  (selected) =>
-                    !selected?.subTaskId && selected?.taskId === task.id,
-                );
+                  const isHide = hideIds.includes(task.id);
 
-                const isHide = hideIds.includes(task.id);
-
-                return (
-                  <DraggableTask
-                    key={task.id}
-                    id={task.id}
-                    index={taskIndex}
-                    checked={isChecked}
-                    onChange={onToggleTask(
-                      !isChecked,
-                      taskListItem,
-                      task,
-                      task?.sub_tasks,
-                    )}
-                    isHide={isHide}
-                    isHovered={hoveredId === task.id}
-                    onMouseEnter={() => setHoveredId(task.id)}
-                    onMouseLeave={() => setHoveredId(undefined)}
-                    setHideIds={setHideIds}
-                  >
-                    <Stack
-                      width="100%"
-                      overflow="hidden"
-                      sx={{
-                        // transform: "translateX(-45px)",
-                        ml: -5.625,
-                      }}
+                  return (
+                    <DraggableTask
+                      key={task.id}
+                      id={task.id}
+                      index={taskIndex}
+                      checked={isChecked}
+                      onChange={onToggleTask(
+                        !isChecked,
+                        taskListItem,
+                        task,
+                        task?.sub_tasks,
+                      )}
+                      isHide={isHide}
+                      isHovered={hoveredId === task.id}
+                      onMouseEnter={() => setHoveredId(task.id)}
+                      onMouseLeave={() => setHoveredId(undefined)}
+                      setHideIds={setHideIds}
                     >
                       <Stack
-                        direction={{ md: "row" }}
-                        alignItems={{
-                          xs: "flex-start",
-                          md: "center",
-                        }}
-                        minHeight={38}
-                        maxHeight={{ md: 38 }}
                         width="100%"
-                        sx={{ ...sx.task, ml: 4 }}
-                        // sx={sx.task}
                         overflow="hidden"
-                        borderBottom={{ md: "1px solid" }}
-                        borderColor={{ md: "grey.100" }}
+                        sx={{
+                          // transform: "translateX(-45px)",
+                          ml: -5.625,
+                        }}
                       >
-                        <Content
-                          color="text.primary"
-                          fontWeight={600}
-                          textAlign="left"
-                          noWrap
-                          tooltip={task.name}
-                          onClick={onSetTask(task, taskListItem.id, task.id, undefined, taskListItem.name, task.name)}
+                        <Stack
+                          direction={{ md: "row" }}
+                          alignItems={{
+                            xs: "flex-start",
+                            md: "center",
+                          }}
+                          minHeight={38}
+                          maxHeight={{ md: 38 }}
+                          width="100%"
+                          sx={{ ...sx.task, ml: 4 }}
+                          // sx={sx.task}
+                          overflow="hidden"
+                          borderBottom={{ md: "1px solid" }}
+                          borderColor={{ md: "grey.100" }}
                         >
-                          {task.name}
-                        </Content>
-                        <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%', paddingLeft: 0 }}>
-                          <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} placeholder={task?.owner ? '' : commonT("form.title.noAssigner")} />
-                        </Content>
-                        <Content>{formatDate(task?.start_date)}</Content>
-                        <Content>{formatDate(task?.end_date)}</Content>
-                        <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}>
-                          <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
-                        </Content>
-                        <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center', overflow: 'hidden', '& > p': { lineHeight: '30px'} }}>
-                          <Description>{task?.description}</Description>
-                        </Content>
-                        <Content sx={{ display: { xs: "none", md: "flex", alignItem: 'center', position: 'relative', right: '16px'  } }}>
-                          <MoreList
-                            selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task)]}
-                            onReset={onResetSelected}
-                          />
-                        </Content>
-                      </Stack>
-                      {!isHide && (
-                        <>
-                          <Droppable droppableId={task.id}>
-                            {(taskDropProvided) => (
-                              <div
-                                ref={taskDropProvided.innerRef}
-                                {...taskDropProvided.droppableProps}
-                                style={{ minHeight: 1 }}
-                              >
-                                {task?.sub_tasks?.map((subTask) => {
-                                  const isChecked = selectedList.some(
-                                    (item) => item?.subTaskId === subTask.id,
-                                  );
-                                  return (
-                                    <>
-                                      <Stack
-                                        key={subTask.id}
-                                        direction="row"
-                                        alignItems="center"
-                                        minHeight={38}
-                                        overflow="hidden"
-                                        borderBottom={{
-                                          md: "1px solid",
-                                        }}
-                                        borderColor={{
-                                          md: "grey.100",
-                                        }}
-                                        maxHeight={{ md: 38 }}
-                                        sx={{
-                                          "& >.checkbox": {
-                                            opacity: isChecked ? 1 : 0,
-                                            userSelect: isChecked
-                                              ? undefined
-                                              : "none",
-                                          },
-                                          "&:hover >.checkbox": {
-                                            opacity: 1,
-                                          },
-                                        }}
-                                      >
-                                        <Checkbox
-                                          className="checkbox"
-                                          size="small"
-                                          checked={isChecked}
-                                          onChange={onToggleSubTask(
-                                            taskListItem,
-                                            task,
-                                            subTask,
-                                          )}
-                                        />
-                                        <Stack
-                                          direction={{
-                                            md: "row",
-                                          }}
-                                          alignItems={{
-                                            xs: "flex-start",
-                                            md: "center",
-                                          }}
-                                          sx={sx.subTask}
-                                          overflow="hidden"
-                                        >
-                                          <Content
-                                            color="text.primary"
-                                            textAlign="left"
-                                            noWrap
-                                            tooltip={subTask.name}
-                                            onClick={onSetTask(
-                                              subTask,
-                                              taskListItem.id,
-                                              task.id,
-                                              subTask.id,
-                                              taskListItem.name,
-                                              task.name
-                                            )}
-                                          >
-                                            {subTask.name}
-                                          </Content>
-                                          <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%', paddingLeft: 0 }}>
-                                            <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} placeholder={subTask?.owner ? '' : commonT("form.title.noAssigner")} />
-                                          </Content>
-                                          <Content>
-                                            {formatDate(subTask?.start_date)}
-                                          </Content>
-                                          <Content>
-                                            {formatDate(subTask?.end_date)}
-                                          </Content>
-                                          <Content
-                                            noWrap={false}
-                                            whiteSpace="nowrap"
-                                            sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}
-                                          >
-                                            <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
-                                          </Content>
-
-                                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center', overflow: 'hidden', '& > p': { lineHeight: '30px'} }}>
-                                            <Description>
-                                              {subTask.description}
-                                            </Description>
-                                          </Content>
-                                        </Stack>
-                                        <MoreList
-                                          sx={{
-                                            display: { xs: "none", md: "flex" },
-                                          }}
-                                          selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task, subTask)]}
-                                          onReset={onResetSelected}
-                                        />
-                                      </Stack>
-                                    </>
-                                  );
-                                })}
-                                {taskDropProvided.placeholder}
-                              </div>
-                            )}
-                          </Droppable>
-                          <Stack
-                            width="100%"
-                            direction="row"
-                            spacing={1}
-                            alignItems="center"
+                          <Content
+                            color="text.primary"
+                            fontWeight={600}
+                            textAlign="left"
+                            noWrap
+                            tooltip={task.name}
+                            onClick={onSetTask(task, taskListItem.id, task.id, undefined, taskListItem.name, task.name)}
                           >
-                            <PlusIcon sx={{ color: '#0bb783'}}/>
-                            <TextField
-                              name={task.id}
-                              label={projectT(
-                                "detailTasks.addNewSubTaskPlaceholder",
-                              )}
-                              value={task.id == taskIdSelected ? taskName : ""}
-                              onKeyDown={(e) =>
-                                onKeyDownTaskName(e, taskListItem.id, task.id)
-                              }
-                              fullWidth
-                              variant="filled"
-                              size="small"
-                              onChange={changeNameTask}
-                              sx={{
-                                "& >div": {
-                                  bgcolor: "transparent!important",
-                                  "&:after": {
-                                    borderBottomColor: "#0bb783 !important",
-                                  },
-                                  "&:before": {
-                                    borderBottom: "unset !important",
-                                  },
-                                },
-                                "& input": {
-                                  fontSize: 14,
-                                  paddingTop: "17px !important",
-                                },
-                                width: "35% !important",
-                                "& label.Mui-focused": {
-                                  color: "green",
-                                },
-                                "& >label": {
-                                  fontWeight: "600 !important",
-                                  fontSize: "13px",
-                                  color: "#0bb783 !important",
-                                },
-                              }}
+                            {task.name}
+                          </Content>
+                          <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%', paddingLeft: 0 }}>
+                            <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} placeholder={task?.owner ? '' : commonT("form.title.noAssigner")} />
+                          </Content>
+                          <Content>{formatDate(task?.start_date)}</Content>
+                          <Content>{formatDate(task?.end_date)}</Content>
+                          <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}>
+                            <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
+                          </Content>
+                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center', overflow: 'hidden', '& > p': { lineHeight: '30px'} }}>
+                            <Description>{task?.description}</Description>
+                          </Content>
+                          <Content sx={{ display: { xs: "none", md: "flex", alignItem: 'center', position: 'relative', right: '16px'  } }}>
+                            <MoreList
+                              selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task)]}
+                              onReset={onResetSelected}
                             />
-                          </Stack>
+                          </Content>
+                        </Stack>
+                        {!isHide && (
+                          <>
+                            <Droppable droppableId={task.id}>
+                              {(taskDropProvided) => (
+                                <div
+                                  ref={taskDropProvided.innerRef}
+                                  {...taskDropProvided.droppableProps}
+                                  style={{ minHeight: 1 }}
+                                >
+                                  {task?.sub_tasks?.map((subTask) => {
+                                    const isChecked = selectedList.some(
+                                      (item) => item?.subTaskId === subTask.id,
+                                    );
+                                    return (
+                                      <>
+                                        <Stack
+                                          key={subTask.id}
+                                          direction="row"
+                                          alignItems="center"
+                                          minHeight={38}
+                                          overflow="hidden"
+                                          borderBottom={{
+                                            md: "1px solid",
+                                          }}
+                                          borderColor={{
+                                            md: "grey.100",
+                                          }}
+                                          maxHeight={{ md: 38 }}
+                                          sx={{
+                                            "& >.checkbox": {
+                                              opacity: isChecked ? 1 : 0,
+                                              userSelect: isChecked
+                                                ? undefined
+                                                : "none",
+                                            },
+                                            "&:hover >.checkbox": {
+                                              opacity: 1,
+                                            },
+                                          }}
+                                        >
+                                          <Checkbox
+                                            className="checkbox"
+                                            size="small"
+                                            checked={isChecked}
+                                            onChange={onToggleSubTask(
+                                              taskListItem,
+                                              task,
+                                              subTask,
+                                            )}
+                                          />
+                                          <Stack
+                                            direction={{
+                                              md: "row",
+                                            }}
+                                            alignItems={{
+                                              xs: "flex-start",
+                                              md: "center",
+                                            }}
+                                            sx={sx.subTask}
+                                            overflow="hidden"
+                                          >
+                                            <Content
+                                              color="text.primary"
+                                              textAlign="left"
+                                              noWrap
+                                              tooltip={subTask.name}
+                                              onClick={onSetTask(
+                                                subTask,
+                                                taskListItem.id,
+                                                task.id,
+                                                subTask.id,
+                                                taskListItem.name,
+                                                task.name
+                                              )}
+                                            >
+                                              {subTask.name}
+                                            </Content>
+                                            <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%', paddingLeft: 0 }}>
+                                              <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} placeholder={subTask?.owner ? '' : commonT("form.title.noAssigner")} />
+                                            </Content>
+                                            <Content>
+                                              {formatDate(subTask?.start_date)}
+                                            </Content>
+                                            <Content>
+                                              {formatDate(subTask?.end_date)}
+                                            </Content>
+                                            <Content
+                                              noWrap={false}
+                                              whiteSpace="nowrap"
+                                              sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}
+                                            >
+                                              <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
+                                            </Content>
 
-                          {!!errorTaskName && (
-                            <Text variant="caption" color="error">
-                              {errorTaskName}
-                            </Text>
-                          )}
-                        </>
-                      )}
-                    </Stack>
-                  </DraggableTask>
-                );
-              })}
-            </DroppableTaskList>
-          );
-        })}
-        {isFetching && (
-          <CircularProgress
-            size={20}
-            sx={{ mx: "auto", my: 1 }}
-            color="primary"
-          />
-        )}
-      </DragDropContext>
+                                            <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center', overflow: 'hidden', '& > p': { lineHeight: '30px'} }}>
+                                              <Description>
+                                                {subTask.description}
+                                              </Description>
+                                            </Content>
+                                          </Stack>
+                                          <MoreList
+                                            sx={{
+                                              display: { xs: "none", md: "flex" },
+                                            }}
+                                            selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task, subTask)]}
+                                            onReset={onResetSelected}
+                                          />
+                                        </Stack>
+                                      </>
+                                    );
+                                  })}
+                                  {taskDropProvided.placeholder}
+                                </div>
+                              )}
+                            </Droppable>
+                            <Stack
+                              width="100%"
+                              direction="row"
+                              spacing={1}
+                              alignItems="center"
+                            >
+                              <PlusIcon sx={{ color: '#0bb783'}}/>
+                              <TextField
+                                name={task.id}
+                                label={projectT(
+                                  "detailTasks.addNewSubTaskPlaceholder",
+                                )}
+                                value={task.id == taskIdSelected ? taskName : ""}
+                                onKeyDown={(e) =>
+                                  onKeyDownTaskName(e, taskListItem.id, task.id)
+                                }
+                                fullWidth
+                                variant="filled"
+                                size="small"
+                                onChange={changeNameTask}
+                                sx={{
+                                  "& >div": {
+                                    bgcolor: "transparent!important",
+                                    "&:after": {
+                                      borderBottomColor: "#0bb783 !important",
+                                    },
+                                    "&:before": {
+                                      borderBottom: "unset !important",
+                                    },
+                                  },
+                                  "& input": {
+                                    fontSize: 14,
+                                    paddingTop: "17px !important",
+                                  },
+                                  width: "35% !important",
+                                  "& label.Mui-focused": {
+                                    color: "green",
+                                  },
+                                  "& >label": {
+                                    fontWeight: "600 !important",
+                                    fontSize: "13px",
+                                    color: "#0bb783 !important",
+                                  },
+                                }}
+                              />
+                            </Stack>
+
+                            {!!errorTaskName && (
+                              <Text variant="caption" color="error">
+                                {errorTaskName}
+                              </Text>
+                            )}
+                          </>
+                        )}
+                      </Stack>
+                    </DraggableTask>
+                  );
+                })}
+              </DroppableTaskList>
+            );
+          })}
+          {isFetching && (
+            <CircularProgress
+              size={20}
+              sx={{ mx: "auto", my: 1 }}
+              color="primary"
+            />
+          )}
+        </DragDropContext>
+      </FixedLayout>
 
       <Loading open={isProcessing} />
 
