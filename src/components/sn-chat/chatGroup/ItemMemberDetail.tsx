@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import { IconButton } from "components/shared";
 import { useState } from "react";
-import DefaultPopupLayout from "components/TimeTracking/TimeTrackingModal/DefaultPopupLayout";
+import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
 
 interface ItemMemberDetailProp {
   admin?: boolean;
