@@ -160,8 +160,8 @@ const Select = (props: SelectProps) => {
                 ? "none"
                 : undefined,
           }}
-          key={option.value || option.subText}
-          value={option.value || option.subText}
+          key={option.value}
+          value={option.value}
         >
           <Stack direction="row" alignItems="center" spacing={1}>
             {option.value !== ID_PLACEHOLDER && hasAvatar && (
@@ -177,11 +177,11 @@ const Select = (props: SelectProps) => {
             )}
             <Stack>
               <Text variant="body2" className="text-option">
-                {option.label || option.subText || ""}
+                {option.label}
               </Text>
               {showSubText && (
                 <Text variant="body2" className="sub">
-                  {option.subText || option.label || ""}
+                  {option.subText}
                 </Text>
               )}
             </Stack>
