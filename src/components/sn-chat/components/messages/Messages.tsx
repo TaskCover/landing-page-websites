@@ -12,7 +12,6 @@ import {
   MediaPreviewItem,
   MessageInfo,
   MessageSearchInfo,
-  UnReadMessageInfo,
   UnreadUserInfo,
 } from "store/chat/type";
 import { DataStatus } from "constant/enums";
@@ -44,6 +43,7 @@ interface MessagesProps {
 
 type MessageHandle = {
   pageRef: MutableRefObject<number>;
+  isBottomScrollMessage: boolean;
   initScrollIntoView: () => void;
   clearScrollContentMessage: () => void;
   scrollMessage: () => void;
@@ -67,6 +67,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   ref,
 ) => {
   const [firstElement, setFirstElement] = useState(null);
+  const [isBottomScrollMessage, setBottomScrollMessage] = useState(false);
 
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
@@ -86,6 +87,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
       }
     }),
   );
+
   const focusMessageRef = useRef<HTMLDivElement>(null);
 
   const clearScrollContentMessage = async () => {
@@ -115,9 +117,15 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   useImperativeHandle(
     ref,
     () => {
-      return { pageRef, initScrollIntoView, clearScrollContentMessage, scrollMessage };
+      return {
+        pageRef,
+        isBottomScrollMessage,
+        initScrollIntoView,
+        clearScrollContentMessage,
+        scrollMessage,
+      };
     },
-    [],
+    [isBottomScrollMessage],
   );
 
   const initScrollIntoView = useCallback(() => {
@@ -164,6 +172,10 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     <>
       <Box
         ref={messagesContentRef}
+        onScroll={(e) => {
+          const h = e.currentTarget.scrollTop + e.currentTarget.clientHeight;
+          setBottomScrollMessage(h === e.currentTarget.scrollHeight);
+        }}
         sx={{
           display: "flex",
           gap: "0.5rem",
