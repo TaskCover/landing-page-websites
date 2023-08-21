@@ -7,7 +7,7 @@ import {
   SxProps,
   Table,
   TableBody,
-  TableCell,
+  Grid,
   TableCellProps,
   TableHead,
   TableRow,
@@ -41,6 +41,7 @@ type TableLayoutProps = {
   pending?: boolean;
   error?: string;
   noData?: boolean;
+  hasSelectAll?: boolean;
   onCreate?: () => void;
   onEdit?: () => void;
   headerProps?: TableCellProps;
@@ -57,6 +58,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     pending,
     error,
     noData,
+    hasSelectAll,
     onCreate,
     onEdit,
     headerProps = {},
@@ -99,12 +101,12 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     timeout = setTimeout(() => {
       const newBodySx = refs?.reduce((out, item, index) => {
         out[`& td:nth-of-type(${index + 1}), & th:nth-of-type(${index + 1})`] =
-          {
-            minWidth: item?.current?.offsetWidth,
-            width: item?.current?.offsetWidth,
-            maxWidth: item?.current?.offsetWidth,
-            overflowX: "hidden",
-          };
+        {
+          minWidth: item?.current?.offsetWidth,
+          width: item?.current?.offsetWidth,
+          maxWidth: item?.current?.offsetWidth,
+          overflowX: "hidden",
+        };
         return out;
       }, {});
       setBodySx(newBodySx);
@@ -133,6 +135,8 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
           overflowX: "auto",
           overflowY: "hidden",
           minHeight: HEIGHT_HEADER,
+          display: 'flex',
+          alignItem: 'center',
           ...sxContainerHeaderProps,
         }}
         {...restContainerHeaderProps}
@@ -159,7 +163,21 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                   {...restHeaderProps}
                   ref={refs[index]}
                 >
-                  {item.value}
+                  {hasSelectAll && index == 0 ? <Box>
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Grid item xs={2}>
+                        {children}
+                      </Grid>
+                      <Grid xs={10}>
+                        {item.value}
+                      </Grid>
+                    </Grid>
+                  </Box> : item.value}
                 </CellHeader>
               ))}
             </TableRow>
@@ -193,9 +211,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                   ) : null}
                 </CellBody>
               </TableRow>
-            ) : (
-              children
-            )}
+            ) : (hasSelectAll ? "" : children)}
           </TableBody>
         </Table>
       </Box>

@@ -107,6 +107,7 @@ const Assign = (props: AssignProps) => {
           onChange={onChangeSearch}
           emitWhenEnter
           search={filters?.["members.email"]}
+          style={{ marginLeft: '10px', marginRight: '10px' }}
         />
         {options.map((option) => (
           <MenuItem
@@ -117,7 +118,16 @@ const Assign = (props: AssignProps) => {
           >
             <Stack direction="row" alignItems="center" spacing={1} width="100%">
               <Avatar src={option?.avatar ?? UserPlaceholderImage} size={24} />
-              <Stack alignItems="flex-start">
+              <Stack alignItems="flex-start" sx={{
+                '&': { maxWidth: '90%', width: '100%' },
+                '& > p ': {
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  width: '90%',
+                  textAlign: 'left'
+                }
+              }}>
                 <Text variant="body2">{option.label}</Text>
                 <Text variant="body2" className="sub">
                   {option.subText}

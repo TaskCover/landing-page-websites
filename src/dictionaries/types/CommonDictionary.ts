@@ -27,6 +27,7 @@ export type CommonDictionary = {
       upload: string;
       uploadImage: string;
       assigner: string;
+      noAssigner: string;
       startDate: string;
       endDate: string;
       dueDate: string;

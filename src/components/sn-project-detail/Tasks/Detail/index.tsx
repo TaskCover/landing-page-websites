@@ -1,5 +1,5 @@
 import { memo, useEffect, useState, useRef, useMemo } from "react";
-import { DrawerProps, Drawer, drawerClasses, Stack, Box } from "@mui/material";
+import { DrawerProps, Drawer, drawerClasses, Stack, Box, Typography, Breadcrumbs, OutlinedInput } from "@mui/material";
 import { IconButton, Input, Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import { NS_PROJECT } from "constant/index";
@@ -12,20 +12,29 @@ import { useTaskDetail } from "store/project/selectors";
 import { AssignTask, CommentEditor, StatusTask } from "./components";
 import Activities from "./Activities";
 import EditTask from "./components/EditTask";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const Detail = () => {
-  const { task, onUpdateTaskDetail } = useTaskDetail();
+  const { task, taskParent, onUpdateTaskDetail, onUpdateTask } = useTaskDetail();
   const scrollEndRef = useRef<HTMLDivElement | null>(null);
 
-  const projectT = useTranslations(NS_PROJECT);
-
   const [tab, setTab] = useState<TabDetail>(TabDetail.DETAIL);
-
   const onClose = () => {
     onUpdateTaskDetail();
   };
 
-  if (!task) return null;
+  if (!task || !taskParent) return null;
+
+  const breadcrumbs_values = [taskParent.taskListName, taskParent.taskName];
+  if (task.subTaskId) {
+    breadcrumbs_values.push(task.name);
+  } else if (task.taskId) {
+    breadcrumbs_values[1] = task.name;
+  }
+
+  const breadcrumbs = breadcrumbs_values.map((item, idx) => {
+    return <Typography key={idx+1} color="text.primary">{item}</Typography>
+  })
 
   return (
     <Drawer
@@ -48,9 +57,12 @@ const Detail = () => {
         justifyContent="space-between"
         p={{ xs: 2, md: 3 }}
       >
-        <Text variant="h5" color="text.primary" textTransform="capitalize">
-          {projectT("taskDetail.title")}
-        </Text>
+        <Breadcrumbs
+          separator={<NavigateNextIcon color="disabled" fontSize="small" />}
+          aria-label="breadcrumb"
+        >
+          {breadcrumbs}
+        </Breadcrumbs>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>

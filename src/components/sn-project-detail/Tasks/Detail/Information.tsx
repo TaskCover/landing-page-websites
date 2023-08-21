@@ -255,6 +255,7 @@ const Information = () => {
                     },
                     "& input": {
                       fontSize: 15,
+                      paddingTop: '0px !important',
                     },
                     width: '60% !important'
                   }}
@@ -397,64 +398,71 @@ const Information = () => {
         </InformationItem>
       </Stack>
 
-      <InformationItem
-        label={`${commonT("form.title.description")}:`}
-        minHeight={!isAddDescription ? 150 : ''}
-        bgcolor="grey.50"
-        p={2}
-        borderRadius={1}
-      >
-        {
-          (!!task?.description && !isAddDescription) && (
-                <Stack direction="row" justifyContent="end">
-                  <IconButton
-                      onClick={() => {
-                        onShowAddDescription();
-                        setDescription(task?.description)
-                      }}
-                      variant="contained"
-                      size="small"
-                      sx={{
-                        backgroundColor: isDarkMode ? "grey.50" : "primary.light",
-                        color: "text.primary",
-                        p: 1,
-                        "&:hover svg": {
-                          color: "common.white",
-                        },
-                        justifyContent: "end",
-                        maxWidth: "50px"
-                      }}
-                  >
-                    <PencilUnderlineIcon sx={{ fontSize: 16 }} />
-                  </IconButton>
-                </Stack>
-            )
-        }
-        {(!!task?.description && !isAddDescription) && (
-            <>
-              <Box
-                  sx={{
-                    fontSize: 14,
-                    "& *": {
-                      wordBreak: "break-all",
-                    },
-                  }}
-                  className="html"
-                  dangerouslySetInnerHTML={{
-                    __html: readMore || task.description.length < 400 ? task.description : `${task.description.substring(0, 400)}...`,
-                  }}
-              />
-              {
-                  task.description.length > 400 && (
-                      <p className="btn" onClick={() => setReadMore(!readMore)} style={{ cursor: "pointer", color: "#1BC5BD", fontSize: "14px", fontWeight: "600"}}>
-                        {readMore ? projectT("taskDetail.showLess") : projectT("taskDetail.showMore")}
-                      </p>
-                  )
-              }
-            </>
-        )}
-      </InformationItem>
-      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} textEdit={description}/>
+      {
+        !isAddDescription && (
+              <InformationItem
+                  label={`${commonT("form.title.description")}:`}
+                  minHeight={!isAddDescription ? 150 : ''}
+                  bgcolor="grey.50"
+                  p={2}
+                  borderRadius={1}
+                  marginTop="8px !important"
+                  position="relative"
+              >
+                {
+                    (!!task?.description && !isAddDescription) && (
+                        <Stack direction="row" justifyContent="end" sx={{ position: 'absolute', top: '2px', right: '14px' }}>
+                          <IconButton
+                              onClick={() => {
+                                onShowAddDescription();
+                                setDescription(task?.description)
+                              }}
+                              variant="contained"
+                              size="small"
+                              sx={{
+                                backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+                                color: "text.primary",
+                                p: 1,
+                                "&:hover svg": {
+                                  color: "common.white",
+                                },
+                                justifyContent: "end",
+                                maxWidth: "50px"
+                              }}
+                          >
+                            <PencilUnderlineIcon sx={{ fontSize: 16 }} />
+                          </IconButton>
+                        </Stack>
+                    )
+                }
+                {(!!task?.description && !isAddDescription) && (
+                    <>
+                      <Box
+                          sx={{
+                            fontSize: 14,
+                            "& *": {
+                              wordBreak: "break-all",
+                            },
+                          }}
+                          className="html"
+                          dangerouslySetInnerHTML={{
+                            __html: readMore || task.description.length < 400 ? task.description : `${task.description.substring(0, 400)}...`,
+                          }}
+                      />
+                      {
+                          task.description.length > 400 && (
+                              <p className="btn" onClick={() => setReadMore(!readMore)} style={{ cursor: "pointer", color: "#1BC5BD", fontSize: "14px", fontWeight: "600"}}>
+                                {readMore ? projectT("taskDetail.showLess") : projectT("taskDetail.showMore")}
+                              </p>
+                          )
+                      }
+                    </>
+                )}
+              </InformationItem>
+          )
+      }
+
+      <DescriptionTask open={isAddDescription} onClose={onHideAddDescription} textEdit={description} title={commonT("form.title.description")}/>
       <AttachmentsTask id={ATTACHMENT_ID} files={files} setFiles={setFiles} />
       {!subTaskId && <SubTasksOfTask open={isAddSubTask} />}
       <TodoList open={isAddTodo} />

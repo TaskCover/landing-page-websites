@@ -1,14 +1,15 @@
-import { memo, useCallback, useState } from "react";
-import { BodyCell, StatusCell } from "components/Table";
+import { memo } from "react";
+import { BodyCell } from "components/Table";
 import { Project } from "store/project/reducer";
 import { getPath } from "utils/index";
 import { PROJECT_TASKS_PATH } from "constant/paths";
 import Avatar from "components/Avatar";
-import { Stack, Theme, selectClasses } from "@mui/material";
+import { Stack } from "@mui/material";
 import { Text } from "components/shared";
-import { TEXT_STATUS, COLOR_STATUS, Member } from "./components/helpers";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
-import { Saved, SelectStatus, SelectMembers, Assigner } from "./components";
+import { Saved, SelectStatus, Assigner } from "./components";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
 
 type DesktopCellsProps = {
   item: Project;
@@ -17,6 +18,7 @@ type DesktopCellsProps = {
 
 const DesktopCells = (props: DesktopCellsProps) => {
   const { item, order } = props;
+  const commonT = useTranslations(NS_COMMON);
 
   return (
     <>
@@ -41,15 +43,13 @@ const DesktopCells = (props: DesktopCellsProps) => {
           </Text>
         </Stack>
       </BodyCell>
-      {item.owner ? (
-        <BodyCell align="left">
-          <Assigner value={item?.owner?.fullname} id={item.id} />
-        </BodyCell>
-      ) : (
-        <BodyCell align="left" />
-      )}
+      <BodyCell align="left" sx={{ paddingLeft: 0 }}>
+        <Assigner value={item?.owner?.id} id={item.id} rootSx={{ "& > svg": { display: 'none' } }} placeholder={item?.owner ? '' : commonT("form.title.noAssigner")} />
+      </BodyCell>
       {item.status ? (
-        <SelectStatus value={item.status} id={item.id} />
+        <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
+          <SelectStatus value={item.status} id={item.id} />
+        </BodyCell>
       ) : (
         <BodyCell />
       )}

@@ -28,6 +28,7 @@ import FileExcelIcon from "../../../icons/FileExcelIcon";
 import FileIcon from "../../../icons/FileIcon";
 import {useParams} from "next/navigation";
 import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
+import Link from '@mui/material/Link';
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -89,11 +90,11 @@ const DesktopInformation = (props) => {
     background: "#F7F7FD",
     height: "70px",
     display: "flex",
-    gap: "15px"
+    gap: "15px",
   }));
 
   const fileIcon = (extension, url) => {
-    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1) {
+    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1 || extension.indexOf('png') !== -1) {
         return <Box
             component="img"
             src={url}
@@ -201,7 +202,12 @@ const DesktopInformation = (props) => {
         {item?.description || "--"}
       </InformationItem>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} className='attachment-filter'>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} className='attachment-filter'
+        style={{
+          borderTop: "1px solid #5e5e5e",
+          paddingTop: "20px",
+        }}
+      >
             <Text variant="body2" sx={{
                 fontWeight: "600"
             }}>{projectT("detail.listFile.title")}</Text>
@@ -264,10 +270,16 @@ const DesktopInformation = (props) => {
       </Stack>
 
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {
+              dataFilter?.length == 0 && (
+                <p style={{ margin: "auto"}}>{projectT("detail.listFile.noData")}</p>
+              ) 
+            }
             {dataFilter?.map((data, index) => (
                 <Grid item xs={2} sm={4} md={4} key={index} sx={{
                     paddingRight: "16px",
                 }}>
+                  <Link href={data.link} style={{ textDecoration : "none"}}>
                     <Item>
                         {
                             fileIcon(data.extension, data.link)
@@ -295,8 +307,8 @@ const DesktopInformation = (props) => {
                                 <span>{data.uploaded_by}</span>
                             </Text>
                         </Stack>
-
                     </Item>
+                  </Link>
                 </Grid>
             ))}
         </Grid>
@@ -345,7 +357,7 @@ const MobileInformation = (props) => {
   }));
 
   const fileIcon = (extension, url) => {
-    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1) {
+    if (extension.indexOf('.jpeg') !== -1 || extension.indexOf('.jpg') !== -1 || extension.indexOf('png') !== -1) {
         return <Box
             component="img"
             src={url}
@@ -485,10 +497,17 @@ const MobileInformation = (props) => {
         </Stack>
 
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 1, sm: 2, md: 3 }}>
+            {
+              dataFilter?.length == 0 && (
+                <p style={{ margin: "auto"}}>{projectT("detail.listFile.noData")}</p>
+              ) 
+            }
+
             {dataFilter?.map((data, index) => (
                 <Grid item xs={2} sm={4} md={4} key={index} sx={{
                     paddingRight: "16px",
                 }}>
+                  <Link href={data.link} style={{ textDecoration : "none"}}>
                     <Item>
                         {
                             fileIcon(data.extension, data.link)
@@ -518,6 +537,7 @@ const MobileInformation = (props) => {
                         </Stack>
 
                     </Item>
+                  </Link>
                 </Grid>
             ))}
         </Grid>

@@ -26,6 +26,7 @@ export const PROJECT_MEMBERS_PATH = "/projects/{id}/members";
 export const PROJECT_INFORMATION_PATH = "/projects/{id}";
 
 export const TIME_TRACKING_PATH = "/time-tracking";
+export const RESOURCE_PLANING_PATH = "/resource-planing";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -53,6 +54,7 @@ export const AUTHORIZED_PATHS = {
     MY_COMPANY_PATH,
     HOME_PATH,
     TIME_TRACKING_PATH,
+    RESOURCE_PLANING_PATH
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -75,6 +77,7 @@ export const AUTHORIZED_PATHS = {
     MY_COMPANY_PATH,
     HOME_PATH,
     TIME_TRACKING_PATH,
+    RESOURCE_PLANING_PATH
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };

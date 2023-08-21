@@ -32,10 +32,9 @@ const MessageItemRender = ({
     [message, user],
   );
 
-  const strippedHtml = message.matchedText.replace(/<[^>]+>/g, '');
+  const strippedHtml = message.matchedText.replace(/<[^>]+>/g, "");
   const messageMatched = useMemo(
-    () =>
-      isCurrentAcc ? `<p>You: ${strippedHtml}</p>` : strippedHtml,
+    () => (isCurrentAcc ? `<p>You: ${strippedHtml}</p>` : strippedHtml),
     [isCurrentAcc, strippedHtml],
   );
 
@@ -154,7 +153,12 @@ const MessageListSearch = ({
               {...props}
             >
               <MessageItemRender text={text} message={message} />
-              <Typography variant="caption" color="#999999" ml="auto">
+              <Typography
+                variant="caption"
+                color="#999999"
+                ml="auto"
+                whiteSpace="nowrap"
+              >
                 {renderTimeDiff(message?.ts)}
               </Typography>
             </Box>

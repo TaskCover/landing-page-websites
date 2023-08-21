@@ -137,6 +137,10 @@ const Conversation = () => {
         onEnterMessage={handleSendMessage}
         files={files}
         onChangeFiles={(file) => setFiles(file)}
+        onResize={() => {
+          inputRef?.current?.clearScrollContentMessage();
+          inputRef?.current?.initScrollIntoView();
+        }}
       />
     </>
   );

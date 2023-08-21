@@ -45,9 +45,9 @@ const Actions = () => {
         <Button
           onClick={onShow}
           startIcon={<PlusIcon />}
-          size={isMdSmaller ? "extraSmall" : "small"}
+          size={"extraSmall"}
           variant="primary"
-          sx={{ height: { xs: 32, md: 40 } }}
+          sx={{ height: 32, px: ({ spacing }) => `${spacing(2)}!important` }}
         >
           {commonT("createNew")}
         </Button>

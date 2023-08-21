@@ -61,7 +61,8 @@ export const ProjectLang: ProjectDictionary = {
         all: "All",
         file: "File",
         image: "Image"
-      }
+      },
+      noData: "No data",
     }
   },
   detailMembers: {

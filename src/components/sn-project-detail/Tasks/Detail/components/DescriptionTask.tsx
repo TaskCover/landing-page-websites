@@ -13,10 +13,11 @@ type DescriptionTaskProps = {
   onClose: () => void;
   open: boolean;
   textEdit?: string;
+  title?: string;
 };
 
 const DescriptionTask = (props: DescriptionTaskProps) => {
-  const { open, onClose: onCloseProps, textEdit } = props;
+  const { open, onClose: onCloseProps, textEdit, title } = props;
   const [text, setText] = useState<string | undefined>(textEdit ?? "");
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
@@ -66,7 +67,7 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
       <Editor
         value={text ?? ""}
         onChange={onChangeText}
-        title=""
+        title={title ?? ""}
         name="description"
         editorKey={DESCRIPTION_EDITOR}
       />

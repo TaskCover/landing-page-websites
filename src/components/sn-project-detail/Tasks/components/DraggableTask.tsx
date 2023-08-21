@@ -17,6 +17,8 @@ type DraggableTaskProps = {
   isHide: boolean;
   isHovered: boolean;
   setHideIds: Dispatch<SetStateAction<string[]>>;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
 };
 
 const DraggableTask = (props: DraggableTaskProps) => {

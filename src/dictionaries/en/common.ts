@@ -30,6 +30,7 @@ export const CommonLang: CommonDictionary = {
       upload: "Upload",
       uploadImage: "Upload",
       assigner: "Assigner",
+      noAssigner: "No Assigner",
       startDate: "Start date",
       endDate: "End date",
       dueDate: "Due date",

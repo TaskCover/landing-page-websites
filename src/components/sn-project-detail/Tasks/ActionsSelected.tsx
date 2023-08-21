@@ -68,7 +68,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
       px={1.5}
       py={{ xs: 1, md: 0.75 }}
       position="sticky"
-      top={{ xs: 209, md: 90 }}
+      top={{ xs: 209, md: 80 }}
       zIndex={12}
     >
       <Stack
@@ -100,7 +100,7 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
         alignItems="center"
         spacing={{ md: 3 }}
         width="100%"
-        justifyContent={{ xs: "space-between", md: "flex-start" }}
+        justifyContent={{ xs: "space-between", md: "flex-end" }}
         display={{ xs: "grid", md: "flex" }}
         gridTemplateColumns={{ xs: "repeat(2, 1fr)", md: "unset" }}
       >
