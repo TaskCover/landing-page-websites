@@ -187,6 +187,12 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
             index !== messages.length - 1
               ? currentTimeMessage.getTime() - nextTimeMessage.getTime() !== 0
               : false;
+
+          const isShowYear =
+            new Date().getFullYear() !== nextTimeMessage.getFullYear();
+          const showDate = `${nextTimeMessage.getDate()} ${
+            nameMonthList[Number(nextTimeMessage.getMonth())]
+          } ${isShowYear ? nextTimeMessage.getFullYear() : ""}`.trim();
           return (
             <React.Fragment key={index}>
               <MessageLayout
@@ -218,8 +224,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                   fontSize="12px"
                   lineHeight="18px"
                 >
-                  {nextTimeMessage.getDate()}{" "}
-                  {nameMonthList[Number(nextTimeMessage.getMonth())]}
+                  {showDate}
                 </Typography>
               )}
             </React.Fragment>
