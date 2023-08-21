@@ -138,8 +138,10 @@ const Conversation = () => {
         files={files}
         onChangeFiles={(file) => setFiles(file)}
         onResize={() => {
-          inputRef?.current?.clearScrollContentMessage();
-          inputRef?.current?.initScrollIntoView();
+          if (inputRef?.current?.isBottomScrollMessage) {
+            inputRef?.current?.clearScrollContentMessage();
+            inputRef?.current?.initScrollIntoView();
+          }
         }}
       />
     </>
