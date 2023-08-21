@@ -44,6 +44,7 @@ interface MessagesProps {
 
 type MessageHandle = {
   pageRef: MutableRefObject<number>;
+  initScrollIntoView: () => void;
   clearScrollContentMessage: () => void;
   scrollMessage: () => void;
 };
@@ -114,7 +115,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   useImperativeHandle(
     ref,
     () => {
-      return { pageRef, clearScrollContentMessage, scrollMessage };
+      return { pageRef, initScrollIntoView, clearScrollContentMessage, scrollMessage };
     },
     [],
   );
