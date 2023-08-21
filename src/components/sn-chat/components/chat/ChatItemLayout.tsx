@@ -38,7 +38,12 @@ const ChatItemLayout = ({
       {...props}
     >
       <ChatItemRender chatInfo={chatInfo} sessionId={sessionId} />
-      <Typography variant="caption" color="#999999" ml="auto">
+      <Typography
+        variant="caption"
+        color="#999999"
+        ml="auto"
+        whiteSpace="nowrap"
+      >
         {renderTimeDiff(lastMessage?.ts)}
       </Typography>
     </Box>
