@@ -2,7 +2,7 @@
 
 import Box from "@mui/material/Box";
 import ChatEditor from "./ChatEditor";
-import { memo } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 interface ChatInputProps {
   isLoading: boolean;
@@ -10,6 +10,7 @@ interface ChatInputProps {
   files?: File[];
   onEnterMessage: (message: string) => void;
   onChangeFiles?: (file: File[]) => void;
+  onResize?: (num?: number) => void;
 }
 const ChatInput = ({
   isLoading,
@@ -17,9 +18,29 @@ const ChatInput = ({
   files,
   onEnterMessage,
   onChangeFiles,
+  onResize,
 }: ChatInputProps) => {
+  const [bodyElement, setBodyElement] = useState(null);
+  const resizeObserver = useRef(
+    new ResizeObserver((entries) => onResize?.(entries[0].target.clientHeight)),
+  );
+
+  useEffect(() => {
+    const currentElement = bodyElement;
+    const currentObserver = resizeObserver.current;
+    if (currentElement) {
+      currentObserver.observe(currentElement);
+    }
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement);
+      }
+    };
+  }, [bodyElement]);
+
   return (
     <Box
+      ref={setBodyElement}
       sx={{
         width: "100%",
         bottom: "1rem",
