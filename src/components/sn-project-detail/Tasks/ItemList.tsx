@@ -121,6 +121,32 @@ const ItemList = () => {
     [selectedList.length],
   );
 
+  const getTotalItemCount = (taskList: TaskList) => {
+    let totalCount = taskList.tasks.length;
+    for (const task of taskList.tasks) {
+      if (task.sub_tasks) {
+        totalCount += task.sub_tasks.length;
+      }
+    }
+
+    return totalCount;
+  };
+
+  const totalItemCount = useMemo(() => {
+    let totalCount = 0;
+
+    for (const taskList of dataList) {
+      totalCount++
+      totalCount += getTotalItemCount(taskList);
+    }
+
+    return totalCount;
+  }, [dataList]);
+
+  const allItemsChecked = useMemo(() => {
+    return selectedList.length === totalItemCount && totalItemCount !== 0;
+  }, [selectedList.length, totalItemCount]);
+
   const handleAllChecked = () => {
     setIsAllChecked((prevIsAllChecked) => !prevIsAllChecked);
 
@@ -172,7 +198,7 @@ const ItemList = () => {
 
   const checkboxLabel = "";
   const checkboxProps = {
-    checked: isAllChecked,
+    checked: allItemsChecked,
     onChange: handleAllChecked,
   };
   const desktopHeaderList: CellProps[] = useMemo(
@@ -296,7 +322,6 @@ const ItemList = () => {
 
         newSelectedList = [...newSelectedList, ...additionalSelectedList];
       } else {
-        setIsAllChecked(false);
         newSelectedList = newSelectedList.filter(
           (item) => item.taskListId !== taskList.id,
         );
@@ -320,8 +345,25 @@ const ItemList = () => {
           taskListId: taskList.id,
           taskListName: taskList.name,
         });
+
+        if (task?.sub_tasks?.length) {
+          task?.sub_tasks?.forEach((subTask) => {
+            const isExisted = newSelectedList.some(
+              (selected) => selected?.subTaskId === subTask.id,
+            );
+            if (!isExisted) {
+              newSelectedList.push({
+                taskListId: taskList.id,
+                taskListName: taskList.name,
+                taskId: task.id,
+                taskName: task.name,
+                subTaskId: subTask.id,
+                subTaskName: subTask.name,
+              });
+            }
+          });
+        }
       } else {
-        setIsAllChecked(false);
         const indexDeleted = newSelectedList.findIndex(
           (selected) => !selected?.subTaskId && selected.taskId === task.id,
         );
@@ -329,23 +371,26 @@ const ItemList = () => {
         if (indexDeleted !== -1) {
           newSelectedList.splice(indexDeleted, 1);
         }
+
+        subTasks?.forEach(item => {
+          const index = newSelectedList.findIndex(
+            (selected) => selected?.subTaskId === item.id && selected?.taskId === task.id,
+          );
+          if (index !== -1) {
+            newSelectedList.splice(indexDeleted, 1);
+          }
+        })
       }
 
       setSelectedList(newSelectedList);
     };
   };
 
-  const onToggleSubTask = (taskList: TaskList, task: Task, subTask: Task) => {
+  const onToggleSubTask = (newChecked: boolean, taskList: TaskList, task: Task, subTask: Task) => {
     return () => {
       const newSelectedList = [...selectedList];
-      const indexSelected = selectedList.findIndex(
-        (item) =>
-          item?.taskListId === taskList.id &&
-          item?.taskId === task.id &&
-          item?.subTaskId === subTask.id,
-      );
 
-      if (indexSelected === -1) {
+      if (newChecked) {
         newSelectedList.push({
           taskId: task.id,
           taskName: task.name,
@@ -354,9 +399,61 @@ const ItemList = () => {
           subTaskId: subTask.id,
           subTaskName: subTask.name,
         });
+
+        // count subTask in Task
+        let countSubTasks = 0
+        newSelectedList.forEach(item => {
+          if (item?.taskListId === taskList.id && item?.taskId === task.id && item?.subTaskId === subTask.id)
+            countSubTasks++
+        })
+
+        if (countSubTasks === task.sub_tasks?.length) {
+          newSelectedList.push({
+            taskId: task.id,
+            taskName: task.name,
+            taskListId: taskList.id,
+            taskListName: taskList.name,
+          });
+        }
+
+        // count task in task list
+        let countTasks = 0
+        newSelectedList.forEach(item => {
+          if (item?.taskListId === taskList.id && item?.taskId === task.id)
+            countTasks++
+        })
+
+        if (countTasks === taskList.tasks.length) {
+          newSelectedList.push({
+            taskListId: taskList.id,
+            taskListName: taskList.name,
+          });
+        }
+
       } else {
-        setIsAllChecked(false);
-        newSelectedList.splice(indexSelected, 1);
+        const indexSelectedSubTask = selectedList.findIndex(
+          (item) =>
+            item?.taskListId === taskList.id &&
+            item?.taskId === task.id &&
+            item?.subTaskId === subTask.id,
+        );
+
+        if (indexSelectedSubTask !== -1)
+          newSelectedList.splice(indexSelectedSubTask, 1);
+
+        // remove task by index
+        const indexSelectedTask = newSelectedList.findIndex(item => {
+          return item?.taskId === task.id && item?.taskListId === taskList.id && !item?.subTaskId
+        })
+        if (indexSelectedTask !== -1)
+          newSelectedList.splice(indexSelectedTask, 1);
+
+        // remove task list by index
+        const indexSelectedTaskList = newSelectedList.findIndex(item =>
+          !item?.taskId && item?.taskListId === taskList.id && !item?.subTaskId
+        )
+        if (indexSelectedTaskList !== -1)
+          newSelectedList.splice(indexSelectedTaskList, 1);
       }
       setSelectedList(newSelectedList);
     };
@@ -734,6 +831,12 @@ const ItemList = () => {
     }
   }
 
+  const isCheckedTask = (task: Task) => {
+    return selectedList.some(item => {
+      return item.taskId === task.id || item.subTaskId === task.id
+    })
+  }
+
   useEventListener("scroll", onScroll, undefined, SCROLL_ID);
 
   useEffect(() => {
@@ -809,12 +912,7 @@ const ItemList = () => {
       <FixedLayout flex={1}>
         <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
           {dataList.map((taskListItem, indexTaskList) => {
-            const isChecked = selectedList.some(
-              (selected) =>
-                !selected?.subTaskId &&
-                !selected.taskId &&
-                selected?.taskListId === taskListItem.id,
-            );
+            const isChecked = Boolean(taskListItem.tasks.length) && taskListItem.tasks.every(item => isCheckedTask(item))
 
             return (
               <DroppableTaskList
@@ -950,6 +1048,7 @@ const ItemList = () => {
                                             size="small"
                                             checked={isChecked}
                                             onChange={onToggleSubTask(
+                                              !isChecked,
                                               taskListItem,
                                               task,
                                               subTask,
