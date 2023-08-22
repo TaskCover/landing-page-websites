@@ -378,23 +378,19 @@ const ItemList = () => {
       }
       // unchecked
       else {
-        const indexDeleted = newSelectedList.findIndex(
-          (selected) => !selected?.subTaskId && selected.taskId === task.id,
-        );
-
-        if (indexDeleted !== -1) {
-          newSelectedList.splice(indexDeleted, 1);
-        }
-
-        // remove all subtask
+        // remove all subtask, task with that id
         newSelectedList = newSelectedList.filter(
-          (item) => item?.taskId === task.id && item?.subTaskId,
+          (item) => item?.taskId !== task.id,
         );
 
         // remove task list
-        newSelectedList = newSelectedList.filter(
-          (item) => item?.taskListId === taskList.id && !!item?.taskId && !!item?.subTaskId,
+        const indexSelectTaskList = newSelectedList.findIndex(
+          (selected) => selected.taskListId === taskList.id && !selected.taskId && !selected.subTaskId,
         );
+
+        if (indexSelectTaskList !== -1) {
+          newSelectedList.splice(indexSelectTaskList, 1);
+        }
       }
 
       setSelectedList(newSelectedList);
@@ -403,7 +399,7 @@ const ItemList = () => {
 
   const onToggleSubTask = (newChecked: boolean, taskList: TaskList, task: Task, subTask: Task) => {
     return () => {
-      let newSelectedList = [...selectedList];
+      const newSelectedList = [...selectedList];
 
       if (newChecked) {
         newSelectedList.push({
@@ -434,7 +430,7 @@ const ItemList = () => {
         // count task in task list
         let countTasks = 0
         newSelectedList.forEach(item => {
-          if (item?.taskId === task.id && !item?.subTaskId)
+          if (item.taskListId === taskList.id && item?.taskId && !item?.subTaskId)
             countTasks++
         })
 
@@ -457,15 +453,20 @@ const ItemList = () => {
           newSelectedList.splice(indexSelectedSubTask, 1);
 
         // remove task
-        newSelectedList = newSelectedList.filter(
+        const indexSelectedTask = newSelectedList.findIndex(
           (item) => {
-            return item?.taskId === task.id && !!item?.subTaskId
+            return item?.taskId === task.id && !item?.subTaskId
           }
         );
+        if (indexSelectedTask !== -1)
+          newSelectedList.splice(indexSelectedTask, 1);
+
         // remove task list
-        newSelectedList = newSelectedList.filter(
-          (item) => item?.taskListId === taskList.id && !!item?.taskId && !!item?.subTaskId,
+        const indexSelectedTaskList = newSelectedList.findIndex(
+          (item) => item?.taskListId === taskList.id && !item?.taskId && !item?.subTaskId,
         );
+        if (indexSelectedTaskList !== -1)
+          newSelectedList.splice(indexSelectedTaskList, 1);
       }
       setSelectedList(newSelectedList);
     };
