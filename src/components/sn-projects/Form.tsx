@@ -149,6 +149,9 @@ const Form = (props: FormProps) => {
       if (hasValue(initialValues?.working_hours)) {
         dataParsed["working_hours"] = dataParsed["working_hours"] ?? null;
       }
+      if (hasValue(initialValues?.currency)) {
+        dataParsed["currency"] = dataParsed["currency"] ?? null;
+      }
 
       const newItem = await onSubmitProps(dataParsed);
 

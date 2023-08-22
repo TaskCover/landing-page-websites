@@ -111,6 +111,7 @@ const ItemList = () => {
               ? new Date(item.end_date).getTime()
               : undefined,
             expected_cost: item?.expected_cost,
+            currency: item?.currency,
             working_hours: item?.working_hours,
             members: item?.members.map(({ id, fullname, ...rest }) => ({
               id,
