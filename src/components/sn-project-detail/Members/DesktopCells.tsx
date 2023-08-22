@@ -27,10 +27,10 @@ const DesktopCells = (props: DesktopCellsProps) => {
       <BodyCell align="left" textProps={{ noWrap: true }} tooltip={item.email}>
         {item.email}
       </BodyCell>
-      <BodyCell>{item?.position_project?.name}</BodyCell>
+      <BodyCell>{item?.position?.name}</BodyCell>
       <BodyCell></BodyCell>
-      <BodyCell tooltip={formatDate(item.date_in, DATE_TIME_FORMAT_SLASH)}>
-        {formatDate(item.date_in)}
+      <BodyCell tooltip={formatDate(item?.date_in, DATE_TIME_FORMAT_SLASH)}>
+        {formatDate(item?.date_in)}
       </BodyCell>
       <BodyCell align="left">
         <DeleteUser id={item.id} />
