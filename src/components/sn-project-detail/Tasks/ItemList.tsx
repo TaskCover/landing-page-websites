@@ -1119,7 +1119,7 @@ const ItemList = () => {
                                 </div>
                               )}
                             </Droppable>
-                            <Stack
+                            {/* <Stack
                               width="100%"
                               direction="row"
                               spacing={1}
@@ -1164,7 +1164,7 @@ const ItemList = () => {
                                   },
                                 }}
                               />
-                            </Stack>
+                            </Stack> */}
 
                             {!!errorTaskName && (
                               <Text variant="caption" color="error">
