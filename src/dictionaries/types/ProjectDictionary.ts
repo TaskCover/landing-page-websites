@@ -173,6 +173,7 @@ export type ProjectDictionary = {
     };
     notification: {
       assignSuccess: string;
+      dateSuccess: string;
     };
   };
   detailActivities: {

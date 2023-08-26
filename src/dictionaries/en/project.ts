@@ -178,6 +178,7 @@ export const ProjectLang: ProjectDictionary = {
     },
     notification: {
       assignSuccess: "Assign task successfully!",
+      dateSuccess: "Change time successfully",
     },
   },
   detailActivities: {

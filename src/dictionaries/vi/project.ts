@@ -178,6 +178,7 @@ export const ProjectLang: ProjectDictionary = {
     },
     notification: {
       assignSuccess: "Giao công việc cho thành viên thành công!",
+      dateSuccess: "Thay đổi thời gian thành công",
     },
   },
   detailActivities: {
