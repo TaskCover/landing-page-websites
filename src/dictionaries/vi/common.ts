@@ -36,6 +36,7 @@ export const CommonLang: CommonDictionary = {
       description: "Mô tả",
       note: "Ghi chú",
       title: "Tiêu đề",
+      selectTime: "Chọn ngày"
     },
     confirm: "Xác nhận",
     save: "Lưu",

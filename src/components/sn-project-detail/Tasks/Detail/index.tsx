@@ -20,6 +20,7 @@ const Detail = () => {
 
   const [tab, setTab] = useState<TabDetail>(TabDetail.DETAIL);
   const onClose = () => {
+    setTab(TabDetail.DETAIL)
     onUpdateTaskDetail();
   };
 

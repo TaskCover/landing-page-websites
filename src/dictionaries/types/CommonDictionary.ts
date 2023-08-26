@@ -34,6 +34,7 @@ export type CommonDictionary = {
       description: string;
       note: string;
       title: string;
+      selectTime: string;
     };
     confirm: string;
     save: string;

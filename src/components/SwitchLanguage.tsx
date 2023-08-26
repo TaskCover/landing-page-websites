@@ -27,42 +27,52 @@ const SwitchLanguage = (props: StackProps) => {
     }
   };
 
+  const langData = [
+    {
+      img: '/images/img-vn-flag.png',
+      alt: 'Vietnamese Flag',
+      content: commonT("i18n.vn"),
+      value: 'vi'
+    },
+    {
+      img: '/images/img-usa-flag.png',
+      alt: 'USA Flag',
+      content: commonT("i18n.en"),
+      value: 'en'
+    },
+  ]
+
   return (
-      <Stack {...props}>
-        <Select
-            value={locale}
-            onChange={onChangeValue}
-            disableUnderline
-            sx = {{
-              ...defaultSx,
-              boxShadow: 'none',
-              '.MuiOutlinedInput-notchedOutline': { border: 0 }
-            }
-          }
-        >
-          <MenuItem value="vi">
-            <div style={{display:"flex", padding:"5px"}}>
-              <img src="/images/img-vn-flag.png" alt="Vietnamese Flag" style={{marginTop:"16px",marginRight:"5px", width:"24px", height:"24px"}} />
-              <p>{commonT("i18n.vn")}</p>
-            </div>
-
-          </MenuItem>
-          <MenuItem value="en">
-            <div style={{display:"flex",  padding:"5px"}}>
-              <img src="/images/img-usa-flag.png" alt="USA Flag" style={{marginTop:"16px",marginRight:"5px", width:"24px", height:"24px"}} />
-              <p>{commonT("i18n.en")}</p>
-            </div>
-
-          </MenuItem>
-
-        </Select>
-        <Link
-            ref={linkRef}
-            href={fullPath}
-            locale={locale === "vi" ? "en" : "vi"}
-            sx={{ display: "none" }}
-        />
-      </Stack>
+    <Stack {...props}>
+      <Select
+        value={locale}
+        onChange={onChangeValue}
+        disableUnderline
+        sx={{
+          ...defaultSx,
+          boxShadow: 'none',
+          '.MuiOutlinedInput-notchedOutline': { border: 0 }
+        }
+        }
+      >
+        {
+          langData.map(item => (
+            <MenuItem value={item.value} key={item.value} sx={{ '* > p': { marginY: '8px' } }}>
+              <div style={{ display: "flex", alignItems: 'center', justifyContent: 'center' }}>
+                <img src={item.img} alt={item.alt} style={{ marginRight: "5px", width: "24px", height: "24px" }} />
+                <p>{item.content}</p>
+              </div>
+            </MenuItem>
+          ))
+        }
+      </Select>
+      <Link
+        ref={linkRef}
+        href={fullPath}
+        locale={locale === "vi" ? "en" : "vi"}
+        sx={{ display: "none" }}
+      />
+    </Stack>
 
   );
 };
