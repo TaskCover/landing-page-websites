@@ -55,3 +55,11 @@ export enum FILE_MAP {
   CSV,
   PDF,
 }
+
+export enum SALE_STAGE {
+  LEAD,
+  PROPOSAL_SENT,
+  PROSPECT,
+  WAITING_APPROVE,
+  NEGOTIATION,
+}
