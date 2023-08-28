@@ -52,7 +52,7 @@ export const Endpoint = {
   PROJECT_TYPES: "type-project",
   PROJECT_TYPE_ITEM: "type-project/{id}",
   PROJECT_TYPES_INACTIVE: "type-project/inactive",
-  SALES_LIST: "/sales",
+  SALES_LIST: "/sales/all",
   COST_HISTORY: "/cost-history",
 
   POSITIONS_ALL: "/positions/all",

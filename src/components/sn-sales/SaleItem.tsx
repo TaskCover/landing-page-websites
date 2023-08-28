@@ -9,34 +9,34 @@ import { formatDate, formatNumber } from "utils/index";
 import { DATE_FORMAT_SLASH, NS_SALES, SHORT_TIME_FORMAT } from "constant/index";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
+import { Sales } from "store/sales/reducer";
+import { ownKeys } from "immer/dist/internal";
 
 interface IProps {
-  item: Record<string, string | number>; // change to data type
+  item: Sales; // change to data type
 }
-
-const dropdwonDummy = [
-  {
-    value: "Test",
-    label: "Test",
-  },
-];
-
 const SaleItem = ({ item }: IProps) => {
   const onChange = () => {
     console.log("change");
   };
 
+  const owner = [
+    {
+      value: item.owner.id,
+      label: item.owner.fullname,
+    }
+  ]
   return (
     <TableRow>
       <BodyCell align="left">
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} src={item.avatar as string}></Avatar>
-          <Text > {item.name}</Text>
+          <Avatar size={32} src={item.owner.avatar?.link || ""}></Avatar>
+          <Text> {item.name}</Text>
         </Stack>
       </BodyCell>
       <StatusCell
-        color={COLOR_STAGE_STATUS[item.stage]}
-        text={TEXT_STAGE_STATUS[item.stage]}
+        color={COLOR_STAGE_STATUS[item.status]}
+        text={TEXT_STAGE_STATUS[item.status]}
         namespace={NS_SALES}
       >
         {item.stage}
@@ -52,14 +52,15 @@ const SaleItem = ({ item }: IProps) => {
           }}
           size="small"
           name="owner"
-          value={item.owner}
+          value={item.owner.id}
           onChange={onChange}
-          options={dropdwonDummy}
+          options={owner}
         />
       </BodyCell>
-      <BodyCell align="right">
-        {formatNumber(item.revenue, {
-          prefix: "$",
+      {/* // TODO: improve when make clear api */}
+      {/* <BodyCell align="right">
+        {formatNumber(item.currency.name, {
+          prefix: ite,
           numberOfFixed: 2,
         })}
       </BodyCell>
@@ -68,18 +69,18 @@ const SaleItem = ({ item }: IProps) => {
           prefix: "$",
           numberOfFixed: 2,
         })}
-      </BodyCell>
+      </BodyCell> */}
       <BodyCell
         align="right"
         tooltip={formatDate(item.created_time, SHORT_TIME_FORMAT)}
       >
-        {formatDate(item.time, SHORT_TIME_FORMAT)}h
+        {formatDate(item.created_time, SHORT_TIME_FORMAT)}h
       </BodyCell>
       <BodyCell align="right">
         {formatNumber(item.probability, { suffix: "%" })}
       </BodyCell>
       <BodyCell align="left">
-        {formatDate(item.lastActivity, DATE_FORMAT_SLASH)}
+        {formatDate(item.updated_time, DATE_FORMAT_SLASH)}
       </BodyCell>
     </TableRow>
   );
