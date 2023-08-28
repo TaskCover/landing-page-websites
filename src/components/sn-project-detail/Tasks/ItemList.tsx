@@ -262,12 +262,18 @@ const ItemList = () => {
         throw AN_ERROR_TRY_AGAIN;
       }
 
-      await onUpdateTask(
+      const newData = await onUpdateTask(
         { [name]: value },
         taskListId,
         taskId,
         subTaskId
       );
+      if (newData) {
+        onAddSnackbar(
+          projectT("taskDetail.notification.dateSuccess"),
+          "success",
+        );
+      }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
@@ -1184,7 +1190,7 @@ const ItemList = () => {
                                 </div>
                               )}
                             </Droppable>
-                            <Stack
+                            {/* <Stack
                               width="100%"
                               direction="row"
                               spacing={1}
@@ -1229,7 +1235,7 @@ const ItemList = () => {
                                   },
                                 }}
                               />
-                            </Stack>
+                            </Stack> */}
 
                             {!!errorTaskName && (
                               <Text variant="caption" color="error">

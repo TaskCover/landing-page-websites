@@ -29,8 +29,8 @@ const DesktopCells = (props: DesktopCellsProps) => {
       </BodyCell>
       <BodyCell>{item?.position?.name}</BodyCell>
       <BodyCell></BodyCell>
-      <BodyCell tooltip={formatDate(item.date_in, DATE_TIME_FORMAT_SLASH)}>
-        {formatDate(item.date_in)}
+      <BodyCell tooltip={formatDate(item?.date_in, DATE_TIME_FORMAT_SLASH)}>
+        {formatDate(item?.date_in)}
       </BodyCell>
       <BodyCell align="left">
         <DeleteUser id={item.id} />

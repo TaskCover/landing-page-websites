@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import {
   changeParentTask,
@@ -96,6 +97,7 @@ export interface Project {
   description: string;
   expected_cost: number;
   working_hours: number;
+  currency: string;
   start_date: string;
   end_date: string;
   number?: string;
