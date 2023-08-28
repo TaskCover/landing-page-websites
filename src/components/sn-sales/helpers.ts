@@ -15,3 +15,4 @@ export const COLOR_STAGE_STATUS: { [key in SALE_STAGE]: string } = {
   [SALE_STAGE.WAITING_APPROVE]: "success",
   [SALE_STAGE.NEGOTIATION]: "purple",
 };
+

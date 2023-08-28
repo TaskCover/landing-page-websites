@@ -1,5 +1,6 @@
 export type SalesDictionary = {
   list: {
+    title: string;
     head: {
       title: string;
     };
@@ -18,13 +19,14 @@ export type SalesDictionary = {
       unit: string;
       owner: string;
       tags: string;
+      submit: string;
     };
     table: {
       stage: string;
       pjRevenue: string;
       revenue: string;
       time: string;
-      onwer: string;
+      owner: string;
       probability: string;
       lastActivity: string;
     };

@@ -2,6 +2,7 @@ import { SalesDictionary } from "dictionaries/types/SalesDictionary";
 
 export const salesLang: SalesDictionary = {
   list: {
+    title: 'Giao dịch',
     head: {
       title: "Sales | Taskcover",
     },
@@ -20,13 +21,14 @@ export const salesLang: SalesDictionary = {
       unit: "Đơn vị",
       owner: "Chủ sở hữu",
       tags: "Thẻ",
+      submit: "Thêm Giao Dịch"
     },
     table: {
       stage: "Giai đoạn",
       pjRevenue: "Doanh thu PJ",
       revenue: "Doanh thu",
       time: "Thời gian",
-      onwer: "Chủ sở hữu",
+      owner: "Chủ sở hữu",
       probability: "Xác suất",
       lastActivity: "Hoạt động gần đây",
     },

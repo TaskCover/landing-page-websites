@@ -56,6 +56,10 @@ export enum FILE_MAP {
   PDF,
 }
 
+export enum SORT_OPTIONS {
+  ASC = "asc",
+  DESC = "desc",
+}
 export enum SALE_STAGE {
   LEAD,
   PROPOSAL_SENT,

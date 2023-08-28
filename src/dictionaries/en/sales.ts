@@ -2,6 +2,7 @@ import { SalesDictionary } from "dictionaries/types/SalesDictionary";
 
 export const SalesLang: SalesDictionary = {
   list: {
+    title: 'Sales',
     head: {
       title: "Sales | Taskcover",
     },
@@ -20,13 +21,14 @@ export const SalesLang: SalesDictionary = {
       unit: "Unit",
       owner: "Owner",
       tags: "Tags",
+      submit: "Create Deal"
     },
     table: {
       stage: "Stage",
       pjRevenue: "PJ Revenue",
       revenue: "Revenue",
       time: "Time",
-      onwer: "Owner",
+      owner: "Owner",
       probability: "Probability",
       lastActivity: "Last Activity",
     },
