@@ -268,6 +268,15 @@ const Form = (props: FormProps) => {
     }
   };
 
+  const [typeInput, setTypeInput] = useState(formik.values?.type_project.label)
+
+  const handleAddingNewType = async () => {
+    const result = await onCreateProjectType({ name: typeInput })
+    const newType = { value: result.id, label: result.name }
+    setTypeProject(newType)
+    formik.setFieldValue('type_project', result.id);
+  }
+
   return (
     <FormLayout
       sx={{
@@ -325,6 +334,8 @@ const Form = (props: FormProps) => {
                 {...params}
                 label={projectT("list.form.title.projectType")}
                 onBlur={formik.handleBlur}
+                value={typeInput}
+                onChange={(e) => setTypeInput(e.target.value)}
                 error={
                   !!commonT(touchedErrors?.type_project, {
                     name: projectT("list.form.title.projectType"),
@@ -360,7 +371,7 @@ const Form = (props: FormProps) => {
                     backgroundColor: "transparent",
                     cursor: "pointer",
                   }}
-                  onClick={() => onCreateProjectType}
+                  onClick={handleAddingNewType}
                 >
                   + Add to new project type
                 </div>
