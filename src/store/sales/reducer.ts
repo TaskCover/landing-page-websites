@@ -28,6 +28,9 @@ export interface Sales {
   todo_list: string[];
   stage: string;
   comment: Comment[];
+  revenue: number;
+  revenuePJ: number;
+  estimate: number;
   activity: string[];
 }
 

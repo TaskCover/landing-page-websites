@@ -26,7 +26,7 @@ export const getSales = createAsyncThunk(
         ? queries.pageSize
         : Number(queries.pageSize),
     }) as GetSalesListQueries;
-    
+
     try {
       const response = await client.get(Endpoint.SALES_LIST, newQueries, {
         baseURL: SALE_API_URL,

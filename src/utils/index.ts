@@ -6,7 +6,6 @@ import {
   DATE_FORMAT_SLASH,
 } from "constant/index";
 import { ItemListResponse, OptionFormatNumber } from "constant/types";
-import { useTranslations } from "next-intl";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import StringFormat from "string-format";
@@ -340,20 +339,9 @@ export const getMonthShortName = (monthNo) => {
   date.setMonth(monthNo);
   return date.toLocaleString("en-US", { month: "short" });
 };
-
-export const getTimeDurationInHoursAndMinutes = (time: string) => {
-  const currentDate = moment();
-  const startDate = moment(time);
-
-  if (!startDate.isValid()) return "Invalid date";
-  if (currentDate.isBefore(startDate)) return "00:00";
-
-  const duration = moment.duration(currentDate.diff(time));
-
-  const totalMinutes = duration.asMinutes();
-
-  const totalHours = Math.floor(totalMinutes / 60);
-  const remainingMinutes = Math.floor(totalMinutes) % 60;
+export const formatEstimateTime = (time: string | number) => {
+  const totalHours = Math.floor(Number(time) / 60);
+  const remainingMinutes = Math.floor(Number(time)) % 60;
 
   const formattedHours = totalHours < 10 ? `0${totalHours}` : totalHours;
   const formattedMinutes =

@@ -22,6 +22,7 @@ import { useSales } from "store/sales/selectors";
 import useQueryParams from "hooks/useQueryParams";
 import { usePathname, useRouter } from "next-intl/client";
 import { useCompany } from "store/manager/selectors";
+import { formatEstimateTime } from '../../utils/index';
 
 const SalesPage = () => {
   const commonT = useTranslations(NS_COMMON);
@@ -36,7 +37,9 @@ const SalesPage = () => {
     totalItems,
     salesError,
     onGetSales,
-    salesFilters,
+    totalRevenue,
+    totalRevenuePJ,
+    totalTime,
     pageIndex,
     pageSize,
     totalPages,
@@ -67,7 +70,7 @@ const SalesPage = () => {
 
   const headerList: CellProps[] = useMemo(
     () => [
-      {
+      { 
         value: commonT("name"),
         align: "left",
         width: "15%",
@@ -92,7 +95,7 @@ const SalesPage = () => {
             <Text variant="h6" color="grey.400">
               {salesT("list.table.revenue")}
             </Text>
-            <Text variant="h6">{formatNumber(100, { prefix: "$" })}</Text>
+            <Text variant="h6">{formatNumber(totalRevenue, { prefix: "$" })}</Text>
           </Stack>
         ),
         minWidth: 100,
@@ -106,7 +109,7 @@ const SalesPage = () => {
             <Text variant="h6" color="grey.400">
               {salesT("list.table.pjRevenue")}
             </Text>
-            <Text variant="h6">{formatNumber(100, { prefix: "$" })}</Text>
+            <Text variant="h6">{formatNumber(totalRevenuePJ, { prefix: "$" })}</Text>
           </Stack>
         ),
         minWidth: 100,
@@ -121,7 +124,7 @@ const SalesPage = () => {
               {salesT("list.table.time")}
             </Text>
             <Text variant="h6">
-              {formatDate(new Date().toDateString(), SHORT_TIME_FORMAT)}h
+              {formatEstimateTime(totalTime)}h
             </Text>
           </Stack>
         ),
@@ -151,7 +154,7 @@ const SalesPage = () => {
         <TableLayout
           headerList={headerList}
           noData={!isIdle && totalItems === 0}
-          minWidth={820}
+          minWidth={1020}
           px={2}
           pending={isFetching}
           headerProps={{

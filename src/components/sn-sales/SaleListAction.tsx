@@ -13,6 +13,7 @@ import { useSales } from "store/sales/selectors";
 import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
 import { CompanyFilter } from "components/sn-company-detail/Employees/components";
+import AddSquareIcon from "icons/AddSquareIcon";
 
 const modalName = {
   DEAL: "deal",
@@ -118,9 +119,23 @@ const SalesListAction = () => {
             onClick={() => onOpenModal(modalName.DEAL)}
             size="small"
             variant="contained"
-            startIcon={<PlusIcon />}
             sx={{ height: 40, width: "fit-content" }}
           >
+            <AddSquareIcon
+              sx={{
+                display: { xs: "block", md: "none" },
+                width: 24,
+                height: 24,
+              }}
+            />
+            <PlusIcon
+              sx={{
+                display: { xs: "none", md: "block" },
+                mr: 1,
+                width: 18,
+                height: 18,
+              }}
+            />
             <Text sx={{ display: { xs: "none", md: "block" } }} color="inherit">
               {salesT("list.action.deal")}
             </Text>
@@ -130,8 +145,14 @@ const SalesListAction = () => {
             size="small"
             variant="secondary"
             sx={{ height: 40, width: "fit-content" }}
-            startIcon={<ArrowExport />}
           >
+            <ArrowExport
+              sx={{
+                width: { xs: 24, md: 18 },
+                height: { xs: 24, md: 18 },
+                mr: 1,
+              }}
+            />
             <Text sx={{ display: { xs: "none", md: "block" } }} color="inherit">
               {salesT("list.action.export")}
             </Text>

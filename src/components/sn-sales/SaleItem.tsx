@@ -12,7 +12,7 @@ import { Dropdown } from "components/Filters";
 import {
   formatDate,
   formatNumber,
-  getTimeDurationInHoursAndMinutes,
+  formatEstimateTime,
 } from "utils/index";
 import { DATE_FORMAT_SLASH, NS_SALES, SHORT_TIME_FORMAT } from "constant/index";
 import Avatar from "components/Avatar";
@@ -34,7 +34,8 @@ const SaleItem = ({ item }: IProps) => {
     },
   ];
 
-  const time = getTimeDurationInHoursAndMinutes(item.start_date);
+
+  const time = formatEstimateTime(item.estimate);
 
   return (
     <TableRow>
@@ -69,13 +70,13 @@ const SaleItem = ({ item }: IProps) => {
       </BodyCell>
       {/* // TODO: improve when make clear api */}
       <BodyCell align="right">
-        {formatNumber(0, {
+        {formatNumber(item.revenue, {
           prefix: CURRENCY_SYMBOL[item.currency],
           numberOfFixed: 2,
         })}
       </BodyCell>
       <BodyCell align="right">
-        {formatNumber(0, {
+        {formatNumber(item.revenuePJ, {
           prefix: CURRENCY_SYMBOL[item.currency],
           numberOfFixed: 2,
         })}

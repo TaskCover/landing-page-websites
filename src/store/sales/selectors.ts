@@ -21,6 +21,18 @@ export const useSales = () => {
     [salesStatus],
   );
 
+  const totalRevenue = useMemo(() => {
+    return sales.reduce((prev, data) => prev + data.revenue, 0);
+  }, [pageIndex, pageSize, totalItems, totalPages]);
+
+  const totalRevenuePJ = useMemo(() => {
+    return sales.reduce((prev, data) => prev + data.revenuePJ, 0);
+  }, [pageIndex, pageSize, totalItems, totalPages]);
+
+  const totalTime = useMemo(() => {
+    return sales.reduce((prev, data) => prev + data.estimate, 0);
+  }, [pageIndex, pageSize, totalItems, totalPages]);
+
   const onGetSales = useCallback(
     async (queries: GetSalesListQueries) => {
       await dispatch(getSales(queries));
@@ -32,6 +44,9 @@ export const useSales = () => {
     sales,
     salesFilters,
     salesError,
+    totalRevenue,
+    totalRevenuePJ,
+    totalTime,
     salesStatus,
     pageIndex,
     pageSize,
