@@ -26,8 +26,8 @@ export type ErrorResponse = {
 };
 
 export interface BaseQueries {
-  pageIndex: number;
-  pageSize: number;
+  pageIndex?: number;
+  pageSize?: number;
 }
 
 export interface User {

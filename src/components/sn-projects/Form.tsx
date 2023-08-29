@@ -245,7 +245,7 @@ const Form = (props: FormProps) => {
   };
 
   useEffect(() => {
-    onGetProjectTypeOptions({ pageIndex: 1, pageSize: 20 });
+    onGetProjectTypeOptions({ pageSize: 50000 });
   }, [onGetProjectTypeOptions]);
 
   useEffect(() => {
@@ -266,15 +266,18 @@ const Form = (props: FormProps) => {
     } else {
       formik.setFieldValue('type_project', '');
     }
+    setOpenTypeProject(false)
   };
 
   const [typeInput, setTypeInput] = useState(formik.values?.type_project.label)
+  const [openTypeProject, setOpenTypeProject] = useState(false)
 
   const handleAddingNewType = async () => {
     const result = await onCreateProjectType({ name: typeInput })
     const newType = { value: result.id, label: result.name }
     setTypeProject(newType)
     formik.setFieldValue('type_project', result.id);
+    setOpenTypeProject(false)
   }
 
   return (
@@ -329,6 +332,8 @@ const Form = (props: FormProps) => {
             options={projectTypeOptions}
             value={typeProject}
             onChange={handleOnChange}
+            onFocus={() => setOpenTypeProject(true)}
+            open={openTypeProject}
             renderInput={(params) => (
               <TextField
                 {...params}
