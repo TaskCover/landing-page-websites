@@ -7,6 +7,7 @@ import { BaseQueries } from "constant/types";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
 import { Task, TaskList } from "./reducer";
+import { Option } from 'constant/types';
 
 export enum ProjectStatus {
   ACTIVE = "ACTIVE",
@@ -50,7 +51,7 @@ export type ProjectData = {
   members?: {
     id: string;
   }[];
-  type_project: string;
+  type_project: Option;
   status?: ProjectStatus;
   saved?: boolean;
   avatar?: string[];

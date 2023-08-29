@@ -10,7 +10,7 @@ import {
   NS_PROJECT,
 } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
-import { memo, useEffect, useMemo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
 import {
@@ -257,6 +257,26 @@ const Form = (props: FormProps) => {
   }, [onGetOptions]);
   const { onCreateProjectType } = useProjectTypes();
 
+  const [typeProject, setTypeProject] = useState(formik.values?.type_project)
+
+  const handleOnChange = (event, option) => {
+    if (option) {
+      formik.setFieldValue('type_project', option.value);
+      setTypeProject(option)
+    } else {
+      formik.setFieldValue('type_project', '');
+    }
+  };
+
+  const [typeInput, setTypeInput] = useState(formik.values?.type_project.label)
+
+  const handleAddingNewType = async () => {
+    const result = await onCreateProjectType({ name: typeInput })
+    const newType = { value: result.id, label: result.name }
+    setTypeProject(newType)
+    formik.setFieldValue('type_project', result.id);
+  }
+
   return (
     <FormLayout
       sx={{
@@ -307,14 +327,15 @@ const Form = (props: FormProps) => {
           <Autocomplete
             popupIcon={<ChevronIcon sx={{ fontSize: 16 }} />}
             options={projectTypeOptions}
-            getOptionLabel={(option) => option.label}
+            value={typeProject}
+            onChange={handleOnChange}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label={projectT("list.form.title.projectType")}
-                onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values?.type_project}
+                value={typeInput}
+                onChange={(e) => setTypeInput(e.target.value)}
                 error={
                   !!commonT(touchedErrors?.type_project, {
                     name: projectT("list.form.title.projectType"),
@@ -350,7 +371,7 @@ const Form = (props: FormProps) => {
                     backgroundColor: "transparent",
                     cursor: "pointer",
                   }}
-                  onClick={() => onCreateProjectType}
+                  onClick={handleAddingNewType}
                 >
                   + Add to new project type
                 </div>
