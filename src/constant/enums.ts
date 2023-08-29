@@ -57,15 +57,15 @@ export enum FILE_MAP {
 }
 
 export enum SORT_OPTIONS {
-  ASC = "asc",
-  DESC = "desc",
+  ASC = "1",
+  DESC = "-1",
 }
 
 export enum SALE_STAGE {
-  LEAD,
-  PROPOSAL_SENT,
-  PROSPECT,
-  NEGOTIATION,
+  LEAD= 'LEAD',
+  PROPOSAL_SENT = 'PROPOSAL_SENT',
+  PROSPECT = 'PROSPECT',
+  NEGOTIATION = 'NEGOTIATION',
   WAITING_APPROVE = "WATTING_APPROVE",
 }
 

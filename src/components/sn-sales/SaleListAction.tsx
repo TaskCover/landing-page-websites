@@ -30,7 +30,9 @@ const SalesListAction = () => {
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
 
-  const [queries, setQueries] = useState<Params>({});
+  const [queries, setQueries] = useState<Params>({
+    sort: SORT_OPTIONS.DESC,
+  });
 
   const onOpenModal = (modal) => {
     switch (modal) {
@@ -122,7 +124,7 @@ const SalesListAction = () => {
             variant="contained"
             sx={{ height: 40, width: "fit-content" }}
           >
-            <AddSquareIcon
+            <AddSquareIcon  
               sx={{
                 display: { xs: "block", md: "none" },
                 width: 24,
@@ -172,12 +174,8 @@ const SalesListAction = () => {
         minWidth={{ md: "fit-content" }}
       >
         <Stack direction="row" alignItems="center" gap={2}>
-          <CompanyFilter
-            hasAll={false}
-            onChange={(name, value) => onChangeQueries(name, value)}
-          />
+
           <Dropdown
-            placeholder={"sort by"}
             name="sort"
             hasAll={false}
             onChange={(name, value) => onChangeQueries(name, value)}

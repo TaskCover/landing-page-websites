@@ -1,4 +1,4 @@
-import { DataStatus } from "constant/enums";
+import { DataStatus, SORT_OPTIONS } from "constant/enums";
 import { useCallback, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
@@ -23,15 +23,15 @@ export const useSales = () => {
 
   const totalRevenue = useMemo(() => {
     return sales.reduce((prev, data) => prev + data.revenue, 0);
-  }, [pageIndex, pageSize, totalItems, totalPages]);
+  }, [sales]);
 
   const totalRevenuePJ = useMemo(() => {
     return sales.reduce((prev, data) => prev + data.revenuePJ, 0);
-  }, [pageIndex, pageSize, totalItems, totalPages]);
+  }, [sales]);
 
   const totalTime = useMemo(() => {
     return sales.reduce((prev, data) => prev + data.estimate, 0);
-  }, [pageIndex, pageSize, totalItems, totalPages]);
+  }, [sales]);
 
   const onGetSales = useCallback(
     async (queries: GetSalesListQueries) => {
@@ -58,7 +58,12 @@ export const useSales = () => {
           newPageIndex =
             totalItems % pageSize === 0 ? totalPages + 1 : totalPages;
         }
-        onGetSales({ ...salesFilters, pageIndex: newPageIndex, pageSize });
+        onGetSales({
+          ...salesFilters,
+          pageIndex: 1,
+          pageSize: 10,
+          sort: SORT_OPTIONS.DESC,
+        });
       });
     },
     [dispatch],

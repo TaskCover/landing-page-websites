@@ -6,7 +6,7 @@ import {
   TextField,
   Autocomplete,
 } from "@mui/material";
-import React, { memo, } from "react";
+import React, { memo } from "react";
 import FormLayout from "components/FormLayout";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
@@ -122,13 +122,12 @@ const AddDealModal = ({ open, onClose }: IProps) => {
   };
 
   const onSearchMember = (name: string, value = "") => {
-      onGetEmployeeOptions({
-        pageIndex: 1,
-        pageSize: 20,
-        email: (value as string) || "",
-      });
+    onGetEmployeeOptions({
+      pageIndex: 1,
+      pageSize: 20,
+      email: (value as string) || "",
+    });
   };
-
 
   return (
     <FormLayout
@@ -161,16 +160,19 @@ const AddDealModal = ({ open, onClose }: IProps) => {
           <Grid item xs={12} md={8}>
             <Controller
               control={control}
-              name="company"
+              name="owner"
               render={({ field, fieldState: { error } }) => (
                 <Select
-                  options={companyOptions}
-                  fullWidth
-                  onEndReached={onEndReachedCompanyOptions}
-                  pending={companyIsFetching}
+                  onChangeSearch={(_, newValue) =>
+                    onSearchMember(field.name, newValue as string)
+                  }
                   error={error?.message}
+                  fullWidth
+                  options={employeeOptions}
+                  onEndReached={onEndReachedEmployeeOptions}
+                  pending={employeeIsFetching}
                   {...field}
-                  title={commonT("company")}
+                  title={salesT(`${salesFormTranslatePrefix}.owner`)}
                 />
               )}
             />
@@ -193,24 +195,6 @@ const AddDealModal = ({ open, onClose }: IProps) => {
         </Grid>
         <Controller
           control={control}
-          name="owner"
-          render={({ field, fieldState: { error } }) => (
-            <Select
-              onChangeSearch={(_, newValue) =>
-                onSearchMember(field.name, newValue as string)
-              }
-              error={error?.message}
-              fullWidth
-              options={employeeOptions}
-              onEndReached={onEndReachedEmployeeOptions}
-              pending={employeeIsFetching}
-              {...field}
-              title={salesT(`${salesFormTranslatePrefix}.owner`)}
-            />
-          )}
-        />
-        <Controller
-          control={control}
           name="members"
           render={({ field, fieldState: { error } }) => {
             const { onChange, ...props } = field;
@@ -218,12 +202,14 @@ const AddDealModal = ({ open, onClose }: IProps) => {
               const mappingData = data.map((item) => item.value);
               onChange(mappingData);
             };
-            const filteredOption = employeeOptions.filter((item) => item.value !== getValues("owner"));
+            const filteredOption = employeeOptions.filter(
+              (item) => item.value !== getValues("owner"),
+            );
             return (
               <SelectMultiple
                 options={filteredOption}
                 onSelect={onSelect}
-                onOpen={ () => onSearchMember(field.name, '')}
+                onOpen={() => onSearchMember(field.name, "")}
                 error={error?.message}
                 onEndReached={onEndReachedEmployeeOptions}
                 loading={employeeIsFetching}

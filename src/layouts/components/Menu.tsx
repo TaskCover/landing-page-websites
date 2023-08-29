@@ -259,7 +259,7 @@ const DATA: MenuItemProps[] = [
     label: "menu.sales",
     href: SALES_LIST_PATH,
     icon: <CardReceive />,
-    roles: [Permission.AM],
+    roles: [Permission.AM, Permission.ST],
   },
 ];
 

@@ -29,6 +29,7 @@ export const getSales = createAsyncThunk(
   async (queries: GetSalesListQueries) => {
     const newQueries = cleanObject({
       search_key: queries.search_key || undefined,
+      sort_by: queries.sort || undefined,
       company: queries.company || undefined,
       page: queries.pageIndex ? (queries.pageIndex as number) : undefined,
       size: isNaN(queries.pageSize)

@@ -1,5 +1,5 @@
-import Wrapper from "components/Wrapper";
 import SalesPage from "components/sn-sales";
+import SalesWrapper from "components/sn-sales/SalesWrapper";
 import { NS_SALES } from "constant/index";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -14,10 +14,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const Sales = () => {
+  
   return (
-    <Wrapper>
+    <SalesWrapper>
       <SalesPage />
-    </Wrapper>
+    </SalesWrapper>
   );
 };
 

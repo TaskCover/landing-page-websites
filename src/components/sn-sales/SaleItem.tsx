@@ -44,6 +44,8 @@ const SaleItem = ({ item }: IProps) => {
         color={COLOR_STAGE_STATUS[item.status]}
         text={TEXT_STAGE_STATUS[item.status]}
         namespace={NS_SALES}
+        width="120px"
+        size="small"
       >
         {item.stage}
       </StatusCell>
@@ -64,7 +66,6 @@ const SaleItem = ({ item }: IProps) => {
           options={owner}
         />
       </BodyCell>
-      {/* // TODO: improve when make clear api */}
       <BodyCell align="right">
         {formatNumber(item.revenue, {
           prefix: CURRENCY_SYMBOL[item.currency],
@@ -78,7 +79,7 @@ const SaleItem = ({ item }: IProps) => {
         })}
       </BodyCell>
       <BodyCell width="11%" size="small" align="right">
-        {time}h
+        {`${time}h`}
       </BodyCell>
       <BodyCell align="right">{item.probability}</BodyCell>
       <BodyCell align="left">

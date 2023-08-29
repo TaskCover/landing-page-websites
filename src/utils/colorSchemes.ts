@@ -46,6 +46,7 @@ const colorSchemes = {
       },
       purple: {
         main: "#8950FC",
+        light: "#EEE5FF",
       },
       grey: {
         50: "#F7F7FD", // OK
@@ -119,6 +120,7 @@ const colorSchemes = {
       },
       purple: {
         main: "#8950FC",
+        light: "#EEE5FF",
       },
       grey: {
         50: "#1E1E1E", // OK

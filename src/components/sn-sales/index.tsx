@@ -39,6 +39,7 @@ const SalesPage = () => {
     onGetSales,
     totalRevenue,
     totalRevenuePJ,
+    salesFilters,
     totalTime,
     pageIndex,
     pageSize,
@@ -56,11 +57,11 @@ const SalesPage = () => {
   };
 
   const onChangeSize = (newSize) => {
-    onChangeQueries({ pageSize: newSize, pageIndex: 1 });
+    onChangeQueries({ ...salesFilters, pageSize: newSize, pageIndex: 1 });
   };
 
   const onChangePage = (newPage) => {
-    onChangeQueries({ pageSize, pageIndex: newPage });
+    onChangeQueries({ ...salesFilters, pageSize, pageIndex: newPage });
   };
 
   useEffect(() => {
@@ -144,7 +145,7 @@ const SalesPage = () => {
         minWidth: 100,
       },
     ],
-    [commonT, salesT],
+    [commonT, salesT, totalRevenue, totalRevenuePJ, totalTime],
   );
 
   return (
@@ -152,13 +153,14 @@ const SalesPage = () => {
       <FixedLayout>
         <SaleListAction />
         <TableLayout
+          maxHeight={860}
           headerList={headerList}
           noData={!isIdle && totalItems === 0}
           minWidth={1020}
           px={2}
           pending={isFetching}
           headerProps={{
-            sx: { px: { xs: 2, md: 2 } },
+            sx: { px: { xs: 2, md: 2 }, overflow: 'auto'} 
           }}
           error={salesError as string}
         >
