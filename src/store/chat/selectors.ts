@@ -41,6 +41,7 @@ import {
   MessageSearchInfoRequest,
   MessageSearchInfo,
   UnReadMessageRequest,
+  MessageInfo,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -56,6 +57,7 @@ import {
   clearMessageList,
   reset,
   setStateSearchMessage,
+  updateUnSeenMessage,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -235,6 +237,8 @@ export const useChat = () => {
           type,
         }),
       );
+
+      await dispatch(updateUnSeenMessage(roomId));
     },
     [dispatch, roomId, user],
   );
@@ -417,7 +421,9 @@ export const useChat = () => {
 
   const onSetLastMessage = (newMessage: {
     roomId: string;
-    lastMessage: Attachment;
+    lastMessage: MessageInfo;
+    unreadCount: number;
+    unreadsFrom: string;
   }) => {
     dispatch(setLastMessage(newMessage));
   };

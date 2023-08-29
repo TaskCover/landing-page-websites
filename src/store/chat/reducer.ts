@@ -25,6 +25,7 @@ import {
   TYPE_LIST,
   UserInfo,
   MediaPreviewItem,
+  IChatInfo,
 } from "./type";
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
@@ -149,14 +150,38 @@ const chatSlice = createSlice({
         status: action.payload.status,
       };
     },
-    setLastMessage: (state, action) => {
+    setLastMessage: (
+      state,
+      action: PayloadAction<{
+        roomId: string;
+        lastMessage: MessageInfo;
+        unreadCount: number;
+        unreadsFrom: string;
+      }>,
+    ) => {
       const newConversation = state.convention.map((item) => {
         if (item._id === action.payload.roomId) {
-          return { ...item, lastMessage: action.payload.lastMessage };
+          return {
+            ...item,
+            lastMessage: action.payload.lastMessage,
+            unreadCount: action.payload.unreadCount,
+            unreadsFrom: action.payload.unreadsFrom,
+          };
         }
         return item;
       });
       state.convention = newConversation;
+    },
+    updateUnSeenMessage: (state, action) => {
+      const index = state.convention.findIndex((i) => i._id === action.payload);
+      if (index > -1) {
+        const updateConversation = {
+          ...state.convention[index],
+          unreadCount: 0,
+          unreadsFrom: "",
+        };
+        state.convention.splice(index, 1, updateConversation);
+      }
     },
     setStateSearchMessage: (
       state,
@@ -187,6 +212,8 @@ const chatSlice = createSlice({
           pageSize: action.meta.arg.count || 20,
           textSearch: action.meta.arg.text,
         };
+
+        console.log(state.conversationPaging);
       })
       .addCase(
         getAllConvention.fulfilled,
@@ -210,6 +237,8 @@ const chatSlice = createSlice({
           }
           state.conversationPaging.pageSize = state.conversationPaging.pageSize;
           state.conversationStatus = DataStatus.SUCCEEDED;
+
+          console.log(state.conversationPaging);
         },
       )
       .addCase(getAllConvention.rejected, (state, action) => {
@@ -385,7 +414,7 @@ const chatSlice = createSlice({
       })
       // addMembersToDirectMessageGroup
       .addCase(addMembersToDirectMessageGroup.pending, (state, action) => {
-        state.messageInfo = []
+        state.messageInfo = [];
         state.addMembers2GroupStatus = DataStatus.LOADING;
       })
       .addCase(
@@ -457,6 +486,7 @@ export const {
   clearConversation,
   clearMessageList,
   setStateSearchMessage,
+  updateUnSeenMessage,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

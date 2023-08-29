@@ -4,11 +4,12 @@ import ChatItemLayout from "./ChatItemLayout";
 import { useChat } from "store/chat/selectors";
 import { DirectionChat, IChatItemInfo, STEP } from "store/chat/type";
 import { useAuth, useSnackbar } from "store/app/selectors";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
+import { useWSChat } from "store/chat/helpers";
 
 const ChatList = () => {
   const { user } = useAuth();
@@ -23,8 +24,11 @@ const ChatList = () => {
     onSetStep,
   } = useChat();
 
+  useWSChat();
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
+  console.log(initText);
+
   const [textSearch, setTextSearch] = useState(initText);
   const [lastElement, setLastElement] = useState(null);
   const pageRef = useRef(pageIndex);
@@ -75,26 +79,29 @@ const ChatList = () => {
       });
   }, [convention, user]);
 
-  const handleGetConversation = async (
-    text: string,
-    type: DirectionChat,
-    offset?: number,
-    count?: number,
-  ) => {
-    try {
-      await onGetAllConvention({
-        type,
-        text,
-        offset: offset || 0,
-        count: count || 10,
-      });
-    } catch (error) {
-      onAddSnackbar(
-        typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
-        "error",
-      );
-    }
-  };
+  const handleGetConversation = useCallback(
+    async (
+      text: string,
+      type: DirectionChat,
+      offset?: number,
+      count?: number,
+    ) => {
+      try {
+        await onGetAllConvention({
+          type,
+          text,
+          offset: offset || 0,
+          count: count || 10,
+        });
+      } catch (error) {
+        onAddSnackbar(
+          typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+          "error",
+        );
+      }
+    },
+    [onAddSnackbar, onGetAllConvention, t],
+  );
 
   const handleClickConversation = (chatInfo: IChatItemInfo) => {
     onSetRoomId(chatInfo._id);
