@@ -14,6 +14,7 @@ import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
 import { CompanyFilter } from "components/sn-company-detail/Employees/components";
 import AddSquareIcon from "icons/AddSquareIcon";
+import ExportModal from "./Modals/ExportModal";
 
 const modalName = {
   DEAL: "deal",
@@ -209,6 +210,10 @@ const SalesListAction = () => {
         open={dealModel}
         onClose={() => onCloseModal(modalName.DEAL)}
       />
+      <ExportModal
+        open={exportModel}
+        onClose={() => onCloseModal(modalName.EXPORT)}
+          />
     </Stack>
   );
 };

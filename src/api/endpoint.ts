@@ -54,6 +54,7 @@ export const Endpoint = {
   PROJECT_TYPES_INACTIVE: "type-project/inactive",
   SALES_LIST: "/sales/all",
   CREATE_DEAL: '/sales',
+  SALES_DEAL_EXPORT: "/sales/export/deal",
   COST_HISTORY: "/cost-history",
 
   POSITIONS_ALL: "/positions/all",
