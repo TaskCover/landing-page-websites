@@ -1,16 +1,14 @@
-import React, { memo, SyntheticEvent, useRef } from "react";
+import React, { memo, SyntheticEvent } from "react";
 import {
   Autocomplete,
   SxProps,
-  Chip,
   MenuItem,
-  inputBaseClasses,
-  Grow,
+  Stack,
 } from "@mui/material";
 import { Option } from "constant/types";
-import { IconButton, Input, Select, Text } from "components/shared";
+import {  Input, Text } from "components/shared";
 import ArrowDownIcon from "icons/ArrowDownIcon";
-import ChevronIcon from "icons/ChevronIcon";
+import { uuid } from "utils/index";
 
 interface IProps {
   label: string;
@@ -21,21 +19,29 @@ interface IProps {
     value: Array<Option>,
   ) => void;
   loading?: boolean;
+  onEndReached?: () => void;
   sx?: SxProps;
+  value?: Option;
 }
+
+const ID_PLACEHOLDER = uuid();
+
 const SelectMultiple = ({
   limitTags = 3,
   options,
   label,
   onSelect,
   sx,
+  onEndReached,
   loading = true,
 }: IProps) => {
+
   return (
     <Autocomplete
       getOptionLabel={(option) => option?.label || ""}
       multiple
       fullWidth
+      onEnded={onEndReached}
       limitTags={limitTags}
       renderInput={(params) => (
         <Input
@@ -48,6 +54,31 @@ const SelectMultiple = ({
           placeholder="--"
         />
       )}
+      renderOption={(props, option) => {
+        return (
+          <MenuItem
+            {...props}
+            sx={{
+              ...defaultSx.item,
+              display: option.value === ID_PLACEHOLDER ? "none" : undefined,
+            }}
+            value={option.value}
+          >
+            <Stack direction="row" alignItems="center" spacing={1}>
+              {option.value !== ID_PLACEHOLDER && (
+                <Stack>
+                  <Text variant="body2" className="text-option">
+                    {option.label}
+                  </Text>
+                  <Text variant="body2" className="sub">
+                    {option.subText}
+                  </Text>
+                </Stack>
+              )}
+            </Stack>
+          </MenuItem>
+        );
+      }}
       popupIcon={
         <ArrowDownIcon
           sx={{
@@ -76,16 +107,17 @@ const SelectMultiple = ({
 export default memo(SelectMultiple);
 
 const defaultSx = {
-  slot: {
-    "&:hover > svg": {
-      color: "primary.main",
-    },
-    [`&.${inputBaseClasses.focused} > svg`]: {
-      color: "primary.main",
-    },
-    "& > svg": {
-      fontSize: 24,
-      color: "grey.400",
+ 
+  item: {
+    fontSize: 14,
+    color: "text.primary",
+    lineHeight: "22px",
+    backgroundColor: "grey.50",
+    "&:hover": {
+      backgroundColor: "primary.main",
+      "& svg": {
+        color: "common.white",
+      },
     },
   },
 };

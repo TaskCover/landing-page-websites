@@ -15,6 +15,9 @@ import { useTranslations } from "next-intl";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input, Select } from "components/shared";
 import SelectMultiple from "../components/SelectMultiple";
+import { CURRENCY_SYMBOL } from "../helpers";
+import useGetCompanyOptions from "../hooks/useGetCompanyOptions";
+import useGetEmployeeOptions from "../hooks/useGetEmployeeOptions";
 
 interface IProps {
   open: boolean;
@@ -23,16 +26,29 @@ interface IProps {
 
 const salesFormTranslatePrefix = "list.newDealForm";
 
+const UNIT_OPTIONS = Object.keys(CURRENCY_SYMBOL).map((key) => ({
+  label: `${key}(${CURRENCY_SYMBOL[key]})`,
+  value: key,
+}));
+
 const AddDealModal = ({ open, onClose }: IProps) => {
+  const {
+    companyIsFetching,
+    companyOptions,
+    onEndReachedCompanyOptions,
+  } = useGetCompanyOptions();
+
+  const { employeeOptions, employeeIsFetching, onEndReachedEmployeeOptions } = useGetEmployeeOptions();
+  
   //create form
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
 
   const schema = yup.object().shape({
-    dealName: yup.string(),
+    dealName: yup.string().required(commonT("form.error.required")),
     company: yup.string(),
-    unit: yup.string(),
-    owner: yup.string(),
+    currency: yup.string().oneOf(Object.keys(CURRENCY_SYMBOL), commonT('form.error.invalid')).required('form.error.required'),
+    owner: yup.string().required('form.error.required'),
     dealMember: yup.array().of(yup.string()),
     tags: yup.string(),
   });
@@ -40,8 +56,8 @@ const AddDealModal = ({ open, onClose }: IProps) => {
   const { handleSubmit, control, setValue, reset } = useForm({
     defaultValues: {
       dealName: "",
-      company: "",
-      unit: "vnd",
+      company: companyOptions[0]?.value as string || '',
+      currency: UNIT_OPTIONS[0].value,
       owner: "abc",
       dealMember: ["abc"],
       tags: "",
@@ -53,13 +69,6 @@ const AddDealModal = ({ open, onClose }: IProps) => {
     onClose();
     reset();
   };
-
-  const UNIT_OPTIONS = [
-    {
-      label: "VND",
-      value: "vnd",
-    },
-  ];
 
   const MEMBER_OPTIONS = [
     {
@@ -103,14 +112,21 @@ const AddDealModal = ({ open, onClose }: IProps) => {
               control={control}
               name="company"
               render={({ field }) => (
-                <Input fullWidth {...field} title={commonT("company")} />
+                <Select
+                  options={companyOptions}
+                  fullWidth
+                  onEndReached={onEndReachedCompanyOptions}
+                  pending={companyIsFetching}
+                  {...field}
+                  title={salesT(`${salesFormTranslatePrefix}.company`)}
+                />
               )}
             />
           </Grid>
           <Grid item xs>
             <Controller
               control={control}
-              name="unit"
+              name="currency"
               render={({ field }) => (
                 <Select
                   options={UNIT_OPTIONS}
@@ -128,7 +144,9 @@ const AddDealModal = ({ open, onClose }: IProps) => {
           render={({ field }) => (
             <Select
               fullWidth
-              options={MEMBER_OPTIONS}
+              options={employeeOptions}
+              onEndReached={onEndReachedEmployeeOptions}
+              pending={employeeIsFetching}
               {...field}
               title={salesT(`${salesFormTranslatePrefix}.owner`)}
             />
@@ -145,8 +163,10 @@ const AddDealModal = ({ open, onClose }: IProps) => {
             };
             return (
               <SelectMultiple
-                options={MEMBER_OPTIONS}
+                options={employeeOptions}
                 onSelect={onSelect}
+                onEndReached={onEndReachedEmployeeOptions}
+                loading={employeeIsFetching}
                 label={salesT(`${salesFormTranslatePrefix}.dealMember`)}
               />
             );
