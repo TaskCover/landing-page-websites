@@ -17,6 +17,7 @@ export interface IChatInfo {
   sysMes: boolean;
   avatar: string;
   unreadCount: number;
+  unreadsFrom: string;
 }
 
 export interface IChatGroup {

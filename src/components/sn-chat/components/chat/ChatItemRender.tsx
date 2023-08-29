@@ -124,6 +124,10 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
           color="#999999"
           sx={{
             display: "flex",
+            ...(isUnReadMessage && {
+              fontWeight: 700,
+              color: "black",
+            }),
             "& *": {
               margin: 0,
               padding: 0,
@@ -151,10 +155,10 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
             "& a": {
               color: "#999999",
             },
-            "& ol": {
+            "& ol, & ul": {
               marginLeft: "1rem",
               display: "flex",
-              gap: "1rem",
+              gap: "2rem",
             },
             "& pre": {
               display: "-webkit-box",
@@ -163,7 +167,6 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
               overflow: "hidden",
             },
           }}
-          fontWeight={isUnReadMessage ? "900" : "normal"}
         />
       </>
     );
