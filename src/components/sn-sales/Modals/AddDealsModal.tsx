@@ -6,9 +6,9 @@ import {
   TextField,
   Autocomplete,
 } from "@mui/material";
-import React, { memo } from "react";
+import React, { memo, } from "react";
 import FormLayout from "components/FormLayout";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { NS_COMMON, NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
@@ -18,6 +18,8 @@ import SelectMultiple from "../components/SelectMultiple";
 import { CURRENCY_SYMBOL } from "../helpers";
 import useGetCompanyOptions from "../hooks/useGetCompanyOptions";
 import useGetEmployeeOptions from "../hooks/useGetEmployeeOptions";
+import { useSales } from "store/sales/selectors";
+import useGetProjectTypeOptions from "../hooks/useGetProjectTypeOptions";
 
 interface IProps {
   open: boolean;
@@ -31,55 +33,103 @@ const UNIT_OPTIONS = Object.keys(CURRENCY_SYMBOL).map((key) => ({
   value: key,
 }));
 
-const AddDealModal = ({ open, onClose }: IProps) => {
-  const {
-    companyIsFetching,
-    companyOptions,
-    onEndReachedCompanyOptions,
-  } = useGetCompanyOptions();
+const DUMMY_TAGS = [
+  {
+    label: "ABC",
+    value: "abc",
+  },
+  {
+    label: "bcd",
+    value: "bcd",
+  },
+];
 
-  const { employeeOptions, employeeIsFetching, onEndReachedEmployeeOptions } = useGetEmployeeOptions();
-  
+const AddDealModal = ({ open, onClose }: IProps) => {
+  const { companyIsFetching, companyOptions, onEndReachedCompanyOptions } =
+    useGetCompanyOptions();
+
+  const {
+    employeeOptions,
+    employeeIsFetching,
+    onEndReachedEmployeeOptions,
+    onGetEmployeeOptions,
+  } = useGetEmployeeOptions();
+
+  const {
+    projectTypeIsFetching,
+    projectTypeOptions,
+    onEndReachedProjectTypeOptions,
+  } = useGetProjectTypeOptions();
+
+  const { onCreateDeal } = useSales();
   //create form
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
 
   const schema = yup.object().shape({
-    dealName: yup.string().required(commonT("form.error.required")),
+    dealName: yup.string().required(
+      commonT("form.error.required", {
+        name: salesT(`${salesFormTranslatePrefix}.dealName`),
+      }),
+    ),
     company: yup.string(),
-    currency: yup.string().oneOf(Object.keys(CURRENCY_SYMBOL), commonT('form.error.invalid')).required('form.error.required'),
-    owner: yup.string().required('form.error.required'),
-    dealMember: yup.array().of(yup.string()),
-    tags: yup.string(),
+    currency: yup
+      .string()
+      .oneOf(
+        Object.keys(CURRENCY_SYMBOL),
+        commonT("form.error.invalid", {
+          name: salesT(`${salesFormTranslatePrefix}.currency`),
+        }),
+      )
+      .required(
+        commonT("form.error.required", {
+          name: `${salesFormTranslatePrefix}.currency`,
+        }),
+      ),
+    owner: yup.string().required(
+      commonT("form.error.required", {
+        name: salesT(`${salesFormTranslatePrefix}.owner`),
+      }),
+    ),
+    members: yup
+      .array()
+      .of(yup.string())
+      .min(
+        1,
+        commonT("form.error.required", {
+          name: salesT(`${salesFormTranslatePrefix}.dealMember`),
+        }),
+      ),
+    tags: yup.array().of(yup.string()),
   });
 
-  const { handleSubmit, control, setValue, reset } = useForm({
+  const { handleSubmit, control, reset, getValues } = useForm({
     defaultValues: {
       dealName: "",
-      company: companyOptions[0]?.value as string || '',
+      company: (companyOptions[0]?.value as string) || "",
       currency: UNIT_OPTIONS[0].value,
-      owner: "abc",
-      dealMember: ["abc"],
-      tags: "",
+      owner: "",
+      members: [],
+      tags: [],
     },
     resolver: yupResolver(schema),
   });
 
   const onSubmit = (data) => {
     onClose();
+    onCreateDeal(data);
     reset();
   };
 
-  const MEMBER_OPTIONS = [
-    {
-      label: "ABC",
-      value: "abc",
-    },
-    {
-      label: "bcd",
-      value: "bcd",
-    },
-  ];
+  const onSearchMember = (name: string, value = "") => {
+      onGetEmployeeOptions({
+        pageIndex: 1,
+        pageSize: 20,
+        email: (value as string) || "",
+      });
+  };
+
+
   return (
     <FormLayout
       sx={{
@@ -98,9 +148,10 @@ const AddDealModal = ({ open, onClose }: IProps) => {
         <Controller
           control={control}
           name="dealName"
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <Input
               fullWidth
+              error={error?.message}
               {...field}
               title={salesT(`${salesFormTranslatePrefix}.dealName`)}
             />
@@ -111,14 +162,15 @@ const AddDealModal = ({ open, onClose }: IProps) => {
             <Controller
               control={control}
               name="company"
-              render={({ field }) => (
+              render={({ field, fieldState: { error } }) => (
                 <Select
                   options={companyOptions}
                   fullWidth
                   onEndReached={onEndReachedCompanyOptions}
                   pending={companyIsFetching}
+                  error={error?.message}
                   {...field}
-                  title={salesT(`${salesFormTranslatePrefix}.company`)}
+                  title={commonT("company")}
                 />
               )}
             />
@@ -127,8 +179,9 @@ const AddDealModal = ({ open, onClose }: IProps) => {
             <Controller
               control={control}
               name="currency"
-              render={({ field }) => (
+              render={({ field, fieldState: { error } }) => (
                 <Select
+                  error={error?.message}
                   options={UNIT_OPTIONS}
                   fullWidth
                   {...field}
@@ -141,8 +194,12 @@ const AddDealModal = ({ open, onClose }: IProps) => {
         <Controller
           control={control}
           name="owner"
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <Select
+              onChangeSearch={(_, newValue) =>
+                onSearchMember(field.name, newValue as string)
+              }
+              error={error?.message}
               fullWidth
               options={employeeOptions}
               onEndReached={onEndReachedEmployeeOptions}
@@ -154,17 +211,20 @@ const AddDealModal = ({ open, onClose }: IProps) => {
         />
         <Controller
           control={control}
-          name="dealMember"
-          render={({ field }) => {
+          name="members"
+          render={({ field, fieldState: { error } }) => {
             const { onChange, ...props } = field;
             const onSelect = (e, data) => {
               const mappingData = data.map((item) => item.value);
               onChange(mappingData);
             };
+            const filteredOption = employeeOptions.filter((item) => item.value !== getValues("owner"));
             return (
               <SelectMultiple
-                options={employeeOptions}
+                options={filteredOption}
                 onSelect={onSelect}
+                onOpen={ () => onSearchMember(field.name, '')}
+                error={error?.message}
                 onEndReached={onEndReachedEmployeeOptions}
                 loading={employeeIsFetching}
                 label={salesT(`${salesFormTranslatePrefix}.dealMember`)}
@@ -175,15 +235,23 @@ const AddDealModal = ({ open, onClose }: IProps) => {
         <Controller
           control={control}
           name="tags"
-          render={({ field }) => (
-            <Select
-              placeholder="--"
-              fullWidth
-              options={MEMBER_OPTIONS}
-              {...field}
-              title={salesT(`${salesFormTranslatePrefix}.tags`)}
-            />
-          )}
+          render={({ field, fieldState: { error } }) => {
+            const { onChange, ...props } = field;
+            const onSelect = (e, data) => {
+              const mappingData = data.map((item) => item.label);
+              onChange(mappingData);
+            };
+            return (
+              <SelectMultiple
+                options={projectTypeOptions}
+                onSelect={onSelect}
+                error={error?.message}
+                onEndReached={onEndReachedProjectTypeOptions}
+                loading={projectTypeIsFetching}
+                label={salesT(`${salesFormTranslatePrefix}.tags`)}
+              />
+            );
+          }}
         />
       </Stack>
     </FormLayout>

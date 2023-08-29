@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useEmployeeOptions } from "store/company/selectors";
-import { useCompanyOptions } from "store/manager/selectors";
 
 const useGetEmployeeOptions = () => {
   const {
@@ -26,6 +25,7 @@ const useGetEmployeeOptions = () => {
     employeeOptions: options,
     employeeIsFetching: isFetching,
     onEndReachedEmployeeOptions,
+    onGetEmployeeOptions: onGetOptions,
   };
 };
 

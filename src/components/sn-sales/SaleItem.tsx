@@ -9,11 +9,7 @@ import {
   CURRENCY_SYMBOL,
 } from "./helpers";
 import { Dropdown } from "components/Filters";
-import {
-  formatDate,
-  formatNumber,
-  formatEstimateTime,
-} from "utils/index";
+import { formatDate, formatNumber, formatEstimateTime } from "utils/index";
 import { DATE_FORMAT_SLASH, NS_SALES, SHORT_TIME_FORMAT } from "constant/index";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
@@ -34,8 +30,7 @@ const SaleItem = ({ item }: IProps) => {
     },
   ];
 
-
-  const time = formatEstimateTime(item.estimate);
+  const time = formatEstimateTime(item.estimate || 0);
 
   return (
     <TableRow>
@@ -63,6 +58,7 @@ const SaleItem = ({ item }: IProps) => {
           }}
           onChange={onChange}
           size="small"
+          hasAll={false}
           name="owner"
           value={item.owner.id}
           options={owner}

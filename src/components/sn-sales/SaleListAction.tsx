@@ -172,11 +172,13 @@ const SalesListAction = () => {
       >
         <Stack direction="row" alignItems="center" gap={2}>
           <CompanyFilter
+            hasAll={false}
             onChange={(name, value) => onChangeQueries(name, value)}
           />
           <Dropdown
             placeholder={"sort by"}
             name="sort"
+            hasAll={false}
             onChange={(name, value) => onChangeQueries(name, value)}
             options={SORT_FITLER}
             value={queries?.sort || SORT_OPTIONS.DESC}

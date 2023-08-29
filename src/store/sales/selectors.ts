@@ -2,7 +2,7 @@ import { DataStatus } from "constant/enums";
 import { useCallback, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { GetSalesListQueries, getSales } from "./actions";
+import { DealData, GetSalesListQueries, createDeal, getSales } from "./actions";
 
 export const useSales = () => {
   const dispatch = useAppDispatch();
@@ -40,6 +40,30 @@ export const useSales = () => {
     [dispatch],
   );
 
+  const onCreateDeal = useCallback(
+    async (data) => {
+      const members = data.members.map((value) => ({ id: value }));
+      const description = data.tags.join(",");
+      const convertedBody: DealData = {
+        currency: data.currency,
+        owner: data.owner,
+        description: description,
+        name: data.dealName,
+        members,
+        company_id: data.company,
+      };
+      await dispatch(createDeal(convertedBody)).then(() => {
+        let newPageIndex = totalPages || 0;
+        if (totalPages && totalItems) {
+          newPageIndex =
+            totalItems % pageSize === 0 ? totalPages + 1 : totalPages;
+        }
+        onGetSales({ ...salesFilters, pageIndex: newPageIndex, pageSize });
+      });
+    },
+    [dispatch],
+  );
+
   return {
     sales,
     salesFilters,
@@ -55,5 +79,6 @@ export const useSales = () => {
     isIdle,
     isFetching,
     onGetSales,
+    onCreateDeal,
   };
 };

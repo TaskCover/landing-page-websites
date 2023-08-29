@@ -15,6 +15,15 @@ export interface GetSalesListQueries extends BaseQueries {
   company?: string;
 }
 
+export interface DealData {
+  name: string;
+  company_id?: string;
+  description?: string;
+  currency: string;
+  owner: string;
+  members?: Record<string, string>[];
+}
+
 export const getSales = createAsyncThunk(
   "sales/getSales",
   async (queries: GetSalesListQueries) => {
@@ -48,3 +57,21 @@ export const getSales = createAsyncThunk(
     }
   },
 );
+
+export const createDeal = createAsyncThunk(
+  "sales/createDeal",
+  async (data: DealData) => {
+    try {
+      const response = await client.post(Endpoint.CREATE_DEAL, data, {
+        baseURL: SALE_API_URL,
+      });
+      if (response?.status === HttpStatusCode.CREATED) {
+        const { data } = response;
+        return data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  }
+)

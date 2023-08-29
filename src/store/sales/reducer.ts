@@ -5,7 +5,7 @@ import { ItemListResponse, Paging, User } from "constant/types";
 import { Avatar } from "store/chat/type";
 import { Comment } from "store/project/reducer";
 import { getFiltersFromQueries } from "utils/index";
-import { GetSalesListQueries, getSales } from "./actions";
+import { GetSalesListQueries, createDeal, getSales } from "./actions";
 
 export interface Sales {
   id: string;
@@ -48,6 +48,7 @@ const initState: SaleState = {
   salesPaging: DEFAULT_PAGING,
   salesError: undefined,
   salesFilters: {},
+
 };
 
 const salesSlice = createSlice({
@@ -80,6 +81,21 @@ const salesSlice = createSlice({
     builder.addCase(getSales.rejected, (state, action) => {
       state.salesStatus = DataStatus.FAILED;
       state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(createDeal.fulfilled, (state, action) => {
+      state.sales.unshift(action.payload);
+      if (state.sales.length > state.salesPaging.pageSize) {
+        state.sales.pop();
+        if (
+          state.salesPaging.totalPages != undefined &&
+          state.salesPaging.totalPages < (state.salesPaging.totalItems || 0) / state.salesPaging.pageSize) {
+          state.salesPaging.totalPages += 1;
+        }
+
+      }
+      if (state.salesPaging.totalItems !== undefined) {
+        state.salesPaging.totalItems += 1;
+      }
     });
   },
 });

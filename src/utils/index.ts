@@ -339,6 +339,7 @@ export const getMonthShortName = (monthNo) => {
   date.setMonth(monthNo);
   return date.toLocaleString("en-US", { month: "short" });
 };
+
 export const formatEstimateTime = (time: string | number) => {
   const totalHours = Math.floor(Number(time) / 60);
   const remainingMinutes = Math.floor(Number(time)) % 60;
