@@ -1,4 +1,4 @@
-import { SALE_STAGE } from "constant/enums";
+import { CURRENCY_CODE, SALE_STAGE } from "constant/enums";
 
 export const TEXT_STAGE_STATUS: { [key in SALE_STAGE]: string } = {
   [SALE_STAGE.LEAD]: "list.stage.lead",
@@ -16,3 +16,20 @@ export const COLOR_STAGE_STATUS: { [key in SALE_STAGE]: string } = {
   [SALE_STAGE.NEGOTIATION]: "purple",
 };
 
+export const CURRENCY_SYMBOL: Record<CURRENCY_CODE, string> = {
+  [CURRENCY_CODE.USD]: "$",
+  [CURRENCY_CODE.EUR]: "€", 
+  [CURRENCY_CODE.JPY]: "¥",
+  [CURRENCY_CODE.GBP]: "£",
+  [CURRENCY_CODE.AUD]: "A$",
+  [CURRENCY_CODE.CAD]: "C$",
+  [CURRENCY_CODE.NZD]: "NZ$",
+  [CURRENCY_CODE.SGD]: "S$",
+  [CURRENCY_CODE.HKD]: "HK$",
+  [CURRENCY_CODE.SEK]: "kr",
+  [CURRENCY_CODE.CHF]: "CHF",
+  [CURRENCY_CODE.MXN]: "MX$",
+  [CURRENCY_CODE.BRL]: "R$",
+  [CURRENCY_CODE.RUB]: "₽",
+  [CURRENCY_CODE.CNY]: "¥",
+}

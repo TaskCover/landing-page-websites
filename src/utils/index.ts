@@ -12,6 +12,7 @@ import { ReadonlyURLSearchParams } from "next/navigation";
 import StringFormat from "string-format";
 import { clientStorage } from "./storage";
 import dayjs, { OpUnitType, QUnitType } from "dayjs";
+import moment from "moment";
 
 export const parseHashURL = (value: string) => `#${value}`;
 
@@ -326,16 +327,37 @@ export const hasValue = (value?) => {
 export const checkIsMobile = () => /Android|iPhone/i.test(navigator?.userAgent);
 
 export const formatBytes = (bytes, decimals = 2) => {
-  if (!+bytes) return '0 Bytes'
-  const k = 1024
-  const dm = decimals < 0 ? 0 : decimals
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
-}
+  if (!+bytes) return "0 Bytes";
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+};
 
 export const getMonthShortName = (monthNo) => {
   const date = new Date();
   date.setMonth(monthNo);
-  return date.toLocaleString('en-US', { month: 'short' });
-}
+  return date.toLocaleString("en-US", { month: "short" });
+};
+
+export const getTimeDurationInHoursAndMinutes = (time: string) => {
+  const currentDate = moment();
+  const startDate = moment(time);
+
+  if (!startDate.isValid()) return "Invalid date";
+  if (currentDate.isBefore(startDate)) return "00:00";
+
+  const duration = moment.duration(currentDate.diff(time));
+
+  const totalMinutes = duration.asMinutes();
+
+  const totalHours = Math.floor(totalMinutes / 60);
+  const remainingMinutes = Math.floor(totalMinutes) % 60;
+
+  const formattedHours = totalHours < 10 ? `0${totalHours}` : totalHours;
+  const formattedMinutes =
+    remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
+
+  return `${formattedHours}:${formattedMinutes}`;
+};

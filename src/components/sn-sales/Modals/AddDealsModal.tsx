@@ -7,7 +7,6 @@ import {
   Autocomplete,
 } from "@mui/material";
 import React, { memo } from "react";
-import BaseModal from "./BaseModal";
 import FormLayout from "components/FormLayout";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import * as yup from "yup";
@@ -51,7 +50,6 @@ const AddDealModal = ({ open, onClose }: IProps) => {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
     onClose();
     reset();
   };
@@ -146,7 +144,7 @@ const AddDealModal = ({ open, onClose }: IProps) => {
               onChange(mappingData);
             };
             return (
-              <SelectMultiple 
+              <SelectMultiple
                 options={MEMBER_OPTIONS}
                 onSelect={onSelect}
                 label={salesT(`${salesFormTranslatePrefix}.dealMember`)}
@@ -163,7 +161,6 @@ const AddDealModal = ({ open, onClose }: IProps) => {
               fullWidth
               options={MEMBER_OPTIONS}
               {...field}
-
               title={salesT(`${salesFormTranslatePrefix}.tags`)}
             />
           )}

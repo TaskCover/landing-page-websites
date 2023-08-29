@@ -60,10 +60,29 @@ export enum SORT_OPTIONS {
   ASC = "asc",
   DESC = "desc",
 }
+
 export enum SALE_STAGE {
   LEAD,
   PROPOSAL_SENT,
   PROSPECT,
   NEGOTIATION,
   WAITING_APPROVE = "WATTING_APPROVE",
+}
+
+export enum CURRENCY_CODE {
+    USD='USD',
+    EUR='EUR',
+    JPY='JPY',
+    GBP='GBP',
+    CAD='CAD',
+    AUD='AUD',
+    SGD='SGD',
+    HKD='HKD',
+    SEK='SEK',
+    CHF='CHF',
+    NZD='NZD',
+    MXN='MXN',
+    BRL='BRL',
+    RUB='RUB',
+    CNY='CNY',
 }

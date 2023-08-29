@@ -1,14 +1,18 @@
-import { Icon, Modal, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import { NS_COMMON, NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import AddDealModal from "./Modals/AddDealsModal";
 import ArrowExport from "icons/ArrowExport";
 import PlusIcon from "icons/PlusIcon";
 import { Dropdown, Search } from "components/Filters";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { SORT_OPTIONS } from "constant/enums";
+import { useSales } from "store/sales/selectors";
+import { usePathname, useRouter } from "next-intl/client";
+import { getPath } from "utils/index";
+import { CompanyFilter } from "components/sn-company-detail/Employees/components";
 
 const modalName = {
   DEAL: "deal",
@@ -18,8 +22,12 @@ const modalName = {
 const SalesListAction = () => {
   const [dealModel, setDealModal] = useState(false);
   const [exportModel, setExportModel] = useState(false);
+  const { push } = useRouter();
+  const pathname = usePathname();
+  const { salesFilters, onGetSales } = useSales();
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
+
   const [queries, setQueries] = useState<Params>({});
 
   const onOpenModal = (modal) => {
@@ -46,9 +54,18 @@ const SalesListAction = () => {
     }
   };
 
+  const onSearch = () => {
+    const path = getPath(pathname, queries);
+    push(path);
+  };
+
   const onChangeQueries = (name, value) => {
     setQueries((prevQueries) => ({ ...prevQueries, [name]: value }));
   };
+
+  useEffect(() => {
+    setQueries(salesFilters);
+  }, [salesFilters]);
 
   const SORT_FITLER = useMemo(
     () => [
@@ -62,16 +79,6 @@ const SalesListAction = () => {
       },
     ],
     [salesT],
-  );
-
-  const COMPANY_QUERIES = useMemo(
-    () => [
-      {
-        label: "ABC",
-        value: "abc",
-      },
-    ],
-    [commonT],
   );
 
   return (
@@ -123,9 +130,7 @@ const SalesListAction = () => {
             size="small"
             variant="secondary"
             sx={{ height: 40, width: "fit-content" }}
-            startIcon={
-                <ArrowExport />
-            }
+            startIcon={<ArrowExport />}
           >
             <Text sx={{ display: { xs: "none", md: "block" } }} color="inherit">
               {salesT("list.action.export")}
@@ -145,36 +150,32 @@ const SalesListAction = () => {
         minWidth={{ md: "fit-content" }}
       >
         <Stack direction="row" alignItems="center" gap={2}>
-          <Dropdown
-            placeholder={commonT("company")}
-            name="company"
+          <CompanyFilter
             onChange={(name, value) => onChangeQueries(name, value)}
-            value={queries?.company}
-            options={COMPANY_QUERIES}
           />
           <Dropdown
             placeholder={"sort by"}
             name="sort"
             onChange={(name, value) => onChangeQueries(name, value)}
             options={SORT_FITLER}
-            value={queries?.sort}
+            value={queries?.sort || SORT_OPTIONS.DESC}
           />
         </Stack>
         <Stack direction="row" alignItems="center" gap={2} flexWrap={"wrap"}>
           <Search
-            name="search"
+            name="search_key"
             placeholder={commonT("search")}
             onChange={(name, value) => onChangeQueries(name, value)}
             sx={{ width: 210 }}
-            value={queries?.name}
+            value={queries?.search_key}
           />
           <Button
             size="extraSmall"
             sx={{
-              display: { xs: "flex", md: "none" },
+              // display: { xs: "flex", md: "none" },
               height: 32,
             }}
-            onClick={() => console.log("search")}
+            onClick={onSearch}
             variant="secondary"
           >
             {commonT("search")}

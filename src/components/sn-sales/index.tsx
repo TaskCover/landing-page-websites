@@ -11,7 +11,13 @@ import { SALE_STAGE } from "constant/enums";
 import SaleListAction from "./SaleListAction";
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
-import { cleanObject, formatDate, formatNumber, getPath, stringifyURLSearchParams } from "utils/index";
+import {
+  cleanObject,
+  formatDate,
+  formatNumber,
+  getPath,
+  stringifyURLSearchParams,
+} from "utils/index";
 import { useSales } from "store/sales/selectors";
 import useQueryParams from "hooks/useQueryParams";
 import { usePathname, useRouter } from "next-intl/client";
@@ -21,10 +27,20 @@ const SalesPage = () => {
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
   const { initQuery, isReady, query } = useQueryParams();
-  const pathname  = usePathname();
-  const {  push } = useRouter();
-  const { sales,isIdle, isFetching, totalItems, onGetSales, salesFilters, pageIndex, pageSize, totalPages } =
-    useSales();
+  const pathname = usePathname();
+  const { push } = useRouter();
+  const {
+    sales,
+    isIdle,
+    isFetching,
+    totalItems,
+    salesError,
+    onGetSales,
+    salesFilters,
+    pageIndex,
+    pageSize,
+    totalPages,
+  } = useSales();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (queries: { [key: string]: any }) => {
@@ -37,7 +53,7 @@ const SalesPage = () => {
   };
 
   const onChangeSize = (newSize) => {
-    onChangeQueries({pageSize: newSize, pageIndex: 1});
+    onChangeQueries({ pageSize: newSize, pageIndex: 1 });
   };
 
   const onChangePage = (newPage) => {
@@ -48,22 +64,25 @@ const SalesPage = () => {
     if (!isReady) return;
     onGetSales(query);
   }, [isReady, initQuery, onGetSales]);
-  
+
   const headerList: CellProps[] = useMemo(
     () => [
       {
         value: commonT("name"),
         align: "left",
         width: "15%",
+        minWidth: 160,
       },
       {
         value: salesT("list.table.stage"),
         width: "15%",
+        minWidth: 160,
       },
       {
         value: salesT("list.table.owner"),
         align: "left",
         width: "10%",
+        minWidth: 160,
       },
       {
         value: salesT("list.table.revenue"),
@@ -76,6 +95,7 @@ const SalesPage = () => {
             <Text variant="h6">{formatNumber(100, { prefix: "$" })}</Text>
           </Stack>
         ),
+        minWidth: 100,
         width: "10%",
       },
       {
@@ -89,6 +109,7 @@ const SalesPage = () => {
             <Text variant="h6">{formatNumber(100, { prefix: "$" })}</Text>
           </Stack>
         ),
+        minWidth: 100,
         width: "10%",
       },
       {
@@ -104,35 +125,39 @@ const SalesPage = () => {
             </Text>
           </Stack>
         ),
+        minWidth: 100,
         width: "10%",
       },
       {
         value: salesT("list.table.probability"),
         align: "right",
         width: "10%",
+        minWidth: 100,
       },
       {
         value: salesT("list.table.lastActivity"),
         align: "left",
         width: "10%",
+        minWidth: 100,
       },
     ],
     [commonT, salesT],
   );
-  
+
   return (
     <>
       <FixedLayout>
         <SaleListAction />
         <TableLayout
           headerList={headerList}
-          noData={!isIdle && totalItems === 0} 
+          noData={!isIdle && totalItems === 0}
           minWidth={820}
           px={2}
           pending={isFetching}
           headerProps={{
             sx: { px: { xs: 2, md: 2 } },
           }}
+          error={salesError as string}
         >
           {sales.map((item, index) => (
             <SaleItem key={`Sale-item-${index}`} item={item} />

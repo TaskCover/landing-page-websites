@@ -1,23 +1,32 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Endpoint, client } from "api";
 import { AN_ERROR_TRY_AGAIN, AUTH_API_URL, SALE_API_URL } from "constant/index";
-import { refactorRawItemListResponse,cleanObject, serverQueries } from "utils/index";
+import {
+  refactorRawItemListResponse,
+  cleanObject,
+  serverQueries,
+} from "utils/index";
 import { HttpStatusCode } from "constant/enums";
 import { BaseQueries } from "constant/types";
 
 export interface GetSalesListQueries extends BaseQueries {
   sort?: string;
+  search_key?: string;
   company?: string;
 }
 
 export const getSales = createAsyncThunk(
-  "company/getEmployees",
+  "sales/getSales",
   async (queries: GetSalesListQueries) => {
-    
     const newQueries = cleanObject({
-    page: queries.pageIndex ? (queries.pageIndex as number) : undefined,
-    size: isNaN(queries.pageSize) ? queries.pageSize : Number(queries.pageSize),
-  });
+      search_key: queries.search_key || undefined,
+      company: queries.company || undefined,
+      page: queries.pageIndex ? (queries.pageIndex as number) : undefined,
+      size: isNaN(queries.pageSize)
+        ? queries.pageSize
+        : Number(queries.pageSize),
+    }) as GetSalesListQueries;
+    
     try {
       const response = await client.get(Endpoint.SALES_LIST, newQueries, {
         baseURL: SALE_API_URL,
@@ -31,7 +40,7 @@ export const getSales = createAsyncThunk(
           data: data.docs,
         };
 
-        return await refactorRawItemListResponse(formattedData);
+        return refactorRawItemListResponse(formattedData);
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
