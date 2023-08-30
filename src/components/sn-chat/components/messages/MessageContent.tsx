@@ -20,7 +20,7 @@ export const TimeMessage = ({
   isCurrentUser,
   timeMessageProps,
 }: {
-  time: string;
+  time: string | Date;
   isRead: boolean;
   isCurrentUser: boolean;
   timeMessageProps?: TypographyProps;
