@@ -20,7 +20,7 @@ export const TimeMessage = ({
   isCurrentUser,
   timeMessageProps,
 }: {
-  time: string;
+  time: string | Date;
   isRead: boolean;
   isCurrentUser: boolean;
   timeMessageProps?: TypographyProps;
@@ -40,8 +40,7 @@ export const TimeMessage = ({
     }
     if (lastHours === 0) date.setHours(12);
     if (lastHours === 12) half = "PM";
-
-    return `${formatDate(date.toLocaleString(), "HH:mm")}${half}`;
+    return `${formatDate(date, "HH:mm")}${half}`;
   }, [time]);
   return (
     <Typography

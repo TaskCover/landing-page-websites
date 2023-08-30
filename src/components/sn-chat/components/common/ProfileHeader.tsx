@@ -235,6 +235,7 @@ const ProfileHeader = ({
     }
   }, [
     avatar,
+    avatarClone,
     groupButton,
     handleKeyDown,
     name,

@@ -215,7 +215,7 @@ const MediaContent = () => {
     return <Typography textAlign="center">Loading...</Typography>;
   }
 
-  return (
+  return mediaClone?.length > 0 ? (
     <Box
       sx={{
         display: "grid",
@@ -228,19 +228,17 @@ const MediaContent = () => {
         maxHeight: "100%",
       }}
     >
-      {mediaClone?.length > 0 ? (
-        mediaClone?.map((item, index) => (
-          <MediaClone
-            key={index}
-            src={item.url}
-            type={item.type}
-            listMedia={mediaClone as unknown as MediaPreview[]}
-          />
-        ))
-      ) : (
-        <Typography textAlign="center">No Data...</Typography>
-      )}
+      {mediaClone?.map((item, index) => (
+        <MediaClone
+          key={index}
+          src={item.url}
+          type={item.type}
+          listMedia={mediaClone as unknown as MediaPreview[]}
+        />
+      ))}
     </Box>
+  ) : (
+    <Typography textAlign="center">No Data...</Typography>
   );
 };
 
