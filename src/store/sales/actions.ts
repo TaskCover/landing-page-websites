@@ -41,7 +41,7 @@ export const getSales = createAsyncThunk(
       sort_by: queries.sort || "-1",
       company: queries.company || undefined,
       page: queries.pageIndex ? (queries.pageIndex as number) : undefined,
-      size: isNaN(queries.pageSize)
+      size: isNaN(queries.pageSize || 0)
         ? queries.pageSize
         : Number(queries.pageSize),
     }) as GetSalesListQueries;
