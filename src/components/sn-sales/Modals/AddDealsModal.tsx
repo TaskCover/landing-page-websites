@@ -45,16 +45,12 @@ const DUMMY_TAGS = [
 ];
 
 const AddDealModal = ({ open, onClose }: IProps) => {
-  const { companyIsFetching, companyOptions, onEndReachedCompanyOptions } =
-    useGetCompanyOptions();
-
   const {
     employeeOptions,
     employeeIsFetching,
     onEndReachedEmployeeOptions,
     onGetEmployeeOptions,
   } = useGetEmployeeOptions();
-
   const {
     projectTypeIsFetching,
     projectTypeOptions,
@@ -72,7 +68,6 @@ const AddDealModal = ({ open, onClose }: IProps) => {
         name: salesT(`${salesFormTranslatePrefix}.dealName`),
       }),
     ),
-    company: yup.string(),
     currency: yup
       .string()
       .oneOf(
@@ -106,7 +101,6 @@ const AddDealModal = ({ open, onClose }: IProps) => {
   const { handleSubmit, control, reset, getValues } = useForm({
     defaultValues: {
       dealName: "",
-      company: (companyOptions[0]?.value as string) || "",
       currency: UNIT_OPTIONS[0].value,
       owner: "",
       members: [],

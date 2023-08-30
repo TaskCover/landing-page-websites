@@ -17,16 +17,28 @@ const useGetEmployeeOptions = () => {
     onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
   };
 
-  useEffect(() => {
-    onGetOptions({ pageIndex: 1, pageSize: 20 });
-  }, [onGetOptions]);
-    
+  const onSearchEmployee = (name: string, value = "") => {
+    onGetOptions({
+      pageIndex: 1,
+      pageSize: 20,
+      email: (value as string) || "",
+    });
+  };
+
   return {
     employeeOptions: options,
     employeeIsFetching: isFetching,
     onEndReachedEmployeeOptions,
     onGetEmployeeOptions: onGetOptions,
+    onSearchEmployee,
   };
 };
 
+export const useFetchEmployeeOptions = () => {
+  const { onGetOptions, pageIndex, pageSize, filters } = useEmployeeOptions();
+
+  useEffect(() => {
+    onGetOptions({ pageIndex: 1, pageSize: 20 });
+  }, [onGetOptions]);
+};
 export default useGetEmployeeOptions;

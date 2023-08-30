@@ -2,7 +2,7 @@
 
 import { TableRow, Stack } from "@mui/material";
 import { BodyCell, StatusCell } from "components/Table";
-import React, { memo } from "react";
+import React, { memo, use, useEffect, useMemo, useState } from "react";
 import {
   COLOR_STAGE_STATUS,
   TEXT_STAGE_STATUS,
@@ -10,33 +10,37 @@ import {
 } from "./helpers";
 import { Dropdown } from "components/Filters";
 import { formatDate, formatNumber, formatEstimateTime } from "utils/index";
-import { DATE_FORMAT_SLASH, NS_SALES, SHORT_TIME_FORMAT } from "constant/index";
+import { DATE_FORMAT_SLASH, NS_SALES } from "constant/index";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { Sales } from "store/sales/reducer";
-
+import useGetEmployeeOptions from "./hooks/useGetEmployeeOptions";
+import { useSales } from "store/sales/selectors";
 interface IProps {
   item: Sales; // change to data type
 }
 const SaleItem = ({ item }: IProps) => {
-  const onChange = () => {
-    return;
-  };
-
-  const owner = [
-    {
-      value: item.owner.id,
-      label: item.owner.fullname,
-    },
-  ];
+  const { employeeOptions, onEndReachedEmployeeOptions, onSearchEmployee } =
+    useGetEmployeeOptions();
+  const { onUpdateDeal } = useSales();
+  const [owner, setOwner] = useState(item.owner.id);
 
   const time = formatEstimateTime(item.estimate || 0);
+
+  const onSubmit = (data) => {
+    onUpdateDeal({ owner: data.owner, id: item.id });
+  };
+
+  const avatar = useMemo(() => {
+    const result = employeeOptions.find((item) => item.value === owner);
+    return result?.avatar || "";
+  }, [JSON.stringify(item.owner)]);
 
   return (
     <TableRow>
       <BodyCell align="left">
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} src={item.owner.avatar?.link || ""}></Avatar>
+          <Avatar size={32} src={avatar}></Avatar>
           <Text> {item.name}</Text>
         </Stack>
       </BodyCell>
@@ -51,6 +55,7 @@ const SaleItem = ({ item }: IProps) => {
       </StatusCell>
       <BodyCell align="left">
         <Dropdown
+          name="owner"
           rootSx={{
             width: "100%",
             px: "0!important",
@@ -58,12 +63,18 @@ const SaleItem = ({ item }: IProps) => {
           sx={{
             width: "100%",
           }}
-          onChange={onChange}
+          onChange={(name, value) => {
+            onSubmit({ owner: value });
+            setOwner(value as string);
+          }}
           size="small"
           hasAll={false}
-          name="owner"
-          value={item.owner.id}
-          options={owner}
+          onEndReached={onEndReachedEmployeeOptions}
+          onChangeSearch={(name, value) => {
+            onSearchEmployee(name, value as string);
+          }}
+          value={owner}
+          options={employeeOptions}
         />
       </BodyCell>
       <BodyCell align="right">

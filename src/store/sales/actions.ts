@@ -1,3 +1,4 @@
+import StringFormat from "string-format";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Endpoint, client } from "api";
 import { AN_ERROR_TRY_AGAIN, AUTH_API_URL, SALE_API_URL } from "constant/index";
@@ -8,6 +9,7 @@ import {
 } from "utils/index";
 import { HttpStatusCode } from "constant/enums";
 import { BaseQueries } from "constant/types";
+import { Employee } from "store/company/reducer";
 
 export interface GetSalesListQueries extends BaseQueries {
   sort?: string;
@@ -20,8 +22,15 @@ export interface DealData {
   company_id?: string;
   description?: string;
   currency: string;
-  owner: string;
+  owner: Partial<Employee>;
   members?: Record<string, string>[];
+  start_date?: string;
+  end_date?: string;
+  estimate?: number;
+  revenue?: number;
+  revenuePJ?: number;
+  probability?: number;
+  stage?: string;
 }
 
 export const getSales = createAsyncThunk(
@@ -29,7 +38,7 @@ export const getSales = createAsyncThunk(
   async (queries: GetSalesListQueries) => {
     const newQueries = cleanObject({
       search_key: queries.search_key || undefined,
-      sort_by: queries.sort || undefined,
+      sort_by: queries.sort || "-1",
       company: queries.company || undefined,
       page: queries.pageIndex ? (queries.pageIndex as number) : undefined,
       size: isNaN(queries.pageSize)
@@ -74,5 +83,27 @@ export const createDeal = createAsyncThunk(
     } catch (error) {
       throw error;
     }
-  }
-)
+  },
+);
+
+export const updateDeal = createAsyncThunk(
+  "sales/updateDeal",
+  async ({ id, data }: { id: string; data: Partial<DealData> }) => {
+    try {
+      const response = await client.put(
+        StringFormat(Endpoint.SALES_DEAL_UPDATE, { id }),
+        data,
+        {
+          baseURL: SALE_API_URL,
+        },
+      );
+      if (response?.status === HttpStatusCode.OK) {
+        const { data } = response;
+        return data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);

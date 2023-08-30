@@ -55,8 +55,9 @@ export const Endpoint = {
   SALES_LIST: "/sales/all",
   CREATE_DEAL: '/sales',
   SALES_DEAL_EXPORT: "/sales/export/deal",
+  SALES_DEAL_UPDATE: "/sales/{id}",
   COST_HISTORY: "/cost-history",
-
+  
   POSITIONS_ALL: "/positions/all",
   POSITIONS: "/positions",
   POSITION_ITEM: "/positions/{id}",

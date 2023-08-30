@@ -5,7 +5,12 @@ import { ItemListResponse, Paging, User } from "constant/types";
 import { Avatar } from "store/chat/type";
 import { Comment } from "store/project/reducer";
 import { getFiltersFromQueries } from "utils/index";
-import { GetSalesListQueries, createDeal, getSales } from "./actions";
+import {
+  GetSalesListQueries,
+  createDeal,
+  getSales,
+  updateDeal,
+} from "./actions";
 
 export interface Sales {
   id: string;
@@ -47,8 +52,9 @@ const initState: SaleState = {
   salesStatus: DataStatus.IDLE,
   salesPaging: DEFAULT_PAGING,
   salesError: undefined,
-  salesFilters: {},
-
+  salesFilters: {
+    sort: "-1",
+  },
 };
 
 const salesSlice = createSlice({
@@ -88,13 +94,22 @@ const salesSlice = createSlice({
         state.sales.pop();
         if (
           state.salesPaging.totalPages != undefined &&
-          state.salesPaging.totalPages < (state.salesPaging.totalItems || 0) / state.salesPaging.pageSize) {
+          state.salesPaging.totalPages <
+            (state.salesPaging.totalItems || 0) / state.salesPaging.pageSize
+        ) {
           state.salesPaging.totalPages += 1;
         }
-
       }
       if (state.salesPaging.totalItems !== undefined) {
         state.salesPaging.totalItems += 1;
+      }
+    });
+    builder.addCase(updateDeal.fulfilled, (state, action) => {
+      const index = state.sales.findIndex(
+        (item) => item.id === action.payload.id,
+      );
+      if (index !== -1) {
+        state.sales[index] = Object.assign(state.sales[index], action.payload);
       }
     });
   },

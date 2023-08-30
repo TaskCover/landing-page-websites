@@ -22,7 +22,8 @@ import { useSales } from "store/sales/selectors";
 import useQueryParams from "hooks/useQueryParams";
 import { usePathname, useRouter } from "next-intl/client";
 import { useCompany } from "store/manager/selectors";
-import { formatEstimateTime } from '../../utils/index';
+import { formatEstimateTime } from "../../utils/index";
+import { useFetchEmployeeOptions } from "./hooks/useGetEmployeeOptions";
 
 const SalesPage = () => {
   const commonT = useTranslations(NS_COMMON);
@@ -71,7 +72,7 @@ const SalesPage = () => {
 
   const headerList: CellProps[] = useMemo(
     () => [
-      { 
+      {
         value: commonT("name"),
         align: "left",
         width: "15%",
@@ -96,7 +97,9 @@ const SalesPage = () => {
             <Text variant="h6" color="grey.400">
               {salesT("list.table.revenue")}
             </Text>
-            <Text variant="h6">{formatNumber(totalRevenue, { prefix: "$" })}</Text>
+            <Text variant="h6">
+              {formatNumber(totalRevenue, { prefix: "$" })}
+            </Text>
           </Stack>
         ),
         minWidth: 100,
@@ -110,7 +113,9 @@ const SalesPage = () => {
             <Text variant="h6" color="grey.400">
               {salesT("list.table.pjRevenue")}
             </Text>
-            <Text variant="h6">{formatNumber(totalRevenuePJ, { prefix: "$" })}</Text>
+            <Text variant="h6">
+              {formatNumber(totalRevenuePJ, { prefix: "$" })}
+            </Text>
           </Stack>
         ),
         minWidth: 100,
@@ -124,9 +129,7 @@ const SalesPage = () => {
             <Text variant="h6" color="grey.400">
               {salesT("list.table.time")}
             </Text>
-            <Text variant="h6">
-              {formatEstimateTime(totalTime)}h
-            </Text>
+            <Text variant="h6">{formatEstimateTime(totalTime)}h</Text>
           </Stack>
         ),
         minWidth: 100,
@@ -148,6 +151,7 @@ const SalesPage = () => {
     [commonT, salesT, totalRevenue, totalRevenuePJ, totalTime],
   );
 
+  useFetchEmployeeOptions();
   return (
     <>
       <FixedLayout>
@@ -160,7 +164,7 @@ const SalesPage = () => {
           px={2}
           pending={isFetching}
           headerProps={{
-            sx: { px: { xs: 2, md: 2 }, overflow: 'auto'} 
+            sx: { px: { xs: 2, md: 2 }, overflow: "auto" },
           }}
           error={salesError as string}
         >

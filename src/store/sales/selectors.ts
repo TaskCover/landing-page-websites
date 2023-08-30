@@ -2,7 +2,14 @@ import { DataStatus, SORT_OPTIONS } from "constant/enums";
 import { useCallback, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { DealData, GetSalesListQueries, createDeal, getSales } from "./actions";
+import {
+  DealData,
+  GetSalesListQueries,
+  createDeal,
+  getSales,
+  updateDeal,
+} from "./actions";
+import moment from "moment";
 
 export const useSales = () => {
   const dispatch = useAppDispatch();
@@ -68,6 +75,22 @@ export const useSales = () => {
     },
     [dispatch],
   );
+  const onUpdateDeal = useCallback(
+    async (data) => {
+      const members = data.members?.map((value) => ({ id: value }));
+      const description = data.tags?.join(",");
+      const convertedBody: DealData = {
+        currency: data.currency,
+        owner: data.owner,
+        description: description,
+        name: data.dealName,
+        members,
+        company_id: data.company,
+      };
+      await dispatch(updateDeal({ id: data.id, data: convertedBody }));
+    },
+    [dispatch],
+  );
 
   return {
     sales,
@@ -84,6 +107,7 @@ export const useSales = () => {
     isIdle,
     isFetching,
     onGetSales,
+    onUpdateDeal,
     onCreateDeal,
   };
 };
