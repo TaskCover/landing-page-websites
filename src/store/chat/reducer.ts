@@ -29,6 +29,7 @@ import {
 } from "./type";
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
+import dayjs from "dayjs";
 
 const initalPage = {
   pageIndex: 0,
@@ -159,18 +160,29 @@ const chatSlice = createSlice({
         unreadsFrom: string;
       }>,
     ) => {
-      const newConversation = state.convention.map((item) => {
-        if (item._id === action.payload.roomId) {
-          return {
-            ...item,
-            lastMessage: action.payload.lastMessage,
-            unreadCount: action.payload.unreadCount,
-            unreadsFrom: action.payload.unreadsFrom,
-          };
-        }
-        return item;
-      });
-      state.convention = newConversation;
+      const newConversation = state.convention
+        .map((item) => {
+          if (item._id === action.payload.roomId) {
+            return {
+              ...item,
+              lastMessage: action.payload.lastMessage,
+              unreadCount: action.payload.unreadCount,
+              unreadsFrom: action.payload.unreadsFrom,
+            };
+          }
+          return item;
+        })
+        .sort((a, b) => {
+          if (a.lastMessage && b.lastMessage) {
+            const aDate = new Date(a.lastMessage.ts);
+            const bDate = new Date(b.lastMessage.ts);
+            const compareTime = dayjs(aDate).isBefore(dayjs(bDate));
+            return compareTime ? 1 : -1;
+          } else {
+            return 1;
+          }
+        });
+      state.convention = [...newConversation];
     },
     updateUnSeenMessage: (state, action) => {
       const index = state.convention.findIndex((i) => i._id === action.payload);
@@ -212,8 +224,6 @@ const chatSlice = createSlice({
           pageSize: action.meta.arg.count || 20,
           textSearch: action.meta.arg.text,
         };
-
-        console.log(state.conversationPaging);
       })
       .addCase(
         getAllConvention.fulfilled,
@@ -237,8 +247,6 @@ const chatSlice = createSlice({
           }
           state.conversationPaging.pageSize = state.conversationPaging.pageSize;
           state.conversationStatus = DataStatus.SUCCEEDED;
-
-          console.log(state.conversationPaging);
         },
       )
       .addCase(getAllConvention.rejected, (state, action) => {

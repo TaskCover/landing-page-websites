@@ -143,13 +143,9 @@ const ChatListTemp = () => {
       onReset();
     }
   };
-
   if (!roleChatAccept) {
     return null;
   }
-
-  console.log(open);
-
   return (
     <Box
       sx={{

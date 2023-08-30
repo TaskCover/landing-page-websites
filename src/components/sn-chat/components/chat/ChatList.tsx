@@ -27,7 +27,6 @@ const ChatList = () => {
   useWSChat();
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
-  console.log(initText);
 
   const [textSearch, setTextSearch] = useState(initText);
   const [lastElement, setLastElement] = useState(null);

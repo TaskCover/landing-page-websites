@@ -1,12 +1,12 @@
 import Box, { BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Avatar from "components/Avatar";
-import { renderTimeDiff } from "components/sn-chat/utils";
 import { DataStatus } from "constant/enums";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
 import { MessageSearchInfo, RoomType } from "store/chat/type";
+import { renderTimeDiff } from "utils/index";
 
 interface MesageListSearchProps {
   text: string;

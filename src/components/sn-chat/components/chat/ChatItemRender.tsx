@@ -41,6 +41,9 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
   const lastMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setAvatarClone(avatar);
+  }, [avatar]);
+  useEffect(() => {
     if (lastMessageContent && lastMessageRef.current) {
       lastMessageRef.current.innerHTML = !isMessageNotConnect
         ? lastMessageContent
