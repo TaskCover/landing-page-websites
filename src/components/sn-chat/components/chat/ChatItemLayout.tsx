@@ -1,8 +1,8 @@
 import Box, { BoxProps } from "@mui/material/Box";
 import { Typography } from "@mui/material";
 import { IChatItemInfo } from "store/chat/type";
-import { renderTimeDiff } from "components/sn-chat/utils";
 import ChatItemRender from "./ChatItemRender";
+import { renderTimeDiff } from "utils/index";
 
 interface ChatItemProp {
   sessionId: string;

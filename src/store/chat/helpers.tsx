@@ -125,14 +125,14 @@ export const useWSChat = () => {
               _id: roomIdnoti,
               msg: message,
               u: sender,
-              ts: new Date().toLocaleString(),
+              ts: new Date(),
             } as MessageInfo;
             if (roomIdnoti !== roomId) {
               onSetLastMessage({
                 roomId: roomIdnoti,
                 lastMessage,
                 unreadCount: 1,
-                unreadsFrom: new Date().toDateString(),
+                unreadsFrom: "",
               });
             }
           }

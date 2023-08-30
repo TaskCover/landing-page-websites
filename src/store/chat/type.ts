@@ -89,7 +89,7 @@ export interface MessageInfo {
   attachments: Attachment[];
   parseUrls: boolean;
   groupable: boolean;
-  ts: string;
+  ts: string | Date;
   u: UserSendInfo;
   rid: string;
   _updatedAt: string;
