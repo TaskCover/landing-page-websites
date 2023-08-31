@@ -8,7 +8,7 @@ export const COMPANY_API_URL = process.env.COMPANY_API_URL as string;
 export const UPLOAD_API_URL = process.env.UPLOAD_API_URL as string;
 export const TIME_SHEET_API_URL = process.env.TIME_SHEET_API_URL as string;
 export const CHAT_API_URL = process.env.CHAT_API_URL as string;
-
+export const SALE_API_URL = process.env.SALE_API_URL as string;
 export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
 export const DARK_THEME_MEDIA_SYSTEM = "(prefers-color-scheme: dark)";
 
@@ -64,6 +64,7 @@ export const NS_ACCOUNT = "account";
 export const NS_PROJECT = "project";
 export const NS_COMPANY = "company";
 export const NS_MANAGER = "manager";
+export const NS_SALES = "sales";
 export const NS_TIME_TRACKING = "timeTracking";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];

@@ -27,6 +27,7 @@ export const PROJECT_INFORMATION_PATH = "/projects/{id}";
 
 export const TIME_TRACKING_PATH = "/time-tracking";
 export const RESOURCE_PLANING_PATH = "/resource-planing";
+export const SALES_LIST_PATH = '/sales'
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -54,7 +55,8 @@ export const AUTHORIZED_PATHS = {
     MY_COMPANY_PATH,
     HOME_PATH,
     TIME_TRACKING_PATH,
-    RESOURCE_PLANING_PATH
+    RESOURCE_PLANING_PATH,
+    SALES_LIST_PATH
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,

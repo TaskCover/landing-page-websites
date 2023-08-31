@@ -6,12 +6,12 @@ import {
   DATE_FORMAT_SLASH,
 } from "constant/index";
 import { ItemListResponse, OptionFormatNumber } from "constant/types";
-import { useTranslations } from "next-intl";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import StringFormat from "string-format";
 import { clientStorage } from "./storage";
 import dayjs, { OpUnitType, QUnitType } from "dayjs";
+import moment from "moment";
 
 export const parseHashURL = (value: string) => `#${value}`;
 
@@ -326,19 +326,19 @@ export const hasValue = (value?) => {
 export const checkIsMobile = () => /Android|iPhone/i.test(navigator?.userAgent);
 
 export const formatBytes = (bytes, decimals = 2) => {
-  if (!+bytes) return '0 Bytes'
-  const k = 1024
-  const dm = decimals < 0 ? 0 : decimals
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
-}
+  if (!+bytes) return "0 Bytes";
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+};
 
 export const getMonthShortName = (monthNo) => {
   const date = new Date();
   date.setMonth(monthNo);
-  return date.toLocaleString('en-US', { month: 'short' });
-}
+  return date.toLocaleString("en-US", { month: "short" });
+};
 
 export const renderTimeDiff = (ts: string | Date) => {
   if (!ts) return;
@@ -362,4 +362,15 @@ export const renderTimeDiff = (ts: string | Date) => {
   } else {
     return showDate;
   }
+};
+
+export const formatEstimateTime = (time: string | number) => {
+  const totalHours = Math.floor(Number(time) / 60);
+  const remainingMinutes = Math.floor(Number(time)) % 60;
+
+  const formattedHours = totalHours < 10 ? `0${totalHours}` : totalHours;
+  const formattedMinutes =
+    remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
+
+  return `${formattedHours}:${formattedMinutes}`;
 };
