@@ -263,10 +263,10 @@ const Form = (props: FormProps) => {
     if (option) {
       formik.setFieldValue('type_project', option.value);
       setTypeProject(option)
+      setOpenTypeProject(false)
     } else {
       formik.setFieldValue('type_project', '');
     }
-    setOpenTypeProject(false)
   };
 
   const [typeInput, setTypeInput] = useState(formik.values?.type_project.label)
