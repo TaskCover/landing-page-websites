@@ -7,7 +7,6 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
 import "react-quill/dist/quill.snow.css";
 import { ACCEPT_MEDIA, FILE_ACCEPT } from "constant/index";
@@ -49,6 +48,13 @@ hljs.configure({
   ],
 });
 
+const ACCEPT_ALL = [...FILE_ACCEPT, ...ACCEPT_MEDIA];
+const TOOLBAR = [
+  ["bold", "italic", "underline", "strike"],
+  ["link", "code-block"],
+  [{ list: "ordered" }, { list: "bullet" }],
+];
+
 export type EditorProps = {
   hasAttachment?: boolean;
   children?: React.ReactNode;
@@ -59,13 +65,6 @@ export type EditorProps = {
   onChangeFiles?: (files: File[]) => void;
   onEnterText?: (text: string) => void;
 };
-
-const ACCEPT_ALL = [...FILE_ACCEPT, ...ACCEPT_MEDIA];
-const TOOLBAR = [
-  ["bold", "italic", "underline", "strike"],
-  ["link", "code-block"],
-  [{ list: "ordered" }, { list: "bullet" }],
-];
 
 const ChatEditor = (props: EditorProps) => {
   const {
@@ -79,44 +78,12 @@ const ChatEditor = (props: EditorProps) => {
     isLoading,
   } = props;
 
-  const [value, setValue] = useState(initalValue);
   const inputMediaRef = useRef<HTMLInputElement | null>(null);
   const inputFileRef = useRef<HTMLInputElement | null>(null);
   const urlFiles = useMemo(
     () => files.map((file) => URL.createObjectURL(file)),
     [files],
   );
-
-  const onChangeFile = (
-    event: ChangeEvent<HTMLInputElement>,
-    type: string[],
-  ) => {
-    if (!event.target.files?.length) return;
-    let newFiles = Array.from(event.target.files);
-
-    newFiles = newFiles.reduce(
-      (out: File[], file) => {
-        if (type?.includes(file.type)) {
-          out.push(file);
-        }
-        return out;
-      },
-      [...files],
-    );
-    onChangeFiles && onChangeFiles(newFiles);
-    if (inputMediaRef.current) {
-      inputMediaRef.current.value = "";
-    }
-  };
-
-  const onRemove = (index: number) => {
-    return () => {
-      const newFiles = [...files];
-      newFiles.splice(index, 1);
-      onChangeFiles && onChangeFiles(newFiles);
-    };
-  };
-
   const toolbarAttachment = useMemo(
     () => ({
       container: [
@@ -136,14 +103,13 @@ const ChatEditor = (props: EditorProps) => {
     }),
     [],
   );
-
   const toolbar = useMemo(
     () => (hasAttachment ? toolbarAttachment : TOOLBAR),
     [hasAttachment, toolbarAttachment],
   );
 
-  const { quill, quillRef, editor } = useQuill({
-    strict: true,
+  const { quill, quillRef } = useQuill({
+    strict: false,
     modules: {
       syntax: {
         highlight: (text) => hljs.highlightAuto(text).value,
@@ -175,8 +141,40 @@ const ChatEditor = (props: EditorProps) => {
       "bullet",
     ],
   });
-
   const quillRefCurr = quillRef.current;
+
+  const onChangeFile = useCallback(
+    (event: ChangeEvent<HTMLInputElement>, type: string[]) => {
+      if (!event.target.files?.length) return;
+      let newFiles = Array.from(event.target.files);
+
+      newFiles = newFiles.reduce(
+        (out: File[], file) => {
+          if (type?.includes(file.type)) {
+            out.push(file);
+          }
+          return out;
+        },
+        [...files],
+      );
+      onChangeFiles && onChangeFiles(newFiles);
+      if (inputMediaRef.current) {
+        inputMediaRef.current.value = "";
+      }
+    },
+    [files, onChangeFiles],
+  );
+
+  const onRemove = useCallback(
+    (index: number) => {
+      return () => {
+        const newFiles = [...files];
+        newFiles.splice(index, 1);
+        onChangeFiles && onChangeFiles(newFiles);
+      };
+    },
+    [files, onChangeFiles],
+  );
 
   const handleKeyDown = useCallback(
     (event) => {
@@ -192,17 +190,19 @@ const ChatEditor = (props: EditorProps) => {
         const text = quill?.getText().trim() ? quill.root.innerHTML : "";
         onEnterText?.(text);
         quill?.setText("");
-        setValue("");
       }
     },
     [onEnterText, quill],
   );
 
-  const handleChaneEmoji = (emoji: Emoji) => {
-    const newText = `${emoji.native}`;
-    quill?.insertText(quill?.getLength() - 1, newText);
-    quill?.root.focus();
-  };
+  const handleChaneEmoji = useCallback(
+    (emoji: Emoji) => {
+      const newText = `${emoji.native}`;
+      quill?.insertText(quill?.getLength() - 1, newText);
+      quill?.root.focus();
+    },
+    [quill],
+  );
 
   useEffect(() => {
     quill?.focus();
@@ -220,7 +220,7 @@ const ChatEditor = (props: EditorProps) => {
 
   return (
     <Stack
-      className="editor"
+    className="editor"
       sx={{
         "& .ql-snow": {
           border: "unset !important",
