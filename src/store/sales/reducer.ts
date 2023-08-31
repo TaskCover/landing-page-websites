@@ -8,9 +8,17 @@ import { getFiltersFromQueries } from "utils/index";
 import {
   GetSalesListQueries,
   createDeal,
+  getDetailDeal,
   getSales,
   updateDeal,
 } from "./actions";
+
+export interface Todo {
+  id: string;
+  name: string;
+  is_done: string;
+  priority: string;
+}
 
 export interface Sales {
   id: string;
@@ -30,7 +38,7 @@ export interface Sales {
   tags?: string[];
   currency: string;
   probability: number;
-  todo_list: string[];
+  todo_list: Todo[];
   stage: string;
   comment: Comment[];
   revenue: number;
@@ -45,6 +53,10 @@ export interface SaleState {
   salesPaging: Paging;
   salesError?: string;
   salesFilters: Omit<GetSalesListQueries, "pageIndex" | "pageSize">;
+
+  saleDetail: Sales | null;
+  saleDetailStatus: DataStatus;
+  saleDetailError?: string;
 }
 
 const initState: SaleState = {
@@ -55,6 +67,10 @@ const initState: SaleState = {
   salesFilters: {
     sort: "-1",
   },
+
+  saleDetail: null,
+  saleDetailStatus: DataStatus.IDLE,
+  saleDetailError: undefined,
 };
 
 const salesSlice = createSlice({
@@ -111,6 +127,22 @@ const salesSlice = createSlice({
       if (index !== -1) {
         state.sales[index] = Object.assign(state.sales[index], action.payload);
       }
+    });
+    builder.addCase(updateDeal.rejected, (state, action) => {
+      state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(createDeal.rejected, (state, action) => {
+      state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(getDetailDeal.pending, (state, action) => {
+      state.salesStatus = DataStatus.LOADING;
+    });
+    builder.addCase(getDetailDeal.fulfilled, (state, action) => {
+      state.saleDetail = action.payload;
+      state.salesStatus = DataStatus.SUCCEEDED;
+    });
+    builder.addCase(getDetailDeal.rejected, (state, action) => {
+      state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
     });
   },
 });

@@ -1,17 +1,21 @@
 import { DataStatus, SORT_OPTIONS } from "constant/enums";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   DealData,
   GetSalesListQueries,
   createDeal,
+  getDetailDeal,
   getSales,
   updateDeal,
 } from "./actions";
 import moment from "moment";
+import { error } from "console";
+import { useSnackbar } from "store/app/selectors";
 
 export const useSales = () => {
+  const { onAddSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
   const { sales, salesFilters, salesError, salesStatus } = useAppSelector(
     (state) => state.sales,
@@ -59,6 +63,7 @@ export const useSales = () => {
         members,
         company_id: data.company,
       };
+
       await dispatch(createDeal(convertedBody)).then(() => {
         let newPageIndex = totalPages || 0;
         if (totalPages && totalItems) {
@@ -84,13 +89,21 @@ export const useSales = () => {
         owner: data.owner,
         description: description,
         name: data.dealName,
+        probability: data.probability,
         members,
+        status: data.status,
         company_id: data.company,
       };
       await dispatch(updateDeal({ id: data.id, data: convertedBody }));
     },
     [dispatch],
   );
+
+  useEffect(() => {
+    if (salesError) {
+      onAddSnackbar(salesError, "error");
+    }
+  }, [salesError]);
 
   return {
     sales,
@@ -109,5 +122,37 @@ export const useSales = () => {
     onGetSales,
     onUpdateDeal,
     onCreateDeal,
+  };
+};
+
+export const useSaleDetail = () => {
+  const dispatch = useAppDispatch();
+  const { saleDetail, saleDetailError, saleDetailStatus } = useAppSelector(
+    (state) => state.sales,
+    shallowEqual,
+  );
+  const isIdle = useMemo(
+    () => saleDetailStatus === DataStatus.IDLE,
+    [saleDetailStatus],
+  );
+  const isFetching = useMemo(
+    () => saleDetailStatus === DataStatus.LOADING,
+    [saleDetailStatus],
+  );
+
+  const onGetSaleDetail = useCallback(
+    async (id: string) => {
+      await dispatch(getDetailDeal(id));
+    },
+    [dispatch],
+  );
+
+  return {
+    saleDetail,
+    saleDetailError,
+    saleDetailStatus,
+    isIdle,
+    isFetching,
+    onGetSaleDetail,
   };
 };

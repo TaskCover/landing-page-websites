@@ -20,6 +20,7 @@ export interface GetSalesListQueries extends BaseQueries {
 export interface DealData {
   name: string;
   company_id?: string;
+  status?: string;
   description?: string;
   currency: string;
   owner: Partial<Employee>;
@@ -41,7 +42,7 @@ export const getSales = createAsyncThunk(
       sort_by: queries.sort || "-1",
       company: queries.company || undefined,
       page: queries.pageIndex ? (queries.pageIndex as number) : undefined,
-      size: isNaN(queries.pageSize)
+      size: isNaN(queries.pageSize as number)
         ? queries.pageSize
         : Number(queries.pageSize),
     }) as GetSalesListQueries;
@@ -91,8 +92,30 @@ export const updateDeal = createAsyncThunk(
   async ({ id, data }: { id: string; data: Partial<DealData> }) => {
     try {
       const response = await client.put(
-        StringFormat(Endpoint.SALES_DEAL_UPDATE, { id }),
+        StringFormat(Endpoint.SALES_DEAL_DETAIL, { id }),
         data,
+        {
+          baseURL: SALE_API_URL,
+        },
+      );
+      if (response?.status === HttpStatusCode.OK) {
+        const { data } = response;
+        return data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getDetailDeal = createAsyncThunk(
+  "sales/getDetailDeal",
+  async (id: string) => {
+    try {
+      const response = await client.get(
+        StringFormat(Endpoint.SALES_DEAL_DETAIL, { id }),
+        {},
         {
           baseURL: SALE_API_URL,
         },
