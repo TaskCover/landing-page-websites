@@ -266,7 +266,6 @@ const Form = (props: FormProps) => {
     } else {
       formik.setFieldValue('type_project', '');
     }
-    setOpenTypeProject(false)
   };
 
   const [typeInput, setTypeInput] = useState(formik.values?.type_project.label)
