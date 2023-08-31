@@ -10,6 +10,7 @@ import { useForm, useFormContext } from "react-hook-form";
 import { Sales } from "store/sales/reducer";
 import { useSaleDetail } from "store/sales/selectors";
 import Loading from "components/Loading";
+import { useFetchEmployeeOptions } from "components/sn-sales/hooks/useGetEmployeeOptions";
 
 const SalesDetail = () => {
   const [tab, setTab] = useState<SALES_DETAIL_TAB>(SALES_DETAIL_TAB.FEED);
@@ -20,6 +21,7 @@ const SalesDetail = () => {
   const id = getValues("id");
 
   useFetchDealDetail(id);
+  useFetchEmployeeOptions();
   const { saleDetail, isFetching } = useSaleDetail();
 
   useEffect(() => {

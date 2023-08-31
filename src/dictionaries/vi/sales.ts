@@ -48,6 +48,7 @@ export const salesLang: SalesDictionary = {
   },
   detail: {
     tab: {
+      assign: "Thành Viên",
       feed: "Tin mới",
       service: "Dịch vụ",
     },

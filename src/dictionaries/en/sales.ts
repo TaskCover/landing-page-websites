@@ -49,6 +49,7 @@ export const SalesLang: SalesDictionary = {
   detail: {
     tab: {
       feed: "Feed",
+      assign: "Assign",
       service: "Service",
     },
     todoList: {

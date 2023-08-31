@@ -9,6 +9,7 @@ import React, { memo } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { useSaleDetail } from "store/sales/selectors";
 
+const TODO_PREFIX = "detail.todoList";
 const TodoList = () => {
   const { saleDetail } = useSaleDetail();
   const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
@@ -85,7 +86,7 @@ const TodoList = () => {
         initCollapse
         label={
           <Text color="text.primary" variant="h6" textTransform="uppercase">
-            {`${salesT("taskDetail.toDoList")} (${
+            {`${salesT(`${TODO_PREFIX}.title`)} (${
               saleDetail?.todo_list?.length ?? 0
             })`}
           </Text>

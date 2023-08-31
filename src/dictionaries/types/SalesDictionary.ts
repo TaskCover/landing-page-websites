@@ -46,6 +46,8 @@ export type SalesDictionary = {
   };
   detail: {
     tab: {
+      assign: string;
+
       feed: string;
       service: string;
     };

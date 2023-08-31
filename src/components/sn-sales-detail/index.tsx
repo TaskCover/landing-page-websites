@@ -20,7 +20,7 @@ const SaleForm = ({ params }) => {
       estimate: 0,
       id: params.id,
       is_active: false,
-      member: [],
+      members: [],
       owner: {},
       probability: 0,
       revenue: 0,

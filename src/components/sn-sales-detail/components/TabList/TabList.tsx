@@ -6,9 +6,15 @@ import { useTranslations } from "next-intl";
 import React, { memo, useMemo } from "react";
 import { getPath } from "utils/index";
 import { Stack, Tab, Tabs } from "@mui/material";
-import { Date } from "components/Filters";
+import { Date, Dropdown } from "components/Filters";
 import moment from "moment";
-import { useSaleDetail } from "store/sales/selectors";
+import { useSaleDetail, useSales } from "store/sales/selectors";
+import { Button, Input, Select, Text } from "components/shared";
+import PlusIcon from "icons/PlusIcon";
+import AvatarGroup from "components/shared/AvatarGroup";
+import useGetEmployeeOptions from "components/sn-sales/hooks/useGetEmployeeOptions";
+import Assign from "../Assign";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 export enum SALES_DETAIL_TAB {
   FEED = "feed",
@@ -45,7 +51,6 @@ function a11yProps(index: number) {
 }
 
 const TabItem = (props: TabItemProps) => {
-  const { saleDetail } = useSaleDetail();
   const { href = "", value, label, isActive, ...rest } = props;
   const salesT = useTranslations(NS_SALES);
   const { isDarkMode, palette } = useTheme();
@@ -79,8 +84,16 @@ const TabItem = (props: TabItemProps) => {
 };
 
 const TabList = ({ value, onChange }: TabListProps) => {
-  const onChangeDate = (value) => {
-    console.log(value);
+  const { saleDetail } = useSaleDetail();
+  const { onUpdateDeal } = useSales();
+
+  const { control, setValue, getValues } = useFormContext();
+
+  const members = useWatch({ control, name: "members" });
+
+  const onAssign = (name, assignees) => {
+    setValue(name, assignees);
+    onUpdateDeal({ id: getValues("id"), [name]: [...assignees] });
   };
 
   return (
@@ -111,13 +124,61 @@ const TabList = ({ value, onChange }: TabListProps) => {
           />
         ))}
       </Tabs>
-      <Stack>
-        <Date
-          label="Start Date"
+      <Stack direction="row" alignItems="center" spacing={3}>
+        <Controller
           name="start_date"
-          format={DATE_FORMAT_SLASH}
-          onChange={(name, newDate) => onChangeDate}
+          control={control}
+          defaultValue={saleDetail?.start_date || moment().toDate()}
+          render={({ field }) => {
+            const { onChange, ...rest } = field;
+            const onChangeDate = (e, value) => {
+              onChange(value);
+
+              onUpdateDeal({ id: getValues("id"), start_date: value });
+            };
+            return (
+              <Date
+                label="Start Date"
+                format={DATE_FORMAT_SLASH}
+                onChange={onChangeDate}
+                {...rest}
+              />
+            );
+          }}
         />
+        <Stack direction="row" gap={1} alignItems="center">
+          {/* {avatarList?.length === 0 ||
+            (true && (
+              <Text variant="body2" sx={{ cursor: "pointer" }}>
+                Assign
+              </Text>
+            ))}
+          <PlusIcon />
+
+          <Dropdown
+            name="assign"
+            onChange={() => console.log("change here")}
+            options={employeeOptions}
+            placeholder="Assign"
+            SelectProps={{
+              value: [
+                {
+                  label: "Assign",
+                  value: "Assign",
+                },
+              ],
+              multiple: true,
+            }} */}
+          {/* /> */}
+          <Controller
+            name="members"
+            control={control}
+            defaultValue={members}
+            render={({ field }) => {
+              return <Assign onAssign={onAssign} {...field} />;
+            }}
+          />
+        </Stack>
       </Stack>
     </Stack>
   );

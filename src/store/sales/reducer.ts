@@ -30,7 +30,7 @@ export interface Sales {
   status: string;
   start_date: string;
   owner: User;
-  member: User[];
+  members: User[];
   description?: string;
   is_active: boolean;
   company: string;

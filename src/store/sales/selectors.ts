@@ -13,6 +13,7 @@ import {
 import moment from "moment";
 import { error } from "console";
 import { useSnackbar } from "store/app/selectors";
+import { DATE_FORMAT_FORM } from "constant/index";
 
 export const useSales = () => {
   const { onAddSnackbar } = useSnackbar();
@@ -82,7 +83,6 @@ export const useSales = () => {
   );
   const onUpdateDeal = useCallback(
     async (data) => {
-      const members = data.members?.map((value) => ({ id: value }));
       const description = data.tags?.join(",");
       const convertedBody: DealData = {
         currency: data.currency,
@@ -90,9 +90,10 @@ export const useSales = () => {
         description: description,
         name: data.dealName,
         probability: data.probability,
-        members,
+        members: data.members,
         status: data.status,
         company_id: data.company,
+        start_date: moment(data.start_date).format("YYYY-MM-DD"),
       };
       await dispatch(updateDeal({ id: data.id, data: convertedBody }));
     },

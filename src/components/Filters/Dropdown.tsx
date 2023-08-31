@@ -11,14 +11,7 @@ const Dropdown = (props: DropdownProps) => {
   const { rootSx, name, onChange, value, sx, options, ...rest } = props;
 
   const hasValue = useMemo(
-    () =>
-      options.some((option) => {
-        if (option.value === 0) {
-          console.log("option", option);
-          console.log("value", value);
-        }
-        return option.value === value;
-      }),
+    () => options.some((option) => option.value === value),
     [options, value],
   );
 
