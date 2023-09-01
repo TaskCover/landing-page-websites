@@ -7,7 +7,7 @@ import { BaseQueries } from "constant/types";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
 import { Task, TaskList } from "./reducer";
-import { Option } from 'constant/types';
+import { Option } from "constant/types";
 
 export enum ProjectStatus {
   ACTIVE = "ACTIVE",

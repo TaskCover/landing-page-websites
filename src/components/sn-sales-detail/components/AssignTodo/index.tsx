@@ -18,7 +18,7 @@ import {
 } from "constant/index";
 import ChevronIcon from "icons/ChevronIcon";
 import { useTranslations } from "next-intl";
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useMemo, useRef, useState } from "react";
 import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
 import Avatar from "components/Avatar";
 import { IconButton, Text } from "components/shared";
@@ -52,7 +52,7 @@ const defaultSx = {
 };
 
 type AssignProps = {
-  value: User;
+  value: string;
   name: string;
   onAssign: (name: string, data: User) => void;
 };
@@ -61,14 +61,14 @@ const DisplayItem = ({
   user,
   onRemoveAssign,
 }: {
-  user: User;
+  user: Option;
   onRemoveAssign: (id: string) => void;
 }) => {
   const { employeeOptions } = useGetEmployeeOptions();
 
   const { isDarkMode } = useTheme();
 
-  const { fullname } = (user ?? {}) as User;
+  const { label } = (user ?? {}) as Option;
 
   return (
     <Stack
@@ -81,10 +81,13 @@ const DisplayItem = ({
       display="inline-flex"
       width="fit-content"
     >
-      <Text variant="body2" maxWidth={150} noWrap tooltip={fullname}>
-        {fullname}
+      <Text variant="body2" maxWidth={150} noWrap tooltip={label}>
+        {label}
       </Text>
-      <IconButton noPadding onClick={() => onRemoveAssign(user.id)}>
+      <IconButton
+        noPadding
+        onClick={() => onRemoveAssign(user.value as string)}
+      >
         <CircleCloseIcon sx={{ color: "grey.400" }} />
       </IconButton>
     </Stack>
@@ -127,14 +130,22 @@ const AssignTodo = (props: AssignProps) => {
       } as User);
   };
 
+  const mappedOwner = useMemo(
+    () =>
+      employeeOptions.find((option) => {
+        return option.value === value;
+      }),
+    [employeeOptions, value],
+  );
+
   const onRemoveAssign = (id) => {
     onChange && onChange(name, {} as User);
   };
   return (
     <PopoverLayout
       label={
-        value?.id ? (
-          <DisplayItem user={value} onRemoveAssign={onRemoveAssign} />
+        mappedOwner ? (
+          <DisplayItem user={mappedOwner} onRemoveAssign={onRemoveAssign} />
         ) : (
           <Stack direction="row" alignItems="center" spacing={1}>
             <Text variant="body2" noWrap>

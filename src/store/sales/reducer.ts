@@ -7,12 +7,14 @@ import { Comment } from "store/project/reducer";
 import { getFiltersFromQueries } from "utils/index";
 import {
   GetSalesListQueries,
+  createComment,
   createDeal,
   createTodo,
   deleteTodo,
   getDetailDeal,
   getSales,
   updateDeal,
+  updatePriority,
   updateTodo,
 } from "./actions";
 import build from "next/dist/build";
@@ -21,8 +23,8 @@ export interface Todo {
   id: string;
   name: string;
   is_done: boolean;
-  priority: string;
-  due_date: string;
+  priority: number;
+  expiration_date: string;
   owner: string;
 }
 
@@ -46,7 +48,7 @@ export interface Sales {
   probability: number;
   todo_list: Todo[];
   stage: string;
-  comment: Comment[];
+  comments: Comment[];
   revenue: number;
   revenuePJ: number;
   todoItem: Todo;
@@ -68,6 +70,10 @@ export interface SaleState {
   salesTodo: Todo | null;
   salesTodoStatus: DataStatus;
   salesTodoError?: string;
+
+  comments: Comment[];
+  commentsStatus: DataStatus;
+  commentsError?: string;
 }
 
 const initState: SaleState = {
@@ -86,6 +92,10 @@ const initState: SaleState = {
   salesTodo: null,
   salesTodoStatus: DataStatus.IDLE,
   salesTodoError: undefined,
+
+  comments: [],
+  commentsStatus: DataStatus.IDLE,
+  commentsError: undefined,
 };
 
 const salesSlice = createSlice({
@@ -185,6 +195,11 @@ const salesSlice = createSlice({
     });
     builder.addCase(deleteTodo.rejected, (state, action) => {
       state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(createComment.fulfilled, (state, action) => {
+      if (state.saleDetail) {
+        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+      }
     });
   },
 });

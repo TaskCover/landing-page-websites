@@ -59,5 +59,16 @@ export const SalesLang: SalesDictionary = {
       dueDate: "Due Date",
       addNew: "Add new",
     },
+    comment: {
+      title: "Wrrite your comment",
+      placeholder: "write something on comment",
+      show: {
+        title: "Show",
+        change: "Change",
+        comments: "Comments",
+        attachment: "Attachment",
+      },
+      submit: "Submit",
+    },
   },
 };

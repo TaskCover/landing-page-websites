@@ -59,5 +59,16 @@ export const salesLang: SalesDictionary = {
       addTodo: "Thêm việc cần làm",
       addNew: "Thêm mới",
     },
+    comment: {
+      title: "Bình luận",
+      placeholder: "Viết bình luận",
+      show: {
+        attachment: "Tệp đính kèm",
+        change: "Thay đổi",
+        title: "Hiển thị",
+        comments: "Tất cả bình luận",
+      },
+      submit: "Gửi",
+    },
   },
 };

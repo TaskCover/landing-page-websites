@@ -3,20 +3,24 @@ import { useCallback, useEffect, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
+  CommentData,
   DealData,
   GetSalesListQueries,
   TodoData,
   TodoItemData,
+  createComment,
   createDeal,
   createTodo,
   deleteTodo,
   getDetailDeal,
   getSales,
   updateDeal,
+  updatePriority,
   updateTodo,
 } from "./actions";
 import moment from "moment";
 import { useSnackbar } from "store/app/selectors";
+import { Todo } from "./reducer";
 
 export const useSales = () => {
   const { onAddSnackbar } = useSnackbar();
@@ -189,12 +193,17 @@ export const useSalesTodo = () => {
 
   const onCreateTodo = useCallback(
     async ({ dealId, data }: { dealId: string; data: TodoItemData }) => {
+      const expiration_date =
+        data.expiration_date &&
+        moment(data.expiration_date, "DD-MM-YYYY").format("YYYY-MM-DD");
       return await dispatch(
         createTodo({
-          todo_list: {
-            ...data,
-            due_date: moment(data.due_date, "DD-MM-YYYY").format("YYYY-MM-DD"),
-          },
+          todo_list: [
+            {
+              ...data,
+              expiration_date: expiration_date,
+            },
+          ],
           deal_id: dealId,
         }),
       ).unwrap();
@@ -207,17 +216,17 @@ export const useSalesTodo = () => {
       id: string,
       { dealId, data }: { dealId: string; data: TodoItemData },
     ) => {
-      const due_date =
-        (data.due_date &&
-          moment(data.due_date, "DD-MM-YYYY").format("YYYY-MM-DD")) ||
-        undefined;
+      const expiration_date =
+        data.expiration_date &&
+        moment(data.expiration_date, "DD-MM-YYYY").format("YYYY-MM-DD");
+
       return await dispatch(
         updateTodo({
           id,
           data: {
             todo_list: {
               ...data,
-              due_date,
+              expiration_date: expiration_date,
             },
             deal_id: dealId,
           },
@@ -237,6 +246,22 @@ export const useSalesTodo = () => {
     },
     [dispatch],
   );
+
+  const onUpdatePriority = async (
+    id,
+    { dealId, priority }: { dealId: string; priority: number },
+  ) => {
+    await updatePriority({
+      id,
+      data: {
+        deal_id: dealId,
+        todo_list: {
+          priority,
+        } as TodoItemData,
+      },
+    });
+  };
+
   return {
     salesTodo,
     salesTodoStatus,
@@ -246,5 +271,44 @@ export const useSalesTodo = () => {
     onCreateTodo,
     onUpdateTodo,
     onDeleteTodo,
+    onUpdatePriority,
+  };
+};
+
+export const useSalesComment = () => {
+  const { saleDetail, commentsStatus, commentsError } = useAppSelector(
+    (state) => state.sales,
+    shallowEqual,
+  );
+  const dispatch = useAppDispatch();
+  const salesComment = useMemo(() => {
+    if (saleDetail) {
+      return saleDetail.comments;
+    }
+    return [];
+  }, [saleDetail]);
+
+  const isIdle = useMemo(
+    () => commentsStatus === DataStatus.IDLE,
+    [commentsStatus],
+  );
+  const isFetching = useMemo(
+    () => commentsStatus === DataStatus.LOADING,
+    [commentsStatus],
+  );
+
+  const onCreateComment = useCallback(
+    async (data: CommentData) => {
+      return await dispatch(createComment({ data })).unwrap();
+    },
+    [dispatch],
+  );
+
+  return {
+    commentsError,
+    salesComment,
+    isIdle,
+    isFetching,
+    onCreateComment,
   };
 };

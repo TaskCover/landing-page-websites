@@ -6,7 +6,7 @@ import { DATE_FORMAT_HYPHEN, NS_COMMON, NS_SALES } from "constant/index";
 import useToggle from "hooks/useToggle";
 import PlusIcon from "icons/PlusIcon";
 import { useTranslations } from "next-intl";
-import React, { ChangeEvent, memo, useState } from "react";
+import React, { ChangeEvent, memo, use, useMemo, useState } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { Controller, useForm, useFormContext, useWatch } from "react-hook-form";
 import { useSaleDetail, useSalesTodo } from "store/sales/selectors";
@@ -15,6 +15,12 @@ import AssignTodo from "../AssignTodo";
 import SubItem from "./SubItem";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { TodoItemData } from "store/sales/actions";
+import { Todo } from "store/sales/reducer";
+import { TaskDetail } from "store/project/reducer";
+import { getMessageErrorByAPI } from "utils/index";
+import { reorderPriority } from "components/sn-sales-detail/helpers";
+import { on } from "events";
+import { useSnackbar } from "store/app/selectors";
 
 export const TodoName = ({
   onSubmit,
@@ -101,7 +107,7 @@ export const TodoName = ({
         <Grid2 xs={12} md={5}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Controller
-              name="todoItem.due_date"
+              name="todoItem.expiration_date"
               control={control}
               render={({ field }) => {
                 const { onChange: onValueChange, ...rest } = field;
@@ -125,7 +131,7 @@ export const TodoName = ({
               render={({ field }) => {
                 const { onChange, ...rest } = field;
                 const onAssign = (name: string, value: User) => {
-                  onChange(value);
+                  onChange(value.id);
                 };
 
                 return <AssignTodo {...rest} onAssign={onAssign} />;
@@ -144,28 +150,53 @@ const TODO_PREFIX = "detail.todoList";
 
 const TodoList = () => {
   const { saleDetail } = useSaleDetail();
+  const { onAddSnackbar } = useSnackbar();
   const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
   const salesT = useTranslations(NS_SALES);
+  const commonT = useTranslations(NS_COMMON);
   const { control, getValues, setValue } = useFormContext();
-  const { onCreateTodo, onUpdateTodo } = useSalesTodo();
+  const { onCreateTodo, onUpdateTodo, onUpdatePriority } = useSalesTodo();
+
+  const todoListForm = useWatch({ control, name: "todo_list" });
+  const todoList = useMemo(() => {
+    return (Object.values(todoListForm ?? {}) as Array<Todo>).sort(
+      (a, b) => a.priority - b.priority,
+    );
+  }, [JSON.stringify(todoListForm)]);
 
   const onSubmit = async (value) => {
     onCreateTodo({
       dealId: saleDetail?.id || "",
       data: {
         ...value,
-        owner: value.owner?.id,
+        priority: value.priority || todoList.length + 1,
+        owner: value.owner?.id || value.owner,
       },
     });
   };
 
   const onDragEnd = async (result: DropResult) => {
-    console.log("🚀 ~ file: index.tsx:163 ~ onDragEnd ~ result:", result);
-    // onUpdateTodo({
-    //   dealId: saleDetail?.id || "",
-    //   data: {
-    //     pri
-    // });
+    const { source, destination } = result;
+    const todoListArray = Object.values(todoListForm) as Array<Todo>;
+    const reorderedObject = reorderPriority(
+      todoListArray,
+      destination?.index ?? 0,
+      source?.index ?? 0,
+    );
+
+    setValue("todo_list", reorderedObject);
+    try {
+      await Promise.all(
+        todoListArray.map((todo) =>
+          onUpdatePriority(todo.id, {
+            dealId: saleDetail?.id || "",
+            priority: todo.priority,
+          }),
+        ),
+      );
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
   };
 
   return (
@@ -195,11 +226,11 @@ const TodoList = () => {
             <Droppable droppableId="droppableId">
               {(provided) => (
                 <div ref={provided.innerRef} {...provided.droppableProps}>
-                  {saleDetail?.todo_list?.map((todo, index) => (
+                  {todoList?.map((todo, index) => (
                     <SubItem
                       key={todo.id}
                       todo={todo}
-                      dealId={saleDetail.id}
+                      dealId={saleDetail?.id || ""}
                       index={index}
                     />
                   ))}

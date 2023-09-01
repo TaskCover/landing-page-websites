@@ -2,6 +2,7 @@ import { Stack, Checkbox } from "@mui/material";
 import ConfirmDialog from "components/ConfirmDialog";
 import Loading from "components/Loading";
 import {
+  DATE_FORMAT_FORM,
   DATE_FORMAT_HYPHEN,
   DATE_FORMAT_SLASH,
   NS_COMMON,
@@ -25,6 +26,7 @@ import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { TodoItemData } from "store/sales/actions";
 import TrashIcon from "icons/TrashIcon";
 import MoveDotIcon from "icons/MoveDotIcon";
+import { formatDate } from "utils/index";
 
 export enum Action {
   RENAME = 1,
@@ -39,7 +41,7 @@ const SubItem = ({
   dealId: string;
   index: number;
 }) => {
-  const { id, is_done, name, owner, priority } = todo;
+  const { id, is_done, name, owner } = todo;
 
   const { saleDetail } = useSaleDetail();
   const { onAddSnackbar } = useSnackbar();
@@ -156,7 +158,7 @@ const SubItem = ({
               <Grid2 xs={4} alignItems="center" spacing={1}>
                 <Stack direction="row" alignItems={"center"} spacing={1}>
                   <Controller
-                    name={`todo_list.${index}.due_date`}
+                    name={`todo_list.${id}.expiration_date`}
                     control={control}
                     render={({ field }) => {
                       const { onChange, ...rest } = field;
@@ -165,7 +167,7 @@ const SubItem = ({
                         onUpdateTodo(id, {
                           dealId: saleDetail?.id || "",
                           data: {
-                            due_date: value,
+                            expiration_date: value,
                           } as TodoItemData,
                         });
                       };
@@ -174,24 +176,19 @@ const SubItem = ({
                           label={salesT("detail.todoList.dueDate")}
                           format={DATE_FORMAT_HYPHEN}
                           onChange={onChangeDate}
-                          calendarContainer={({ children }) => (
-                            <div style={{ position: "relative", zIndex: 9999 }}>
-                              {children}
-                            </div>
-                          )}
                           {...rest}
                         />
                       );
                     }}
                   />
                   <Controller
-                    name={`todo_list.${index}.owner`}
+                    name={`todo_list.${id}.owner`}
                     control={control}
                     defaultValue={mappedOwner}
                     render={({ field }) => {
                       const { onChange, ...rest } = field;
                       const onAssign = (name: string, value: User) => {
-                        onChange(value);
+                        onChange(value.id);
                         onUpdateTodo(id, {
                           dealId: saleDetail?.id || "",
                           data: {

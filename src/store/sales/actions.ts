@@ -37,13 +37,19 @@ export interface TodoItemData {
   name: string;
   is_done?: boolean;
   owner?: string;
-  priority?: string;
-  due_date?: string;
+  priority?: number;
+  expiration_date?: string;
 }
 export interface TodoData {
   deal_id: string;
-  todo_list: TodoItemData;
+  todo_list: TodoItemData[] | TodoItemData;
 }
+
+export type CommentData = {
+  deal_id: string;
+  content?: string;
+  attachment?: string[];
+};
 
 export const getSales = createAsyncThunk(
   "sales/getSales",
@@ -194,6 +200,49 @@ export const deleteTodo = createAsyncThunk(
         },
       });
       if (response?.status === HttpStatusCode.OK) {
+        const { data } = response;
+        return data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const updatePriority = async ({
+  id,
+  data,
+}: {
+  id: string;
+  data: TodoData;
+}) => {
+  try {
+    const response = await client.put(
+      StringFormat(Endpoint.SALES_TODO_DETAIL, { id }),
+      data,
+      {
+        baseURL: SALE_API_URL,
+      },
+    );
+    if (response?.status === HttpStatusCode.OK) {
+      const { data } = response;
+      return data;
+    }
+    throw AN_ERROR_TRY_AGAIN;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createComment = createAsyncThunk(
+  "sales/createComment",
+  async ({ data }: { data: CommentData }) => {
+    try {
+      const response = await client.post(Endpoint.SALES_COMMENT, data, {
+        baseURL: SALE_API_URL,
+      });
+      if (response?.status === HttpStatusCode.CREATED) {
         const { data } = response;
         return data;
       }

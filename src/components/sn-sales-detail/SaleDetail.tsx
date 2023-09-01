@@ -7,10 +7,14 @@ import { useFetchDealDetail } from "./hooks/useGetDealDetail";
 import { TabContext, TabPanel } from "@mui/lab";
 import SaleFeed from "./sn-feed";
 import { useForm, useFormContext } from "react-hook-form";
-import { Sales } from "store/sales/reducer";
+import { Sales, Todo } from "store/sales/reducer";
 import { useSaleDetail } from "store/sales/selectors";
 import Loading from "components/Loading";
 import { useFetchEmployeeOptions } from "components/sn-sales/hooks/useGetEmployeeOptions";
+import { TodoItemData } from "store/sales/actions";
+import moment from "moment";
+import { DATE_FORMAT_HYPHEN } from "constant/index";
+import { formatDate } from "utils/index";
 
 const SalesDetail = () => {
   const [tab, setTab] = useState<SALES_DETAIL_TAB>(SALES_DETAIL_TAB.FEED);
@@ -25,10 +29,24 @@ const SalesDetail = () => {
   const { saleDetail, isFetching } = useSaleDetail();
 
   useEffect(() => {
-    const todo_list = saleDetail?.todo_list.reduce((acc, todo) => {
-      acc[todo.id] = todo;
-      return acc;
-    }, {});
+    if (!saleDetail) return;
+
+    const sortedTodoList = [...saleDetail?.todo_list].sort(
+      (a, b) => a.priority - b.priority,
+    );
+    const todo_list: Record<string, Todo> = sortedTodoList.reduce(
+      (acc, todo, index) => {
+        acc[todo.id] = {
+          ...todo,
+          priority: index + 1,
+          expiration_date:
+            todo.expiration_date &&
+            formatDate(todo.expiration_date, DATE_FORMAT_HYPHEN),
+        };
+        return acc;
+      },
+      {},
+    ) as Record<string, Todo>;
 
     reset({
       ...saleDetail,

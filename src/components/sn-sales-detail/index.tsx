@@ -31,6 +31,7 @@ const SaleForm = ({ params }) => {
       tags: [],
       updated_time: "",
       todoItem: {},
+      comments: [],
       status: SALE_STAGE.LEAD,
     },
   });
