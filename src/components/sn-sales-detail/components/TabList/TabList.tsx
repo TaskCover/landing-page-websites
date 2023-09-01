@@ -1,7 +1,11 @@
 "use client";
 import useTheme from "hooks/useTheme";
 import Link from "components/Link";
-import { DATE_FORMAT_SLASH, NS_SALES } from "constant/index";
+import {
+  DATE_FORMAT_HYPHEN,
+  DATE_FORMAT_SLASH,
+  NS_SALES,
+} from "constant/index";
 import { useTranslations } from "next-intl";
 import React, { memo, useMemo } from "react";
 import { getPath } from "utils/index";
@@ -9,10 +13,6 @@ import { Stack, Tab, Tabs } from "@mui/material";
 import { Date, Dropdown } from "components/Filters";
 import moment from "moment";
 import { useSaleDetail, useSales } from "store/sales/selectors";
-import { Button, Input, Select, Text } from "components/shared";
-import PlusIcon from "icons/PlusIcon";
-import AvatarGroup from "components/shared/AvatarGroup";
-import useGetEmployeeOptions from "components/sn-sales/hooks/useGetEmployeeOptions";
 import Assign from "../Assign";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 
@@ -93,18 +93,31 @@ const TabList = ({ value, onChange }: TabListProps) => {
 
   const onAssign = (name, assignees) => {
     setValue(name, assignees);
-    onUpdateDeal({ id: getValues("id"), [name]: [...assignees] });
+    const newAssignees = assignees.filter(
+      (item) =>
+        !saleDetail?.members?.find((member) => member.id === item.id) &&
+        item.id !== saleDetail?.owner.id,
+    );
+    onUpdateDeal({ id: getValues("id"), [name]: [...newAssignees] });
   };
 
   return (
     <Stack
-      direction="row"
+      direction={{
+        xs: "column",
+        sm: "row",
+      }}
       justifyContent="space-between"
-      alignItems="center"
+      alignItems={{
+        xs: "flex-start",
+        sm: "center",
+      }}
       sx={{
+        padding: { xs: 2, sm: 0 },
         borderBottom: "1px solid",
         borderColor: "grey.100",
       }}
+      gap={2}
     >
       <Tabs
         value={value}
@@ -124,7 +137,14 @@ const TabList = ({ value, onChange }: TabListProps) => {
           />
         ))}
       </Tabs>
-      <Stack direction="row" alignItems="center" spacing={3}>
+      <Stack
+        direction={{
+          xs: "row-reverse",
+          sm: "row",
+        }}
+        alignItems="center"
+        spacing={3}
+      >
         <Controller
           name="start_date"
           control={control}
@@ -133,13 +153,12 @@ const TabList = ({ value, onChange }: TabListProps) => {
             const { onChange, ...rest } = field;
             const onChangeDate = (e, value) => {
               onChange(value);
-
               onUpdateDeal({ id: getValues("id"), start_date: value });
             };
             return (
               <Date
                 label="Start Date"
-                format={DATE_FORMAT_SLASH}
+                format={DATE_FORMAT_HYPHEN}
                 onChange={onChangeDate}
                 {...rest}
               />

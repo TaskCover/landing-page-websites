@@ -1,30 +1,34 @@
 import { Stack } from "@mui/material";
+import { ArrowLeftIcon } from "@mui/x-date-pickers";
 import { formErrorCode } from "api/formErrorCode";
 import Avatar from "components/Avatar";
 import { Dropdown } from "components/Filters";
-import { Text } from "components/shared";
+import Link from "components/Link";
+import { Button, Text } from "components/shared";
 import { useGetStageOptions } from "components/sn-sales-detail/hooks/useGetDealDetail";
-import {
-  CURRENCY_SYMBOL,
-  mappingProbabilityOptions,
-} from "components/sn-sales/helpers";
+import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { CURRENCY_CODE } from "constant/enums";
-import { NS_COMMON } from "constant/index";
-import { ErrorResponse } from "constant/types";
+import { NS_COMMON, NS_SALES } from "constant/index";
+import { SALES_LIST_PATH } from "constant/paths";
+import { ErrorResponse, Option } from "constant/types";
 import { Data } from "emoji-mart";
 import { useTranslations } from "next-intl";
-import React from "react";
+import { useRouter } from "next-intl/client";
+import React, { useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useSnackbar } from "store/app/selectors";
 import { useSaleDetail, useSales } from "store/sales/selectors";
-import { formatNumber, getMessageErrorByAPI } from "utils/index";
+import { formatNumber, getMessageErrorByAPI, getPath } from "utils/index";
 
 const TabHeader = () => {
   const { saleDetail } = useSaleDetail();
   const { onUpdateDeal } = useSales();
   const { stageOptions } = useGetStageOptions();
+  const { push } = useRouter();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
+  const salesT = useTranslations(NS_SALES);
+
   const { control, handleSubmit, getValues } = useFormContext();
 
   const onSubmit = (name, value) => {
@@ -36,16 +40,42 @@ const TabHeader = () => {
     }
   };
 
+  const mappingProbabilityOptions: Option[] = useMemo(
+    () =>
+      Array.from(new Array(11), (value, index) => ({
+        label: `${salesT("list.table.probability")} - ${index * 10}%`,
+        value: index * 10 + 1,
+      })),
+    [],
+  );
   return (
     <Stack
-      direction="row"
+      overflow={"auto"}
+      direction={{
+        xs: "column",
+        sm: "row",
+      }}
       spacing={2}
-      padding={3}
+      padding={{
+        xs: 0,
+        sm: 3,
+      }}
       justifyContent="space-between"
-      alignItems="center"
+      alignItems={{
+        xs: "flex-start",
+        sm: "center",
+      }}
     >
-      <Stack direction="row" spacing={2}>
-        <Avatar size={32} src={saleDetail?.owner.avatar?.link} />
+      <Stack direction="row" spacing={1}>
+        <Link href={getPath(SALES_LIST_PATH)}>
+          <ArrowLeftIcon
+            sx={{ color: "common.black" }}
+            height={24}
+            width={24}
+            color="inherit"
+          />
+        </Link>
+        <Avatar size={32} src={saleDetail?.owner?.avatar?.link} />
         <Text variant="h4">{saleDetail?.name}</Text>
       </Stack>
       <Stack direction="row" justifyContent="flex-end" spacing={2}>

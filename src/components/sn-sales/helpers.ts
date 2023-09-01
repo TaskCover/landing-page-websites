@@ -40,13 +40,6 @@ export const mappingStageStatusOptions: Option[] = [
   },
 ];
 
-export const mappingProbabilityOptions: Option[] = Array.from(
-  new Array(11),
-  (value, index) => ({
-    label: `Probability - ${index * 10}%`,
-    value: index * 10 + 1,
-  }),
-);
 export const CURRENCY_SYMBOL: Record<CURRENCY_CODE, string> = {
   [CURRENCY_CODE.USD]: "$",
   [CURRENCY_CODE.EUR]: "€",

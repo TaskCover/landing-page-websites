@@ -21,13 +21,14 @@ import { useTranslations } from "next-intl";
 import React, { memo, useRef, useState } from "react";
 import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
 import Avatar from "components/Avatar";
-import { Text } from "components/shared";
+import { IconButton, Text } from "components/shared";
 import useGetEmployeeOptions from "components/sn-sales/hooks/useGetEmployeeOptions";
 import AvatarGroup, { AvatarProps } from "components/shared/AvatarGroup";
 import PlusIcon from "icons/PlusIcon";
 import { useFormContext } from "react-hook-form";
 import { Option, User } from "constant/types";
-import { useSaleDetail } from "store/sales/selectors";
+import CircleCloseIcon from "icons/CircleCloseIcon";
+import useTheme from "hooks/useTheme";
 
 const WRONG_NUMBER = 10;
 
@@ -51,35 +52,49 @@ const defaultSx = {
 };
 
 type AssignProps = {
-  value: User[];
-  onAssign: (name: string, data: User[]) => void;
+  value: User;
+  name: string;
+  onAssign: (name: string, data: User) => void;
 };
 
-const DisplayItem = ({ users }: { users: User[] }) => {
+const DisplayItem = ({
+  user,
+  onRemoveAssign,
+}: {
+  user: User;
+  onRemoveAssign: (id: string) => void;
+}) => {
   const { employeeOptions } = useGetEmployeeOptions();
-  const salesT = useTranslations(NS_SALES);
 
-  const avatars: AvatarProps[] = users?.map((option) => {
-    const user = employeeOptions.find((item) => item.value === option.id);
-    return {
-      src: user?.avatar ?? UserPlaceholderImage.src,
-    };
-  });
+  const { isDarkMode } = useTheme();
+
+  const { fullname } = (user ?? {}) as User;
+
   return (
-    <Stack direction="row" alignItems="center" spacing={1}>
-      {avatars?.length === 0 ? (
-        <Text variant="body2">{salesT("detail.tab.assign")}</Text>
-      ) : (
-        <AvatarGroup max={3} size={24} fontSize={14} avatars={avatars || []} />
-      )}
-      <PlusIcon />
+    <Stack
+      direction="row"
+      py={0.25}
+      px={0.5}
+      borderRadius={5}
+      bgcolor={isDarkMode ? "background.default" : "primary.light"}
+      spacing={1}
+      display="inline-flex"
+      width="fit-content"
+    >
+      <Text variant="body2" maxWidth={150} noWrap tooltip={fullname}>
+        {fullname}
+      </Text>
+      <IconButton noPadding onClick={() => onRemoveAssign(user.id)}>
+        <CircleCloseIcon sx={{ color: "grey.400" }} />
+      </IconButton>
     </Stack>
   );
 };
 
-const Assign = (props: AssignProps) => {
-  const { onAssign: onChange, value } = props;
-  const { saleDetail } = useSaleDetail();
+const AssignTodo = (props: AssignProps) => {
+  const { onAssign: onChange, value, name } = props;
+  const salesT = useTranslations(NS_SALES);
+
   const {
     employeeIsFetching,
     employeeOptions,
@@ -103,25 +118,36 @@ const Assign = (props: AssignProps) => {
   }, 250);
 
   const onAssign = (user: Option) => {
-    const selectedItem = value.find((item) => item.id === user.value);
-    const newSeleted = [...value];
-    if (selectedItem) {
-      newSeleted.splice(newSeleted.indexOf(selectedItem), 1);
-    } else {
-      newSeleted.push({
-        id: user.value as string,
+    buttonRef.current?.click();
+    onChange &&
+      onChange(name, {
+        id: user.value,
         fullname: user.label,
-        email: "",
-        avatar: {
-          link: user.avatar as string,
-        },
+        avatar: user.avatar,
       } as User);
-    }
-    onChange && onChange("members", newSeleted);
   };
 
+  const onRemoveAssign = (id) => {
+    onChange && onChange(name, {} as User);
+  };
   return (
-    <PopoverLayout label={<DisplayItem users={value} />} ref={buttonRef}>
+    <PopoverLayout
+      label={
+        value?.id ? (
+          <DisplayItem user={value} onRemoveAssign={onRemoveAssign} />
+        ) : (
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Text variant="body2" noWrap>
+              {salesT("detail.tab.assign")}
+            </Text>
+            <ChevronIcon />
+          </Stack>
+        )
+
+        // <DisplayItem users={value} />
+      }
+      ref={buttonRef}
+    >
       <MenuList onScroll={onScroll} component={Box} sx={{ pb: 0 }}>
         <Search
           name="members.email"
@@ -134,15 +160,12 @@ const Assign = (props: AssignProps) => {
           }}
         />
         {employeeOptions.map((option) => {
-          const checked = value?.some((member) => option.value === member.id);
-          const isDisabled = saleDetail?.owner?.id === option.value;
           return (
             <MenuItem
               component={ButtonBase}
               onClick={() => onAssign(option)}
               sx={defaultSx.item}
               key={option.value}
-              disabled={isDisabled}
             >
               <Stack
                 direction="row"
@@ -150,7 +173,6 @@ const Assign = (props: AssignProps) => {
                 spacing={0}
                 width="100%"
               >
-                <Checkbox checked={checked} />
                 <Avatar
                   src={option?.avatar ?? UserPlaceholderImage}
                   size={24}
@@ -187,4 +209,4 @@ const Assign = (props: AssignProps) => {
   );
 };
 
-export default memo(Assign);
+export default memo(AssignTodo);

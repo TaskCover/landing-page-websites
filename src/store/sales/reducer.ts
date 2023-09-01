@@ -8,16 +8,22 @@ import { getFiltersFromQueries } from "utils/index";
 import {
   GetSalesListQueries,
   createDeal,
+  createTodo,
+  deleteTodo,
   getDetailDeal,
   getSales,
   updateDeal,
+  updateTodo,
 } from "./actions";
+import build from "next/dist/build";
 
 export interface Todo {
   id: string;
   name: string;
-  is_done: string;
+  is_done: boolean;
   priority: string;
+  due_date: string;
+  owner: string;
 }
 
 export interface Sales {
@@ -43,6 +49,7 @@ export interface Sales {
   comment: Comment[];
   revenue: number;
   revenuePJ: number;
+  todoItem: Todo;
   estimate: number;
   activity: string[];
 }
@@ -57,6 +64,10 @@ export interface SaleState {
   saleDetail: Sales | null;
   saleDetailStatus: DataStatus;
   saleDetailError?: string;
+
+  salesTodo: Todo | null;
+  salesTodoStatus: DataStatus;
+  salesTodoError?: string;
 }
 
 const initState: SaleState = {
@@ -71,6 +82,10 @@ const initState: SaleState = {
   saleDetail: null,
   saleDetailStatus: DataStatus.IDLE,
   saleDetailError: undefined,
+
+  salesTodo: null,
+  salesTodoStatus: DataStatus.IDLE,
+  salesTodoError: undefined,
 };
 
 const salesSlice = createSlice({
@@ -143,6 +158,33 @@ const salesSlice = createSlice({
     });
     builder.addCase(getDetailDeal.rejected, (state, action) => {
       state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(createTodo.pending, (state, action) => {
+      state.salesTodoStatus = DataStatus.LOADING;
+    });
+    builder.addCase(createTodo.fulfilled, (state, action) => {
+      if (state.saleDetail) {
+        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+      }
+    });
+    builder.addCase(createTodo.rejected, (state, action) => {
+      state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(updateTodo.fulfilled, (state, action) => {
+      if (state.saleDetail) {
+        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+      }
+    });
+    builder.addCase(updateTodo.rejected, (state, action) => {
+      state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(deleteTodo.fulfilled, (state, action) => {
+      if (state.saleDetail) {
+        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+      }
+    });
+    builder.addCase(deleteTodo.rejected, (state, action) => {
+      state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
     });
   },
 });

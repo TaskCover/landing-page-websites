@@ -25,8 +25,14 @@ const SalesDetail = () => {
   const { saleDetail, isFetching } = useSaleDetail();
 
   useEffect(() => {
+    const todo_list = saleDetail?.todo_list.reduce((acc, todo) => {
+      acc[todo.id] = todo;
+      return acc;
+    }, {});
+
     reset({
       ...saleDetail,
+      todo_list,
       id,
     });
     return reset();
@@ -36,7 +42,7 @@ const SalesDetail = () => {
 
   return (
     <>
-      <FixedLayout>
+      <FixedLayout maxHeight={840} overflow="auto">
         <TabHeader />
         <TabList value={tab} onChange={onChangeTab} />
         <TabContext value={tab}>

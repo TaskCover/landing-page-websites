@@ -6,7 +6,7 @@ import { SALE_STAGE } from "constant/enums";
 
 const SaleForm = ({ params }) => {
   // form control
-  const method = useForm<Sales>({
+  const method = useForm({
     defaultValues: {
       name: "",
       description: "",
@@ -15,6 +15,7 @@ const SaleForm = ({ params }) => {
       comment: [],
       company: "",
       created_time: "",
+      todo_list: {},
       created_by: {},
       currency: "",
       estimate: 0,
@@ -29,6 +30,7 @@ const SaleForm = ({ params }) => {
       start_date: "",
       tags: [],
       updated_time: "",
+      todoItem: {},
       status: SALE_STAGE.LEAD,
     },
   });

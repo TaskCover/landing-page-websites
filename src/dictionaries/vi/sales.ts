@@ -53,7 +53,8 @@ export const salesLang: SalesDictionary = {
       service: "Dịch vụ",
     },
     todoList: {
-      assign: "Giao việc",
+      assign: "Phân công",
+      dueDate: "Thời hạn",
       title: "Danh sách việc cần làm",
       addTodo: "Thêm việc cần làm",
       addNew: "Thêm mới",

@@ -55,6 +55,7 @@ export type SalesDictionary = {
       title: string;
       addTodo: string;
       assign: string;
+      dueDate: string;
       addNew: string;
     };
   };

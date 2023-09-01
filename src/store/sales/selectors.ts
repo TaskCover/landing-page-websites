@@ -5,15 +5,18 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   DealData,
   GetSalesListQueries,
+  TodoData,
+  TodoItemData,
   createDeal,
+  createTodo,
+  deleteTodo,
   getDetailDeal,
   getSales,
   updateDeal,
+  updateTodo,
 } from "./actions";
 import moment from "moment";
-import { error } from "console";
 import { useSnackbar } from "store/app/selectors";
-import { DATE_FORMAT_FORM } from "constant/index";
 
 export const useSales = () => {
   const { onAddSnackbar } = useSnackbar();
@@ -83,6 +86,10 @@ export const useSales = () => {
   );
   const onUpdateDeal = useCallback(
     async (data) => {
+      const start_date =
+        (data.start_date &&
+          moment(data.start_date, "DD-MM-YYYY").format("YYYY-MM-DD")) ||
+        undefined;
       const description = data.tags?.join(",");
       const convertedBody: DealData = {
         currency: data.currency,
@@ -93,7 +100,7 @@ export const useSales = () => {
         members: data.members,
         status: data.status,
         company_id: data.company,
-        start_date: moment(data.start_date).format("YYYY-MM-DD"),
+        start_date,
       };
       await dispatch(updateDeal({ id: data.id, data: convertedBody }));
     },
@@ -155,5 +162,89 @@ export const useSaleDetail = () => {
     isIdle,
     isFetching,
     onGetSaleDetail,
+  };
+};
+
+export const useSalesTodo = () => {
+  const { saleDetail, salesTodoStatus, salesTodoError } = useAppSelector(
+    (state) => state.sales,
+    shallowEqual,
+  );
+  const dispatch = useAppDispatch();
+  const salesTodo = useMemo(() => {
+    if (saleDetail) {
+      return saleDetail.todo_list;
+    }
+    return [];
+  }, [saleDetail]);
+
+  const isIdle = useMemo(
+    () => salesTodoStatus === DataStatus.IDLE,
+    [salesTodoStatus],
+  );
+  const isFetching = useMemo(
+    () => salesTodoStatus === DataStatus.LOADING,
+    [salesTodoStatus],
+  );
+
+  const onCreateTodo = useCallback(
+    async ({ dealId, data }: { dealId: string; data: TodoItemData }) => {
+      return await dispatch(
+        createTodo({
+          todo_list: {
+            ...data,
+            due_date: moment(data.due_date, "DD-MM-YYYY").format("YYYY-MM-DD"),
+          },
+          deal_id: dealId,
+        }),
+      ).unwrap();
+    },
+    [dispatch],
+  );
+
+  const onUpdateTodo = useCallback(
+    async (
+      id: string,
+      { dealId, data }: { dealId: string; data: TodoItemData },
+    ) => {
+      const due_date =
+        (data.due_date &&
+          moment(data.due_date, "DD-MM-YYYY").format("YYYY-MM-DD")) ||
+        undefined;
+      return await dispatch(
+        updateTodo({
+          id,
+          data: {
+            todo_list: {
+              ...data,
+              due_date,
+            },
+            deal_id: dealId,
+          },
+        }),
+      ).unwrap();
+    },
+    [dispatch],
+  );
+  const onDeleteTodo = useCallback(
+    async (id: string, dealId: string) => {
+      return await dispatch(
+        deleteTodo({
+          id,
+          dealId,
+        }),
+      ).unwrap();
+    },
+    [dispatch],
+  );
+  return {
+    salesTodo,
+    salesTodoStatus,
+    salesTodoError,
+    isIdle,
+    isFetching,
+    onCreateTodo,
+    onUpdateTodo,
+    onDeleteTodo,
   };
 };

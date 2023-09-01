@@ -56,6 +56,7 @@ export const SalesLang: SalesDictionary = {
       assign: "Assign",
       title: "Todo List",
       addTodo: "Add Todo",
+      dueDate: "Due Date",
       addNew: "Add new",
     },
   },
