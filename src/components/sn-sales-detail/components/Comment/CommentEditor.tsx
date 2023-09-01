@@ -27,12 +27,15 @@ import { getMessageErrorByAPI } from "utils/index";
 import { useFormContext } from "react-hook-form";
 import moment from "moment";
 import { SaleState, Sales } from "store/sales/reducer";
+import useToggle from "hooks/useToggle";
+import Loading from "components/Loading";
 
 const CommentEditor = forwardRef(
   (_, ref: ForwardedRef<HTMLDivElement | null>) => {
     const commonT = useTranslations(NS_COMMON);
     const salesT = useTranslations(NS_SALES);
     const { onAddSnackbar } = useSnackbar();
+    const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
 
     const editorRef = useRef<UnprivilegedEditor | undefined>();
     const { control, setValue } = useFormContext();
@@ -48,7 +51,7 @@ const CommentEditor = forwardRef(
       setFiles(files);
     };
 
-    const { saleDetail } = useSaleDetail();
+    const { saleDetail, onGetSaleDetail } = useSaleDetail();
     const { onCreateComment } = useSalesComment();
 
     const disabled = useMemo(
@@ -61,7 +64,9 @@ const CommentEditor = forwardRef(
 
     const onSubmit = async () => {
       //   if (!taskListId || !taskId) return;
+
       try {
+        onProcessingTrue();
         const data = {
           deal_id: saleDetail?.id || "",
           content: editorRef.current?.getHTML() ?? content,
@@ -85,8 +90,8 @@ const CommentEditor = forwardRef(
           newComments.sort((a, b) =>
             moment(b.created_time).isAfter(a.created_time) ? 1 : -1,
           );
-          console.log("newComments", newComments);
-          setValue("comments", newComments);
+          onGetSaleDetail(saleDetail?.id || "");
+          // setValue("comments", newComments);
           setContent("");
           setFiles([]);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -94,34 +99,39 @@ const CommentEditor = forwardRef(
         }
       } catch (error) {
         onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      } finally {
+        onProcessingFalse();
       }
     };
 
     return (
-      <Editor
-        hasAttachment
-        placeholder={salesT("detail.comment.placeholder")}
-        onChange={onChange}
-        onChangeFiles={onChangeFiles}
-        value={content}
-        files={files}
-      >
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          mt={2}
+      <>
+        <Editor
+          hasAttachment
+          placeholder={salesT("detail.comment.placeholder")}
+          onChange={onChange}
+          onChangeFiles={onChangeFiles}
+          value={content}
+          files={files}
         >
-          <Button
-            disabled={disabled}
-            onClick={onSubmit}
-            variant="primary"
-            size="small"
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            mt={2}
           >
-            {salesT("detail.comment.submit")}
-          </Button>
-        </Stack>
-      </Editor>
+            <Button
+              disabled={disabled}
+              onClick={onSubmit}
+              variant="primary"
+              size="small"
+            >
+              {salesT("detail.comment.submit")}
+            </Button>
+          </Stack>
+        </Editor>
+        <Loading open={isProcessing} />
+      </>
     );
   },
 );

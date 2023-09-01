@@ -78,7 +78,17 @@ export const TodoName = ({
     >
       <Grid2 xs={12} md={7}>
         <Stack direction="row" alignItems="center" spacing={2}>
-          {isAssign && <PlusIcon width={24} height={24} />}
+          {isAssign && (
+            <PlusIcon
+              onClick={(event) =>
+                onKeyDown({
+                  key: "Enter",
+                } as React.KeyboardEvent<HTMLInputElement>)
+              }
+              width={24}
+              height={24}
+            />
+          )}
           <TextField
             value={name}
             onKeyDown={onKeyDown}

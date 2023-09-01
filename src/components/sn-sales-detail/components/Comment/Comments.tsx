@@ -11,15 +11,19 @@ import { NS_PROJECT, NS_SALES } from "constant/index";
 import { Attachment } from "constant/types";
 import { useFormContext, useWatch } from "react-hook-form";
 import useGetEmployeeOptions from "components/sn-sales/hooks/useGetEmployeeOptions";
+import { SalesComment } from "store/sales/reducer";
+import { useSaleDetail } from "store/sales/selectors";
+import Loading from "components/Loading";
 
 type CommentsProps = {
-  comments?: Comment[];
+  comments?: SalesComment[];
 };
 
-type CommentItemProps = {} & Comment;
+type CommentItemProps = {} & SalesComment;
 
 const Comments = () => {
   const salesT = useTranslations(NS_SALES);
+  const { isFetching } = useSaleDetail();
   const { control, getValues } = useFormContext();
   const [listAttachmentsDown, setListAttachmentsDown] = useState<Attachment[]>(
     [],
@@ -27,7 +31,9 @@ const Comments = () => {
 
   const comments = useWatch({ control, name: "comments" });
 
-  return (
+  return isFetching ? (
+    <Loading open={isFetching} />
+  ) : (
     <Stack sx={{ mt: 3 }} spacing={2}>
       {comments?.map((comment) => (
         <CommentItem
@@ -44,29 +50,30 @@ export default memo(Comments);
 
 const CommentItem = (props: CommentItemProps) => {
   const {
-    creator,
+    creator: { body },
     content,
     attachments_down = [],
     created_time,
     listAttachmentsDown,
   } = props;
-  const { employeeOptions } = useGetEmployeeOptions();
+  // const { employeeOptions } = useGetEmployeeOptions();
   //   const user = useMemo(() => {
   //     if (!creator) return undefined;
   //     const userInSale = employeeOptions?.find(
-  //       (member) => member.value === creator,
+  //       (member) => member.avatar=== creator,
   //     );
   //     return userInSale ?? creator;
   //   }, [creator, employeeOptions]);
+
   return (
     <Stack flex={1} spacing={1} bgcolor="grey.50" p={2} borderRadius={1}>
       <Stack direction="row" justifyContent="space-between" spacing={1}>
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} src={creator?.avatar?.link} />
+          <Avatar size={32} src={body?.avatar?.link} />
           <Stack>
-            <Text variant="body2">{creator?.fullname ?? "--"}</Text>
+            <Text variant="body2">{body?.fullname ?? "--"}</Text>
             <Text variant="caption" color="grey.400">
-              {creator?.email ?? "--"}
+              {body?.email ?? "--"}
             </Text>
           </Stack>
         </Stack>

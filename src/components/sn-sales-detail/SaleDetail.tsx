@@ -11,7 +11,6 @@ import { Sales, Todo } from "store/sales/reducer";
 import { useSaleDetail } from "store/sales/selectors";
 import Loading from "components/Loading";
 import { useFetchEmployeeOptions } from "components/sn-sales/hooks/useGetEmployeeOptions";
-import { TodoItemData } from "store/sales/actions";
 import moment from "moment";
 import { DATE_FORMAT_HYPHEN } from "constant/index";
 import { formatDate } from "utils/index";
@@ -34,6 +33,10 @@ const SalesDetail = () => {
     const sortedTodoList = [...saleDetail?.todo_list].sort(
       (a, b) => a.priority - b.priority,
     );
+    const comments = [...saleDetail?.comments];
+    comments?.sort((a, b) => {
+      return moment(b.created_time).isAfter(moment(a.created_time)) ? 1 : -1;
+    });
     const todo_list: Record<string, Todo> = sortedTodoList.reduce(
       (acc, todo, index) => {
         acc[todo.id] = {
@@ -51,6 +54,7 @@ const SalesDetail = () => {
     reset({
       ...saleDetail,
       todo_list,
+      comments: comments,
       id,
     });
     return reset();

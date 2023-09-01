@@ -50,7 +50,6 @@ const TabHeader = () => {
   );
   return (
     <Stack
-      overflow={"auto"}
       direction={{
         xs: "column",
         sm: "row",
@@ -78,7 +77,15 @@ const TabHeader = () => {
         <Avatar size={32} src={saleDetail?.owner?.avatar?.link} />
         <Text variant="h4">{saleDetail?.name}</Text>
       </Stack>
-      <Stack direction="row" justifyContent="flex-end" spacing={2}>
+      <Stack
+        direction="row"
+        justifyContent={{
+          xs: "space-between",
+          sm: "flex-end",
+        }}
+        spacing={2}
+        flexWrap={{ xs: "wrap", sm: "nowrap" }}
+      >
         <Controller
           control={control}
           name="status"

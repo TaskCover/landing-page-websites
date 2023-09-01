@@ -49,6 +49,7 @@ export type CommentData = {
   deal_id: string;
   content?: string;
   attachment?: string[];
+  attachment_down?: string[];
 };
 
 export const getSales = createAsyncThunk(

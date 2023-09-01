@@ -27,7 +27,11 @@ export interface Todo {
   expiration_date: string;
   owner: string;
 }
-
+export interface SalesComment extends Omit<Comment, "creator"> {
+  creator: {
+    body: User;
+  };
+}
 export interface Sales {
   id: string;
   name: string;
@@ -48,7 +52,7 @@ export interface Sales {
   probability: number;
   todo_list: Todo[];
   stage: string;
-  comments: Comment[];
+  comments: SalesComment[];
   revenue: number;
   revenuePJ: number;
   todoItem: Todo;
@@ -71,7 +75,7 @@ export interface SaleState {
   salesTodoStatus: DataStatus;
   salesTodoError?: string;
 
-  comments: Comment[];
+  comments: SalesComment[];
   commentsStatus: DataStatus;
   commentsError?: string;
 }

@@ -123,20 +123,20 @@ const SubItem = ({
         {(provided, snapshot) => (
           <div ref={provided.innerRef} {...provided.draggableProps}>
             <Grid2 container alignItems="center" spacing={2}>
-              <Grid2 container xs={7} alignItems="center" spacing={0.5}>
-                <Grid2 xs={1}>
+              <Grid2 container xs={12} md={7} alignItems="center" spacing={0.5}>
+                <Grid2 xs={2} md={1}>
                   <IconButton noPadding {...provided.dragHandleProps}>
                     <MoveDotIcon fontSize="small" sx={{ color: "grey.A200" }} />
                   </IconButton>
                 </Grid2>
-                <Grid2 xs={1}>
+                <Grid2 xs={2} md={1}>
                   <Checkbox
                     size="small"
                     checked={is_done}
                     onChange={onChangeStatus}
                   />
                 </Grid2>
-                <Grid2 xs={10}>
+                <Grid2 xs={8} md={10} sx={{ maxWidth: 120 }}>
                   {action === Action.RENAME ? (
                     <TodoName onSubmit={onChangeName} value={name} autoFocus />
                   ) : (
@@ -145,7 +145,6 @@ const SubItem = ({
                       sx={{
                         textDecoration: is_done ? "line-through" : undefined,
                       }}
-                      noWrap
                       onClick={onEditName}
                       mt={0.25}
                     >
@@ -155,7 +154,7 @@ const SubItem = ({
                 </Grid2>
               </Grid2>
 
-              <Grid2 xs={4} alignItems="center" spacing={1}>
+              <Grid2 xs={12} md={4} alignItems="center" spacing={1}>
                 <Stack direction="row" alignItems={"center"} spacing={1}>
                   <Controller
                     name={`todo_list.${id}.expiration_date`}
