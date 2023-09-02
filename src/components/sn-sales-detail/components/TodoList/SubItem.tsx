@@ -124,7 +124,7 @@ const SubItem = ({
           <div ref={provided.innerRef} {...provided.draggableProps}>
             <Grid2 container alignItems="center" spacing={2}>
               <Grid2 container xs={12} md={7} alignItems="center" spacing={0.5}>
-                <Grid2 xs={2} md={1}>
+                <Grid2 xs={1}>
                   <IconButton noPadding {...provided.dragHandleProps}>
                     <MoveDotIcon fontSize="small" sx={{ color: "grey.A200" }} />
                   </IconButton>
