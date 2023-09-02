@@ -136,7 +136,7 @@ const SubItem = ({
                     onChange={onChangeStatus}
                   />
                 </Grid2>
-                <Grid2 xs={8} md={10} sx={{ maxWidth: 120 }}>
+                <Grid2 xs={8} md={10}>
                   {action === Action.RENAME ? (
                     <TodoName onSubmit={onChangeName} value={name} autoFocus />
                   ) : (
@@ -145,6 +145,8 @@ const SubItem = ({
                       sx={{
                         textDecoration: is_done ? "line-through" : undefined,
                       }}
+                      noWrap
+                      textOverflow={"ellipsis"}
                       onClick={onEditName}
                       mt={0.25}
                     >

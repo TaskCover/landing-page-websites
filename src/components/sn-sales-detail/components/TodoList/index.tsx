@@ -76,7 +76,7 @@ export const TodoName = ({
       width="100%"
       spacing={2}
     >
-      <Grid2 xs={12} md={7}>
+      <Grid2 xs={12} md={isAssign ? 7 : 12}>
         <Stack direction="row" alignItems="center" spacing={2}>
           {isAssign && (
             <PlusIcon
@@ -90,6 +90,7 @@ export const TodoName = ({
             />
           )}
           <TextField
+            multiline
             value={name}
             onKeyDown={onKeyDown}
             fullWidth
