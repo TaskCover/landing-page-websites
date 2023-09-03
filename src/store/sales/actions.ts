@@ -48,8 +48,8 @@ export interface TodoData {
 export type CommentData = {
   deal_id: string;
   content?: string;
-  attachment?: string[];
-  attachment_down?: string[];
+  attachments?: string[];
+  attachments_down?: string[];
 };
 
 export const getSales = createAsyncThunk(
