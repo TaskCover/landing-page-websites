@@ -12,6 +12,7 @@ import { NS_COMMON, NS_SALES } from "constant/index";
 import { SALES_LIST_PATH } from "constant/paths";
 import { ErrorResponse, Option } from "constant/types";
 import { Data } from "emoji-mart";
+import CoinIcon from "icons/CoinIcon";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next-intl/client";
 import React, { useMemo } from "react";
@@ -133,8 +134,14 @@ const TabHeader = () => {
           options={mappingProbabilityOptions}
           name="probability"
         /> */}
-        <Stack direction="row" justifyContent={"center"} alignItems="center">
+        <Stack
+          direction="row"
+          justifyContent={"center"}
+          alignItems="center"
+          spacing={1}
+        >
           {/* Add coin icon here */}
+          <CoinIcon />
           <Text variant="body2">
             Revenue:{" "}
             {formatNumber(saleDetail?.revenue || 0, {
