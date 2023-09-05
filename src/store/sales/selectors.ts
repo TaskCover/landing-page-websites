@@ -1,17 +1,29 @@
 import { DataStatus, SORT_OPTIONS } from "constant/enums";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
+  CommentData,
   DealData,
   GetSalesListQueries,
+  TodoData,
+  TodoItemData,
+  createComment,
   createDeal,
+  createTodo,
+  deleteTodo,
+  getDetailDeal,
   getSales,
   updateDeal,
+  updatePriority,
+  updateTodo,
 } from "./actions";
 import moment from "moment";
+import { useSnackbar } from "store/app/selectors";
+import { Todo } from "./reducer";
 
 export const useSales = () => {
+  const { onAddSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
   const { sales, salesFilters, salesError, salesStatus } = useAppSelector(
     (state) => state.sales,
@@ -59,6 +71,7 @@ export const useSales = () => {
         members,
         company_id: data.company,
       };
+
       await dispatch(createDeal(convertedBody)).then(() => {
         let newPageIndex = totalPages || 0;
         if (totalPages && totalItems) {
@@ -77,20 +90,32 @@ export const useSales = () => {
   );
   const onUpdateDeal = useCallback(
     async (data) => {
-      const members = data.members?.map((value) => ({ id: value }));
+      const start_date =
+        (data.start_date &&
+          moment(data.start_date, "DD-MM-YYYY").format("YYYY-MM-DD")) ||
+        undefined;
       const description = data.tags?.join(",");
       const convertedBody: DealData = {
         currency: data.currency,
         owner: data.owner,
         description: description,
         name: data.dealName,
-        members,
+        probability: data.probability,
+        members: data.members,
+        status: data.status,
         company_id: data.company,
+        start_date,
       };
       await dispatch(updateDeal({ id: data.id, data: convertedBody }));
     },
     [dispatch],
   );
+
+  useEffect(() => {
+    if (salesError) {
+      onAddSnackbar(salesError, "error");
+    }
+  }, [salesError]);
 
   return {
     sales,
@@ -109,5 +134,181 @@ export const useSales = () => {
     onGetSales,
     onUpdateDeal,
     onCreateDeal,
+  };
+};
+
+export const useSaleDetail = () => {
+  const dispatch = useAppDispatch();
+  const { saleDetail, saleDetailError, saleDetailStatus } = useAppSelector(
+    (state) => state.sales,
+    shallowEqual,
+  );
+  const isIdle = useMemo(
+    () => saleDetailStatus === DataStatus.IDLE,
+    [saleDetailStatus],
+  );
+  const isFetching = useMemo(
+    () => saleDetailStatus === DataStatus.LOADING,
+    [saleDetailStatus],
+  );
+
+  const onGetSaleDetail = useCallback(
+    async (id: string) => {
+      await dispatch(getDetailDeal(id));
+    },
+    [dispatch],
+  );
+
+  return {
+    saleDetail,
+    saleDetailError,
+    saleDetailStatus,
+    isIdle,
+    isFetching,
+    onGetSaleDetail,
+  };
+};
+
+export const useSalesTodo = () => {
+  const { saleDetail, salesTodoStatus, salesTodoError } = useAppSelector(
+    (state) => state.sales,
+    shallowEqual,
+  );
+  const dispatch = useAppDispatch();
+  const salesTodo = useMemo(() => {
+    if (saleDetail) {
+      return saleDetail.todo_list;
+    }
+    return [];
+  }, [saleDetail]);
+
+  const isIdle = useMemo(
+    () => salesTodoStatus === DataStatus.IDLE,
+    [salesTodoStatus],
+  );
+  const isFetching = useMemo(
+    () => salesTodoStatus === DataStatus.LOADING,
+    [salesTodoStatus],
+  );
+
+  const onCreateTodo = useCallback(
+    async ({ dealId, data }: { dealId: string; data: TodoItemData }) => {
+      const expiration_date =
+        data.expiration_date &&
+        moment(data.expiration_date, "DD-MM-YYYY").format("YYYY-MM-DD");
+      return await dispatch(
+        createTodo({
+          todo_list: [
+            {
+              ...data,
+              expiration_date: expiration_date,
+            },
+          ],
+          deal_id: dealId,
+        }),
+      ).unwrap();
+    },
+    [dispatch],
+  );
+
+  const onUpdateTodo = useCallback(
+    async (
+      id: string,
+      { dealId, data }: { dealId: string; data: TodoItemData },
+    ) => {
+      const expiration_date =
+        data.expiration_date &&
+        moment(data.expiration_date, "DD-MM-YYYY").format("YYYY-MM-DD");
+
+      return await dispatch(
+        updateTodo({
+          id,
+          data: {
+            todo_list: {
+              ...data,
+              expiration_date: expiration_date,
+            },
+            deal_id: dealId,
+          },
+        }),
+      ).unwrap();
+    },
+    [dispatch],
+  );
+  const onDeleteTodo = useCallback(
+    async (id: string, dealId: string) => {
+      return await dispatch(
+        deleteTodo({
+          id,
+          dealId,
+        }),
+      ).unwrap();
+    },
+    [dispatch],
+  );
+
+  const onUpdatePriority = async (
+    id,
+    { dealId, priority }: { dealId: string; priority: number },
+  ) => {
+    await updatePriority({
+      id,
+      data: {
+        deal_id: dealId,
+        todo_list: {
+          priority,
+        } as TodoItemData,
+      },
+    });
+  };
+
+  return {
+    salesTodo,
+    salesTodoStatus,
+    salesTodoError,
+    isIdle,
+    isFetching,
+    onCreateTodo,
+    onUpdateTodo,
+    onDeleteTodo,
+    onUpdatePriority,
+  };
+};
+
+export const useSalesComment = () => {
+  const { saleDetail, commentsStatus, commentsError } = useAppSelector(
+    (state) => state.sales,
+    shallowEqual,
+  );
+  const dispatch = useAppDispatch();
+  const salesComment = useMemo(() => {
+    if (saleDetail) {
+      return saleDetail.comments;
+    }
+    return [];
+  }, [saleDetail]);
+
+  const isIdle = useMemo(
+    () => commentsStatus === DataStatus.IDLE,
+    [commentsStatus],
+  );
+  const isFetching = useMemo(
+    () => commentsStatus === DataStatus.LOADING,
+    [commentsStatus],
+  );
+
+  const onCreateComment = useCallback(
+    async (data: CommentData) => {
+      return await dispatch(createComment({ data })).unwrap();
+    },
+    [dispatch],
+  );
+
+  return {
+    commentsError,
+    salesComment,
+    isIdle,
+    isFetching,
+    onCreateComment,
   };
 };

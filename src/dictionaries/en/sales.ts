@@ -2,7 +2,7 @@ import { SalesDictionary } from "dictionaries/types/SalesDictionary";
 
 export const SalesLang: SalesDictionary = {
   list: {
-    title: 'Sales',
+    title: "Sales",
     head: {
       title: "Sales | Taskcover",
     },
@@ -21,7 +21,7 @@ export const SalesLang: SalesDictionary = {
       unit: "Unit",
       owner: "Owner",
       tags: "Tags",
-      submit: "Create Deal"
+      submit: "Create Deal",
     },
     table: {
       stage: "Stage",
@@ -44,6 +44,31 @@ export const SalesLang: SalesDictionary = {
       documentFormat: "Document Format",
       orientation: "Orientation",
       pagesize: "Page size",
+    },
+  },
+  detail: {
+    tab: {
+      feed: "Feed",
+      assign: "Assign",
+      service: "Service",
+    },
+    todoList: {
+      assign: "Assign",
+      title: "Todo List",
+      addTodo: "Add Todo",
+      dueDate: "Due Date",
+      addNew: "Add new",
+    },
+    comment: {
+      title: "Wrrite your comment",
+      placeholder: "write something on comment",
+      show: {
+        title: "Show",
+        change: "Change",
+        comments: "Comments",
+        attachment: "Attachment",
+      },
+      submit: "Submit",
     },
   },
 };

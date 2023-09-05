@@ -2,7 +2,7 @@ import { SalesDictionary } from "dictionaries/types/SalesDictionary";
 
 export const salesLang: SalesDictionary = {
   list: {
-    title: 'Giao dịch',
+    title: "Giao dịch",
     head: {
       title: "Sales | Taskcover",
     },
@@ -21,7 +21,7 @@ export const salesLang: SalesDictionary = {
       unit: "Đơn vị",
       owner: "Chủ sở hữu",
       tags: "Thẻ",
-      submit: "Thêm Giao Dịch"
+      submit: "Thêm Giao Dịch",
     },
     table: {
       stage: "Giai đoạn",
@@ -44,6 +44,31 @@ export const salesLang: SalesDictionary = {
       documentFormat: "Định dạng tài liệu",
       orientation: "Hướng",
       pagesize: "Kích thước trang",
+    },
+  },
+  detail: {
+    tab: {
+      assign: "Thành Viên",
+      feed: "Tin mới",
+      service: "Dịch vụ",
+    },
+    todoList: {
+      assign: "Phân công",
+      dueDate: "Thời hạn",
+      title: "Danh sách việc cần làm",
+      addTodo: "Thêm việc cần làm",
+      addNew: "Thêm mới",
+    },
+    comment: {
+      title: "Bình luận",
+      placeholder: "Viết bình luận",
+      show: {
+        attachment: "Tệp đính kèm",
+        change: "Thay đổi",
+        title: "Hiển thị",
+        comments: "Tất cả bình luận",
+      },
+      submit: "Gửi",
     },
   },
 };

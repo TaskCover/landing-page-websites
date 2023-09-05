@@ -9,13 +9,20 @@ import {
   CURRENCY_SYMBOL,
 } from "./helpers";
 import { Dropdown } from "components/Filters";
-import { formatDate, formatNumber, formatEstimateTime } from "utils/index";
+import {
+  formatDate,
+  formatNumber,
+  formatEstimateTime,
+  getPath,
+} from "utils/index";
 import { DATE_FORMAT_SLASH, NS_SALES } from "constant/index";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { Sales } from "store/sales/reducer";
 import useGetEmployeeOptions from "./hooks/useGetEmployeeOptions";
 import { useSales } from "store/sales/selectors";
+import { SALE_DETAIL_PATH } from "constant/paths";
+
 interface IProps {
   item: Sales; // change to data type
 }
@@ -38,10 +45,21 @@ const SaleItem = ({ item }: IProps) => {
 
   return (
     <TableRow>
-      <BodyCell align="left">
+      <BodyCell
+        align="left"
+        href={getPath(SALE_DETAIL_PATH, undefined, { id: item.id })}
+      >
         <Stack direction="row" alignItems="center" spacing={1}>
           <Avatar size={32} src={avatar}></Avatar>
-          <Text> {item.name}</Text>
+          <Text
+            variant="body2"
+            color="text.primary"
+            fontWeight={600}
+            lineHeight={1.28}
+            sx={{ "&:hover": { color: "primary.main" } }}
+          >
+            {item.name}
+          </Text>
         </Stack>
       </BodyCell>
       <StatusCell

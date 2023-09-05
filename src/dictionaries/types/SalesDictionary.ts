@@ -44,4 +44,30 @@ export type SalesDictionary = {
       pagesize: string;
     };
   };
+  detail: {
+    tab: {
+      assign: string;
+
+      feed: string;
+      service: string;
+    };
+    todoList: {
+      title: string;
+      addTodo: string;
+      assign: string;
+      dueDate: string;
+      addNew: string;
+    };
+    comment: {
+      title: string;
+      placeholder: string;
+      submit: string;
+      show: {
+        title: string;
+        comments: string;
+        attachment: string;
+        change: string;
+      };
+    };
+  };
 };

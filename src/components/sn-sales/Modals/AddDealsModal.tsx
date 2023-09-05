@@ -1,11 +1,4 @@
-import {
-  DialogContent,
-  Modal,
-  Stack,
-  Grid,
-  TextField,
-  Autocomplete,
-} from "@mui/material";
+import { Stack, Grid } from "@mui/material";
 import React, { memo } from "react";
 import FormLayout from "components/FormLayout";
 import { useForm, Controller } from "react-hook-form";
@@ -16,7 +9,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Input, Select } from "components/shared";
 import SelectMultiple from "../components/SelectMultiple";
 import { CURRENCY_SYMBOL } from "../helpers";
-import useGetCompanyOptions from "../hooks/useGetCompanyOptions";
 import useGetEmployeeOptions from "../hooks/useGetEmployeeOptions";
 import { useSales } from "store/sales/selectors";
 import useGetProjectTypeOptions from "../hooks/useGetProjectTypeOptions";
@@ -28,21 +20,10 @@ interface IProps {
 
 const salesFormTranslatePrefix = "list.newDealForm";
 
-const UNIT_OPTIONS = Object.keys(CURRENCY_SYMBOL).map((key) => ({
+export const UNIT_OPTIONS = Object.keys(CURRENCY_SYMBOL).map((key) => ({
   label: `${key}(${CURRENCY_SYMBOL[key]})`,
   value: key,
 }));
-
-const DUMMY_TAGS = [
-  {
-    label: "ABC",
-    value: "abc",
-  },
-  {
-    label: "bcd",
-    value: "bcd",
-  },
-];
 
 const AddDealModal = ({ open, onClose }: IProps) => {
   const {

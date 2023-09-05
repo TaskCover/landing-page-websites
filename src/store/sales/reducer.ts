@@ -7,11 +7,31 @@ import { Comment } from "store/project/reducer";
 import { getFiltersFromQueries } from "utils/index";
 import {
   GetSalesListQueries,
+  createComment,
   createDeal,
+  createTodo,
+  deleteTodo,
+  getDetailDeal,
   getSales,
   updateDeal,
+  updatePriority,
+  updateTodo,
 } from "./actions";
+import build from "next/dist/build";
 
+export interface Todo {
+  id: string;
+  name: string;
+  is_done: boolean;
+  priority: number;
+  expiration_date: string;
+  owner: string;
+}
+export interface SalesComment extends Omit<Comment, "creator"> {
+  creator: {
+    body: User;
+  };
+}
 export interface Sales {
   id: string;
   name: string;
@@ -22,7 +42,7 @@ export interface Sales {
   status: string;
   start_date: string;
   owner: User;
-  member: User[];
+  members: User[];
   description?: string;
   is_active: boolean;
   company: string;
@@ -30,11 +50,12 @@ export interface Sales {
   tags?: string[];
   currency: string;
   probability: number;
-  todo_list: string[];
+  todo_list: Todo[];
   stage: string;
-  comment: Comment[];
+  comments: SalesComment[];
   revenue: number;
   revenuePJ: number;
+  todoItem: Todo;
   estimate: number;
   activity: string[];
 }
@@ -45,6 +66,18 @@ export interface SaleState {
   salesPaging: Paging;
   salesError?: string;
   salesFilters: Omit<GetSalesListQueries, "pageIndex" | "pageSize">;
+
+  saleDetail: Sales | null;
+  saleDetailStatus: DataStatus;
+  saleDetailError?: string;
+
+  salesTodo: Todo | null;
+  salesTodoStatus: DataStatus;
+  salesTodoError?: string;
+
+  comments: SalesComment[];
+  commentsStatus: DataStatus;
+  commentsError?: string;
 }
 
 const initState: SaleState = {
@@ -55,6 +88,18 @@ const initState: SaleState = {
   salesFilters: {
     sort: "-1",
   },
+
+  saleDetail: null,
+  saleDetailStatus: DataStatus.IDLE,
+  saleDetailError: undefined,
+
+  salesTodo: null,
+  salesTodoStatus: DataStatus.IDLE,
+  salesTodoError: undefined,
+
+  comments: [],
+  commentsStatus: DataStatus.IDLE,
+  commentsError: undefined,
 };
 
 const salesSlice = createSlice({
@@ -110,6 +155,54 @@ const salesSlice = createSlice({
       );
       if (index !== -1) {
         state.sales[index] = Object.assign(state.sales[index], action.payload);
+      }
+    });
+    builder.addCase(updateDeal.rejected, (state, action) => {
+      state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(createDeal.rejected, (state, action) => {
+      state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(getDetailDeal.pending, (state, action) => {
+      state.salesStatus = DataStatus.LOADING;
+    });
+    builder.addCase(getDetailDeal.fulfilled, (state, action) => {
+      state.saleDetail = action.payload;
+      state.salesStatus = DataStatus.SUCCEEDED;
+    });
+    builder.addCase(getDetailDeal.rejected, (state, action) => {
+      state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(createTodo.pending, (state, action) => {
+      state.salesTodoStatus = DataStatus.LOADING;
+    });
+    builder.addCase(createTodo.fulfilled, (state, action) => {
+      if (state.saleDetail) {
+        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+      }
+    });
+    builder.addCase(createTodo.rejected, (state, action) => {
+      state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(updateTodo.fulfilled, (state, action) => {
+      if (state.saleDetail) {
+        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+      }
+    });
+    builder.addCase(updateTodo.rejected, (state, action) => {
+      state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(deleteTodo.fulfilled, (state, action) => {
+      if (state.saleDetail) {
+        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+      }
+    });
+    builder.addCase(deleteTodo.rejected, (state, action) => {
+      state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(createComment.fulfilled, (state, action) => {
+      if (state.saleDetail) {
+        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
       }
     });
   },

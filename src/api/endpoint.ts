@@ -53,11 +53,14 @@ export const Endpoint = {
   PROJECT_TYPE_ITEM: "type-project/{id}",
   PROJECT_TYPES_INACTIVE: "type-project/inactive",
   SALES_LIST: "/sales/all",
-  CREATE_DEAL: '/sales',
+  CREATE_DEAL: "/sales",
   SALES_DEAL_EXPORT: "/sales/export/deal",
-  SALES_DEAL_UPDATE: "/sales/{id}",
+  SALES_DEAL_DETAIL: "/sales/{id}",
+  SALES_TODO: "/sales/todo",
+  SALES_TODO_DETAIL: "/sales/todo/{id}",
+  SALES_COMMENT: "/sales/comment",
   COST_HISTORY: "/cost-history",
-  
+
   POSITIONS_ALL: "/positions/all",
   POSITIONS: "/positions",
   POSITION_ITEM: "/positions/{id}",
