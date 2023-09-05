@@ -15,7 +15,7 @@ interface ParamState {
 }
 
 const useChattingActions = () => {
-    const { onGetAllConvention, convention } = useChat();
+    const { onGetAllConvention, convention, isFetching } = useChat();
     const { onAddSnackbar } = useSnackbar()
     const t = useTranslations(NS_COMMON);
 
@@ -47,11 +47,10 @@ const useChattingActions = () => {
         [onAddSnackbar, onGetAllConvention, params, t],
     );
 
-    console.log(convention, 'convention');
-
     return {
         handleGetConversation,
         conversations: convention,
+        loading: isFetching
     }
 }
 

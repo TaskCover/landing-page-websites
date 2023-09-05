@@ -105,7 +105,7 @@ const MainLayout = (props: MainLayoutProps) => {
         }
       </Stack>
       <Snackbar />
-      <ChatListTemp />
+      {pathname !== CHATTING_ROOM_PATH ? <ChatListTemp /> : null}
     </>
   );
 };
