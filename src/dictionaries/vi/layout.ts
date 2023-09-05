@@ -27,5 +27,10 @@ export const LayoutLang: LayoutDictionary = {
     statementHistory: "Lịch sử báo cáo",
     timeTracking: "Theo dõi thời gian",
     resourcePlaning: "Kế hoạch tài nguyên",
+<<<<<<< Updated upstream
+=======
+    sales: "Giao dịch",
+    chat: "Tin nhắn",
+>>>>>>> Stashed changes
   },
 };

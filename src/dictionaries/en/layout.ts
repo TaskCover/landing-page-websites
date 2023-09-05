@@ -27,5 +27,7 @@ export const LayoutLang: LayoutDictionary = {
     statementHistory: "Statement History",
     timeTracking: "Time Tracking",
     resourcePlaning: "Resource Planing",
+    sales: "Sales",
+    chat: "Chat",
   },
 };

@@ -16,7 +16,12 @@ import {
   PROJECT_TYPES_PATH,
   STATEMENT_HISTORY_PATH,
   TIME_TRACKING_PATH,
-  RESOURCE_PLANING_PATH
+  RESOURCE_PLANING_PATH,
+  CHATTING_ROOM_PATH,
+<<<<<<< Updated upstream
+=======
+  SALES_LIST_PATH,
+>>>>>>> Stashed changes
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -32,6 +37,11 @@ import { Permission } from "constant/enums";
 import useTheme from "hooks/useTheme";
 import MenuTimeTrackingIcon from "icons/MenuTimeTrackingIcon";
 import MenuResourcePlaningIcon from "icons/MenuResourcePlaningIcon";
+<<<<<<< Updated upstream
+=======
+import CardReceive from "icons/CardReceive";
+import MenuChatIcon from "icons/MenuChatIcon";
+>>>>>>> Stashed changes
 
 const Menu = () => {
   const { user } = useAuth();
@@ -181,8 +191,14 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
 const DATA: MenuItemProps[] = [
   {
     label: "menu.dashboard",
-    href: HOME_PATH,
+    href: CHATTING_ROOM_PATH,
     icon: <MenuDashboardIcon />,
+    roles: [Permission.AM, Permission.ST],
+  },
+  {
+    label: "menu.chat",
+    href: CHATTING_ROOM_PATH,
+    icon: <MenuChatIcon />,
     roles: [Permission.AM, Permission.ST],
   },
   {
@@ -258,8 +274,8 @@ const DATA: MenuItemProps[] = [
 const checkIsActiveLink = (pathname: string, href?: string) => {
   return Boolean(
     pathname &&
-      href &&
-      (pathname === href ||
-        (href.length && href !== "/" && pathname.startsWith(href))),
+    href &&
+    (pathname === href ||
+      (href.length && href !== "/" && pathname.startsWith(href))),
   );
 };

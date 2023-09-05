@@ -10,6 +10,7 @@ import { shallowEqual } from "react-redux";
 import { usePathname, useRouter } from "next-intl/client";
 import {
   AUTHORIZED_PATHS,
+  CHATTING_ROOM_PATH,
   FORGOT_PASSWORD_PATH,
   HOME_PATH,
   JOIN_WORKSPACE_PATH,
@@ -30,6 +31,8 @@ type MainLayoutProps = {
 
 const AUTH_PATHS = [SIGNUP_PATH, FORGOT_PASSWORD_PATH, JOIN_WORKSPACE_PATH];
 
+const NO_HEADER_PATHS = [CHATTING_ROOM_PATH]
+
 const MainLayout = (props: MainLayoutProps) => {
   const { children } = props;
 
@@ -46,6 +49,7 @@ const MainLayout = (props: MainLayoutProps) => {
   const { onGetProfile } = useAuth();
 
   const isLoggedIn = useMemo(() => !!token, [token]);
+  const isNoHeader = useMemo(() => !!NO_HEADER_PATHS.includes(pathname), [pathname])
 
   const isAuthorized = useMemo(() => {
     if (!user?.roles?.length) return false;
@@ -69,6 +73,12 @@ const MainLayout = (props: MainLayoutProps) => {
 
   if (!appReady || !token || !user) return <AppLoading />;
 
+<<<<<<< Updated upstream
+  console.log("xxxx:", isAuthorized, user, pathname, id);
+=======
+  console.log(isNoHeader, 'isNoHeader');
+>>>>>>> Stashed changes
+
   return (
     <>
       <Stack
@@ -79,7 +89,7 @@ const MainLayout = (props: MainLayoutProps) => {
         overflow="hidden"
       >
         <Sidebar />
-        <Stack flex={1} width="100%" height="100%" overflow="hidden">
+        {!isNoHeader ? <Stack flex={1} width="100%" height="100%" overflow="hidden">
           <Header />
           <Stack
             flex={1}
@@ -97,7 +107,8 @@ const MainLayout = (props: MainLayoutProps) => {
               </Text>
             )}
           </Stack>
-        </Stack>
+        </Stack> : children
+        }
       </Stack>
       <Snackbar />
       <ChatListTemp />

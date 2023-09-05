@@ -25,5 +25,7 @@ export type LayoutDictionary = {
     statementHistory: string;
     timeTracking: string;
     resourcePlaning: string;
+    sales: string;
+    chat: string;
   };
 };
