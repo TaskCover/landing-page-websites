@@ -20,8 +20,8 @@ const useChattingActions = () => {
     const t = useTranslations(NS_COMMON);
 
     const [params, setParams] = useState<ParamState>({
-        count: 0,
-        offset: 10,
+        count: 10,
+        offset: 0,
         text: '',
         type: 'a'
     })
@@ -47,15 +47,11 @@ const useChattingActions = () => {
         [onAddSnackbar, onGetAllConvention, params, t],
     );
 
+    console.log(convention, 'convention');
+
     return {
         handleGetConversation,
-        conversations: [{
-            name: "Nguyen Quoc Duy",
-            currentMess: "mess new",
-            isHasNewMessage: false,
-            timeSendMess: "3",
-            key: '1t'
-        }],
+        conversations: convention,
     }
 }
 
