@@ -35,6 +35,7 @@ import useTheme from "hooks/useTheme";
 import MenuTimeTrackingIcon from "icons/MenuTimeTrackingIcon";
 import MenuResourcePlaningIcon from "icons/MenuResourcePlaningIcon";
 import MenuChatIcon from "icons/MenuChatIcon";
+import CardReceive from "icons/CardReceive";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -260,6 +261,12 @@ const DATA: MenuItemProps[] = [
     label: "menu.resourcePlaning",
     href: RESOURCE_PLANING_PATH,
     icon: <MenuResourcePlaningIcon />,
+    roles: [Permission.AM, Permission.ST],
+  },
+  {
+    label: "menu.sales",
+    href: SALES_LIST_PATH,
+    icon: <CardReceive />,
     roles: [Permission.AM, Permission.ST],
   },
 ];

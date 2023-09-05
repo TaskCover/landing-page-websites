@@ -24,7 +24,7 @@ export const CommonLang: CommonDictionary = {
         "{name} is too long, maximum {max, plural, =0 {no characters} =1 {one character} other {# characters}}",
       datePast: "{name} cannot be a date in the past.",
       gte: "{name} must be greater than or equal to {name2}",
-      renameGroup: "{name} is not a valid room name"
+      renameGroup: "{name} is not a valid room name",
     },
     title: {
       upload: "Upload",
@@ -55,6 +55,7 @@ export const CommonLang: CommonDictionary = {
     anErrorTryReload: "An error occurred. Please try reload page.",
   },
   position: "Position",
+  company: "Company",
   fullName: "Full name",
   phone: "Phone number",
   status: "Status",

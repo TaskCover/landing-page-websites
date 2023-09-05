@@ -160,7 +160,8 @@ const Actions = () => {
             size="extraSmall"
             sx={{
               display: { xs: "none", md: "flex" },
-              height: 32, px: ({ spacing }) => `${spacing(2)}!important`
+              height: 32,
+              px: ({ spacing }) => `${spacing(2)}!important`,
             }}
             onClick={onSearch}
             variant="secondary"

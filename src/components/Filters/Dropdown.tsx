@@ -19,7 +19,6 @@ const Dropdown = (props: DropdownProps) => {
     const { name, value } = event.target;
     onChange(name, value);
   };
-
   return (
     <Select
       size="small"
@@ -30,15 +29,15 @@ const Dropdown = (props: DropdownProps) => {
         fontWeight: 600,
         height: 32,
         "&": {
-          position: 'relative',
-          width: '100%',
+          position: "relative",
+          width: "100%",
         },
         "& .text-option": {
           fontWeight: 600,
           color: "grey.400",
           whiteSpace: "wrap",
-          textAlign: 'left',
-          width: '100% important'
+          textAlign: "left",
+          width: "100% important",
         },
         "& >svg": {
           fontSize: 20,

@@ -51,6 +51,7 @@ export type CommonDictionary = {
     anErrorTryReload: string;
   };
   position: string;
+  company: string;
   fullName: string;
   phone: string;
   status: string;

@@ -15,7 +15,9 @@ import {
   NS_COMPANY,
   NS_MANAGER,
   NS_TIME_TRACKING,
+  NS_SALES,
 } from "constant/index";
+import { SalesLang } from "./sales";
 
 export default {
   [NS_COMMON]: CommonLang,
@@ -26,4 +28,5 @@ export default {
   [NS_COMPANY]: CompanyLang,
   [NS_MANAGER]: ManagerLang,
   [NS_TIME_TRACKING]: TimeTrackingLang,
+  [NS_SALES]: SalesLang,
 };

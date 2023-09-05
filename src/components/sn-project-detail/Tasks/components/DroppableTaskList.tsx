@@ -183,6 +183,21 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
 
               {isShow && props.children}
               {provided.placeholder}
+
+              {isShow &&
+                <Button
+                  onClick={onShowCreate}
+                  startIcon={<PlusIcon />}
+                  variant="text"
+                  size="extraSmall"
+                  color="secondary"
+                  sx={{
+                    ml: { xs: 2, md: 6 },
+                  }}
+                >
+                  {projectT("detailTasks.addNewTask")}
+                </Button>
+              }
             </div>
           );
         }}

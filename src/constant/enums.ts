@@ -55,3 +55,34 @@ export enum FILE_MAP {
   CSV,
   PDF,
 }
+
+export enum SORT_OPTIONS {
+  ASC = "1",
+  DESC = "-1",
+}
+
+export enum SALE_STAGE {
+  LEAD= 'LEAD',
+  PROPOSAL_SENT = 'PROPOSAL_SENT',
+  PROSPECT = 'PROSPECT',
+  NEGOTIATION = 'NEGOTIATION',
+  WAITING_APPROVE = "WATTING_APPROVE",
+}
+
+export enum CURRENCY_CODE {
+    USD='USD',
+    EUR='EUR',
+    JPY='JPY',
+    GBP='GBP',
+    CAD='CAD',
+    AUD='AUD',
+    SGD='SGD',
+    HKD='HKD',
+    SEK='SEK',
+    CHF='CHF',
+    NZD='NZD',
+    MXN='MXN',
+    BRL='BRL',
+    RUB='RUB',
+    CNY='CNY',
+}

@@ -36,7 +36,7 @@ export const CommonLang: CommonDictionary = {
       description: "Mô tả",
       note: "Ghi chú",
       title: "Tiêu đề",
-      selectTime: "Chọn ngày"
+      selectTime: "Chọn ngày",
     },
     confirm: "Xác nhận",
     save: "Lưu",
@@ -54,6 +54,7 @@ export const CommonLang: CommonDictionary = {
     anErrorTryReload: "Đã xảy ra lỗi. Vui lòng thử tải lại trang.",
   },
   position: "Chức vụ",
+  company: "Công ty",
   fullName: "Họ tên",
   phone: "Số điện thoại",
   status: "Trạng thái",

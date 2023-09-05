@@ -44,6 +44,10 @@ const colorSchemes = {
         dark: "#04AA77", // OK
         contrastText: "#FFFFFF",
       },
+      purple: {
+        main: "#8950FC",
+        light: "#EEE5FF",
+      },
       grey: {
         50: "#F7F7FD", // OK
         100: "#ECECF3", // OK
@@ -113,6 +117,10 @@ const colorSchemes = {
         light: "#D7F9EF", // OK
         dark: "#04AA77", // OK
         contrastText: "rgba(0, 0, 0, .87)",
+      },
+      purple: {
+        main: "#8950FC",
+        light: "#EEE5FF",
       },
       grey: {
         50: "#1E1E1E", // OK

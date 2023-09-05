@@ -13,10 +13,24 @@ import { AssignTask, CommentEditor, StatusTask } from "./components";
 import Activities from "./Activities";
 import EditTask from "./components/EditTask";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import Actions, { Action } from "./components/SubTasksOfTask/Actions";
+import MoveOtherTask from "./components/SubTasksOfTask/MoveOtherTask";
 
 const Detail = () => {
   const { task, taskParent, onUpdateTaskDetail, onUpdateTask } = useTaskDetail();
   const scrollEndRef = useRef<HTMLDivElement | null>(null);
+  const [action, setAction] = useState<Action | undefined>();
+  const projectT = useTranslations(NS_PROJECT);
+
+  const options = useMemo(
+    () => [
+      {
+        label: projectT("taskDetail.changeParentTask"),
+        value: Action.CHANGE_PARENT_TASK,
+      },
+    ],
+    [projectT],
+  );
 
   const [tab, setTab] = useState<TabDetail>(TabDetail.DETAIL);
   const onClose = () => {
@@ -36,6 +50,15 @@ const Detail = () => {
   const breadcrumbs = breadcrumbs_values.map((item, idx) => {
     return <Typography key={idx+1} color="text.primary">{item}</Typography>
   })
+
+  const onChangeAction = (newAction?: Action) => {
+    setAction(newAction);
+  };
+
+  const onResetAction = () => {
+    setAction(undefined);
+    onUpdateTaskDetail();
+  };
 
   return (
     <Drawer
@@ -58,12 +81,24 @@ const Detail = () => {
         justifyContent="space-between"
         p={{ xs: 2, md: 3 }}
       >
-        <Breadcrumbs
-          separator={<NavigateNextIcon color="disabled" fontSize="small" />}
-          aria-label="breadcrumb"
-        >
-          {breadcrumbs}
-        </Breadcrumbs>
+        <Stack direction="row" alignItems="center">
+          <Breadcrumbs
+            separator={<NavigateNextIcon color="disabled" fontSize="small" />}
+            aria-label="breadcrumb"
+          >
+            {breadcrumbs}
+          </Breadcrumbs>
+          {task.subTaskId &&
+            <Stack ml={2}>
+              <Actions subId={task.subTaskId} onChangeAction={onChangeAction} options={options} />
+
+              {/* ACTIONS */}
+              {action === Action.CHANGE_PARENT_TASK && (
+                <MoveOtherTask subId={task.subTaskId} open onClose={onResetAction} />
+              )}
+            </Stack>
+          }
+        </Stack>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
