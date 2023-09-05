@@ -35,6 +35,8 @@ const SaleForm = ({ params }) => {
       attachments: [],
       attachments_down: [],
       status: SALE_STAGE.LEAD,
+      sections: {},
+      sectionsList: [],
     },
   });
 

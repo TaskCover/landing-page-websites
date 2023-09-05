@@ -364,7 +364,7 @@ export const renderTimeDiff = (ts: string | Date) => {
   }
 };
 
-export const formatEstimateTime = (time: string | number) => {
+export const formatEstimateTime = (time: string | number, isHour?: boolean) => {
   const totalHours = Math.floor(Number(time) / 60);
   const remainingMinutes = Math.floor(Number(time)) % 60;
 
@@ -372,5 +372,8 @@ export const formatEstimateTime = (time: string | number) => {
   const formattedMinutes =
     remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
 
+  if (isHour) {
+    return `${formattedHours}h`;
+  }
   return `${formattedHours}:${formattedMinutes}`;
 };

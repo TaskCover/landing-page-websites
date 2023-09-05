@@ -6,16 +6,20 @@ import {
   CommentData,
   DealData,
   GetSalesListQueries,
+  SectionData,
   TodoData,
   TodoItemData,
   createComment,
   createDeal,
+  createServiceSection,
   createTodo,
   deleteTodo,
   getDetailDeal,
   getSales,
+  getServices,
   updateDeal,
   updatePriority,
+  updateServiceSection,
   updateTodo,
 } from "./actions";
 import moment from "moment";
@@ -310,5 +314,60 @@ export const useSalesComment = () => {
     isIdle,
     isFetching,
     onCreateComment,
+  };
+};
+
+export const useSalesService = () => {
+  const { serviceSectionList, serviceSection, servicesError, servicesStatus } =
+    useAppSelector((state) => state.sales, shallowEqual);
+  const dispatch = useAppDispatch();
+
+  const isIdle = useMemo(
+    () => servicesStatus === DataStatus.IDLE,
+    [servicesStatus],
+  );
+  const isFetching = useMemo(
+    () => servicesStatus === DataStatus.LOADING,
+    [servicesStatus],
+  );
+
+  const onGetService = useCallback(
+    async (dealId) => {
+      await dispatch(getServices({ dealId }));
+    },
+    [dispatch],
+  );
+
+  const onUpdateSection = useCallback(
+    async ({ sectionId, data }: { sectionId: string; data: SectionData }) => {
+      await dispatch(updateServiceSection({ sectionId, data }));
+    },
+    [dispatch],
+  );
+
+  const onCreateSection = useCallback(
+    async ({
+      dealId,
+      data,
+      start_date,
+    }: {
+      dealId: string;
+      start_date: string;
+      data: SectionData[];
+    }) => {
+      await dispatch(createServiceSection({ dealId, data, start_date }));
+    },
+    [dispatch],
+  );
+
+  return {
+    serviceSectionList,
+    serviceSection,
+    servicesError,
+    isIdle,
+    isFetching,
+    onGetService,
+    onCreateSection,
+    onUpdateSection,
   };
 };

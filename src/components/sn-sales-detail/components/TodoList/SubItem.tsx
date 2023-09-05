@@ -31,6 +31,12 @@ import { formatDate } from "utils/index";
 export enum Action {
   RENAME = 1,
   DELETE,
+  DUPLICATE,
+  SHOW_DISCOUNT,
+  SHOW_MARKUP,
+  SHOW_FIXED_PRICE,
+  SHOW_ESTIMATE,
+  SHOW_DESCRIPTION,
 }
 const SubItem = ({
   todo,

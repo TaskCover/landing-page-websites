@@ -9,12 +9,15 @@ import {
   GetSalesListQueries,
   createComment,
   createDeal,
+  createServiceSection,
   createTodo,
   deleteTodo,
   getDetailDeal,
   getSales,
+  getServices,
   updateDeal,
   updatePriority,
+  updateServiceSection,
   updateTodo,
 } from "./actions";
 import build from "next/dist/build";
@@ -60,6 +63,34 @@ export interface Sales {
   activity: string[];
 }
 
+export interface Service {
+  id: string;
+  name: string;
+  desc: string;
+  serviceType: string;
+  billType: string;
+  unit: string;
+  estimate: number;
+  qty: number;
+  price: number;
+  discount: number;
+  markup: 1;
+  tolBudget: number;
+  createdAt: string;
+  updatedAt: string;
+  creator: string;
+}
+
+export interface ServiceSection {
+  id: string;
+  start_date: string;
+  service: Service[];
+  createdAt: string;
+  updatedAt: string;
+  creator: string;
+  deal: string;
+}
+
 export interface SaleState {
   sales: Sales[];
   salesStatus: DataStatus;
@@ -78,6 +109,11 @@ export interface SaleState {
   comments: SalesComment[];
   commentsStatus: DataStatus;
   commentsError?: string;
+
+  serviceSectionList: ServiceSection[];
+  serviceSection: ServiceSection | null;
+  servicesStatus: DataStatus;
+  servicesError?: string;
 }
 
 const initState: SaleState = {
@@ -100,6 +136,11 @@ const initState: SaleState = {
   comments: [],
   commentsStatus: DataStatus.IDLE,
   commentsError: undefined,
+
+  serviceSectionList: [],
+  serviceSection: null,
+  servicesStatus: DataStatus.IDLE,
+  servicesError: undefined,
 };
 
 const salesSlice = createSlice({
@@ -204,6 +245,31 @@ const salesSlice = createSlice({
       if (state.saleDetail) {
         state.saleDetail.todo_list = action.payload.deal_update.todo_list;
       }
+    });
+    builder.addCase(getServices.pending, (state, action) => {
+      state.servicesStatus = DataStatus.LOADING;
+    });
+    builder.addCase(getServices.fulfilled, (state, action) => {
+      state.serviceSectionList = action.payload.sections;
+      state.servicesStatus = DataStatus.SUCCEEDED;
+    });
+    builder.addCase(getServices.rejected, (state, action) => {
+      state.servicesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+    });
+    builder.addCase(updateServiceSection.fulfilled, (state, action) => {
+      state.serviceSection = action.payload.service;
+      state.servicesStatus = DataStatus.SUCCEEDED;
+    });
+    builder.addCase(updateServiceSection.rejected, (state, action) => {
+      state.servicesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+      state.servicesStatus = DataStatus.FAILED;
+    });
+    builder.addCase(createServiceSection.fulfilled, (state, action) => {
+      state.servicesStatus = action.payload;
+    });
+    builder.addCase(createServiceSection.rejected, (state, action) => {
+      state.servicesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+      state.servicesStatus = DataStatus.FAILED;
     });
   },
 });

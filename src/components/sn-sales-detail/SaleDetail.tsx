@@ -14,6 +14,7 @@ import { useFetchEmployeeOptions } from "components/sn-sales/hooks/useGetEmploye
 import moment from "moment";
 import { DATE_FORMAT_HYPHEN } from "constant/index";
 import { formatDate } from "utils/index";
+import SaleService from "./components/sn-service";
 
 const SalesDetail = () => {
   const [tab, setTab] = useState<SALES_DETAIL_TAB>(SALES_DETAIL_TAB.FEED);
@@ -71,7 +72,9 @@ const SalesDetail = () => {
           <TabPanel value={SALES_DETAIL_TAB.FEED}>
             <SaleFeed />
           </TabPanel>
-          <TabPanel value={SALES_DETAIL_TAB.SERVICE}>Item Two</TabPanel>
+          <TabPanel value={SALES_DETAIL_TAB.SERVICE}>
+            <SaleService />
+          </TabPanel>
         </TabContext>
       </FixedLayout>
     </>
