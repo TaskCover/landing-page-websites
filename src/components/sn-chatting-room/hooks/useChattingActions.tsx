@@ -20,7 +20,7 @@ const useChattingActions = () => {
     const t = useTranslations(NS_COMMON);
 
     const [params, setParams] = useState<ParamState>({
-        count: 10,
+        count: 12,
         offset: 0,
         text: '',
         type: 'a'

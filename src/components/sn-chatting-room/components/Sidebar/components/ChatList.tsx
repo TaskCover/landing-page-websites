@@ -9,10 +9,10 @@ const ChatList = () => {
     const { conversations } = useChattingActions();
     return (
         conversations.length > 0 ? conversations.map(conversation => {
-            const { key, ...propsConversation } = conversation;
+            const { ...propsConversation } = conversation;
             return (
                 <ChatSingle
-                    key={key}
+                    key={conversation._id}
                     isOnline
                     {...propsConversation}
                 />
