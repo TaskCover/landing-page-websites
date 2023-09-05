@@ -31,6 +31,7 @@ const useHeaderServiceTable = () => {
           display: columns.includes(ServiceColumn.NAME) ? "table-cell" : "none",
         },
       },
+
       {
         id: "Description",
         value: salesT("detail.service.table.description"),
@@ -42,6 +43,34 @@ const useHeaderServiceTable = () => {
             : "none",
         },
       },
+      // {
+      //   id: "serviceType",
+      //   value: salesT("detail.service.table.serviceType"),
+      //   align: "left",
+      //   sx: {
+      //     display: columns.includes(ServiceColumn.SERVICE_TYPE)
+      //       ? "table-cell"
+      //       : "none",
+      //   },
+      // },
+      // {
+      //   id: "billType",
+      //   value: salesT("detail.service.table.billType"),
+      //   align: "left",
+      //   sx: {
+      //     display: columns.includes(ServiceColumn.BILL_TYPE)
+      //       ? "table-cell"
+      //       : "none",
+      //   },
+      // },
+      // {
+      //   id: "unit",
+      //   value: salesT("detail.service.table.unit"),
+      //   align: "left",
+      //   sx: {
+      //     display: columns.includes(ServiceColumn.UNIT) ? "table-cell" : "none",
+      //   },
+      // },
       {
         id: "estimate",
         value: salesT("detail.service.table.estimate"),
@@ -73,7 +102,26 @@ const useHeaderServiceTable = () => {
             : "none",
         },
       },
-
+      // {
+      //   id: "discount",
+      //   value: salesT("detail.service.table.discount"),
+      //   align: "left",
+      //   sx: {
+      //     display: columns.includes(ServiceColumn.DISCOUNT)
+      //       ? "table-cell"
+      //       : "none",
+      //   },
+      // },
+      // {
+      //   id: "markUp",
+      //   value: salesT("detail.service.table.markup"),
+      //   align: "left",
+      //   sx: {
+      //     display: columns.includes(ServiceColumn.MARK_UP)
+      //       ? "table-cell"
+      //       : "none",
+      //   },
+      // },
       {
         id: "totalBuget",
         value: salesT("detail.service.table.totalBuget"),
@@ -108,6 +156,7 @@ const useHeaderServiceTable = () => {
 
   return {
     serviceTableHeader: headerList,
+    columns,
     onShowColumn,
   };
 };

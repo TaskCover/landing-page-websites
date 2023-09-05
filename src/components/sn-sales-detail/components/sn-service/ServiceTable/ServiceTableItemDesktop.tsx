@@ -10,8 +10,11 @@ import { useTranslations } from "next-intl";
 import ServiceItemAction from "./ServiceItemAction";
 import useItemAction from "components/sn-sales-detail/hooks/useItemAction";
 import { Service } from "store/sales/reducer";
-import { formatEstimateTime } from "utils/index";
+import { formatEstimateTime, formatNumber } from "utils/index";
 import { Controller, useFormContext } from "react-hook-form";
+import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
+import useHeaderServiceTable from "components/sn-sales-detail/hooks/useHeaderServiceTable";
+import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 
 interface IProps {
   index: number;
@@ -22,8 +25,11 @@ interface IProps {
 const ServiceTableItem = ({ index, sectionKey, service }: IProps) => {
   const { isEdit } = useContext(EditContext);
   const { register, control, getValues } = useFormContext();
+  const { columns } = useHeaderServiceTable();
   const saleT = useTranslations(NS_SALES);
   const { onAction } = useItemAction();
+
+  const currency = getValues("currency");
 
   return (
     <Draggable draggableId={service?.id} index={index}>
@@ -80,7 +86,49 @@ const ServiceTableItem = ({ index, sectionKey, service }: IProps) => {
                 }}
                 align="left"
               >
-                <Text variant="body2">{service.desc}</Text>
+                {isEdit ? (
+                  <Controller
+                    control={control}
+                    {...register(`${sectionKey}.${index}.desc`)}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        sx={{
+                          width: "100%",
+                        }}
+                      />
+                    )}
+                  />
+                ) : (
+                  <Text variant="body2">{service.desc}</Text>
+                )}
+              </BodyCell>
+
+              <BodyCell
+                sx={{
+                  ...defaultSx.item,
+                }}
+                align="left"
+              >
+                {isEdit ? (
+                  <Controller
+                    control={control}
+                    defaultValue={0}
+                    {...register(`${sectionKey}.${index}.estimate`)}
+                    render={({ field }) => (
+                      <Input
+                        helperText="h"
+                        type="number"
+                        {...field}
+                        sx={{
+                          width: "100%",
+                        }}
+                      />
+                    )}
+                  />
+                ) : (
+                  <Text variant="body2">{`${service.estimate || 0}h`}</Text>
+                )}
               </BodyCell>
               <BodyCell
                 sx={{
@@ -88,7 +136,27 @@ const ServiceTableItem = ({ index, sectionKey, service }: IProps) => {
                 }}
                 align="left"
               >
-                <Text variant="body2">{`${service.estimate}h`}</Text>
+                {isEdit ? (
+                  <Controller
+                    control={control}
+                    defaultValue={0}
+                    {...register(`${sectionKey}.${index}.qty`)}
+                    render={({ field }) => (
+                      <Input
+                        helperText="pcs"
+                        type="number"
+                        {...field}
+                        sx={{
+                          width: "100%",
+                        }}
+                      />
+                    )}
+                  />
+                ) : (
+                  <Text variant="body2">
+                    {formatNumber(service.qty, { suffix: "pcs" })}
+                  </Text>
+                )}
               </BodyCell>
               <BodyCell
                 sx={{
@@ -96,23 +164,86 @@ const ServiceTableItem = ({ index, sectionKey, service }: IProps) => {
                 }}
                 align="left"
               >
-                <Text variant="body2">{service.qty}</Text>
+                {isEdit ? (
+                  <Controller
+                    control={control}
+                    defaultValue={0}
+                    {...register(`${sectionKey}.${index}.price`)}
+                    render={({ field }) => (
+                      <Input
+                        helperText={`${CURRENCY_SYMBOL[currency]}/pc`}
+                        type="number"
+                        {...field}
+                        sx={{
+                          width: "100%",
+                        }}
+                      />
+                    )}
+                  />
+                ) : (
+                  <Text variant="body2">
+                    {formatNumber(service.price, {
+                      prefix: CURRENCY_SYMBOL[currency],
+                      suffix: "/pc",
+                      numberOfFixed: 2,
+                    })}
+                  </Text>
+                )}
               </BodyCell>
+              {columns.includes(ServiceColumn.MARK_UP) && (
+                <BodyCell
+                  sx={{
+                    ...defaultSx.item,
+                  }}
+                  align="left"
+                >
+                  {isEdit ? (
+                    <Controller
+                      control={control}
+                      {...register(`${sectionKey}.${index}.markup`)}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          sx={{
+                            width: "100%",
+                          }}
+                        />
+                      )}
+                    />
+                  ) : (
+                    <Text variant="body2">{service.markup}</Text>
+                  )}
+                </BodyCell>
+              )}
               <BodyCell
                 sx={{
                   ...defaultSx.item,
                 }}
                 align="left"
               >
-                <Text variant="body2">{service.price}</Text>
-              </BodyCell>
-              <BodyCell
-                sx={{
-                  ...defaultSx.item,
-                }}
-                align="left"
-              >
-                <Text variant="body2">{service.tolBudget}</Text>
+                {isEdit ? (
+                  <Controller
+                    control={control}
+                    defaultValue={0}
+                    {...register(`${sectionKey}.${index}.tolBudget`)}
+                    render={({ field }) => (
+                      <Input
+                        helperText={CURRENCY_SYMBOL[currency]}
+                        type="number"
+                        {...field}
+                        sx={{
+                          width: "100%",
+                        }}
+                      />
+                    )}
+                  />
+                ) : (
+                  <Text variant="body2">
+                    {formatNumber(service.tolBudget, {
+                      prefix: CURRENCY_SYMBOL[currency],
+                    })}
+                  </Text>
+                )}
               </BodyCell>
 
               {isEdit && (

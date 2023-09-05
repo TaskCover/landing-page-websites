@@ -19,6 +19,7 @@ import useItemAction from "components/sn-sales-detail/hooks/useItemAction";
 import useFetchServiceSection from "components/sn-sales-detail/hooks/useGetServiceSection";
 import { Service, ServiceSection } from "store/sales/reducer";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import { uuid } from "utils/index";
 
 interface IProps {
   section: ServiceSection;
@@ -44,8 +45,13 @@ const ServiceTable = ({ section, index }: IProps) => {
 
   const onAddRow = () => {
     append({
-      id: "new",
-      name: "",
+      id: uuid(),
+      name: "name",
+      desc: "description",
+      price: 0,
+      qty: 0,
+      unit: "unit",
+      tolBudget: 0,
     });
   };
 

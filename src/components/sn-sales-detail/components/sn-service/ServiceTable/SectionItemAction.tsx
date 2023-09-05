@@ -47,13 +47,8 @@ const SectionItemAction = (props: ActionsProps) => {
         value: Action.SHOW_ESTIMATE,
       },
       {
-        label: salesT("detail.service.showDescription"),
+        label: salesT("detail.service.ShowDescription"),
         value: Action.SHOW_DESCRIPTION,
-      },
-      {
-        label: salesT("detail.service.duplicate"),
-        value: Action.DUPLICATE,
-        icon: <CopyIcon />,
       },
       {
         label: commonT("delete"),
@@ -88,7 +83,6 @@ const SectionItemAction = (props: ActionsProps) => {
             key={option.value}
           >
             <Stack direction="row" spacing={1} alignItems="center">
-              {option.icon}
               <Text variant="body2" color={option.color}>
                 {option.label}
               </Text>
