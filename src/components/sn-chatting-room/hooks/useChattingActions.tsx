@@ -1,5 +1,6 @@
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next-intl/client";
 import { useCallback, useState } from "react";
 import { useSnackbar } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
@@ -29,6 +30,8 @@ const useChattingActions = () => {
     const { onGetAllConvention, convention, isFetching, onGetLastMessages, messageInfo } = useChat();
     const { onAddSnackbar } = useSnackbar()
     const t = useTranslations(NS_COMMON);
+    const pathname = usePathname()
+    const currentIdChat = pathname.split('/').pop || ''
 
     const [params, setParams] = useState<ParamState>(defaultParam)
 

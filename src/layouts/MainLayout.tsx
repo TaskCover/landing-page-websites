@@ -2,7 +2,7 @@
 
 import { Snackbar, Stack } from "@mui/material";
 import AppLoading from "components/AppLoading";
-import Header, { HEADER_HEIGHT } from "./Header";
+import Header from "./Header";
 import { memo, useEffect, useMemo } from "react";
 import { Sidebar } from "./components";
 import { useAppSelector } from "store/hooks";
@@ -41,6 +41,8 @@ const MainLayout = (props: MainLayoutProps) => {
   const { id } = useParams() as { id: string };
   const commonT = useTranslations(NS_COMMON);
 
+  const pathNameWithoutId = id ? pathname.replace(`/${id}`, "") : pathname
+
   const { appReady, token, user } = useAppSelector(
     (state) => state.app,
     shallowEqual,
@@ -49,7 +51,7 @@ const MainLayout = (props: MainLayoutProps) => {
   const { onGetProfile } = useAuth();
 
   const isLoggedIn = useMemo(() => !!token, [token]);
-  const isNoHeader = useMemo(() => !!NO_HEADER_PATHS.includes(pathname), [pathname])
+  const isNoHeader = useMemo(() => !!NO_HEADER_PATHS.includes(pathNameWithoutId), [pathNameWithoutId])
 
   const isAuthorized = useMemo(() => {
     if (!user?.roles?.length) return false;
@@ -72,6 +74,7 @@ const MainLayout = (props: MainLayoutProps) => {
   }, [user?.id, onGetProfile]);
 
   if (!appReady || !token || !user) return <AppLoading />;
+
 
   return (
     <>
@@ -105,7 +108,7 @@ const MainLayout = (props: MainLayoutProps) => {
         }
       </Stack>
       <Snackbar />
-      {pathname !== CHATTING_ROOM_PATH ? <ChatListTemp /> : null}
+      {!isNoHeader ? <ChatListTemp /> : null}
     </>
   );
 };

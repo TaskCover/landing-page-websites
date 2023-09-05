@@ -1,19 +1,17 @@
 import Wrapper from "components/Wrapper";
 import ChattingRoom from "components/sn-chatting-room";
-import { NS_COMPANY } from "constant/index";
+import { NS_CHAT } from "constant/index";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations(NS_COMPANY);
+  const t = await getTranslations(NS_CHAT);
 
   return {
-    title: t("costHistory.head.title"),
+    // title: t("seo.title"),
   };
 }
 
 export default function Page() {
-  return (
-    <ChattingRoom />
-  )
+  return <ChattingRoom />;
 }
