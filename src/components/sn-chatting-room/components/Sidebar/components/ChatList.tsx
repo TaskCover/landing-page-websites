@@ -8,13 +8,18 @@ const ChatList = () => {
     const { conversations } = useChattingActions();
     return (
         conversations.length > 0 ?
-            <Box display="flex" flexDirection="column" width="100%" height="90vh" sx={{ overflowX: 'scroll' }}>
-                {conversations.map(conversation => <ChatSingle
-                    key={conversation._id}
-                    {...conversation}
-                />)}
-            </Box>
-            : <NoData />
+            (
+                <Box display="flex" flexDirection="column" width="100%" height="90vh" sx={{ overflowX: 'scroll' }}>
+                    {conversations.map(conversation => (
+                        <ChatSingle
+                            key={conversation._id}
+                            {...conversation}
+                        />
+                    ))}
+                </Box>
+            )
+            :
+            <NoData />
     )
 };
 

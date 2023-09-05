@@ -15,7 +15,7 @@ const RoomDetails = () => {
 
   return (
     (pathname !== CHATTING_ROOM_PATH && !loading) ? (
-      <Box>
+      <Box width="100%">
         <RoomHeader />
       </Box>
     ) : (
