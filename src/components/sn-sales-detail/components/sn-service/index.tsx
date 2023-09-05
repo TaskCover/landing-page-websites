@@ -1,24 +1,29 @@
 "use client";
 import { Stack } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import ServiceTable from "./ServiceTable";
 import ServiceHeader from "./ServiceHeader/ServiceHeaderDesktop";
 import { EditProvider } from "./context/EditContext";
-import { DUMMY_SERVICE } from "../dummy";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import useBreakpoint from "hooks/useBreakpoint";
 import ServiceHeaderMobile from "./ServiceHeader/ServiceHeaderMobile";
-import useGetServiceSection from "components/sn-sales-detail/hooks/useGetServiceSection";
 import { useSalesService } from "store/sales/selectors";
+import { useFormContext } from "react-hook-form";
+import Loading from "components/Loading";
+import useFetchServiceSection from "components/sn-sales-detail/hooks/useGetServiceSection";
 
 const SaleService = () => {
-  const { serviceSectionList } = useSalesService();
   const { isMdSmaller } = useBreakpoint();
+  const { getValues, control } = useFormContext();
+  const { isFetching } = useSalesService();
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
     console.log(result);
   };
-  useGetServiceSection();
+
+  // const sectionsList = getValues("sectionsList");
+  const { serviceSectionList } = useSalesService();
+
   return (
     <EditProvider>
       <Stack spacing={2}>
@@ -26,8 +31,6 @@ const SaleService = () => {
           <ServiceHeader />
         </Stack>
         <Stack spacing={2}>
-          {/* Service table
-           */}
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable">
               {(provided) => (

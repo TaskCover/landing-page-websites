@@ -16,8 +16,9 @@ import ServiceTableItemMobile from "./ServiceTableItemMobile";
 import ServiceItemAction from "./ServiceItemAction";
 import SectionItemAction from "./SectionItemAction";
 import useItemAction from "components/sn-sales-detail/hooks/useItemAction";
-import useGetServiceSection from "components/sn-sales-detail/hooks/useGetServiceSection";
-import { ServiceSection } from "store/sales/reducer";
+import useFetchServiceSection from "components/sn-sales-detail/hooks/useGetServiceSection";
+import { Service, ServiceSection } from "store/sales/reducer";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 interface IProps {
   section: ServiceSection;
@@ -25,12 +26,16 @@ interface IProps {
 }
 
 const ServiceTable = ({ section, index }: IProps) => {
-  const { service } = section;
   const salesT = useTranslations(NS_SALES);
   const { isEdit } = useContext(EditContext);
   const { serviceTableHeader } = useHeaderServiceTable();
   const { isMdSmaller } = useBreakpoint();
   const { onAction } = useItemAction();
+  const { control } = useFormContext();
+  const { fields, append } = useFieldArray({
+    control,
+    name: `sectionsList.${index}.service`,
+  });
 
   const onDragService = (result) => {
     const { destination, source, draggableId } = result;
@@ -38,12 +43,15 @@ const ServiceTable = ({ section, index }: IProps) => {
   };
 
   const onAddRow = () => {
-    console.log("add row");
+    append({
+      id: "new",
+      name: "",
+    });
   };
 
-  const onAddRowByRateCard = () => {
-    console.log("add row by rate card");
-  };
+  // const onAddRowByRateCard = () => {
+  //   console.log("add row by rate card");
+  // };
 
   return (
     <Stack py={2}>
@@ -117,11 +125,12 @@ const ServiceTable = ({ section, index }: IProps) => {
                   <Droppable droppableId="droppableService">
                     {(provided) => (
                       <div ref={provided.innerRef} {...provided.droppableProps}>
-                        {service?.map((item, index) => (
+                        {fields?.map((item, serviceIndex) => (
                           <ServiceTableItem
-                            index={index}
-                            data={item}
-                            key={`${section.id}-service-${index}`}
+                            service={item as Service}
+                            index={serviceIndex}
+                            key={item.id}
+                            sectionKey={`sectionsList.${index}.service`}
                           />
                         ))}
                       </div>
@@ -135,6 +144,7 @@ const ServiceTable = ({ section, index }: IProps) => {
       </Draggable>
       <Stack direction="row" spacing={2}>
         <Button
+          onClick={onAddRow}
           variant="text"
           TouchRippleProps={{
             style: {

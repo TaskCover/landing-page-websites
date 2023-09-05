@@ -6,7 +6,7 @@ import { useSaleDetail, useSalesService } from "store/sales/selectors";
 export const useSetServiceValue = () => {
   const { serviceSectionList, servicesError } = useSalesService();
   const { onAddSnackbar } = useSnackbar();
-  const { getValues, setValue } = useFormContext();
+  const { setValue } = useFormContext();
 
   useEffect(() => {
     if (servicesError) {
@@ -17,7 +17,7 @@ export const useSetServiceValue = () => {
   }, [serviceSectionList, servicesError]);
 };
 
-const useGetServiceSection = () => {
+const useFetchServiceSection = () => {
   const { onGetService } = useSalesService();
   const { saleDetail } = useSaleDetail();
 
@@ -26,7 +26,6 @@ const useGetServiceSection = () => {
       onGetService(saleDetail?.id);
     }
   }, [saleDetail?.id]);
-  useSetServiceValue();
 };
 
-export default useGetServiceSection;
+export default useFetchServiceSection;

@@ -6,12 +6,14 @@ import React, { useContext } from "react";
 import { EditContext } from "../../context/EditContext";
 import useBreakpoint from "hooks/useBreakpoint";
 import useServiceHeader from "../../../../hooks/useServiceHeader";
+import { useFormContext } from "react-hook-form";
 
 const ServiceHeader = () => {
   const commonT = useTranslations(NS_COMMON);
   const { isMdSmaller } = useBreakpoint();
   const { isEdit, setEdit } = useContext(EditContext);
-  const { onSaveChange } = useServiceHeader();
+  const { handleSubmit } = useFormContext();
+  const { onSaveChange, onCancel } = useServiceHeader();
   return (
     <Stack direction="row" justifyContent={isEdit ? "flex-end" : "flex-start"}>
       {!isEdit ? (
@@ -36,13 +38,10 @@ const ServiceHeader = () => {
       ) : (
         !isMdSmaller && (
           <Stack direction="row" spacing={2}>
-            <Button
-              variant="outlined"
-              onClick={() => setEdit && setEdit(false)}
-            >
+            <Button variant="outlined" onClick={onCancel}>
               {commonT("form.cancel")}
             </Button>
-            <Button onClick={onSaveChange} variant="contained">
+            <Button onClick={handleSubmit(onSaveChange)} variant="contained">
               {commonT("form.save")}
             </Button>
           </Stack>

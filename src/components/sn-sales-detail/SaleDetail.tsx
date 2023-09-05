@@ -8,13 +8,15 @@ import { TabContext, TabPanel } from "@mui/lab";
 import SaleFeed from "./sn-feed";
 import { useForm, useFormContext } from "react-hook-form";
 import { Sales, Todo } from "store/sales/reducer";
-import { useSaleDetail } from "store/sales/selectors";
+import { useSaleDetail, useSalesService } from "store/sales/selectors";
 import Loading from "components/Loading";
 import { useFetchEmployeeOptions } from "components/sn-sales/hooks/useGetEmployeeOptions";
 import moment from "moment";
 import { DATE_FORMAT_HYPHEN } from "constant/index";
 import { formatDate } from "utils/index";
 import SaleService from "./components/sn-service";
+import useFetchServiceSection from "./hooks/useGetServiceSection";
+import useServiceHeader from "./hooks/useServiceHeader";
 
 const SalesDetail = () => {
   const [tab, setTab] = useState<SALES_DETAIL_TAB>(SALES_DETAIL_TAB.FEED);
@@ -22,17 +24,22 @@ const SalesDetail = () => {
   const onChangeTab = (e: React.SyntheticEvent, newTab: SALES_DETAIL_TAB) => {
     setTab(newTab);
   };
+
   const id = getValues("id");
 
   useFetchDealDetail(id);
   useFetchEmployeeOptions();
+  useFetchServiceSection();
+
+  const { isFetching: isServiceFetching } = useSalesService();
   const { saleDetail, isFetching } = useSaleDetail();
+  const { serviceSectionList } = useSalesService();
 
   useEffect(() => {
     if (!saleDetail) return;
 
-    const sortedTodoList = [...saleDetail?.todo_list].sort(
-      (a, b) => a.priority - b.priority,
+    const sortedTodoList = [...saleDetail?.todo_list].sort((a, b) =>
+      a.priority - b.priority ? 1 : -1,
     );
     const comments = [...saleDetail?.comments];
     comments?.sort((a, b) => {
@@ -57,9 +64,11 @@ const SalesDetail = () => {
       todo_list,
       comments: comments,
       id,
+      sectionsList: serviceSectionList,
     });
+
     return reset();
-  }, [saleDetail]);
+  }, [saleDetail, serviceSectionList]);
 
   if (isFetching) return <Loading open />;
 

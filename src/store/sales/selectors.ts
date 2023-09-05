@@ -318,6 +318,7 @@ export const useSalesComment = () => {
 };
 
 export const useSalesService = () => {
+  const { saleDetail } = useSaleDetail();
   const { serviceSectionList, serviceSection, servicesError, servicesStatus } =
     useAppSelector((state) => state.sales, shallowEqual);
   const dispatch = useAppDispatch();
@@ -328,6 +329,11 @@ export const useSalesService = () => {
   );
   const isFetching = useMemo(
     () => servicesStatus === DataStatus.LOADING,
+    [servicesStatus],
+  );
+
+  const isSuccessful = useMemo(
+    () => servicesStatus === DataStatus.SUCCEEDED,
     [servicesStatus],
   );
 
@@ -364,6 +370,7 @@ export const useSalesService = () => {
     serviceSectionList,
     serviceSection,
     servicesError,
+    isSuccessful,
     isIdle,
     isFetching,
     onGetService,

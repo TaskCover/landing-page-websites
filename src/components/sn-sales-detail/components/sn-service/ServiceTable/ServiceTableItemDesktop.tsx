@@ -11,19 +11,22 @@ import ServiceItemAction from "./ServiceItemAction";
 import useItemAction from "components/sn-sales-detail/hooks/useItemAction";
 import { Service } from "store/sales/reducer";
 import { formatEstimateTime } from "utils/index";
+import { Controller, useFormContext } from "react-hook-form";
 
 interface IProps {
-  data: Service;
   index: number;
+  sectionKey: string;
+  service: Service;
 }
 
-const ServiceTableItem = ({ data, index }: IProps) => {
+const ServiceTableItem = ({ index, sectionKey, service }: IProps) => {
   const { isEdit } = useContext(EditContext);
+  const { register, control, getValues } = useFormContext();
   const saleT = useTranslations(NS_SALES);
   const { onAction } = useItemAction();
 
   return (
-    <Draggable draggableId={data.id} index={index}>
+    <Draggable draggableId={service?.id} index={index}>
       {(provided) => (
         <div ref={provided.innerRef} {...provided.draggableProps}>
           <Stack
@@ -38,7 +41,6 @@ const ServiceTableItem = ({ data, index }: IProps) => {
               <IconButton
                 sx={{
                   position: "absolute",
-                  zIndex: 9999,
                   left: "-4px",
                 }}
                 noPadding
@@ -56,17 +58,20 @@ const ServiceTableItem = ({ data, index }: IProps) => {
                 }}
               >
                 {isEdit ? (
-                  <Input
-                    defaultValue="name"
-                    value="name"
-                    sx={{
-                      [`& .MuiInputBase-root`]: {
-                        border: "1px solid #E0E0E0",
-                      },
-                    }}
+                  <Controller
+                    control={control}
+                    {...register(`${sectionKey}.${index}.name`)}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        sx={{
+                          width: "100%",
+                        }}
+                      />
+                    )}
                   />
                 ) : (
-                  <Text variant="body2">{data.name}</Text>
+                  <Text variant="body2">{service.name}</Text>
                 )}
               </BodyCell>
               <BodyCell
@@ -75,7 +80,7 @@ const ServiceTableItem = ({ data, index }: IProps) => {
                 }}
                 align="left"
               >
-                <Text variant="body2">{data.desc}</Text>
+                <Text variant="body2">{service.desc}</Text>
               </BodyCell>
               <BodyCell
                 sx={{
@@ -83,7 +88,7 @@ const ServiceTableItem = ({ data, index }: IProps) => {
                 }}
                 align="left"
               >
-                <Text variant="body2">{`${data.estimate}h`}</Text>
+                <Text variant="body2">{`${service.estimate}h`}</Text>
               </BodyCell>
               <BodyCell
                 sx={{
@@ -91,7 +96,7 @@ const ServiceTableItem = ({ data, index }: IProps) => {
                 }}
                 align="left"
               >
-                <Text variant="body2">{data.qty}</Text>
+                <Text variant="body2">{service.qty}</Text>
               </BodyCell>
               <BodyCell
                 sx={{
@@ -99,7 +104,7 @@ const ServiceTableItem = ({ data, index }: IProps) => {
                 }}
                 align="left"
               >
-                <Text variant="body2">{data.price}</Text>
+                <Text variant="body2">{service.price}</Text>
               </BodyCell>
               <BodyCell
                 sx={{
@@ -107,14 +112,14 @@ const ServiceTableItem = ({ data, index }: IProps) => {
                 }}
                 align="left"
               >
-                <Text variant="body2">{data.tolBudget}</Text>
+                <Text variant="body2">{service.tolBudget}</Text>
               </BodyCell>
 
               {isEdit && (
                 <BodyCell>
                   <ServiceItemAction
                     onChangeAction={onAction}
-                    serviceId={data.id}
+                    serviceId={service.id}
                   />
                 </BodyCell>
               )}
