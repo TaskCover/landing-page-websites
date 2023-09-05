@@ -5,23 +5,35 @@ import useChattingActions from "components/sn-chatting-room/hooks/useChattingAct
 import React, { useEffect } from "react";
 import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
+import useGetScreenMode from "components/sn-chatting-room/hooks/useGetScreenMode";
 const Sidebar = () => {
-
   const { handleGetConversation, loading } = useChattingActions();
+  const { mobileMode } = useGetScreenMode();
 
   useEffect(() => {
-    handleGetConversation(undefined)
-  }, [handleGetConversation])
+    handleGetConversation(undefined);
+  }, [handleGetConversation]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: 'calc(var(--vh, 1vh) * 100)', boxShadow: '2px 2px 24px 0px rgba(0, 0, 0, 0.10)', minWidth: '300px', maxWidth: '300px' }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "calc(var(--vh, 1vh) * 100)",
+        boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
+        ...(!mobileMode
+          ? { minWidth: "300px", maxWidth: "300px" }
+          : { width: "100%" }),
+      }}
+    >
       <SearchBar />
       {loading ? (
         <Box display="flex" alignItems="center" justifyContent="center">
           <CircularProgress />
         </Box>
-      )
-        : <ChatList />}
+      ) : (
+        <ChatList />
+      )}
     </Box>
   );
 };
