@@ -185,7 +185,7 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
 const DATA: MenuItemProps[] = [
   {
     label: "menu.dashboard",
-    href: CHATTING_ROOM_PATH,
+    href: HOME_PATH,
     icon: <MenuDashboardIcon />,
     roles: [Permission.AM, Permission.ST],
   },
