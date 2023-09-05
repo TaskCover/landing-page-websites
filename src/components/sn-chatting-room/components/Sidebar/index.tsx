@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
 const Sidebar = () => {
+
   const { handleGetConversation, loading } = useChattingActions();
 
   useEffect(() => {
@@ -13,9 +14,14 @@ const Sidebar = () => {
   }, [handleGetConversation])
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: 'calc(var(--vh, 1vh) * 100)', boxShadow: '2px 2px 24px 0px rgba(0, 0, 0, 0.10)' }}>
+    <Box sx={{ display: "flex", flexDirection: "column", height: 'calc(var(--vh, 1vh) * 100)', boxShadow: '2px 2px 24px 0px rgba(0, 0, 0, 0.10)', minWidth: '300px', maxWidth: '300px' }}>
       <SearchBar />
-      {loading ? <CircularProgress /> : <ChatList />}
+      {loading ? (
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <CircularProgress />
+        </Box>
+      )
+        : <ChatList />}
     </Box>
   );
 };

@@ -7,6 +7,13 @@ import { DirectionChat } from "store/chat/type";
 
 // This hook only contains event actions not included useEffect 
 
+const defaultParam = {
+    count: 12,
+    offset: 0,
+    text: '',
+    type: 'a' as DirectionChat
+}
+
 interface ParamState {
     type: DirectionChat,
     text: string,
@@ -14,17 +21,16 @@ interface ParamState {
     count: number
 }
 
+interface ParamChatState extends ParamState {
+    roomId: string
+}
+
 const useChattingActions = () => {
-    const { onGetAllConvention, convention, isFetching } = useChat();
+    const { onGetAllConvention, convention, isFetching, onGetLastMessages, messageInfo } = useChat();
     const { onAddSnackbar } = useSnackbar()
     const t = useTranslations(NS_COMMON);
 
-    const [params, setParams] = useState<ParamState>({
-        count: 12,
-        offset: 0,
-        text: '',
-        type: 'a'
-    })
+    const [params, setParams] = useState<ParamState>(defaultParam)
 
 
     const handleGetConversation = useCallback(async (body?: ParamState) => {
@@ -47,10 +53,16 @@ const useChattingActions = () => {
         [onAddSnackbar, onGetAllConvention, params, t],
     );
 
+    const handleGetDetailConversation = (props: ParamChatState) => {
+        onGetLastMessages(props)
+    }
+
     return {
         handleGetConversation,
+        handleGetDetailConversation,
         conversations: convention,
-        loading: isFetching
+        loading: isFetching,
+        detailsMessage: messageInfo,
     }
 }
 

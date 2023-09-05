@@ -11,7 +11,7 @@ const SearchBar = () => {
             justifyContent: "center",
             alignItems: "center",
             marginBottom: "8px",
-            minWidth: '293px'
+            width: '100%'
         }}
     >
         <Paper
