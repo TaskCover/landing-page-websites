@@ -18,10 +18,7 @@ import {
   TIME_TRACKING_PATH,
   RESOURCE_PLANING_PATH,
   CHATTING_ROOM_PATH,
-<<<<<<< Updated upstream
-=======
   SALES_LIST_PATH,
->>>>>>> Stashed changes
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -37,11 +34,7 @@ import { Permission } from "constant/enums";
 import useTheme from "hooks/useTheme";
 import MenuTimeTrackingIcon from "icons/MenuTimeTrackingIcon";
 import MenuResourcePlaningIcon from "icons/MenuResourcePlaningIcon";
-<<<<<<< Updated upstream
-=======
-import CardReceive from "icons/CardReceive";
 import MenuChatIcon from "icons/MenuChatIcon";
->>>>>>> Stashed changes
 
 const Menu = () => {
   const { user } = useAuth();

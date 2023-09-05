@@ -73,12 +73,6 @@ const MainLayout = (props: MainLayoutProps) => {
 
   if (!appReady || !token || !user) return <AppLoading />;
 
-<<<<<<< Updated upstream
-  console.log("xxxx:", isAuthorized, user, pathname, id);
-=======
-  console.log(isNoHeader, 'isNoHeader');
->>>>>>> Stashed changes
-
   return (
     <>
       <Stack
