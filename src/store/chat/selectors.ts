@@ -16,6 +16,7 @@ import {
   renameGroup,
   searchChatText,
   getUnreadMessages,
+  getConventionById,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -147,6 +148,27 @@ export const useChat = () => {
     [dispatch, user],
   );
 
+  const onGetConventionById = useCallback(
+    async ({
+      count = 1,
+      offset = 0,
+      ...rest
+    }: Omit<ChatConventionItemRequest, "authToken" | "userId">) => {
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
+      return await dispatch(
+        getConventionById({
+          count,
+          offset,
+          authToken,
+          userId,
+          ...rest,
+        }),
+      ).unwrap();
+    },
+    [dispatch, user],
+  );
+
   const onGetLastMessages = useCallback(
     async ({
       count,
@@ -224,9 +246,8 @@ export const useChat = () => {
   );
 
   const onGetUnReadMessages = useCallback(
-    async ({
-      type = "d",
-    }: Omit<UnReadMessageRequest, "authToken" | "userId" | "roomId">) => {
+    async (paramReq?: Partial<UnReadMessageRequest>) => {
+      const { type = "d" } = paramReq || {};
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       await dispatch(
@@ -588,5 +609,6 @@ export const useChat = () => {
     onSearchChatText,
     onSetStateSearchMessage,
     onGetUnReadMessages,
+    onGetConventionById,
   };
 };
