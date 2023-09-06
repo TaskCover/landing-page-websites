@@ -59,6 +59,7 @@ export type ServiceData = Partial<
 export interface SectionData {
   start_date: string;
   services: ServiceData[];
+  service?: ServiceData[];
 }
 export const getSales = createAsyncThunk(
   "sales/getSales",
@@ -330,6 +331,27 @@ export const createServiceSection = createAsyncThunk(
         },
       );
       if (response?.status === HttpStatusCode.CREATED) {
+        const { data } = response;
+        return data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const deleteSection = createAsyncThunk(
+  "sales/deleteSection",
+  async ({ sectionId }: { sectionId: string }) => {
+    try {
+      const response = await client.delete(
+        StringFormat(Endpoint.SALES_SERVICE_DETAIL, { sectionId }),
+        {
+          baseURL: SALE_API_URL,
+        },
+      );
+      if (response?.status === HttpStatusCode.OK) {
         const { data } = response;
         return data;
       }

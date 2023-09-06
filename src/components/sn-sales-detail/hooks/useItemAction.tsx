@@ -16,6 +16,7 @@ const useItemAction = (
   index: number,
   append: UseFieldArrayAppend<FieldValues, string>,
   remove: UseFieldArrayRemove,
+  onRemoveSection: () => void,
   fields: Record<"id", string>[],
 ) => {
   const { control } = useFormContext();
@@ -38,6 +39,9 @@ const useItemAction = (
         break;
       case Action.DELETE:
         onRemove("", data);
+        break;
+      case Action.SECTION_DELETE:
+        onRemoveSection();
         break;
       case Action.SHOW_DESCRIPTION:
         onShowColumn(ServiceColumn.DESCRIPTION);

@@ -1,3 +1,4 @@
+import { on } from "events";
 import { DataStatus, SORT_OPTIONS } from "constant/enums";
 import { useCallback, useEffect, useMemo } from "react";
 import { shallowEqual } from "react-redux";
@@ -13,6 +14,7 @@ import {
   createDeal,
   createServiceSection,
   createTodo,
+  deleteSection,
   deleteTodo,
   getDetailDeal,
   getSales,
@@ -24,7 +26,8 @@ import {
 } from "./actions";
 import moment from "moment";
 import { useSnackbar } from "store/app/selectors";
-import { Todo } from "./reducer";
+import { ServiceSection, Todo } from "./reducer";
+import Item from "components/sn-cost-history/Item";
 
 export const useSales = () => {
   const { onAddSnackbar } = useSnackbar();
@@ -361,11 +364,28 @@ export const useSalesService = () => {
       start_date: string;
       data: SectionData[];
     }) => {
-      await dispatch(createServiceSection({ dealId, data, start_date }));
+      const newData = data.map((item) => ({
+        ...item,
+        services: item.service,
+      }));
+
+      await dispatch(
+        createServiceSection({
+          dealId,
+          data: newData as SectionData[],
+          start_date,
+        }),
+      );
     },
     [dispatch],
   );
 
+  const onDeleteSection = useCallback(
+    async (sectionId: string) => {
+      await dispatch(deleteSection({ sectionId }));
+    },
+    [dispatch],
+  );
   return {
     serviceSectionList,
     serviceSection,
@@ -376,5 +396,6 @@ export const useSalesService = () => {
     onGetService,
     onCreateSection,
     onUpdateSection,
+    onDeleteSection,
   };
 };

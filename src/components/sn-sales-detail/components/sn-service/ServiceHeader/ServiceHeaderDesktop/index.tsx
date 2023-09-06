@@ -7,33 +7,42 @@ import { EditContext } from "../../context/EditContext";
 import useBreakpoint from "hooks/useBreakpoint";
 import useServiceHeader from "../../../../hooks/useServiceHeader";
 import { useFormContext } from "react-hook-form";
+import { useSalesService } from "store/sales/selectors";
 
 const ServiceHeader = () => {
   const commonT = useTranslations(NS_COMMON);
   const { isMdSmaller } = useBreakpoint();
   const { isEdit, setEdit } = useContext(EditContext);
-  const { handleSubmit } = useFormContext();
+  const { handleSubmit, getValues } = useFormContext();
   const { onSaveChange, onCancel } = useServiceHeader();
+
+  const sectionsList = getValues("sectionsList");
   return (
-    <Stack direction="row" justifyContent={isEdit ? "flex-end" : "flex-start"}>
+    <Stack
+      direction="row"
+      width="100%"
+      justifyContent={isEdit ? "flex-end" : "flex-start"}
+    >
       {!isEdit ? (
         <Stack>
-          <Button
-            variant="contained"
-            size="medium"
-            startIcon={
-              <EditIcon
-                sx={{
-                  width: 16,
-                  height: 16,
-                  color: "inherit",
-                }}
-              />
-            }
-            onClick={() => setEdit && setEdit(true)}
-          >
-            {commonT("edit")}
-          </Button>
+          {sectionsList.length !== 0 && (
+            <Button
+              variant="contained"
+              size="medium"
+              startIcon={
+                <EditIcon
+                  sx={{
+                    width: 16,
+                    height: 16,
+                    color: "inherit",
+                  }}
+                />
+              }
+              onClick={() => setEdit && setEdit(true)}
+            >
+              {commonT("edit")}
+            </Button>
+          )}
         </Stack>
       ) : (
         !isMdSmaller && (

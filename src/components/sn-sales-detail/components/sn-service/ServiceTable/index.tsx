@@ -1,5 +1,5 @@
 import { CellProps, TableLayout } from "components/Table";
-import { NS_SALES } from "constant/index";
+import { NS_COMMON, NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
 import React, { useContext, useMemo } from "react";
 import ServiceTableItem from "./ServiceTableItemDesktop";
@@ -27,32 +27,45 @@ import {
   useWatch,
 } from "react-hook-form";
 import { uuid } from "utils/index";
+import ConfirmDialog from "components/ConfirmDialog";
+import useToggle from "hooks/useToggle";
 
 interface IProps {
   section: ServiceSection;
   index: number;
+  onAddSection: () => void;
+  onRemoveSection: () => void;
 }
 
-const ServiceTable = ({ section, index }: IProps) => {
+const ServiceTable = ({
+  section,
+  index,
+  onAddSection,
+  onRemoveSection,
+}: IProps) => {
   const salesT = useTranslations(NS_SALES);
   const { isEdit } = useContext(EditContext);
-  const { serviceTableHeader } = useHeaderServiceTable();
+  const { serviceTableHeader } = useHeaderServiceTable(index);
   const { isMdSmaller } = useBreakpoint();
   const { control } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control,
     name: `sectionsList.${index}.service`,
   });
+  const commonT = useTranslations(NS_COMMON);
+
   const { onAction } = useItemAction(
     index,
     append as UseFieldArrayAppend<FieldValues, string>,
     remove as UseFieldArrayRemove,
+    onRemoveSection,
     fields,
   );
 
   const onDragService = (result) => {
     const { destination, source, draggableId } = result;
-    console.log(result);
+    if (!destination) return;
+    move(source.index, destination.index);
   };
 
   const onAddRow = () => {
@@ -100,6 +113,7 @@ const ServiceTable = ({ section, index }: IProps) => {
                   )}
                 </Stack>
                 <Button
+                  onClick={onAddSection}
                   variant="text"
                   TouchRippleProps={{
                     style: {

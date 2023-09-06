@@ -31,6 +31,7 @@ import { formatDate } from "utils/index";
 export enum Action {
   RENAME = 1,
   DELETE,
+  SECTION_DELETE,
   DUPLICATE,
   SHOW_DISCOUNT,
   SHOW_MARKUP,

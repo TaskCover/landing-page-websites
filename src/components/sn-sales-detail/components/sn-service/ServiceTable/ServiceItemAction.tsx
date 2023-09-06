@@ -68,7 +68,7 @@ const ServiceItemAction = (props: ActionsProps) => {
         ref={buttonRef}
         label={
           <IconButton>
-            <MoreSquareIcon sx={{ fontSize: 20 }} />
+            <MoreSquareIcon sx={{ fontSize: 24 }} />
           </IconButton>
         }
       >

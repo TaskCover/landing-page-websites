@@ -1,10 +1,20 @@
-import { CellProps } from "components/Table";
+"use client";
+import { CellProps, HeaderCell } from "components/Table";
 import { NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import { EditContext } from "../components/sn-service/context/EditContext";
 import { ServiceColumn } from "./useGetHeaderColumn";
-
+import { Box, Stack, TableCell, TableHead } from "@mui/material";
+import { Text } from "components/shared";
+import {
+  FieldValue,
+  FieldValues,
+  useFieldArray,
+  useFormContext,
+} from "react-hook-form";
+import { Service } from "store/sales/reducer";
+import { SectionData } from "store/sales/actions";
 const defaultColumns = [
   ServiceColumn.NAME,
   ServiceColumn.DESCRIPTION,
@@ -15,7 +25,7 @@ const defaultColumns = [
   ServiceColumn.ACTION,
 ];
 
-const useHeaderServiceTable = () => {
+const useHeaderServiceTable = (index?: number) => {
   const salesT = useTranslations(NS_SALES);
   const { isEdit } = useContext(EditContext);
   const [columns, setColumns] = useState<ServiceColumn[]>([...defaultColumns]);
@@ -34,6 +44,17 @@ const useHeaderServiceTable = () => {
       align: "left",
     },
   ];
+
+  const { getValues, control } = useFormContext();
+
+  const services = getValues(`sectionsList.${index}.service`);
+  const totalTime = useMemo(() => {
+    const total = services?.reduce((prev, field) => {
+      const estimate = field?.estimate ? field.estimate : 0;
+      return prev + estimate;
+    }, 0);
+    return total;
+  }, services);
 
   const headerList: CellProps[] = useMemo(() => {
     const list: CellProps[] = [

@@ -16,6 +16,8 @@ import { Text } from "components/shared";
 import CopyIcon from "icons/CopyIcon";
 import TrashIcon from "icons/TrashIcon";
 import MoreDotIcon from "icons/MoreDotIcon";
+import ConfirmDialog from "components/ConfirmDialog";
+import useToggle from "hooks/useToggle";
 
 type ActionsProps = {
   sectionId: string;
@@ -27,6 +29,7 @@ const SectionItemAction = (props: ActionsProps) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
+  const [isDelete, onOpen, onClose] = useToggle();
 
   const options = useMemo(() => {
     return [
@@ -52,8 +55,9 @@ const SectionItemAction = (props: ActionsProps) => {
       },
       {
         label: commonT("delete"),
-        value: Action.DELETE,
+        value: Action.SECTION_DELETE,
         color: "error.main",
+        onClick: onOpen,
       },
     ];
   }, [commonT, salesT]);
@@ -78,7 +82,11 @@ const SectionItemAction = (props: ActionsProps) => {
         {options.map((option) => (
           <MenuItem
             component={ButtonBase}
-            onClick={onAction(option.value)}
+            onClick={() =>
+              option.value === Action.SECTION_DELETE
+                ? onOpen()
+                : onAction(option.value)
+            }
             sx={defaultSx.item}
             key={option.value}
           >
@@ -90,6 +98,13 @@ const SectionItemAction = (props: ActionsProps) => {
           </MenuItem>
         ))}
       </MenuList>
+      <ConfirmDialog
+        onSubmit={onAction(Action.SECTION_DELETE)}
+        open={isDelete}
+        onClose={onClose}
+        title={commonT("confirmDelete.title")}
+        content={commonT("confirmDelete.content")}
+      />
     </PopoverLayout>
   );
 };

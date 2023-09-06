@@ -5,8 +5,6 @@ import React, { cloneElement, useContext, useMemo } from "react";
 import { EditContext } from "../context/EditContext";
 import { Draggable } from "react-beautiful-dnd";
 import MoveDotIcon from "icons/MoveDotIcon";
-import { NS_COMMON, NS_SALES } from "constant/index";
-import { useTranslations } from "next-intl";
 import ServiceItemAction from "./ServiceItemAction";
 import useItemAction from "components/sn-sales-detail/hooks/useItemAction";
 import { Service } from "store/sales/reducer";
@@ -104,7 +102,6 @@ const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
                   <Text variant="body2">{service.desc}</Text>
                 )}
               </BodyCell>
-
               <BodyCell
                 sx={{
                   ...defaultSx.item,
@@ -120,6 +117,11 @@ const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
                       <Input
                         helperText="h"
                         type="number"
+                        InputProps={{
+                          inputProps: {
+                            min: 0,
+                          },
+                        }}
                         {...field}
                         sx={{
                           width: "100%",
@@ -131,6 +133,7 @@ const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
                   <Text variant="body2">{`${service.estimate || 0}h`}</Text>
                 )}
               </BodyCell>
+
               <BodyCell
                 sx={{
                   ...defaultSx.item,
@@ -146,6 +149,11 @@ const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
                       <Input
                         helperText="pcs"
                         type="number"
+                        InputProps={{
+                          inputProps: {
+                            min: 0,
+                          },
+                        }}
                         {...field}
                         sx={{
                           width: "100%",
@@ -174,6 +182,11 @@ const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
                       <Input
                         helperText={`${CURRENCY_SYMBOL[currency]}/pc`}
                         type="number"
+                        InputProps={{
+                          inputProps: {
+                            min: 0,
+                          },
+                        }}
                         {...field}
                         sx={{
                           width: "100%",
@@ -231,6 +244,11 @@ const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
                       <Input
                         helperText={CURRENCY_SYMBOL[currency]}
                         type="number"
+                        InputProps={{
+                          inputProps: {
+                            min: 0,
+                          },
+                        }}
                         {...field}
                         sx={{
                           width: "100%",

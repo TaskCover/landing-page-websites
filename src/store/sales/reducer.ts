@@ -11,6 +11,7 @@ import {
   createDeal,
   createServiceSection,
   createTodo,
+  deleteSection,
   deleteTodo,
   getDetailDeal,
   getSales,
@@ -265,9 +266,16 @@ const salesSlice = createSlice({
       state.servicesStatus = DataStatus.FAILED;
     });
     builder.addCase(createServiceSection.fulfilled, (state, action) => {
-      state.servicesStatus = action.payload;
+      state.servicesStatus = DataStatus.SUCCEEDED;
     });
     builder.addCase(createServiceSection.rejected, (state, action) => {
+      state.servicesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+      state.servicesStatus = DataStatus.FAILED;
+    });
+    builder.addCase(deleteSection.fulfilled, (state, action) => {
+      state.servicesStatus = DataStatus.SUCCEEDED;
+    });
+    builder.addCase(deleteSection.rejected, (state, action) => {
       state.servicesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
       state.servicesStatus = DataStatus.FAILED;
     });
