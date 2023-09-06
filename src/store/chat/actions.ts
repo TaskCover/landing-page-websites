@@ -18,7 +18,6 @@ import {
   RenameGroupRequest,
   MessageSearchInfoRequest,
   UnReadMessageRequest,
-  MessageInfo,
 } from "./type";
 import { AxiosError } from "axios";
 
@@ -31,6 +30,28 @@ export const getAllConvention = createAsyncThunk(
       });
       if (response?.status === HttpStatusCode.OK) {
         return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const message = error.response?.data["error"];
+        return rejectWithValue(message);
+      } else {
+        throw error;
+      }
+    }
+  },
+);
+
+export const getConventionById = createAsyncThunk(
+  "chat/getConventionById",
+  async (paramReq: ChatConventionItemRequest, { rejectWithValue }) => {
+    try {
+      const response = await client.post("getAllConversations", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data.length > 0 ? response.data[0] : null;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

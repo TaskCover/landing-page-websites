@@ -30,6 +30,7 @@ import {
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
 import dayjs from "dayjs";
+import { State } from "linkifyjs";
 
 const initalPage = {
   pageIndex: 0,
@@ -204,6 +205,9 @@ const chatSlice = createSlice({
       state.stateSearchMessage = action.payload;
       state.messageInfo = [];
     },
+//     getUpdateConversation: (state, action) => {
+// log
+//     },
     clearConversation: (state) => {
       state.convention = [];
       state.conversationPaging = { ...initalPage, textSearch: "" };
