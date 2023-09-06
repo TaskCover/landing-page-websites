@@ -1,11 +1,11 @@
 import { Stack, TableRow } from "@mui/material";
 import { BodyCell } from "components/Table";
 import { Button, IconButton, Input, Text } from "components/shared";
-import React, { useContext, useMemo } from "react";
+import React, { cloneElement, useContext, useMemo } from "react";
 import { EditContext } from "../context/EditContext";
 import { Draggable } from "react-beautiful-dnd";
 import MoveDotIcon from "icons/MoveDotIcon";
-import { NS_SALES } from "constant/index";
+import { NS_COMMON, NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
 import ServiceItemAction from "./ServiceItemAction";
 import useItemAction from "components/sn-sales-detail/hooks/useItemAction";
@@ -15,20 +15,21 @@ import { Controller, useFormContext } from "react-hook-form";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import useHeaderServiceTable from "components/sn-sales-detail/hooks/useHeaderServiceTable";
 import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
+import { Action } from "../../TodoList/SubItem";
+import ConfirmDialog from "components/ConfirmDialog";
+import useToggle from "hooks/useToggle";
 
 interface IProps {
   index: number;
   sectionKey: string;
   service: Service;
+  onAction: (action: Action) => void;
 }
 
-const ServiceTableItem = ({ index, sectionKey, service }: IProps) => {
+const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
   const { isEdit } = useContext(EditContext);
   const { register, control, getValues } = useFormContext();
   const { columns } = useHeaderServiceTable();
-  const saleT = useTranslations(NS_SALES);
-  const { onAction } = useItemAction();
-
   const currency = getValues("currency");
 
   return (
@@ -251,6 +252,7 @@ const ServiceTableItem = ({ index, sectionKey, service }: IProps) => {
                   <ServiceItemAction
                     onChangeAction={onAction}
                     serviceId={service.id}
+                    index={index}
                   />
                 </BodyCell>
               )}

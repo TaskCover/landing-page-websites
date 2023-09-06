@@ -18,7 +18,14 @@ import SectionItemAction from "./SectionItemAction";
 import useItemAction from "components/sn-sales-detail/hooks/useItemAction";
 import useFetchServiceSection from "components/sn-sales-detail/hooks/useGetServiceSection";
 import { Service, ServiceSection } from "store/sales/reducer";
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import {
+  FieldValues,
+  UseFieldArrayAppend,
+  UseFieldArrayRemove,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from "react-hook-form";
 import { uuid } from "utils/index";
 
 interface IProps {
@@ -31,12 +38,17 @@ const ServiceTable = ({ section, index }: IProps) => {
   const { isEdit } = useContext(EditContext);
   const { serviceTableHeader } = useHeaderServiceTable();
   const { isMdSmaller } = useBreakpoint();
-  const { onAction } = useItemAction();
   const { control } = useFormContext();
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: `sectionsList.${index}.service`,
   });
+  const { onAction } = useItemAction(
+    index,
+    append as UseFieldArrayAppend<FieldValues, string>,
+    remove as UseFieldArrayRemove,
+    fields,
+  );
 
   const onDragService = (result) => {
     const { destination, source, draggableId } = result;
@@ -79,7 +91,7 @@ const ServiceTable = ({ section, index }: IProps) => {
                       />
                     </IconButton>
                   )} */}
-                  <Text variant="h4">Section {index}</Text>
+                  <Text variant="h4">Section {index + 1}</Text>
                   {isEdit && (
                     <SectionItemAction
                       sectionId={section.id}
@@ -133,6 +145,7 @@ const ServiceTable = ({ section, index }: IProps) => {
                       <div ref={provided.innerRef} {...provided.droppableProps}>
                         {fields?.map((item, serviceIndex) => (
                           <ServiceTableItem
+                            onAction={onAction}
                             service={item as Service}
                             index={serviceIndex}
                             key={item.id}

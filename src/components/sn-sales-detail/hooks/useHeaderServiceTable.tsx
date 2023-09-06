@@ -1,7 +1,7 @@
 import { CellProps } from "components/Table";
 import { NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
-import React, { useContext, useMemo, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { EditContext } from "../components/sn-service/context/EditContext";
 import { ServiceColumn } from "./useGetHeaderColumn";
 
@@ -19,6 +19,21 @@ const useHeaderServiceTable = () => {
   const salesT = useTranslations(NS_SALES);
   const { isEdit } = useContext(EditContext);
   const [columns, setColumns] = useState<ServiceColumn[]>([...defaultColumns]);
+
+  const mappingCol: CellProps[] = [
+    {
+      id: ServiceColumn.NAME,
+      value: salesT("detail.service.table.name"),
+      minWidth: 170,
+      align: "left",
+    },
+    {
+      id: ServiceColumn.DESCRIPTION,
+      value: salesT("detail.service.table.description"),
+      minWidth: 170,
+      align: "left",
+    },
+  ];
 
   const headerList: CellProps[] = useMemo(() => {
     const list: CellProps[] = [
@@ -133,6 +148,12 @@ const useHeaderServiceTable = () => {
         },
       },
     ];
+    const colList = columns.map((col) => {
+      const exitedCol = mappingCol.find((item) => item.id === col);
+      if (exitedCol) {
+        return exitedCol;
+      }
+    });
     if (isEdit) {
       list.push({
         id: "action",
@@ -141,18 +162,20 @@ const useHeaderServiceTable = () => {
       });
     }
     return list;
-  }, [salesT, isEdit, columns]);
+  }, [salesT, isEdit, JSON.stringify(columns)]);
 
-  const onShowColumn = (column: ServiceColumn) => {
+  const onShowColumn = useCallback((column: ServiceColumn) => {
     const isExisted = columns.includes(column);
+
     const newCols = [...columns];
     if (isExisted) {
       newCols.splice(newCols.indexOf(column), 1);
     } else {
       newCols.push(column);
     }
+
     setColumns(newCols);
-  };
+  }, []);
 
   return {
     serviceTableHeader: headerList,

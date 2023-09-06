@@ -15,17 +15,22 @@ import { Action } from "../../TodoList/SubItem";
 import { Text } from "components/shared";
 import CopyIcon from "icons/CopyIcon";
 import TrashIcon from "icons/TrashIcon";
+import ConfirmDialog from "components/ConfirmDialog";
+import useToggle from "hooks/useToggle";
 
 type ActionsProps = {
   serviceId: string;
-  onChangeAction: (action: Action) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onChangeAction: (action: Action, data?: any) => void;
+  index: number;
 };
 
 const ServiceItemAction = (props: ActionsProps) => {
-  const { serviceId, onChangeAction } = props;
+  const { serviceId, onChangeAction, index } = props;
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
+  const [isDelete, openConfirm, closeConfirm] = useToggle();
 
   const options = useMemo(() => {
     return [
@@ -44,39 +49,55 @@ const ServiceItemAction = (props: ActionsProps) => {
   }, [commonT]);
 
   const onAction = (action: Action) => {
+    if (action === Action.DELETE) {
+      return openConfirm;
+    }
     return () => {
-      onChangeAction(action);
+      onChangeAction(action, serviceId);
       buttonRef?.current?.click();
     };
   };
 
+  const onDelete = () => {
+    onChangeAction(Action.DELETE, index);
+    closeConfirm();
+  };
   return (
-    <PopoverLayout
-      ref={buttonRef}
-      label={
-        <IconButton>
-          <MoreSquareIcon sx={{ fontSize: 20 }} />
-        </IconButton>
-      }
-    >
-      <MenuList component={Box} sx={{ pb: 0 }}>
-        {options.map((option) => (
-          <MenuItem
-            component={ButtonBase}
-            onClick={onAction(option.value)}
-            sx={defaultSx.item}
-            key={option.value}
-          >
-            <Stack direction="row" spacing={1} alignItems="center">
-              {option.icon}
-              <Text variant="body2" color={option.color}>
-                {option.label}
-              </Text>
-            </Stack>
-          </MenuItem>
-        ))}
-      </MenuList>
-    </PopoverLayout>
+    <>
+      <PopoverLayout
+        ref={buttonRef}
+        label={
+          <IconButton>
+            <MoreSquareIcon sx={{ fontSize: 20 }} />
+          </IconButton>
+        }
+      >
+        <MenuList component={Box} sx={{ pb: 0 }}>
+          {options.map((option) => (
+            <MenuItem
+              component={ButtonBase}
+              onClick={onAction(option.value)}
+              sx={defaultSx.item}
+              key={option.value}
+            >
+              <Stack direction="row" spacing={1} alignItems="center">
+                {option.icon}
+                <Text variant="body2" color={option.color}>
+                  {option.label}
+                </Text>
+              </Stack>
+            </MenuItem>
+          ))}
+        </MenuList>
+      </PopoverLayout>
+      <ConfirmDialog
+        onSubmit={onDelete}
+        open={isDelete}
+        onClose={closeConfirm}
+        title={commonT("confirmDelete.title")}
+        content={commonT("confirmDelete.content")}
+      />
+    </>
   );
 };
 
