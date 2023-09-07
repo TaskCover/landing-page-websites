@@ -346,6 +346,10 @@ export interface UnReadMessageInfo {
   success: boolean;
 }
 
+export interface ReadMessageRequest extends AuthenRequestCommon {
+  roomId: string;
+}
+
 export enum STEP {
   IDLE,
   CONVENTION,

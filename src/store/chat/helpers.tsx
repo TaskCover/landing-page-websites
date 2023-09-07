@@ -7,6 +7,7 @@ import {
   MessageBodyRequest,
   MessageInfo,
 } from "./type";
+import { readMessages } from "./actions";
 
 export const useWSChat = () => {
   const { user } = useAuth();
@@ -35,6 +36,17 @@ export const useWSChat = () => {
       return await onGetConventionById(paramReq);
     },
     [onGetConventionById],
+  );
+
+  const handleReadMessages = useCallback(
+    async (roomId: string) => {
+      await readMessages({
+        authToken: token,
+        userId: userId || "",
+        roomId,
+      });
+    },
+    [token, userId],
   );
 
   const appendMessage = useCallback(
@@ -125,6 +137,7 @@ export const useWSChat = () => {
             data.msg === "changed"
           ) {
             appendMessage(data.fields.args[0]);
+            handleReadMessages(data.fields.args[0].rid);
           }
 
           if (
