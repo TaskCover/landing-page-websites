@@ -63,10 +63,8 @@ const SectionItemAction = (props: ActionsProps) => {
   }, [commonT, salesT]);
 
   const onAction = (action: Action) => {
-    return () => {
-      onChangeAction(action);
-      buttonRef?.current?.click();
-    };
+    onChangeAction(action);
+    buttonRef?.current?.click();
   };
 
   return (
@@ -99,7 +97,7 @@ const SectionItemAction = (props: ActionsProps) => {
         ))}
       </MenuList>
       <ConfirmDialog
-        onSubmit={onAction(Action.SECTION_DELETE)}
+        onSubmit={() => onAction(Action.SECTION_DELETE)}
         open={isDelete}
         onClose={onClose}
         title={commonT("confirmDelete.title")}

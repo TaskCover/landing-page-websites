@@ -29,6 +29,7 @@ import {
 import { uuid } from "utils/index";
 import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
+import { useGetHeaderColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 
 interface IProps {
   section: ServiceSection;
@@ -45,7 +46,7 @@ const ServiceTable = ({
 }: IProps) => {
   const salesT = useTranslations(NS_SALES);
   const { isEdit } = useContext(EditContext);
-  const { serviceTableHeader } = useHeaderServiceTable(index);
+  // const { serviceTableHeader } = useHeaderServiceTable(index);
   const { isMdSmaller } = useBreakpoint();
   const { control } = useFormContext();
   const { fields, append, remove, move } = useFieldArray({
@@ -53,7 +54,7 @@ const ServiceTable = ({
     name: `sectionsList.${index}.service`,
   });
   const commonT = useTranslations(NS_COMMON);
-
+  const { headerList } = useHeaderServiceTable(index);
   const { onAction } = useItemAction(
     index,
     append as UseFieldArrayAppend<FieldValues, string>,
@@ -144,14 +145,15 @@ const ServiceTable = ({
               </Stack>
               {/* Table layout desktop */}
               <TableLayout
-                headerList={serviceTableHeader}
-                maxHeight={860}
-                minWidth={1020}
-                px={2}
+                headerList={headerList}
+                maxHeight={920}
                 headerProps={{
-                  sx: { px: { xs: 2, md: 2 }, overflow: "auto" },
+                  sx: { px: { xs: 2, md: 2 } },
                 }}
                 position="relative"
+                sx={{
+                  overflow: "auto",
+                }}
               >
                 <DragDropContext onDragEnd={onDragService}>
                   <Droppable droppableId="droppableService">

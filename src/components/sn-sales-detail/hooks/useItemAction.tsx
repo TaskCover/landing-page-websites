@@ -20,7 +20,7 @@ const useItemAction = (
   fields: Record<"id", string>[],
 ) => {
   const { control } = useFormContext();
-  const { onShowColumn } = useHeaderServiceTable();
+  const { onShowColumn } = useHeaderServiceTable(index);
   const onDuplicate = (serviceId) => {
     const service = fields.find((item) => item.id === serviceId);
 

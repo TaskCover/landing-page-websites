@@ -17,6 +17,7 @@ import { formatDate } from "utils/index";
 import SaleService from "./components/sn-service";
 import useFetchServiceSection from "./hooks/useGetServiceSection";
 import useServiceHeader from "./hooks/useServiceHeader";
+import useHeaderServiceTable from "./hooks/useHeaderServiceTable";
 
 const SalesDetail = () => {
   const [tab, setTab] = useState<SALES_DETAIL_TAB>(SALES_DETAIL_TAB.FEED);
@@ -24,7 +25,7 @@ const SalesDetail = () => {
   const onChangeTab = (e: React.SyntheticEvent, newTab: SALES_DETAIL_TAB) => {
     setTab(newTab);
   };
-
+  const { serviceTableHeader } = useHeaderServiceTable();
   const id = getValues("id");
 
   useFetchDealDetail(id);
@@ -64,7 +65,10 @@ const SalesDetail = () => {
       todo_list,
       comments: comments,
       id,
-      sectionsList: serviceSectionList,
+      sectionsList: serviceSectionList.map((item) => ({
+        ...item,
+        columns: serviceTableHeader,
+      })),
     });
 
     return reset();
@@ -74,7 +78,7 @@ const SalesDetail = () => {
 
   return (
     <>
-      <FixedLayout maxHeight={840} overflow="auto">
+      <FixedLayout maxHeight={920} minWidth={1340} overflow="auto">
         <TabHeader />
         <TabList value={tab} onChange={onChangeTab} />
         <TabContext value={tab}>

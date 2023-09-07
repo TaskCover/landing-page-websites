@@ -75,7 +75,7 @@ export interface Service {
   qty: number;
   price: number;
   discount: number;
-  markup: 1;
+  markUp: number;
   tolBudget: number;
   createdAt: string;
   updatedAt: string;

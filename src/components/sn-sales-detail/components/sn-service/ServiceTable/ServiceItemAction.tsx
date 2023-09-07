@@ -105,7 +105,7 @@ export default ServiceItemAction;
 
 const defaultSx = {
   item: {
-    fontSize: 14,
+    fontSize: 16,
     color: "text.primary",
     lineHeight: "22px",
     width: "100%",
