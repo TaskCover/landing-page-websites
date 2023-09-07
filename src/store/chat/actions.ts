@@ -18,6 +18,7 @@ import {
   RenameGroupRequest,
   MessageSearchInfoRequest,
   UnReadMessageRequest,
+  ReadMessageRequest,
 } from "./type";
 import { AxiosError } from "axios";
 
@@ -173,6 +174,21 @@ export const getUnreadMessages = createAsyncThunk(
     }
   },
 );
+
+export const readMessages = async (paramReq: ReadMessageRequest) => {
+    try {
+      const response = await client.post("readMessages", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  };
 
 export const createDirectMessageGroup = createAsyncThunk(
   "chat/createDirectMessageGroup",
