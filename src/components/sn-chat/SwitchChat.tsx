@@ -26,8 +26,6 @@ const SwitchChat = () => {
         return <ChatListUser />;
       case STEP.CHAT_ONE:
         return <ConversationLayoutUser />;
-      case STEP.ADD_GROUP:
-        return <AddGroup />;
       case STEP.VIEW_DETAIL_USER:
         return (
           <ConversationLayout>
@@ -60,6 +58,8 @@ const SwitchChat = () => {
             <Conversation />
           </ConversationLayout>
         );
+      case STEP.ADD_MEMBER:
+          return <AddGroup />;
       default:
         return null;
     }

@@ -55,6 +55,7 @@ const AddGroup = () => {
     onCreateDirectMessageGroup,
     onAddMembers2Group,
     onFetchGroupMembersMember,
+    currStep
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -114,23 +115,28 @@ const AddGroup = () => {
   };
 
   const handleCreateGroup = async () => {
+    const memberAddGroup = Object.keys(employeeSelected).filter(
+      (item) => employeeSelected[item] === true,
+    )
     if (dataTransfer?.isNew) {
-      const result = await onCreateDirectMessageGroup({
-        groupName: (() => {
-          return (
-            Object.keys(employeeSelected)
-              .filter((item) => employeeSelected[item] === true)
-              ?.join("-")
-              .slice(0, 10) +
-            `...${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`
-          );
-        })(),
-        members: Object.keys(employeeSelected).filter(
-          (item) => employeeSelected[item] === true,
-        ),
-        type: "d",
-      });      
-      handleSuccess(result);
+      if(memberAddGroup.length > 0){
+        const result = await onCreateDirectMessageGroup({
+          groupName: (() => {
+            return (
+              Object.keys(employeeSelected)
+                .filter((item) => employeeSelected[item] === true)
+                ?.join("-")
+                .slice(0, 10) +
+              `...${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`
+            );
+          })(),
+          members: Object.keys(employeeSelected).filter(
+            (item) => employeeSelected[item] === true,
+          ),
+          type: "d",
+        });      
+        handleSuccess(result);
+      }
     } else {
       const users = Object.keys(employeeIdSelected).filter(
         (item) => employeeIdSelected[item] === true,
@@ -167,7 +173,11 @@ const AddGroup = () => {
             cursor: "pointer",
           }}
           onClick={() => {
-            onSetStep(prevStep);
+            if(currStep === STEP.ADD_GROUP) {
+              onSetStep(STEP.CONVENTION);
+            } else {
+              onSetStep(prevStep);
+            }
           }}
         >
           <ArrowDownIcon />
@@ -266,7 +276,11 @@ const AddGroup = () => {
           size="small"
           sx={defaultSx.button}
           onClick={() => {
-            onSetStep(prevStep);
+            if(currStep === STEP.ADD_GROUP) {
+              onSetStep(STEP.CONVENTION);
+            } else {
+              onSetStep(prevStep);
+            }
           }}
         >
           {commonT("form.cancel")}
