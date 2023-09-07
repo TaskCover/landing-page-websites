@@ -48,7 +48,7 @@ const Detail = () => {
   }
 
   const breadcrumbs = breadcrumbs_values.map((item, idx) => {
-    return <Typography key={idx+1} color="text.primary">{item}</Typography>
+    return <Typography key={idx + 1} color="text.primary" sx={{ fontSize: '20px', fontWeight: 600 }}>{item}</Typography>
   })
 
   const onChangeAction = (newAction?: Action) => {
