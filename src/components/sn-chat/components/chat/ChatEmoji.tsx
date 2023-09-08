@@ -23,7 +23,7 @@ const ChatEmoji = ({ onChange }: ChatEmojiProps) => {
   const [anchorEl, setAnchorEl] = useState<SVGSVGElement | null>(null);
   const [open, setOpen] = useState(false);
   const handleOpen = (event: React.MouseEvent<SVGSVGElement>) => {
-    setOpen((prev) => !prev);
+    setOpen(true);
     setAnchorEl(event.currentTarget);
   };
 
@@ -32,9 +32,7 @@ const ChatEmoji = ({ onChange }: ChatEmojiProps) => {
     setAnchorEl(null);
   };
 
-  const ref = useOnClickOutside(handleClose, null, [
-    anchorEl as unknown as HTMLElement,
-  ]);
+  const ref = useOnClickOutside(handleClose);
 
   return (
     <Box position="relative" display="flex">
@@ -43,7 +41,7 @@ const ChatEmoji = ({ onChange }: ChatEmojiProps) => {
           fill: "transparent",
           cursor: "pointer",
         }}
-        onClick={handleOpen}
+        onMouseDown={handleOpen}
       />
       <Popper
         ref={ref}
