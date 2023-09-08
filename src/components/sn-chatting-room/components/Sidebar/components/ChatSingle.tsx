@@ -1,12 +1,12 @@
 import { Avatar, Box } from "@mui/material";
 import React from "react";
 interface Props {
-  name: string;
-  currentMess: string;
+  name?: string;
+  currentMess?: string;
   avatar?: string;
-  timeSendMess: string;
+  timeSendMess?: string;
   isOnline?: boolean;
-  isHasNewMessage: boolean;
+  isHasNewMessage?: boolean;
   isChoose?: boolean;
 }
 
@@ -42,7 +42,15 @@ const ChatSingle: React.FC<Props> = ({
             position: "relative",
           }}
         >
-          <Avatar src={avatar} sx={{ marginRight: "8px", width: '56px', height: '56px', borderRadius: '10px' }}>
+          <Avatar
+            src={avatar}
+            sx={{
+              marginRight: "8px",
+              width: "56px",
+              height: "56px",
+              borderRadius: "10px",
+            }}
+          >
             N
           </Avatar>
 

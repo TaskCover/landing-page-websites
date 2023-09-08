@@ -3,21 +3,22 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { Text } from "components/shared";
+import { HeaderMobileProps } from "components/sn-chatting-room/utils/type";
 
-interface Props {
-  children?: React.ReactNode;
-  prefix?: React.ReactNode;
-  suffix?: React.ReactNode;
-  title?: string;
-}
-
-const HeaderMobile: React.FC<Props> = ({ children, prefix, suffix, title }) => {
+const HeaderMobile: React.FC<HeaderMobileProps> = ({
+  children,
+  prefix,
+  suffix,
+  title,
+  backgroundColor,
+}) => {
+  const defaultBackgroundColor = backgroundColor ? backgroundColor : "#3699FF";
   return (
     <>
       <Box
         sx={{
           display: "flex",
-          backgroundColor: "#3699FF",
+          backgroundColor: defaultBackgroundColor,
           alignItems: "center",
           justifyContent: "space-between",
           width: "100%",

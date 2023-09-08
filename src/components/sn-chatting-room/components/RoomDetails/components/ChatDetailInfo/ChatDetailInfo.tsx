@@ -1,7 +1,7 @@
 import { Drawer, Box } from "@mui/material";
 import ChatDetailInfoHeader from "./ChatDetailInfoHeader";
 import ChatDetailInfoAvatar from "./ChatDetailInfoAvatar";
-import ChatDetailInfoName from "./ChatDetailInfoName";
+// import ChatDetailInfoName from "./ChatDetailInfoName";
 import ChatDetailInfoMenu from "./ChatDetailInfoMenu";
 
 interface ChatDetailInfoProps {
@@ -41,7 +41,7 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({ isOpen, onClose }) => {
       >
         <ChatDetailInfoHeader onClose={onClose} />
         <ChatDetailInfoAvatar />
-        <ChatDetailInfoName />
+        {/* <ChatDetailInfoName /> */}
         <ChatDetailInfoMenu />
       </Box>
     </Drawer>

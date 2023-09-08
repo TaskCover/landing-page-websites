@@ -5,12 +5,39 @@ import React from "react";
 import HeaderMobile from "./components/HeaderMobile";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import { HeaderMobileProps, MobileScreenType } from "./utils/type";
+import { MobileScreen } from "./utils/constants";
+import { useParams, usePathname } from "next/navigation";
 
 interface Props {
   children: React.ReactNode;
 }
+
 const styleIcon = { color: "white", fontSize: "24px", cursor: "pointer" };
 const ChattingRoomMobileLayout: React.FC<Props> = ({ children }) => {
+  const params = useParams();
+  const pathName = usePathname();
+  console.log({
+    params,
+    pathName,
+  });
+
+  const detectPropsWithScreen = () => {
+    const propsScreenHandler: Partial<{
+      [key in MobileScreenType]: () => HeaderMobileProps;
+    }> = {
+      [MobileScreen.CHAT]: () => {
+        return {
+          title: "Chat",
+          prefix: <ArrowBackIosNewIcon sx={styleIcon} />,
+          suffix: <ControlPointIcon sx={styleIcon} />,
+        };
+      },
+    };
+
+    return propsScreenHandler?.["CHAT"]?.();
+  };
+
   return (
     <Box
       sx={{
@@ -20,11 +47,7 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({ children }) => {
         alignItems: "center",
       }}
     >
-      <HeaderMobile
-        title="Chat"
-        prefix={<ArrowBackIosNewIcon sx={styleIcon} />}
-        suffix={<ControlPointIcon sx={styleIcon} />}
-      />
+      <HeaderMobile {...detectPropsWithScreen()} />
       {children}
     </Box>
   );
