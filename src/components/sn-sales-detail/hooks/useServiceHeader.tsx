@@ -21,7 +21,7 @@ const useServiceHeader = () => {
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
-
+  const { sectionColumns, onSetColumns } = useSalesService();
   const {
     getValues,
     formState: { dirtyFields },
@@ -103,6 +103,10 @@ const useServiceHeader = () => {
           }
           return prev;
         }, []) || [];
+      console.log(
+        "🚀 ~ file: useServiceHeader.tsx:90 ~ deletedList:",
+        deletedList,
+      );
 
       const isSuccessful = await Promise.all([
         ...updatedList,
@@ -132,10 +136,17 @@ const useServiceHeader = () => {
   );
 
   const onCancel = useCallback(() => {
+    const oldColumns = [...sectionColumns];
     setEdit && setEdit(false);
     reset({
       ...getValues(),
       sectionsList: serviceSectionList,
+    });
+
+    oldColumns.forEach((item, index) => {
+      item.columns.forEach((column) => {
+        onSetColumns(index, column);
+      });
     });
   }, [serviceSectionList]);
 

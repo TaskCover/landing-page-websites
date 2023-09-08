@@ -2,7 +2,7 @@ import { Button, Stack } from "@mui/material";
 import { NS_COMMON } from "constant/index";
 import EditIcon from "icons/EditIcon";
 import { useTranslations } from "next-intl";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { EditContext } from "../../context/EditContext";
 import useBreakpoint from "hooks/useBreakpoint";
 import useServiceHeader from "../../../../hooks/useServiceHeader";
@@ -15,8 +15,8 @@ const ServiceHeader = () => {
   const { isEdit, setEdit } = useContext(EditContext);
   const { handleSubmit, getValues } = useFormContext();
   const { onSaveChange, onCancel } = useServiceHeader();
-
   const sectionsList = getValues("sectionsList");
+
   return (
     <Stack
       direction="row"

@@ -346,7 +346,7 @@ export const deleteSection = createAsyncThunk(
   async ({ sectionId }: { sectionId: string }) => {
     try {
       const response = await client.delete(
-        StringFormat(Endpoint.SALES_SERVICE_DETAIL, { sectionId }),
+        StringFormat(Endpoint.SALES_SECTION_DETAIL, { id: sectionId }),
         {
           baseURL: SALE_API_URL,
         },

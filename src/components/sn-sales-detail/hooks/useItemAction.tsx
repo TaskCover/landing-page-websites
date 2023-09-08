@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Action } from "../components/TodoList/SubItem";
 import {
   FieldValue,
@@ -8,9 +8,23 @@ import {
   useFieldArray,
   useFormContext,
 } from "react-hook-form";
-import useHeaderServiceTable from "./useHeaderServiceTable";
 import { ServiceColumn } from "./useGetHeaderColumn";
 import { useSalesService } from "store/sales/selectors";
+
+const defaultColumns = [
+  ServiceColumn.NAME,
+  ServiceColumn.DESCRIPTION,
+  ServiceColumn.SERVICE_TYPE,
+  ServiceColumn.BILL_TYPE,
+  ServiceColumn.UNIT,
+  ServiceColumn.ESTIMATE,
+  ServiceColumn.QUANTITY,
+  ServiceColumn.PRICE,
+  ServiceColumn.DISCOUNT,
+  ServiceColumn.MARK_UP,
+  ServiceColumn.TOTAL_BUGET,
+  ServiceColumn.ACTION,
+];
 
 const useItemAction = (
   index: number,
@@ -19,8 +33,8 @@ const useItemAction = (
   onRemoveSection: () => void,
   fields: Record<"id", string>[],
 ) => {
-  const { control } = useFormContext();
-  const { onShowColumn } = useHeaderServiceTable(index);
+  const { control, setValue, getValues } = useFormContext();
+  const { onSetColumns, sectionColumns } = useSalesService();
   const onDuplicate = (serviceId) => {
     const service = fields.find((item) => item.id === serviceId);
 
@@ -28,7 +42,6 @@ const useItemAction = (
   };
   const onRemove = (name, serviceIndex) => {
     remove(serviceIndex);
-    console.log("remove");
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,19 +57,19 @@ const useItemAction = (
         onRemoveSection();
         break;
       case Action.SHOW_DESCRIPTION:
-        onShowColumn(ServiceColumn.DESCRIPTION);
+        onSetColumns(index, ServiceColumn.DESCRIPTION);
         break;
       case Action.SHOW_DISCOUNT:
-        onShowColumn(ServiceColumn.DISCOUNT);
+        onSetColumns(index, ServiceColumn.DISCOUNT);
         break;
       case Action.SHOW_ESTIMATE:
-        onShowColumn(ServiceColumn.ESTIMATE);
+        onSetColumns(index, ServiceColumn.ESTIMATE);
         break;
       case Action.SHOW_FIXED_PRICE:
-        onShowColumn(ServiceColumn.PRICE);
+        onSetColumns(index, ServiceColumn.PRICE);
         break;
       case Action.SHOW_MARKUP:
-        onShowColumn(ServiceColumn.MARK_UP);
+        onSetColumns(index, ServiceColumn.MARK_UP);
         break;
       default:
     }

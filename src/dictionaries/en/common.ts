@@ -93,6 +93,8 @@ export const CommonLang: CommonDictionary = {
     title: "Confirm delete",
     content: "Are you sure to delete?",
   },
+  show: "Show",
+  hide: "Hide",
   upgradeAccount: "Upgrade account",
   clickGoDetail: "Click to go to detail {name}",
   waiting: "Waiting",

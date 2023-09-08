@@ -26,8 +26,9 @@ import {
 } from "./actions";
 import moment from "moment";
 import { useSnackbar } from "store/app/selectors";
-import { ServiceSection, Todo } from "./reducer";
+import { ServiceSection, Todo, setColumn } from "./reducer";
 import Item from "components/sn-cost-history/Item";
+import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 
 export const useSales = () => {
   const { onAddSnackbar } = useSnackbar();
@@ -283,11 +284,10 @@ export const useSalesTodo = () => {
 };
 
 export const useSalesComment = () => {
-  const { saleDetail, commentsStatus, commentsError } = useAppSelector(
-    (state) => state.sales,
-    shallowEqual,
-  );
+  const { saleDetail, commentsStatus, commentsError, sectionColumns } =
+    useAppSelector((state) => state.sales, shallowEqual);
   const dispatch = useAppDispatch();
+
   const salesComment = useMemo(() => {
     if (saleDetail) {
       return saleDetail.comments;
@@ -322,8 +322,13 @@ export const useSalesComment = () => {
 
 export const useSalesService = () => {
   const { saleDetail } = useSaleDetail();
-  const { serviceSectionList, serviceSection, servicesError, servicesStatus } =
-    useAppSelector((state) => state.sales, shallowEqual);
+  const {
+    serviceSectionList,
+    serviceSection,
+    servicesError,
+    servicesStatus,
+    sectionColumns,
+  } = useAppSelector((state) => state.sales, shallowEqual);
   const dispatch = useAppDispatch();
 
   const isIdle = useMemo(
@@ -380,6 +385,17 @@ export const useSalesService = () => {
     [dispatch],
   );
 
+  const onSetColumns = (sectionIndex: number, col: ServiceColumn) => {
+    const columns = [...sectionColumns[sectionIndex].columns];
+    const isExisted = columns.includes(col);
+    if (isExisted) {
+      columns.splice(columns.indexOf(col), 1);
+    } else {
+      columns.push(col);
+    }
+
+    dispatch(setColumn({ sectionIndex, columns }));
+  };
   const onDeleteSection = useCallback(
     async (sectionId: string) => {
       await dispatch(deleteSection({ sectionId }));
@@ -393,9 +409,11 @@ export const useSalesService = () => {
     isSuccessful,
     isIdle,
     isFetching,
+    sectionColumns,
     onGetService,
     onCreateSection,
     onUpdateSection,
+    onSetColumns,
     onDeleteSection,
   };
 };

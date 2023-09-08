@@ -22,6 +22,8 @@ import {
   updateTodo,
 } from "./actions";
 import build from "next/dist/build";
+import { CellProps } from "components/Table";
+import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 
 export interface Todo {
   id: string;
@@ -85,13 +87,17 @@ export interface Service {
 export interface ServiceSection {
   id: string;
   start_date: string;
-  service: Service[];
+  servie: Service[];
   createdAt: string;
   updatedAt: string;
   creator: string;
   deal: string;
 }
 
+export interface SectionColumnsProps {
+  id: string;
+  columns: ServiceColumn[];
+}
 export interface SaleState {
   sales: Sales[];
   salesStatus: DataStatus;
@@ -115,8 +121,14 @@ export interface SaleState {
   serviceSection: ServiceSection | null;
   servicesStatus: DataStatus;
   servicesError?: string;
-}
 
+  sectionColumns: SectionColumnsProps[];
+}
+const defaultCol = [
+  {
+    id: ServiceColumn.NAME,
+  },
+];
 const initState: SaleState = {
   sales: [],
   salesStatus: DataStatus.IDLE,
@@ -142,12 +154,18 @@ const initState: SaleState = {
   serviceSection: null,
   servicesStatus: DataStatus.IDLE,
   servicesError: undefined,
+
+  sectionColumns: [],
 };
 
 const salesSlice = createSlice({
   name: "sales",
   initialState: initState,
   reducers: {
+    setColumn: (state, action) => {
+      const { sectionIndex, columns } = action.payload;
+      state.sectionColumns[sectionIndex].columns = [...columns];
+    },
     reset: () => initState,
   },
   extraReducers: (builder) => {
@@ -200,10 +218,10 @@ const salesSlice = createSlice({
       }
     });
     builder.addCase(updateDeal.rejected, (state, action) => {
-      state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+      state.saleDetailError = action.error.message ?? AN_ERROR_TRY_AGAIN;
     });
     builder.addCase(createDeal.rejected, (state, action) => {
-      state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+      state.saleDetailError = action.error.message ?? AN_ERROR_TRY_AGAIN;
     });
     builder.addCase(getDetailDeal.pending, (state, action) => {
       state.salesStatus = DataStatus.LOADING;
@@ -213,7 +231,7 @@ const salesSlice = createSlice({
       state.salesStatus = DataStatus.SUCCEEDED;
     });
     builder.addCase(getDetailDeal.rejected, (state, action) => {
-      state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+      state.saleDetailError = action.error.message ?? AN_ERROR_TRY_AGAIN;
     });
     builder.addCase(createTodo.pending, (state, action) => {
       state.salesTodoStatus = DataStatus.LOADING;
@@ -253,6 +271,24 @@ const salesSlice = createSlice({
     builder.addCase(getServices.fulfilled, (state, action) => {
       state.serviceSectionList = action.payload.sections;
       state.servicesStatus = DataStatus.SUCCEEDED;
+      state.sectionColumns = action.payload.sections.map((section) => {
+        return {
+          id: section.id,
+          columns: [
+            ServiceColumn.NAME,
+            ServiceColumn.DESCRIPTION,
+            ServiceColumn.SERVICE_TYPE,
+            ServiceColumn.BILL_TYPE,
+            ServiceColumn.UNIT,
+            ServiceColumn.ESTIMATE,
+            ServiceColumn.QUANTITY,
+            ServiceColumn.PRICE,
+            ServiceColumn.DISCOUNT,
+            ServiceColumn.MARK_UP,
+            ServiceColumn.TOTAL_BUGET,
+          ],
+        };
+      });
     });
     builder.addCase(getServices.rejected, (state, action) => {
       state.servicesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
@@ -283,3 +319,4 @@ const salesSlice = createSlice({
 });
 
 export const salesReducer = salesSlice.reducer;
+export const { setColumn, reset } = salesSlice.actions;

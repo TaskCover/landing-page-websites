@@ -1,7 +1,13 @@
 import { CellProps, TableLayout } from "components/Table";
 import { NS_COMMON, NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
-import React, { useContext, useMemo } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import ServiceTableItem from "./ServiceTableItemDesktop";
 import { Stack, TableBody } from "@mui/material";
 import { Button, IconButton, Text } from "components/shared";
@@ -9,7 +15,6 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import MoveDotIcon from "icons/MoveDotIcon";
 import { EditContext } from "../context/EditContext";
 import PlusIcon from "icons/PlusIcon";
-import useHeaderServiceTable from "components/sn-sales-detail/hooks/useHeaderServiceTable";
 import MoreDotIcon from "icons/MoreDotIcon";
 import useBreakpoint from "hooks/useBreakpoint";
 import ServiceTableItemMobile from "./ServiceTableItemMobile";
@@ -29,7 +34,11 @@ import {
 import { uuid } from "utils/index";
 import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
-import { useGetHeaderColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
+import {
+  ServiceColumn,
+  useGetHeaderColumn,
+} from "components/sn-sales-detail/hooks/useGetHeaderColumn";
+import { useSalesService } from "store/sales/selectors";
 
 interface IProps {
   section: ServiceSection;
@@ -46,15 +55,15 @@ const ServiceTable = ({
 }: IProps) => {
   const salesT = useTranslations(NS_SALES);
   const { isEdit } = useContext(EditContext);
-  // const { serviceTableHeader } = useHeaderServiceTable(index);
   const { isMdSmaller } = useBreakpoint();
+  const { columns: defaultColumns } = useGetHeaderColumn();
   const { control } = useFormContext();
   const { fields, append, remove, move } = useFieldArray({
     control,
     name: `sectionsList.${index}.service`,
   });
+  const { sectionColumns } = useSalesService();
   const commonT = useTranslations(NS_COMMON);
-  const { headerList } = useHeaderServiceTable(index);
   const { onAction } = useItemAction(
     index,
     append as UseFieldArrayAppend<FieldValues, string>,
@@ -81,9 +90,25 @@ const ServiceTable = ({
     });
   };
 
-  // const onAddRowByRateCard = () => {
-  //   console.log("add row by rate card");
-  // };
+  const headerList = useMemo(() => {
+    const list = defaultColumns.reduce((prev, item) => {
+      const sections = sectionColumns[index];
+
+      const isExisted = sections?.columns.includes(item.id as ServiceColumn);
+      if (isExisted) {
+        prev.push(item);
+      }
+      return prev;
+    }, [] as CellProps[]);
+    if (isEdit) {
+      list.push({
+        id: ServiceColumn.ACTION,
+        value: "",
+        width: "4%",
+      });
+    }
+    return list;
+  }, [sectionColumns, isEdit]);
 
   return (
     <Stack py={2}>
@@ -108,6 +133,7 @@ const ServiceTable = ({
                   <Text variant="h4">Section {index + 1}</Text>
                   {isEdit && (
                     <SectionItemAction
+                      sectionIndex={index}
                       sectionId={section.id}
                       onChangeAction={onAction}
                     />
@@ -165,6 +191,7 @@ const ServiceTable = ({
                             service={item as Service}
                             index={serviceIndex}
                             key={item.id}
+                            sectionIndex={index}
                             sectionKey={`sectionsList.${index}.service`}
                           />
                         ))}

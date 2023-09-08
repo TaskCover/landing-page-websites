@@ -1,35 +1,45 @@
 import { Stack, TableRow } from "@mui/material";
 import { BodyCell } from "components/Table";
 import { Button, IconButton, Input, Select, Text } from "components/shared";
-import React, { cloneElement, useContext, useMemo } from "react";
+import React, { cloneElement, useCallback, useContext, useMemo } from "react";
 import { EditContext } from "../context/EditContext";
 import { Draggable } from "react-beautiful-dnd";
 import MoveDotIcon from "icons/MoveDotIcon";
 import ServiceItemAction from "./ServiceItemAction";
-import useItemAction from "components/sn-sales-detail/hooks/useItemAction";
 import { Service } from "store/sales/reducer";
 import { formatEstimateTime, formatNumber } from "utils/index";
 import { Controller, useFormContext } from "react-hook-form";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
-import useHeaderServiceTable from "components/sn-sales-detail/hooks/useHeaderServiceTable";
 import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 import { Action } from "../../TodoList/SubItem";
-import ConfirmDialog from "components/ConfirmDialog";
-import useToggle from "hooks/useToggle";
-import { Dropdown } from "components/Filters";
 import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
+import { useSalesService } from "store/sales/selectors";
 
 interface IProps {
   index: number;
   sectionKey: string;
   service: Service;
+  sectionIndex: number;
   onAction: (action: Action) => void;
 }
 
-const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
+const ServiceTableItem = ({
+  index,
+  sectionKey,
+  service,
+  sectionIndex,
+  onAction,
+}: IProps) => {
   const { isEdit } = useContext(EditContext);
   const { register, control, getValues } = useFormContext();
   const currency = getValues("currency");
+  const { sectionColumns } = useSalesService();
+
+  const isShowCols = useCallback(
+    (cols: ServiceColumn) =>
+      sectionColumns[sectionIndex].columns.includes(cols),
+    [sectionColumns],
+  );
 
   return (
     <Draggable draggableId={service?.id} index={index}>
@@ -83,32 +93,34 @@ const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
                   <Text variant="body2">{service.name}</Text>
                 )}
               </BodyCell>
-              <BodyCell
-                sx={{
-                  ...defaultSx.item,
-                }}
-                align="left"
-              >
-                {isEdit ? (
-                  <Controller
-                    control={control}
-                    {...register(`${sectionKey}.${index}.desc`)}
-                    render={({ field }) => (
-                      <Input
-                        multiline
-                        maxRows={2}
-                        minRows={1}
-                        {...field}
-                        sx={{
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                  />
-                ) : (
-                  <Text variant="body2">{service.desc}</Text>
-                )}
-              </BodyCell>
+              {isShowCols(ServiceColumn.DESCRIPTION) && (
+                <BodyCell
+                  sx={{
+                    ...defaultSx.item,
+                  }}
+                  align="left"
+                >
+                  {isEdit ? (
+                    <Controller
+                      control={control}
+                      {...register(`${sectionKey}.${index}.desc`)}
+                      render={({ field }) => (
+                        <Input
+                          multiline
+                          maxRows={2}
+                          minRows={1}
+                          {...field}
+                          sx={{
+                            width: "100%",
+                          }}
+                        />
+                      )}
+                    />
+                  ) : (
+                    <Text variant="body2">{service.desc}</Text>
+                  )}
+                </BodyCell>
+              )}
               <BodyCell
                 sx={{
                   ...defaultSx.item,
@@ -191,37 +203,39 @@ const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
                 )}
               </BodyCell>
 
-              <BodyCell
-                sx={{
-                  ...defaultSx.item,
-                }}
-                align="left"
-              >
-                {isEdit ? (
-                  <Controller
-                    control={control}
-                    defaultValue={0}
-                    {...register(`${sectionKey}.${index}.estimate`)}
-                    render={({ field }) => (
-                      <Input
-                        helperText="h"
-                        type="number"
-                        InputProps={{
-                          inputProps: {
-                            min: 0,
-                          },
-                        }}
-                        {...field}
-                        sx={{
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                  />
-                ) : (
-                  <Text variant="body2">{`${service.estimate || 0}h`}</Text>
-                )}
-              </BodyCell>
+              {isShowCols(ServiceColumn.ESTIMATE) && (
+                <BodyCell
+                  sx={{
+                    ...defaultSx.item,
+                  }}
+                  align="left"
+                >
+                  {isEdit ? (
+                    <Controller
+                      control={control}
+                      defaultValue={0}
+                      {...register(`${sectionKey}.${index}.estimate`)}
+                      render={({ field }) => (
+                        <Input
+                          helperText="h"
+                          type="number"
+                          InputProps={{
+                            inputProps: {
+                              min: 0,
+                            },
+                          }}
+                          {...field}
+                          sx={{
+                            width: "100%",
+                          }}
+                        />
+                      )}
+                    />
+                  ) : (
+                    <Text variant="body2">{`${service.estimate || 0}h`}</Text>
+                  )}
+                </BodyCell>
+              )}
 
               <BodyCell
                 sx={{
@@ -256,111 +270,117 @@ const ServiceTableItem = ({ index, sectionKey, service, onAction }: IProps) => {
                   </Text>
                 )}
               </BodyCell>
-              <BodyCell
-                sx={{
-                  ...defaultSx.item,
-                }}
-                align="left"
-              >
-                {isEdit ? (
-                  <Controller
-                    control={control}
-                    defaultValue={0}
-                    {...register(`${sectionKey}.${index}.price`)}
-                    render={({ field }) => (
-                      <Input
-                        helperText={`${CURRENCY_SYMBOL[currency]}/pc`}
-                        type="number"
-                        InputProps={{
-                          inputProps: {
-                            min: 0,
-                          },
-                        }}
-                        {...field}
-                        sx={{
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                  />
-                ) : (
-                  <Text variant="body2">
-                    {formatNumber(service.price, {
-                      prefix: CURRENCY_SYMBOL[currency],
-                      suffix: "/pc",
-                      numberOfFixed: 2,
-                    })}
-                  </Text>
-                )}
-              </BodyCell>
-              <BodyCell
-                sx={{
-                  ...defaultSx.item,
-                }}
-                align="left"
-              >
-                {isEdit ? (
-                  <Controller
-                    control={control}
-                    defaultValue={0}
-                    {...register(`${sectionKey}.${index}.discount`)}
-                    render={({ field }) => (
-                      <Input
-                        helperText="%"
-                        type="number"
-                        InputProps={{
-                          inputProps: {
-                            min: 0,
-                            max: 100,
-                          },
-                        }}
-                        {...field}
-                        sx={{
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                  />
-                ) : (
-                  <Text variant="body2">
-                    {formatNumber(service.discount, { suffix: "%" })}
-                  </Text>
-                )}
-              </BodyCell>
+              {isShowCols(ServiceColumn.PRICE) && (
+                <BodyCell
+                  sx={{
+                    ...defaultSx.item,
+                  }}
+                  align="left"
+                >
+                  {isEdit ? (
+                    <Controller
+                      control={control}
+                      defaultValue={0}
+                      {...register(`${sectionKey}.${index}.price`)}
+                      render={({ field }) => (
+                        <Input
+                          helperText={`${CURRENCY_SYMBOL[currency]}/pc`}
+                          type="number"
+                          InputProps={{
+                            inputProps: {
+                              min: 0,
+                            },
+                          }}
+                          {...field}
+                          sx={{
+                            width: "100%",
+                          }}
+                        />
+                      )}
+                    />
+                  ) : (
+                    <Text variant="body2">
+                      {formatNumber(service.price, {
+                        prefix: CURRENCY_SYMBOL[currency],
+                        suffix: "/pc",
+                        numberOfFixed: 2,
+                      })}
+                    </Text>
+                  )}
+                </BodyCell>
+              )}
+              {isShowCols(ServiceColumn.DISCOUNT) && (
+                <BodyCell
+                  sx={{
+                    ...defaultSx.item,
+                  }}
+                  align="left"
+                >
+                  {isEdit ? (
+                    <Controller
+                      control={control}
+                      defaultValue={0}
+                      {...register(`${sectionKey}.${index}.discount`)}
+                      render={({ field }) => (
+                        <Input
+                          helperText="%"
+                          type="number"
+                          InputProps={{
+                            inputProps: {
+                              min: 0,
+                              max: 100,
+                            },
+                          }}
+                          {...field}
+                          sx={{
+                            width: "100%",
+                          }}
+                        />
+                      )}
+                    />
+                  ) : (
+                    <Text variant="body2">
+                      {formatNumber(service.discount, { suffix: "%" })}
+                    </Text>
+                  )}
+                </BodyCell>
+              )}
 
-              <BodyCell
-                sx={{
-                  ...defaultSx.item,
-                }}
-                align="left"
-              >
-                {isEdit ? (
-                  <Controller
-                    control={control}
-                    {...register(`${sectionKey}.${index}.markUp`)}
-                    render={({ field }) => (
-                      <Input
-                        helperText="%"
-                        {...field}
-                        InputProps={{
-                          inputProps: {
-                            min: 0,
-                            max: 100,
-                          },
-                        }}
-                        type="number"
-                        sx={{
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                  />
-                ) : (
-                  <Text variant="body2">
-                    {formatNumber(service.markUp, { suffix: "%" })}
-                  </Text>
-                )}
-              </BodyCell>
+              {isShowCols(ServiceColumn.MARK_UP) && (
+                <BodyCell
+                  sx={{
+                    ...defaultSx.item,
+                  }}
+                  align="left"
+                >
+                  {isEdit ? (
+                    <Controller
+                      control={control}
+                      {...register(`${sectionKey}.${index}.markUp`)}
+                      render={({ field }) => (
+                        <Input
+                          helperText="%"
+                          {...field}
+                          InputProps={{
+                            inputProps: {
+                              min: 0,
+                              max: 100,
+                            },
+                          }}
+                          type="number"
+                          sx={{
+                            width: "100%",
+                          }}
+                        />
+                      )}
+                    />
+                  ) : (
+                    <Text variant="body2">
+                      {formatNumber(service.markUp, { suffix: "%" })}
+                    </Text>
+                  )}
+                </BodyCell>
+              )}
               <BodyCell
                 sx={{
                   ...defaultSx.item,

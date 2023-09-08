@@ -27,6 +27,7 @@ import CellHeader, { HEIGHT_HEADER } from "./HeaderCell";
 import useWindowSize from "hooks/useWindowSize";
 import { useSidebar } from "store/app/selectors";
 import { useTranslations } from "next-intl";
+import { uuid } from "utils/index";
 
 export type CellProps = TableCellProps & {
   value: string | React.ReactNode;
@@ -146,7 +147,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
             <TableRow>
               {headerList.map(({ sx: sxItem, ...item }, index) => (
                 <CellHeader
-                  key={index}
+                  key={uuid()}
                   {...item}
                   width={item.width ?? `${100 / nOfColumnsNotWidthFixed}%`}
                   sx={
