@@ -144,8 +144,10 @@ const ChatEditor = (props: EditorProps) => {
       if (inputMediaRef.current) {
         inputMediaRef.current.value = "";
       }
+      quillEditor?.focus();
+
     },
-    [files, onChangeFiles],
+    [files, onChangeFiles, quillEditor],
   );
 
   const onRemove = useCallback(
