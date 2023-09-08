@@ -263,7 +263,7 @@ const AccountInfoHeader = ({
                   color: "white",
                 }}
                 onClick={() => {
-                  onSetStep(STEP.ADD_GROUP);
+                  onSetStep(STEP.ADD_MEMBER);
                 }}
               >
                 <ProfileAdd />
