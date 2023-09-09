@@ -1,5 +1,6 @@
 import { memo, useEffect, useState, useRef, useMemo } from "react";
 import { DrawerProps, Drawer, drawerClasses, Stack, Box, Typography, Breadcrumbs, OutlinedInput } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { IconButton, Input, Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import { NS_PROJECT } from "constant/index";
@@ -18,6 +19,7 @@ import MoveOtherTask from "./components/SubTasksOfTask/MoveOtherTask";
 
 const Detail = () => {
   const { task, taskParent, onUpdateTaskDetail, onUpdateTask } = useTaskDetail();
+  const taskLists = useAppSelector((state) => state.project.tasks);
   const scrollEndRef = useRef<HTMLDivElement | null>(null);
   const [action, setAction] = useState<Action | undefined>();
   const projectT = useTranslations(NS_PROJECT);
@@ -47,8 +49,34 @@ const Detail = () => {
     breadcrumbs_values[1] = task.name;
   }
 
+  const onGotoTask = async () => {
+    const taskList = taskLists.filter(item => item.id === task.taskListId)
+
+    if (!taskList[0]) return
+
+    const taskOfSubtask = taskList[0].tasks.filter(item => item.id === task.taskId)
+
+    if (!taskOfSubtask[0]) return
+
+    onUpdateTaskDetail({ ...taskOfSubtask[0], taskId: taskOfSubtask[0].id, taskListId: taskList[0].id });
+  };
+
   const breadcrumbs = breadcrumbs_values.map((item, idx) => {
-    return <Typography key={idx + 1} color="text.primary" sx={{ fontSize: '20px', fontWeight: 600 }}>{item}</Typography>
+    return (
+      <Typography
+        key={idx + 1}
+        color="text.primary"
+        sx={{
+          fontSize: '20px',
+          fontWeight: idx !== 2 ? '500' : '400',
+          color: idx === 0 ? 'grey.300' : 'text.primary',
+          cursor: idx === 1 ? 'pointer' : 'unset'
+        }}
+        onClick={idx === 1 ? onGotoTask : undefined}
+      >
+        {item}
+      </Typography>
+    )
   })
 
   const onChangeAction = (newAction?: Action) => {
