@@ -4,7 +4,7 @@ import { IconButton, Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_PROJECT, STATUS_OPTIONS } from "constant/index";
 import { formatNumber, getMessageErrorByAPI } from "utils/index";
-import { AssignerFilter, MoreList, Selected } from "./components";
+import { AssignerFilter, MoreList, MoreActionList, Selected } from "./components";
 import { Date, Dropdown } from "components/Filters";
 import { useSnackbar } from "store/app/selectors";
 import { useTaskDetail } from "store/project/selectors";
@@ -166,7 +166,8 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
             },
           }}
         />
-        <MoreList sx={{ display: { xs: "none", md: "flex" } }} {...props} />
+        <MoreActionList sx={{ display: { xs: "none", md: "flex" } }} {...props} />
+        {/* <MoreList sx={{ display: { xs: "none", md: "flex" } }} {...props} /> */}
       </Stack>
     </Stack>
   );
