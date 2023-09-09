@@ -448,11 +448,11 @@ const MoreActionList = (props: MoreActionListProps) => {
       Object.values(data.subTasks).forEach((item) => {
         promises.push(onDeleteSubTasks(item));
       });
-      Object.values(data.tasks).forEach((item) => {
+      !Object.values(data.subTasks).length && Object.values(data.tasks).forEach((item) => {
         promises.push(onDeleteTasks(item));
       });
 
-      if (data.taskLists.tasks_list.length) {
+      if (!Object.values(data.tasks).length && data.taskLists.tasks_list.length) {
         promises.push(onDeleteTaskLists(data.taskLists));
       }
 
