@@ -1,5 +1,4 @@
-import { Drawer, Box, Typography, IconButton, Avatar } from "@mui/material";
-import ArrowDownIcon from "icons/ArrowDownIcon";
+import { Box, Typography, IconButton } from "@mui/material";
 
 interface ChatDetailInfoProps {
   onClose: () => void;

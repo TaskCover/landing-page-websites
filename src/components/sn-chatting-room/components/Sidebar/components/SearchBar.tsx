@@ -1,6 +1,6 @@
 import { Box, InputBase, Paper } from "@mui/material";
 import { IconButton } from "components/shared";
-import useGetScreenMode from "components/sn-chatting-room/hooks/useGetScreenMode";
+import useGetScreenMode from "hooks/useGetScreenMode";
 import SearchIcon from "icons/SearchIcon";
 
 const SearchBar = () => {

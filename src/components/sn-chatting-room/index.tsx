@@ -1,38 +1,17 @@
 "use client";
 
 import React from "react";
-import { Box } from "@mui/material";
 import { SNChat } from "./components";
 import useRouteChatDetails from "./hooks/useRouteChatDetails";
-import useGetScreenMode from "./hooks/useGetScreenMode";
-import ChattingRoomMobileLayout from "./ChattingRoomMobileLayout";
+import useGetScreenMode from "hooks/useGetScreenMode";
+import { Box } from "@mui/material";
 
-const { RoomDetails, Sidebar } = SNChat;
+const { RoomDetails } = SNChat;
 
 const ChattingRoom = () => {
   useRouteChatDetails();
 
   const { mobileMode } = useGetScreenMode();
-
-  const renderChattingRoomWithModeDesktop = () => {
-    return (
-      <>
-        <Sidebar />
-        <RoomDetails />
-      </>
-    );
-  };
-
-  const renderChattingRoomWithModeMobile = () => {
-    return (
-      <>
-        <ChattingRoomMobileLayout>
-          <Sidebar />
-        </ChattingRoomMobileLayout>
-      </>
-    );
-  };
-
   return (
     <Box
       sx={{
@@ -40,9 +19,10 @@ const ChattingRoom = () => {
         ...(!mobileMode && { display: "flex", alignItems: "flex-start" }),
       }}
     >
-      {!mobileMode
-        ? renderChattingRoomWithModeDesktop()
-        : renderChattingRoomWithModeMobile()}
+      <SNChat.ChattingRoomLayout>
+        <SNChat.Sidebar />
+        <RoomDetails />
+      </SNChat.ChattingRoomLayout>
     </Box>
   );
 };

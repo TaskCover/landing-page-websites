@@ -2,11 +2,11 @@
 
 import { Box } from "@mui/material";
 import React from "react";
-import HeaderMobile from "./components/HeaderMobile";
+import HeaderMobile from "../HeaderMobile";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
-import { HeaderMobileProps, MobileScreenType } from "./utils/type";
-import { MobileScreen } from "./utils/constants";
+import { HeaderMobileProps, MobileScreenType } from "../../utils/type";
+import { MobileScreen } from "../../utils/constants";
 import { useParams, usePathname } from "next/navigation";
 
 interface Props {
@@ -17,10 +17,6 @@ const styleIcon = { color: "white", fontSize: "24px", cursor: "pointer" };
 const ChattingRoomMobileLayout: React.FC<Props> = ({ children }) => {
   const params = useParams();
   const pathName = usePathname();
-  console.log({
-    params,
-    pathName,
-  });
 
   const detectPropsWithScreen = () => {
     const propsScreenHandler: Partial<{

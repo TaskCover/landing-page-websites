@@ -1,7 +1,6 @@
 "use client";
 
 import useWindowSize from "hooks/useWindowSize";
-import React from "react";
 
 const useGetScreenMode = () => {
   const { width = 0, height = 0 } = useWindowSize();

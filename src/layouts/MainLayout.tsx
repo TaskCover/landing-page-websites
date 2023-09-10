@@ -31,7 +31,7 @@ type MainLayoutProps = {
 
 const AUTH_PATHS = [SIGNUP_PATH, FORGOT_PASSWORD_PATH, JOIN_WORKSPACE_PATH];
 
-const NO_HEADER_PATHS = [CHATTING_ROOM_PATH]
+const IS_CHATTING_ROOM = [CHATTING_ROOM_PATH]
 
 const MainLayout = (props: MainLayoutProps) => {
   const { children } = props;
@@ -51,7 +51,7 @@ const MainLayout = (props: MainLayoutProps) => {
   const { onGetProfile } = useAuth();
 
   const isLoggedIn = useMemo(() => !!token, [token]);
-  const isNoHeader = useMemo(() => !!NO_HEADER_PATHS.includes(pathNameWithoutId), [pathNameWithoutId])
+  const isChatting = useMemo(() => !!IS_CHATTING_ROOM.includes(pathNameWithoutId), [pathNameWithoutId])
 
   const isAuthorized = useMemo(() => {
     if (!user?.roles?.length) return false;
@@ -86,7 +86,7 @@ const MainLayout = (props: MainLayoutProps) => {
         overflow="hidden"
       >
         <Sidebar />
-        {!isNoHeader ? <Stack flex={1} width="100%" height="100%" overflow="hidden">
+        <Stack flex={1} width="100%" height="100%" overflow="hidden">
           <Header />
           <Stack
             flex={1}
@@ -104,11 +104,10 @@ const MainLayout = (props: MainLayoutProps) => {
               </Text>
             )}
           </Stack>
-        </Stack> : <Stack flex={1} width="100%" height="100%" overflow="hidden"> {children}</Stack>
-        }
+        </Stack> 
       </Stack>
       <Snackbar />
-      {!isNoHeader ? <ChatListTemp /> : null}
+      {!isChatting ? <ChatListTemp /> : null}
     </>
   );
 };

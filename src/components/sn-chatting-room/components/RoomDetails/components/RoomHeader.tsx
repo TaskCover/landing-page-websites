@@ -7,7 +7,7 @@ import SearchIcon from "icons/SearchIcon";
 import SidebarIcon from "icons/SidebarIcon";
 import VideoCallIcon from "icons/VideoCallIcon";
 import colorSchemes from "utils/colorSchemes";
-import ChatDetailInfo from "./ChatDetailInfo/ChatDetailInfo";
+import ChatDetailInfo from "./ChatDetailInfo";
 
 const RoomHeader = () => {
   const { currentConversation } = useChattingActions();

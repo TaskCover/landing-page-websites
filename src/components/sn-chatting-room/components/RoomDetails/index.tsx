@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { CHATTING_ROOM_PATH } from "constant/paths";
 
 const RoomDetails = () => {
-  const { conversations, loading } = useChattingActions();
+  const {loading } = useChattingActions();
   const pathname = usePathname()
   const t = useTranslations(NS_COMMON);
 

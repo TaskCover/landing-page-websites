@@ -1,18 +1,18 @@
 "use client";
 
-import { Box, CircularProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
 import React, { useEffect } from "react";
 import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
-import useGetScreenMode from "components/sn-chatting-room/hooks/useGetScreenMode";
+import useGetScreenMode from "hooks/useGetScreenMode";
 const Sidebar = () => {
-  const { handleGetConversation, loading } = useChattingActions();
+  const { handleGetConversation } = useChattingActions();
   const { mobileMode } = useGetScreenMode();
 
   useEffect(() => {
     handleGetConversation(undefined);
-  }, [handleGetConversation]);
+  }, []);
 
   return (
     <Box
@@ -27,13 +27,7 @@ const Sidebar = () => {
       }}
     >
       <SearchBar />
-      {loading ? (
-        <Box display="flex" alignItems="center" justifyContent="center">
-          <CircularProgress />
-        </Box>
-      ) : (
-        <ChatList />
-      )}
+      <ChatList />
     </Box>
   );
 };

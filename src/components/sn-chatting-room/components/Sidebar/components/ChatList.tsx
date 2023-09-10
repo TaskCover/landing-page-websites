@@ -1,16 +1,18 @@
 import NoData from "components/NoData";
 import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
-import React, { useState } from "react";
+import React from "react";
 import { Box } from "@mui/material";
 import { useAuth } from "store/app/selectors";
 import ChatItemLayout from "components/sn-chat/components/chat/ChatItemLayout";
 import { IChatItemInfo } from "store/chat/type";
-import { useDeepCompareMemo } from "components/sn-chatting-room/hooks";
+import { useRouter } from "next/navigation";
+import { CHATTING_ROOM_PATH } from "constant/paths";
+import { useDeepCompareMemo } from "hooks/useDeepCompare";
 
 const ChatList = () => {
   const { conversations } = useChattingActions();
   const { user } = useAuth();
-  const [count, setCount] = useState(0);
+  const router = useRouter()
 
   const _conversations = useDeepCompareMemo(() => {
     return conversations
@@ -40,7 +42,7 @@ const ChatList = () => {
   }, [conversations, user]);
 
   const handleClickConversation = (chatInfo: IChatItemInfo) => {
-    console.log("chatInfo:", chatInfo);
+    router.push(`${CHATTING_ROOM_PATH}/${(chatInfo?._id)}`)
   };
 
   const renderConversation = useDeepCompareMemo(() => {
@@ -60,7 +62,6 @@ const ChatList = () => {
 
     return (
       <>
-        <button onClick={() => setCount(count + 1)}>Click</button>
         <Box
           display="flex"
           flexDirection="column"
