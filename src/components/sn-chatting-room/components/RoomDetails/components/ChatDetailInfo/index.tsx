@@ -1,16 +1,17 @@
-import { Drawer, Box } from "@mui/material";
+import { Drawer, Box, Typography, Avatar } from "@mui/material";
 import ChatDetailInfoHeader from "./ChatDetailInfoHeader";
-import ChatDetailInfoAvatar from "./ChatDetailInfoAvatar";
 // import ChatDetailInfoName from "./ChatDetailInfoName";
 import AccountProfileIcon from "icons/AccountProfileIcon";
-import MediaFileIcon from "icons/MediaFileIcon";
 import LinkIcon from "icons/LinkIcon";
 import FileIcon from "icons/FileIcon";
 import ChatDetailInfoMenuItem from "./ChatDetailInfoMenuItem";
+import MediaFileChatIcon from "icons/MediaFileChatIcon";
+import { IChatItemInfo } from "store/chat/type";
 
 interface ChatDetailInfoProps {
   isOpen: boolean;
   onClose: () => void;
+  currentConversation: IChatItemInfo;
 }
 
 interface MenuItem {
@@ -25,7 +26,7 @@ const menuItems: MenuItem[] = [
   },
   {
     text: "Media file",
-    icon: <MediaFileIcon />,
+    icon: <MediaFileChatIcon />,
   },
   {
     text: "Link",
@@ -37,7 +38,11 @@ const menuItems: MenuItem[] = [
   },
 ];
 
-const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({ isOpen, onClose }) => {
+const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
+  isOpen,
+  onClose,
+  currentConversation,
+}) => {
   const styleDrawerOpen = isOpen ? { display: "block" } : { display: "none" };
 
   return (
@@ -68,7 +73,31 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({ isOpen, onClose }) => {
         }}
       >
         <ChatDetailInfoHeader onClose={onClose} />
-        <ChatDetailInfoAvatar />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+          }}
+        >
+          <Avatar
+            src={currentConversation?.avatar}
+            sx={{
+              height: "80px",
+              width: "80px",
+              flexShrink: "0",
+              borderRadius: "10px",
+            }} />
+        </Box>
+        <Box>
+          <Typography
+            variant="h6"
+            color="var(--Black, #212121)"
+            sx={{ textAlign: "center" }}
+          >
+            {currentConversation?.name}
+          </Typography>
+        </Box>{" "}
         <Box
           sx={{
             display: "flex",
@@ -79,7 +108,11 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({ isOpen, onClose }) => {
           }}
         >
           {menuItems.map((item, index) => (
-            <ChatDetailInfoMenuItem key={index} text={item.text} icon={item.icon} />
+            <ChatDetailInfoMenuItem
+              key={index}
+              text={item.text}
+              icon={item.icon}
+            />
           ))}
         </Box>
       </Box>

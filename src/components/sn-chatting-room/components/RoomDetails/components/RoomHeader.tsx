@@ -92,7 +92,7 @@ const RoomHeader = ({ currentConversation }) => {
           <SidebarIcon />
         </IconButton>
       </Box>
-      <ChatDetailInfo isOpen={isDrawerOpen} onClose={closeDrawer} />
+      <ChatDetailInfo currentConversation={currentConversation} isOpen={isDrawerOpen} onClose={closeDrawer} />
     </Box>
   );
 };

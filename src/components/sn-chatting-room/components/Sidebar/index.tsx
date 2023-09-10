@@ -1,16 +1,13 @@
 "use client";
 
 import { Box } from "@mui/material";
-import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
-import React, { useEffect } from "react";
+import React from "react";
 import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
 import useGetScreenMode from "hooks/useGetScreenMode";
 
 const Sidebar = ({ onSelectRoom, currentConversation }) => {
   const { mobileMode } = useGetScreenMode();
-
-  console.log(currentConversation?._id, 'currentConversation?._id');
   
   return (
     <Box
