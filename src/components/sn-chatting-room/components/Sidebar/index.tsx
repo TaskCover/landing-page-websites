@@ -6,13 +6,11 @@ import React, { useEffect } from "react";
 import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
 import useGetScreenMode from "hooks/useGetScreenMode";
-const Sidebar = () => {
-  const { handleGetConversation } = useChattingActions();
-  const { mobileMode } = useGetScreenMode();
+import useFetchingChatting from "components/sn-chatting-room/hooks/useFetchingChatting";
 
-  useEffect(() => {
-    handleGetConversation(undefined);
-  }, []);
+const Sidebar = () => {
+  const { mobileMode } = useGetScreenMode();
+  useFetchingChatting()
 
   return (
     <Box

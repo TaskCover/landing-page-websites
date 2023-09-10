@@ -2,16 +2,15 @@
 
 import React from "react";
 import { SNChat } from "./components";
-import useRouteChatDetails from "./hooks/useRouteChatDetails";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { Box } from "@mui/material";
 
 const { RoomDetails } = SNChat;
 
 const ChattingRoom = () => {
-  useRouteChatDetails();
 
   const { mobileMode } = useGetScreenMode();
+
   return (
     <Box
       sx={{

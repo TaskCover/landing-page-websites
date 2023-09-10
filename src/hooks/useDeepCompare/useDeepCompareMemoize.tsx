@@ -1,5 +1,5 @@
 import { useRef, DependencyList } from "react";
-import { deepEqual } from "../utils/helpers";
+import { deepEqual } from "utils/index";
 
 export const useDeepCompareMemoize = (value: DependencyList) => {
   const ref = useRef<DependencyList>([]);

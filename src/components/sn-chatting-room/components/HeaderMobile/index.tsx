@@ -3,7 +3,7 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { Text } from "components/shared";
-import { HeaderMobileProps } from "components/sn-chatting-room/utils/type";
+import { HeaderMobileProps } from "components/sn-chatting-room/type";
 
 const HeaderMobile: React.FC<HeaderMobileProps> = ({
   children,
