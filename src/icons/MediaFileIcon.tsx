@@ -1,10 +1,7 @@
 import { memo } from "react";
 import { SvgIcon, SvgIconProps } from "@mui/material";
 
-interface MediaFileIconProps extends SvgIconProps {
-  fill?: string;
-  stroke?: string
-}
+
 const MediaFileIcon = (props: SvgIconProps) => {
   return (
     <SvgIcon
@@ -40,8 +37,5 @@ const MediaFileIcon = (props: SvgIconProps) => {
   );
 };
 
-MediaFileIcon.defaultProps = {
-  fill: 'none',
-  stroke: '#666666'
-}
+
 export default memo(MediaFileIcon);

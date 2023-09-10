@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { ParamChatState, ParamState } from "../type"
 import useChattingActions from "./useChattingActions"
+import { IChatItemInfo } from "store/chat/type"
 
 const defaultParam = {
     count: 12,
@@ -15,7 +16,12 @@ const defaultChatParam = {
     roomId: ''
 }
 
-const useFetchingChatting = () => {
+export interface useFetchingChattingReturns {
+    onSelectRoom: (roomId: string) => void;
+    currentConversation?: IChatItemInfo
+}
+
+const useFetchingChatting = (): useFetchingChattingReturns => {
     const { conversations, handleGetDetailConversation, handleGetConversation } = useChattingActions()
 
     const [params, setParams] = useState<ParamState>(defaultParam as ParamState)

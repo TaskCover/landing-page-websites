@@ -42,9 +42,7 @@ const ChatList = ({ onSelectRoom, idActive }) => {
     onSelectRoom(chatInfo?._id);
   };
 
-  const renderConversation = (idActive: string) => {
-    console.log(idActive, 'idActive');
-    
+  const renderConversation = (idActive: string) => {    
     return conversations.map((conversation) => (
       <ChatItemLayout
         chatInfo={conversation}

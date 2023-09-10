@@ -7,6 +7,8 @@ import FileIcon from "icons/FileIcon";
 import ChatDetailInfoMenuItem from "./ChatDetailInfoMenuItem";
 import MediaFileChatIcon from "icons/MediaFileChatIcon";
 import { IChatItemInfo } from "store/chat/type";
+import LinkChatIcon from "icons/LinkChatIcon";
+import FileChatIcon from "icons/FileChatIcon";
 
 interface ChatDetailInfoProps {
   isOpen: boolean;
@@ -30,11 +32,11 @@ const menuItems: MenuItem[] = [
   },
   {
     text: "Link",
-    icon: <LinkIcon />,
+    icon: <LinkChatIcon />,
   },
   {
     text: "File",
-    icon: <FileIcon />,
+    icon: <FileChatIcon />,
   },
 ];
 
@@ -52,6 +54,7 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
         flexShrink: 0,
         ...styleDrawerOpen,
         "& .MuiDrawer-paper": {
+          top: '50px',
           width: "272px",
           boxSizing: "border-box",
           border: "none",

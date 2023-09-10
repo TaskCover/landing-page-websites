@@ -1,9 +1,7 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
-import NoData from "components/NoData";
+import { Box, CircularProgress } from "@mui/material";
 import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
 import React from "react";
 import RoomHeader from "./components/RoomHeader";
-import { usePathname } from "next/navigation";
 
 const RoomDetails = ({ currentConversation }) => {
   const {loading } = useChattingActions();
