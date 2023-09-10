@@ -1,18 +1,15 @@
 import NoData from "components/NoData";
 import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
-import React from "react";
+import React, { useMemo } from "react";
 import { Box } from "@mui/material";
 import { useAuth } from "store/app/selectors";
 import ChatItemLayout from "components/sn-chat/components/chat/ChatItemLayout";
 import { IChatItemInfo } from "store/chat/type";
-import { useRouter } from "next/navigation";
-import { CHATTING_ROOM_PATH } from "constant/paths";
 import { useDeepCompareMemo } from "hooks/useDeepCompare";
 
-const ChatList = () => {
+const ChatList = ({ onSelectRoom, idActive }) => {
   const { conversations } = useChattingActions();
   const { user } = useAuth();
-  const router = useRouter()
 
   const _conversations = useDeepCompareMemo(() => {
     return conversations
@@ -23,41 +20,43 @@ const ChatList = () => {
           ...item,
           ...(item?.statuses?.length > 0
             ? {
-                status:
-                  item.statuses?.[0].username === user?.["username"]
-                    ? item.statuses?.[1]?.status
-                    : item.statuses?.[0]?.status,
-              }
+              status:
+                item.statuses?.[0].username === user?.["username"]
+                  ? item.statuses?.[1]?.status
+                  : item.statuses?.[0]?.status,
+            }
             : {}),
           ...(item?.usernames?.length > 0
             ? {
-                username:
-                  item.usernames?.[0] === user?.["username"]
-                    ? item.usernames?.[1]
-                    : item.usernames?.[0],
-              }
+              username:
+                item.usernames?.[0] === user?.["username"]
+                  ? item.usernames?.[1]
+                  : item.usernames?.[0],
+            }
             : {}),
         };
       });
   }, [conversations, user]);
 
   const handleClickConversation = (chatInfo: IChatItemInfo) => {
-    router.push(`${CHATTING_ROOM_PATH}/${(chatInfo?._id)}`)
+    onSelectRoom(chatInfo?._id);
   };
 
-  const renderConversation = useDeepCompareMemo(() => {
+  const renderConversation = (idActive: string) => {
+    console.log(idActive, 'idActive');
+    
     return conversations.map((conversation) => (
-      // <ChatSingle key={conversation._id} {...conversation} />
       <ChatItemLayout
         chatInfo={conversation}
         sessionId={user?.["username"]}
         key={conversation._id}
         onClickConvention={handleClickConversation}
+        isActive={idActive === conversation._id || false}
       />
     ));
-  }, [_conversations]);
+  }
 
-  const renderConversations = () => {
+  const renderConversations = (idActive: string) => {
     if (conversations.length <= 0) return <NoData />;
 
     return (
@@ -69,13 +68,13 @@ const ChatList = () => {
           height="90vh"
           sx={{ overflowX: "scroll" }}
         >
-          {renderConversation}
+          {renderConversation(idActive)}
         </Box>
       </>
     );
   };
 
-  return <>{renderConversations()}</>;
+  return <>{renderConversations(idActive)}</>;
 };
 
 export default ChatList;

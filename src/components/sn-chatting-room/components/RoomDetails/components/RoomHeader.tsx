@@ -9,8 +9,7 @@ import VideoCallIcon from "icons/VideoCallIcon";
 import colorSchemes from "utils/colorSchemes";
 import ChatDetailInfo from "./ChatDetailInfo";
 
-const RoomHeader = () => {
-  const { currentConversation } = useChattingActions();
+const RoomHeader = ({ currentConversation }) => {
   const { isDarkMode } = useTheme();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

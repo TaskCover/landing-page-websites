@@ -9,12 +9,14 @@ interface ChatItemProp {
   chatInfo: IChatItemInfo;
   chatItemProps?: BoxProps;
   onClickConvention: (data: IChatItemInfo) => void;
+  isActive?: boolean;
 }
 const ChatItemLayout = ({
   chatItemProps,
   sessionId,
   chatInfo,
   onClickConvention,
+  isActive,
 }: ChatItemProp) => {
   const { sx, ...props } = chatItemProps || {};
   const { lastMessage } = chatInfo || {};
@@ -29,6 +31,7 @@ const ChatItemLayout = ({
         marginBottom: 1,
         cursor: "pointer",
         position: "relative",
+        background: isActive ? "#F7F7FD" : "white",
         ":hover": {
           backgroundColor: "#F7F7FD",
         },

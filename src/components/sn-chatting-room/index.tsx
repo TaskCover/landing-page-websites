@@ -4,12 +4,14 @@ import React from "react";
 import { SNChat } from "./components";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { Box } from "@mui/material";
+import useFetchingChatting from "./hooks/useFetchingChatting";
 
-const { RoomDetails } = SNChat;
+const { RoomDetails, Sidebar, ChattingRoomLayout } = SNChat;
 
 const ChattingRoom = () => {
 
   const { mobileMode } = useGetScreenMode();
+  const { onSelectRoom, currentConversation } = useFetchingChatting()
 
   return (
     <Box
@@ -18,10 +20,10 @@ const ChattingRoom = () => {
         ...(!mobileMode && { display: "flex", alignItems: "flex-start" }),
       }}
     >
-      <SNChat.ChattingRoomLayout>
-        <SNChat.Sidebar />
-        <RoomDetails />
-      </SNChat.ChattingRoomLayout>
+      <ChattingRoomLayout>
+        <Sidebar currentConversation={currentConversation} onSelectRoom={onSelectRoom} />
+        <RoomDetails currentConversation={currentConversation}/>
+      </ChattingRoomLayout>
     </Box>
   );
 };

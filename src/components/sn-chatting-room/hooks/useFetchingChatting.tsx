@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { ParamChatState, ParamState } from "../type"
 import useChattingActions from "./useChattingActions"
 
@@ -16,28 +16,48 @@ const defaultChatParam = {
 }
 
 const useFetchingChatting = () => {
-
     const { conversations, handleGetDetailConversation, handleGetConversation } = useChattingActions()
 
     const [params, setParams] = useState<ParamState>(defaultParam as ParamState)
     const [detailParams, setDetailsParams] = useState<ParamChatState>(defaultChatParam as ParamChatState)
-    const [selectedRoomId, setSelectedRoomId] = useState<string>()
 
 
     useEffect(() => {
-        handleGetConversation({body: params});
+        handleGetConversation({ body: params });
       }, [handleGetConversation, params]);
-
+      
     useEffect(() => {
-        if(conversations?.length > 0  && selectedRoomId){
+        if(detailParams?.roomId?.length > 0){            
           handleGetDetailConversation({
             ...detailParams,
-            roomId: selectedRoomId ? selectedRoomId : conversations[0]?._id 
           });
         }
-      }, [detailParams, handleGetDetailConversation, conversations, selectedRoomId])
+    }, [detailParams])
     
 
+    useEffect(() => {
+        if(conversations?.length > 0){
+            onSelectRoom(conversations[0]?._id)
+        }
+    }, [conversations])
+
+    const onSelectRoom = (roomId: string) => {
+        setDetailsParams((prevState) => ({
+            ...prevState,
+            roomId
+        }));
+    }
+
+    const currentConversation = useMemo(() => {
+        if(detailParams?.roomId){
+            return conversations.find(conversation => conversation?._id === detailParams?.roomId)
+        }
+    }, [detailParams?.roomId, conversations])
+    
+    return {
+        onSelectRoom,
+        currentConversation
+    }
 }
 
 export default useFetchingChatting;

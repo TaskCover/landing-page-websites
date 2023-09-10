@@ -6,12 +6,12 @@ import React, { useEffect } from "react";
 import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
 import useGetScreenMode from "hooks/useGetScreenMode";
-import useFetchingChatting from "components/sn-chatting-room/hooks/useFetchingChatting";
 
-const Sidebar = () => {
+const Sidebar = ({ onSelectRoom, currentConversation }) => {
   const { mobileMode } = useGetScreenMode();
-  useFetchingChatting()
 
+  console.log(currentConversation?._id, 'currentConversation?._id');
+  
   return (
     <Box
       sx={{
@@ -25,7 +25,7 @@ const Sidebar = () => {
       }}
     >
       <SearchBar />
-      <ChatList />
+      <ChatList idActive={currentConversation?._id} onSelectRoom={onSelectRoom} />
     </Box>
   );
 };

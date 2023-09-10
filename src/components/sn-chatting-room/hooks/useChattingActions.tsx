@@ -29,11 +29,11 @@ const useChattingActions = () => {
     );
 
 
-    const handleGetDetailConversation = useCallback((props: ParamChatState) => {
-        if (props?.roomId?.length > 0 && props?.roomId) {
+    const handleGetDetailConversation = (props: ParamChatState) => {
+        if (props?.roomId?.length > 0) {
             onGetLastMessages(props)
         }
-    }, [onGetLastMessages])
+    }
 
 
     return {
