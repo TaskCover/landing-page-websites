@@ -1,14 +1,11 @@
 import { Drawer, Box, Typography, Avatar } from "@mui/material";
 import ChatDetailInfoHeader from "./ChatDetailInfoHeader";
-// import ChatDetailInfoName from "./ChatDetailInfoName";
 import AccountProfileIcon from "icons/AccountProfileIcon";
 import LinkIcon from "icons/LinkIcon";
 import FileIcon from "icons/FileIcon";
 import ChatDetailInfoMenuItem from "./ChatDetailInfoMenuItem";
-import MediaFileChatIcon from "icons/MediaFileChatIcon";
 import { IChatItemInfo } from "store/chat/type";
-import LinkChatIcon from "icons/LinkChatIcon";
-import FileChatIcon from "icons/FileChatIcon";
+import MediaFileIcon from "icons/MediaFileIcon";
 
 interface ChatDetailInfoProps {
   isOpen: boolean;
@@ -18,25 +15,25 @@ interface ChatDetailInfoProps {
 
 interface MenuItem {
   text: string;
-  icon: JSX.Element;
+  icon: JSX.ElementType;
 }
 
 const menuItems: MenuItem[] = [
   {
     text: "Account infomation",
-    icon: <AccountProfileIcon />,
+    icon: AccountProfileIcon,
   },
   {
     text: "Media file",
-    icon: <MediaFileChatIcon />,
+    icon: MediaFileIcon,
   },
   {
     text: "Link",
-    icon: <LinkChatIcon />,
+    icon: LinkIcon,
   },
   {
     text: "File",
-    icon: <FileChatIcon />,
+    icon: FileIcon,
   },
 ];
 

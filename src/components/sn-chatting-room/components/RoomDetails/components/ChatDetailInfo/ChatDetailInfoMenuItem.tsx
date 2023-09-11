@@ -5,7 +5,7 @@ import UserIcon from "icons/UserIcon";
 
 interface ChatDetailInfoMenuItemProps {
   text: string;
-  icon: JSX.Element;
+  icon: JSX.ElementType;
 }
 
 const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
@@ -47,17 +47,12 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
             gap: "16px",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "20px",
-              height: "20px",
-            }}
-          >
-            {props.icon}
-          </Box>
+
+            <props.icon  sx={{
+          fill: "none",
+          color: "#666666",
+          filter: "opacity(0.8)",
+        }}/>
           <Typography variant="body2" color="var(--Black, #212121)">
             {props.text}
           </Typography>

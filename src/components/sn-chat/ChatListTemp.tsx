@@ -112,7 +112,7 @@ const ChatListTemp = () => {
   const handleGetConversation = async () => {
     try {
       await onGetAllConvention({
-        type: "a",
+        type: "d",
         text: "",
         offset: 0,
         count: 10,
