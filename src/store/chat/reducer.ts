@@ -26,6 +26,7 @@ import {
   UserInfo,
   MediaPreviewItem,
   IChatInfo,
+  SetParamConversationProps,
 } from "./type";
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
@@ -80,6 +81,10 @@ const initialState: ChatState = {
   chatAttachments: [],
   deleteConversationStatus: DataStatus.IDLE,
   dataTransfer: {},
+  // param allChat,
+  paramsConversation: {},
+  paramsLastMessage: {},
+  paramsUnreadMessage: {}
 };
 
 const isConversation = (type: string) => {
@@ -212,6 +217,12 @@ const chatSlice = createSlice({
       state.messageInfo = [];
       state.messagePaging = initalPage;
     },
+    setParamsState: (
+      state,
+      action: PayloadAction<SetParamConversationProps>
+    ) => {
+      state[action.payload.type] = action.payload.value;
+    }
   },
   extraReducers: (builder) =>
     builder

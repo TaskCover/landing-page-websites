@@ -197,9 +197,14 @@ export interface ChatState {
   groupMembers: any[];
   chatAttachments: any;
   deleteConversationStatus: DataStatus;
+  paramsConversation: ChatRequestCommon | {};
+  paramsLastMessage: LastMessagesRequest | {};
+  paramsUnreadMessage: UnReadMessageRequest | {}
 }
 
 export type DirectionChat = "a" | "c" | "d";
+
+export type TypeParamsChat = 'paramsConversation' |  'paramsLastMessage' | 'paramsUnreadMessage'
 
 export interface AuthenRequestCommon {
   authToken: string;
@@ -344,6 +349,11 @@ export interface UnReadMessageInfo {
   roomId: string;
   info: UnreadUserInfo[];
   success: boolean;
+}
+
+export interface SetParamConversationProps {
+  type: TypeParamsChat,
+  value: any
 }
 
 export enum STEP {

@@ -517,6 +517,9 @@ export const useChat = () => {
     [dispatch, onSendMessage, onSetStateSendMessage],
   );
 
+  const onSetParamChat = () => {
+    
+  }
   return {
     convention,
     mediaListConversation,
