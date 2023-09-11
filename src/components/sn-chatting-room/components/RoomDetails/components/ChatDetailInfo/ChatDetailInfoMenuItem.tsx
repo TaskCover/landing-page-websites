@@ -2,15 +2,28 @@ import React, { useState } from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import UserIcon from "icons/UserIcon";
+import AccountInfo from "../AccountInfo";
+import { IChatItemInfo } from "store/chat/type";
 
 interface ChatDetailInfoMenuItemProps {
   text: string;
   icon: JSX.ElementType;
+  openDrawer: boolean;
+  currentConversation: IChatItemInfo;
 }
 
 const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
   props,
 ) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // Handler to open the drawer.
+  const openDrawer = () => {
+    setIsDrawerOpen(true);
+  };
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+
   const [isRotated, setIsRotated] = useState(false);
 
   const toggleRotation = () => {
@@ -20,6 +33,8 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
   const rotationStyle: React.CSSProperties = isRotated
     ? { transform: "rotate(90deg)" }
     : {};
+
+  const isOpenDrawer = props.openDrawer ? openDrawer : undefined;
 
   return (
     <Box
@@ -47,12 +62,13 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
             gap: "16px",
           }}
         >
-
-            <props.icon  sx={{
-          fill: "none",
-          color: "#666666",
-          filter: "opacity(0.8)",
-        }}/>
+          <props.icon
+            sx={{
+              fill: "none",
+              color: "#666666",
+              filter: "opacity(0.8)",
+            }}
+          />
           <Typography variant="body2" color="var(--Black, #212121)">
             {props.text}
           </Typography>
@@ -67,7 +83,7 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
             alignItems: "center",
           }}
         >
-          <IconButton onClick={toggleRotation}>
+          <IconButton onClick={isOpenDrawer}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -83,6 +99,11 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
           </IconButton>
         </Box>
       </Box>
+      <AccountInfo
+        isOpen={isDrawerOpen}
+        onClose={closeDrawer}
+        currentConversation={props.currentConversation}
+      />
     </Box>
   );
 };

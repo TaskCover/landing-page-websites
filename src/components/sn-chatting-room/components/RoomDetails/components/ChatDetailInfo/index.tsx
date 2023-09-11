@@ -16,24 +16,29 @@ interface ChatDetailInfoProps {
 interface MenuItem {
   text: string;
   icon: JSX.ElementType;
+  openDrawer: boolean;
 }
 
 const menuItems: MenuItem[] = [
   {
     text: "Account infomation",
     icon: AccountProfileIcon,
+    openDrawer: true,
   },
   {
     text: "Media file",
     icon: MediaFileIcon,
+    openDrawer: false,
   },
   {
     text: "Link",
     icon: LinkIcon,
+    openDrawer: false,
   },
   {
     text: "File",
     icon: FileIcon,
+    openDrawer: false,
   },
 ];
 
@@ -42,16 +47,14 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
   onClose,
   currentConversation,
 }) => {
-  const styleDrawerOpen = isOpen ? { display: "block" } : { display: "none" };
-
+  const styleDrawerOpen = isOpen ? { width: "272px" } : { width: "0" };
   return (
     <Drawer
       sx={{
-        width: "272px",
         flexShrink: 0,
         ...styleDrawerOpen,
         "& .MuiDrawer-paper": {
-          top: '50px',
+          top: "50px",
           width: "272px",
           boxSizing: "border-box",
           border: "none",
@@ -87,7 +90,8 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
               width: "80px",
               flexShrink: "0",
               borderRadius: "10px",
-            }} />
+            }}
+          />
         </Box>
         <Box>
           <Typography
@@ -112,6 +116,8 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
               key={index}
               text={item.text}
               icon={item.icon}
+              openDrawer={item.openDrawer}
+              currentConversation={currentConversation}
             />
           ))}
         </Box>
