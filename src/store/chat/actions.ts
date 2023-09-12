@@ -19,6 +19,7 @@ import {
   MessageSearchInfoRequest,
   UnReadMessageRequest,
   ReadMessageRequest,
+  ForwardMessageGroup,
 } from "./type";
 import { AxiosError } from "axios";
 
@@ -344,6 +345,24 @@ export const deleteConversation = createAsyncThunk(
   async (paramReq: DeleteConversationGroup) => {
     try {
       const response = await client.post("deleteConversation", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const forwardMessage = createAsyncThunk(
+  "chat/forwardMessage",
+  async (paramReq: ForwardMessageGroup) => {
+    try {
+      const response = await client.post("forwardMessage", paramReq, {
         baseURL: CHAT_API_URL,
       });
 
