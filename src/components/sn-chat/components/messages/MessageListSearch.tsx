@@ -74,9 +74,9 @@ const MessageItemRender = ({
             ref={lastMessageRef}
             color="#828282"
             sx={{
-              display: "flex",
               fontSize: "14px",
               lineHeight: "22px",
+              overflowWrap: "anywhere",
               "& *": {
                 margin: 0,
                 padding: 0,

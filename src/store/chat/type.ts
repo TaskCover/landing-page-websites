@@ -366,6 +366,7 @@ export enum STEP {
   FILE,
   CHAT_FORWARD,
   CHAT_GROUP,
+  ADD_MEMBER,
 }
 
 export enum STEP_INFO {

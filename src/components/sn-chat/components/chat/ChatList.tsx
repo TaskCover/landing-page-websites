@@ -206,6 +206,12 @@ const ChatList = () => {
           onClick={() => {
             onSetStep(STEP.ADD_GROUP, { isNew: true });
           }}
+          sx={{
+            alignItems: "center",
+            width: 24,
+            height: 24,
+            cursor: "pointer"
+          }}
         >
           <NewGroupIcon />
         </Box>
