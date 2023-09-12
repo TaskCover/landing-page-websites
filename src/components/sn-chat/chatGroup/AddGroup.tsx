@@ -118,6 +118,10 @@ const AddGroup = () => {
     const memberAddGroup = Object.keys(employeeSelected).filter(
       (item) => employeeSelected[item] === true,
     )
+    if (!Object.values(employeeIdSelected)?.filter(item=>item).length) {
+      onAddSnackbar("Please select at least one member!", "error");
+      return;
+    }
     if (dataTransfer?.isNew) {
       if(memberAddGroup.length > 0){
         const result = await onCreateDirectMessageGroup({
