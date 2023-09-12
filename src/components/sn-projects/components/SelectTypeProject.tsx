@@ -54,6 +54,7 @@ const SelectTypeProject = (props: SelectTypeProjectProps) => {
   const [searchValue, setSearchValue] = useState('')
 
   const onChangeSearch = (name: string, value?: string) => {
+    if(!value?.trim()) return
     setSearchValue(value)
   };
 
