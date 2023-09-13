@@ -13,7 +13,6 @@ interface ItemMemberDetailProp {
   data?: any;
   callbackAddAdmin?: () => void;
   callbackRemove?: () => void;
-  onClick?: () => void;
 }
 
 const ItemMemberDetail = ({
@@ -21,7 +20,6 @@ const ItemMemberDetail = ({
   data,
   callbackAddAdmin,
   callbackRemove,
-  onClick,
 }: ItemMemberDetailProp) => {
   const TYPE_POPUP = {
     ADD_ADMIN: "ADD_ADMIN",
@@ -117,7 +115,6 @@ const ItemMemberDetail = ({
           display: "flex",
           alignItems: "center",
         }}
-        onClick={onClick}
       >
         <Avatar
           alt="Avatar"
@@ -148,7 +145,7 @@ const ItemMemberDetail = ({
             fontWeight={400}
             fontSize={12}
           >
-            {`${data?.username}@`}
+            {`@${data?.username}`}
           </Typography>
         </Box>
       </Box>
@@ -194,14 +191,14 @@ const ItemMemberDetail = ({
                       ...pre,
                       type: TYPE_POPUP.ADD_ADMIN,
                       statusPopup: true,
-                      title: "Add as admin",
-                      content: <>Are you sure add as admin?</>,
+                      title: commonT("chatBox.addAsAdmin"),
+                      content: <>{commonT("chatBox.sureAddAsAdmin")}</>,
                     }));
                   }}>
-                    Add as admin
+                    {commonT("chatBox.addAsAdmin")}
                   </MenuItem>
                   <MenuItem onClick={() => handleClickMenu("remove")}>
-                    Remove from chat{" "}
+                    {commonT("chatBox.removeFromChat")}
                   </MenuItem>
                 </>
               ) : (

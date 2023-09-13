@@ -3,6 +3,8 @@ import Avatar from "components/Avatar";
 import { ImageList, Typography } from "@mui/material";
 import { IChatItemInfo } from "store/chat/type";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/";
 
 interface ChatItemRenderProps {
   sessionId: string;
@@ -18,6 +20,8 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
     unreadCount,
     status: statusPartner,
   } = chatInfo || {};
+  const commonT = useTranslations(NS_COMMON);
+
   const [avatarClone, setAvatarClone] = useState<string | undefined>(avatar);
   const isUnReadMessage = useMemo(() => unreadCount > 0, [unreadCount]);
   const isDirectMessage = useMemo(() => t === "d", [t]);
@@ -33,7 +37,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
       return isCurrentAccByLastMessage ? "You sent a file." : "Sent a file.";
     } else {
       return isCurrentAccByLastMessage
-        ? `<p>You: ${lastMessage?.msg}</p>`
+        ? `<p>${commonT("chatBox.you")} ${lastMessage?.msg}</p>`
         : lastMessage?.msg;
     }
   }, [isCurrentAccByLastMessage, lastMessage]);

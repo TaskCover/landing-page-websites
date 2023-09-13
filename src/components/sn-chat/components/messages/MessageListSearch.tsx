@@ -1,7 +1,9 @@
 import Box, { BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Avatar from "components/Avatar";
+import { NS_COMMON } from "constant/index";
 import { DataStatus } from "constant/enums";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
@@ -27,6 +29,8 @@ const MessageItemRender = ({
   const [avatarClone, setAvatarClone] = useState<string | undefined>(
     message.avatar,
   );
+  const commonT = useTranslations(NS_COMMON);
+
   const isCurrentAcc = useMemo(
     () => user?.["id_rocket"] === message.userId,
     [message, user],
@@ -34,7 +38,7 @@ const MessageItemRender = ({
 
   const strippedHtml = message.matchedText.replace(/<[^>]+>/g, "");
   const messageMatched = useMemo(
-    () => (isCurrentAcc ? `<p>You: ${strippedHtml}</p>` : strippedHtml),
+    () => (isCurrentAcc ? `<p>${commonT("chatBox.you")} ${strippedHtml}</p>` : strippedHtml),
     [isCurrentAcc, strippedHtml],
   );
 

@@ -44,17 +44,12 @@ const AddGroup = () => {
 
   const {
     prevStep,
-    createGroupStatus,
-    newGroupData,
-    convention,
     dataTransfer,
     groupMembers,
     onSetRoomId,
-    onGetAllConvention,
     onSetStep,
     onCreateDirectMessageGroup,
     onAddMembers2Group,
-    onFetchGroupMembersMember,
     currStep
   } = useChat();
 
@@ -62,17 +57,8 @@ const AddGroup = () => {
   const { onAddSnackbar } = useSnackbar();
 
   useEffect(() => {
-    onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 30 });
-    onGetAllConvention({
-      type: "a",
-      text: "",
-      offset: 0,
-      count: 1000,
-    });
-    onFetchGroupMembersMember({
-      roomId: dataTransfer?._id,
-    });
-  }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
+    onGetEmployees(user?.company ?? "", {name: textSearch, pageIndex: 0, pageSize: 30 });
+  }, [onGetEmployees, textSearch, user?.company]);
 
   const handleSuccess = (result) => {
     if (result?.error) {
@@ -80,12 +66,6 @@ const AddGroup = () => {
       return;
     }
     onAddSnackbar("Successfully!", "success");
-    onGetAllConvention({
-      type: "a",
-      text: "",
-      offset: 0,
-      count: 1000,
-    });
     onSetStep(STEP.CHAT_GROUP, !dataTransfer?.isNew ? dataTransfer : result?.payload?.group);
     onSetRoomId(dataTransfer?.isNew ? result?.payload?.group?._id : dataTransfer?._id)
   };
@@ -197,7 +177,7 @@ const AddGroup = () => {
               border: "1px solid transparent",
             },
           }}
-          placeholder="Search name"
+          placeholder={commonT("chatBox.searchName")}
           fullWidth
           onKeyDown={handleKeyDown}
           InputProps={{

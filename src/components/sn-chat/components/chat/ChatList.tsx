@@ -7,7 +7,7 @@ import { useAuth, useSnackbar } from "store/app/selectors";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
-import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useWSChat } from "store/chat/helpers";
 
@@ -27,7 +27,7 @@ const ChatList = () => {
 
   useWSChat();
   const { onAddSnackbar } = useSnackbar();
-  const t = useTranslations(NS_COMMON);
+  const commonT = useTranslations(NS_COMMON);
 
   const [textSearch, setTextSearch] = useState(initText);
   const [lastElement, setLastElement] = useState(null);
@@ -95,12 +95,12 @@ const ChatList = () => {
         });
       } catch (error) {
         onAddSnackbar(
-          typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+          typeof error === "string" ? error : commonT(AN_ERROR_TRY_AGAIN),
           "error",
         );
       }
     },
-    [onAddSnackbar, onGetAllConvention, t],
+    [onAddSnackbar, onGetAllConvention, commonT],
   );
 
   const handleClickConversation = (chatInfo: IChatItemInfo) => {
@@ -162,7 +162,7 @@ const ChatList = () => {
         }}
       >
         <Typography color="white" variant="h4">
-          Chat
+          {commonT("chatBox.chat")}
         </Typography>
         <TextField
           size="small"
@@ -201,7 +201,7 @@ const ChatList = () => {
               />
             ),
           }}
-          placeholder="Search name"
+          placeholder={commonT("chatBox.searchName")}
           fullWidth
           value={textSearch}
           onChange={(e) => setTextSearch(e.target.value)}

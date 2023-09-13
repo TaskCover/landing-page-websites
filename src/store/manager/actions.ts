@@ -28,6 +28,7 @@ export type GetEmployeeListQueries = BaseQueries & {
   is_pay_user?: boolean;
   company?: string;
   date?: string;
+  name?: string;
 };
 
 export type GetCompanyListQueries = BaseQueries & {
