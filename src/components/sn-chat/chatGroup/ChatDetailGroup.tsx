@@ -119,8 +119,10 @@ const ChatDetailGroup = (props) => {
   };
 
   const handleClickMember = (member) => {
-    onSetConversationInfo(member)
-    onSetStep(STEP.VIEW_DETAIL_USER);
+    // onSetConversationInfo(member)
+    // onSetStep(STEP.VIEW_DETAIL_USER);
+    console.log({ dataTransfer });
+    
   }
 
   const _renderNewAdmin = () => {
@@ -409,6 +411,7 @@ const ChatDetailGroup = (props) => {
           >
             <Avatar
               alt="Avatar"
+              src={dataTransfer?.avatar}
               size={80}
               style={{
                 borderRadius: "10px",
