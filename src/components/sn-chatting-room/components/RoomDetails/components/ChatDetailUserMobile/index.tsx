@@ -7,6 +7,8 @@ import ChatDetailUserMenuItemMobile from "./ChatDetailUserMenuItemMobile";
 import MediaFileIcon from "icons/MediaFileIcon";
 import CreateGroupChatIcon from "icons/CreateGroupChatIcon";
 import DeleteChatIcon from "icons/DeleteChatIcon";
+import { useState } from "react";
+import SearchDetailChatUser from "../SearchDetailChatUser";
 
 interface ChatDetailUserMobileProps {
   currentConversation: IChatItemInfo;
@@ -17,9 +19,16 @@ interface MenuItem {
   icon: JSX.ElementType;
   stroke: string;
   borderBottom?: boolean;
+  handleOnClick?: () => void;
 }
 
 const ChatDetailUserMobile = (currentConversation) => {
+  const [searchConversationShow, setSearchConversationShow] = useState(false);
+
+  const handleSearchConversation = () => {
+    setSearchConversationShow(!searchConversationShow);
+  };
+
   const menuItems: MenuItem[] = [
     {
       text: "Account infomation",
@@ -43,6 +52,7 @@ const ChatDetailUserMobile = (currentConversation) => {
       text: "Search in conversation",
       icon: SearchIcon,
       stroke: "#999999",
+      handleOnClick: handleSearchConversation,
     },
   ];
 
@@ -51,8 +61,10 @@ const ChatDetailUserMobile = (currentConversation) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
+        position: "relative",
+        height: "100%",
         gap: "12px",
       }}
     >
@@ -110,6 +122,7 @@ const ChatDetailUserMobile = (currentConversation) => {
               icon={item.icon}
               stroke={item.stroke}
               borderBottom={item.borderBottom}
+              handleOnClick={item.handleOnClick}
             />
           ))}
         </Box>
@@ -130,6 +143,11 @@ const ChatDetailUserMobile = (currentConversation) => {
           />
         </Box>
       </Box>
+      <SearchDetailChatUser
+        isOpen={searchConversationShow}
+        onClose={handleSearchConversation}
+        currentConversation={currentConversation}
+      />
     </Box>
   );
 };

@@ -6,6 +6,7 @@ interface ChatDetailUserMenuItemMobileProps {
   icon: JSX.ElementType;
   stroke?: string;
   borderBottom?: boolean;
+  handleOnClick?: () => void;
 }
 
 const ChatDetailUserMenuItemMobile: React.FC<
@@ -51,6 +52,7 @@ const ChatDetailUserMenuItemMobile: React.FC<
         </Box>
 
         <IconButton
+          onClick={props.handleOnClick}
           sx={{
             display: "flex",
             width: "20px",

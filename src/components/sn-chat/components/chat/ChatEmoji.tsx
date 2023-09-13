@@ -21,7 +21,7 @@ interface ChatEmojiProps {
 }
 const ChatEmoji = ({ onChange }: ChatEmojiProps) => {
   const [anchorEl, setAnchorEl] = useState<SVGSVGElement | null>(null);
-  const handleOpen = (event: React.MouseEvent<SVGSVGElement>) => {
+  const handleOnClick = (event: React.MouseEvent<SVGSVGElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -35,7 +35,7 @@ const ChatEmoji = ({ onChange }: ChatEmojiProps) => {
           fill: "transparent",
           cursor: "pointer",
         }}
-        onClick={handleOpen}
+        onClick={handleOnClick}
       />
       <Popover
         open={!!anchorEl}
