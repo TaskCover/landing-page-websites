@@ -17,6 +17,7 @@ import {
   searchChatText,
   getUnreadMessages,
   getConventionById,
+  forwardMessage,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -43,6 +44,7 @@ import {
   MessageSearchInfo,
   UnReadMessageRequest,
   MessageInfo,
+  ForwardMessageGroup,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -483,6 +485,21 @@ export const useChat = () => {
     dispatch(reset());
   };
 
+  const onForwardMessage = useCallback(
+    async (params: Omit<ForwardMessageGroup, "authToken" | "userId">) => {
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
+      return await dispatch(
+        forwardMessage({
+          authToken,
+          userId,
+          ...params,
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
   const onUploadAndSendFile = useCallback(
     async ({ endpoint, files }: { endpoint: string; files: File[] }) => {
       onSetStateSendMessage({ files, status: DataStatus.LOADING });
@@ -610,5 +627,6 @@ export const useChat = () => {
     onSetStateSearchMessage,
     onGetUnReadMessages,
     onGetConventionById,
+    onForwardMessage
   };
 };

@@ -18,6 +18,7 @@ const ChatList = () => {
     convention,
     conversationPaging: { pageIndex, pageSize, textSearch: initText },
     isFetching,
+    currStep,
     onSetRoomId,
     onSetConversationInfo,
     onGetAllConvention,
@@ -119,6 +120,10 @@ const ChatList = () => {
       handleGetConversation(event.target.value, "a");
     }
   };
+
+  useEffect(() => {
+    handleGetConversation('', 'a');
+  }, [ currStep ])
 
   useEffect(() => {
     pageRef.current = pageIndex;

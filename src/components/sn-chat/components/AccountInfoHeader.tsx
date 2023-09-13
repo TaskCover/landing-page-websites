@@ -10,7 +10,7 @@ import PointOnline from "icons/pointOnline";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
 import VideoCallIcon from "icons/VideoCallIcon";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { IChatItemInfo, STEP } from "store/chat/type";
@@ -25,11 +25,22 @@ const AccountInfoHeader = ({
   onPrevious,
   viewStep,
 }: AccountInfoHeaderProp) => {
-  const { dataTransfer, onSetStep, prevStep } = useChat();
+  const { dataTransfer, onSetStep, prevStep, currStep, onGetAllConvention } = useChat();
   const { usersCount, t, name } = accountInfo;
   const isGroup = useMemo(() => t !== "d", [t]);
 
   const [textSearch, setTextSearch] = useState("");
+
+  useEffect(() => {
+    (async() => {
+      await onGetAllConvention({
+        type: 'a',
+        text: textSearch ?? '',
+        offset: 0,
+        count: 30,
+      });
+    })();
+  }, [currStep, textSearch])
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {

@@ -251,6 +251,11 @@ export interface DeleteConversationGroup extends AuthenRequestCommon {
   type: string;
 }
 
+export interface ForwardMessageGroup extends AuthenRequestCommon {
+  roomId: string;
+  messageId: string;
+}
+
 export type RoomType = "c" | "d" | "p";
 export interface ChatAttachmentsRequest extends AuthenRequestCommon {
   roomId?: string;
