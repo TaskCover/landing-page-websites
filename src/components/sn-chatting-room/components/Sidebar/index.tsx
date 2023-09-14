@@ -6,10 +6,11 @@ import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { useFetchingChattingReturns } from "components/sn-chatting-room/hooks/useFetchingChatting";
+import { useWSChat } from "store/chat/helpers";
 
 const Sidebar: FC<useFetchingChattingReturns> = ({ onSelectRoom, currentConversation }) => {
   const { mobileMode } = useGetScreenMode();
-  
+  useWSChat();
   return (
     <Box
       sx={{

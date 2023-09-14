@@ -8,7 +8,7 @@ import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 
 const initPageIndex = 10;
-const Conversation = () => {
+const Conversation = ({ wrapperMessageSx }) => {
   const {
     roomId,
     conversationInfo,
@@ -131,6 +131,7 @@ const Conversation = () => {
           getLastMessage(page, 10);
         }}
         ref={inputRef}
+        wrapperMessageSx={wrapperMessageSx}
       />
       <ChatInput
         isLoading={false}

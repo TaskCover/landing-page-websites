@@ -39,6 +39,8 @@ interface MessagesProps {
   focusMessage: MessageSearchInfo | null;
   unReadMessage: UnreadUserInfo[];
   onRefetch: (page: number) => void;
+  wrapperMessageSx: any;
+
 }
 
 type MessageHandle = {
@@ -63,6 +65,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     focusMessage,
     unReadMessage,
     onRefetch,
+    wrapperMessageSx
   }: MessagesProps,
   ref,
 ) => {
@@ -181,8 +184,9 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           gap: "0.5rem",
           flexDirection: "column",
           overflow: "auto",
-          height: "100%",
+          
           padding: "1rem 1rem 0 1rem",
+          ...!!wrapperMessageSx ? {...wrapperMessageSx} : {height: "100%"}
         }}
       >
         {messages.map((message, index) => {
