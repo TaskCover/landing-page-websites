@@ -1,11 +1,12 @@
 import { Drawer, Box, Typography, Avatar } from "@mui/material";
 import ChatDetailInfoHeader from "./ChatDetailInfoHeader";
-import AccountProfileIcon from "icons/AccountProfileIcon";
-import LinkIcon from "icons/LinkIcon";
-import FileIcon from "icons/FileIcon";
 import ChatDetailInfoMenuItem from "./ChatDetailInfoMenuItem";
 import { IChatItemInfo } from "store/chat/type";
-import MediaFileIcon from "icons/MediaFileIcon";
+import useGetScreenMode from "hooks/useGetScreenMode";
+import { useMemo } from "react";
+import AccountInfo from "../Drawer";
+import { useChatDetailInfo } from "./useChatDetailInfo";
+import DrawerInfoChat from "../Drawer";
 
 interface ChatDetailInfoProps {
   isOpen: boolean;
@@ -13,41 +14,29 @@ interface ChatDetailInfoProps {
   currentConversation: IChatItemInfo;
 }
 
-interface MenuItem {
-  text: string;
-  icon: JSX.ElementType;
-  openDrawer: boolean;
-}
-
-const menuItems: MenuItem[] = [
-  {
-    text: "Account infomation",
-    icon: AccountProfileIcon,
-    openDrawer: true,
-  },
-  {
-    text: "Media file",
-    icon: MediaFileIcon,
-    openDrawer: false,
-  },
-  {
-    text: "Link",
-    icon: LinkIcon,
-    openDrawer: false,
-  },
-  {
-    text: "File",
-    icon: FileIcon,
-    openDrawer: false,
-  },
-];
 
 const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
   isOpen,
   onClose,
   currentConversation,
 }) => {
-  const styleDrawerOpen = isOpen ? { width: "272px" } : { width: "0" };
+  const { extraDesktopMode } = useGetScreenMode();
+  const {
+    onOpenDrawer,
+    isDrawerOpen,
+    closeDrawer,
+    menuItems,
+    typeDrawer
+  } = useChatDetailInfo({ currentConversation });
+
+  const styleDrawerOpen = useMemo(
+    () =>
+      isOpen
+        ? { width: extraDesktopMode ? "424px" : "272px" }
+        : { width: 0 },
+    [extraDesktopMode, isOpen],
+  );
+
   return (
     <Drawer
       sx={{
@@ -55,7 +44,7 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
         ...styleDrawerOpen,
         "& .MuiDrawer-paper": {
           top: "50px",
-          width: "272px",
+          width: extraDesktopMode ? "424px" : "272px",
           boxSizing: "border-box",
           border: "none",
         },
@@ -69,8 +58,8 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
-          width: "272px",
-          height: "677px",
+          width: extraDesktopMode ? "424px" : "272px",
+          height: extraDesktopMode ? "948px" : "677px",
           backgroundColor: "var(--Gray0, #F7F7FD)",
           gap: "12px",
         }}
@@ -116,14 +105,18 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
               key={index}
               text={item.text}
               icon={item.icon}
-              openDrawer={item.openDrawer}
+              isOpenDrawer={isDrawerOpen}
               currentConversation={currentConversation}
+              onOpenDrawer={onOpenDrawer}
+              callBackOpenDrawer={item.callback}
             />
           ))}
         </Box>
+        {isDrawerOpen ? <DrawerInfoChat isOpen={isDrawerOpen} type={typeDrawer} onClose={closeDrawer} currentConversation={currentConversation} /> : null}
       </Box>
     </Drawer>
   );
 };
+
 
 export default ChatDetailInfo;

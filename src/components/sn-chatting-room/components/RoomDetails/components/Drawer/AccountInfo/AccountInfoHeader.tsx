@@ -20,14 +20,11 @@ const AccountInfoHeader: React.FC<AccountInfoProps> = (props) => {
         backgroundColor: "var(--White, #fff)",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            width: "32px",
-            height: "32px",
             transform: "rotate(0deg)",
           }}
         >
@@ -45,14 +42,15 @@ const AccountInfoHeader: React.FC<AccountInfoProps> = (props) => {
               />
             </svg>
           </IconButton>
-        </Box>
-        <Typography
+          <Typography
           variant="h5"
           color="var(--Black, #212121)"
           sx={{ width: "180px", textAlign: "center" }}
         >
           {props.currentConversation?.name}
         </Typography>
+        </Box>
+
         <Box
           sx={{
             display: "flex",

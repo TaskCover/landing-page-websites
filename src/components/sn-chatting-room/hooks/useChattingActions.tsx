@@ -8,7 +8,7 @@ import { ParamChatState, ParamState } from "../type";
 
 
 const useChattingActions = () => {
-    const { onGetAllConvention, convention, isFetching, onGetLastMessages, messageInfo, onGetChatAttachments } = useChat();
+    const { onGetAllConvention, convention, isFetching, onGetLastMessages, messageInfo } = useChat();
     const { onAddSnackbar } = useSnackbar()
     const t = useTranslations(NS_COMMON);
 
