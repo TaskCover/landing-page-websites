@@ -112,8 +112,6 @@ const chatSlice = createSlice({
       state.typeList = action.payload;
     },
     setDataTransfer: (state, action) => {
-      console.log("action.payload", action.payload);
-
       state.dataTransfer = action.payload;
     },
     setConversationInfo: (state, action) => {

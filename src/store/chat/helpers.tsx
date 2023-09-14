@@ -3,23 +3,27 @@ import { useAuth } from "store/app/selectors";
 import { useChat } from "./selectors";
 import { MessageBodyRequest, MessageInfo } from "./type";
 
-export const useWSChat = () => {
+export const useWSChat = (props:  { roomIdDesktop?: string }) => {
   const { user } = useAuth();
   const {
-    roomId,
-    conversationPaging,
+    roomId: roomIdMobile,
     dataTransfer,
     onSetMessage,
     onSetLastMessage,
-    onGetAllConvention,
   } = useChat();
 
   const [ws, setWs] = useState<WebSocket | null>(null);
   const token = user?.["authToken"];
   const userId = user?.["id_rocket"];
 
+  const roomId = !!props?.roomIdDesktop ? props?.roomIdDesktop : roomIdMobile;
+  console.log(roomId, 'roomId');
+  console.log(props?.roomIdDesktop, 'roomIdDesktop');
+  
+  
   const appendMessage = useCallback(
     (message) => {
+      
       const newMessage = {
         ...message,
         ts: new Date(message?.ts?.["$date"]),
@@ -41,7 +45,7 @@ export const useWSChat = () => {
         MessageBodyRequest,
         "sender_userId" | "sender_authToken" | "receiverUsername"
       >,
-    ) => {
+    ) => {      
       if (message.message && message.message.trim()?.length > 0) {
         ws?.send(
           JSON.stringify({
@@ -67,6 +71,8 @@ export const useWSChat = () => {
     if (ws) {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log(data, 'event');
+                
         if (data.msg === "connected") {
           ws.send(
             JSON.stringify({
@@ -105,8 +111,7 @@ export const useWSChat = () => {
           data.msg === "changed"
         ) {
           appendMessage(data.fields.args[0]);
-        }
-
+        }        
         if (
           data.collection === "stream-notify-user" &&
           data.msg === "changed"
@@ -165,7 +170,7 @@ export const useWSChat = () => {
 
   useEffect(() => {
     if (ws) {
-      ws.onclose = (e) => {
+      ws.onclose = (e) => {        
         if (
           ws &&
           e.code !== 3001 &&
@@ -182,7 +187,7 @@ export const useWSChat = () => {
     }
 
     return () => {
-      ws?.close(3001, "force closed");
+     ws?.close(3001, "force closed")
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, ws, dataTransfer?._id]);

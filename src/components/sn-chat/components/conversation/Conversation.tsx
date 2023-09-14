@@ -1,16 +1,21 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { useAuth, useSnackbar } from "store/app/selectors";
-import { useWSChat } from "store/chat/helpers";
+import { useWSChat, useWSChatDesktop } from "store/chat/helpers";
 import ChatInput from "../chat/ChatInput";
 import Messages from "../messages/Messages";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 
 const initPageIndex = 10;
-const Conversation = ({ wrapperMessageSx }) => {
+
+interface Props {
+  wrapperMessageSx?: any;
+  roomIdDesktop?: string;
+}
+const Conversation: FC<Props> = ({ wrapperMessageSx, roomIdDesktop }) => {
   const {
-    roomId,
+    roomId: roomIdMobile,
     conversationInfo,
     convention,
     messageInfo,
@@ -26,7 +31,10 @@ const Conversation = ({ wrapperMessageSx }) => {
     onUploadAndSendFile,
   } = useChat();
   const { user } = useAuth();
-  const { sendMessage } = useWSChat();
+  const roomId = !!roomIdDesktop ? roomIdDesktop : roomIdMobile;
+
+  const { sendMessage } = useWSChat({ roomIdDesktop });
+
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
   const [files, setFiles] = useState<File[]>([]);
@@ -110,7 +118,11 @@ const Conversation = ({ wrapperMessageSx }) => {
         });
       }
     },
-    [files, onUploadAndSendFile, sendMessage],
+    [
+      files,
+      onUploadAndSendFile,
+      sendMessage,
+    ],
   );
 
   return (

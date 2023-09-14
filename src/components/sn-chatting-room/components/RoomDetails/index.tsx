@@ -6,12 +6,12 @@ import Conversation from "components/sn-chat/components/conversation/Conversatio
 
 const RoomDetails = ({ currentConversation }) => {
   const {loading } = useChattingActions();
-  
+    
   return (
     (!loading) ? (
       <Box width="100%" display="flex" justifyContent="space-between" flexDirection="column">
         <RoomHeader currentConversation={currentConversation} />
-        <Conversation wrapperMessageSx={{ height: '75vh' }} />
+        <Conversation wrapperMessageSx={{ height: '75vh' }} roomIdDesktop={currentConversation?._id} />
       </Box>
     ) : (
       <Box width="100%" height="100%" display="flex" alignItems="center" justifyContent="center">

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { ParamChatState, ParamState } from "../type"
 import useChattingActions from "./useChattingActions"
 import { IChatItemInfo } from "store/chat/type"
+import { useChat } from "store/chat/selectors"
 
 const defaultParam = {
     count: 12,
@@ -22,8 +23,9 @@ export interface useFetchingChattingReturns {
 }
 
 const useFetchingChatting = (): useFetchingChattingReturns => {
-    const { conversations, handleGetDetailConversation, handleGetConversation } = useChattingActions()
+    const { conversations, handleGetDetailConversation, handleGetConversation, onGetUnReadMessages } = useChattingActions()
 
+    const {onSetRoomId} = useChat()
     const [params, setParams] = useState<ParamState>(defaultParam as ParamState)
     const [detailParams, setDetailsParams] = useState<ParamChatState>(defaultChatParam as ParamChatState)
 
@@ -39,7 +41,6 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
           });
         }
     }, [detailParams])
-    
 
     useEffect(() => {
         if(conversations?.length > 0){
@@ -47,6 +48,9 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
         }
     }, [conversations])
 
+    useEffect(() => {
+        onGetUnReadMessages && onGetUnReadMessages({ type: 'd' })
+    }, [onGetUnReadMessages])
     const onSelectRoom = (roomId: string) => {
         setDetailsParams((prevState) => ({
             ...prevState,
@@ -60,6 +64,10 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
         }
     }, [detailParams?.roomId, conversations])
     
+    useEffect(() => {
+        // onSetRoomId(detailParams.roomId)
+    }, [detailParams.roomId])
+
     return {
         onSelectRoom,
         currentConversation

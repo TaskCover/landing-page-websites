@@ -8,7 +8,7 @@ import { ParamChatState, ParamState } from "../type";
 
 
 const useChattingActions = () => {
-    const { onGetAllConvention, convention, isFetching, onGetLastMessages, messageInfo } = useChat();
+    const { onGetAllConvention, convention, isFetching, onGetLastMessages, messageInfo, onGetUnReadMessages } = useChat();
     const { onAddSnackbar } = useSnackbar()
     const t = useTranslations(NS_COMMON);
 
@@ -30,7 +30,7 @@ const useChattingActions = () => {
 
 
     const handleGetDetailConversation = (props: ParamChatState) => {
-        if (props?.roomId?.length > 0) {
+        if (props?.roomId?.length > 0) {            
             onGetLastMessages(props)
         }
     }
@@ -41,6 +41,7 @@ const useChattingActions = () => {
         conversations: convention,
         loading: isFetching,
         detailsMessage: messageInfo,
+        onGetUnReadMessages
     }
 }
 

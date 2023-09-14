@@ -5,19 +5,13 @@ import { SNChat } from "./components";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { Box } from "@mui/material";
 import useFetchingChatting from "./hooks/useFetchingChatting";
-import ChattingRoomMobileLayout from "./components/Layout/ChattingRoomMobileLayout";
 import ChatDetailUserMobile from "./components/RoomDetails/components/ChatDetailUserMobile";
-import AccountInfoMobile from "./components/RoomDetails/components/AccountInfoMobile";
 
 const { RoomDetails, Sidebar, ChattingRoomLayout } = SNChat;
 
 const ChattingRoom = () => {
   const { mobileMode } = useGetScreenMode();
   const { onSelectRoom, currentConversation } = useFetchingChatting();
-
-  // const LayoutComponent = mobileMode
-  //   ? ChattingRoomMobileLayout
-  //   : ChattingRoomLayout;
 
   return (
     <Box
@@ -27,13 +21,6 @@ const ChattingRoom = () => {
         ...(!mobileMode && { display: "flex", alignItems: "flex-start" }),
       }}
     >
-      {/* <LayoutComponent>
-        <Sidebar
-          currentConversation={currentConversation}
-          onSelectRoom={onSelectRoom}
-        />
-        <RoomDetails currentConversation={currentConversation} />
-      </LayoutComponent> */}
       {!mobileMode ? (
         <ChattingRoomLayout>
           <Sidebar

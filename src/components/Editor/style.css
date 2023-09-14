@@ -82,3 +82,7 @@
   background-color: var(--mui-palette-grey-100);
   color: var(--mui-palette-text-primary);
 }
+
+.quill .ql-toolbar:first-child {
+  display: none !important;
+}
