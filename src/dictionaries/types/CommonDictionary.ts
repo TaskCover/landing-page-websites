@@ -106,9 +106,11 @@ export type CommonDictionary = {
   processing: string;
   aFewFilesInvalid: string;
   processingUpload: string;
+  cancel: string;
   chatBox: {
     chat: string;
     searchName: string;
+    searchConversation: string;
     you: string;
     active: string;
     typeMessage: string;

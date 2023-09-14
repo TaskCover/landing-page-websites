@@ -110,9 +110,11 @@ export const CommonLang: CommonDictionary = {
   aFewFilesInvalid:
     "Hệ thống chỉ hỗ trợ các định dạng file doc, docx, xlsx, xls, csv, mp3, mp4, png, jpeg, jpg, pdf, ppt, pptx, zip, rar. Vui lòng kiểm tra lại định dạng file đính kèm của bạn.",
   processingUpload: "Đang tải lên tệp tin...",
-  chatBox: {
+  cancel: "Huỷ",
+    chatBox: {
     chat: "Trò chuyện",
     searchName: "Tìm kiếm tên",
+    searchConversation: "Tìm kiếm hội thoại",
     you: "Bạn:",
     active: "Đang hoạt động",
     typeMessage: "Nhập tin nhắn...",

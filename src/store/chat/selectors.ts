@@ -233,7 +233,7 @@ export const useChat = () => {
     async ({
       text,
       type = "d",
-    }: Omit<MessageSearchInfoRequest, "authToken" | "userId" | "roomId">) => {
+    }: Omit<MessageSearchInfoRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       return await dispatch(

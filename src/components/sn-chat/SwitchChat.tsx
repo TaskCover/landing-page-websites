@@ -9,6 +9,7 @@ import ChatDetailGroup from "./chatGroup/ChatDetailGroup";
 import List from "./chatGroup/list/List";
 import ChatForward from "./ChatForward";
 import Conversation from "./components/conversation/Conversation";
+import SearchChatText from "./chatGroup/SearchChatText";
 
 const SwitchChat = () => {
   const { currStep, onSetStep } = useChat();
@@ -60,6 +61,8 @@ const SwitchChat = () => {
         );
       case STEP.ADD_MEMBER:
           return <AddGroup />;
+      case STEP.SEARCH_CHAT_TEXT:
+          return <SearchChatText />;
       default:
         return null;
     }

@@ -269,6 +269,9 @@ const AccountInfoHeader = ({
                     sx={{
                       color: "#1BC5BD",
                     }}
+                    onClick={() => {
+                      onSetStep(STEP.SEARCH_CHAT_TEXT);
+                    }}
                   />
                 </IconButton>
               )}
