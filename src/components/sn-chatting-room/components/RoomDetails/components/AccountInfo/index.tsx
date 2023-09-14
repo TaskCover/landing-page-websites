@@ -2,6 +2,11 @@ import { Drawer, Box, Typography, Avatar } from "@mui/material";
 import AccountInfoHeader from "./AccountInfoHeader";
 import { IChatItemInfo } from "store/chat/type";
 import AccountInfoItem from "./AccountInfoItem";
+import { useChat } from "store/chat/selectors";
+import { useEffect } from "react";
+import { UserInfo } from "store/app/reducer";
+import { useTranslations } from "next-intl";
+import { NS_AUTH } from "constant/index";
 
 interface AccountInfoProps {
   isOpen: boolean;
@@ -14,28 +19,19 @@ interface InfoItem {
   value: string;
 }
 
-const infoItems: InfoItem[] = [
-  {
-    label: "Name",
-    value: "Nguyen Van A",
-  },
-  {
-    label: "Chức vụ",
-    value: "CEO 12",
-  },
-  {
-    label: "Số điện thoại",
-    value: "0332429173",
-  },
-  {
-    label: "Email",
-    value: "eu@fpt.com",
-  },
-];
+const mapperDataToInfo = (partnerInfo: Partial<UserInfo>) => ({
+  fullName: partnerInfo.fullname,
+  email: partnerInfo.email,
+  position: partnerInfo.position?.name,
+  phone: partnerInfo.phone
+})
+
 
 const AccountInfo: React.FC<AccountInfoProps> = (props) => {
   const styleDrawerOpen = props.isOpen ? { width: "272px" } : { width: "0" };
-
+  const { partnerInfo } = useChat()
+  const t = useTranslations(NS_AUTH)
+  
   return (
     <Drawer
       sx={{
@@ -92,11 +88,11 @@ const AccountInfo: React.FC<AccountInfoProps> = (props) => {
             padding: "0px 12px",
           }}
         >
-          {infoItems.map((item, index) => (
+          {partnerInfo && Object.keys(mapperDataToInfo(partnerInfo))?.map((key) => (
             <AccountInfoItem
-              key={index}
-              label={item.label}
-              value={item.value}
+              key={key}
+              label={t(`signup.form.title.${key}`)}
+              value={mapperDataToInfo(partnerInfo)[key]}
             />
           ))}
         </Box>

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import UserIcon from "icons/UserIcon";
 import AccountInfo from "../AccountInfo";
 import { IChatItemInfo } from "store/chat/type";
+import { useChat } from "store/chat/selectors";
 
 interface ChatDetailInfoMenuItemProps {
   text: string;
@@ -16,10 +17,15 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
   props,
 ) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { onGetUserInfo } = useChat();
   // Handler to open the drawer.
-  const openDrawer = () => {
-    setIsDrawerOpen(true);
-  };
+  const openDrawer = useCallback(() => {
+    if (props?.currentConversation?.usernames[0]) {
+      setIsDrawerOpen(true);
+      onGetUserInfo(props?.currentConversation?.usernames[0]);
+    }
+  }, [props?.currentConversation?.usernames]);
+
   const closeDrawer = () => {
     setIsDrawerOpen(false);
   };
