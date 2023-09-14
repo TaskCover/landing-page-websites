@@ -7,7 +7,7 @@ import { useAuth, useSnackbar } from "store/app/selectors";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
-import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_CHAT_BOX, NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useWSChat } from "store/chat/helpers";
 
@@ -28,6 +28,7 @@ const ChatList = () => {
   useWSChat();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
 
   const [textSearch, setTextSearch] = useState(initText);
   const [lastElement, setLastElement] = useState(null);
@@ -162,7 +163,7 @@ const ChatList = () => {
         }}
       >
         <Typography color="white" variant="h4">
-          {commonT("chatBox.chat")}
+          {commonChatBox("chatBox.chat")}
         </Typography>
         <TextField
           size="small"
@@ -201,7 +202,7 @@ const ChatList = () => {
               />
             ),
           }}
-          placeholder={commonT("chatBox.searchName")}
+          placeholder={commonChatBox("chatBox.searchName")}
           fullWidth
           value={textSearch}
           onChange={(e) => setTextSearch(e.target.value)}

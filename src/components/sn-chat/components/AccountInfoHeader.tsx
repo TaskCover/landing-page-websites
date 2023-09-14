@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Avatar from "components/Avatar";
-import { NS_COMMON } from "constant/index";
+import { NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import ArrowRightIcon from "icons/ArrowRightIcon";
 import CloseIcon from "icons/CloseIcon";
@@ -32,7 +32,7 @@ const AccountInfoHeader = ({
   const isGroup = useMemo(() => t !== "d", [t]);
 
   const [textSearch, setTextSearch] = useState("");
-  const commonT = useTranslations(NS_COMMON);
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
 
   useEffect(() => {
     (async() => {
@@ -122,7 +122,7 @@ const AccountInfoHeader = ({
               {name ? name : dataTransfer?.fname}
             </Typography>
             <Typography variant="caption" color="#999999">
-              {commonT("chatBox.active")}
+              {commonChatBox("chatBox.active")}
             </Typography>
           </Box>
           {/* <IconButton

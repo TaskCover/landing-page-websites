@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import "react-quill/dist/quill.snow.css";
-import { ACCEPT_MEDIA, FILE_ACCEPT, NS_COMMON } from "constant/index";
+import { ACCEPT_MEDIA, FILE_ACCEPT, NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import "quill/dist/quill.snow.css";
 import ImageImportIcon from "icons/ImageImportIcon";
@@ -97,7 +97,7 @@ const ChatEditor = (props: EditorProps) => {
     onGetUnReadMessages,
     dataTransfer
    } = useChat();
-   const commonT = useTranslations(NS_COMMON);
+   const commonChatBox = useTranslations(NS_CHAT_BOX);
 
   const quillRef = useRef<ReactQuill>(null);
   const inputMediaRef = useRef<HTMLInputElement | null>(null);
@@ -295,7 +295,7 @@ const ChatEditor = (props: EditorProps) => {
         <QuillNoSSRWrapper
           forwardedRef={quillRef}
           theme="snow"
-          placeholder={commonT("chatBox.typeMessage")}
+          placeholder={commonChatBox("chatBox.typeMessage")}
           modules={modules}
           formats={[
             "bold",

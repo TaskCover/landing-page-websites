@@ -4,6 +4,7 @@ import { Typography } from "@mui/material";
 import { ChangeEvent } from "react";
 import { Button } from "components/shared";
 import { Employee } from "store/company/reducer";
+import useTheme from "hooks/useTheme";
 
 interface ItemSearchChatTextProp {
   employee: Employee;
@@ -16,6 +17,7 @@ const ItemSearchChatText = ({
   onClickItem,
 }: ItemSearchChatTextProp) => {
   const { fullname, email, avatar } = employee;
+  const { isDarkMode } = useTheme();
 
   return (
     <Box
@@ -26,8 +28,7 @@ const ItemSearchChatText = ({
         marginBottom: 1,
         // cursor: "pointer",
         ":hover": {
-          backgroundColor: "#F7F7FD",
-        },
+          backgroundColor: isDarkMode ? "#3a3b3c" : "#F7F7FD"        },
       }}
       p={1}
       onClick={onClickItem}

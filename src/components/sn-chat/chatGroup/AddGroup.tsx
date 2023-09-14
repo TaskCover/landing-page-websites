@@ -13,7 +13,7 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 import SearchIcon from "icons/SearchIcon";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";
-import { NS_COMMON } from "constant/index";
+import { NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { Employee } from "store/company/reducer";
 import SelectItem from "../components/SelectItem";
@@ -54,6 +54,7 @@ const AddGroup = () => {
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
   const { onAddSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -177,7 +178,7 @@ const AddGroup = () => {
               border: "1px solid transparent",
             },
           }}
-          placeholder={commonT("chatBox.searchName")}
+          placeholder={commonChatBox("chatBox.searchName")}
           fullWidth
           onKeyDown={handleKeyDown}
           InputProps={{
