@@ -256,6 +256,11 @@ export interface ForwardMessageGroup extends AuthenRequestCommon {
   messageId: string;
 }
 
+export interface ChangeGroupAvatar extends AuthenRequestCommon {
+  roomId: string;
+  avatarUrl: string;
+}
+
 export type RoomType = "c" | "d" | "p";
 export interface ChatAttachmentsRequest extends AuthenRequestCommon {
   roomId?: string;

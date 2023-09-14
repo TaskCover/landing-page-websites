@@ -57,7 +57,7 @@ const AddGroup = () => {
   const { onAddSnackbar } = useSnackbar();
 
   useEffect(() => {
-    onGetEmployees(user?.company ?? "", {name: textSearch, pageIndex: 0, pageSize: 30 });
+    onGetEmployees(user?.company ?? "", {email: textSearch, pageIndex: 0, pageSize: 30 });
   }, [onGetEmployees, textSearch, user?.company]);
 
   const handleSuccess = (result) => {

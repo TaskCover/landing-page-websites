@@ -20,8 +20,11 @@ import { useAuth, useSnackbar } from "store/app/selectors";
 import ItemDetail from "../components/ItemDetail";
 import MediaFileIconGroup from "icons/MediaFileIconGroup";
 import LinkIconGroup from "icons/LinkIconGroup";
+import { uploadFile } from "store/chat/media/actionMedia";
+import { useAppDispatch } from "store/hooks";
 
 const ChatDetailGroup = (props) => {
+  const dispatch = useAppDispatch();
   const {
     typeList,
     dataTransfer,
@@ -36,7 +39,8 @@ const ChatDetailGroup = (props) => {
     onRemoveGroupMember,
     onSetConversationInfo,
     onDeleteConversationGroup,
-    onGetAllConvention
+    onGetAllConvention,
+    onChangeGroupAvatar,
   } = useChat();
   const { user } = useAuth();
   //check owner
@@ -286,7 +290,7 @@ const ChatDetailGroup = (props) => {
       };
       const renameResult = (await onRenameGroup({
         roomId: dataTransfer?._id,
-        name: renameGroup,
+        name: renameGroup.replaceAll(' ', '_'),
       })) as any;
       
       if (renameResult?.error) {
@@ -400,6 +404,7 @@ const ChatDetailGroup = (props) => {
           >
             <Avatar
               alt="Avatar"
+              src={dataTransfer?.avatar}
               size={80}
               style={{
                 borderRadius: "10px",
@@ -422,6 +427,11 @@ const ChatDetailGroup = (props) => {
                   id="upload-photo"
                   name="upload-photo"
                   type="file"
+                  onChange={async (e) => {
+                    if (e.currentTarget.files?.length) {
+                      onChangeGroupAvatar(e.currentTarget.files[0], dataTransfer?._id);
+                    }
+                  }}
                 />
                 <Fab
                   color="primary"
