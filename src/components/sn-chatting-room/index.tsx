@@ -7,6 +7,7 @@ import { Box } from "@mui/material";
 import useFetchingChatting from "./hooks/useFetchingChatting";
 import ChattingRoomMobileLayout from "./components/Layout/ChattingRoomMobileLayout";
 import ChatDetailUserMobile from "./components/RoomDetails/components/ChatDetailUserMobile";
+import AccountInfoMobile from "./components/RoomDetails/components/AccountInfoMobile";
 
 const { RoomDetails, Sidebar, ChattingRoomLayout } = SNChat;
 

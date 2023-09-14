@@ -1,5 +1,6 @@
 import { Box, IconButton, Typography } from "@mui/material";
 import ArrowDownIcon from "icons/ArrowDownIcon";
+import AccountInfoMobile from "../AccountInfoMobile";
 
 interface ChatDetailUserMenuItemMobileProps {
   text: string;

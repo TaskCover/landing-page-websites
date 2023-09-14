@@ -7,8 +7,10 @@ import ChatDetailUserMenuItemMobile from "./ChatDetailUserMenuItemMobile";
 import MediaFileIcon from "icons/MediaFileIcon";
 import CreateGroupChatIcon from "icons/CreateGroupChatIcon";
 import DeleteChatIcon from "icons/DeleteChatIcon";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import SearchDetailChatUser from "../SearchDetailChatUser";
+import { useChat } from "store/chat/selectors";
+import AccountInfoMobile from "../AccountInfoMobile";
 
 interface ChatDetailUserMobileProps {
   currentConversation: IChatItemInfo;
@@ -24,6 +26,19 @@ interface MenuItem {
 
 const ChatDetailUserMobile = (currentConversation) => {
   const [searchConversationShow, setSearchConversationShow] = useState(false);
+  const [accountInfoShow, setAccountInfoShow] = useState(false);
+  const { onGetUserInfo } = useChat();
+
+  const handleOpenAccountInfoMobile = useCallback(() => {
+    if (currentConversation?.usernames[0]) {
+      setAccountInfoShow(true);
+      onGetUserInfo(currentConversation?.usernames[0]);
+    }
+  }, [currentConversation?.usernames]);
+
+  const handleCloseAccountInfoMobile = () => {
+    setAccountInfoShow(false);
+  };
 
   const handleSearchConversation = () => {
     setSearchConversationShow(!searchConversationShow);
@@ -35,6 +50,7 @@ const ChatDetailUserMobile = (currentConversation) => {
       icon: AccountProfileIcon,
       stroke: "#3699FF",
       borderBottom: true,
+      handleOnClick: handleOpenAccountInfoMobile,
     },
     {
       text: `Create a chat group with ${currentConversation?.name}`,
@@ -88,7 +104,7 @@ const ChatDetailUserMobile = (currentConversation) => {
         />
         <Box>
           <Typography
-            variant="h6"
+            variant="h4"
             color="var(--Black, #212121)"
             sx={{ textAlign: "center" }}
           >
@@ -146,6 +162,11 @@ const ChatDetailUserMobile = (currentConversation) => {
       <SearchDetailChatUser
         isOpen={searchConversationShow}
         onClose={handleSearchConversation}
+        currentConversation={currentConversation}
+      />
+      <AccountInfoMobile
+        isOpen={accountInfoShow}
+        onClose={handleCloseAccountInfoMobile}
         currentConversation={currentConversation}
       />
     </Box>
