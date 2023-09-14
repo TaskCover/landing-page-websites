@@ -18,6 +18,7 @@ import {
   getUnreadMessages,
   getConventionById,
   forwardMessage,
+  changeGroupAvatar,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -45,6 +46,7 @@ import {
   UnReadMessageRequest,
   MessageInfo,
   ForwardMessageGroup,
+  ChangeGroupAvatar,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -500,6 +502,23 @@ export const useChat = () => {
     [dispatch, user],
   );
 
+  const onChangeGroupAvatar = useCallback(
+    async (file: File, roomId: string) => {
+      const result = await dispatch(uploadFile({ endpoint: 'files/upload-link', file }));
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
+      return await dispatch(
+        changeGroupAvatar({
+          authToken,
+          userId,
+          roomId,
+          avatarUrl: result?.payload?.download ?? '',
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
   const onUploadAndSendFile = useCallback(
     async ({ endpoint, files }: { endpoint: string; files: File[] }) => {
       onSetStateSendMessage({ files, status: DataStatus.LOADING });
@@ -627,6 +646,7 @@ export const useChat = () => {
     onSetStateSearchMessage,
     onGetUnReadMessages,
     onGetConventionById,
-    onForwardMessage
+    onForwardMessage,
+    onChangeGroupAvatar
   };
 };
