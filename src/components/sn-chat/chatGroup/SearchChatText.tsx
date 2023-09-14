@@ -18,32 +18,16 @@ import { useEmployeesOfCompany } from "store/manager/selectors";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { STEP } from "store/chat/type";
 import ItemSearchChatText from "./ItemSearchChatText";
+import { DataStatus } from "constant/enums";
 
 const SearchChatText = () => {
   const [textSearch, setTextSearch] = useState("");
-  
-  const {
-    items,
-    onGetEmployees,
-    onApproveOrReject: onApproveOrRejectAction,
-  } = useEmployeesOfCompany();
-
-  const { user } = useAuth();
-
-  useEffect(() => {
-    onGetEmployees(user?.company ?? "", {email: textSearch, pageIndex: 0, pageSize: 30 });
-  }, [onGetEmployees, textSearch, user?.company]);
 
   const {
-    prevStep,
-    dataTransfer,
-    groupMembers,
-    onSetRoomId,
     onSetStep,
-    onCreateDirectMessageGroup,
-    onAddMembers2Group,
-    currStep,
     onSearchChatText,
+    listSearchMessage,
+    statusListSearchMessage
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -56,9 +40,8 @@ const SearchChatText = () => {
 
   const getSearchChatText = useCallback(async () => {
     await onSearchChatText({
-      roomId: dataTransfer?._id,
       text: textSearch,
-      type: 'd',
+      type: 'p',
     });
   }, [textSearch, onSearchChatText]);
 
@@ -121,7 +104,7 @@ const SearchChatText = () => {
           }}
         />
         <Typography 
-          sx={{color: '#1BC5BD', fontWeight: 600, fontSize: 14}} 
+          sx={{color: '#1BC5BD', fontWeight: 600, fontSize: 14, cursor: "pointer"}} 
           onClick={()=>{onSetStep(STEP.CHAT_DETAIL_GROUP);}}
         >
           {commonT("cancel")}
@@ -132,7 +115,8 @@ const SearchChatText = () => {
         maxHeight="calc(550px - 85px - 15px)"
         minHeight="calc(550px - 85px - 15px)"
       >
-        {!items ? (
+        {statusListSearchMessage === DataStatus.LOADING ||
+      statusListSearchMessage === DataStatus.FAILED  ? (
           Array.from({ length: 5 }, (_, i) => (
             <Box
               key={i}
@@ -156,13 +140,8 @@ const SearchChatText = () => {
           ))
         ) : (
           <>
-            {items?.length > 0
-              ? items
-                  ?.filter(
-                    (item) =>
-                      dataTransfer?.isNew || !dataTransfer?.isNew && !groupMembers?.map((m) => m._id)?.includes(item.id_rocket),
-                  )
-                  ?.filter((m) => m.id_rocket !== user?.id_rocket)
+            {listSearchMessage?.length > 0
+              ? listSearchMessage
                   .map((item, index) => {
                     return (
                       <ItemSearchChatText

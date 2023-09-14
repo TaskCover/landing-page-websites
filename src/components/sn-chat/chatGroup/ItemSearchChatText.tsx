@@ -2,12 +2,12 @@ import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
 import { Typography } from "@mui/material";
 import { ChangeEvent } from "react";
-import { Button } from "components/shared";
-import { Employee } from "store/company/reducer";
+import { SearchChatText } from "store/company/reducer";
 import useTheme from "hooks/useTheme";
+import { renderTimeDiff } from "utils/index";
 
 interface ItemSearchChatTextProp {
-  employee: Employee;
+  employee: SearchChatText;
   onClick?: (event: ChangeEvent<HTMLInputElement>) => void;
   onClickItem?: () => void;
 }
@@ -16,7 +16,7 @@ const ItemSearchChatText = ({
   onClick,
   onClickItem,
 }: ItemSearchChatTextProp) => {
-  const { fullname, email, avatar } = employee;
+  const { fullname, matchedText, avatar, ts } = employee;
   const { isDarkMode } = useTheme();
 
   return (
@@ -34,7 +34,7 @@ const ItemSearchChatText = ({
       onClick={onClickItem}
     >
       <Avatar
-        src={avatar?.link}
+        src={avatar}
         alt="Avatar"
         size={42}
         style={{
@@ -51,9 +51,17 @@ const ItemSearchChatText = ({
           {fullname}
         </Typography>
         <Typography variant="caption" color="#999999">
-          {email}
+          {matchedText}
         </Typography>
       </Box>
+      <Typography
+        variant="caption"
+        color="#999999"
+        ml="auto"
+        whiteSpace="nowrap"
+      >
+        {renderTimeDiff(ts)}
+      </Typography>
     </Box>
   );
 };
