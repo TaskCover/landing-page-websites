@@ -89,7 +89,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     }),
   );
 
-  const getTimeStamp = (time: string) => {
+  const getTimeStamp = (time: string | Date) => {
     const date = new Date(time);
     const lastHours = date.getHours();
     let half = "AM";
@@ -262,7 +262,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                         borderRadius: '10px',
                         display: 'inline-block',
                       }}
-                    >{message?.u?.username} {message?.t === 'au' ? 'added' : (message?.t === 'ru' ? 'removed' : message?.t)} {message?.msg} ({getTimeStamp(message?.ts)})</Typography>
+                    >{message?.u?.username} {message?.t === 'au' ? 'added' : (message?.t === 'ru' ? 'removed' : message?.t)} {message?.msg} ({getTimeStamp(message?.ts ?? '')})</Typography>
                   </Box>
               )}
               {hasNextDay && (
