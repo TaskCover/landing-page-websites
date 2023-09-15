@@ -15,7 +15,7 @@ import {
 import useTheme from "hooks/useTheme";
 import OutLineExpandIcon from "icons/OutLineExpandIcon";
 
-interface IOptionStructure {
+export interface IOptionStructure {
   label: string;
   value: string;
 }

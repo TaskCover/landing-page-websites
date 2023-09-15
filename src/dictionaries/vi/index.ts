@@ -17,7 +17,7 @@ import { CompanyLang } from "./company";
 import { LayoutLang } from "./layout";
 import { ManagerLang } from "./manager";
 import { ProjectLang } from "./project";
-import { ResourcePlanningLang } from "./resourcePlanning";
+import { ResourcePlanning } from "./resourcePlanning";
 import { salesLang } from "./sales";
 import { TimeTrackingLang } from "./timetracking";
 
@@ -31,5 +31,5 @@ export default {
   [NS_MANAGER]: ManagerLang,
   [NS_TIME_TRACKING]: TimeTrackingLang,
   [NS_SALES]: salesLang,
-  [NS_RESOURCE_PLANNING]: ResourcePlanningLang,
+  [NS_RESOURCE_PLANNING]: ResourcePlanning,
 };

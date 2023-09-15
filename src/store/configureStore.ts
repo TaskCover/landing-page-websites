@@ -9,6 +9,7 @@ import timeTrackingReducer, {
 import managerReducer, { ManagerState } from "store/manager/reducer";
 import chatReducer from "store/chat/reducer";
 import { SaleState, salesReducer } from "./sales/reducer";
+import { resourcePlanningReducer } from "./resourcePlanning/reducer";
 
 export interface State {
   app: AppState;
@@ -30,6 +31,7 @@ export const store = configureStore({
     manager: managerReducer,
     chat: chatReducer,
     sales: salesReducer,
+    resourcePlanning: resourcePlanningReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

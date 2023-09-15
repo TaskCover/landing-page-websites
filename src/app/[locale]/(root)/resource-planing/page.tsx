@@ -4,6 +4,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { TabContext, TabPanel } from "@mui/lab";
 import TabList from "@mui/lab/TabList";
 import { Grid, Stack, Tab, Typography } from "@mui/material";
+import { LocalizationProvider, viVN } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Wrapper from "components/Wrapper";
 import AllPeopleTab from "components/sn-resource-planing/AllPeopleTab";
 import MyScheduleTab from "components/sn-resource-planing/MyScheduleTab";
@@ -88,17 +90,32 @@ export default function ResourcePlanningPage() {
                   setTab(newValue)
                 }
               >
-                <Tab label="All People" value="allPeople" sx={tabStyles} />
-                <Tab label="My schedule" value="mySchedule" sx={tabStyles} />
+                <Tab
+                  label={t("header.tab.allPeople")}
+                  value="allPeople"
+                  sx={tabStyles}
+                />
+                <Tab
+                  label={t("header.tab.mySchedule")}
+                  value="mySchedule"
+                  sx={tabStyles}
+                />
               </TabList>
             </Grid>
           </Grid>
-          <TabPanel value="allPeople">
-            <AllPeopleTab />
-          </TabPanel>
-          <TabPanel value="mySchedule">
-            <MyScheduleTab />
-          </TabPanel>
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            localeText={
+              viVN.components.MuiLocalizationProvider.defaultProps.localeText
+            }
+          >
+            <TabPanel value="allPeople">
+              <AllPeopleTab />
+            </TabPanel>
+            <TabPanel value="mySchedule">
+              <MyScheduleTab />
+            </TabPanel>
+          </LocalizationProvider>
         </TabContext>
       </Stack>
     </Wrapper>
