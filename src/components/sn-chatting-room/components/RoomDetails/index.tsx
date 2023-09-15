@@ -11,7 +11,7 @@ const RoomDetails = ({ currentConversation }) => {
     (!loading) ? (
       <Box width="100%" display="flex" justifyContent="space-between" flexDirection="column">
         <RoomHeader currentConversation={currentConversation} />
-        <Conversation wrapperMessageSx={{ height: '75vh' }} roomIdDesktop={currentConversation?._id} />
+        <Conversation wrapperMessageSx={{ height: '70vh' }} roomIdDesktop={currentConversation?._id} />
       </Box>
     ) : (
       <Box width="100%" height="100%" display="flex" alignItems="center" justifyContent="center">
