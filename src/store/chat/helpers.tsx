@@ -3,7 +3,7 @@ import { useAuth } from "store/app/selectors";
 import { useChat } from "./selectors";
 import { MessageBodyRequest, MessageInfo } from "./type";
 
-export const useWSChat = (props:  { roomIdDesktop?: string }) => {
+export const useWSChat = (props: { roomIdDesktop?: string }) => {
   const { user } = useAuth();
   const {
     roomId: roomIdMobile,
@@ -17,13 +17,8 @@ export const useWSChat = (props:  { roomIdDesktop?: string }) => {
   const userId = user?.["id_rocket"];
 
   const roomId = !!props?.roomIdDesktop ? props?.roomIdDesktop : roomIdMobile;
-  console.log(roomId, 'roomId');
-  console.log(props?.roomIdDesktop, 'roomIdDesktop');
-  
-  
   const appendMessage = useCallback(
     (message) => {
-      
       const newMessage = {
         ...message,
         ts: new Date(message?.ts?.["$date"]),
@@ -45,8 +40,10 @@ export const useWSChat = (props:  { roomIdDesktop?: string }) => {
         MessageBodyRequest,
         "sender_userId" | "sender_authToken" | "receiverUsername"
       >,
-    ) => {      
+    ) => {
       if (message.message && message.message.trim()?.length > 0) {
+        console.log(roomId, 'roomId');
+        
         ws?.send(
           JSON.stringify({
             msg: "method",
@@ -71,8 +68,6 @@ export const useWSChat = (props:  { roomIdDesktop?: string }) => {
     if (ws) {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log(data, 'event');
-                
         if (data.msg === "connected") {
           ws.send(
             JSON.stringify({
@@ -111,7 +106,7 @@ export const useWSChat = (props:  { roomIdDesktop?: string }) => {
           data.msg === "changed"
         ) {
           appendMessage(data.fields.args[0]);
-        }        
+        }
         if (
           data.collection === "stream-notify-user" &&
           data.msg === "changed"
@@ -162,32 +157,35 @@ export const useWSChat = (props:  { roomIdDesktop?: string }) => {
     return wsClient;
   };
 
+  const reConnect = () => {
+    setTimeout(() => {
+      console.log("reConnect");
+      const wsNew = connectSocket();
+      connectMessage(wsNew);
+    }, 100);
+  };
+
   useEffect(() => {
     const wsNew = connectSocket();
     connectMessage(wsNew);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [roomId]);
 
   useEffect(() => {
     if (ws) {
-      ws.onclose = (e) => {        
+      ws.onclose = (e) => {
         if (
           ws &&
-          e.code !== 3001 &&
+          (e.code !== 3001) &&
           (ws.readyState === ws.CLOSING || ws.readyState === ws.CLOSED)
         ) {
-          setTimeout(() => {
-            console.log("reConnect");
-            const wsNew = connectSocket();
-            connectMessage(wsNew);
-          }, 100);
-          // }
+          reConnect();
         }
       };
     }
 
     return () => {
-     ws?.close(3001, "force closed")
+      ws?.close(3001, "force closed");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, ws, dataTransfer?._id]);
