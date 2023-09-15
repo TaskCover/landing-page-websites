@@ -83,6 +83,7 @@ export interface ParsedURL {
 }
 
 export interface MessageInfo {
+  t: string;
   _id: string;
   alias: string;
   msg: string;
