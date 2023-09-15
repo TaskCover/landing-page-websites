@@ -87,6 +87,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, roomIdDesktop }) => {
     const countNew = stateSearchMessage?.offset
       ? stateSearchMessage?.offset + initPageIndex
       : initPageIndex;
+    if(!roomId) return;
     getLastMessage(0, countNew);
     if (inputRef.current) {
       inputRef.current.pageRef.current = countNew - initPageIndex;
