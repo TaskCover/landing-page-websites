@@ -186,13 +186,11 @@ const GroupChatMobile = (currentConversation) => {
           ))}
         </Box>
       </Box>
-      {isDrawerOpen && (
-        <MembersMobile
-          isOpen={isDrawerOpen}
-          onClose={closeDrawer}
-          currentConversation={currentConversation}
-        />
-      )}
+      <MembersMobile
+        isOpen={isDrawerOpen}
+        onClose={closeDrawer}
+        currentConversation={currentConversation}
+      />
     </Box>
   );
 };

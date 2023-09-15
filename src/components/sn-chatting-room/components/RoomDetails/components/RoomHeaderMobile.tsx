@@ -96,12 +96,12 @@ const RoomHeaderMobile = ({ currentConversation }) => {
         >
           <VideoCallIcon stroke={"#FFF"} />
         </IconButton>
+        <ChatDetailUserMobile
+          isOpen={isDrawerOpen}
+          onClose={closeDrawer}
+          currentConversation={currentConversation}
+        />
       </Box>
-      <ChatDetailUserMobile
-        isOpen={isDrawerOpen}
-        onClose={closeDrawer}
-        currentConversation={currentConversation}
-      />
     </Box>
   );
 };
