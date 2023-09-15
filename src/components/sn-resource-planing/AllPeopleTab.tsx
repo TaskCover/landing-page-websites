@@ -247,6 +247,7 @@ const AllPeopleTab = () => {
         calendarRef={calendarRef}
       />
       <Box
+        overflow="scroll"
         sx={{
           "& .custom-header": {
             "& .fc-scrollgrid-sync-inner": {
@@ -338,7 +339,7 @@ const AllPeopleTab = () => {
                 }}
                 sx={{ width: 1 }}
               >
-                <Grid item xs={2} md={5} />
+                <Grid item xs={3} md={5} />
                 <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {resourceT("schedule.resourceHeader.available")}
@@ -441,7 +442,7 @@ const AllPeopleTab = () => {
                   >
                     <Grid
                       item
-                      xs={2}
+                      xs={3}
                       md={5}
                       sx={{
                         px: 1,

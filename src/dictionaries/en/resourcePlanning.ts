@@ -31,4 +31,20 @@ export const ResourcePlanningLang: ResourceDictionary = {
       addBooking: "Add booking",
     },
   },
+  form: {
+    title: "Resource Planning",
+
+    project: "Project",
+    timeoff: "Time off",
+    detail: "Show booking detail",
+    role: "Role",
+    dateRange: "Date range",
+    createBooking: "Create booking",
+    allocation: "Allocation",
+    note: "Note",
+    leftToSchedule: "Left to schedule",
+    estimate: "Estimate",
+    work: "Work",
+    schedule: "Schedule",
+  },
 };

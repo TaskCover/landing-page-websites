@@ -31,4 +31,20 @@ export const ResourcePlanning: ResourceDictionary = {
       addBooking: "Thêm lịch",
     },
   },
+  form: {
+    title: "Quản lý lịch trình",
+
+    project: "Dự án",
+    timeoff: "Nghỉ phép",
+    detail: "Xem chi tiết lịch trình",
+    role: "Vai trò",
+    dateRange: "Khoảng thời gian",
+    createBooking: "Tạo lịch",
+    allocation: "Phân bổ",
+    note: "Ghi chú",
+    leftToSchedule: "Còn lại để lên lịch",
+    estimate: "Ước tính",
+    work: "Giờ làm",
+    schedule: "Lên lịch",
+  },
 };

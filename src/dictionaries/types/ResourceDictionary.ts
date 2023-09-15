@@ -29,4 +29,21 @@ export default interface ResourceDictionary {
       addBooking: string;
     };
   };
+  form: {
+    title: string;
+
+    project: string;
+    timeoff: string;
+
+    detail: string;
+    role: string;
+    dateRange: string;
+    createBooking: string;
+    allocation: string;
+    note: string;
+    leftToSchedule: string;
+    estimate: string;
+    work: string;
+    schedule: string;
+  };
 }
