@@ -1,13 +1,7 @@
 "use client";
 
 import { Box, Stack } from "@mui/material";
-import {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef } from "react";
 import "react-quill/dist/quill.snow.css";
 import { ACCEPT_MEDIA, FILE_ACCEPT } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
@@ -220,7 +214,7 @@ const ChatEditor = (props: EditorProps) => {
 
   return (
     <Stack
-    className="editor"
+      className="editor"
       sx={{
         "& .ql-snow": {
           border: "unset !important",

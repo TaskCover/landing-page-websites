@@ -6,6 +6,7 @@ import useGetScreenMode from "hooks/useGetScreenMode";
 import { Box } from "@mui/material";
 import useFetchingChatting from "./hooks/useFetchingChatting";
 import ChatDetailUserMobile from "./components/RoomDetails/components/ChatDetailUserMobile";
+import GroupChatMobile from "./components/RoomDetails/components/GroupChatMobile";
 
 const { RoomDetails, Sidebar, ChattingRoomLayout } = SNChat;
 
@@ -30,7 +31,7 @@ const ChattingRoom = () => {
           <RoomDetails currentConversation={currentConversation} />
         </ChattingRoomLayout>
       ) : (
-        <ChatDetailUserMobile {...currentConversation} />
+        <GroupChatMobile {...currentConversation} />
       )}
     </Box>
   );
