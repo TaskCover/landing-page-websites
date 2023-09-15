@@ -378,6 +378,7 @@ export enum STEP {
   CHAT_FORWARD,
   CHAT_GROUP,
   ADD_MEMBER,
+  SEARCH_CHAT_TEXT,
 }
 
 export enum STEP_INFO {

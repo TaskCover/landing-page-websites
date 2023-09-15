@@ -6,6 +6,8 @@ import { ProjectLang } from "./project";
 import { CompanyLang } from "./company";
 import { ManagerLang } from "./manager";
 import { TimeTrackingLang } from "./timetracking";
+import { ChatBoxLang } from "./chatbox";
+
 import {
   NS_AUTH,
   NS_COMMON,
@@ -16,6 +18,7 @@ import {
   NS_MANAGER,
   NS_TIME_TRACKING,
   NS_SALES,
+  NS_CHAT_BOX
 } from "constant/index";
 import { salesLang } from "./sales";
 
@@ -29,4 +32,5 @@ export default {
   [NS_MANAGER]: ManagerLang,
   [NS_TIME_TRACKING]: TimeTrackingLang,
   [NS_SALES]: salesLang,
+  [NS_CHAT_BOX]: ChatBoxLang,
 };

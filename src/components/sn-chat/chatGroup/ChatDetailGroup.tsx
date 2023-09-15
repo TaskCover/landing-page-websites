@@ -7,7 +7,7 @@ import GroupNameIcon from "icons/GroupNameIcon";
 import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
 import { useEffect, useState, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
-import { NS_COMMON } from "constant/index";
+import { NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import FileGroupIcon from "icons/FileGroupIcon";
 import ArrowRightIcon from "icons/ArrowRightIcon";
 import EditGroupNameIcon from "icons/EditGroupNameIcon";
@@ -22,9 +22,12 @@ import MediaFileIconGroup from "icons/MediaFileIconGroup";
 import LinkIconGroup from "icons/LinkIconGroup";
 import { uploadFile } from "store/chat/media/actionMedia";
 import { useAppDispatch } from "store/hooks";
+import useTheme from "hooks/useTheme";
 
 const ChatDetailGroup = (props) => {
   const dispatch = useAppDispatch();
+  const { isDarkMode } = useTheme();
+
   const {
     typeList,
     dataTransfer,
@@ -50,6 +53,7 @@ const ChatDetailGroup = (props) => {
   const owner = owners.some((obj) => obj._id === user?.id_rocket);
 
   const commonT = useTranslations(NS_COMMON);
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
   const TYPE_POPUP = {
     DELETE: "DELETE",
     LEAVE_AND_NEW_ADD: "LEAVE_AND_NEW_ADD",
@@ -118,13 +122,6 @@ const ChatDetailGroup = (props) => {
     });
   };
 
-  const handleClickMember = (member) => {
-    // onSetConversationInfo(member)
-    // onSetStep(STEP.VIEW_DETAIL_USER);
-    console.log({ dataTransfer });
-    
-  }
-
   const _renderNewAdmin = () => {
     return (
       <>
@@ -142,8 +139,7 @@ const ChatDetailGroup = (props) => {
                       marginBottom: 1,
                       // cursor: "pointer",
                       ":hover": {
-                        backgroundColor: "#F7F7FD",
-                      },
+                        backgroundColor: isDarkMode ? "#3a3b3c" : "#F7F7FD"                      },
                     }}
                     p={1}
                     onClick={() => {
@@ -152,7 +148,7 @@ const ChatDetailGroup = (props) => {
                         ...pre,
                         type: TYPE_POPUP.LEAVE_AND_NEW_ADD,
                         statusPopup: true,
-                        title: "Leave Group",
+                        title: commonChatBox("chatBox.leaveGroup"),
                         content: (
                           <Box
                             sx={{
@@ -160,7 +156,7 @@ const ChatDetailGroup = (props) => {
                             }}
                           >
                             <Typography>
-                              Leave group and select{" "}
+                              {commonChatBox("chatBox.leaveGroupMsg.text_1")}{" "}
                               <span
                                 style={{
                                   color: "var(--brand-primary, #3699FF)",
@@ -168,7 +164,7 @@ const ChatDetailGroup = (props) => {
                               >
                                 {item?.fullname}
                               </span>{" "}
-                              as new admin?
+                              {commonChatBox("chatBox.leaveGroupMsg.text_2")}
                             </Typography>
                           </Box>
                         ),
@@ -382,7 +378,7 @@ const ChatDetailGroup = (props) => {
       ...pre,
       type: TYPE_POPUP.NEW_ADMIN,
       statusPopup: true,
-      title: "select a new admin",
+      title: commonChatBox("chatBox.selectAdminNew"),
       content: <>{_renderNewAdmin()}</>,
     }));
   };
@@ -466,7 +462,7 @@ const ChatDetailGroup = (props) => {
           }}
         >
           <ItemDetail
-            text={`Group name: ${dataTransfer?.name}`}
+            text={`${commonChatBox("chatBox.groupName")} ${dataTransfer?.name}`}
             icon={<GroupNameIcon />}
             iconClick={<EditGroupNameIcon />}
             onClick={() => {
@@ -474,14 +470,14 @@ const ChatDetailGroup = (props) => {
                 ...pre,
                 type: TYPE_POPUP.RENAME_GROUP,
                 statusPopup: true,
-                title: "Change name",
+                title: commonChatBox("chatBox.changeName"),
                 content: <></>,
                 actionType: 0,
               }));
             }}
           />
           <ItemDetail
-            text={"Media"}
+            text={commonChatBox("chatBox.media")}
             icon={<MediaFileIconGroup />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
@@ -490,7 +486,7 @@ const ChatDetailGroup = (props) => {
             }}
           />
           <ItemDetail
-            text={"Link"}
+            text={commonChatBox("chatBox.link")}
             icon={<LinkIconGroup />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
@@ -500,7 +496,7 @@ const ChatDetailGroup = (props) => {
           />
 
           <ItemDetail
-            text={"File"}
+            text={commonChatBox("chatBox.file")}
             icon={<FileGroupIcon />}
             iconClick={<ArrowRightIcon />}
             onClick={() => {
@@ -519,11 +515,11 @@ const ChatDetailGroup = (props) => {
           <Box>
             <Typography
               variant="caption"
-              color="#212121"
+              color={isDarkMode ? "white" : "#212121"}
               fontSize={16}
               fontWeight={600}
             >
-              {`Member (${dataTransfer?.usersCount})`}
+              {`${commonChatBox("chatBox.members")} (${dataTransfer?.usersCount})`}
             </Typography>
           </Box>
           <Box>
@@ -547,9 +543,6 @@ const ChatDetailGroup = (props) => {
               }}
               callbackRemove={() => {
                 handleManageMember("remove", member);
-              }}
-              onClick={() => {
-                handleClickMember(member)
               }}
               admin = {owner}
             />
@@ -575,13 +568,13 @@ const ChatDetailGroup = (props) => {
                       ...pre,
                       type: TYPE_POPUP.DELETE,
                       statusPopup: true,
-                      title: "Delete Group",
-                      content: <>Are you sure to delete group?</>,
+                      title: commonChatBox("chatBox.deleteGroup"),
+                      content: <>{commonChatBox("chatBox.sureRemoveGroup")}</>,
                       actionType: 0,
                     }));
                   }}
                 >
-                  {"Delete group"}
+                  {commonChatBox("chatBox.deleteGroup")}
                 </Typography>
               </Box>
             )}
@@ -599,7 +592,7 @@ const ChatDetailGroup = (props) => {
                       ...pre,
                       type: TYPE_POPUP.LEAVE_OWNER,
                       statusPopup: true,
-                      title: "Leave Group",
+                      title: commonChatBox("chatBox.leaveGroup"),
                       content: (
                         <Box
                           sx={{
@@ -607,11 +600,10 @@ const ChatDetailGroup = (props) => {
                           }}
                         >
                           <Typography>
-                            You won&apos;t be able to see the messages in this
-                            conversation
+                            {commonChatBox("chatBox.leaveGroupConfirm.text_1")}
                           </Typography>
                           <Typography>
-                            again after you leave the group. Please{" "}
+                          {commonChatBox("chatBox.leaveGroupConfirm.text_2")}{" "}
                             <span
                               style={{
                                 color: "var(--brand-primary, #3699FF)",
@@ -619,11 +611,11 @@ const ChatDetailGroup = (props) => {
                               }}
                               onClick={handleNewAdd}
                             >
-                              select a new admin
+                              {commonChatBox("chatBox.selectAdminNew")}
                             </span>
                           </Typography>
                           <Typography>
-                            or the system will choose automatically
+                          {commonChatBox("chatBox.leaveGroupConfirm.text_3")}
                           </Typography>
                         </Box>
                       ),
@@ -633,13 +625,13 @@ const ChatDetailGroup = (props) => {
                       ...pre,
                       type: TYPE_POPUP.LEAVE_MEMBER,
                       statusPopup: true,
-                      title: "Leave Group",
-                      content: <>Are you sure to leave group?</>,
+                      title: commonChatBox("chatBox.leaveGroup"),
+                      content: <>{commonChatBox("chatBox.sureLeaveGroup")}</>,
                     }));
                   }
                 }}
               >
-                {"Leave group"}
+                {commonChatBox("chatBox.leaveGroup")}
               </Typography>
             </Box>
             }

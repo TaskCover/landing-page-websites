@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { Permission } from "constant/enums";
+import useTheme from "hooks/useTheme";
 
 const ChatListTemp = () => {
   const { user } = useAuth();
@@ -22,6 +23,7 @@ const ChatListTemp = () => {
   const [show, setShow] = useState(false);
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
+  const { isDarkMode } = useTheme();
 
   const init = {
     type: "",
@@ -184,13 +186,15 @@ const ChatListTemp = () => {
                 right: "5rem",
                 borderRadius: "16px",
                 boxShadow: "2px 2px 24px 0px #0000001A",
+                backgroundColor: isDarkMode ? "#303130" : "",
+
               }}
             >
               <Box
                 sx={{
                   height: "100%",
                   overflow: "hidden",
-                  backgroundColor: "white",
+                  backgroundColor: isDarkMode ? "#303130" : "",
                 }}
               >
                 {open && <SwitchChat />}
