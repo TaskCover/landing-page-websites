@@ -45,5 +45,6 @@ export default interface ResourceDictionary {
     estimate: string;
     work: string;
     schedule: string;
+    selectTimeOffCategory: string;
   };
 }

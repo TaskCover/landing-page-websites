@@ -152,13 +152,21 @@ const CustomDateRangePicker: React.FC<TextFieldInputProps> = ({
         PaperProps={{
           sx: {
             width: "100%",
-            maxWidth: 700,
+            maxWidth: 570,
           },
         }}
         hideBackdrop={true}
         slotProps={{
           backdrop: {
             onClick: () => setIsOpenCalendar(false),
+          },
+        }}
+        sx={{
+          "& .MuiPaper-root .MuiGrid-root .MuiList-root": {
+            display: "none",
+          },
+          "& .MuiPaper-root .MuiGrid-root > .MuiGrid-root:nth-of-type(2)": {
+            flex: "1 0 auto",
           },
         }}
       >

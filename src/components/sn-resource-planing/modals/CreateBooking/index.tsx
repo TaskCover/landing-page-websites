@@ -17,27 +17,20 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 import ProjectTab from "./ProjectTab";
 import DialogLayout from "components/DialogLayout";
+import { useTranslations } from "next-intl";
+import { NS_RESOURCE_PLANNING } from "constant/index";
+import TimeOffTab from "./TimeoffTab";
 
 interface IProps {
   open: boolean;
   onClose(): void;
 }
 
-// interface DateRange {
-//   startDate?: Date;
-//   endDate?: Date;
-// }
-
-// interface DefinedRange {
-//   label: string;
-//   startDate: Date;
-//   endDate: Date;
-// }
-
 const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
   const [activeTabs, setActiveTabs] = useState("1");
+  const resourceT = useTranslations(NS_RESOURCE_PLANNING);
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     setActiveTabs(newValue);
@@ -64,7 +57,7 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
       }
       open={open}
       onClose={onClose}
-      sx={{ width: 600, minHeight: 600 }}
+      sx={{ width: 600, minHeight: 500 }}
     >
       <DialogContent>
         <TabContext value={activeTabs}>
@@ -89,7 +82,7 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
             }}
           >
             <Tab
-              label="All People"
+              label={resourceT("form.project")}
               value="1"
               sx={{
                 fontSize: "14px",
@@ -100,7 +93,7 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
               }}
             />
             <Tab
-              label="My Schedule"
+              label={resourceT("form.timeoff")}
               value="2"
               sx={{
                 fontSize: "14px",
@@ -112,9 +105,9 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
           <TabPanel value="1" sx={{ p: 0 }}>
             <ProjectTab onClose={onClose} open={open} />
           </TabPanel>
-          {/* <TabPanel value="2" sx={{ p: 0 }}>
-            {_renderTimeOff()}
-        </TabPanel> */}
+          <TabPanel value="2" sx={{ p: 0 }}>
+            <TimeOffTab onClose={onClose} open={open} />
+          </TabPanel>
         </TabContext>
       </DialogContent>
     </DialogLayout>

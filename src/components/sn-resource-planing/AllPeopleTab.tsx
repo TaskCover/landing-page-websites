@@ -22,6 +22,7 @@ import { useResourceDate } from "store/resourcePlanning/selector";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
 import CreateBooking from "./modals/CreateBooking";
+import ArrowDownIcon from "icons/ArrowDownIcon";
 
 const AllPeopleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -165,6 +166,19 @@ const AllPeopleTab = () => {
         // if (campaignEvent) campaignEvent.setDates(first.start, last.end);
       }
     };
+
+  const handleCollapseToggle = (itemId: string) => {
+    if (selectedResource.includes(itemId)) {
+      setSelectedResource(selectedResource.filter((id) => id !== itemId));
+    } else {
+      setSelectedResource([...selectedResource, itemId]);
+    }
+    const collapseButton = document.querySelectorAll(
+      `td[data-resource-id="${itemId}"][role="gridcell"] > div > div > span.fc-datagrid-expander`,
+    ) as NodeListOf<HTMLElement>;
+    if (collapseButton[0]) collapseButton[0].click();
+  };
+
   const checkEventType = (value) => {
     switch (value) {
       case "PROJECT_BOOKING":
@@ -431,7 +445,7 @@ const AllPeopleTab = () => {
                       background: "#E1F0FFB2",
                     },
                   }}
-                  // onClick={() => handleCollapseToggle(resource._resource.id)}
+                  onClick={() => handleCollapseToggle(resource._resource.id)}
                 >
                   <Grid
                     container
@@ -458,14 +472,13 @@ const AllPeopleTab = () => {
                           UI/UX
                         </Typography>
                       </Box>
-                      <Box
-                        component="img"
+                      <ArrowDownIcon
                         sx={{
                           width: "20px",
                           ml: 2,
                           transform: isActive
-                            ? "rotate(180deg)"
-                            : "rotate(0deg)",
+                            ? "rotate(-90deg)"
+                            : "rotate(90deg)",
                           transitionDelay: "all ease 0.25s",
                         }}
                       />

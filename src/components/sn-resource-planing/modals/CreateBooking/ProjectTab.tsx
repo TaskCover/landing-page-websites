@@ -1,13 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  CommonColors,
-  Box,
-  Typography,
-  Collapse,
-  Stack,
-  Button,
-  useTheme,
-} from "@mui/material";
+import { Box, Typography, Collapse, Stack, useTheme } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import TextFieldSelect, {
   IOptionStructure,
@@ -15,20 +7,17 @@ import TextFieldSelect, {
 import Textarea from "components/sn-time-tracking/Component/Textarea";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Grid } from "swiper";
 import { schemaProject } from "./Schemas";
 import CustomDateRangePicker from "components/sn-resource-planing/components/CustomDateRangePicker";
 import TextFieldInput from "components/shared/TextFieldInput";
 import ArrowDownIcon from "icons/ArrowDownIcon";
-import useToggle from "hooks/useToggle";
-import { RootState } from "store/configureStore";
-import { useSelector } from "react-redux";
 import { usePositionOptions } from "store/global/selectors";
 import { Options } from "linkifyjs";
 import { useProject, useProjects } from "store/project/selectors";
 import _ from "lodash";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
+import { Button } from "components/shared";
 
 interface IProps {
   open: boolean;
@@ -101,7 +90,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
               error={!!errorsProject.project_id?.message}
               required
               options={projectOptions}
-              label="Project"
+              label={resourceT("form.project")}
               {...field}
             />
           )}
@@ -119,7 +108,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
               error={!!errorsProject.position?.message}
               required
               options={positionOptions as IOptionStructure[]}
-              label="Position"
+              label={resourceT("form.role")}
             />
           )}
         />
@@ -135,7 +124,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
               onChange={(value) => {
                 field.onChange(value);
               }}
-              label="Date range"
+              label={resourceT("form.dateRange")}
               placeholder=""
               error={!!errorsProject.dateRange?.message}
               helperText={errorsProject.dateRange?.message}
@@ -164,7 +153,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
             control={controlProject}
             render={({ field }) => (
               <TextFieldInput
-                label="Allocation"
+                label={resourceT("form.allocation")}
                 placeholder="8h"
                 sx={{
                   borderRight: "1px solid #BABCC6",
@@ -212,7 +201,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
           name="note"
           control={controlProject}
           render={({ field }) => {
-            return <Textarea {...field} label="Note" />;
+            return <Textarea {...field} label={resourceT("form.note")} />;
           }}
         />
       </Grid2>
@@ -391,7 +380,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
       <Grid2 xs={12}>
         <Stack direction="row" justifyContent="center" gap={3}>
           <Button
-            variant="outlined"
+            variant="primaryOutlined"
             size="medium"
             onClick={onClose}
             sx={{
