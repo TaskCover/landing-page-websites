@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import "react-quill/dist/quill.snow.css";
-import { ACCEPT_MEDIA, FILE_ACCEPT } from "constant/index";
+import { ACCEPT_MEDIA, FILE_ACCEPT, NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import "quill/dist/quill.snow.css";
 import ImageImportIcon from "icons/ImageImportIcon";
@@ -20,6 +20,8 @@ import hljs from "highlight.js";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import type ReactQuill from "react-quill";
+import { useChat } from "store/chat/selectors";
+import { useTranslations } from "next-intl";
 
 const QuillNoSSRWrapper = dynamic(
   async () => {
@@ -91,6 +93,11 @@ const ChatEditor = (props: EditorProps) => {
     initalValue,
     isLoading,
   } = props;
+  const { 
+    onGetUnReadMessages,
+    dataTransfer
+   } = useChat();
+   const commonChatBox = useTranslations(NS_CHAT_BOX);
 
   const quillRef = useRef<ReactQuill>(null);
   const inputMediaRef = useRef<HTMLInputElement | null>(null);
@@ -187,9 +194,17 @@ const ChatEditor = (props: EditorProps) => {
     setValue("");
   }, [onEnterText, quillEditor]);
 
+  const getUnReadMessage = useCallback(async () => {
+    await onGetUnReadMessages({
+      type: dataTransfer?.t ?? "d",
+    });
+  }, [dataTransfer?.t, onGetUnReadMessages]);
+
+
   const handleKeyDown = useCallback(
     (event) => {
       if (event.key === "Enter" && !event.shiftKey) {
+        getUnReadMessage();
         handleMessage();
       }
     },
@@ -280,7 +295,7 @@ const ChatEditor = (props: EditorProps) => {
         <QuillNoSSRWrapper
           forwardedRef={quillRef}
           theme="snow"
-          placeholder="Type Message..."
+          placeholder={commonChatBox("chatBox.typeMessage")}
           modules={modules}
           formats={[
             "bold",

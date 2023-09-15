@@ -2,10 +2,11 @@ import Avatar from "components/Avatar";
 import { Box, Button, Menu, MenuItem, Typography } from "@mui/material";
 import MoreSquareIcon from "icons/MoreSquareIcon";
 import { useTranslations } from "next-intl";
-import { NS_COMMON } from "constant/index";
+import { NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import { IconButton } from "components/shared";
 import { useState } from "react";
 import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
+import useTheme from "hooks/useTheme";
 
 interface ItemMemberDetailProp {
   admin?: boolean;
@@ -13,7 +14,6 @@ interface ItemMemberDetailProp {
   data?: any;
   callbackAddAdmin?: () => void;
   callbackRemove?: () => void;
-  onClick?: () => void;
 }
 
 const ItemMemberDetail = ({
@@ -21,11 +21,11 @@ const ItemMemberDetail = ({
   data,
   callbackAddAdmin,
   callbackRemove,
-  onClick,
 }: ItemMemberDetailProp) => {
   const TYPE_POPUP = {
     ADD_ADMIN: "ADD_ADMIN",
   };
+  const { isDarkMode } = useTheme();
 
   const init = {
     type: "",
@@ -38,6 +38,7 @@ const ItemMemberDetail = ({
 
   const [showPopup, setShowPopup] = useState(init);
   const commonT = useTranslations(NS_COMMON);
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -117,7 +118,6 @@ const ItemMemberDetail = ({
           display: "flex",
           alignItems: "center",
         }}
-        onClick={onClick}
       >
         <Avatar
           alt="Avatar"
@@ -136,7 +136,7 @@ const ItemMemberDetail = ({
         >
           <Typography
             variant="inherit"
-            color="#212121"
+            color={isDarkMode ? "white" : "#212121"}
             fontWeight={600}
             fontSize={14}
           >
@@ -148,7 +148,7 @@ const ItemMemberDetail = ({
             fontWeight={400}
             fontSize={12}
           >
-            {`${data?.username}@`}
+            {`@${data?.username}`}
           </Typography>
         </Box>
       </Box>
@@ -157,7 +157,7 @@ const ItemMemberDetail = ({
           <Button
             variant="primary"
             sx={{
-              background: "#ECECF3",
+              background: isDarkMode ? "#6c727a" : "#ECECF3",
               fontSize: "0.75rem",
               fontWeight: 400,
             }}
@@ -194,14 +194,14 @@ const ItemMemberDetail = ({
                       ...pre,
                       type: TYPE_POPUP.ADD_ADMIN,
                       statusPopup: true,
-                      title: "Add as admin",
-                      content: <>Are you sure add as admin?</>,
+                      title: commonChatBox("chatBox.addAsAdmin"),
+                      content: <>{commonChatBox("chatBox.sureAddAsAdmin")}</>,
                     }));
                   }}>
-                    Add as admin
+                    {commonChatBox("chatBox.addAsAdmin")}
                   </MenuItem>
                   <MenuItem onClick={() => handleClickMenu("remove")}>
-                    Remove from chat{" "}
+                    {commonChatBox("chatBox.removeFromChat")}
                   </MenuItem>
                 </>
               ) : (
