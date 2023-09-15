@@ -24,7 +24,7 @@ const ChatList = () => {
     onSetStep,
   } = useChat();
 
-  useWSChat({});
+  useWSChat();
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
 

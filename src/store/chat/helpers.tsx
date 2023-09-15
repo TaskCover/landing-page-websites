@@ -3,10 +3,10 @@ import { useAuth } from "store/app/selectors";
 import { useChat } from "./selectors";
 import { MessageBodyRequest, MessageInfo } from "./type";
 
-export const useWSChat = (props: { roomIdDesktop?: string }) => {
+export const useWSChat = () => {
   const { user } = useAuth();
   const {
-    roomId: roomIdMobile,
+    roomId: roomIdStore,
     dataTransfer,
     onSetMessage,
     onSetLastMessage,
@@ -15,8 +15,9 @@ export const useWSChat = (props: { roomIdDesktop?: string }) => {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const token = user?.["authToken"];
   const userId = user?.["id_rocket"];
+  const roomId = dataTransfer?._id ?? roomIdStore;
 
-  const roomId = !!props?.roomIdDesktop ? props?.roomIdDesktop : roomIdMobile;
+  console.log(roomId, 'roomId');  
   const appendMessage = useCallback(
     (message) => {
       const newMessage = {
@@ -41,9 +42,7 @@ export const useWSChat = (props: { roomIdDesktop?: string }) => {
         "sender_userId" | "sender_authToken" | "receiverUsername"
       >,
     ) => {
-      if (message.message && message.message.trim()?.length > 0) {
-        console.log(roomId, 'roomId');
-        
+      if (message.message && message.message.trim()?.length > 0) {        
         ws?.send(
           JSON.stringify({
             msg: "method",

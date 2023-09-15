@@ -38,8 +38,8 @@ const ChatList = ({ onSelectRoom, idActive }) => {
       });
   }, [conversations, user]);
 
-  const handleClickConversation = (chatInfo: IChatItemInfo) => {
-    onSelectRoom(chatInfo?._id);
+  const handleClickConversation = (chatInfo: IChatItemInfo) => {    
+    onSelectRoom(chatInfo);
   };
 
   const renderConversation = (idActive: string) => {    

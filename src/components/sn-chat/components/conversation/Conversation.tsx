@@ -11,11 +11,10 @@ const initPageIndex = 10;
 
 interface Props {
   wrapperMessageSx?: any;
-  roomIdDesktop?: string;
 }
-const Conversation: FC<Props> = ({ wrapperMessageSx, roomIdDesktop }) => {
+const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
   const {
-    roomId: roomIdMobile,
+    roomId,
     conversationInfo,
     convention,
     messageInfo,
@@ -31,9 +30,8 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, roomIdDesktop }) => {
     onUploadAndSendFile,
   } = useChat();
   const { user } = useAuth();
-  const roomId = !!roomIdDesktop ? roomIdDesktop : roomIdMobile;
 
-  const { sendMessage } = useWSChat({ roomIdDesktop });
+  const { sendMessage } = useWSChat();
 
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
@@ -50,9 +48,10 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, roomIdDesktop }) => {
       ) || [],
     [unReadMessage?.info, user],
   );
+  
 
   const getLastMessage = useCallback(
-    async (page?: number, size?: number) => {      
+    async (page?: number, size?: number) => {            
       try {
         await onGetLastMessages({
           roomId: dataTransfer?._id ?? roomId,
@@ -86,10 +85,10 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, roomIdDesktop }) => {
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
       ? stateSearchMessage?.offset + initPageIndex
-      : initPageIndex;
-    if(!roomId) return;
-    console.log(roomId, 'roomId');
+      : initPageIndex;    
+    console.log(!!roomId && !!dataTransfer?._id, roomId, dataTransfer?._id);
     
+    if(!!roomId && !!dataTransfer?._id) return;
     getLastMessage(0, countNew);
     if (inputRef.current) {
       inputRef.current.pageRef.current = countNew - initPageIndex;
