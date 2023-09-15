@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { useAuth, useSnackbar } from "store/app/selectors";
-import { useWSChat, useWSChatDesktop } from "store/chat/helpers";
+import { useWSChat } from "store/chat/helpers";
 import ChatInput from "../chat/ChatInput";
 import Messages from "../messages/Messages";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
@@ -52,7 +52,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, roomIdDesktop }) => {
   );
 
   const getLastMessage = useCallback(
-    async (page?: number, size?: number) => {
+    async (page?: number, size?: number) => {      
       try {
         await onGetLastMessages({
           roomId: dataTransfer?._id ?? roomId,
@@ -88,6 +88,8 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, roomIdDesktop }) => {
       ? stateSearchMessage?.offset + initPageIndex
       : initPageIndex;
     if(!roomId) return;
+    console.log(roomId, 'roomId');
+    
     getLastMessage(0, countNew);
     if (inputRef.current) {
       inputRef.current.pageRef.current = countNew - initPageIndex;

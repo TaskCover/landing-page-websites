@@ -13,8 +13,6 @@ import { useTranslations } from "next-intl";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { Permission } from "constant/enums";
-import { useWSChat } from "store/chat/helpers";
-
 const ChatListTemp = () => {
   const { user } = useAuth();
   const { onGetAllConvention, onClearConversation, onReset } = useChat();

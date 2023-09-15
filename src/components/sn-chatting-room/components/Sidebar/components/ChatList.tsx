@@ -43,7 +43,7 @@ const ChatList = ({ onSelectRoom, idActive }) => {
   };
 
   const renderConversation = (idActive: string) => {    
-    return conversations.map((conversation) => (
+    return _conversations.map((conversation) => (
       <ChatItemLayout
         chatInfo={conversation}
         sessionId={user?.["username"]}
@@ -55,7 +55,7 @@ const ChatList = ({ onSelectRoom, idActive }) => {
   }
 
   const renderConversations = (idActive: string) => {
-    if (conversations.length <= 0) return <NoData />;
+    if (_conversations.length <= 0) return <NoData />;
 
     return (
       <>
