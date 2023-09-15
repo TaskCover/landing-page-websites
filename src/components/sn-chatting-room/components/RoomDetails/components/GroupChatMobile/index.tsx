@@ -15,6 +15,21 @@ const GroupChatMobile = (currentConversation) => {
     bottomMenuItems,
   } = useGroupChat();
 
+  const arrayAvatar = [
+    {
+      id: 1,
+      avatar: currentConversation?.avatar,
+    },
+    {
+      id: 2,
+      avatar: currentConversation?.avatar,
+    },
+    {
+      id: 3,
+      avatar: currentConversation?.avatar,
+    },
+  ];
+
   return (
     <Box
       sx={{
@@ -36,21 +51,42 @@ const GroupChatMobile = (currentConversation) => {
         <GroupChatHeaderMobile />
         <Box
           sx={{
-            display: "flex",
+            display: "inline-flex",
             flexDirection: "column",
             alignItems: "center",
             gap: "8px",
           }}
         >
-          <Avatar
-            src={currentConversation?.avatar}
+          <Box
             sx={{
+              position: "relative",
+              width: "129px",
               height: "55px",
-              width: "55px",
               flexShrink: "0",
-              borderRadius: "50%",
             }}
-          />
+          >
+            {arrayAvatar.map((item, index) => (
+              <Box
+                key={item.id}
+                sx={{
+                  position: "absolute",
+                  left: `${index * 37}px`, // Adjust the left position as needed
+                  zIndex: `${index + 1}`,
+                }}
+              >
+                <Avatar
+                  src={item.avatar}
+                  sx={{
+                    height: "55px",
+                    width: "55px",
+                    flexShrink: "0",
+                    borderRadius: "50%",
+                  }}
+                />
+              </Box>
+            ))}
+          </Box>
+
           <Box
             sx={{
               display: "flex",
