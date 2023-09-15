@@ -1,4 +1,4 @@
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Drawer, Typography } from "@mui/material";
 import ChatDetailUserHeaderMobile from "./ChatDetailUserHeaderMobile";
 import { IChatItemInfo } from "store/chat/type";
 import AccountProfileIcon from "icons/AccountProfileIcon";
@@ -13,6 +13,8 @@ import { useChat } from "store/chat/selectors";
 import AccountInfoMobile from "../AccountInfoMobile";
 
 interface ChatDetailUserMobileProps {
+  isOpen: boolean;
+  onClose: () => void;
   currentConversation: IChatItemInfo;
 }
 
@@ -24,7 +26,11 @@ interface MenuItem {
   handleOnClick?: () => void;
 }
 
-const ChatDetailUserMobile = (currentConversation) => {
+const ChatDetailUserMobile: React.FC<ChatDetailUserMobileProps> = ({
+  isOpen,
+  onClose,
+  currentConversation,
+}) => {
   const [searchConversationShow, setSearchConversationShow] = useState(false);
   const [accountInfoShow, setAccountInfoShow] = useState(false);
   const { onGetUserInfo } = useChat();
@@ -71,105 +77,121 @@ const ChatDetailUserMobile = (currentConversation) => {
       handleOnClick: handleSearchConversation,
     },
   ];
+  const styleDrawerOpen = isOpen ? { width: "100%" } : { width: "0" };
 
   return (
-    <Box
+    <Drawer
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        position: "relative",
-        height: "100%",
-        gap: "12px",
+        flexShrink: 0,
+        ...styleDrawerOpen,
+        "& .MuiDrawer-paper": {
+          width: "100%",
+          boxSizing: "border-box",
+          border: "none",
+        },
       }}
+      variant="persistent"
+      anchor="right"
+      open={isOpen}
     >
-      <ChatDetailUserHeaderMobile />
       <Box
         sx={{
           display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
           alignItems: "center",
-          flexDirection: "column",
-          marginBottom: "18px",
+          position: "relative",
+          height: "100%",
+          gap: "12px",
         }}
       >
-        <Avatar
-          src={currentConversation?.avatar}
-          sx={{
-            height: "80px",
-            width: "80px",
-            flexShrink: "0",
-            borderRadius: "50%",
-          }}
-        />
-        <Box>
-          <Typography
-            variant="h4"
-            color="var(--Black, #212121)"
-            sx={{ textAlign: "center" }}
-          >
-            {currentConversation?.name}
-          </Typography>
-        </Box>
-      </Box>
-
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "24px",
-        }}
-      >
+        <ChatDetailUserHeaderMobile onClose={onClose} />
         <Box
           sx={{
             display: "flex",
+            alignItems: "center",
             flexDirection: "column",
-            padding: "12px 24px",
-            marginX: "16px",
-            gap: "8px",
-            borderRadius: "16px",
-            backgroundColor: "#F7F7FD",
+            marginBottom: "18px",
           }}
         >
-          {menuItems.map((item, index) => (
-            <ChatDetailUserMenuItemMobile
-              key={index}
-              text={item.text}
-              icon={item.icon}
-              stroke={item.stroke}
-              borderBottom={item.borderBottom}
-              handleOnClick={item.handleOnClick}
-            />
-          ))}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "12px 24px",
-            marginX: "16px",
-            gap: "8px",
-            borderRadius: "16px",
-            backgroundColor: "#F7F7FD",
-          }}
-        >
-          <ChatDetailUserMenuItemMobile
-            text="Delete chat"
-            icon={DeleteChatIcon}
+          <Avatar
+            src={currentConversation?.avatar}
+            sx={{
+              height: "80px",
+              width: "80px",
+              flexShrink: "0",
+              borderRadius: "50%",
+            }}
           />
+          <Box>
+            <Typography
+              variant="h4"
+              color="var(--Black, #212121)"
+              sx={{ textAlign: "center" }}
+            >
+              {currentConversation?.name}
+            </Typography>
+          </Box>
         </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "24px",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              padding: "12px 24px",
+              marginX: "16px",
+              gap: "8px",
+              borderRadius: "16px",
+              backgroundColor: "#F7F7FD",
+            }}
+          >
+            {menuItems.map((item, index) => (
+              <ChatDetailUserMenuItemMobile
+                key={index}
+                text={item.text}
+                icon={item.icon}
+                stroke={item.stroke}
+                borderBottom={item.borderBottom}
+                handleOnClick={item.handleOnClick}
+              />
+            ))}
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              padding: "12px 24px",
+              marginX: "16px",
+              gap: "8px",
+              borderRadius: "16px",
+              backgroundColor: "#F7F7FD",
+            }}
+          >
+            <ChatDetailUserMenuItemMobile
+              text="Delete chat"
+              icon={DeleteChatIcon}
+            />
+          </Box>
+        </Box>
+        <SearchDetailChatUser
+          isOpen={searchConversationShow}
+          onClose={handleSearchConversation}
+          currentConversation={currentConversation}
+        />
+        <AccountInfoMobile
+          isOpen={accountInfoShow}
+          onClose={handleCloseAccountInfoMobile}
+          currentConversation={currentConversation}
+        />
       </Box>
-      <SearchDetailChatUser
-        isOpen={searchConversationShow}
-        onClose={handleSearchConversation}
-        currentConversation={currentConversation}
-      />
-      <AccountInfoMobile
-        isOpen={accountInfoShow}
-        onClose={handleCloseAccountInfoMobile}
-        currentConversation={currentConversation}
-      />
-    </Box>
+    </Drawer>
   );
 };
 

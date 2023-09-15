@@ -24,18 +24,18 @@ const SearchDetailChatUser: React.FC<SearchDetailChatUserProps> = ({
 }) => {
   const chatSearch: chatSearch[] = [
     {
-      avatar: currentConversation.avatar,
-      name: currentConversation.name,
+      avatar: currentConversation?.avatar,
+      name: currentConversation?.name,
       message: "Have a good day!",
     },
     {
-      avatar: currentConversation.avatar,
-      name: currentConversation.name,
+      avatar: currentConversation?.avatar,
+      name: currentConversation?.name,
       message: "Have a good day!",
     },
     {
-      avatar: currentConversation.avatar,
-      name: currentConversation.name,
+      avatar: currentConversation?.avatar,
+      name: currentConversation?.name,
       message: "Have a good day!",
     },
   ];

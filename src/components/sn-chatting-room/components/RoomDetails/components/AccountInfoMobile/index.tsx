@@ -32,7 +32,6 @@ const AccountInfoMobile: React.FC<AccountInfoMobileProps> = (props) => {
         flexShrink: 0,
         ...styleDrawerOpen,
         "& .MuiDrawer-paper": {
-          top: "50px",
           width: "100%",
           boxSizing: "border-box",
           border: "none",
