@@ -148,7 +148,7 @@ const ItemMemberDetail = ({
             fontWeight={400}
             fontSize={12}
           >
-            {`@${data?.username}`}
+            {data?.email}
           </Typography>
         </Box>
       </Box>

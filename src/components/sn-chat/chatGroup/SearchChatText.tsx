@@ -150,7 +150,15 @@ const SearchChatText = () => {
                       />
                     );
                   })
-              : null}
+              : <Box 
+                  sx={{
+                    textAlign: "center",
+                    fontWeight: 600,
+                    fontSize: 14,
+                  }}  
+                >
+                  {commonT("noData")}
+                </Box>}
           </>
         )}
       </Box>

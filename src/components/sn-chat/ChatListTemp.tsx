@@ -186,7 +186,7 @@ const ChatListTemp = () => {
                 right: "5rem",
                 borderRadius: "16px",
                 boxShadow: "2px 2px 24px 0px #0000001A",
-                backgroundColor: isDarkMode ? "#303130" : "",
+                backgroundColor: isDarkMode ? "#303130" : "white",
 
               }}
             >
@@ -194,7 +194,7 @@ const ChatListTemp = () => {
                 sx={{
                   height: "100%",
                   overflow: "hidden",
-                  backgroundColor: isDarkMode ? "#303130" : "",
+                  backgroundColor: isDarkMode ? "#303130" : "white",
                 }}
               >
                 {open && <SwitchChat />}

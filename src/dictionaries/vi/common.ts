@@ -111,4 +111,5 @@ export const CommonLang: CommonDictionary = {
     "Hệ thống chỉ hỗ trợ các định dạng file doc, docx, xlsx, xls, csv, mp3, mp4, png, jpeg, jpg, pdf, ppt, pptx, zip, rar. Vui lòng kiểm tra lại định dạng file đính kèm của bạn.",
   processingUpload: "Đang tải lên tệp tin...",
   cancel: "Huỷ",
+  success: "Thành công!"
 };

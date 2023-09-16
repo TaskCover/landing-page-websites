@@ -10,6 +10,7 @@ import SearchRoundIcon from "icons/SearchRoundIcon";
 import { AN_ERROR_TRY_AGAIN, NS_CHAT_BOX, NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useWSChat } from "store/chat/helpers";
+import useTheme from "hooks/useTheme";
 
 const ChatList = () => {
   const { user } = useAuth();
@@ -29,6 +30,7 @@ const ChatList = () => {
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
   const commonChatBox = useTranslations(NS_CHAT_BOX);
+  const { isDarkMode } = useTheme();
 
   const [textSearch, setTextSearch] = useState(initText);
   const [lastElement, setLastElement] = useState(null);
@@ -226,6 +228,7 @@ const ChatList = () => {
         ref={chatListRef}
         overflow="auto"
         maxHeight="calc(600px - 74px - 15px)"
+        bgcolor={isDarkMode ? "#303031" : "white"}
       >
         {(isFetching || isError) && pageIndex === 0 ? (
           Array.from({ length: 5 }, (_, i) => (
