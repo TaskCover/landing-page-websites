@@ -116,7 +116,7 @@ const ChatDetailGroup = (props) => {
         return onAddSnackbar(result?.error?.message, "error");
       }
     }
-    onAddSnackbar("Successfully!", "success");
+    onAddSnackbar(commonT("success"), "success");
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
     });
@@ -274,7 +274,7 @@ const ChatDetailGroup = (props) => {
       onAddSnackbar(result?.error?.message, "error");
       return;
     }
-    onAddSnackbar("Successfully!", "success");
+    onAddSnackbar(commonT("success"), "success");
     onGetAllConvention({
       type: "a",
       text: "",
@@ -307,7 +307,7 @@ const ChatDetailGroup = (props) => {
           count: 10,
         });
         onSetDataTransfer(dataTransferNew);
-        onAddSnackbar("Successfully!", "success");
+        onAddSnackbar(commonT("success"), "success");
       }
     };
     const left = async () => {

@@ -107,4 +107,5 @@ export type CommonDictionary = {
   aFewFilesInvalid: string;
   processingUpload: string;
   cancel: string;
+  success: string
 };

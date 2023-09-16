@@ -29,5 +29,6 @@ export type ChatBox = {
       text_2: string;
       text_3: string;
     },
+    accountInformation: string,
   };
 };

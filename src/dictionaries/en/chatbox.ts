@@ -9,7 +9,7 @@ export const ChatBoxLang: ChatBox = {
     active: "Active",
     typeMessage: "Type Message...",
     groupName: "Group name:",
-    media: "Media",
+    media: "Media file",
     link: "Link",
     file: "File",
     members: "Members",
@@ -31,5 +31,6 @@ export const ChatBoxLang: ChatBox = {
       text_2: "again after you leave the group. Please",
       text_3: "or the system will choose automatically",
     },
+    accountInformation: "Account information",
   },
 };

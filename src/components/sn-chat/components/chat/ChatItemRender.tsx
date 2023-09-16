@@ -179,7 +179,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
         />
       </>
     );
-  }, [isCurrentAccByLastMessage, isUnReadMessage, name]);
+  }, [isCurrentAccByLastMessage, isUnReadMessage, name, isDarkMode]);
 
   return (
     <>

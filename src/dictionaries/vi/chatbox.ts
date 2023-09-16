@@ -31,5 +31,6 @@ export const ChatBoxLang: ChatBox = {
       text_2: "trong cuộc trò chuyện này. Vui lòng",
       text_3: "hoặc hệ thống sẽ tự động chọn",
     },
+    accountInformation: "Thông tin tài khoản",
   }
 };

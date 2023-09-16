@@ -12,7 +12,7 @@ import { useChat } from "store/chat/selectors";
 const LinkContent = () => {
   const { chatLinks, chatLinksStatus, onGetChatUrls } = useChat();
   const { onAddSnackbar } = useSnackbar();
-  const t = useTranslations(NS_COMMON);
+  const commonT = useTranslations(NS_COMMON);
 
   useEffect(() => {
     const handleGetUrl = async () => {
@@ -20,14 +20,14 @@ const LinkContent = () => {
         await onGetChatUrls();
       } catch (error) {
         onAddSnackbar(
-          typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+          typeof error === "string" ? error : commonT(AN_ERROR_TRY_AGAIN),
           "error",
         );
       }
     };
 
     handleGetUrl();
-  }, [onAddSnackbar, onGetChatUrls, t]);
+  }, [onAddSnackbar, onGetChatUrls, commonT]);
 
   const chatLinkClone = useMemo(() => {
     return chatLinks?.reduce((result, current) => {
@@ -86,7 +86,7 @@ const LinkContent = () => {
           );
         })
       ) : (
-        <Typography textAlign="center">No Data...</Typography>
+        <Typography textAlign="center">{commonT("noData")}</Typography>
       )}
     </Box>
   );
