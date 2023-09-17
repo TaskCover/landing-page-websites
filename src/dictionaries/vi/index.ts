@@ -20,11 +20,7 @@ import {
   NS_TIME_TRACKING,
   NS_SALES,
   NS_CHAT,
-<<<<<<< Updated upstream
   NS_CHAT_BOX,
-=======
-  NS_CHAT_BOX
->>>>>>> Stashed changes
 } from "constant/index";
 import { salesLang } from "./sales";
 

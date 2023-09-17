@@ -86,13 +86,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
     const countNew = stateSearchMessage?.offset
       ? stateSearchMessage?.offset + initPageIndex
       : initPageIndex;        
-<<<<<<< Updated upstream
     if((!roomId || roomId?.length === 0) && !dataTransfer?._id) return;
-=======
-    if((!roomId) && !dataTransfer?._id) return;
-    console.log((!roomId || roomId?.length === 0) && !dataTransfer?._id);
-    
->>>>>>> Stashed changes
     getLastMessage(0, countNew);
     if (inputRef.current) {
       inputRef.current.pageRef.current = countNew - initPageIndex;

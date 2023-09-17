@@ -17,15 +17,9 @@ const defaultChatParam = {
 };
 
 export interface useFetchingChattingReturns {
-<<<<<<< Updated upstream
   onSelectRoom: (chatInfo: IChatItemInfo) => void;
   currentConversation?: IChatItemInfo;
   onSearchText: (text?: string) => void;
-=======
-    onSelectRoom: (chatInfo: IChatItemInfo) => void
-    currentConversation?: IChatItemInfo;
-    onSearchText: (text?: string) => void;
->>>>>>> Stashed changes
 }
 
 const useFetchingChatting = (): useFetchingChattingReturns => {
@@ -46,7 +40,6 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
     }
   }, [conversations]);
 
-<<<<<<< Updated upstream
   const onSelectRoom = (chatInfo: IChatItemInfo) => {
     setDetailsParams((prevState) => ({
       ...prevState,
@@ -56,22 +49,6 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
       onSetStep(STEP.CHAT_GROUP, chatInfo);
     } else {
       onSetStep(STEP.CHAT_ONE, chatInfo);
-=======
-    const currentConversation = useMemo(() => {
-        if(detailParams?.roomId){
-            return conversations.find(conversation => conversation?._id === detailParams?.roomId)
-        }
-    }, [detailParams?.roomId, conversations])
-    
-    useEffect(() => {
-        // onSetRoomId(detailParams.roomId)
-    }, [detailParams.roomId])
-
-    return {
-        onSelectRoom,
-        currentConversation,
-        onSearchText: (text) => setParams({...params, text: text as string})
->>>>>>> Stashed changes
     }
   };
 
