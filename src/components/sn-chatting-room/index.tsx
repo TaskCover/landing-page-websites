@@ -13,8 +13,8 @@ const { RoomDetails, Sidebar, ChattingRoomLayout } = SNChat;
 
 const ChattingRoom = () => {
   const { mobileMode } = useGetScreenMode();
-  const { onSelectRoom, currentConversation } = useFetchingChatting();
-
+  const { onSelectRoom, currentConversation, onSearchText } =
+    useFetchingChatting();
   return (
     <Box
       sx={{
@@ -28,6 +28,7 @@ const ChattingRoom = () => {
           <Sidebar
             currentConversation={currentConversation}
             onSelectRoom={onSelectRoom}
+            onSearchText={onSearchText}
           />
           <RoomDetails currentConversation={currentConversation} />
         </ChattingRoomLayout>

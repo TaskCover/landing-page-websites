@@ -1,10 +1,30 @@
 import { Box, InputBase, Paper } from "@mui/material";
 import { IconButton } from "components/shared";
+import { ParamState } from "components/sn-chatting-room/type";
+import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import SearchIcon from "icons/SearchIcon";
+import { useEffect, useState } from "react";
+import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
+import { debounce } from "utils/index";
 
-const SearchBar = () => {
+const SearchBar = ({ onSearchText }) => {
   const { mobileMode } = useGetScreenMode();
+  const { handleGetConversation } = useChattingActions();
+
+  const [inputValue, setInputValue] = useState("");
+
+  console.log(inputValue);
+
+  const debounceSearchText = debounce((text: string) => {
+    setInputValue(text);
+    // onSearchText(text);
+    console.log("text", text);
+  }, 1000);
+
+  // const handdleChangeInput = (text: string) => {
+  // };
+
   return (
     <Box
       sx={{
@@ -48,6 +68,8 @@ const SearchBar = () => {
               padding: "0px !important",
             },
           }}
+          value={inputValue}
+          onChange={(e) => debounceSearchText(e.target.value)}
         />
       </Paper>
     </Box>

@@ -16,8 +16,7 @@ const mapperDataToInfo = (partnerInfo: Partial<UserInfo>) => ({
   phone: partnerInfo.phone,
 });
 
-const AccountInfo:FC<DrawerInfoChatProps> = (props) => {
-    
+const AccountInfo: FC<DrawerInfoChatProps> = (props) => {
   const { extraDesktopMode } = useGetScreenMode();
   const { partnerInfo } = useChat();
   const t = useTranslations(NS_AUTH);
@@ -31,6 +30,7 @@ const AccountInfo:FC<DrawerInfoChatProps> = (props) => {
         width: extraDesktopMode ? "424px" : "272px",
         height: extraDesktopMode ? "948px" : "677px",
         gap: "12px",
+        backgroundColor: "var(--Gray0, #F7F7FD)",
       }}
     >
       <AccountInfoHeader

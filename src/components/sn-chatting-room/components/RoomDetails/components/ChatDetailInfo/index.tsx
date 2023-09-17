@@ -14,26 +14,18 @@ interface ChatDetailInfoProps {
   currentConversation: IChatItemInfo;
 }
 
-
 const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
   isOpen,
   onClose,
   currentConversation,
 }) => {
   const { extraDesktopMode } = useGetScreenMode();
-  const {
-    onOpenDrawer,
-    isDrawerOpen,
-    closeDrawer,
-    menuItems,
-    typeDrawer
-  } = useChatDetailInfo({ currentConversation });
+  const { onOpenDrawer, isDrawerOpen, closeDrawer, menuItems, typeDrawer } =
+    useChatDetailInfo({ currentConversation });
 
   const styleDrawerOpen = useMemo(
     () =>
-      isOpen
-        ? { width: extraDesktopMode ? "424px" : "272px" }
-        : { width: 0 },
+      isOpen ? { width: extraDesktopMode ? "424px" : "272px" } : { width: 0 },
     [extraDesktopMode, isOpen],
   );
 
@@ -112,11 +104,17 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
             />
           ))}
         </Box>
-        {isDrawerOpen ? <DrawerInfoChat isOpen={isDrawerOpen} type={typeDrawer} onClose={closeDrawer} currentConversation={currentConversation} /> : null}
+        {isDrawerOpen ? (
+          <DrawerInfoChat
+            isOpen={isDrawerOpen}
+            type={typeDrawer}
+            onClose={closeDrawer}
+            currentConversation={currentConversation}
+          />
+        ) : null}
       </Box>
     </Drawer>
   );
 };
-
 
 export default ChatDetailInfo;
