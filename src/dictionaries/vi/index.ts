@@ -19,7 +19,7 @@ import {
   NS_MANAGER,
   NS_TIME_TRACKING,
   NS_SALES,
-  NS_CHAT
+  NS_CHAT,
   NS_CHAT_BOX
 } from "constant/index";
 import { salesLang } from "./sales";

@@ -85,10 +85,8 @@ const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
       ? stateSearchMessage?.offset + initPageIndex
-      : initPageIndex;    
-    console.log(!!roomId && !!dataTransfer?._id, roomId, dataTransfer?._id);
-    
-    if(!!roomId && !!dataTransfer?._id) return;
+      : initPageIndex;        
+    if((!roomId || roomId?.length === 0) && !dataTransfer?._id) return;
     getLastMessage(0, countNew);
     if (inputRef.current) {
       inputRef.current.pageRef.current = countNew - initPageIndex;
