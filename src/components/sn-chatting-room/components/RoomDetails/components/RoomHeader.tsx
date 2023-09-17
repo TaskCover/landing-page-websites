@@ -23,7 +23,11 @@ import { useSnackbar } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
 import { debounce } from "utils/index";
 import { Text } from "components/shared";
-import { ArrowCircleDownOutlined, ArrowCircleUp, ArrowUpward } from "@mui/icons-material";
+import {
+  ArrowCircleDownOutlined,
+  ArrowCircleUp,
+  ArrowUpward,
+} from "@mui/icons-material";
 
 const RoomHeader = ({ currentConversation }) => {
   const { isDarkMode } = useTheme();
@@ -31,13 +35,17 @@ const RoomHeader = ({ currentConversation }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { mobileMode } = useGetScreenMode();
   const { onAddSnackbar } = useSnackbar();
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  const { onSearchChatText, listSearchMessage } = useChat();
+  const { onSearchChatText, listSearchMessage, onSetStateSearchMessage } =
+    useChat();
   const [search, setSearchText] = useState({
     text: "",
     isOpen: false,
   });
+
+  const [currentIndex, setCurrentIndex] = useState<number>(
+    listSearchMessage?.length,
+  );
 
   const handleSearchChatText = useCallback(async () => {
     try {
@@ -57,8 +65,7 @@ const RoomHeader = ({ currentConversation }) => {
   }, [search.isOpen, search.text]);
 
   const debounceSearchText = debounce((text: string) => {
-    console.log(text);
-    
+    setSearchText({ ...search, text });
   }, 1000);
 
   // Handler to open the drawer.
@@ -78,6 +85,18 @@ const RoomHeader = ({ currentConversation }) => {
   useEffect(() => {
     handleSearchChatText();
   }, [handleSearchChatText]);
+
+  const onDirectToMessage = useCallback((type = "up") => {
+    const newIndex = type !== "up" ? currentIndex - 1 : currentIndex + 1;
+    if (newIndex < 0 || newIndex > listSearchMessage.length - 1) return;
+    setCurrentIndex(newIndex);
+    const message = listSearchMessage[newIndex];
+    onSetStateSearchMessage(message);
+  }, [currentIndex]);
+
+  useEffect(() => {
+    setCurrentIndex(listSearchMessage?.length);
+  }, [listSearchMessage?.length]);
 
   return (
     <Box
@@ -134,12 +153,22 @@ const RoomHeader = ({ currentConversation }) => {
                 <Text variant="body2" className="text-option">
                   {listSearchMessage?.length} matches
                 </Text>
-                <IconButton sx={{ p: "5px", bgcolor: 'white' }} aria-label="search">
+                <IconButton
+                  sx={{ p: "5px", bgcolor: "white" }}
+                  aria-label="search"
+                  onClick={() => onDirectToMessage("up")}
+                >
                   <ArrowCircleUp />
                 </IconButton>
-                <IconButton sx={{ p: "5px", bgcolor: 'white' }} aria-label="search">
-                  <ArrowCircleDownOutlined />
-                </IconButton>
+                {listSearchMessage?.length > 1 ? (
+                  <IconButton
+                    sx={{ p: "5px", bgcolor: "white" }}
+                    aria-label="search"
+                    onClick={() => onDirectToMessage("down")}
+                  >
+                    <ArrowCircleDownOutlined />
+                  </IconButton>
+                ) : null}
               </Box>
             ) : (
               ""

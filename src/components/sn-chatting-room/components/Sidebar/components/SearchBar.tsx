@@ -1,11 +1,7 @@
 import { Box, InputBase, Paper } from "@mui/material";
 import { IconButton } from "components/shared";
-import { ParamState } from "components/sn-chatting-room/type";
-import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import SearchIcon from "icons/SearchIcon";
-import { useEffect, useState } from "react";
-import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
 import { debounce } from "utils/index";
 
 const SearchBar = ({ onSearchText }) => {
@@ -14,7 +10,7 @@ const SearchBar = ({ onSearchText }) => {
   const debounceSearchText = debounce((text: string) => {
     onSearchText(text);
   }, 1000);
-  
+
   return (
     <Box
       sx={{

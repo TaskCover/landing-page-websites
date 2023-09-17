@@ -65,6 +65,8 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
 
   const handleSelectMessage = useCallback(
     (message: MessageSearchInfo) => {
+      console.log(message, 'message');
+      
       onSetStateSearchMessage(message);
       setStateSearch({ isSearch: false, text: "" });
       onPrevious();

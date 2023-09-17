@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ParamChatState, ParamState } from "../type";
 import useChattingActions from "./useChattingActions";
-import { DirectionChat, IChatItemInfo, STEP } from "store/chat/type";
+import { IChatItemInfo, STEP } from "store/chat/type";
 import { useChat } from "store/chat/selectors";
 
 const defaultParam = {
@@ -20,6 +20,7 @@ export interface useFetchingChattingReturns {
   onSelectRoom: (chatInfo: IChatItemInfo) => void;
   currentConversation?: IChatItemInfo;
   onSearchText: (text?: string) => void;
+  onResetCurrentConversation?: () => void;
 }
 
 const useFetchingChatting = (): useFetchingChattingReturns => {
@@ -60,14 +61,15 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
     }
   }, [detailParams?.roomId, conversations]);
 
-  useEffect(() => {
-    // onSetRoomId(detailParams.roomId)
-  }, [detailParams.roomId]);
+  const onResetCurrentConversation = () => {
+    setDetailsParams({...detailParams, roomId: '-1'})
+  }
 
   return {
     onSelectRoom,
     currentConversation,
     onSearchText: (text) => setParams({ ...params, text: text as string }),
+    onResetCurrentConversation,
   };
 };
 
