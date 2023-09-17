@@ -83,6 +83,7 @@ export interface ParsedURL {
 }
 
 export interface MessageInfo {
+  t: string;
   _id: string;
   alias: string;
   msg: string;
@@ -256,6 +257,16 @@ export interface DeleteConversationGroup extends AuthenRequestCommon {
   type: string;
 }
 
+export interface ForwardMessageGroup extends AuthenRequestCommon {
+  roomId: string;
+  messageId: string;
+}
+
+export interface ChangeGroupAvatar extends AuthenRequestCommon {
+  roomId: string;
+  avatarUrl: string;
+}
+
 export type RoomType = "c" | "d" | "p";
 export interface ChatAttachmentsRequest extends AuthenRequestCommon {
   roomId?: string;
@@ -356,6 +367,10 @@ export interface SetParamConversationProps {
   value: any
 }
 
+export interface ReadMessageRequest extends AuthenRequestCommon {
+  roomId: string;
+}
+
 export enum STEP {
   IDLE,
   CONVENTION,
@@ -372,6 +387,8 @@ export enum STEP {
   FILE,
   CHAT_FORWARD,
   CHAT_GROUP,
+  ADD_MEMBER,
+  SEARCH_CHAT_TEXT,
 }
 
 export enum STEP_INFO {

@@ -3,6 +3,7 @@ import { Typography } from "@mui/material";
 import { IChatItemInfo } from "store/chat/type";
 import ChatItemRender from "./ChatItemRender";
 import { renderTimeDiff } from "utils/index";
+import useTheme from "hooks/useTheme";
 
 interface ChatItemProp {
   sessionId: string;
@@ -21,6 +22,7 @@ const ChatItemLayout = ({
   const { sx, ...props } = chatItemProps || {};
   const { lastMessage } = chatInfo || {};
 
+  const { isDarkMode } = useTheme();
   return (
     <Box
       onClick={() => onClickConvention(chatInfo)}
@@ -33,7 +35,7 @@ const ChatItemLayout = ({
         position: "relative",
         background: isActive ? "#F7F7FD" : "white",
         ":hover": {
-          backgroundColor: "#F7F7FD",
+          backgroundColor: isDarkMode ? "#3a3b3c" : "#F7F7FD",
         },
         ...sx,
       }}

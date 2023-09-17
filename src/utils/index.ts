@@ -203,6 +203,66 @@ export const serverQueries = (
   return cleanData;
 };
 
+export const serverQueriesOr = (
+  {
+    pageIndex,
+    pageSize,
+    ...rest
+  }: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  },
+  likeKeys?: string[],
+  booleanKeys?: string[],
+  numberKeys?: string[],
+  schemaKeys?: {
+    [key: string]: string;
+  },
+  keys?: string[],
+) => {
+  const queries = cleanObject({
+    ...rest,
+    page: pageIndex ? (pageIndex as number) - 1 : undefined,
+    size: isNaN(pageSize) ? pageSize : Number(pageSize),
+  });
+
+  const data = Object.entries(queries).reduce(
+    (out: { [key: string]: string[] }, [key, value]) => {
+      if (KEYS.includes(key) || keys?.includes(key)) {
+        out[key] = value;
+      } else {
+        if (likeKeys?.includes(key)) {
+          out.query.push(`like(${key},"${value}")`);
+        } else if (typeof value === "boolean" || booleanKeys?.includes(key)) {
+          const boolValue =
+            typeof value === "boolean"
+              ? value
+              : value === "true" || Number(value) === 1;
+          out.query.push(`like(${key},${boolValue})`);
+        } else if (typeof value === "number" || numberKeys?.includes(key)) {
+          out.query.push(`like(${key},${value})`);
+        } else {
+          const schema = schemaKeys?.[key] ?? "like";
+          out.query.push(`${schema}(${key},"${value}")`);
+        }
+      }
+      return out;
+    },
+    { query: [] },
+  );
+
+  const cleanData = cleanObject(data);
+
+  if (cleanData["query"].length) {
+    cleanData["query"] = `or(${cleanData["query"].join(",")})`;
+  } else {
+    delete cleanData["query"];
+  }
+  console.log('cleanData', cleanData);
+  
+  return cleanData;
+};
+
 export const formatDate = (
   date?: number | string | Date,
   format?: string,

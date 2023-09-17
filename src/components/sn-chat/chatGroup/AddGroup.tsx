@@ -13,7 +13,7 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 import SearchIcon from "icons/SearchIcon";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";
-import { NS_COMMON } from "constant/index";
+import { NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { Employee } from "store/company/reducer";
 import SelectItem from "../components/SelectItem";
@@ -44,47 +44,29 @@ const AddGroup = () => {
 
   const {
     prevStep,
-    createGroupStatus,
-    newGroupData,
-    convention,
     dataTransfer,
     groupMembers,
     onSetRoomId,
-    onGetAllConvention,
     onSetStep,
     onCreateDirectMessageGroup,
     onAddMembers2Group,
-    onFetchGroupMembersMember,
+    currStep
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
   const { onAddSnackbar } = useSnackbar();
 
   useEffect(() => {
-    onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 30 });
-    onGetAllConvention({
-      type: "a",
-      text: "",
-      offset: 0,
-      count: 1000,
-    });
-    onFetchGroupMembersMember({
-      roomId: dataTransfer?._id,
-    });
-  }, [onGetAllConvention, onGetEmployees, textSearch, user?.company]);
+    onGetEmployees(user?.company ?? "", {email: textSearch, fullname: textSearch, pageIndex: 0, pageSize: 30 });
+  }, [onGetEmployees, textSearch, user?.company]);
 
   const handleSuccess = (result) => {
     if (result?.error) {
       onAddSnackbar(result?.error?.message, "error");
       return;
     }
-    onAddSnackbar("Successfully!", "success");
-    onGetAllConvention({
-      type: "a",
-      text: "",
-      offset: 0,
-      count: 1000,
-    });
+    onAddSnackbar(commonT("success"), "success");
     onSetStep(STEP.CHAT_GROUP, !dataTransfer?.isNew ? dataTransfer : result?.payload?.group);
     onSetRoomId(dataTransfer?.isNew ? result?.payload?.group?._id : dataTransfer?._id)
   };
@@ -114,23 +96,32 @@ const AddGroup = () => {
   };
 
   const handleCreateGroup = async () => {
+    const memberAddGroup = Object.keys(employeeSelected).filter(
+      (item) => employeeSelected[item] === true,
+    )
+    if (!Object.values(employeeIdSelected)?.filter(item=>item).length) {
+      onAddSnackbar("Please select at least one member!", "error");
+      return;
+    }
     if (dataTransfer?.isNew) {
-      const result = await onCreateDirectMessageGroup({
-        groupName: (() => {
-          return (
-            Object.keys(employeeSelected)
-              .filter((item) => employeeSelected[item] === true)
-              ?.join("-")
-              .slice(0, 10) +
-            `...${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`
-          );
-        })(),
-        members: Object.keys(employeeSelected).filter(
-          (item) => employeeSelected[item] === true,
-        ),
-        type: "d",
-      });      
-      handleSuccess(result);
+      if(memberAddGroup.length > 0){
+        const result = await onCreateDirectMessageGroup({
+          groupName: (() => {
+            return (
+              Object.keys(employeeSelected)
+                .filter((item) => employeeSelected[item] === true)
+                ?.join("-")
+                .slice(0, 10) +
+              `...${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`
+            );
+          })(),
+          members: Object.keys(employeeSelected).filter(
+            (item) => employeeSelected[item] === true,
+          ),
+          type: "d",
+        });      
+        handleSuccess(result);
+      }
     } else {
       const users = Object.keys(employeeIdSelected).filter(
         (item) => employeeIdSelected[item] === true,
@@ -167,7 +158,11 @@ const AddGroup = () => {
             cursor: "pointer",
           }}
           onClick={() => {
-            onSetStep(prevStep);
+            if(currStep === STEP.ADD_GROUP) {
+              onSetStep(STEP.CONVENTION);
+            } else {
+              onSetStep(prevStep);
+            }
           }}
         >
           <ArrowDownIcon />
@@ -183,7 +178,7 @@ const AddGroup = () => {
               border: "1px solid transparent",
             },
           }}
-          placeholder="Search name"
+          placeholder={commonChatBox("chatBox.searchName")}
           fullWidth
           onKeyDown={handleKeyDown}
           InputProps={{
@@ -266,7 +261,11 @@ const AddGroup = () => {
           size="small"
           sx={defaultSx.button}
           onClick={() => {
-            onSetStep(prevStep);
+            if(currStep === STEP.ADD_GROUP) {
+              onSetStep(STEP.CONVENTION);
+            } else {
+              onSetStep(prevStep);
+            }
           }}
         >
           {commonT("form.cancel")}

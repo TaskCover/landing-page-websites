@@ -1,6 +1,10 @@
 import Box, { BoxProps } from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { MessageInfo } from "store/chat/type";
+import Forward from "icons/Forward";
+import { useState } from "react";
+import { useChat } from "store/chat/selectors";
+import { MessageInfo, STEP } from "store/chat/type";
+import "../../../../components/Editor/style.css";
 
 interface MessageLayoutProps {
   sessionId: string;
@@ -20,10 +24,12 @@ const MessageLayout = ({
 }: MessageLayoutProps) => {
   const isCurrentUser = message.u.username === sessionId;
   const { sx, ...props } = messageProps || {};
-
+  const [isForward, setIsForward] = useState(true);
+  const { onSetStep, dataTransfer } = useChat();
   return (
     <>
       <Box
+        className="message-layout"
         sx={{
           width: "100%",
           display: "flex",
@@ -38,6 +44,35 @@ const MessageLayout = ({
         }}
         {...props}
       >
+        {isForward && <>
+          <Box
+            className="forward-icon"
+            order={isCurrentUser ? "1" : "3"}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <Box
+              className="mouse-pointer"
+              onClick={() => {                
+                onSetStep(STEP.CHAT_FORWARD, { ...dataTransfer, message });
+              }}
+              sx={{
+                backgroundColor: "#ECECF3",
+                height: "32px",
+                width: "32px",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <Forward />
+            </Box>
+          </Box>
+        </>}
         {/* Message content */}
         {children}
         {/* Avartar partner */}

@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Avatar from "components/Avatar";
+import { NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import ArrowRightIcon from "icons/ArrowRightIcon";
 import CloseIcon from "icons/CloseIcon";
@@ -10,7 +11,8 @@ import PointOnline from "icons/pointOnline";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
 import VideoCallIcon from "icons/VideoCallIcon";
-import { useMemo } from "react";
+import { useTranslations } from "next-intl";
+import { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { IChatItemInfo, STEP } from "store/chat/type";
@@ -25,11 +27,23 @@ const AccountInfoHeader = ({
   onPrevious,
   viewStep,
 }: AccountInfoHeaderProp) => {
-  const { dataTransfer, onSetStep, prevStep } = useChat();
+  const { dataTransfer, onSetStep, prevStep, currStep, onGetAllConvention } = useChat();
   const { usersCount, t, name } = accountInfo;
   const isGroup = useMemo(() => t !== "d", [t]);
 
   const [textSearch, setTextSearch] = useState("");
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
+
+  useEffect(() => {
+    (async() => {
+      await onGetAllConvention({
+        type: 'a',
+        text: textSearch ?? '',
+        offset: 0,
+        count: 30,
+      });
+    })();
+  }, [currStep, textSearch])
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -108,7 +122,7 @@ const AccountInfoHeader = ({
               {name ? name : dataTransfer?.fname}
             </Typography>
             <Typography variant="caption" color="#999999">
-              Active
+              {commonChatBox("chatBox.active")}
             </Typography>
           </Box>
           {/* <IconButton
@@ -249,11 +263,14 @@ const AccountInfoHeader = ({
             {_renderItemHeader(viewStep)}
 
             <Box ml="auto">
-              {viewStep != STEP.CHAT_ONE && (
+              {(viewStep == STEP.CHAT_DETAIL_GROUP) && (
                 <IconButton>
                   <SearchIcon
                     sx={{
                       color: "#1BC5BD",
+                    }}
+                    onClick={() => {
+                      onSetStep(STEP.SEARCH_CHAT_TEXT);
                     }}
                   />
                 </IconButton>
@@ -263,7 +280,7 @@ const AccountInfoHeader = ({
                   color: "white",
                 }}
                 onClick={() => {
-                  onSetStep(STEP.ADD_GROUP);
+                  onSetStep(STEP.ADD_MEMBER);
                 }}
               >
                 <ProfileAdd />

@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import SwitchChat from "components/sn-chat/SwitchChat";
 import ChatMessageIcon from "icons/ChatMessageIcon";
 import CloseIcon from "icons/CloseIcon";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
 import { Grow, Typography } from "@mui/material";
@@ -13,6 +13,8 @@ import { useTranslations } from "next-intl";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { Permission } from "constant/enums";
+import useTheme from "hooks/useTheme";
+
 const ChatListTemp = () => {
   const { user } = useAuth();
   const { onGetAllConvention, onClearConversation, onReset } = useChat();
@@ -21,6 +23,7 @@ const ChatListTemp = () => {
   const [show, setShow] = useState(false);
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
+  const { isDarkMode } = useTheme();
 
   const init = {
     type: "",
@@ -183,13 +186,15 @@ const ChatListTemp = () => {
                 right: "5rem",
                 borderRadius: "16px",
                 boxShadow: "2px 2px 24px 0px #0000001A",
+                backgroundColor: isDarkMode ? "#303130" : "white",
+
               }}
             >
               <Box
                 sx={{
                   height: "100%",
                   overflow: "hidden",
-                  backgroundColor: "white",
+                  backgroundColor: isDarkMode ? "#303130" : "white",
                 }}
               >
                 {open && <SwitchChat />}

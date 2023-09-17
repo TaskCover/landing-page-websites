@@ -12,7 +12,7 @@ import { useChat } from "store/chat/selectors";
 const FileContent = () => {
   const { mediaList, mediaListStatus, onGetChatAttachments } = useChat();
   const { onAddSnackbar } = useSnackbar();
-  const t = useTranslations(NS_COMMON);
+  const commonT = useTranslations(NS_COMMON);
 
   useEffect(() => {
     const handleGetAttachment = async () => {
@@ -20,14 +20,14 @@ const FileContent = () => {
         await onGetChatAttachments({ fileType: "file" });
       } catch (error) {
         onAddSnackbar(
-          typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+          typeof error === "string" ? error : commonT(AN_ERROR_TRY_AGAIN),
           "error",
         );
       }
     };
 
     handleGetAttachment();
-  }, [onAddSnackbar, onGetChatAttachments, t]);
+  }, [onAddSnackbar, onGetChatAttachments, commonT]);
 
   const fileClone = useMemo(() => {
     return mediaList?.filter((file) => file.name && file.path);
@@ -83,7 +83,7 @@ const FileContent = () => {
           );
         })
       ) : (
-        <Typography textAlign="center">No Data...</Typography>
+        <Typography textAlign="center">{commonT("noData")}</Typography>
       )}
     </Box>
   );

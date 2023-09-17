@@ -83,6 +83,14 @@
   color: var(--mui-palette-text-primary);
 }
 
-.quill .ql-toolbar:first-child {
+.forward-icon {
   display: none !important;
+}
+
+.message-layout:hover .forward-icon {
+  display: flex !important;
+}
+
+.mouse-pointer {
+  cursor: pointer;
 }

@@ -94,7 +94,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
       inputRef.current.pageRef.current = countNew - initPageIndex;
       inputRef.current.scrollMessage();
     }
-  }, [roomId, dataTransfer, getLastMessage, stateSearchMessage, t]);
+  }, [roomId, dataTransfer?._id, getLastMessage, stateSearchMessage, t]);
 
   useEffect(() => {
     if (stateSendMessage.status) {

@@ -31,6 +31,7 @@ import {
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
 import dayjs from "dayjs";
+import { State } from "linkifyjs";
 
 const initalPage = {
   pageIndex: 0,
@@ -100,6 +101,7 @@ const chatSlice = createSlice({
       const prevStep = Number(action.payload.step) - 1;
       state.prevStep = prevStep === STEP.IDLE ? STEP.CONVENTION : prevStep;
       state.currStep = action.payload.step;
+      state.messageInfo = [];
 
       if (action.payload.dataTransfer !== undefined) {
         state.dataTransfer = action.payload.dataTransfer;
@@ -207,6 +209,9 @@ const chatSlice = createSlice({
       state.stateSearchMessage = action.payload;
       state.messageInfo = [];
     },
+//     getUpdateConversation: (state, action) => {
+// log
+//     },
     clearConversation: (state) => {
       state.convention = [];
       state.conversationPaging = { ...initalPage, textSearch: "" };
