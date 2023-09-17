@@ -10,21 +10,11 @@ import { debounce } from "utils/index";
 
 const SearchBar = ({ onSearchText }) => {
   const { mobileMode } = useGetScreenMode();
-  const { handleGetConversation } = useChattingActions();
-
-  const [inputValue, setInputValue] = useState("");
-
-  console.log(inputValue);
 
   const debounceSearchText = debounce((text: string) => {
-    setInputValue(text);
-    // onSearchText(text);
-    console.log("text", text);
+    onSearchText(text);
   }, 1000);
-
-  // const handdleChangeInput = (text: string) => {
-  // };
-
+  
   return (
     <Box
       sx={{
@@ -68,7 +58,6 @@ const SearchBar = ({ onSearchText }) => {
               padding: "0px !important",
             },
           }}
-          value={inputValue}
           onChange={(e) => debounceSearchText(e.target.value)}
         />
       </Paper>

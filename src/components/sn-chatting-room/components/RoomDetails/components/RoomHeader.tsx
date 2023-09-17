@@ -57,7 +57,8 @@ const RoomHeader = ({ currentConversation }) => {
   }, [search.isOpen, search.text]);
 
   const debounceSearchText = debounce((text: string) => {
-    setSearchText({ ...search, text });
+    console.log(text);
+    
   }, 1000);
 
   // Handler to open the drawer.
@@ -77,8 +78,6 @@ const RoomHeader = ({ currentConversation }) => {
   useEffect(() => {
     handleSearchChatText();
   }, [handleSearchChatText]);
-
-  console.log(listSearchMessage, "listSearchMessage");
 
   return (
     <Box
