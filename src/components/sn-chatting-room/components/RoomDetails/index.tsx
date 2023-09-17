@@ -6,7 +6,7 @@ import Conversation from "components/sn-chat/components/conversation/Conversatio
 import useGetScreenMode from "hooks/useGetScreenMode";
 import RoomHeaderMobile from "./components/RoomHeaderMobile";
 
-const RoomDetails = ({ currentConversation }) => {
+const RoomDetails = ({ currentConversation, onResetCurrentConversation }) => {
   const { loading } = useChattingActions();
   const { mobileMode } = useGetScreenMode();
 
@@ -18,7 +18,10 @@ const RoomDetails = ({ currentConversation }) => {
       flexDirection="column"
     >
       {mobileMode ? (
-        <RoomHeaderMobile currentConversation={currentConversation} />
+        <RoomHeaderMobile
+          currentConversation={currentConversation}
+          onResetCurrentConversation={onResetCurrentConversation}
+        />
       ) : (
         <RoomHeader currentConversation={currentConversation} />
       )}

@@ -12,20 +12,23 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CallIcon from "icons/CallIcon";
 import ChatDetailUserMobile from "./ChatDetailUserMobile";
 
-const RoomHeaderMobile = ({ currentConversation }) => {
+const RoomHeaderMobile = ({
+  currentConversation,
+  onResetCurrentConversation,
+}) => {
   const { isDarkMode } = useTheme();
+
+  console.log(currentConversation);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   // Handler to open the drawer.
   const openDrawer = () => {
     setIsDrawerOpen(true);
-    console.log(true);
   };
 
   // Handler to close the drawer.
   const closeDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
-    console.log(false);
   };
 
   const styleIcon = { color: "white", fontSize: "24px", cursor: "pointer" };
@@ -49,7 +52,10 @@ const RoomHeaderMobile = ({ currentConversation }) => {
           gap: "24px",
         }}
       >
-        <ArrowBackIosNewIcon style={styleIcon} />
+        <ArrowBackIosNewIcon
+          style={styleIcon}
+          onClick={onResetCurrentConversation}
+        />
         <Box
           sx={{
             display: "flex",

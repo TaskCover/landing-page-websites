@@ -13,8 +13,15 @@ const { RoomDetails, Sidebar, ChattingRoomLayout } = SNChat;
 
 const ChattingRoom = () => {
   const { mobileMode } = useGetScreenMode();
-  const { onSelectRoom, currentConversation, onSearchText } =
-    useFetchingChatting();
+  const {
+    onSelectRoom,
+    currentConversation,
+    onSearchText,
+    onResetCurrentConversation,
+  } = useFetchingChatting();
+
+  console.log(currentConversation);
+
   return (
     <Box
       sx={{
@@ -30,12 +37,29 @@ const ChattingRoom = () => {
             onSelectRoom={onSelectRoom}
             onSearchText={onSearchText}
           />
-          <RoomDetails currentConversation={currentConversation} />
+          <RoomDetails
+            currentConversation={currentConversation}
+            onResetCurrentConversation={onResetCurrentConversation}
+          />
         </ChattingRoomLayout>
       ) : (
         // <GroupChatMobile {...currentConversation} />
-
-        <RoomDetails currentConversation={currentConversation} />
+        <>
+          {currentConversation ? (
+            <RoomDetails
+              currentConversation={currentConversation}
+              onResetCurrentConversation={onResetCurrentConversation}
+            />
+          ) : (
+            <ChattingRoomMobileLayout>
+              <Sidebar
+                currentConversation={currentConversation}
+                onSelectRoom={onSelectRoom}
+                onSearchText={onSearchText}
+              />
+            </ChattingRoomMobileLayout>
+          )}
+        </>
       )}
     </Box>
   );

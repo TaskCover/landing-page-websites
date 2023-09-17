@@ -3,6 +3,7 @@ import { ParamChatState, ParamState } from "../type";
 import useChattingActions from "./useChattingActions";
 import { IChatItemInfo, STEP } from "store/chat/type";
 import { useChat } from "store/chat/selectors";
+import useGetScreenMode from "hooks/useGetScreenMode";
 
 const defaultParam = {
   count: 12,
@@ -19,8 +20,8 @@ const defaultChatParam = {
 export interface useFetchingChattingReturns {
   onSelectRoom: (chatInfo: IChatItemInfo) => void;
   currentConversation?: IChatItemInfo;
-  onSearchText: (text?: string) => void;
   onResetCurrentConversation?: () => void;
+  onSearchText: (text?: string) => void;
 }
 
 const useFetchingChatting = (): useFetchingChattingReturns => {
@@ -30,12 +31,19 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
   const [detailParams, setDetailsParams] = useState<ParamChatState>(
     defaultChatParam as ParamChatState,
   );
+  const { mobileMode } = useGetScreenMode();
+
+  const onResetCurrentConversation = () => {
+    setDetailsParams({ ...detailParams, roomId: "-1" });
+    return onResetCurrentConversation;
+  };
 
   useEffect(() => {
     handleGetConversation({ body: params });
   }, [handleGetConversation, params]);
 
   useEffect(() => {
+    if (mobileMode) return;
     if (conversations?.length > 0) {
       onSelectRoom(conversations[0]);
     }
@@ -61,15 +69,11 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
     }
   }, [detailParams?.roomId, conversations]);
 
-  const onResetCurrentConversation = () => {
-    setDetailsParams({...detailParams, roomId: '-1'})
-  }
-
   return {
     onSelectRoom,
     currentConversation,
-    onSearchText: (text) => setParams({ ...params, text: text as string }),
     onResetCurrentConversation,
+    onSearchText: (text) => setParams({ ...params, text: text as string }),
   };
 };
 
