@@ -230,19 +230,16 @@ export const useChat = () => {
   );
 
   const onSearchChatText = useCallback(
-    async ({
-      text,
-      type = "d",
-    }: Omit<MessageSearchInfoRequest, "authToken" | "userId" | "roomId">) => {
+    async (params : Omit<MessageSearchInfoRequest, "authToken" | "userId" >) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
         searchChatText({
           authToken,
           userId,
-          roomId,
-          text,
-          type,
+          roomId: params?.roomId ?? roomId,
+          text: params?.text,
+          type: params?.type,
         }),
       ).unwrap();
     },

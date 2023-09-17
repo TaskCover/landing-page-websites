@@ -340,7 +340,7 @@ export interface MessageSearchInfo {
 }
 
 export interface MessageSearchInfoRequest extends AuthenRequestCommon {
-  roomId: string;
+  roomId?: string;
   text: string;
   type: RoomType;
 }

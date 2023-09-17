@@ -13,8 +13,13 @@ const { RoomDetails, Sidebar, ChattingRoomLayout } = SNChat;
 
 const ChattingRoom = () => {
   const { mobileMode } = useGetScreenMode();
+<<<<<<< Updated upstream
   const { onSelectRoom, currentConversation, onSearchText } =
     useFetchingChatting();
+=======
+  const { onSelectRoom, currentConversation, onSearchText } = useFetchingChatting();
+
+>>>>>>> Stashed changes
   return (
     <Box
       sx={{
