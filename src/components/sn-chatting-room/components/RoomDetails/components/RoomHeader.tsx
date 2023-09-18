@@ -80,19 +80,19 @@ const RoomHeader = ({ currentConversation }) => {
 
   const onOpenSearchMessage = () => {
     setSearchText({ isOpen: !search.isOpen, text: "" });
-  };
+  }; 
 
   useEffect(() => {
     handleSearchChatText();
   }, [handleSearchChatText]);
 
-  const onDirectToMessage = useCallback((type = "up") => {
-    const newIndex = type !== "up" ? currentIndex - 1 : currentIndex + 1;
+  const onDirectToMessage = useCallback(() => {
+    const newIndex = currentIndex - 1;
     if (newIndex < 0 || newIndex > listSearchMessage.length - 1) return;
     setCurrentIndex(newIndex);
     const message = listSearchMessage[newIndex];
     onSetStateSearchMessage(message);
-  }, [currentIndex]);
+  }, [currentIndex, listSearchMessage]);
 
   useEffect(() => {
     setCurrentIndex(listSearchMessage?.length);
@@ -156,19 +156,10 @@ const RoomHeader = ({ currentConversation }) => {
                 <IconButton
                   sx={{ p: "5px", bgcolor: "white" }}
                   aria-label="search"
-                  onClick={() => onDirectToMessage("up")}
+                  onClick={onDirectToMessage}
                 >
                   <ArrowCircleUp />
                 </IconButton>
-                {listSearchMessage?.length > 1 ? (
-                  <IconButton
-                    sx={{ p: "5px", bgcolor: "white" }}
-                    aria-label="search"
-                    onClick={() => onDirectToMessage("down")}
-                  >
-                    <ArrowCircleDownOutlined />
-                  </IconButton>
-                ) : null}
               </Box>
             ) : (
               ""
