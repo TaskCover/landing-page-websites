@@ -11,14 +11,13 @@ import ChatDetailInfo from "./ChatDetailInfo";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CallIcon from "icons/CallIcon";
 import ChatDetailUserMobile from "./ChatDetailUserMobile";
+import GroupChatMobile from "./GroupChatMobile";
 
 const RoomHeaderMobile = ({
   currentConversation,
   onResetCurrentConversation,
 }) => {
   const { isDarkMode } = useTheme();
-
-  console.log(currentConversation);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   // Handler to open the drawer.
@@ -31,7 +30,16 @@ const RoomHeaderMobile = ({
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  console.log(currentConversation);
+
+  const ObjectLayout = {
+    c: GroupChatMobile,
+    d: ChatDetailUserMobile,
+    p: ChatDetailUserMobile,
+  };
   const styleIcon = { color: "white", fontSize: "24px", cursor: "pointer" };
+  const typeOfChat = currentConversation?.t;
+  const RenderedComponent = ObjectLayout[typeOfChat];
 
   return (
     <Box
@@ -102,11 +110,13 @@ const RoomHeaderMobile = ({
         >
           <VideoCallIcon stroke={"#FFF"} />
         </IconButton>
-        <ChatDetailUserMobile
-          isOpen={isDrawerOpen}
-          onClose={closeDrawer}
-          currentConversation={currentConversation}
-        />
+        {RenderedComponent && (
+          <RenderedComponent
+            isOpen={isDrawerOpen}
+            onClose={closeDrawer}
+            currentConversation={currentConversation}
+          />
+        )}
       </Box>
     </Box>
   );

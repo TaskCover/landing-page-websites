@@ -1,7 +1,13 @@
 import { Box, IconButton } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
-const GroupChatHeaderMobile = () => {
+interface ChatDetailUserHeaderMobileProps {
+  onClose: () => void;
+}
+
+const GroupChatHeaderMobile: React.FC<ChatDetailUserHeaderMobileProps> = ({
+  onClose,
+}) => {
   return (
     <Box
       sx={{
@@ -12,7 +18,10 @@ const GroupChatHeaderMobile = () => {
         width: "100%",
       }}
     >
-      <IconButton sx={{ width: "12px", height: "21px", color: "#999999" }}>
+      <IconButton
+        sx={{ width: "12px", height: "21px", color: "#999999" }}
+        onClick={onClose}
+      >
         <ArrowBackIosNewIcon />
       </IconButton>
     </Box>
