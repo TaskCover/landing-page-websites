@@ -18,6 +18,7 @@ import _ from "lodash";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import { Button } from "components/shared";
+import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 
 interface IProps {
   open: boolean;
@@ -27,12 +28,10 @@ interface IProps {
 const ProjectTab = ({ open, onClose }: IProps) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
-  const [projectOptions, setProjectOptions] = React.useState<
-    IOptionStructure[]
-  >([]);
+
   const { palette } = useTheme();
-  const { items: projects } = useProjects();
-  const { options: positionOptions } = usePositionOptions();
+  const { positionOptions, projectOptions } = useGetOptions();
+
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const {
@@ -65,18 +64,6 @@ const ProjectTab = ({ open, onClose }: IProps) => {
       resetProject();
     }
   }, [open]);
-
-  useEffect(() => {
-    if (!_.isEmpty(projects)) {
-      const resolveOption = _.map(projects, (project) => {
-        return {
-          label: project.name,
-          value: project.id,
-        };
-      });
-      setProjectOptions(resolveOption);
-    }
-  }, [projects]);
 
   return (
     <Grid2 container spacing={2} sx={{ mt: 1 }}>

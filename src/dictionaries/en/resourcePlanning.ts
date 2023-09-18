@@ -46,5 +46,6 @@ export const ResourcePlanningLang: ResourceDictionary = {
     estimate: "Estimate",
     work: "Work",
     schedule: "Schedule",
+    selectTimeOffCategory: "Select time off category",
   },
 };

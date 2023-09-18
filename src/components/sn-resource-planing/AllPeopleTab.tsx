@@ -1,6 +1,11 @@
+"use client";
+
 import FullCalendar from "@fullcalendar/react";
 import React from "react";
-import { IBookingAllFitler } from "store/resourcePlanning/action";
+import {
+  IBookingAllFitler,
+  getBookingAll,
+} from "store/resourcePlanning/action";
 import { DEFAULT_BOOKING_ALL_FILTER, EXAMPLE_DATA, weekdays } from "./hepler";
 import dayjs from "dayjs";
 import { isEmpty, includes } from "lodash";
@@ -18,11 +23,18 @@ import GrayArrowIcon from "icons/GrayArrowIcon";
 import Image from "next/image";
 import PlusIcon from "icons/PlusIcon";
 import TimeHeader from "./TimeHeader";
-import { useResourceDate } from "store/resourcePlanning/selector";
+import {
+  useGetBookingAll,
+  useResourceDate,
+} from "store/resourcePlanning/selector";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
 import CreateBooking from "./modals/CreateBooking";
 import ArrowDownIcon from "icons/ArrowDownIcon";
+import { useFetchBookingAll } from "./hooks/useBookingAll";
+import { IBookingListItem } from "store/resourcePlanning/reducer";
+import { RESOURCE_EVENT_TYPE } from "constant/enums";
+import useGetOptions from "./hooks/useGetOptions";
 
 const AllPeopleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -32,15 +44,14 @@ const AllPeopleTab = () => {
   const prevFilters = React.useRef<IBookingAllFitler>(
     DEFAULT_BOOKING_ALL_FILTER,
   );
-
   prevFilters.current = filters;
 
+  const { bookingAll, bookingAllFilter } = useGetBookingAll();
   const { selectedDate, updateDate } = useResourceDate();
-  const [resources, setResources] = React.useState<typeof EXAMPLE_DATA>([]);
+  const [resources, setResources] = React.useState<IBookingListItem[]>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
-
   const generateDateRange = () => {
     const start_date = dayjs(filters?.start_date);
     const result: Array<Date> = [];
@@ -60,10 +71,10 @@ const AllPeopleTab = () => {
       selectedDate,
     });
   };
-
+  useFetchBookingAll();
   React.useEffect(() => {
-    setResources(EXAMPLE_DATA);
-  }, []);
+    if (bookingAll) setResources(bookingAll);
+  }, [bookingAll]);
 
   React.useEffect(() => {
     if (
@@ -72,7 +83,6 @@ const AllPeopleTab = () => {
       dayjs(filters?.end_date).isValid()
     ) {
       generateDateRange();
-      // dispatch(getMyTimeTracking(filters));
     }
   }, [filters?.start_date, filters?.end_date]);
 
@@ -84,86 +94,9 @@ const AllPeopleTab = () => {
       if (type === "campaign") {
         // Campaign has been moved, compute diff and update each steps
         if (!calendarRef.current) return null;
-        // const diff = event.start.getTime() - oldEvent.start.getTime();
-        // calendarRef.current
-        //   .getApi()
-        //   .getEvents()
-        //   .filter(
-        //     (currentEvent: {
-        //       extendedProps: { type: any; campaignId: any };
-        //     }) => {
-        //       const { type: currEventType, campaignId: currEventCampaignId } =
-        //         currentEvent.extendedProps;
-        //       return (
-        //         currEventType === 'step' && currEventCampaignId === campaignId
-        //       );
-        //     }
-        //   )
-        //   .forEach(
-        //     (campaignEvent: {
-        //       start: any;
-        //       end: any;
-        //       setDates: (arg0: Date, arg1: Date) => void;
-        //     }) => {
-        //       const start = campaignEvent.start;
-        //       const end = campaignEvent.end;
-        //       campaignEvent.setDates(
-        //         new Date(start.getTime() + diff),
-        //         new Date(end.getTime() + diff)
-        //       );
-        //     }
-        //   );
       } else if (type === "step") {
         // Step has been resized or move, update the campaign dates
         if (!calendarRef.current) return null;
-        // const campaignEvent = calendarRef.current
-        //   .getApi()
-        //   .getEvents()
-        //   .find(
-        //     ({ extendedProps: evt }) =>
-        //       evt.type === 'campaign' && evt.campaignId === campaignId
-        //   );
-        // const { first, last } = calendarRef.current
-        //   .getApi()
-        //   .getEvents()
-        //   .filter(
-        //     (currentEvent: {
-        //       extendedProps: { type: any; campaignId: any };
-        //     }) => {
-        //       const { type: currEventType, campaignId: currEventCampaignId } =
-        //         currentEvent.extendedProps;
-        //       return (
-        //         currEventType === 'step' && currEventCampaignId === campaignId
-        //       );
-        //     }
-        //   )
-        //   .reduce(
-        //     (
-        //       acc: {
-        //         first: { start: { getTime: () => number } } | null;
-        //         last: { end: { getTime: () => number } } | null;
-        //       },
-        //       evt: {
-        //         start: { getTime: () => number };
-        //         end: { getTime: () => number };
-        //       }
-        //     ) => {
-        //       return {
-        //         first:
-        //           acc.first === null ||
-        //           acc.first.start.getTime() > evt.start.getTime()
-        //             ? evt
-        //             : acc.first,
-        //         last:
-        //           acc.last === null ||
-        //           acc.last.end.getTime() < evt.end.getTime()
-        //             ? evt
-        //             : acc.last,
-        //       };
-        //     },
-        //     { first: null, last: null }
-        //   );
-        // if (campaignEvent) campaignEvent.setDates(first.start, last.end);
       }
     };
 
@@ -203,55 +136,65 @@ const AllPeopleTab = () => {
   };
   const getEvents = () =>
     resources
-      .map(
-        ({
-          id,
-          name: campaignName,
-          from: campaignFrom,
-          to: campaignTo,
-          steps,
-        }) =>
-          steps
-            .map(({ id: eventId, name, from, to, eventType }) => ({
+      ?.map(({ id, bookings, fullname }) =>
+        bookings
+          .map((props) => {
+            const {
+              id: eventId,
+              start_date: from,
+              end_date: to,
+              booking_type,
+
+              position,
+            } = props;
+
+            return {
               resourceId: eventId.toString(),
-              start: from,
-              end: to,
+              start: dayjs(from).toDate(),
+              end: dayjs(to).toDate(),
               allDay: true,
               type: "step",
               campaignId: id,
-              name,
-              eventType,
+              position,
+              name: fullname,
+              booking_type,
               eventId,
-            }))
-            .concat([
-              {
-                resourceId: id,
-                start: campaignFrom,
-                end: campaignTo,
-                allDay: true,
-                type: "campaign",
-                name: campaignName,
-                campaignId: id,
-                eventId: 1,
-                eventType: "",
-              },
-            ]),
+            };
+          })
+          .concat([
+            {
+              resourceId: id,
+              start: dayjs(filters?.start_date).toDate(),
+              end: dayjs(filters?.end_date).toDate(),
+              allDay: true,
+              type: "campaign",
+              campaignId: id,
+              name: fullname,
+              position: {},
+              booking_type: "PROJECT_BOOKING",
+              eventId: id,
+            },
+          ]),
       )
       .flat();
 
   const getResources = () =>
-    resources.map((resource) => ({
+    resources?.map((resource) => ({
       ...resource,
-      children: resource?.steps.map((step) => ({
-        id: step?.id,
-        name: step?.name,
+      children: resource?.bookings.map((booking) => ({
+        id: booking?.id,
+        name: booking?.project?.name,
         type: "step",
-        eventType: step?.eventType,
+        eventType: booking?.booking_type,
+        note: booking?.note,
+        position: booking?.position,
       })),
     }));
 
   const mappedResources = getResources();
   const mappedEvents = getEvents();
+
+  useGetOptions();
   return (
     <Stack direction="column" rowGap={2}>
       <FilterHeader />
@@ -384,9 +327,21 @@ const AllPeopleTab = () => {
             );
           }}
           resourceLabelContent={({ resource }) => {
-            const { name, type } = resource.extendedProps;
+            const { name, company, type, fullname, position, eventType, note } =
+              resource.extendedProps;
+
             const isActive = includes(selectedResource, resource._resource.id);
-            if (type === "step")
+
+            const parentResource = resources.find(
+              (item) => item.id === resource._resource.parentId,
+            );
+            const bookings = parentResource
+              ? [...parentResource?.bookings]
+              : [];
+
+            const isLastItem = bookings.pop()?.id === resource._resource.id;
+
+            if (type === "step") {
               return (
                 <Grid
                   container
@@ -412,26 +367,38 @@ const AllPeopleTab = () => {
                     }}
                   >
                     <Avatar size={36} />
-                    <Typography
-                      sx={{ fontSize: 14, lineBreak: "auto", width: 1 }}
-                    >
-                      {name}
-                    </Typography>
+                    <Stack direction={"column"}>
+                      <Typography
+                        sx={{ fontSize: 14, lineBreak: "auto", width: 1 }}
+                      >
+                        {eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING
+                          ? name
+                          : note}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: 12, lineBreak: "auto", width: 1 }}
+                      >
+                        {position?.name}
+                      </Typography>
+                    </Stack>
                   </Grid>
+                  {isLastItem && (
+                    <Button
+                      variant="text"
+                      startIcon={<PlusIcon />}
+                      sx={{
+                        color: "success.main",
+                      }}
+                      // startIcon={<AddIcon />}
+                      onClick={() => setIsOpenCreate(true)}
+                    >
+                      {resourceT("schedule.action.addBooking")}
+                    </Button>
+                  )}
                   <Grid item xs={5} />
-                  <Button
-                    variant="text"
-                    startIcon={<PlusIcon />}
-                    sx={{
-                      color: "success.main",
-                    }}
-                    // startIcon={<AddIcon />}
-                    onClick={() => setIsOpenCreate(true)}
-                  >
-                    {resourceT("schedule.action.addBooking")}
-                  </Button>
                 </Grid>
               );
+            }
             return (
               <Grid container>
                 <Grid
@@ -467,9 +434,11 @@ const AllPeopleTab = () => {
                     >
                       <Avatar size={32} />
                       <Box>
-                        <Typography sx={{ fontSize: 14 }}>{name}</Typography>
+                        <Typography sx={{ fontSize: 14 }}>
+                          {fullname}
+                        </Typography>
                         <Typography sx={{ color: "#666666", fontSize: 14 }}>
-                          UI/UX
+                          {company}
                         </Typography>
                       </Box>
                       <ArrowDownIcon

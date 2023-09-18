@@ -20,6 +20,7 @@ import DialogLayout from "components/DialogLayout";
 import { useTranslations } from "next-intl";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import TimeOffTab from "./TimeoffTab";
+import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 
 interface IProps {
   open: boolean;

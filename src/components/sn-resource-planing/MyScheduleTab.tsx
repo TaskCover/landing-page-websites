@@ -15,7 +15,6 @@ import { ResourceInput } from "@fullcalendar/resource";
 import BlueArrowIcon from "icons/BlueArrowIcon";
 import RedArrowIcon from "icons/RedArrowIcon";
 import GrayArrowIcon from "icons/GrayArrowIcon";
-import Image from "next/image";
 import PlusIcon from "icons/PlusIcon";
 import TimeHeader from "./TimeHeader";
 import { useResourceDate } from "store/resourcePlanning/selector";
@@ -226,6 +225,7 @@ const MyScheduleTab = () => {
   const getResources = () =>
     resources.map((resource) => ({
       ...resource,
+      name: resource?.name,
       children: resource?.steps.map((step) => ({
         id: step?.id,
         name: step?.name,
@@ -367,7 +367,8 @@ const MyScheduleTab = () => {
             );
           }}
           resourceLabelContent={({ resource }) => {
-            const { name, type } = resource.extendedProps;
+            const { name, type, fullname } = resource.extendedProps;
+
             const isActive = includes(selectedResource, resource._resource.id);
             if (type === "step")
               return (
@@ -450,7 +451,9 @@ const MyScheduleTab = () => {
                     >
                       <Avatar size={32} />
                       <Box>
-                        <Typography sx={{ fontSize: 14 }}>{name}</Typography>
+                        <Typography sx={{ fontSize: 14 }}>
+                          {fullname}
+                        </Typography>
                         <Typography sx={{ color: "#666666", fontSize: 14 }}>
                           UI/UX
                         </Typography>

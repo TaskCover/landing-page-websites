@@ -70,6 +70,11 @@ export const Endpoint = {
   SIGNUP_UPLOAD: "/avatar/upload",
   UPLOAD_LINK: "/files/upload-link",
 
+  RESOURCE_PLANNING: "/resources",
+  RESOURCE_PLANNING_LIST: "/resources/all",
+  RESOURCE_PLANNING_DETAIL: "/resources/{id}",
+  MY_RESOURCE_PLANNING: "/resources/me",
+
   MY_TIME_SHEET: "/timesheets/me",
   WORK_LOG: "/timesheets/log",
   COMPANY_TIME_SHEET: "timesheets/company",

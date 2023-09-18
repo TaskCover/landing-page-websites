@@ -1,13 +1,15 @@
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { useAppSelector } from "store/hooks";
-import { IBookingAllFitler } from "./action";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { IBookingAllFitler, getBookingAll } from "./action";
 import {
   IDatePicker,
   setBookingAllFilter,
   setCurrentDate,
   setDatePicker,
 } from "./reducer";
+import { useSnackbar } from "store/app/selectors";
+import { useEffect } from "react";
 
 export const useResourceFilter = () => {
   const { end_date, search_key, start_date } = useAppSelector(
@@ -33,7 +35,7 @@ export const useResourceDate = () => {
   );
   const { dateRange, selectedDate } = datePicker;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const updateDate = (date: IDatePicker) => {
     dispatch(setDatePicker(date));
@@ -49,5 +51,29 @@ export const useResourceDate = () => {
     updateDate,
     updateCurrentDate,
     currentDate,
+  };
+};
+
+export const useGetBookingAll = () => {
+  const { bookingAll, bookingAllLoading, bookingAllError, bookingAllFilter } =
+    useAppSelector((state) => state.resourcePlanning);
+  const { onAddSnackbar } = useSnackbar();
+  const dispatch = useAppDispatch();
+
+  const getBookingResource = async (params: IBookingAllFitler) => {
+    await dispatch(getBookingAll(params));
+  };
+
+  useEffect(() => {
+    if (bookingAllError) {
+      onAddSnackbar(bookingAllError, "error");
+    }
+  }, [bookingAllError]);
+  return {
+    bookingAllFilter,
+    bookingAll,
+    bookingAllLoading,
+    bookingAllError,
+    getBookingResource,
   };
 };
