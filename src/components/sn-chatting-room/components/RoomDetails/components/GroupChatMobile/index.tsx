@@ -5,6 +5,7 @@ import EditGroupNameIcon from "icons/EditGroupNameIcon";
 import GroupChatItemMobile from "./GroupChatItemMobile";
 import MembersMobile from "../MembersMobile";
 import { IChatItemInfo } from "store/chat/type";
+import { useChat } from "store/chat/selectors";
 
 interface ChatDetailUserMobileProps {
   isOpen: boolean;
@@ -25,21 +26,6 @@ const GroupChatMobile: React.FC<ChatDetailUserMobileProps> = ({
     midMenuItems,
     bottomMenuItems,
   } = useGroupChat();
-
-  const arrayAvatar = [
-    {
-      id: 1,
-      avatar: currentConversation?.avatar,
-    },
-    {
-      id: 2,
-      avatar: currentConversation?.avatar,
-    },
-    {
-      id: 3,
-      avatar: currentConversation?.avatar,
-    },
-  ];
 
   const styleDrawerOpen = isOpen ? { width: "100%" } : { width: "0" };
 
@@ -86,13 +72,13 @@ const GroupChatMobile: React.FC<ChatDetailUserMobileProps> = ({
           >
             <Box
               sx={{
-                position: "relative",
-                width: "129px",
-                height: "55px",
-                flexShrink: "0",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "8px",
               }}
             >
-              {arrayAvatar.map((item, index) => (
+              {/* {arrayAvatar.map((item, index) => (
                 <Box
                   key={item.id}
                   sx={{
@@ -111,7 +97,17 @@ const GroupChatMobile: React.FC<ChatDetailUserMobileProps> = ({
                     }}
                   />
                 </Box>
-              ))}
+              ))} */}
+
+              <Avatar
+                src={currentConversation.avatar}
+                sx={{
+                  height: "55px",
+                  width: "55px",
+                  flexShrink: "0",
+                  borderRadius: "50%",
+                }}
+              />
             </Box>
 
             <Box
