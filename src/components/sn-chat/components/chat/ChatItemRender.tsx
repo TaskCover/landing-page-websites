@@ -125,7 +125,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
           lineHeight="18px"
           color={isDarkMode? "white" : "black"}
         >
-          {name}
+          {isGroup ? name?.replaceAll('_', ' ') : name}
         </Typography>
         <Typography
           ref={lastMessageRef}

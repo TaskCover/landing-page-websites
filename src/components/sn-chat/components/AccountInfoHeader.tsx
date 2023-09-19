@@ -119,7 +119,7 @@ const AccountInfoHeader = ({
                 onSetStep(STEP.CHAT_DETAIL_GROUP);
               }}
             >
-              {name ? name : dataTransfer?.fname}
+              {name ? name : dataTransfer?.fname?.replaceAll('_', ' ')}
             </Typography>
             <Typography variant="caption" color="#999999">
               {commonChatBox("chatBox.active")}
@@ -152,7 +152,7 @@ const AccountInfoHeader = ({
                 fontWeight: 600,
               }}
             >
-              {dataTransfer?.name}
+              {dataTransfer?.name?.replaceAll('_', ' ')}
             </Box>
           </>
         );
