@@ -76,12 +76,12 @@ const ChatDetailGroup = (props) => {
   const [userId, setUserId] = useState("");
   const { onAddSnackbar } = useSnackbar();
   const handleClosePopup = () => {
-    setRenameGroup(dataTransfer?.name)
+    setRenameGroup(dataTransfer?.name?.replaceAll('_', ' '))
     setShowPopup(init);
   };
 
   useEffect(() => {
-    setRenameGroup(dataTransfer?.name)
+    setRenameGroup(dataTransfer?.name?.replaceAll('_', ' '))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataTransfer]);
 
@@ -285,12 +285,16 @@ const ChatDetailGroup = (props) => {
   };
 
   const handlePopup = async () => {
+    if (!renameGroup.trim()) {
+      return onAddSnackbar("Invalid group name!", "error");
+    }
     const renameGroupApi = async () => {
       const dataTransferNew = {
         ...dataTransfer,
         name: renameGroup,
         fname: renameGroup,
       };
+      
       const renameResult = (await onRenameGroup({
         roomId: dataTransfer?._id,
         name: renameGroup.replaceAll(' ', '_'),
@@ -462,7 +466,7 @@ const ChatDetailGroup = (props) => {
           }}
         >
           <ItemDetail
-            text={`${commonChatBox("chatBox.groupName")} ${dataTransfer?.name}`}
+            text={`${commonChatBox("chatBox.groupName")} ${dataTransfer?.name?.replaceAll('_', ' ')}`}
             icon={<GroupNameIcon />}
             iconClick={<EditGroupNameIcon />}
             onClick={() => {

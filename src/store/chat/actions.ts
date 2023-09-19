@@ -378,10 +378,10 @@ export const forwardMessage = createAsyncThunk(
 );
 
 export const changeGroupAvatar = createAsyncThunk(
-  "chat/changeGroupAvatar",
+  "chat/changeRoomAvatar",
   async (paramReq: ChangeGroupAvatar) => {
     try {
-      const response = await client.post("changeGroupAvatar", paramReq, {
+      const response = await client.post("changeRoomAvatar", paramReq, {
         baseURL: CHAT_API_URL,
       });
 
