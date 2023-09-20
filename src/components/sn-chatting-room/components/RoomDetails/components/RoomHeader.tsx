@@ -28,6 +28,8 @@ import {
   ArrowCircleUp,
   ArrowUpward,
 } from "@mui/icons-material";
+import { useChatDetailInfo } from "components/sn-chatting-room/hooks/useChatDetailInfo";
+import { STEP } from "store/chat/type";
 
 const RoomHeader = ({ currentConversation }) => {
   const { isDarkMode } = useTheme();
@@ -36,7 +38,10 @@ const RoomHeader = ({ currentConversation }) => {
   const { mobileMode } = useGetScreenMode();
   const { onAddSnackbar } = useSnackbar();
 
-  const { onSearchChatText, listSearchMessage, onSetStateSearchMessage } =
+  const propsChatDetailInfo =
+  useChatDetailInfo({ currentConversation });
+
+  const { onSearchChatText, listSearchMessage, onSetStateSearchMessage, onSetStep, dataTransfer } =
     useChat();
   const [search, setSearchText] = useState({
     text: "",
@@ -97,6 +102,10 @@ const RoomHeader = ({ currentConversation }) => {
   useEffect(() => {
     setCurrentIndex(listSearchMessage?.length);
   }, [listSearchMessage?.length]);
+
+  useEffect(() => {
+    closeDrawer()
+  }, [currentConversation])
 
   return (
     <Box
@@ -204,6 +213,15 @@ const RoomHeader = ({ currentConversation }) => {
           sx={{
             color: "transparent",
           }}
+          onClick={() => {
+            openDrawer()
+            propsChatDetailInfo?.onOpenDrawer();
+            propsChatDetailInfo?.onChangeTypeDrawer('group')            
+            if(currentConversation.t === 'd') {
+            onSetStep(STEP.ADD_GROUP, {...dataTransfer, isNew: true});
+            }
+
+          }}
         >
           <ProfileAdd />
         </IconButton>
@@ -227,6 +245,7 @@ const RoomHeader = ({ currentConversation }) => {
         currentConversation={currentConversation}
         isOpen={isDrawerOpen}
         onClose={closeDrawer}
+        {...propsChatDetailInfo}
       />
     </Box>
   );

@@ -51,7 +51,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
   
 
   const getLastMessage = useCallback(
-    async (page?: number, size?: number) => {            
+    async (page?: number, size?: number) => {       
       try {
         await onGetLastMessages({
           roomId: dataTransfer?._id ?? roomId,
@@ -66,14 +66,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
         );
       }
     },
-    [
-      dataTransfer?._id,
-      dataTransfer?.t,
-      onAddSnackbar,
-      onGetLastMessages,
-      roomId,
-      t,
-    ],
+    [dataTransfer, onAddSnackbar, onGetLastMessages, roomId, t],
   );
 
   const getUnReadMessage = useCallback(async () => {
@@ -124,7 +117,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
       sendMessage,
     ],
   );
-
+  
   return (
     <>
       <Messages

@@ -16,6 +16,7 @@ const ChattingRoom = () => {
     currentConversation,
     onSearchText,
     onResetCurrentConversation,
+    onChangeParamsConversation,
   } = useFetchingChatting();
 
   return (
@@ -32,6 +33,7 @@ const ChattingRoom = () => {
             currentConversation={currentConversation}
             onSelectRoom={onSelectRoom}
             onSearchText={onSearchText}
+            onChangeParamsConversation={onChangeParamsConversation}
           />
           <RoomDetails
             currentConversation={currentConversation}
@@ -39,7 +41,6 @@ const ChattingRoom = () => {
           />
         </ChattingRoomLayout>
       ) : (
-        // <GroupChatMobile {...currentConversation} />
         <>
           {currentConversation ? (
             <RoomDetails
@@ -52,6 +53,7 @@ const ChattingRoom = () => {
                 currentConversation={currentConversation}
                 onSelectRoom={onSelectRoom}
                 onSearchText={onSearchText}
+                onChangeParamsConversation={onChangeParamsConversation}
               />
             </ChattingRoomMobileLayout>
           )}

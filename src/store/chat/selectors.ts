@@ -287,7 +287,7 @@ export const useChat = () => {
   );
 
   const onSetDataTransfer = useCallback(
-    (data: any) => {
+    (data: any) => {      
       dispatch(setDataTransfer(data));
     },
     [dispatch],

@@ -4,25 +4,24 @@ import ChatDetailInfoMenuItem from "./ChatDetailInfoMenuItem";
 import { IChatItemInfo } from "store/chat/type";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { useMemo } from "react";
-import AccountInfo from "../Drawer";
-import { useChatDetailInfo } from "./useChatDetailInfo";
 import DrawerInfoChat from "../Drawer";
+import { useChatDetailInfoReturns } from "components/sn-chatting-room/hooks/useChatDetailInfo";
 
-interface ChatDetailInfoProps {
+type ChatDetailInfoProps = {
   isOpen: boolean;
   onClose: () => void;
   currentConversation: IChatItemInfo;
-}
+} & useChatDetailInfoReturns
 
 const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
   isOpen,
   onClose,
   currentConversation,
+  ...props
 }) => {
   const { extraDesktopMode } = useGetScreenMode();
-  const { onOpenDrawer, isDrawerOpen, closeDrawer, menuItems, typeDrawer } =
-    useChatDetailInfo({ currentConversation });
-
+  const { onOpenDrawer, isDrawerOpen, closeDrawer, menuItems, typeDrawer, onChangeTypeDrawer } = props
+  
   const styleDrawerOpen = useMemo(
     () =>
       isOpen ? { width: extraDesktopMode ? "424px" : "272px" } : { width: 0 },
@@ -110,6 +109,7 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
             type={typeDrawer}
             onClose={closeDrawer}
             currentConversation={currentConversation}
+            onChangeTypeDrawer={onChangeTypeDrawer}
           />
         ) : null}
       </Box>

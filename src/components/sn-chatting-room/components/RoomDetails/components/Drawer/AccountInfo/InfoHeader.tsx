@@ -5,9 +5,10 @@ import { IChatItemInfo } from "store/chat/type";
 interface AccountInfoProps {
   onClose: () => void;
   currentConversation: IChatItemInfo;
+  title?: string;
 }
 
-const AccountInfoHeader: React.FC<AccountInfoProps> = (props) => {
+const InfoHeader: React.FC<AccountInfoProps> = (props) => {
   return (
     <Box
       sx={{
@@ -47,7 +48,7 @@ const AccountInfoHeader: React.FC<AccountInfoProps> = (props) => {
           color="var(--Black, #212121)"
           sx={{ width: "180px", textAlign: "center" }}
         >
-          {props.currentConversation?.name}
+          {props?.title ? props?.title : props.currentConversation?.name}
         </Typography>
         </Box>
 
@@ -74,4 +75,4 @@ const AccountInfoHeader: React.FC<AccountInfoProps> = (props) => {
   );
 };
 
-export default AccountInfoHeader;
+export default InfoHeader;

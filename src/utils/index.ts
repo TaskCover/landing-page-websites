@@ -258,8 +258,6 @@ export const serverQueriesOr = (
   } else {
     delete cleanData["query"];
   }
-  console.log("cleanData", cleanData);
-
   return cleanData;
 };
 

@@ -1,5 +1,5 @@
 import { Avatar, Box } from "@mui/material";
-import AccountInfoHeader from "./AccountInfoHeader";
+import AccountInfoHeader from "./InfoHeader";
 import AccountInfoItem from "./AccountInfoItem";
 import { UserInfo } from "store/app/reducer";
 import { useTranslations } from "next-intl";

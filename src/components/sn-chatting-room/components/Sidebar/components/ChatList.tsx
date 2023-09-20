@@ -6,10 +6,13 @@ import { useAuth } from "store/app/selectors";
 import ChatItemLayout from "components/sn-chat/components/chat/ChatItemLayout";
 import { IChatItemInfo } from "store/chat/type";
 import { useDeepCompareMemo } from "hooks/useDeepCompare";
+import { useWSChat } from "store/chat/helpers";
 
 const ChatList = ({ onSelectRoom, idActive }) => {
   const { conversations } = useChattingActions();
   const { user } = useAuth();
+  
+  useWSChat();
 
   const _conversations = useDeepCompareMemo(() => {
     return conversations
@@ -20,29 +23,29 @@ const ChatList = ({ onSelectRoom, idActive }) => {
           ...item,
           ...(item?.statuses?.length > 0
             ? {
-              status:
-                item.statuses?.[0].username === user?.["username"]
-                  ? item.statuses?.[1]?.status
-                  : item.statuses?.[0]?.status,
-            }
+                status:
+                  item.statuses?.[0].username === user?.["username"]
+                    ? item.statuses?.[1]?.status
+                    : item.statuses?.[0]?.status,
+              }
             : {}),
           ...(item?.usernames?.length > 0
             ? {
-              username:
-                item.usernames?.[0] === user?.["username"]
-                  ? item.usernames?.[1]
-                  : item.usernames?.[0],
-            }
+                username:
+                  item.usernames?.[0] === user?.["username"]
+                    ? item.usernames?.[1]
+                    : item.usernames?.[0],
+              }
             : {}),
         };
       });
   }, [conversations, user]);
 
-  const handleClickConversation = (chatInfo: IChatItemInfo) => {    
+  const handleClickConversation = (chatInfo: IChatItemInfo) => {
     onSelectRoom(chatInfo);
   };
 
-  const renderConversation = (idActive: string) => {    
+  const renderConversation = (idActive: string) => {
     return _conversations.map((conversation) => (
       <ChatItemLayout
         chatInfo={conversation}
@@ -52,7 +55,7 @@ const ChatList = ({ onSelectRoom, idActive }) => {
         isActive={idActive === conversation._id || false}
       />
     ));
-  }
+  };
 
   const renderConversations = (idActive: string) => {
     if (_conversations.length <= 0) return <NoData />;
@@ -65,8 +68,8 @@ const ChatList = ({ onSelectRoom, idActive }) => {
           width="100%"
           height="90vh"
           sx={{ overflowX: "scroll" }}
-        >
-          {renderConversation(idActive)}
+        >        
+            {renderConversation(idActive)}
         </Box>
       </>
     );

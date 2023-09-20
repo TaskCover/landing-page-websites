@@ -2,12 +2,15 @@ import { Drawer, Box, Typography, Avatar } from "@mui/material";
 import { IChatItemInfo } from "store/chat/type";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import AccountInfo from "./AccountInfo";
+import StorageInfo from "./StorageInfo";
+import AddGroup from "components/sn-chat/chatGroup/AddGroup";
 
 export interface DrawerInfoChatProps {
   isOpen: boolean;
   onClose: () => void;
   currentConversation: IChatItemInfo;
-  type: string
+  type: string;
+  onChangeTypeDrawer?: (type: string) => void;
 }
 
 const DrawerInfoChat: React.FC<DrawerInfoChatProps> = (props) => {
@@ -33,7 +36,13 @@ const DrawerInfoChat: React.FC<DrawerInfoChatProps> = (props) => {
       anchor="right"
       open={props.isOpen}
     >
-      {props?.type === 'account' && <AccountInfo {...props}/>}
+      {props?.type === "group" ? (
+        <AddGroup callbackBackIcon={() => props.onClose()} />
+      ) : props?.type === "account" ? (
+        <AccountInfo {...props} />
+      ) : (
+        <StorageInfo {...props} />
+      )}
     </Drawer>
   );
 };

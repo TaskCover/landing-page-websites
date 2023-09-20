@@ -85,7 +85,7 @@ const initialState: ChatState = {
   // param allChat,
   paramsConversation: {},
   paramsLastMessage: {},
-  paramsUnreadMessage: {}
+  paramsUnreadMessage: {},
 };
 
 const isConversation = (type: string) => {
@@ -101,9 +101,14 @@ const chatSlice = createSlice({
       const prevStep = Number(action.payload.step) - 1;
       state.prevStep = prevStep === STEP.IDLE ? STEP.CONVENTION : prevStep;
       state.currStep = action.payload.step;
-      state.messageInfo = [];
+      if (!action?.payload?.dataTransfer?.isDesktop) {
+        state.messageInfo = [];
+      }
 
-      if (action.payload.dataTransfer !== undefined) {
+      if (
+        action.payload.dataTransfer !== undefined &&
+        Object.keys(action.payload.dataTransfer).length > 0
+      ) {
         state.dataTransfer = action.payload.dataTransfer;
       }
     },
@@ -114,7 +119,9 @@ const chatSlice = createSlice({
       state.typeList = action.payload;
     },
     setDataTransfer: (state, action) => {
-      state.dataTransfer = action.payload;
+      if (Object.keys(action.payload.dataTransfer).length > 0) {
+        state.dataTransfer = action.payload;
+      }
     },
     setConversationInfo: (state, action) => {
       state.conversationInfo = action.payload;
@@ -209,9 +216,9 @@ const chatSlice = createSlice({
       state.stateSearchMessage = action.payload;
       state.messageInfo = [];
     },
-//     getUpdateConversation: (state, action) => {
-// log
-//     },
+    //     getUpdateConversation: (state, action) => {
+    // log
+    //     },
     clearConversation: (state) => {
       state.convention = [];
       state.conversationPaging = { ...initalPage, textSearch: "" };
@@ -222,10 +229,10 @@ const chatSlice = createSlice({
     },
     setParamsState: (
       state,
-      action: PayloadAction<SetParamConversationProps>
+      action: PayloadAction<SetParamConversationProps>,
     ) => {
       state[action.payload.type] = action.payload.value;
-    }
+    },
   },
   extraReducers: (builder) =>
     builder

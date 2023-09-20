@@ -22,6 +22,7 @@ export interface useFetchingChattingReturns {
   currentConversation?: IChatItemInfo;
   onResetCurrentConversation?: () => void;
   onSearchText: (text?: string) => void;
+  onChangeParamsConversation: (params: ParamState) => void
 }
 
 const useFetchingChatting = (): useFetchingChattingReturns => {
@@ -35,7 +36,7 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
 
   const onResetCurrentConversation = () => {
     setDetailsParams({ ...detailParams, roomId: "-1" });
-    return onResetCurrentConversation;
+    return;
   };
 
   useEffect(() => {
@@ -55,9 +56,9 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
       roomId: chatInfo?._id,
     }));
     if (chatInfo?.t !== "d") {
-      onSetStep(STEP.CHAT_GROUP, chatInfo);
+      onSetStep(STEP.CHAT_GROUP, {...chatInfo, isDesktop: !mobileMode});
     } else {
-      onSetStep(STEP.CHAT_ONE, chatInfo);
+      onSetStep(STEP.CHAT_ONE, {...chatInfo, isDesktop: !mobileMode});
     }
   };
 
@@ -69,11 +70,16 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
     }
   }, [detailParams?.roomId, conversations]);
 
+  const onChangeParamsConversation = (params: ParamState) => {
+    setParams(params)
+  }
+
   return {
     onSelectRoom,
     currentConversation,
     onResetCurrentConversation,
     onSearchText: (text) => setParams({ ...params, text: text as string }),
+    onChangeParamsConversation,
   };
 };
 
