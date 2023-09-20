@@ -187,9 +187,7 @@ const ItemMemberDetail = ({
                 horizontal: "left",
               }}
             >
-              {true ? (
-                <>
-                  <MenuItem onClick={() => {
+                <MenuItem onClick={() => {
                     setShowPopup((pre) => ({
                       ...pre,
                       type: TYPE_POPUP.ADD_ADMIN,
@@ -203,10 +201,6 @@ const ItemMemberDetail = ({
                   <MenuItem onClick={() => handleClickMenu("remove")}>
                     {commonChatBox("chatBox.removeFromChat")}
                   </MenuItem>
-                </>
-              ) : (
-                <></>
-              )}
             </Menu>
           </>
         )}

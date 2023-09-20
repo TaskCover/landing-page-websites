@@ -102,11 +102,13 @@ export const useActionGroupDetails = () => {
     };
   
     useEffect(() => {
+      if(dataTransfer?.t !== 'd'){
       onFetchGroupMembersMember({
         roomId: dataTransfer?._id,
       });
+    }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [dataTransfer]);
   
   
     const handleNewAdd = () => {

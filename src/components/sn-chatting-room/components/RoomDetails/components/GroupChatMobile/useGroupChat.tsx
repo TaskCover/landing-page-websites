@@ -6,7 +6,7 @@ import MediaFileIcon from "icons/MediaFileIcon";
 import SearchIcon from "icons/SearchIcon";
 import { useCallback, useMemo, useState } from "react";
 import { useChat } from "store/chat/selectors";
-import { IChatItemInfo } from "store/chat/type";
+import { IChatItemInfo, RoomType } from "store/chat/type";
 
 interface MenuItem {
   text: string;
@@ -14,7 +14,7 @@ interface MenuItem {
   stroke?: string;
   borderBottom?: boolean;
   type?: string;
-  handleOnClick?: () => void;
+  handleOnClick?: (fileType?: any) => void;
 }
 
 export enum TypeDrawer {
@@ -57,9 +57,10 @@ export const useGroupChat = ({
 
   const callbackChatAttachment = useCallback(
     (fileType: "link" | "media" | "file") => {
+      if(!currentConversation?.t || !currentConversation?._id) return;
       onGetChatAttachments({
         roomId: currentConversation?._id,
-        roomType: "d",
+        roomType: currentConversation?.t as RoomType,
         fileType,
       });
       setTypeDrawer("media");

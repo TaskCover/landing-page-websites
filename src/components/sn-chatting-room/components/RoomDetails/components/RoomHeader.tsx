@@ -37,6 +37,7 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { mobileMode } = useGetScreenMode();
   const { onAddSnackbar } = useSnackbar();
+  const {onFetchGroupMembersMember} = useChat();
 
   const propsChatDetailInfo =
   useChatDetailInfo({ currentConversation, onSelectRoom });

@@ -198,6 +198,7 @@ export const useChat = () => {
     async (params?: Omit<UrlsQuery, "userId" | "authToken">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
+      if(!params) return;
       await dispatch(
         getChatUrls({
           roomId: params?.roomId ?? roomId,
@@ -417,7 +418,9 @@ export const useChat = () => {
   const onGetChatAttachments = useCallback(
     async (params: Omit<ChatAttachmentsRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
-      const userId = user?.["id_rocket"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";                  
+      if(!(params?.roomType ?? (conversationInfo?.t as RoomType))) return;
+      if((params?.roomId ?? roomId).length === 0) return;
       return await dispatch(
         getChatAttachments({
           authToken,
