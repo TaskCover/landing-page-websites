@@ -31,8 +31,6 @@ const RoomHeaderMobile = ({
     setIsDrawerOpen(!isDrawerOpen);
   };
 
-  console.log(currentConversation);
-
   const PrivateChatLayout = () => {
     if (currentConversation.userCount === 2) {
       return ChatDetailUserMobile;
