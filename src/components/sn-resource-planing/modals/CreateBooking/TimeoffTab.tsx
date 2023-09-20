@@ -69,7 +69,7 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
               error={!!errorsTimeOff.categoryTimeOff?.message}
               required
               options={[]}
-              label="Select time off category"
+              label={resourceT("form.selectTimeOffCategory")}
             />
           )}
         />
@@ -86,7 +86,7 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
                 onChange={(value) => {
                   field.onChange(value);
                 }}
-                label="Date range"
+                label={resourceT("form.dateRange")}
                 placeholder=""
                 error={!!errorsTimeOff.dateRange?.message}
                 helperText={errorsTimeOff.dateRange?.message}

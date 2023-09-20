@@ -33,7 +33,7 @@ export const ResourcePlanning: ResourceDictionary = {
   },
   form: {
     title: "Quản lý lịch trình",
-
+    selectTimeOffCategory: "Chọn loại nghỉ phép",
     project: "Dự án",
     timeoff: "Nghỉ phép",
     detail: "Xem chi tiết lịch trình",
