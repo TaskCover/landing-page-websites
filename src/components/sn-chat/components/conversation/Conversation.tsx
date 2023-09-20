@@ -84,7 +84,7 @@ const Conversation = () => {
       inputRef.current.pageRef.current = countNew - initPageIndex;
       inputRef.current.scrollMessage();
     }
-  }, [roomId, dataTransfer, getLastMessage, stateSearchMessage, t]);
+  }, [roomId, dataTransfer?._id, getLastMessage, stateSearchMessage, t]);
 
   useEffect(() => {
     if (stateSendMessage.status) {
@@ -138,8 +138,10 @@ const Conversation = () => {
         files={files}
         onChangeFiles={(file) => setFiles(file)}
         onResize={() => {
-          inputRef?.current?.clearScrollContentMessage();
-          inputRef?.current?.initScrollIntoView();
+          if (inputRef?.current?.isBottomScrollMessage) {
+            inputRef?.current?.clearScrollContentMessage();
+            inputRef?.current?.initScrollIntoView();
+          }
         }}
       />
     </>

@@ -9,6 +9,7 @@ import {
   DraggableTask,
   MoreList,
 } from "./components";
+import { isTaskListChecked, isTaskChecked, isSubTaskChecked } from './helpers'
 import { Button, Checkbox, Text, TextProps } from "components/shared";
 import {
   CircularProgress,
@@ -27,6 +28,7 @@ import {
   AN_ERROR_TRY_AGAIN,
   NS_COMMON,
   NS_PROJECT,
+  DATE_FORMAT_HYPHEN,
 } from "constant/index";
 import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
 import useQueryParams from "hooks/useQueryParams";
@@ -52,6 +54,9 @@ import SelectStatusTask from "components/sn-projects/components/SelectStatusTask
 import AssignerTask from "components/sn-projects/components/AssignerTask";
 import Content from "./components/Content";
 import Description from "./components/Description";
+import {
+  Date
+} from "components/Filters";
 
 const ItemList = () => {
   const {
@@ -245,6 +250,35 @@ const ItemList = () => {
     };
   };
 
+  const onUpdateTimeTask = async ({
+    taskListId,
+    taskId,
+    subTaskId,
+    name,
+    value,
+  }) => {
+    try {
+      if (!taskListId || !taskId) {
+        throw AN_ERROR_TRY_AGAIN;
+      }
+
+      const newData = await onUpdateTask(
+        { [name]: value },
+        taskListId,
+        taskId,
+        subTaskId
+      );
+      if (newData) {
+        onAddSnackbar(
+          projectT("taskDetail.notification.dateSuccess"),
+          "success",
+        );
+      }
+    } catch (error) {
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
+  };
+
   const onCreateSubTaskQuick = async (
     data: TaskFormData,
     taskListId,
@@ -323,7 +357,7 @@ const ItemList = () => {
         newSelectedList = [...newSelectedList, ...additionalSelectedList];
       } else {
         newSelectedList = newSelectedList.filter(
-          (item) => item.taskListId !== taskList.id,
+          (item) => item?.taskListId !== taskList.id,
         );
       }
       setSelectedList(newSelectedList);
@@ -334,10 +368,9 @@ const ItemList = () => {
     newChecked: boolean,
     taskList: TaskList,
     task: Task,
-    subTasks?: Task[],
   ) => {
     return () => {
-      const newSelectedList = [...selectedList];
+      let newSelectedList = [...selectedList];
       if (newChecked) {
         newSelectedList.push({
           taskId: task.id,
@@ -346,6 +379,7 @@ const ItemList = () => {
           taskListName: taskList.name,
         });
 
+        // add all sub tasks
         if (task?.sub_tasks?.length) {
           task?.sub_tasks?.forEach((subTask) => {
             const isExisted = newSelectedList.some(
@@ -363,23 +397,34 @@ const ItemList = () => {
             }
           });
         }
-      } else {
-        const indexDeleted = newSelectedList.findIndex(
-          (selected) => !selected?.subTaskId && selected.taskId === task.id,
+
+        // count the task in task list
+        // let countTasks = 0
+        // newSelectedList.forEach(item => {
+        //   if (item?.taskListId === taskList.id && item?.taskId && !item?.subTaskId)
+        //     countTasks++
+        // })
+        // if (countTasks === taskList.tasks.length)
+        //   newSelectedList.push({
+        //     taskListId: taskList.id,
+        //     taskListName: taskList.name,
+        //   });
+      }
+      // unchecked
+      else {
+        // remove all subtask, task with that id
+        newSelectedList = newSelectedList.filter(
+          (item) => item?.taskId !== task.id,
         );
 
-        if (indexDeleted !== -1) {
-          newSelectedList.splice(indexDeleted, 1);
-        }
+        // remove task list
+        const indexSelectTaskList = newSelectedList.findIndex(
+          (selected) => selected.taskListId === taskList.id && !selected.taskId && !selected.subTaskId,
+        );
 
-        subTasks?.forEach(item => {
-          const index = newSelectedList.findIndex(
-            (selected) => selected?.subTaskId === item.id && selected?.taskId === task.id,
-          );
-          if (index !== -1) {
-            newSelectedList.splice(indexDeleted, 1);
-          }
-        })
+        if (indexSelectTaskList !== -1) {
+          newSelectedList.splice(indexSelectTaskList, 1);
+        }
       }
 
       setSelectedList(newSelectedList);
@@ -401,34 +446,34 @@ const ItemList = () => {
         });
 
         // count subTask in Task
-        let countSubTasks = 0
-        newSelectedList.forEach(item => {
-          if (item?.taskListId === taskList.id && item?.taskId === task.id && item?.subTaskId === subTask.id)
-            countSubTasks++
-        })
+        // let countSubTasks = 0
+        // newSelectedList.forEach(item => {
+        //   if (item?.taskId === task.id && item?.subTaskId)
+        //     countSubTasks++
+        // })
 
-        if (countSubTasks === task.sub_tasks?.length) {
-          newSelectedList.push({
-            taskId: task.id,
-            taskName: task.name,
-            taskListId: taskList.id,
-            taskListName: taskList.name,
-          });
-        }
+        // if (countSubTasks === task.sub_tasks?.length) {
+        //   newSelectedList.push({
+        //     taskId: task.id,
+        //     taskName: task.name,
+        //     taskListId: taskList.id,
+        //     taskListName: taskList.name,
+        //   });
+        // }
 
         // count task in task list
-        let countTasks = 0
-        newSelectedList.forEach(item => {
-          if (item?.taskListId === taskList.id && item?.taskId === task.id)
-            countTasks++
-        })
+        // let countTasks = 0
+        // newSelectedList.forEach(item => {
+        //   if (item.taskListId === taskList.id && item?.taskId && !item?.subTaskId)
+        //     countTasks++
+        // })
 
-        if (countTasks === taskList.tasks.length) {
-          newSelectedList.push({
-            taskListId: taskList.id,
-            taskListName: taskList.name,
-          });
-        }
+        // if (countTasks === taskList.tasks.length) {
+        //   newSelectedList.push({
+        //     taskListId: taskList.id,
+        //     taskListName: taskList.name,
+        //   });
+        // }
 
       } else {
         const indexSelectedSubTask = selectedList.findIndex(
@@ -441,17 +486,19 @@ const ItemList = () => {
         if (indexSelectedSubTask !== -1)
           newSelectedList.splice(indexSelectedSubTask, 1);
 
-        // remove task by index
-        const indexSelectedTask = newSelectedList.findIndex(item => {
-          return item?.taskId === task.id && item?.taskListId === taskList.id && !item?.subTaskId
-        })
+        // remove task
+        const indexSelectedTask = newSelectedList.findIndex(
+          (item) => {
+            return item?.taskId === task.id && !item?.subTaskId
+          }
+        );
         if (indexSelectedTask !== -1)
           newSelectedList.splice(indexSelectedTask, 1);
 
-        // remove task list by index
-        const indexSelectedTaskList = newSelectedList.findIndex(item =>
-          !item?.taskId && item?.taskListId === taskList.id && !item?.subTaskId
-        )
+        // remove task list
+        const indexSelectedTaskList = newSelectedList.findIndex(
+          (item) => item?.taskListId === taskList.id && !item?.taskId && !item?.subTaskId,
+        );
         if (indexSelectedTaskList !== -1)
           newSelectedList.splice(indexSelectedTaskList, 1);
       }
@@ -831,12 +878,6 @@ const ItemList = () => {
     }
   }
 
-  const isCheckedTask = (task: Task) => {
-    return selectedList.some(item => {
-      return item.taskId === task.id || item.subTaskId === task.id
-    })
-  }
-
   useEventListener("scroll", onScroll, undefined, SCROLL_ID);
 
   useEffect(() => {
@@ -912,7 +953,7 @@ const ItemList = () => {
       <FixedLayout flex={1}>
         <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
           {dataList.map((taskListItem, indexTaskList) => {
-            const isChecked = Boolean(taskListItem.tasks.length) && taskListItem.tasks.every(item => isCheckedTask(item))
+            const isChecked = isTaskListChecked(selectedList, taskListItem.id)
 
             return (
               <DroppableTaskList
@@ -927,10 +968,7 @@ const ItemList = () => {
                 index={indexTaskList}
               >
                 {taskListItem.tasks.map((task, taskIndex) => {
-                  const isChecked = selectedList.some(
-                    (selected) =>
-                      !selected?.subTaskId && selected?.taskId === task.id,
-                  );
+                  const isChecked = isTaskChecked(selectedList, task.id)
 
                   const isHide = hideIds.includes(task.id);
 
@@ -944,7 +982,6 @@ const ItemList = () => {
                         !isChecked,
                         taskListItem,
                         task,
-                        task?.sub_tasks,
                       )}
                       isHide={isHide}
                       isHovered={hoveredId === task.id}
@@ -988,8 +1025,29 @@ const ItemList = () => {
                           <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%', paddingLeft: 0 }}>
                             <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} placeholder={task?.owner ? '' : commonT("form.title.noAssigner")} />
                           </Content>
-                          <Content>{formatDate(task?.start_date)}</Content>
-                          <Content>{formatDate(task?.end_date)}</Content>
+                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', '* > p ': { color: 'unset', fontWeight: 'normal' } }}>
+                            <Date
+                              label={commonT("form.title.selectTime")}
+                              name="start_date"
+                              onChange={(name, value) => onUpdateTimeTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', name, value })}
+                              value={task?.start_date}
+                              iconProps={{
+                                sx: { fontSize: 16 },
+                              }}
+                            />
+                          </Content>
+
+                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', '* > p ': { color: 'unset', fontWeight: 'normal' } }}>
+                            <Date
+                              label={commonT("form.title.selectTime")}
+                              name="end_date"
+                              onChange={(name, value) => onUpdateTimeTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', name, value })}
+                              value={task?.end_date}
+                              iconProps={{
+                                sx: { fontSize: 16 },
+                              }}
+                            />
+                          </Content>
                           <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}>
                             <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
                           </Content>
@@ -1013,9 +1071,7 @@ const ItemList = () => {
                                   style={{ minHeight: 1 }}
                                 >
                                   {task?.sub_tasks?.map((subTask) => {
-                                    const isChecked = selectedList.some(
-                                      (item) => item?.subTaskId === subTask.id,
-                                    );
+                                    const isChecked = isSubTaskChecked(selectedList, subTask.id)
                                     return (
                                       <>
                                         <Stack
@@ -1084,11 +1140,27 @@ const ItemList = () => {
                                             <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%', paddingLeft: 0 }}>
                                               <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} placeholder={subTask?.owner ? '' : commonT("form.title.noAssigner")} />
                                             </Content>
-                                            <Content>
-                                              {formatDate(subTask?.start_date)}
+                                            <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', '* > p ': { color: 'unset', fontWeight: 'normal' } }}>
+                                              <Date
+                                                label={commonT("form.title.selectTime")}
+                                                name="start_date"
+                                                onChange={(name, value) => onUpdateTimeTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, name, value })}
+                                                value={subTask?.start_date}
+                                                iconProps={{
+                                                  sx: { fontSize: 16 },
+                                                }}
+                                              />
                                             </Content>
-                                            <Content>
-                                              {formatDate(subTask?.end_date)}
+                                            <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', '* > p ': { color: 'unset', fontWeight: 'normal' } }}>
+                                              <Date
+                                                label={commonT("form.title.selectTime")}
+                                                name="end_date"
+                                                onChange={(name, value) => onUpdateTimeTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, name, value })}
+                                                value={subTask?.end_date}
+                                                iconProps={{
+                                                  sx: { fontSize: 16 },
+                                                }}
+                                              />
                                             </Content>
                                             <Content
                                               noWrap={false}
@@ -1119,7 +1191,7 @@ const ItemList = () => {
                                 </div>
                               )}
                             </Droppable>
-                            <Stack
+                            {/* <Stack
                               width="100%"
                               direction="row"
                               spacing={1}
@@ -1164,7 +1236,7 @@ const ItemList = () => {
                                   },
                                 }}
                               />
-                            </Stack>
+                            </Stack> */}
 
                             {!!errorTaskName && (
                               <Text variant="caption" color="error">

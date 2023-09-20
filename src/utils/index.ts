@@ -6,12 +6,12 @@ import {
   DATE_FORMAT_SLASH,
 } from "constant/index";
 import { ItemListResponse, OptionFormatNumber } from "constant/types";
-import { useTranslations } from "next-intl";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import StringFormat from "string-format";
 import { clientStorage } from "./storage";
 import dayjs, { OpUnitType, QUnitType } from "dayjs";
+import moment from "moment";
 
 export const parseHashURL = (value: string) => `#${value}`;
 
@@ -203,8 +203,68 @@ export const serverQueries = (
   return cleanData;
 };
 
+export const serverQueriesOr = (
+  {
+    pageIndex,
+    pageSize,
+    ...rest
+  }: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  },
+  likeKeys?: string[],
+  booleanKeys?: string[],
+  numberKeys?: string[],
+  schemaKeys?: {
+    [key: string]: string;
+  },
+  keys?: string[],
+) => {
+  const queries = cleanObject({
+    ...rest,
+    page: pageIndex ? (pageIndex as number) - 1 : undefined,
+    size: isNaN(pageSize) ? pageSize : Number(pageSize),
+  });
+
+  const data = Object.entries(queries).reduce(
+    (out: { [key: string]: string[] }, [key, value]) => {
+      if (KEYS.includes(key) || keys?.includes(key)) {
+        out[key] = value;
+      } else {
+        if (likeKeys?.includes(key)) {
+          out.query.push(`like(${key},"${value}")`);
+        } else if (typeof value === "boolean" || booleanKeys?.includes(key)) {
+          const boolValue =
+            typeof value === "boolean"
+              ? value
+              : value === "true" || Number(value) === 1;
+          out.query.push(`like(${key},${boolValue})`);
+        } else if (typeof value === "number" || numberKeys?.includes(key)) {
+          out.query.push(`like(${key},${value})`);
+        } else {
+          const schema = schemaKeys?.[key] ?? "like";
+          out.query.push(`${schema}(${key},"${value}")`);
+        }
+      }
+      return out;
+    },
+    { query: [] },
+  );
+
+  const cleanData = cleanObject(data);
+
+  if (cleanData["query"].length) {
+    cleanData["query"] = `or(${cleanData["query"].join(",")})`;
+  } else {
+    delete cleanData["query"];
+  }
+  console.log('cleanData', cleanData);
+  
+  return cleanData;
+};
+
 export const formatDate = (
-  date?: number | string,
+  date?: number | string | Date,
   format?: string,
   fallback?: string,
 ) => {
@@ -326,16 +386,51 @@ export const hasValue = (value?) => {
 export const checkIsMobile = () => /Android|iPhone/i.test(navigator?.userAgent);
 
 export const formatBytes = (bytes, decimals = 2) => {
-  if (!+bytes) return '0 Bytes'
-  const k = 1024
-  const dm = decimals < 0 ? 0 : decimals
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
-}
+  if (!+bytes) return "0 Bytes";
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+};
 
 export const getMonthShortName = (monthNo) => {
   const date = new Date();
   date.setMonth(monthNo);
-  return date.toLocaleString('en-US', { month: 'short' });
-}
+  return date.toLocaleString("en-US", { month: "short" });
+};
+
+export const renderTimeDiff = (ts: string | Date) => {
+  if (!ts) return;
+  const currentDate = new Date();
+  const date = new Date(ts);
+  const timeDiff = getDaysDiff(currentDate, date);
+  const timePositive = Math.abs(timeDiff);
+  const isShowYear = currentDate.getFullYear() !== date.getFullYear();
+  const showDate = `${date.getDate()} ${getMonthShortName(
+    Number(date.getMonth()),
+  )} ${isShowYear ? date.getFullYear() : ""}`.trim();
+
+  if (timePositive === 0) {
+    return "1m";
+  } else if (timePositive < 60) {
+    return timePositive + "m";
+  } else if (timePositive < 1440) {
+    return (timePositive / 60).toFixed(0) + "h";
+  } else if (timePositive < 4320) {
+    return (timePositive / 60 / 24).toFixed(0) + "d";
+  } else {
+    return showDate;
+  }
+};
+
+export const formatEstimateTime = (time: string | number) => {
+  const totalHours = Math.floor(Number(time) / 60);
+  const remainingMinutes = Math.floor(Number(time)) % 60;
+
+  const formattedHours = totalHours < 10 ? `0${totalHours}` : totalHours;
+  const formattedMinutes =
+    remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
+
+  return `${formattedHours}:${formattedMinutes}`;
+};

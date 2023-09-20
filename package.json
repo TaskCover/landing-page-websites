@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 2023",
+    "start": "next start",
     "lint": "next lint",
     "prepare": "husky install"
   },
@@ -26,6 +26,7 @@
     "@mui/x-date-pickers": "^6.9.2",
     "@mui/x-date-pickers-pro": "^6.9.2",
     "@reduxjs/toolkit": "^1.9.5",
+    "@types/file-saver": "^2.0.5",
     "axios": "^1.4.0",
     "bufferutil": "^4.0.7",
     "chart.js": "^4.3.0",
@@ -33,6 +34,7 @@
     "dayjs": "^1.11.9",
     "emoji-mart": "^5.5.2",
     "emoji-picker-react": "^4.4.9",
+    "file-saver": "^2.0.5",
     "formik": "^2.4.1",
     "highlight.js": "^11.8.0",
     "linkify-html": "^4.1.1",

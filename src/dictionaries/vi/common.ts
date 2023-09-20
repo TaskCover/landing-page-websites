@@ -36,6 +36,7 @@ export const CommonLang: CommonDictionary = {
       description: "Mô tả",
       note: "Ghi chú",
       title: "Tiêu đề",
+      selectTime: "Chọn ngày",
     },
     confirm: "Xác nhận",
     save: "Lưu",
@@ -53,6 +54,7 @@ export const CommonLang: CommonDictionary = {
     anErrorTryReload: "Đã xảy ra lỗi. Vui lòng thử tải lại trang.",
   },
   position: "Chức vụ",
+  company: "Công ty",
   fullName: "Họ tên",
   phone: "Số điện thoại",
   status: "Trạng thái",
@@ -108,4 +110,6 @@ export const CommonLang: CommonDictionary = {
   aFewFilesInvalid:
     "Hệ thống chỉ hỗ trợ các định dạng file doc, docx, xlsx, xls, csv, mp3, mp4, png, jpeg, jpg, pdf, ppt, pptx, zip, rar. Vui lòng kiểm tra lại định dạng file đính kèm của bạn.",
   processingUpload: "Đang tải lên tệp tin...",
+  cancel: "Huỷ",
+  success: "Thành công!"
 };

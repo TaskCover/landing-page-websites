@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -12,7 +13,6 @@ import {
   MediaPreviewItem,
   MessageInfo,
   MessageSearchInfo,
-  UnReadMessageInfo,
   UnreadUserInfo,
 } from "store/chat/type";
 import { DataStatus } from "constant/enums";
@@ -44,6 +44,7 @@ interface MessagesProps {
 
 type MessageHandle = {
   pageRef: MutableRefObject<number>;
+  isBottomScrollMessage: boolean;
   initScrollIntoView: () => void;
   clearScrollContentMessage: () => void;
   scrollMessage: () => void;
@@ -67,6 +68,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   ref,
 ) => {
   const [firstElement, setFirstElement] = useState(null);
+  const [isBottomScrollMessage, setBottomScrollMessage] = useState(false);
 
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
@@ -86,6 +88,23 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
       }
     }),
   );
+
+  const getTimeStamp = (time: string | Date) => {
+    const date = new Date(time);
+    const lastHours = date.getHours();
+    let half = "AM";
+    if (lastHours === undefined) {
+      return "";
+    }
+    if (lastHours > 12) {
+      date.setHours(lastHours - 12);
+      half = "PM";
+    }
+    if (lastHours === 0) date.setHours(12);
+    if (lastHours === 12) half = "PM";
+    return `${formatDate(date, "HH:mm")}${half}`;
+  };
+
   const focusMessageRef = useRef<HTMLDivElement>(null);
 
   const clearScrollContentMessage = async () => {
@@ -115,9 +134,15 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   useImperativeHandle(
     ref,
     () => {
-      return { pageRef, initScrollIntoView, clearScrollContentMessage, scrollMessage };
+      return {
+        pageRef,
+        isBottomScrollMessage,
+        initScrollIntoView,
+        clearScrollContentMessage,
+        scrollMessage,
+      };
     },
-    [],
+    [isBottomScrollMessage],
   );
 
   const initScrollIntoView = useCallback(() => {
@@ -164,6 +189,10 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     <>
       <Box
         ref={messagesContentRef}
+        onScroll={(e) => {
+          const h = e.currentTarget.scrollTop + e.currentTarget.clientHeight;
+          setBottomScrollMessage(h === e.currentTarget.scrollHeight);
+        }}
         sx={{
           display: "flex",
           gap: "0.5rem",
@@ -196,28 +225,46 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           } ${isShowYear ? nextTimeMessage.getFullYear() : ""}`.trim();
           return (
             <React.Fragment key={index}>
-              <MessageLayout
-                sessionId={sessionId}
-                message={message}
-                avatarPartner={avatarPartner || undefined}
-                hasNextMessageFromSameUser={hasNextMessageFromSameUser}
-                messageProps={{
-                  ...(index === 0 && {
-                    ref: setFirstElement,
-                  }),
-                  ...(message._id === focusMessage?.messageId && {
-                    ref: focusMessageRef,
-                  }),
-                }}
-              >
-                <MessageContent
+              {!message?.t ? (
+                <MessageLayout
+                  sessionId={sessionId}
                   message={message}
-                  mediaListPreview={mediaListPreview}
-                  isCurrentUser={isCurrentUser}
-                  isGroup={isGroup}
-                  unReadMessage={unReadMessage}
-                />
-              </MessageLayout>
+                  avatarPartner={avatarPartner || undefined}
+                  hasNextMessageFromSameUser={hasNextMessageFromSameUser}
+                  messageProps={{
+                    ...(index === 0 && {
+                      ref: setFirstElement,
+                    }),
+                    ...(message._id === focusMessage?.messageId && {
+                      ref: focusMessageRef,
+                    }),
+                  }}
+                >
+                  <MessageContent
+                    message={message}
+                    mediaListPreview={mediaListPreview}
+                    isCurrentUser={isCurrentUser}
+                    isGroup={isGroup}
+                    unReadMessage={unReadMessage}
+                  />
+                </MessageLayout>
+              ) : (
+                  <Box
+                    sx={{
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        backgroundColor: '#f1f1f1',
+                        fontSize: '10px',
+                        padding: '2px 5px',
+                        borderRadius: '10px',
+                        display: 'inline-block',
+                      }}
+                    >{message?.u?.username} {message?.t === 'au' ? 'added' : (message?.t === 'ru' ? 'removed' : message?.t)} {message?.msg} ({getTimeStamp(message?.ts ?? '')})</Typography>
+                  </Box>
+              )}
               {hasNextDay && (
                 <Typography
                   textAlign="center"

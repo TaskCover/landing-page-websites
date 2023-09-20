@@ -4,11 +4,13 @@ import ChatItemLayout from "./ChatItemLayout";
 import { useChat } from "store/chat/selectors";
 import { DirectionChat, IChatItemInfo, STEP } from "store/chat/type";
 import { useAuth, useSnackbar } from "store/app/selectors";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
-import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_CHAT_BOX, NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
+import { useWSChat } from "store/chat/helpers";
+import useTheme from "hooks/useTheme";
 
 const ChatList = () => {
   const { user } = useAuth();
@@ -17,14 +19,19 @@ const ChatList = () => {
     convention,
     conversationPaging: { pageIndex, pageSize, textSearch: initText },
     isFetching,
+    currStep,
     onSetRoomId,
     onSetConversationInfo,
     onGetAllConvention,
     onSetStep,
   } = useChat();
 
+  useWSChat();
   const { onAddSnackbar } = useSnackbar();
-  const t = useTranslations(NS_COMMON);
+  const commonT = useTranslations(NS_COMMON);
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
+  const { isDarkMode } = useTheme();
+
   const [textSearch, setTextSearch] = useState(initText);
   const [lastElement, setLastElement] = useState(null);
   const pageRef = useRef(pageIndex);
@@ -75,26 +82,29 @@ const ChatList = () => {
       });
   }, [convention, user]);
 
-  const handleGetConversation = async (
-    text: string,
-    type: DirectionChat,
-    offset?: number,
-    count?: number,
-  ) => {
-    try {
-      await onGetAllConvention({
-        type,
-        text,
-        offset: offset || 0,
-        count: count || 10,
-      });
-    } catch (error) {
-      onAddSnackbar(
-        typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
-        "error",
-      );
-    }
-  };
+  const handleGetConversation = useCallback(
+    async (
+      text: string,
+      type: DirectionChat,
+      offset?: number,
+      count?: number,
+    ) => {
+      try {
+        await onGetAllConvention({
+          type,
+          text,
+          offset: offset || 0,
+          count: count || 10,
+        });
+      } catch (error) {
+        onAddSnackbar(
+          typeof error === "string" ? error : commonT(AN_ERROR_TRY_AGAIN),
+          "error",
+        );
+      }
+    },
+    [onAddSnackbar, onGetAllConvention, commonT],
+  );
 
   const handleClickConversation = (chatInfo: IChatItemInfo) => {
     onSetRoomId(chatInfo._id);
@@ -113,6 +123,10 @@ const ChatList = () => {
       handleGetConversation(event.target.value, "a");
     }
   };
+
+  useEffect(() => {
+    handleGetConversation('', 'a');
+  }, [ currStep ])
 
   useEffect(() => {
     pageRef.current = pageIndex;
@@ -151,7 +165,7 @@ const ChatList = () => {
         }}
       >
         <Typography color="white" variant="h4">
-          Chat
+          {commonChatBox("chatBox.chat")}
         </Typography>
         <TextField
           size="small"
@@ -190,7 +204,7 @@ const ChatList = () => {
               />
             ),
           }}
-          placeholder="Search name"
+          placeholder={commonChatBox("chatBox.searchName")}
           fullWidth
           value={textSearch}
           onChange={(e) => setTextSearch(e.target.value)}
@@ -200,6 +214,12 @@ const ChatList = () => {
           onClick={() => {
             onSetStep(STEP.ADD_GROUP, { isNew: true });
           }}
+          sx={{
+            alignItems: "center",
+            width: 24,
+            height: 24,
+            cursor: "pointer"
+          }}
         >
           <NewGroupIcon />
         </Box>
@@ -208,6 +228,7 @@ const ChatList = () => {
         ref={chatListRef}
         overflow="auto"
         maxHeight="calc(600px - 74px - 15px)"
+        bgcolor={isDarkMode ? "#303031" : "white"}
       >
         {(isFetching || isError) && pageIndex === 0 ? (
           Array.from({ length: 5 }, (_, i) => (

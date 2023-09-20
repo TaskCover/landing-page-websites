@@ -289,7 +289,7 @@ const TimeCreate: React.FC<IProps> = ({
               />
             )}
           />
-          <Controller
+          {/* <Controller
             name="position"
             control={control}
             render={({ field }) => (
@@ -304,7 +304,7 @@ const TimeCreate: React.FC<IProps> = ({
                 {...(field as any)}
               />
             )}
-          />
+          /> */}
 
           <Controller
             name="day"

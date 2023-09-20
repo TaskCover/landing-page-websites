@@ -1,13 +1,10 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import Fade from "@mui/material/Fade";
-import Paper from "@mui/material/Paper";
-import Popper from "@mui/material/Popper";
 import SwitchChat from "components/sn-chat/SwitchChat";
 import ChatMessageIcon from "icons/ChatMessageIcon";
 import CloseIcon from "icons/CloseIcon";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
 import { Grow, Typography } from "@mui/material";
@@ -16,6 +13,7 @@ import { useTranslations } from "next-intl";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { Permission } from "constant/enums";
+import useTheme from "hooks/useTheme";
 
 const ChatListTemp = () => {
   const { user } = useAuth();
@@ -25,6 +23,7 @@ const ChatListTemp = () => {
   const [show, setShow] = useState(false);
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
+  const { isDarkMode } = useTheme();
 
   const init = {
     type: "",
@@ -145,7 +144,6 @@ const ChatListTemp = () => {
       onReset();
     }
   };
-
   if (!roleChatAccept) {
     return null;
   }
@@ -171,35 +169,39 @@ const ChatListTemp = () => {
           sx={{ width: showPopup?.widthPopup }}
         />
       ) : (
-        <Grow
-          in={open}
-          style={{ transformOrigin: "bottom right" }}
-          {...(open ? { timeout: 500 } : {})}
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              width: "400px",
-              height: "calc(100% - 7rem)",
-              maxHeight: "600px",
-              overflow: "hidden",
-              bottom: "7rem",
-              right: "5rem",
-              borderRadius: "16px",
-              boxShadow: "2px 2px 24px 0px #0000001A",
-            }}
+        <>
+          <Grow
+            in={open}
+            style={{ transformOrigin: "bottom right" }}
+            {...(open ? { timeout: 500 } : {})}
           >
             <Box
               sx={{
-                height: "100%",
+                position: "absolute",
+                width: "400px",
+                height: "calc(100% - 7rem)",
+                maxHeight: "600px",
                 overflow: "hidden",
-                backgroundColor: "white",
+                bottom: "7rem",
+                right: "5rem",
+                borderRadius: "16px",
+                boxShadow: "2px 2px 24px 0px #0000001A",
+                backgroundColor: isDarkMode ? "#303130" : "white",
+
               }}
             >
-              <SwitchChat />
+              <Box
+                sx={{
+                  height: "100%",
+                  overflow: "hidden",
+                  backgroundColor: isDarkMode ? "#303130" : "white",
+                }}
+              >
+                {open && <SwitchChat />}
+              </Box>
             </Box>
-          </Box>
-        </Grow>
+          </Grow>
+        </>
       )}
       <Box
         position="fixed"

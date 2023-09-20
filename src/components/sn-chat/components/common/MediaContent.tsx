@@ -170,7 +170,7 @@ export const MediaClone = ({
 const MediaContent = () => {
   const { mediaList, mediaListStatus, onGetChatAttachments } = useChat();
   const { onAddSnackbar } = useSnackbar();
-  const t = useTranslations(NS_COMMON);
+  const commonT = useTranslations(NS_COMMON);
 
   useEffect(() => {
     const handleGetAttachment = async () => {
@@ -178,13 +178,13 @@ const MediaContent = () => {
         await onGetChatAttachments({ fileType: "media" });
       } catch (error) {
         onAddSnackbar(
-          typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+          typeof error === "string" ? error : commonT(AN_ERROR_TRY_AGAIN),
           "error",
         );
       }
     };
     handleGetAttachment();
-  }, [onAddSnackbar, onGetChatAttachments, t]);
+  }, [onAddSnackbar, onGetChatAttachments, commonT]);
 
   const mediaClone = useMemo(() => {
     const acceptType = ACCEPT_MEDIA.map((item) => item.split("/")?.[1]);
@@ -215,7 +215,7 @@ const MediaContent = () => {
     return <Typography textAlign="center">Loading...</Typography>;
   }
 
-  return (
+  return mediaClone?.length > 0 ? (
     <Box
       sx={{
         display: "grid",
@@ -228,19 +228,17 @@ const MediaContent = () => {
         maxHeight: "100%",
       }}
     >
-      {mediaClone?.length > 0 ? (
-        mediaClone?.map((item, index) => (
-          <MediaClone
-            key={index}
-            src={item.url}
-            type={item.type}
-            listMedia={mediaClone as unknown as MediaPreview[]}
-          />
-        ))
-      ) : (
-        <Typography textAlign="center">No Data...</Typography>
-      )}
+      {mediaClone?.map((item, index) => (
+        <MediaClone
+          key={index}
+          src={item.url}
+          type={item.type}
+          listMedia={mediaClone as unknown as MediaPreview[]}
+        />
+      ))}
     </Box>
+  ) : (
+    <Typography textAlign="center">{commonT("noData")}</Typography>
   );
 };
 

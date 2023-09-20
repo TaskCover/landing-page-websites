@@ -34,6 +34,7 @@ export type CommonDictionary = {
       description: string;
       note: string;
       title: string;
+      selectTime: string;
     };
     confirm: string;
     save: string;
@@ -50,6 +51,7 @@ export type CommonDictionary = {
     anErrorTryReload: string;
   };
   position: string;
+  company: string;
   fullName: string;
   phone: string;
   status: string;
@@ -104,4 +106,6 @@ export type CommonDictionary = {
   processing: string;
   aFewFilesInvalid: string;
   processingUpload: string;
+  cancel: string;
+  success: string
 };

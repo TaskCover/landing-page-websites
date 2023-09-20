@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import {
   changeParentTask,
@@ -31,7 +32,7 @@ import {
   convertSubTaskToTask,
   DependencyStatus,
   deleteDependency,
-  getProjectAttachment
+  getProjectAttachment,
 } from "./actions";
 import {
   Attachment,
@@ -96,6 +97,7 @@ export interface Project {
   description: string;
   expected_cost: number;
   working_hours: number;
+  currency: string;
   start_date: string;
   end_date: string;
   number?: string;
@@ -169,6 +171,7 @@ export interface ActivityTask {
   action: string;
   task: Task;
   project: Project;
+  new?: string;
 }
 
 export type TaskDetail = Omit<Task, "task_list" | "task" | "sub_task"> & {
@@ -393,12 +396,12 @@ const projectSlice = createSlice({
         state.itemStatus = DataStatus.LOADING;
       })
       .addCase(
-          getProjectAttachment.fulfilled,
-          (state, action: PayloadAction<any>) => {
-            state.attachments = action.payload;
-            state.itemStatus = DataStatus.SUCCEEDED;
-            state.itemError = undefined;
-          },
+        getProjectAttachment.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.attachments = action.payload;
+          state.itemStatus = DataStatus.SUCCEEDED;
+          state.itemError = undefined;
+        },
       )
       .addCase(getProjectAttachment.rejected, (state, action) => {
         state.attachments = undefined;
@@ -861,7 +864,12 @@ const projectSlice = createSlice({
       }),
 });
 
-export const { removeMember, updateTaskDetail, updateTaskParent, resetTasks, reset } =
-  projectSlice.actions;
+export const {
+  removeMember,
+  updateTaskDetail,
+  updateTaskParent,
+  resetTasks,
+  reset,
+} = projectSlice.actions;
 
 export default projectSlice.reducer;

@@ -6,6 +6,7 @@ import {
   Popover,
   Stack,
   popoverClasses,
+  TextField,
 } from "@mui/material";
 import { Button, Checkbox, IconButton, Text } from "components/shared";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
@@ -77,6 +78,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
   const { isXlSmaller } = useBreakpoint();
 
   const projectT = useTranslations(NS_PROJECT);
+  const commonT = useTranslations(NS_COMMON);
   const { onCreateTask: onCreateTaskAction } = useTasksOfProject();
 
   const isMobile = useMemo(() => checkIsMobile(), []);
@@ -87,6 +89,37 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
 
   const onCreateTask = async (data: TaskFormData) => {
     return await onCreateTaskAction(data, id);
+  };
+  const { onAddSnackbar } = useSnackbar();
+
+  const [taskName, setTaskName] = useState<string>("");
+
+  const changeNameTask = (event) => {
+    setTaskName(event.target.value);
+  };
+
+  const onKeyDownTaskName = async (
+    event: React.KeyboardEvent<HTMLDivElement>,
+    taskListId: string,
+  ) => {
+    if (event.key !== "Enter") return;
+    const nameTrimmed = taskName?.trim();
+    const newItem = await onCreateTask(
+      {
+        task_list: taskListId,
+        name: nameTrimmed,
+        description: "",
+        end_date: "",
+        start_date: "",
+      },
+    );
+    if (newItem) {
+      setTaskName("");
+      onAddSnackbar(
+        projectT("detailTasks.notification.taskSuccess", { label: commonT("createNew") }),
+        "success",
+      );
+    }
   };
 
   return (
@@ -183,6 +216,53 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
 
               {isShow && props.children}
               {provided.placeholder}
+
+              {isShow &&
+                <Stack
+                  width="100%"
+                  direction="row"
+                  spacing={0}
+                  alignItems="center"
+                  sx={{ ml: { xs: 2, md: 6 }, }}
+                >
+                  <PlusIcon sx={{ color: '#0bb783' }} />
+                  <TextField
+                    label={projectT("detailTasks.addNewTask")}
+                    value={taskName}
+                    onKeyDown={(e) =>
+                      onKeyDownTaskName(e, id)
+                    }
+                    fullWidth
+                    variant="filled"
+                    size="small"
+                    onChange={changeNameTask}
+                    sx={{
+                      "& >div": {
+                        bgcolor: "transparent!important",
+                        "&:after": {
+                          borderBottomColor: "#0bb783 !important",
+                        },
+                        "&:before": {
+                          borderBottom: "unset !important",
+                        },
+                      },
+                      "& input": {
+                        fontSize: 14,
+                        paddingTop: "17px !important",
+                      },
+                      width: "35% !important",
+                      "& label.Mui-focused": {
+                        color: "green",
+                      },
+                      "& >label": {
+                        fontWeight: "600 !important",
+                        fontSize: "14px",
+                        color: "#0bb783 !important",
+                      },
+                    }}
+                  />
+                </Stack>
+              }
             </div>
           );
         }}

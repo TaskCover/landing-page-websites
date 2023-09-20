@@ -17,6 +17,7 @@ export interface IChatInfo {
   sysMes: boolean;
   avatar: string;
   unreadCount: number;
+  unreadsFrom: string;
 }
 
 export interface IChatGroup {
@@ -82,13 +83,14 @@ export interface ParsedURL {
 }
 
 export interface MessageInfo {
+  t: string;
   _id: string;
   alias: string;
   msg: string;
   attachments: Attachment[];
   parseUrls: boolean;
   groupable: boolean;
-  ts: string;
+  ts: string | Date;
   u: UserSendInfo;
   rid: string;
   _updatedAt: string;
@@ -250,6 +252,16 @@ export interface DeleteConversationGroup extends AuthenRequestCommon {
   type: string;
 }
 
+export interface ForwardMessageGroup extends AuthenRequestCommon {
+  roomId: string;
+  messageId: string;
+}
+
+export interface ChangeGroupAvatar extends AuthenRequestCommon {
+  roomId: string;
+  avatarUrl: string;
+}
+
 export type RoomType = "c" | "d" | "p";
 export interface ChatAttachmentsRequest extends AuthenRequestCommon {
   roomId?: string;
@@ -345,6 +357,10 @@ export interface UnReadMessageInfo {
   success: boolean;
 }
 
+export interface ReadMessageRequest extends AuthenRequestCommon {
+  roomId: string;
+}
+
 export enum STEP {
   IDLE,
   CONVENTION,
@@ -361,6 +377,8 @@ export enum STEP {
   FILE,
   CHAT_FORWARD,
   CHAT_GROUP,
+  ADD_MEMBER,
+  SEARCH_CHAT_TEXT,
 }
 
 export enum STEP_INFO {

@@ -117,7 +117,8 @@ const Select = (props: SelectProps) => {
     <Input
       select
       SelectProps={{
-        IconComponent: ChevronIcon,
+        IconComponent: () => <ChevronIcon onClick={onOpen} />,
+        open: isShow,
         onOpen: onOpenSelect,
         onClose,
         MenuProps: {

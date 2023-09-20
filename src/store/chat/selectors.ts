@@ -16,6 +16,9 @@ import {
   renameGroup,
   searchChatText,
   getUnreadMessages,
+  getConventionById,
+  forwardMessage,
+  changeGroupAvatar,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
 import { useMemo, useCallback } from "react";
@@ -41,6 +44,9 @@ import {
   MessageSearchInfoRequest,
   MessageSearchInfo,
   UnReadMessageRequest,
+  MessageInfo,
+  ForwardMessageGroup,
+  ChangeGroupAvatar,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -56,6 +62,7 @@ import {
   clearMessageList,
   reset,
   setStateSearchMessage,
+  updateUnSeenMessage,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -145,6 +152,27 @@ export const useChat = () => {
     [dispatch, user],
   );
 
+  const onGetConventionById = useCallback(
+    async ({
+      count = 1,
+      offset = 0,
+      ...rest
+    }: Omit<ChatConventionItemRequest, "authToken" | "userId">) => {
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
+      return await dispatch(
+        getConventionById({
+          count,
+          offset,
+          authToken,
+          userId,
+          ...rest,
+        }),
+      ).unwrap();
+    },
+    [dispatch, user],
+  );
+
   const onGetLastMessages = useCallback(
     async ({
       count,
@@ -222,9 +250,8 @@ export const useChat = () => {
   );
 
   const onGetUnReadMessages = useCallback(
-    async ({
-      type = "d",
-    }: Omit<UnReadMessageRequest, "authToken" | "userId" | "roomId">) => {
+    async (paramReq?: Partial<UnReadMessageRequest>) => {
+      const { type = "d" } = paramReq || {};
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       await dispatch(
@@ -235,6 +262,8 @@ export const useChat = () => {
           type,
         }),
       );
+
+      await dispatch(updateUnSeenMessage(roomId));
     },
     [dispatch, roomId, user],
   );
@@ -417,7 +446,9 @@ export const useChat = () => {
 
   const onSetLastMessage = (newMessage: {
     roomId: string;
-    lastMessage: Attachment;
+    lastMessage: MessageInfo;
+    unreadCount: number;
+    unreadsFrom: string;
   }) => {
     dispatch(setLastMessage(newMessage));
   };
@@ -455,6 +486,38 @@ export const useChat = () => {
   const onReset = () => {
     dispatch(reset());
   };
+
+  const onForwardMessage = useCallback(
+    async (params: Omit<ForwardMessageGroup, "authToken" | "userId">) => {
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
+      return await dispatch(
+        forwardMessage({
+          authToken,
+          userId,
+          ...params,
+        }),
+      );
+    },
+    [dispatch, user],
+  );
+
+  const onChangeGroupAvatar = useCallback(
+    async (file: File, roomId: string) => {
+      const result = await dispatch(uploadFile({ endpoint: 'files/upload-link', file }));
+      const authToken = user?.["authToken"] ?? "";
+      const userId = user?.["id_rocket"] ?? "";
+      return await dispatch(
+        changeGroupAvatar({
+          authToken,
+          userId,
+          roomId,
+          avatarUrl: result?.payload?.download ?? '',
+        }),
+      );
+    },
+    [dispatch, user],
+  );
 
   const onUploadAndSendFile = useCallback(
     async ({ endpoint, files }: { endpoint: string; files: File[] }) => {
@@ -582,5 +645,8 @@ export const useChat = () => {
     onSearchChatText,
     onSetStateSearchMessage,
     onGetUnReadMessages,
+    onGetConventionById,
+    onForwardMessage,
+    onChangeGroupAvatar
   };
 };

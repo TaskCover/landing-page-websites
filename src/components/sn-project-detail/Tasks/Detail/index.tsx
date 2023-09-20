@@ -1,5 +1,6 @@
 import { memo, useEffect, useState, useRef, useMemo } from "react";
 import { DrawerProps, Drawer, drawerClasses, Stack, Box, Typography, Breadcrumbs, OutlinedInput } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { IconButton, Input, Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import { NS_PROJECT } from "constant/index";
@@ -13,13 +14,29 @@ import { AssignTask, CommentEditor, StatusTask } from "./components";
 import Activities from "./Activities";
 import EditTask from "./components/EditTask";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import Actions, { Action } from "./components/SubTasksOfTask/Actions";
+import MoveOtherTask from "./components/SubTasksOfTask/MoveOtherTask";
 
 const Detail = () => {
   const { task, taskParent, onUpdateTaskDetail, onUpdateTask } = useTaskDetail();
+  const taskLists = useAppSelector((state) => state.project.tasks);
   const scrollEndRef = useRef<HTMLDivElement | null>(null);
+  const [action, setAction] = useState<Action | undefined>();
+  const projectT = useTranslations(NS_PROJECT);
+
+  const options = useMemo(
+    () => [
+      {
+        label: projectT("taskDetail.changeParentTask"),
+        value: Action.CHANGE_PARENT_TASK,
+      },
+    ],
+    [projectT],
+  );
 
   const [tab, setTab] = useState<TabDetail>(TabDetail.DETAIL);
   const onClose = () => {
+    setTab(TabDetail.DETAIL)
     onUpdateTaskDetail();
   };
 
@@ -32,9 +49,44 @@ const Detail = () => {
     breadcrumbs_values[1] = task.name;
   }
 
+  const onGotoTask = async () => {
+    const taskList = taskLists.filter(item => item.id === task.taskListId)
+
+    if (!taskList[0]) return
+
+    const taskOfSubtask = taskList[0].tasks.filter(item => item.id === task.taskId)
+
+    if (!taskOfSubtask[0]) return
+
+    onUpdateTaskDetail({ ...taskOfSubtask[0], taskId: taskOfSubtask[0].id, taskListId: taskList[0].id });
+  };
+
   const breadcrumbs = breadcrumbs_values.map((item, idx) => {
-    return <Typography key={idx+1} color="text.primary">{item}</Typography>
+    return (
+      <Typography
+        key={idx + 1}
+        color="text.primary"
+        sx={{
+          fontSize: '20px',
+          fontWeight: idx !== 2 ? '500' : '400',
+          color: idx === 0 ? 'grey.300' : 'text.primary',
+          cursor: idx === 1 ? 'pointer' : 'unset'
+        }}
+        onClick={idx === 1 ? onGotoTask : undefined}
+      >
+        {item}
+      </Typography>
+    )
   })
+
+  const onChangeAction = (newAction?: Action) => {
+    setAction(newAction);
+  };
+
+  const onResetAction = () => {
+    setAction(undefined);
+    onUpdateTaskDetail();
+  };
 
   return (
     <Drawer
@@ -57,12 +109,24 @@ const Detail = () => {
         justifyContent="space-between"
         p={{ xs: 2, md: 3 }}
       >
-        <Breadcrumbs
-          separator={<NavigateNextIcon color="disabled" fontSize="small" />}
-          aria-label="breadcrumb"
-        >
-          {breadcrumbs}
-        </Breadcrumbs>
+        <Stack direction="row" alignItems="center">
+          <Breadcrumbs
+            separator={<NavigateNextIcon color="disabled" fontSize="small" />}
+            aria-label="breadcrumb"
+          >
+            {breadcrumbs}
+          </Breadcrumbs>
+          {task.subTaskId &&
+            <Stack ml={2}>
+              <Actions subId={task.subTaskId} onChangeAction={onChangeAction} options={options} />
+
+              {/* ACTIONS */}
+              {action === Action.CHANGE_PARENT_TASK && (
+                <MoveOtherTask subId={task.subTaskId} open onClose={onResetAction} />
+              )}
+            </Stack>
+          }
+        </Stack>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>

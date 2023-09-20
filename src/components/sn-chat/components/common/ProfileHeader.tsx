@@ -225,6 +225,7 @@ const ProfileHeader = ({
               onSearch?.("", false);
             }}
             sx={{
+              marginLeft: '0.3rem',
               color: "#1BC5BD",
             }}
           >
@@ -235,6 +236,7 @@ const ProfileHeader = ({
     }
   }, [
     avatar,
+    avatarClone,
     groupButton,
     handleKeyDown,
     name,

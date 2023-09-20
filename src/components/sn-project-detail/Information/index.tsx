@@ -189,7 +189,7 @@ const DesktopInformation = (props) => {
           label={projectT("list.form.title.estimatedCost")}
           width={170}
         >
-          {formatNumber(item?.expected_cost)}
+          {formatNumber(item?.expected_cost)}  {item?.currency}
         </InformationItem>
         <InformationItem
           color="secondary.main"
