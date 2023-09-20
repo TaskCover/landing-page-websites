@@ -376,6 +376,7 @@ const Form = (props: FormProps) => {
             rootSx={sxConfig.input}
             sx={{ width: "65%" }}
             numberType="integer"
+            negative={false}
           />
           <Select
             options={currencyOptions}
