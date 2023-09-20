@@ -154,6 +154,10 @@ const Form = (props: FormProps) => {
         dataParsed["currency"] = dataParsed["currency"] ?? null;
       }
 
+      // format type project
+      dataParsed["type_project"] = typeProject.value ?? null;
+
+
       const newItem = await onSubmitProps(dataParsed);
 
       if (newItem) {
@@ -448,7 +452,7 @@ const validationSchema = Yup.object().shape({
     .max(MAX_NAME_CHARACTERS, "form.error.overMax"),
   description: Yup.string(),
   owner: Yup.string(),
-  type_project: Yup.string(),
+  // type_project: Yup.string(),
   start_date: Yup.number(),
   end_date: Yup.number().min(Yup.ref("start_date"), "form.error.gte"),
   // expected_cost: Yup.number().min(0, "form.error.nonNegative"),
