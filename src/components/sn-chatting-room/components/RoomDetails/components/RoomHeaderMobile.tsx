@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import React, { useMemo, useState } from "react";
+import { Avatar, Box, IconButton, ImageList, Typography } from "@mui/material";
 import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
 import useTheme from "hooks/useTheme";
 import ProfileAdd from "icons/ProfileAdd";
@@ -11,14 +11,14 @@ import ChatDetailInfo from "./ChatDetailInfo";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CallIcon from "icons/CallIcon";
 import ChatDetailUserMobile from "./ChatDetailUserMobile";
+import GroupChatMobile from "./GroupChatMobile";
+import ComponentAvatar from "components/Avatar";
 
 const RoomHeaderMobile = ({
   currentConversation,
   onResetCurrentConversation,
 }) => {
   const { isDarkMode } = useTheme();
-
-  console.log(currentConversation);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   // Handler to open the drawer.
@@ -31,7 +31,96 @@ const RoomHeaderMobile = ({
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  const PrivateChatLayout = () => {
+    if (currentConversation.userCount === 2) {
+      return ChatDetailUserMobile;
+    } else {
+      return GroupChatMobile;
+    }
+  };
+
+  const ObjectLayout = {
+    c: GroupChatMobile,
+    d: ChatDetailUserMobile,
+    p: PrivateChatLayout(),
+  };
   const styleIcon = { color: "white", fontSize: "24px", cursor: "pointer" };
+  const typeOfChat = currentConversation?.t;
+  const RenderedComponent = ObjectLayout[typeOfChat];
+
+  const isGroup = useMemo(
+    () => currentConversation?.t !== "d",
+    [currentConversation],
+  );
+
+  const groupAvatar = useMemo(() => {
+    if (isGroup && currentConversation.usersCount > 3) {
+      return (
+        <ImageList
+          sx={{
+            width: 52,
+            height: 52,
+            margin: 0,
+            alignItems: "center",
+            alignContent: "center",
+            gap: "2px!important",
+          }}
+          cols={2}
+          rowHeight={164}
+        >
+          <ComponentAvatar
+            alt="Avatar"
+            size={22}
+            style={{
+              borderRadius: "5px",
+            }}
+          />
+          <ComponentAvatar
+            alt="Avatar"
+            size={22}
+            style={{
+              borderRadius: "5px",
+            }}
+          />
+          <ComponentAvatar
+            alt="Avatar"
+            size={22}
+            style={{
+              borderRadius: "5px",
+            }}
+          />
+          {currentConversation.usersCount - 3 > 0 ? (
+            <Box
+              sx={{
+                textAlign: "center",
+                borderRadius: "5px",
+                backgroundColor: "#3078F1",
+                color: "white",
+                width: "22px",
+                height: "22px",
+                lineHeight: "22px",
+              }}
+            >
+              <Typography variant="caption">
+                +{currentConversation.usersCount - 3}
+              </Typography>
+            </Box>
+          ) : null}
+        </ImageList>
+      );
+    } else {
+      return (
+        <Avatar
+          src={currentConversation?.avatar}
+          sx={{
+            width: "32px",
+            height: "32px",
+            borderRadius: "9999px",
+          }}
+        />
+      );
+    }
+  }, [isGroup, currentConversation.usersCount]);
 
   return (
     <Box
@@ -64,14 +153,7 @@ const RoomHeaderMobile = ({
           }}
           onClick={openDrawer}
         >
-          <Avatar
-            src={currentConversation?.avatar}
-            sx={{
-              width: "32px",
-              height: "32px",
-              borderRadius: "9999px",
-            }}
-          />
+          {groupAvatar}
           <Box display="flex" flexDirection="column" gap="4px">
             <Typography variant="h6" color="#FFF">
               {currentConversation?.name}
@@ -102,11 +184,13 @@ const RoomHeaderMobile = ({
         >
           <VideoCallIcon stroke={"#FFF"} />
         </IconButton>
-        <ChatDetailUserMobile
-          isOpen={isDrawerOpen}
-          onClose={closeDrawer}
-          currentConversation={currentConversation}
-        />
+        {RenderedComponent && (
+          <RenderedComponent
+            isOpen={isDrawerOpen}
+            onClose={closeDrawer}
+            currentConversation={currentConversation}
+          />
+        )}
       </Box>
     </Box>
   );

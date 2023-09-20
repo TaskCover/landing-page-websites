@@ -18,7 +18,6 @@ const MembersMobile: React.FC<MembersMobileProps> = (props) => {
         flexShrink: 0,
         ...styleDrawerOpen,
         "& .MuiDrawer-paper": {
-          top: "50px",
           width: "100%",
           boxSizing: "border-box",
           border: "none",
@@ -39,9 +38,10 @@ const MembersMobile: React.FC<MembersMobileProps> = (props) => {
         <Box
           sx={{
             padding: "0px 16px",
-            display: "flex",
+            display: "inline-flex",
             gap: "16px",
             flexDirection: "column",
+            alignItems: "flex-start",
           }}
         >
           <MembersItemMobile {...props.currentConversation} />

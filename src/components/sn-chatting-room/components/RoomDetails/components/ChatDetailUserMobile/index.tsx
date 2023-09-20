@@ -1,16 +1,11 @@
 import { Avatar, Box, Drawer, Typography } from "@mui/material";
 import ChatDetailUserHeaderMobile from "./ChatDetailUserHeaderMobile";
 import { IChatItemInfo } from "store/chat/type";
-import AccountProfileIcon from "icons/AccountProfileIcon";
-import SearchIcon from "icons/SearchIcon";
 import ChatDetailUserMenuItemMobile from "./ChatDetailUserMenuItemMobile";
-import MediaFileIcon from "icons/MediaFileIcon";
-import CreateGroupChatIcon from "icons/CreateGroupChatIcon";
 import DeleteChatIcon from "icons/DeleteChatIcon";
-import { useCallback, useState } from "react";
 import SearchDetailChatUser from "../SearchDetailChatUser";
-import { useChat } from "store/chat/selectors";
 import AccountInfoMobile from "../AccountInfoMobile";
+import { useChatDetailUserMobile } from "./UseChatDetailUserMobile";
 
 interface ChatDetailUserMobileProps {
   isOpen: boolean;
@@ -18,65 +13,19 @@ interface ChatDetailUserMobileProps {
   currentConversation: IChatItemInfo;
 }
 
-interface MenuItem {
-  text: string;
-  icon: JSX.ElementType;
-  stroke: string;
-  borderBottom?: boolean;
-  handleOnClick?: () => void;
-}
-
 const ChatDetailUserMobile: React.FC<ChatDetailUserMobileProps> = ({
   isOpen,
   onClose,
   currentConversation,
 }) => {
-  const [searchConversationShow, setSearchConversationShow] = useState(false);
-  const [accountInfoShow, setAccountInfoShow] = useState(false);
-  const { onGetUserInfo } = useChat();
+  const {
+    menuItems,
+    accountInfoShow,
+    searchConversationShow,
+    handleCloseAccountInfoMobile,
+    handleSearchConversation,
+  } = useChatDetailUserMobile({ currentConversation });
 
-  const handleOpenAccountInfoMobile = useCallback(() => {
-    if (currentConversation?.usernames[0]) {
-      setAccountInfoShow(true);
-      onGetUserInfo(currentConversation?.usernames[0]);
-    }
-  }, [currentConversation?.usernames]);
-
-  const handleCloseAccountInfoMobile = () => {
-    setAccountInfoShow(false);
-  };
-
-  const handleSearchConversation = () => {
-    setSearchConversationShow(!searchConversationShow);
-  };
-
-  const menuItems: MenuItem[] = [
-    {
-      text: "Account infomation",
-      icon: AccountProfileIcon,
-      stroke: "#3699FF",
-      borderBottom: true,
-      handleOnClick: handleOpenAccountInfoMobile,
-    },
-    {
-      text: `Create a chat group with ${currentConversation?.name}`,
-      icon: CreateGroupChatIcon,
-      stroke: "#3699FF",
-      borderBottom: true,
-    },
-    {
-      text: "Media files, files and links",
-      icon: MediaFileIcon,
-      stroke: "#1BC5BD",
-      borderBottom: true,
-    },
-    {
-      text: "Search in conversation",
-      icon: SearchIcon,
-      stroke: "#999999",
-      handleOnClick: handleSearchConversation,
-    },
-  ];
   const styleDrawerOpen = isOpen ? { width: "100%" } : { width: "0" };
 
   return (
