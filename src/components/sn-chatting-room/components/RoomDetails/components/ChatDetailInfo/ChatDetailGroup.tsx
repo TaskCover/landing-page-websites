@@ -30,6 +30,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
 
   const { groupMembers } = useChat();
 
+
   //check owner
   const owners = Object.values(groupMembers).filter((item) =>
     item.roles.includes("owner"),
@@ -71,6 +72,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
         sx={{
           height: "180px",
           overflow: "auto",
+          width: '100%'
         }}
       >
         {groupMembers?.map((member, index) => (
@@ -91,6 +93,8 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
         sx={{
           display: "flex",
           justifyContent: "center",
+          width: '100%'
+
         }}
       >
         <Box>

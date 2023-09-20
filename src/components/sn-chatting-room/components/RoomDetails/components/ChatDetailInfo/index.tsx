@@ -61,6 +61,7 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
               ? "var(--Gray0, #F7F7FD)"
               : "#ffffff",
           gap: "12px",
+          borderLeft: '1px solid #cccccc'
         }}
       >
         <ChatDetailInfoHeader onClose={onClose} />
