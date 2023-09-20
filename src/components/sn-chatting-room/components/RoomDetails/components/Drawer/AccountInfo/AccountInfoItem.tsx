@@ -1,4 +1,5 @@
 import { Box, IconButton, Typography } from "@mui/material";
+import useTheme from "hooks/useTheme";
 
 interface ChatDetailInfoMenuItemProps {
   label: string;
@@ -6,6 +7,7 @@ interface ChatDetailInfoMenuItemProps {
 }
 
 const AccountInfoItem: React.FC<ChatDetailInfoMenuItemProps> = (props) => {
+  const {isDarkMode} =  useTheme();
   return (
     <Box
       sx={{
@@ -25,10 +27,10 @@ const AccountInfoItem: React.FC<ChatDetailInfoMenuItemProps> = (props) => {
           alignSelf: "stretch",
         }}
       >
-        <Typography variant="body2" color="var(--Black, #212121)">
+        <Typography variant="body2" color={isDarkMode ? 'white' :"var(--Black, #212121)"}>
           {props.label}
         </Typography>
-        <Typography variant="body2" color="var(--Black, #212121)">
+        <Typography variant="body2" color={isDarkMode ? 'white' :"var(--Black, #212121)"}>
           {props.value}
         </Typography>
       </Box>

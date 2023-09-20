@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { MessageInfo, STEP } from "store/chat/type";
 import "../../../../components/Editor/style.css";
+import useTheme from "hooks/useTheme";
 
 interface MessageLayoutProps {
   sessionId: string;
@@ -26,6 +27,7 @@ const MessageLayout = ({
   const { sx, ...props } = messageProps || {};
   const [isForward, setIsForward] = useState(true);
   const { onSetStep, dataTransfer } = useChat();
+  const { isDarkMode } = useTheme();
   return (
     <>
       <Box
@@ -44,35 +46,37 @@ const MessageLayout = ({
         }}
         {...props}
       >
-        {isForward && <>
-          <Box
-            className="forward-icon"
-            order={isCurrentUser ? "1" : "3"}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
+        {isForward && (
+          <>
             <Box
-              className="mouse-pointer"
-              onClick={() => {                
-                onSetStep(STEP.CHAT_FORWARD, { ...dataTransfer, message });
-              }}
+              className="forward-icon"
+              order={isCurrentUser ? "1" : "3"}
               sx={{
-                backgroundColor: "#ECECF3",
-                height: "32px",
-                width: "32px",
-                borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center"
+                height: "100%",
               }}
             >
-              <Forward />
+              <Box
+                className="mouse-pointer"
+                onClick={() => {
+                  onSetStep(STEP.CHAT_FORWARD, { ...dataTransfer, message });
+                }}
+                sx={{
+                  backgroundColor: isDarkMode ? "#3a3b3c" : "#ECECF3",
+                  height: "32px",
+                  width: "32px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Forward />
+              </Box>
             </Box>
-          </Box>
-        </>}
+          </>
+        )}
         {/* Message content */}
         {children}
         {/* Avartar partner */}
@@ -82,6 +86,7 @@ const MessageLayout = ({
             sx={{
               display: "flex",
               alignItems: "center",
+              
             }}
           >
             {!isCurrentUser && (

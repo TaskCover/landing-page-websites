@@ -1,12 +1,14 @@
 import { Box, InputBase, Paper } from "@mui/material";
 import { IconButton } from "components/shared";
 import useGetScreenMode from "hooks/useGetScreenMode";
+import useTheme from "hooks/useTheme";
 import SearchIcon from "icons/SearchIcon";
 import { debounce } from "utils/index";
 
 const SearchBar = ({ onSearchText }) => {
   const { mobileMode } = useGetScreenMode();
 
+  const { isDarkMode } = useTheme();
   const debounceSearchText = debounce((text: string) => {
     onSearchText(text);
   }, 1000);
@@ -18,12 +20,15 @@ const SearchBar = ({ onSearchText }) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginBottom: "8px",
         width: "100%",
 
-        backgroundColor: !mobileMode
-          ? "var(--brand-primary, #3699FF)"
-          : "white",
+        ...(isDarkMode
+          ? {}
+          : {
+              backgroundColor: !mobileMode
+                ? "var(--brand-primary, #3699FF)"
+                : "white",
+            }),
       }}
     >
       <Paper
@@ -38,9 +43,10 @@ const SearchBar = ({ onSearchText }) => {
           ...(!mobileMode
             ? { width: "273px" }
             : { width: "80%", border: "1px solid" }),
+          background: isDarkMode ? "#3a3b3c" : "white",
         }}
       >
-        <IconButton sx={{ p: "10px" }} aria-label="search">
+        <IconButton sx={{ p: "10px", color: isDarkMode ? "white" :"#999999" }} aria-label="search">
           <SearchIcon />
         </IconButton>
 
@@ -48,7 +54,8 @@ const SearchBar = ({ onSearchText }) => {
           size="small"
           placeholder="Search name"
           sx={{
-            backgroundColor: "white",
+            background: isDarkMode ? "#3a3b3c" : "white",
+            color: isDarkMode ? "white" : "#999999",
             fontSize: 14,
             "& .MuiInputBase-input": {
               padding: "0px !important",

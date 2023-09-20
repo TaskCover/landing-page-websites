@@ -8,6 +8,7 @@ import { useChat } from "store/chat/selectors";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { FC } from "react";
 import { DrawerInfoChatProps } from "..";
+import useTheme from "hooks/useTheme";
 
 const mapperDataToInfo = (partnerInfo: Partial<UserInfo>) => ({
   fullName: partnerInfo.fullname,
@@ -20,6 +21,7 @@ const AccountInfo: FC<DrawerInfoChatProps> = (props) => {
   const { extraDesktopMode } = useGetScreenMode();
   const { partnerInfo } = useChat();
   const t = useTranslations(NS_AUTH);
+  const {isDarkMode} =  useTheme();
 
   return (
     <Box
@@ -28,9 +30,9 @@ const AccountInfo: FC<DrawerInfoChatProps> = (props) => {
         alignItems: "center",
         flexDirection: "column",
         width: extraDesktopMode ? "424px" : "272px",
-        height: extraDesktopMode ? "948px" : "677px",
+        height: extraDesktopMode ? "948px" : "681px",
         gap: "12px",
-        backgroundColor: "var(--Gray0, #F7F7FD)",
+        backgroundColor: isDarkMode ? "#313130": "var(--Gray0, #F7F7FD)",
       }}
     >
       <AccountInfoHeader

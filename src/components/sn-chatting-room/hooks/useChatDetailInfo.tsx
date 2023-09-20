@@ -1,5 +1,5 @@
 import AccountProfileIcon from "icons/AccountProfileIcon";
-import FileIcon from "icons/FileIcon";
+import FileBasicIcon from "icons/FileBasicIcon";
 import LinkIcon from "icons/LinkIcon";
 import MediaFileIcon from "icons/MediaFileIcon";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -26,7 +26,7 @@ export interface useChatDetailInfoReturns {
   closeDrawer: () => void;
   isDrawerOpen: boolean;
   menuItems: MenuItem[];
-  typeDrawer: "account" | "link" | "media" | "file" | "group";
+  typeDrawer: "account" | "link" | "media" | "file" | "group" | "forward";
   onChangeTypeDrawer: (type: string) => void;
   onSelectRoom: any
 }
@@ -60,10 +60,7 @@ export const useChatDetailInfo = ({
     }, [currentConversation]);
   
     const callbackChatAttachment = useCallback((fileType: 'link' | 'media' | 'file') => {      
-      console.log(currentConversation, 'currentConversation');
-      
       if(!currentConversation) return;
-            
       onGetChatAttachments({
         roomId: currentConversation?._id,
         roomType: currentConversation?.t  as RoomType || 'd',
@@ -73,7 +70,6 @@ export const useChatDetailInfo = ({
     }, [currentConversation]);
   
     const callbackChatUrls = useCallback(() => {
-      console.log(currentConversation, 'currentConversation');
       if(!currentConversation?.t || !currentConversation?._id) return;
       if(currentConversation)  onGetChatUrls({ roomId: currentConversation?._id, type: currentConversation?.t});
       setTypeDrawer(TypeDrawer.link)
@@ -101,7 +97,7 @@ export const useChatDetailInfo = ({
         },
         {
           text: "File",
-          icon: FileIcon,
+          icon: FileBasicIcon,
           callback: () =>  callbackChatAttachment('file'),
           type: 'file'
         },

@@ -22,6 +22,7 @@ import dynamic from "next/dynamic";
 import type ReactQuill from "react-quill";
 import { useChat } from "store/chat/selectors";
 import { useTranslations } from "next-intl";
+import useTheme from "hooks/useTheme";
 
 const QuillNoSSRWrapper = dynamic(
   async () => {
@@ -98,6 +99,8 @@ const ChatEditor = (props: EditorProps) => {
     dataTransfer
    } = useChat();
    const commonChatBox = useTranslations(NS_CHAT_BOX);
+
+   const {isDarkMode} = useTheme();
 
   const quillRef = useRef<ReactQuill>(null);
   const inputMediaRef = useRef<HTMLInputElement | null>(null);

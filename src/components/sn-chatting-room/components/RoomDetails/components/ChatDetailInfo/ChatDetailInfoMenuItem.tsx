@@ -4,6 +4,7 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 import AccountInfo from "../Drawer";
 import { IChatItemInfo } from "store/chat/type";
 import { useChat } from "store/chat/selectors";
+import useTheme from "hooks/useTheme";
 
 interface ChatDetailInfoMenuItemProps {
   text: string;
@@ -31,6 +32,7 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
     ? { transform: "rotate(90deg)" }
     : {};
 
+    const {isDarkMode} = useTheme()
   return (
     <Box
       sx={{
@@ -40,7 +42,9 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
         alignSelf: "stretch",
         padding: "10px 0px",
         gap: "10px",
+        cursor: "pointer",
       }}
+      onClick={onOpenDrawer}
     >
       <Box
         sx={{
@@ -60,11 +64,11 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
           <props.icon
             sx={{
               fill: "none",
-              color: "#666666",
+              color: isDarkMode ? 'white' : "#666666",
               filter: "opacity(0.8)",
             }}
           />
-          <Typography variant="body2" color="var(--Black, #212121)">
+          <Typography variant="body2" color={isDarkMode ? 'white' :"var(--Black, #212121)"}>
             {props.text}
           </Typography>
         </Box>

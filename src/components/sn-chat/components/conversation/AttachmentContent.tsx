@@ -15,6 +15,7 @@ import { useMemo, useRef, useState } from "react";
 import { Attachment } from "store/chat/media/typeMedia";
 import { MediaPreviewItem, MessageInfo } from "store/chat/type";
 import { TimeMessage } from "../messages/MessageContent";
+import useTheme from "hooks/useTheme";
 
 const IconFile = {
   [FILE_MAP.DOC]: FileDocIcon,
@@ -86,6 +87,18 @@ const AttachmentContent = ({
         }
       });
   }, [message]);
+
+  const {isDarkMode} = useTheme();
+
+  const renderBackgroundColor = useMemo(() => {
+    if(isCurrentUser) {
+      if(isDarkMode) return '#333333';
+      return "#EBF5FF"
+    }
+    return isDarkMode ? "#3a3b3c" : "#F7F7FD";
+  }, [isCurrentUser, isDarkMode]);
+
+
   return (
     <>
       {
@@ -217,7 +230,7 @@ const AttachmentContent = ({
                     alignItems="flex-end"
                     key={index}
                     sx={{
-                      backgroundColor: isCurrentUser ? "#EBF5FF" : "#F7F7FD",
+                      backgroundColor: renderBackgroundColor,
                       padding: "0.5rem 1rem",
                       borderRadius: "20px",
                     }}

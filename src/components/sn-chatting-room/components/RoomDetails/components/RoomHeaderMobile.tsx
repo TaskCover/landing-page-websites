@@ -30,7 +30,7 @@ const RoomHeaderMobile = ({
   };
 
   const PrivateChatLayout = () => {
-    if (currentConversation.userCount === 2) {
+    if (currentConversation?.userCount === 2) {
       return ChatDetailUserMobile;
     } else {
       return GroupChatMobile;
@@ -52,7 +52,7 @@ const RoomHeaderMobile = ({
   );
 
   const groupAvatar = useMemo(() => {
-    if (isGroup && currentConversation.usersCount > 3) {
+    if (isGroup && currentConversation?.usersCount > 3) {
       return (
         <ImageList
           sx={{
@@ -118,7 +118,7 @@ const RoomHeaderMobile = ({
         />
       );
     }
-  }, [isGroup, currentConversation.usersCount]);
+  }, [isGroup, currentConversation?.usersCount]);
 
   return (
     <Box

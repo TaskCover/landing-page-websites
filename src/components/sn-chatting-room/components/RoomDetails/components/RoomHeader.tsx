@@ -37,7 +37,6 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { mobileMode } = useGetScreenMode();
   const { onAddSnackbar } = useSnackbar();
-  const {onFetchGroupMembersMember} = useChat();
 
   const propsChatDetailInfo =
   useChatDetailInfo({ currentConversation, onSelectRoom });
@@ -120,7 +119,7 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
       justifyContent="space-between"
       height="76px"
       padding="10px"
-      bgcolor="var(--Gray0, #F7F7FD);"
+      bgcolor={ isDarkMode ? "#3a3b3c" :"var(--Gray0, #F7F7FD)"}
     >
       <Box
         width="100%"
@@ -187,7 +186,7 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
               sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
             />
             <Box display="flex" flexDirection="column" gap="4px">
-              <Typography variant="h6" color="var(--Black, #212121)">
+              <Typography variant="h6" color={isDarkMode ? 'white' :"var(--Black, #212121)"}>
                 {currentConversation?.name}
               </Typography>
               <Typography variant="body2" color="var(--Gray3, #999)">

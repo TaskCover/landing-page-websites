@@ -6,6 +6,7 @@ import InfoHeader from "../AccountInfo/InfoHeader";
 import MediaContent from "components/sn-chat/components/common/MediaContent";
 import FileContent from "components/sn-chat/components/common/FileContent";
 import LinkContent from "components/sn-chat/components/common/LinkContent";
+import useTheme from "hooks/useTheme";
 
 const TYPES = [
   {
@@ -24,6 +25,8 @@ const TYPES = [
 
 const StorageInfo: FC<DrawerInfoChatProps> = (props) => {
   const { extraDesktopMode } = useGetScreenMode();
+  const {isDarkMode} =  useTheme();
+
   return (
     <Box
       sx={{
@@ -31,9 +34,9 @@ const StorageInfo: FC<DrawerInfoChatProps> = (props) => {
         alignItems: "center",
         flexDirection: "column",
         width: extraDesktopMode ? "424px" : "272px",
-        height: extraDesktopMode ? "948px" : "677px",
+        height: extraDesktopMode ? "948px" : "681px",
         gap: "12px",
-        backgroundColor: "var(--Gray0, #F7F7FD)",
+        backgroundColor: isDarkMode ? "#313130": "var(--Gray0, #F7F7FD)",
       }}
     >
       <InfoHeader

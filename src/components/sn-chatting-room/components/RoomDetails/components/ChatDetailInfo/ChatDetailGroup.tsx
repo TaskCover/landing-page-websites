@@ -44,6 +44,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
         icon={GroupNameIcon}
         isOpenDrawer={props?.isDrawerOpen as boolean}
         currentConversation={props?.currentConversation as any}
+        callBackOpenDrawer={() => console.log('change name')}
       />
       <Box
         sx={{
@@ -52,6 +53,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
           borderRight: "none",
           borderLeft: "none",
           width: "100%",
+          margin: '24px 0'
         }}
       >
         {(props?.menuItems as any[])

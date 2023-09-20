@@ -7,11 +7,13 @@ import ChatItemLayout from "components/sn-chat/components/chat/ChatItemLayout";
 import { IChatItemInfo } from "store/chat/type";
 import { useDeepCompareMemo } from "hooks/useDeepCompare";
 import { useWSChat } from "store/chat/helpers";
+import useTheme from "hooks/useTheme";
 
 const ChatList = ({ onSelectRoom, idActive }) => {
   const { conversations } = useChattingActions();
   const { user } = useAuth();
-  
+  const { isDarkMode } = useTheme();
+
   useWSChat();
 
   const _conversations = useDeepCompareMemo(() => {
@@ -67,7 +69,7 @@ const ChatList = ({ onSelectRoom, idActive }) => {
           flexDirection="column"
           width="100%"
           height="90vh"
-          sx={{ overflowX: "scroll" }}
+          sx={{ overflowX: "scroll", bgcolor: isDarkMode ? "var(--mui-palette-grey-50)" : 'white' }}
         >        
             {renderConversation(idActive)}
         </Box>

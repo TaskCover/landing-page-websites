@@ -4,6 +4,7 @@ import { IChatItemInfo } from "store/chat/type";
 import ChatItemRender from "./ChatItemRender";
 import { renderTimeDiff } from "utils/index";
 import useTheme from "hooks/useTheme";
+import { useMemo } from "react";
 
 interface ChatItemProp {
   sessionId: string;
@@ -21,8 +22,20 @@ const ChatItemLayout = ({
 }: ChatItemProp) => {
   const { sx, ...props } = chatItemProps || {};
   const { lastMessage } = chatInfo || {};
-
   const { isDarkMode } = useTheme();
+
+  const renderColorByType = useMemo(() => 
+    {
+      if(isDarkMode){
+        if(isActive) return "#313130"
+        return "#3a3b3c"
+      }else {
+        if(isActive) return "#F7F7FD"
+        return "white"
+      }
+    }
+  , [isActive, isDarkMode])
+
   return (
     <Box
       onClick={() => onClickConvention(chatInfo)}
@@ -33,9 +46,9 @@ const ChatItemLayout = ({
         marginBottom: 1,
         cursor: "pointer",
         position: "relative",
-        background: isActive ? "#F7F7FD" : "white",
+        background: renderColorByType,
         ":hover": {
-          backgroundColor: isDarkMode ? "#3a3b3c" : "#F7F7FD",
+          backgroundColor: isDarkMode ? "#313130" : "#F7F7FD",
         },
         ...sx,
       }}

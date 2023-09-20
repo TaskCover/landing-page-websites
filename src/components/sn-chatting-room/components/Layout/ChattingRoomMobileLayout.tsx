@@ -1,21 +1,19 @@
 "use client";
 
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import HeaderMobile from "../HeaderMobile";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import { HeaderMobileProps, MobileScreenType } from "../../type";
 import { MobileScreen } from "../../const";
-import { useParams, usePathname } from "next/navigation";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { useAuth } from "store/app/selectors";
-import AddGroup from "components/sn-chat/chatGroup/AddGroup";
-import SwitchChat from "components/sn-chat/SwitchChat";
+import useTheme from "hooks/useTheme";
 
 interface Props {
   children: React.ReactNode;
-  setOpenAddGroup: (value: boolean) => void;
+  setOpenAddGroup?: (value: boolean) => void;
 }
 
 const styleIcon = { color: "white", fontSize: "24px", cursor: "pointer" };
@@ -23,9 +21,8 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({
   children,
   setOpenAddGroup,
 }) => {
-  const params = useParams();
-  const pathName = usePathname();
 
+  const {isDarkMode} = useTheme();
   const { onGetEmployees, items } = useEmployeesOfCompany();
   const { user } = useAuth();
 
@@ -45,13 +42,13 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({
           prefix: (
             <ArrowBackIosNewIcon
               sx={styleIcon}
-              onClick={() => setOpenAddGroup(false)}
+              onClick={() => setOpenAddGroup && setOpenAddGroup(false)}
             />
           ),
           suffix: (
             <ControlPointIcon
               sx={styleIcon}
-              onClick={() => setOpenAddGroup(true)}
+              onClick={() => setOpenAddGroup && setOpenAddGroup(true)}
             />
           ),
         };
@@ -68,6 +65,7 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        bgcolor: isDarkMode ? "var(--mui-palette-grey-50)" : 'white',
       }}
     >
       <HeaderMobile {...detectPropsWithScreen()} />

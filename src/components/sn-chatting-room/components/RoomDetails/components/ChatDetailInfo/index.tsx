@@ -9,6 +9,7 @@ import useGetScreenMode from "hooks/useGetScreenMode";
 import ChatDetailGroup from "./ChatDetailGroup";
 import { useActionGroupDetails } from "./useActionGroupDetails";
 import DrawerInfoChat from "../Drawer";
+import useTheme from "hooks/useTheme";
 
 export type ChatDetailInfoProps = {
   isOpen: boolean;
@@ -31,6 +32,19 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
       isOpen ? { width: extraDesktopMode ? "424px" : "272px" } : { width: 0 },
     [extraDesktopMode, isOpen],
   );
+
+  const { isDarkMode } = useTheme();
+
+  const renderColorByType = useMemo(() => {
+
+    if(currentConversation?.t === 'd'){
+      if(isDarkMode) return "#313130"
+      return  "var(--Gray0, #F7F7FD)"
+    }
+    if(isDarkMode) return "#313130"
+    return '#ffffff'
+
+  } , [isDarkMode, currentConversation?.t])
 
   const propsActionGroupDetail = useActionGroupDetails();
   return (
@@ -55,13 +69,10 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
           alignItems: "center",
           flexDirection: "column",
           width: extraDesktopMode ? "424px" : "272px",
-          height: extraDesktopMode ? "948px" : "677px",
-          backgroundColor:
-            currentConversation?.t === "d"
-              ? "var(--Gray0, #F7F7FD)"
-              : "#ffffff",
+          height: extraDesktopMode ? "948px" : "681px",
+          backgroundColor: renderColorByType,
           gap: "12px",
-          borderLeft: '1px solid #cccccc'
+          ...isDarkMode ? {} : {borderLeft: '1px solid #cccccc'},
         }}
       >
         <ChatDetailInfoHeader onClose={onClose} />
@@ -85,7 +96,7 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
         <Box>
           <Typography
             variant="h6"
-            color="var(--Black, #212121)"
+            color={isDarkMode ? 'white' :"var(--Black, #212121)"}
             sx={{ textAlign: "center" }}
           >
             {currentConversation?.name}

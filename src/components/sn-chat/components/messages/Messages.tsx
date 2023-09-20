@@ -23,6 +23,7 @@ import { formatDate, sleep } from "utils/index";
 import Typography from "@mui/material/Typography";
 import { nameMonthList } from "constant/index";
 import React from "react";
+import useTheme from "hooks/useTheme";
 
 interface MessagesProps {
   sessionId: string;
@@ -188,6 +189,8 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
+  const {isDarkMode} = useTheme();
+
   return (
     <>
       <Box
@@ -260,7 +263,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                   >
                     <Typography
                       sx={{
-                        backgroundColor: '#f1f1f1',
+                        backgroundColor: isDarkMode ? '#3a3b3c' : '#f1f1f1',
                         fontSize: '10px',
                         padding: '2px 5px',
                         borderRadius: '10px',

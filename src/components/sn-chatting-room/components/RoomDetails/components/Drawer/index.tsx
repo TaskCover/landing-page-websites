@@ -20,7 +20,7 @@ const DrawerInfoChat: React.FC<DrawerInfoChatProps> = (props) => {
   const styleDrawerOpen = props.isOpen
     ? { width: extraDesktopMode ? "424px" : "272px" }
     : { width: "0" };
-
+    
   return (
     <Drawer
       sx={{
