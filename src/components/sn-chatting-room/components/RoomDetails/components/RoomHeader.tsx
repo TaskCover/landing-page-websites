@@ -41,8 +41,13 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
   const propsChatDetailInfo =
   useChatDetailInfo({ currentConversation, onSelectRoom });
 
-  const { onSearchChatText, listSearchMessage, onSetStateSearchMessage, onSetStep, dataTransfer } =
-    useChat();
+  const {
+    onSearchChatText,
+    listSearchMessage,
+    onSetStateSearchMessage,
+    onSetStep,
+    dataTransfer,
+  } = useChat();
   const [search, setSearchText] = useState({
     text: "",
     isOpen: false,
@@ -85,7 +90,7 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
 
   const onOpenSearchMessage = () => {
     setSearchText({ isOpen: !search.isOpen, text: "" });
-  }; 
+  };
 
   useEffect(() => {
     handleSearchChatText();
@@ -104,8 +109,8 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
   }, [listSearchMessage?.length]);
 
   useEffect(() => {
-    closeDrawer()
-  }, [currentConversation])
+    closeDrawer();
+  }, [currentConversation]);
 
   return (
     <Box
@@ -214,13 +219,12 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
             color: "transparent",
           }}
           onClick={() => {
-            openDrawer()
+            openDrawer();
             propsChatDetailInfo?.onOpenDrawer();
-            propsChatDetailInfo?.onChangeTypeDrawer('group')            
-            if(currentConversation.t === 'd') {
-            onSetStep(STEP.ADD_GROUP, {...dataTransfer, isNew: true});
+            propsChatDetailInfo?.onChangeTypeDrawer("group");
+            if (currentConversation.t === "d") {
+              onSetStep(STEP.ADD_GROUP, { ...dataTransfer, isNew: true });
             }
-
           }}
         >
           <ProfileAdd />

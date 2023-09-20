@@ -32,6 +32,7 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
   const [detailParams, setDetailsParams] = useState<ParamChatState>(
     defaultChatParam as ParamChatState,
   );
+
   const { mobileMode } = useGetScreenMode();
 
   const onResetCurrentConversation = () => {

@@ -187,7 +187,6 @@ const ChatListTemp = () => {
                 borderRadius: "16px",
                 boxShadow: "2px 2px 24px 0px #0000001A",
                 backgroundColor: isDarkMode ? "#303130" : "white",
-
               }}
             >
               <Box

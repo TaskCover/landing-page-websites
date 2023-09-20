@@ -1,15 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { SNChat } from "./components";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { Box } from "@mui/material";
 import useFetchingChatting from "./hooks/useFetchingChatting";
 import ChattingRoomMobileLayout from "./components/Layout/ChattingRoomMobileLayout";
+import AddGroup from "components/sn-chat/chatGroup/AddGroup";
 
 const { RoomDetails, Sidebar, ChattingRoomLayout } = SNChat;
 
 const ChattingRoom = () => {
+  const [openAddGroup, setOpenAddGroup] = useState(false);
+
   const { mobileMode } = useGetScreenMode();
   const {
     onSelectRoom,
@@ -50,13 +53,17 @@ const ChattingRoom = () => {
               onSelectRoom={onSelectRoom}
             />
           ) : (
-            <ChattingRoomMobileLayout>
-              <Sidebar
-                currentConversation={currentConversation}
-                onSelectRoom={onSelectRoom}
-                onSearchText={onSearchText}
-                onChangeParamsConversation={onChangeParamsConversation}
-              />
+            <ChattingRoomMobileLayout setOpenAddGroup={setOpenAddGroup}>
+              {openAddGroup ? (
+                <AddGroup />
+              ) : (
+                <Sidebar
+                  currentConversation={currentConversation}
+                  onSelectRoom={onSelectRoom}
+                  onSearchText={onSearchText}
+                  onChangeParamsConversation={onChangeParamsConversation}
+                />
+              )}
             </ChattingRoomMobileLayout>
           )}
         </>

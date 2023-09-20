@@ -3,17 +3,18 @@ import GroupChatHeaderMobile from "./GroupChatHeaderMobile";
 import { useGroupChat } from "./useGroupChat";
 import EditGroupNameIcon from "icons/EditGroupNameIcon";
 import GroupChatItemMobile from "./GroupChatItemMobile";
-import MembersMobile from "../MembersMobile";
+import MembersMobile from "../GroupDrawerMobile/MembersMobile";
 import { IChatItemInfo } from "store/chat/type";
-import { useChat } from "store/chat/selectors";
+import GroupDrawerMobile from "../GroupDrawerMobile";
+import { useChatDetailInfoReturns } from "../ChatDetailUserMobile/UseChatDetailUserMobile";
 
-interface ChatDetailUserMobileProps {
+type GroupChatMobileProps = {
   isOpen: boolean;
   onClose: () => void;
   currentConversation: IChatItemInfo;
-}
+} & useChatDetailInfoReturns;
 
-const GroupChatMobile: React.FC<ChatDetailUserMobileProps> = ({
+const GroupChatMobile: React.FC<GroupChatMobileProps> = ({
   isOpen,
   onClose,
   currentConversation,
@@ -25,7 +26,9 @@ const GroupChatMobile: React.FC<ChatDetailUserMobileProps> = ({
     topMenuItems,
     midMenuItems,
     bottomMenuItems,
-  } = useGroupChat();
+    typeDrawer,
+    onChangeTypeDrawer,
+  } = useGroupChat({ currentConversation });
 
   const styleDrawerOpen = isOpen ? { width: "100%" } : { width: "0" };
 
@@ -149,6 +152,7 @@ const GroupChatMobile: React.FC<ChatDetailUserMobileProps> = ({
                 icon={item.icon}
                 text={item.text}
                 stroke={item.stroke}
+                handleOnClick={item.handleOnClick}
               />
             ))}
           </Box>
@@ -168,6 +172,7 @@ const GroupChatMobile: React.FC<ChatDetailUserMobileProps> = ({
                   stroke={item.stroke}
                   onOpenDrawer={onOpenDrawer}
                   isDrawerOpen={isDrawerOpen}
+                  handleOnClick={item.handleOnClick}
                 />
                 {item.borderBottom && (
                   <Box
@@ -209,10 +214,12 @@ const GroupChatMobile: React.FC<ChatDetailUserMobileProps> = ({
             ))}
           </Box>
         </Box>
-        <MembersMobile
+        <GroupDrawerMobile
           isOpen={isDrawerOpen}
           onClose={closeDrawer}
           currentConversation={currentConversation}
+          type={typeDrawer}
+          onChangeTypeDrawer={onChangeTypeDrawer}
         />
       </Box>
     </Drawer>
