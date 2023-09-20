@@ -1,6 +1,5 @@
 import { Box, IconButton, Typography } from "@mui/material";
 import ArrowDownIcon from "icons/ArrowDownIcon";
-import AccountInfoMobile from "../AccountInfoMobile";
 
 interface ChatDetailUserMenuItemMobileProps {
   text: string;
@@ -62,7 +61,7 @@ const GroupChatItemMobile: React.FC<ChatDetailUserMenuItemMobileProps> = (
         </Box>
 
         <IconButton
-          onClick={props.onOpenDrawer}
+          onClick={props.handleOnClick}
           sx={{
             display: "flex",
             width: "20px",

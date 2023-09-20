@@ -3,6 +3,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 interface AccountInfoMobileProps {
   onClose: () => void;
+  title?: string;
 }
 
 const AccountInfoMobileHeader: React.FC<AccountInfoMobileProps> = (props) => {
@@ -42,7 +43,7 @@ const AccountInfoMobileHeader: React.FC<AccountInfoMobileProps> = (props) => {
           color="var(--Black, #212121)"
           sx={{ width: "180px", textAlign: "center" }}
         >
-          Account infomation
+          {props.title ? props.title : "Account infomation"}
         </Typography>
       </Box>
     </Box>

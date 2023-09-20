@@ -4,14 +4,15 @@ import { IChatItemInfo } from "store/chat/type";
 import ChatDetailUserMenuItemMobile from "./ChatDetailUserMenuItemMobile";
 import DeleteChatIcon from "icons/DeleteChatIcon";
 import SearchDetailChatUser from "../SearchDetailChatUser";
-import AccountInfoMobile from "../AccountInfoMobile";
 import { useChatDetailUserMobile } from "./UseChatDetailUserMobile";
+import { useChatDetailInfoReturns } from "components/sn-chatting-room/hooks/useChatDetailInfo";
+import DrawerMobile from "../DrawerMobile";
 
-interface ChatDetailUserMobileProps {
+type ChatDetailUserMobileProps = {
   isOpen: boolean;
   onClose: () => void;
   currentConversation: IChatItemInfo;
-}
+} & useChatDetailInfoReturns;
 
 const ChatDetailUserMobile: React.FC<ChatDetailUserMobileProps> = ({
   isOpen,
@@ -24,6 +25,8 @@ const ChatDetailUserMobile: React.FC<ChatDetailUserMobileProps> = ({
     searchConversationShow,
     handleCloseAccountInfoMobile,
     handleSearchConversation,
+    typeDrawer,
+    onChangeTypeDrawer,
   } = useChatDetailUserMobile({ currentConversation });
 
   const styleDrawerOpen = isOpen ? { width: "100%" } : { width: "0" };
@@ -108,7 +111,9 @@ const ChatDetailUserMobile: React.FC<ChatDetailUserMobileProps> = ({
                 icon={item.icon}
                 stroke={item.stroke}
                 borderBottom={item.borderBottom}
-                handleOnClick={item.handleOnClick}
+                handleOnClick={() =>
+                  item?.handleOnClick && item.handleOnClick()
+                }
               />
             ))}
           </Box>
@@ -134,10 +139,12 @@ const ChatDetailUserMobile: React.FC<ChatDetailUserMobileProps> = ({
           onClose={handleSearchConversation}
           currentConversation={currentConversation}
         />
-        <AccountInfoMobile
+        <DrawerMobile
           isOpen={accountInfoShow}
           onClose={handleCloseAccountInfoMobile}
           currentConversation={currentConversation}
+          onChangeTypeDrawer={onChangeTypeDrawer}
+          type={typeDrawer}
         />
       </Box>
     </Drawer>

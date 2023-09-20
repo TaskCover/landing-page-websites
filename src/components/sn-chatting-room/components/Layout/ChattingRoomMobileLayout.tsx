@@ -8,16 +8,21 @@ import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import { HeaderMobileProps, MobileScreenType } from "../../type";
 import { MobileScreen } from "../../const";
 import { useParams, usePathname } from "next/navigation";
-import AddMemberToGroup from "../RoomDetails/components/AddMemberToGroup";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { useAuth } from "store/app/selectors";
+import AddGroup from "components/sn-chat/chatGroup/AddGroup";
+import SwitchChat from "components/sn-chat/SwitchChat";
 
 interface Props {
   children: React.ReactNode;
+  setOpenAddGroup: (value: boolean) => void;
 }
 
 const styleIcon = { color: "white", fontSize: "24px", cursor: "pointer" };
-const ChattingRoomMobileLayout: React.FC<Props> = ({ children }) => {
+const ChattingRoomMobileLayout: React.FC<Props> = ({
+  children,
+  setOpenAddGroup,
+}) => {
   const params = useParams();
   const pathName = usePathname();
 
@@ -30,17 +35,6 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({ children }) => {
     }
   };
 
-  const [openDrawer, setOpenDrawer] = useState(false);
-
-  const handleOpenDrawer = () => {
-    setOpenDrawer(true);
-    getEmployeesByCompany();
-  };
-
-  const handleCloseDrawer = () => {
-    setOpenDrawer(false);
-  };
-
   const detectPropsWithScreen = () => {
     const propsScreenHandler: Partial<{
       [key in MobileScreenType]: () => HeaderMobileProps;
@@ -48,9 +42,17 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({ children }) => {
       [MobileScreen.CHAT]: () => {
         return {
           title: "Chat",
-          prefix: <ArrowBackIosNewIcon sx={styleIcon} />,
+          prefix: (
+            <ArrowBackIosNewIcon
+              sx={styleIcon}
+              onClick={() => setOpenAddGroup(false)}
+            />
+          ),
           suffix: (
-            <ControlPointIcon sx={styleIcon} onClick={handleOpenDrawer} />
+            <ControlPointIcon
+              sx={styleIcon}
+              onClick={() => setOpenAddGroup(true)}
+            />
           ),
         };
       },
@@ -70,11 +72,6 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({ children }) => {
     >
       <HeaderMobile {...detectPropsWithScreen()} />
       {children}
-      <AddMemberToGroup
-        isOpen={openDrawer}
-        onClose={handleCloseDrawer}
-        items={items}
-      />
     </Box>
   );
 };
