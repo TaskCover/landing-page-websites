@@ -11,6 +11,7 @@ export interface DrawerInfoChatProps {
   currentConversation: IChatItemInfo;
   type: string;
   onChangeTypeDrawer?: (type: string) => void;
+  onSelectNewGroup?: any
 }
 
 const DrawerInfoChat: React.FC<DrawerInfoChatProps> = (props) => {
@@ -37,7 +38,7 @@ const DrawerInfoChat: React.FC<DrawerInfoChatProps> = (props) => {
       open={props.isOpen}
     >
       {props?.type === "group" ? (
-        <AddGroup callbackBackIcon={() => props.onClose()} />
+        <AddGroup callbackBackIcon={() => props.onClose()} onSelectNewGroup={(value) => props?.onSelectNewGroup(value)} />
       ) : props?.type === "account" ? (
         <AccountInfo {...props} />
       ) : (

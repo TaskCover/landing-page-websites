@@ -1,12 +1,12 @@
 import { Box, CircularProgress } from "@mui/material";
 import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
-import React, { useCallback, useRef, useState } from "react";
+import React from "react";
 import RoomHeader from "./components/RoomHeader";
 import Conversation from "components/sn-chat/components/conversation/Conversation";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import RoomHeaderMobile from "./components/RoomHeaderMobile";
 
-const RoomDetails = ({ currentConversation, onResetCurrentConversation }) => {
+const RoomDetails = ({ currentConversation, onResetCurrentConversation, onSelectRoom }) => {
   const { loading } = useChattingActions();
   const { mobileMode } = useGetScreenMode();
 
@@ -23,7 +23,7 @@ const RoomDetails = ({ currentConversation, onResetCurrentConversation }) => {
           onResetCurrentConversation={onResetCurrentConversation}
         />
       ) : (
-        <RoomHeader currentConversation={currentConversation} />
+        <RoomHeader onSelectRoom={onSelectRoom} currentConversation={currentConversation} />
       )}
       <Conversation wrapperMessageSx={{ height: "70vh" }} />
     </Box>

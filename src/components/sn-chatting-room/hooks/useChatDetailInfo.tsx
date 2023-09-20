@@ -28,14 +28,17 @@ export interface useChatDetailInfoReturns {
   menuItems: MenuItem[];
   typeDrawer: "account" | "link" | "media" | "file" | "group";
   onChangeTypeDrawer: (type: string) => void;
+  onSelectRoom: any
 }
   
 export const useChatDetailInfo = ({
     currentConversation,
+    onSelectRoom
   }: {
     currentConversation: IChatItemInfo;
+    onSelectRoom: any
   }): useChatDetailInfoReturns => {
-    const { onGetUserInfo, onGetChatAttachments, onGetChatUrls } = useChat();
+    const { onGetUserInfo, onGetChatAttachments, onGetChatUrls, onGetAllConvention, conversationPaging} = useChat();
   
     const [typeDrawer, setTypeDrawer] = useState<keyof typeof TypeDrawer | any>(TypeDrawer.account);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -113,13 +116,20 @@ export const useChatDetailInfo = ({
       closeDrawer();
     }, [currentConversation])
     
+    const onSelectedRom = (value) => {      
+      if(onSelectRoom){
+        onSelectRoom(value)
+      }
+    }
+
     return {
       onOpenDrawer,
       closeDrawer,
       isDrawerOpen,
       menuItems,
       typeDrawer,
-      onChangeTypeDrawer
+      onChangeTypeDrawer,
+      onSelectRoom: onSelectedRom,
     };
   };
   

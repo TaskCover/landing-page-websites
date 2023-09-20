@@ -10,8 +10,8 @@ interface ChatDetailInfoMenuItemProps {
   icon: JSX.ElementType;
   isOpenDrawer: boolean;
   currentConversation: IChatItemInfo;
-  callBackOpenDrawer: () => void;
-  onOpenDrawer: () => void
+  callBackOpenDrawer?: () => void;
+  onOpenDrawer?: () => void
 
 }
 
@@ -78,7 +78,7 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
             alignItems: "center",
           }}
         >
-          <IconButton onClick={onOpenDrawer}>
+          {props?.callBackOpenDrawer ? <IconButton onClick={onOpenDrawer}>
             <ArrowDownIcon
               sx={{
                 ml: "auto",
@@ -87,7 +87,7 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
                 cursor: "pointer",
               }}
             />
-          </IconButton>
+          </IconButton> : '' }
         </Box>
       </Box>
 

@@ -18,8 +18,6 @@ const RoomHeaderMobile = ({
   currentConversation,
   onResetCurrentConversation,
 }) => {
-  const { isDarkMode } = useTheme();
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   // Handler to open the drawer.
   const openDrawer = () => {

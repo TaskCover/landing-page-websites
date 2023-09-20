@@ -2,16 +2,19 @@ import { Drawer, Box, Typography, Avatar } from "@mui/material";
 import ChatDetailInfoHeader from "./ChatDetailInfoHeader";
 import ChatDetailInfoMenuItem from "./ChatDetailInfoMenuItem";
 import { IChatItemInfo } from "store/chat/type";
-import useGetScreenMode from "hooks/useGetScreenMode";
 import { useMemo } from "react";
-import DrawerInfoChat from "../Drawer";
 import { useChatDetailInfoReturns } from "components/sn-chatting-room/hooks/useChatDetailInfo";
+import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
+import useGetScreenMode from "hooks/useGetScreenMode";
+import ChatDetailGroup from "./ChatDetailGroup";
+import { useActionGroupDetails } from "./useActionGroupDetails";
+import DrawerInfoChat from "../Drawer";
 
-type ChatDetailInfoProps = {
+export type ChatDetailInfoProps = {
   isOpen: boolean;
   onClose: () => void;
   currentConversation: IChatItemInfo;
-} & useChatDetailInfoReturns
+} & useChatDetailInfoReturns;
 
 const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
   isOpen,
@@ -20,14 +23,16 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
   ...props
 }) => {
   const { extraDesktopMode } = useGetScreenMode();
+
   const { onOpenDrawer, isDrawerOpen, closeDrawer, menuItems, typeDrawer, onChangeTypeDrawer } = props
-  
+
   const styleDrawerOpen = useMemo(
     () =>
       isOpen ? { width: extraDesktopMode ? "424px" : "272px" } : { width: 0 },
     [extraDesktopMode, isOpen],
   );
 
+  const propsActionGroupDetail = useActionGroupDetails();
   return (
     <Drawer
       sx={{
@@ -51,7 +56,10 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
           flexDirection: "column",
           width: extraDesktopMode ? "424px" : "272px",
           height: extraDesktopMode ? "948px" : "677px",
-          backgroundColor: "var(--Gray0, #F7F7FD)",
+          backgroundColor:
+            currentConversation?.t === "d"
+              ? "var(--Gray0, #F7F7FD)"
+              : "#ffffff",
           gap: "12px",
         }}
       >
@@ -91,17 +99,21 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
             padding: "0px 12px",
           }}
         >
-          {menuItems.map((item, index) => (
-            <ChatDetailInfoMenuItem
-              key={index}
-              text={item.text}
-              icon={item.icon}
-              isOpenDrawer={isDrawerOpen}
-              currentConversation={currentConversation}
-              onOpenDrawer={onOpenDrawer}
-              callBackOpenDrawer={item.callback}
-            />
-          ))}
+          {currentConversation?.t === "d" ? (
+            menuItems.map((item, index) => (
+              <ChatDetailInfoMenuItem
+                key={index}
+                text={item.text}
+                icon={item.icon}
+                isOpenDrawer={isDrawerOpen}
+                currentConversation={currentConversation}
+                onOpenDrawer={onOpenDrawer}
+                callBackOpenDrawer={item.callback}
+              />
+            ))
+          ) : (
+            <ChatDetailGroup currentConversation={currentConversation} {...props} {...propsActionGroupDetail}/>
+          )}
         </Box>
         {isDrawerOpen ? (
           <DrawerInfoChat
@@ -110,11 +122,13 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
             onClose={closeDrawer}
             currentConversation={currentConversation}
             onChangeTypeDrawer={onChangeTypeDrawer}
+            onSelectNewGroup={props.onSelectRoom}
           />
         ) : null}
       </Box>
     </Drawer>
   );
 };
+
 
 export default ChatDetailInfo;

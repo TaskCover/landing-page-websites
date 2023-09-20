@@ -38,6 +38,7 @@ const ChattingRoom = () => {
           <RoomDetails
             currentConversation={currentConversation}
             onResetCurrentConversation={onResetCurrentConversation}
+            onSelectRoom={onSelectRoom}
           />
         </ChattingRoomLayout>
       ) : (
@@ -46,6 +47,7 @@ const ChattingRoom = () => {
             <RoomDetails
               currentConversation={currentConversation}
               onResetCurrentConversation={onResetCurrentConversation}
+              onSelectRoom={onSelectRoom}
             />
           ) : (
             <ChattingRoomMobileLayout>

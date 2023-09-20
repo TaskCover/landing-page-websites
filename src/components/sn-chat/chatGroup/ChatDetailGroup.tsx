@@ -24,6 +24,15 @@ import { uploadFile } from "store/chat/media/actionMedia";
 import { useAppDispatch } from "store/hooks";
 import useTheme from "hooks/useTheme";
 
+export const TYPE_POPUP = {
+  DELETE: "DELETE",
+  LEAVE_AND_NEW_ADD: "LEAVE_AND_NEW_ADD",
+  LEAVE_OWNER: "LEAVE_OWNER",
+  LEAVE_MEMBER: "LEAVE_MEMBER",
+  NEW_ADMIN: "NEW_ADMIN",
+  RENAME_GROUP: "RENAME_GROUP",
+};
+
 const ChatDetailGroup = (props) => {
   const dispatch = useAppDispatch();
   const { isDarkMode } = useTheme();
@@ -54,14 +63,7 @@ const ChatDetailGroup = (props) => {
 
   const commonT = useTranslations(NS_COMMON);
   const commonChatBox = useTranslations(NS_CHAT_BOX);
-  const TYPE_POPUP = {
-    DELETE: "DELETE",
-    LEAVE_AND_NEW_ADD: "LEAVE_AND_NEW_ADD",
-    LEAVE_OWNER: "LEAVE_OWNER",
-    LEAVE_MEMBER: "LEAVE_MEMBER",
-    NEW_ADMIN: "NEW_ADMIN",
-    RENAME_GROUP: "RENAME_GROUP",
-  };
+
   const init = {
     type: "",
     statusPopup: false,

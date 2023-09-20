@@ -23,9 +23,10 @@ import useGetScreenMode from "hooks/useGetScreenMode";
 
 interface AddGroupProps {
   callbackBackIcon?: any;
+  onSelectNewGroup?: any;
 }
 
-const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon }) => {
+const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup }) => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
   const [employeeNameSelected, setEmployeeNameSelected] = useState<any>({});
@@ -67,6 +68,11 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon }) => {
       return;
     }
     onAddSnackbar(commonT("success"), "success");
+    if(!mobileMode) {
+      console.log(result?.payload?.group, 'result?.payload?.group');
+      onSelectNewGroup(result?.payload?.group);
+      return;
+    }
     onSetStep(STEP.CHAT_GROUP, !dataTransfer?.isNew ? dataTransfer : result?.payload?.group);
     onSetRoomId(dataTransfer?.isNew ? result?.payload?.group?._id : dataTransfer?._id)
   };

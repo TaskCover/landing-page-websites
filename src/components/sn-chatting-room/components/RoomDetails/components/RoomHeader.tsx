@@ -31,7 +31,7 @@ import {
 import { useChatDetailInfo } from "components/sn-chatting-room/hooks/useChatDetailInfo";
 import { STEP } from "store/chat/type";
 
-const RoomHeader = ({ currentConversation }) => {
+const RoomHeader = ({ currentConversation, onSelectRoom }) => {
   const { isDarkMode } = useTheme();
   const t = useTranslations(NS_COMMON);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -39,7 +39,7 @@ const RoomHeader = ({ currentConversation }) => {
   const { onAddSnackbar } = useSnackbar();
 
   const propsChatDetailInfo =
-  useChatDetailInfo({ currentConversation });
+  useChatDetailInfo({ currentConversation, onSelectRoom });
 
   const { onSearchChatText, listSearchMessage, onSetStateSearchMessage, onSetStep, dataTransfer } =
     useChat();
