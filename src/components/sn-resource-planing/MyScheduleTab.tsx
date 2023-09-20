@@ -15,12 +15,13 @@ import { ResourceInput } from "@fullcalendar/resource";
 import BlueArrowIcon from "icons/BlueArrowIcon";
 import RedArrowIcon from "icons/RedArrowIcon";
 import GrayArrowIcon from "icons/GrayArrowIcon";
-import Image from "next/image";
 import PlusIcon from "icons/PlusIcon";
 import TimeHeader from "./TimeHeader";
 import { useResourceDate } from "store/resourcePlanning/selector";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
+import CreateBooking from "./modals/CreateBooking";
+import ArrowDownIcon from "icons/ArrowDownIcon";
 
 const MyScheduleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -37,6 +38,7 @@ const MyScheduleTab = () => {
   const [resources, setResources] = React.useState<typeof EXAMPLE_DATA>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
+  const [isOpenCreate, setIsOpenCreate] = React.useState(false);
 
   const generateDateRange = () => {
     const start_date = dayjs(filters?.start_date);
@@ -59,7 +61,11 @@ const MyScheduleTab = () => {
   };
 
   React.useEffect(() => {
-    setResources(EXAMPLE_DATA);
+    // TODO: filter resources to for my schedule
+    const fitleredResources = EXAMPLE_DATA.filter(
+      (item) => item.id === "camp-1",
+    );
+    setResources(fitleredResources);
   }, []);
 
   React.useEffect(() => {
@@ -81,86 +87,9 @@ const MyScheduleTab = () => {
       if (type === "campaign") {
         // Campaign has been moved, compute diff and update each steps
         if (!calendarRef.current) return null;
-        // const diff = event.start.getTime() - oldEvent.start.getTime();
-        // calendarRef.current
-        //   .getApi()
-        //   .getEvents()
-        //   .filter(
-        //     (currentEvent: {
-        //       extendedProps: { type: any; campaignId: any };
-        //     }) => {
-        //       const { type: currEventType, campaignId: currEventCampaignId } =
-        //         currentEvent.extendedProps;
-        //       return (
-        //         currEventType === 'step' && currEventCampaignId === campaignId
-        //       );
-        //     }
-        //   )
-        //   .forEach(
-        //     (campaignEvent: {
-        //       start: any;
-        //       end: any;
-        //       setDates: (arg0: Date, arg1: Date) => void;
-        //     }) => {
-        //       const start = campaignEvent.start;
-        //       const end = campaignEvent.end;
-        //       campaignEvent.setDates(
-        //         new Date(start.getTime() + diff),
-        //         new Date(end.getTime() + diff)
-        //       );
-        //     }
-        //   );
       } else if (type === "step") {
         // Step has been resized or move, update the campaign dates
         if (!calendarRef.current) return null;
-        // const campaignEvent = calendarRef.current
-        //   .getApi()
-        //   .getEvents()
-        //   .find(
-        //     ({ extendedProps: evt }) =>
-        //       evt.type === 'campaign' && evt.campaignId === campaignId
-        //   );
-        // const { first, last } = calendarRef.current
-        //   .getApi()
-        //   .getEvents()
-        //   .filter(
-        //     (currentEvent: {
-        //       extendedProps: { type: any; campaignId: any };
-        //     }) => {
-        //       const { type: currEventType, campaignId: currEventCampaignId } =
-        //         currentEvent.extendedProps;
-        //       return (
-        //         currEventType === 'step' && currEventCampaignId === campaignId
-        //       );
-        //     }
-        //   )
-        //   .reduce(
-        //     (
-        //       acc: {
-        //         first: { start: { getTime: () => number } } | null;
-        //         last: { end: { getTime: () => number } } | null;
-        //       },
-        //       evt: {
-        //         start: { getTime: () => number };
-        //         end: { getTime: () => number };
-        //       }
-        //     ) => {
-        //       return {
-        //         first:
-        //           acc.first === null ||
-        //           acc.first.start.getTime() > evt.start.getTime()
-        //             ? evt
-        //             : acc.first,
-        //         last:
-        //           acc.last === null ||
-        //           acc.last.end.getTime() < evt.end.getTime()
-        //             ? evt
-        //             : acc.last,
-        //       };
-        //     },
-        //     { first: null, last: null }
-        //   );
-        // if (campaignEvent) campaignEvent.setDates(first.start, last.end);
       }
     };
   const checkEventType = (value) => {
@@ -184,6 +113,18 @@ const MyScheduleTab = () => {
           background: "none",
         };
     }
+  };
+
+  const handleCollapseToggle = (itemId: string) => {
+    if (selectedResource.includes(itemId)) {
+      setSelectedResource(selectedResource.filter((id) => id !== itemId));
+    } else {
+      setSelectedResource([...selectedResource, itemId]);
+    }
+    const collapseButton = document.querySelectorAll(
+      `td[data-resource-id="${itemId}"][role="gridcell"] > div > div > span.fc-datagrid-expander`,
+    ) as NodeListOf<HTMLElement>;
+    if (collapseButton[0]) collapseButton[0].click();
   };
   const getEvents = () =>
     resources
@@ -408,8 +349,7 @@ const MyScheduleTab = () => {
                     sx={{
                       color: "success.main",
                     }}
-                    // startIcon={<AddIcon />}
-                    // onClick={() => setIsOpenCreate(true)}
+                    onClick={() => setIsOpenCreate(true)}
                   >
                     {resourceT("schedule.action.addBooking")}
                   </Button>
@@ -428,7 +368,7 @@ const MyScheduleTab = () => {
                       background: "#E1F0FFB2",
                     },
                   }}
-                  // onClick={() => handleCollapseToggle(resource._resource.id)}
+                  onClick={() => handleCollapseToggle(resource._resource.id)}
                 >
                   <Grid
                     container
@@ -455,14 +395,13 @@ const MyScheduleTab = () => {
                           UI/UX
                         </Typography>
                       </Box>
-                      <Box
-                        component="img"
+                      <ArrowDownIcon
                         sx={{
                           width: "20px",
                           ml: 2,
                           transform: isActive
-                            ? "rotate(180deg)"
-                            : "rotate(0deg)",
+                            ? "rotate(-90deg)"
+                            : "rotate(90deg)",
                           transitionDelay: "all ease 0.25s",
                         }}
                       />
@@ -557,6 +496,10 @@ const MyScheduleTab = () => {
           // eventDrop={handleEventChange(calendarRef, false)}
         />
       </Box>
+      <CreateBooking
+        onClose={() => setIsOpenCreate(false)}
+        open={isOpenCreate}
+      />
     </Stack>
   );
 };
