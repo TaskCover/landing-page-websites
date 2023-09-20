@@ -51,7 +51,8 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup }) => {
     onSetStep,
     onCreateDirectMessageGroup,
     onAddMembers2Group,
-    currStep
+    currStep,
+    onFetchGroupMembersMember
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -61,6 +62,12 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup }) => {
   useEffect(() => {
     onGetEmployees(user?.company ?? "", {email: textSearch, fullname: textSearch, pageIndex: 0, pageSize: 30 });
   }, [onGetEmployees, textSearch, user?.company]);
+
+  useEffect(() => {
+    onFetchGroupMembersMember({
+      roomId: dataTransfer?._id,
+    });
+  }, [])
 
   const handleSuccess = (result) => {
     if (result?.error) {
