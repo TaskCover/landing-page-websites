@@ -399,7 +399,7 @@ const Information = () => {
       </Stack>
 
       {
-        !isAddDescription && (
+        task?.description && !isAddDescription && (
               <InformationItem
                   label={`${commonT("form.title.description")}:`}
                   minHeight={!isAddDescription ? 150 : ''}
