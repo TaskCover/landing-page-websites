@@ -204,7 +204,7 @@ export const useChat = () => {
     async (params?: Omit<UrlsQuery, "userId" | "authToken">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
-      if(!params) return;
+      if (!params) return;
       await dispatch(
         getChatUrls({
           roomId: params?.roomId ?? roomId,
@@ -237,7 +237,7 @@ export const useChat = () => {
   );
 
   const onSearchChatText = useCallback(
-    async (params : Omit<MessageSearchInfoRequest, "authToken" | "userId" >) => {
+    async (params: Omit<MessageSearchInfoRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
@@ -294,9 +294,7 @@ export const useChat = () => {
   );
 
   const onSetDataTransfer = useCallback(
-    (data: any) => {      
-      console.log(data, 'data');
-      
+    (data: any) => {
       dispatch(setDataTransfer(data));
     },
     [dispatch],
@@ -426,9 +424,9 @@ export const useChat = () => {
   const onGetChatAttachments = useCallback(
     async (params: Omit<ChatAttachmentsRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
-      const userId = user?.["id_rocket"] ?? "";                  
-      if(!(params?.roomType ?? (conversationInfo?.t as RoomType))) return;
-      if((params?.roomId ?? roomId).length === 0) return;
+      const userId = user?.["id_rocket"] ?? "";
+      if (!(params?.roomType ?? (conversationInfo?.t as RoomType))) return;
+      if ((params?.roomId ?? roomId).length === 0) return;
       return await dispatch(
         getChatAttachments({
           authToken,
@@ -512,7 +510,9 @@ export const useChat = () => {
 
   const onChangeGroupAvatar = useCallback(
     async (file: File, roomId: string) => {
-      const result = await dispatch(uploadFile({ endpoint: 'files/upload-link', file }));
+      const result = await dispatch(
+        uploadFile({ endpoint: "files/upload-link", file }),
+      );
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       return await dispatch(
@@ -520,7 +520,7 @@ export const useChat = () => {
           authToken,
           userId,
           roomId,
-          avatarUrl: result?.payload?.download ?? '',
+          avatarUrl: result?.payload?.download ?? "",
         }),
       );
     },
@@ -596,12 +596,9 @@ export const useChat = () => {
     [dispatch],
   );
 
-  const onResetDataTransfer = useCallback(
-    async () => {
-      return dispatch(resetDataTransfer());
-    },
-    [dispatch],
-  );
+  const onResetDataTransfer = useCallback(async () => {
+    return dispatch(resetDataTransfer());
+  }, [dispatch]);
 
   return {
     convention,
@@ -681,6 +678,6 @@ export const useChat = () => {
     onCloseDrawer,
     typeDrawerChat,
     isOpenInfoChat,
-    onResetDataTransfer
+    onResetDataTransfer,
   };
 };

@@ -42,7 +42,6 @@ interface MessagesProps {
   unReadMessage: UnreadUserInfo[];
   onRefetch: (page: number) => void;
   wrapperMessageSx: any;
-
 }
 
 type MessageHandle = {
@@ -67,7 +66,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     focusMessage,
     unReadMessage,
     onRefetch,
-    wrapperMessageSx
+    wrapperMessageSx,
   }: MessagesProps,
   ref,
 ) => {
@@ -189,7 +188,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
-  const {isDarkMode} = useTheme();
+  const { isDarkMode } = useTheme();
 
   return (
     <>
@@ -204,9 +203,11 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           gap: "0.5rem",
           flexDirection: "column",
           overflow: "auto",
-          
+
           padding: "1rem 1rem 0 1rem",
-          ...!!wrapperMessageSx ? {...wrapperMessageSx} : {height: "100%"}
+          ...(!!wrapperMessageSx
+            ? { ...wrapperMessageSx }
+            : { height: "100%" }),
         }}
       >
         {messages.map((message, index) => {
@@ -256,21 +257,29 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                   />
                 </MessageLayout>
               ) : (
-                  <Box
+                <Box
+                  sx={{
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography
                     sx={{
-                      textAlign: 'center',
+                      backgroundColor: isDarkMode ? "#3a3b3c" : "#f1f1f1",
+                      fontSize: "10px",
+                      padding: "2px 5px",
+                      borderRadius: "10px",
+                      display: "inline-block",
                     }}
                   >
-                    <Typography
-                      sx={{
-                        backgroundColor: isDarkMode ? '#3a3b3c' : '#f1f1f1',
-                        fontSize: '10px',
-                        padding: '2px 5px',
-                        borderRadius: '10px',
-                        display: 'inline-block',
-                      }}
-                    >{message?.u?.username} {message?.t === 'au' ? 'added' : (message?.t === 'ru' ? 'removed' : message?.t)} {message?.msg} ({getTimeStamp(message?.ts ?? '')})</Typography>
-                  </Box>
+                    {message?.u?.username}{" "}
+                    {message?.t === "au"
+                      ? "added"
+                      : message?.t === "ru"
+                      ? "removed"
+                      : message?.t}{" "}
+                    {message?.msg} ({getTimeStamp(message?.ts ?? "")})
+                  </Typography>
+                </Box>
               )}
               {hasNextDay && (
                 <Typography

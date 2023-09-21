@@ -130,7 +130,7 @@ const chatSlice = createSlice({
       state.typeList = action.payload;
     },
     setDataTransfer: (state, action) => {
-      if (action?.payload?.dataTransfer && Object.keys(action.payload.dataTransfer).length > 0) {
+      if (action?.payload && Object.keys(action.payload).length > 0) {
         state.dataTransfer = action.payload;
       }
     },

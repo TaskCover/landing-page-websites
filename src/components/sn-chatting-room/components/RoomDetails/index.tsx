@@ -7,29 +7,34 @@ import RoomHeaderMobile from "./components/RoomHeaderMobile";
 import { useChat } from "store/chat/selectors";
 
 const RoomDetails = () => {
-  const { mobileMode } = useGetScreenMode();
-  const { isFetching: loading } = useChat();
-  return !loading ? (
-    <Box
+  const { mobileMode, extraDesktopMode } = useGetScreenMode();
+  const { isOpenInfoChat } = useChat();
+
+  return  <Box
       width="100%"
       display="flex"
       justifyContent="space-between"
       flexDirection="column"
     >
       {mobileMode ? <RoomHeaderMobile /> : <RoomHeader />}
-      <Conversation wrapperMessageSx={{ height: "70vh" }} />
+      <Conversation
+        wrapperMessageSx={{
+          height: "70vh",
+          ...(isOpenInfoChat
+            ? {
+                width: `calc(100% - ${extraDesktopMode ? "424px" : "272px"})`,
+              }
+            : {}),
+        }}
+        wrapperInputSx={{
+          ...(isOpenInfoChat
+            ? {
+                width: `calc(100% - ${extraDesktopMode ? "424px" : "272px"})`,
+              }
+            : {}),
+        }}
+      />
     </Box>
-  ) : (
-    <Box
-      width="100%"
-      height="100%"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <CircularProgress />
-    </Box>
-  );
 };
 
 export default RoomDetails;

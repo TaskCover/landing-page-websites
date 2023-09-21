@@ -7,7 +7,6 @@ import { NS_AUTH } from "constant/index";
 import { useChat } from "store/chat/selectors";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import useTheme from "hooks/useTheme";
-import { IChatItemInfo } from "store/chat/type";
 
 const mapperDataToInfo = (partnerInfo: Partial<UserInfo>) => ({
   fullName: partnerInfo.fullname,
@@ -22,7 +21,7 @@ const AccountInfo = () => {
   const t = useTranslations(NS_AUTH);
   const {isDarkMode} =  useTheme();
 
-  const {dataTransfer: currentConversation, onCloseDrawer} = useChat();
+  const {dataTransfer: currentConversation, onSetDrawerType} = useChat();
   return (
     <Box
       sx={{
@@ -30,15 +29,12 @@ const AccountInfo = () => {
         alignItems: "center",
         flexDirection: "column",
         width: extraDesktopMode ? "424px" : "272px",
-        height: extraDesktopMode ? "948px" : "681px",
+        height: extraDesktopMode ? "948px" : "730px",
         gap: "12px",
         backgroundColor: isDarkMode ? "#313130": "var(--Gray0, #F7F7FD)",
       }}
     >
-      <AccountInfoHeader
-        onClose={() => onCloseDrawer('info')}
-        currentConversation={currentConversation as IChatItemInfo}
-      />
+      <AccountInfoHeader onClose={() => onSetDrawerType('info')} />
       <Box
         sx={{
           display: "flex",

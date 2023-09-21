@@ -50,8 +50,7 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
 
   useEffect(() => {
     if (mobileMode) return;
-    if (conversations?.length > 0) {
-      console.log(conversations[0], 'conversations[0]');
+    if (conversations?.length > 0 && params?.text?.length === 0) {
       onSelectRoom(conversations[0]);
     }
   }, [conversations, onSelectRoom]);  

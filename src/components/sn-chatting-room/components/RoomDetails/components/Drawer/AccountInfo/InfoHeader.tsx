@@ -1,8 +1,6 @@
 import { Box, Typography, IconButton } from "@mui/material";
 import useTheme from "hooks/useTheme";
-import ProfileAdd from "icons/ProfileAdd";
 import { useChat } from "store/chat/selectors";
-import { IChatItemInfo } from "store/chat/type";
 
 interface AccountInfoProps {
   onClose: () => void;
@@ -16,12 +14,13 @@ const InfoHeader: React.FC<AccountInfoProps> = (props) => {
     <Box
       sx={{
         display: "flex",
-        height: "76px",
+        height: "77px",
         alignItems: "center",
         justifyContent: "space-between",
         alignSelf: "stretch",
         padding: "16px 8px",
         backgroundColor:  isDarkMode ? "var(--mui-palette-grey-50)": "var(--White, #fff)",
+        width: "100%",
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
@@ -29,10 +28,15 @@ const InfoHeader: React.FC<AccountInfoProps> = (props) => {
           sx={{
             display: "flex",
             alignItems: "center",
-            transform: "rotate(0deg)",
+            position: 'relative',
+            justifyContent: "center",
+            width: '100%'
           }}
         >
-          <IconButton onClick={props.onClose}>
+          <IconButton onClick={props.onClose} sx={{
+            position: 'absolute',
+            left: '10px',
+          }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="32"

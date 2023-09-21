@@ -41,7 +41,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
   return (
     <>
       <ChatDetailInfoMenuItem
-        text={"Group Name: " + currentConversation?.name}
+        text={"Group Name: " + currentConversation?.name?.replaceAll("_", " ")}
         icon={GroupNameIcon}
         callBackOpenDrawer={() => props?.setShowPopup((pre) => ({
           ...pre,
@@ -51,7 +51,6 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
           content: <></>,
           actionType: 0,
         }))}
-        currentConversation={currentConversation}
         callBackIcon={EditGroupNameIcon}
       />
       <Box

@@ -11,7 +11,7 @@ const ChatDetailInfoHeader: React.FC<ChatDetailInfoProps> = ({ onClose }) => {
     <Box
       sx={{
         display: "flex",
-        height: "76px",
+        height: "77px",
         alignItems: "center",
         justifyContent: "space-between",
         alignSelf: "stretch",
@@ -19,18 +19,11 @@ const ChatDetailInfoHeader: React.FC<ChatDetailInfoProps> = ({ onClose }) => {
         backgroundColor: isDarkMode ? "#1e1e1e" :"var(--White, #fff)",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "32px",
-            height: "32px",
-            transform: "rotate(0deg)",
-          }}
-        >
-          <IconButton onClick={onClose}>
+      <Box sx={{ display: "flex", alignItems: "center", width: '100%', justifyContent: 'center'}}>
+          <IconButton onClick={onClose} style={{
+            position: 'absolute',
+            left: '10px',
+          }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="32"
@@ -44,7 +37,6 @@ const ChatDetailInfoHeader: React.FC<ChatDetailInfoProps> = ({ onClose }) => {
               />
             </svg>
           </IconButton>
-        </Box>
         <Typography
           variant="h5"
           color={isDarkMode ? "white" : "var(--Black, #212121)"}

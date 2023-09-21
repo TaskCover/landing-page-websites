@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { FC } from "react";
-import { DrawerInfoChatProps } from "..";
 import InfoHeader from "../AccountInfo/InfoHeader";
 import MediaContent from "components/sn-chat/components/common/MediaContent";
 import FileContent from "components/sn-chat/components/common/FileContent";
@@ -25,7 +24,7 @@ const TYPES = [
   },
 ];
 
-const StorageInfo: FC<DrawerInfoChatProps> = () => {
+const StorageInfo = () => {
   const { extraDesktopMode } = useGetScreenMode();
   const {isDarkMode} =  useTheme();
   const {typeDrawerChat, onSetDrawerType, dataTransfer: currentConversation} = useChat();
@@ -37,14 +36,13 @@ const StorageInfo: FC<DrawerInfoChatProps> = () => {
         alignItems: "center",
         flexDirection: "column",
         width: extraDesktopMode ? "424px" : "272px",
-        height: extraDesktopMode ? "948px" : "681px",
+        height: extraDesktopMode ? "948px" : "730px",
         gap: "12px",
         backgroundColor: isDarkMode ? "#313130": "var(--Gray0, #F7F7FD)",
       }}
     >
       <InfoHeader
-        onClose={() => onSetDrawerType('info')
-        }
+        onClose={() => onSetDrawerType('info')}
         title="Chat detail info"
       />
       <Box

@@ -110,7 +110,7 @@ const RoomHeaderMobile = () => {
         />
       );
     }
-  }, [isGroup, currentConversation?.usersCount]);
+  }, [isGroup, currentConversation.usersCount, currentConversation?.avatar]);
 
   return (
     <Box
@@ -146,7 +146,7 @@ const RoomHeaderMobile = () => {
           {groupAvatar}
           <Box display="flex" flexDirection="column" gap="4px">
             <Typography variant="h6" color="#FFF">
-              {currentConversation?.name}
+              {currentConversation?.t !== 'd' ? currentConversation?.name?.replaceAll('_', ' ') : currentConversation?.name}
             </Typography>
             <Typography variant="body2" color="rgba(255, 255, 255, 0.60)">
               Online

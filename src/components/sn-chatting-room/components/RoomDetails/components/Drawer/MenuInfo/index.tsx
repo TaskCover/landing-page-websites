@@ -34,10 +34,9 @@ const MenuInfo = () => {
         alignItems: "center",
         flexDirection: "column",
         width: extraDesktopMode ? "424px" : "272px",
-        height: extraDesktopMode ? "948px" : "681px",
+        height: extraDesktopMode ? "948px" : "730px",
         backgroundColor: renderColorByType,
         gap: "12px",
-        ...(isDarkMode ? {} : { borderLeft: "1px solid #cccccc" }),
       }}
     >
       <ChatDetailInfoHeader onClose={() => onCloseDrawer("info")} />
@@ -58,7 +57,7 @@ const MenuInfo = () => {
             borderRadius: "10px",
           }}
         />
-        <UploadAvatarGroup />
+        {currentConversation?.t !== 'd' && <UploadAvatarGroup />}
       </Box>
       <Box>
         <Typography
@@ -84,7 +83,6 @@ const MenuInfo = () => {
               key={index}
               text={item.text}
               icon={item.icon}
-              currentConversation={currentConversation}
               callBackOpenDrawer={item.callback}
               type={item?.type}
             />

@@ -6,13 +6,15 @@ import ChatInput from "../chat/ChatInput";
 import Messages from "../messages/Messages";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
+import { SxProps, Theme } from "@mui/material";
 
 const initPageIndex = 10;
 
 interface Props {
-  wrapperMessageSx?: any;
+  wrapperMessageSx?: SxProps<Theme>;
+  wrapperInputSx?: SxProps<Theme>;
 }
-const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
+const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
   const {
     roomId,
     conversationInfo,
@@ -74,8 +76,6 @@ const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
       type: dataTransfer?.t ?? "d",
     });
   }, [dataTransfer?.t, onGetUnReadMessages]);
-
-  console.log(dataTransfer, 'dataTransfer');
   
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
@@ -151,6 +151,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
             inputRef?.current?.initScrollIntoView();
           }
         }}
+        wrapperInputSx={wrapperInputSx}
       />
     </>
   );

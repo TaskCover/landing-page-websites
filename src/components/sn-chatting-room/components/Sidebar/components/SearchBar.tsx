@@ -62,6 +62,12 @@ const SearchBar = ({ onSearchText }) => {
             },
           }}
           onChange={(e) => debounceSearchText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" ) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+          }}
         />
       </Paper>
     </Box>

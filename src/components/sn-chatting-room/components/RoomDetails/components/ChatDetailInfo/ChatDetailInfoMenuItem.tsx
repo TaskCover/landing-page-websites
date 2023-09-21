@@ -1,15 +1,13 @@
 import React, { useCallback, useState } from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import ArrowDownIcon from "icons/ArrowDownIcon";
-import AccountInfo from "../Drawer";
-import { IChatItemInfo, TypeDrawerChat } from "store/chat/type";
+import { TypeDrawerChat } from "store/chat/type";
 import { useChat } from "store/chat/selectors";
 import useTheme from "hooks/useTheme";
 
 interface ChatDetailInfoMenuItemProps {
   text: string;
   icon: JSX.ElementType;
-  currentConversation: IChatItemInfo;
   callBackOpenDrawer?: () => void;
   callBackIcon?: JSX.ElementType;
   type?: string

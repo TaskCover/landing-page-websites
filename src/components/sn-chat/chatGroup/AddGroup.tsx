@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, ElementType, FC, useEffect, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import SearchIcon from "icons/SearchIcon";
@@ -23,10 +23,11 @@ import useGetScreenMode from "hooks/useGetScreenMode";
 
 interface AddGroupProps {
   callbackBackIcon?: any;
+  CustomCallBackIcon?: any;
   onSelectNewGroup?: any;
 }
 
-const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup }) => {
+const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, CustomCallBackIcon }) => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
   const [employeeNameSelected, setEmployeeNameSelected] = useState<any>({});
@@ -156,7 +157,7 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        ...mobileMode ? {} : {width: '272px', borderLeft: '1px solid #cccccc'}
+        ...mobileMode ? {} : {width: '100%'}
       }}
     >
       <Box
@@ -165,6 +166,7 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup }) => {
           alignItems: "center",
           gap: 1,
           padding: 2,
+          paddingLeft: '10px',
         }}
       >
         <IconButton
@@ -183,7 +185,7 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup }) => {
             }
           }}
         >
-          <ArrowDownIcon />
+         {CustomCallBackIcon ? CustomCallBackIcon : <ArrowDownIcon />}
         </IconButton>
         <TextField
           size="small"

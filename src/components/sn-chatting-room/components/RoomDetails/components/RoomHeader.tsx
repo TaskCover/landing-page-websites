@@ -24,7 +24,6 @@ import { useChat } from "store/chat/selectors";
 import { debounce } from "utils/index";
 import { Text } from "components/shared";
 import { ArrowCircleUp } from "@mui/icons-material";
-import { useChatDetailInfo } from "components/sn-chatting-room/hooks/useChatDetailInfo";
 import { RoomType, STEP } from "store/chat/type";
 
 const RoomHeader = () => {
@@ -49,6 +48,10 @@ const RoomHeader = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(
     listSearchMessage?.length,
   );
+
+  const onResetSearchText = useCallback(() => {
+    setSearchText({text: "", isOpen: false} );
+  }, []);
 
   const handleSearchChatText = useCallback(async () => {
     try {
@@ -85,20 +88,23 @@ const RoomHeader = () => {
     setCurrentIndex(newIndex);
     const message = listSearchMessage[newIndex];
     onSetStateSearchMessage(message);
-  }, [currentIndex, listSearchMessage]);
+  }, [currentIndex, listSearchMessage, onSetStateSearchMessage]);
 
   useEffect(() => {
     setCurrentIndex(listSearchMessage?.length);
   }, [listSearchMessage?.length]);
 
-  console.log(currentConversation, 'currentConversation');
+
+  useEffect(() => {
+    onResetSearchText()
+  }, [currentConversation, onResetSearchText])
   
   return (
     <Box
       width="100%"
       display="flex"
       justifyContent="space-between"
-      height="76px"
+      height="77px"
       padding="10px"
       bgcolor={isDarkMode ? "#3a3b3c" : "var(--Gray0, #F7F7FD)"}
     >
@@ -120,6 +126,7 @@ const RoomHeader = () => {
                 height: "40px",
                 borderRadius: "8px",
                 boxShadow: "none",
+                ...isDarkMode ? { background: "#1e1e1e", color: 'white' } : {},
                 ...(!mobileMode
                   ? { width: "400px" }
                   : { width: "80%", border: "1px solid" }),
@@ -135,11 +142,17 @@ const RoomHeader = () => {
                 onChange={(e) => debounceSearchText(e.target.value)}
                 sx={{
                   width: "100%",
-                  backgroundColor: "white",
+                  ...isDarkMode ? { background: "#1e1e1e", color: 'white' } : { background: 'white' },
                   fontSize: 14,
                   "& .MuiInputBase-input": {
                     padding: "0px !important",
                   },
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
                 }}
               />
             </Paper>
@@ -149,7 +162,7 @@ const RoomHeader = () => {
                   {listSearchMessage?.length} matches
                 </Text>
                 <IconButton
-                  sx={{ p: "5px", bgcolor: "white" }}
+                  sx={{ p: "5px", bgcolor: isDarkMode ? "#3a3b3c" :  "white" }}
                   aria-label="search"
                   onClick={onDirectToMessage}
                 >
@@ -171,7 +184,7 @@ const RoomHeader = () => {
                 variant="h6"
                 color={isDarkMode ? "white" : "var(--Black, #212121)"}
               >
-                {currentConversation?.name}
+               {currentConversation?.t !== 'd' ? currentConversation?.name?.replaceAll('_', ' ') : currentConversation?.name}
               </Typography>
               <Typography variant="body2" color="var(--Gray3, #999)">
                 Online

@@ -31,11 +31,11 @@ const DrawerMobile: React.FC<DrawerMobileProps> = (props) => {
       anchor="right"
       open={props.isOpen}
     >
-      {props?.type === "account" ? (
+      {/* {props?.type === "account" ? (
         <AccountInfoMobile {...props} />
       ) : (
         <StorageInfoMobile {...props} />
-      )}
+      )} */}
     </Drawer>
   );
 };

@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import ChatForward from "components/sn-chat/ChatForward";
 import MenuInfo from "./MenuInfo";
 import { useChat } from "store/chat/selectors";
+import ArrowDownIcon from "icons/ArrowDownIcon";
 
 const DrawerInfoChat = () => {
   const { typeDrawerChat, onSetDrawerType, onSetDataTransfer } = useChat();
@@ -16,6 +17,7 @@ const DrawerInfoChat = () => {
         <AddGroup
           callbackBackIcon={() => onSetDrawerType("info")}
           onSelectNewGroup={(value) => onSetDataTransfer(value)}
+          CustomCallBackIcon={<ArrowDownIcon sx={{ fontSize: '2rem' }} />}
         />
       ),
       account: <AccountInfo />,
