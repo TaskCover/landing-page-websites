@@ -10,6 +10,7 @@ import ChatDetailGroup from "./ChatDetailGroup";
 import { useActionGroupDetails } from "./useActionGroupDetails";
 import DrawerInfoChat from "../Drawer";
 import useTheme from "hooks/useTheme";
+import { UploadAvatarGroup } from "components/sn-chat/chatGroup/UploadAvatarGroup";
 
 export type ChatDetailInfoProps = {
   isOpen: boolean;
@@ -92,6 +93,7 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
               borderRadius: "10px",
             }}
           />
+          <UploadAvatarGroup />
         </Box>
         <Box>
           <Typography

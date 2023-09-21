@@ -13,6 +13,7 @@ interface ChatDetailInfoMenuItemProps {
   currentConversation: IChatItemInfo;
   callBackOpenDrawer?: () => void;
   onOpenDrawer?: () => void
+  callBackIcon?: JSX.ElementType
 
 }
 
@@ -83,14 +84,14 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
           }}
         >
           {props?.callBackOpenDrawer ? <IconButton onClick={onOpenDrawer}>
-            <ArrowDownIcon
+          {props?.callBackIcon ? <props.callBackIcon /> : <ArrowDownIcon
               sx={{
                 ml: "auto",
                 transform: "rotate(180deg)",
                 filter: "opacity(0.5)",
                 cursor: "pointer",
               }}
-            />
+            />}
           </IconButton> : '' }
         </Box>
       </Box>

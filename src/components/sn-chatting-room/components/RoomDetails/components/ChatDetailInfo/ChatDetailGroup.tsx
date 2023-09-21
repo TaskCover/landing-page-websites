@@ -12,6 +12,7 @@ import { useChat } from "store/chat/selectors";
 import { useAuth } from "store/app/selectors";
 import { ChangeEvent, FC } from "react";
 import { ChatDetailInfoProps } from ".";
+import EditGroupNameIcon from "icons/EditGroupNameIcon";
 
 interface ChatDetailGroupProps extends Partial<ChatDetailInfoProps> {
   handleNewAdd: () => void;
@@ -44,7 +45,15 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
         icon={GroupNameIcon}
         isOpenDrawer={props?.isDrawerOpen as boolean}
         currentConversation={props?.currentConversation as any}
-        callBackOpenDrawer={() => console.log('change name')}
+        callBackOpenDrawer={() => props?.setShowPopup((pre) => ({
+          ...pre,
+          type: TYPE_POPUP.RENAME_GROUP,
+          statusPopup: true,
+          title: commonChatBox("chatBox.changeName"),
+          content: <></>,
+          actionType: 0,
+        }))}
+        callBackIcon={EditGroupNameIcon}
       />
       <Box
         sx={{
