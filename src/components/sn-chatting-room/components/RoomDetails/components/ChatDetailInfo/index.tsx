@@ -82,6 +82,7 @@ const ChatDetailInfo: React.FC<ChatDetailInfoProps> = ({
             display: "flex",
             flexDirection: "column",
             gap: "12px",
+            position: 'relative'
           }}
         >
           <Avatar
