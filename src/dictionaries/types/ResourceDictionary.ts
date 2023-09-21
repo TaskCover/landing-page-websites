@@ -21,6 +21,14 @@ export default interface ResourceDictionary {
       eventTime: string;
       thisWeek: string;
     };
+    unit: {
+      day: string;
+      hour: string;
+    };
+    unitSymbol: {
+      day: string;
+      hour: string;
+    };
     resourceHeader: {
       available: string;
       schedule: string;

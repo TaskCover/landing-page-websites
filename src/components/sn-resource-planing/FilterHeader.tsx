@@ -3,11 +3,44 @@ import { Search } from "components/Filters";
 import Filter from "components/sn-time-tracking/Component/Filter";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
-import { WorkingStatus } from "store/resourcePlanning/action";
+import {
+  IBookingAllFitler,
+  WorkingStatus,
+} from "store/resourcePlanning/action";
+import { useGetBookingAll } from "store/resourcePlanning/selector";
+import useGetOptions from "./hooks/useGetOptions";
+import { setBookingAllFilter } from "store/resourcePlanning/reducer";
+import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { cleanObject, stringifyURLSearchParams } from "utils/index";
+import useQueryParams from "hooks/useQueryParams";
 
 const FilterHeader = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
   const commonT = useTranslations<string>(NS_COMMON);
+  const { bookingAllFilter, getBookingResource, isReady } = useGetBookingAll();
+  const pathname = usePathname();
+  const { push } = useRouter();
+  const { initQuery, query } = useQueryParams();
+  const { positionOptions } = useGetOptions();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onChangeQueries = (queries: IBookingAllFitler) => {
+    let newQueries = { ...query, ...queries };
+    newQueries = cleanObject(newQueries) as IBookingAllFitler;
+    const queryString = stringifyURLSearchParams(newQueries);
+    push(`${pathname}${queryString}`);
+    getBookingResource(newQueries);
+  };
+
+  const onSelectPosition = (value) => {
+    onChangeQueries({ ...bookingAllFilter, position: value });
+  };
+
+  // useEffect(() => {
+  //   if (!isReady) return;
+  //   getBookingResource(query);
+  // }, []);
 
   return (
     <Stack
@@ -61,11 +94,11 @@ const FilterHeader = () => {
         />
         <Stack direction="row" spacing="16px">
           <Filter.Select
-            value="position"
-            onChange={(event) => console.log(event.target.value)}
+            value={bookingAllFilter.position}
+            onChange={(event) => onSelectPosition(event.target.value)}
             label={commonT("position")}
             sx={{ maxWidth: "200px" }}
-            options={[]}
+            options={positionOptions}
           />
           <Filter.Select
             value="workingHours"

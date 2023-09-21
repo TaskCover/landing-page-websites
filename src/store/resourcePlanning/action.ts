@@ -4,11 +4,11 @@ import { RESOURCE_API_URL } from "constant/index";
 import { Dispatch } from "react";
 
 export interface IBookingAllFitler {
-  search_key?: string;
-  working_sort?: WorkingStatus;
+  search_key: string;
+  working_sort: WorkingStatus;
   start_date: string;
   end_date: string;
-  position?: string;
+  position: string;
 }
 export enum resourceActionType {
   SET_BOOKING_ALL_FILTER = "SET_BOOKING_ALL_FILTER",
@@ -17,6 +17,7 @@ export enum resourceActionType {
 }
 
 export enum WorkingStatus {
+  ALL = "",
   ACTIVE = "ACTIVE",
   PENDING = "PENDING",
   INACTIVE = "INACTIVE",

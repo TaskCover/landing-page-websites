@@ -9,12 +9,13 @@ import {
   setDatePicker,
 } from "./reducer";
 import { useSnackbar } from "store/app/selectors";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { DataStatus } from "constant/enums";
+import dayjs from "dayjs";
 
 export const useResourceFilter = () => {
-  const { end_date, search_key, start_date } = useAppSelector(
-    (state) => state.resourcePlanning.bookingAllFilter,
-  );
+  const { end_date, search_key, start_date, position, working_sort } =
+    useAppSelector((state) => state.resourcePlanning.bookingAllFilter);
   const dispatch = useDispatch();
 
   const updateFilter = (filter: IBookingAllFitler) => {
@@ -24,6 +25,8 @@ export const useResourceFilter = () => {
   return {
     end_date,
     search_key,
+    position,
+    working_sort,
     start_date,
     updateFilter,
   };
@@ -55,14 +58,35 @@ export const useResourceDate = () => {
 };
 
 export const useGetBookingAll = () => {
-  const { bookingAll, bookingAllLoading, bookingAllError, bookingAllFilter } =
-    useAppSelector((state) => state.resourcePlanning);
+  const {
+    bookingAll,
+    bookingAllLoading,
+    bookingAllError,
+    bookingAllFilter,
+    bookingAllStatus,
+  } = useAppSelector((state) => state.resourcePlanning);
   const { onAddSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
 
   const getBookingResource = async (params: IBookingAllFitler) => {
+    const newParams = {
+      ...params,
+      start_date: params.start_date ?? dayjs().format("YYYY-MM-DD"),
+      end_date: params.end_date ?? dayjs().format("YYYY-MM-DD"),
+    };
+
     await dispatch(getBookingAll(params));
   };
+
+  const isReady = useMemo(
+    () => bookingAllStatus === DataStatus.SUCCEEDED,
+    [bookingAllStatus],
+  );
+
+  const totalHour = useMemo(
+    () => bookingAll.reduce((prev, item) => prev + item.total_hour, 0),
+    [bookingAll],
+  );
 
   useEffect(() => {
     if (bookingAllError) {
@@ -71,6 +95,8 @@ export const useGetBookingAll = () => {
   }, [bookingAllError]);
   return {
     bookingAllFilter,
+    totalHour,
+    isReady,
     bookingAll,
     bookingAllLoading,
     bookingAllError,

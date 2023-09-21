@@ -33,8 +33,13 @@ import CreateBooking from "./modals/CreateBooking";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import { useFetchBookingAll } from "./hooks/useBookingAll";
 import { IBookingListItem } from "store/resourcePlanning/reducer";
-import { RESOURCE_EVENT_TYPE } from "constant/enums";
+import {
+  RESOURCE_ALLOCATION_TYPE,
+  RESOURCE_ALLOCATION_UNIT,
+  RESOURCE_EVENT_TYPE,
+} from "constant/enums";
 import useGetOptions from "./hooks/useGetOptions";
+import useGetMappingTime from "./hooks/useGetMappingTime";
 
 const AllPeopleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -46,6 +51,7 @@ const AllPeopleTab = () => {
   );
   prevFilters.current = filters;
 
+  const { mappedTimeSymbol } = useGetMappingTime();
   const { bookingAll, bookingAllFilter } = useGetBookingAll();
   const { selectedDate, updateDate } = useResourceDate();
   const [resources, setResources] = React.useState<IBookingListItem[]>([]);
@@ -114,13 +120,13 @@ const AllPeopleTab = () => {
 
   const checkEventType = (value) => {
     switch (value) {
-      case "PROJECT_BOOKING":
+      case RESOURCE_EVENT_TYPE.PROJECT_BOOKING:
         return {
           icon: <BlueArrowIcon width={16} height={16} />,
-          color: "rgba(54, 153, 255, 0.80)",
-          background: "rgba(225, 240, 255, 0.70)",
+          color: "#3699FFCC",
+          background: "#EBF5FF",
         };
-      case "OFF_TIME":
+      case RESOURCE_EVENT_TYPE.TIME_OF_BOOKING:
         return {
           icon: <RedArrowIcon width={16} height={16} />,
           color: "rgba(246, 78, 96, 0.80);",
@@ -136,16 +142,18 @@ const AllPeopleTab = () => {
   };
   const getEvents = () =>
     resources
-      ?.map(({ id, bookings, fullname }) =>
-        bookings
-          .map((props) => {
+      ?.map(
+        ({ id, bookings, fullname }) =>
+          bookings.map((props) => {
             const {
               id: eventId,
               start_date: from,
               end_date: to,
               booking_type,
-
+              allocation,
               position,
+              allocation_type,
+              total_hour,
             } = props;
 
             return {
@@ -157,24 +165,27 @@ const AllPeopleTab = () => {
               campaignId: id,
               position,
               name: fullname,
-              booking_type,
+              allocation,
+              allocation_type,
+              total_hour,
+              eventType: booking_type,
               eventId,
             };
-          })
-          .concat([
-            {
-              resourceId: id,
-              start: dayjs(filters?.start_date).toDate(),
-              end: dayjs(filters?.end_date).toDate(),
-              allDay: true,
-              type: "campaign",
-              campaignId: id,
-              name: fullname,
-              position: {},
-              booking_type: "PROJECT_BOOKING",
-              eventId: id,
-            },
-          ]),
+          }),
+        // .concat([
+        //   {
+        //     resourceId: id,
+        //     start: dayjs(filters?.start_date).toDate(),
+        //     end: dayjs(filters?.end_date).toDate(),
+        //     allDay: true,
+        //     type: "campaign",
+        //     campaignId: id,
+        //     name: fullname,
+        //     position: {},
+        //     eventType: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
+        //     eventId: id,
+        //   },
+        // ]),
       )
       .flat();
 
@@ -286,7 +297,7 @@ const AllPeopleTab = () => {
             );
           }}
           resourceAreaHeaderClassNames="custom-header"
-          resourceAreaHeaderContent={() => {
+          resourceAreaHeaderContent={(resrouce) => {
             return (
               <Grid
                 container
@@ -488,8 +499,24 @@ const AllPeopleTab = () => {
             );
           }}
           eventContent={({ event }) => {
-            const { eventType } = event.extendedProps;
+            const { eventType, allocation_type, allocation } =
+              event.extendedProps;
+
             const checkedEventType = checkEventType(eventType);
+            const day = dayjs(event.end).diff(dayjs(event.start), "days");
+
+            let unit;
+            switch (allocation_type) {
+              case RESOURCE_ALLOCATION_UNIT.HOUR_PER_DAY:
+                unit = mappedTimeSymbol[RESOURCE_ALLOCATION_TYPE.HOUR_PER_DAY];
+                break;
+              case RESOURCE_ALLOCATION_UNIT.HOUR:
+                unit = " " + mappedTimeSymbol[RESOURCE_ALLOCATION_TYPE.HOUR];
+                break;
+              default:
+                unit = mappedTimeSymbol[RESOURCE_ALLOCATION_TYPE.PERCENTAGE];
+                break;
+            }
             return (
               <Stack
                 className="fc-event-title fc-sticky"
@@ -507,7 +534,9 @@ const AllPeopleTab = () => {
                 {checkedEventType.icon}
                 <Tooltip
                   title={resourceT("schedule.time.eventTime", {
-                    day: dayjs(event.end).diff(dayjs(event.start), "days"),
+                    day,
+                    allocation,
+                    unit,
                   })}
                 >
                   <Typography
@@ -523,7 +552,9 @@ const AllPeopleTab = () => {
                     }}
                   >
                     {resourceT("schedule.time.eventTime", {
-                      day: dayjs(event.end).diff(dayjs(event.start), "days"),
+                      day,
+                      allocation,
+                      unit,
                     })}
                   </Typography>
                 </Tooltip>

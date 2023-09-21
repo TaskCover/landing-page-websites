@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { WorkingStatus } from "store/resourcePlanning/action";
 
 const today = dayjs().add(1, "day"); // Ngày hiện tại + 1 ngày (ngày mai)
 const startOfWeek = today.startOf("week").add(0, "day"); // Ngày bắt đầu tuần (chủ nhật)
@@ -11,6 +12,8 @@ export const DEFAULT_BOOKING_ALL_FILTER = {
   start_date: defaultStartDate,
   end_date: defaultEndDate,
   search_key: "",
+  position: "",
+  working_sort: WorkingStatus.ALL,
 };
 
 export const weekdays = ["SUN", "MON", "TUE", "WEB", "THU", "FRI", "SAT"];

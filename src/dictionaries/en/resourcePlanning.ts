@@ -19,8 +19,16 @@ export const ResourcePlanningLang: ResourceDictionary = {
         inactive: "Inactive",
       },
     },
+    unit: {
+      day: "day",
+      hour: "hour",
+    },
+    unitSymbol: {
+      day: "d",
+      hour: "h",
+    },
     time: {
-      eventTime: "8h/day for {day} days",
+      eventTime: "{allocation}{unit} for {day} days",
       thisWeek: "This week",
     },
     resourceHeader: {
@@ -46,6 +54,5 @@ export const ResourcePlanningLang: ResourceDictionary = {
     estimate: "Estimate",
     work: "Work",
     schedule: "Schedule",
-    selectTimeOffCategory: "Select time off category",
   },
 };

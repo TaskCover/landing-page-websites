@@ -91,3 +91,20 @@ export enum RESOURCE_EVENT_TYPE {
   PROJECT_BOOKING = "PROJECT_BOOKING",
   TIME_OF_BOOKING = "TIME_OF_BOOKING",
 }
+
+export enum RESOURCE_ALLOCATION_TYPE {
+  PERCENTAGE,
+  HOUR,
+  HOUR_PER_DAY,
+}
+
+export enum RESOURCE_ALLOCATION_UNIT {
+  PERCENTAGE = "%",
+  HOUR = "h",
+  HOUR_PER_DAY = "h/day",
+}
+
+export enum DAY_TIME_UNIT {
+  DAY = "day",
+  HOUR = "hour",
+}

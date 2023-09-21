@@ -20,12 +20,20 @@ export const ResourcePlanning: ResourceDictionary = {
       },
     },
     time: {
-      eventTime: "8h/ngày cho {day} ngày",
+      eventTime: "{allocation}{unit} cho {day} ngày",
       thisWeek: "Tuần này",
     },
     resourceHeader: {
       available: "Khả dụng",
       schedule: "Lịch trình",
+    },
+    unit: {
+      day: "ngày",
+      hour: "giờ",
+    },
+    unitSymbol: {
+      day: "ngày",
+      hour: "h",
     },
     action: {
       addBooking: "Thêm lịch",

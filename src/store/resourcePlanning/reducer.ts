@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { Position } from "store/company/reducer";
 import { Project } from "store/project/reducer";
 import { DEFAULT_BOOKING_ALL_FILTER } from "components/sn-resource-planing/hepler";
+import { DataStatus } from "constant/enums";
 
 export interface IDatePicker {
   dateRange: Date[];
@@ -41,6 +42,7 @@ interface ResoucrPlanningState {
   bookingAll: IBookingListItem[];
   bookingAllLoading: boolean;
   bookingAllError: string;
+  bookingAllStatus: DataStatus;
 }
 
 const initialState: ResoucrPlanningState = {
@@ -53,6 +55,7 @@ const initialState: ResoucrPlanningState = {
 
   bookingAll: [],
   bookingAllLoading: false,
+  bookingAllStatus: DataStatus.IDLE,
   bookingAllError: "",
 };
 
@@ -74,14 +77,18 @@ export const resourcePlanningSlice = createSlice({
     builder
       .addCase(getBookingAll.pending, (state) => {
         state.bookingAllLoading = true;
+        state.bookingAllStatus = DataStatus.LOADING;
       })
       .addCase(getBookingAll.fulfilled, (state, action) => {
+        state.bookingAllFilter = action.meta.arg;
         state.bookingAllLoading = false;
         state.bookingAll = action.payload;
+        state.bookingAllStatus = DataStatus.SUCCEEDED;
       })
       .addCase(getBookingAll.rejected, (state, action) => {
         state.bookingAllLoading = false;
         state.bookingAllError = action.error.message || "";
+        state.bookingAllStatus = DataStatus.FAILED;
       });
   },
 });
