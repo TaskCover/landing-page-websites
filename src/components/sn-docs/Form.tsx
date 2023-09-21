@@ -4,32 +4,28 @@ import FormLayout from "components/FormLayout";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_COMPANY } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
 import { memo, useMemo } from "react";
-import { useAuth, useSnackbar } from "store/app/selectors";
+import { useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
 import { getMessageErrorByAPI } from "utils/index";
 import { DataAction } from "constant/enums";
-import { Input, Select } from "components/shared";
-import { EmployeeData } from "store/company/actions";
-import { EMAIL_REGEX } from "constant/regex";
-import { usePositionOptions } from "store/global/selectors";
+import { Input } from "components/shared";
+import { PositionData } from "store/company/actions";
+import { formErrorCode } from "api/formErrorCode";
+import { ErrorResponse } from "constant/types";
 import { useTranslations } from "next-intl";
 
 type FormProps = {
-  initialValues: EmployeeData;
+  initialValues: PositionData;
   type: DataAction;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit: (values: EmployeeData) => Promise<any>;
+  onSubmit: (values: PositionData) => Promise<any>;
 } & Omit<DialogLayoutProps, "children" | "onSubmit">;
 
 const Form = (props: FormProps) => {
   const { initialValues, type, onSubmit: onSubmitProps, ...rest } = props;
   const { onAddSnackbar } = useSnackbar();
-  const { user, onGetProfile } = useAuth();
-  const companyT = useTranslations(NS_COMPANY);
   const commonT = useTranslations(NS_COMMON);
-
-  const { options, onGetOptions, isFetching, totalPages, pageIndex, pageSize } =
-    usePositionOptions();
+  const companyT = useTranslations(NS_COMPANY);
 
   const label = useMemo(() => {
     switch (type) {
@@ -42,24 +38,28 @@ const Form = (props: FormProps) => {
     }
   }, [commonT, type]);
 
-  const onSubmit = async (values: EmployeeData) => {
+  const onSubmit = async (values: PositionData) => {
     try {
       const newItem = await onSubmitProps(values);
 
       if (newItem) {
         onAddSnackbar(
-          companyT("employees.notification.success", { label }),
+          companyT("positions.notification.success", { label }),
           "success",
         );
-        if (values?.email === user?.email) {
-          onGetProfile();
-        }
         props.onClose();
       } else {
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      if (
+        (error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA &&
+        (error as ErrorResponse)["message"]
+      ) {
+        formik.setFieldError("name", "form.error.existed");
+      } else {
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      }
     }
   };
 
@@ -72,7 +72,7 @@ const Form = (props: FormProps) => {
 
   const touchedErrors = useMemo(() => {
     return Object.entries(formik.errors).reduce(
-      (out: FormikErrors<EmployeeData>, [key, error]) => {
+      (out: FormikErrors<PositionData>, [key, error]) => {
         if (formik.touched[key]) {
           out[key] = error;
         }
@@ -87,11 +87,6 @@ const Form = (props: FormProps) => {
     [touchedErrors, formik.isSubmitting],
   );
 
-  const onEndReached = () => {
-    if (isFetching || (totalPages && pageIndex >= totalPages)) return;
-    onGetOptions({ pageSize, pageIndex: pageIndex + 1 });
-  };
-
   return (
     <FormLayout
       sx={{
@@ -99,7 +94,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
-      label={`${label} ${companyT("employees.key")}`}
+      label={`${label} ${companyT("positions.key")}`}
       submitting={formik.isSubmitting}
       disabled={disabled}
       onSubmit={formik.handleSubmit}
@@ -107,32 +102,16 @@ const Form = (props: FormProps) => {
     >
       <Stack spacing={2} py={3}>
         <Input
-          title="Email"
-          name="email"
+          title={companyT("positions.form.title.name")}
+          name="name"
           required
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values?.email}
-          error={commonT(touchedErrors?.email, {
-            name: "Email",
-          })}
-          disabled={type === DataAction.UPDATE}
-          rootSx={sxConfig.input}
-        />
-        <Select
-          options={options}
-          title={commonT("position")}
-          name="position"
-          required
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values?.position}
-          error={commonT(touchedErrors?.position, {
-            name: commonT("position"),
+          value={formik.values?.name}
+          error={commonT(touchedErrors?.name, {
+            name: companyT("positions.form.title.name"),
           })}
           rootSx={sxConfig.input}
-          fullWidth
-          onEndReached={onEndReached}
         />
       </Stack>
     </FormLayout>
@@ -142,11 +121,7 @@ const Form = (props: FormProps) => {
 export default memo(Form);
 
 export const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .trim()
-    .required("form.error.required")
-    .matches(EMAIL_REGEX, "form.error.invalid"),
-  position: Yup.string().required("form.error.required"),
+  name: Yup.string().trim().required("form.error.required"),
 });
 
 const sxConfig = {
