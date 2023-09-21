@@ -398,16 +398,17 @@ const ItemList = () => {
           });
         }
 
-        let countTasks = 0
-        newSelectedList.forEach(item => {
-          if (item?.taskListId === taskList.id && item?.taskId && !item?.subTaskId)
-            countTasks++
-        })
-        if (countTasks === taskList.tasks.length)
-          newSelectedList.push({
-            taskListId: taskList.id,
-            taskListName: taskList.name,
-          });
+        // count the task in task list
+        // let countTasks = 0
+        // newSelectedList.forEach(item => {
+        //   if (item?.taskListId === taskList.id && item?.taskId && !item?.subTaskId)
+        //     countTasks++
+        // })
+        // if (countTasks === taskList.tasks.length)
+        //   newSelectedList.push({
+        //     taskListId: taskList.id,
+        //     taskListName: taskList.name,
+        //   });
       }
       // unchecked
       else {
@@ -445,34 +446,34 @@ const ItemList = () => {
         });
 
         // count subTask in Task
-        let countSubTasks = 0
-        newSelectedList.forEach(item => {
-          if (item?.taskId === task.id && item?.subTaskId)
-            countSubTasks++
-        })
+        // let countSubTasks = 0
+        // newSelectedList.forEach(item => {
+        //   if (item?.taskId === task.id && item?.subTaskId)
+        //     countSubTasks++
+        // })
 
-        if (countSubTasks === task.sub_tasks?.length) {
-          newSelectedList.push({
-            taskId: task.id,
-            taskName: task.name,
-            taskListId: taskList.id,
-            taskListName: taskList.name,
-          });
-        }
+        // if (countSubTasks === task.sub_tasks?.length) {
+        //   newSelectedList.push({
+        //     taskId: task.id,
+        //     taskName: task.name,
+        //     taskListId: taskList.id,
+        //     taskListName: taskList.name,
+        //   });
+        // }
 
         // count task in task list
-        let countTasks = 0
-        newSelectedList.forEach(item => {
-          if (item.taskListId === taskList.id && item?.taskId && !item?.subTaskId)
-            countTasks++
-        })
+        // let countTasks = 0
+        // newSelectedList.forEach(item => {
+        //   if (item.taskListId === taskList.id && item?.taskId && !item?.subTaskId)
+        //     countTasks++
+        // })
 
-        if (countTasks === taskList.tasks.length) {
-          newSelectedList.push({
-            taskListId: taskList.id,
-            taskListName: taskList.name,
-          });
-        }
+        // if (countTasks === taskList.tasks.length) {
+        //   newSelectedList.push({
+        //     taskListId: taskList.id,
+        //     taskListName: taskList.name,
+        //   });
+        // }
 
       } else {
         const indexSelectedSubTask = selectedList.findIndex(

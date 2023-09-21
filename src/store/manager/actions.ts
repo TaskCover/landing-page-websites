@@ -8,7 +8,7 @@ import {
   COMPANY_API_URL,
 } from "constant/index";
 import { BaseQueries } from "constant/types";
-import { refactorRawItemListResponse, serverQueries } from "utils/index";
+import { refactorRawItemListResponse, serverQueries, serverQueriesOr } from "utils/index";
 import StringFormat from "string-format";
 
 export enum CompanyStatus {
@@ -28,6 +28,8 @@ export type GetEmployeeListQueries = BaseQueries & {
   is_pay_user?: boolean;
   company?: string;
   date?: string;
+  name?: string;
+  fullname?: string;
 };
 
 export type GetCompanyListQueries = BaseQueries & {
@@ -44,7 +46,7 @@ export type GetStatementHistoryQueries = BaseQueries & {
 export const getEmployeesOfCompany = createAsyncThunk(
   "manager/getEmployeesOfCompany",
   async ({ ...queries }: GetEmployeeListQueries) => {
-    queries = serverQueries(
+    queries = serverQueriesOr(
       { ...queries, sort: "created_time=-1" },
       ["email"],
       ["approve"],

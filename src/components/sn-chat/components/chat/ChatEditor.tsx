@@ -7,16 +7,32 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import "react-quill/dist/quill.snow.css";
-import { ACCEPT_MEDIA, FILE_ACCEPT } from "constant/index";
+import { ACCEPT_MEDIA, FILE_ACCEPT, NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
-import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
 import ImageImportIcon from "icons/ImageImportIcon";
 import UploadFileIcon from "icons/UploadFileIcon";
 import ChatEmoji, { Emoji } from "./ChatEmoji";
 import hljs from "highlight.js";
+import "react-quill/dist/quill.snow.css";
+import dynamic from "next/dynamic";
+import type ReactQuill from "react-quill";
+import { useChat } from "store/chat/selectors";
+import { useTranslations } from "next-intl";
+
+const QuillNoSSRWrapper = dynamic(
+  async () => {
+    const { default: RQ } = await import("react-quill");
+    // eslint-disable-next-line react/display-name, @typescript-eslint/no-explicit-any
+    return ({ forwardedRef, ...props }: any) => (
+      <RQ ref={forwardedRef} {...props} />
+    );
+  },
+  { ssr: false },
+);
 
 hljs.configure({
   // optionally configure hljs
@@ -77,9 +93,16 @@ const ChatEditor = (props: EditorProps) => {
     initalValue,
     isLoading,
   } = props;
+  const { 
+    onGetUnReadMessages,
+    dataTransfer
+   } = useChat();
+   const commonChatBox = useTranslations(NS_CHAT_BOX);
 
+  const quillRef = useRef<ReactQuill>(null);
   const inputMediaRef = useRef<HTMLInputElement | null>(null);
   const inputFileRef = useRef<HTMLInputElement | null>(null);
+  const [value, setValue] = useState("");
   const urlFiles = useMemo(
     () => files.map((file) => URL.createObjectURL(file)),
     [files],
@@ -108,40 +131,7 @@ const ChatEditor = (props: EditorProps) => {
     [hasAttachment, toolbarAttachment],
   );
 
-  const { quill, quillRef } = useQuill({
-    strict: false,
-    modules: {
-      syntax: {
-        highlight: (text) => hljs.highlightAuto(text).value,
-      },
-      toolbar,
-      keyboard: {
-        bindings: {
-          shift_enter: {
-            key: 13,
-            shiftKey: true,
-            handler: function (range, context) {
-              // quill?.insertText(range.index - 1, "\n");
-              return true;
-            },
-          },
-        },
-      },
-    },
-    placeholder: "Type Message...",
-    formats: [
-      "bold",
-      "italic",
-      "underline",
-      "strike",
-      "link",
-      "code-block",
-      "list",
-      "ordered",
-      "bullet",
-    ],
-  });
-  const quillRefCurr = quillRef.current;
+  const quillEditor = quillRef.current?.getEditor();
 
   const onChangeFile = useCallback(
     (event: ChangeEvent<HTMLInputElement>, type: string[]) => {
@@ -161,8 +151,10 @@ const ChatEditor = (props: EditorProps) => {
       if (inputMediaRef.current) {
         inputMediaRef.current.value = "";
       }
+      quillEditor?.focus();
+
     },
-    [files, onChangeFiles],
+    [files, onChangeFiles, quillEditor],
   );
 
   const onRemove = useCallback(
@@ -176,51 +168,103 @@ const ChatEditor = (props: EditorProps) => {
     [files, onChangeFiles],
   );
 
+  const handleMessage = useCallback(() => {
+    const parser = new DOMParser();
+    const html = parser.parseFromString(
+      quillEditor?.root.innerHTML || "",
+      "text/html",
+    );
+    const body = html.body;
+    const arrIndexRemove: number[] = [];
+    for (let i = body.children.length - 1; i > -1; i--) {
+      const element = body.children[i] as HTMLElement;
+      if (element.tagName === "P" && element.innerText.trim() === "") {
+        arrIndexRemove.push(i);
+      } else {
+        break;
+      }
+    }
+
+    for (const i of arrIndexRemove) {
+      body.children[i]?.remove();
+    }
+
+    onEnterText?.(body.innerHTML);
+    quillEditor?.deleteText(0, quillEditor?.getLength());
+    setValue("");
+  }, [onEnterText, quillEditor]);
+
+  const getUnReadMessage = useCallback(async () => {
+    await onGetUnReadMessages({
+      type: dataTransfer?.t ?? "d",
+    });
+  }, [dataTransfer?.t, onGetUnReadMessages]);
+
+
   const handleKeyDown = useCallback(
     (event) => {
-      const listText = quill?.getContents().ops || [];
-      const lastText = listText[listText.length - 1];
-      const lastUpdate = {
-        ...lastText,
-        insert: lastText.insert.trim() + "\n",
-      };
       if (event.key === "Enter" && !event.shiftKey) {
-        listText.splice(listText.length - 1, 1, lastUpdate);
-        quill?.setContents({ ...quill?.getContents(), ops: listText });
-        const text = quill?.getText().trim() ? quill.root.innerHTML : "";
-        onEnterText?.(text);
-        quill?.setText("");
+        getUnReadMessage();
+        handleMessage();
       }
     },
-    [onEnterText, quill],
+    [handleMessage],
   );
 
   const handleChaneEmoji = useCallback(
     (emoji: Emoji) => {
+      quillEditor?.focus();
+      const selection = quillEditor?.getSelection();
       const newText = `${emoji.native}`;
-      quill?.insertText(quill?.getLength() - 1, newText);
-      quill?.root.focus();
+      let i = 1;
+      if (selection?.index === undefined || selection?.index === 0) {
+        i = 0;
+      } else {
+        i = selection?.index;
+      }
+      quillEditor?.insertText(i, newText);
     },
-    [quill],
+    [quillEditor],
   );
 
   useEffect(() => {
-    quill?.focus();
-    quillRefCurr?.addEventListener("keydown", handleKeyDown);
-    return () => {
-      quillRefCurr?.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [handleKeyDown, quill, quillRefCurr]);
-
-  useEffect(() => {
+    quillEditor?.focus();
     if (initalValue) {
-      quill?.setText(initalValue);
+      setValue(initalValue);
     }
-  }, [initalValue, quill]);
+  }, [initalValue, quillEditor]);
+
+  const modules = useMemo(() => {
+    return {
+      toolbar,
+      syntax: {
+        highlight: (text) => {
+          return hljs.highlightAuto(text).value;
+        },
+      },
+      keyboard: {
+        bindings: {
+          enter: {
+            key: 13,
+            handler: function (range, context) {
+              return false;
+            },
+          },
+          shift_enter: {
+            key: 13,
+            shiftKey: true,
+            handler: function (range, context) {
+              return true;
+            },
+          },
+        },
+      },
+    };
+  }, [toolbar]);
 
   return (
     <Stack
-    className="editor"
+      className="editor"
       sx={{
         "& .ql-snow": {
           border: "unset !important",
@@ -233,9 +277,9 @@ const ChatEditor = (props: EditorProps) => {
           display: "block",
           "& .ql-editor": {
             paddingRight: "7rem",
-          },
-          "& .ql-blank::before": {
-            color: "#BABCC6",
+            "&.ql-blank::before": {
+              color: "#BABCC6",
+            },
           },
           "& .ql-tooltip": {
             right: "0",
@@ -248,10 +292,28 @@ const ChatEditor = (props: EditorProps) => {
     >
       {isLoading ? "loading..." : null}
       <Box position="relative">
-        <Box
-          component={"div"}
-          ref={quillRef}
-          sx={{
+        <QuillNoSSRWrapper
+          forwardedRef={quillRef}
+          theme="snow"
+          placeholder={commonChatBox("chatBox.typeMessage")}
+          modules={modules}
+          formats={[
+            "bold",
+            "italic",
+            "underline",
+            "strike",
+            "link",
+            "code-block",
+            "list",
+            "ordered",
+            "bullet",
+          ]}
+          value={value}
+          onChange={(value) => {
+            setValue(value);
+          }}
+          onKeyDown={handleKeyDown}
+          style={{
             color: "black !important",
             flexDirection: "column",
           }}
