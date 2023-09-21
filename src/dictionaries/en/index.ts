@@ -18,9 +18,11 @@ import {
   NS_MANAGER,
   NS_TIME_TRACKING,
   NS_SALES,
-  NS_CHAT_BOX
+  NS_CHAT_BOX,
+  NS_DOCS,
 } from "constant/index";
 import { SalesLang } from "./sales";
+import { DocsLang } from "./docs";
 
 export default {
   [NS_COMMON]: CommonLang,
@@ -33,4 +35,5 @@ export default {
   [NS_TIME_TRACKING]: TimeTrackingLang,
   [NS_SALES]: SalesLang,
   [NS_CHAT_BOX]: ChatBoxLang,
+  [NS_DOCS]: DocsLang,
 };

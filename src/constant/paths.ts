@@ -30,6 +30,9 @@ export const RESOURCE_PLANING_PATH = "/resource-planing";
 export const SALES_LIST_PATH = "/sales";
 export const SALE_DETAIL_PATH = "/sales/{id}";
 
+export const DOCS_PATH = "/documents";
+export const DOCS_DETAIL_PATH = "/documents/{id}";
+
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
   SIGNUP_PATH,
@@ -59,6 +62,9 @@ export const AUTHORIZED_PATHS = {
     RESOURCE_PLANING_PATH,
     SALE_DETAIL_PATH,
     SALES_LIST_PATH,
+    DOCS_PATH,
+    DOCS_DETAIL_PATH
+
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -84,6 +90,8 @@ export const AUTHORIZED_PATHS = {
     RESOURCE_PLANING_PATH,
     SALES_LIST_PATH,
     SALE_DETAIL_PATH,
+    DOCS_PATH,
+    DOCS_DETAIL_PATH
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };

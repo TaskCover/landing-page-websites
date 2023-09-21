@@ -28,5 +28,6 @@ export const LayoutLang: LayoutDictionary = {
     timeTracking: "Time Tracking",
     resourcePlaning: "Resource Planing",
     sales: "Sales",
+    docs: "Documents",
   },
 };

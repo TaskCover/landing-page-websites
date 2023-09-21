@@ -18,6 +18,7 @@ import {
   TIME_TRACKING_PATH,
   RESOURCE_PLANING_PATH,
   SALES_LIST_PATH,
+  DOCS_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -34,6 +35,7 @@ import useTheme from "hooks/useTheme";
 import MenuTimeTrackingIcon from "icons/MenuTimeTrackingIcon";
 import MenuResourcePlaningIcon from "icons/MenuResourcePlaningIcon";
 import CardReceive from "icons/CardReceive";
+import MenuDocsIcon from "icons/MenuDocsIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -247,6 +249,12 @@ const DATA: MenuItemProps[] = [
     label: "menu.timeTracking",
     href: TIME_TRACKING_PATH,
     icon: <MenuTimeTrackingIcon />,
+    roles: [Permission.AM, Permission.ST],
+  },
+  {
+    label: "menu.docs",
+    href: DOCS_PATH,
+    icon: <MenuDocsIcon />,
     roles: [Permission.AM, Permission.ST],
   },
   {
