@@ -8,9 +8,7 @@ import useGetScreenMode from "hooks/useGetScreenMode";
 import { useFetchingChattingReturns } from "components/sn-chatting-room/hooks/useFetchingChatting";
 
 const Sidebar: FC<useFetchingChattingReturns> = ({
-  onSelectRoom,
-  currentConversation,
-  onSearchText,
+ onSearchText,
 }) => {
   const { mobileMode } = useGetScreenMode();
   return (
@@ -27,10 +25,7 @@ const Sidebar: FC<useFetchingChattingReturns> = ({
       }}
     >
       <SearchBar onSearchText={onSearchText} />
-      <ChatList
-        idActive={currentConversation?._id}
-        onSelectRoom={onSelectRoom}
-      />
+      <ChatList />
     </Box>
   );
 };

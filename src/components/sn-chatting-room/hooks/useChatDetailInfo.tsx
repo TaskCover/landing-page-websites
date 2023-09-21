@@ -2,61 +2,28 @@ import AccountProfileIcon from "icons/AccountProfileIcon";
 import FileBasicIcon from "icons/FileBasicIcon";
 import LinkIcon from "icons/LinkIcon";
 import MediaFileIcon from "icons/MediaFileIcon";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useChat } from "store/chat/selectors";
-import { IChatItemInfo, RoomType } from "store/chat/type";
+import { RoomType, TypeDrawerChat } from "store/chat/type";
 
 interface MenuItem {
     text: string;
     icon: JSX.ElementType;
     callback: () => void;
-    type: string;
+    type: TypeDrawerChat;
   }
   
-export enum TypeDrawer {
-    account = "account",
-    media = "media",
-    link = "link",
-    file = "file",
-    group = 'group'
-  }
 
 export interface useChatDetailInfoReturns {
-  onOpenDrawer: () => void;
-  closeDrawer: () => void;
-  isDrawerOpen: boolean;
   menuItems: MenuItem[];
-  typeDrawer: "account" | "link" | "media" | "file" | "group" | "forward";
   onChangeTypeDrawer: (type: string) => void;
-  onSelectRoom: any
 }
   
-export const useChatDetailInfo = ({
-    currentConversation,
-    onSelectRoom
-  }: {
-    currentConversation: IChatItemInfo;
-    onSelectRoom: any
-  }): useChatDetailInfoReturns => {
-    const { onGetUserInfo, onGetChatAttachments, onGetChatUrls, onGetAllConvention, conversationPaging} = useChat();
-  
-    const [typeDrawer, setTypeDrawer] = useState<keyof typeof TypeDrawer | any>(TypeDrawer.account);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    // Handler to open the drawer.
-  
-  
-    const onOpenDrawer = () => {
-      setIsDrawerOpen(true);
-    };
-  
-    const closeDrawer = () => {
-      setIsDrawerOpen(false);
-      setTypeDrawer(undefined)
-    };
-  
+export const useChatDetailInfo = (): useChatDetailInfoReturns => {
+    const { onGetUserInfo, onGetChatAttachments, onGetChatUrls, dataTransfer: currentConversation} = useChat();
+
     const callbackOpenAccount = useCallback(() => {
-      onGetUserInfo(currentConversation?.usernames[0]);
-      setTypeDrawer(TypeDrawer.account)
+      onGetUserInfo(currentConversation?.usernames[0] as string);
     }, [currentConversation]);
   
     const callbackChatAttachment = useCallback((fileType: 'link' | 'media' | 'file') => {      
@@ -66,13 +33,11 @@ export const useChatDetailInfo = ({
         roomType: currentConversation?.t  as RoomType || 'd',
         fileType,
       });
-      setTypeDrawer(fileType)
     }, [currentConversation]);
   
     const callbackChatUrls = useCallback(() => {
       if(!currentConversation?.t || !currentConversation?._id) return;
       if(currentConversation)  onGetChatUrls({ roomId: currentConversation?._id, type: currentConversation?.t});
-      setTypeDrawer(TypeDrawer.link)
     }, [currentConversation]);
   
     const menuItems: MenuItem[] = useMemo(
@@ -111,27 +76,12 @@ export const useChatDetailInfo = ({
       if(onCallBackByType){
         onCallBackByType()
       }
-      setTypeDrawer(type as TypeDrawer)
     }
-
-    useEffect(() => {
-      closeDrawer();
-    }, [currentConversation])
-    
-    const onSelectedRom = (value) => {      
-      if(onSelectRoom){
-        onSelectRoom(value)
-      }
-    }
+  
 
     return {
-      onOpenDrawer,
-      closeDrawer,
-      isDrawerOpen,
       menuItems,
-      typeDrawer,
       onChangeTypeDrawer,
-      onSelectRoom: onSelectedRom,
     };
   };
   

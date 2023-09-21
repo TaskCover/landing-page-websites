@@ -1,24 +1,16 @@
 import React, { useMemo, useState } from "react";
 import { Avatar, Box, IconButton, ImageList, Typography } from "@mui/material";
-import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
-import useTheme from "hooks/useTheme";
-import ProfileAdd from "icons/ProfileAdd";
-import SearchIcon from "icons/SearchIcon";
-import SidebarIcon from "icons/SidebarIcon";
 import VideoCallIcon from "icons/VideoCallIcon";
-import colorSchemes from "utils/colorSchemes";
-import ChatDetailInfo from "./ChatDetailInfo";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CallIcon from "icons/CallIcon";
 import ChatDetailUserMobile from "./ChatDetailUserMobile";
 import GroupChatMobile from "./GroupChatMobile";
 import ComponentAvatar from "components/Avatar";
+import { useChat } from "store/chat/selectors";
 
-const RoomHeaderMobile = ({
-  currentConversation,
-  onResetCurrentConversation,
-}) => {
+const RoomHeaderMobile = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const {dataTransfer: currentConversation, onResetDataTransfer } = useChat()
   // Handler to open the drawer.
   const openDrawer = () => {
     setIsDrawerOpen(true);
@@ -141,7 +133,7 @@ const RoomHeaderMobile = ({
       >
         <ArrowBackIosNewIcon
           style={styleIcon}
-          onClick={onResetCurrentConversation}
+          onClick={onResetDataTransfer}
         />
         <Box
           sx={{

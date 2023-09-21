@@ -23,30 +23,23 @@ import { useSnackbar } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
 import { debounce } from "utils/index";
 import { Text } from "components/shared";
-import {
-  ArrowCircleDownOutlined,
-  ArrowCircleUp,
-  ArrowUpward,
-} from "@mui/icons-material";
+import { ArrowCircleUp } from "@mui/icons-material";
 import { useChatDetailInfo } from "components/sn-chatting-room/hooks/useChatDetailInfo";
-import { STEP } from "store/chat/type";
+import { RoomType, STEP } from "store/chat/type";
 
-const RoomHeader = ({ currentConversation, onSelectRoom }) => {
+const RoomHeader = () => {
   const { isDarkMode } = useTheme();
   const t = useTranslations(NS_COMMON);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { mobileMode } = useGetScreenMode();
   const { onAddSnackbar } = useSnackbar();
-
-  const propsChatDetailInfo =
-  useChatDetailInfo({ currentConversation, onSelectRoom });
 
   const {
     onSearchChatText,
     listSearchMessage,
     onSetStateSearchMessage,
     onSetStep,
-    dataTransfer,
+    onSetDrawerType,
+    dataTransfer: currentConversation
   } = useChat();
   const [search, setSearchText] = useState({
     text: "",
@@ -62,7 +55,7 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
       if (!search?.isOpen) return;
       await onSearchChatText({
         text: search?.text,
-        type: currentConversation?.t,
+        type: currentConversation?.t as RoomType,
         roomId: currentConversation?._id,
       });
     } catch (error) {
@@ -77,16 +70,6 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
   const debounceSearchText = debounce((text: string) => {
     setSearchText({ ...search, text });
   }, 1000);
-
-  // Handler to open the drawer.
-  const openDrawer = () => {
-    setIsDrawerOpen(true);
-  };
-
-  // Handler to close the drawer.
-  const closeDrawer = () => {
-    setIsDrawerOpen(false);
-  };
 
   const onOpenSearchMessage = () => {
     setSearchText({ isOpen: !search.isOpen, text: "" });
@@ -108,10 +91,8 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
     setCurrentIndex(listSearchMessage?.length);
   }, [listSearchMessage?.length]);
 
-  useEffect(() => {
-    closeDrawer();
-  }, [currentConversation]);
-
+  console.log(currentConversation, 'currentConversation');
+  
   return (
     <Box
       width="100%"
@@ -119,7 +100,7 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
       justifyContent="space-between"
       height="76px"
       padding="10px"
-      bgcolor={ isDarkMode ? "#3a3b3c" :"var(--Gray0, #F7F7FD)"}
+      bgcolor={isDarkMode ? "#3a3b3c" : "var(--Gray0, #F7F7FD)"}
     >
       <Box
         width="100%"
@@ -186,7 +167,10 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
               sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
             />
             <Box display="flex" flexDirection="column" gap="4px">
-              <Typography variant="h6" color={isDarkMode ? 'white' :"var(--Black, #212121)"}>
+              <Typography
+                variant="h6"
+                color={isDarkMode ? "white" : "var(--Black, #212121)"}
+              >
                 {currentConversation?.name}
               </Typography>
               <Typography variant="body2" color="var(--Gray3, #999)">
@@ -219,11 +203,9 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
             color: "transparent",
           }}
           onClick={() => {
-            openDrawer();
-            propsChatDetailInfo?.onOpenDrawer();
-            propsChatDetailInfo?.onChangeTypeDrawer("group");
-            if (currentConversation.t === "d") {
-              onSetStep(STEP.ADD_GROUP, { ...dataTransfer, isNew: true });
+            if (currentConversation?.t === "d") {
+              onSetDrawerType("group");
+              onSetStep(STEP.ADD_GROUP, { ...currentConversation, isNew: true });
             }
           }}
         >
@@ -237,20 +219,15 @@ const RoomHeader = ({ currentConversation, onSelectRoom }) => {
           <VideoCallIcon />
         </IconButton>
         <IconButton
-          onClick={openDrawer}
           sx={{
             color: "transparent",
           }}
+          onClick={() => onSetDrawerType("info")}
         >
           <SidebarIcon />
         </IconButton>
       </Box>
-      <ChatDetailInfo
-        currentConversation={currentConversation}
-        isOpen={isDrawerOpen}
-        onClose={closeDrawer}
-        {...propsChatDetailInfo}
-      />
+      <ChatDetailInfo />
     </Box>
   );
 };

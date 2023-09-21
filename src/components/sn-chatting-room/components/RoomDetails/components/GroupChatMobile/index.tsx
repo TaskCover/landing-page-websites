@@ -81,27 +81,6 @@ const GroupChatMobile: React.FC<GroupChatMobileProps> = ({
                 gap: "8px",
               }}
             >
-              {/* {arrayAvatar.map((item, index) => (
-                <Box
-                  key={item.id}
-                  sx={{
-                    position: "absolute",
-                    left: `${index * 37}px`, // Adjust the left position as needed
-                    zIndex: `${index + 1}`,
-                  }}
-                >
-                  <Avatar
-                    src={item.avatar}
-                    sx={{
-                      height: "55px",
-                      width: "55px",
-                      flexShrink: "0",
-                      borderRadius: "50%",
-                    }}
-                  />
-                </Box>
-              ))} */}
-
               <Avatar
                 src={currentConversation.avatar}
                 sx={{

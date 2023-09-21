@@ -31,8 +31,6 @@ import {
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
 import dayjs from "dayjs";
-import { State } from "linkifyjs";
-
 const initalPage = {
   pageIndex: 0,
   pageSize: 10,
@@ -86,6 +84,8 @@ const initialState: ChatState = {
   paramsConversation: {},
   paramsLastMessage: {},
   paramsUnreadMessage: {},
+  typeDrawerChat: 'info',
+  isOpenInfoChat: false,
 };
 
 const isConversation = (type: string) => {
@@ -97,6 +97,17 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
+    resetDataTransfer: (state) => {
+      state.dataTransfer = {};
+    },
+    setTypeDrawerChatDesktop: (state, action) => {
+      state.typeDrawerChat = action.payload;
+      state.isOpenInfoChat = true;
+    },
+    setCloseDrawerChatDesktop: (state, action) => {
+      state.typeDrawerChat = action.payload;
+      state.isOpenInfoChat = false;
+    },
     setStep: (state, action) => {
       const prevStep = Number(action.payload.step) - 1;
       state.prevStep = prevStep === STEP.IDLE ? STEP.CONVENTION : prevStep;
@@ -119,7 +130,7 @@ const chatSlice = createSlice({
       state.typeList = action.payload;
     },
     setDataTransfer: (state, action) => {
-      if (Object.keys(action.payload.dataTransfer).length > 0) {
+      if (action?.payload?.dataTransfer && Object.keys(action.payload.dataTransfer).length > 0) {
         state.dataTransfer = action.payload;
       }
     },
@@ -516,6 +527,9 @@ export const {
   clearMessageList,
   setStateSearchMessage,
   updateUnSeenMessage,
+  setTypeDrawerChatDesktop,
+  setCloseDrawerChatDesktop,
+  resetDataTransfer
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

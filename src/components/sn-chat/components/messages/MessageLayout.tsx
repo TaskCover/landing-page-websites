@@ -14,6 +14,7 @@ interface MessageLayoutProps {
   avatarPartner: string | undefined;
   hasNextMessageFromSameUser: boolean;
   messageProps: BoxProps;
+  callBackForward?: () => void;
 }
 const MessageLayout = ({
   sessionId,
@@ -22,6 +23,7 @@ const MessageLayout = ({
   avatarPartner,
   hasNextMessageFromSameUser,
   messageProps,
+  callBackForward
 }: MessageLayoutProps) => {
   const isCurrentUser = message.u.username === sessionId;
   const { sx, ...props } = messageProps || {};
@@ -61,6 +63,7 @@ const MessageLayout = ({
                 className="mouse-pointer"
                 onClick={() => {
                   onSetStep(STEP.CHAT_FORWARD, { ...dataTransfer, message });
+                  callBackForward && callBackForward()
                 }}
                 sx={{
                   backgroundColor: isDarkMode ? "#3a3b3c" : "#ECECF3",

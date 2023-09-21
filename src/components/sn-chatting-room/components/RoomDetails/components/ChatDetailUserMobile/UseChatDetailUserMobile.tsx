@@ -29,7 +29,7 @@ export interface useChatDetailInfoReturns {
   handleCloseAccountInfoMobile: () => void;
   handleSearchConversation: () => void;
   menuItems: MenuItem[];
-  typeDrawer: "account" | "link" | "media" | "file" | "group";
+  typeDrawer: "account" | "link" | "media" | "file" | "group" | "forward";
   onChangeTypeDrawer: (type: string) => void;
 }
 

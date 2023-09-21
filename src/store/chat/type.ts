@@ -200,9 +200,12 @@ export interface ChatState {
   deleteConversationStatus: DataStatus;
   paramsConversation: ChatRequestCommon | {};
   paramsLastMessage: LastMessagesRequest | {};
-  paramsUnreadMessage: UnReadMessageRequest | {}
+  paramsUnreadMessage: UnReadMessageRequest | {};
+  typeDrawerChat: TypeDrawerChat;
+  isOpenInfoChat: boolean;
 }
 
+export type TypeDrawerChat = 'group' | 'forward' | 'media' | 'file' | 'link' | 'info' | 'account'
 export type DirectionChat = "a" | "c" | "d";
 
 export type TypeParamsChat = 'paramsConversation' |  'paramsLastMessage' | 'paramsUnreadMessage'

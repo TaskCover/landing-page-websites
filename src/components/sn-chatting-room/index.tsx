@@ -7,6 +7,7 @@ import { Box } from "@mui/material";
 import useFetchingChatting from "./hooks/useFetchingChatting";
 import ChattingRoomMobileLayout from "./components/Layout/ChattingRoomMobileLayout";
 import AddGroup from "components/sn-chat/chatGroup/AddGroup";
+import { useChat } from "store/chat/selectors";
 
 const { RoomDetails, Sidebar, ChattingRoomLayout } = SNChat;
 
@@ -14,13 +15,8 @@ const ChattingRoom = () => {
   const [openAddGroup, setOpenAddGroup] = useState(false);
 
   const { mobileMode } = useGetScreenMode();
-  const {
-    onSelectRoom,
-    currentConversation,
-    onSearchText,
-    onResetCurrentConversation,
-    onChangeParamsConversation,
-  } = useFetchingChatting();
+  const { onSearchText, onChangeParamsConversation } = useFetchingChatting();
+  const { dataTransfer: currentConversation } = useChat();
 
   return (
     <Box
@@ -33,33 +29,21 @@ const ChattingRoom = () => {
       {!mobileMode ? (
         <ChattingRoomLayout>
           <Sidebar
-            currentConversation={currentConversation}
-            onSelectRoom={onSelectRoom}
             onSearchText={onSearchText}
             onChangeParamsConversation={onChangeParamsConversation}
           />
-          <RoomDetails
-            currentConversation={currentConversation}
-            onResetCurrentConversation={onResetCurrentConversation}
-            onSelectRoom={onSelectRoom}
-          />
+          <RoomDetails />
         </ChattingRoomLayout>
       ) : (
         <>
           {currentConversation ? (
-            <RoomDetails
-              currentConversation={currentConversation}
-              onResetCurrentConversation={onResetCurrentConversation}
-              onSelectRoom={onSelectRoom}
-            />
+            <RoomDetails />
           ) : (
             <ChattingRoomMobileLayout setOpenAddGroup={setOpenAddGroup}>
               {openAddGroup ? (
                 <AddGroup />
               ) : (
                 <Sidebar
-                  currentConversation={currentConversation}
-                  onSelectRoom={onSelectRoom}
                   onSearchText={onSearchText}
                   onChangeParamsConversation={onChangeParamsConversation}
                 />

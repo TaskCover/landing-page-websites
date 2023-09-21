@@ -29,7 +29,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
 
   const { user } = useAuth();
 
-  const { groupMembers } = useChat();
+  const { groupMembers, dataTransfer: currentConversation } = useChat();
 
 
   //check owner
@@ -41,10 +41,8 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
   return (
     <>
       <ChatDetailInfoMenuItem
-        text={"Group Name: " + props.currentConversation?.name}
+        text={"Group Name: " + currentConversation?.name}
         icon={GroupNameIcon}
-        isOpenDrawer={props?.isDrawerOpen as boolean}
-        currentConversation={props?.currentConversation as any}
         callBackOpenDrawer={() => props?.setShowPopup((pre) => ({
           ...pre,
           type: TYPE_POPUP.RENAME_GROUP,
@@ -53,6 +51,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
           content: <></>,
           actionType: 0,
         }))}
+        currentConversation={currentConversation}
         callBackIcon={EditGroupNameIcon}
       />
       <Box
@@ -72,9 +71,6 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
               key={index}
               text={item.text}
               icon={item.icon}
-              isOpenDrawer={props?.isDrawerOpen as boolean}
-              currentConversation={props?.currentConversation as any}
-              onOpenDrawer={props?.onOpenDrawer}
               callBackOpenDrawer={item.callback}
             />
           ))}

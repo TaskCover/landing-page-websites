@@ -102,7 +102,7 @@ export const useActionGroupDetails = () => {
     };
   
     useEffect(() => {
-      if(dataTransfer?.t !== 'd'){
+      if(dataTransfer?.t !== 'd' && dataTransfer?._id){
       onFetchGroupMembersMember({
         roomId: dataTransfer?._id,
       });

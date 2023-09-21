@@ -6,9 +6,8 @@ import { useTranslations } from "next-intl";
 import { NS_AUTH } from "constant/index";
 import { useChat } from "store/chat/selectors";
 import useGetScreenMode from "hooks/useGetScreenMode";
-import { FC } from "react";
-import { DrawerInfoChatProps } from "..";
 import useTheme from "hooks/useTheme";
+import { IChatItemInfo } from "store/chat/type";
 
 const mapperDataToInfo = (partnerInfo: Partial<UserInfo>) => ({
   fullName: partnerInfo.fullname,
@@ -17,12 +16,13 @@ const mapperDataToInfo = (partnerInfo: Partial<UserInfo>) => ({
   phone: partnerInfo.phone,
 });
 
-const AccountInfo: FC<DrawerInfoChatProps> = (props) => {
+const AccountInfo = () => {
   const { extraDesktopMode } = useGetScreenMode();
   const { partnerInfo } = useChat();
   const t = useTranslations(NS_AUTH);
   const {isDarkMode} =  useTheme();
 
+  const {dataTransfer: currentConversation, onCloseDrawer} = useChat();
   return (
     <Box
       sx={{
@@ -36,8 +36,8 @@ const AccountInfo: FC<DrawerInfoChatProps> = (props) => {
       }}
     >
       <AccountInfoHeader
-        onClose={props.onClose}
-        currentConversation={props.currentConversation}
+        onClose={() => onCloseDrawer('info')}
+        currentConversation={currentConversation as IChatItemInfo}
       />
       <Box
         sx={{
@@ -47,7 +47,7 @@ const AccountInfo: FC<DrawerInfoChatProps> = (props) => {
         }}
       >
         <Avatar
-          src={props.currentConversation?.avatar}
+          src={currentConversation?.avatar}
           sx={{
             height: "80px",
             width: "80px",

@@ -1,17 +1,17 @@
 import { Box, Typography, IconButton } from "@mui/material";
 import useTheme from "hooks/useTheme";
 import ProfileAdd from "icons/ProfileAdd";
+import { useChat } from "store/chat/selectors";
 import { IChatItemInfo } from "store/chat/type";
 
 interface AccountInfoProps {
   onClose: () => void;
-  currentConversation: IChatItemInfo;
   title?: string;
-  onChangeTypeDrawer?: ((type: string) => void) | undefined
 }
 
 const InfoHeader: React.FC<AccountInfoProps> = (props) => {
   const  {isDarkMode} = useTheme()
+  const {dataTransfer: currentConversation} = useChat();
   return (
     <Box
       sx={{
@@ -51,7 +51,7 @@ const InfoHeader: React.FC<AccountInfoProps> = (props) => {
           color={isDarkMode ? 'white' :"var(--Black, #212121)"}
           sx={{ width: "180px", textAlign: "center" }}
         >
-          {props?.title ? props?.title : props.currentConversation?.name}
+          {props?.title ? props?.title : currentConversation?.name as string}
         </Typography>
         </Box>
       </Box>

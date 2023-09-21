@@ -2,30 +2,29 @@ import React, { useCallback, useState } from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import AccountInfo from "../Drawer";
-import { IChatItemInfo } from "store/chat/type";
+import { IChatItemInfo, TypeDrawerChat } from "store/chat/type";
 import { useChat } from "store/chat/selectors";
 import useTheme from "hooks/useTheme";
 
 interface ChatDetailInfoMenuItemProps {
   text: string;
   icon: JSX.ElementType;
-  isOpenDrawer: boolean;
   currentConversation: IChatItemInfo;
   callBackOpenDrawer?: () => void;
-  onOpenDrawer?: () => void
-  callBackIcon?: JSX.ElementType
-
+  callBackIcon?: JSX.ElementType;
+  type?: string
 }
 
 const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
   props,
 ) => {
 
+  const {onSetDrawerType} = useChat()
   // Handler to open the drawer.
-  const onOpenDrawer = () => {
-    props.onOpenDrawer && props.onOpenDrawer()
+  const onOpenDrawer = useCallback(() => {
       props?.callBackOpenDrawer && props.callBackOpenDrawer() 
-  };
+      onSetDrawerType(props?.type as TypeDrawerChat)
+  }, []);
 
   const [isRotated, setIsRotated] = useState(false);
 

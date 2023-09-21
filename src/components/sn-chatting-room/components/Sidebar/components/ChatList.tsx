@@ -1,6 +1,5 @@
 import NoData from "components/NoData";
-import useChattingActions from "components/sn-chatting-room/hooks/useChattingActions";
-import React, { useMemo } from "react";
+import React from "react";
 import { Box } from "@mui/material";
 import { useAuth } from "store/app/selectors";
 import ChatItemLayout from "components/sn-chat/components/chat/ChatItemLayout";
@@ -8,9 +7,10 @@ import { IChatItemInfo } from "store/chat/type";
 import { useDeepCompareMemo } from "hooks/useDeepCompare";
 import { useWSChat } from "store/chat/helpers";
 import useTheme from "hooks/useTheme";
+import { useChat } from "store/chat/selectors";
 
-const ChatList = ({ onSelectRoom, idActive }) => {
-  const { conversations } = useChattingActions();
+const ChatList = () => {
+  const {onSetDataTransfer, dataTransfer: currentConversation, convention: conversations} = useChat()
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
 
@@ -44,7 +44,7 @@ const ChatList = ({ onSelectRoom, idActive }) => {
   }, [conversations, user]);
 
   const handleClickConversation = (chatInfo: IChatItemInfo) => {
-    onSelectRoom(chatInfo);
+    onSetDataTransfer(chatInfo);
   };
 
   const renderConversation = (idActive: string) => {
@@ -77,7 +77,7 @@ const ChatList = ({ onSelectRoom, idActive }) => {
     );
   };
 
-  return <>{renderConversations(idActive)}</>;
+  return <>{renderConversations(currentConversation?._id as string)}</>;
 };
 
 export default ChatList;

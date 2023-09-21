@@ -7,8 +7,6 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import { HeaderMobileProps, MobileScreenType } from "../../type";
 import { MobileScreen } from "../../const";
-import { useEmployeesOfCompany } from "store/manager/selectors";
-import { useAuth } from "store/app/selectors";
 import useTheme from "hooks/useTheme";
 
 interface Props {
@@ -21,17 +19,7 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({
   children,
   setOpenAddGroup,
 }) => {
-
   const {isDarkMode} = useTheme();
-  const { onGetEmployees, items } = useEmployeesOfCompany();
-  const { user } = useAuth();
-
-  const getEmployeesByCompany = () => {
-    if (user && user.company) {
-      onGetEmployees(user?.company ?? "", { pageIndex: 0, pageSize: 30 });
-    }
-  };
-
   const detectPropsWithScreen = () => {
     const propsScreenHandler: Partial<{
       [key in MobileScreenType]: () => HeaderMobileProps;

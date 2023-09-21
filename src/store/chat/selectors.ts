@@ -47,6 +47,7 @@ import {
   MessageInfo,
   ForwardMessageGroup,
   ChangeGroupAvatar,
+  TypeDrawerChat,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -63,6 +64,9 @@ import {
   reset,
   setStateSearchMessage,
   updateUnSeenMessage,
+  setTypeDrawerChatDesktop,
+  setCloseDrawerChatDesktop,
+  resetDataTransfer,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -112,6 +116,8 @@ export const useChat = () => {
     dataTransfer,
     groupMembers,
     chatAttachments,
+    typeDrawerChat,
+    isOpenInfoChat,
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -289,6 +295,8 @@ export const useChat = () => {
 
   const onSetDataTransfer = useCallback(
     (data: any) => {      
+      console.log(data, 'data');
+      
       dispatch(setDataTransfer(data));
     },
     [dispatch],
@@ -574,9 +582,27 @@ export const useChat = () => {
     [dispatch, onSendMessage, onSetStateSendMessage],
   );
 
-  const onSetParamChat = () => {
-    
-  }
+  const onSetDrawerType = useCallback(
+    async (type: TypeDrawerChat) => {
+      return dispatch(setTypeDrawerChatDesktop(type));
+    },
+    [dispatch],
+  );
+
+  const onCloseDrawer = useCallback(
+    async (type: TypeDrawerChat) => {
+      return dispatch(setCloseDrawerChatDesktop(type));
+    },
+    [dispatch],
+  );
+
+  const onResetDataTransfer = useCallback(
+    async () => {
+      return dispatch(resetDataTransfer());
+    },
+    [dispatch],
+  );
+
   return {
     convention,
     mediaListConversation,
@@ -650,6 +676,11 @@ export const useChat = () => {
     onGetUnReadMessages,
     onGetConventionById,
     onForwardMessage,
-    onChangeGroupAvatar
+    onChangeGroupAvatar,
+    onSetDrawerType,
+    onCloseDrawer,
+    typeDrawerChat,
+    isOpenInfoChat,
+    onResetDataTransfer
   };
 };

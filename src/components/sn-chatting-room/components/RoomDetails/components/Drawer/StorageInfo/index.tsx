@@ -7,6 +7,8 @@ import MediaContent from "components/sn-chat/components/common/MediaContent";
 import FileContent from "components/sn-chat/components/common/FileContent";
 import LinkContent from "components/sn-chat/components/common/LinkContent";
 import useTheme from "hooks/useTheme";
+import { useChat } from "store/chat/selectors";
+import { TypeDrawerChat } from "store/chat/type";
 
 const TYPES = [
   {
@@ -23,9 +25,10 @@ const TYPES = [
   },
 ];
 
-const StorageInfo: FC<DrawerInfoChatProps> = (props) => {
+const StorageInfo: FC<DrawerInfoChatProps> = () => {
   const { extraDesktopMode } = useGetScreenMode();
   const {isDarkMode} =  useTheme();
+  const {typeDrawerChat, onSetDrawerType, dataTransfer: currentConversation} = useChat();
 
   return (
     <Box
@@ -40,8 +43,8 @@ const StorageInfo: FC<DrawerInfoChatProps> = (props) => {
       }}
     >
       <InfoHeader
-        onClose={props.onClose}
-        currentConversation={props.currentConversation}
+        onClose={() => onSetDrawerType('info')
+        }
         title="Chat detail info"
       />
       <Box
@@ -58,16 +61,16 @@ const StorageInfo: FC<DrawerInfoChatProps> = (props) => {
               padding: "5px 10px",
               borderRadius: "30px",
               border: `1px solid ${
-                type?.type === props.type ? "#3699FF" : "#999999"
+                type?.type === typeDrawerChat ? "#3699FF" : "#999999"
               }`,
-              color: type?.type === props.type ? "#3699FF" : "#999999",
+              color: type?.type === typeDrawerChat ? "#3699FF" : "#999999",
               minWidth: "78px",
               textAlign: "center",
               fontSize: "14px",
               cursor: "pointer",
             }}
             onClick={() =>
-              props?.onChangeTypeDrawer && props?.onChangeTypeDrawer(type?.type)
+              onSetDrawerType && onSetDrawerType(type?.type as TypeDrawerChat)
             }
           >
             {type.text}
@@ -75,9 +78,9 @@ const StorageInfo: FC<DrawerInfoChatProps> = (props) => {
         ))}
       </Box>
       <Box>
-        {props?.type === "media" && <MediaContent /> }
-        {props?.type === 'link' && <LinkContent />}
-        {props?.type === 'file' && <FileContent />}
+        {typeDrawerChat === "media" && <MediaContent /> }
+        {typeDrawerChat === 'link' && <LinkContent />}
+        {typeDrawerChat === 'file' && <FileContent />}
       </Box>
     </Box>
   );

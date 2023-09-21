@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { ParamChatState, ParamState } from "../type";
-import useChattingActions from "./useChattingActions";
-import { IChatItemInfo, STEP } from "store/chat/type";
+import { useCallback, useEffect, useState } from "react";
+import { ParamState } from "../type";
 import { useChat } from "store/chat/selectors";
 import useGetScreenMode from "hooks/useGetScreenMode";
+import { useTranslations } from "next-intl";
+import { useSnackbar } from "store/app/selectors";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 
 const defaultParam = {
   count: 12,
@@ -12,33 +13,36 @@ const defaultParam = {
   type: "a",
 };
 
-const defaultChatParam = {
-  ...defaultParam,
-  roomId: "",
-};
-
 export interface useFetchingChattingReturns {
-  onSelectRoom: (chatInfo: IChatItemInfo) => void;
-  currentConversation?: IChatItemInfo;
-  onResetCurrentConversation?: () => void;
   onSearchText: (text?: string) => void;
   onChangeParamsConversation: (params: ParamState) => void
 }
 
 const useFetchingChatting = (): useFetchingChattingReturns => {
-  const { conversations, handleGetConversation } = useChattingActions();
-  const { onSetStep } = useChat();
   const [params, setParams] = useState<ParamState>(defaultParam as ParamState);
-  const [detailParams, setDetailsParams] = useState<ParamChatState>(
-    defaultChatParam as ParamChatState,
-  );
+  const { onGetAllConvention, convention: conversations, onSetDataTransfer: onSelectRoom, dataTransfer } = useChat();
 
   const { mobileMode } = useGetScreenMode();
 
-  const onResetCurrentConversation = () => {
-    setDetailsParams({ ...detailParams, roomId: "-1" });
-    return;
-  };
+  const { onAddSnackbar } = useSnackbar()
+  const t = useTranslations(NS_COMMON);
+
+
+  const handleGetConversation = useCallback(async ({ body }: { body: ParamState }) => {        
+      try {
+          await onGetAllConvention({
+          ...body 
+          });
+      } catch (error) {
+          onAddSnackbar(
+              typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+              "error",
+          );
+      }
+  },
+      [onAddSnackbar, onGetAllConvention, t],
+  );
+  
 
   useEffect(() => {
     handleGetConversation({ body: params });
@@ -47,38 +51,16 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
   useEffect(() => {
     if (mobileMode) return;
     if (conversations?.length > 0) {
+      console.log(conversations[0], 'conversations[0]');
       onSelectRoom(conversations[0]);
     }
-  }, [conversations]);
-
-  const onSelectRoom = (chatInfo: IChatItemInfo) => {
-    setDetailsParams((prevState) => ({
-      ...prevState,
-      roomId: chatInfo?._id,
-    }));
-    if (chatInfo?.t !== "d") {
-      onSetStep(STEP.CHAT_GROUP, {...chatInfo, isDesktop: !mobileMode});
-    } else {
-      onSetStep(STEP.CHAT_ONE, {...chatInfo, isDesktop: !mobileMode});
-    }
-  };
-
-  const currentConversation = useMemo(() => {
-    if (detailParams?.roomId) {
-      return conversations.find(
-        (conversation) => conversation?._id === detailParams?.roomId,
-      );
-    }
-  }, [detailParams?.roomId, conversations]);
+  }, [conversations, onSelectRoom]);  
 
   const onChangeParamsConversation = (params: ParamState) => {
     setParams(params)
   }
 
   return {
-    onSelectRoom,
-    currentConversation,
-    onResetCurrentConversation,
     onSearchText: (text) => setParams({ ...params, text: text as string }),
     onChangeParamsConversation,
   };

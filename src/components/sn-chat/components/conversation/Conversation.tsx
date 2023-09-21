@@ -75,6 +75,8 @@ const Conversation: FC<Props> = ({ wrapperMessageSx }) => {
     });
   }, [dataTransfer?.t, onGetUnReadMessages]);
 
+  console.log(dataTransfer, 'dataTransfer');
+  
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
       ? stateSearchMessage?.offset + initPageIndex
