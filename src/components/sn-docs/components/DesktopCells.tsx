@@ -21,17 +21,6 @@ const DesktopCells = (props: DesktopCellsProps) => {
       <BodyCell tooltip={formatDate(item.created_time, DATE_TIME_FORMAT_SLASH)}>
         {formatDate(item.created_time)}
       </BodyCell>
-      <BodyCell
-        tooltip={formatDate(item.date_end_using, DATE_TIME_FORMAT_SLASH)}
-      >
-        {formatDate(item.date_end_using)}
-      </BodyCell>
-      <StatusCell
-        namespace={NS_COMPANY}
-        text={TEXT_STATUS[item.status]}
-        color={COLOR_STATUS[item.status]}
-        width={93}
-      />
     </>
   );
 };

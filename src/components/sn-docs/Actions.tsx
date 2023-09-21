@@ -168,7 +168,12 @@ const Actions = () => {
         </Stack>
         <Button
           size="small"
-          sx={{ height: 40, display: { md: "none" }, width: "fit-content" }}
+          sx={{
+            height: 40,
+            display: { md: "none" },
+            width: "fit-content",
+            marginBottom: "20px",
+          }}
           onClick={onSearch}
           variant="secondary"
         >
