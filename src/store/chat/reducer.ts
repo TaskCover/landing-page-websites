@@ -86,6 +86,7 @@ const initialState: ChatState = {
   paramsUnreadMessage: {},
   typeDrawerChat: 'info',
   isOpenInfoChat: false,
+  isChatDesktop: false,
 };
 
 const isConversation = (type: string) => {
@@ -97,6 +98,9 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
+    setChatDesktop : (state, action) => {
+      state.isChatDesktop = action.payload
+    },
     resetConversationInfo: (state) => {
       state.conversationInfo = null;
     },
@@ -529,7 +533,8 @@ export const {
   updateUnSeenMessage,
   setTypeDrawerChatDesktop,
   setCloseDrawerChatDesktop,
-  resetConversationInfo
+  resetConversationInfo,
+  setChatDesktop
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

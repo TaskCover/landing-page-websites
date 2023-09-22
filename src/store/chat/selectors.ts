@@ -68,6 +68,7 @@ import {
   setTypeDrawerChatDesktop,
   setCloseDrawerChatDesktop,
   resetConversationInfo,
+  setChatDesktop,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -119,6 +120,7 @@ export const useChat = () => {
     chatAttachments,
     typeDrawerChat,
     isOpenInfoChat,
+    isChatDesktop,
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -601,6 +603,10 @@ export const useChat = () => {
     return dispatch(resetConversationInfo());
   }, [dispatch]);
 
+  const onSetChatDesktop = useCallback(async (valid = true) => {
+    return dispatch(setChatDesktop(valid));
+  }, [dispatch]);
+
   return {
     convention,
     mediaListConversation,
@@ -680,5 +686,7 @@ export const useChat = () => {
     typeDrawerChat,
     isOpenInfoChat,
     onResetConversationInfo,
+    isChatDesktop,
+    onSetChatDesktop
   };
 };

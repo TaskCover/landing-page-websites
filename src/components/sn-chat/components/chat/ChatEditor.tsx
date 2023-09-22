@@ -10,7 +10,12 @@ import {
   useState,
 } from "react";
 import "react-quill/dist/quill.snow.css";
-import { ACCEPT_MEDIA, FILE_ACCEPT, NS_CHAT_BOX, NS_COMMON } from "constant/index";
+import {
+  ACCEPT_MEDIA,
+  FILE_ACCEPT,
+  NS_CHAT_BOX,
+  NS_COMMON,
+} from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import "quill/dist/quill.snow.css";
 import ImageImportIcon from "icons/ImageImportIcon";
@@ -94,13 +99,10 @@ const ChatEditor = (props: EditorProps) => {
     initalValue,
     isLoading,
   } = props;
-  const { 
-    onGetUnReadMessages,
-    dataTransfer
-   } = useChat();
-   const commonChatBox = useTranslations(NS_CHAT_BOX);
+  const { onGetUnReadMessages, dataTransfer, isChatDesktop } = useChat();
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
 
-   const {isDarkMode} = useTheme();
+  const { isDarkMode } = useTheme();
 
   const quillRef = useRef<ReactQuill>(null);
   const inputMediaRef = useRef<HTMLInputElement | null>(null);
@@ -155,7 +157,6 @@ const ChatEditor = (props: EditorProps) => {
         inputMediaRef.current.value = "";
       }
       quillEditor?.focus();
-
     },
     [files, onChangeFiles, quillEditor],
   );
@@ -202,7 +203,6 @@ const ChatEditor = (props: EditorProps) => {
       type: dataTransfer?.t ?? "d",
     });
   }, [dataTransfer?.t, onGetUnReadMessages]);
-
 
   const handleKeyDown = useCallback(
     (event) => {
@@ -267,10 +267,11 @@ const ChatEditor = (props: EditorProps) => {
 
   useEffect(() => {
     setValue("");
-  }, [dataTransfer])
-  
+  }, [dataTransfer]);
+
   return (
     <Stack
+      direction={isChatDesktop ? "column-reverse" : "column"}
       className="editor"
       sx={{
         "& .ql-snow": {
@@ -361,8 +362,8 @@ const ChatEditor = (props: EditorProps) => {
         flex={1}
         flexWrap="nowrap"
         overflow="auto"
-        display={urlFiles?.length > 0 ? "flex" : "none"}
         p={noCss ? 0 : 1}
+        display={urlFiles?.length > 0 ? "flex" : isChatDesktop ? "block" : "none"}
         sx={
           noCss
             ? {}
@@ -371,6 +372,7 @@ const ChatEditor = (props: EditorProps) => {
                 borderBottomLeftRadius: 4,
                 borderBottomRightRadius: 4,
                 borderTop: "none",
+                ...(isChatDesktop ? { minHeight: "80px" } : {}),
               }
         }
       >

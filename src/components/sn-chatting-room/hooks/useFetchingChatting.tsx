@@ -20,7 +20,7 @@ export interface useFetchingChattingReturns {
 
 const useFetchingChatting = (): useFetchingChattingReturns => {
   const [params, setParams] = useState<ParamState>(defaultParam as ParamState);
-  const { onGetAllConvention, convention: conversations, onSetConversationInfo: onSelectRoom, onSetRoomId } = useChat();
+  const { onGetAllConvention, convention: conversations, onSetConversationInfo: onSelectRoom, onSetRoomId, onSetChatDesktop } = useChat();
 
   const { mobileMode } = useGetScreenMode();
 
@@ -53,8 +53,9 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
     if (conversations?.length > 0) {
       onSelectRoom(conversations[0]);
       onSetRoomId(conversations[0]?._id);
+      onSetChatDesktop()
     }
-  }, [conversations, mobileMode, onSelectRoom, onSetRoomId, params?.text?.length]);  
+  }, [conversations, mobileMode, onSelectRoom, onSetRoomId, params?.text?.length, onSetChatDesktop]);  
 
   const onChangeParamsConversation = (params: ParamState) => {
     setParams(params)

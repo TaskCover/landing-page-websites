@@ -17,7 +17,7 @@ import useTheme from "hooks/useTheme";
 
 const ChatListTemp = () => {
   const { user } = useAuth();
-  const { onGetAllConvention, onClearConversation, onReset } = useChat();
+  const { onGetAllConvention, onClearConversation, onReset,onSetChatDesktop } = useChat();
   const popperRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
@@ -128,6 +128,7 @@ const ChatListTemp = () => {
 
   const handleTrigger = (e: React.MouseEvent<HTMLDivElement>) => {
     popperRef.current = !popperRef.current;
+    onSetChatDesktop(false)
     if (browserWidth < 768) {
       setOpen(false);
       setShow(true);

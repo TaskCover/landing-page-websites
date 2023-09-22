@@ -204,6 +204,7 @@ export interface ChatState {
   paramsUnreadMessage: UnReadMessageRequest | {};
   typeDrawerChat: TypeDrawerChat;
   isOpenInfoChat: boolean;
+  isChatDesktop: boolean;
 }
 
 export type TypeDrawerChat = 'group' | 'forward' | 'media' | 'file' | 'link' | 'info' | 'account'
