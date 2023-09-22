@@ -7,6 +7,7 @@ import Messages from "../messages/Messages";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { SxProps, Theme } from "@mui/material";
+import useGetScreenMode from "hooks/useGetScreenMode";
 
 const initPageIndex = 10;
 
@@ -30,10 +31,27 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
     onGetUnReadMessages,
     onGetLastMessages,
     onUploadAndSendFile,
+    isChatDesktop,
+    isOpenInfoChat,
   } = useChat();
   const { user } = useAuth();
 
   const { sendMessage } = useWSChat();
+  const { extraDesktopMode, mobileMode, desktopMode } = useGetScreenMode();
+
+  const ObjectDeviceMode = useMemo(() => {
+    if (desktopMode) {
+      return {
+        heightBefore: "70vh",
+        heightAfter: "58vh",
+      };
+    } else if (mobileMode) {
+      return {
+        heightBefore: "76vh",
+        heightAfter: "67vh",
+      };
+    }
+  }, [desktopMode, mobileMode]);
 
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
@@ -153,7 +171,22 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
           getLastMessage(page, 10);
         }}
         ref={inputRef}
-        wrapperMessageSx={wrapperMessageSx}
+        {...(ObjectDeviceMode &&
+          isChatDesktop && {
+            wrapperMessageSx: {
+              height:
+                files?.length === 0
+                  ? ObjectDeviceMode.heightBefore
+                  : ObjectDeviceMode.heightAfter,
+              ...(isOpenInfoChat
+                ? {
+                    width: `calc(100% - ${
+                      extraDesktopMode ? "424px" : "272px"
+                    })`,
+                  }
+                : {}),
+            },
+          })}
       />
       <ChatInput
         isLoading={false}

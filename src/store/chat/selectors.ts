@@ -221,18 +221,17 @@ export const useChat = () => {
   );
 
   const onSendMessage = useCallback(
-    async (
-      message: Partial<MessageBodyRequest>
-    ) => {      
+    async (message: Partial<MessageBodyRequest>) => {
       await dispatch(
         sendMessages({
           sender_userId: user?.["id_rocket"] || "",
           userId: user?.["id_rocket"] || "",
           sender_authToken: user?.["authToken"] || "",
           authToken: user?.["authToken"] || "",
-          receiverUsername: conversationInfo?.username || dataTransfer?.username,
-          roomId:  dataTransfer?._id || conversationInfo?._id || roomId,
-          t: dataTransfer?.t || conversationInfo?.t ,
+          receiverUsername:
+            conversationInfo?.username || dataTransfer?.username,
+          roomId: dataTransfer?._id || conversationInfo?._id || roomId,
+          t: dataTransfer?.t || conversationInfo?.t,
           channel: dataTransfer?.name || conversationInfo?.name || "",
           ...message,
         }),
@@ -605,9 +604,12 @@ export const useChat = () => {
     return dispatch(resetConversationInfo());
   }, [dispatch]);
 
-  const onSetChatDesktop = useCallback(async (valid = true) => {
-    return dispatch(setChatDesktop(valid));
-  }, [dispatch]);
+  const onSetChatDesktop = useCallback(
+    async (valid = true) => {
+      return dispatch(setChatDesktop(valid));
+    },
+    [dispatch],
+  );
 
   return {
     convention,
@@ -689,6 +691,6 @@ export const useChat = () => {
     isOpenInfoChat,
     onResetConversationInfo,
     isChatDesktop,
-    onSetChatDesktop
+    onSetChatDesktop,
   };
 };

@@ -99,7 +99,7 @@ const ChatEditor = (props: EditorProps) => {
     initalValue,
     isLoading,
   } = props;
-  const { onGetUnReadMessages, dataTransfer, isChatDesktop } = useChat();
+  const { onGetUnReadMessages, dataTransfer } = useChat();
   const commonChatBox = useTranslations(NS_CHAT_BOX);
 
   const { isDarkMode } = useTheme();
@@ -271,7 +271,7 @@ const ChatEditor = (props: EditorProps) => {
 
   return (
     <Stack
-      direction={isChatDesktop ? "column-reverse" : "column"}
+      // direction={isChatDesktop ? "column-reverse" : "column"}
       className="editor"
       sx={{
         "& .ql-snow": {
@@ -363,7 +363,7 @@ const ChatEditor = (props: EditorProps) => {
         flexWrap="nowrap"
         overflow="auto"
         p={noCss ? 0 : 1}
-        display={urlFiles?.length > 0 ? "flex" : isChatDesktop ? "block" : "none"}
+        display={urlFiles?.length > 0 ? "flex" : "none"}
         sx={
           noCss
             ? {}
@@ -372,7 +372,6 @@ const ChatEditor = (props: EditorProps) => {
                 borderBottomLeftRadius: 4,
                 borderBottomRightRadius: 4,
                 borderTop: "none",
-                ...(isChatDesktop ? { minHeight: "80px" } : {}),
               }
         }
       >

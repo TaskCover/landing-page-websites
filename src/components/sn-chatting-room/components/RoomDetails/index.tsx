@@ -10,7 +10,8 @@ const RoomDetails = () => {
   const { mobileMode, extraDesktopMode } = useGetScreenMode();
   const { isFetching: loading, isOpenInfoChat } = useChat();
 
-  return  <Box
+  return (
+    <Box
       width="100%"
       display="flex"
       justifyContent="space-between"
@@ -18,14 +19,6 @@ const RoomDetails = () => {
     >
       {mobileMode ? <RoomHeaderMobile /> : <RoomHeader />}
       <Conversation
-        wrapperMessageSx={{
-          height: extraDesktopMode ? "70vh" : '58vh',
-          ...(isOpenInfoChat
-            ? {
-                width: `calc(100% - ${extraDesktopMode ? "424px" : "272px"})`,
-              }
-            : {}),
-        }}
         wrapperInputSx={{
           ...(isOpenInfoChat
             ? {
@@ -35,6 +28,7 @@ const RoomDetails = () => {
         }}
       />
     </Box>
+  );
 };
 
 export default RoomDetails;
