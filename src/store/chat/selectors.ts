@@ -222,21 +222,23 @@ export const useChat = () => {
 
   const onSendMessage = useCallback(
     async (
-      message: Omit<
-        MessageBodyRequest,
-        "sender_userId" | "sender_authToken" | "receiverUsername"
-      >,
+      message: Partial<MessageBodyRequest>
     ) => {      
       await dispatch(
         sendMessages({
           sender_userId: user?.["id_rocket"] || "",
+          userId: user?.["id_rocket"] || "",
           sender_authToken: user?.["authToken"] || "",
+          authToken: user?.["authToken"] || "",
           receiverUsername: conversationInfo?.username || dataTransfer?.username,
+          roomId:  dataTransfer?._id || conversationInfo?._id || roomId,
+          t: dataTransfer?.t || conversationInfo?.t ,
+          channel: dataTransfer?.name || conversationInfo?.name || "",
           ...message,
         }),
       );
     },
-    [conversationInfo?.username, dispatch, user, dataTransfer],
+    [conversationInfo, dispatch, user, dataTransfer],
   );
 
   const onSearchChatText = useCallback(

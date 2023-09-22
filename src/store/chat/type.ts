@@ -331,6 +331,11 @@ export interface MessageBodyRequest {
   receiverUsername: string;
   message?: string;
   attachments?: Attachment[];
+  t: 'd' | 'c' | 'p';
+  roomId?: string;
+  userId?: string;
+  channel?: string;
+  authToken?: string;
 }
 
 export interface MessageSearchInfo {
