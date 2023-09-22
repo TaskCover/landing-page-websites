@@ -14,8 +14,6 @@ const ChatList = () => {
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
 
-  useWSChat();
-
   const _conversations = useDeepCompareMemo(() => {
     return conversations
       .filter((item) => item.username !== user?.["username"])

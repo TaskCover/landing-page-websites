@@ -8,6 +8,7 @@ import {
   MessageInfo,
 } from "./type";
 import { readMessages } from "./actions";
+import { useWhatChanged } from "@simbathesailor/use-what-changed";
 
 export const useWSChat = () => {
   const { user } = useAuth();

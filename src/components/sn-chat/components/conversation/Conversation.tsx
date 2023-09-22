@@ -7,7 +7,6 @@ import Messages from "../messages/Messages";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { SxProps, Theme } from "@mui/material";
-import { useWhatChanged } from "@simbathesailor/use-what-changed";
 
 const initPageIndex = 10;
 
@@ -95,10 +94,6 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
     roomId,
     t,
   ];
-  useWhatChanged(
-    depsCallback,
-    "dataTransfer, onAddSnackbar, getLastMessage, roomId, t",
-  );
 
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
