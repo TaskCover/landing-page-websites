@@ -1,71 +1,60 @@
-import { memo } from "react";
-import { Stack } from "@mui/material";
 import Avatar from "components/Avatar";
-import { Text } from "components/shared";
-import { formatDate, formatNumber } from "utils/index";
 import { BodyCell } from "components/Table";
+import { formatDate } from "utils/index";
+import { memo } from "react";
 import { Position } from "store/company/reducer";
-import { NS_COMMON, NS_COMPANY, DATE_TIME_FORMAT_SLASH } from "constant/index";
-import { useTranslations } from "next-intl";
+import { Stack, TableRow } from "@mui/material";
+import { Text } from "components/shared";
 
 type MobileContentCellProps = {
   item: Position;
 };
 
-type InformationItemProps = {
-  label: string;
-  children?: string | React.ReactNode;
-};
-
 const MobileContentCell = (props: MobileContentCellProps) => {
   const { item } = props;
-  const commonT = useTranslations(NS_COMMON);
-  const companyT = useTranslations(NS_COMPANY);
-
   return (
-    <>
-      <BodyCell align="left" sx={{ px: 0.5 }} textProps={{ variant: "h6" }}>
-        {item?.name}
+    <TableRow>
+      <BodyCell align="left" sx={{ px: "10px" }}>
+        <Text fontWeight={600} fontSize={12}>
+          {item?.name}
+        </Text>
       </BodyCell>
-      <BodyCell align="left" sx={{ px: 0.5 }}>
-        {item?.created_by?.fullname}
+      <BodyCell>
+        <Text fontWeight={400} fontSize={12}>
+          {formatDate(item.created_time)}
+        </Text>
       </BodyCell>
-      <BodyCell
-        tooltip={formatDate(item.created_time, DATE_TIME_FORMAT_SLASH)}
-        sx={{ px: 0.5 }}
-        textProps={{
-          sx: {
-            wordBreak: "break-all",
-          },
-        }}
-      >
-        {formatDate(item.created_time)}
+      <BodyCell>
+        <Text fontWeight={600} fontSize={12}>
+          22 hours ago
+        </Text>
       </BodyCell>
-      <BodyCell sx={{ px: 0.5 }}>
-        {formatNumber(item?.total_member_of_position)}
+      <BodyCell sx={{ py: "10px" }} align="center">
+        {item?.created_by?.id ? (
+          <Stack
+            justifyContent={"center"}
+            direction="row"
+            alignItems="center"
+            spacing={1}
+          >
+            <Avatar size={24} src={item.created_by?.avatar?.link} />
+            <Stack
+              justifyContent={"start"}
+              alignItems={"start"}
+              direction={"column"}
+            >
+              <Text fontWeight={600} fontSize={12}>
+                {item.created_by?.fullname}
+              </Text>
+              <Text fontWeight={400} fontSize={12}>
+                {item?.name}
+              </Text>
+            </Stack>
+          </Stack>
+        ) : null}
       </BodyCell>
-    </>
+    </TableRow>
   );
 };
 
 export default memo(MobileContentCell);
-
-const InformationItem = (props: InformationItemProps) => {
-  const { label, children = "--" } = props;
-
-  return (
-    <Stack direction="row" alignItems="center" spacing={2}>
-      <Text variant="caption" color="grey.400">
-        {label}
-      </Text>
-
-      {typeof children === "string" ? (
-        <Text variant="body2" noWrap>
-          {children}
-        </Text>
-      ) : (
-        children
-      )}
-    </Stack>
-  );
-};

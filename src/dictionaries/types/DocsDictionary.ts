@@ -1,4 +1,5 @@
 export type DocsDictionary = {
+   none : string,
    title : string
    button: {
       add: string

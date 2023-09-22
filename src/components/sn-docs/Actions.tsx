@@ -37,9 +37,13 @@ const Actions = () => {
 
   const [queries, setQueries] = useState<Params>({});
 
-  const paymentOptions = useMemo(
-    () =>
-      PAYMENT_OPTIONS.map((item) => ({ ...item, label: companyT(item.label) })),
+  const grOptions = useMemo(
+    () => Group_OPTIONS.map((item) => ({ ...item, label: docsT(item.label) })),
+    [companyT],
+  );
+
+  const filterOptions = useMemo(
+    () => Filter_Options.map((item) => ({ ...item, label: docsT(item.label) })),
     [companyT],
   );
 
@@ -134,21 +138,21 @@ const Actions = () => {
           />
           <Dropdown
             placeholder={docsT("filter.fields")}
-            options={paymentOptions}
+            options={grOptions}
             name="status"
             onChange={onChangeQueries}
             value={Number(queries?.status)}
           />
           <Dropdown
             placeholder={docsT("filter.group.group")}
-            options={paymentOptions}
+            options={grOptions}
             name="status"
             onChange={onChangeQueries}
             value={Number(queries?.status)}
           />
           <Dropdown
             placeholder={docsT("filter.filter.filter")}
-            options={paymentOptions}
+            options={filterOptions}
             name="status"
             onChange={onChangeQueries}
             value={Number(queries?.status)}
@@ -186,10 +190,16 @@ const Actions = () => {
 
 export default memo(Actions);
 
-const PAYMENT_OPTIONS = [
-  { label: TEXT_STATUS[1], value: PayStatus.PAID },
-  { label: TEXT_STATUS[2], value: PayStatus.UNPAID },
-  { label: TEXT_STATUS[3], value: PayStatus.WAITING },
+const Group_OPTIONS = [
+  { label: "filter.filter.creator", value: 1 },
+  { label: "filter.filter.project", value: 2 },
+];
+const Filter_Options = [
+  { label: "filter.filter.creator", value: 1 },
+  { label: "filter.filter.lastEdited", value: 2 },
+  { label: "filter.filter.name", value: 3 },
+  { label: "filter.filter.project", value: 4 },
+  { label: "filter.filter.projectStatus", value: 5 },
 ];
 
 const INITIAL_VALUES = {

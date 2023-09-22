@@ -1,6 +1,7 @@
 import { DocsDictionary } from "dictionaries/types/DocsDictionary";
 
 export const DocsLang: DocsDictionary = {
+   none: 'None',
     title : 'Tài liệu',
     button: {
         add: 'Thêm'
@@ -16,7 +17,7 @@ export const DocsLang: DocsDictionary = {
            project : 'Dự án',
         },
         filter: {
-        filter : 'Lọc',
+           filter : 'Lọc',
            creator : 'Người sáng tạo',
            lastEdited : 'Chỉnh sửa lần cuối',
            name : 'Tên',

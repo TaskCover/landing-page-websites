@@ -1,6 +1,7 @@
 import { DocsDictionary } from "dictionaries/types/DocsDictionary";
 
 export const DocsLang: DocsDictionary = {
+   none: 'None',
     title : 'Documents',
     button: {
         add: 'Add'

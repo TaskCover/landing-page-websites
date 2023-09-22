@@ -1,24 +1,20 @@
 "use client";
 
-import { memo, useEffect, useMemo, useState } from "react";
-import { TableRow, Box } from "@mui/material";
-import { TableLayout, CellProps, ActionsCell } from "components/Table";
+import { memo, useEffect, useMemo } from "react";
+import { TableRow } from "@mui/material";
+import { TableLayout, CellProps } from "components/Table";
 import useQueryParams from "hooks/useQueryParams";
 import { usePathname, useRouter } from "next-intl/client";
 import useBreakpoint from "hooks/useBreakpoint";
-import { DataAction } from "constant/enums";
 import MobileContentCell from "./MobileContentCell";
 import DesktopCells from "./DesktopCells";
-import { Position } from "store/company/reducer";
 import { usePositions } from "store/company/selectors";
-import { PositionData } from "store/company/actions";
-import Form from "./Form";
-import { getDataFromKeys, getPath } from "utils/index";
+import { getPath } from "utils/index";
 import { DEFAULT_PAGING, NS_COMMON, NS_COMPANY } from "constant/index";
 import Pagination from "components/Pagination";
 import { useTranslations } from "next-intl";
-import { useAuth } from "store/app/selectors";
 import FixedLayout from "components/FixedLayout";
+import ItemDoc from "./ItemDoc";
 
 const ItemList = () => {
   const {
@@ -31,55 +27,45 @@ const ItemList = () => {
     totalItems,
     totalPages,
     onGetPositions,
-    onUpdatePosition,
-    onDeletePosition,
   } = usePositions();
-  const commonT = useTranslations(NS_COMMON);
-  const companyT = useTranslations(NS_COMPANY);
 
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
-  const { onGetProfile, user } = useAuth();
 
   const pathname = usePathname();
   const { initQuery, isReady, query } = useQueryParams();
-
-  const [item, setItem] = useState<Position | undefined>();
-  const [action, setAction] = useState<DataAction | undefined>();
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
       {
         value: "Document",
-        width: "25%",
+        width: "30%",
         align: "left",
       },
       {
         value: "Created at",
-        width: "25%",
-        align: "left",
+        width: "23.333%",
       },
-      { value: "Last edited", width: "25%" },
-      { value: "Creator", width: "25%" },
+      { value: "Last edited", width: "23.333%" },
+      { value: "Creator", width: "23.333%" },
     ],
-    [commonT, companyT],
+    [],
   );
   const mobileHeaderList: CellProps[] = useMemo(
     () => [
       {
-        value: commonT("name"),
-        width: "20%",
+        value: "Document",
+        width: "23.333%",
         align: "left",
       },
       {
-        value: commonT("creator"),
-        width: "25%",
-        align: "left",
+        value: "Created at",
+        width: "23.333%",
       },
-      { value: commonT("creationDate"), width: "20%" },
-      { value: companyT("positions.numberOfEmployees"), width: "20%" },
+      { value: "Last edited", width: "23.333%" },
+      { value: "Creator", width: "30%" },
     ],
-    [commonT, companyT],
+    [],
   );
 
   const headerList = useMemo(() => {
@@ -89,11 +75,6 @@ const ItemList = () => {
 
     return [...additionalHeaderList] as CellProps[];
   }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
-
-  const onResetAction = () => {
-    setItem(undefined);
-    setAction(undefined);
-  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (queries: { [key: string]: any }) => {
@@ -112,15 +93,6 @@ const ItemList = () => {
     onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
   };
 
-  const onUpdate = async (data: PositionData) => {
-    if (!item) return;
-    const result = await onUpdatePosition(item.id, data.name);
-    if (result && item.id === user?.position?.id) {
-      onGetProfile();
-    }
-    return result;
-  };
-
   useEffect(() => {
     if (!isReady) return;
     onGetPositions({ ...DEFAULT_PAGING, ...initQuery });
@@ -136,12 +108,13 @@ const ItemList = () => {
           noData={!isIdle && items.length === 0}
           px={{ xs: 0, md: 3 }}
           headerProps={{
-            sx: { px: { xs: 0.5, md: 2 }, wordBreak: "break-all" },
+            sx: { px: { xs: 0.5, md: 2 } },
           }}
         >
           {items.map((item) => {
             return (
               <TableRow key={item.id}>
+                <ItemDoc></ItemDoc>
                 {isMdSmaller ? (
                   <MobileContentCell item={item} />
                 ) : (
@@ -162,20 +135,8 @@ const ItemList = () => {
           onChangeSize={onChangeSize}
         />
       </FixedLayout>
-
-      {action === DataAction.UPDATE && (
-        <Form
-          open
-          onClose={onResetAction}
-          type={DataAction.UPDATE}
-          initialValues={getDataFromKeys(item, ["name"]) as PositionData}
-          onSubmit={onUpdate}
-        />
-      )}
     </>
   );
 };
 
 export default memo(ItemList);
-
-const MOBILE_HEADER_LIST = [{ value: "#", width: "75%", align: "left" }];
