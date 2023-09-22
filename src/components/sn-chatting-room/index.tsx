@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { SNChat } from "./components";
 import useGetScreenMode from "hooks/useGetScreenMode";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import useFetchingChatting from "./hooks/useFetchingChatting";
 import ChattingRoomMobileLayout from "./components/Layout/ChattingRoomMobileLayout";
 import AddGroup from "components/sn-chat/chatGroup/AddGroup";
@@ -16,7 +16,9 @@ const ChattingRoom = () => {
 
   const { mobileMode } = useGetScreenMode();
   const { onSearchText, onChangeParamsConversation } = useFetchingChatting();
-  const { dataTransfer: currentConversation } = useChat();
+  const { conversationInfo: currentConversation, dataTransfer } = useChat();
+
+  console.log("currentConversation", dataTransfer);
 
   return (
     <Box
@@ -32,7 +34,9 @@ const ChattingRoom = () => {
             onSearchText={onSearchText}
             onChangeParamsConversation={onChangeParamsConversation}
           />
-          <RoomDetails />
+          {Object.keys(dataTransfer).length !== 0 ? <RoomDetails /> : <Box display="flex" alignItems="center" justifyContent="center" width="100%" height="90vh">
+            <Typography variant="h3">Please select a conversation</Typography>
+          </Box>}
         </ChattingRoomLayout>
       ) : (
         <>

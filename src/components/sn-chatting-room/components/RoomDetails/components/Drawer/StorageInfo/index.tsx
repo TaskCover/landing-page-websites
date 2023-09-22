@@ -27,7 +27,7 @@ const TYPES = [
 const StorageInfo = () => {
   const { extraDesktopMode } = useGetScreenMode();
   const {isDarkMode} =  useTheme();
-  const {typeDrawerChat, onSetDrawerType, dataTransfer: currentConversation} = useChat();
+  const {typeDrawerChat, onSetDrawerType} = useChat();
 
   return (
     <Box

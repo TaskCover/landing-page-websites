@@ -29,7 +29,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
 
   const { user } = useAuth();
 
-  const { groupMembers, dataTransfer: currentConversation } = useChat();
+  const { groupMembers, conversationInfo: currentConversation } = useChat();
 
 
   //check owner
@@ -52,6 +52,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
           actionType: 0,
         }))}
         callBackIcon={EditGroupNameIcon}
+        dontOpenDrawer={true}
       />
       <Box
         sx={{
@@ -71,6 +72,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
               text={item.text}
               icon={item.icon}
               callBackOpenDrawer={item.callback}
+              type={item?.type}
             />
           ))}
       </Box>

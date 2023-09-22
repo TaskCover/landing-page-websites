@@ -10,7 +10,7 @@ import { useChat } from "store/chat/selectors";
 
 const RoomHeaderMobile = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const {dataTransfer: currentConversation, onResetDataTransfer } = useChat()
+  const {conversationInfo: currentConversation, onResetConversationInfo } = useChat()
   // Handler to open the drawer.
   const openDrawer = () => {
     setIsDrawerOpen(true);
@@ -22,7 +22,7 @@ const RoomHeaderMobile = () => {
   };
 
   const PrivateChatLayout = () => {
-    if (currentConversation?.userCount === 2) {
+    if (currentConversation?.usersCount === 2) {
       return ChatDetailUserMobile;
     } else {
       return GroupChatMobile;
@@ -110,7 +110,7 @@ const RoomHeaderMobile = () => {
         />
       );
     }
-  }, [isGroup, currentConversation.usersCount, currentConversation?.avatar]);
+  }, [isGroup, currentConversation?.usersCount, currentConversation?.avatar]);
 
   return (
     <Box
@@ -133,7 +133,7 @@ const RoomHeaderMobile = () => {
       >
         <ArrowBackIosNewIcon
           style={styleIcon}
-          onClick={onResetDataTransfer}
+          onClick={onResetConversationInfo}
         />
         <Box
           sx={{

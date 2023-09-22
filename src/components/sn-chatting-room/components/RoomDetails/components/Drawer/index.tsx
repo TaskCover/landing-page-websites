@@ -8,7 +8,7 @@ import { useChat } from "store/chat/selectors";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 
 const DrawerInfoChat = () => {
-  const { typeDrawerChat, onSetDrawerType, onSetDataTransfer } = useChat();
+  const { typeDrawerChat, onSetDrawerType, onSetConversationInfo } = useChat();
 
   const DrawerObjs = useMemo(
     () => ({
@@ -16,7 +16,7 @@ const DrawerInfoChat = () => {
       group: (
         <AddGroup
           callbackBackIcon={() => onSetDrawerType("info")}
-          onSelectNewGroup={(value) => onSetDataTransfer(value)}
+          onSelectNewGroup={(value) => onSetConversationInfo(value)}
           CustomCallBackIcon={<ArrowDownIcon sx={{ fontSize: '2rem' }} />}
         />
       ),
@@ -27,7 +27,7 @@ const DrawerInfoChat = () => {
         </>
       ),
     }),
-    [onSetDrawerType, onSetDataTransfer],
+    [onSetDrawerType, onSetConversationInfo],
   );
 
   return DrawerObjs[typeDrawerChat] || <StorageInfo />;

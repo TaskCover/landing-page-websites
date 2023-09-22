@@ -35,7 +35,7 @@ const InfoHeader: React.FC<AccountInfoProps> = (props) => {
         >
           <IconButton onClick={props.onClose} sx={{
             position: 'absolute',
-            left: '10px',
+            left: '-5px',
           }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

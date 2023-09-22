@@ -97,8 +97,8 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
-    resetDataTransfer: (state) => {
-      state.dataTransfer = {};
+    resetConversationInfo: (state) => {
+      state.conversationInfo = null;
     },
     setTypeDrawerChatDesktop: (state, action) => {
       state.typeDrawerChat = action.payload;
@@ -529,7 +529,7 @@ export const {
   updateUnSeenMessage,
   setTypeDrawerChatDesktop,
   setCloseDrawerChatDesktop,
-  resetDataTransfer
+  resetConversationInfo
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

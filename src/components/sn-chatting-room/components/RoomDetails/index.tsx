@@ -8,7 +8,7 @@ import { useChat } from "store/chat/selectors";
 
 const RoomDetails = () => {
   const { mobileMode, extraDesktopMode } = useGetScreenMode();
-  const { isOpenInfoChat } = useChat();
+  const { isFetching: loading, isOpenInfoChat } = useChat();
 
   return  <Box
       width="100%"

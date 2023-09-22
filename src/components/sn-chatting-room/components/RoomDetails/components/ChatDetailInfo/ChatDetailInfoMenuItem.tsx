@@ -10,7 +10,8 @@ interface ChatDetailInfoMenuItemProps {
   icon: JSX.ElementType;
   callBackOpenDrawer?: () => void;
   callBackIcon?: JSX.ElementType;
-  type?: string
+  type?: string,
+  dontOpenDrawer?: boolean
 }
 
 const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
@@ -21,6 +22,9 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
   // Handler to open the drawer.
   const onOpenDrawer = useCallback(() => {
       props?.callBackOpenDrawer && props.callBackOpenDrawer() 
+      if(props.dontOpenDrawer){
+        return;
+      }
       onSetDrawerType(props?.type as TypeDrawerChat)
   }, []);
 

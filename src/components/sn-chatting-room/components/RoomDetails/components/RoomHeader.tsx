@@ -38,13 +38,16 @@ const RoomHeader = () => {
     onSetStateSearchMessage,
     onSetStep,
     onSetDrawerType,
-    dataTransfer: currentConversation
+    dataTransfer: currentConversation,
+    onResetConversationInfo,
+    onCloseDrawer,
+    roomId
   } = useChat();
   const [search, setSearchText] = useState({
     text: "",
     isOpen: false,
   });
-
+  
   const [currentIndex, setCurrentIndex] = useState<number>(
     listSearchMessage?.length,
   );
@@ -97,7 +100,9 @@ const RoomHeader = () => {
 
   useEffect(() => {
     onResetSearchText()
-  }, [currentConversation, onResetSearchText])
+    onResetConversationInfo();
+    onCloseDrawer('info')
+  }, [ onResetSearchText, onResetConversationInfo, onCloseDrawer, roomId])
   
   return (
     <Box
@@ -216,10 +221,8 @@ const RoomHeader = () => {
             color: "transparent",
           }}
           onClick={() => {
-            if (currentConversation?.t === "d") {
               onSetDrawerType("group");
-              onSetStep(STEP.ADD_GROUP, { ...currentConversation, isNew: true });
-            }
+              onSetStep(STEP.ADD_GROUP, { ...currentConversation, isNew: currentConversation?.t === 'd' });
           }}
         >
           <ProfileAdd />

@@ -22,7 +22,7 @@ export interface useChatDetailInfoReturns {
 export const useChatDetailInfo = (): useChatDetailInfoReturns => {
     const { onGetUserInfo, onGetChatAttachments, onGetChatUrls, dataTransfer: currentConversation} = useChat();
 
-    const callbackOpenAccount = useCallback(() => {
+    const callbackOpenAccount = useCallback(() => {      
       onGetUserInfo(currentConversation?.usernames[0] as string);
     }, [currentConversation]);
   

@@ -48,6 +48,7 @@ import {
   ForwardMessageGroup,
   ChangeGroupAvatar,
   TypeDrawerChat,
+  IChatInfo,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -66,7 +67,7 @@ import {
   updateUnSeenMessage,
   setTypeDrawerChatDesktop,
   setCloseDrawerChatDesktop,
-  resetDataTransfer,
+  resetConversationInfo,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -223,17 +224,17 @@ export const useChat = () => {
         MessageBodyRequest,
         "sender_userId" | "sender_authToken" | "receiverUsername"
       >,
-    ) => {
+    ) => {      
       await dispatch(
         sendMessages({
           sender_userId: user?.["id_rocket"] || "",
           sender_authToken: user?.["authToken"] || "",
-          receiverUsername: conversationInfo?.username || "",
+          receiverUsername: conversationInfo?.username || dataTransfer?.username,
           ...message,
         }),
       );
     },
-    [conversationInfo?.username, dispatch, user],
+    [conversationInfo?.username, dispatch, user, dataTransfer],
   );
 
   const onSearchChatText = useCallback(
@@ -596,8 +597,8 @@ export const useChat = () => {
     [dispatch],
   );
 
-  const onResetDataTransfer = useCallback(async () => {
-    return dispatch(resetDataTransfer());
+  const onResetConversationInfo = useCallback(async () => {
+    return dispatch(resetConversationInfo());
   }, [dispatch]);
 
   return {
@@ -615,7 +616,7 @@ export const useChat = () => {
     totalItems,
     totalPages,
     roomId,
-    conversationInfo,
+    conversationInfo: conversationInfo as IChatInfo,
     currStep,
     prevStep,
     partnerInfo,
@@ -678,6 +679,6 @@ export const useChat = () => {
     onCloseDrawer,
     typeDrawerChat,
     isOpenInfoChat,
-    onResetDataTransfer,
+    onResetConversationInfo,
   };
 };

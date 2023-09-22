@@ -7,6 +7,7 @@ import Messages from "../messages/Messages";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { SxProps, Theme } from "@mui/material";
+import { useWhatChanged } from "@simbathesailor/use-what-changed";
 
 const initPageIndex = 10;
 
@@ -50,14 +51,23 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
       ) || [],
     [unReadMessage?.info, user],
   );
-  
+
+  const currentRoomId = useMemo(() => {
+    return dataTransfer?._id ?? roomId;
+  }, [dataTransfer, roomId]);
+
+  const currentRoomType = useMemo(() => {
+    return dataTransfer?.t ?? "d";
+  }, [dataTransfer]);
 
   const getLastMessage = useCallback(
-    async (page?: number, size?: number) => {       
+    async (page?: number, size?: number) => {
+      if (currentRoomId.length === 0) return;
+      if (currentRoomType.length === 0) return;
       try {
         await onGetLastMessages({
-          roomId: dataTransfer?._id ?? roomId,
-          type: dataTransfer?.t ?? "d",
+          roomId: currentRoomId,
+          type: currentRoomType,
           offset: page,
           count: size,
         });
@@ -68,7 +78,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
         );
       }
     },
-    [dataTransfer, onAddSnackbar, onGetLastMessages, roomId, t],
+    [onAddSnackbar, onGetLastMessages, currentRoomId, t, currentRoomType],
   );
 
   const getUnReadMessage = useCallback(async () => {
@@ -76,12 +86,24 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
       type: dataTransfer?.t ?? "d",
     });
   }, [dataTransfer?.t, onGetUnReadMessages]);
-  
+
+  const depsCallback = [
+    dataTransfer,
+    onAddSnackbar,
+    onGetLastMessages,
+    roomId,
+    t,
+  ];
+  useWhatChanged(
+    depsCallback,
+    "dataTransfer, onAddSnackbar, getLastMessage, roomId, t",
+  );
+
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
       ? stateSearchMessage?.offset + initPageIndex
-      : initPageIndex;        
-    if((!roomId || roomId?.length === 0) && !dataTransfer?._id) return;
+      : initPageIndex;
+    if ((!roomId || roomId?.length === 0) && !dataTransfer?._id) return;
     getLastMessage(0, countNew);
     if (inputRef.current) {
       inputRef.current.pageRef.current = countNew - initPageIndex;
@@ -113,13 +135,9 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
         });
       }
     },
-    [
-      files,
-      onUploadAndSendFile,
-      sendMessage,
-    ],
+    [files, onUploadAndSendFile, sendMessage],
   );
-  
+
   return (
     <>
       <Messages

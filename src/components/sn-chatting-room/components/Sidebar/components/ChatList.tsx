@@ -10,7 +10,7 @@ import useTheme from "hooks/useTheme";
 import { useChat } from "store/chat/selectors";
 
 const ChatList = () => {
-  const {onSetDataTransfer, dataTransfer: currentConversation, convention: conversations} = useChat()
+  const {dataTransfer: currentConversation, convention: conversations, onSetRoomId, onSetDataTransfer, onSetConversationInfo} = useChat()
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
 
@@ -44,7 +44,9 @@ const ChatList = () => {
   }, [conversations, user]);
 
   const handleClickConversation = (chatInfo: IChatItemInfo) => {
-    onSetDataTransfer(chatInfo);
+    onSetRoomId(chatInfo._id)
+    onSetDataTransfer(chatInfo)
+    onSetConversationInfo(chatInfo)
   };
 
   const renderConversation = (idActive: string) => {

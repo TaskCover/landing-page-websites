@@ -15,7 +15,7 @@ const MenuInfo = () => {
   const { extraDesktopMode } = useGetScreenMode();
   const { menuItems } = useChatDetailInfo();
 
-  const { onCloseDrawer, dataTransfer: currentConversation} = useChat();
+  const { onCloseDrawer, dataTransfer: currentConversation } = useChat();
   const renderColorByType = useMemo(() => {
     if (currentConversation?.t === "d") {
       if (isDarkMode) return "#313130";
@@ -57,7 +57,7 @@ const MenuInfo = () => {
             borderRadius: "10px",
           }}
         />
-        {currentConversation?.t !== 'd' && <UploadAvatarGroup />}
+        {currentConversation?.t !== "d" && <UploadAvatarGroup />}
       </Box>
       <Box>
         <Typography
@@ -65,7 +65,9 @@ const MenuInfo = () => {
           color={isDarkMode ? "white" : "var(--Black, #212121)"}
           sx={{ textAlign: "center" }}
         >
-          {currentConversation?.name}
+          {currentConversation?.t !== "d"
+            ? currentConversation?.name?.replaceAll("_", " ")
+            : currentConversation?.name}
         </Typography>
       </Box>{" "}
       <Box
@@ -88,10 +90,7 @@ const MenuInfo = () => {
             />
           ))
         ) : (
-          <ChatDetailGroup
-             menuItems={menuItems}
-            {...propsActionGroupDetail}
-          />
+          <ChatDetailGroup menuItems={menuItems} {...propsActionGroupDetail} />
         )}
       </Box>
     </Box>
