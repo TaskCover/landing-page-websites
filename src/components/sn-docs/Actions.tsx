@@ -16,6 +16,7 @@ import { usePathname, useRouter } from "next-intl/client";
 import { usePositionOptions } from "store/global/selectors";
 import { useTranslations } from "next-intl";
 import { useDocs } from "store/docs/selectors";
+import Link from "next/link";
 
 const Actions = () => {
   const {
@@ -97,14 +98,19 @@ const Actions = () => {
           <Text variant="h4" display={{ md: "none" }}>
             {docsT("title")}
           </Text>
-          <Button
-            startIcon={<PlusIcon />}
-            size="extraSmall"
-            variant="primary"
-            sx={{ height: 32, px: ({ spacing }) => `${spacing(2)}!important` }}
-          >
-            {docsT("button.add")}
-          </Button>
+          <Link href={"documents/create"}>
+            <Button
+              startIcon={<PlusIcon />}
+              size="extraSmall"
+              variant="primary"
+              sx={{
+                height: 32,
+                px: ({ spacing }) => `${spacing(2)}!important`,
+              }}
+            >
+              {docsT("button.add")}
+            </Button>
+          </Link>
         </Stack>
 
         <Stack
