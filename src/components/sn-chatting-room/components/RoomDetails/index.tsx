@@ -19,7 +19,7 @@ const RoomDetails = () => {
       {mobileMode ? <RoomHeaderMobile /> : <RoomHeader />}
       <Conversation
         wrapperMessageSx={{
-          height: "70vh",
+          height: extraDesktopMode ? "70vh" : '60vh',
           ...(isOpenInfoChat
             ? {
                 width: `calc(100% - ${extraDesktopMode ? "424px" : "272px"})`,
