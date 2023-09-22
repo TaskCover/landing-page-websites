@@ -265,6 +265,10 @@ const ChatEditor = (props: EditorProps) => {
     };
   }, [toolbar]);
 
+  useEffect(() => {
+    setValue("");
+  }, [dataTransfer])
+  
   return (
     <Stack
       className="editor"

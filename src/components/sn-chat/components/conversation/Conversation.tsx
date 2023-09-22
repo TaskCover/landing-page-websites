@@ -44,6 +44,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
     () => conversationInfo?.t !== "d",
     [conversationInfo?.t],
   );
+
   const unReadMessageClone = useMemo(
     () =>
       unReadMessage?.info.filter(
@@ -103,6 +104,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
     const countNew = stateSearchMessage?.offset
       ? stateSearchMessage?.offset + initPageIndex
       : initPageIndex;
+    setFiles([]);
     if ((!roomId || roomId?.length === 0) && !dataTransfer?._id) return;
     getLastMessage(0, countNew);
     if (inputRef.current) {
