@@ -15,6 +15,7 @@ import { useEmployees } from "store/company/selectors";
 import { usePathname, useRouter } from "next-intl/client";
 import { usePositionOptions } from "store/global/selectors";
 import { useTranslations } from "next-intl";
+import { useDocs } from "store/docs/selectors";
 
 const Actions = () => {
   const {
@@ -29,8 +30,7 @@ const Actions = () => {
   const commonT = useTranslations(NS_COMMON);
   const docsT = useTranslations(NS_DOCS);
 
-  const { filters, onGetEmployees, pageSize, onCreateEmployee } =
-    useEmployees();
+  const { filters } = useDocs();
 
   const pathname = usePathname();
   const { push } = useRouter();
@@ -122,9 +122,9 @@ const Actions = () => {
         >
           <Search
             placeholder={docsT("filter.search", { name: "email" })}
-            name="email"
+            name="doc"
             onChange={onChangeQueries}
-            value={queries?.email}
+            value={queries?.doc}
             sx={{ width: 200, minWidth: 200 }}
           />
           <Dropdown
@@ -139,23 +139,23 @@ const Actions = () => {
           <Dropdown
             placeholder={docsT("filter.fields")}
             options={grOptions}
-            name="status"
+            name="fields"
             onChange={onChangeQueries}
-            value={Number(queries?.status)}
+            value={Number(queries?.fields)}
           />
           <Dropdown
             placeholder={docsT("filter.group.group")}
             options={grOptions}
-            name="status"
+            name="group"
             onChange={onChangeQueries}
-            value={Number(queries?.status)}
+            value={Number(queries?.group)}
           />
           <Dropdown
             placeholder={docsT("filter.filter.filter")}
             options={filterOptions}
-            name="status"
+            name="filter"
             onChange={onChangeQueries}
-            value={Number(queries?.status)}
+            value={Number(queries?.filter)}
           />
           <Button
             size="extraSmall"
@@ -201,8 +201,3 @@ const Filter_Options = [
   { label: "filter.filter.project", value: 4 },
   { label: "filter.filter.projectStatus", value: 5 },
 ];
-
-const INITIAL_VALUES = {
-  email: "",
-  position: "",
-};
