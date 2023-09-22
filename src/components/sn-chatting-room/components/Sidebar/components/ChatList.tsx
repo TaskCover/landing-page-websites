@@ -1,18 +1,95 @@
 import NoData from "components/NoData";
-import React from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Box } from "@mui/material";
-import { useAuth } from "store/app/selectors";
+import { useAuth, useSnackbar } from "store/app/selectors";
 import ChatItemLayout from "components/sn-chat/components/chat/ChatItemLayout";
-import { IChatItemInfo } from "store/chat/type";
+import { DirectionChat, IChatItemInfo } from "store/chat/type";
 import { useDeepCompareMemo } from "hooks/useDeepCompare";
-import { useWSChat } from "store/chat/helpers";
 import useTheme from "hooks/useTheme";
 import { useChat } from "store/chat/selectors";
+import { useTranslations } from "next-intl";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 
 const ChatList = () => {
-  const {dataTransfer: currentConversation, convention: conversations, onSetRoomId, onSetDataTransfer, onSetConversationInfo} = useChat()
+  const {
+    dataTransfer: currentConversation,
+    convention: conversations,
+    onSetRoomId,
+    onSetDataTransfer,
+    onSetConversationInfo,
+    onGetAllConvention,
+    conversationPaging: { pageIndex, pageSize, textSearch: initText },
+  } = useChat();
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
+
+  const { onAddSnackbar } = useSnackbar();
+  const commonT = useTranslations(NS_COMMON);
+
+  const [lastElement, setLastElement] = useState(null);
+  const pageRef = useRef(pageIndex);
+  const chatListRef = useRef<HTMLDivElement>(null);
+  const scrollHeightRef = useRef(0);
+  const observer = useMemo(() => {
+    return new IntersectionObserver((entries) => {
+      const first = entries[0];
+      if (first.isIntersecting) {
+        pageRef.current = pageRef.current + pageSize;
+
+        scrollHeightRef.current = chatListRef.current?.scrollHeight || 0;
+        const clientHeight = (chatListRef.current?.clientHeight || 0) + 100;
+        if (scrollHeightRef.current > clientHeight) {
+          handleGetConversation(initText, "a", pageRef.current, pageSize);
+        }
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageSize]);
+
+  const handleGetConversation = useCallback(
+    async (
+      text: string,
+      type: DirectionChat,
+      offset?: number,
+      count?: number,
+    ) => {
+      try {
+        await onGetAllConvention({
+          type,
+          text,
+          offset: offset || 0,
+          count: count || 10,
+        });
+      } catch (error) {
+        onAddSnackbar(
+          typeof error === "string" ? error : commonT(AN_ERROR_TRY_AGAIN),
+          "error",
+        );
+      }
+    },
+    [onAddSnackbar, onGetAllConvention, commonT],
+  );
+
+  useEffect(() => {
+    const currentElement = lastElement;
+    const currentObserver = observer;
+
+    if (currentElement) {
+      currentObserver.observe(currentElement);
+    }
+
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement);
+      }
+    };
+  }, [lastElement, observer]);
 
   const _conversations = useDeepCompareMemo(() => {
     return conversations
@@ -42,19 +119,24 @@ const ChatList = () => {
   }, [conversations, user]);
 
   const handleClickConversation = (chatInfo: IChatItemInfo) => {
-    onSetRoomId(chatInfo._id)
-    onSetDataTransfer(chatInfo)
-    onSetConversationInfo(chatInfo)
+    onSetRoomId(chatInfo._id);
+    onSetDataTransfer(chatInfo);
+    onSetConversationInfo(chatInfo);
   };
 
   const renderConversation = (idActive: string) => {
-    return _conversations.map((conversation) => (
+    return _conversations.map((conversation, index) => (
       <ChatItemLayout
         chatInfo={conversation}
         sessionId={user?.["username"]}
         key={conversation._id}
         onClickConvention={handleClickConversation}
         isActive={idActive === conversation._id || false}
+        chatItemProps={{
+          ...(index === _conversations?.length - 1 && {
+            ref: setLastElement,
+          }),
+        }}
       />
     ));
   };
@@ -63,17 +145,19 @@ const ChatList = () => {
     if (_conversations.length <= 0) return <NoData />;
 
     return (
-      <>
         <Box
           display="flex"
           flexDirection="column"
           width="100%"
           height="90vh"
-          sx={{ overflowX: "scroll", bgcolor: isDarkMode ? "var(--mui-palette-grey-50)" : 'white' }}
-        >        
-            {renderConversation(idActive)}
+          sx={{
+            overflowX: "scroll",
+            bgcolor: isDarkMode ? "var(--mui-palette-grey-50)" : "white",
+          }}
+          ref={chatListRef}
+        >
+          {renderConversation(idActive)}
         </Box>
-      </>
     );
   };
 
