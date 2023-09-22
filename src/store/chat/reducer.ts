@@ -178,6 +178,10 @@ const chatSlice = createSlice({
         status: action.payload.status,
       };
     },
+    setListNewConversation: (state, action) => {  
+      state.convention = action.payload;
+    },
+
     setLastMessage: (
       state,
       action: PayloadAction<{
@@ -534,7 +538,8 @@ export const {
   setTypeDrawerChatDesktop,
   setCloseDrawerChatDesktop,
   resetConversationInfo,
-  setChatDesktop
+  setChatDesktop,
+  setListNewConversation
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

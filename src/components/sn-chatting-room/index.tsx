@@ -18,8 +18,6 @@ const ChattingRoom = () => {
   const { onSearchText, onChangeParamsConversation } = useFetchingChatting();
   const { conversationInfo: currentConversation, dataTransfer } = useChat();
 
-  console.log("currentConversation", dataTransfer);
-
   return (
     <Box
       sx={{

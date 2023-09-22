@@ -69,6 +69,7 @@ import {
   setCloseDrawerChatDesktop,
   resetConversationInfo,
   setChatDesktop,
+  setListNewConversation,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -511,7 +512,7 @@ export const useChat = () => {
     },
     [dispatch, user],
   );
-
+  
   const onChangeGroupAvatar = useCallback(
     async (file: File, roomId: string) => {
       const result = await dispatch(
@@ -519,7 +520,7 @@ export const useChat = () => {
       );
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
-      return await dispatch(
+       await dispatch(
         changeGroupAvatar({
           authToken,
           userId,
@@ -527,8 +528,17 @@ export const useChat = () => {
           avatarUrl: result?.payload?.download ?? "",
         }),
       );
+      onSetDataTransfer({ ...dataTransfer, avatar: result?.payload?.download });
+      const newConversations = convention?.map((item) => {
+        if(item._id === roomId){
+          return {...item, avatar: result?.payload?.download}
+        }
+        return item
+      });
+      dispatch(setListNewConversation(newConversations ?? []));
+      return;
     },
-    [dispatch, user],
+    [convention, dataTransfer, dispatch, onSetDataTransfer, user],
   );
 
   const onUploadAndSendFile = useCallback(
