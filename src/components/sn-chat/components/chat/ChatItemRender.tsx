@@ -58,7 +58,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
   }, [isMessageNotConnect, lastMessageContent]);
 
   const groupAvatar = useMemo(() => {
-    if (isGroup && usersCount > 3) {
+    if (!avatarClone && isGroup && usersCount > 3) {
       return (
         <ImageList
           sx={{ width: 56, height: 56, margin: 0 }}
