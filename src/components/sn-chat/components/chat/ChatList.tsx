@@ -270,7 +270,9 @@ const ChatList = () => {
                     />
                   );
                 })
-              : null}
+              : (
+                <Typography textAlign="center" marginTop={2}>{commonT("noData")}</Typography>
+              )}
           </>
         )}
       </Box>
