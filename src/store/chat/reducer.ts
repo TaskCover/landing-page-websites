@@ -503,6 +503,7 @@ const chatSlice = createSlice({
         (state, action: PayloadAction<MediaResponse<MediaType>>) => {
           state.leftGroupStatus = DataStatus.SUCCEEDED;
           state.mediaList = action.payload.files;
+          state.chatAttachments = action.payload.files;
           state.mediaListStatus = DataStatus.SUCCEEDED;
         },
       )

@@ -21,8 +21,9 @@ import MessageLayout from "../messages/MessageLayout";
 import MessageContent from "./MessageContent";
 import { formatDate, sleep } from "utils/index";
 import Typography from "@mui/material/Typography";
-import { nameMonthList } from "constant/index";
+import { nameMonthList, NS_CHAT_BOX } from "constant/index";
 import React from "react";
+import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
 
 interface MessagesProps {
@@ -72,6 +73,8 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
 ) => {
   const [firstElement, setFirstElement] = useState(null);
   const [isBottomScrollMessage, setBottomScrollMessage] = useState(false);
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
+  const { isDarkMode } = useTheme();
 
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
@@ -188,7 +191,6 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
-  const { isDarkMode } = useTheme();
 
   return (
     <>
@@ -262,24 +264,17 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                     textAlign: "center",
                   }}
                 >
-                  <Typography
-                    sx={{
-                      backgroundColor: isDarkMode ? "#3a3b3c" : "#f1f1f1",
-                      fontSize: "10px",
-                      padding: "2px 5px",
-                      borderRadius: "10px",
-                      display: "inline-block",
-                    }}
-                  >
-                    {message?.u?.username}{" "}
-                    {message?.t === "au"
-                      ? "added"
-                      : message?.t === "ru"
-                      ? "removed"
-                      : message?.t}{" "}
-                    {message?.msg} ({getTimeStamp(message?.ts ?? "")})
-                  </Typography>
-                </Box>
+                    <Typography
+                      sx={{
+                        backgroundColor: isDarkMode ? '#5b5959' : '#f1f1f1',
+                        fontSize: '10px',
+                        padding: '2px 5px',
+                        borderRadius: '10px',
+                        display: 'inline-block',
+                      }}
+                    >{message?.u?.username} {message?.t === 'au' ? commonChatBox("chatBox.added") : (message?.t === 'ru' ? commonChatBox("chatBox.removed") : message?.t)} {message?.msg} ({getTimeStamp(message?.ts ?? '')})</Typography>
+                    
+                  </Box>
               )}
               {hasNextDay && (
                 <Typography
