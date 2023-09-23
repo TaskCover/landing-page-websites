@@ -13,8 +13,6 @@ import { useTranslations } from "next-intl";
 import React, { useCallback, useContext, useMemo, useRef } from "react";
 import { Action } from "../../TodoList/SubItem";
 import { Text } from "components/shared";
-import CopyIcon from "icons/CopyIcon";
-import TrashIcon from "icons/TrashIcon";
 import MoreDotIcon from "icons/MoreDotIcon";
 import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
@@ -38,8 +36,7 @@ const SectionItemAction = (props: ActionsProps) => {
   const { sectionColumns } = useSalesService();
 
   const checkIsShowText = (col: ServiceColumn) => {
-    const isShow = sectionColumns[sectionIndex].columns.includes(col);
-
+    const isShow = sectionColumns[sectionIndex]?.columns.includes(col);
     return isShow ? commonT("hide") : commonT("show");
   };
 
@@ -96,7 +93,11 @@ const SectionItemAction = (props: ActionsProps) => {
       ref={buttonRef}
       label={
         <IconButton>
-          <MoreDotIcon sx={{ fontSize: 20 }} />
+          <MoreDotIcon
+            sx={{
+              fontSize: 20,
+            }}
+          />
         </IconButton>
       }
     >
@@ -142,6 +143,7 @@ const defaultSx = {
     "& > img": {
       mr: 1,
     },
+
     "&:hover": {
       backgroundColor: "primary.main",
       "& svg": {

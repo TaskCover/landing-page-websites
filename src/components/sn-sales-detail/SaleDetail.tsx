@@ -1,6 +1,6 @@
 "use client";
 import FixedLayout from "components/FixedLayout";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import TabList, { SALES_DETAIL_TAB } from "./components/TabList/TabList";
 import TabHeader from "./components/TabHeader/TabHeader";
 import { useFetchDealDetail } from "./hooks/useGetDealDetail";
@@ -17,7 +17,10 @@ import { formatDate } from "utils/index";
 import SaleService from "./components/sn-service";
 import useFetchServiceSection from "./hooks/useGetServiceSection";
 import useServiceHeader from "./hooks/useServiceHeader";
-import { EditProvider } from "./components/sn-service/context/EditContext";
+import {
+  EditContext,
+  EditProvider,
+} from "./components/sn-service/context/EditContext";
 
 const SalesDetail = () => {
   const [tab, setTab] = useState<SALES_DETAIL_TAB>(SALES_DETAIL_TAB.FEED);
@@ -34,7 +37,7 @@ const SalesDetail = () => {
   const { isFetching: isServiceFetching } = useSalesService();
   const { saleDetail, isFetching } = useSaleDetail();
   const { serviceSectionList } = useSalesService();
-
+  const { isEdit } = useContext(EditContext);
   useEffect(() => {
     if (!saleDetail) return;
 
@@ -73,22 +76,24 @@ const SalesDetail = () => {
   if (isFetching) return <Loading open />;
 
   return (
-    <>
-      <FixedLayout maxHeight={920} minWidth={1340} overflow="auto">
-        <TabHeader />
-        <TabList value={tab} onChange={onChangeTab} />
-        <TabContext value={tab}>
-          <TabPanel value={SALES_DETAIL_TAB.FEED}>
-            <SaleFeed />
-          </TabPanel>
-          <TabPanel value={SALES_DETAIL_TAB.SERVICE}>
-            <EditProvider>
-              <SaleService />
-            </EditProvider>
-          </TabPanel>
-        </TabContext>
-      </FixedLayout>
-    </>
+    <FixedLayout
+      maxHeight={920}
+      maxWidth={1480}
+      sx={{
+        overflowY: "auto",
+      }}
+    >
+      <TabHeader />
+      <TabList value={tab} onChange={onChangeTab} />
+      <TabContext value={tab}>
+        <TabPanel value={SALES_DETAIL_TAB.FEED}>
+          <SaleFeed />
+        </TabPanel>
+        <TabPanel value={SALES_DETAIL_TAB.SERVICE}>
+          <SaleService />
+        </TabPanel>
+      </TabContext>
+    </FixedLayout>
   );
 };
 

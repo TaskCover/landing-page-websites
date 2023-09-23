@@ -3,7 +3,7 @@ import { EditContext } from "../components/sn-service/context/EditContext";
 import { useFormContext } from "react-hook-form";
 import { useSalesService } from "store/sales/selectors";
 import { reset } from "linkifyjs";
-import { ServiceSection } from "store/sales/reducer";
+import { ServiceSection, setColumn } from "store/sales/reducer";
 import { useSnackbar } from "store/app/selectors";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_SALES } from "constant/index";
@@ -103,10 +103,6 @@ const useServiceHeader = () => {
           }
           return prev;
         }, []) || [];
-      console.log(
-        "🚀 ~ file: useServiceHeader.tsx:90 ~ deletedList:",
-        deletedList,
-      );
 
       const isSuccessful = await Promise.all([
         ...updatedList,
@@ -137,6 +133,7 @@ const useServiceHeader = () => {
 
   const onCancel = useCallback(() => {
     const oldColumns = [...sectionColumns];
+
     setEdit && setEdit(false);
     reset({
       ...getValues(),
@@ -144,9 +141,7 @@ const useServiceHeader = () => {
     });
 
     oldColumns.forEach((item, index) => {
-      item.columns.forEach((column) => {
-        onSetColumns(index, column);
-      });
+      onSetColumns(index, item.columns);
     });
   }, [serviceSectionList]);
 

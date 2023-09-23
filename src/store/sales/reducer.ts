@@ -164,6 +164,12 @@ const salesSlice = createSlice({
   reducers: {
     setColumn: (state, action) => {
       const { sectionIndex, columns } = action.payload;
+      if (!state.sectionColumns[sectionIndex]) {
+        state.sectionColumns.push({
+          id: action.payload.sectionIndex,
+          columns: [...columns],
+        });
+      }
       state.sectionColumns[sectionIndex].columns = [...columns];
     },
     reset: () => initState,

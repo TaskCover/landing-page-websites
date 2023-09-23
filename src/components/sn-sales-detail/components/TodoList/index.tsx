@@ -230,7 +230,7 @@ const TodoList = () => {
           }}
           width={{
             xs: "100%",
-            md: "calc(80% - 48px)",
+            md: "calc(90% - 48px)",
           }}
         >
           <DragDropContext onDragEnd={onDragEnd}>

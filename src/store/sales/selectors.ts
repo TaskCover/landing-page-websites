@@ -28,7 +28,11 @@ import moment from "moment";
 import { useSnackbar } from "store/app/selectors";
 import { ServiceSection, Todo, setColumn } from "./reducer";
 import Item from "components/sn-cost-history/Item";
-import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
+import {
+  ServiceColumn,
+  defaultShowColumns,
+  useGetHeaderColumn,
+} from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 
 export const useSales = () => {
   const { onAddSnackbar } = useSnackbar();
@@ -234,6 +238,7 @@ export const useSalesTodo = () => {
           data: {
             todo_list: {
               ...data,
+              owner: data.owner ?? "",
               expiration_date: expiration_date,
             },
             deal_id: dealId,
@@ -330,7 +335,6 @@ export const useSalesService = () => {
     sectionColumns,
   } = useAppSelector((state) => state.sales, shallowEqual);
   const dispatch = useAppDispatch();
-
   const isIdle = useMemo(
     () => servicesStatus === DataStatus.IDLE,
     [servicesStatus],
@@ -385,8 +389,18 @@ export const useSalesService = () => {
     [dispatch],
   );
 
-  const onSetColumns = (sectionIndex: number, col: ServiceColumn) => {
-    const columns = [...sectionColumns[sectionIndex].columns];
+  const onSetColumns = (
+    sectionIndex: number,
+    col: ServiceColumn | ServiceColumn[],
+  ) => {
+    const columns = sectionColumns[sectionIndex]
+      ? [...sectionColumns[sectionIndex].columns]
+      : [...defaultShowColumns];
+
+    if (col instanceof Array) {
+      dispatch(setColumn({ sectionIndex, columns: col }));
+      return;
+    }
     const isExisted = columns.includes(col);
     if (isExisted) {
       columns.splice(columns.indexOf(col), 1);

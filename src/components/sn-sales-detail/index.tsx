@@ -3,6 +3,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Sales } from "store/sales/reducer";
 import SalesDetail from "./SaleDetail";
 import { SALE_STAGE } from "constant/enums";
+import { EditProvider } from "./components/sn-service/context/EditContext";
 
 const SaleForm = ({ params }) => {
   // form control
@@ -42,7 +43,9 @@ const SaleForm = ({ params }) => {
 
   return (
     <FormProvider {...method}>
-      <SalesDetail />
+      <EditProvider>
+        <SalesDetail />
+      </EditProvider>
     </FormProvider>
   );
 };

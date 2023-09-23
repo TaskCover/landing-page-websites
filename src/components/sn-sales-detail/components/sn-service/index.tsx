@@ -33,7 +33,6 @@ const SaleService = () => {
   };
 
   const onAddSection = () => {
-    setEdit(false);
     append({} as ServiceSection);
   };
 

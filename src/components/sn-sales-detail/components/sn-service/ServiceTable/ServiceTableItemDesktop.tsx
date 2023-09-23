@@ -14,6 +14,8 @@ import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColu
 import { Action } from "../../TodoList/SubItem";
 import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
 import { useSalesService } from "store/sales/selectors";
+import LockIcon from "icons/LockIcon";
+import UnlockIcon from "icons/UnlockIcon";
 
 interface IProps {
   index: number;
@@ -34,15 +36,28 @@ const ServiceTableItem = ({
   const { register, control, getValues } = useFormContext();
   const currency = getValues("currency");
   const { sectionColumns } = useSalesService();
+  const [isLocked, setIsLocked] = React.useState(false);
 
   const isShowCols = useCallback(
-    (cols: ServiceColumn) =>
-      sectionColumns[sectionIndex].columns.includes(cols),
+    (cols: ServiceColumn) => {
+      if (!sectionColumns[sectionIndex]) return true;
+      return sectionColumns[sectionIndex].columns.includes(cols);
+    },
     [sectionColumns],
   );
 
+  const defaultUnit = useMemo(() => {
+    const unit = UNIT_OPTIONS.find(
+      (item) => item.value === service.unit,
+    )?.value;
+    return unit || UNIT_OPTIONS[0];
+  }, [service.unit]);
   return (
-    <Draggable draggableId={service?.id} index={index}>
+    <Draggable
+      draggableId={service?.id}
+      index={index}
+      isDragDisabled={isLocked}
+    >
       {(provided) => (
         <div ref={provided.innerRef} {...provided.draggableProps}>
           <Stack
@@ -57,7 +72,8 @@ const ServiceTableItem = ({
               <IconButton
                 sx={{
                   position: "absolute",
-                  left: "-4px",
+                  zIndex: 999,
+                  left: "-6px",
                 }}
                 noPadding
                 {...provided.dragHandleProps}
@@ -71,6 +87,7 @@ const ServiceTableItem = ({
                 size="small"
                 sx={{
                   ...defaultSx.item,
+                  ml: 2,
                 }}
               >
                 {isEdit ? (
@@ -80,6 +97,7 @@ const ServiceTableItem = ({
                     render={({ field }) => (
                       <Input
                         {...field}
+                        disabled={isLocked}
                         multiline
                         maxRows={2}
                         minRows={1}
@@ -97,6 +115,7 @@ const ServiceTableItem = ({
                 <BodyCell
                   sx={{
                     ...defaultSx.item,
+                    height: "auto",
                   }}
                   align="left"
                 >
@@ -110,6 +129,7 @@ const ServiceTableItem = ({
                           maxRows={2}
                           minRows={1}
                           {...field}
+                          disabled={isLocked}
                           sx={{
                             width: "100%",
                           }}
@@ -117,7 +137,20 @@ const ServiceTableItem = ({
                       )}
                     />
                   ) : (
-                    <Text variant="body2">{service.desc}</Text>
+                    <Text
+                      variant="body2"
+                      sx={{
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        display: "block",
+                        height: "fit-content",
+                        boxSizing: "border-box",
+                        WebkitLineClamp: "2",
+                        WebkitBoxOrient: "vertical",
+                      }}
+                    >
+                      {service.desc}
+                    </Text>
                   )}
                 </BodyCell>
               )}
@@ -134,6 +167,7 @@ const ServiceTableItem = ({
                     render={({ field }) => (
                       <Input
                         {...field}
+                        disabled={isLocked}
                         multiline
                         maxRows={2}
                         minRows={1}
@@ -163,6 +197,7 @@ const ServiceTableItem = ({
                         maxRows={2}
                         minRows={1}
                         {...field}
+                        disabled={isLocked}
                         sx={{
                           width: "100%",
                         }}
@@ -182,7 +217,7 @@ const ServiceTableItem = ({
                 {isEdit ? (
                   <Controller
                     control={control}
-                    defaultValue={UNIT_OPTIONS[0]}
+                    defaultValue={defaultUnit}
                     {...register(`${sectionKey}.${index}.unit`)}
                     render={({ field }) => {
                       return (
@@ -190,6 +225,7 @@ const ServiceTableItem = ({
                           multiline
                           placeholder="Select unit"
                           {...field}
+                          disabled={isLocked}
                           options={UNIT_OPTIONS}
                           sx={{
                             width: "100%",
@@ -199,7 +235,9 @@ const ServiceTableItem = ({
                     }}
                   />
                 ) : (
-                  <Text variant="body2">{service.unit}</Text>
+                  <Text variant="body2">
+                    {service.unit || UNIT_OPTIONS[0].value}
+                  </Text>
                 )}
               </BodyCell>
 
@@ -225,6 +263,7 @@ const ServiceTableItem = ({
                             },
                           }}
                           {...field}
+                          disabled={isLocked}
                           sx={{
                             width: "100%",
                           }}
@@ -258,6 +297,7 @@ const ServiceTableItem = ({
                           },
                         }}
                         {...field}
+                        disabled={isLocked}
                         sx={{
                           width: "100%",
                         }}
@@ -292,6 +332,7 @@ const ServiceTableItem = ({
                             },
                           }}
                           {...field}
+                          disabled={isLocked}
                           sx={{
                             width: "100%",
                           }}
@@ -332,6 +373,7 @@ const ServiceTableItem = ({
                             },
                           }}
                           {...field}
+                          disabled={isLocked}
                           sx={{
                             width: "100%",
                           }}
@@ -361,6 +403,7 @@ const ServiceTableItem = ({
                         <Input
                           helperText="%"
                           {...field}
+                          disabled={isLocked}
                           InputProps={{
                             inputProps: {
                               min: 0,
@@ -402,6 +445,7 @@ const ServiceTableItem = ({
                           },
                         }}
                         {...field}
+                        disabled={isLocked}
                         sx={{
                           width: "100%",
                         }}
@@ -418,12 +462,30 @@ const ServiceTableItem = ({
               </BodyCell>
 
               {isEdit && (
-                <BodyCell>
-                  <ServiceItemAction
-                    onChangeAction={onAction}
-                    serviceId={service.id}
-                    index={index}
-                  />
+                <BodyCell sx={{ padding: 0, position: "relative" }}>
+                  <Stack
+                    direction={"row"}
+                    spacing={0}
+                    sx={{
+                      position: "relative",
+                      zIndex: 99,
+                    }}
+                  >
+                    <IconButton
+                      sx={{
+                        width: "24px",
+                        color: isLocked ? "success.main" : "text.main",
+                      }}
+                      onClick={() => setIsLocked(!isLocked)}
+                    >
+                      {isLocked ? <LockIcon /> : <UnlockIcon />}
+                    </IconButton>
+                    <ServiceItemAction
+                      onChangeAction={onAction}
+                      serviceId={service.id}
+                      index={index}
+                    />
+                  </Stack>
                 </BodyCell>
               )}
             </TableRow>
@@ -439,7 +501,8 @@ export default ServiceTableItem;
 const defaultSx = {
   item: {
     "&.MuiTableCell-root": {
-      py: 2,
+      py: 1,
+      px: 1,
     },
   },
 };

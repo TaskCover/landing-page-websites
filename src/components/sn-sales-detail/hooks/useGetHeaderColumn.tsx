@@ -31,6 +31,19 @@ export type ServiceColumnProps = {
   sx?: Record<string, unknown>;
 };
 
+export const defaultShowColumns: ServiceColumn[] = [
+  ServiceColumn.NAME,
+  ServiceColumn.DESCRIPTION,
+  ServiceColumn.SERVICE_TYPE,
+  ServiceColumn.BILL_TYPE,
+  ServiceColumn.UNIT,
+  ServiceColumn.ESTIMATE,
+  ServiceColumn.QUANTITY,
+  ServiceColumn.PRICE,
+  ServiceColumn.DISCOUNT,
+  ServiceColumn.MARK_UP,
+  ServiceColumn.TOTAL_BUGET,
+];
 export const useGetHeaderColumn = () => {
   const { control, getValues } = useFormContext();
   const { isEdit } = useContext(EditContext);
@@ -45,6 +58,9 @@ export const useGetHeaderColumn = () => {
         // minWidth: 170,
         width: "9%",
         align: "left",
+        sx: {
+          pl: 2,
+        },
       },
 
       {
@@ -119,22 +135,15 @@ export const useGetHeaderColumn = () => {
         // minWidth: 160,
       },
     ];
+
     if (isEdit) {
       list.push({
         id: ServiceColumn.ACTION,
         value: "",
-        width: "4%",
-        align: "right",
+        width: "2%",
       });
     }
     return list;
-    if (isEdit) {
-      list.push({
-        id: ServiceColumn.ACTION,
-        value: "",
-        width: "4%",
-      });
-    }
   }, [salesT, isEdit]);
   return {
     columns: headerList,
