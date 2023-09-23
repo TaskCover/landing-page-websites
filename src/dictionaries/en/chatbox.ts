@@ -32,5 +32,7 @@ export const ChatBoxLang: ChatBox = {
       text_3: "or the system will choose automatically",
     },
     accountInformation: "Account information",
+    added: "added",
+    removed: "removed",
   },
 };

@@ -32,5 +32,7 @@ export const ChatBoxLang: ChatBox = {
       text_3: "hoặc hệ thống sẽ tự động chọn",
     },
     accountInformation: "Thông tin tài khoản",
+    added: "đã thêm",
+    removed: "đã xoá",
   }
 };

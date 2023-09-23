@@ -30,5 +30,7 @@ export type ChatBox = {
       text_3: string;
     },
     accountInformation: string,
+    added: string,
+    removed: string,
   };
 };
