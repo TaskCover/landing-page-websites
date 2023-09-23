@@ -42,7 +42,7 @@ interface MessagesProps {
   focusMessage: MessageSearchInfo | null;
   unReadMessage: UnreadUserInfo[];
   onRefetch: (page: number) => void;
-  wrapperMessageSx: any;
+  wrapperMessageSx?: any;
 }
 
 type MessageHandle = {

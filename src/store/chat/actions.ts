@@ -217,7 +217,8 @@ export const readMessages = async (paramReq: ReadMessageRequest) => {
     }
     throw AN_ERROR_TRY_AGAIN;
   } catch (error) {
-    throw error;
+    console.log(error);
+    // throw error;
   }
 };
 

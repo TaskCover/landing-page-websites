@@ -21,11 +21,7 @@ const DrawerInfoChat = () => {
         />
       ),
       account: <AccountInfo />,
-      forward: (
-        <>
-          <ChatForward />
-        </>
-      ),
+      forward: <ChatForward  callbackCancel={() => onSetDrawerType('info')}/>,
     }),
     [onSetDrawerType, onSetConversationInfo],
   );

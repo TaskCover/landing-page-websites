@@ -23,12 +23,11 @@ const MessageLayout = ({
   avatarPartner,
   hasNextMessageFromSameUser,
   messageProps,
-  callBackForward
 }: MessageLayoutProps) => {
   const isCurrentUser = message.u.username === sessionId;
   const { sx, ...props } = messageProps || {};
   const [isForward, setIsForward] = useState(true);
-  const { onSetStep, dataTransfer } = useChat();
+  const { onSetStep, dataTransfer, isChatDesktop, onSetDataTransfer, onSetDrawerType } = useChat();
   const { isDarkMode } = useTheme();
   return (
     <>
@@ -62,8 +61,12 @@ const MessageLayout = ({
               <Box
                 className="mouse-pointer"
                 onClick={() => {
-                  onSetStep(STEP.CHAT_FORWARD, { ...dataTransfer, message });
-                  callBackForward && callBackForward()
+                  if(isChatDesktop){
+                    onSetDataTransfer({ ...dataTransfer, message });
+                    onSetDrawerType('forward')
+                  } else {
+                    onSetStep(STEP.CHAT_FORWARD, { ...dataTransfer, message });
+                  }
                 }}
                 sx={{
                   backgroundColor: isDarkMode ? "#3a3b3c" : "#ECECF3",

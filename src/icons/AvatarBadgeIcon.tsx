@@ -23,7 +23,7 @@ const AvatarBadgeIcon = (props) => {
           r="6.5"
           fill="#0BB783"
           stroke="white"
-          stroke-width="3"
+          strokeWidth="3"
         />
       </svg>
     </SvgIcon>

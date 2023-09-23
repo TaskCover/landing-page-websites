@@ -1,6 +1,6 @@
 "use client";
 
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import React from "react";
 import HeaderMobile from "../HeaderMobile";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -19,7 +19,7 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({
   children,
   setOpenAddGroup,
 }) => {
-  const {isDarkMode} = useTheme();
+  const { isDarkMode } = useTheme();
   const detectPropsWithScreen = () => {
     const propsScreenHandler: Partial<{
       [key in MobileScreenType]: () => HeaderMobileProps;
@@ -28,16 +28,18 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({
         return {
           title: "Chat",
           prefix: (
-            <ArrowBackIosNewIcon
-              sx={styleIcon}
-              onClick={() => setOpenAddGroup && setOpenAddGroup(false)}
-            />
+            <IconButton
+              onClick={() => setOpenAddGroup && setOpenAddGroup(true)}
+            >
+              <ArrowBackIosNewIcon sx={styleIcon} />
+            </IconButton>
           ),
           suffix: (
-            <ControlPointIcon
-              sx={styleIcon}
+            <IconButton
               onClick={() => setOpenAddGroup && setOpenAddGroup(true)}
-            />
+            >
+              <ControlPointIcon sx={styleIcon} />
+            </IconButton>
           ),
         };
       },
@@ -53,7 +55,7 @@ const ChattingRoomMobileLayout: React.FC<Props> = ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        bgcolor: isDarkMode ? "var(--mui-palette-grey-50)" : 'white',
+        bgcolor: isDarkMode ? "var(--mui-palette-grey-50)" : "white",
       }}
     >
       <HeaderMobile {...detectPropsWithScreen()} />

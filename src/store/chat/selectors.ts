@@ -513,6 +513,10 @@ export const useChat = () => {
     [dispatch, user],
   );
   
+  const onChangeListConversations =  useCallback((newConversations: IChatInfo[]) => {
+    dispatch(setListNewConversation(newConversations ?? []));
+  }, [dispatch]);
+
   const onChangeGroupAvatar = useCallback(
     async (file: File, roomId: string) => {
       const result = await dispatch(
@@ -702,5 +706,6 @@ export const useChat = () => {
     onResetConversationInfo,
     isChatDesktop,
     onSetChatDesktop,
+    onChangeListConversations
   };
 };

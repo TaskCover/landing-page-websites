@@ -41,7 +41,8 @@ const RoomHeader = () => {
     dataTransfer: currentConversation,
     onResetConversationInfo,
     onCloseDrawer,
-    roomId
+    roomId,
+    onSetDataTransfer
   } = useChat();
   const [search, setSearchText] = useState({
     text: "",
@@ -222,7 +223,7 @@ const RoomHeader = () => {
           }}
           onClick={() => {
               onSetDrawerType("group");
-              onSetStep(STEP.ADD_GROUP, { ...currentConversation, isNew: currentConversation?.t === 'd' });
+              onSetDataTransfer({ ...currentConversation, isNew: currentConversation?.t === 'd' });
           }}
         >
           <ProfileAdd />

@@ -30,12 +30,14 @@ const AttachmentContent = ({
   isCurrentUser,
   isRead,
   attachmentProps,
+  showOnlyContent,
 }: {
   message: MessageInfo;
   mediaListPreview: MediaPreviewItem[];
   isCurrentUser: boolean;
   isRead: boolean;
   attachmentProps?: BoxProps;
+  showOnlyContent?: boolean;
 }) => {
   const { sx, ...props } = attachmentProps || {};
 
@@ -88,16 +90,15 @@ const AttachmentContent = ({
       });
   }, [message]);
 
-  const {isDarkMode} = useTheme();
+  const { isDarkMode } = useTheme();
 
   const renderBackgroundColor = useMemo(() => {
-    if(isCurrentUser) {
-      if(isDarkMode) return '#333333';
-      return "#EBF5FF"
+    if (isCurrentUser) {
+      if (isDarkMode) return "#333333";
+      return "#EBF5FF";
     }
     return isDarkMode ? "#3a3b3c" : "#F7F7FD";
   }, [isCurrentUser, isDarkMode]);
-
 
   return (
     <>
@@ -135,22 +136,26 @@ const AttachmentContent = ({
                       }))
                     }
                   />
-                  <TimeMessage
-                    time={message.ts}
-                    isRead={isRead}
-                    isCurrentUser={isCurrentUser}
-                    timeMessageProps={{
-                      sx: {
-                        position: "absolute",
-                        bottom: ".4rem",
-                        right: ".3rem",
-                        gap: "0.2rem",
-                        padding: "0 6px",
-                        borderRadius: "15px",
-                        backgroundColor: "#00000080",
-                      },
-                    }}
-                  />
+                  {showOnlyContent ? (
+                    ""
+                  ) : (
+                    <TimeMessage
+                      time={message.ts}
+                      isRead={isRead}
+                      isCurrentUser={isCurrentUser}
+                      timeMessageProps={{
+                        sx: {
+                          position: "absolute",
+                          bottom: ".4rem",
+                          right: ".3rem",
+                          gap: "0.2rem",
+                          padding: "0 6px",
+                          borderRadius: "15px",
+                          backgroundColor: "#00000080",
+                        },
+                      }}
+                    />
+                  )}
                 </Box>
               );
             })}
@@ -194,22 +199,26 @@ const AttachmentContent = ({
                       <source src={url} />
                     </Box>
                   </>
-                  <TimeMessage
-                    time={message.ts}
-                    isRead={isRead}
-                    isCurrentUser={isCurrentUser}
-                    timeMessageProps={{
-                      sx: {
-                        position: "absolute",
-                        bottom: ".4rem",
-                        right: ".3rem",
-                        gap: "0.2rem",
-                        padding: "0 6px",
-                        borderRadius: "15px",
-                        backgroundColor: "#00000080",
-                      },
-                    }}
-                  />
+                  {showOnlyContent ? (
+                    ""
+                  ) : (
+                    <TimeMessage
+                      time={message.ts}
+                      isRead={isRead}
+                      isCurrentUser={isCurrentUser}
+                      timeMessageProps={{
+                        sx: {
+                          position: "absolute",
+                          bottom: ".4rem",
+                          right: ".3rem",
+                          gap: "0.2rem",
+                          padding: "0 6px",
+                          borderRadius: "15px",
+                          backgroundColor: "#00000080",
+                        },
+                      }}
+                    />
+                  )}
                 </Box>
               );
             })}
@@ -255,11 +264,15 @@ const AttachmentContent = ({
                         {file?.title}
                       </Link>
                     </Box>
-                    <TimeMessage
-                      time={message.ts}
-                      isRead={isRead}
-                      isCurrentUser={isCurrentUser}
-                    />
+                    {showOnlyContent ? (
+                      ""
+                    ) : (
+                      <TimeMessage
+                        time={message.ts}
+                        isRead={isRead}
+                        isCurrentUser={isCurrentUser}
+                      />
+                    )}
                   </Box>
                 );
               })}

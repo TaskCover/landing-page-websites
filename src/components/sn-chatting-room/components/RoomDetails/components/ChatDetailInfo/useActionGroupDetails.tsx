@@ -1,6 +1,6 @@
 import { Box, Typography, TextField, Button } from "@mui/material";
 import { STEP } from "store/chat/type";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Avatar from "components/Avatar";
 import { useChat } from "store/chat/selectors";
 import { useAuth, useSnackbar } from "store/app/selectors";
@@ -34,7 +34,7 @@ export const useActionGroupDetails = () => {
   const {
     dataTransfer,
     groupMembers,
-    onSetStep,
+    onSetConversationInfo,
     onLeftGroup,
     onRenameGroup,
     onSetDataTransfer,
@@ -43,6 +43,8 @@ export const useActionGroupDetails = () => {
     onRemoveGroupMember,
     onDeleteConversationGroup,
     onGetAllConvention,
+    onChangeListConversations,
+    convention
   } = useChat();
 
   const { user } = useAuth();
@@ -210,8 +212,15 @@ export const useActionGroupDetails = () => {
       offset: 0,
       count: 1000,
     });
-    onSetStep(STEP.CONVENTION);
   };
+
+  const onChangeConversationWhenLeave = useCallback(() => {
+    const indexCurrentData = convention?.findIndex((item) => item._id === dataTransfer?._id);
+    const newConversations = convention?.filter((item) => item._id !== dataTransfer?._id);
+    onSetDataTransfer(convention[indexCurrentData + 1] ?? convention[indexCurrentData - 1] ?? {})
+    onSetConversationInfo(convention[indexCurrentData + 1] ?? convention[indexCurrentData - 1] ?? {})
+    onChangeListConversations(newConversations);
+  }, [convention, dataTransfer?._id, onChangeListConversations, onSetConversationInfo, onSetDataTransfer])
 
   const handlePopup = async () => {
     const renameGroupApi = async () => {
@@ -233,12 +242,13 @@ export const useActionGroupDetails = () => {
           "error",
         );
       } else {
-        onGetAllConvention({
-          type: "a",
-          text: "",
-          offset: 0,
-          count: 10,
+        const newConversations = convention?.map((item) => {
+          if(item._id === dataTransfer?._id) {
+              return dataTransferNew
+          } 
+          return item;
         });
+        onChangeListConversations(newConversations)
         onSetDataTransfer(dataTransferNew);
         onAddSnackbar(commonT("success"), "success");
       }
@@ -278,7 +288,7 @@ export const useActionGroupDetails = () => {
           type: "p",
           roomId: dataTransfer?._id,
         });
-        onSetStep(STEP.CONVENTION);
+        onChangeConversationWhenLeave()
         handleSuccess(result);
         break;
       case TYPE_POPUP.LEAVE_MEMBER:
@@ -287,6 +297,7 @@ export const useActionGroupDetails = () => {
       case TYPE_POPUP.LEAVE_AND_NEW_ADD:
         await addAndRemove(userId, user?.id_rocket ?? "");
         await left();
+        onChangeConversationWhenLeave()
         break;
       case TYPE_POPUP.LEAVE_OWNER:
         //NEW OWNER RANDOM
@@ -296,6 +307,7 @@ export const useActionGroupDetails = () => {
         if (!random) return onAddSnackbar("Error!", "error"); // Handle delete group
         await addAndRemove(random, user?.id_rocket ?? "");
         await left();
+        onChangeConversationWhenLeave()
         break;
       case TYPE_POPUP.RENAME_GROUP:
         await renameGroupApi();
