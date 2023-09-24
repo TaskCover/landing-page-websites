@@ -58,6 +58,31 @@ export type SalesDictionary = {
       dueDate: string;
       addNew: string;
     };
+    service: {
+      title: string;
+      table: {
+        name: string;
+        price: string;
+        description: string;
+        quantity: string;
+        estimate: string;
+        totalBuget: string;
+        serviceType: string;
+        billType: string;
+        unit: string;
+        discount: string;
+        markup: string;
+      };
+      addSection: string;
+      addNewFromRateCard: string;
+      addNewRow: string;
+      duplicate: string;
+      showDiscount: string;
+      showMarkup: string;
+      showFixedPrice: string;
+      showEstimate: string;
+      ShowDescription: string;
+    };
     comment: {
       title: string;
       placeholder: string;

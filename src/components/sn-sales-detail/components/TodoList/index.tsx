@@ -226,7 +226,7 @@ const TodoList = () => {
           mt={2}
           overflow={{
             xs: "auto",
-            md: "hidden",
+            md: "auto",
           }}
           width={{
             xs: "100%",

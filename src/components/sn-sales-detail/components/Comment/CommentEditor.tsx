@@ -72,14 +72,14 @@ const CommentEditor = forwardRef(
           content: editorRef.current?.getHTML() ?? content,
         } as CommentData;
         if (files.length) {
-          data.attachment = [];
+          data.attachments = [];
           const promises = files.map((file) => {
             return client.upload(Endpoint.UPLOAD_LINK, file);
           });
           const results = await Promise.allSettled(promises);
           results.forEach((result) => {
             if (result.status === "fulfilled" && result.value) {
-              (data.attachment as string[]).push(result.value);
+              (data.attachments as string[]).push(result.value);
             }
           });
         }

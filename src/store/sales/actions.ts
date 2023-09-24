@@ -10,6 +10,7 @@ import {
 import { HttpStatusCode } from "constant/enums";
 import { BaseQueries } from "constant/types";
 import { Employee } from "store/company/reducer";
+import { Service } from "./reducer";
 
 export interface GetSalesListQueries extends BaseQueries {
   sort?: string;
@@ -31,6 +32,7 @@ export interface DealData {
   revenue?: number;
   revenuePJ?: number;
   probability?: number;
+  tags?: string[];
   stage?: string;
 }
 export interface TodoItemData {
@@ -48,10 +50,18 @@ export interface TodoData {
 export type CommentData = {
   deal_id: string;
   content?: string;
-  attachment?: string[];
-  attachment_down?: string[];
+  attachments?: string[];
+  attachments_down?: string[];
 };
 
+export type ServiceData = Partial<
+  Omit<Service, "id" | "updatedAt" | "createdAt" | "creator">
+>;
+export interface SectionData {
+  start_date: string;
+  services: ServiceData[];
+  service?: ServiceData[];
+}
 export const getSales = createAsyncThunk(
   "sales/getSales",
   async (queries: GetSalesListQueries) => {
@@ -244,6 +254,105 @@ export const createComment = createAsyncThunk(
         baseURL: SALE_API_URL,
       });
       if (response?.status === HttpStatusCode.CREATED) {
+        const { data } = response;
+        return data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getServices = createAsyncThunk(
+  "sales/getServices",
+  async ({ dealId }: { dealId: string }) => {
+    try {
+      const response = await client.get(
+        StringFormat(Endpoint.SALES_SERVICE_DETAIL, { id: dealId }),
+        {},
+        {
+          baseURL: SALE_API_URL,
+        },
+      );
+      if (response?.status === HttpStatusCode.OK) {
+        const { data } = response;
+        return data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const updateServiceSection = createAsyncThunk(
+  "sales/updateServiceSection",
+  async ({ sectionId, data }: { sectionId: string; data: SectionData }) => {
+    try {
+      const response = await client.put(
+        StringFormat(Endpoint.SALES_SERVICE_DETAIL, { id: sectionId }),
+        data,
+        {
+          baseURL: SALE_API_URL,
+        },
+      );
+      if (response?.status === HttpStatusCode.OK) {
+        const { data } = response;
+        return data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const createServiceSection = createAsyncThunk(
+  "sales/createServiceSection",
+  async ({
+    dealId,
+    start_date,
+    data,
+  }: {
+    dealId: string;
+    start_date: string;
+    data: SectionData[];
+  }) => {
+    try {
+      const response = await client.post(
+        StringFormat(Endpoint.SALES_SERVICE),
+        {
+          deal_id: dealId,
+          sections: [...data],
+          start_date: start_date,
+        },
+        {
+          baseURL: SALE_API_URL,
+        },
+      );
+      if (response?.status === HttpStatusCode.CREATED) {
+        const { data } = response;
+        return data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const deleteSection = createAsyncThunk(
+  "sales/deleteSection",
+  async ({ sectionId }: { sectionId: string }) => {
+    try {
+      const response = await client.delete(
+        StringFormat(Endpoint.SALES_SECTION_DETAIL, { id: sectionId }),
+        {
+          baseURL: SALE_API_URL,
+        },
+      );
+      if (response?.status === HttpStatusCode.OK) {
         const { data } = response;
         return data;
       }

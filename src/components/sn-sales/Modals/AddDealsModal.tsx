@@ -12,6 +12,7 @@ import { CURRENCY_SYMBOL } from "../helpers";
 import useGetEmployeeOptions from "../hooks/useGetEmployeeOptions";
 import { useSales } from "store/sales/selectors";
 import useGetProjectTypeOptions from "../hooks/useGetProjectTypeOptions";
+import { useTagOptions, useTags } from "store/tags/selector";
 
 interface IProps {
   open: boolean;
@@ -39,6 +40,8 @@ const AddDealModal = ({ open, onClose }: IProps) => {
   } = useGetProjectTypeOptions();
 
   const { onCreateDeal } = useSales();
+  const { tagsOptions, onSearchTags } = useTagOptions();
+  const { onCreateTags } = useTags();
   //create form
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
@@ -79,7 +82,7 @@ const AddDealModal = ({ open, onClose }: IProps) => {
     tags: yup.array().of(yup.string()),
   });
 
-  const { handleSubmit, control, reset, getValues } = useForm({
+  const { handleSubmit, control, reset, getValues, setValue } = useForm({
     defaultValues: {
       dealName: "",
       currency: UNIT_OPTIONS[0].value,
@@ -199,16 +202,46 @@ const AddDealModal = ({ open, onClose }: IProps) => {
           render={({ field, fieldState: { error } }) => {
             const { onChange, ...props } = field;
             const onSelect = (e, data) => {
-              const mappingData = data.map((item) => item.label);
+              const mappingData = data.map((item) => item.value);
               onChange(mappingData);
+            };
+            const onEnter = (value: string | undefined) => {
+              if (!value) return;
+              const tags = getValues("tags") ?? [];
+              const isExisted = tagsOptions.find(
+                (item) => item.label === value,
+              );
+              const convertedTags = tags.map((item) => {
+                return {
+                  label: item,
+                  value: item,
+                };
+              });
+              if (isExisted) {
+                onSelect(null, [
+                  ...convertedTags,
+                  {
+                    label: value,
+                    value: isExisted.value,
+                  },
+                ]);
+                return;
+              }
+              onCreateTags({
+                name: value,
+              });
+              // setValue("tags", [...tags, isExisted.value]);
+              // onSelect(null, cno);
             };
             return (
               <SelectMultiple
-                options={projectTypeOptions}
+                options={tagsOptions}
                 onSelect={onSelect}
                 error={error?.message}
+                onInputChange={(value) => onSearchTags(value)}
                 onEndReached={onEndReachedProjectTypeOptions}
                 loading={projectTypeIsFetching}
+                onEnter={onEnter}
                 label={salesT(`${salesFormTranslatePrefix}.tags`)}
               />
             );

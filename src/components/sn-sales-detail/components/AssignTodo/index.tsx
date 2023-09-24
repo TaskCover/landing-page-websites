@@ -86,6 +86,7 @@ const DisplayItem = ({
       </Text>
       <IconButton
         noPadding
+        sx={{ position: "relative", zIndex: 99 }}
         onClick={() => onRemoveAssign(user.value as string)}
       >
         <CircleCloseIcon sx={{ color: "grey.400" }} />
@@ -139,7 +140,11 @@ const AssignTodo = (props: AssignProps) => {
   );
 
   const onRemoveAssign = (id) => {
-    onChange && onChange(name, {} as User);
+    onChange &&
+      onChange(name, {
+        id: "undefined",
+        fullname: "",
+      } as User);
   };
   return (
     <PopoverLayout
