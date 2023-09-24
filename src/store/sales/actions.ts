@@ -32,6 +32,7 @@ export interface DealData {
   revenue?: number;
   revenuePJ?: number;
   probability?: number;
+  tags?: string[];
   stage?: string;
 }
 export interface TodoItemData {

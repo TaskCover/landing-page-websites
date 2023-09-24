@@ -1,11 +1,16 @@
-import { CellProps, HeaderCell } from "components/Table";
+import { BodyCell, CellProps, HeaderCell } from "components/Table";
 import { NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
 import { use, useContext, useEffect, useMemo, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { EditContext } from "../components/sn-service/context/EditContext";
-import { Stack } from "@mui/material";
+import { Box, Grid, Stack, TableCell } from "@mui/material";
 import { Text } from "components/shared";
+import { Service } from "store/sales/reducer";
+import { formatDate, formatEstimateTime, formatNumber } from "utils/index";
+import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
+import { CURRENCY_CODE } from "constant/enums";
+import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 
 export enum ServiceColumn {
   NAME = "name",
@@ -44,11 +49,31 @@ export const defaultShowColumns: ServiceColumn[] = [
   ServiceColumn.MARK_UP,
   ServiceColumn.TOTAL_BUGET,
 ];
-export const useGetHeaderColumn = () => {
+export const useGetHeaderColumn = (index: number) => {
   const { control, getValues } = useFormContext();
   const { isEdit } = useContext(EditContext);
 
   const salesT = useTranslations(NS_SALES);
+  const { fields } = useFieldArray({
+    control,
+    name: `sectionsList.${index}.service`,
+  });
+
+  const totalBuget = useMemo(() => {
+    const result = fields?.reduce((prev, item) => {
+      const price = (item as Service).tolBudget || 0;
+      return prev + price;
+    }, 0);
+    return result;
+  }, [fields]);
+
+  const estimateTime = useMemo(() => {
+    const result = fields?.reduce((prev, item) => {
+      const estimate = (item as Service).estimate || 0;
+      return prev + estimate;
+    }, 0);
+    return result;
+  }, [fields]);
 
   const headerList: CellProps[] = useMemo(() => {
     const list: CellProps[] = [
@@ -96,6 +121,7 @@ export const useGetHeaderColumn = () => {
         value: salesT("detail.service.table.estimate"),
         align: "left",
         width: "8%",
+
         // minWidth: 120,
       },
       {
@@ -132,6 +158,23 @@ export const useGetHeaderColumn = () => {
         value: salesT("detail.service.table.totalBuget"),
         align: "left",
         width: "8%",
+        // component: (props) => (
+        //   <Stack
+        //     {...props}
+        //     direction="row"
+        //     alignItems="center"
+        //     justifyContent="flex-end"
+        //   >
+        //     <Text>{salesT("detail.service.table.totalBuget")}</Text>
+        //     <Text fontSize={14} fontWeight={600}>
+        //       {formatNumber(totalBuget, {
+        //         numberOfFixed: 2,
+        //         prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+        //       })}
+        //     </Text>
+        //   </Stack>
+        // ),
+
         // minWidth: 160,
       },
     ];
@@ -148,5 +191,6 @@ export const useGetHeaderColumn = () => {
   return {
     columns: headerList,
     // columns,
+    totalBuget,
   };
 };

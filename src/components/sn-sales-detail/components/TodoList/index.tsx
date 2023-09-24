@@ -226,11 +226,11 @@ const TodoList = () => {
           mt={2}
           overflow={{
             xs: "auto",
-            md: "hidden",
+            md: "auto",
           }}
           width={{
             xs: "100%",
-            md: "calc(90% - 48px)",
+            md: "calc(80% - 48px)",
           }}
         >
           <DragDropContext onDragEnd={onDragEnd}>

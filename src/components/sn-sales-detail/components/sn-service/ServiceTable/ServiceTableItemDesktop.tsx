@@ -1,14 +1,20 @@
 import { Stack, TableRow } from "@mui/material";
 import { BodyCell } from "components/Table";
 import { Button, IconButton, Input, Select, Text } from "components/shared";
-import React, { cloneElement, useCallback, useContext, useMemo } from "react";
+import React, {
+  cloneElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+} from "react";
 import { EditContext } from "../context/EditContext";
 import { Draggable } from "react-beautiful-dnd";
 import MoveDotIcon from "icons/MoveDotIcon";
 import ServiceItemAction from "./ServiceItemAction";
 import { Service } from "store/sales/reducer";
 import { formatEstimateTime, formatNumber } from "utils/index";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 import { Action } from "../../TodoList/SubItem";
@@ -16,6 +22,7 @@ import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
 import { useSalesService } from "store/sales/selectors";
 import LockIcon from "icons/LockIcon";
 import UnlockIcon from "icons/UnlockIcon";
+import { CURRENCY_CODE } from "constant/enums";
 
 interface IProps {
   index: number;
@@ -33,10 +40,14 @@ const ServiceTableItem = ({
   onAction,
 }: IProps) => {
   const { isEdit } = useContext(EditContext);
-  const { register, control, getValues } = useFormContext();
-  const currency = getValues("currency");
+  const { register, control, getValues, setValue } = useFormContext();
   const { sectionColumns } = useSalesService();
   const [isLocked, setIsLocked] = React.useState(false);
+
+  const currency = useWatch({
+    control,
+    name: `${sectionKey}.${index}.unit`,
+  });
 
   const isShowCols = useCallback(
     (cols: ServiceColumn) => {
@@ -46,12 +57,31 @@ const ServiceTableItem = ({
     [sectionColumns],
   );
 
-  const defaultUnit = useMemo(() => {
-    const unit = UNIT_OPTIONS.find(
-      (item) => item.value === service.unit,
-    )?.value;
-    return unit || UNIT_OPTIONS[0];
-  }, [service.unit]);
+  const tolBuget = useMemo(() => {
+    if (typeof service.tolBudget !== "number") {
+      return parseFloat(service.tolBudget);
+    }
+    return service.tolBudget;
+  }, [service.tolBudget]);
+
+  // const existedUnit = useMemo(() => {
+  //   const unit = UNIT_OPTIONS.find(
+  //     (item) => item.value === service.unit,
+  //   )?.value;
+  //   return unit || UNIT_OPTIONS[0].value;
+  // }, [service.unit]);
+
+  // const currency = useMemo(() => {
+  //   const currency = getValues("currency");
+  //   return currency;
+  // }, [getValues("currency")]);
+  useEffect(() => {
+    setValue(
+      `${sectionKey}.${index}.unit`,
+      service.unit ?? UNIT_OPTIONS[0].value,
+    );
+  }, [index, sectionKey]);
+
   return (
     <Draggable
       draggableId={service?.id}
@@ -217,12 +247,12 @@ const ServiceTableItem = ({
                 {isEdit ? (
                   <Controller
                     control={control}
-                    defaultValue={defaultUnit}
                     {...register(`${sectionKey}.${index}.unit`)}
                     render={({ field }) => {
                       return (
                         <Select
                           multiline
+                          defaultValue={currency}
                           placeholder="Select unit"
                           {...field}
                           disabled={isLocked}
@@ -235,9 +265,7 @@ const ServiceTableItem = ({
                     }}
                   />
                 ) : (
-                  <Text variant="body2">
-                    {service.unit || UNIT_OPTIONS[0].value}
-                  </Text>
+                  <Text variant="body2">{currency as string}</Text>
                 )}
               </BodyCell>
 
@@ -324,7 +352,9 @@ const ServiceTableItem = ({
                       {...register(`${sectionKey}.${index}.price`)}
                       render={({ field }) => (
                         <Input
-                          helperText={`${CURRENCY_SYMBOL[currency]}/pc`}
+                          helperText={`${
+                            CURRENCY_SYMBOL[currency as CURRENCY_CODE]
+                          }/pc`}
                           type="number"
                           InputProps={{
                             inputProps: {
@@ -342,7 +372,7 @@ const ServiceTableItem = ({
                   ) : (
                     <Text variant="body2">
                       {formatNumber(service.price, {
-                        prefix: CURRENCY_SYMBOL[currency],
+                        prefix: CURRENCY_SYMBOL[currency as CURRENCY_CODE],
                         suffix: "/pc",
                         numberOfFixed: 2,
                       })}
@@ -437,7 +467,7 @@ const ServiceTableItem = ({
                     {...register(`${sectionKey}.${index}.tolBudget`)}
                     render={({ field }) => (
                       <Input
-                        helperText={CURRENCY_SYMBOL[currency]}
+                        helperText={CURRENCY_SYMBOL[currency as CURRENCY_CODE]}
                         type="number"
                         InputProps={{
                           inputProps: {
@@ -454,8 +484,9 @@ const ServiceTableItem = ({
                   />
                 ) : (
                   <Text variant="body2">
-                    {formatNumber(service.tolBudget, {
-                      prefix: CURRENCY_SYMBOL[currency],
+                    {formatNumber(tolBuget, {
+                      numberOfFixed: 2,
+                      prefix: CURRENCY_SYMBOL[currency as CURRENCY_CODE],
                     })}
                   </Text>
                 )}

@@ -58,12 +58,11 @@ const ServiceTable = ({
   const salesT = useTranslations(NS_SALES);
   const { isEdit } = useContext(EditContext);
   const { isMdSmaller } = useBreakpoint();
-  const { columns: defaultColumns } = useGetHeaderColumn();
+  const { columns: defaultColumns } = useGetHeaderColumn(index);
   const { control, getValues } = useFormContext();
   const { fields, append, remove, move } = useFieldArray({
     control,
     name: `sectionsList.${index}.service`,
-    keyName: "id",
   });
   const { sectionColumns } = useSalesService();
   const commonT = useTranslations(NS_COMMON);

@@ -82,6 +82,7 @@ export const useSales = () => {
         name: data.dealName,
         members,
         company_id: data.company,
+        tags: data.tags,
       };
 
       await dispatch(createDeal(convertedBody)).then(() => {
@@ -116,6 +117,7 @@ export const useSales = () => {
         members: data.members,
         status: data.status,
         company_id: data.company,
+        tags: data.tags,
         start_date,
       };
       await dispatch(updateDeal({ id: data.id, data: convertedBody }));

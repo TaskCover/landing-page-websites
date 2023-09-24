@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { BodyCell } from "components/Table";
 import { Button, IconButton, Input, Text } from "components/shared";
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { EditContext } from "../context/EditContext";
 import { Draggable } from "react-beautiful-dnd";
 import MoveDotIcon from "icons/MoveDotIcon";
@@ -49,8 +49,8 @@ const ServiceTableItemMobile = ({
   const { isEdit } = useContext(EditContext);
   const saleT = useTranslations(NS_SALES);
   const [isLocked, setIsLocked] = React.useState(false);
-  const { register, control, getValues } = useFormContext();
-  const currency = getValues("currency");
+  const { register, control, getValues, setValue } = useFormContext();
+  const currency = getValues(`${sectionKey}.${index}.unit`);
   const { sectionColumns } = useSalesService();
 
   const isShowCols = useCallback(
@@ -64,6 +64,13 @@ const ServiceTableItemMobile = ({
   const draggableId = useMemo(() => {
     return `SERVICE-SECTION-${index}`;
   }, [index]);
+
+  useEffect(() => {
+    setValue(
+      `${sectionKey}.${index}.unit`,
+      service.unit ?? UNIT_OPTIONS[0].value,
+    );
+  }, [index, sectionKey]);
 
   return (
     <Draggable

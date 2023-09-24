@@ -13,7 +13,7 @@ import {
 
 export interface CustomInputProps {
   control: Control;
-  label: string;
+  label?: string;
   placeholder?: string;
   helperText?: string;
   defaultValue?: string | number;
@@ -34,12 +34,14 @@ const CustomInput = (props: CustomInputProps, ref) => {
   } = props;
   return (
     <Grid2 container spacing={1} alignItems="center">
-      <Grid2 xs={4}>
-        <Text variant="body2" color="grey.300">
-          {label}
-        </Text>
-      </Grid2>
-      <Grid2 xs={8} position="relative">
+      {label && (
+        <Grid2 xs={4}>
+          <Text variant="body2" color="grey.300">
+            {label}
+          </Text>
+        </Grid2>
+      )}
+      <Grid2 xs={label ? 8 : 12} position="relative">
         <Controller
           control={control}
           defaultValue={defaultValue}
