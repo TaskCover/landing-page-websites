@@ -30,7 +30,7 @@ import {
   Upload,
 } from "components/shared";
 import { useEmployeeOptions } from "store/company/selectors";
-import { SelectMembers } from "./components";
+import { SelectMembers, SelectTypeProject } from "./components";
 import { Member } from "./components/helpers";
 import {
   useCurrencyOptions,
@@ -44,6 +44,7 @@ import { useDispatch } from "react-redux";
 import { useProjectTypes } from "store/company/selectors";
 import { useProjects } from "store/project/selectors";
 import ChevronIcon from "icons/ChevronIcon";
+import { Option } from "constant/types";
 
 export type ProjectDataForm = Omit<ProjectData, "members" | "avatar"> & {
   members?: Member[];
@@ -153,6 +154,10 @@ const Form = (props: FormProps) => {
         dataParsed["currency"] = dataParsed["currency"] ?? null;
       }
 
+      // format type project
+      dataParsed["type_project"] = typeProject.value ?? null;
+
+
       const newItem = await onSubmitProps(dataParsed);
 
       if (newItem) {
@@ -259,26 +264,14 @@ const Form = (props: FormProps) => {
 
   const [typeProject, setTypeProject] = useState(formik.values?.type_project)
 
-  const handleOnChange = (event, option) => {
+  const handleOnChangeTypeProject = (option: Option) => {
     if (option) {
       formik.setFieldValue('type_project', option.value);
       setTypeProject(option)
-      setOpenTypeProject(false)
     } else {
-      formik.setFieldValue('type_project', '');
+      formik.setFieldValue('type_project', '')
     }
   };
-
-  const [typeInput, setTypeInput] = useState(formik.values?.type_project.label)
-  const [openTypeProject, setOpenTypeProject] = useState(false)
-
-  const handleAddingNewType = async () => {
-    const result = await onCreateProjectType({ name: typeInput })
-    const newType = { value: result.id, label: result.name }
-    setTypeProject(newType)
-    formik.setFieldValue('type_project', result.id);
-    setOpenTypeProject(false)
-  }
 
   return (
     <FormLayout
@@ -327,66 +320,12 @@ const Form = (props: FormProps) => {
             }}
             onOpen={onGetEmployeeOptions}
           />
-          <Autocomplete
-            popupIcon={<ChevronIcon sx={{ fontSize: 16 }} />}
-            options={projectTypeOptions}
-            value={typeProject}
-            onChange={handleOnChange}
-            onFocus={() => setOpenTypeProject(true)}
-            open={openTypeProject}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={projectT("list.form.title.projectType")}
-                onBlur={formik.handleBlur}
-                value={typeInput}
-                onChange={(e) => setTypeInput(e.target.value)}
-                error={
-                  !!commonT(touchedErrors?.type_project, {
-                    name: projectT("list.form.title.projectType"),
-                  })
-                }
-                helperText={commonT(touchedErrors?.type_project, {
-                  name: projectT("list.form.title.projectType"),
-                })}
-                variant="outlined"
-                fullWidth
-                style={{ backgroundColor: "#f7f7fd" }}
-                sx={{
-                  mt: { xs: 2, sm: 0 },
-                  label: {
-                    color: "#a3a3a3",
-                    fontFamily:
-                      "'__Open_Sans_b8d98e','__Open_Sans_Fallback_b8d98e',Arial,sans-serif",
-                    fontSize: 13,
-                    top: '5px'
-                  },
-                  "& fieldset": { border: "none" },
-                }}
-              />
-            )}
-            noOptionsText={
-              <div style={{ textAlign: "center", cursor: "pointer" }}>
-                <p style={{ color: "black" }}>
-                  This types of project doesn't exits
-                </p>
-                <div
-                  style={{
-                    color: "#0bb79f",
-                    backgroundColor: "transparent",
-                    cursor: "pointer",
-                  }}
-                  onClick={handleAddingNewType}
-                >
-                  + Add to new project type
-                </div>
-              </div>
-            }
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>{option.label}</li>
-            )}
-            fullWidth
-          />
+          <div style={{ width: '100%' }}>
+            <SelectTypeProject
+              onChange={handleOnChangeTypeProject}
+              value={typeProject}
+            />
+          </div>
         </Stack>
         <SelectMembers
           name="members"
@@ -437,6 +376,7 @@ const Form = (props: FormProps) => {
             rootSx={sxConfig.input}
             sx={{ width: "65%" }}
             numberType="integer"
+            negative={false}
           />
           <Select
             options={currencyOptions}
@@ -513,7 +453,7 @@ const validationSchema = Yup.object().shape({
     .max(MAX_NAME_CHARACTERS, "form.error.overMax"),
   description: Yup.string(),
   owner: Yup.string(),
-  type_project: Yup.string(),
+  // type_project: Yup.string(),
   start_date: Yup.number(),
   end_date: Yup.number().min(Yup.ref("start_date"), "form.error.gte"),
   // expected_cost: Yup.number().min(0, "form.error.nonNegative"),

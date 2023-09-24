@@ -112,4 +112,6 @@ export const CommonLang: CommonDictionary = {
   processingUpload: "Đang tải lên tệp tin...",
   day: "ngày",
   hour: "giờ",
+  cancel: "Huỷ",
+  success: "Thành công!",
 };

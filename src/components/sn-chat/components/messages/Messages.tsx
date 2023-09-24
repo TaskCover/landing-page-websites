@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -20,8 +21,10 @@ import MessageLayout from "../messages/MessageLayout";
 import MessageContent from "./MessageContent";
 import { formatDate, sleep } from "utils/index";
 import Typography from "@mui/material/Typography";
-import { nameMonthList } from "constant/index";
+import { nameMonthList, NS_CHAT_BOX } from "constant/index";
 import React from "react";
+import { useTranslations } from "next-intl";
+import useTheme from "hooks/useTheme";
 
 interface MessagesProps {
   sessionId: string;
@@ -68,6 +71,8 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
 ) => {
   const [firstElement, setFirstElement] = useState(null);
   const [isBottomScrollMessage, setBottomScrollMessage] = useState(false);
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
+  const { isDarkMode } = useTheme();
 
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
@@ -87,6 +92,22 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
       }
     }),
   );
+
+  const getTimeStamp = (time: string | Date) => {
+    const date = new Date(time);
+    const lastHours = date.getHours();
+    let half = "AM";
+    if (lastHours === undefined) {
+      return "";
+    }
+    if (lastHours > 12) {
+      date.setHours(lastHours - 12);
+      half = "PM";
+    }
+    if (lastHours === 0) date.setHours(12);
+    if (lastHours === 12) half = "PM";
+    return `${formatDate(date, "HH:mm")}${half}`;
+  };
 
   const focusMessageRef = useRef<HTMLDivElement>(null);
 
@@ -208,28 +229,46 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           } ${isShowYear ? nextTimeMessage.getFullYear() : ""}`.trim();
           return (
             <React.Fragment key={index}>
-              <MessageLayout
-                sessionId={sessionId}
-                message={message}
-                avatarPartner={avatarPartner || undefined}
-                hasNextMessageFromSameUser={hasNextMessageFromSameUser}
-                messageProps={{
-                  ...(index === 0 && {
-                    ref: setFirstElement,
-                  }),
-                  ...(message._id === focusMessage?.messageId && {
-                    ref: focusMessageRef,
-                  }),
-                }}
-              >
-                <MessageContent
+              {!message?.t ? (
+                <MessageLayout
+                  sessionId={sessionId}
                   message={message}
-                  mediaListPreview={mediaListPreview}
-                  isCurrentUser={isCurrentUser}
-                  isGroup={isGroup}
-                  unReadMessage={unReadMessage}
-                />
-              </MessageLayout>
+                  avatarPartner={avatarPartner || undefined}
+                  hasNextMessageFromSameUser={hasNextMessageFromSameUser}
+                  messageProps={{
+                    ...(index === 0 && {
+                      ref: setFirstElement,
+                    }),
+                    ...(message._id === focusMessage?.messageId && {
+                      ref: focusMessageRef,
+                    }),
+                  }}
+                >
+                  <MessageContent
+                    message={message}
+                    mediaListPreview={mediaListPreview}
+                    isCurrentUser={isCurrentUser}
+                    isGroup={isGroup}
+                    unReadMessage={unReadMessage}
+                  />
+                </MessageLayout>
+              ) : (
+                  <Box
+                    sx={{
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        backgroundColor: isDarkMode ? '#5b5959' : '#f1f1f1',
+                        fontSize: '10px',
+                        padding: '2px 5px',
+                        borderRadius: '10px',
+                        display: 'inline-block',
+                      }}
+                    >{message?.u?.username} {message?.t === 'au' ? commonChatBox("chatBox.added") : (message?.t === 'ru' ? commonChatBox("chatBox.removed") : message?.t)} {message?.msg} ({getTimeStamp(message?.ts ?? '')})</Typography>
+                  </Box>
+              )}
               {hasNextDay && (
                 <Typography
                   textAlign="center"

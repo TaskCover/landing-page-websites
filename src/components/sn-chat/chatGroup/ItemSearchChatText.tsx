@@ -1,28 +1,22 @@
 import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { Checkbox, ImageList, Typography } from "@mui/material";
-import { IChatItemInfo } from "store/chat/type";
-import { ChangeEvent, useMemo } from "react";
-import CircleUnchecked from "icons/CircleUnchecked";
-import CircleCheckedFilled from "icons/CircleCheckedFilled";
-import { Button } from "components/shared";
-import { Employee } from "store/company/reducer";
+import { Typography } from "@mui/material";
+import { ChangeEvent } from "react";
+import { SearchChatText } from "store/company/reducer";
 import useTheme from "hooks/useTheme";
+import { renderTimeDiff } from "utils/index";
 
-interface SelectItemProp {
-  employee: Employee;
+interface ItemSearchChatTextProp {
+  employee: SearchChatText;
   onClick?: (event: ChangeEvent<HTMLInputElement>) => void;
-  checkbox?: boolean;
   onClickItem?: () => void;
 }
-const SelectItem = ({
+const ItemSearchChatText = ({
   employee,
   onClick,
-  checkbox,
   onClickItem,
-}: SelectItemProp) => {
-  const { fullname, email, avatar } = employee;
-  const label = { inputProps: { "aria-label": "Checkbox demo" } };
+}: ItemSearchChatTextProp) => {
+  const { fullname, matchedText, avatar, ts } = employee;
   const { isDarkMode } = useTheme();
 
   return (
@@ -39,20 +33,12 @@ const SelectItem = ({
       p={1}
       onClick={onClickItem}
     >
-      {checkbox && (
-        <Checkbox
-          onChange={onClick}
-          {...label}
-          icon={<CircleUnchecked />}
-          checkedIcon={<CircleCheckedFilled />}
-        />
-      )}
       <Avatar
-        src={avatar?.link}
+        src={avatar}
         alt="Avatar"
         size={42}
         style={{
-          borderRadius: "50%",
+          borderRadius: "10px",
         }}
       />
       <Box
@@ -65,10 +51,18 @@ const SelectItem = ({
           {fullname}
         </Typography>
         <Typography variant="caption" color="#999999">
-          {email}
+          {matchedText}
         </Typography>
       </Box>
+      <Typography
+        variant="caption"
+        color="#999999"
+        ml="auto"
+        whiteSpace="nowrap"
+      >
+        {renderTimeDiff(ts)}
+      </Typography>
     </Box>
   );
 };
-export default SelectItem;
+export default ItemSearchChatText;

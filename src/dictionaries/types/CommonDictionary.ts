@@ -108,4 +108,6 @@ export type CommonDictionary = {
   processingUpload: string;
   day: string;
   hour: string;
+  cancel: string;
+  success: string;
 };

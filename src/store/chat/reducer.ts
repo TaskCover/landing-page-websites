@@ -96,6 +96,7 @@ const chatSlice = createSlice({
       const prevStep = Number(action.payload.step) - 1;
       state.prevStep = prevStep === STEP.IDLE ? STEP.CONVENTION : prevStep;
       state.currStep = action.payload.step;
+      state.messageInfo = [];
 
       if (action.payload.dataTransfer !== undefined) {
         state.dataTransfer = action.payload.dataTransfer;
@@ -467,6 +468,7 @@ const chatSlice = createSlice({
         (state, action: PayloadAction<MediaResponse<MediaType>>) => {
           state.leftGroupStatus = DataStatus.SUCCEEDED;
           state.mediaList = action.payload.files;
+          state.chatAttachments = action.payload.files;
           state.mediaListStatus = DataStatus.SUCCEEDED;
         },
       )

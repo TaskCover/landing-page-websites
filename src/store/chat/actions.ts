@@ -18,6 +18,9 @@ import {
   RenameGroupRequest,
   MessageSearchInfoRequest,
   UnReadMessageRequest,
+  ReadMessageRequest,
+  ForwardMessageGroup,
+  ChangeGroupAvatar,
 } from "./type";
 import { AxiosError } from "axios";
 
@@ -174,6 +177,21 @@ export const getUnreadMessages = createAsyncThunk(
   },
 );
 
+export const readMessages = async (paramReq: ReadMessageRequest) => {
+    try {
+      const response = await client.post("readMessages", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  };
+
 export const createDirectMessageGroup = createAsyncThunk(
   "chat/createDirectMessageGroup",
   async (paramReq: CreateGroupRequest) => {
@@ -328,6 +346,42 @@ export const deleteConversation = createAsyncThunk(
   async (paramReq: DeleteConversationGroup) => {
     try {
       const response = await client.post("deleteConversation", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const forwardMessage = createAsyncThunk(
+  "chat/forwardMessage",
+  async (paramReq: ForwardMessageGroup) => {
+    try {
+      const response = await client.post("forwardMessage", paramReq, {
+        baseURL: CHAT_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const changeGroupAvatar = createAsyncThunk(
+  "chat/changeRoomAvatar",
+  async (paramReq: ChangeGroupAvatar) => {
+    try {
+      const response = await client.post("changeRoomAvatar", paramReq, {
         baseURL: CHAT_API_URL,
       });
 

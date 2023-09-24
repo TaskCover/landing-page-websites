@@ -113,4 +113,6 @@ export const CommonLang: CommonDictionary = {
   processingUpload: "Uploading files...",
   day: "day",
   hour: "hour",
+  cancel: "Cancel",
+  success: "Successfully!",
 };

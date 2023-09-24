@@ -36,6 +36,17 @@ export interface Employee extends User {
   id_rocket?: string;
 }
 
+export interface SearchChatText {
+  avatar: string;
+  fullname: string;
+  matchedText: string;
+  messageId: string;
+  offset: number;
+  roomId: string;
+  ts: string;
+  userId: string;
+}
+
 export interface Position {
   id: string;
   name: string;
