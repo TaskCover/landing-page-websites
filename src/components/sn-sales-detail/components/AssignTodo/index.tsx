@@ -140,7 +140,11 @@ const AssignTodo = (props: AssignProps) => {
   );
 
   const onRemoveAssign = (id) => {
-    onChange && onChange(name, {} as User);
+    onChange &&
+      onChange(name, {
+        id: "undefined",
+        fullname: "",
+      } as User);
   };
   return (
     <PopoverLayout
