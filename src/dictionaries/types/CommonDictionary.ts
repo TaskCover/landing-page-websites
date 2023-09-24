@@ -82,6 +82,8 @@ export type CommonDictionary = {
     close: string;
     pause: string;
   };
+  show: string;
+  hide: string;
   searchBy: string;
   creationDate: string;
   creator: string;

@@ -58,7 +58,14 @@ export const Endpoint = {
   SALES_DEAL_DETAIL: "/sales/{id}",
   SALES_TODO: "/sales/todo",
   SALES_TODO_DETAIL: "/sales/todo/{id}",
+  SALES_SERVICE: "/sales/service/",
+  SALES_SERVICE_DETAIL: "/sales/service/{id}",
+  SALES_SECTION_DETAIL: "/sales/section/{id}",
   SALES_COMMENT: "/sales/comment",
+  TAGS: "/tags",
+  TAGS_ALL: "/tags/all",
+  TAGS_DETAIL: "/tags/{id}",
+
   COST_HISTORY: "/cost-history",
 
   POSITIONS_ALL: "/positions/all",

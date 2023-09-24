@@ -18,6 +18,7 @@ interface IProps {
   sx?: SxProps;
   error?: string;
   value?: Option;
+  onEnter?: (value: string | undefined) => void;
   onOpen?: () => void;
   onInputChange?: (value: string) => void;
 }
@@ -28,6 +29,7 @@ const SelectMultiple = ({
   limitTags = 3,
   options,
   label,
+  onEnter,
   onSelect,
   sx,
   onEndReached,
@@ -36,10 +38,12 @@ const SelectMultiple = ({
   onOpen,
   loading = true,
 }: IProps) => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
   return (
     <Autocomplete
       getOptionLabel={(option) => option?.label || ""}
       multiple
+      autoSelect
       fullWidth
       onOpen={() => onOpen && onOpen()}
       onEnded={onEndReached}
@@ -50,6 +54,13 @@ const SelectMultiple = ({
             ...sx,
             cursor: "pointer",
             pt: 3,
+          }}
+          inputRef={inputRef}
+          onKeyDown={function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              onEnter && onEnter(inputRef.current?.value);
+            }
           }}
           error={error}
           {...params}

@@ -92,6 +92,8 @@ export const CommonLang: CommonDictionary = {
     title: "Xác nhận xóa",
     content: "Bạn có chắc chắn muốn xóa?",
   },
+  show: "Hiển thị",
+  hide: "Ẩn",
   upgradeAccount: "Nâng cấp tài khoản",
   clickGoDetail: "Nhấn để tới trang chi tiết {name}",
   waiting: "Đang chờ",

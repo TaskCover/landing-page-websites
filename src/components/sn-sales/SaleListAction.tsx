@@ -124,7 +124,7 @@ const SalesListAction = () => {
             variant="contained"
             sx={{ height: 40, width: "fit-content" }}
           >
-            <AddSquareIcon  
+            <AddSquareIcon
               sx={{
                 display: { xs: "block", md: "none" },
                 width: 24,
@@ -143,7 +143,7 @@ const SalesListAction = () => {
               {salesT("list.action.deal")}
             </Text>
           </Button>
-          <Button
+          {/* <Button
             onClick={() => onOpenModal(modalName.EXPORT)}
             size="small"
             variant="secondary"
@@ -159,7 +159,7 @@ const SalesListAction = () => {
             <Text sx={{ display: { xs: "none", md: "block" } }} color="inherit">
               {salesT("list.action.export")}
             </Text>
-          </Button>
+          </Button> */}
         </Stack>
       </Stack>
       <Stack
@@ -174,7 +174,6 @@ const SalesListAction = () => {
         minWidth={{ md: "fit-content" }}
       >
         <Stack direction="row" alignItems="center" gap={2}>
-
           <Dropdown
             name="sort"
             hasAll={false}
@@ -211,7 +210,7 @@ const SalesListAction = () => {
       <ExportModal
         open={exportModel}
         onClose={() => onCloseModal(modalName.EXPORT)}
-          />
+      />
     </Stack>
   );
 };
