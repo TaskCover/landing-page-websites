@@ -5,6 +5,7 @@ import HeaderDocDetail from "components/sn-docs/detail/HeaderDocDetail";
 import { NS_DOCS } from "constant/index";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { Box } from "@mui/material";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations(NS_DOCS);
@@ -16,9 +17,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function Page() {
   return (
-    <Wrapper>
-      <HeaderDocDetail></HeaderDocDetail>
-      <DocDetail></DocDetail>
+    <Wrapper transparent>
+      <Box
+        sx={{
+          margin: "24px",
+        }}
+      >
+        <HeaderDocDetail></HeaderDocDetail>
+        <DocDetail></DocDetail>
+      </Box>
     </Wrapper>
   );
 }
