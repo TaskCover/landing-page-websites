@@ -19,9 +19,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Page({ params }) {
   return (
     <Wrapper>
-      {/* <MainSection />
-      <Banner /> */}
-      <ResourcePlanningPage />
+      <MainSection />
+      <Banner />
     </Wrapper>
   );
 }
