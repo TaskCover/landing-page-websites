@@ -17,10 +17,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function Page() {
   return (
-    <Wrapper transparent>
+    <Wrapper overflow="auto" transparent>
       <Box
         sx={{
-          margin: "24px",
+          margin: {
+            md: "24px",
+            xs: "0px",
+          },
         }}
       >
         <HeaderDocDetail></HeaderDocDetail>

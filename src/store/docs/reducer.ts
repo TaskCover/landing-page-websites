@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { ItemDocsProps } from "components/sn-docs/detail/LeftSlide/ItemDocs";
 import { DataStatus } from "constant/enums";
 import { DEFAULT_PAGING } from "constant/index";
 import { Paging } from "constant/types";
@@ -20,6 +21,11 @@ export interface IDocs {
     any,
     "pageIndex" | "pageSize"
   >;
+
+  docDetails : {
+    info: {}
+    data: ItemDocsProps
+  }
 }
 
   
@@ -33,12 +39,102 @@ const initialState: IDocs = {
   docOptionsStatus: DataStatus.IDLE,
   docOptionsPaging: DEFAULT_PAGING,
   docOptionsFilters: {},
+
+  docDetails : {
+    info: {},
+    data: {
+      title: "Page",
+      content: {
+        title: "",
+        content: "",
+      },
+      children: [
+        {
+          id: 1,
+          title: "page 1",
+          content: {
+            title: "",
+            content: "",
+          },
+          children: [
+            {
+              id: 1,
+              title: "page 1.1",
+              content: {
+                title: "",
+                content: "",
+              },
+              children: [],
+            },
+          ],
+        },
+        {
+          id: 2,
+          title: "page 2",
+          content: {
+            title: "",
+            content: "",
+          },
+          children: [],
+        },
+        {
+          id: 2,
+          title: "page 2",
+          content: {
+            title: "",
+            content: "",
+          },
+          children: [],
+        },
+        {
+          id: 2,
+          title: "page 2",
+          content: {
+            title: "",
+            content: "",
+          },
+          children: [],
+        },
+        {
+          id: 2,
+          title: "page 2",
+          content: {
+            title: "",
+            content: "",
+          },
+          children: [],
+        },
+        {
+          id: 2,
+          title: "page 2",
+          content: {
+            title: "",
+            content: "",
+          },
+          children: [],
+        },
+        {
+          id: 2,
+          title: "page 2",
+          content: {
+            title: "",
+            content: "",
+          },
+          children: [],
+        },
+      ],
+    }
+  }
 }
 
 const docSlice = createSlice({
     name: "docs",
     initialState,
-    reducers: {},
+    reducers: {
+      createPage(state , actions) {
+        state.docDetails.data = actions.payload
+      }
+    },
 });
   
   export default docSlice.reducer;
