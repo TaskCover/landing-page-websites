@@ -37,7 +37,7 @@ import {
   RESOURCE_EVENT_TYPE,
 } from "constant/enums";
 import { S } from "@fullcalendar/core/internal-common";
-import { IBookingListItem } from "store/resourcePlanning/reducer";
+import { IBookingItem, IBookingListItem } from "store/resourcePlanning/reducer";
 import { useFetchBookingAll, useFetchMyBooking } from "./hooks/useBookingAll";
 import useGetMappingTime from "./hooks/useGetMappingTime";
 import useGetOptions from "./hooks/useGetOptions";
@@ -55,7 +55,7 @@ const MyScheduleTab = () => {
   const { mappedTimeSymbol } = useGetMappingTime();
   const { selectedDate, updateDate } = useResourceDate();
   const { getMyBooking, myBooking } = useMyBooking();
-  const [resources, setResources] = React.useState<IBookingListItem[]>([]);
+  const [resources, setResources] = React.useState<IBookingItem[]>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
@@ -144,68 +144,74 @@ const MyScheduleTab = () => {
     }
   };
   const getEvents = () =>
-    resources
-      ?.map(
-        ({ id, bookings, fullname }) =>
-          bookings.map((props) => {
-            const {
-              id: eventId,
-              start_date: from,
-              end_date: to,
-              booking_type,
-              allocation,
-              position,
-              allocation_type,
-              total_hour,
-            } = props;
+    resources.map((props: IBookingItem) => {
+      const {
+        id: eventId,
+        start_date: from,
+        end_date: to,
+        booking_type,
+        allocation,
+        position,
+        allocation_type,
+        total_hour,
+      } = props;
 
-            return {
-              resourceId: eventId.toString(),
-              start: dayjs(from).toDate(),
-              end: dayjs(to).toDate(),
-              allDay: true,
-              type: "step",
-              campaignId: id,
-              position,
-              name: fullname,
-              allocation,
-              allocation_type,
-              total_hour,
-              eventType: booking_type,
-              eventId,
-            };
-          }),
-        // .concat([
-        //   {
-        //     resourceId: id,
-        //     start: dayjs(filters?.start_date).toDate(),
-        //     end: dayjs(filters?.end_date).toDate(),
-        //     allDay: true,
-        //     type: "campaign",
-        //     campaignId: id,
-        //     name: fullname,
-        //     position: {},
-        //     eventType: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
-        //     eventId: id,
-        //   },
-        // ]),
-      )
-      .flat();
-
-  const getResources = () =>
-    resources?.map((resource) => ({
-      ...resource,
-      children: resource?.bookings.map((booking) => ({
-        id: booking?.id,
-        name: booking?.project?.name,
+      return {
+        resourceId: eventId.toString(),
+        start: dayjs(from).toDate(),
+        end: dayjs(to).toDate(),
+        allDay: true,
         type: "step",
-        eventType: booking?.booking_type,
-        note: booking?.note,
-        position: booking?.position,
-      })),
-    }));
+        position,
+        allocation,
+        allocation_type,
+        total_hour,
+        eventType: booking_type,
+        eventId,
+      };
+    }) as ResourceInput;
+  // .concat([
+  //   {
+  //     resourceId: id,
+  //     start: dayjs(filters?.start_date).toDate(),
+  //     end: dayjs(filters?.end_date).toDate(),
+  //     allDay: true,
+  //     type: "campaign",
+  //     campaignId: id,
+  //     name: fullname,
+  //     position: {},
+  //     eventType: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
+  //     eventId: id,
+  //   },
+  // ]),
 
+  const getResources = () => {
+    const result =
+      resources?.map((resource: IBookingItem) => ({
+        ...resource,
+        type: "step",
+        // children: resource?.bookings?.map((booking) => ({
+        //   id: booking?.id,
+        //   name: booking?.project?.name,
+        //   type: "step",
+        //   eventType: booking?.booking_type,
+        //   note: booking?.note,
+        //   position: booking?.position,
+        // })),
+      })) || [];
+    return [
+      {
+        id: "1",
+        fullname: "Nguyễn Văn A",
+        company: "Công ty TNHH ABC",
+        total_hour: 160,
+        bookings: result,
+        children: result,
+      },
+    ];
+  };
   const mappedResources = getResources();
+
   const mappedEvents = getEvents();
 
   useGetOptions();
@@ -348,11 +354,9 @@ const MyScheduleTab = () => {
             const parentResource = resources.find(
               (item) => item.id === resource._resource.parentId,
             );
-            const bookings = parentResource
-              ? [...parentResource?.bookings]
-              : [];
-
-            const isLastItem = bookings.pop()?.id === resource._resource.id;
+            // const bookings = parentResource?.bookings || [];
+            const isLastItem =
+              resources[resources.length - 1]?.id === resource._resource.id;
 
             if (type === "step") {
               return (

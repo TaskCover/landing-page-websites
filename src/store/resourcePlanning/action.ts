@@ -8,8 +8,8 @@ export interface IBookingAllFitler {
   search_key?: string;
   working_sort?: WorkingStatus;
   sort?: SORT_OPTIONS | "";
-  start_date: string;
-  end_date: string;
+  start_date?: string;
+  end_date?: string;
   position?: string;
 }
 export enum resourceActionType {

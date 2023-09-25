@@ -117,6 +117,7 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
       selectedDate,
     });
   };
+
   useEffect(() => {
     if (
       !isEmpty(filters) &&
@@ -156,17 +157,25 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
           onOpen={() => setIsOpen(true)}
           onClose={() => setIsOpen(false)}
           onChange={(date: Date | null) => {
+            const calendarApi =
+              calendarRef?.current && calendarRef?.current.getApi();
+
             if (date) {
               const { startDate, endDate } = getWeekStartAndEndDates(date);
               updateDate({
-                dateRange,
+                dateRange: [...dateRange],
                 selectedDate: date,
               });
+              updateCurrentDate("");
               setFilters({
                 ...filters,
                 start_date: startDate,
                 end_date: endDate,
               });
+              if (calendarApi) {
+                calendarApi?.gotoDate(startDate);
+                calendarApi?.refetchEvents();
+              }
             }
           }}
           closeOnSelect

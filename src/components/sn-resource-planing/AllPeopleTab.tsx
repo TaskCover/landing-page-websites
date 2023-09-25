@@ -110,6 +110,7 @@ const AllPeopleTab = () => {
       } else if (type === "step") {
         // Step has been resized or move, update the campaign dates
         if (!calendarRef.current) return null;
+        2;
       }
     };
 
@@ -189,6 +190,9 @@ const AllPeopleTab = () => {
         //     campaignId: id,
         //     name: fullname,
         //     position: {},
+        //     allocation: 0,
+        //     allocation_type: "",
+        //     total_hour: 0,
         //     eventType: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
         //     eventId: id,
         //   },
@@ -314,14 +318,14 @@ const AllPeopleTab = () => {
                 sx={{ width: 1 }}
               >
                 <Grid item xs={3} md={5} />
-                <Grid item xs={1} md={2}>
+                {/* <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {resourceT("schedule.resourceHeader.available")}
                   </Typography>
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
                     160 h
                   </Typography>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {resourceT("schedule.resourceHeader.schedule")}
@@ -330,7 +334,7 @@ const AllPeopleTab = () => {
                     40 h
                   </Typography>
                 </Grid>
-                <Grid item xs={1} md={2}>
+                {/* <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {`${resourceT(
                       "schedule.resourceHeader.schedule",
@@ -339,7 +343,7 @@ const AllPeopleTab = () => {
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
                     0 %
                   </Typography>
-                </Grid>
+                </Grid> */}
               </Grid>
             );
           }}
@@ -469,7 +473,7 @@ const AllPeopleTab = () => {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={1} md={2}>
+                    {/* <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
                           ...textHeadStyle,
@@ -478,7 +482,7 @@ const AllPeopleTab = () => {
                       >
                         160 h
                       </Typography>
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
@@ -489,7 +493,7 @@ const AllPeopleTab = () => {
                         40 h
                       </Typography>
                     </Grid>
-                    <Grid item xs={1} md={2}>
+                    {/* <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
                           ...textHeadStyle,
@@ -498,7 +502,7 @@ const AllPeopleTab = () => {
                       >
                         0 %
                       </Typography>
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                 </Grid>
               </Grid>

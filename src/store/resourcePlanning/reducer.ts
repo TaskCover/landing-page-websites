@@ -49,7 +49,7 @@ interface ResoucrPlanningState {
   bookingAllError: string;
   bookingAllStatus: DataStatus;
 
-  myBooking: IBookingListItem[];
+  myBooking: IBookingItem[];
   myBookingError: string;
   myBookingFilter: IBookingAllFitler;
   myBookingStatus: DataStatus;

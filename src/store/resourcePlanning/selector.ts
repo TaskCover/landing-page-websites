@@ -119,12 +119,6 @@ export const useMyBooking = () => {
   );
 
   const getMyBooking = async (params: IBookingAllFitler) => {
-    const newParams = {
-      ...params,
-      start_date: params.start_date ?? dayjs().format("YYYY-MM-DD"),
-      end_date: params.end_date ?? dayjs().format("YYYY-MM-DD"),
-    };
-
     await dispatch(getMyBookingResource(params));
   };
 

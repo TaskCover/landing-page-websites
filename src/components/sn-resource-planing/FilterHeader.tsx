@@ -10,21 +10,25 @@ import {
 import { useBookingAll, useMyBooking } from "store/resourcePlanning/selector";
 import useGetOptions from "./hooks/useGetOptions";
 import { setBookingAllFilter } from "store/resourcePlanning/reducer";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { cleanObject, stringifyURLSearchParams } from "utils/index";
 import useQueryParams from "hooks/useQueryParams";
-import { SORT_OPTIONS } from "constant/enums";
 import dayjs from "dayjs";
-import { TAB_TYPE } from "./hepler";
+import {
+  SORT_RESROUCE_OPTIONS,
+  DEFAULT_BOOKING_ALL_FILTER,
+  TAB_TYPE,
+  endOfWeek,
+  startOfWeek,
+} from "./hepler";
 
 const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
   const commonT = useTranslations<string>(NS_COMMON);
-  const [queries, setQueries] = useState<IBookingAllFitler>({
-    start_date: dayjs().format("YYYY-MM-DD"),
-    end_date: dayjs().format("YYYY-MM-DD"),
-  });
+  const [queries, setQueries] = useState<IBookingAllFitler>(
+    DEFAULT_BOOKING_ALL_FILTER,
+  );
   const { bookingAllFilter, getBookingResource } = useBookingAll();
   const { getMyBooking, myBookingFilter } = useMyBooking();
   const pathname = usePathname();
@@ -34,8 +38,7 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSearch = () => {
-    let newQueries = { ...queries };
-    newQueries = cleanObject(newQueries) as IBookingAllFitler;
+    const newQueries = { ...queries };
     const queryString = stringifyURLSearchParams(newQueries);
     push(`${pathname}${queryString}`);
     switch (type) {
@@ -47,6 +50,15 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
         break;
     }
   };
+
+  const positions = useMemo(() => {
+    const result = [...positionOptions];
+    result.unshift({
+      label: commonT("all"),
+      value: "",
+    });
+    return result;
+  }, [positionOptions]);
 
   const onChangeQueries = (name, value) => {
     setQueries((prev) => ({
@@ -104,7 +116,7 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
       >
         <Search
           name="search_key"
-          value={queries?.search_key}
+          value={queries?.search_key || ""}
           onChange={(name, value) => onChangeQueries(name, value)}
           placeholder={resourceT("schedule.filter.search")}
           sx={{
@@ -124,21 +136,23 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
             }
             label={commonT("position")}
             sx={{ maxWidth: "200px" }}
-            options={positionOptions}
+            options={positions}
           />
           <Filter.Select
-            value={queries.sort || ""}
-            onChange={(event) => onChangeQueries("sort", event.target.value)}
+            value={queries.working_sort || ""}
+            onChange={(event) =>
+              onChangeQueries("working_sort", event.target.value)
+            }
             label={resourceT("schedule.filter.workingHours")}
             sx={{ width: "150px" }}
             options={[
               {
                 label: resourceT("schedule.filter.asceding"),
-                value: SORT_OPTIONS.ASC,
+                value: SORT_RESROUCE_OPTIONS.ASC,
               },
               {
                 label: resourceT("schedule.filter.descending"),
-                value: SORT_OPTIONS.DESC,
+                value: SORT_RESROUCE_OPTIONS.DESC,
               },
             ]}
           />

@@ -10,9 +10,14 @@ export enum TAB_TYPE {
   MY = "my",
 }
 
-const today = dayjs().add(1, "day"); // Ngày hiện tại + 1 ngày (ngày mai)
-const startOfWeek = today.startOf("week").add(0, "day"); // Ngày bắt đầu tuần (chủ nhật)
-const endOfWeek = today.startOf("week").add(6, "day"); // Ngày kết thúc tuần (thứ 2)
+export enum SORT_RESROUCE_OPTIONS {
+  ASC = "asc",
+  DESC = "desc",
+}
+
+export const today = dayjs().add(1, "day"); // Ngày hiện tại + 1 ngày (ngày mai)
+export const startOfWeek = today.startOf("week").add(0, "day"); // Ngày bắt đầu tuần (chủ nhật)
+export const endOfWeek = today.startOf("week").add(6, "day"); // Ngày kết thúc tuần (thứ 2)
 
 const defaultStartDate = startOfWeek.format("YYYY-MM-DD");
 const defaultEndDate = endOfWeek.format("YYYY-MM-DD");
