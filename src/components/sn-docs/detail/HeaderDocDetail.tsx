@@ -57,7 +57,10 @@ const HeaderDocDetail = () => {
           </Box>
           <Box
             sx={{
-              width: "100%",
+              width: {
+                xs: "100%",
+                md: "auto",
+              },
               display: "flex",
               alignItems: "center",
               justifyContent: {

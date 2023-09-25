@@ -19,14 +19,28 @@ const LeftSlideDoc = () => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        flex: 1,
+        display: {
+          md: "block",
+          xs: "none",
+        },
+        width: {
+          md: "30%",
+          xs: "0",
+        },
+      }}
+    >
       <Box>
         <Search
           placeholder={docsT("filter.search", { name: "email" })}
           name="doc"
           onChange={onChangeQueries}
           value={search}
-          sx={{ width: 317, maxWidth: 317 }}
+          sx={{
+            width: "100%",
+          }}
         />
         <Box>
           <Text
@@ -41,7 +55,7 @@ const LeftSlideDoc = () => {
           <ItemDocs isFirst data={dataFake}></ItemDocs>
         </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 

@@ -18,7 +18,7 @@ import "./style.css";
 
 const EditDocs = () => {
   const [title, setTitle] = useState("");
-  const [height, setHeight] = useState(69);
+  const [height, setHeight] = useState(58);
   const [content, setContent] = useState("");
   const titleRef: any = useRef(null);
   const contentRef: any = useRef(null);
@@ -50,14 +50,17 @@ const EditDocs = () => {
     if (titleRef.current) {
       // Lấy chiều cao của phần tử tham chiếu và cập nhật state
       const elementHeight = titleRef.current.offsetHeight;
-      setHeight(elementHeight || 69);
+      setHeight(elementHeight || 58);
     }
-  }, [titleRef?.current]);
+  }, [titleRef?.current, title]);
 
   return (
     <Box
       sx={{
-        width: "100%",
+        width: {
+          md: "70%",
+          xs: "100%",
+        },
         position: "relative",
         // Title
         ".edit-title .ql-toolbar": {
@@ -66,7 +69,10 @@ const EditDocs = () => {
         ".edit-title .ql-container": {
           background: "white !important",
           border: "none",
-          paddingLeft: "32px",
+          paddingLeft: {
+            md: "32px",
+            xs: "0",
+          },
         },
         ".edit-title": {
           position: "absolute",
@@ -75,12 +81,21 @@ const EditDocs = () => {
           zIndex: 1,
         },
         ".edit-title .ql-editor::before": {
-          paddingLeft: "32px",
-          fontSize: "32px !important",
+          paddingLeft: {
+            md: "32px",
+            xs: "0",
+          },
+          fontSize: {
+            md: "32px !important",
+            xs: "24px !important",
+          },
           fontWeight: 700,
         },
         ".edit-title .ql-editor": {
-          fontSize: "32px !important",
+          fontSize: {
+            md: "32px !important",
+            xs: "24px !important",
+          },
           fontWeight: 700,
         },
 
@@ -92,13 +107,19 @@ const EditDocs = () => {
           boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
         },
         ".edit-content .ql-container": {
-          marginTop: `${70 + (height - 69)}px`,
+          marginTop: `${70 + (height - 58)}px`,
           background: "white !important",
           border: "none",
-          padding: "32px",
+          paddingLeft: {
+            md: "32px",
+            xs: "0",
+          },
         },
         ".edit-content .ql-editor::before": {
-          paddingLeft: "32px",
+          paddingLeft: {
+            md: "32px",
+            xs: "0",
+          },
         },
       }}
       className="entry-content"
