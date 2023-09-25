@@ -18,6 +18,8 @@ export const ResourcePlanning: ResourceDictionary = {
         pending: "Tạm dừng",
         inactive: "Ngừng làm việc",
       },
+      descending: "Giảm dần theo giờ làm",
+      asceding: "Tăng dần theo giờ làm",
     },
     time: {
       eventTime: "{allocation}{unit} cho {day} ngày",

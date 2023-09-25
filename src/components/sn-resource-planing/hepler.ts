@@ -1,5 +1,14 @@
+import { SORT_OPTIONS } from "constant/enums";
 import dayjs from "dayjs";
-import { WorkingStatus } from "store/resourcePlanning/action";
+import {
+  IBookingAllFitler,
+  WorkingStatus,
+} from "store/resourcePlanning/action";
+
+export enum TAB_TYPE {
+  ALL = "all",
+  MY = "my",
+}
 
 const today = dayjs().add(1, "day"); // Ngày hiện tại + 1 ngày (ngày mai)
 const startOfWeek = today.startOf("week").add(0, "day"); // Ngày bắt đầu tuần (chủ nhật)
@@ -8,9 +17,10 @@ const endOfWeek = today.startOf("week").add(6, "day"); // Ngày kết thúc tu�
 const defaultStartDate = startOfWeek.format("YYYY-MM-DD");
 const defaultEndDate = endOfWeek.format("YYYY-MM-DD");
 
-export const DEFAULT_BOOKING_ALL_FILTER = {
+export const DEFAULT_BOOKING_ALL_FILTER: IBookingAllFitler = {
   start_date: defaultStartDate,
   end_date: defaultEndDate,
+  sort: "",
   search_key: "",
   position: "",
   working_sort: WorkingStatus.ALL,

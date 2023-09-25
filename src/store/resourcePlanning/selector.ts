@@ -1,7 +1,13 @@
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { IBookingAllFitler, getBookingAll } from "./action";
+import {
+  BookingData,
+  IBookingAllFitler,
+  createBookingResource,
+  getBookingAll,
+  getMyBookingResource,
+} from "./action";
 import {
   IDatePicker,
   setBookingAllFilter,
@@ -57,14 +63,9 @@ export const useResourceDate = () => {
   };
 };
 
-export const useGetBookingAll = () => {
-  const {
-    bookingAll,
-    bookingAllLoading,
-    bookingAllError,
-    bookingAllFilter,
-    bookingAllStatus,
-  } = useAppSelector((state) => state.resourcePlanning);
+export const useBookingAll = () => {
+  const { bookingAll, bookingAllError, bookingAllFilter, bookingAllStatus } =
+    useAppSelector((state) => state.resourcePlanning);
   const { onAddSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
 
@@ -87,7 +88,9 @@ export const useGetBookingAll = () => {
     () => bookingAll.reduce((prev, item) => prev + item.total_hour, 0),
     [bookingAll],
   );
-
+  const createBooking = async (data: BookingData) => {
+    dispatch(createBookingResource(data));
+  };
   useEffect(() => {
     if (bookingAllError) {
       onAddSnackbar(bookingAllError, "error");
@@ -96,10 +99,46 @@ export const useGetBookingAll = () => {
   return {
     bookingAllFilter,
     totalHour,
+    createBooking,
     isReady,
     bookingAll,
-    bookingAllLoading,
     bookingAllError,
     getBookingResource,
+  };
+};
+
+export const useMyBooking = () => {
+  const { myBooking, myBookingError, myBookingStatus, myBookingFilter } =
+    useAppSelector((state) => state.resourcePlanning);
+  const { onAddSnackbar } = useSnackbar();
+  const dispatch = useAppDispatch();
+
+  const isReady = useMemo(
+    () => myBookingStatus === DataStatus.SUCCEEDED,
+    [myBookingStatus],
+  );
+
+  const getMyBooking = async (params: IBookingAllFitler) => {
+    const newParams = {
+      ...params,
+      start_date: params.start_date ?? dayjs().format("YYYY-MM-DD"),
+      end_date: params.end_date ?? dayjs().format("YYYY-MM-DD"),
+    };
+
+    await dispatch(getMyBookingResource(params));
+  };
+
+  useEffect(() => {
+    if (myBookingError) {
+      onAddSnackbar(myBookingError, "error");
+    }
+  }, [myBookingError]);
+
+  return {
+    myBooking,
+    myBookingError,
+    myBookingFilter,
+    isReady,
+    getMyBooking,
   };
 };

@@ -18,6 +18,8 @@ export const ResourcePlanningLang: ResourceDictionary = {
         pending: "Pending",
         inactive: "Inactive",
       },
+      descending: "Descending by working hours",
+      asceding: "Ascending by working hours",
     },
     unit: {
       day: "day",

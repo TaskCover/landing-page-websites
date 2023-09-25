@@ -16,6 +16,8 @@ export default interface ResourceDictionary {
         pending: string;
         inactive: string;
       };
+      descending: string;
+      asceding: string;
     };
     time: {
       eventTime: string;

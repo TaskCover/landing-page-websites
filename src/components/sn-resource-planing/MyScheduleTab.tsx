@@ -1,7 +1,12 @@
 import FullCalendar from "@fullcalendar/react";
 import React from "react";
 import { IBookingAllFitler } from "store/resourcePlanning/action";
-import { DEFAULT_BOOKING_ALL_FILTER, EXAMPLE_DATA, weekdays } from "./hepler";
+import {
+  DEFAULT_BOOKING_ALL_FILTER,
+  EXAMPLE_DATA,
+  TAB_TYPE,
+  weekdays,
+} from "./hepler";
 import dayjs from "dayjs";
 import { isEmpty, includes } from "lodash";
 import FilterHeader from "./FilterHeader";
@@ -17,11 +22,25 @@ import RedArrowIcon from "icons/RedArrowIcon";
 import GrayArrowIcon from "icons/GrayArrowIcon";
 import PlusIcon from "icons/PlusIcon";
 import TimeHeader from "./TimeHeader";
-import { useResourceDate } from "store/resourcePlanning/selector";
+import {
+  useBookingAll,
+  useMyBooking,
+  useResourceDate,
+} from "store/resourcePlanning/selector";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
 import CreateBooking from "./modals/CreateBooking";
 import ArrowDownIcon from "icons/ArrowDownIcon";
+import {
+  RESOURCE_ALLOCATION_TYPE,
+  RESOURCE_ALLOCATION_UNIT,
+  RESOURCE_EVENT_TYPE,
+} from "constant/enums";
+import { S } from "@fullcalendar/core/internal-common";
+import { IBookingListItem } from "store/resourcePlanning/reducer";
+import { useFetchBookingAll, useFetchMyBooking } from "./hooks/useBookingAll";
+import useGetMappingTime from "./hooks/useGetMappingTime";
+import useGetOptions from "./hooks/useGetOptions";
 
 const MyScheduleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -31,15 +50,15 @@ const MyScheduleTab = () => {
   const prevFilters = React.useRef<IBookingAllFitler>(
     DEFAULT_BOOKING_ALL_FILTER,
   );
-
   prevFilters.current = filters;
 
+  const { mappedTimeSymbol } = useGetMappingTime();
   const { selectedDate, updateDate } = useResourceDate();
-  const [resources, setResources] = React.useState<typeof EXAMPLE_DATA>([]);
+  const { getMyBooking, myBooking } = useMyBooking();
+  const [resources, setResources] = React.useState<IBookingListItem[]>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
-
   const generateDateRange = () => {
     const start_date = dayjs(filters?.start_date);
     const result: Array<Date> = [];
@@ -60,13 +79,11 @@ const MyScheduleTab = () => {
     });
   };
 
+  useFetchMyBooking();
+
   React.useEffect(() => {
-    // TODO: filter resources to for my schedule
-    const fitleredResources = EXAMPLE_DATA.filter(
-      (item) => item.id === "camp-1",
-    );
-    setResources(fitleredResources);
-  }, []);
+    if (myBooking) setResources(myBooking);
+  }, [myBooking]);
 
   React.useEffect(() => {
     if (
@@ -75,7 +92,6 @@ const MyScheduleTab = () => {
       dayjs(filters?.end_date).isValid()
     ) {
       generateDateRange();
-      // dispatch(getMyTimeTracking(filters));
     }
   }, [filters?.start_date, filters?.end_date]);
 
@@ -92,15 +108,28 @@ const MyScheduleTab = () => {
         if (!calendarRef.current) return null;
       }
     };
+
+  const handleCollapseToggle = (itemId: string) => {
+    if (selectedResource.includes(itemId)) {
+      setSelectedResource(selectedResource.filter((id) => id !== itemId));
+    } else {
+      setSelectedResource([...selectedResource, itemId]);
+    }
+    const collapseButton = document.querySelectorAll(
+      `td[data-resource-id="${itemId}"][role="gridcell"] > div > div > span.fc-datagrid-expander`,
+    ) as NodeListOf<HTMLElement>;
+    if (collapseButton[0]) collapseButton[0].click();
+  };
+
   const checkEventType = (value) => {
     switch (value) {
-      case "PROJECT_BOOKING":
+      case RESOURCE_EVENT_TYPE.PROJECT_BOOKING:
         return {
           icon: <BlueArrowIcon width={16} height={16} />,
-          color: "rgba(54, 153, 255, 0.80)",
-          background: "rgba(225, 240, 255, 0.70)",
+          color: "#3699FFCC",
+          background: "#EBF5FF",
         };
-      case "OFF_TIME":
+      case RESOURCE_EVENT_TYPE.TIME_OF_BOOKING:
         return {
           icon: <RedArrowIcon width={16} height={16} />,
           color: "rgba(246, 78, 96, 0.80);",
@@ -114,79 +143,82 @@ const MyScheduleTab = () => {
         };
     }
   };
-
-  const handleCollapseToggle = (itemId: string) => {
-    if (selectedResource.includes(itemId)) {
-      setSelectedResource(selectedResource.filter((id) => id !== itemId));
-    } else {
-      setSelectedResource([...selectedResource, itemId]);
-    }
-    const collapseButton = document.querySelectorAll(
-      `td[data-resource-id="${itemId}"][role="gridcell"] > div > div > span.fc-datagrid-expander`,
-    ) as NodeListOf<HTMLElement>;
-    if (collapseButton[0]) collapseButton[0].click();
-  };
   const getEvents = () =>
     resources
-      .map(
-        ({
-          id,
-          name: campaignName,
-          from: campaignFrom,
-          to: campaignTo,
-          steps,
-        }) =>
-          steps
-            .map(({ id: eventId, name, from, to, eventType }) => ({
+      ?.map(
+        ({ id, bookings, fullname }) =>
+          bookings.map((props) => {
+            const {
+              id: eventId,
+              start_date: from,
+              end_date: to,
+              booking_type,
+              allocation,
+              position,
+              allocation_type,
+              total_hour,
+            } = props;
+
+            return {
               resourceId: eventId.toString(),
-              start: from,
-              end: to,
+              start: dayjs(from).toDate(),
+              end: dayjs(to).toDate(),
               allDay: true,
               type: "step",
               campaignId: id,
-              name,
-              eventType,
+              position,
+              name: fullname,
+              allocation,
+              allocation_type,
+              total_hour,
+              eventType: booking_type,
               eventId,
-            }))
-            .concat([
-              {
-                resourceId: id,
-                start: campaignFrom,
-                end: campaignTo,
-                allDay: true,
-                type: "campaign",
-                name: campaignName,
-                campaignId: id,
-                eventId: 1,
-                eventType: "",
-              },
-            ]),
+            };
+          }),
+        // .concat([
+        //   {
+        //     resourceId: id,
+        //     start: dayjs(filters?.start_date).toDate(),
+        //     end: dayjs(filters?.end_date).toDate(),
+        //     allDay: true,
+        //     type: "campaign",
+        //     campaignId: id,
+        //     name: fullname,
+        //     position: {},
+        //     eventType: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
+        //     eventId: id,
+        //   },
+        // ]),
       )
       .flat();
 
   const getResources = () =>
-    resources.map((resource) => ({
+    resources?.map((resource) => ({
       ...resource,
-      name: resource?.name,
-      children: resource?.steps.map((step) => ({
-        id: step?.id,
-        name: step?.name,
+      children: resource?.bookings.map((booking) => ({
+        id: booking?.id,
+        name: booking?.project?.name,
         type: "step",
-        eventType: step?.eventType,
+        eventType: booking?.booking_type,
+        note: booking?.note,
+        position: booking?.position,
       })),
     }));
 
   const mappedResources = getResources();
   const mappedEvents = getEvents();
+
+  useGetOptions();
   return (
     <Stack direction="column" rowGap={2}>
-      <FilterHeader />
+      <FilterHeader type={TAB_TYPE.MY} />
       <TimeHeader
         filters={filters}
         setFilters={setFilters}
         calendarRef={calendarRef}
       />
       <Box
+        overflow="scroll"
         sx={{
           "& .custom-header": {
             "& .fc-scrollgrid-sync-inner": {
@@ -221,7 +253,6 @@ const MyScheduleTab = () => {
           initialView="resourceTimeline"
           schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
           resourceAreaWidth={660}
-          resourcesInitiallyExpanded={true}
           resourceOrder="from"
           weekends={true}
           editable={true}
@@ -268,7 +299,7 @@ const MyScheduleTab = () => {
             );
           }}
           resourceAreaHeaderClassNames="custom-header"
-          resourceAreaHeaderContent={() => {
+          resourceAreaHeaderContent={(resrouce) => {
             return (
               <Grid
                 container
@@ -278,7 +309,7 @@ const MyScheduleTab = () => {
                 }}
                 sx={{ width: 1 }}
               >
-                <Grid item xs={2} md={5} />
+                <Grid item xs={3} md={5} />
                 <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {resourceT("schedule.resourceHeader.available")}
@@ -309,10 +340,21 @@ const MyScheduleTab = () => {
             );
           }}
           resourceLabelContent={({ resource }) => {
-            const { name, type, fullname } = resource.extendedProps;
+            const { name, company, type, fullname, position, eventType, note } =
+              resource.extendedProps;
 
             const isActive = includes(selectedResource, resource._resource.id);
-            if (type === "step")
+
+            const parentResource = resources.find(
+              (item) => item.id === resource._resource.parentId,
+            );
+            const bookings = parentResource
+              ? [...parentResource?.bookings]
+              : [];
+
+            const isLastItem = bookings.pop()?.id === resource._resource.id;
+
+            if (type === "step") {
               return (
                 <Grid
                   container
@@ -338,25 +380,38 @@ const MyScheduleTab = () => {
                     }}
                   >
                     <Avatar size={36} />
-                    <Typography
-                      sx={{ fontSize: 14, lineBreak: "auto", width: 1 }}
-                    >
-                      {name}
-                    </Typography>
+                    <Stack direction={"column"}>
+                      <Typography
+                        sx={{ fontSize: 14, lineBreak: "auto", width: 1 }}
+                      >
+                        {eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING
+                          ? name
+                          : note}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: 12, lineBreak: "auto", width: 1 }}
+                      >
+                        {position?.name}
+                      </Typography>
+                    </Stack>
                   </Grid>
+                  {isLastItem && (
+                    <Button
+                      variant="text"
+                      startIcon={<PlusIcon />}
+                      sx={{
+                        color: "success.main",
+                      }}
+                      // startIcon={<AddIcon />}
+                      onClick={() => setIsOpenCreate(true)}
+                    >
+                      {resourceT("schedule.action.addBooking")}
+                    </Button>
+                  )}
                   <Grid item xs={5} />
-                  <Button
-                    variant="text"
-                    startIcon={<PlusIcon />}
-                    sx={{
-                      color: "success.main",
-                    }}
-                    onClick={() => setIsOpenCreate(true)}
-                  >
-                    {resourceT("schedule.action.addBooking")}
-                  </Button>
                 </Grid>
               );
+            }
             return (
               <Grid container>
                 <Grid
@@ -381,7 +436,7 @@ const MyScheduleTab = () => {
                   >
                     <Grid
                       item
-                      xs={2}
+                      xs={3}
                       md={5}
                       sx={{
                         px: 1,
@@ -396,7 +451,7 @@ const MyScheduleTab = () => {
                           {fullname}
                         </Typography>
                         <Typography sx={{ color: "#666666", fontSize: 14 }}>
-                          UI/UX
+                          {company}
                         </Typography>
                       </Box>
                       <ArrowDownIcon
@@ -446,8 +501,24 @@ const MyScheduleTab = () => {
             );
           }}
           eventContent={({ event }) => {
-            const { eventType } = event.extendedProps;
+            const { eventType, allocation_type, allocation } =
+              event.extendedProps;
+
             const checkedEventType = checkEventType(eventType);
+            const day = dayjs(event.end).diff(dayjs(event.start), "days");
+
+            let unit;
+            switch (allocation_type) {
+              case RESOURCE_ALLOCATION_UNIT.HOUR_PER_DAY:
+                unit = mappedTimeSymbol[RESOURCE_ALLOCATION_TYPE.HOUR_PER_DAY];
+                break;
+              case RESOURCE_ALLOCATION_UNIT.HOUR:
+                unit = " " + mappedTimeSymbol[RESOURCE_ALLOCATION_TYPE.HOUR];
+                break;
+              default:
+                unit = mappedTimeSymbol[RESOURCE_ALLOCATION_TYPE.PERCENTAGE];
+                break;
+            }
             return (
               <Stack
                 className="fc-event-title fc-sticky"
@@ -465,7 +536,9 @@ const MyScheduleTab = () => {
                 {checkedEventType.icon}
                 <Tooltip
                   title={resourceT("schedule.time.eventTime", {
-                    day: dayjs(event.end).diff(dayjs(event.start), "days"),
+                    day,
+                    allocation,
+                    unit,
                   })}
                 >
                   <Typography
@@ -481,7 +554,9 @@ const MyScheduleTab = () => {
                     }}
                   >
                     {resourceT("schedule.time.eventTime", {
-                      day: dayjs(event.end).diff(dayjs(event.start), "days"),
+                      day,
+                      allocation,
+                      unit,
                     })}
                   </Typography>
                 </Tooltip>

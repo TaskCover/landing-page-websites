@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IBookingAllFitler, getBookingAll, resourceActionType } from "./action";
+import {
+  IBookingAllFitler,
+  createBookingResource,
+  getBookingAll,
+  getMyBookingResource,
+  resourceActionType,
+} from "./action";
 import dayjs from "dayjs";
 import { Position } from "store/company/reducer";
 import { Project } from "store/project/reducer";
@@ -40,9 +46,13 @@ interface ResoucrPlanningState {
 
   bookingAllFilter: IBookingAllFitler;
   bookingAll: IBookingListItem[];
-  bookingAllLoading: boolean;
   bookingAllError: string;
   bookingAllStatus: DataStatus;
+
+  myBooking: IBookingListItem[];
+  myBookingError: string;
+  myBookingFilter: IBookingAllFitler;
+  myBookingStatus: DataStatus;
 }
 
 const initialState: ResoucrPlanningState = {
@@ -54,9 +64,13 @@ const initialState: ResoucrPlanningState = {
   currentDate: dayjs().toString(),
 
   bookingAll: [],
-  bookingAllLoading: false,
   bookingAllStatus: DataStatus.IDLE,
   bookingAllError: "",
+
+  myBooking: [],
+  myBookingStatus: DataStatus.IDLE,
+  myBookingFilter: DEFAULT_BOOKING_ALL_FILTER,
+  myBookingError: "",
 };
 
 export const resourcePlanningSlice = createSlice({
@@ -76,17 +90,34 @@ export const resourcePlanningSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getBookingAll.pending, (state) => {
-        state.bookingAllLoading = true;
         state.bookingAllStatus = DataStatus.LOADING;
       })
       .addCase(getBookingAll.fulfilled, (state, action) => {
         state.bookingAllFilter = action.meta.arg;
-        state.bookingAllLoading = false;
         state.bookingAll = action.payload;
         state.bookingAllStatus = DataStatus.SUCCEEDED;
       })
       .addCase(getBookingAll.rejected, (state, action) => {
-        state.bookingAllLoading = false;
+        state.bookingAllError = action.error.message || "";
+        state.bookingAllStatus = DataStatus.FAILED;
+      })
+      .addCase(getMyBookingResource.pending, (state) => {
+        state.myBookingStatus = DataStatus.LOADING;
+      })
+      .addCase(getMyBookingResource.fulfilled, (state, action) => {
+        state.myBooking = action.payload;
+        state.myBookingStatus = DataStatus.SUCCEEDED;
+      })
+      .addCase(getMyBookingResource.rejected, (state, action) => {
+        state.myBookingError = action.error.message || "";
+        state.myBookingStatus = DataStatus.FAILED;
+      })
+      .addCase(createBookingResource.fulfilled, (state, action) => {
+        if (state.bookingAll) {
+          state.bookingAll.push(action.payload);
+        }
+      })
+      .addCase(createBookingResource.rejected, (state, action) => {
         state.bookingAllError = action.error.message || "";
         state.bookingAllStatus = DataStatus.FAILED;
       });

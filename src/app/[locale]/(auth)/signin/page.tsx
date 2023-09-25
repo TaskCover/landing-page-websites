@@ -6,6 +6,7 @@ import FixedLayout from "components/FixedLayout";
 import SaleService from "components/sn-sales-detail/components/sn-service";
 import SalesWrapper from "components/sn-sales/SalesWrapper";
 import SaleForm from "components/sn-sales-detail";
+import ResourcePlanningPage from "app/[locale]/(root)/resource-planing/page";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations(NS_AUTH);
@@ -18,8 +19,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Page({ params }) {
   return (
     <Wrapper>
-      <MainSection />
-      <Banner />
+      {/* <MainSection />
+      <Banner /> */}
+      <ResourcePlanningPage />
     </Wrapper>
   );
 }

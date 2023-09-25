@@ -1,10 +1,18 @@
 import { useEffect } from "react";
-import { useGetBookingAll } from "store/resourcePlanning/selector";
+import { useBookingAll, useMyBooking } from "store/resourcePlanning/selector";
 
 export const useFetchBookingAll = () => {
-  const { bookingAllFilter, getBookingResource } = useGetBookingAll();
+  const { bookingAllFilter, getBookingResource } = useBookingAll();
 
   useEffect(() => {
     getBookingResource(bookingAllFilter);
   }, [bookingAllFilter]);
+};
+
+export const useFetchMyBooking = () => {
+  const { getMyBooking, myBookingFilter } = useMyBooking();
+
+  useEffect(() => {
+    getMyBooking(myBookingFilter);
+  }, [myBookingFilter]);
 };

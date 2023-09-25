@@ -7,40 +7,62 @@ import {
   IBookingAllFitler,
   WorkingStatus,
 } from "store/resourcePlanning/action";
-import { useGetBookingAll } from "store/resourcePlanning/selector";
+import { useBookingAll, useMyBooking } from "store/resourcePlanning/selector";
 import useGetOptions from "./hooks/useGetOptions";
 import { setBookingAllFilter } from "store/resourcePlanning/reducer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { cleanObject, stringifyURLSearchParams } from "utils/index";
 import useQueryParams from "hooks/useQueryParams";
+import { SORT_OPTIONS } from "constant/enums";
+import dayjs from "dayjs";
+import { TAB_TYPE } from "./hepler";
 
-const FilterHeader = () => {
+const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
   const commonT = useTranslations<string>(NS_COMMON);
-  const { bookingAllFilter, getBookingResource, isReady } = useGetBookingAll();
+  const [queries, setQueries] = useState<IBookingAllFitler>({
+    start_date: dayjs().format("YYYY-MM-DD"),
+    end_date: dayjs().format("YYYY-MM-DD"),
+  });
+  const { bookingAllFilter, getBookingResource } = useBookingAll();
+  const { getMyBooking, myBookingFilter } = useMyBooking();
   const pathname = usePathname();
   const { push } = useRouter();
   const { initQuery, query } = useQueryParams();
   const { positionOptions } = useGetOptions();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onChangeQueries = (queries: IBookingAllFitler) => {
-    let newQueries = { ...query, ...queries };
+  const onSearch = () => {
+    let newQueries = { ...queries };
     newQueries = cleanObject(newQueries) as IBookingAllFitler;
     const queryString = stringifyURLSearchParams(newQueries);
     push(`${pathname}${queryString}`);
-    getBookingResource(newQueries);
+    switch (type) {
+      case TAB_TYPE.ALL:
+        getBookingResource(newQueries);
+        break;
+      case TAB_TYPE.MY:
+        getMyBooking(newQueries);
+        break;
+    }
   };
 
-  const onSelectPosition = (value) => {
-    onChangeQueries({ ...bookingAllFilter, position: value });
+  const onChangeQueries = (name, value) => {
+    setQueries((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  // useEffect(() => {
-  //   if (!isReady) return;
-  //   getBookingResource(query);
-  // }, []);
+  useEffect(() => {
+    if (query) {
+      setQueries((prev) => ({
+        ...prev,
+        ...query,
+      }));
+    }
+  }, [query]);
 
   return (
     <Stack
@@ -81,7 +103,9 @@ const FilterHeader = () => {
         spacing="16px"
       >
         <Search
-          name="search"
+          name="search_key"
+          value={queries?.search_key}
+          onChange={(name, value) => onChangeQueries(name, value)}
           placeholder={resourceT("schedule.filter.search")}
           sx={{
             maxWidth: "402px",
@@ -94,29 +118,27 @@ const FilterHeader = () => {
         />
         <Stack direction="row" spacing="16px">
           <Filter.Select
-            value={bookingAllFilter.position}
-            onChange={(event) => onSelectPosition(event.target.value)}
+            value={queries.position || ""}
+            onChange={(event) =>
+              onChangeQueries("position", event.target.value)
+            }
             label={commonT("position")}
             sx={{ maxWidth: "200px" }}
             options={positionOptions}
           />
           <Filter.Select
-            value="workingHours"
-            onChange={(event) => console.log(event.target.value)}
+            value={queries.sort || ""}
+            onChange={(event) => onChangeQueries("sort", event.target.value)}
             label={resourceT("schedule.filter.workingHours")}
             sx={{ width: "150px" }}
             options={[
               {
-                label: resourceT("schedule.filter.status.active"),
-                value: WorkingStatus.ACTIVE,
+                label: resourceT("schedule.filter.asceding"),
+                value: SORT_OPTIONS.ASC,
               },
               {
-                label: resourceT("schedule.filter.status.pending"),
-                value: WorkingStatus.PENDING,
-              },
-              {
-                label: resourceT("schedule.filter.status.inactive"),
-                value: WorkingStatus.INACTIVE,
+                label: resourceT("schedule.filter.descending"),
+                value: SORT_OPTIONS.DESC,
               },
             ]}
           />
@@ -132,6 +154,7 @@ const FilterHeader = () => {
               height: "40px",
             },
           }}
+          onClick={() => onSearch()}
         >
           {commonT("search")}
         </Button>

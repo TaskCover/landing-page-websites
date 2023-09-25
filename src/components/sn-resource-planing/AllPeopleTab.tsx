@@ -1,12 +1,17 @@
 "use client";
 
 import FullCalendar from "@fullcalendar/react";
-import React from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import {
   IBookingAllFitler,
   getBookingAll,
 } from "store/resourcePlanning/action";
-import { DEFAULT_BOOKING_ALL_FILTER, EXAMPLE_DATA, weekdays } from "./hepler";
+import {
+  DEFAULT_BOOKING_ALL_FILTER,
+  EXAMPLE_DATA,
+  TAB_TYPE,
+  weekdays,
+} from "./hepler";
 import dayjs from "dayjs";
 import { isEmpty, includes } from "lodash";
 import FilterHeader from "./FilterHeader";
@@ -24,7 +29,7 @@ import Image from "next/image";
 import PlusIcon from "icons/PlusIcon";
 import TimeHeader from "./TimeHeader";
 import {
-  useGetBookingAll,
+  useBookingAll,
   useResourceDate,
 } from "store/resourcePlanning/selector";
 import { NS_RESOURCE_PLANNING } from "constant/index";
@@ -52,7 +57,7 @@ const AllPeopleTab = () => {
   prevFilters.current = filters;
 
   const { mappedTimeSymbol } = useGetMappingTime();
-  const { bookingAll, bookingAllFilter } = useGetBookingAll();
+  const { bookingAll, bookingAllFilter } = useBookingAll();
   const { selectedDate, updateDate } = useResourceDate();
   const [resources, setResources] = React.useState<IBookingListItem[]>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
@@ -77,7 +82,9 @@ const AllPeopleTab = () => {
       selectedDate,
     });
   };
+
   useFetchBookingAll();
+
   React.useEffect(() => {
     if (bookingAll) setResources(bookingAll);
   }, [bookingAll]);
@@ -208,7 +215,7 @@ const AllPeopleTab = () => {
   useGetOptions();
   return (
     <Stack direction="column" rowGap={2}>
-      <FilterHeader />
+      <FilterHeader type={TAB_TYPE.ALL} />
       <TimeHeader
         filters={filters}
         setFilters={setFilters}
@@ -250,7 +257,6 @@ const AllPeopleTab = () => {
           initialView="resourceTimeline"
           schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
           resourceAreaWidth={660}
-          resourcesInitiallyExpanded={true}
           resourceOrder="from"
           weekends={true}
           editable={true}
