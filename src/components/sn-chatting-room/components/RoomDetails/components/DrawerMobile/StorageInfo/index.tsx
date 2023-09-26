@@ -1,10 +1,8 @@
 import { Box } from "@mui/material";
-import useGetScreenMode from "hooks/useGetScreenMode";
 import { FC } from "react";
 import MediaContent from "components/sn-chat/components/common/MediaContent";
 import FileContent from "components/sn-chat/components/common/FileContent";
 import LinkContent from "components/sn-chat/components/common/LinkContent";
-import { DrawerInfoChatProps } from "../../Drawer";
 import AccountInfoMobileHeader from "../AccountInfoMobile/AccountInfoMobileHeader";
 
 const TYPES = [
@@ -22,7 +20,7 @@ const TYPES = [
   },
 ];
 
-const StorageInfoMobile: FC<DrawerInfoChatProps> = (props) => {
+const StorageInfoMobile: FC<any> = (props) => {
   return (
     <Box
       sx={{

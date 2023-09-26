@@ -141,7 +141,9 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
 
   const handleSendMessage = useCallback(
     async (message: string) => {
-      sendMessage({ message });
+      sendMessage({
+        message,
+      });
       inputRef?.current?.clearScrollContentMessage();
       if (files.length > 0) {
         await onUploadAndSendFile({

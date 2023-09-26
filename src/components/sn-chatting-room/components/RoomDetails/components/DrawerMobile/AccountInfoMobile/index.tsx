@@ -1,4 +1,4 @@
-import { Drawer, Box, Typography, Avatar } from "@mui/material";
+import { Box, Typography, Avatar } from "@mui/material";
 import AccountInfoMobileHeader from "./AccountInfoMobileHeader";
 import { IChatItemInfo } from "store/chat/type";
 import { useChat } from "store/chat/selectors";

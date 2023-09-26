@@ -14,7 +14,6 @@ interface DrawerMobileProps {
 
 const DrawerMobile: React.FC<DrawerMobileProps> = (props) => {
   const styleDrawerOpen = props.isOpen ? { width: "100%" } : { width: "0" };
-  console.log(props.type);
 
   return (
     <Drawer
