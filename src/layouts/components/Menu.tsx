@@ -189,12 +189,7 @@ const DATA: MenuItemProps[] = [
     icon: <MenuDashboardIcon />,
     roles: [Permission.AM, Permission.ST],
   },
-  {
-    label: "menu.chat",
-    href: CHATTING_ROOM_PATH,
-    icon: <MenuChatIcon />,
-    roles: [Permission.AM, Permission.ST],
-  },
+
   {
     label: "menu.project",
     icon: <MenuProjectIcon />,
@@ -261,6 +256,12 @@ const DATA: MenuItemProps[] = [
     label: "menu.resourcePlaning",
     href: RESOURCE_PLANING_PATH,
     icon: <MenuResourcePlaningIcon />,
+    roles: [Permission.AM, Permission.ST],
+  },
+  {
+    label: "menu.chat",
+    href: CHATTING_ROOM_PATH,
+    icon: <MenuChatIcon />,
     roles: [Permission.AM, Permission.ST],
   },
   {

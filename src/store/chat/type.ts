@@ -5,6 +5,8 @@ import { Attachment, ChatLinkType, MediaType } from "./media/typeMedia";
 
 export type IChatItemInfo = IChatInfo & IChatGroup & IChatDirect;
 export interface IChatInfo {
+  status: string;
+  username: string;
   usernames: any;
   _id: string;
   _updatedAt: string;

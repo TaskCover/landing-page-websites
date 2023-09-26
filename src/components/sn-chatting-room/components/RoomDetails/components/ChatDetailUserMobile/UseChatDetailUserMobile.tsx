@@ -11,7 +11,7 @@ interface MenuItem {
   icon: JSX.ElementType;
   stroke: string;
   borderBottom?: boolean;
-  handleOnClick?: () => void;
+  handleOnClick?: any;
   type?: string;
 }
 

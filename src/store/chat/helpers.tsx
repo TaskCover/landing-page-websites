@@ -71,7 +71,7 @@ export const useWSChat = () => {
     (
       message: Omit<
         MessageBodyRequest,
-        "sender_userId" | "sender_authToken" | "receiverUsername"
+        "sender_userId" | "sender_authToken" | "receiverUsername" | "t"
       >,
     ) => {
       if (message.message && message.message.trim()?.length > 0) {        
