@@ -8,6 +8,7 @@ import React, { memo, useState } from "react";
 import ItemDocs from "./ItemDocs";
 import { Text } from "components/shared";
 import { useAppSelector } from "store/hooks";
+import ArrowRight from "icons/ArrowRight";
 
 const LeftSlideDoc = () => {
   const dataFake = useAppSelector((state) => state.doc.docDetails.data);
@@ -21,18 +22,47 @@ const LeftSlideDoc = () => {
   return (
     <Box
       sx={{
-        flex: 1,
-        display: {
-          md: "block",
-          xs: "none",
-        },
         width: {
           md: "30%",
-          xs: "0",
+          xs: "70%",
         },
+        flex: 1,
+        height: "100%",
+        position: "relative",
       }}
     >
-      <Box>
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          padding: "4px",
+          display: {
+            md: "none",
+            xs: "flex",
+          },
+          zIndex: "30",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#E1F0FF",
+        }}
+      >
+        <ArrowRight></ArrowRight>
+      </Box>
+      <Box
+        sx={{
+          height: "100%",
+          backgroundColor: "white",
+          zIndex: "39",
+          position: {
+            md: "unset",
+            xs: "absolute",
+          },
+          left: 0,
+          top: 0,
+          display: "block",
+        }}
+      >
         <Search
           placeholder={docsT("filter.search", { name: "email" })}
           name="doc"
