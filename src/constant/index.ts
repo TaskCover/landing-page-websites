@@ -66,6 +66,7 @@ export const NS_COMPANY = "company";
 export const NS_MANAGER = "manager";
 export const NS_SALES = "sales";
 export const NS_TIME_TRACKING = "timeTracking";
+export const NS_CHAT = "chat";
 export const NS_CHAT_BOX = "chatbox";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];

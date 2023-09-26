@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, ElementType, FC, useEffect, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import SearchIcon from "icons/SearchIcon";
@@ -19,23 +19,25 @@ import { Employee } from "store/company/reducer";
 import SelectItem from "../components/SelectItem";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { STEP } from "store/chat/type";
-import { DataStatus } from "constant/enums";
+import useGetScreenMode from "hooks/useGetScreenMode";
 
-const AddGroup = () => {
+interface AddGroupProps {
+  callbackBackIcon?: any;
+  CustomCallBackIcon?: any;
+  onSelectNewGroup?: any;
+}
+
+const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, CustomCallBackIcon }) => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
   const [employeeNameSelected, setEmployeeNameSelected] = useState<any>({});
   const [employeeIdSelected, setEmployeeIdSelected] = useState<any>({});
+  const {mobileMode} = useGetScreenMode();
 
   const {
     items,
     isFetching,
-    isIdle,
     error,
-    totalItems,
-    pageSize,
-    pageIndex,
-    totalPages,
     onGetEmployees,
     onApproveOrReject: onApproveOrRejectAction,
   } = useEmployeesOfCompany();
@@ -74,6 +76,11 @@ const AddGroup = () => {
       return;
     }
     onAddSnackbar(commonT("success"), "success");
+    if(!mobileMode) {
+      console.log(result?.payload?.group, 'result?.payload?.group');
+      onSelectNewGroup(result?.payload?.group);
+      return;
+    }
     onSetStep(STEP.CHAT_GROUP, !dataTransfer?.isNew ? dataTransfer : result?.payload?.group);
     onSetRoomId(dataTransfer?.isNew ? result?.payload?.group?._id : dataTransfer?._id)
   };
@@ -109,7 +116,7 @@ const AddGroup = () => {
     if (!Object.values(employeeIdSelected)?.filter(item=>item).length) {
       onAddSnackbar("Please select at least one member!", "error");
       return;
-    }
+    }    
     if (dataTransfer?.isNew) {
       if(memberAddGroup.length > 0){
         const result = await onCreateDirectMessageGroup({
@@ -150,6 +157,7 @@ const AddGroup = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
+        ...mobileMode ? {} : {width: '100%'}
       }}
     >
       <Box
@@ -158,6 +166,7 @@ const AddGroup = () => {
           alignItems: "center",
           gap: 1,
           padding: 2,
+          paddingLeft: '10px',
         }}
       >
         <IconButton
@@ -165,6 +174,10 @@ const AddGroup = () => {
             cursor: "pointer",
           }}
           onClick={() => {
+            if(callbackBackIcon) {
+              callbackBackIcon();
+              return;
+            }
             if(currStep === STEP.ADD_GROUP) {
               onSetStep(STEP.CONVENTION);
             } else {
@@ -172,7 +185,7 @@ const AddGroup = () => {
             }
           }}
         >
-          <ArrowDownIcon />
+         {CustomCallBackIcon ? CustomCallBackIcon : <ArrowDownIcon />}
         </IconButton>
         <TextField
           size="small"
@@ -258,7 +271,8 @@ const AddGroup = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: 1,
+          gap: mobileMode ? 1 : '0px'
+          ,
           padding: 2,
         }}
       >
@@ -268,6 +282,9 @@ const AddGroup = () => {
           size="small"
           sx={defaultSx.button}
           onClick={() => {
+            if(callbackBackIcon){
+              callbackBackIcon()
+            }
             if(currStep === STEP.ADD_GROUP) {
               onSetStep(STEP.CONVENTION);
             } else {

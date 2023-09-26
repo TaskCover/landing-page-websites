@@ -121,8 +121,37 @@ export const getUserInfoById = createAsyncThunk(
 export const sendMessages = createAsyncThunk(
   "chat/sendMessages",
   async (paramReq: MessageBodyRequest) => {
+    const { t, ...param } = paramReq;
+    const objUrl = {
+      d: "sendDirectMessage",
+      p: "sendMessageToGroup",
+      c: "sendMessageToChannel",
+    };
+    // p for group sendMessageToGroup
+    // c for channel sendMessageToChannel
+    const paramsByType = {
+      d: {
+        "sender_authToken": param.sender_authToken,    
+        "sender_userId": param.sender_userId,
+        "receiverUsername": param.receiverUsername,
+        "attachments": param.attachments,
+      },
+      p : {
+        "authToken": param.authToken,    
+        "userId": param.userId,
+        "roomId": param.roomId,
+        "attachments": param.attachments,  
+      },
+      c : {
+        "authToken": param.authToken,    
+        "userId": param.userId,
+        "channel": param.channel,
+        "attachments": param.attachments,  
+      }
+    }
+    if(!t) return;
     try {
-      const response = await client.post("sendDirectMessage", paramReq, {
+      const response = await client.post(objUrl[t], paramsByType[t], {
         baseURL: CHAT_API_URL,
       });
 
@@ -178,19 +207,20 @@ export const getUnreadMessages = createAsyncThunk(
 );
 
 export const readMessages = async (paramReq: ReadMessageRequest) => {
-    try {
-      const response = await client.post("readMessages", paramReq, {
-        baseURL: CHAT_API_URL,
-      });
+  try {
+    const response = await client.post("readMessages", paramReq, {
+      baseURL: CHAT_API_URL,
+    });
 
-      if (response?.status === HttpStatusCode.OK) {
-        return response.data;
-      }
-      throw AN_ERROR_TRY_AGAIN;
-    } catch (error) {
-      throw error;
+    if (response?.status === HttpStatusCode.OK) {
+      return response.data;
     }
-  };
+    throw AN_ERROR_TRY_AGAIN;
+  } catch (error) {
+    console.log(error);
+    // throw error;
+  }
+};
 
 export const createDirectMessageGroup = createAsyncThunk(
   "chat/createDirectMessageGroup",
