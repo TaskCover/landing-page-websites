@@ -56,5 +56,12 @@ export const ResourcePlanningLang: ResourceDictionary = {
     estimate: "Estimate",
     work: "Work",
     schedule: "Schedule",
+    timeOffType: {
+      vacation: "Vacation",
+      sick: "Sick leave",
+      other: "Not available",
+    },
+    createSuccess: "Create booking successfully",
+    createFailed: "Create booking failed",
   },
 };

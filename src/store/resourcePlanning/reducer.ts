@@ -113,9 +113,7 @@ export const resourcePlanningSlice = createSlice({
         state.myBookingStatus = DataStatus.FAILED;
       })
       .addCase(createBookingResource.fulfilled, (state, action) => {
-        if (state.bookingAll) {
-          state.bookingAll.push(action.payload);
-        }
+        state.bookingAllStatus = DataStatus.SUCCEEDED;
       })
       .addCase(createBookingResource.rejected, (state, action) => {
         state.bookingAllError = action.error.message || "";

@@ -12,6 +12,15 @@ import { useTranslations } from "next-intl";
 import { useForm, Controller } from "react-hook-form";
 import Textarea from "components/sn-time-tracking/Component/Textarea";
 import { Button } from "components/shared";
+import { useGetTimeOffOptions } from "components/sn-sales/hooks/useGetTimeOffOptions";
+import { useBookingAll } from "store/resourcePlanning/selector";
+import {
+  RESOURCE_ALLOCATION_TYPE,
+  RESOURCE_ALLOCATION_UNIT,
+  RESOURCE_EVENT_TYPE,
+} from "constant/enums";
+import dayjs from "dayjs";
+import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 interface IProps {
   open: boolean;
   onClose(): void;
@@ -22,7 +31,9 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
   const { palette } = useTheme();
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
-
+  const { createBooking } = useBookingAll();
+  const { timeOffOptions } = useGetTimeOffOptions();
+  const { positionOptions, projectOptions } = useGetOptions();
   const {
     control: controlTimeOff,
     handleSubmit: handleSubmitTimeOff,
@@ -39,9 +50,8 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
         startDate: undefined,
         endDate: undefined,
       },
-      workingTime: undefined,
       allocation: "",
-      allocation_type: "hour",
+      allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
       note: "",
     },
   });
@@ -53,7 +63,17 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
   }, [open]);
 
   const onSubmitTimeOff = (data) => {
-    console.log("data", data, watchTimeOff);
+    createBooking({
+      ...data,
+      booking_type: RESOURCE_EVENT_TYPE.TIME_OF_BOOKING,
+      start_date: dayjs(data.dateRange.startDate).format("YYYY-MM-DD"),
+      end_date: dayjs(data.dateRange.endDate).format("YYYY-MM-DD"),
+      time_off_type: data.categoryTimeOff,
+      position: positionOptions[0].value,
+      allocation_type: data.allocation_type,
+      project_id: projectOptions[0].value,
+    });
+    onClose();
   };
 
   return (
@@ -64,11 +84,11 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
           control={controlTimeOff}
           render={({ field }) => (
             <TextFieldSelect
-              value={field.value}
+              {...field}
               helperText={errorsTimeOff.categoryTimeOff?.message}
               error={!!errorsTimeOff.categoryTimeOff?.message}
               required
-              options={[]}
+              options={timeOffOptions}
               label={resourceT("form.selectTimeOffCategory")}
             />
           )}
@@ -138,16 +158,16 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
                   }}
                   options={[
                     {
-                      label: `h/${commonT("day")}`,
-                      value: `h/day`,
+                      label: RESOURCE_ALLOCATION_UNIT.HOUR,
+                      value: RESOURCE_ALLOCATION_TYPE.HOUR,
                     },
                     {
-                      label: "%",
-                      value: "%",
+                      label: RESOURCE_ALLOCATION_UNIT.HOUR_PER_DAY,
+                      value: RESOURCE_ALLOCATION_TYPE.HOUR_PER_DAY,
                     },
                     {
-                      label: commonT("hour"),
-                      value: "hour",
+                      label: RESOURCE_ALLOCATION_UNIT.PERCENTAGE,
+                      value: RESOURCE_ALLOCATION_TYPE.PERCENTAGE,
                     },
                   ]}
                   onFocus={() => setIsFocusAllocation(true)}
@@ -159,12 +179,12 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
         </Grid2>
       </Grid2>
       <Grid2 xs={12}>
-        <Textarea
-          value=""
-          onChange={() => {
-            console.log("a");
+        <Controller
+          name="note"
+          control={controlTimeOff}
+          render={({ field }) => {
+            return <Textarea {...field} label={resourceT("form.note")} />;
           }}
-          label={resourceT("form.note")}
         />
       </Grid2>
       <Grid2 xs={12}>

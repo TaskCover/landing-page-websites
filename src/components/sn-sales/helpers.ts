@@ -40,6 +40,12 @@ export const mappingStageStatusOptions: Option[] = [
   },
 ];
 
+export enum TIME_OFF_TYPE {
+  VACATION = "VACATION",
+  SICK = "SICK",
+  OTHER = "OTHER",
+}
+
 export const CURRENCY_SYMBOL: Record<CURRENCY_CODE, string> = {
   [CURRENCY_CODE.USD]: "$",
   [CURRENCY_CODE.EUR]: "€",

@@ -18,6 +18,8 @@ import { useSnackbar } from "store/app/selectors";
 import { useEffect, useMemo } from "react";
 import { DataStatus } from "constant/enums";
 import dayjs from "dayjs";
+import { useTranslations } from "next-intl";
+import { NS_RESOURCE_PLANNING } from "constant/index";
 
 export const useResourceFilter = () => {
   const { end_date, search_key, start_date, position, working_sort } =
@@ -67,6 +69,7 @@ export const useBookingAll = () => {
   const { bookingAll, bookingAllError, bookingAllFilter, bookingAllStatus } =
     useAppSelector((state) => state.resourcePlanning);
   const { onAddSnackbar } = useSnackbar();
+  const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const dispatch = useAppDispatch();
 
   const getBookingResource = async (params: IBookingAllFitler) => {
@@ -89,7 +92,14 @@ export const useBookingAll = () => {
     [bookingAll],
   );
   const createBooking = async (data: BookingData) => {
-    dispatch(createBookingResource(data));
+    await dispatch(createBookingResource(data))
+      .then(async () => {
+        await getBookingResource(bookingAllFilter);
+        onAddSnackbar(resourceT("form.createSuccess"), "success");
+      })
+      .catch((err) => {
+        onAddSnackbar(resourceT("form.createFailed"), "error");
+      });
   };
   useEffect(() => {
     if (bookingAllError) {

@@ -12,6 +12,9 @@ import { MobileDatePicker } from "@mui/x-date-pickers";
 import CustomDateRangePicker from "components/sn-resource-planing/components/CustomDateRangePicker";
 import Textarea from "components/sn-time-tracking/Component/Textarea";
 import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
+import { useTranslations } from "next-intl";
+import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
+import useTheme from "hooks/useTheme";
 
 interface IProps {
   open: boolean;
@@ -20,6 +23,10 @@ interface IProps {
 
 const EditBooking: React.FC<IProps> = ({ open, onClose }) => {
   const [activeTabs, setActiveTabs] = useState("1");
+  const [isFocusAllocation, setIsFocusAllocation] = useState(false);
+  const resourceT = useTranslations(NS_RESOURCE_PLANNING);
+  const commonT = useTranslations(NS_COMMON);
+  const { palette } = useTheme();
 
   const schemaProject = yup
     .object({
@@ -33,7 +40,12 @@ const EditBooking: React.FC<IProps> = ({ open, onClose }) => {
         .nullable()
         .required("Ngày bắt đầu không được bỏ trống")
         .typeError("Ngày không đúng định dạng"),
-
+      dateRange: yup.object().shape({
+        startDate: yup.date(),
+        endDate: yup.date(),
+      }),
+      allocation: yup.number(),
+      allocation_type: yup.string(),
       workingTime: yup
         .string()
         .required("Thời gian làm việc không được bỏ trống"),
@@ -52,7 +64,10 @@ const EditBooking: React.FC<IProps> = ({ open, onClose }) => {
         .nullable()
         .required("Ngày không được bỏ trống")
         .typeError("Ngày không đúng định dạng"),
-
+      dateRange: yup.object().shape({
+        startDate: yup.date(),
+        endDate: yup.date(),
+      }),
       workingTime: yup
         .string()
         .required("Thời gian làm việc không được bỏ trống"),
@@ -74,6 +89,7 @@ const EditBooking: React.FC<IProps> = ({ open, onClose }) => {
       projectName: "",
       role: "",
       date: undefined,
+      dateRange: {},
       workingTime: undefined,
       note: "",
     },
@@ -119,7 +135,90 @@ const EditBooking: React.FC<IProps> = ({ open, onClose }) => {
   const _renderProject = () => {
     return (
       <Grid container spacing={2} sx={{ mt: 1 }}>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={6}>
+          <Stack
+            direction="row"
+            sx={{
+              ".text-field-input-container, .text-field-select-container": {
+                border: `1px solid transparent`,
+                transition: "border-color 0.3s ease",
+              },
+              border: `1px solid ${
+                isFocusAllocation ? palette.primary.main : "transparent"
+              }`,
+              "&:focus-within": {
+                borderColor: palette.primary.main,
+              },
+            }}
+          >
+            <Controller
+              name="allocation"
+              control={controlProject}
+              render={({ field }) => (
+                <TextFieldInput
+                  label={resourceT("form.allocation")}
+                  placeholder="8h"
+                  sx={{
+                    borderRight: "1px solid #BABCC6",
+                  }}
+                  helperText={errorsProject.allocation?.message}
+                  error={!!errorsProject.allocation?.message}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="allocation_type"
+              control={controlProject}
+              render={({ field }) => (
+                <TextFieldSelect
+                  value={field.value}
+                  onChange={(event) => {
+                    field.onChange(event.target.value);
+                  }}
+                  placeholder=""
+                  options={[
+                    {
+                      label: `h/${commonT("day")}`,
+                      value: `h/day`,
+                    },
+                    {
+                      label: "%",
+                      value: "%",
+                    },
+                    {
+                      label: commonT("hour"),
+                      value: "hour",
+                    },
+                  ]}
+                  onFocus={() => setIsFocusAllocation(true)}
+                  onBlur={() => setIsFocusAllocation(false)}
+                />
+              )}
+            />
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Controller
+            name="dateRange"
+            control={controlProject}
+            render={({ field }) => (
+              <CustomDateRangePicker
+                required
+                value={field.value}
+                onChange={(value) => {
+                  field.onChange(value);
+                }}
+                label={resourceT("form.dateRange")}
+                placeholder=""
+                error={!!errorsProject.dateRange?.message}
+                helperText={errorsProject.dateRange?.message}
+              />
+            )}
+          />
+        </Grid>
+        {/* <Grid item xs={12}>
           <Controller
             name="projectName"
             control={controlProject}
@@ -155,16 +254,26 @@ const EditBooking: React.FC<IProps> = ({ open, onClose }) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <CustomDateRangePicker
-            required
-            value={null}
-            onChange={(value) => {
-              setValueProject("date", value);
-              clearErrorsProject("date");
+          <Controller
+            name="dateRange"
+            control={controlProject}
+            render={({ field }) => {
+              const { onChange, ...rest } = field;
+              const onPickDate = (value) => {
+                setValueProject("date", value);
+                clearErrorsProject("date");
+              };
+              return (
+                <CustomDateRangePicker
+                  {...rest}
+                  required
+                  onChange={onPickDate}
+                  label="Date"
+                  error={!!errorsProject.date?.message}
+                  helperText={errorsProject.date?.message}
+                />
+              );
             }}
-            label="Date"
-            error={!!errorsProject.date?.message}
-            helperText={errorsProject.date?.message}
           />
         </Grid>
 
@@ -213,7 +322,7 @@ const EditBooking: React.FC<IProps> = ({ open, onClose }) => {
               Save change
             </Button>
           </Stack>
-        </Grid>
+        </Grid> */}
       </Grid>
     );
   };
@@ -240,9 +349,9 @@ const EditBooking: React.FC<IProps> = ({ open, onClose }) => {
         <Grid item xs={12}>
           <CustomDateRangePicker
             required
-            value={null}
+            value={{}}
             onChange={(value) => {
-              setValueTimeOff("date", value);
+              setValueTimeOff("dateRange", value);
               clearErrorsTimeOff("date");
             }}
             label="Date"

@@ -45,6 +45,7 @@ import {
 } from "constant/enums";
 import useGetOptions from "./hooks/useGetOptions";
 import useGetMappingTime from "./hooks/useGetMappingTime";
+import EditBooking from "./modals/EditBooking";
 
 const AllPeopleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -63,6 +64,7 @@ const AllPeopleTab = () => {
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
+  const [isOpenEdit, setIsOpenEdit] = React.useState(false);
   const generateDateRange = () => {
     const start_date = dayjs(filters?.start_date);
     const result: Array<Date> = [];
@@ -348,8 +350,16 @@ const AllPeopleTab = () => {
             );
           }}
           resourceLabelContent={({ resource }) => {
-            const { name, company, type, fullname, position, eventType, note } =
-              resource.extendedProps;
+            const {
+              name,
+              company,
+              type,
+              fullname,
+              position,
+              eventType,
+              note,
+              bookings: parentBookings,
+            } = resource.extendedProps;
 
             const isActive = includes(selectedResource, resource._resource.id);
 
@@ -360,7 +370,9 @@ const AllPeopleTab = () => {
               ? [...parentResource?.bookings]
               : [];
 
-            const isLastItem = bookings.pop()?.id === resource._resource.id;
+            const isLastItem =
+              bookings.pop()?.id === resource._resource.id ||
+              bookings.length === 0;
 
             if (type === "step") {
               return (
@@ -504,6 +516,19 @@ const AllPeopleTab = () => {
                       </Typography>
                     </Grid> */}
                   </Grid>
+                  {parentBookings?.length === 0 && (
+                    <Button
+                      variant="text"
+                      startIcon={<PlusIcon />}
+                      sx={{
+                        color: "success.main",
+                      }}
+                      // startIcon={<AddIcon />}
+                      onClick={() => setIsOpenCreate(true)}
+                    >
+                      {resourceT("schedule.action.addBooking")}
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             );
@@ -550,6 +575,7 @@ const AllPeopleTab = () => {
                   })}
                 >
                   <Typography
+                    // onClick={() => setIsOpenEdit(true)}
                     sx={{
                       fontSize: 16,
                       fontWeight: 400,
@@ -587,6 +613,7 @@ const AllPeopleTab = () => {
         onClose={() => setIsOpenCreate(false)}
         open={isOpenCreate}
       />
+      <EditBooking onClose={() => setIsOpenEdit(false)} open={isOpenEdit} />
     </Stack>
   );
 };

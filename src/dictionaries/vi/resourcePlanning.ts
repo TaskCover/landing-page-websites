@@ -56,5 +56,12 @@ export const ResourcePlanning: ResourceDictionary = {
     estimate: "Ước tính",
     work: "Giờ làm",
     schedule: "Lên lịch",
+    timeOffType: {
+      vacation: "Nghỉ phép",
+      sick: "Nghỉ ốm",
+      other: "Khác",
+    },
+    createFailed: "Tạo lịch thất bại",
+    createSuccess: "Tạo lịch thành công",
   },
 };

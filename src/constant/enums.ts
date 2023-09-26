@@ -93,14 +93,14 @@ export enum RESOURCE_EVENT_TYPE {
 }
 
 export enum RESOURCE_ALLOCATION_TYPE {
-  PERCENTAGE,
-  HOUR,
-  HOUR_PER_DAY,
+  PERCENTAGE = "%",
+  HOUR = "hours",
+  HOUR_PER_DAY = "h/day",
 }
 
 export enum RESOURCE_ALLOCATION_UNIT {
   PERCENTAGE = "%",
-  HOUR = "h",
+  HOUR = "hours",
   HOUR_PER_DAY = "h/day",
 }
 

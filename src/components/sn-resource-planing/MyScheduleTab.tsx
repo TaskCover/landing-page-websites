@@ -1,5 +1,5 @@
 import FullCalendar from "@fullcalendar/react";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { IBookingAllFitler } from "store/resourcePlanning/action";
 import {
   DEFAULT_BOOKING_ALL_FILTER,
@@ -41,6 +41,8 @@ import { IBookingItem, IBookingListItem } from "store/resourcePlanning/reducer";
 import { useFetchBookingAll, useFetchMyBooking } from "./hooks/useBookingAll";
 import useGetMappingTime from "./hooks/useGetMappingTime";
 import useGetOptions from "./hooks/useGetOptions";
+import { useAuth, useUserInfo } from "store/app/selectors";
+import { formatEstimateTime } from "utils/index";
 
 const MyScheduleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -54,6 +56,7 @@ const MyScheduleTab = () => {
 
   const { mappedTimeSymbol } = useGetMappingTime();
   const { selectedDate, updateDate } = useResourceDate();
+  const { user } = useAuth();
   const { getMyBooking, myBooking } = useMyBooking();
   const [resources, setResources] = React.useState<IBookingItem[]>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
@@ -185,7 +188,7 @@ const MyScheduleTab = () => {
   //   },
   // ]),
 
-  const getResources = () => {
+  const getResources = useCallback(() => {
     const result =
       resources?.map((resource: IBookingItem) => ({
         ...resource,
@@ -201,15 +204,22 @@ const MyScheduleTab = () => {
       })) || [];
     return [
       {
-        id: "1",
-        fullname: "Nguyễn Văn A",
-        company: "Công ty TNHH ABC",
+        id: user?.id,
+        fullname: user?.fullname,
+        company: user?.company,
         total_hour: 160,
         bookings: result,
         children: result,
       },
     ];
-  };
+  }, [JSON.stringify(resources)]);
+
+  const totalhour = useMemo(() => {
+    return resources.reduce((total, item) => {
+      return total + item.total_hour;
+    }, 0);
+  }, [JSON.stringify(resources)]);
+
   const mappedResources = getResources();
 
   const mappedEvents = getEvents();
@@ -305,7 +315,7 @@ const MyScheduleTab = () => {
             );
           }}
           resourceAreaHeaderClassNames="custom-header"
-          resourceAreaHeaderContent={(resrouce) => {
+          resourceAreaHeaderContent={(resource) => {
             return (
               <Grid
                 container
@@ -316,23 +326,23 @@ const MyScheduleTab = () => {
                 sx={{ width: 1 }}
               >
                 <Grid item xs={3} md={5} />
-                <Grid item xs={1} md={2}>
+                {/* <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {resourceT("schedule.resourceHeader.available")}
                   </Typography>
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
                     160 h
                   </Typography>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {resourceT("schedule.resourceHeader.schedule")}
                   </Typography>
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
-                    40 h
+                    {totalhour}h
                   </Typography>
                 </Grid>
-                <Grid item xs={1} md={2}>
+                {/* <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {`${resourceT(
                       "schedule.resourceHeader.schedule",
@@ -341,7 +351,7 @@ const MyScheduleTab = () => {
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
                     0 %
                   </Typography>
-                </Grid>
+                </Grid> */}
               </Grid>
             );
           }}
@@ -469,7 +479,7 @@ const MyScheduleTab = () => {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={1} md={2}>
+                    {/* <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
                           ...textHeadStyle,
@@ -478,7 +488,7 @@ const MyScheduleTab = () => {
                       >
                         160 h
                       </Typography>
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
@@ -486,10 +496,10 @@ const MyScheduleTab = () => {
                           textAlign: "center",
                         }}
                       >
-                        40 h
+                        {totalhour}h
                       </Typography>
                     </Grid>
-                    <Grid item xs={1} md={2}>
+                    {/* <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
                           ...textHeadStyle,
@@ -498,7 +508,7 @@ const MyScheduleTab = () => {
                       >
                         0 %
                       </Typography>
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                 </Grid>
               </Grid>

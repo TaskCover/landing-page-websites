@@ -17,9 +17,9 @@ export const schemaProject = yup
           ),
       })
       .required("Khoảng thời gian không được bỏ trống"),
-    workingTime: yup
-      .string()
-      .required("Thời gian làm việc không được bỏ trống"),
+    // workingTime: yup
+    //   .string()
+    //   .required("Thời gian làm việc không được bỏ trống"),
     allocation: yup.string().notRequired(),
     allocation_type: yup.string().notRequired(),
     note: yup.string().trim().notRequired(),
@@ -45,9 +45,9 @@ export const schemaTimeOff = yup
           ),
       })
       .required("Khoảng thời gian không được bỏ trống"),
-    workingTime: yup
-      .string()
-      .required("Thời gian làm việc không được bỏ trống"),
+    // workingTime: yup
+    //   .string()
+    //   .required("Thời gian làm việc không được bỏ trống"),
     allocation: yup.string().notRequired(),
     allocation_type: yup.string().notRequired(),
     note: yup.string().trim().notRequired(),

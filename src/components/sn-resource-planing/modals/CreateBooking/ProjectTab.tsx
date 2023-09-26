@@ -19,6 +19,10 @@ import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import { Button } from "components/shared";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
+import { useBookingAll } from "store/resourcePlanning/selector";
+import dayjs from "dayjs";
+import { BookingData } from "store/resourcePlanning/action";
+import { RESOURCE_ALLOCATION_TYPE, RESOURCE_EVENT_TYPE } from "constant/enums";
 
 interface IProps {
   open: boolean;
@@ -31,6 +35,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
 
   const { palette } = useTheme();
   const { positionOptions, projectOptions } = useGetOptions();
+  const { createBooking } = useBookingAll();
 
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
@@ -41,6 +46,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
     // clearErrors: clearErrorsProject,
     watch: watchProject,
     reset: resetProject,
+
     formState: { errors: errorsProject },
   } = useForm({
     resolver: yupResolver(schemaProject),
@@ -48,15 +54,21 @@ const ProjectTab = ({ open, onClose }: IProps) => {
       project_id: "",
       position: "",
       dateRange: {},
-      workingTime: undefined,
       allocation: "",
-      allocation_type: "hour",
+      allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
       note: "",
     },
   });
 
   const onSubmitProject = (data) => {
-    console.log("data", data, watchProject);
+    const cleanData: BookingData = {
+      ...data,
+      start_date: dayjs(data.dateRange.startDate).format("YYYY-MM-DD"),
+      end_date: dayjs(data.dateRange.endDate).format("YYYY-MM-DD"),
+      booking_type: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
+    };
+    createBooking(cleanData);
+    onClose();
   };
 
   useEffect(() => {
@@ -165,15 +177,15 @@ const ProjectTab = ({ open, onClose }: IProps) => {
                 options={[
                   {
                     label: `h/${commonT("day")}`,
-                    value: `h/day`,
+                    value: RESOURCE_ALLOCATION_TYPE.HOUR_PER_DAY,
                   },
                   {
                     label: "%",
-                    value: "%",
+                    value: RESOURCE_ALLOCATION_TYPE.PERCENTAGE,
                   },
                   {
                     label: commonT("hour"),
-                    value: "hour",
+                    value: RESOURCE_ALLOCATION_TYPE.HOUR,
                   },
                 ]}
                 onFocus={() => setIsFocusAllocation(true)}
