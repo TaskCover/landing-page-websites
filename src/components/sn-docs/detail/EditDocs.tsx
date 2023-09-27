@@ -18,24 +18,27 @@ import "./style.css";
 
 const EditDocs = () => {
   const [title, setTitle] = useState("");
-  const [height, setHeight] = useState(58);
+  const [height, setHeight] = useState(69);
   const [content, setContent] = useState("");
   const titleRef: any = useRef(null);
   const contentRef: any = useRef(null);
   const modules = useMemo(
     () => ({
       toolbar: [
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        ["bold", "italic", "underline", "strike", "blockquote", "code-block"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ align: [] }],
-        // [{ indent: "-1" }, { indent: "+1" }],
         [
+          { header: [1, 2, 3, 4, 5, 6, false] },
+          "bold",
+          "italic",
+          "underline",
+          "strike",
+          "blockquote",
+          "code-block",
+          { list: "ordered" },
+          { list: "bullet" },
+          { align: [] },
           { color: [] },
           { background: ["transparent", ...COLORS] },
-          // { script: "sub" },
-          // { script: "super" },
-          "attachment",
+          // "attachment",
           "link",
           "image",
           "video",
@@ -50,13 +53,17 @@ const EditDocs = () => {
     if (titleRef.current) {
       // Lấy chiều cao của phần tử tham chiếu và cập nhật state
       const elementHeight = titleRef.current.offsetHeight;
-      setHeight(elementHeight || 58);
+      setHeight(elementHeight || 69);
     }
   }, [titleRef?.current, title]);
 
   return (
     <Box
       sx={{
+        paddingBottom: {
+          md: "0",
+          xs: "80px",
+        },
         width: {
           md: "70%",
           xs: "100%",
@@ -77,7 +84,10 @@ const EditDocs = () => {
         ".edit-title": {
           position: "absolute",
           width: "100%",
-          top: "80px",
+          top: {
+            md: "80px",
+            xs: "0",
+          },
           zIndex: 1,
         },
         ".edit-title .ql-editor::before": {
@@ -105,9 +115,20 @@ const EditDocs = () => {
           borderRadius: "6px !important",
           borderBottom: "1px solid var(--Gray1, #ECECF3) !important",
           boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
+          position: {
+            md: "unset",
+            xs: "fixed",
+          },
+          xs: {
+            bottom: "20px",
+            left: "16px",
+            right: "16px",
+            zIndex: 29,
+            bgcolor: "white",
+          },
         },
         ".edit-content .ql-container": {
-          marginTop: `${70 + (height - 58)}px`,
+          marginTop: `${70 + (height - 69)}px`,
           background: "white !important",
           border: "none",
           paddingLeft: {
