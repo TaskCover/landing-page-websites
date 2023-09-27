@@ -9,6 +9,7 @@ import {
   NS_RESOURCE_PLANNING,
   NS_SALES,
   NS_TIME_TRACKING,
+  NS_CHAT,
   NS_CHAT_BOX,
 } from "constant/index";
 import { AccountLang } from "./account";
@@ -22,6 +23,7 @@ import { ResourcePlanningLang } from "./resourcePlanning";
 import { SalesLang } from "./sales";
 import { TimeTrackingLang } from "./timetracking";
 import { ChatBoxLang } from "./chatbox";
+import { ChatLang } from "./chat";
 
 export default {
   [NS_COMMON]: CommonLang,
@@ -34,5 +36,6 @@ export default {
   [NS_TIME_TRACKING]: TimeTrackingLang,
   [NS_SALES]: SalesLang,
   [NS_RESOURCE_PLANNING]: ResourcePlanningLang,
+  [NS_CHAT]: ChatLang,
   [NS_CHAT_BOX]: ChatBoxLang,
 };

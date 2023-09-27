@@ -12,8 +12,7 @@ import { readMessages } from "./actions";
 export const useWSChat = () => {
   const { user } = useAuth();
   const {
-    roomId,
-    conversationPaging,
+    roomId: roomIdStore,
     dataTransfer,
     onSetMessage,
     onSetLastMessage,
@@ -23,6 +22,7 @@ export const useWSChat = () => {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const token = user?.["authToken"];
   const userId = user?.["id_rocket"];
+  const roomId = dataTransfer?._id ?? roomIdStore;
 
   const handleGetConventionById = useCallback(
     async (id: string, typeRoom: DirectionChat) => {
@@ -58,7 +58,7 @@ export const useWSChat = () => {
       onSetMessage(newMessage);
       onSetLastMessage({
         roomId,
-        lastMessage: newMessage,
+        lastMessage: newMessage || {},
         unreadCount: 0,
         unreadsFrom: "",
       });
@@ -70,10 +70,10 @@ export const useWSChat = () => {
     (
       message: Omit<
         MessageBodyRequest,
-        "sender_userId" | "sender_authToken" | "receiverUsername"
+        "sender_userId" | "sender_authToken" | "receiverUsername" | "t"
       >,
     ) => {
-      if (message.message && message.message.trim()?.length > 0) {
+      if (message.message && message.message.trim()?.length > 0) {        
         ws?.send(
           JSON.stringify({
             msg: "method",
@@ -159,7 +159,7 @@ export const useWSChat = () => {
               if (roomIdnoti !== roomId) {
                 onSetLastMessage({
                   roomId: roomIdnoti,
-                  lastMessage: dataConversation["lastMessage"],
+                  lastMessage: dataConversation["lastMessage"] || {},
                   unreadCount: 1,
                   unreadsFrom: "",
                 });
@@ -170,7 +170,7 @@ export const useWSChat = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [conversationPaging, roomId, token, userId],
+    [roomId, token, userId],
   );
 
   const connectSocket = () => {
@@ -189,6 +189,14 @@ export const useWSChat = () => {
     return wsClient;
   };
 
+  const reConnect = () => {
+    setTimeout(() => {
+      console.log("reConnect");
+      const wsNew = connectSocket();
+      connectMessage(wsNew);
+    }, 100);
+  };
+
   useEffect(() => {
     const wsNew = connectSocket();
     connectMessage(wsNew);
@@ -200,14 +208,10 @@ export const useWSChat = () => {
       ws.onclose = (e) => {
         if (
           ws &&
-          e.code !== 3001 &&
+          (e.code !== 3001) &&
           (ws.readyState === ws.CLOSING || ws.readyState === ws.CLOSED)
         ) {
-          setTimeout(() => {
-            console.log("reConnect");
-            const wsNew = connectSocket();
-            connectMessage(wsNew);
-          }, 100);
+          reConnect();
         }
       };
     }

@@ -25,6 +25,7 @@ import { nameMonthList, NS_CHAT_BOX } from "constant/index";
 import React from "react";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
+import { useChat } from "store/chat/selectors";
 
 interface MessagesProps {
   sessionId: string;
@@ -42,6 +43,7 @@ interface MessagesProps {
   focusMessage: MessageSearchInfo | null;
   unReadMessage: UnreadUserInfo[];
   onRefetch: (page: number) => void;
+  wrapperMessageSx?: any;
 }
 
 type MessageHandle = {
@@ -66,6 +68,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     focusMessage,
     unReadMessage,
     onRefetch,
+    wrapperMessageSx,
   }: MessagesProps,
   ref,
 ) => {
@@ -189,8 +192,10 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
+  
   return (
     <>
+      
       <Box
         ref={messagesContentRef}
         onScroll={(e) => {
@@ -202,8 +207,11 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           gap: "0.5rem",
           flexDirection: "column",
           overflow: "auto",
-          height: "100%",
+
           padding: "1rem 1rem 0 1rem",
+          ...(!!wrapperMessageSx
+            ? { ...wrapperMessageSx }
+            : { height: "100%" }),
         }}
       >
         {messages.map((message, index) => {
@@ -227,6 +235,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           const showDate = `${nextTimeMessage.getDate()} ${
             nameMonthList[Number(nextTimeMessage.getMonth())]
           } ${isShowYear ? nextTimeMessage.getFullYear() : ""}`.trim();
+
           return (
             <React.Fragment key={index}>
               {!message?.t ? (
@@ -243,6 +252,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                       ref: focusMessageRef,
                     }),
                   }}
+  
                 >
                   <MessageContent
                     message={message}
@@ -253,11 +263,11 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                   />
                 </MessageLayout>
               ) : (
-                  <Box
-                    sx={{
-                      textAlign: 'center',
-                    }}
-                  >
+                <Box
+                  sx={{
+                    textAlign: "center",
+                  }}
+                >
                     <Typography
                       sx={{
                         backgroundColor: isDarkMode ? '#5b5959' : '#f1f1f1',
@@ -267,6 +277,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                         display: 'inline-block',
                       }}
                     >{message?.u?.username} {message?.t === 'au' ? commonChatBox("chatBox.added") : (message?.t === 'ru' ? commonChatBox("chatBox.removed") : message?.t)} {message?.msg} ({getTimeStamp(message?.ts ?? '')})</Typography>
+                    
                   </Box>
               )}
               {hasNextDay && (

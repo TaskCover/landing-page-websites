@@ -47,6 +47,8 @@ import {
   MessageInfo,
   ForwardMessageGroup,
   ChangeGroupAvatar,
+  TypeDrawerChat,
+  IChatInfo,
 } from "./type";
 import { useAuth } from "store/app/selectors";
 import {
@@ -63,6 +65,12 @@ import {
   reset,
   setStateSearchMessage,
   updateUnSeenMessage,
+  setTypeDrawerChatDesktop,
+  setCloseDrawerChatDesktop,
+  resetConversationInfo,
+  setChatDesktop,
+  setListNewConversation,
+  resetSearchChatText,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -112,6 +120,9 @@ export const useChat = () => {
     dataTransfer,
     groupMembers,
     chatAttachments,
+    typeDrawerChat,
+    isOpenInfoChat,
+    isChatDesktop,
   } = useAppSelector((state) => state.chat, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
@@ -198,6 +209,7 @@ export const useChat = () => {
     async (params?: Omit<UrlsQuery, "userId" | "authToken">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
+      if (!params) return;
       await dispatch(
         getChatUrls({
           roomId: params?.roomId ?? roomId,
@@ -211,38 +223,40 @@ export const useChat = () => {
   );
 
   const onSendMessage = useCallback(
-    async (
-      message: Omit<
-        MessageBodyRequest,
-        "sender_userId" | "sender_authToken" | "receiverUsername"
-      >,
-    ) => {
+    async (message: Partial<MessageBodyRequest>) => {
       await dispatch(
         sendMessages({
           sender_userId: user?.["id_rocket"] || "",
+          userId: user?.["id_rocket"] || "",
           sender_authToken: user?.["authToken"] || "",
-          receiverUsername: conversationInfo?.username || "",
+          authToken: user?.["authToken"] || "",
+          receiverUsername:
+            conversationInfo?.username || dataTransfer?.username,
+          roomId: dataTransfer?._id || conversationInfo?._id || roomId,
+          t: dataTransfer?.t || conversationInfo?.t,
+          channel: dataTransfer?.name || conversationInfo?.name || "",
           ...message,
         }),
       );
     },
-    [conversationInfo?.username, dispatch, user],
+    [conversationInfo, dispatch, user, dataTransfer],
   );
 
   const onSearchChatText = useCallback(
-    async ({
-      text,
-      type = "d",
-    }: Omit<MessageSearchInfoRequest, "authToken" | "userId" | "roomId">) => {
+    async (params: Omit<MessageSearchInfoRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
+      if(params?.text?.length === 0) {
+        dispatch(resetSearchChatText())
+        return;
+      };
       return await dispatch(
         searchChatText({
           authToken,
           userId,
-          roomId,
-          text,
-          type,
+          roomId: params?.roomId ?? roomId,
+          text: params?.text,
+          type: params?.type,
         }),
       ).unwrap();
     },
@@ -421,6 +435,8 @@ export const useChat = () => {
     async (params: Omit<ChatAttachmentsRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
+      if (!(params?.roomType ?? (conversationInfo?.t as RoomType))) return;
+      if ((params?.roomId ?? roomId).length === 0) return;
       return await dispatch(
         getChatAttachments({
           authToken,
@@ -450,6 +466,8 @@ export const useChat = () => {
     unreadCount: number;
     unreadsFrom: string;
   }) => {
+    console.log(newMessage);
+    
     dispatch(setLastMessage(newMessage));
   };
 
@@ -501,22 +519,37 @@ export const useChat = () => {
     },
     [dispatch, user],
   );
+  
+  const onChangeListConversations =  useCallback((newConversations: IChatInfo[]) => {
+    dispatch(setListNewConversation(newConversations ?? []));
+  }, [dispatch]);
 
   const onChangeGroupAvatar = useCallback(
     async (file: File, roomId: string) => {
-      const result = await dispatch(uploadFile({ endpoint: 'files/upload-link', file }));
+      const result = await dispatch(
+        uploadFile({ endpoint: "files/upload-link", file }),
+      );
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
-      return await dispatch(
+       await dispatch(
         changeGroupAvatar({
           authToken,
           userId,
           roomId,
-          avatarUrl: result?.payload?.download ?? '',
+          avatarUrl: result?.payload?.download ?? "",
         }),
       );
+      onSetDataTransfer({ ...dataTransfer, avatar: result?.payload?.download });
+      const newConversations = convention?.map((item) => {
+        if(item._id === roomId){
+          return {...item, avatar: result?.payload?.download}
+        }
+        return item
+      });
+      dispatch(setListNewConversation(newConversations ?? []));
+      return;
     },
-    [dispatch, user],
+    [convention, dataTransfer, dispatch, onSetDataTransfer, user],
   );
 
   const onUploadAndSendFile = useCallback(
@@ -574,6 +607,31 @@ export const useChat = () => {
     [dispatch, onSendMessage, onSetStateSendMessage],
   );
 
+  const onSetDrawerType = useCallback(
+    async (type: TypeDrawerChat) => {
+      return dispatch(setTypeDrawerChatDesktop(type));
+    },
+    [dispatch],
+  );
+
+  const onCloseDrawer = useCallback(
+    async (type: TypeDrawerChat) => {
+      return dispatch(setCloseDrawerChatDesktop(type));
+    },
+    [dispatch],
+  );
+
+  const onResetConversationInfo = useCallback(async () => {
+    return dispatch(resetConversationInfo());
+  }, [dispatch]);
+
+  const onSetChatDesktop = useCallback(
+    async (valid = true) => {
+      return dispatch(setChatDesktop(valid));
+    },
+    [dispatch],
+  );
+
   return {
     convention,
     mediaListConversation,
@@ -589,7 +647,7 @@ export const useChat = () => {
     totalItems,
     totalPages,
     roomId,
-    conversationInfo,
+    conversationInfo: conversationInfo as IChatInfo,
     currStep,
     prevStep,
     partnerInfo,
@@ -647,6 +705,14 @@ export const useChat = () => {
     onGetUnReadMessages,
     onGetConventionById,
     onForwardMessage,
-    onChangeGroupAvatar
+    onChangeGroupAvatar,
+    onSetDrawerType,
+    onCloseDrawer,
+    typeDrawerChat,
+    isOpenInfoChat,
+    onResetConversationInfo,
+    isChatDesktop,
+    onSetChatDesktop,
+    onChangeListConversations
   };
 };

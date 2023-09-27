@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import Link from "components/Link";
 import { DataStatus } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import useTheme from "hooks/useTheme";
 import FileBasicIcon from "icons/FileBasicIcon";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
@@ -40,6 +41,7 @@ const FileContent = () => {
     return <Typography textAlign="center">Loading...</Typography>;
   }
 
+  const {isDarkMode} = useTheme();
   return (
     <Box
       sx={{
@@ -71,7 +73,7 @@ const FileContent = () => {
                 href={item.path}
                 target="_blank"
                 sx={{
-                  color: "#212121",
+                  color: isDarkMode ? 'white' : "#212121",
                   overflowWrap: "anywhere",
                   fontWeight: 600,
                   textDecoration: "auto",

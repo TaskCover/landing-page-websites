@@ -9,6 +9,8 @@ import { useEffect, useMemo, useRef } from "react";
 import ReadedIcon from "icons/ReadedIcon";
 import UnReadIcon from "icons/UnReadIcon";
 import hljs from "highlight.js";
+import useTheme from "hooks/useTheme";
+import { useChat } from "store/chat/selectors";
 
 export const TimeMessage = ({
   time,
@@ -73,8 +75,10 @@ const MessageContent = ({
   unReadMessage,
 }: MessageContentProps) => {
   const textRef = useRef<HTMLDivElement>(null);
+  const {listSearchMessage} = useChat();
 
   const isUnReadCheck = unReadMessage.some((item) => item.unreadCount === 0);
+  const {isDarkMode} = useTheme();
   const isReadMessage = useMemo(() => {
     const timeMessage = new Date(message.ts);
     if (isGroup) {
@@ -118,6 +122,17 @@ const MessageContent = ({
     }
   }, [message]);
 
+  const renderBackgroundColor = useMemo(() => {
+    if(listSearchMessage.map(item => item.messageId).includes(message._id)) {
+      return isDarkMode ? "#F7F7FD" : "#3a3b3c" ;
+    }
+    if(isCurrentUser) {
+      if(isDarkMode) return '#333333';
+      return "#EBF5FF"
+    }
+    return isDarkMode ? "#3a3b3c" : "#F7F7FD";
+  }, [isCurrentUser, isDarkMode, listSearchMessage, message._id]);
+
   if (message.msg) {
     return (
       <Box
@@ -128,7 +143,7 @@ const MessageContent = ({
           alignItems: "flex-end",
           padding: "0.5rem 1rem",
           borderRadius: "20px",
-          backgroundColor: isCurrentUser ? "#EBF5FF" : "#F7F7FD",
+          backgroundColor: renderBackgroundColor,
           maxWidth: "270px",
         }}
         order={2}

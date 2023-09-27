@@ -16,48 +16,9 @@ import { AN_ERROR_TRY_AGAIN, NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import UserInfo from "./UserInfo";
 import GroupMediaProfile from "./GroupMediaProfile";
+import ItemProfile from "../common/ItemProfile";
 import useTheme from "hooks/useTheme";
 
-const ItemProfile = ({
-  Icon,
-  title,
-  onClick,
-}: {
-  Icon: React.ElementType;
-  title: string;
-  onClick: () => void;
-}) => {
-  return (
-    <Box
-      display="flex"
-      gap="1rem"
-      ml="1rem"
-      mr="1.5rem"
-      alignItems="center"
-      sx={{
-        cursor: "pointer",
-      }}
-      onClick={onClick}
-    >
-      <Icon
-        sx={{
-          fill: "none",
-          color: "#666666",
-          filter: "opacity(0.8)",
-        }}
-      />
-      <Typography>{title}</Typography>
-      <ArrowDownIcon
-        sx={{
-          ml: "auto",
-          transform: "rotate(180deg)",
-          filter: "opacity(0.5)",
-          cursor: "pointer",
-        }}
-      />
-    </Box>
-  );
-};
 
 interface UserLandingProps {
   displayUserInfo: boolean;
@@ -104,6 +65,8 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
 
   const handleSelectMessage = useCallback(
     (message: MessageSearchInfo) => {
+      console.log(message, 'message');
+      
       onSetStateSearchMessage(message);
       setStateSearch({ isSearch: false, text: "" });
       onPrevious();
