@@ -70,6 +70,7 @@ import {
   resetConversationInfo,
   setChatDesktop,
   setListNewConversation,
+  resetSearchChatText,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -245,6 +246,10 @@ export const useChat = () => {
     async (params: Omit<MessageSearchInfoRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
+      if(params?.text?.length === 0) {
+        dispatch(resetSearchChatText())
+        return;
+      };
       return await dispatch(
         searchChatText({
           authToken,
@@ -461,6 +466,8 @@ export const useChat = () => {
     unreadCount: number;
     unreadsFrom: string;
   }) => {
+    console.log(newMessage);
+    
     dispatch(setLastMessage(newMessage));
   };
 

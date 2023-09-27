@@ -25,6 +25,7 @@ import { nameMonthList, NS_CHAT_BOX } from "constant/index";
 import React from "react";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
+import { useChat } from "store/chat/selectors";
 
 interface MessagesProps {
   sessionId: string;
@@ -191,9 +192,10 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
-
+  
   return (
     <>
+      
       <Box
         ref={messagesContentRef}
         onScroll={(e) => {
@@ -233,6 +235,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           const showDate = `${nextTimeMessage.getDate()} ${
             nameMonthList[Number(nextTimeMessage.getMonth())]
           } ${isShowYear ? nextTimeMessage.getFullYear() : ""}`.trim();
+
           return (
             <React.Fragment key={index}>
               {!message?.t ? (
@@ -249,6 +252,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                       ref: focusMessageRef,
                     }),
                   }}
+  
                 >
                   <MessageContent
                     message={message}

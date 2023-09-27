@@ -210,7 +210,7 @@ export const useActionGroupDetails = () => {
       type: "a",
       text: "",
       offset: 0,
-      count: 1000,
+      count: 10,
     });
   };
 

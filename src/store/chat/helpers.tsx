@@ -8,7 +8,6 @@ import {
   MessageInfo,
 } from "./type";
 import { readMessages } from "./actions";
-import { useWhatChanged } from "@simbathesailor/use-what-changed";
 
 export const useWSChat = () => {
   const { user } = useAuth();
@@ -59,7 +58,7 @@ export const useWSChat = () => {
       onSetMessage(newMessage);
       onSetLastMessage({
         roomId,
-        lastMessage: newMessage,
+        lastMessage: newMessage || {},
         unreadCount: 0,
         unreadsFrom: "",
       });
@@ -160,7 +159,7 @@ export const useWSChat = () => {
               if (roomIdnoti !== roomId) {
                 onSetLastMessage({
                   roomId: roomIdnoti,
-                  lastMessage: dataConversation["lastMessage"],
+                  lastMessage: dataConversation["lastMessage"] || {},
                   unreadCount: 1,
                   unreadsFrom: "",
                 });
