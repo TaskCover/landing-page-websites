@@ -76,10 +76,11 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   const [isBottomScrollMessage, setBottomScrollMessage] = useState(false);
   const commonChatBox = useTranslations(NS_CHAT_BOX);
   const { isDarkMode } = useTheme();
-
+  const { isChatDesktop } = useChat();
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
+  
   const scrollHeightRef = useRef(0);
   const observer = useRef(
     new IntersectionObserver((entries) => {
@@ -88,7 +89,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         pageRef.current = pageRef.current + pageSize;
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         const clientHeight =
-          (messagesContentRef.current?.clientHeight || 0) + 100;
+          (messagesContentRef.current?.clientHeight || 0) + 50
         if (scrollHeightRef.current > clientHeight) {
           onRefetch(pageRef.current);
         }
@@ -152,14 +153,15 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     [isBottomScrollMessage],
   );
 
-  const initScrollIntoView = useCallback(() => {
+  const initScrollIntoView = useCallback(() => {    
     if (messagesContentRef.current) {
       const index = messagesContentRef.current?.scrollHeight
         ? Number(
-            messagesContentRef.current?.scrollHeight -
-              scrollHeightRef.current || 0,
+            messagesContentRef.current?.scrollHeight - scrollHeightRef.current || 0,
           )
         : 0;
+      console.log(index);
+      
       messagesContentRef.current.scrollTo(0, index);
     }
   }, []);
@@ -192,10 +194,8 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
-  
   return (
     <>
-      
       <Box
         ref={messagesContentRef}
         onScroll={(e) => {
@@ -207,8 +207,10 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           gap: "0.5rem",
           flexDirection: "column",
           overflow: "auto",
+          justifyContent: "flex-end",
+          height: "100vh",
 
-          padding: "1rem 1rem 0 1rem",
+          padding: "1rem",
           ...(!!wrapperMessageSx
             ? { ...wrapperMessageSx }
             : { height: "100%" }),
@@ -252,7 +254,6 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                       ref: focusMessageRef,
                     }),
                   }}
-  
                 >
                   <MessageContent
                     message={message}
@@ -268,17 +269,24 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                     textAlign: "center",
                   }}
                 >
-                    <Typography
-                      sx={{
-                        backgroundColor: isDarkMode ? '#5b5959' : '#f1f1f1',
-                        fontSize: '10px',
-                        padding: '2px 5px',
-                        borderRadius: '10px',
-                        display: 'inline-block',
-                      }}
-                    >{message?.u?.username} {message?.t === 'au' ? commonChatBox("chatBox.added") : (message?.t === 'ru' ? commonChatBox("chatBox.removed") : message?.t)} {message?.msg} ({getTimeStamp(message?.ts ?? '')})</Typography>
-                    
-                  </Box>
+                  <Typography
+                    sx={{
+                      backgroundColor: isDarkMode ? "#5b5959" : "#f1f1f1",
+                      fontSize: "10px",
+                      padding: "2px 5px",
+                      borderRadius: "10px",
+                      display: "inline-block",
+                    }}
+                  >
+                    {message?.u?.username}{" "}
+                    {message?.t === "au"
+                      ? commonChatBox("chatBox.added")
+                      : message?.t === "ru"
+                      ? commonChatBox("chatBox.removed")
+                      : message?.t}{" "}
+                    {message?.msg} ({getTimeStamp(message?.ts ?? "")})
+                  </Typography>
+                </Box>
               )}
               {hasNextDay && (
                 <Typography
