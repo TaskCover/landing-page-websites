@@ -4,7 +4,7 @@ import { schemaTimeOff } from "../CreateBooking/Schemas";
 import TextFieldSelect from "components/sn-time-tracking/Component/Select";
 import CustomDateRangePicker from "components/sn-resource-planing/components/CustomDateRangePicker";
 import TextFieldInput from "components/shared/TextFieldInput";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useTheme from "hooks/useTheme";
 import { Stack } from "@mui/material";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
@@ -21,12 +21,14 @@ import {
 } from "constant/enums";
 import dayjs from "dayjs";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
+import { IBookingItem } from "store/resourcePlanning/reducer";
 interface IProps {
   open: boolean;
   onClose(): void;
+  bookingId: string;
 }
 
-const TimeOffTab = ({ open, onClose }: IProps) => {
+const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
   const { palette } = useTheme();
   const commonT = useTranslations(NS_COMMON);
@@ -34,6 +36,19 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
   const { createBooking } = useBookingAll();
   const { timeOffOptions } = useGetTimeOffOptions();
   const { positionOptions, projectOptions } = useGetOptions();
+  const { bookingAll } = useBookingAll();
+
+  const bookingEvent: IBookingItem = useMemo(() => {
+    const booking =
+      bookingAll
+        .find((item) => item.bookings.find((i) => i.id === bookingId))
+        ?.bookings.find((i) => i.id === bookingId) || ({} as IBookingItem);
+    if (booking.booking_type !== RESOURCE_EVENT_TYPE.TIME_OF_BOOKING) {
+      return {} as IBookingItem;
+    }
+    return booking;
+  }, [JSON.stringify(bookingAll)]);
+
   const {
     control: controlTimeOff,
     handleSubmit: handleSubmitTimeOff,
@@ -45,14 +60,27 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
   } = useForm({
     resolver: yupResolver(schemaTimeOff),
     defaultValues: {
-      categoryTimeOff: "",
+      // categoryTimeOff: "",
+      // dateRange: {
+      //   startDate: undefined,
+      //   endDate: undefined,
+      // },
+      // allocation: "",
+      // allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
+      // note: "",
+      categoryTimeOff: bookingEvent?.time_off_type || "",
       dateRange: {
-        startDate: undefined,
-        endDate: undefined,
+        startDate: bookingEvent?.start_date
+          ? dayjs(bookingEvent?.start_date).toDate()
+          : undefined,
+        endDate: bookingEvent?.end_date
+          ? dayjs(bookingEvent?.end_date).toDate()
+          : undefined,
       },
-      allocation: "",
-      allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
-      note: "",
+      allocation: bookingEvent?.allocation || 0,
+      allocation_type:
+        bookingEvent?.allocation_type || RESOURCE_ALLOCATION_TYPE.HOUR,
+      note: bookingEvent?.note || "",
     },
   });
 
@@ -208,7 +236,7 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
             variant="contained"
             onClick={handleSubmitTimeOff(onSubmitTimeOff)}
           >
-            {resourceT("form.createBooking")}
+            {resourceT("form.editBooking")}
           </Button>
         </Stack>
       </Grid2>

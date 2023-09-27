@@ -28,15 +28,11 @@ interface IProps {
 }
 
 const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
-  const [isShowDetail, setIsShowDetail] = useState(false);
-  const [isFocusAllocation, setIsFocusAllocation] = useState(false);
   const [activeTabs, setActiveTabs] = useState("1");
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     setActiveTabs(newValue);
-    // if (newValue === "1") resetTimeOff();
-    // if (newValue === "2") resetProject();
   };
 
   return (
@@ -87,6 +83,7 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
               value="1"
               sx={{
                 fontSize: "14px",
+                color: "gray.300",
                 lineHeight: "16px",
                 fontWeight: 600,
                 px: "32px",
@@ -99,6 +96,7 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
               sx={{
                 fontSize: "14px",
                 lineHeight: "16px",
+                color: "gray.300",
                 fontWeight: 600,
               }}
             />

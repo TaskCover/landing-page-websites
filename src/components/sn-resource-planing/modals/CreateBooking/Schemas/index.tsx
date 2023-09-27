@@ -20,7 +20,7 @@ export const schemaProject = yup
     // workingTime: yup
     //   .string()
     //   .required("Thời gian làm việc không được bỏ trống"),
-    allocation: yup.string().notRequired(),
+    allocation: yup.number().notRequired(),
     allocation_type: yup.string().notRequired(),
     note: yup.string().trim().notRequired(),
   })
@@ -48,7 +48,7 @@ export const schemaTimeOff = yup
     // workingTime: yup
     //   .string()
     //   .required("Thời gian làm việc không được bỏ trống"),
-    allocation: yup.string().notRequired(),
+    allocation: yup.number().notRequired(),
     allocation_type: yup.string().notRequired(),
     note: yup.string().trim().notRequired(),
   })

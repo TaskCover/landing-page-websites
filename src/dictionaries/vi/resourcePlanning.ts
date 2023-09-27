@@ -38,7 +38,15 @@ export const ResourcePlanning: ResourceDictionary = {
       hour: "h",
     },
     action: {
+      editBooking: "Sửa lịch",
       addBooking: "Thêm lịch",
+    },
+    toolTip: {
+      resolveBooking: "Giải quyết lịch trình",
+      splitBooking: "Chia lịch trình",
+      duplicateBooking: "Nhân đôi lịch trình",
+      openBudget: "Mở ngân sách 'Quản trị'",
+      deleteOverBooking: "Xóa lịch trình",
     },
   },
   form: {
@@ -63,5 +71,8 @@ export const ResourcePlanning: ResourceDictionary = {
     },
     createFailed: "Tạo lịch thất bại",
     createSuccess: "Tạo lịch thành công",
+    editBooking: "Sửa lịch",
+    updateFailed: "Cập nhật lịch thất bại",
+    updateSuccess: "Cập nhật lịch thành công",
   },
 };

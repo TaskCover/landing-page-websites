@@ -42,7 +42,8 @@ import { useFetchBookingAll, useFetchMyBooking } from "./hooks/useBookingAll";
 import useGetMappingTime from "./hooks/useGetMappingTime";
 import useGetOptions from "./hooks/useGetOptions";
 import { useAuth, useUserInfo } from "store/app/selectors";
-import { formatEstimateTime } from "utils/index";
+import { formatEstimateTime, formatNumber } from "utils/index";
+import EditBooking from "./modals/EditBooking";
 
 const MyScheduleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -62,6 +63,11 @@ const MyScheduleTab = () => {
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
+  const [isOpenEdit, setIsOpenEdit] = React.useState({
+    isOpen: false,
+    bookingId: "",
+    isProject: true,
+  });
   const generateDateRange = () => {
     const start_date = dayjs(filters?.start_date);
     const result: Array<Date> = [];
@@ -326,23 +332,23 @@ const MyScheduleTab = () => {
                 sx={{ width: 1 }}
               >
                 <Grid item xs={3} md={5} />
-                {/* <Grid item xs={1} md={2}>
+                <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {resourceT("schedule.resourceHeader.available")}
                   </Typography>
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
                     160 h
                   </Typography>
-                </Grid> */}
+                </Grid>
                 <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {resourceT("schedule.resourceHeader.schedule")}
                   </Typography>
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
-                    {totalhour}h
+                    {formatNumber(totalhour, { numberOfFixed: 2 })}h
                   </Typography>
                 </Grid>
-                {/* <Grid item xs={1} md={2}>
+                <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {`${resourceT(
                       "schedule.resourceHeader.schedule",
@@ -351,7 +357,7 @@ const MyScheduleTab = () => {
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
                     0 %
                   </Typography>
-                </Grid> */}
+                </Grid>
               </Grid>
             );
           }}
@@ -479,7 +485,7 @@ const MyScheduleTab = () => {
                         }}
                       />
                     </Grid>
-                    {/* <Grid item xs={1} md={2}>
+                    <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
                           ...textHeadStyle,
@@ -488,7 +494,7 @@ const MyScheduleTab = () => {
                       >
                         160 h
                       </Typography>
-                    </Grid> */}
+                    </Grid>
                     <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
@@ -496,10 +502,10 @@ const MyScheduleTab = () => {
                           textAlign: "center",
                         }}
                       >
-                        {totalhour}h
+                        {formatNumber(totalhour, { numberOfFixed: 2 })}h
                       </Typography>
                     </Grid>
-                    {/* <Grid item xs={1} md={2}>
+                    <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
                           ...textHeadStyle,
@@ -508,14 +514,14 @@ const MyScheduleTab = () => {
                       >
                         0 %
                       </Typography>
-                    </Grid> */}
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             );
           }}
           eventContent={({ event }) => {
-            const { eventType, allocation_type, allocation } =
+            const { eventType, allocation_type, allocation, eventId } =
               event.extendedProps;
 
             const checkedEventType = checkEventType(eventType);
@@ -545,6 +551,14 @@ const MyScheduleTab = () => {
                   alignItems: "center",
                   justifyContent: "space-between",
                   background: checkedEventType.background,
+                }}
+                onClick={() => {
+                  setIsOpenEdit({
+                    isOpen: true,
+                    isProject:
+                      eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
+                    bookingId: eventId,
+                  });
                 }}
               >
                 {checkedEventType.icon}
@@ -593,6 +607,18 @@ const MyScheduleTab = () => {
         onClose={() => setIsOpenCreate(false)}
         open={isOpenCreate}
       />
+      {/* <EditBooking
+        open={isOpenEdit.isOpen}
+        bookingId={isOpenEdit.bookingId}
+        isProject={isOpenEdit.isProject}
+        onClose={() =>
+          setIsOpenEdit({
+            isOpen: false,
+            isProject: true,
+            bookingId: "",
+          })
+        }
+      /> */}
     </Stack>
   );
 };

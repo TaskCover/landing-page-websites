@@ -8,7 +8,7 @@ interface IProps {
   open: boolean;
   content: React.ReactNode | JSX.Element;
   onClose(): void;
-  title: string;
+  title: string | React.ReactNode;
   isCenterTitle?: boolean;
   sx?: object;
   width?: string | number;

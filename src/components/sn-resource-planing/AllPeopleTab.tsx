@@ -43,9 +43,14 @@ import {
   RESOURCE_ALLOCATION_UNIT,
   RESOURCE_EVENT_TYPE,
 } from "constant/enums";
-import useGetOptions from "./hooks/useGetOptions";
+import useGetOptions, { useFetchOptions } from "./hooks/useGetOptions";
 import useGetMappingTime from "./hooks/useGetMappingTime";
 import EditBooking from "./modals/EditBooking";
+import {
+  formatEstimateTime,
+  formatNumber,
+  formatNumberHourToTime,
+} from "utils/index";
 
 const AllPeopleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -64,7 +69,11 @@ const AllPeopleTab = () => {
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
-  const [isOpenEdit, setIsOpenEdit] = React.useState(false);
+  const [isOpenEdit, setIsOpenEdit] = React.useState({
+    isOpen: false,
+    bookingId: "",
+    isProject: true,
+  });
   const generateDateRange = () => {
     const start_date = dayjs(filters?.start_date);
     const result: Array<Date> = [];
@@ -84,7 +93,7 @@ const AllPeopleTab = () => {
       selectedDate,
     });
   };
-
+  useFetchOptions();
   useFetchBookingAll();
 
   React.useEffect(() => {
@@ -100,6 +109,12 @@ const AllPeopleTab = () => {
       generateDateRange();
     }
   }, [filters?.start_date, filters?.end_date]);
+
+  const totalhour = useMemo(() => {
+    return resources.reduce((total, item) => {
+      return total + item.total_hour;
+    }, 0);
+  }, [JSON.stringify(resources)]);
 
   const handleEventChange =
     (calendarRef: React.RefObject<FullCalendar>, isResize: boolean) =>
@@ -320,23 +335,24 @@ const AllPeopleTab = () => {
                 sx={{ width: 1 }}
               >
                 <Grid item xs={3} md={5} />
-                {/* <Grid item xs={1} md={2}>
+                <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {resourceT("schedule.resourceHeader.available")}
                   </Typography>
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
                     160 h
                   </Typography>
-                </Grid> */}
+                </Grid>
                 <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {resourceT("schedule.resourceHeader.schedule")}
                   </Typography>
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
-                    40 h
+                    {formatNumberHourToTime(totalhour)}
+                    {/* {formatNumber(totalhour, { numberOfFixed: 2 })}h */}
                   </Typography>
                 </Grid>
-                {/* <Grid item xs={1} md={2}>
+                <Grid item xs={1} md={2}>
                   <Typography sx={{ ...textHeadStyle, color: "#666" }}>
                     {`${resourceT(
                       "schedule.resourceHeader.schedule",
@@ -345,7 +361,7 @@ const AllPeopleTab = () => {
                   <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
                     0 %
                   </Typography>
-                </Grid> */}
+                </Grid>
               </Grid>
             );
           }}
@@ -485,7 +501,7 @@ const AllPeopleTab = () => {
                         }}
                       />
                     </Grid>
-                    {/* <Grid item xs={1} md={2}>
+                    <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
                           ...textHeadStyle,
@@ -494,7 +510,7 @@ const AllPeopleTab = () => {
                       >
                         160 h
                       </Typography>
-                    </Grid> */}
+                    </Grid>
                     <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
@@ -502,10 +518,10 @@ const AllPeopleTab = () => {
                           textAlign: "center",
                         }}
                       >
-                        40 h
+                        {formatNumber(totalhour, { numberOfFixed: 2 })}h
                       </Typography>
                     </Grid>
-                    {/* <Grid item xs={1} md={2}>
+                    <Grid item xs={1} md={2}>
                       <Typography
                         sx={{
                           ...textHeadStyle,
@@ -514,7 +530,7 @@ const AllPeopleTab = () => {
                       >
                         0 %
                       </Typography>
-                    </Grid> */}
+                    </Grid>
                   </Grid>
                   {parentBookings?.length === 0 && (
                     <Button
@@ -534,7 +550,7 @@ const AllPeopleTab = () => {
             );
           }}
           eventContent={({ event }) => {
-            const { eventType, allocation_type, allocation } =
+            const { eventType, allocation_type, allocation, eventId } =
               event.extendedProps;
 
             const checkedEventType = checkEventType(eventType);
@@ -565,6 +581,14 @@ const AllPeopleTab = () => {
                   justifyContent: "space-between",
                   background: checkedEventType.background,
                 }}
+                onClick={() =>
+                  setIsOpenEdit({
+                    isOpen: true,
+                    isProject:
+                      eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
+                    bookingId: eventId,
+                  })
+                }
               >
                 {checkedEventType.icon}
                 <Tooltip
@@ -575,7 +599,6 @@ const AllPeopleTab = () => {
                   })}
                 >
                   <Typography
-                    // onClick={() => setIsOpenEdit(true)}
                     sx={{
                       fontSize: 16,
                       fontWeight: 400,
@@ -613,7 +636,18 @@ const AllPeopleTab = () => {
         onClose={() => setIsOpenCreate(false)}
         open={isOpenCreate}
       />
-      <EditBooking onClose={() => setIsOpenEdit(false)} open={isOpenEdit} />
+      {/* <EditBooking
+        isProject={isOpenEdit.isProject}
+        bookingId={isOpenEdit.bookingId}
+        onClose={() =>
+          setIsOpenEdit({
+            isOpen: false,
+            isProject: true,
+            bookingId: "",
+          })
+        }
+        open={isOpenEdit.isOpen}
+      /> */}
     </Stack>
   );
 };

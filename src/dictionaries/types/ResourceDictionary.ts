@@ -37,6 +37,14 @@ export default interface ResourceDictionary {
     };
     action: {
       addBooking: string;
+      editBooking: string;
+    };
+    toolTip: {
+      resolveBooking: string;
+      splitBooking: string;
+      openBudget: string;
+      deleteOverBooking: string;
+      duplicateBooking: string;
     };
   };
   form: {
@@ -63,5 +71,8 @@ export default interface ResourceDictionary {
     };
     createSuccess: string;
     createFailed: string;
+    editBooking: string;
+    updateSuccess: string;
+    updateFailed: string;
   };
 }

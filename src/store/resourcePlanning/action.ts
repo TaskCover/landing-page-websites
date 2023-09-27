@@ -96,3 +96,21 @@ export const getDetailBooking = createAsyncThunk(
     }
   },
 );
+
+export const updateBookingResource = createAsyncThunk(
+  "resource/updateBooking",
+  async (params: BookingData & { id: string }) => {
+    try {
+      const response = await client.post(
+        `${Endpoint.RESOURCE_PLANNING}/${params.id}`,
+        params,
+        {
+          baseURL: RESOURCE_API_URL,
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+);

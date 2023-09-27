@@ -7,6 +7,7 @@ import {
   createBookingResource,
   getBookingAll,
   getMyBookingResource,
+  updateBookingResource,
 } from "./action";
 import {
   IDatePicker,
@@ -101,6 +102,22 @@ export const useBookingAll = () => {
         onAddSnackbar(resourceT("form.createFailed"), "error");
       });
   };
+
+  const updateBooking = async (data: BookingData, id: string) => {
+    await dispatch(
+      updateBookingResource({
+        ...data,
+        id,
+      }),
+    )
+      .then(async () => {
+        await getBookingResource(bookingAllFilter);
+        onAddSnackbar(resourceT("form.updateSuccess"), "success");
+      })
+      .catch((err) => {
+        onAddSnackbar(resourceT("form.updateFailed"), "error");
+      });
+  };
   useEffect(() => {
     if (bookingAllError) {
       onAddSnackbar(bookingAllError, "error");
@@ -111,6 +128,7 @@ export const useBookingAll = () => {
     totalHour,
     createBooking,
     isReady,
+    updateBooking,
     bookingAll,
     bookingAllError,
     getBookingResource,

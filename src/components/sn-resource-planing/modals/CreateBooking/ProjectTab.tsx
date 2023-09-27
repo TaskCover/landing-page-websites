@@ -7,7 +7,6 @@ import TextFieldSelect, {
 import Textarea from "components/sn-time-tracking/Component/Textarea";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { schemaProject } from "./Schemas";
 import CustomDateRangePicker from "components/sn-resource-planing/components/CustomDateRangePicker";
 import TextFieldInput from "components/shared/TextFieldInput";
 import ArrowDownIcon from "icons/ArrowDownIcon";
@@ -23,6 +22,7 @@ import { useBookingAll } from "store/resourcePlanning/selector";
 import dayjs from "dayjs";
 import { BookingData } from "store/resourcePlanning/action";
 import { RESOURCE_ALLOCATION_TYPE, RESOURCE_EVENT_TYPE } from "constant/enums";
+import { schemaProject } from "../CreateBooking/Schemas";
 
 interface IProps {
   open: boolean;
@@ -54,7 +54,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
       project_id: "",
       position: "",
       dateRange: {},
-      allocation: "",
+      allocation: 0,
       allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
       note: "",
     },

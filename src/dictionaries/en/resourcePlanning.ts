@@ -39,6 +39,14 @@ export const ResourcePlanningLang: ResourceDictionary = {
     },
     action: {
       addBooking: "Add booking",
+      editBooking: "Edit booking",
+    },
+    toolTip: {
+      resolveBooking: "Resolve overbooking",
+      splitBooking: "Split booking",
+      duplicateBooking: "Duplicate booking",
+      openBudget: "Open budget 'Administration'",
+      deleteOverBooking: "Delete overbooking",
     },
   },
   form: {
@@ -63,5 +71,8 @@ export const ResourcePlanningLang: ResourceDictionary = {
     },
     createSuccess: "Create booking successfully",
     createFailed: "Create booking failed",
+    editBooking: "Edit booking",
+    updateSuccess: "Update booking successfully",
+    updateFailed: "Update booking failed",
   },
 };

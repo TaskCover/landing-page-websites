@@ -5,12 +5,14 @@ import {
   getBookingAll,
   getMyBookingResource,
   resourceActionType,
+  updateBookingResource,
 } from "./action";
 import dayjs from "dayjs";
 import { Position } from "store/company/reducer";
 import { Project } from "store/project/reducer";
 import { DEFAULT_BOOKING_ALL_FILTER } from "components/sn-resource-planing/hepler";
 import { DataStatus } from "constant/enums";
+import { TIME_OFF_TYPE } from "components/sn-sales/helpers";
 
 export interface IDatePicker {
   dateRange: Date[];
@@ -22,6 +24,7 @@ export interface IBookingItem {
   booking_type: string;
   project_id?: string;
   position?: Partial<Position>;
+  time_off_type?: TIME_OFF_TYPE;
   start_date: string;
   end_date: string;
   allocation: number;
@@ -116,6 +119,16 @@ export const resourcePlanningSlice = createSlice({
         state.bookingAllStatus = DataStatus.SUCCEEDED;
       })
       .addCase(createBookingResource.rejected, (state, action) => {
+        state.bookingAllError = action.error.message || "";
+        state.bookingAllStatus = DataStatus.FAILED;
+      })
+      .addCase(updateBookingResource.pending, (state) => {
+        state.bookingAllStatus = DataStatus.LOADING;
+      })
+      .addCase(updateBookingResource.fulfilled, (state, action) => {
+        state.bookingAllStatus = DataStatus.SUCCEEDED;
+      })
+      .addCase(updateBookingResource.rejected, (state, action) => {
         state.bookingAllError = action.error.message || "";
         state.bookingAllStatus = DataStatus.FAILED;
       });

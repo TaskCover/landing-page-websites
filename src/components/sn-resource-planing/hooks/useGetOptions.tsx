@@ -1,10 +1,10 @@
 import { IOptionStructure } from "components/sn-time-tracking/Component/Select";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePositions } from "store/company/selectors";
 import { useProjects } from "store/project/selectors";
 import _ from "lodash";
 
-const useFetchOptions = () => {
+export const useFetchOptions = () => {
   const { onGetProjects } = useProjects();
   const { onGetPositions } = usePositions();
   useEffect(() => {
@@ -14,16 +14,15 @@ const useFetchOptions = () => {
 };
 
 const useGetOptions = () => {
-  const [projectOptions, setProjectOptions] = useState<IOptionStructure[]>([]);
-  const [positionOptions, setPositionOptions] = useState<IOptionStructure[]>(
-    [],
-  );
+  // const [projectOptions, setProjectOptions] = useState<IOptionStructure[]>([]);
+  // const [positionOptions, setPositionOptions] = useState<IOptionStructure[]>(
+  //   [],
+  // );
   const { items: projects } = useProjects();
 
   const { items: positions } = usePositions();
 
-  useFetchOptions();
-  useEffect(() => {
+  const projectOptions: IOptionStructure[] = useMemo(() => {
     if (!_.isEmpty(projects)) {
       const resolveProjects = _.map(projects, (project) => {
         return {
@@ -31,11 +30,12 @@ const useGetOptions = () => {
           value: project?.id,
         };
       });
-      setProjectOptions(resolveProjects);
+      return resolveProjects;
     }
-  }, [projects]);
+    return [];
+  }, [JSON.stringify(projects)]);
 
-  useEffect(() => {
+  const positionOptions: IOptionStructure[] = useMemo(() => {
     if (!_.isEmpty(positions)) {
       const resolvePositions = _.map(positions, (position) => {
         return {
@@ -43,9 +43,10 @@ const useGetOptions = () => {
           value: position?.id,
         };
       });
-      setPositionOptions(resolvePositions);
+      return resolvePositions;
     }
-  }, [positions]);
+    return [];
+  }, [JSON.stringify(positions)]);
 
   return {
     projectOptions,
