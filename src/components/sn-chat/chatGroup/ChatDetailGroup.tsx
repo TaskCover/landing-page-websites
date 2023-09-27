@@ -282,7 +282,7 @@ const ChatDetailGroup = (props) => {
       type: "a",
       text: "",
       offset: 0,
-      count: 1000,
+      count: 10,
     });
     onSetStep(STEP.CONVENTION);
   };

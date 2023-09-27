@@ -252,6 +252,9 @@ const chatSlice = createSlice({
     ) => {
       state[action.payload.type] = action.payload.value;
     },
+    resetSearchChatText: (state) => {
+      state.listSearchMessage = []
+    }
   },
   extraReducers: (builder) =>
     builder
@@ -314,7 +317,7 @@ const chatSlice = createSlice({
         getLatestMessages.fulfilled,
         (state, action: PayloadAction<MessageInfo[]>) => {
           // state.messageInfo = []
-          if (action.payload?.length > 0) {
+          if (action.payload) {
             const messageNew = action.payload?.reverse() || [];
 
             //Save media message
@@ -540,7 +543,8 @@ export const {
   setCloseDrawerChatDesktop,
   resetConversationInfo,
   setChatDesktop,
-  setListNewConversation
+  setListNewConversation,
+  resetSearchChatText
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

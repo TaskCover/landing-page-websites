@@ -4,7 +4,6 @@ import {
   InputAdornment,
   Skeleton,
   TextField,
-  Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { ChangeEvent, ElementType, FC, useEffect, useState } from "react";
@@ -27,12 +26,16 @@ interface AddGroupProps {
   onSelectNewGroup?: any;
 }
 
-const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, CustomCallBackIcon }) => {
+const AddGroup: FC<AddGroupProps> = ({
+  callbackBackIcon,
+  onSelectNewGroup,
+  CustomCallBackIcon,
+}) => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
   const [employeeNameSelected, setEmployeeNameSelected] = useState<any>({});
   const [employeeIdSelected, setEmployeeIdSelected] = useState<any>({});
-  const {mobileMode} = useGetScreenMode();
+  const { mobileMode } = useGetScreenMode();
 
   const {
     items,
@@ -53,7 +56,11 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
     onCreateDirectMessageGroup,
     onAddMembers2Group,
     currStep,
-    onFetchGroupMembersMember
+    onFetchGroupMembersMember,
+    onSetDataTransfer,
+    onChangeListConversations,
+    convention,
+    isChatDesktop,
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -61,14 +68,20 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
   const { onAddSnackbar } = useSnackbar();
 
   useEffect(() => {
-    onGetEmployees(user?.company ?? "", {email: textSearch, fullname: textSearch, pageIndex: 0, pageSize: 30 });
+    onGetEmployees(user?.company ?? "", {
+      email: textSearch,
+      fullname: textSearch,
+      pageIndex: 0,
+      pageSize: 30,
+    });
   }, [onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
+    if (dataTransfer.isNew) return;
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
     });
-  }, [])
+  }, [dataTransfer, onFetchGroupMembersMember]);
 
   const handleSuccess = (result) => {
     if (result?.error) {
@@ -76,13 +89,20 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
       return;
     }
     onAddSnackbar(commonT("success"), "success");
-    if(!mobileMode) {
-      console.log(result?.payload?.group, 'result?.payload?.group');
+    onSetRoomId(
+      dataTransfer?.isNew ? result?.payload?.group?._id : dataTransfer?._id,
+    );
+    const dataItem = !dataTransfer?.isNew
+      ? dataTransfer
+      : result?.payload?.group;
+
+    if (isChatDesktop) {
       onSelectNewGroup(result?.payload?.group);
+      onSetDataTransfer(dataItem);
+      onChangeListConversations([dataItem].concat(convention));
       return;
     }
-    onSetStep(STEP.CHAT_GROUP, !dataTransfer?.isNew ? dataTransfer : result?.payload?.group);
-    onSetRoomId(dataTransfer?.isNew ? result?.payload?.group?._id : dataTransfer?._id)
+    onSetStep(STEP.CHAT_GROUP, dataItem);
   };
 
   const handleKeyDown = (event) => {
@@ -112,13 +132,13 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
   const handleCreateGroup = async () => {
     const memberAddGroup = Object.keys(employeeSelected).filter(
       (item) => employeeSelected[item] === true,
-    )
-    if (!Object.values(employeeIdSelected)?.filter(item=>item).length) {
+    );
+    if (!Object.values(employeeIdSelected)?.filter((item) => item).length) {
       onAddSnackbar("Please select at least one member!", "error");
       return;
-    }    
+    }
     if (dataTransfer?.isNew) {
-      if(memberAddGroup.length > 0){
+      if (memberAddGroup.length > 0) {
         const result = await onCreateDirectMessageGroup({
           groupName: (() => {
             return (
@@ -133,8 +153,9 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
             (item) => employeeSelected[item] === true,
           ),
           type: "d",
-        });      
+        });
         handleSuccess(result);
+        console.log(result, "result");
       }
     } else {
       const users = Object.keys(employeeIdSelected).filter(
@@ -157,7 +178,7 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
       sx={{
         display: "flex",
         flexDirection: "column",
-        ...mobileMode ? {} : {width: '100%'}
+        ...(mobileMode ? {} : { width: "100%" }),
       }}
     >
       <Box
@@ -166,7 +187,7 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
           alignItems: "center",
           gap: 1,
           padding: 2,
-          paddingLeft: '10px',
+          paddingLeft: "10px",
         }}
       >
         <IconButton
@@ -174,18 +195,18 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
             cursor: "pointer",
           }}
           onClick={() => {
-            if(callbackBackIcon) {
+            if (callbackBackIcon) {
               callbackBackIcon();
               return;
             }
-            if(currStep === STEP.ADD_GROUP) {
+            if (currStep === STEP.ADD_GROUP) {
               onSetStep(STEP.CONVENTION);
             } else {
               onSetStep(prevStep);
             }
           }}
         >
-         {CustomCallBackIcon ? CustomCallBackIcon : <ArrowDownIcon />}
+          {CustomCallBackIcon ? CustomCallBackIcon : <ArrowDownIcon />}
         </IconButton>
         <TextField
           size="small"
@@ -247,7 +268,11 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
               ? items
                   ?.filter(
                     (item) =>
-                      dataTransfer?.isNew || !dataTransfer?.isNew && !groupMembers?.map((m) => m._id)?.includes(item.id_rocket),
+                      dataTransfer?.isNew ||
+                      (!dataTransfer?.isNew &&
+                        !groupMembers
+                          ?.map((m) => m._id)
+                          ?.includes(item.id_rocket)),
                   )
                   ?.filter((m) => m.id_rocket !== user?.id_rocket)
                   .map((item, index) => {
@@ -271,8 +296,7 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: mobileMode ? 1 : '0px'
-          ,
+          gap: mobileMode ? 1 : "0px",
           padding: 2,
         }}
       >
@@ -282,10 +306,11 @@ const AddGroup:FC<AddGroupProps> = ({ callbackBackIcon, onSelectNewGroup, Custom
           size="small"
           sx={defaultSx.button}
           onClick={() => {
-            if(callbackBackIcon){
-              callbackBackIcon()
+            if (callbackBackIcon) {
+              callbackBackIcon();
+              return;
             }
-            if(currStep === STEP.ADD_GROUP) {
+            if (currStep === STEP.ADD_GROUP) {
               onSetStep(STEP.CONVENTION);
             } else {
               onSetStep(prevStep);

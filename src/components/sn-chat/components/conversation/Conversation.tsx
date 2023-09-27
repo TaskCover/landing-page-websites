@@ -80,8 +80,8 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
 
   const getLastMessage = useCallback(
     async (page?: number, size?: number) => {
-      if (currentRoomId.length === 0) return;
-      if (currentRoomType.length === 0) return;
+      if (currentRoomId?.length === 0) return;
+      if (currentRoomType?.length === 0) return;
       try {
         await onGetLastMessages({
           roomId: currentRoomId,
