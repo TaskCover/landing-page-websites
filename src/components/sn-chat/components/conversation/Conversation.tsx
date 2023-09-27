@@ -37,7 +37,8 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
   const { user } = useAuth();
 
   const { sendMessage } = useWSChat();
-  const { extraDesktopMode, mobileMode, desktopMode } = useGetScreenMode();
+  const { extraDesktopMode, mobileMode, desktopMode, ipadMode, mediaMode } =
+    useGetScreenMode();
 
   const ObjectDeviceMode = useMemo(() => {
     if (desktopMode) {
@@ -47,11 +48,21 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
       };
     } else if (mobileMode) {
       return {
-        heightBefore: "76vh",
+        heightBefore: "75vh",
         heightAfter: "67vh",
       };
+    } else if (ipadMode) {
+      return {
+        heightBefore: "80vh",
+        heightAfter: "75vh",
+      };
+    } else if (mediaMode) {
+      return {
+        heightBefore: "77vh",
+        heightAfter: "72vh",
+      };
     }
-  }, [desktopMode, mobileMode]);
+  }, [desktopMode, mobileMode, ipadMode, mediaMode]);
 
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);

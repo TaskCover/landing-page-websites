@@ -7,7 +7,8 @@ const useGetScreenMode = () => {
 
   return {
     mobileMode: width < 600,
-    ipadMode: width >= 600 && width <= 1024,
+    mediaMode: width >= 600 && width <= 800,
+    ipadMode: width > 800 && width <= 1024,
     desktopMode: width > 1024,
     extraDesktopMode: width > 1600,
     superDesktopMode: width >= 1920,
