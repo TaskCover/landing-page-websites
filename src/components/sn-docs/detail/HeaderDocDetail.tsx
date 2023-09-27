@@ -11,8 +11,10 @@ import MoreIcon from "icons/MoreIcon";
 import OpenSidebarIcon from "icons/OpenSidebarIcon";
 import ShareIcon from "icons/ShareIcon";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 const HeaderDocDetail = () => {
+  const router = useRouter();
   return (
     <>
       <Stack
@@ -28,13 +30,14 @@ const HeaderDocDetail = () => {
           sx={{
             display: {
               xs: "flex",
-              md: "none",
+              sm: "none",
             },
             alignItems: "center",
           }}
+          onClick={() => router.back()}
         >
           <BackIcon></BackIcon>
-          <Text variant={{ xs: "h3", md: "h4" }}>{"Project abc"}</Text>
+          <Text variant={{ xs: "h3", sm: "h4" }}>{"Project abc"}</Text>
         </Box>
         <Box
           sx={{
@@ -47,28 +50,28 @@ const HeaderDocDetail = () => {
             sx={{
               display: {
                 xs: "none",
-                md: "flex",
+                sm: "flex",
               },
               alignItems: "center",
             }}
           >
             <BackIcon></BackIcon>
-            <Text variant={{ xs: "h4", md: "h5" }}>{"Project abc"}</Text>
+            <Text variant={{ xs: "h4", sm: "h5" }}>{"Project abc"}</Text>
           </Box>
           <Box
             sx={{
               width: {
                 xs: "100%",
-                md: "auto",
+                sm: "auto",
               },
               display: "flex",
               alignItems: "center",
               justifyContent: {
-                md: "flex-end",
+                sm: "flex-end",
                 xs: "space-between",
               },
               gap: {
-                md: "20px",
+                sm: "20px",
                 xs: "12px",
               },
             }}
@@ -79,7 +82,7 @@ const HeaderDocDetail = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: {
-                  md: "20px",
+                  sm: "20px",
                   xs: "12px",
                 },
               }}
@@ -116,6 +119,7 @@ const HeaderDocDetail = () => {
     </>
   );
 };
+
 const styleButton = {
   padding: "4px",
   display: "flex",

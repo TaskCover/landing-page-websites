@@ -21,7 +21,7 @@ export default function Page() {
       <Box
         sx={{
           margin: {
-            md: "24px",
+            sm: "24px",
             xs: "0px",
           },
         }}

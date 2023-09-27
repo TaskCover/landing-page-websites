@@ -15,12 +15,15 @@ import ReactQuill from "react-quill";
 import { Box } from "@mui/material";
 import "react-quill/dist/quill.snow.css";
 import "./style.css";
+import { LeftSlideDocProps } from "./LeftSlide/LeftSlideDoc";
 
-const EditDocs = () => {
+const EditDocs = ({ open }: LeftSlideDocProps) => {
   const [title, setTitle] = useState("");
-  const [height, setHeight] = useState(69);
+  const [height, setHeight] = useState(0);
+  const [heightToolbar, setHeightToolbar] = useState(69);
   const [content, setContent] = useState("");
   const titleRef: any = useRef(null);
+  let tbRef: any = useRef(null);
   const contentRef: any = useRef(null);
   const modules = useMemo(
     () => ({
@@ -51,21 +54,38 @@ const EditDocs = () => {
 
   useEffect(() => {
     if (titleRef.current) {
-      // Lấy chiều cao của phần tử tham chiếu và cập nhật state
       const elementHeight = titleRef.current.offsetHeight;
-      setHeight(elementHeight || 69);
+      setHeight(elementHeight);
     }
   }, [titleRef?.current, title]);
+
+  useEffect(() => {
+    if (tbRef.current) {
+      const elementHeight = tbRef.current.offsetHeight;
+      setHeightToolbar(elementHeight);
+    }
+  }, [tbRef?.current, title]);
+
+  useEffect(() => {
+    const tb = document.querySelector(".edit-content .ql-toolbar");
+    if (tb) {
+      tbRef.current = tb;
+    }
+  }, []);
 
   return (
     <Box
       sx={{
+        minWidth: {
+          sm: "unset",
+          xs: !open ? "unset" : "calc(100vh - 39px)",
+        },
         paddingBottom: {
-          md: "0",
+          sm: "0",
           xs: "80px",
         },
         width: {
-          md: "70%",
+          sm: "70%",
           xs: "100%",
         },
         position: "relative",
@@ -77,7 +97,7 @@ const EditDocs = () => {
           background: "white !important",
           border: "none",
           paddingLeft: {
-            md: "32px",
+            sm: "32px",
             xs: "0",
           },
         },
@@ -85,25 +105,25 @@ const EditDocs = () => {
           position: "absolute",
           width: "100%",
           top: {
-            md: "80px",
+            sm: `${heightToolbar + 20}px`,
             xs: "0",
           },
           zIndex: 1,
         },
         ".edit-title .ql-editor::before": {
           paddingLeft: {
-            md: "32px",
+            sm: "32px",
             xs: "0",
           },
           fontSize: {
-            md: "32px !important",
+            sm: "32px !important",
             xs: "24px !important",
           },
           fontWeight: 700,
         },
         ".edit-title .ql-editor": {
           fontSize: {
-            md: "32px !important",
+            sm: "32px !important",
             xs: "24px !important",
           },
           fontWeight: 700,
@@ -116,29 +136,43 @@ const EditDocs = () => {
           borderBottom: "1px solid var(--Gray1, #ECECF3) !important",
           boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
           position: {
-            md: "unset",
+            sm: "unset",
             xs: "fixed",
           },
-          xs: {
-            bottom: "20px",
-            left: "16px",
-            right: "16px",
-            zIndex: 29,
-            bgcolor: "white",
+          bottom: {
+            sm: "unset",
+            xs: "20px",
           },
+          left: {
+            sm: "unset",
+            xs: "16px",
+          },
+          right: {
+            sm: "unset",
+            xs: "16px",
+          },
+          zIndex: {
+            sm: "unset",
+            xs: 29,
+          },
+          bgcolor: "white",
         },
         ".edit-content .ql-container": {
-          marginTop: `${70 + (height - 69)}px`,
+          marginTop: {
+            sm: `${height + 16}px`,
+            xs: `${height}px`,
+          },
           background: "white !important",
+          minHeight: "60vh",
           border: "none",
           paddingLeft: {
-            md: "32px",
+            sm: "32px",
             xs: "0",
           },
         },
         ".edit-content .ql-editor::before": {
           paddingLeft: {
-            md: "32px",
+            sm: "32px",
             xs: "0",
           },
         },

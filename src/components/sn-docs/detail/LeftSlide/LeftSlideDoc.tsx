@@ -10,9 +10,13 @@ import { Text } from "components/shared";
 import { useAppSelector } from "store/hooks";
 import ArrowRight from "icons/ArrowRight";
 
-const LeftSlideDoc = () => {
+export interface LeftSlideDocProps {
+  open: boolean;
+  setOpen?: any;
+}
+
+const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
   const dataFake = useAppSelector((state) => state.doc.docDetails.data);
-  const [open, setOpen] = useState(false);
   const docsT = useTranslations(NS_DOCS);
   const [search, setSearch] = useState("");
   const onChangeQueries = (name: string, value: any) => {
@@ -24,8 +28,8 @@ const LeftSlideDoc = () => {
       sx={{
         position: "relative",
         width: {
-          md: "30%",
-          xs: open ? "70%" : "0",
+          sm: "30%",
+          xs: open ? "90%" : "0",
         },
       }}
     >
@@ -33,7 +37,10 @@ const LeftSlideDoc = () => {
         sx={{
           position: "relative",
           height: "100%",
-          backgroundColor: "white",
+          backgroundColor: {
+            sm: "unset",
+            xs: "white",
+          },
           zIndex: "39",
           display: "block",
         }}
@@ -43,16 +50,17 @@ const LeftSlideDoc = () => {
           sx={{
             position: "absolute",
             top: 0,
-            left: "100%",
+            left: open ? "calc(100% + 4px)" : "calc(100% - 16px)",
             padding: "4px",
             display: {
-              md: "none",
+              sm: "none",
               xs: "flex",
             },
             zIndex: "30",
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "#E1F0FF",
+            transform: open ? "rotate(180deg)" : "unset",
           }}
         >
           <ArrowRight></ArrowRight>
@@ -60,7 +68,7 @@ const LeftSlideDoc = () => {
         <Box
           sx={{
             display: {
-              md: "block",
+              sm: "block",
               xs: open ? "block" : "none",
             },
           }}
