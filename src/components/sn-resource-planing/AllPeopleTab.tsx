@@ -2,10 +2,7 @@
 
 import FullCalendar from "@fullcalendar/react";
 import React, { useCallback, useEffect, useMemo } from "react";
-import {
-  IBookingAllFitler,
-  getBookingAll,
-} from "store/resourcePlanning/action";
+import { IBookingAllFitler } from "store/resourcePlanning/action";
 import {
   DEFAULT_BOOKING_ALL_FILTER,
   EXAMPLE_DATA,
@@ -13,18 +10,14 @@ import {
   weekdays,
 } from "./hepler";
 import dayjs from "dayjs";
-import { isEmpty, includes } from "lodash";
+import { isEmpty } from "lodash";
 import FilterHeader from "./FilterHeader";
 import { Box } from "@mui/system";
-import { Button, Tooltip } from "components/shared";
 import { Grid, Stack, Typography } from "@mui/material";
 import Avatar from "components/Avatar";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import interactionPlugin from "@fullcalendar/interaction";
 import { ResourceInput } from "@fullcalendar/resource";
-import BlueArrowIcon from "icons/BlueArrowIcon";
-import RedArrowIcon from "icons/RedArrowIcon";
-import GrayArrowIcon from "icons/GrayArrowIcon";
 import Image from "next/image";
 import PlusIcon from "icons/PlusIcon";
 import TimeHeader from "./TimeHeader";
@@ -35,14 +28,7 @@ import {
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
 import CreateBooking from "./modals/CreateBooking";
-import ArrowDownIcon from "icons/ArrowDownIcon";
 import { useFetchBookingAll } from "./hooks/useBookingAll";
-import { IBookingListItem } from "store/resourcePlanning/reducer";
-import {
-  RESOURCE_ALLOCATION_TYPE,
-  RESOURCE_ALLOCATION_UNIT,
-  RESOURCE_EVENT_TYPE,
-} from "constant/enums";
 import useGetOptions, { useFetchOptions } from "./hooks/useGetOptions";
 import useGetMappingTime from "./hooks/useGetMappingTime";
 import EditBooking from "./modals/EditBooking";
@@ -51,6 +37,15 @@ import {
   formatNumber,
   formatNumberHourToTime,
 } from "utils/index";
+import ResourceLabel from "./components/ResourceLabel";
+import EventContents from "./components/EventContents";
+import { IBookingListItem } from "store/resourcePlanning/reducer";
+
+export interface IEditState {
+  isOpen: boolean;
+  bookingId: string;
+  isProject: boolean;
+}
 
 const AllPeopleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -69,7 +64,7 @@ const AllPeopleTab = () => {
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
-  const [isOpenEdit, setIsOpenEdit] = React.useState({
+  const [isOpenEdit, setIsOpenEdit] = React.useState<IEditState>({
     isOpen: false,
     bookingId: "",
     isProject: true,
@@ -131,6 +126,7 @@ const AllPeopleTab = () => {
       }
     };
 
+  // Toggle the resource
   const handleCollapseToggle = (itemId: string) => {
     if (selectedResource.includes(itemId)) {
       setSelectedResource(selectedResource.filter((id) => id !== itemId));
@@ -143,28 +139,7 @@ const AllPeopleTab = () => {
     if (collapseButton[0]) collapseButton[0].click();
   };
 
-  const checkEventType = (value) => {
-    switch (value) {
-      case RESOURCE_EVENT_TYPE.PROJECT_BOOKING:
-        return {
-          icon: <BlueArrowIcon width={16} height={16} />,
-          color: "#3699FFCC",
-          background: "#EBF5FF",
-        };
-      case RESOURCE_EVENT_TYPE.TIME_OF_BOOKING:
-        return {
-          icon: <RedArrowIcon width={16} height={16} />,
-          color: "rgba(246, 78, 96, 0.80);",
-          background: "#FEEDED",
-        };
-      default:
-        return {
-          icon: <GrayArrowIcon width={16} height={16} />,
-          color: "#BABCC6",
-          background: "none",
-        };
-    }
-  };
+  // Convert resource bookings to event content for render
   const getEvents = () =>
     resources
       ?.map(
@@ -197,6 +172,7 @@ const AllPeopleTab = () => {
               eventId,
             };
           }),
+        // TODO: remove if the label has no info
         // .concat([
         //   {
         //     resourceId: id,
@@ -217,6 +193,7 @@ const AllPeopleTab = () => {
       )
       .flat();
 
+  // convert the resource to resource content for render
   const getResources = () =>
     resources?.map((resource) => ({
       ...resource,
@@ -290,6 +267,7 @@ const AllPeopleTab = () => {
           resources={mappedResources as ResourceInput}
           events={mappedEvents as ResourceInput}
           slotLabelContent={(arg) => {
+            // Content label for each slot on calendar
             const date = dayjs(arg?.date);
             const weekday = weekdays[date.day()];
             const isSelected = dayjs(date.format("YYYY-MM-DDDD")).isSame(
@@ -325,6 +303,7 @@ const AllPeopleTab = () => {
           }}
           resourceAreaHeaderClassNames="custom-header"
           resourceAreaHeaderContent={(resrouce) => {
+            // Header content on the resource table
             return (
               <Grid
                 container
@@ -366,266 +345,33 @@ const AllPeopleTab = () => {
             );
           }}
           resourceLabelContent={({ resource }) => {
-            const {
-              name,
-              company,
-              type,
-              fullname,
-              position,
-              eventType,
-              note,
-              bookings: parentBookings,
-            } = resource.extendedProps;
-
-            const isActive = includes(selectedResource, resource._resource.id);
-
             const parentResource = resources.find(
               (item) => item.id === resource._resource.parentId,
             );
             const bookings = parentResource
               ? [...parentResource?.bookings]
               : [];
-
             const isLastItem =
               bookings.pop()?.id === resource._resource.id ||
               bookings.length === 0;
 
-            if (type === "step") {
-              return (
-                <Grid
-                  container
-                  direction="column"
-                  gap={1}
-                  alignItems="flex-start"
-                  sx={{
-                    width: 1,
-                    py: 2,
-                    "&:hover": {
-                      background: "#E1F0FFB2",
-                    },
-                  }}
-                >
-                  <Grid
-                    item
-                    xs={2}
-                    sx={{
-                      px: 1,
-                      display: "flex",
-                      alignItems: "center",
-                      columnGap: 1,
-                    }}
-                  >
-                    <Avatar size={36} />
-                    <Stack direction={"column"}>
-                      <Typography
-                        sx={{ fontSize: 14, lineBreak: "auto", width: 1 }}
-                      >
-                        {eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING
-                          ? name
-                          : note}
-                      </Typography>
-                      <Typography
-                        sx={{ fontSize: 12, lineBreak: "auto", width: 1 }}
-                      >
-                        {position?.name}
-                      </Typography>
-                    </Stack>
-                  </Grid>
-                  {isLastItem && (
-                    <Button
-                      variant="text"
-                      startIcon={<PlusIcon />}
-                      sx={{
-                        color: "success.main",
-                      }}
-                      // startIcon={<AddIcon />}
-                      onClick={() => setIsOpenCreate(true)}
-                    >
-                      {resourceT("schedule.action.addBooking")}
-                    </Button>
-                  )}
-                  <Grid item xs={5} />
-                </Grid>
-              );
-            }
+            // Content on the resource as a label
             return (
-              <Grid container>
-                <Grid
-                  item
-                  xs={12}
-                  sx={{
-                    width: 1,
-                    py: 2,
-                    cursor: "pointer",
-                    "&:hover": {
-                      background: "#E1F0FFB2",
-                    },
-                  }}
-                  onClick={() => handleCollapseToggle(resource._resource.id)}
-                >
-                  <Grid
-                    container
-                    gap={{
-                      xs: 3,
-                      md: 1,
-                    }}
-                  >
-                    <Grid
-                      item
-                      xs={3}
-                      md={5}
-                      sx={{
-                        px: 1,
-                        display: "flex",
-                        alignItems: "center",
-                        columnGap: 1,
-                      }}
-                    >
-                      <Avatar size={32} />
-                      <Box>
-                        <Typography sx={{ fontSize: 14 }}>
-                          {fullname}
-                        </Typography>
-                        <Typography sx={{ color: "#666666", fontSize: 14 }}>
-                          {company}
-                        </Typography>
-                      </Box>
-                      <ArrowDownIcon
-                        sx={{
-                          width: "20px",
-                          ml: 2,
-                          transform: isActive
-                            ? "rotate(-90deg)"
-                            : "rotate(90deg)",
-                          transitionDelay: "all ease 0.25s",
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={1} md={2}>
-                      <Typography
-                        sx={{
-                          ...textHeadStyle,
-                          textAlign: "center",
-                        }}
-                      >
-                        160 h
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={1} md={2}>
-                      <Typography
-                        sx={{
-                          ...textHeadStyle,
-                          textAlign: "center",
-                        }}
-                      >
-                        {formatNumber(totalhour, { numberOfFixed: 2 })}h
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={1} md={2}>
-                      <Typography
-                        sx={{
-                          ...textHeadStyle,
-                          textAlign: "center",
-                        }}
-                      >
-                        0 %
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  {parentBookings?.length === 0 && (
-                    <Button
-                      variant="text"
-                      startIcon={<PlusIcon />}
-                      sx={{
-                        color: "success.main",
-                      }}
-                      // startIcon={<AddIcon />}
-                      onClick={() => setIsOpenCreate(true)}
-                    >
-                      {resourceT("schedule.action.addBooking")}
-                    </Button>
-                  )}
-                </Grid>
-              </Grid>
+              <ResourceLabel
+                handleCollapseToggle={handleCollapseToggle}
+                resource={resource}
+                resources={resources}
+                isLastItem={isLastItem}
+                selectedResource={selectedResource}
+                totalhour={totalhour}
+                setIsOpenCreate={setIsOpenCreate}
+              />
             );
           }}
           eventContent={({ event }) => {
-            const { eventType, allocation_type, allocation, eventId } =
-              event.extendedProps;
-
-            const checkedEventType = checkEventType(eventType);
-            const day = dayjs(event.end).diff(dayjs(event.start), "days");
-
-            let unit;
-            switch (allocation_type) {
-              case RESOURCE_ALLOCATION_UNIT.HOUR_PER_DAY:
-                unit = mappedTimeSymbol[RESOURCE_ALLOCATION_TYPE.HOUR_PER_DAY];
-                break;
-              case RESOURCE_ALLOCATION_UNIT.HOUR:
-                unit = " " + mappedTimeSymbol[RESOURCE_ALLOCATION_TYPE.HOUR];
-                break;
-              default:
-                unit = mappedTimeSymbol[RESOURCE_ALLOCATION_TYPE.PERCENTAGE];
-                break;
-            }
+            // Content on calendar
             return (
-              <Stack
-                className="fc-event-title fc-sticky"
-                direction="row"
-                sx={{
-                  border: `1px solid ${checkedEventType.color}`,
-                  display: "flex!important",
-                  width: 1,
-                  borderRadius: 1,
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  background: checkedEventType.background,
-                }}
-                onClick={() =>
-                  setIsOpenEdit({
-                    isOpen: true,
-                    isProject:
-                      eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
-                    bookingId: eventId,
-                  })
-                }
-              >
-                {checkedEventType.icon}
-                <Tooltip
-                  title={resourceT("schedule.time.eventTime", {
-                    day,
-                    allocation,
-                    unit,
-                  })}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: 16,
-                      fontWeight: 400,
-                      color: "#BABCC6",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      px: 1,
-                      mr: "auto",
-                    }}
-                  >
-                    {resourceT("schedule.time.eventTime", {
-                      day,
-                      allocation,
-                      unit,
-                    })}
-                  </Typography>
-                </Tooltip>
-
-                <Stack
-                  sx={{
-                    transform: "rotate(180deg)",
-                  }}
-                >
-                  {checkedEventType.icon}
-                </Stack>
-              </Stack>
+              <EventContents event={event} setIsOpenEdit={setIsOpenEdit} />
             );
           }}
           eventResize={handleEventChange(calendarRef, true)}
@@ -636,6 +382,8 @@ const AllPeopleTab = () => {
         onClose={() => setIsOpenCreate(false)}
         open={isOpenCreate}
       />
+
+      {/* TODO: wait for confirm the edit function */}
       {/* <EditBooking
         isProject={isOpenEdit.isProject}
         bookingId={isOpenEdit.bookingId}
