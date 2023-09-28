@@ -1,51 +1,45 @@
 import Box from "@mui/material/Box";
-import { IChatItemInfo, STEP } from "store/chat/type";
 import { useChat } from "store/chat/selectors";
-import { useMemo } from "react";
-import Forward from "icons/Forward";
 import ForwardHeader from "./ForwarHeader";
+import ChatForward from "components/sn-chat/ChatForward";
+import { useState } from "react";
 
-interface ForwardLayoutProp {
-  children: React.ReactNode;
-  viewStep?: STEP;
-}
-const ForwardLayout = ({ children, viewStep }: ForwardLayoutProp) => {
-  const { roomId, convention, prevStep, onSetStep, currStep } = useChat();
+const ForwardLayout = () => {
+  const { onSetDrawerType } = useChat();
+  const [param, setParam] = useState({
+    text: '',
+  })
+  const [conversations, setConversation] = useState([]);
+  // handle get all conversation
+  // const response = await client.post("getAllConversations", paramReq, {
+  //   baseURL: CHAT_API_URL,
+  // }); 
+  //setConversation(response.data.data);
 
-  const accountInfo = useMemo(() => {
-    const account = convention?.find(
-      (item) => item._id === roomId,
-    ) as IChatItemInfo & { stateOnPage: string };
+  // const [textSearch, setTextSearch] = useState("");
 
-    return { ...account };
-  }, [convention, roomId]);
+  const onSearchTxt = (value) => {
+    console.log(value);
+    
+  }
+
+  // useEffect(() => {
+  // handle get all conversation
+
+  // }, [ param]);
+
+
 
   return (
     <>
-      <ForwardHeader
-        accountInfo={accountInfo}
-        onPrevious={() => {
-          switch (currStep) {
-            case STEP.CHAT_GROUP:
-              onSetStep(STEP.CONVENTION);
-              break;
-            case STEP.CHAT_DETAIL_GROUP:
-              onSetStep(STEP.CHAT_GROUP);
-              break;
-            default:
-              onSetStep(prevStep);
-              break;
-          }
-        }}
-        viewStep={viewStep}
-      />
+      <ForwardHeader onSearchTxt={onSearchTxt} onPrevious={() => onSetDrawerType('info')}  />
       <Box
         display="flex"
         flexDirection="column"
         overflow="hidden"
         height="calc(600px - 77px)"
       >
-        {children}
+        <ChatForward conversations={conversations} callbackCancel={() => onSetDrawerType("info")} />
       </Box>
     </>
   );

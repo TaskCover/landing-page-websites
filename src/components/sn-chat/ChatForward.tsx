@@ -10,19 +10,15 @@ import { useEmployeesOfCompany } from "store/manager/selectors";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { ChangeEvent, FC, useEffect, useMemo, useState } from "react";
 import { Employee } from "store/company/reducer";
-import { IChatItemInfo, STEP } from "store/chat/type";
+import { STEP } from "store/chat/type";
 import useTheme from "hooks/useTheme";
 import AttachmentContent from "./components/conversation/AttachmentContent";
-import CloseIcon from "icons/CloseIcon";
-import SearchIcon from "icons/SearchIcon";
-import AccountInfoHeader from "./components/AccountInfoHeader";
-
 interface Props {
   callbackCancel?: () => void;
-  viewStep?: STEP;
+  conversations?: any;
 }
 
-const ChatForward: FC<Props> = ({ callbackCancel, viewStep }) => {
+const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
   const [employeeIdSelected, setEmployeeIdSelected] = useState<any>({});
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
@@ -30,7 +26,6 @@ const ChatForward: FC<Props> = ({ callbackCancel, viewStep }) => {
     isFetching,
     error,
     onGetEmployees,
-    onApproveOrReject: onApproveOrRejectAction,
   } = useEmployeesOfCompany();
 
   const { user } = useAuth();
@@ -140,7 +135,7 @@ const ChatForward: FC<Props> = ({ callbackCancel, viewStep }) => {
               ))
             ) : (
               <>
-                {convention
+                {(isChatDesktop ? conversations : convention)
                   ?.filter((item) => item?._id !== dataTransfer?._id)
                   ?.filter((item) => item?.name)
                   ?.map((item, index) => (

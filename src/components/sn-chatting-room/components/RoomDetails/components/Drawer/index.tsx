@@ -37,9 +37,7 @@ const DrawerInfoChat = () => {
       ),
       account: <AccountInfo />,
       forward: (
-        <ForwardLayout viewStep={STEP.CHAT_FORWARD}>
-          <ChatForward callbackCancel={() => onSetDrawerType("info")} />
-        </ForwardLayout>
+        <ForwardLayout />
       ),
     }),
 
