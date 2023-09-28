@@ -231,6 +231,12 @@ export const useMemberOptions = () => {
   const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
   const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
 
+    const onGetOptions = useCallback(
+    async (id: string, queries: BaseQueries) => {
+      await dispatch(getMembersOfProject({ ...queries, id, concat: true }));
+    },
+    [dispatch],
+  );
 
   return {
     options,

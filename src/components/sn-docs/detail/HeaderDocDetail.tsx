@@ -13,16 +13,20 @@ import ShareIcon from "icons/ShareIcon";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import ModalShare from "./LeftSlide/modal/ModalShare";
+import DrawCommet from "./DrawCommet";
 
 const HeaderDocDetail = () => {
   const [openShare, setOpenShare] = useState(false);
+  const [openComment, setOpenComment] = useState(false);
   const router = useRouter();
+
   return (
     <>
       <ModalShare
         setOpenShare={setOpenShare}
         openShare={openShare}
       ></ModalShare>
+      <DrawCommet open={openComment} setOpen={setOpenComment}></DrawCommet>
       <Stack
         justifyContent="space-between"
         borderBottom="1px solid"
@@ -115,7 +119,7 @@ const HeaderDocDetail = () => {
                 </Box>
               </Tooltip>
               <Tooltip title={"Bình luận"}>
-                <Box sx={styleButton}>
+                <Box onClick={() => setOpenComment(true)} sx={styleButton}>
                   <CommentIcon></CommentIcon>
                 </Box>
               </Tooltip>

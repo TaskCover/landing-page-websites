@@ -25,6 +25,7 @@ interface ModalShareProps {
 interface initType {
   people: string | number | null | undefined;
   access: number;
+  email: string | number | null | undefined;
 }
 
 const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
@@ -45,6 +46,11 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
   const projectT = useTranslations(NS_PROJECT);
   const [search, setSearch] = useState("");
   const { initQuery, isReady, query } = useQueryParams();
+  const [queries, setQueries] = useState({});
+
+  const onChangeQueries = (name: string, value: never) => {
+    setQueries((prevQueries) => ({ ...prevQueries, [name]: value }));
+  };
 
   const onSubmit = async (values) => {
     try {
@@ -53,8 +59,9 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
   };
 
   const init: initType = {
-    people: "",
-    access: 0,
+    people: "all",
+    access: 1,
+    email: "",
   };
 
   const formik = useFormik({
@@ -70,19 +77,49 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
     subText: e.email,
   }));
 
+  console.log(formik.values);
+
+  const option2 = [
+    {
+      value: "all",
+      label: "All employee",
+    },
+    ...options,
+  ];
+  const optionAccess = [
+    {
+      value: 1,
+      label: "Full access",
+    },
+    {
+      value: 2,
+      label: "Can view",
+    },
+    {
+      value: 3,
+      label: "Can edit",
+    },
+    {
+      value: 4,
+      label: "Can comment",
+    },
+  ];
+
   useEffect(() => {
     if (!isReady) return;
     onGetEmployees({ ...DEFAULT_PAGING, ...initQuery });
   }, [initQuery, isReady, onGetEmployees]);
 
-  console.log(options);
+  const onChangeSearch = (name: string, value?: string | number) => {
+    onGetEmployees({ pageIndex: 1, pageSize: 20, [name]: value ?? "" });
+  };
 
   return (
     <FormLayout
       open={openShare}
       onClose={() => setOpenShare(false)}
       sx={{
-        minWidth: { xs: "calc(100vw - 24px)", lg: 500 },
+        minWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
@@ -90,13 +127,13 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
     >
       <Stack direction={{ sm: "row" }} spacing={2}>
         <Select
-          options={options as unknown as Option[]}
+          options={option2 as unknown as Option[]}
           title={"People"}
           hasAvatar
           searchProps={{
             value: "",
             placeholder: commonT("searchBy", { name: "email" }),
-            name: "members.email",
+            name: "email",
           }}
           name="people"
           onChange={formik.handleChange}
@@ -104,8 +141,18 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
           value={formik.values?.people}
           rootSx={sxConfig.input}
           fullWidth
-          //   onChangeSearch={onChangeSearch}
+          onChangeSearch={onChangeSearch}
           //   onEndReached={onEndReached}
+        />
+        <Select
+          options={optionAccess}
+          title={"Access"}
+          name="access"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values?.access}
+          rootSx={sxConfig.input}
+          fullWidth
         />
       </Stack>
     </FormLayout>
