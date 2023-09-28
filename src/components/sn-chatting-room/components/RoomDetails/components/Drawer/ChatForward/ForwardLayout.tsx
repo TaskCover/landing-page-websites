@@ -2,44 +2,64 @@ import Box from "@mui/material/Box";
 import { useChat } from "store/chat/selectors";
 import ForwardHeader from "./ForwarHeader";
 import ChatForward from "components/sn-chat/ChatForward";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { ChatConventionItemRequest } from "store/chat/type";
+import { client } from "api/client";
+import { CHAT_API_URL } from "constant/index";
+import { useAuth } from "store/app/selectors";
 
 const ForwardLayout = () => {
   const { onSetDrawerType } = useChat();
   const [param, setParam] = useState({
-    text: '',
-  })
+    text: "",
+  });
   const [conversations, setConversation] = useState([]);
-  // handle get all conversation
-  // const response = await client.post("getAllConversations", paramReq, {
-  //   baseURL: CHAT_API_URL,
-  // }); 
-  //setConversation(response.data.data);
-
-  // const [textSearch, setTextSearch] = useState("");
+  const { user } = useAuth();
 
   const onSearchTxt = (value) => {
-    console.log(value);
-    
-  }
+    setParam({
+      text: value,
+    });
+  };
 
-  // useEffect(() => {
-  // handle get all conversation
+  const handleGetAllConversation = async (
+    paramReq: ChatConventionItemRequest,
+  ) => {
+    const response = await client.post("getAllConversations", paramReq, {
+      baseURL: CHAT_API_URL,
+    });
+    setConversation(response.data);
+  };
 
-  // }, [ param]);
-
-
+  useEffect(() => {
+    const authToken = user?.["authToken"] ?? "";
+    const userId = user?.["id_rocket"] ?? "";
+    handleGetAllConversation({
+      type: "a",
+      text: param.text ?? "",
+      offset: 0,
+      count: 30,
+      authToken,
+      userId,
+    });
+  }, [param, user]);
 
   return (
     <>
-      <ForwardHeader onSearchTxt={onSearchTxt} onPrevious={() => onSetDrawerType('info')}  />
+      <ForwardHeader
+        onSearchTxt={onSearchTxt}
+        onPrevious={() => onSetDrawerType("info")}
+      />
       <Box
         display="flex"
         flexDirection="column"
         overflow="hidden"
         height="calc(600px - 77px)"
       >
-        <ChatForward conversations={conversations} callbackCancel={() => onSetDrawerType("info")} />
+        <ChatForward
+          conversations={conversations}
+          callbackCancel={() => onSetDrawerType("info")}
+        />
       </Box>
     </>
   );
