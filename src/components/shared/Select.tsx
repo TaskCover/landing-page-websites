@@ -66,7 +66,7 @@ const Select = (props: SelectProps) => {
   const [isShow, onOpen, onClose] = useToggle(false);
 
   const hasValue = useMemo(
-    () => options.some((option) => option.value === value),
+    () => options?.some((option) => option.value === value),
     [options, value],
   );
 
@@ -151,7 +151,7 @@ const Select = (props: SelectProps) => {
           />
         </ListSubheader>
       )}
-      {optionList.map((option) => (
+      {optionList?.map((option) => (
         <MenuItem
           sx={{
             ...defaultSx.item,

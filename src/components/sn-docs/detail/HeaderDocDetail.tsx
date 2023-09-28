@@ -11,12 +11,18 @@ import MoreIcon from "icons/MoreIcon";
 import OpenSidebarIcon from "icons/OpenSidebarIcon";
 import ShareIcon from "icons/ShareIcon";
 import React, { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import ModalShare from "./LeftSlide/modal/ModalShare";
 
 const HeaderDocDetail = () => {
+  const [openShare, setOpenShare] = useState(false);
   const router = useRouter();
   return (
     <>
+      <ModalShare
+        setOpenShare={setOpenShare}
+        openShare={openShare}
+      ></ModalShare>
       <Stack
         justifyContent="space-between"
         borderBottom="1px solid"
@@ -33,11 +39,20 @@ const HeaderDocDetail = () => {
               sm: "none",
             },
             alignItems: "center",
+            cursor: "pointer",
           }}
           onClick={() => router.back()}
         >
           <BackIcon></BackIcon>
-          <Text variant={{ xs: "h3", sm: "h4" }}>{"Project abc"}</Text>
+          <Text
+            onClick={() => router.back()}
+            sx={{
+              cursor: "pointer",
+            }}
+            variant={{ xs: "h3", sm: "h4" }}
+          >
+            {"Project abc"}
+          </Text>
         </Box>
         <Box
           sx={{
@@ -53,7 +68,9 @@ const HeaderDocDetail = () => {
                 sm: "flex",
               },
               alignItems: "center",
+              cursor: "pointer",
             }}
+            onClick={() => router.back()}
           >
             <BackIcon></BackIcon>
             <Text variant={{ xs: "h4", sm: "h5" }}>{"Project abc"}</Text>
@@ -88,7 +105,7 @@ const HeaderDocDetail = () => {
               }}
             >
               <Tooltip title={"Chia sẻ"}>
-                <Box sx={styleButton}>
+                <Box onClick={() => setOpenShare(true)} sx={styleButton}>
                   <ShareIcon></ShareIcon>
                 </Box>
               </Tooltip>
