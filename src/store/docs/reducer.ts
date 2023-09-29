@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ItemDocsProps } from "components/sn-docs/detail/LeftSlide/ItemDocs";
 import { DataStatus } from "constant/enums";
 import { DEFAULT_PAGING } from "constant/index";
 import { Paging } from "constant/types";
 import { Position } from "store/company/reducer";
+import { addPage } from "./actions";
 
 export interface IDocs {
   docs: any[];
@@ -50,7 +51,7 @@ const initialState: IDocs = {
       },
       children: [
         {
-          id: 1,
+          id: '1',
           title: "page 1",
           content: {
             title: "",
@@ -58,7 +59,7 @@ const initialState: IDocs = {
           },
           children: [
             {
-              id: 1,
+              id: '1.1',
               title: "page 1.1",
               content: {
                 title: "",
@@ -69,60 +70,14 @@ const initialState: IDocs = {
           ],
         },
         {
-          id: 2,
+          id: '2',
           title: "page 2",
           content: {
             title: "",
             content: "",
           },
           children: [],
-        },
-        {
-          id: 2,
-          title: "page 2",
-          content: {
-            title: "",
-            content: "",
-          },
-          children: [],
-        },
-        {
-          id: 2,
-          title: "page 2",
-          content: {
-            title: "",
-            content: "",
-          },
-          children: [],
-        },
-        {
-          id: 2,
-          title: "page 2",
-          content: {
-            title: "",
-            content: "",
-          },
-          children: [],
-        },
-        {
-          id: 2,
-          title: "page 2",
-          content: {
-            title: "",
-            content: "",
-          },
-          children: [],
-        },
-        {
-          id: 2,
-          title: "page 2",
-          content: {
-            title: "",
-            content: "",
-          },
-          children: [],
-        },
-      ],
+        }],
     }
   }
 }
@@ -132,9 +87,44 @@ const docSlice = createSlice({
     initialState,
     reducers: {
       createPage(state , actions) {
-        state.docDetails.data = actions.payload
+        const { parentId, child } = actions.payload;
+        function addChildToParent(parent, childToAdd) {
+          if (parent.id === parentId) {
+            parent.children.push(childToAdd);
+          } else if (parent.children) {
+            parent.children.forEach((child) => {
+              addChildToParent(child, childToAdd);
+            });
+          }
+        }
+
+        addChildToParent(state, child);
       }
     },
+    extraReducers: (builder) => {
+      builder.addCase(addChild.fulfilled, (state, action) => {
+        const { parentId, child } = action.payload;
+        
+        function addChildToParent(parent, childToAdd) {
+          if (parent.id === parentId) {
+            parent.children.push(childToAdd);
+          } else if (parent.children) {
+            parent.children.forEach((child) => {
+              addChildToParent(child, childToAdd);
+            });
+          }
+        }
+        
+        addChildToParent(state, child);
+      });
+    },
 });
-  
-  export default docSlice.reducer;
+export const addChild = createAsyncThunk('data/addChild', async ({ parentId, child } : {parentId : string, child : any }) => {
+
+  return { parentId, child };
+});
+
+
+export const {createPage} = docSlice.actions
+
+export default docSlice.reducer;

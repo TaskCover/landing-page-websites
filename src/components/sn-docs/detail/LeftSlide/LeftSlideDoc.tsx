@@ -9,6 +9,7 @@ import ItemDocs from "./ItemDocs";
 import { Text } from "components/shared";
 import { useAppSelector } from "store/hooks";
 import ArrowRight from "icons/ArrowRight";
+import { uuid } from "utils/index";
 
 export interface LeftSlideDocProps {
   open: boolean;
@@ -17,10 +18,46 @@ export interface LeftSlideDocProps {
 
 const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
   const dataFake = useAppSelector((state) => state.doc.docDetails.data);
+
+  const [data, setData] = useState(dataFake);
+
   const docsT = useTranslations(NS_DOCS);
   const [search, setSearch] = useState("");
   const onChangeQueries = (name: string, value: any) => {
     setSearch(value);
+  };
+
+  const addChildToData = (parent, child) => {
+    const newData = { ...data };
+
+    const addChildToParent = (parentNode) => {
+      if (parentNode.id === parent) {
+        parentNode.children.push(child);
+      } else {
+        parentNode.children.forEach((child) => {
+          addChildToParent(child);
+        });
+      }
+    };
+
+    addChildToParent(newData);
+    setData(newData);
+  };
+
+  // Hàm xử lý khi nhấn nút "Thêm mục con"
+  const handleAddChild = (parent) => {
+    const id = uuid();
+    const newChild = {
+      id: id,
+      title: "",
+      content: {
+        title: "",
+        content: "",
+      },
+      children: [],
+    };
+
+    addChildToData(parent, newChild);
   };
 
   return (
@@ -29,7 +66,7 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
         position: "relative",
         width: {
           sm: "30%",
-          xs: open ? "90%" : "0",
+          xs: open ? "236px" : "0",
         },
       }}
     >
@@ -41,6 +78,7 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
             sm: "unset",
             xs: "white",
           },
+          width: "100%",
           zIndex: "39",
           display: "block",
         }}
@@ -71,6 +109,10 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
               sm: "block",
               xs: open ? "block" : "none",
             },
+            width: {
+              sm: "auto",
+              xs: open ? "200px" : "0",
+            },
           }}
         >
           <Search
@@ -80,6 +122,7 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
             value={search}
             sx={{
               width: "100%",
+              backgroundColor: "white",
             }}
           />
           <Box>
@@ -92,7 +135,7 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
             >
               Pages
             </Text>
-            <ItemDocs isFirst data={dataFake}></ItemDocs>
+            <ItemDocs onClick={handleAddChild} isFirst data={data}></ItemDocs>
           </Box>
         </Box>
       </Box>

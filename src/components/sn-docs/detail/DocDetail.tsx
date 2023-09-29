@@ -2,14 +2,27 @@
 
 import React, { useState } from "react";
 import LeftSlideDoc from "./LeftSlide/LeftSlideDoc";
-import { Box, Stack } from "@mui/material";
+import { Box } from "@mui/material";
 import EditDocs from "./EditDocs";
 
-const DocDetail = () => {
+export interface IDocDetail {
+  openComment: boolean;
+  openSlider: boolean;
+  setOpenSlider: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenComment: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const DocDetail = ({
+  openComment,
+  setOpenComment,
+  openSlider,
+  setOpenSlider,
+}: IDocDetail) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Box
+      position={"relative"}
       sx={{
         display: "flex",
         gap: { xs: open ? 3 : 1, md: 3 },
@@ -19,7 +32,13 @@ const DocDetail = () => {
       pb={{ xs: 1.5, md: 1, lg: 1.5 }}
     >
       <LeftSlideDoc open={open} setOpen={setOpen}></LeftSlideDoc>
-      <EditDocs open={open}></EditDocs>
+      <EditDocs
+        openSlider={openSlider}
+        setOpenSlider={setOpenSlider}
+        setOpenComment={setOpenComment}
+        openComment={openComment}
+        open={open}
+      ></EditDocs>
     </Box>
   );
 };

@@ -1,29 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable react/no-children-prop */
 "use client";
 import { Box } from "@mui/material";
 import { Text } from "components/shared";
 import DocsItem from "icons/DocsItem";
 import IconAdd from "icons/IconAdd";
-import MoreIcon from "icons/MoreIcon";
-import React, { memo, useCallback } from "react";
+import React, { memo } from "react";
 import MorePoper from "./MorePoper";
-import ConfirmDialog from "components/ConfirmDialog";
 
 export interface ItemDocsProps {
+  onClick?: any;
   title: string;
   content?: {
     title: string;
     content: string;
   };
-  id?: number;
+  id?: string;
   children: ItemDocsProps[];
 }
 interface ItemDocs {
   isFirst?: boolean;
   data: ItemDocsProps;
+  onClick: any;
 }
 
-const ItemDoc = ({ title }: ItemDocsProps) => {
+const ItemDoc = ({ title, id, onClick }: ItemDocsProps) => {
   return (
     <>
       <Box
@@ -33,6 +35,11 @@ const ItemDoc = ({ title }: ItemDocsProps) => {
           alignItems: "center",
           justifyContent: "space-between",
           padding: 1,
+          ":hover": {
+            " .btn-more": {
+              visibility: "visible",
+            },
+          },
         }}
       >
         <Box
@@ -43,12 +50,14 @@ const ItemDoc = ({ title }: ItemDocsProps) => {
           }}
         >
           <DocsItem></DocsItem>
-          <Text fontWeight={600} fontSize={14}>
+          <Text sx={{ flex: 1 }} fontWeight={600} fontSize={14}>
             {title}
           </Text>
         </Box>
         <Box
+          className="btn-more"
           sx={{
+            visibility: "hidden",
             display: "flex",
             alignItems: "center",
             gap: 1.4,
@@ -56,6 +65,7 @@ const ItemDoc = ({ title }: ItemDocsProps) => {
         >
           <MorePoper></MorePoper>
           <Box
+            onClick={() => onClick(id)}
             sx={{
               cursor: "pointer",
             }}
@@ -68,18 +78,25 @@ const ItemDoc = ({ title }: ItemDocsProps) => {
   );
 };
 
-const ItemDocs = ({ data, isFirst }: ItemDocs) => {
+const ItemDocs = ({ data, isFirst, onClick }: ItemDocs) => {
   return (
     <>
-      <ItemDoc children={data.children} title={data.title}></ItemDoc>
+      <ItemDoc
+        onClick={onClick}
+        children={data.children}
+        title={data.title}
+      ></ItemDoc>
       {data.children && (
         <Box
           sx={{
-            marginLeft: "24px",
+            marginLeft: {
+              md: "24px",
+              xs: "16px",
+            },
           }}
         >
           {data?.children?.map((e: ItemDocsProps) => {
-            return <ItemDocs key={e.id} data={e}></ItemDocs>;
+            return <ItemDocs onClick={onClick} key={e.id} data={e}></ItemDocs>;
           })}
         </Box>
       )}
