@@ -1,3 +1,4 @@
+"use client";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Stack, Typography, Tab, Grid } from "@mui/material";
 import { LocalizationProvider, viVN } from "@mui/x-date-pickers";

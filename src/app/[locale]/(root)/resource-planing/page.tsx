@@ -1,4 +1,3 @@
-"use client";
 import Wrapper from "components/Wrapper";
 import ResourcePlanning from "components/sn-resource-planing";
 
