@@ -1,9 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Typography, Collapse, Stack, useTheme } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import TextFieldSelect, {
-  IOptionStructure,
-} from "components/sn-time-tracking/Component/Select";
 import Textarea from "components/sn-time-tracking/Component/Textarea";
 import React, { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -19,8 +16,11 @@ import { useBookingAll } from "store/resourcePlanning/selector";
 import dayjs from "dayjs";
 import { BookingData } from "store/resourcePlanning/action";
 import { RESOURCE_ALLOCATION_TYPE, RESOURCE_EVENT_TYPE } from "constant/enums";
-import { schemaProject } from "../CreateBooking/Schemas";
 import { IBookingItem } from "store/resourcePlanning/reducer";
+import TextFieldSelect, {
+  IOptionStructure,
+} from "components/shared/TextFieldSelect";
+import { useGetSchemas } from "../Schemas";
 
 interface IProps {
   open: boolean;
@@ -33,8 +33,9 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
 
   const { palette } = useTheme();
-  const { positionOptions, projectOptions } = useGetOptions();
+  const { positionOptions, projectOptions, timeOptions } = useGetOptions();
   const { bookingAll, updateBooking } = useBookingAll();
+  const { schemaProject } = useGetSchemas();
 
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
@@ -145,8 +146,10 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
               }}
               label={resourceT("form.dateRange")}
               placeholder=""
-              error={!!errorsProject.dateRange?.message}
-              helperText={errorsProject.dateRange?.message}
+              errorMessage={
+                errorsProject.dateRange?.startDate?.message ||
+                errorsProject.dateRange?.endDate?.message
+              }
             />
           )}
         />
@@ -194,20 +197,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                   field.onChange(event.target.value);
                 }}
                 placeholder=""
-                options={[
-                  {
-                    label: `h/${commonT("day")}`,
-                    value: RESOURCE_ALLOCATION_TYPE.HOUR_PER_DAY,
-                  },
-                  {
-                    label: "%",
-                    value: RESOURCE_ALLOCATION_TYPE.PERCENTAGE,
-                  },
-                  {
-                    label: commonT("hour"),
-                    value: RESOURCE_ALLOCATION_TYPE.HOUR,
-                  },
-                ]}
+                options={timeOptions}
                 onFocus={() => setIsFocusAllocation(true)}
                 onBlur={() => setIsFocusAllocation(false)}
               />

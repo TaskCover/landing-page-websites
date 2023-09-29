@@ -1,8 +1,11 @@
-import { IOptionStructure } from "components/sn-time-tracking/Component/Select";
 import { useEffect, useMemo, useState } from "react";
 import { usePositions } from "store/company/selectors";
 import { useProjects } from "store/project/selectors";
 import _ from "lodash";
+import { IOptionStructure } from "components/shared/TextFieldSelect";
+import { RESOURCE_ALLOCATION_TYPE } from "constant/enums";
+import { NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 
 export const useFetchOptions = () => {
   const { onGetProjects } = useProjects();
@@ -19,9 +22,8 @@ const useGetOptions = () => {
   //   [],
   // );
   const { items: projects } = useProjects();
-
   const { items: positions } = usePositions();
-
+  const commonT = useTranslations(NS_COMMON);
   const projectOptions: IOptionStructure[] = useMemo(() => {
     if (!_.isEmpty(projects)) {
       const resolveProjects = _.map(projects, (project) => {
@@ -48,8 +50,26 @@ const useGetOptions = () => {
     return [];
   }, [JSON.stringify(positions)]);
 
+  const timeOptions = useMemo(
+    () => [
+      {
+        label: `h/${commonT("day")}`,
+        value: RESOURCE_ALLOCATION_TYPE.HOUR_PER_DAY,
+      },
+      {
+        label: "%",
+        value: RESOURCE_ALLOCATION_TYPE.PERCENTAGE,
+      },
+      {
+        label: commonT("hour"),
+        value: RESOURCE_ALLOCATION_TYPE.HOUR,
+      },
+    ],
+    [],
+  );
   return {
     projectOptions,
+    timeOptions,
     positionOptions,
   };
 };

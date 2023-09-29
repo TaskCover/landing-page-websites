@@ -69,6 +69,7 @@ export const ResourcePlanningLang: ResourceDictionary = {
       sick: "Sick leave",
       other: "Not available",
     },
+    timeOffCategory: "Time off category",
     createSuccess: "Create booking successfully",
     createFailed: "Create booking failed",
     editBooking: "Edit booking",

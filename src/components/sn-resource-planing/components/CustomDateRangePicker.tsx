@@ -13,13 +13,12 @@ import _ from "lodash";
 import { DateRangePicker, DateRange } from "mui-daterange-picker";
 import CalendarIcon from "icons/CalendarIcon";
 import useTheme from "hooks/useTheme";
-import DialogLayout from "components/DialogLayout";
 
 interface ISectionProps {
   value?: DateRange | null;
   label?: string;
   onChange?(value?): void;
-  error?: boolean;
+  errorMessage: string | undefined;
   required?: boolean;
   disabled?: boolean;
   placeholder?: string;
@@ -34,7 +33,7 @@ const CustomDateRangePicker: React.FC<TextFieldInputProps> = ({
   required,
   disabled,
   fullWidth,
-  error,
+  errorMessage,
   helperText,
   sx,
 }) => {
@@ -81,7 +80,7 @@ const CustomDateRangePicker: React.FC<TextFieldInputProps> = ({
             transition: "all ease 0.25s",
             borderWidth: "1px",
             borderStyle: "solid",
-            borderColor: error
+            borderColor: errorMessage
               ? "rgba(246, 78, 96, 1)"
               : isFocus
               ? "rgba(54, 153, 255, 0.5)"
@@ -145,6 +144,15 @@ const CustomDateRangePicker: React.FC<TextFieldInputProps> = ({
           >
             {helperText}
           </FormHelperText>
+        ) : null}
+        {errorMessage ? (
+          <Typography
+            fontSize={10}
+            sx={{ pl: 2, pt: 1 }}
+            color="rgba(246, 78, 96, 1)"
+          >
+            {errorMessage}
+          </Typography>
         ) : null}
       </Box>
       <Dialog

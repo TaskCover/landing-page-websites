@@ -53,6 +53,7 @@ export const ResourcePlanning: ResourceDictionary = {
     title: "Quản lý lịch trình",
     selectTimeOffCategory: "Chọn loại nghỉ phép",
     project: "Dự án",
+    timeOffCategory: "Loại nghỉ phép",
     timeoff: "Nghỉ phép",
     detail: "Xem chi tiết lịch trình",
     role: "Vai trò",

@@ -1,7 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import { schemaTimeOff } from "../CreateBooking/Schemas";
-import TextFieldSelect from "components/sn-time-tracking/Component/Select";
 import CustomDateRangePicker from "components/sn-resource-planing/components/CustomDateRangePicker";
 import TextFieldInput from "components/shared/TextFieldInput";
 import { useEffect, useMemo, useState } from "react";
@@ -22,6 +20,8 @@ import {
 import dayjs from "dayjs";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 import { IBookingItem } from "store/resourcePlanning/reducer";
+import TextFieldSelect from "components/shared/TextFieldSelect";
+import { useGetSchemas } from "../Schemas";
 interface IProps {
   open: boolean;
   onClose(): void;
@@ -37,6 +37,7 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
   const { timeOffOptions } = useGetTimeOffOptions();
   const { positionOptions, projectOptions } = useGetOptions();
   const { bookingAll } = useBookingAll();
+  const { schemaTimeOff } = useGetSchemas();
 
   const bookingEvent: IBookingItem = useMemo(() => {
     const booking =
@@ -52,22 +53,12 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
   const {
     control: controlTimeOff,
     handleSubmit: handleSubmitTimeOff,
-    // setValue: setValueTimeOff,
-    // clearErrors: clearErrorsTimeOff,
     watch: watchTimeOff,
     reset: resetTimeOff,
     formState: { errors: errorsTimeOff },
   } = useForm({
     resolver: yupResolver(schemaTimeOff),
     defaultValues: {
-      // categoryTimeOff: "",
-      // dateRange: {
-      //   startDate: undefined,
-      //   endDate: undefined,
-      // },
-      // allocation: "",
-      // allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
-      // note: "",
       categoryTimeOff: bookingEvent?.time_off_type || "",
       dateRange: {
         startDate: bookingEvent?.start_date
@@ -136,8 +127,10 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
                 }}
                 label={resourceT("form.dateRange")}
                 placeholder=""
-                error={!!errorsTimeOff.dateRange?.message}
-                helperText={errorsTimeOff.dateRange?.message}
+                errorMessage={
+                  errorsTimeOff.dateRange?.startDate?.message ||
+                  errorsTimeOff.dateRange?.endDate?.message
+                }
               />
             )}
           />

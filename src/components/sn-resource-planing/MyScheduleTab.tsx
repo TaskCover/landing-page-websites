@@ -9,11 +9,8 @@ import {
 } from "./hepler";
 import dayjs from "dayjs";
 import { isEmpty, includes } from "lodash";
-import FilterHeader from "./FilterHeader";
 import { Box } from "@mui/system";
-import { Button, Tooltip } from "components/shared";
 import { Grid, Stack, Typography } from "@mui/material";
-import Avatar from "components/Avatar";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import interactionPlugin from "@fullcalendar/interaction";
 import { ResourceInput } from "@fullcalendar/resource";
@@ -21,7 +18,7 @@ import BlueArrowIcon from "icons/BlueArrowIcon";
 import RedArrowIcon from "icons/RedArrowIcon";
 import GrayArrowIcon from "icons/GrayArrowIcon";
 import PlusIcon from "icons/PlusIcon";
-import TimeHeader from "./TimeHeader";
+import TimeHeader from "./components/TimeHeader";
 import { useMyBooking, useResourceDate } from "store/resourcePlanning/selector";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
@@ -32,11 +29,13 @@ import useGetMappingTime from "./hooks/useGetMappingTime";
 import { formatEstimateTime, formatNumber } from "utils/index";
 import EditBooking from "./modals/EditBooking";
 import ResourceLabel from "./components/ResourceLabel";
-import { Island_Moments } from "next/font/google";
 import EventContents from "./components/EventContents";
 import { useAuth } from "store/app/selectors";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
 import useGetOptions from "./hooks/useGetOptions";
+import FilterHeader from "./components/FilterHeader";
+import SlotLabelContent from "./components/SlotLabelContent";
+import ResourceHeaderContent from "./components/ResourceHeaderContent";
 
 const MyScheduleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -232,36 +231,7 @@ const MyScheduleTab = () => {
         setFilters={setFilters}
         calendarRef={calendarRef}
       />
-      <Box
-        overflow="scroll"
-        sx={{
-          "& .custom-header": {
-            "& .fc-scrollgrid-sync-inner": {
-              width: "100%!important",
-            },
-          },
-          "& .fc-datagrid-cell-cushion": { padding: "0!important" },
-          "& .fc-datagrid-cell": {},
-          "& .fc-event-resizable": {
-            background: "none!important",
-            border: "none!important",
-          },
-          "& .fc-datagrid-cell-frame": {
-            // height: 'auto!important',
-          },
-          "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander":
-            {
-              display: "none!important",
-            },
-          "& td.fc-day-sun, & td.fc-day-sat": {
-            borderBottom: "none!important",
-            background: "#FAFAFA!important",
-          },
-          "& th.fc-day-sun, & th.fc-day-sat": {
-            background: "#FAFAFA!important",
-          },
-        }}
-      >
+      <Box overflow="scroll" sx={{ ...defaultStyle }}>
         <FullCalendar
           ref={calendarRef}
           plugins={[resourceTimelinePlugin, interactionPlugin]}
@@ -280,78 +250,15 @@ const MyScheduleTab = () => {
           resources={mappedResources as ResourceInput}
           events={mappedEvents as ResourceInput}
           slotLabelContent={(arg) => {
-            const date = dayjs(arg?.date);
-            const weekday = weekdays[date.day()];
-            const isSelected = dayjs(date.format("YYYY-MM-DDDD")).isSame(
-              dayjs().format("YYYY-MM-DDDD"),
-            );
-            // const isWeekend = date.get('d') === 1 || date.get('d') === 5;
-            return (
-              <Stack direction="column">
-                <Typography
-                  sx={{
-                    textTransform: "uppercase",
-                    fontSize: "10px",
-                    fontWeight: 400,
-                    textAlign: "left",
-                    color: isSelected ? "#1BC5BD" : "#212121",
-                  }}
-                >
-                  {weekday}
-                </Typography>
-                <Typography
-                  sx={{
-                    textTransform: "uppercase",
-                    fontSize: "14px",
-                    textAlign: "left",
-                    fontWeight: 600,
-                    color: isSelected ? "#1BC5BD" : "#212121",
-                  }}
-                >
-                  {date.isValid() && date.format("DD")}
-                </Typography>
-              </Stack>
-            );
+            return <SlotLabelContent arg={arg} />;
           }}
           resourceAreaHeaderClassNames="custom-header"
           resourceAreaHeaderContent={(resource) => {
             return (
-              <Grid
-                container
-                gap={{
-                  xs: 3,
-                  md: 1,
-                }}
-                sx={{ width: 1 }}
-              >
-                <Grid item xs={3} md={5} />
-                <Grid item xs={1} md={2}>
-                  <Typography sx={{ ...textHeadStyle, color: "#666" }}>
-                    {resourceT("schedule.resourceHeader.available")}
-                  </Typography>
-                  <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
-                    160 h
-                  </Typography>
-                </Grid>
-                <Grid item xs={1} md={2}>
-                  <Typography sx={{ ...textHeadStyle, color: "#666" }}>
-                    {resourceT("schedule.resourceHeader.schedule")}
-                  </Typography>
-                  <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
-                    {formatNumber(totalhour, { numberOfFixed: 2 })}h
-                  </Typography>
-                </Grid>
-                <Grid item xs={1} md={2}>
-                  <Typography sx={{ ...textHeadStyle, color: "#666" }}>
-                    {`${resourceT(
-                      "schedule.resourceHeader.schedule",
-                    )}/${resourceT("schedule.resourceHeader.available")}`}
-                  </Typography>
-                  <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
-                    0 %
-                  </Typography>
-                </Grid>
-              </Grid>
+              <ResourceHeaderContent
+                totalhour={totalhour}
+                resource={resource}
+              />
             );
           }}
           resourceLabelContent={({ resource }) => {
@@ -409,9 +316,30 @@ const MyScheduleTab = () => {
   );
 };
 
-const textHeadStyle = {
-  fontSize: "14px",
-  fontWeight: 400,
+const defaultStyle = {
+  "& .custom-header": {
+    "& .fc-scrollgrid-sync-inner": {
+      width: "100%!important",
+    },
+  },
+  "& .fc-datagrid-cell-cushion": { padding: "0!important" },
+  "& .fc-datagrid-cell": {},
+  "& .fc-event-resizable": {
+    background: "none!important",
+    border: "none!important",
+  },
+  "& .fc-datagrid-cell-frame": {
+    // height: 'auto!important',
+  },
+  "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander": {
+    display: "none!important",
+  },
+  "& td.fc-day-sun, & td.fc-day-sat": {
+    borderBottom: "none!important",
+    background: "#FAFAFA!important",
+  },
+  "& th.fc-day-sun, & th.fc-day-sat": {
+    background: "#FAFAFA!important",
+  },
 };
-
 export default MyScheduleTab;

@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from "react";
 import _ from "lodash";
-import { useSelector } from "react-redux";
-import * as yup from "yup";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  DialogContent,
-  Grid,
-  Stack,
-  Tab,
-  Box,
-  Typography,
-  Collapse,
-} from "@mui/material";
+import { DialogContent, Tab, Box, Typography } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 import ProjectTab from "./ProjectTab";
@@ -20,7 +8,6 @@ import DialogLayout from "components/DialogLayout";
 import { useTranslations } from "next-intl";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import TimeOffTab from "./TimeoffTab";
-import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 
 interface IProps {
   open: boolean;

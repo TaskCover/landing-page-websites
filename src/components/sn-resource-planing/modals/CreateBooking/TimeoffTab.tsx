@@ -1,7 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import { schemaTimeOff } from "../CreateBooking/Schemas";
-import TextFieldSelect from "components/sn-time-tracking/Component/Select";
 import CustomDateRangePicker from "components/sn-resource-planing/components/CustomDateRangePicker";
 import TextFieldInput from "components/shared/TextFieldInput";
 import { useEffect, useState } from "react";
@@ -21,6 +19,8 @@ import {
 } from "constant/enums";
 import dayjs from "dayjs";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
+import TextFieldSelect from "components/shared/TextFieldSelect";
+import { useGetSchemas } from "../Schemas";
 interface IProps {
   open: boolean;
   onClose(): void;
@@ -34,6 +34,8 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
   const { createBooking } = useBookingAll();
   const { timeOffOptions } = useGetTimeOffOptions();
   const { positionOptions, projectOptions } = useGetOptions();
+  const { schemaTimeOff } = useGetSchemas();
+
   const {
     control: controlTimeOff,
     handleSubmit: handleSubmitTimeOff,
@@ -50,7 +52,7 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
         startDate: undefined,
         endDate: undefined,
       },
-      allocation: "",
+      allocation: 0,
       allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
       note: "",
     },
@@ -108,8 +110,10 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
                 }}
                 label={resourceT("form.dateRange")}
                 placeholder=""
-                error={!!errorsTimeOff.dateRange?.message}
-                helperText={errorsTimeOff.dateRange?.message}
+                errorMessage={
+                  errorsTimeOff.dateRange?.startDate?.message ||
+                  errorsTimeOff.dateRange?.endDate?.message
+                }
               />
             )}
           />
@@ -183,7 +187,9 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
           name="note"
           control={controlTimeOff}
           render={({ field }) => {
-            return <Textarea {...field} label={resourceT("form.note")} />;
+            return (
+              <Textarea {...field} label={resourceT("form.note")} required />
+            );
           }}
         />
       </Grid2>

@@ -3,16 +3,13 @@ import { Box, Typography, Collapse, Stack, useTheme } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import TextFieldSelect, {
   IOptionStructure,
-} from "components/sn-time-tracking/Component/Select";
+} from "components/shared/TextFieldSelect";
 import Textarea from "components/sn-time-tracking/Component/Textarea";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import CustomDateRangePicker from "components/sn-resource-planing/components/CustomDateRangePicker";
 import TextFieldInput from "components/shared/TextFieldInput";
 import ArrowDownIcon from "icons/ArrowDownIcon";
-import { usePositionOptions } from "store/global/selectors";
-import { Options } from "linkifyjs";
-import { useProject, useProjects } from "store/project/selectors";
 import _ from "lodash";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
@@ -22,7 +19,7 @@ import { useBookingAll } from "store/resourcePlanning/selector";
 import dayjs from "dayjs";
 import { BookingData } from "store/resourcePlanning/action";
 import { RESOURCE_ALLOCATION_TYPE, RESOURCE_EVENT_TYPE } from "constant/enums";
-import { schemaProject } from "../CreateBooking/Schemas";
+import { useGetSchemas } from "../Schemas";
 
 interface IProps {
   open: boolean;
@@ -34,9 +31,9 @@ const ProjectTab = ({ open, onClose }: IProps) => {
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
 
   const { palette } = useTheme();
-  const { positionOptions, projectOptions } = useGetOptions();
+  const { positionOptions, projectOptions, timeOptions } = useGetOptions();
   const { createBooking } = useBookingAll();
-
+  const { schemaProject } = useGetSchemas();
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const {
@@ -125,8 +122,10 @@ const ProjectTab = ({ open, onClose }: IProps) => {
               }}
               label={resourceT("form.dateRange")}
               placeholder=""
-              error={!!errorsProject.dateRange?.message}
-              helperText={errorsProject.dateRange?.message}
+              errorMessage={
+                errorsProject.dateRange?.startDate?.message ||
+                errorsProject.dateRange?.endDate?.message
+              }
             />
           )}
         />
@@ -174,20 +173,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
                   field.onChange(event.target.value);
                 }}
                 placeholder=""
-                options={[
-                  {
-                    label: `h/${commonT("day")}`,
-                    value: RESOURCE_ALLOCATION_TYPE.HOUR_PER_DAY,
-                  },
-                  {
-                    label: "%",
-                    value: RESOURCE_ALLOCATION_TYPE.PERCENTAGE,
-                  },
-                  {
-                    label: commonT("hour"),
-                    value: RESOURCE_ALLOCATION_TYPE.HOUR,
-                  },
-                ]}
+                options={timeOptions}
                 onFocus={() => setIsFocusAllocation(true)}
                 onBlur={() => setIsFocusAllocation(false)}
               />

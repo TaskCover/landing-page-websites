@@ -7,7 +7,7 @@ import { Box, Typography } from "@mui/material";
 import ChatDetailInfoMenuItem from "./ChatDetailInfoMenuItem";
 import { useTranslations } from "next-intl";
 import { NS_CHAT_BOX } from "constant/index";
-import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
+import DefaultPopupLayout from "layouts/DefaultPopupLayout";
 import { useChat } from "store/chat/selectors";
 import { useAuth } from "store/app/selectors";
 import { ChangeEvent, FC } from "react";
@@ -31,7 +31,6 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
 
   const { groupMembers, conversationInfo: currentConversation } = useChat();
 
-
   //check owner
   const owners = Object.values(groupMembers).filter((item) =>
     item.roles.includes("owner"),
@@ -43,14 +42,16 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
       <ChatDetailInfoMenuItem
         text={"Group Name: " + currentConversation?.name?.replaceAll("_", " ")}
         icon={GroupNameIcon}
-        callBackOpenDrawer={() => props?.setShowPopup((pre) => ({
-          ...pre,
-          type: TYPE_POPUP.RENAME_GROUP,
-          statusPopup: true,
-          title: commonChatBox("chatBox.changeName"),
-          content: <></>,
-          actionType: 0,
-        }))}
+        callBackOpenDrawer={() =>
+          props?.setShowPopup((pre) => ({
+            ...pre,
+            type: TYPE_POPUP.RENAME_GROUP,
+            statusPopup: true,
+            title: commonChatBox("chatBox.changeName"),
+            content: <></>,
+            actionType: 0,
+          }))
+        }
         callBackIcon={EditGroupNameIcon}
         dontOpenDrawer={true}
       />
@@ -61,7 +62,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
           borderRight: "none",
           borderLeft: "none",
           width: "100%",
-          margin: '24px 0'
+          margin: "24px 0",
         }}
       >
         {(props?.menuItems as any[])
@@ -80,7 +81,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
         sx={{
           height: "180px",
           overflow: "auto",
-          width: '100%'
+          width: "100%",
         }}
       >
         {groupMembers?.map((member, index) => (
@@ -101,8 +102,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          width: '100%'
-
+          width: "100%",
         }}
       >
         <Box>

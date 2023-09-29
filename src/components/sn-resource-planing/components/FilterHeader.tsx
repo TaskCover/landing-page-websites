@@ -1,6 +1,6 @@
 import { Button, SelectChangeEvent, Stack } from "@mui/material";
 import { Search } from "components/Filters";
-import Filter from "components/sn-time-tracking/Component/Filter";
+import Filter from "components/shared/Filter";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
 import {
@@ -8,7 +8,7 @@ import {
   WorkingStatus,
 } from "store/resourcePlanning/action";
 import { useBookingAll, useMyBooking } from "store/resourcePlanning/selector";
-import useGetOptions from "./hooks/useGetOptions";
+import useGetOptions from "../hooks/useGetOptions";
 import { setBookingAllFilter } from "store/resourcePlanning/reducer";
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ import {
   TAB_TYPE,
   endOfWeek,
   startOfWeek,
-} from "./hepler";
+} from "../hepler";
 
 const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
