@@ -15,7 +15,7 @@ jobs:
         - name: Install Dependencies
           run: |
             echo "Running Install Dependencies ... "
-            yarn install
+            yarn
         - name: Run Linting
           run: |
             echo "Running lint testing ... "
