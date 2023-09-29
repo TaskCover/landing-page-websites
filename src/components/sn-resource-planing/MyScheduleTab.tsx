@@ -121,28 +121,6 @@ const MyScheduleTab = () => {
     if (collapseButton[0]) collapseButton[0].click();
   };
 
-  const checkEventType = (value) => {
-    switch (value) {
-      case RESOURCE_EVENT_TYPE.PROJECT_BOOKING:
-        return {
-          icon: <BlueArrowIcon width={16} height={16} />,
-          color: "#3699FFCC",
-          background: "#EBF5FF",
-        };
-      case RESOURCE_EVENT_TYPE.TIME_OF_BOOKING:
-        return {
-          icon: <RedArrowIcon width={16} height={16} />,
-          color: "rgba(246, 78, 96, 0.80);",
-          background: "#FEEDED",
-        };
-      default:
-        return {
-          icon: <GrayArrowIcon width={16} height={16} />,
-          color: "#BABCC6",
-          background: "none",
-        };
-    }
-  };
   const getEvents = () =>
     resources.map((props: IBookingItem) => {
       const {
@@ -224,7 +202,7 @@ const MyScheduleTab = () => {
 
   useGetOptions();
   return (
-    <Stack direction="column" rowGap={2}>
+    <Stack direction="column" rowGap={2} >
       <FilterHeader type={TAB_TYPE.MY} />
       <TimeHeader
         filters={filters}
@@ -262,14 +240,6 @@ const MyScheduleTab = () => {
             );
           }}
           resourceLabelContent={({ resource }) => {
-            const { name, company, type, fullname, position, eventType, note } =
-              resource.extendedProps;
-
-            const isActive = includes(selectedResource, resource._resource.id);
-
-            const parentResource = resources.find(
-              (item) => item.id === resource._resource.parentId,
-            );
             // const bookings = parentResource?.bookings || [];
             const isLastItem =
               resources[resources.length - 1]?.id === resource._resource.id;
@@ -322,6 +292,9 @@ const defaultStyle = {
       width: "100%!important",
     },
   },
+  "& .fc-media-screen": {
+    maxHeight: "70vh!important",
+  },
   "& .fc-datagrid-cell-cushion": { padding: "0!important" },
   "& .fc-datagrid-cell": {},
   "& .fc-event-resizable": {
@@ -329,7 +302,7 @@ const defaultStyle = {
     border: "none!important",
   },
   "& .fc-datagrid-cell-frame": {
-    // height: 'auto!important',
+    height: "auto!important",
   },
   "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander": {
     display: "none!important",

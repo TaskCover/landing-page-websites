@@ -207,7 +207,7 @@ const AllPeopleTab = () => {
         setFilters={setFilters}
         calendarRef={calendarRef}
       />
-      <Box overflow="scroll" sx={{ ...defaultStyle }}>
+      <Box sx={{ ...defaultStyle, overflowX: "scroll" }}>
         <FullCalendar
           ref={calendarRef}
           plugins={[resourceTimelinePlugin, interactionPlugin]}
@@ -299,6 +299,9 @@ const defaultStyle = {
     "& .fc-scrollgrid-sync-inner": {
       width: "100%!important",
     },
+  },
+  "& .fc-media-screen": {
+    maxHeight: "65vh!important",
   },
   "& .fc-datagrid-cell-cushion": { padding: "0!important" },
   "& .fc-datagrid-cell": {},

@@ -7,7 +7,18 @@ export const metadata = {
 
 export default function ResourcePlanningPage() {
   return (
-    <Wrapper overflow="auto">
+    <Wrapper
+      sx={{
+        overflow: {
+          sx: "scroll",
+          md: "hidden",
+        },
+      }}
+      px={{
+        sx: 2,
+        md: 10,
+      }}
+    >
       <ResourcePlanning />
     </Wrapper>
   );

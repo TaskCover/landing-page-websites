@@ -19,7 +19,14 @@ const ResourcePlanning = () => {
   const t = useTranslations(NS_RESOURCE_PLANNING);
 
   return (
-    <Stack>
+    <Stack
+      maxHeight={{ md: "90vh" }}
+      overflow={{
+        sx: "scroll",
+        md: "hidden",
+      }}
+      minWidth={350}
+    >
       <Grid
         container
         sx={{ display: isSmSmaller ? "block" : "none", padding: "10px" }}

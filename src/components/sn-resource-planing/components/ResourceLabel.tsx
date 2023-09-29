@@ -113,13 +113,13 @@ const ResourceLabel = ({
         <Grid
           container
           gap={{
-            xs: 3,
+            xs: 2,
             md: 1,
           }}
         >
           <Grid
             item
-            xs={3}
+            xs={4}
             md={5}
             sx={{
               px: 1,
@@ -128,21 +128,31 @@ const ResourceLabel = ({
               columnGap: 1,
             }}
           >
-            <Avatar size={32} />
-            <Box>
-              <Typography sx={{ fontSize: 14 }}>{fullname}</Typography>
-              <Typography sx={{ color: "#666666", fontSize: 14 }}>
-                {company}
-              </Typography>
-            </Box>
-            <ArrowDownIcon
-              sx={{
-                width: "20px",
-                ml: 2,
-                transform: isActive ? "rotate(-90deg)" : "rotate(90deg)",
-                transitionDelay: "all ease 0.25s",
+            <Stack
+              direction={"row"}
+              gap={{
+                xs: 1,
               }}
-            />
+            >
+              <Avatar size={32} />
+              <Box>
+                <Typography sx={{ fontSize: 14 }}>{fullname}</Typography>
+                <Typography sx={{ color: "#666666", fontSize: 14 }}>
+                  {company}
+                </Typography>
+              </Box>
+              <ArrowDownIcon
+                sx={{
+                  width: "20px",
+                  ml: {
+                    xs: 1,
+                    md: 0,
+                  },
+                  transform: isActive ? "rotate(-90deg)" : "rotate(90deg)",
+                  transitionDelay: "all ease 0.25s",
+                }}
+              />
+            </Stack>
           </Grid>
           <Grid item xs={1} md={2}>
             <Typography

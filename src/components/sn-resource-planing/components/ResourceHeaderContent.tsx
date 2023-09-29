@@ -17,12 +17,12 @@ const ResourceHeaderContent = ({ totalhour }: IProps) => {
     <Grid
       container
       gap={{
-        xs: 3,
+        xs: 2,
         md: 1,
       }}
       sx={{ width: 1 }}
     >
-      <Grid item xs={3} md={5} />
+      <Grid item xs={4} md={5} />
       <Grid item xs={1} md={2}>
         <Typography sx={{ ...textHeadStyle, color: "#666" }}>
           {resourceT("schedule.resourceHeader.available")}
