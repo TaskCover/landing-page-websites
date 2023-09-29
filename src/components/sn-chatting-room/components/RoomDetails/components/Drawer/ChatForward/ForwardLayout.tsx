@@ -9,7 +9,7 @@ import { CHAT_API_URL } from "constant/index";
 import { useAuth } from "store/app/selectors";
 
 const ForwardLayout = () => {
-  const { onSetDrawerType } = useChat();
+  const { onSetDrawerType, onCloseDrawer } = useChat();
   const [param, setParam] = useState({
     text: "",
   });
@@ -58,7 +58,7 @@ const ForwardLayout = () => {
       >
         <ChatForward
           conversations={conversations}
-          callbackCancel={() => onSetDrawerType("info")}
+          callbackCancel={() => onCloseDrawer("info")}
         />
       </Box>
     </>

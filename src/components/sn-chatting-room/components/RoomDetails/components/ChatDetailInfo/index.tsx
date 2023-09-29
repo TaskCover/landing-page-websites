@@ -10,12 +10,12 @@ export type ChatDetailInfoProps = useChatDetailInfoReturns;
 
 const ChatDetailInfo = () => {
   const { extraDesktopMode } = useGetScreenMode();
-  const { isOpenInfoChat } = useChat();
+  const { isOpenInfoChat, typeDrawerChat } = useChat();
 
   const styleDrawerOpen = useMemo(
     () =>
-    isOpenInfoChat ? { width: extraDesktopMode ? "424px" : "272px" } : { width: 0 },
-    [extraDesktopMode, isOpenInfoChat],
+    (isOpenInfoChat && typeDrawerChat !== 'forward') ? { width: extraDesktopMode ? "424px" : "272px" } : { width: 0 },
+    [extraDesktopMode, isOpenInfoChat, typeDrawerChat],
   );
 
 
@@ -33,7 +33,7 @@ const ChatDetailInfo = () => {
       }}
       variant="persistent"
       anchor="right"
-      open={isOpenInfoChat}
+      open={isOpenInfoChat && typeDrawerChat !== 'forward'}
     >
         <DrawerInfoChat  />
     </Drawer>

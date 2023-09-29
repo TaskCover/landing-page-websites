@@ -21,34 +21,6 @@ const ForwardHeader = ({ onPrevious, onSearchTxt }: ForwardHeaderProp) => {
   return (
     <>
       <Box sx={{ padding: 3, borderBottom: "1px solid #ECECF3" }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography
-            sx={{
-              color: "var(--black, #212121)",
-              fontSize: "1rem",
-              fontWeight: 600,
-              paddingBottom: 2,
-            }}
-          >
-            Forward message
-          </Typography>
-          <IconButton
-            onClick={() => {
-              onPrevious();
-            }}
-            sx={{
-              width: "26px",
-              height: "26px",
-            }}
-          >
-            <CloseIcon sx={{ width: "20px", height: "20px" }} />
-          </IconButton>
-        </Box>
         <TextField
           size="small"
           sx={{
