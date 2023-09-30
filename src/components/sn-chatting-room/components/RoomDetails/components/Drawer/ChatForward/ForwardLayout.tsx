@@ -15,8 +15,9 @@ const ForwardLayout = () => {
   });
   const [conversations, setConversation] = useState([]);
   const { user } = useAuth();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const onSearchTxt = (value) => {
+  const onSearchTxt = (value) => {    
     setParam({
       text: value,
     });
@@ -25,9 +26,11 @@ const ForwardLayout = () => {
   const handleGetAllConversation = async (
     paramReq: ChatConventionItemRequest,
   ) => {
+    setLoading(true)
     const response = await client.post("getAllConversations", paramReq, {
       baseURL: CHAT_API_URL,
     });
+    setLoading(false) 
     setConversation(response.data);
   };
 
@@ -57,6 +60,7 @@ const ForwardLayout = () => {
         height="calc(600px - 77px)"
       >
         <ChatForward
+          loading={loading}
           conversations={conversations}
           callbackCancel={() => onCloseDrawer("info")}
         />
