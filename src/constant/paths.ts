@@ -28,6 +28,9 @@ export const PROJECT_INFORMATION_PATH = "/projects/{id}";
 export const TIME_TRACKING_PATH = "/time-tracking";
 export const RESOURCE_PLANING_PATH = "/resource-planing";
 export const SALES_LIST_PATH = "/sales";
+export const CHATTING_ROOM_PATH = "/chat";
+export const CHATTING_INFO_PATH = "/chat/{id}";
+
 export const SALE_DETAIL_PATH = "/sales/{id}";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
@@ -59,6 +62,7 @@ export const AUTHORIZED_PATHS = {
     RESOURCE_PLANING_PATH,
     SALE_DETAIL_PATH,
     SALES_LIST_PATH,
+    CHATTING_ROOM_PATH,
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -84,6 +88,7 @@ export const AUTHORIZED_PATHS = {
     RESOURCE_PLANING_PATH,
     SALES_LIST_PATH,
     SALE_DETAIL_PATH,
+    CHATTING_ROOM_PATH,
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };

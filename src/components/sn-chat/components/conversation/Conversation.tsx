@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { useWSChat } from "store/chat/helpers";
@@ -6,9 +6,16 @@ import ChatInput from "../chat/ChatInput";
 import Messages from "../messages/Messages";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
+import { SxProps, Theme } from "@mui/material";
+import useGetScreenMode from "hooks/useGetScreenMode";
 
 const initPageIndex = 10;
-const Conversation = () => {
+
+interface Props {
+  wrapperMessageSx?: SxProps<Theme>;
+  wrapperInputSx?: SxProps<Theme>;
+}
+const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
   const {
     roomId,
     conversationInfo,
@@ -24,9 +31,15 @@ const Conversation = () => {
     onGetUnReadMessages,
     onGetLastMessages,
     onUploadAndSendFile,
+    isChatDesktop,
+    isOpenInfoChat,
   } = useChat();
   const { user } = useAuth();
+
   const { sendMessage } = useWSChat();
+  const { extraDesktopMode } =
+    useGetScreenMode();
+
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
   const [files, setFiles] = useState<File[]>([]);
@@ -35,6 +48,7 @@ const Conversation = () => {
     () => conversationInfo?.t !== "d",
     [conversationInfo?.t],
   );
+
   const unReadMessageClone = useMemo(
     () =>
       unReadMessage?.info.filter(
@@ -43,12 +57,22 @@ const Conversation = () => {
     [unReadMessage?.info, user],
   );
 
+  const currentRoomId = useMemo(() => {
+    return dataTransfer?._id ?? roomId;
+  }, [dataTransfer, roomId]);
+
+  const currentRoomType = useMemo(() => {
+    return dataTransfer?.t ?? "d";
+  }, [dataTransfer]);
+
   const getLastMessage = useCallback(
     async (page?: number, size?: number) => {
+      if (currentRoomId?.length === 0) return;
+      if (currentRoomType?.length === 0) return;
       try {
         await onGetLastMessages({
-          roomId: dataTransfer?._id ?? roomId,
-          type: dataTransfer?.t ?? "d",
+          roomId: currentRoomId,
+          type: currentRoomType,
           offset: page,
           count: size,
         });
@@ -59,14 +83,7 @@ const Conversation = () => {
         );
       }
     },
-    [
-      dataTransfer?._id,
-      dataTransfer?.t,
-      onAddSnackbar,
-      onGetLastMessages,
-      roomId,
-      t,
-    ],
+    [onAddSnackbar, onGetLastMessages, currentRoomId, t, currentRoomType],
   );
 
   const getUnReadMessage = useCallback(async () => {
@@ -75,10 +92,20 @@ const Conversation = () => {
     });
   }, [dataTransfer?.t, onGetUnReadMessages]);
 
+  const depsCallback = [
+    dataTransfer,
+    onAddSnackbar,
+    onGetLastMessages,
+    roomId,
+    t,
+  ];
+
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
       ? stateSearchMessage?.offset + initPageIndex
       : initPageIndex;
+    setFiles([]);
+    if ((!roomId || roomId?.length === 0) && !dataTransfer?._id) return;
     getLastMessage(0, countNew);
     if (inputRef.current) {
       inputRef.current.pageRef.current = countNew - initPageIndex;
@@ -101,7 +128,9 @@ const Conversation = () => {
 
   const handleSendMessage = useCallback(
     async (message: string) => {
-      sendMessage({ message });
+      sendMessage({
+        message,
+      });
       inputRef?.current?.clearScrollContentMessage();
       if (files.length > 0) {
         await onUploadAndSendFile({
@@ -131,6 +160,17 @@ const Conversation = () => {
           getLastMessage(page, 10);
         }}
         ref={inputRef}
+        {...(isChatDesktop && {
+            wrapperMessageSx: {
+              ...(isOpenInfoChat
+                ? {
+                    width: `calc(100% - ${
+                      extraDesktopMode ? "424px" : "272px"
+                    })`,
+                  }
+                : {}),
+            },
+          })}
       />
       <ChatInput
         isLoading={false}
@@ -143,6 +183,7 @@ const Conversation = () => {
             inputRef?.current?.initScrollIntoView();
           }
         }}
+        wrapperInputSx={wrapperInputSx}
       />
     </>
   );

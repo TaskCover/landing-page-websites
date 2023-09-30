@@ -47,7 +47,7 @@ const SwitchLanguage = (props: StackProps) => {
       <Select
         value={locale}
         onChange={onChangeValue}
-        disableUnderline
+        disableUnderline={true}
         sx={{
           ...defaultSx,
           boxShadow: 'none',

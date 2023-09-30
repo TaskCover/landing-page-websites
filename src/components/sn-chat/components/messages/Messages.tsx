@@ -25,6 +25,7 @@ import { nameMonthList, NS_CHAT_BOX } from "constant/index";
 import React from "react";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
+import { useChat } from "store/chat/selectors";
 
 interface MessagesProps {
   sessionId: string;
@@ -42,6 +43,7 @@ interface MessagesProps {
   focusMessage: MessageSearchInfo | null;
   unReadMessage: UnreadUserInfo[];
   onRefetch: (page: number) => void;
+  wrapperMessageSx?: any;
 }
 
 type MessageHandle = {
@@ -66,6 +68,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     focusMessage,
     unReadMessage,
     onRefetch,
+    wrapperMessageSx,
   }: MessagesProps,
   ref,
 ) => {
@@ -73,10 +76,11 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   const [isBottomScrollMessage, setBottomScrollMessage] = useState(false);
   const commonChatBox = useTranslations(NS_CHAT_BOX);
   const { isDarkMode } = useTheme();
-
+  const { isChatDesktop } = useChat();
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
+  
   const scrollHeightRef = useRef(0);
   const observer = useRef(
     new IntersectionObserver((entries) => {
@@ -85,7 +89,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         pageRef.current = pageRef.current + pageSize;
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         const clientHeight =
-          (messagesContentRef.current?.clientHeight || 0) + 100;
+          (messagesContentRef.current?.clientHeight || 0) + 50
         if (scrollHeightRef.current > clientHeight) {
           onRefetch(pageRef.current);
         }
@@ -149,14 +153,15 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     [isBottomScrollMessage],
   );
 
-  const initScrollIntoView = useCallback(() => {
+  const initScrollIntoView = useCallback(() => {    
     if (messagesContentRef.current) {
       const index = messagesContentRef.current?.scrollHeight
         ? Number(
-            messagesContentRef.current?.scrollHeight -
-              scrollHeightRef.current || 0,
+            messagesContentRef.current?.scrollHeight - scrollHeightRef.current || 0,
           )
         : 0;
+      console.log(index);
+      
       messagesContentRef.current.scrollTo(0, index);
     }
   }, []);
@@ -245,8 +250,13 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           gap: "0.5rem",
           flexDirection: "column",
           overflow: "auto",
-          height: "100%",
-          padding: "1rem 1rem 0 1rem",
+          justifyContent: "flex-end",
+          height: "100vh",
+
+          padding: "1rem",
+          ...(!!wrapperMessageSx
+            ? { ...wrapperMessageSx }
+            : { height: "100%" }),
         }}
       >
         {messages.map((message, index) => {
@@ -270,6 +280,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           const showDate = `${nextTimeMessage.getDate()} ${
             nameMonthList[Number(nextTimeMessage.getMonth())]
           } ${isShowYear ? nextTimeMessage.getFullYear() : ""}`.trim();
+
           return (
             <React.Fragment key={index}>
               {!message?.t ? (
@@ -296,11 +307,11 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                   />
                 </MessageLayout>
               ) : (
-                  <Box
-                    sx={{
-                      textAlign: 'center',
-                    }}
-                  >
+                <Box
+                  sx={{
+                    textAlign: "center",
+                  }}
+                >
                     <Typography
                       sx={{
                         backgroundColor: isDarkMode ? '#5b5959' : '#f1f1f1',

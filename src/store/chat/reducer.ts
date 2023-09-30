@@ -26,12 +26,11 @@ import {
   UserInfo,
   MediaPreviewItem,
   IChatInfo,
+  SetParamConversationProps,
 } from "./type";
 import { getChatRoomFile, getChatUrls } from "./media/actionMedia";
 import { ChatLinkType, MediaResponse, MediaType } from "./media/typeMedia";
 import dayjs from "dayjs";
-import { State } from "linkifyjs";
-
 const initalPage = {
   pageIndex: 0,
   pageSize: 10,
@@ -81,6 +80,13 @@ const initialState: ChatState = {
   chatAttachments: [],
   deleteConversationStatus: DataStatus.IDLE,
   dataTransfer: {},
+  // param allChat,
+  paramsConversation: {},
+  paramsLastMessage: {},
+  paramsUnreadMessage: {},
+  typeDrawerChat: 'info',
+  isOpenInfoChat: false,
+  isChatDesktop: false,
 };
 
 const isConversation = (type: string) => {
@@ -92,13 +98,32 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
+    setChatDesktop : (state, action) => {
+      state.isChatDesktop = action.payload
+    },
+    resetConversationInfo: (state) => {
+      state.conversationInfo = null;
+    },
+    setTypeDrawerChatDesktop: (state, action) => {
+      state.typeDrawerChat = action.payload;
+      state.isOpenInfoChat = true;
+    },
+    setCloseDrawerChatDesktop: (state, action) => {
+      state.typeDrawerChat = action.payload;
+      state.isOpenInfoChat = false;
+    },
     setStep: (state, action) => {
       const prevStep = Number(action.payload.step) - 1;
       state.prevStep = prevStep === STEP.IDLE ? STEP.CONVENTION : prevStep;
       state.currStep = action.payload.step;
-      state.messageInfo = [];
+      if (!action?.payload?.dataTransfer?.isDesktop) {
+        state.messageInfo = [];
+      }
 
-      if (action.payload.dataTransfer !== undefined) {
+      if (
+        action.payload.dataTransfer !== undefined &&
+        Object.keys(action.payload.dataTransfer).length > 0
+      ) {
         state.dataTransfer = action.payload.dataTransfer;
       }
     },
@@ -109,9 +134,9 @@ const chatSlice = createSlice({
       state.typeList = action.payload;
     },
     setDataTransfer: (state, action) => {
-      console.log("action.payload", action.payload);
-
-      state.dataTransfer = action.payload;
+      if (action?.payload && Object.keys(action.payload).length > 0) {
+        state.dataTransfer = action.payload;
+      }
     },
     setConversationInfo: (state, action) => {
       state.conversationInfo = action.payload;
@@ -153,6 +178,10 @@ const chatSlice = createSlice({
         status: action.payload.status,
       };
     },
+    setListNewConversation: (state, action) => {  
+      state.convention = action.payload;
+    },
+
     setLastMessage: (
       state,
       action: PayloadAction<{
@@ -206,9 +235,9 @@ const chatSlice = createSlice({
       state.stateSearchMessage = action.payload;
       state.messageInfo = [];
     },
-//     getUpdateConversation: (state, action) => {
-// log
-//     },
+    //     getUpdateConversation: (state, action) => {
+    // log
+    //     },
     clearConversation: (state) => {
       state.convention = [];
       state.conversationPaging = { ...initalPage, textSearch: "" };
@@ -217,6 +246,15 @@ const chatSlice = createSlice({
       state.messageInfo = [];
       state.messagePaging = initalPage;
     },
+    setParamsState: (
+      state,
+      action: PayloadAction<SetParamConversationProps>,
+    ) => {
+      state[action.payload.type] = action.payload.value;
+    },
+    resetSearchChatText: (state) => {
+      state.listSearchMessage = []
+    }
   },
   extraReducers: (builder) =>
     builder
@@ -279,7 +317,7 @@ const chatSlice = createSlice({
         getLatestMessages.fulfilled,
         (state, action: PayloadAction<MessageInfo[]>) => {
           // state.messageInfo = []
-          if (action.payload?.length > 0) {
+          if (action.payload) {
             const messageNew = action.payload?.reverse() || [];
 
             //Save media message
@@ -501,6 +539,12 @@ export const {
   clearMessageList,
   setStateSearchMessage,
   updateUnSeenMessage,
+  setTypeDrawerChatDesktop,
+  setCloseDrawerChatDesktop,
+  resetConversationInfo,
+  setChatDesktop,
+  setListNewConversation,
+  resetSearchChatText
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
