@@ -40,7 +40,9 @@ export const ChatBoxLang: ChatBox = {
       lead_trans: '{user1} đã chuyển quyền quản trị viên cho {user2} vào lúc {time}.',
       lead_remove: '{user1} đã xoá quyền quản trị viên của {user2} vào lúc {time}.',
       rename: '{user1} đã đổi tên nhóm thành {name} vào lúc {time}.',
-      edit_avatar: '{user1} đã thay đổi ảnh đại diện nhóm vào lúc {time}.'
+      edit_avatar: '{user1} đã thay đổi ảnh đại diện nhóm vào lúc {time}.',
+      rename_alert: 'Thay đổi tên nhóm thành công!',
+      change_avatar_alert: 'Thay đổi ảnh đại diện thành công'
     }
   }
 };

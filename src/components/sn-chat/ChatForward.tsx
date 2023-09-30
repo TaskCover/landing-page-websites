@@ -81,7 +81,11 @@ const ChatForward: FC<Props> = (props) => {
         })
       }
       else {
-        onSetStep(STEP.CHAT_GROUP, dataTransfer);
+        if (dataTransfer?.t === 'd') {
+          onSetStep(STEP.CHAT_ONE, dataTransfer);
+        } else {
+          onSetStep(STEP.CHAT_GROUP, dataTransfer);
+        }
       }
     });
   };

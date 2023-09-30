@@ -40,7 +40,9 @@ export const ChatBoxLang: ChatBox = {
       lead_trans: '{user1} transferred admin rights to {user2} at {time}.',
       lead_remove: '{user1} removed admin rights from {user2} at {time}.',
       rename: '{user1} renamed the group to {name} at {time}.',
-      edit_avatar: '{user1} changed the group\'s avatar at {time}.'
+      edit_avatar: '{user1} changed the group\'s avatar at {time}.',
+      rename_alert: 'Group name changed successfully!',
+      change_avatar_alert: 'Profile picture changed successfully!'
     }
   },
 };

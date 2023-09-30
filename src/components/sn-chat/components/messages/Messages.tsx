@@ -226,12 +226,12 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           time: getTimeStamp(message?.ts ?? '')
         });
         break;
-      default:
+      case 'r':
         msg = commonChatBox("chatBox.group.rename", {
           user1: message?.u?.username,
-          user2: message?.msg,
+          name: message?.msg,
           time: getTimeStamp(message?.ts ?? '')
-        }); 
+        });
         break;
     }
     return msg;

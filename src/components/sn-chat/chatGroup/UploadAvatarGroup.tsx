@@ -1,9 +1,14 @@
 import { Box, Fab } from "@mui/material";
+import { NS_CHAT_BOX } from "constant/index";
 import UploadImageIcon from "icons/UploadImageIcon";
+import { useTranslations } from "next-intl";
+import { useSnackbar } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
 
 export const UploadAvatarGroup = () => {
-  const { dataTransfer, onChangeGroupAvatar} = useChat();
+  const { dataTransfer, onChangeGroupAvatar } = useChat();
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
+  const { onAddSnackbar } = useSnackbar();
   return (
     <Box
       sx={{
@@ -23,7 +28,8 @@ export const UploadAvatarGroup = () => {
           type="file"
           onChange={async (e) => {
             if (e.currentTarget.files?.length) {
-              onChangeGroupAvatar(e.currentTarget.files[0], dataTransfer?._id);
+              await onChangeGroupAvatar(e.currentTarget.files[0], dataTransfer?._id);
+              onAddSnackbar(commonChatBox("chatBox.group.change_avatar_alert"), "success");
             }
           }}
         />
