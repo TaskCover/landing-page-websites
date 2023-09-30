@@ -17,9 +17,10 @@ import AttachmentContent from "./components/conversation/AttachmentContent";
 
 interface Props {
   callbackCancel?: () => void;
+  conversations?: any;
 }
 
-const ChatForward: FC<Props> = (props) => {
+const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
   const [employeeIdSelected, setEmployeeIdSelected] = useState<any>({});
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
@@ -39,7 +40,8 @@ const ChatForward: FC<Props> = (props) => {
     onForwardMessage,
     isChatDesktop,
     onSetDataTransfer,
-    onGetAllConvention
+    onGetAllConvention,
+    roomId
   } = useChat();
 
   useEffect(() => {
@@ -127,8 +129,8 @@ const ChatForward: FC<Props> = (props) => {
                 </Box>
               ))
             ) : (
-              <>
-                {convention
+                <>
+                  {(isChatDesktop ? conversations : convention)
                   ?.filter((item) => item?._id !== dataTransfer?._id)
                   ?.filter((item) => item?.name)
                   ?.map((item, index) => (
@@ -235,8 +237,8 @@ const ChatForward: FC<Props> = (props) => {
             size="small"
             sx={defaultSx.button}
             onClick={() => {
-              if (props?.callbackCancel) {
-                props?.callbackCancel();
+              if (callbackCancel) {
+                callbackCancel();
                 return;
               }
               onSetStep(STEP.CHAT_GROUP, dataTransfer);
