@@ -32,5 +32,6 @@ export type ChatBox = {
     accountInformation: string,
     added: string,
     removed: string,
+    group: {add: string, remove: string, lead_trans: string, lead_remove, edit_avatar: string, rename: string}
   };
 };

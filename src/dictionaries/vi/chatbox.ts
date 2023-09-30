@@ -34,5 +34,13 @@ export const ChatBoxLang: ChatBox = {
     accountInformation: "Thông tin tài khoản",
     added: "đã thêm",
     removed: "đã xoá",
+    group: {
+      add: '{user1} đã thêm {user2} vào nhóm vào lúc {time}.',
+      remove: '{user1} đã xoá {user2} ra khỏi nhóm vào lúc {time}.',
+      lead_trans: '{user1} đã chuyển quyền quản trị viên cho {user2} vào lúc {time}.',
+      lead_remove: '{user1} đã xoá quyền quản trị viên của {user2} vào lúc {time}.',
+      rename: '{user1} đã đổi tên nhóm thành {name} vào lúc {time}.',
+      edit_avatar: '{user1} đã thay đổi ảnh đại diện nhóm vào lúc {time}.'
+    }
   }
 };
