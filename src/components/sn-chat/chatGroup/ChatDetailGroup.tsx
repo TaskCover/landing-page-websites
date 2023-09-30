@@ -317,7 +317,7 @@ const ChatDetailGroup = (props) => {
           count: 10,
         });
         onSetDataTransfer(dataTransferNew);
-        onAddSnackbar(commonT("success"), "success");
+        onAddSnackbar(commonChatBox("chatBox.group.rename_alert"), "success");
       }
     };
     const left = async () => {

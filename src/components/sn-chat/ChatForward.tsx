@@ -1,24 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box } from "@mui/system";
 import SelectItem from "./components/SelectItem";
-import { Skeleton, Typography, TextField, InputAdornment } from "@mui/material";
-import { Button, IconButton } from "components/shared";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
+import { Skeleton, Typography } from "@mui/material";
+import { Button } from "components/shared";
 import { useChat } from "store/chat/selectors";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import { useEmployeesOfCompany } from "store/manager/selectors";
 import { useAuth, useSnackbar } from "store/app/selectors";
-import { ChangeEvent, FC, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { Employee } from "store/company/reducer";
 import { STEP } from "store/chat/type";
 import useTheme from "hooks/useTheme";
 import AttachmentContent from "./components/conversation/AttachmentContent";
+
 interface Props {
   callbackCancel?: () => void;
-  conversations?: any;
 }
 
-const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
+const ChatForward: FC<Props> = (props) => {
   const [employeeIdSelected, setEmployeeIdSelected] = useState<any>({});
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
@@ -26,10 +27,9 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
     isFetching,
     error,
     onGetEmployees,
+    onApproveOrReject: onApproveOrRejectAction,
   } = useEmployeesOfCompany();
-
   const { user } = useAuth();
-  const [textSearch, setTextSearch] = useState("");
 
   const { isDarkMode } = useTheme();
   const {
@@ -39,8 +39,7 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
     onForwardMessage,
     isChatDesktop,
     onSetDataTransfer,
-    onGetAllConvention,
-    roomId,
+    onGetAllConvention
   } = useChat();
 
   useEffect(() => {
@@ -72,34 +71,28 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
       });
     Promise.all(fws).then((values) => {
       onAddSnackbar("Forward message successfully!", "success");
-      if (isChatDesktop) {
-        onSetDataTransfer(dataTransfer);
+      if(isChatDesktop){
+        onSetDataTransfer(dataTransfer)
         onGetAllConvention({
           count: 10,
           offset: 0,
           text: "",
-          type: "a",
-        });
-      } else {
-        onSetStep(STEP.CHAT_GROUP, dataTransfer);
+          type: "a",  
+        })
+      }
+      else {
+        if (dataTransfer?.t === 'd') {
+          onSetStep(STEP.CHAT_ONE, dataTransfer);
+        } else {
+          onSetStep(STEP.CHAT_GROUP, dataTransfer);
+        }
       }
     });
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      setTextSearch(event.target.value);
-    }
-  };
-
   return (
     <>
-      <Box
-        sx={{
-          padding: isChatDesktop ? 0 : 3,
-          paddingTop: isChatDesktop ? 3 : 0,
-        }}
-      >
+      <Box sx={{ padding: isChatDesktop ? 0: 3, paddingTop: isChatDesktop ? 3 :  0 }}>
         <Box
           sx={{
             height: "240px",
@@ -135,7 +128,7 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
               ))
             ) : (
               <>
-                {(isChatDesktop ? conversations : convention)
+                {convention
                   ?.filter((item) => item?._id !== dataTransfer?._id)
                   ?.filter((item) => item?.name)
                   ?.map((item, index) => (
@@ -191,9 +184,7 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
                 fontStyle: "normal",
                 fontWeight: 400,
                 lineHeight: "1.375rem",
-                ...(isChatDesktop
-                  ? { display: "flex", justifyContent: "center" }
-                  : { height: "70px" }),
+                ...(isChatDesktop ? { display: 'flex', justifyContent: 'center'} : { height: "70px" }),
                 overflowY: "auto",
                 overflowX: "hidden",
                 color: isDarkMode ? "white" : "var(--black, #212121)",
@@ -233,10 +224,8 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: isDarkMode
-              ? "var(--mui-palette-background-paper)"
-              : "white",
-            gap: isChatDesktop ? 0 : 1,
+            backgroundColor: isDarkMode ? "var(--mui-palette-background-paper)" : "white",
+            gap: isChatDesktop ? 0 :  1,
             padding: 2,
           }}
         >
@@ -246,8 +235,8 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
             size="small"
             sx={defaultSx.button}
             onClick={() => {
-              if (callbackCancel) {
-                callbackCancel();
+              if (props?.callbackCancel) {
+                props?.callbackCancel();
                 return;
               }
               onSetStep(STEP.CHAT_GROUP, dataTransfer);

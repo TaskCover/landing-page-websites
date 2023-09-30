@@ -192,6 +192,49 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
+
+  const renderMessage = (message: MessageInfo) => {
+    let msg = '';
+    switch (message?.t) {
+      case 'au':
+        msg = commonChatBox("chatBox.group.add", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? '')
+        });
+        break;
+      case 'ru':
+        msg = commonChatBox("chatBox.group.remove", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? '')
+        });
+        break;
+      case 'subscription-role-added':
+        msg = commonChatBox("chatBox.group.lead_trans", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? '')
+        });
+        break;
+      case 'subscription-role-removed':
+        msg = commonChatBox("chatBox.group.lead_remove", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? '')
+        });
+        break;
+      case 'r':
+        msg = commonChatBox("chatBox.group.rename", {
+          user1: message?.u?.username,
+          name: message?.msg,
+          time: getTimeStamp(message?.ts ?? '')
+        });
+        break;
+    }
+    return msg;
+  }
+
   return (
     <>
       <Box
@@ -267,24 +310,16 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                     textAlign: "center",
                   }}
                 >
-                  <Typography
-                    sx={{
-                      backgroundColor: isDarkMode ? "#5b5959" : "#f1f1f1",
-                      fontSize: "10px",
-                      padding: "2px 5px",
-                      borderRadius: "10px",
-                      display: "inline-block",
-                    }}
-                  >
-                    {message?.u?.username}{" "}
-                    {message?.t === "au"
-                      ? commonChatBox("chatBox.added")
-                      : message?.t === "ru"
-                      ? commonChatBox("chatBox.removed")
-                      : message?.t}{" "}
-                    {message?.msg} ({getTimeStamp(message?.ts ?? "")})
-                  </Typography>
-                </Box>
+                    <Typography
+                      sx={{
+                        backgroundColor: isDarkMode ? '#5b5959' : '#f1f1f1',
+                        fontSize: '10px',
+                        padding: '2px 5px',
+                        borderRadius: '10px',
+                        display: 'inline-block',
+                      }}
+                    >{ renderMessage(message) }</Typography>
+                  </Box>
               )}
               {hasNextDay && (
                 <Typography
