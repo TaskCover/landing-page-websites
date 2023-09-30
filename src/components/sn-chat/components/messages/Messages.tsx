@@ -159,9 +159,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         ? Number(
             messagesContentRef.current?.scrollHeight - scrollHeightRef.current || 0,
           )
-        : 0;
-      console.log(index);
-      
+        : 0;      
       messagesContentRef.current.scrollTo(0, index);
     }
   }, []);
@@ -250,7 +248,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           gap: "0.5rem",
           flexDirection: "column",
           overflow: "auto",
-          justifyContent: "flex-end",
+          ...messages.length < 5 && { justifyContent: "flex-end" },
           height: "100vh",
 
           padding: "1rem",

@@ -27,23 +27,26 @@ const AccountInfoHeader = ({
   onPrevious,
   viewStep,
 }: AccountInfoHeaderProp) => {
-  const { dataTransfer, onSetStep, prevStep, currStep, onGetAllConvention } = useChat();
+  const { dataTransfer, onSetStep, prevStep, currStep, onGetAllConvention } =
+    useChat();
   const { usersCount, t, name } = accountInfo;
   const isGroup = useMemo(() => t !== "d", [t]);
 
   const [textSearch, setTextSearch] = useState("");
   const commonChatBox = useTranslations(NS_CHAT_BOX);
 
+  console.log(textSearch);
+
   useEffect(() => {
-    (async() => {
+    (async () => {
       await onGetAllConvention({
-        type: 'a',
-        text: textSearch ?? '',
+        type: "a",
+        text: textSearch ?? "",
         offset: 0,
         count: 30,
       });
     })();
-  }, [currStep, textSearch])
+  }, [currStep, textSearch]);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -114,12 +117,15 @@ const AccountInfoHeader = ({
               flexDirection: "column",
             }}
           >
-            <Typography variant="inherit" fontWeight="bold" style={{ cursor: "pointer" }}
+            <Typography
+              variant="inherit"
+              fontWeight="bold"
+              style={{ cursor: "pointer" }}
               onClick={() => {
                 onSetStep(STEP.CHAT_DETAIL_GROUP);
               }}
             >
-              {name ? name : dataTransfer?.fname?.replaceAll('_', ' ')}
+              {name ? name : dataTransfer?.fname?.replaceAll("_", " ")}
             </Typography>
             <Typography variant="caption" color="#999999">
               {commonChatBox("chatBox.active")}
@@ -152,7 +158,7 @@ const AccountInfoHeader = ({
                 fontWeight: 600,
               }}
             >
-              {dataTransfer?.name?.replaceAll('_', ' ')}
+              {dataTransfer?.name?.replaceAll("_", " ")}
             </Box>
           </>
         );
@@ -263,7 +269,7 @@ const AccountInfoHeader = ({
             {_renderItemHeader(viewStep)}
 
             <Box ml="auto">
-              {(viewStep == STEP.CHAT_DETAIL_GROUP) && (
+              {viewStep == STEP.CHAT_DETAIL_GROUP && (
                 <IconButton>
                   <SearchIcon
                     sx={{

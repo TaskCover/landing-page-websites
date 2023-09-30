@@ -15,8 +15,6 @@ interface GroupchatDrawerMobileProps {
 const GroupDrawerMobile: React.FC<GroupchatDrawerMobileProps> = (props) => {
   const styleDrawerOpen = props.isOpen ? { width: "100%" } : { width: "0" };
 
-  console.log(props.type);
-
   return (
     <Drawer
       sx={{
