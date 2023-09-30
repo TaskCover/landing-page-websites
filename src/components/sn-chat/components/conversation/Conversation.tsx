@@ -33,6 +33,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
     onUploadAndSendFile,
     isChatDesktop,
     isOpenInfoChat,
+    typeDrawerChat
   } = useChat();
   const { user } = useAuth();
 
@@ -43,7 +44,6 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
   const [files, setFiles] = useState<File[]>([]);
-  const account = convention?.find((item) => item._id === roomId);
   const isGroup = useMemo(
     () => conversationInfo?.t !== "d",
     [conversationInfo?.t],
@@ -64,7 +64,9 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
   const currentRoomType = useMemo(() => {
     return dataTransfer?.t ?? "d";
   }, [dataTransfer]);
-
+  
+  const account = useMemo(() => (convention?.find((item) => item._id === (isChatDesktop ? dataTransfer?._id : roomId))), [convention, dataTransfer?._id, isChatDesktop, roomId]);
+  
   const getLastMessage = useCallback(
     async (page?: number, size?: number) => {
       if (currentRoomId?.length === 0) return;
@@ -141,7 +143,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
     },
     [files, onUploadAndSendFile, sendMessage],
   );
-
+  
   return (
     <>
       <Messages
@@ -149,7 +151,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
         pageSize={pageSize}
         sessionId={user?.["username"]}
         isGroup={isGroup}
-        avatarPartner={conversationInfo?.avatar ?? account?.avatar ?? undefined}
+        avatarPartner={account?.avatar ?? conversationInfo?.avatar  ?? undefined}
         initialMessage={messageInfo}
         mediaListPreview={mediaListConversation}
         stateMessage={stateSendMessage}
@@ -162,7 +164,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
         ref={inputRef}
         {...(isChatDesktop && {
             wrapperMessageSx: {
-              ...(isOpenInfoChat
+              ...(isOpenInfoChat && typeDrawerChat !== 'forward'
                 ? {
                     width: `calc(100% - ${
                       extraDesktopMode ? "424px" : "272px"

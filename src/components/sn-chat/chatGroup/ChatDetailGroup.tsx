@@ -24,6 +24,7 @@ import { uploadFile } from "store/chat/media/actionMedia";
 import { useAppDispatch } from "store/hooks";
 import useTheme from "hooks/useTheme";
 import { UploadAvatarGroup } from "./UploadAvatarGroup";
+import ForwardLayout from "components/sn-chatting-room/components/RoomDetails/components/Drawer/ChatForward/ForwardLayout";
 
 export const TYPE_POPUP = {
   DELETE: "DELETE",
@@ -32,6 +33,7 @@ export const TYPE_POPUP = {
   LEAVE_MEMBER: "LEAVE_MEMBER",
   NEW_ADMIN: "NEW_ADMIN",
   RENAME_GROUP: "RENAME_GROUP",
+  FORWARD_MESSAGE: "FORWARD_MESSAGE",
 };
 
 const ChatDetailGroup = (props) => {
@@ -50,10 +52,8 @@ const ChatDetailGroup = (props) => {
     onFetchGroupMembersMember,
     onChangeGroupRole,
     onRemoveGroupMember,
-    onSetConversationInfo,
     onDeleteConversationGroup,
     onGetAllConvention,
-    onChangeGroupAvatar,
   } = useChat();
   const { user } = useAuth();
   //check owner
@@ -239,6 +239,9 @@ const ChatDetailGroup = (props) => {
             />
             : showPopup?.content}
         </Box>
+        {showPopup?.type !== TYPE_POPUP.NEW_ADMIN && (
+          <ForwardLayout />
+        )}
         {showPopup?.type !== TYPE_POPUP.NEW_ADMIN && (
           <Box
             sx={{
