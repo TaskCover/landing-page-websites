@@ -1,11 +1,70 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ItemDocsProps } from "components/sn-docs/detail/LeftSlide/ItemDocs";
-import { DataStatus } from "constant/enums";
-import { DEFAULT_PAGING } from "constant/index";
-import { Paging } from "constant/types";
-import { Position } from "store/company/reducer";
-import { addPage } from "./actions";
+/* eslint-disable no-var */
+"use client"
+
+import { addPage } from './actions';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { DataStatus } from 'constant/enums';
+import { DEFAULT_PAGING } from 'constant/index';
+import { ItemDocsProps } from 'components/sn-docs/detail/LeftSlide/ItemDocs';
+import { Paging } from 'constant/types';
+import { Position } from 'store/company/reducer';
+import { clientStorage } from 'utils/storage';
+/* eslint-disable @typescript-eslint/no-explicit-any */ 
+
+export type PageSettingsType = {
+  font: string;
+  smallText: boolean;
+  fullWidth: boolean;
+  lock: boolean;
+};
+
+export type CoverPictureType = {
+  url: string;
+  verticalPosition: number;
+};
+
+const storedPageInfo : any = null
+const storedWorkspaceInfo : any = null
+
+
+
+
+export type PageType = {
+  id: string;
+  reference: string;
+  path: string | null;
+  icon: string;
+  title: string;
+  createdAt: Date;
+};
+
+export interface WorkspaceState {
+  id: string;
+  name: string;
+  icon: string;
+  members: string[];
+  pages: PageType[];
+}
+
+export type ContentType = {
+  type: string;
+  content: unknown[];
+};
+
+export interface PageState {
+  id: string;
+  reference: string;
+  title: string;
+  icon: string;
+  coverPicture: CoverPictureType;
+  content: any;
+  favorite: string[];
+  pageSettings: PageSettingsType;
+  path: string | null;
+  workspaceId: string;
+  createdAt: Date;
+  updatedAt?: Date;
+}
 
 export interface IDocs {
   docs: any[];
@@ -22,11 +81,12 @@ export interface IDocs {
     any,
     "pageIndex" | "pageSize"
   >;
-
   docDetails : {
     info: {}
     data: ItemDocsProps
-  }
+  };
+  pageInfo : PageState | null;
+  workspaceInfo: WorkspaceState | null
 }
 
   
@@ -79,7 +139,9 @@ const initialState: IDocs = {
           children: [],
         }],
     }
-  }
+  },
+  pageInfo :  storedPageInfo ? JSON.parse(storedPageInfo) : null,
+  workspaceInfo: storedWorkspaceInfo ? JSON.parse(storedWorkspaceInfo) : null,
 }
 
 const docSlice = createSlice({
@@ -99,7 +161,23 @@ const docSlice = createSlice({
         }
 
         addChildToParent(state, child);
-      }
+      },
+      setPage: (state, action: PayloadAction<PageState>) => {
+        state.pageInfo = action.payload;
+        localStorage.setItem("pageInfo", JSON.stringify(action.payload));
+      },
+      clearPage: (state) => {
+        state.pageInfo = null;
+        localStorage.removeItem("pageInfo");
+      },
+      setWorkspace: (state, action: PayloadAction<WorkspaceState>) => {
+        state.workspaceInfo = action.payload;
+        localStorage.setItem("workspaceInfo", JSON.stringify(action.payload));
+      },
+      clearWorkspace: (state) => {
+        state.workspaceInfo = null;
+        localStorage.removeItem("workspaceInfo");
+      },
     },
     extraReducers: (builder) => {
       builder.addCase(addChild.fulfilled, (state, action) => {
@@ -120,11 +198,10 @@ const docSlice = createSlice({
     },
 });
 export const addChild = createAsyncThunk('data/addChild', async ({ parentId, child } : {parentId : string, child : any }) => {
-
   return { parentId, child };
 });
 
 
-export const {createPage} = docSlice.actions
+export const {createPage ,clearPage ,setPage , setWorkspace , clearWorkspace} = docSlice.actions
 
 export default docSlice.reducer;
