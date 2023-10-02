@@ -4,11 +4,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext, useMemo } from "react";
 import { NodeViewContent, NodeViewProps, NodeViewWrapper } from "@tiptap/react";
-import PlusIcon from "../../../asset/icons/plus-thick.svg";
-import DragIcon from "../../../asset/icons/drag-handle.svg";
+
 import styles from "./dBlockNodeView.module.scss";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { useAppSelector } from "store/hooks";
+import PlusIcon from "icons/PlusIcon";
+import DragIcon from "components/sn-docs/news/asset/icons/DragIcon";
 
 export const DBlockNodeView: React.FC<NodeViewProps> = ({
   node,
@@ -36,7 +37,7 @@ export const DBlockNodeView: React.FC<NodeViewProps> = ({
     });
   };
 
-  const fullWidth = pageInfo?.pageSettings.fullWidth!;
+  const fullWidth = pageInfo?.pageSettings?.fullWidth!;
 
   return (
     <>

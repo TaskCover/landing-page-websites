@@ -5,8 +5,7 @@ import React, { useState } from "react";
 import HeaderDocDetail from "./HeaderDocDetail";
 import DocDetail from "./DocDetail";
 import { NewPageContextProvider } from "../news/context/NewPageContext";
-import ThemeProvider from "contexts/ThemeProvider";
-import PageBody from "../news/page-body";
+import { ThemeProvider } from "../news/context/ThemeContext";
 
 const PageDocDetail = () => {
   const [openComment, setOpenComment] = useState(false);
@@ -29,13 +28,12 @@ const PageDocDetail = () => {
             openSlider={openSlider}
             setOpenSlider={setOpenSlider}
           ></HeaderDocDetail>
-          <PageBody></PageBody>
-          {/* <DocDetail
+          <DocDetail
             openComment={openComment}
             setOpenComment={setOpenComment}
             openSlider={openSlider}
             setOpenSlider={setOpenSlider}
-          ></DocDetail> */}
+          ></DocDetail>
         </Box>
       </NewPageContextProvider>
     </ThemeProvider>

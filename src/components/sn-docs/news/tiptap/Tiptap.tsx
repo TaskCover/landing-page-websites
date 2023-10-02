@@ -12,6 +12,7 @@ import { debounce } from "lodash";
 import { useDispatch } from "react-redux";
 import "./styles.css";
 import { useAppSelector } from "store/hooks";
+import { setPage } from "store/docs/reducer";
 
 export const Tiptap = () => {
   const pageInfo = useAppSelector((state) => state.doc.pageInfo);
@@ -37,7 +38,7 @@ export const Tiptap = () => {
           content,
           pageId: pageInfo?.id!,
         };
-        // dispatch(setPage({ ...page.data }));
+        dispatch(setPage(pageContent));
       }
     }, 2000);
 

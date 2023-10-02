@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import LeftSlideDoc from "./LeftSlide/LeftSlideDoc";
 import { Box } from "@mui/material";
 import EditDocs from "./EditDocs";
+import PageBody from "../news/page-body";
 
 export interface IDocDetail {
   openComment: boolean;
@@ -32,13 +33,7 @@ const DocDetail = ({
       pb={{ xs: 1.5, md: 1, lg: 1.5 }}
     >
       <LeftSlideDoc open={open} setOpen={setOpen}></LeftSlideDoc>
-      <EditDocs
-        openSlider={openSlider}
-        setOpenSlider={setOpenSlider}
-        setOpenComment={setOpenComment}
-        openComment={openComment}
-        open={open}
-      ></EditDocs>
+      <PageBody></PageBody>
     </Box>
   );
 };

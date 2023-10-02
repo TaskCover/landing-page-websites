@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
-import UnsplashIcon from "../../assets/icons/unsplash-logo.svg";
+// import { ReactComponent as UnsplashIcon } from "../../assets/icons/unsplash-logo.svg";
 import styles from "./changeCover.module.scss";
-// import Gallery from "./Gallery";
 import Upload from "./Upload";
 import CoverLink from "./CoverLink";
 import Unsplash from "./Unsplash";
 import { useDispatch } from "react-redux";
 import { ThemeContext } from "../context/ThemeContext";
 import { useAppSelector } from "store/hooks";
+import UnsplashIcon from "../asset/icons/UnsplashIcon";
 
 type ChangeCoverProps = {
   open: boolean;
@@ -90,7 +90,7 @@ const ChangeCover: React.FC<ChangeCoverProps> = ({ open, onClose }) => {
                 onClick={() => setActiveTab("unsplash")}
               >
                 <p className={`${styles.unsplash}`}>
-                  {/* <UnsplashIcon /> */}
+                  <UnsplashIcon />
                   Unsplash
                 </p>
               </div>

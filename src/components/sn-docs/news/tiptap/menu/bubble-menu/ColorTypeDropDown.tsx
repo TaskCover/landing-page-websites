@@ -1,13 +1,12 @@
 "use client";
 
-import ReactComponent from "*.svg";
 import Tippy from "@tippyjs/react";
 import { Editor } from "@tiptap/core";
 import { useContext, useState } from "react";
-import DownIcon from "../../../asset/icons/down-expand.svg";
 import styles from "./colorTypeDropDown.module.scss";
 import dropButtonTogglestyles from "./colorTypeToggle.module.scss";
 import { ThemeContext } from "components/sn-docs/news/context/ThemeContext";
+import DownIcon from "components/sn-docs/news/asset/icons/DownIcon";
 
 export const ColorTypeDropDown = ({ editor }: { editor: Editor }) => {
   const [isOpen, setIsOpen] = useState(false);

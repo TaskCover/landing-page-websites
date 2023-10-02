@@ -206,7 +206,7 @@ export const ResizableMediaNodeView = ({
     <NodeViewWrapper
       as="article"
       className={`${styles.media_node_view} ${
-        pageInfo?.pageSettings.fullWidth ? "" : styles.full_width
+        pageInfo?.pageSettings?.fullWidth ? "" : styles.full_width
       } ${floatClass} ${alignClass}`}
     >
       <div className={`${styles.inner_media} ${styles.group}`}>

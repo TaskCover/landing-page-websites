@@ -54,7 +54,6 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
 
   const onSubmit = async (values) => {
     try {
-      console.log(values);
     } catch (error) {}
   };
 
@@ -76,8 +75,6 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
     avatar: e.avatar?.link || "",
     subText: e.email,
   }));
-
-  console.log(formik.values);
 
   const option2 = [
     {

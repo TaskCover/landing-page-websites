@@ -1,5 +1,36 @@
 @use "../styles/abstracts/colors" as *;
 
+.form_title {
+  padding: 10px 0 0 25px;
+  transition: padding 1s;
+
+  input {
+    width: 90%;
+    background-color: inherit;
+    border: none;
+    outline: none;
+    font-size: 44px;
+    font-family: sans-serif;
+    font-weight: 800;
+    padding: 10px;
+    color: $dark-color-tertiary;
+
+    &::placeholder {
+      color: $background-hover;
+    }
+  }
+}
+
+.dark .form_title {
+  input {
+    color: $color-secondary !important;
+    &::placeholder {
+      color: $background-hover !important;
+    }
+  }
+}
+
+
 .content {
   overflow-y: auto;
   height: calc(100vh - 44px);
@@ -121,26 +152,7 @@
       }
     }
 
-    form {
-      padding: 10px 0 0 75px;
-      transition: padding 1s;
-
-      input {
-        width: 90%;
-        background-color: inherit;
-        border: none;
-        outline: none;
-        font-size: 44px;
-        font-family: sans-serif;
-        font-weight: 800;
-        padding: 10px;
-        color: $dark-color-tertiary;
-
-        &::placeholder {
-          color: $background-hover;
-        }
-      }
-    }
+    
 
     .editor {
       margin: 0 50px;
@@ -307,15 +319,6 @@
       }
     }
 
-    form {
-      input {
-        color: $color-secondary;
-
-        &::placeholder {
-          color: $dark-background-hover;
-        }
-      }
-    }
 
     .project {
       border: none;
