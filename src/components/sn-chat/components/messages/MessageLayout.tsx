@@ -24,7 +24,7 @@ const MessageLayout = ({
   hasNextMessageFromSameUser,
   messageProps,
 }: MessageLayoutProps) => {
-  const isCurrentUser = message.u.username === sessionId;
+  const isCurrentUser = message.u.username === sessionId;  
   const { sx, ...props } = messageProps || {};
   const [isForward, setIsForward] = useState(true);
   const { onSetStep, dataTransfer, isChatDesktop, onSetDataTransfer, onSetDrawerType } = useChat();

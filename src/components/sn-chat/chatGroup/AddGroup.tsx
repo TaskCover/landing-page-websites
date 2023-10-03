@@ -155,7 +155,6 @@ const AddGroup: FC<AddGroupProps> = ({
           type: "d",
         });
         handleSuccess(result);
-        console.log(result, "result");
       }
     } else {
       const users = Object.keys(employeeIdSelected).filter(

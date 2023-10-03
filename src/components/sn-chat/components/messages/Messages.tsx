@@ -76,10 +76,11 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   const [isBottomScrollMessage, setBottomScrollMessage] = useState(false);
   const commonChatBox = useTranslations(NS_CHAT_BOX);
   const { isDarkMode } = useTheme();
-
+  const { isChatDesktop } = useChat();
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
+  
   const scrollHeightRef = useRef(0);
   const observer = useRef(
     new IntersectionObserver((entries) => {
@@ -88,7 +89,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         pageRef.current = pageRef.current + pageSize;
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         const clientHeight =
-          (messagesContentRef.current?.clientHeight || 0) + 100;
+          (messagesContentRef.current?.clientHeight || 0) + 50
         if (scrollHeightRef.current > clientHeight) {
           onRefetch(pageRef.current);
         }
@@ -152,14 +153,13 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     [isBottomScrollMessage],
   );
 
-  const initScrollIntoView = useCallback(() => {
+  const initScrollIntoView = useCallback(() => {    
     if (messagesContentRef.current) {
       const index = messagesContentRef.current?.scrollHeight
         ? Number(
-            messagesContentRef.current?.scrollHeight -
-              scrollHeightRef.current || 0,
+            messagesContentRef.current?.scrollHeight - scrollHeightRef.current || 0,
           )
-        : 0;
+        : 0;      
       messagesContentRef.current.scrollTo(0, index);
     }
   }, []);
@@ -192,10 +192,51 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
-  
+
+  const renderMessage = (message: MessageInfo) => {
+    let msg = '';
+    switch (message?.t) {
+      case 'au':
+        msg = commonChatBox("chatBox.group.add", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? '')
+        });
+        break;
+      case 'ru':
+        msg = commonChatBox("chatBox.group.remove", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? '')
+        });
+        break;
+      case 'subscription-role-added':
+        msg = commonChatBox("chatBox.group.lead_trans", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? '')
+        });
+        break;
+      case 'subscription-role-removed':
+        msg = commonChatBox("chatBox.group.lead_remove", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? '')
+        });
+        break;
+      case 'r':
+        msg = commonChatBox("chatBox.group.rename", {
+          user1: message?.u?.username,
+          name: message?.msg,
+          time: getTimeStamp(message?.ts ?? '')
+        });
+        break;
+    }
+    return msg;
+  }
+
   return (
     <>
-      
       <Box
         ref={messagesContentRef}
         onScroll={(e) => {
@@ -207,8 +248,10 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           gap: "0.5rem",
           flexDirection: "column",
           overflow: "auto",
+          ...messages.length < 5 && { justifyContent: "flex-end" },
+          height: "100vh",
 
-          padding: "1rem 1rem 0 1rem",
+          padding: "1rem",
           ...(!!wrapperMessageSx
             ? { ...wrapperMessageSx }
             : { height: "100%" }),
@@ -252,7 +295,6 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                       ref: focusMessageRef,
                     }),
                   }}
-  
                 >
                   <MessageContent
                     message={message}
@@ -276,8 +318,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                         borderRadius: '10px',
                         display: 'inline-block',
                       }}
-                    >{message?.u?.username} {message?.t === 'au' ? commonChatBox("chatBox.added") : (message?.t === 'ru' ? commonChatBox("chatBox.removed") : message?.t)} {message?.msg} ({getTimeStamp(message?.ts ?? '')})</Typography>
-                    
+                    >{ renderMessage(message) }</Typography>
                   </Box>
               )}
               {hasNextDay && (
