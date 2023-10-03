@@ -35,7 +35,6 @@ import { suggestion } from "../menu/slash-menu/suggestions";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../config/firebase";
 import { uuid } from "utils/index";
-
 interface GetExtensionsProps {
   openLinkModal: () => void;
 }

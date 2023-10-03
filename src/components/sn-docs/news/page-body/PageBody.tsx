@@ -1,34 +1,38 @@
 "use client";
-import styles from "./pageBody.module.scss";
 import ChangeCover from "../change-cover-panel";
-import React, { useEffect, useState } from "react";
+import MenuBarHeader from "./MenuBarHeader";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import styles from "./pageBody.module.scss";
 import { debounce } from "lodash";
+import { Editor } from "@tiptap/core";
+import { getExtensions } from "../tiptap/extensions/starter-kit";
 import { PageState, setPage } from "store/docs/reducer";
+import { ThemeContext } from "../context/ThemeContext";
 import { Tiptap } from "../tiptap/Tiptap";
 import { useAppSelector } from "store/hooks";
 import { useDispatch } from "react-redux";
+import { useEditor } from "@tiptap/react";
+import { Box } from "@mui/material";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 const PageBody = () => {
   const pageInfo = useAppSelector((state) => state.doc.pageInfo);
-  const [emojiCode, setEmojiCode] = useState<string | null>(null);
   const [title, setTitle] = useState<string>(pageInfo?.title!);
   const [verticalPosition, setVerticalPosition] = useState(0);
   const [openChangeCover, setOpenChangeCover] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const [pageContent, setPageContent] = useState<any>(null);
+  const [isAddingNewLink, setIsAddingNewLink] = useState(false);
+  const openLinkModal = () => setIsAddingNewLink(true);
+  const { theme } = useContext(ThemeContext);
 
-  const alo = useAppSelector((state) => state.doc.pageInfo);
-  console.log("🚀 ~ file: PageBody.tsx:23 ~ PageBody ~ alo:", alo);
+  const dispatch = useDispatch();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setTitle(e.target.value);
   };
-
-  useEffect(() => {
-    setEmojiCode(null);
-  }, [emojiCode]);
 
   useEffect(() => {
     setTitle(pageInfo?.title!);
@@ -51,7 +55,7 @@ const PageBody = () => {
         };
         dispatch(setPage(updatedPage));
       }
-    }, 5000);
+    }, 1000);
 
     if (verticalPosition !== 0) {
       localStorage.setItem("imagePosition", JSON.stringify(verticalPosition));
@@ -71,9 +75,75 @@ const PageBody = () => {
     }
   }, []);
 
+  const handleContentUpdate = (content: any) => {
+    setPageContent(content);
+  };
+
+  const logContent = useCallback(
+    (e: Editor) => handleContentUpdate(e.getJSON()),
+    [],
+  );
+
+  useEffect(() => {
+    const savePageContent = debounce((content) => {
+      if (pageInfo?.content !== content) {
+        const pageData = {
+          content,
+          pageId: pageInfo?.id!,
+        };
+        dispatch(setPage(pageContent));
+      }
+    }, 2000);
+
+    savePageContent(pageContent);
+
+    return () => {
+      savePageContent.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleContentUpdate]);
+
+  const editor = useEditor({
+    extensions: getExtensions({ openLinkModal }),
+    editorProps: {
+      attributes: {
+        class: `main-editor`,
+        spellCheck: "false",
+        suppressContentEditableWarning: "true",
+      },
+    },
+    onUpdate: ({ editor: e }) => {
+      logContent(e);
+    },
+  });
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      editor?.setEditable(!pageInfo?.pageSettings?.lock!);
+      editor?.commands.setContent(pageInfo?.content);
+      setPageContent(pageInfo?.content);
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageInfo]);
+
   return (
-    <>
-      <div className={`${styles.content}}`}>
+    <Box
+      sx={{
+        paddingBottom: {
+          sm: "0",
+          xs: "80px",
+        },
+        width: {
+          sm: "70%",
+          xs: "100%",
+        },
+      }}
+    >
+      <div className={`${styles.content}} ${styles[theme]}`}>
+        {editor && <MenuBarHeader editor={editor as Editor} />}
+
         <div
           className={`${styles.page_content} ${
             pageInfo?.pageSettings?.fullWidth ? "" : styles.full_width
@@ -95,7 +165,7 @@ const PageBody = () => {
             />
           </form>
           <div className={`${styles.editor}`}>
-            <Tiptap />
+            <Tiptap editor={editor} />
           </div>
         </div>
       </div>
@@ -103,7 +173,7 @@ const PageBody = () => {
         open={openChangeCover}
         onClose={() => setOpenChangeCover(false)}
       />
-    </>
+    </Box>
   );
 };
 

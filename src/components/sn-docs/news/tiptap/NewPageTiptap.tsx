@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useContext, useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
@@ -53,7 +55,7 @@ export const NewPageTiptap = () => {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      editor?.setEditable(!pageSettings.lock!);
+      editor?.setEditable(!pageSettings?.lock!);
       editor?.commands.setContent(content);
       setPageContent(content);
     }, 0);
