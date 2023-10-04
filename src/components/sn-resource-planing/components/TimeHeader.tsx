@@ -284,13 +284,18 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
               ...changeWeekButtonStyles,
               maxHeight: "28px",
               fontWeight: 500,
-              color: "rgba(102, 102, 102, 1)",
               background: palette.grey[100],
               borderRadius: "4px",
               ["&.MuiButtonBase-root"]: {
+                color:
+                  dayjs(currentDate).format("YYYY-MM-DD") ===
+                  dayjs().format("YYYY-MM-DD")
+                    ? palette.grey[300]
+                    : palette.grey[900],
                 minWidth: "32px!important",
                 minHeight: "32px!important",
-                px: "12px",
+                fontSize: "14px",
+                px: "16px",
               },
             }}
             onClick={() => onAction("week", "today")}
@@ -299,7 +304,7 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
               dayjs().format("YYYY-MM-DD")
             }
           >
-            {resourceT("schedule.time.thisWeek")}
+            {resourceT("schedule.time.thisWeek").toUpperCase()}
           </Button>
           <Button
             variant="contained"
