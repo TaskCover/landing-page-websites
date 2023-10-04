@@ -36,6 +36,7 @@ import useGetOptions from "./hooks/useGetOptions";
 import FilterHeader from "./components/FilterHeader";
 import SlotLabelContent from "./components/SlotLabelContent";
 import ResourceHeaderContent from "./components/ResourceHeaderContent";
+import useTheme from "hooks/useTheme";
 
 const MyScheduleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -54,6 +55,7 @@ const MyScheduleTab = () => {
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
+  const { palette } = useTheme();
   const [isOpenEdit, setIsOpenEdit] = React.useState({
     isOpen: false,
     bookingId: "",
@@ -201,8 +203,39 @@ const MyScheduleTab = () => {
   const mappedEvents = getEvents();
 
   useGetOptions();
+
+  const defaultStyle = {
+    "& .custom-header": {
+      "& .fc-scrollgrid-sync-inner": {
+        width: "100%!important",
+      },
+    },
+    "& .fc-media-screen": {
+      maxHeight: "70vh!important",
+    },
+    "& .fc-datagrid-cell-cushion": { padding: "0!important" },
+    "& .fc-datagrid-cell": {},
+    "& .fc-event-resizable": {
+      background: "none!important",
+      border: "none!important",
+    },
+    "& .fc-datagrid-cell-frame": {
+      height: "auto!important",
+    },
+    "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander":
+      {
+        display: "none!important",
+      },
+    "& td.fc-day-sun, & td.fc-day-sat": {
+      borderBottom: "none!important",
+      background: palette.grey[50],
+    },
+    "& th.fc-day-sun, & th.fc-day-sat": {
+      background: palette.grey[50],
+    },
+  };
   return (
-    <Stack direction="column" rowGap={2} >
+    <Stack direction="column" rowGap={2}>
       <FilterHeader type={TAB_TYPE.MY} />
       <TimeHeader
         filters={filters}
@@ -286,33 +319,4 @@ const MyScheduleTab = () => {
   );
 };
 
-const defaultStyle = {
-  "& .custom-header": {
-    "& .fc-scrollgrid-sync-inner": {
-      width: "100%!important",
-    },
-  },
-  "& .fc-media-screen": {
-    maxHeight: "70vh!important",
-  },
-  "& .fc-datagrid-cell-cushion": { padding: "0!important" },
-  "& .fc-datagrid-cell": {},
-  "& .fc-event-resizable": {
-    background: "none!important",
-    border: "none!important",
-  },
-  "& .fc-datagrid-cell-frame": {
-    height: "auto!important",
-  },
-  "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander": {
-    display: "none!important",
-  },
-  "& td.fc-day-sun, & td.fc-day-sat": {
-    borderBottom: "none!important",
-    background: "#FAFAFA!important",
-  },
-  "& th.fc-day-sun, & th.fc-day-sat": {
-    background: "#FAFAFA!important",
-  },
-};
 export default MyScheduleTab;
