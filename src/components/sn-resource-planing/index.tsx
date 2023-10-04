@@ -56,11 +56,7 @@ const ResourcePlanning = () => {
         <Grid
           container
           sx={{
-            backgroundColor: isSmSmaller
-              ? "#FFFFFF"
-              : isDarkMode
-              ? "#212121"
-              : "#F7F7FD",
+            backgroundColor: isDarkMode ? "#212121" : "#FFFFFF",
             height: isSmSmaller ? "110px" : "auto",
             alignItems: "center",
           }}

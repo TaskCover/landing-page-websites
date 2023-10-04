@@ -255,6 +255,11 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
             xs: "flex-start",
             sm: "flex-end",
           }}
+          sx={{
+            height: "32px",
+            py: 1,
+          }}
+          gap={"4px"}
           minWidth="fit-content"
         >
           <Button
@@ -262,31 +267,30 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
             sx={{
               ...changeWeekButtonStyles,
               padding: 0,
-              borderRadius: "4px 0px 0px 4px",
-              ["&.MuiButton-sizeMedium"]: {
-                minWidth: "28px!important",
-                minHeight: "28px!important",
-                padding: 1,
+              borderRadius: "4px 0 0 4px",
+              ["&.MuiButtonBase-root"]: {
+                minWidth: "32px!important",
+                minHeight: "32px!important",
+                padding: 0,
               },
             }}
             onClick={() => onAction("week", "prev")}
           >
-            <ChevronLeftIcon fontSize="medium" />
+            <ChevronLeftIcon fontSize="small" />
           </Button>
           <Button
             variant="contained"
             sx={{
               ...changeWeekButtonStyles,
-              height: "24px",
+              maxHeight: "28px",
               fontWeight: 500,
               color: "rgba(102, 102, 102, 1)",
               background: palette.grey[100],
-              borderRadius: "0px",
-              margin: "0 1px",
-              ["&.MuiButton-sizeMedium"]: {
-                minWidth: "48px!important",
-                minHeight: "38px!important",
-                padding: 2,
+              borderRadius: "4px",
+              ["&.MuiButtonBase-root"]: {
+                minWidth: "32px!important",
+                minHeight: "32px!important",
+                px: "12px",
               },
             }}
             onClick={() => onAction("week", "today")}
@@ -303,15 +307,15 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
               ...changeWeekButtonStyles,
               padding: 0,
               borderRadius: "0px 4px 4px 0px",
-              ["&.MuiButton-sizeMedium"]: {
-                minWidth: "28px!important",
-                minHeight: "28px!important",
-                padding: 1,
+              ["&.MuiButtonBase-root"]: {
+                minWidth: "32px!important",
+                minHeight: "32px!important",
+                padding: 0,
               },
             }}
             onClick={() => onAction("week", "next")}
           >
-            <ChevronRightIcon fontSize="medium" />
+            <ChevronRightIcon fontSize="small" />
           </Button>
         </Stack>
       </Grid2>

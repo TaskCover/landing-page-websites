@@ -1,4 +1,4 @@
-import { Button, SelectChangeEvent, Stack } from "@mui/material";
+import { SelectChangeEvent, Stack } from "@mui/material";
 import { Search } from "components/Filters";
 import Filter from "components/shared/Filter";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
@@ -22,6 +22,7 @@ import {
   endOfWeek,
   startOfWeek,
 } from "../hepler";
+import { Button } from "components/shared";
 
 const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -100,7 +101,7 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
           },
           padding: {
             xs: "0",
-            md: "8px 16px",
+            md: "4px 8px",
           },
           borderRadius: "4px",
         }}
@@ -121,10 +122,10 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
           placeholder={resourceT("schedule.filter.search")}
           sx={{
             maxWidth: "432px",
-            height: "40px",
+            height: "32px",
             " .MuiInputBase-root": {
               maxWidth: "295px",
-              height: "40px",
+              height: "30px",
             },
           }}
         />
@@ -144,7 +145,7 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
               onChangeQueries("working_sort", event.target.value)
             }
             label={resourceT("schedule.filter.workingHours")}
-            sx={{ maxWidth: "200px" }}
+            sx={{ maxWidth: "260px" }}
             options={[
               {
                 label: resourceT("schedule.filter.asceding"),
@@ -158,14 +159,13 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
           />
         </Stack>
         <Button
-          variant="contained"
+          variant="secondary"
+          size="small"
           sx={{
-            maxWidth: "295px",
-            height: "40px",
-            backgroundColor: "#",
-            " .MuiInputBase-root": {
+            "&.MuiButtonBase-root": {
               maxWidth: "295px",
-              height: "40px",
+              minHeight: "32px!important",
+              padding: "0 16px!important",
             },
           }}
           onClick={() => onSearch()}
