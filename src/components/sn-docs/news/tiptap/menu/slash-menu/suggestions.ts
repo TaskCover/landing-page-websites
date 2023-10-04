@@ -21,24 +21,16 @@ import tableImg from "../../../asset/images/bubble-menu/simple-table.e31a23bb.pn
 import columnImg from "../../../asset/images/bubble-menu/columnList.63d7ab92.png";
 
 interface SlashMenuItem {
-  title: string;
+  title: any;
   command: (params: { editor: Editor; range: Range }) => void;
   img?: any;
+  icon?: any;
   shortcut: string;
   type: string;
   desc: string;
 }
 
 const SlashMenuItems: Partial<SlashMenuItem>[] = [
-  {
-    title: "Text",
-    command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setParagraph().run();
-    },
-    img: textImg,
-    shortcut: "#",
-    desc: "Just start writing with plain text.",
-  },
   {
     title: "Heading 1",
     command: ({ editor, range }) => {

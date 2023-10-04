@@ -1,19 +1,11 @@
 "use client";
 /* eslint-disable react/display-name */
 import { BubbleMenu, Editor } from "@tiptap/react";
-import NodeTypeDropDown from "./NodeTypeDropDown";
-import { ColorTypeDropDown } from "./ColorTypeDropDown";
 import { generalButtons } from "./buttons";
-// import GoToIcon from "../../../asset/icons/go-to.svg";
-// import CommentIcon from "../../../asset/icons/comment.svg";
-// import MentionIcon from "../../../asset/icons/mention.svg";
 import styles from "./bubbleMenu.module.scss";
 import React, { useContext, useMemo } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
-
-interface CustomBubbleMenuProps {
-  editor: Editor;
-}
+import MenuBarHeader from "components/sn-docs/news/page-body/MenuBarHeader";
 
 export const CustomBubbleMenu = ({ editor }) => {
   const { theme } = useContext(ThemeContext);
@@ -42,31 +34,7 @@ export const CustomBubbleMenu = ({ editor }) => {
         moveTransition: "transform 0.2s ease-in-out",
       }}
     >
-      <div className={`${styles.drop_down}`}>
-        <NodeTypeDropDown editor={editor} />
-      </div>
-      <div className={`${styles.divider}`}> </div>
-      <div className={`${styles.filler_button}`}>
-        <div className={`${styles.icon}`}>{/* <GoToIcon /> */}</div>
-        Link
-      </div>
-      <div className={`${styles.divider}`}> </div>
-      <div className={`${styles.filler_button}`}>
-        <div className={`${styles.icon} ${styles.comment}`}>
-          {/* <CommentIcon /> */}
-        </div>
-        Comment
-      </div>
-      <div className={`${styles.divider}`}> </div>
-      {memoizedButtons}
-      <div className={`${styles.divider}`}> </div>
-      <div className={`${styles.drop_down}`}>
-        <ColorTypeDropDown editor={editor} />
-      </div>
-      <div className={`${styles.divider}`}> </div>
-      <div className={`${styles.filler_button}`}>
-        <div className={`${styles.icon}`}>{/* <MentionIcon /> */}</div>
-      </div>
+      <MenuBarHeader editor={editor}></MenuBarHeader>
     </BubbleMenu>
   );
 };

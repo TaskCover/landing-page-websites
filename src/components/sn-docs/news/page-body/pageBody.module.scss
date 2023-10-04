@@ -1,22 +1,20 @@
 @use "../styles/abstracts/colors" as *;
 
 .form_title {
-  padding: 10px 0 0 25px;
   transition: padding 1s;
-
+  padding-left: 20px;
   input {
     width: 90%;
     background-color: inherit;
     border: none;
     outline: none;
-    font-size: 44px;
-    font-family: sans-serif;
+    font-size: 32px;
     font-weight: 800;
-    padding: 10px;
+    padding-left: 10px;
     color: $dark-color-tertiary;
 
     &::placeholder {
-      color: $background-hover;
+      color: #999999;
     }
   }
 }

@@ -52,28 +52,6 @@ const NodeTypeDropDown = ({ editor }: { editor: Editor }) => {
       placement="bottom-start"
       content={
         <div className={`${styles.bubble_menu}  ${styles[theme]}`}>
-          <div className={`${styles.bubble_menu_dropdown}`}>Turn Into</div>
-          <div
-            className={`${styles.bubble_dropdown_item}`}
-            onClick={() => editor.chain().focus().setParagraph().run()}
-          >
-            <div className={`${styles.bubble_dropdown_button}`}>
-              <div className={`${styles.info}`}>
-                <img
-                  src={textImg as unknown as string}
-                  alt="Text"
-                  width="24"
-                  height="24"
-                />
-                <span className={`${styles.bubble_dropdown_button_label}`}>
-                  Text
-                </span>
-              </div>
-              {isOnlyParagraph && (
-                <div className={`${styles.icon}`}>&#10003;</div>
-              )}
-            </div>
-          </div>
           <div
             className={`${styles.bubble_dropdown_item}`}
             onClick={() =>
@@ -82,19 +60,10 @@ const NodeTypeDropDown = ({ editor }: { editor: Editor }) => {
           >
             <div className={`${styles.bubble_dropdown_button}`}>
               <div className={`${styles.info}`}>
-                <img
-                  src={headerImg as unknown as string}
-                  alt="Heading 1"
-                  width="24"
-                  height="24"
-                />
                 <span className={`${styles.bubble_dropdown_button_label}`}>
                   Heading 1
                 </span>
               </div>
-              {editor.isActive("heading", { level: 1 }) && (
-                <div className={`${styles.icon}`}>&#10003;</div>
-              )}
             </div>
           </div>
           <div

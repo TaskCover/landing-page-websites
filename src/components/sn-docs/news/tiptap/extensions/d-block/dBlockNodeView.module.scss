@@ -2,6 +2,10 @@
 
 .dblock {
   display: flex;
+  align-items: center;
+  div {
+    width: 100%;
+  }
 
   p,
   h1,
@@ -9,7 +13,7 @@
   h3 {
     text-align: start;
     margin: 5px 0;
-    width: 50vw;
+    width: 100%;
     transition: width 0.2s ease 0.1s;
   }
 
@@ -23,7 +27,7 @@
   }
 
   hr {
-    width: 920px;
+    width: 100%;
     transition: width 0.5s ease-in-out;
   }
 
@@ -66,7 +70,7 @@
 
     td,
     th {
-      width: 15em;
+      width: 100%;
       border: 1px solid $color-tertiary;
       padding: 3px 5px;
       vertical-align: top;
@@ -162,107 +166,15 @@
   h1,
   h2,
   h3 {
-    width: 90vw;
+    width: 90%;
   }
 
   hr {
-    width: 90vw;
+    width: 90%;
   }
 }
 
-.full_width.left_open {
-  p,
-  h1,
-  h2,
-  h3 {
-    width: 75vw;
-  }
 
-  hr {
-    width: 75vw;
-  }
-
-  table {
-    width: 75vw;
-
-    tr div {
-      p {
-        width: 95%;
-      }
-    }
-  }
-}
-
-.full_width.right_open {
-  p,
-  h1,
-  h2,
-  h3 {
-    width: 70vw;
-  }
-
-  hr {
-    width: 70vw;
-  }
-
-  table {
-    width: 70vw;
-
-    tr div {
-      p {
-        width: 95%;
-      }
-    }
-  }
-}
-
-.full_width.left_open.right_open {
-  p,
-  h1,
-  h2,
-  h3 {
-    width: 60vw;
-  }
-
-  hr {
-    width: 60vw;
-  }
-
-  table {
-    width: 60vw;
-
-    tr div {
-      p {
-        width: 95%;
-      }
-    }
-  }
-}
-
-.left_open {
-  p,
-  h1,
-  h2,
-  h3 {
-    // width: 75vw;
-    // width: 38vw;
-    width: 36vw;
-  }
-
-  hr {
-    width: 36vw;
-  }
-
-  table {
-    width: 36vw;
-
-    tr div {
-      p {
-        width: 95%;
-      }
-    }
-  }
-}
 
 @media screen and (max-width: 1320px) {
   .dblock {
@@ -270,15 +182,15 @@
     h1,
     h2,
     h3 {
-      width: 85vw;
+      width: 100%;
     }
 
     hr {
-      width: 85vw;
+      width: 100%;
     }
 
     table {
-      width: 25vw;
+      width: 25%;
 
       tr div {
         p {
@@ -288,21 +200,5 @@
     }
   }
 
-  .left_open {
-    p,
-    h1,
-    h2,
-    h3 {
-      width: 70vw;
-    }
-  }
-
-  .right_open {
-    p,
-    h1,
-    h2,
-    h3 {
-      width: 50vw;
-    }
-  }
+ 
 }

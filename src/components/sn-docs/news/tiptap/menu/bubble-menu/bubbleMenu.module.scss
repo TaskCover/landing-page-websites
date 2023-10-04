@@ -1,10 +1,9 @@
 @use "../../../styles/abstracts/colors" as *;
 
 .bubble_menu {
-  background-color: $background-secondary;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  // background-color: $background-secondary;
   color: $dark-background-hover;
-  width: 460px;
+  width: 500px;
   padding: 0 10px;
   display: flex;
   align-items: center;

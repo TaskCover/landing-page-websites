@@ -1,172 +1,71 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
+import DownIcon from "../asset/icons/DownIcon";
+import IconBold from "../asset/iconsMenuTipTap/IconBold";
+import IconCode from "../asset/iconsMenuTipTap/IconCode";
+import IconComment from "../asset/iconsMenuTipTap/IconComment";
+import IconItaic from "../asset/iconsMenuTipTap/IconItaic";
+import IconLi from "../asset/iconsMenuTipTap/IconLi";
+import IconLi2 from "../asset/iconsMenuTipTap/IconLi2";
+import IconLineText from "../asset/iconsMenuTipTap/IconLineText";
+import IconLineTextCenter from "../asset/iconsMenuTipTap/IconLineTextCenter";
+import IconLink from "../asset/iconsMenuTipTap/IconLink";
+import styles from "../tiptap/menu/bubble-menu/nodeTypeDropDown.module.scss";
+import Tippy from "@tippyjs/react";
+import toggleButtonStyles from "../tiptap/menu/bubble-menu/nodeTypeToggle.module.scss";
+import { Box } from "@mui/material";
 import { Editor } from "@tiptap/core";
+import { ThemeContext } from "../context/ThemeContext";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React, {
   Fragment,
   memo,
   useCallback,
   useContext,
+  useEffect,
+  useMemo,
   useState,
 } from "react";
-import IconBold from "../asset/iconsMenuTipTap/IconBold";
-import IconItaic from "../asset/iconsMenuTipTap/IconItaic";
-import IconLineText from "../asset/iconsMenuTipTap/IconLineText";
-import IconLineTextCenter from "../asset/iconsMenuTipTap/IconLineTextCenter";
-import IconLink from "../asset/iconsMenuTipTap/IconLink";
-import IconLi from "../asset/iconsMenuTipTap/IconLi";
-import IconCode from "../asset/iconsMenuTipTap/IconCode";
-import IconComment from "../asset/iconsMenuTipTap/IconComment";
-import { Box } from "@mui/material";
-import styles from "../tiptap/menu/bubble-menu/nodeTypeDropDown.module.scss";
-import toggleButtonStyles from "../tiptap/menu/bubble-menu/nodeTypeToggle.module.scss";
-
-import Tippy from "@tippyjs/react";
-import { ThemeContext } from "../context/ThemeContext";
-import DownIcon from "../asset/icons/DownIcon";
-import IconLi2 from "../asset/iconsMenuTipTap/IconLi2";
+import { Text } from "components/shared";
 
 const MenuBarHeader = ({ editor }: { editor: Editor }) => {
-  // const items = [
-  //   {
-  //     icon: "bold",
-  //     title: "Bold",
-  //     action: () => editor.chain().focus().toggleBold().run(),
-  //     isActive: () => editor?.isActive("bold"),
-  //   },
-  //   {
-  //     icon: "italic",
-  //     title: "Italic",
-  //     action: () => editor.chain().focus().toggleItalic().run(),
-  //     isActive: () => editor?.isActive("italic"),
-  //   },
-  //   {
-  //     icon: "strikethrough",
-  //     title: "Strike",
-  //     action: () => editor.chain().focus().toggleStrike().run(),
-  //     isActive: () => editor?.isActive("strike"),
-  //   },
-  //   {
-  //     icon: "code-view",
-  //     title: "Code",
-  //     action: () => editor.chain().focus().toggleCode().run(),
-  //     isActive: () => editor?.isActive("code"),
-  //   },
-  //   {
-  //     icon: "mark-pen-line",
-  //     title: "Highlight",
-  //     action: () => editor.chain().focus().toggleHighlight().run(),
-  //     isActive: () => editor?.isActive("highlight"),
-  //   },
-  //   {
-  //     type: "divider",
-  //   },
-  //   {
-  //     icon: "h-1",
-  //     title: "Heading 1",
-  //     action: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-  //     isActive: () => editor?.isActive("heading", { level: 1 }),
-  //   },
-  //   {
-  //     icon: "h-2",
-  //     title: "Heading 2",
-  //     action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-  //     isActive: () => editor?.isActive("heading", { level: 2 }),
-  //   },
-  //   {
-  //     icon: "paragraph",
-  //     title: "Paragraph",
-  //     action: () => editor.chain().focus().setParagraph().run(),
-  //     isActive: () => editor?.isActive("paragraph"),
-  //   },
-  //   {
-  //     icon: "list-unordered",
-  //     title: "Bullet List",
-  //     action: () => editor.chain().focus().toggleBulletList().run(),
-  //     isActive: () => editor?.isActive("bulletList"),
-  //   },
-  //   {
-  //     icon: "list-ordered",
-  //     title: "Ordered List",
-  //     action: () => editor.chain().focus().toggleOrderedList().run(),
-  //     isActive: () => editor?.isActive("orderedList"),
-  //   },
-  //   {
-  //     icon: "list-check-2",
-  //     title: "Task List",
-  //     action: () => editor.chain().focus().toggleTaskList().run(),
-  //     isActive: () => editor?.isActive("taskList"),
-  //   },
-  //   {
-  //     icon: "code-box-line",
-  //     title: "Code Block",
-  //     action: () => editor.chain().focus().toggleCode().run(),
-  //     isActive: () => editor?.isActive("codeBlock"),
-  //   },
-  //   {
-  //     type: "divider",
-  //   },
-  //   {
-  //     icon: "double-quotes-l",
-  //     title: "Blockquote",
-  //     action: () => editor.chain().focus().toggleBlockquote().run(),
-  //     isActive: () => editor?.isActive("blockquote"),
-  //   },
-  //   {
-  //     icon: "separator",
-  //     title: "Horizontal Rule",
-  //     action: () => editor.chain().focus().setHorizontalRule().run(),
-  //   },
-  //   {
-  //     type: "divider",
-  //   },
-  //   {
-  //     icon: "text-wrap",
-  //     title: "Hard Break",
-  //     action: () => editor.chain().focus().setHardBreak().run(),
-  //   },
-  //   {
-  //     icon: "format-clear",
-  //     title: "Clear Format",
-  //     action: () => editor.chain().focus().clearNodes().unsetAllMarks().run(),
-  //   },
-  //   {
-  //     type: "divider",
-  //   },
-  //   {
-  //     icon: "arrow-go-back-line",
-  //     title: "Undo",
-  //     action: () => editor.chain().focus().undo().run(),
-  //   },
-  //   {
-  //     icon: "arrow-go-forward-line",
-  //     title: "Redo",
-  //     action: () => editor.chain().focus().redo().run(),
-  //   },
-  // ];
-
   const { theme } = useContext(ThemeContext);
-  const [isOpen, setIsOpen] = useState(false);
 
-  const setLink = useCallback(() => {
+  const isOnlyParagraph =
+    !editor.isActive("bulletList") &&
+    !editor.isActive("orderedList") &&
+    !editor.isActive("heading");
+  const h1 = editor.isActive("heading", { level: 1 });
+  const h2 = editor.isActive("heading", { level: 2 });
+  const h3 = editor.isActive("heading", { level: 3 });
+
+  const text = useMemo(() => {
+    if (isOnlyParagraph) {
+      return "Normal";
+    }
+    if (h1) {
+      return "Heading 1";
+    }
+    if (h2) {
+      return "Heading 2";
+    }
+    if (h3) {
+      return "Heading 3";
+    }
+  }, [isOnlyParagraph, h1, h2, h3]);
+
+  const setLink = () => {
     const previousUrl = editor.getAttributes("link").href;
     const url = window.prompt("URL", previousUrl);
-
-    // cancelled
     if (url === null) {
       return;
     }
-
-    // empty
     if (url === "") {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
-
       return;
     }
-
-    // update link
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
-  }, [editor]);
+  };
 
   return (
     <Box
@@ -218,9 +117,8 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
             >
               <div className={`${styles.bubble_dropdown_button}`}>
                 <div className={`${styles.info}`}>
-                  <div></div>
                   <span className={`${styles.bubble_dropdown_button_label}`}>
-                    Text
+                    Normal
                   </span>
                 </div>
               </div>
@@ -233,7 +131,6 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
             >
               <div className={`${styles.bubble_dropdown_button}`}>
                 <div className={`${styles.info}`}>
-                  <div></div>
                   <span className={`${styles.bubble_dropdown_button_label}`}>
                     Heading 1
                   </span>
@@ -248,7 +145,6 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
             >
               <div className={`${styles.bubble_dropdown_button}`}>
                 <div className={`${styles.info}`}>
-                  <div></div>
                   <span className={`${styles.bubble_dropdown_button_label}`}>
                     Heading 2
                   </span>
@@ -263,7 +159,6 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
             >
               <div className={`${styles.bubble_dropdown_button}`}>
                 <div className={`${styles.info}`}>
-                  <div></div>
                   <span className={`${styles.bubble_dropdown_button_label}`}>
                     Heading 3
                   </span>
@@ -276,7 +171,7 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
         <div
           className={`${toggleButtonStyles.bubble_toggle_dropdown} ${toggleButtonStyles[theme]}`}
         >
-          <span className="truncate">Text</span>
+          <Text>{text}</Text>
           <div className={`${toggleButtonStyles.icon}`}>
             <DownIcon />
           </div>
@@ -301,42 +196,41 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
         <IconLineText></IconLineText>
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleStrike}
+        onClick={() => editor.chain().focus().toggleStrike().run()}
         className={editor.isActive("strike") ? "active" : ""}
       >
         <IconLineTextCenter></IconLineTextCenter>
       </button>
       <button
+        value="link"
+        aria-label="link"
         onClick={() =>
           editor.isActive("link")
-            ? setLink()
-            : editor.chain().focus().unsetLink()
+            ? editor.chain().focus().unsetLink().run()
+            : setLink()
         }
         className={editor.isActive("link") ? "active" : ""}
       >
         <IconLink></IconLink>
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive("italic") ? "active" : ""}
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        className={editor.isActive("bulletList") ? "active" : ""}
       >
         <IconLi></IconLi>
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive("italic") ? "active" : ""}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        className={editor.isActive("orderedList") ? "active" : ""}
       >
         <IconLi2></IconLi2>
       </button>
-      <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive("italic") ? "active" : ""}
-      >
+      <button>
         <IconComment></IconComment>
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive("italic") ? "active" : ""}
+        onClick={() => editor.chain().focus().toggleCode().run()}
+        className={editor.isActive("code") ? "active" : ""}
       >
         <IconCode></IconCode>
       </button>

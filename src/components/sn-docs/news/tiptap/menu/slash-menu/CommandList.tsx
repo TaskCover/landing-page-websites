@@ -11,18 +11,35 @@ import React, {
 import { stopPrevent } from "../../utils/eventModifier";
 import styles from "./commandList.module.scss";
 import { ThemeContext } from "../../../context/ThemeContext";
+import { Box } from "@mui/material";
+import Hg1Icon from "./asset/icons/Hg1Icon";
+import H2Icon from "./asset/icons/H2Icon";
+import H3Icon from "./asset/icons/H3Icon";
+import H4Icon from "./asset/icons/H4Icon";
+import BulletListIcon from "./asset/icons/BulletListIcon";
+import NumberListIcon from "./asset/icons/NumberListIcon";
+import TodoListIcon from "./asset/icons/TodoListIcon";
+import TableIcon from "./asset/icons/TableIcon";
+import CodeBlockIcon from "./asset/icons/CodeBlockIcon";
+import QuoteIcon from "./asset/icons/QuoteIcon";
+import VideoIcon from "./asset/icons/VideoIcon";
+import FileIcon from "./asset/icons/FileIcon";
+import ImageIcon from "./asset/icons/ImageIcon";
+import DividerIcon from "./asset/icons/DividerIcon";
 
 interface CommandListProps {
   items: any[];
   command: (...args: any[]) => any;
+  editor: any;
+  range: any;
 }
 
 export const CommandList = React.forwardRef(
-  ({ items, command }: CommandListProps, ref) => {
+  ({ items, command, editor, range }: CommandListProps, ref) => {
+    console.log("🚀 ~ file: CommandList.tsx:35 ~ props:", range);
     const { theme } = useContext(ThemeContext);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-
     useEffect(() => {
       setSelectedIndex(0);
     }, [items]);
@@ -100,16 +117,351 @@ export const CommandList = React.forwardRef(
         className={`${styles.items} ${styles[theme]}`}
         ref={scrollContainerRef}
       >
-        <div className={`${styles.bubble_menu_dropdown}`}>Basic blocks</div>
-        {items.length ? (
+        <div
+          onClick={() => {
+            editor
+              .chain()
+              .focus()
+              .deleteRange(range)
+              .setNode("heading", { level: 1 })
+              .run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <Hg1Icon></Hg1Icon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Heading 1</div>
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            editor
+              .chain()
+              .focus()
+              .deleteRange(range)
+              .setNode("heading", { level: 2 })
+              .run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <H2Icon></H2Icon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Heading 2</div>
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            editor
+              .chain()
+              .focus()
+              .deleteRange(range)
+              .setNode("heading", { level: 3 })
+              .run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <H3Icon></H3Icon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Heading 3</div>
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            editor
+              .chain()
+              .focus()
+              .deleteRange(range)
+              .setNode("heading", { level: 4 })
+              .run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <H4Icon></H4Icon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Heading 4</div>
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            editor.chain().focus().deleteRange(range).toggleBulletList().run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <BulletListIcon></BulletListIcon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Bullet list</div>
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            editor.chain().focus().deleteRange(range).toggleOrderedList().run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <NumberListIcon></NumberListIcon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Numbered list</div>
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            editor.chain().focus().deleteRange(range).toggleTaskList().run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <TodoListIcon></TodoListIcon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>To do list</div>
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            editor
+              .chain()
+              .deleteRange(range)
+              .insertTable({ rows: 1, cols: 2, withHeaderRow: false })
+              .run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <TableIcon></TableIcon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Table</div>
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            editor.chain().focus().deleteRange(range).toggleCode().run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <CodeBlockIcon></CodeBlockIcon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Code block</div>
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <DividerIcon></DividerIcon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Divider</div>
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            editor.chain().focus().deleteRange(range).toggleBlockquote().run();
+          }}
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <QuoteIcon></QuoteIcon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Quote</div>
+          </div>
+        </div>
+        <div
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <ImageIcon></ImageIcon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Image</div>
+          </div>
+        </div>
+        <div
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <VideoIcon></VideoIcon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>Video</div>
+          </div>
+        </div>
+        <div
+          className={`
+         ${styles.item}`}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContentL: "center",
+              alignItems: "center",
+              background: "#F7F7FD",
+              padding: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <FileIcon></FileIcon>
+          </Box>
+          <div className={`${styles.info}`}>
+            <div className={`${styles.title}`}>File</div>
+          </div>
+        </div>
+
+        {/* {items.length ? (
           <>
             {items.map((item, index) => {
               return (
                 <div
                   className={`
-                  ${styles.item}
-                  ${index === selectedIndex ? styles.is_selected : ""} 
-                `}
+                  ${styles.item}`}
                   key={item.title}
                   onClick={() => selectItem(index)}
                   onMouseEnter={() => setSelectedIndex(index)}
@@ -118,10 +470,20 @@ export const CommandList = React.forwardRef(
                   }}
                   tabIndex={0}
                 >
-                  <img src={item.img} alt="Text" width="48" height="48" />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContentL: "center",
+                      alignItems: "center",
+                      background: "#F7F7FD",
+                      padding: "12px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    <Hg1Icon></Hg1Icon>
+                  </Box>
                   <div className={`${styles.info}`}>
                     <div className={`${styles.title}`}>{item.title}</div>
-                    <div className={`${styles.description}`}>{item.desc}</div>
                   </div>
                 </div>
               );
@@ -131,7 +493,7 @@ export const CommandList = React.forwardRef(
           <div className={`${styles.item}`}>
             <div className={`${styles.no_result}`}>No result</div>
           </div>
-        )}
+        )} */}
       </div>
     );
   },

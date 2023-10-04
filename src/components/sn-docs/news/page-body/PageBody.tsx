@@ -27,6 +27,7 @@ const PageBody = () => {
   const [isAddingNewLink, setIsAddingNewLink] = useState(false);
   const openLinkModal = () => setIsAddingNewLink(true);
   const { theme } = useContext(ThemeContext);
+  const [minHeight, setMinHeight] = useState("100vh");
 
   const dispatch = useDispatch();
 
@@ -128,6 +129,32 @@ const PageBody = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageInfo]);
 
+  useEffect(() => {
+    const updateMinHeight = () => {
+      const windowHeight: number = window.innerHeight; // Chiều cao của viewport
+      const elementPosition: DOMRect | undefined = document
+        .getElementById("is-edit-text")
+        ?.getBoundingClientRect(); // Vị trí của phần tử trong viewport
+      if (elementPosition) {
+        const newMinHeight: string =
+          windowHeight - (elementPosition.top + 50) + "px"; // Tính toán giá trị mới cho minHeight
+        setMinHeight(newMinHeight);
+      }
+    };
+
+    window.addEventListener("scroll", updateMinHeight);
+    window.addEventListener("resize", updateMinHeight);
+
+    // Đảm bảo cập nhật ban đầu khi trang được tải
+    updateMinHeight();
+
+    // Clean up listeners khi component unmount
+    return () => {
+      window.removeEventListener("scroll", updateMinHeight);
+      window.removeEventListener("resize", updateMinHeight);
+    };
+  }, []);
+
   return (
     <Box
       sx={{
@@ -143,9 +170,18 @@ const PageBody = () => {
     >
       <div className={`${styles.content}} ${styles[theme]}`}>
         {editor && <MenuBarHeader editor={editor as Editor} />}
-
-        <div
-          className={`${styles.page_content} ${
+        <Box
+          sx={{
+            background: "white",
+            marginTop: "16px",
+            padding: {
+              sm: "32px 40px",
+              xs: "12px",
+            },
+            minHeight: minHeight,
+          }}
+          id="is-edit-text"
+          className={` ${styles.page_content} ${
             pageInfo?.pageSettings?.fullWidth ? "" : styles.full_width
           }
           ${pageInfo?.pageSettings?.smallText ? styles.small_text : ""}
@@ -157,7 +193,7 @@ const PageBody = () => {
               id="title"
               type="text"
               value={title}
-              placeholder="Untitled"
+              placeholder="Enter document title..."
               onChange={handleTitleChange}
               maxLength={36}
               autoComplete="off"
@@ -167,7 +203,7 @@ const PageBody = () => {
           <div className={`${styles.editor}`}>
             <Tiptap editor={editor} />
           </div>
-        </div>
+        </Box>
       </div>
       <ChangeCover
         open={openChangeCover}
