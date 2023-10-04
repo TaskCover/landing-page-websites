@@ -45,7 +45,6 @@ const AllPeopleTab = () => {
   );
   prevFilters.current = filters;
 
-  const { mappedTimeSymbol } = useGetMappingTime();
   const { bookingAll, bookingAllFilter } = useBookingAll();
   const { selectedDate, updateDate } = useResourceDate();
   const [resources, setResources] = React.useState<IBookingListItem[]>([]);

@@ -120,7 +120,7 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
           onChange={(name, value) => onChangeQueries(name, value)}
           placeholder={resourceT("schedule.filter.search")}
           sx={{
-            maxWidth: "402px",
+            maxWidth: "432px",
             height: "40px",
             " .MuiInputBase-root": {
               maxWidth: "295px",
@@ -144,7 +144,7 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
               onChangeQueries("working_sort", event.target.value)
             }
             label={resourceT("schedule.filter.workingHours")}
-            sx={{ width: "150px" }}
+            sx={{ maxWidth: "200px" }}
             options={[
               {
                 label: resourceT("schedule.filter.asceding"),

@@ -130,12 +130,23 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
   }, [filters?.start_date, filters?.end_date]);
 
   return (
-    <Grid2 container>
-      <Grid2 xs={0} sm={2} md={4} />
+    <Grid2
+      container
+      justifyContent={{
+        xs: "flex-start",
+        sm: "flex-end",
+      }}
+      direction={{
+        xs: "column-reverse",
+        sm: "row",
+      }}
+      spacing={2}
+    >
       <Grid2
         xs={12}
         sm={6}
-        md={5}
+        md={4}
+        lg={3}
         sx={{
           display: "flex",
           alignItems: {
@@ -243,7 +254,7 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
           alignItems="center"
           justifyContent={{
             xs: "flex-start",
-            sm: "center",
+            sm: "flex-end",
           }}
         >
           <Button

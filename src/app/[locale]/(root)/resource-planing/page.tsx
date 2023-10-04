@@ -15,8 +15,8 @@ export default function ResourcePlanningPage() {
         },
       }}
       px={{
-        sx: 2,
-        md: 10,
+        sx: 0,
+        md: 3,
       }}
     >
       <ResourcePlanning />

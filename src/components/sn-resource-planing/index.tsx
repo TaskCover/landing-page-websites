@@ -25,6 +25,14 @@ const ResourcePlanning = () => {
         sx: "scroll",
         md: "hidden",
       }}
+      sx={{
+        ["& .MuiTabPanel-root"]: {
+          p: {
+            xs: "10px",
+            md: "20px",
+          },
+        },
+      }}
       minWidth={350}
     >
       <Grid
@@ -48,11 +56,7 @@ const ResourcePlanning = () => {
         <Grid
           container
           sx={{
-            backgroundColor: isSmSmaller
-              ? "inherit"
-              : isDarkMode
-              ? "#565656"
-              : "#FFFFFF",
+            backgroundColor: isSmSmaller ? "#FFFFFF" : "#F7F7FD",
             height: isSmSmaller ? "110px" : "auto",
             alignItems: "center",
           }}
