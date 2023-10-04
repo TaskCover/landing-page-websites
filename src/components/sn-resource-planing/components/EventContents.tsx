@@ -15,6 +15,7 @@ import GrayArrowIcon from "icons/GrayArrowIcon";
 import { useTranslations } from "next-intl";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import { Tooltip } from "components/shared";
+import useTheme from "hooks/useTheme";
 
 interface IEventContentsProps {
   event: EventApi;
@@ -24,6 +25,7 @@ const EventContents = ({ event, setIsOpenEdit }: IEventContentsProps) => {
   const { eventType, allocation_type, allocation, eventId } =
     event.extendedProps;
   const { mappedTimeSymbol } = useGetMappingTime();
+  const { palette, isDarkMode } = useTheme();
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const checkEventType = (value) => {
     switch (value) {
@@ -96,7 +98,7 @@ const EventContents = ({ event, setIsOpenEdit }: IEventContentsProps) => {
           sx={{
             fontSize: 16,
             fontWeight: 400,
-            color: "#BABCC6",
+            color: isDarkMode ? palette.grey[600] : palette.grey[300],
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",

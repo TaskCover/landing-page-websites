@@ -3,6 +3,7 @@ import { Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import React from "react";
 import { weekdays } from "../hepler";
+import useTheme from "hooks/useTheme";
 
 interface IProps {
   arg: SlotLabelContentArg;
@@ -12,6 +13,7 @@ const SlotLabelContent = ({ arg }: IProps) => {
   // Content label for each slot on calendar
   const date = dayjs(arg?.date);
   const weekday = weekdays[date.day()];
+  const { isDarkMode, palette } = useTheme();
   const isSelected = dayjs(date.format("YYYY-MM-DDDD")).isSame(
     dayjs().format("YYYY-MM-DDDD"),
   );
@@ -24,7 +26,7 @@ const SlotLabelContent = ({ arg }: IProps) => {
           fontSize: "10px",
           fontWeight: 400,
           textAlign: "left",
-          color: isSelected ? "#1BC5BD" : "#212121",
+          color: isSelected ? "#1BC5BD" : palette.text.primary,
         }}
       >
         {weekday}
@@ -35,7 +37,7 @@ const SlotLabelContent = ({ arg }: IProps) => {
           fontSize: "14px",
           textAlign: "left",
           fontWeight: 600,
-          color: isSelected ? "#1BC5BD" : "#212121",
+          color: isSelected ? "#1BC5BD" : palette.text.primary,
         }}
       >
         {date.isValid() && date.format("DD")}

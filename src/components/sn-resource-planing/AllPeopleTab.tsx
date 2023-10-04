@@ -28,6 +28,7 @@ import { IBookingListItem } from "store/resourcePlanning/reducer";
 import FilterHeader from "./components/FilterHeader";
 import ResourceHeaderContent from "./components/ResourceHeaderContent";
 import SlotLabelContent from "./components/SlotLabelContent";
+import useTheme from "hooks/useTheme";
 
 export interface IEditState {
   isOpen: boolean;
@@ -51,6 +52,7 @@ const AllPeopleTab = () => {
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
+  const { palette, isDarkMode } = useTheme();
   const [isOpenEdit, setIsOpenEdit] = React.useState<IEditState>({
     isOpen: false,
     bookingId: "",
@@ -198,6 +200,37 @@ const AllPeopleTab = () => {
   const mappedEvents = getEvents();
 
   useGetOptions();
+
+  const defaultStyle = {
+    "& .custom-header": {
+      "& .fc-scrollgrid-sync-inner": {
+        width: "100%!important",
+      },
+    },
+    "& .fc-media-screen": {
+      maxHeight: "65vh!important",
+    },
+    "& .fc-datagrid-cell-cushion": { padding: "0!important" },
+    "& .fc-datagrid-cell": {},
+    "& .fc-event-resizable": {
+      background: "none!important",
+      border: "none!important",
+    },
+    "& .fc-datagrid-cell-frame": {
+      // height: 'auto!important',
+    },
+    "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander":
+      {
+        display: "none!important",
+      },
+    "& td.fc-day-sun, & td.fc-day-sat": {
+      borderBottom: "none!important",
+      background: palette.grey[50],
+    },
+    "& th.fc-day-sun, & th.fc-day-sat": {
+      background: palette.grey[50],
+    },
+  };
   return (
     <Stack direction="column" rowGap={2}>
       <FilterHeader type={TAB_TYPE.ALL} />
@@ -293,33 +326,4 @@ const AllPeopleTab = () => {
   );
 };
 
-const defaultStyle = {
-  "& .custom-header": {
-    "& .fc-scrollgrid-sync-inner": {
-      width: "100%!important",
-    },
-  },
-  "& .fc-media-screen": {
-    maxHeight: "65vh!important",
-  },
-  "& .fc-datagrid-cell-cushion": { padding: "0!important" },
-  "& .fc-datagrid-cell": {},
-  "& .fc-event-resizable": {
-    background: "none!important",
-    border: "none!important",
-  },
-  "& .fc-datagrid-cell-frame": {
-    // height: 'auto!important',
-  },
-  "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander": {
-    display: "none!important",
-  },
-  "& td.fc-day-sun, & td.fc-day-sat": {
-    borderBottom: "none!important",
-    background: "#FAFAFA!important",
-  },
-  "& th.fc-day-sun, & th.fc-day-sat": {
-    background: "#FAFAFA!important",
-  },
-};
 export default AllPeopleTab;
