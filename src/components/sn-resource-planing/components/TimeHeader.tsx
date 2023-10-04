@@ -145,7 +145,6 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
       <Grid2
         xs={12}
         sm={6}
-        md={4}
         lg={3}
         sx={{
           display: "flex",
@@ -248,7 +247,7 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
           <ExpandMore sx={{ color: "rgba(102, 102, 102, 1)" }} />
         </Stack>
       </Grid2>
-      <Grid2 xs={12} sm={3}>
+      <Grid2 xs={12} sm={4} md={3} xl={2}>
         <Stack
           direction="row"
           alignItems="center"
@@ -256,30 +255,39 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
             xs: "flex-start",
             sm: "flex-end",
           }}
+          minWidth="fit-content"
         >
           <Button
             variant="contained"
             sx={{
               ...changeWeekButtonStyles,
-              minWidth: "28px",
-              height: "28px",
               padding: 0,
               borderRadius: "4px 0px 0px 4px",
+              ["&.MuiButton-sizeMedium"]: {
+                minWidth: "28px!important",
+                minHeight: "28px!important",
+                padding: 1,
+              },
             }}
             onClick={() => onAction("week", "prev")}
           >
-            <ChevronLeftIcon />
+            <ChevronLeftIcon fontSize="medium" />
           </Button>
           <Button
             variant="contained"
             sx={{
               ...changeWeekButtonStyles,
-              height: "34px",
+              height: "24px",
               fontWeight: 500,
               color: "rgba(102, 102, 102, 1)",
               background: palette.grey[100],
               borderRadius: "0px",
               margin: "0 1px",
+              ["&.MuiButton-sizeMedium"]: {
+                minWidth: "48px!important",
+                minHeight: "38px!important",
+                padding: 2,
+              },
             }}
             onClick={() => onAction("week", "today")}
             disabled={
@@ -293,14 +301,17 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
             variant="contained"
             sx={{
               ...changeWeekButtonStyles,
-              minWidth: "28px",
-              height: "28px",
               padding: 0,
               borderRadius: "0px 4px 4px 0px",
+              ["&.MuiButton-sizeMedium"]: {
+                minWidth: "28px!important",
+                minHeight: "28px!important",
+                padding: 1,
+              },
             }}
             onClick={() => onAction("week", "next")}
           >
-            <ChevronRightIcon />
+            <ChevronRightIcon fontSize="medium" />
           </Button>
         </Stack>
       </Grid2>
