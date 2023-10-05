@@ -16,9 +16,9 @@ export const LayoutSlider = ({
   height,
 }: {
   children: React.ReactNode;
-  heightToolbar: any;
-  heightContent: any;
-  height: any;
+  heightToolbar?: any;
+  heightContent?: any;
+  height?: any;
 }) => {
   return (
     <Box
@@ -39,7 +39,7 @@ export const LayoutSlider = ({
         width: "100%",
         bgcolor: "white",
         height: {
-          sm: heightContent + heightToolbar + 26,
+          sm: height,
           // xs: heightContent + height,
           xs: "100%",
         },

@@ -5,7 +5,9 @@ import { generalButtons } from "./buttons";
 import styles from "./bubbleMenu.module.scss";
 import React, { useContext, useMemo } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
-import MenuBarHeader from "components/sn-docs/news/page-body/MenuBarHeader";
+import MenuBarHeader, {
+  MenuBarHeaderEdit,
+} from "components/sn-docs/news/page-body/MenuBarHeader";
 
 export const CustomBubbleMenu = ({ editor }) => {
   const { theme } = useContext(ThemeContext);
@@ -34,7 +36,7 @@ export const CustomBubbleMenu = ({ editor }) => {
         moveTransition: "transform 0.2s ease-in-out",
       }}
     >
-      <MenuBarHeader editor={editor}></MenuBarHeader>
+      <MenuBarHeaderEdit editor={editor}></MenuBarHeaderEdit>
     </BubbleMenu>
   );
 };

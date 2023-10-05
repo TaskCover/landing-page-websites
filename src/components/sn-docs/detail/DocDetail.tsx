@@ -33,7 +33,12 @@ const DocDetail = ({
       pb={{ xs: 1.5, md: 1, lg: 1.5 }}
     >
       <LeftSlideDoc open={open} setOpen={setOpen}></LeftSlideDoc>
-      <PageBody></PageBody>
+      <PageBody
+        openSlider={openSlider}
+        setOpenSlider={setOpenSlider}
+        openComment={openComment}
+        setOpenComment={setOpenComment}
+      ></PageBody>
     </Box>
   );
 };

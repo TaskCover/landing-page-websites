@@ -13,12 +13,21 @@ import { useAppSelector } from "store/hooks";
 import { useDispatch } from "react-redux";
 import { useEditor } from "@tiptap/react";
 import { Box } from "@mui/material";
+import { IDocDetail } from "components/sn-docs/detail/DocDetail";
+import DrawComment, {
+  LayoutSlider,
+} from "components/sn-docs/detail/DrawCommet";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-const PageBody = () => {
+const PageBody = ({
+  openComment,
+  openSlider,
+  setOpenComment,
+  setOpenSlider,
+}: IDocDetail) => {
   const pageInfo = useAppSelector((state) => state.doc.pageInfo);
   const [title, setTitle] = useState<string>(pageInfo?.title!);
   const [verticalPosition, setVerticalPosition] = useState(0);
@@ -160,7 +169,7 @@ const PageBody = () => {
       sx={{
         paddingBottom: {
           sm: "0",
-          xs: "80px",
+          xs: "160px",
         },
         width: {
           sm: "70%",
@@ -168,6 +177,11 @@ const PageBody = () => {
         },
       }}
     >
+      {openComment && (
+        <LayoutSlider heightToolbar={minHeight}>
+          <DrawComment setOpenComment={setOpenComment}></DrawComment>
+        </LayoutSlider>
+      )}
       <div className={`${styles.content}} ${styles[theme]}`}>
         {editor && <MenuBarHeader editor={editor as Editor} />}
         <Box

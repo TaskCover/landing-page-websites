@@ -10,6 +10,7 @@ import { ThemeContext } from "../../../context/ThemeContext";
 import { useAppSelector } from "store/hooks";
 import PlusIcon from "icons/PlusIcon";
 import DragIcon from "components/sn-docs/news/asset/icons/DragIcon";
+import { Box } from "@mui/material";
 
 export const DBlockNodeView: React.FC<NodeViewProps> = ({
   node,
@@ -48,9 +49,18 @@ export const DBlockNodeView: React.FC<NodeViewProps> = ({
         }`}
       >
         <section className={`${styles.wrapper_section}`} aria-label="left-menu">
-          <div className={`${styles.icon}`} onClick={createNodeAfter}>
+          <Box
+            sx={{
+              display: {
+                sm: "flex !important",
+                xs: "none !important",
+              },
+            }}
+            className={`${styles.icon}`}
+            onClick={createNodeAfter}
+          >
             <PlusIcon />
-          </div>
+          </Box>
           <div className={`${styles.icon}`} draggable data-drag-handle>
             <DragIcon />
           </div>

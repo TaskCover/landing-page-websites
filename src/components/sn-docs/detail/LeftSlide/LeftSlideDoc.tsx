@@ -122,7 +122,9 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
             value={search}
             sx={{
               width: "100%",
-              backgroundColor: "white",
+              ".MuiOutlinedInput-root": {
+                backgroundColor: "white",
+              },
             }}
           />
           <Box>
