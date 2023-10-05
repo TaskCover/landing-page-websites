@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataStatus } from "constant/enums";
 import { Paging } from "constant/types";
-import { Attachment, ChatLinkType, MediaType } from "./media/typeMedia";
+import { Attachment, ChatLinkType, MediaType, TypeMedia } from "./media/typeMedia";
 
 export type IChatItemInfo = IChatInfo & IChatGroup & IChatDirect;
 export interface IChatInfo {
@@ -150,6 +150,8 @@ export interface MediaPreviewItem {
   link: string;
   name: string;
   object: string;
+  ts: string;
+  type: TypeMedia;
 }
 
 export interface ChatState {
