@@ -464,3 +464,53 @@ export const deepEqual = (foo, bar) => {
 
   return foo !== foo && bar !== bar;
 };
+
+export const copyImage = (url: string) => {
+  const img = document.createElement("img");
+  img.src = url;
+  img.alt = "";
+  img?.setAttribute("crossorigin", "anonymous");
+  img.onload = (e) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(img, 0, 0);
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          return navigator.clipboard
+            .write([
+              new ClipboardItem({
+                ["image/png"]: blob,
+              }),
+            ])
+            .then(() => {
+              console.log("Copied");
+            });
+        }
+      },
+      "image/png",
+      0.9,
+    );
+  };
+};
+
+export const downloadImage = async (url: string, name: string) => {
+  try {
+    const copiedImage = await fetch(url);
+    const blobImage = await copiedImage.blob();
+    const href = URL.createObjectURL(blobImage);
+    const anchorElement = document.createElement("a");
+    anchorElement.href = href;
+    anchorElement.download = name;
+    document.body.appendChild(anchorElement);
+    anchorElement.click();
+
+    document.body.removeChild(anchorElement);
+    window.URL.revokeObjectURL(href);
+  } catch (error) {
+    throw new Error();
+  }
+};

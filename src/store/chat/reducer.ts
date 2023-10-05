@@ -84,7 +84,7 @@ const initialState: ChatState = {
   paramsConversation: {},
   paramsLastMessage: {},
   paramsUnreadMessage: {},
-  typeDrawerChat: 'info',
+  typeDrawerChat: "info",
   isOpenInfoChat: false,
   isChatDesktop: false,
 };
@@ -98,8 +98,8 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
-    setChatDesktop : (state, action) => {
-      state.isChatDesktop = action.payload
+    setChatDesktop: (state, action) => {
+      state.isChatDesktop = action.payload;
     },
     resetConversationInfo: (state) => {
       state.conversationInfo = null;
@@ -156,6 +156,8 @@ const chatSlice = createSlice({
                 link: item.image_url ?? item.video_url ?? "",
                 name: item.name || "",
                 object: "",
+                ts: item.ts || "",
+                type: item.image_url ? "image_url" : "video_url",
               };
             });
 
@@ -178,7 +180,7 @@ const chatSlice = createSlice({
         status: action.payload.status,
       };
     },
-    setListNewConversation: (state, action) => {  
+    setListNewConversation: (state, action) => {
       state.convention = action.payload;
     },
 
@@ -253,8 +255,8 @@ const chatSlice = createSlice({
       state[action.payload.type] = action.payload.value;
     },
     resetSearchChatText: (state) => {
-      state.listSearchMessage = []
-    }
+      state.listSearchMessage = [];
+    },
   },
   extraReducers: (builder) =>
     builder
@@ -333,9 +335,11 @@ const chatSlice = createSlice({
               )
               .map((item) => {
                 return {
-                  link: item.downloadlink || "",
-                  name: item.name || "",
+                  link: item.downloadlink as string,
+                  name: item.name as string,
                   object: "",
+                  ts: item.ts as string,
+                  type: item.image_url ? "image_url" : "video_url",
                 };
               });
 
@@ -544,7 +548,7 @@ export const {
   resetConversationInfo,
   setChatDesktop,
   setListNewConversation,
-  resetSearchChatText
+  resetSearchChatText,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

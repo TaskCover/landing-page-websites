@@ -8,7 +8,6 @@ import AttachmentContent from "../conversation/AttachmentContent";
 import { useEffect, useMemo, useRef } from "react";
 import ReadedIcon from "icons/ReadedIcon";
 import UnReadIcon from "icons/UnReadIcon";
-import hljs from "highlight.js";
 import useTheme from "hooks/useTheme";
 import { useChat } from "store/chat/selectors";
 

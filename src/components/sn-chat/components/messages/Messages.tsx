@@ -43,6 +43,7 @@ interface MessagesProps {
   focusMessage: MessageSearchInfo | null;
   unReadMessage: UnreadUserInfo[];
   onRefetch: (page: number) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapperMessageSx?: any;
 }
 
