@@ -62,27 +62,49 @@ export enum SORT_OPTIONS {
 }
 
 export enum SALE_STAGE {
-  LEAD= 'LEAD',
-  PROPOSAL_SENT = 'PROPOSAL_SENT',
-  PROSPECT = 'PROSPECT',
-  NEGOTIATION = 'NEGOTIATION',
+  LEAD = "LEAD",
+  PROPOSAL_SENT = "PROPOSAL_SENT",
+  PROSPECT = "PROSPECT",
+  NEGOTIATION = "NEGOTIATION",
   WAITING_APPROVE = "WATTING_APPROVE",
 }
 
 export enum CURRENCY_CODE {
-    USD='USD',
-    EUR='EUR',
-    JPY='JPY',
-    GBP='GBP',
-    CAD='CAD',
-    AUD='AUD',
-    SGD='SGD',
-    HKD='HKD',
-    SEK='SEK',
-    CHF='CHF',
-    NZD='NZD',
-    MXN='MXN',
-    BRL='BRL',
-    RUB='RUB',
-    CNY='CNY',
+  USD = "USD",
+  EUR = "EUR",
+  JPY = "JPY",
+  GBP = "GBP",
+  CAD = "CAD",
+  AUD = "AUD",
+  SGD = "SGD",
+  HKD = "HKD",
+  SEK = "SEK",
+  CHF = "CHF",
+  NZD = "NZD",
+  MXN = "MXN",
+  BRL = "BRL",
+  RUB = "RUB",
+  CNY = "CNY",
+}
+
+export enum RESOURCE_EVENT_TYPE {
+  PROJECT_BOOKING = "PROJECT_BOOKING",
+  TIME_OF_BOOKING = "TIME_OF_BOOKING",
+}
+
+export enum RESOURCE_ALLOCATION_TYPE {
+  PERCENTAGE = "%",
+  HOUR = "hours",
+  HOUR_PER_DAY = "h/day",
+}
+
+export enum RESOURCE_ALLOCATION_UNIT {
+  PERCENTAGE = "%",
+  HOUR = "hours",
+  HOUR_PER_DAY = "h/day",
+}
+
+export enum DAY_TIME_UNIT {
+  DAY = "day",
+  HOUR = "hour",
 }

@@ -436,6 +436,19 @@ export const formatEstimateTime = (time: string | number, isHour?: boolean) => {
   return `${formattedHours}:${formattedMinutes}`;
 };
 
+export const formatNumberHourToTime = (time: number, isHour?: boolean) => {
+  const Hour = Math.floor(time);
+  const Minute = Math.floor((time - Hour) * 60);
+
+  const formattedHour = Hour < 10 ? `0${Hour}` : Hour;
+  const formattedMinute = Minute < 10 ? `0${Minute}` : Minute;
+
+  if (isHour) {
+    return `${formattedHour}h`;
+  }
+  return `${formattedHour}:${formattedMinute}h`;
+};
+
 export const deepEqual = (foo, bar) => {
   const has = Object.prototype.hasOwnProperty;
   let ctor, len;
