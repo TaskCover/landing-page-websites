@@ -6,9 +6,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 import { DialogContent, Stack, Box, Button } from "@mui/material";
-import DefaultPopupLayout from "./DefaultPopupLayout";
+import DefaultPopupLayout from "../../../layouts/DefaultPopupLayout";
 import dayjs from "dayjs";
-import TextFieldSelect from "../Component/Select";
 import TimePicker from "../Component/TimePicker";
 import Textarea from "../Component/Textarea";
 import NumberInput from "../Component/NumberInput";
@@ -19,10 +18,15 @@ import { usePositions } from "store/company/selectors";
 import { DataStatus } from "constant/enums";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_TIME_TRACKING } from "constant/index";
+import {
+  AN_ERROR_TRY_AGAIN,
+  NS_COMMON,
+  NS_TIME_TRACKING,
+} from "constant/index";
 import { useTranslations } from "next-intl";
 import { DEFAULT_RANGE_ACTIVITIES } from "store/timeTracking/reducer";
 import useTheme from "hooks/useTheme";
+import TextFieldSelect from "components/shared/TextFieldSelect";
 
 interface IProps {
   type?: string;
@@ -142,11 +146,11 @@ const TimeCreate: React.FC<IProps> = ({
         reset({
           day: date,
           start_time: time,
-          position: userData?.position?.id
+          position: userData?.position?.id,
         });
       } else {
         reset({
-          position: userData?.position?.id
+          position: userData?.position?.id,
         });
       }
     }
@@ -354,7 +358,11 @@ const TimeCreate: React.FC<IProps> = ({
             name="note"
             control={control}
             render={({ field }) => (
-              <Textarea label={timeT("modal.Note")} sx={{ flex: 1 }} {...field} />
+              <Textarea
+                label={timeT("modal.Note")}
+                sx={{ flex: 1 }}
+                {...field}
+              />
             )}
           />
         </Stack>

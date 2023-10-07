@@ -6,7 +6,7 @@ import ChatMessageIcon from "icons/ChatMessageIcon";
 import CloseIcon from "icons/CloseIcon";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "store/chat/selectors";
-import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
+import DefaultPopupLayout from "layouts/DefaultPopupLayout";
 import { Grow, Typography } from "@mui/material";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";
@@ -17,7 +17,8 @@ import useTheme from "hooks/useTheme";
 
 const ChatListTemp = () => {
   const { user } = useAuth();
-  const { onGetAllConvention, onClearConversation, onReset,onSetChatDesktop } = useChat();
+  const { onGetAllConvention, onClearConversation, onReset, onSetChatDesktop } =
+    useChat();
   const popperRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
@@ -128,7 +129,7 @@ const ChatListTemp = () => {
 
   const handleTrigger = (e: React.MouseEvent<HTMLDivElement>) => {
     popperRef.current = !popperRef.current;
-    onSetChatDesktop(false)
+    onSetChatDesktop(false);
     if (browserWidth < 768) {
       setOpen(false);
       setShow(true);

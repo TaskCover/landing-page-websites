@@ -26,7 +26,7 @@ import FullCalendar from "@fullcalendar/react"; // Import DateClickArg type
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
-import Filter from "../../Component/Filter";
+import Filter from "../../../shared/Filter";
 import { calendarStyles } from "./TrackingCalendar.styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -707,13 +707,16 @@ const TrackingCalendar: React.FC<IProps> = () => {
                     position: event?._def?.extendedProps?.position?.id,
                     project_id: event?._def?.extendedProps?.project?.id,
                     start_time: time,
-                    type: event?._def?.extendedProps?.type === "working_time" ? "Work time" : "Break time",
+                    type:
+                      event?._def?.extendedProps?.type === "working_time"
+                        ? "Work time"
+                        : "Break time",
                   };
                   onUpdateTimeSheet({
                     ...dataUpdate,
                   })
                     .then((res) => {
-                      onAddSnackbar("Update timesheet success", "success");        
+                      onAddSnackbar("Update timesheet success", "success");
                     })
                     .catch((err) => {
                       onAddSnackbar("Update timesheet failure", "error");
