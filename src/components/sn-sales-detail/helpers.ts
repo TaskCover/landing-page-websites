@@ -1,4 +1,17 @@
+import { SALE_BILL_TYPE } from "constant/enums";
 import { Todo } from "store/sales/reducer";
+
+export const SALE_BILL_TYPE_LABEL = {
+  [SALE_BILL_TYPE.FIX]: "detail.service.billType.fix",
+  [SALE_BILL_TYPE.ACTUAL]: "detail.service.billType.actual",
+  [SALE_BILL_TYPE.NON_BILLABLE]: "detail.service.billType.nonBillable",
+};
+
+export const COLOR_BILL_TYPE = {
+  [SALE_BILL_TYPE.FIX]: "warning",
+  [SALE_BILL_TYPE.ACTUAL]: "success",
+  [SALE_BILL_TYPE.NON_BILLABLE]: "error",
+};
 
 export const reorderPriority = (list: Array<Todo>, index, sourceIndex) => {
   if (!list) return [];

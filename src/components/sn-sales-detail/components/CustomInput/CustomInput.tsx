@@ -10,6 +10,8 @@ import {
   UseFormRegister,
   UseFormRegisterReturn,
 } from "react-hook-form";
+import CustomLabelSelect from "../CustomLabelSelect";
+import { Option } from "constant/types";
 
 export interface CustomInputProps {
   control: Control;
@@ -18,15 +20,20 @@ export interface CustomInputProps {
   helperText?: string;
   defaultValue?: string | number;
   disabled?: boolean;
+  select?: boolean;
   inputProps?: InputProps;
   register: UseFormRegisterReturn;
+  options?: Option[];
 }
 
 const CustomInput = (props: CustomInputProps, ref) => {
   const {
     control,
+    options,
+    select,
     register,
     label,
+    disabled,
     inputProps,
     placeholder,
     helperText,
@@ -52,7 +59,7 @@ const CustomInput = (props: CustomInputProps, ref) => {
               onFieldChange(e);
               inputProps?.onChange && inputProps.onChange(e);
             };
-            return (
+            return !select ? (
               <Input
                 maxRows={3}
                 minRows={1}
@@ -68,6 +75,15 @@ const CustomInput = (props: CustomInputProps, ref) => {
                 inputRef={ref}
                 onChange={(e) => handleChange(e)}
                 {...rest}
+                disabled={disabled}
+              />
+            ) : (
+              <CustomLabelSelect
+                options={options as Option[]}
+                {...rest}
+                ref={ref}
+                disabled={disabled}
+                onChange={(value) => handleChange(value)}
               />
             );
           }}
