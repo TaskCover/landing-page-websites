@@ -71,6 +71,7 @@ export type SalesDictionary = {
         billType: string;
         unit: string;
         discount: string;
+        estTooltip: string;
         markup: string;
       };
       billType: {

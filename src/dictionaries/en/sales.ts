@@ -70,6 +70,7 @@ export const SalesLang: SalesDictionary = {
         estimate: "Estimate",
         markup: "Markup",
         serviceType: "Service Type",
+        estTooltip: "Estimate is editable on fixed billing price",
         totalBuget: "Total Buget",
         unit: "Unit",
         description: "Description",
