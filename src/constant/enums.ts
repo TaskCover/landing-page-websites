@@ -69,6 +69,12 @@ export enum SALE_STAGE {
   WAITING_APPROVE = "WATTING_APPROVE",
 }
 
+export enum SALE_BILL_TYPE {
+  FIX = "FIX",
+  ACTUAL = "ACTUAL",
+  NON_BILLABLE = "NON_BILLABLE",
+}
+
 export enum CURRENCY_CODE {
   USD = "USD",
   EUR = "EUR",

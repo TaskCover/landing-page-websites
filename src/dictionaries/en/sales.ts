@@ -74,6 +74,11 @@ export const SalesLang: SalesDictionary = {
         unit: "Unit",
         description: "Description",
       },
+      billType: {
+        fix: "Fix",
+        actual: "Actual",
+        nonBillable: "Non Billable",
+      },
       addNewFromRateCard: "Add new from rate card",
       addNewRow: "Add new row",
       addSection: "Add section",

@@ -117,7 +117,9 @@ const Select = (props: SelectProps) => {
     <Input
       select
       SelectProps={{
-        IconComponent: () => <ChevronIcon onClick={onOpen} />,
+        IconComponent: () => (
+          <ChevronIcon onClick={!props.disabled ? onOpen : undefined} />
+        ),
         open: isShow,
         onOpen: onOpenSelect,
         onClose,

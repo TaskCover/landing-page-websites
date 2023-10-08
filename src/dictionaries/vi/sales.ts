@@ -74,6 +74,11 @@ export const salesLang: SalesDictionary = {
         serviceType: "Loại dịch vụ",
         totalBuget: "Tổng ngân sách",
       },
+      billType: {
+        fix: "Giá cố định",
+        actual: "Giá thực tế",
+        nonBillable: "Không tính phí",
+      },
       addNewFromRateCard: "Thêm mới từ thẻ giá",
       addNewRow: "Thêm mới hàng",
       addSection: "Thêm mục",

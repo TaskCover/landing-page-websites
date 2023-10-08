@@ -33,9 +33,13 @@ import {
   defaultShowColumns,
   useGetHeaderColumn,
 } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
+import { useTranslations } from "next-intl";
+import { NS_COMMON, NS_SALES } from "constant/index";
 
 export const useSales = () => {
   const { onAddSnackbar } = useSnackbar();
+  const commonT = useTranslations(NS_COMMON);
+  const saleT = useTranslations(NS_SALES);
   const dispatch = useAppDispatch();
   const { sales, salesFilters, salesError, salesStatus } = useAppSelector(
     (state) => state.sales,
@@ -91,6 +95,12 @@ export const useSales = () => {
           newPageIndex =
             totalItems % pageSize === 0 ? totalPages + 1 : totalPages;
         }
+        onAddSnackbar(
+          commonT("notification.success", {
+            label: saleT("list.newDealForm.submit"),
+          }),
+          "success",
+        );
         onGetSales({
           ...salesFilters,
           pageIndex: 1,

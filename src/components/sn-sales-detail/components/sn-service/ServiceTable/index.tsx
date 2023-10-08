@@ -12,13 +12,10 @@ import ServiceTableItem from "./ServiceTableItemDesktop";
 import { Stack, TableBody } from "@mui/material";
 import { Button, IconButton, Text } from "components/shared";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import MoveDotIcon from "icons/MoveDotIcon";
 import { EditContext } from "../context/EditContext";
 import PlusIcon from "icons/PlusIcon";
-import MoreDotIcon from "icons/MoreDotIcon";
 import useBreakpoint from "hooks/useBreakpoint";
 import ServiceTableItemMobile from "./ServiceTableItemMobile";
-import ServiceItemAction from "./ServiceItemAction";
 import SectionItemAction from "./SectionItemAction";
 import useItemAction from "components/sn-sales-detail/hooks/useItemAction";
 import useFetchServiceSection from "components/sn-sales-detail/hooks/useGetServiceSection";
@@ -32,15 +29,14 @@ import {
   useWatch,
 } from "react-hook-form";
 import { formatNumber, uuid } from "utils/index";
-import ConfirmDialog from "components/ConfirmDialog";
-import useToggle from "hooks/useToggle";
 import {
   ServiceColumn,
   useGetHeaderColumn,
 } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 import { useSalesService } from "store/sales/selectors";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
-import { CURRENCY_CODE } from "constant/enums";
+import { CURRENCY_CODE, SALE_BILL_TYPE } from "constant/enums";
+import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
 
 interface IProps {
   section: ServiceSection;
@@ -65,7 +61,6 @@ const ServiceTable = ({
     name: `sectionsList.${index}.service`,
   });
   const { sectionColumns } = useSalesService();
-  const commonT = useTranslations(NS_COMMON);
   const { onAction } = useItemAction(
     index,
     append as UseFieldArrayAppend<FieldValues, string>,
@@ -86,8 +81,9 @@ const ServiceTable = ({
       name: "name",
       desc: "description",
       price: 0,
+      billType: SALE_BILL_TYPE.FIX,
       qty: 0,
-      unit: "unit",
+      unit: UNIT_OPTIONS[0].value,
       tolBudget: 0,
     });
   };
