@@ -1,12 +1,20 @@
-import { Stack, TableRow } from "@mui/material";
+import { Box, Stack, TableRow } from "@mui/material";
 import { BodyCell, StatusCell } from "components/Table";
-import { Button, IconButton, Input, Select, Text } from "components/shared";
+import {
+  Button,
+  IconButton,
+  Input,
+  Select,
+  Text,
+  Tooltip,
+} from "components/shared";
 import React, {
   cloneElement,
   useCallback,
   useContext,
   useEffect,
   useMemo,
+  useRef,
 } from "react";
 import { EditContext } from "../context/EditContext";
 import { Draggable } from "react-beautiful-dnd";
@@ -33,6 +41,7 @@ import { NS_SALES } from "constant/index";
 import CustomLabelSelect from "../../CustomLabelSelect";
 import CustomInput from "../../CustomInput/CustomInput";
 import CustomDesktopInput from "../../CustomInput/CustomDesktopInput";
+import { useTranslations } from "next-intl";
 
 interface IProps {
   index: number;
@@ -53,6 +62,8 @@ const ServiceTableItem = ({
   const { register, control, getValues, setValue } = useFormContext();
   const { sectionColumns } = useSalesService();
   const [isLocked, setIsLocked] = React.useState(false);
+  const boundingElement = useRef();
+  const saleT = useTranslations(NS_SALES);
   const { billTypeOptions } = useGetBillTypeOptions();
   const currency = useWatch({
     control,
@@ -249,6 +260,7 @@ const ServiceTableItem = ({
                 <BodyCell
                   sx={{
                     ...defaultSx.item,
+                    pointerEvents: "auto",
                   }}
                   align="left"
                 >
@@ -258,6 +270,11 @@ const ServiceTableItem = ({
                     disabled={isLocked || billType === SALE_BILL_TYPE.ACTUAL}
                     isEdit={isEdit}
                     helperText="h"
+                    toolTipText={
+                      billType === SALE_BILL_TYPE.ACTUAL
+                        ? saleT("detail.service.table.estTooltip")
+                        : undefined
+                    }
                     type="number"
                     value={`${service.estimate || 0}h`}
                   />
@@ -329,7 +346,9 @@ const ServiceTableItem = ({
                   <CustomDesktopInput
                     name={`${sectionKey}.${index}.discount`}
                     control={control}
-                    disabled={isLocked}
+                    disabled={
+                      isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                    }
                     isEdit={isEdit}
                     value={formatNumber(service.discount, { suffix: "%" })}
                     type="number"
@@ -365,7 +384,9 @@ const ServiceTableItem = ({
                 <CustomDesktopInput
                   name={`${sectionKey}.${index}.tolBudget`}
                   control={control}
-                  disabled={isLocked}
+                  disabled={
+                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                  }
                   isEdit={isEdit}
                   value={formatNumber(tolBuget, {
                     numberOfFixed: 2,

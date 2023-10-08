@@ -70,6 +70,7 @@ export const salesLang: SalesDictionary = {
         billType: "Loại hóa đơn",
         discount: "Giảm giá",
         estimate: "Ước tính",
+        estTooltip: "Estimate is editable on fixed billing price",
         markup: "Đánh dấu",
         serviceType: "Loại dịch vụ",
         totalBuget: "Tổng ngân sách",

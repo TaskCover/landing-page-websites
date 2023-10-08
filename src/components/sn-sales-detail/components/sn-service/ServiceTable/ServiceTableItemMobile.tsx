@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Stack, Tooltip } from "@mui/material";
 import { Button, IconButton, Input, Text } from "components/shared";
 import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { EditContext } from "../context/EditContext";
@@ -155,6 +155,7 @@ const ServiceTableItemMobile = ({
                   label={saleT(`${prefixT}.unit`)}
                   register={register(`${sectionKey}.${index}.unit`)}
                 />
+
                 <CustomInput
                   control={control}
                   defaultValue={service.estimate}
@@ -166,6 +167,7 @@ const ServiceTableItemMobile = ({
                   label={saleT(`${prefixT}.estimate`)}
                   register={register(`${sectionKey}.${index}.estimate`)}
                 />
+
                 <CustomInput
                   control={control}
                   defaultValue={service.qty}
@@ -208,7 +210,9 @@ const ServiceTableItemMobile = ({
                     },
                   }}
                   helperText="%"
-                  disabled={isLocked}
+                  disabled={
+                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                  }
                   label={saleT(`${prefixT}.discount`)}
                   register={register(`${sectionKey}.${index}.discount`)}
                 />
@@ -239,7 +243,9 @@ const ServiceTableItemMobile = ({
                       max: 100,
                     },
                   }}
-                  disabled={isLocked}
+                  disabled={
+                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                  }
                   helperText={CURRENCY_SYMBOL[currency]}
                   label={saleT(`${prefixT}.totalBuget`)}
                   register={register(`${sectionKey}.${index}.tolBudget`)}
