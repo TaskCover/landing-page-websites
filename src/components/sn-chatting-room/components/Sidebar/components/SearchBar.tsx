@@ -5,6 +5,7 @@ import useTheme from "hooks/useTheme";
 import NewGroupIcon from "icons/NewGroupIcon";
 import SearchIcon from "icons/SearchIcon";
 import { debounce } from "utils/index";
+import TuneIcon from '@mui/icons-material/Tune';
 
 const SearchBar = ({ onSearchText }) => {
   const { mobileMode } = useGetScreenMode();
@@ -75,6 +76,17 @@ const SearchBar = ({ onSearchText }) => {
           }}
         />
       </Paper>
+      <IconButton
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <TuneIcon sx={{
+          color: isDarkMode ? "white" : "white",
+        }} />
+      </IconButton>
       <IconButton
         sx={{
           display: "flex",
