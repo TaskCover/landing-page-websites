@@ -2,6 +2,7 @@ import { Box, InputBase, Paper } from "@mui/material";
 import { IconButton } from "components/shared";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import useTheme from "hooks/useTheme";
+import NewGroupIcon from "icons/NewGroupIcon";
 import SearchIcon from "icons/SearchIcon";
 import { debounce } from "utils/index";
 
@@ -21,6 +22,7 @@ const SearchBar = ({ onSearchText }) => {
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
+        padding: "0px 10px",
 
         ...(isDarkMode
           ? {}
@@ -46,7 +48,10 @@ const SearchBar = ({ onSearchText }) => {
           background: isDarkMode ? "#3a3b3c" : "white",
         }}
       >
-        <IconButton sx={{ p: "10px", color: isDarkMode ? "white" :"#999999" }} aria-label="search">
+        <IconButton
+          sx={{ p: "10px", color: isDarkMode ? "white" : "#999999" }}
+          aria-label="search"
+        >
           <SearchIcon />
         </IconButton>
 
@@ -63,13 +68,22 @@ const SearchBar = ({ onSearchText }) => {
           }}
           onChange={(e) => debounceSearchText(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" ) {
-                e.preventDefault();
-                e.stopPropagation();
+            if (e.key === "Enter") {
+              e.preventDefault();
+              e.stopPropagation();
             }
           }}
         />
       </Paper>
+      <IconButton
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <NewGroupIcon fill="#999999" />
+      </IconButton>
     </Box>
   );
 };
