@@ -58,6 +58,7 @@ const AddGroup: FC<AddGroupProps> = ({
     onChangeListConversations,
     convention,
     isChatDesktop,
+    onCloseDrawer,
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -74,11 +75,11 @@ const AddGroup: FC<AddGroupProps> = ({
   }, [onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
-    if (dataTransfer.isNew) return;
+    if (dataTransfer.isNew || isNew) return;
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
     });
-  }, [dataTransfer, onFetchGroupMembersMember]);
+  }, [dataTransfer, onFetchGroupMembersMember, isNew]);
 
   const handleSuccess = (result) => {
     if (result?.error) {
@@ -94,6 +95,9 @@ const AddGroup: FC<AddGroupProps> = ({
       : result?.payload?.group;
 
     if (isChatDesktop) {
+      if (isNew) {
+        onCloseDrawer("account");
+      }
       onSelectNewGroup(result?.payload?.group);
       onSetDataTransfer(dataItem);
       onChangeListConversations([dataItem].concat(convention));
@@ -304,6 +308,9 @@ const AddGroup: FC<AddGroupProps> = ({
           onClick={() => {
             if (callbackBackIcon) {
               callbackBackIcon();
+              if (isNew) {
+                onCloseDrawer("account");
+              }
               return;
             }
             if (currStep === STEP.ADD_GROUP) {
