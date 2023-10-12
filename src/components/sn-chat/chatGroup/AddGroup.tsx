@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  IconButton,
-  InputAdornment,
-  Skeleton,
-  TextField,
-} from "@mui/material";
+import { IconButton, InputAdornment, Skeleton, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import { ChangeEvent, ElementType, FC, useEffect, useState } from "react";
 import { useChat } from "store/chat/selectors";
@@ -24,12 +19,14 @@ interface AddGroupProps {
   callbackBackIcon?: any;
   CustomCallBackIcon?: any;
   onSelectNewGroup?: any;
+  isNew?: boolean;
 }
 
 const AddGroup: FC<AddGroupProps> = ({
   callbackBackIcon,
   onSelectNewGroup,
   CustomCallBackIcon,
+  isNew,
 }) => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
@@ -137,7 +134,7 @@ const AddGroup: FC<AddGroupProps> = ({
       onAddSnackbar("Please select at least one member!", "error");
       return;
     }
-    if (dataTransfer?.isNew) {
+    if (dataTransfer?.isNew || isNew) {
       if (memberAddGroup.length > 0) {
         const result = await onCreateDirectMessageGroup({
           groupName: (() => {

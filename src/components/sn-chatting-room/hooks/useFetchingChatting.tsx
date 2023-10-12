@@ -14,7 +14,7 @@ const defaultParam = {
 };
 
 export interface useFetchingChattingReturns {
-  onSearchText: (text?: string) => void;
+  onFilterConversation: (name: string, value: string) => void;
   onChangeParamsConversation: (params: ParamState) => void
 }
 
@@ -62,7 +62,7 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
   }
 
   return {
-    onSearchText: (text) => setParams({ ...params, text: text as string }),
+    onFilterConversation: (name: string, value: string) => setParams({ ...params, [name]: value as string }),
     onChangeParamsConversation,
   };
 };

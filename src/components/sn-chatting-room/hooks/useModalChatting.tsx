@@ -4,29 +4,36 @@ import ForwardLayout from "../components/RoomDetails/components/Drawer/ChatForwa
 import AddGroup from "components/sn-chat/chatGroup/AddGroup";
 
 const useModalChatting = () => {
-    const {  isOpenInfoChat, typeDrawerChat, onCloseDrawer } = useChat();
+  const { isOpenInfoChat, typeDrawerChat, onCloseDrawer } = useChat();
 
-    const contentObject = useMemo(() => ({
-        ['forward']: {
-            title: 'Forward message',
-            content: <ForwardLayout />,
-            open: typeDrawerChat === 'forward' && isOpenInfoChat,
-            onClose: () => onCloseDrawer('account'),
-            sx: { width: '500px' }
-        },
-        ['group']: {    
-            title: 'Add Group',
-            content: <AddGroup />,
-            open: typeDrawerChat === 'group' && isOpenInfoChat,
-            onClose: () => onCloseDrawer('account'),
-            sx: { width: '500px' }
-        }
-    }), [isOpenInfoChat, onCloseDrawer, typeDrawerChat]);
+  console.log(isOpenInfoChat, typeDrawerChat);
 
-    const contentChatting = useMemo(() => contentObject[typeDrawerChat], [contentObject, typeDrawerChat])
+  const contentObject = useMemo(
+    () => ({
+      ["forward"]: {
+        title: "Forward message",
+        content: <ForwardLayout />,
+        open: typeDrawerChat === "forward" && isOpenInfoChat,
+        onClose: () => onCloseDrawer("account"),
+        sx: { width: "500px" },
+      },
+      ["group-modal"]: {
+        title: "Add group",
+        content: <AddGroup isNew={true} />,
+        open: typeDrawerChat === "group-modal" && isOpenInfoChat,
+        onClose: () => onCloseDrawer("account"),
+        sx: { width: "500px" },
+      },
+    }),
+    [isOpenInfoChat, onCloseDrawer, typeDrawerChat],
+  );
 
+  const contentChatting = useMemo(
+    () => contentObject[typeDrawerChat],
+    [contentObject, typeDrawerChat],
+  );
 
-    return contentChatting;
-}
+  return contentChatting;
+};
 
 export default useModalChatting;

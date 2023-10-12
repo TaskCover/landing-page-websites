@@ -17,7 +17,8 @@ const ChattingRoom = () => {
   const [openAddGroup, setOpenAddGroup] = useState(false);
 
   const { mobileMode } = useGetScreenMode();
-  const { onSearchText, onChangeParamsConversation } = useFetchingChatting();
+  const { onFilterConversation, onChangeParamsConversation } =
+    useFetchingChatting();
   const { conversationInfo: currentConversation, dataTransfer } = useChat();
   const contentModalChatting = useModalChatting();
   return (
@@ -31,7 +32,7 @@ const ChattingRoom = () => {
       {!mobileMode ? (
         <ChattingRoomLayout>
           <Sidebar
-            onSearchText={onSearchText}
+            onFilterConversation={onFilterConversation}
             onChangeParamsConversation={onChangeParamsConversation}
           />
           {Object.keys(dataTransfer).length !== 0 ? (
@@ -58,7 +59,7 @@ const ChattingRoom = () => {
                 <AddGroup />
               ) : (
                 <Sidebar
-                  onSearchText={onSearchText}
+                  onFilterConversation={onFilterConversation}
                   onChangeParamsConversation={onChangeParamsConversation}
                 />
               )}
