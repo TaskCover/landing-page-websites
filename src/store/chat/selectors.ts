@@ -210,6 +210,17 @@ export const useChat = () => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       if (!params) return;
+      if(isChatDesktop){
+        if(dataTransfer._id?.length === 0) return;
+        return await dispatch(
+          getChatUrls({
+            roomId: dataTransfer?._id,
+            type: dataTransfer?.t,
+            authToken,
+            userId,
+          }),
+        ).unwrap();
+      }
       await dispatch(
         getChatUrls({
           roomId: params?.roomId ?? roomId,
@@ -219,7 +230,7 @@ export const useChat = () => {
         }),
       ).unwrap();
     },
-    [conversationInfo?.t, dispatch, roomId, user],
+    [conversationInfo?.t, dataTransfer?._id, dataTransfer?.t, dispatch, isChatDesktop, roomId, user],
   );
 
   const onSendMessage = useCallback(
@@ -433,22 +444,37 @@ export const useChat = () => {
 
   const onGetChatAttachments = useCallback(
     async (params: Omit<ChatAttachmentsRequest, "authToken" | "userId">) => {
+      
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       if (!(params?.roomType ?? (conversationInfo?.t as RoomType))) return;
-      if ((params?.roomId ?? roomId).length === 0) return;
+      if ((params?.roomId ?? roomId ?? dataTransfer?._id).length === 0) return;
+      
+      if(isChatDesktop){
+        return await dispatch(
+          getChatAttachments({
+            authToken,
+            userId,
+            roomId: dataTransfer?._id,
+            roomType: (dataTransfer?.t ?? "d") as RoomType,
+            fileType: params?.fileType ?? "media",
+          }),
+        ).unwrap();
+      }
+      else {
       return await dispatch(
         getChatAttachments({
           authToken,
           userId,
-          roomId: params?.roomId ?? roomId,
+          roomId: params?.roomId  ?? roomId,
           roomType:
             params?.roomType ?? (conversationInfo?.t as RoomType) ?? "c",
           fileType: params?.fileType ?? "media",
         }),
       ).unwrap();
+      }
     },
-    [conversationInfo, dispatch, roomId, user],
+    [conversationInfo?.t, dataTransfer?._id, dataTransfer?.t, dispatch, isChatDesktop, roomId, user],
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -465,9 +491,7 @@ export const useChat = () => {
     lastMessage: MessageInfo;
     unreadCount: number;
     unreadsFrom: string;
-  }) => {
-    console.log(newMessage);
-    
+  }) => {    
     dispatch(setLastMessage(newMessage));
   };
 
