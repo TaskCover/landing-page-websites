@@ -51,7 +51,11 @@ const ItemSearchChatText = ({
           {fullname}
         </Typography>
         <Typography variant="caption" color="#999999">
-          {matchedText}
+          <div
+            dangerouslySetInnerHTML={{
+              __html: matchedText,
+            }}
+          />
         </Typography>
       </Box>
       <Typography

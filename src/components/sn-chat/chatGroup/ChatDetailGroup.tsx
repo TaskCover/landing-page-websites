@@ -117,6 +117,7 @@ const ChatDetailGroup = (props) => {
         userIdToChange: user?.id_rocket ?? "",
         newRole: "removeOwner",
       })) as any;
+      onAddSnackbar(commonChatBox("chatBox.group.adminChange"), "success");
     } else {
       const result = (await onRemoveGroupMember({
         groupId: dataTransfer?._id,
@@ -125,8 +126,8 @@ const ChatDetailGroup = (props) => {
       if (result?.error) {
         return onAddSnackbar(result?.error?.message, "error");
       }
+      onAddSnackbar(commonChatBox("chatBox.group.removeMember"), "success");
     }
-    onAddSnackbar(commonT("success"), "success");
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
     });
@@ -249,10 +250,10 @@ const ChatDetailGroup = (props) => {
             showPopup?.content
           )}
         </Box>
-        {showPopup?.type !== TYPE_POPUP.NEW_ADMIN && (
+        {![TYPE_POPUP.NEW_ADMIN, TYPE_POPUP.RENAME_GROUP].includes(showPopup?.type) && (
           <ForwardLayout />
         )}
-        {showPopup?.type !== TYPE_POPUP.NEW_ADMIN && (
+        {![TYPE_POPUP.NEW_ADMIN].includes(showPopup?.type) && (
           <Box
             sx={{
               display: "flex",
