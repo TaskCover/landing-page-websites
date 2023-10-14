@@ -1,10 +1,4 @@
-import {
-  Stack,
-  TableRow,
-  backdropClasses,
-  inputBaseClasses,
-} from "@mui/material";
-import { BodyCell } from "components/Table";
+import { Stack, Tooltip } from "@mui/material";
 import { Button, IconButton, Input, Text } from "components/shared";
 import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { EditContext } from "../context/EditContext";
@@ -14,18 +8,19 @@ import { NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
 import { Service } from "store/sales/reducer";
 import { Action } from "../../TodoList/SubItem";
-import SectionItemAction from "./SectionItemAction";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import ServiceItemAction from "./ServiceItemAction";
 import LockIcon from "icons/LockIcon";
 import UnlockIcon from "icons/UnlockIcon";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { useSalesService } from "store/sales/selectors";
 import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 import CustomInput from "../../CustomInput/CustomInput";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
-import CustomSelect from "../../CustomInput/CustomSelect";
 import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
+import CustomSelect from "../../CustomInput/CustomSelect";
+import { useGetBillTypeOptions } from "components/sn-sales-detail/hooks/useGetBillTypeOptions";
+import { SALE_BILL_TYPE } from "constant/enums";
 
 interface IProps {
   index: number;
@@ -52,6 +47,12 @@ const ServiceTableItemMobile = ({
   const { register, control, getValues, setValue } = useFormContext();
   const currency = getValues(`${sectionKey}.${index}.unit`);
   const { sectionColumns } = useSalesService();
+  const { billTypeOptions } = useGetBillTypeOptions();
+
+  const billType = useWatch({
+    control,
+    name: `${sectionKey}.${index}.billType`,
+  });
 
   const isShowCols = useCallback(
     (cols: ServiceColumn) => {
@@ -102,6 +103,7 @@ const ServiceTableItemMobile = ({
                     disabled: isLocked,
                   }}
                   control={control}
+                  disabled={isLocked}
                   defaultValue={service.name}
                   label={saleT(`${prefixT}.name`)}
                   register={register(`${sectionKey}.${index}.name`)}
@@ -112,6 +114,7 @@ const ServiceTableItemMobile = ({
                     multiline: true,
                   }}
                   control={control}
+                  disabled={isLocked}
                   defaultValue={service.desc}
                   label={saleT(`${prefixT}.description`)}
                   register={register(`${sectionKey}.${index}.desc`)}
@@ -121,6 +124,7 @@ const ServiceTableItemMobile = ({
                     disabled: isLocked,
                     multiline: true,
                   }}
+                  disabled={isLocked}
                   control={control}
                   defaultValue={service.serviceType}
                   label={saleT(`${prefixT}.serviceType`)}
@@ -132,7 +136,10 @@ const ServiceTableItemMobile = ({
                     multiline: true,
                   }}
                   control={control}
-                  defaultValue={service.billType}
+                  select
+                  disabled={isLocked}
+                  options={billTypeOptions}
+                  defaultValue={service.billType || billTypeOptions[0].value}
                   label={saleT(`${prefixT}.billType`)}
                   register={register(`${sectionKey}.${index}.billType`)}
                 />
@@ -143,24 +150,30 @@ const ServiceTableItemMobile = ({
                     multiline: true,
                   }}
                   control={control}
+                  disabled={isLocked}
                   defaultValue={service.unit}
                   label={saleT(`${prefixT}.unit`)}
                   register={register(`${sectionKey}.${index}.unit`)}
                 />
+
                 <CustomInput
                   control={control}
                   defaultValue={service.estimate}
                   inputProps={{
-                    disabled: isLocked,
                     type: "number",
                   }}
+                  disabled={isLocked || billType === SALE_BILL_TYPE.ACTUAL}
                   helperText="h"
                   label={saleT(`${prefixT}.estimate`)}
                   register={register(`${sectionKey}.${index}.estimate`)}
                 />
+
                 <CustomInput
                   control={control}
                   defaultValue={service.qty}
+                  disabled={
+                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                  }
                   inputProps={{
                     disabled: isLocked,
                     type: "number",
@@ -173,12 +186,14 @@ const ServiceTableItemMobile = ({
                   control={control}
                   defaultValue={service.price}
                   inputProps={{
-                    disabled: isLocked,
                     type: "number",
                     inputProps: {
                       min: 0,
                     },
                   }}
+                  disabled={
+                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                  }
                   helperText={`${CURRENCY_SYMBOL[currency]}/pc`}
                   label={saleT(`${prefixT}.price`)}
                   register={register(`${sectionKey}.${index}.price`)}
@@ -195,6 +210,9 @@ const ServiceTableItemMobile = ({
                     },
                   }}
                   helperText="%"
+                  disabled={
+                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                  }
                   label={saleT(`${prefixT}.discount`)}
                   register={register(`${sectionKey}.${index}.discount`)}
                 />
@@ -209,6 +227,7 @@ const ServiceTableItemMobile = ({
                       max: 100,
                     },
                   }}
+                  disabled={isLocked}
                   helperText="%"
                   label={saleT(`${prefixT}.markup`)}
                   register={register(`${sectionKey}.${index}.markUp`)}
@@ -224,6 +243,9 @@ const ServiceTableItemMobile = ({
                       max: 100,
                     },
                   }}
+                  disabled={
+                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                  }
                   helperText={CURRENCY_SYMBOL[currency]}
                   label={saleT(`${prefixT}.totalBuget`)}
                   register={register(`${sectionKey}.${index}.tolBudget`)}

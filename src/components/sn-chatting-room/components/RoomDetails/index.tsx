@@ -5,8 +5,8 @@ import Conversation from "components/sn-chat/components/conversation/Conversatio
 import useGetScreenMode from "hooks/useGetScreenMode";
 import RoomHeaderMobile from "./components/RoomHeaderMobile";
 import { useChat } from "store/chat/selectors";
-import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
 import ForwardLayout from "./components/Drawer/ChatForward/ForwardLayout";
+import DefaultPopupLayout from "layouts/DefaultPopupLayout";
 
 const RoomDetails = () => {
   const { mobileMode, extraDesktopMode } = useGetScreenMode();

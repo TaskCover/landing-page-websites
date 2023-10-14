@@ -107,7 +107,7 @@ export const useGetHeaderColumn = (index: number) => {
         value: salesT("detail.service.table.billType"),
         align: "left",
         // minWidth: 140,
-        width: "8%",
+        width: "9%",
       },
       {
         id: ServiceColumn.UNIT,

@@ -1,12 +1,20 @@
-import { Stack, TableRow } from "@mui/material";
-import { BodyCell } from "components/Table";
-import { Button, IconButton, Input, Select, Text } from "components/shared";
+import { Box, Stack, TableRow } from "@mui/material";
+import { BodyCell, StatusCell } from "components/Table";
+import {
+  Button,
+  IconButton,
+  Input,
+  Select,
+  Text,
+  Tooltip,
+} from "components/shared";
 import React, {
   cloneElement,
   useCallback,
   useContext,
   useEffect,
   useMemo,
+  useRef,
 } from "react";
 import { EditContext } from "../context/EditContext";
 import { Draggable } from "react-beautiful-dnd";
@@ -22,7 +30,18 @@ import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
 import { useSalesService } from "store/sales/selectors";
 import LockIcon from "icons/LockIcon";
 import UnlockIcon from "icons/UnlockIcon";
-import { CURRENCY_CODE } from "constant/enums";
+import { CURRENCY_CODE, SALE_BILL_TYPE } from "constant/enums";
+import {
+  COLOR_BILL_TYPE,
+  SALE_BILL_TYPE_LABEL,
+} from "components/sn-sales-detail/helpers";
+import { Option } from "constant/types";
+import { useGetBillTypeOptions } from "components/sn-sales-detail/hooks/useGetBillTypeOptions";
+import { NS_SALES } from "constant/index";
+import CustomLabelSelect from "../../CustomLabelSelect";
+import CustomInput from "../../CustomInput/CustomInput";
+import CustomDesktopInput from "../../CustomInput/CustomDesktopInput";
+import { useTranslations } from "next-intl";
 
 interface IProps {
   index: number;
@@ -43,10 +62,16 @@ const ServiceTableItem = ({
   const { register, control, getValues, setValue } = useFormContext();
   const { sectionColumns } = useSalesService();
   const [isLocked, setIsLocked] = React.useState(false);
-
+  const boundingElement = useRef();
+  const saleT = useTranslations(NS_SALES);
+  const { billTypeOptions } = useGetBillTypeOptions();
   const currency = useWatch({
     control,
     name: `${sectionKey}.${index}.unit`,
+  });
+  const billType = useWatch({
+    control,
+    name: `${sectionKey}.${index}.billType`,
   });
 
   const isShowCols = useCallback(
@@ -57,6 +82,12 @@ const ServiceTableItem = ({
     [sectionColumns],
   );
 
+  const defaultBillType = useMemo(() => {
+    if (!service.billType) return SALE_BILL_TYPE.FIX;
+
+    return service.billType;
+  }, [service.billType]);
+
   const tolBuget = useMemo(() => {
     if (typeof service.tolBudget !== "number") {
       return parseFloat(service.tolBudget);
@@ -64,17 +95,6 @@ const ServiceTableItem = ({
     return service.tolBudget;
   }, [service.tolBudget]);
 
-  // const existedUnit = useMemo(() => {
-  //   const unit = UNIT_OPTIONS.find(
-  //     (item) => item.value === service.unit,
-  //   )?.value;
-  //   return unit || UNIT_OPTIONS[0].value;
-  // }, [service.unit]);
-
-  // const currency = useMemo(() => {
-  //   const currency = getValues("currency");
-  //   return currency;
-  // }, [getValues("currency")]);
   useEffect(() => {
     setValue(
       `${sectionKey}.${index}.unit`,
@@ -120,26 +140,13 @@ const ServiceTableItem = ({
                   ml: 2,
                 }}
               >
-                {isEdit ? (
-                  <Controller
-                    control={control}
-                    {...register(`${sectionKey}.${index}.name`)}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        disabled={isLocked}
-                        multiline
-                        maxRows={2}
-                        minRows={1}
-                        sx={{
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                  />
-                ) : (
-                  <Text variant="body2">{service.name}</Text>
-                )}
+                <CustomDesktopInput
+                  name={`${sectionKey}.${index}.name`}
+                  control={control}
+                  disabled={isLocked}
+                  isEdit={isEdit}
+                  value={service.name}
+                />
               </BodyCell>
               {isShowCols(ServiceColumn.DESCRIPTION) && (
                 <BodyCell
@@ -149,39 +156,13 @@ const ServiceTableItem = ({
                   }}
                   align="left"
                 >
-                  {isEdit ? (
-                    <Controller
-                      control={control}
-                      {...register(`${sectionKey}.${index}.desc`)}
-                      render={({ field }) => (
-                        <Input
-                          multiline
-                          maxRows={2}
-                          minRows={1}
-                          {...field}
-                          disabled={isLocked}
-                          sx={{
-                            width: "100%",
-                          }}
-                        />
-                      )}
-                    />
-                  ) : (
-                    <Text
-                      variant="body2"
-                      sx={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                        display: "block",
-                        height: "fit-content",
-                        boxSizing: "border-box",
-                        WebkitLineClamp: "2",
-                        WebkitBoxOrient: "vertical",
-                      }}
-                    >
-                      {service.desc}
-                    </Text>
-                  )}
+                  <CustomDesktopInput
+                    name={`${sectionKey}.${index}.desc`}
+                    control={control}
+                    disabled={isLocked}
+                    isEdit={isEdit}
+                    value={service.desc}
+                  />
                 </BodyCell>
               )}
               <BodyCell
@@ -190,26 +171,13 @@ const ServiceTableItem = ({
                 }}
                 align="left"
               >
-                {isEdit ? (
-                  <Controller
-                    control={control}
-                    {...register(`${sectionKey}.${index}.serviceType`)}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        disabled={isLocked}
-                        multiline
-                        maxRows={2}
-                        minRows={1}
-                        sx={{
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                  />
-                ) : (
-                  <Text variant="body2">{service.serviceType}</Text>
-                )}
+                <CustomDesktopInput
+                  name={`${sectionKey}.${index}.serviceType`}
+                  control={control}
+                  disabled={isLocked}
+                  isEdit={isEdit}
+                  value={service.serviceType}
+                />
               </BodyCell>
               <BodyCell
                 sx={{
@@ -221,21 +189,41 @@ const ServiceTableItem = ({
                   <Controller
                     control={control}
                     {...register(`${sectionKey}.${index}.billType`)}
+                    defaultValue={{
+                      value: defaultBillType,
+                    }}
                     render={({ field }) => (
-                      <Input
-                        multiline
-                        maxRows={2}
-                        minRows={1}
+                      <CustomLabelSelect
                         {...field}
+                        defaultValue={defaultBillType}
+                        options={billTypeOptions as Option[]}
                         disabled={isLocked}
-                        sx={{
-                          width: "100%",
-                        }}
                       />
                     )}
                   />
                 ) : (
-                  <Text variant="body2">{service.billType}</Text>
+                  <StatusCell
+                    sx={{
+                      [`&.MuiTableCell-body`]: {
+                        borderBottom: "none",
+                        height: "fit-content",
+                      },
+                      [`&.MuiTableCell-root`]: {
+                        display: "flex",
+                        borderBottom: "none",
+                        alignItems: "center",
+                        justifyContent: "start",
+                        padding: 0,
+                      },
+
+                      [`&.MuiSvgIcon-root`]: {
+                        display: "none",
+                      },
+                    }}
+                    text={SALE_BILL_TYPE_LABEL[service.billType]}
+                    color={COLOR_BILL_TYPE[service.billType]}
+                    namespace={NS_SALES}
+                  />
                 )}
               </BodyCell>
               <BodyCell
@@ -251,7 +239,6 @@ const ServiceTableItem = ({
                     render={({ field }) => {
                       return (
                         <Select
-                          multiline
                           defaultValue={currency}
                           placeholder="Select unit"
                           {...field}
@@ -273,34 +260,24 @@ const ServiceTableItem = ({
                 <BodyCell
                   sx={{
                     ...defaultSx.item,
+                    pointerEvents: "auto",
                   }}
                   align="left"
                 >
-                  {isEdit ? (
-                    <Controller
-                      control={control}
-                      defaultValue={0}
-                      {...register(`${sectionKey}.${index}.estimate`)}
-                      render={({ field }) => (
-                        <Input
-                          helperText="h"
-                          type="number"
-                          InputProps={{
-                            inputProps: {
-                              min: 0,
-                            },
-                          }}
-                          {...field}
-                          disabled={isLocked}
-                          sx={{
-                            width: "100%",
-                          }}
-                        />
-                      )}
-                    />
-                  ) : (
-                    <Text variant="body2">{`${service.estimate || 0}h`}</Text>
-                  )}
+                  <CustomDesktopInput
+                    name={`${sectionKey}.${index}.estimate`}
+                    control={control}
+                    disabled={isLocked || billType === SALE_BILL_TYPE.ACTUAL}
+                    isEdit={isEdit}
+                    helperText="h"
+                    toolTipText={
+                      billType === SALE_BILL_TYPE.ACTUAL
+                        ? saleT("detail.service.table.estTooltip")
+                        : undefined
+                    }
+                    type="number"
+                    value={`${service.estimate || 0}h`}
+                  />
                 </BodyCell>
               )}
 
@@ -310,33 +287,22 @@ const ServiceTableItem = ({
                 }}
                 align="left"
               >
-                {isEdit ? (
-                  <Controller
-                    control={control}
-                    defaultValue={0}
-                    {...register(`${sectionKey}.${index}.qty`)}
-                    render={({ field }) => (
-                      <Input
-                        helperText="pcs"
-                        type="number"
-                        InputProps={{
-                          inputProps: {
-                            min: 0,
-                          },
-                        }}
-                        {...field}
-                        disabled={isLocked}
-                        sx={{
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                  />
-                ) : (
-                  <Text variant="body2">
-                    {formatNumber(service.qty, { suffix: "pcs" })}
-                  </Text>
-                )}
+                <CustomDesktopInput
+                  name={`${sectionKey}.${index}.qty`}
+                  control={control}
+                  disabled={
+                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                  }
+                  isEdit={isEdit}
+                  helperText="pcs"
+                  type="number"
+                  inputProps={{
+                    inputProps: {
+                      min: 0,
+                    },
+                  }}
+                  value={formatNumber(service.qty, { suffix: "pcs" })}
+                />
               </BodyCell>
               {isShowCols(ServiceColumn.PRICE) && (
                 <BodyCell
@@ -345,39 +311,29 @@ const ServiceTableItem = ({
                   }}
                   align="left"
                 >
-                  {isEdit ? (
-                    <Controller
-                      control={control}
-                      defaultValue={0}
-                      {...register(`${sectionKey}.${index}.price`)}
-                      render={({ field }) => (
-                        <Input
-                          helperText={`${
-                            CURRENCY_SYMBOL[currency as CURRENCY_CODE]
-                          }/pc`}
-                          type="number"
-                          InputProps={{
-                            inputProps: {
-                              min: 0,
-                            },
-                          }}
-                          {...field}
-                          disabled={isLocked}
-                          sx={{
-                            width: "100%",
-                          }}
-                        />
-                      )}
-                    />
-                  ) : (
-                    <Text variant="body2">
-                      {formatNumber(service.price, {
-                        prefix: CURRENCY_SYMBOL[currency as CURRENCY_CODE],
-                        suffix: "/pc",
-                        numberOfFixed: 2,
-                      })}
-                    </Text>
-                  )}
+                  <CustomDesktopInput
+                    name={`${sectionKey}.${index}.price`}
+                    control={control}
+                    disabled={
+                      isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                    }
+                    isEdit={isEdit}
+                    value={formatNumber(service.price, {
+                      prefix: CURRENCY_SYMBOL[currency as CURRENCY_CODE],
+                      suffix: "/pc",
+                      numberOfFixed: 2,
+                    })}
+                    type="number"
+                    inputProps={{
+                      type: "number",
+                      inputProps: {
+                        min: 0,
+                      },
+                    }}
+                    helperText={`${
+                      CURRENCY_SYMBOL[currency as CURRENCY_CODE]
+                    }/pc`}
+                  />
                 </BodyCell>
               )}
               {isShowCols(ServiceColumn.DISCOUNT) && (
@@ -387,34 +343,17 @@ const ServiceTableItem = ({
                   }}
                   align="left"
                 >
-                  {isEdit ? (
-                    <Controller
-                      control={control}
-                      defaultValue={0}
-                      {...register(`${sectionKey}.${index}.discount`)}
-                      render={({ field }) => (
-                        <Input
-                          helperText="%"
-                          type="number"
-                          InputProps={{
-                            inputProps: {
-                              min: 0,
-                              max: 100,
-                            },
-                          }}
-                          {...field}
-                          disabled={isLocked}
-                          sx={{
-                            width: "100%",
-                          }}
-                        />
-                      )}
-                    />
-                  ) : (
-                    <Text variant="body2">
-                      {formatNumber(service.discount, { suffix: "%" })}
-                    </Text>
-                  )}
+                  <CustomDesktopInput
+                    name={`${sectionKey}.${index}.discount`}
+                    control={control}
+                    disabled={
+                      isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                    }
+                    isEdit={isEdit}
+                    value={formatNumber(service.discount, { suffix: "%" })}
+                    type="number"
+                    helperText="%"
+                  />
                 </BodyCell>
               )}
 
@@ -425,33 +364,15 @@ const ServiceTableItem = ({
                   }}
                   align="left"
                 >
-                  {isEdit ? (
-                    <Controller
-                      control={control}
-                      {...register(`${sectionKey}.${index}.markUp`)}
-                      render={({ field }) => (
-                        <Input
-                          helperText="%"
-                          {...field}
-                          disabled={isLocked}
-                          InputProps={{
-                            inputProps: {
-                              min: 0,
-                              max: 100,
-                            },
-                          }}
-                          type="number"
-                          sx={{
-                            width: "100%",
-                          }}
-                        />
-                      )}
-                    />
-                  ) : (
-                    <Text variant="body2">
-                      {formatNumber(service.markUp, { suffix: "%" })}
-                    </Text>
-                  )}
+                  <CustomDesktopInput
+                    name={`${sectionKey}.${index}.markUp`}
+                    control={control}
+                    disabled={isLocked}
+                    isEdit={isEdit}
+                    value={formatNumber(service.markUp, { suffix: "%" })}
+                    type="number"
+                    helperText="%"
+                  />
                 </BodyCell>
               )}
               <BodyCell
@@ -460,36 +381,20 @@ const ServiceTableItem = ({
                 }}
                 align="left"
               >
-                {isEdit ? (
-                  <Controller
-                    control={control}
-                    defaultValue={0}
-                    {...register(`${sectionKey}.${index}.tolBudget`)}
-                    render={({ field }) => (
-                      <Input
-                        helperText={CURRENCY_SYMBOL[currency as CURRENCY_CODE]}
-                        type="number"
-                        InputProps={{
-                          inputProps: {
-                            min: 0,
-                          },
-                        }}
-                        {...field}
-                        disabled={isLocked}
-                        sx={{
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                  />
-                ) : (
-                  <Text variant="body2">
-                    {formatNumber(tolBuget, {
-                      numberOfFixed: 2,
-                      prefix: CURRENCY_SYMBOL[currency as CURRENCY_CODE],
-                    })}
-                  </Text>
-                )}
+                <CustomDesktopInput
+                  name={`${sectionKey}.${index}.tolBudget`}
+                  control={control}
+                  disabled={
+                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                  }
+                  isEdit={isEdit}
+                  value={formatNumber(tolBuget, {
+                    numberOfFixed: 2,
+                    prefix: CURRENCY_SYMBOL[currency as CURRENCY_CODE],
+                  })}
+                  helperText={CURRENCY_SYMBOL[currency as CURRENCY_CODE]}
+                  type="number"
+                />
               </BodyCell>
 
               {isEdit && (

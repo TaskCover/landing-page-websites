@@ -113,6 +113,8 @@ export const CommonLang: CommonDictionary = {
   aFewFilesInvalid:
     "The system only supports doc, docx, xlsx, xls, csv, mp3, mp4, png, jpeg, jpg, pdf, ppt, pptx, zip, rar file formats. Please recheck extension of file.",
   processingUpload: "Uploading files...",
+  day: "day",
+  hour: "hour",
   cancel: "Cancel",
-  success: "Successfully!"
+  success: "Successfully!",
 };

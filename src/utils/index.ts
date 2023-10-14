@@ -436,6 +436,19 @@ export const formatEstimateTime = (time: string | number, isHour?: boolean) => {
   return `${formattedHours}:${formattedMinutes}`;
 };
 
+export const formatNumberHourToTime = (time: number, isHour?: boolean) => {
+  const Hour = Math.floor(time);
+  const Minute = Math.floor((time - Hour) * 60);
+
+  const formattedHour = Hour < 10 ? `0${Hour}` : Hour;
+  const formattedMinute = Minute < 10 ? `0${Minute}` : Minute;
+
+  if (isHour) {
+    return `${formattedHour}h`;
+  }
+  return `${formattedHour}:${formattedMinute}h`;
+};
+
 export const deepEqual = (foo, bar) => {
   const has = Object.prototype.hasOwnProperty;
   let ctor, len;
@@ -463,4 +476,54 @@ export const deepEqual = (foo, bar) => {
   }
 
   return foo !== foo && bar !== bar;
+};
+
+export const copyImage = (url: string) => {
+  const img = document.createElement("img");
+  img.src = url;
+  img.alt = "";
+  img?.setAttribute("crossorigin", "anonymous");
+  img.onload = (e) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(img, 0, 0);
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          return navigator.clipboard
+            .write([
+              new ClipboardItem({
+                ["image/png"]: blob,
+              }),
+            ])
+            .then(() => {
+              console.log("Copied");
+            });
+        }
+      },
+      "image/png",
+      0.9,
+    );
+  };
+};
+
+export const downloadImage = async (url: string, name: string) => {
+  try {
+    const copiedImage = await fetch(url);
+    const blobImage = await copiedImage.blob();
+    const href = URL.createObjectURL(blobImage);
+    const anchorElement = document.createElement("a");
+    anchorElement.href = href;
+    anchorElement.download = name;
+    document.body.appendChild(anchorElement);
+    anchorElement.click();
+
+    document.body.removeChild(anchorElement);
+    window.URL.revokeObjectURL(href);
+  } catch (error) {
+    throw new Error();
+  }
 };

@@ -17,10 +17,11 @@ import AttachmentContent from "./components/conversation/AttachmentContent";
 
 interface Props {
   callbackCancel?: () => void;
-  conversations?: any;
+  conversations?: any[];
+  loading?: boolean;
 }
 
-const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
+const ChatForward: FC<Props> = (props) => {
   const [employeeIdSelected, setEmployeeIdSelected] = useState<any>({});
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
@@ -41,7 +42,6 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
     isChatDesktop,
     onSetDataTransfer,
     onGetAllConvention,
-    roomId
   } = useChat();
 
   useEffect(() => {
@@ -73,17 +73,16 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
       });
     Promise.all(fws).then((values) => {
       onAddSnackbar("Forward message successfully!", "success");
-      if(isChatDesktop){
-        onSetDataTransfer(dataTransfer)
+      if (isChatDesktop) {
+        onSetDataTransfer(dataTransfer);
         onGetAllConvention({
           count: 10,
           offset: 0,
           text: "",
-          type: "a",  
-        })
-      }
-      else {
-        if (dataTransfer?.t === 'd') {
+          type: "a",
+        });
+      } else {
+        if (dataTransfer?.t === "d") {
           onSetStep(STEP.CHAT_ONE, dataTransfer);
         } else {
           onSetStep(STEP.CHAT_GROUP, dataTransfer);
@@ -94,7 +93,12 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
 
   return (
     <>
-      <Box sx={{ padding: isChatDesktop ? 0: 3, paddingTop: isChatDesktop ? 3 :  0 }}>
+      <Box
+        sx={{
+          padding: isChatDesktop ? 0 : 3,
+          paddingTop: isChatDesktop ? 3 : 0,
+        }}
+      >
         <Box
           sx={{
             height: "240px",
@@ -106,7 +110,7 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
               height: "230px",
             }}
           >
-            {isFetching || error ? (
+            {props?.loading || isFetching || error ? (
               Array.from({ length: 5 }, (_, i) => (
                 <Box
                   key={i}
@@ -129,8 +133,8 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
                 </Box>
               ))
             ) : (
-                <>
-                  {(isChatDesktop ? conversations : convention)
+              <>
+                {(isChatDesktop ? props?.conversations : convention)
                   ?.filter((item) => item?._id !== dataTransfer?._id)
                   ?.filter((item) => item?.name)
                   ?.map((item, index) => (
@@ -154,30 +158,43 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
         </Box>
 
         <Box>
+        {isChatDesktop ? <Typography
+              sx={{
+                borderTop: '1px solid #E0E0E0',
+                color: !isDarkMode ? "#1e1e1e" : "white",
+                fontSize: "0.85rem",
+                fontWeight: 600,
+                lineHeight: "1rem",
+                padding: '1rem',
+                background: isDarkMode ? "#1e1e1e" : "white",
+              }}
+            >
+              Message
+            </Typography> : null }
           <Box
             sx={{
               position: "relative",
             }}
           >
-            <Typography
+            {!isChatDesktop ? <Typography
               sx={{
-                color: "var(--gray-3, #999)",
+                color: !isDarkMode ? "#1e1e1e" : "white",
                 fontSize: "0.75rem",
                 fontWeight: 400,
                 lineHeight: "1rem",
                 position: "absolute",
                 left: 14,
                 top: 10,
-                backgroundColor: isDarkMode ? "#1e1e1e" : "white",
+                background: isDarkMode ? "#1e1e1e" : "white",
               }}
             >
               Message
-            </Typography>
+            </Typography> : null }
             <div
               style={{
                 resize: "vertical",
                 width: "100%",
-                padding: "28px 14px 14px",
+                padding: isChatDesktop ? "14px" : "28px 14px 14px",
                 borderRadius: "0.25rem",
                 background: isDarkMode ? "#1e1e1e" : "var(--gray-0, #F7F7FD)",
                 border: "none",
@@ -186,7 +203,13 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
                 fontStyle: "normal",
                 fontWeight: 400,
                 lineHeight: "1.375rem",
-                ...(isChatDesktop ? { display: 'flex', justifyContent: 'center'} : { height: "70px" }),
+                ...(isChatDesktop
+                  ? {
+                      display: "flex",
+                      justifyContent: "center",
+                      height: "120px",
+                    }
+                  : { height: "70px" }),
                 overflowY: "auto",
                 overflowX: "hidden",
                 color: isDarkMode ? "white" : "var(--black, #212121)",
@@ -209,25 +232,29 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
               )}
             </div>
           </Box>
-          <Typography
-            sx={{
-              color: "var(--gray-3, #999)",
-              textAlign: "right",
-              fontSize: "0.75rem",
-              fontWeight: 400,
-              lineHeight: "1rem",
-            }}
-          >
-            0/2000
-          </Typography>
+          {dataTransfer?.message?.attachments?.length === 0 ? (
+            <Typography
+              sx={{
+                color: "var(--gray-3, #999)",
+                textAlign: "right",
+                fontSize: "0.75rem",
+                fontWeight: 400,
+                lineHeight: "1rem",
+              }}
+            >
+              {dataTransfer?.message?.msg?.length}/2000
+            </Typography>
+          ) : null}
         </Box>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: isDarkMode ? "var(--mui-palette-background-paper)" : "white",
-            gap: isChatDesktop ? 0 :  1,
+            backgroundColor: isDarkMode
+              ? "var(--mui-palette-background-paper)"
+              : "white",
+            gap: isChatDesktop ? 0 : 1,
             padding: 2,
           }}
         >
@@ -237,8 +264,8 @@ const ChatForward: FC<Props> = ({ callbackCancel, conversations }) => {
             size="small"
             sx={defaultSx.button}
             onClick={() => {
-              if (callbackCancel) {
-                callbackCancel();
+              if (props?.callbackCancel) {
+                props?.callbackCancel();
                 return;
               }
               onSetStep(STEP.CHAT_GROUP, dataTransfer);

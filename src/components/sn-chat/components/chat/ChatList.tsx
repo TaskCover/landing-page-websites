@@ -47,12 +47,14 @@ const ChatList = () => {
         const clientHeight = (chatListRef.current?.clientHeight || 0) + 100;
 
         if (scrollHeightRef.current > clientHeight) {
-          handleGetConversation(textSearch, "a", pageRef.current, pageSize);
+          console.log(initText);
+          
+          handleGetConversation(initText, "a", pageRef.current, pageSize);
         }
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageSize, textSearch]);
+  }, [pageSize, initText]);
 
   const conversationList = useMemo(() => {
     return convention
@@ -120,7 +122,7 @@ const ChatList = () => {
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      handleGetConversation(event.target.value, "a");
+      handleGetConversation(event.target.value.toLowerCase(), "a");
     }
   };
 
