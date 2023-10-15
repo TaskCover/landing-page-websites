@@ -42,7 +42,9 @@ export const ChatBoxLang: ChatBox = {
       rename: '{user1} renamed the group to {name} at {time}.',
       edit_avatar: '{user1} changed the group\'s avatar at {time}.',
       rename_alert: 'Group name changed successfully!',
-      change_avatar_alert: 'Profile picture changed successfully!'
+      change_avatar_alert: 'Profile picture changed successfully!',
+      adminChange: 'Successfully transferred administrative rights.',
+      removeMember: 'Member has been removed from the group.'
     }
   },
 };
