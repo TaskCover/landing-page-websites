@@ -211,7 +211,7 @@ export interface ChatState {
   isChatDesktop: boolean;
 }
 
-export type TypeDrawerChat = 'group' | 'forward' | 'media' | 'file' | 'link' | 'info' | 'account'
+export type TypeDrawerChat = 'group' | 'forward' | 'media' | 'file' | 'link' | 'info' | 'account' | 'group-modal'
 export type DirectionChat = "a" | "c" | "d";
 
 export type TypeParamsChat = 'paramsConversation' |  'paramsLastMessage' | 'paramsUnreadMessage'

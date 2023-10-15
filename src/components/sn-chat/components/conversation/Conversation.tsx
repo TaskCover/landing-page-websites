@@ -8,6 +8,7 @@ import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { SxProps, Theme } from "@mui/material";
 import useGetScreenMode from "hooks/useGetScreenMode";
+import { DrawerChatIgnore } from "components/sn-chatting-room/components/RoomDetails";
 
 const initPageIndex = 10;
 
@@ -164,7 +165,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
         ref={inputRef}
         {...(isChatDesktop && {
             wrapperMessageSx: {
-              ...(isOpenInfoChat && typeDrawerChat !== 'forward'
+              ...(isOpenInfoChat && !DrawerChatIgnore.includes(typeDrawerChat)
                 ? {
                     width: `calc(100% - ${
                       extraDesktopMode ? "424px" : "272px"
