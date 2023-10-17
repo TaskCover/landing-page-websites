@@ -159,6 +159,7 @@ const ServiceTableItem = ({
                   <CustomDesktopInput
                     name={`${sectionKey}.${index}.desc`}
                     control={control}
+                    required
                     disabled={isLocked}
                     isEdit={isEdit}
                     value={service.desc}
@@ -240,7 +241,6 @@ const ServiceTableItem = ({
                       return (
                         <Select
                           defaultValue={currency}
-                          placeholder="Select unit"
                           {...field}
                           disabled={isLocked}
                           options={UNIT_OPTIONS}
@@ -319,7 +319,7 @@ const ServiceTableItem = ({
                     }
                     isEdit={isEdit}
                     value={formatNumber(service.price, {
-                      prefix: CURRENCY_SYMBOL[currency as CURRENCY_CODE],
+                      prefix: CURRENCY_SYMBOL[currency as CURRENCY_CODE] || "",
                       suffix: "/pc",
                       numberOfFixed: 2,
                     })}
@@ -331,7 +331,7 @@ const ServiceTableItem = ({
                       },
                     }}
                     helperText={`${
-                      CURRENCY_SYMBOL[currency as CURRENCY_CODE]
+                      CURRENCY_SYMBOL[currency as CURRENCY_CODE] || ""
                     }/pc`}
                   />
                 </BodyCell>
@@ -357,7 +357,7 @@ const ServiceTableItem = ({
                 </BodyCell>
               )}
 
-              {isShowCols(ServiceColumn.MARK_UP) && (
+              {/* {isShowCols(ServiceColumn.MARK_UP) && (
                 <BodyCell
                   sx={{
                     ...defaultSx.item,
@@ -374,7 +374,7 @@ const ServiceTableItem = ({
                     helperText="%"
                   />
                 </BodyCell>
-              )}
+              )} */}
               <BodyCell
                 sx={{
                   ...defaultSx.item,

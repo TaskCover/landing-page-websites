@@ -133,7 +133,11 @@ const SaleItem = ({ item }: IProps) => {
       <BodyCell width="11%" size="small" align="right">
         {`${time}h`}
       </BodyCell>
-      <BodyCell align="right">{item.probability}</BodyCell>
+      <BodyCell align="right">
+        {formatNumber(item.probability, {
+          suffix: "%",
+        })}
+      </BodyCell>
       <BodyCell align="left">
         {formatDate(item.updated_time, DATE_FORMAT_SLASH)}
       </BodyCell>

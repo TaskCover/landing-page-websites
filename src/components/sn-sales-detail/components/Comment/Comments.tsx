@@ -36,7 +36,8 @@ const Comments = () => {
 
   const filteredComments = useMemo(() => {
     if (!comments) return [];
-    if (comentType === "comments") return comments;
+
+    if (comentType === "comments" || !comentType) return comments;
     return comments.filter((comment) => comment.attachments.length > 0);
   }, [comments, comentType]);
 
@@ -69,7 +70,7 @@ const Comments = () => {
       {filteredComments?.map((comment) => (
         <CommentItem
           key={comment.id}
-          type={comentType}
+          type={comentType || "comments"}
           {...comment}
           listAttachmentsDown={listAttachmentsDown}
         />
@@ -87,16 +88,7 @@ const CommentItem = (props: CommentItemProps) => {
     type,
     attachments_down = [],
     created_time,
-    listAttachmentsDown,
   } = props;
-  // const { employeeOptions } = useGetEmployeeOptions();
-  //   const user = useMemo(() => {
-  //     if (!creator) return undefined;
-  //     const userInSale = employeeOptions?.find(
-  //       (member) => member.avatar=== creator,
-  //     );
-  //     return userInSale ?? creator;
-  //   }, [creator, employeeOptions]);
 
   return (
     <Stack flex={1} spacing={1} bgcolor="grey.50" p={2} borderRadius={1}>
@@ -129,6 +121,7 @@ const CommentItem = (props: CommentItemProps) => {
           dangerouslySetInnerHTML={{ __html: content }}
         />
       )}
+
       <Stack direction="row" gap={1.5} flex={1} flexWrap="wrap">
         {attachments_down.map((attachment) => (
           <AttachmentPreview
@@ -136,7 +129,7 @@ const CommentItem = (props: CommentItemProps) => {
             src={attachment.link}
             name={attachment.name}
             listData={attachments_down}
-            listAttachmentsDown={listAttachmentsDown}
+            listAttachmentsDown={attachments_down}
           />
         ))}
       </Stack>

@@ -52,7 +52,7 @@ const SalesDetail = () => {
       (acc, todo, index) => {
         acc[todo.id] = {
           ...todo,
-          priority: index + 1,
+          priority: todo.priority,
           expiration_date:
             todo.expiration_date &&
             formatDate(todo.expiration_date, DATE_FORMAT_HYPHEN),
