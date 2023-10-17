@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  IconButton,
-  InputAdornment,
-  Skeleton,
-  TextField,
-} from "@mui/material";
+import { IconButton, InputAdornment, Skeleton, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import { ChangeEvent, ElementType, FC, useEffect, useState } from "react";
 import { useChat } from "store/chat/selectors";
@@ -24,12 +19,14 @@ interface AddGroupProps {
   callbackBackIcon?: any;
   CustomCallBackIcon?: any;
   onSelectNewGroup?: any;
+  isNew?: boolean;
 }
 
 const AddGroup: FC<AddGroupProps> = ({
   callbackBackIcon,
   onSelectNewGroup,
   CustomCallBackIcon,
+  isNew,
 }) => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
@@ -61,6 +58,7 @@ const AddGroup: FC<AddGroupProps> = ({
     onChangeListConversations,
     convention,
     isChatDesktop,
+    onCloseDrawer,
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -77,11 +75,11 @@ const AddGroup: FC<AddGroupProps> = ({
   }, [onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
-    if (dataTransfer.isNew) return;
+    if (dataTransfer.isNew || isNew) return;
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
     });
-  }, [dataTransfer, onFetchGroupMembersMember]);
+  }, [dataTransfer, onFetchGroupMembersMember, isNew]);
 
   const handleSuccess = (result) => {
     if (result?.error) {
@@ -97,6 +95,9 @@ const AddGroup: FC<AddGroupProps> = ({
       : result?.payload?.group;
 
     if (isChatDesktop) {
+      if (isNew) {
+        onCloseDrawer("account");
+      }
       onSelectNewGroup(result?.payload?.group);
       onSetDataTransfer(dataItem);
       onChangeListConversations([dataItem].concat(convention));
@@ -137,7 +138,7 @@ const AddGroup: FC<AddGroupProps> = ({
       onAddSnackbar("Please select at least one member!", "error");
       return;
     }
-    if (dataTransfer?.isNew) {
+    if (dataTransfer?.isNew || isNew) {
       if (memberAddGroup.length > 0) {
         const result = await onCreateDirectMessageGroup({
           groupName: (() => {
@@ -307,6 +308,9 @@ const AddGroup: FC<AddGroupProps> = ({
           onClick={() => {
             if (callbackBackIcon) {
               callbackBackIcon();
+              if (isNew) {
+                onCloseDrawer("account");
+              }
               return;
             }
             if (currStep === STEP.ADD_GROUP) {

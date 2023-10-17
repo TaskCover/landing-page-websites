@@ -9,7 +9,7 @@ import { useFetchingChattingReturns } from "components/sn-chatting-room/hooks/us
 import { useWSChat } from "store/chat/helpers";
 
 const Sidebar: FC<useFetchingChattingReturns> = ({
- onSearchText,
+ onFilterConversation,
 }) => {
   useWSChat();
   const { mobileMode } = useGetScreenMode();
@@ -26,7 +26,7 @@ const Sidebar: FC<useFetchingChattingReturns> = ({
           : { width: "100%" }),
       }}
     >
-      <SearchBar onSearchText={onSearchText} />
+      <SearchBar onFilterConversation={onFilterConversation} />
       <ChatList />
     </Box>
   );

@@ -1,16 +1,15 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 import RoomHeader from "./components/RoomHeader";
 import Conversation from "components/sn-chat/components/conversation/Conversation";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import RoomHeaderMobile from "./components/RoomHeaderMobile";
 import { useChat } from "store/chat/selectors";
-import ForwardLayout from "./components/Drawer/ChatForward/ForwardLayout";
-import DefaultPopupLayout from "layouts/DefaultPopupLayout";
 
+export const DrawerChatIgnore = ['forward', 'group-modal'];
 const RoomDetails = () => {
   const { mobileMode, extraDesktopMode } = useGetScreenMode();
-  const { isFetching: loading, isOpenInfoChat, typeDrawerChat, onCloseDrawer } = useChat();
+  const { isOpenInfoChat, typeDrawerChat, onCloseDrawer } = useChat();
 
   return (
     <Box
@@ -23,19 +22,12 @@ const RoomDetails = () => {
       {mobileMode ? <RoomHeaderMobile /> : <RoomHeader />}
       <Conversation
         wrapperInputSx={{
-          ...(isOpenInfoChat && typeDrawerChat !== 'forward'
+          ...(isOpenInfoChat && !DrawerChatIgnore?.includes(typeDrawerChat)
             ? {
                 width: `calc(100% - ${extraDesktopMode ? "424px" : "272px"})`,
               }
             : {}),
         }}
-      />
-      <DefaultPopupLayout
-        title={'Forward message'}
-        content={<ForwardLayout />}
-        open={typeDrawerChat === 'forward' && isOpenInfoChat}
-        onClose={() => onCloseDrawer('account')}
-        sx={{ width: '500px' }}
       />
     </Box>
   );

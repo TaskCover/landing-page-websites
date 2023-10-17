@@ -8,6 +8,8 @@ import useFetchingChatting from "./hooks/useFetchingChatting";
 import ChattingRoomMobileLayout from "./components/Layout/ChattingRoomMobileLayout";
 import AddGroup from "components/sn-chat/chatGroup/AddGroup";
 import { useChat } from "store/chat/selectors";
+import DefaultPopupLayout from "layouts/DefaultPopupLayout";
+import useModalChatting from "./hooks/useModalChatting";
 
 const { RoomDetails, Sidebar, ChattingRoomLayout } = SNChat;
 
@@ -15,9 +17,10 @@ const ChattingRoom = () => {
   const [openAddGroup, setOpenAddGroup] = useState(false);
 
   const { mobileMode } = useGetScreenMode();
-  const { onSearchText, onChangeParamsConversation } = useFetchingChatting();
+  const { onFilterConversation, onChangeParamsConversation } =
+    useFetchingChatting();
   const { conversationInfo: currentConversation, dataTransfer } = useChat();
-
+  const contentModalChatting = useModalChatting();
   return (
     <Box
       sx={{
@@ -29,12 +32,22 @@ const ChattingRoom = () => {
       {!mobileMode ? (
         <ChattingRoomLayout>
           <Sidebar
-            onSearchText={onSearchText}
+            onFilterConversation={onFilterConversation}
             onChangeParamsConversation={onChangeParamsConversation}
           />
-          {Object.keys(dataTransfer).length !== 0 ? <RoomDetails /> : <Box display="flex" alignItems="center" justifyContent="center" width="100%" height="90vh">
-            <Typography variant="h3">Please select a conversation</Typography>
-          </Box>}
+          {Object.keys(dataTransfer).length !== 0 ? (
+            <RoomDetails />
+          ) : (
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              width="100%"
+              height="90vh"
+            >
+              <Typography variant="h3">Please select a conversation</Typography>
+            </Box>
+          )}
         </ChattingRoomLayout>
       ) : (
         <>
@@ -46,7 +59,7 @@ const ChattingRoom = () => {
                 <AddGroup />
               ) : (
                 <Sidebar
-                  onSearchText={onSearchText}
+                  onFilterConversation={onFilterConversation}
                   onChangeParamsConversation={onChangeParamsConversation}
                 />
               )}
@@ -54,6 +67,7 @@ const ChattingRoom = () => {
           )}
         </>
       )}
+      <DefaultPopupLayout {...contentModalChatting} />
     </Box>
   );
 };

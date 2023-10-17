@@ -5,6 +5,7 @@ import { useChatDetailInfoReturns } from "components/sn-chatting-room/hooks/useC
 import useGetScreenMode from "hooks/useGetScreenMode";
 import DrawerInfoChat from "../Drawer";
 import { useChat } from "store/chat/selectors";
+import { DrawerChatIgnore } from "../..";
 
 export type ChatDetailInfoProps = useChatDetailInfoReturns;
 
@@ -14,7 +15,7 @@ const ChatDetailInfo = () => {
 
   const styleDrawerOpen = useMemo(
     () =>
-    (isOpenInfoChat && typeDrawerChat !== 'forward') ? { width: extraDesktopMode ? "424px" : "272px" } : { width: 0 },
+    (isOpenInfoChat &&  !DrawerChatIgnore.includes(typeDrawerChat)) ? { width: extraDesktopMode ? "424px" : "272px" } : { width: 0 },
     [extraDesktopMode, isOpenInfoChat, typeDrawerChat],
   );
 
@@ -33,7 +34,7 @@ const ChatDetailInfo = () => {
       }}
       variant="persistent"
       anchor="right"
-      open={isOpenInfoChat && typeDrawerChat !== 'forward'}
+      open={isOpenInfoChat &&  !DrawerChatIgnore.includes(typeDrawerChat)}
     >
         <DrawerInfoChat  />
     </Drawer>
