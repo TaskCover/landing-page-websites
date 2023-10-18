@@ -4,9 +4,12 @@ import ForwardLayout from "../components/RoomDetails/components/Drawer/ChatForwa
 import AddGroup from "components/sn-chat/chatGroup/AddGroup";
 
 const useModalChatting = () => {
-  const { isOpenInfoChat, typeDrawerChat, onCloseDrawer } = useChat();
-
-  console.log(isOpenInfoChat, typeDrawerChat);
+  const {
+    isOpenInfoChat,
+    typeDrawerChat,
+    onCloseDrawer,
+    onSetConversationInfo,
+  } = useChat();
 
   const contentObject = useMemo(
     () => ({
@@ -19,13 +22,19 @@ const useModalChatting = () => {
       },
       ["group-modal"]: {
         title: "Add group",
-        content: <AddGroup isNew={true} />,
+        content: (
+          <AddGroup
+            isNew={true}
+            type="modal"
+            onSelectNewGroup={(value) => onSetConversationInfo(value)}
+          />
+        ),
         open: typeDrawerChat === "group-modal" && isOpenInfoChat,
         onClose: () => onCloseDrawer("account"),
         sx: { width: "500px" },
       },
     }),
-    [isOpenInfoChat, onCloseDrawer, typeDrawerChat],
+    [isOpenInfoChat, onCloseDrawer, onSetConversationInfo, typeDrawerChat],
   );
 
   const contentChatting = useMemo(

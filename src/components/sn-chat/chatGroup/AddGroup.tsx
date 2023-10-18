@@ -20,6 +20,7 @@ interface AddGroupProps {
   CustomCallBackIcon?: any;
   onSelectNewGroup?: any;
   isNew?: boolean;
+  type?: any;
 }
 
 const AddGroup: FC<AddGroupProps> = ({
@@ -27,6 +28,7 @@ const AddGroup: FC<AddGroupProps> = ({
   onSelectNewGroup,
   CustomCallBackIcon,
   isNew,
+  type = null,
 }) => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
@@ -75,11 +77,11 @@ const AddGroup: FC<AddGroupProps> = ({
   }, [onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
-    if (dataTransfer.isNew || isNew) return;
+    if (dataTransfer.isNew || isNew || type === "modal") return;
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
     });
-  }, [dataTransfer, onFetchGroupMembersMember, isNew]);
+  }, [dataTransfer, onFetchGroupMembersMember, isNew, type]);
 
   const handleSuccess = (result) => {
     if (result?.error) {
@@ -100,7 +102,11 @@ const AddGroup: FC<AddGroupProps> = ({
       }
       onSelectNewGroup(result?.payload?.group);
       onSetDataTransfer(dataItem);
-      onChangeListConversations([dataItem].concat(convention));
+      if (type === "modal") {
+        onChangeListConversations([result?.payload?.group].concat(convention));
+      } else {
+        onChangeListConversations([dataItem].concat(convention));
+      }
       return;
     }
     onSetStep(STEP.CHAT_GROUP, dataItem);
@@ -190,24 +196,26 @@ const AddGroup: FC<AddGroupProps> = ({
           paddingLeft: "10px",
         }}
       >
-        <IconButton
-          sx={{
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            if (callbackBackIcon) {
-              callbackBackIcon();
-              return;
-            }
-            if (currStep === STEP.ADD_GROUP) {
-              onSetStep(STEP.CONVENTION);
-            } else {
-              onSetStep(prevStep);
-            }
-          }}
-        >
-          {CustomCallBackIcon ? CustomCallBackIcon : <ArrowDownIcon />}
-        </IconButton>
+        {type !== "modal" && (
+          <IconButton
+            sx={{
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              if (callbackBackIcon) {
+                callbackBackIcon();
+                return;
+              }
+              if (currStep === STEP.ADD_GROUP) {
+                onSetStep(STEP.CONVENTION);
+              } else {
+                onSetStep(prevStep);
+              }
+            }}
+          >
+            {CustomCallBackIcon ? CustomCallBackIcon : <ArrowDownIcon />}
+          </IconButton>
+        )}
         <TextField
           size="small"
           sx={{
@@ -269,6 +277,7 @@ const AddGroup: FC<AddGroupProps> = ({
                   ?.filter(
                     (item) =>
                       dataTransfer?.isNew ||
+                      type === "modal" ||
                       (!dataTransfer?.isNew &&
                         !groupMembers
                           ?.map((m) => m._id)
@@ -308,7 +317,7 @@ const AddGroup: FC<AddGroupProps> = ({
           onClick={() => {
             if (callbackBackIcon) {
               callbackBackIcon();
-              if (isNew) {
+              if (isNew || type === "modal") {
                 onCloseDrawer("account");
               }
               return;
