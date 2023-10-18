@@ -15,7 +15,7 @@ import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 export enum ServiceColumn {
   NAME = "name",
   DESCRIPTION = "desc",
-  SERVICE_TYPE = "serviceType",
+  SERVICE_TYPE = "position",
   BILL_TYPE = "billType",
   UNIT = "unit",
   ESTIMATE = "estimate",
@@ -97,7 +97,7 @@ export const useGetHeaderColumn = (index: number) => {
       },
       {
         id: ServiceColumn.SERVICE_TYPE,
-        value: salesT("detail.service.table.serviceType"),
+        value: salesT("detail.service.table.position"),
         align: "left",
         // minWidth: 140,
         width: "8%",

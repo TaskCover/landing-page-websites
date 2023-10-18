@@ -73,13 +73,22 @@ export const salesLang: SalesDictionary = {
         estimate: "Ước tính",
         estTooltip: "Estimate is editable on fixed billing price",
         markup: "Đánh dấu",
-        serviceType: "Loại dịch vụ",
+        position: "Vị trí",
         totalBuget: "Tổng ngân sách",
       },
       billType: {
         fix: "Giá cố định",
         actual: "Giá thực tế",
         nonBillable: "Không tính phí",
+      },
+      unit: {
+        hour: "Giờ",
+        hourSubText: "Ngân sách và theo dõi trong vài giờ",
+        day: "Ngày",
+        daySubText: "Ngân sách tính theo ngày, theo dõi tính bằng giờ",
+        piece: "Thành phần",
+        pieceSubText:
+          "Lập ngân sách theo từng phần, theo dõi số giờ hoặc chi phí",
       },
       addNewFromRateCard: "Thêm mới từ thẻ giá",
       addNewRow: "Thêm mới hàng",

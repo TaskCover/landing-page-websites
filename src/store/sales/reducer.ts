@@ -70,7 +70,7 @@ export interface Service {
   id: string;
   name: string;
   desc: string;
-  serviceType: string;
+  position: string;
   billType: string;
   unit: string;
   estimate: number;

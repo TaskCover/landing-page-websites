@@ -68,7 +68,7 @@ export type SalesDictionary = {
         quantity: string;
         estimate: string;
         totalBuget: string;
-        serviceType: string;
+        position: string;
         billType: string;
         unit: string;
         discount: string;
@@ -79,6 +79,14 @@ export type SalesDictionary = {
         fix: string;
         actual: string;
         nonBillable: string;
+      };
+      unit: {
+        hour: string;
+        hourSubText: string;
+        day: string;
+        daySubText: string;
+        piece: string;
+        pieceSubText: string;
       };
       addSection: string;
       addNewFromRateCard: string;
