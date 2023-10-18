@@ -130,9 +130,22 @@ export const useSales = () => {
         tags: data.tags,
         start_date,
       };
-      await dispatch(updateDeal({ id: data.id, data: convertedBody }));
+      await dispatch(updateDeal({ id: data.id, data: convertedBody })).then(
+        () => {
+          onAddSnackbar(
+            commonT("notification.success", {
+              label: saleT("list.newDealForm.update"),
+            }),
+            "success",
+          );
+          onGetSales({
+            ...salesFilters,
+            sort: SORT_OPTIONS.DESC,
+          });
+        },
+      );
     },
-    [dispatch],
+    [dispatch, JSON.stringify(salesFilters)],
   );
 
   useEffect(() => {

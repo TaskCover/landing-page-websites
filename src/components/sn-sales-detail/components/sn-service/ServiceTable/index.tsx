@@ -78,8 +78,8 @@ const ServiceTable = ({
   const onAddRow = () => {
     append({
       id: uuid(),
-      name: "name",
-      desc: "description",
+      name: "",
+      desc: "",
       price: 0,
       billType: SALE_BILL_TYPE.FIX,
       qty: 0,
@@ -138,7 +138,6 @@ const ServiceTable = ({
               <Stack
                 direction="row"
                 alignItems="center"
-                maxWidth="100vw"
                 justifyContent="space-between"
               >
                 <Stack direction="row" spacing={1} alignItems="center">

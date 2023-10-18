@@ -20,6 +20,7 @@ export type SalesDictionary = {
       owner: string;
       tags: string;
       submit: string;
+      update: string;
     };
     table: {
       stage: string;

@@ -13,6 +13,7 @@ interface IProps {
   inputProps?;
   toolTipText?: string;
   type?: string;
+  required?: boolean;
 }
 
 const CustomDesktopInput = ({
@@ -25,6 +26,7 @@ const CustomDesktopInput = ({
   type = "string",
   toolTipText,
   value,
+  required,
 }: IProps) => {
   const { register } = useFormContext();
 
@@ -43,6 +45,7 @@ const CustomDesktopInput = ({
                       pointerEvents: "none",
                     },
                   }}
+                  required={required}
                   InputProps={inputProps}
                   disabled={disabled}
                   multiline={type === "number" ? false : true}

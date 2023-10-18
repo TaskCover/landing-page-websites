@@ -146,13 +146,13 @@ export const useGetHeaderColumn = (index: number) => {
         width: "8%",
         // minWidth: 120,
       },
-      {
-        id: ServiceColumn.MARK_UP,
-        value: salesT("detail.service.table.markup"),
-        align: "left",
-        width: "8%",
-        // minWidth: 120,
-      },
+      // {
+      //   id: ServiceColumn.MARK_UP,
+      //   value: salesT("detail.service.table.markup"),
+      //   align: "left",
+      //   width: "8%",
+      //   // minWidth: 120,
+      // },
       {
         id: ServiceColumn.TOTAL_BUGET,
         value: salesT("detail.service.table.totalBuget"),

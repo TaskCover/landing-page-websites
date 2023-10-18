@@ -6,7 +6,14 @@ import { DATE_FORMAT_HYPHEN, NS_COMMON, NS_SALES } from "constant/index";
 import useToggle from "hooks/useToggle";
 import PlusIcon from "icons/PlusIcon";
 import { useTranslations } from "next-intl";
-import React, { ChangeEvent, memo, use, useMemo, useState } from "react";
+import React, {
+  ChangeEvent,
+  memo,
+  use,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { Controller, useForm, useFormContext, useWatch } from "react-hook-form";
 import { useSaleDetail, useSalesTodo } from "store/sales/selectors";
@@ -169,11 +176,12 @@ const TodoList = () => {
   const { onCreateTodo, onUpdateTodo, onUpdatePriority } = useSalesTodo();
 
   const todoListForm = useWatch({ control, name: "todo_list" });
+
   const todoList = useMemo(() => {
     return (Object.values(todoListForm ?? {}) as Array<Todo>).sort(
       (a, b) => a.priority - b.priority,
     );
-  }, [JSON.stringify(todoListForm)]);
+  }, [todoListForm]);
 
   const onSubmit = async (value) => {
     onCreateTodo({
@@ -185,25 +193,24 @@ const TodoList = () => {
       },
     });
   };
-
   const onDragEnd = async (result: DropResult) => {
     const { source, destination } = result;
-    const todoListArray = Object.values(todoListForm) as Array<Todo>;
+    const todoListArray = Object.values(todoList) as Array<Todo>;
     const reorderedObject = reorderPriority(
       todoListArray,
       destination?.index ?? 0,
       source?.index ?? 0,
-    );
+    ) as Record<string, Todo>;
 
     setValue("todo_list", reorderedObject);
     try {
       await Promise.all(
-        todoListArray.map((todo) =>
-          onUpdatePriority(todo.id, {
+        Object.values(reorderedObject).map((todo) => {
+          return onUpdatePriority(todo.id, {
             dealId: saleDetail?.id || "",
             priority: todo.priority,
-          }),
-        ),
+          });
+        }),
       );
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
@@ -226,7 +233,7 @@ const TodoList = () => {
           mt={2}
           overflow={{
             xs: "auto",
-            md: "auto",
+            lg: "hidden",
           }}
           width={{
             xs: "100%",

@@ -22,6 +22,7 @@ export const salesLang: SalesDictionary = {
       owner: "Chủ sở hữu",
       tags: "Thẻ",
       submit: "Thêm Giao Dịch",
+      update: "Cập nhật Giao Dịch",
     },
     table: {
       stage: "Giai đoạn",

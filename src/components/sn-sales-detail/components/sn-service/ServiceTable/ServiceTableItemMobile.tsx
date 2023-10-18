@@ -216,7 +216,7 @@ const ServiceTableItemMobile = ({
                   label={saleT(`${prefixT}.discount`)}
                   register={register(`${sectionKey}.${index}.discount`)}
                 />
-                <CustomInput
+                {/* <CustomInput
                   control={control}
                   defaultValue={service.markUp}
                   inputProps={{
@@ -231,7 +231,7 @@ const ServiceTableItemMobile = ({
                   helperText="%"
                   label={saleT(`${prefixT}.markup`)}
                   register={register(`${sectionKey}.${index}.markUp`)}
-                />
+                /> */}
                 <CustomInput
                   control={control}
                   defaultValue={service.tolBudget}
