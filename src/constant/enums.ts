@@ -114,3 +114,9 @@ export enum DAY_TIME_UNIT {
   DAY = "day",
   HOUR = "hour",
 }
+
+export enum SERVICE_UNIT_OPTIONS {
+  HOUR = "hour",
+  DAY = "day",
+  PIECE = "piece",
+}

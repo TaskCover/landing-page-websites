@@ -138,10 +138,6 @@ export const useSales = () => {
             }),
             "success",
           );
-          onGetSales({
-            ...salesFilters,
-            sort: SORT_OPTIONS.DESC,
-          });
         },
       );
     },

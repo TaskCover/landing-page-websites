@@ -126,9 +126,9 @@ const ServiceTableItemMobile = ({
                   }}
                   disabled={isLocked}
                   control={control}
-                  defaultValue={service.serviceType}
-                  label={saleT(`${prefixT}.serviceType`)}
-                  register={register(`${sectionKey}.${index}.serviceType`)}
+                  defaultValue={service.position}
+                  label={saleT(`${prefixT}.position`)}
+                  register={register(`${sectionKey}.${index}.position`)}
                 />
                 <CustomInput
                   inputProps={{

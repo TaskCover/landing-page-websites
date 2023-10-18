@@ -27,7 +27,7 @@ import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 import { Action } from "../../TodoList/SubItem";
 import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
-import { useSalesService } from "store/sales/selectors";
+import { useSaleDetail, useSalesService } from "store/sales/selectors";
 import LockIcon from "icons/LockIcon";
 import UnlockIcon from "icons/UnlockIcon";
 import { CURRENCY_CODE, SALE_BILL_TYPE } from "constant/enums";
@@ -42,6 +42,7 @@ import CustomLabelSelect from "../../CustomLabelSelect";
 import CustomInput from "../../CustomInput/CustomInput";
 import CustomDesktopInput from "../../CustomInput/CustomDesktopInput";
 import { useTranslations } from "next-intl";
+import { useGetServiceUnitOptions } from "components/sn-sales-detail/hooks/useGetServiceUnitOptions";
 
 interface IProps {
   index: number;
@@ -65,13 +66,16 @@ const ServiceTableItem = ({
   const boundingElement = useRef();
   const saleT = useTranslations(NS_SALES);
   const { billTypeOptions } = useGetBillTypeOptions();
-  const currency = useWatch({
-    control,
-    name: `${sectionKey}.${index}.unit`,
-  });
+  const { saleDetail } = useSaleDetail();
+  const currency = saleDetail?.currency;
+  const { serviceUnitOptions } = useGetServiceUnitOptions();
   const billType = useWatch({
     control,
     name: `${sectionKey}.${index}.billType`,
+  });
+  const unit = useWatch({
+    control,
+    name: `${sectionKey}.${index}.unit`,
   });
 
   const isShowCols = useCallback(
@@ -173,11 +177,11 @@ const ServiceTableItem = ({
                 align="left"
               >
                 <CustomDesktopInput
-                  name={`${sectionKey}.${index}.serviceType`}
+                  name={`${sectionKey}.${index}.position`}
                   control={control}
                   disabled={isLocked}
                   isEdit={isEdit}
-                  value={service.serviceType}
+                  value={service.position}
                 />
               </BodyCell>
               <BodyCell
@@ -243,7 +247,8 @@ const ServiceTableItem = ({
                           defaultValue={currency}
                           {...field}
                           disabled={isLocked}
-                          options={UNIT_OPTIONS}
+                          showSubText
+                          options={serviceUnitOptions as Option[]}
                           sx={{
                             width: "100%",
                           }}
@@ -252,7 +257,9 @@ const ServiceTableItem = ({
                     }}
                   />
                 ) : (
-                  <Text variant="body2">{currency as string}</Text>
+                  <Text variant="body2">
+                    {saleT(`detail.service.unit.${unit}`)}
+                  </Text>
                 )}
               </BodyCell>
 
@@ -301,7 +308,12 @@ const ServiceTableItem = ({
                       min: 0,
                     },
                   }}
-                  value={formatNumber(service.qty, { suffix: "pcs" })}
+                  value={formatNumber(
+                    typeof service.qty === "string"
+                      ? parseInt(service.qty)
+                      : service.qty,
+                    { suffix: "pcs" },
+                  )}
                 />
               </BodyCell>
               {isShowCols(ServiceColumn.PRICE) && (
@@ -318,11 +330,17 @@ const ServiceTableItem = ({
                       isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
                     }
                     isEdit={isEdit}
-                    value={formatNumber(service.price, {
-                      prefix: CURRENCY_SYMBOL[currency as CURRENCY_CODE] || "",
-                      suffix: "/pc",
-                      numberOfFixed: 2,
-                    })}
+                    value={formatNumber(
+                      typeof service.price === "string"
+                        ? parseInt(service.price)
+                        : service.price,
+                      {
+                        prefix:
+                          CURRENCY_SYMBOL[currency as CURRENCY_CODE] || "",
+                        suffix: "/pc",
+                        numberOfFixed: 2,
+                      },
+                    )}
                     type="number"
                     inputProps={{
                       type: "number",
@@ -350,7 +368,14 @@ const ServiceTableItem = ({
                       isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
                     }
                     isEdit={isEdit}
-                    value={formatNumber(service.discount, { suffix: "%" })}
+                    value={formatNumber(
+                      typeof service.discount === "string"
+                        ? parseInt(service.discount)
+                        : service.discount,
+                      {
+                        suffix: "%",
+                      },
+                    )}
                     type="number"
                     helperText="%"
                   />
