@@ -337,7 +337,9 @@ const ServiceTableItem = ({
                       {
                         prefix:
                           CURRENCY_SYMBOL[currency as CURRENCY_CODE] || "",
-                        suffix: "/pc",
+                        suffix: `/${saleT(
+                          `detail.service.unit.${unit}`,
+                        ).toLowerCase()}`,
                         numberOfFixed: 2,
                       },
                     )}
@@ -350,7 +352,7 @@ const ServiceTableItem = ({
                     }}
                     helperText={`${
                       CURRENCY_SYMBOL[currency as CURRENCY_CODE] || ""
-                    }/pc`}
+                    }/${saleT(`detail.service.unit.${unit}`).toLowerCase()}`}
                   />
                 </BodyCell>
               )}
