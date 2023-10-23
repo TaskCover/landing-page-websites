@@ -35,7 +35,11 @@ import {
 } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 import { useSalesService } from "store/sales/selectors";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
-import { CURRENCY_CODE, SALE_BILL_TYPE } from "constant/enums";
+import {
+  CURRENCY_CODE,
+  SALE_BILL_TYPE,
+  SERVICE_UNIT_OPTIONS,
+} from "constant/enums";
 import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
 
 interface IProps {
@@ -83,7 +87,7 @@ const ServiceTable = ({
       price: 0,
       billType: SALE_BILL_TYPE.FIX,
       qty: 0,
-      unit: UNIT_OPTIONS[0].value,
+      unit: SERVICE_UNIT_OPTIONS.DAY,
       tolBudget: 0,
     });
   };
