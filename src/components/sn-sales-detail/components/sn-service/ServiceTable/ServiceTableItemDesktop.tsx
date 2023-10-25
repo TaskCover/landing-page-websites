@@ -1,27 +1,13 @@
 import { Box, Stack, TableRow } from "@mui/material";
 import { BodyCell, StatusCell } from "components/Table";
-import {
-  Button,
-  IconButton,
-  Input,
-  Select,
-  Text,
-  Tooltip,
-} from "components/shared";
-import React, {
-  cloneElement,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+import { IconButton, Select, Text } from "components/shared";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { EditContext } from "../context/EditContext";
 import { Draggable } from "react-beautiful-dnd";
 import MoveDotIcon from "icons/MoveDotIcon";
 import ServiceItemAction from "./ServiceItemAction";
 import { Service } from "store/sales/reducer";
-import { formatEstimateTime, formatNumber } from "utils/index";
+import { formatNumber } from "utils/index";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
@@ -34,6 +20,7 @@ import { CURRENCY_CODE, SALE_BILL_TYPE } from "constant/enums";
 import {
   COLOR_BILL_TYPE,
   SALE_BILL_TYPE_LABEL,
+  mappedUnit,
 } from "components/sn-sales-detail/helpers";
 import { Option } from "constant/types";
 import { useGetBillTypeOptions } from "components/sn-sales-detail/hooks/useGetBillTypeOptions";
@@ -43,6 +30,7 @@ import CustomInput from "../../CustomInput/CustomInput";
 import CustomDesktopInput from "../../CustomInput/CustomDesktopInput";
 import { useTranslations } from "next-intl";
 import { useGetServiceUnitOptions } from "components/sn-sales-detail/hooks/useGetServiceUnitOptions";
+import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 
 interface IProps {
   index: number;
@@ -63,20 +51,30 @@ const ServiceTableItem = ({
   const { register, control, getValues, setValue } = useFormContext();
   const { sectionColumns } = useSalesService();
   const [isLocked, setIsLocked] = React.useState(false);
-  const boundingElement = useRef();
   const saleT = useTranslations(NS_SALES);
   const { billTypeOptions } = useGetBillTypeOptions();
   const { saleDetail } = useSaleDetail();
+  const { positionOptions } = useGetOptions();
   const currency = saleDetail?.currency;
   const { serviceUnitOptions } = useGetServiceUnitOptions();
-  const billType = useWatch({
+  const [billType, unit, qty, price, discount] = useWatch({
     control,
-    name: `${sectionKey}.${index}.billType`,
+    name: [
+      `${sectionKey}.${index}.billType`,
+      `${sectionKey}.${index}.unit`,
+      `${sectionKey}.${index}.qty`,
+      `${sectionKey}.${index}.price`,
+      `${sectionKey}.${index}.discount`,
+    ],
   });
-  const unit = useWatch({
-    control,
-    name: `${sectionKey}.${index}.unit`,
-  });
+
+  const position = useMemo(() => {
+    if (!service.serviceType) return "";
+    const result = positionOptions.find(
+      (item) => item.value === service.serviceType,
+    );
+    return result?.label || "";
+  }, [positionOptions]);
 
   const isShowCols = useCallback(
     (cols: ServiceColumn) => {
@@ -96,8 +94,10 @@ const ServiceTableItem = ({
     if (typeof service.tolBudget !== "number") {
       return parseFloat(service.tolBudget);
     }
+    const result = ((qty * price) / mappedUnit[unit]) * (1 - discount / 100);
+    setValue(`${sectionKey}.${index}.tolBudget`, result.toFixed(2));
     return service.tolBudget;
-  }, [service.tolBudget]);
+  }, [service.tolBudget, qty, price, unit, discount]);
 
   useEffect(() => {
     setValue(
@@ -108,12 +108,17 @@ const ServiceTableItem = ({
 
   return (
     <Draggable
-      draggableId={service?.id}
+      draggableId={`${sectionKey}.${service.id}.${index}`}
       index={index}
-      isDragDisabled={isLocked}
+      key={service?.id}
+      isDragDisabled={isLocked || !isEdit}
     >
       {(provided) => (
-        <div ref={provided.innerRef} {...provided.draggableProps}>
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
           <Stack
             direction={{
               xs: "column",
@@ -125,9 +130,8 @@ const ServiceTableItem = ({
             {isEdit && (
               <IconButton
                 sx={{
-                  position: "absolute",
+                  position: "relative",
                   zIndex: 999,
-                  left: "-6px",
                 }}
                 noPadding
                 {...provided.dragHandleProps}
@@ -147,6 +151,7 @@ const ServiceTableItem = ({
                 <CustomDesktopInput
                   name={`${sectionKey}.${index}.name`}
                   control={control}
+                  required
                   disabled={isLocked}
                   isEdit={isEdit}
                   value={service.name}
@@ -176,17 +181,41 @@ const ServiceTableItem = ({
                 }}
                 align="left"
               >
-                <CustomDesktopInput
-                  name={`${sectionKey}.${index}.position`}
-                  control={control}
-                  disabled={isLocked}
-                  isEdit={isEdit}
-                  value={service.position}
-                />
+                {isEdit ? (
+                  <Controller
+                    control={control}
+                    {...register(`${sectionKey}.${index}.serviceType`)}
+                    render={({ field }) => {
+                      return (
+                        <Select
+                          defaultValue={
+                            service?.serviceType || positionOptions[0]
+                          }
+                          {...field}
+                          disabled={isLocked}
+                          showSubText
+                          options={positionOptions as Option[]}
+                          sx={{
+                            width: "100%",
+                            [`& .MuiInputBase-root`]: {
+                              px: 1,
+                              backgroundColor: "background.paper",
+                            },
+                          }}
+                        />
+                      );
+                    }}
+                  />
+                ) : (
+                  <Text variant="body2">{position}</Text>
+                )}
               </BodyCell>
               <BodyCell
                 sx={{
                   ...defaultSx.item,
+                  [`& .MuiFormControl-root`]: {
+                    width: "100%",
+                  },
                 }}
                 align="left"
               >
@@ -219,13 +248,21 @@ const ServiceTableItem = ({
                         alignItems: "center",
                         justifyContent: "start",
                         padding: 0,
+                        maxWidth: "fill-available!important",
+                        minWidth: "auto!important",
                       },
-
+                      padding: 0,
+                      width: "100%",
                       [`&.MuiSvgIcon-root`]: {
                         display: "none",
                       },
                     }}
                     text={SALE_BILL_TYPE_LABEL[service.billType]}
+                    textProps={{
+                      sx: {
+                        width: "100%",
+                      },
+                    }}
                     color={COLOR_BILL_TYPE[service.billType]}
                     namespace={NS_SALES}
                   />
@@ -251,6 +288,13 @@ const ServiceTableItem = ({
                           options={serviceUnitOptions as Option[]}
                           sx={{
                             width: "100%",
+                            [`& .MuiInputBase-root`]: {
+                              backgroundColor: "background.paper",
+                              px: 1,
+                              [`& .MuiTypography-root:nth-child(2)`]: {
+                                display: "none",
+                              },
+                            },
                           }}
                         />
                       );
@@ -276,12 +320,20 @@ const ServiceTableItem = ({
                     control={control}
                     disabled={isLocked || billType === SALE_BILL_TYPE.ACTUAL}
                     isEdit={isEdit}
-                    helperText="h"
+                    helperText={saleT(
+                      `detail.service.unit.${unit}`,
+                    ).toLowerCase()}
                     toolTipText={
                       billType === SALE_BILL_TYPE.ACTUAL
                         ? saleT("detail.service.table.estTooltip")
                         : undefined
                     }
+                    rules={{
+                      min: {
+                        value: 0,
+                        message: "It must be greater than 0",
+                      },
+                    }}
                     type="number"
                     value={`${service.estimate || 0}h`}
                   />
@@ -301,11 +353,17 @@ const ServiceTableItem = ({
                     isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
                   }
                   isEdit={isEdit}
-                  helperText="pcs"
+                  // helperText="pcs"
                   type="number"
                   inputProps={{
                     inputProps: {
                       min: 0,
+                    },
+                  }}
+                  rules={{
+                    min: {
+                      value: 0,
+                      message: "It must be no less than 0",
                     },
                   }}
                   value={formatNumber(
@@ -350,6 +408,12 @@ const ServiceTableItem = ({
                         min: 0,
                       },
                     }}
+                    rules={{
+                      min: {
+                        value: 0,
+                        message: "It must be no less than 0",
+                      },
+                    }}
                     helperText={`${
                       CURRENCY_SYMBOL[currency as CURRENCY_CODE] || ""
                     }/${saleT(`detail.service.unit.${unit}`).toLowerCase()}`}
@@ -378,30 +442,21 @@ const ServiceTableItem = ({
                         suffix: "%",
                       },
                     )}
+                    rules={{
+                      min: {
+                        value: 0,
+                        message: "It must be no less than 0",
+                      },
+                      max: {
+                        value: 100,
+                        message: "It must be no more than 100",
+                      },
+                    }}
                     type="number"
                     helperText="%"
                   />
                 </BodyCell>
               )}
-
-              {/* {isShowCols(ServiceColumn.MARK_UP) && (
-                <BodyCell
-                  sx={{
-                    ...defaultSx.item,
-                  }}
-                  align="left"
-                >
-                  <CustomDesktopInput
-                    name={`${sectionKey}.${index}.markUp`}
-                    control={control}
-                    disabled={isLocked}
-                    isEdit={isEdit}
-                    value={formatNumber(service.markUp, { suffix: "%" })}
-                    type="number"
-                    helperText="%"
-                  />
-                </BodyCell>
-              )} */}
               <BodyCell
                 sx={{
                   ...defaultSx.item,
@@ -412,7 +467,8 @@ const ServiceTableItem = ({
                   name={`${sectionKey}.${index}.tolBudget`}
                   control={control}
                   disabled={
-                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                    // isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                    true
                   }
                   isEdit={isEdit}
                   value={formatNumber(tolBuget, {

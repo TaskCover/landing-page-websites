@@ -22,6 +22,8 @@ import CustomSelect from "../../CustomInput/CustomSelect";
 import { useGetBillTypeOptions } from "components/sn-sales-detail/hooks/useGetBillTypeOptions";
 import { CURRENCY_CODE, SALE_BILL_TYPE } from "constant/enums";
 import { useGetServiceUnitOptions } from "components/sn-sales-detail/hooks/useGetServiceUnitOptions";
+import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
+import { mappedUnit } from "components/sn-sales-detail/helpers";
 
 interface IProps {
   index: number;
@@ -51,15 +53,26 @@ const ServiceTableItemMobile = ({
   const { sectionColumns } = useSalesService();
   const { serviceUnitOptions } = useGetServiceUnitOptions();
   const { billTypeOptions } = useGetBillTypeOptions();
-  const unit = useWatch({
+  const { positionOptions } = useGetOptions();
+  const [billType, unit, qty, price, discount] = useWatch({
     control,
-    name: `${sectionKey}.${index}.unit`,
+    name: [
+      `${sectionKey}.${index}.billType`,
+      `${sectionKey}.${index}.unit`,
+      `${sectionKey}.${index}.qty`,
+      `${sectionKey}.${index}.price`,
+      `${sectionKey}.${index}.discount`,
+    ],
   });
 
-  const billType = useWatch({
-    control,
-    name: `${sectionKey}.${index}.billType`,
-  });
+  const tolBuget = useMemo(() => {
+    if (typeof service.tolBudget !== "number") {
+      return parseFloat(service.tolBudget);
+    }
+    const result = ((qty * price) / mappedUnit[unit]) * (1 - discount / 100);
+    setValue(`${sectionKey}.${index}.tolBudget`, result.toFixed(2));
+    return service.tolBudget;
+  }, [service.tolBudget, qty, price, unit, discount]);
 
   const isShowCols = useCallback(
     (cols: ServiceColumn) => {
@@ -82,9 +95,10 @@ const ServiceTableItemMobile = ({
 
   return (
     <Draggable
-      draggableId={draggableId}
+      draggableId={`${sectionKey}.${service.id}.${index}`}
       index={index}
-      isDragDisabled={isLocked}
+      isDragDisabled={!isEdit}
+      key={service?.id}
     >
       {(provided) => (
         <div ref={provided.innerRef} {...provided.draggableProps}>
@@ -126,16 +140,17 @@ const ServiceTableItemMobile = ({
                   label={saleT(`${prefixT}.description`)}
                   register={register(`${sectionKey}.${index}.desc`)}
                 />
-                <CustomInput
+                <CustomSelect
                   inputProps={{
                     disabled: isLocked,
                     multiline: true,
                   }}
                   disabled={isLocked}
+                  options={positionOptions}
                   control={control}
-                  defaultValue={service.position}
+                  defaultValue={service.serviceType}
                   label={saleT(`${prefixT}.position`)}
-                  register={register(`${sectionKey}.${index}.position`)}
+                  register={register(`${sectionKey}.${index}.serviceType`)}
                 />
                 <CustomInput
                   inputProps={{
@@ -185,7 +200,6 @@ const ServiceTableItemMobile = ({
                     disabled: isLocked,
                     type: "number",
                   }}
-                  helperText="pc"
                   label={saleT(`${prefixT}.quantity`)}
                   register={register(`${sectionKey}.${index}.qty`)}
                 />
@@ -225,35 +239,16 @@ const ServiceTableItemMobile = ({
                   label={saleT(`${prefixT}.discount`)}
                   register={register(`${sectionKey}.${index}.discount`)}
                 />
-                {/* <CustomInput
-                  control={control}
-                  defaultValue={service.markUp}
-                  inputProps={{
-                    disabled: isLocked,
-                    type: "number",
-                    inputProps: {
-                      min: 0,
-                      max: 100,
-                    },
-                  }}
-                  disabled={isLocked}
-                  helperText="%"
-                  label={saleT(`${prefixT}.markup`)}
-                  register={register(`${sectionKey}.${index}.markUp`)}
-                /> */}
                 <CustomInput
                   control={control}
                   defaultValue={service.tolBudget}
                   inputProps={{
                     disabled: isLocked,
                     type: "number",
-                    inputProps: {
-                      min: 0,
-                      max: 100,
-                    },
                   }}
                   disabled={
-                    isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
+                    true
+                    // isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
                   }
                   helperText={CURRENCY_SYMBOL[currency as CURRENCY_CODE]}
                   label={saleT(`${prefixT}.totalBuget`)}

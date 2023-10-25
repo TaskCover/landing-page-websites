@@ -50,7 +50,7 @@ export const TodoName = ({
   const [error, setError] = useState<string>("");
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+    setName(event.target.value.trim());
     setError("");
   };
 
@@ -63,7 +63,6 @@ export const TodoName = ({
     if (nameTrimmed) {
       setValue("todoItem.name", nameTrimmed);
       await onSubmit(getValues("todoItem"));
-      setName("");
     } else {
       setError(
         commonT("form.error.required", {
@@ -71,6 +70,7 @@ export const TodoName = ({
         }),
       );
     }
+    setName("");
   };
 
   return (
@@ -112,6 +112,10 @@ export const TodoName = ({
               "& input": {
                 fontSize: 15,
               },
+              "& .MuiInputBase-root": {
+                padding: 0,
+              },
+              padding: 0,
             }}
           />
           {!!error && (
@@ -228,6 +232,9 @@ const TodoList = () => {
             })`}
           </Text>
         }
+        sx={{
+          backgroundColor: "background.paper",
+        }}
       >
         <Stack
           mt={2}

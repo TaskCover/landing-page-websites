@@ -66,7 +66,14 @@ const TabHeader = () => {
         sm: "center",
       }}
     >
-      <Stack direction="row" spacing={1}>
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          width: "100%",
+          flex: 1,
+        }}
+      >
         <Link href={getPath(SALES_LIST_PATH)}>
           <ArrowLeftIcon
             sx={{ color: "common.black" }}
@@ -76,13 +83,31 @@ const TabHeader = () => {
           />
         </Link>
         <Avatar size={32} src={saleDetail?.owner?.avatar?.link} />
-        <Text variant="h4">{saleDetail?.name}</Text>
+        <Text
+          variant="h5"
+          sx={{
+            width: "100%",
+            textAlign: "left",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 2,
+            lineHeight: 1.28,
+            overflow: "hidden",
+            wordBreak: "break-word",
+            display: "-webkit-box",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {saleDetail?.name}
+        </Text>
       </Stack>
       <Stack
         direction="row"
         justifyContent={{
           xs: "space-between",
           sm: "flex-end",
+        }}
+        sx={{
+          flex: 1,
         }}
         spacing={2}
         flexWrap={{ xs: "wrap", sm: "nowrap" }}

@@ -79,7 +79,15 @@ const SaleItem = ({ item }: IProps) => {
             color="text.primary"
             fontWeight={600}
             lineHeight={1.28}
-            sx={{ "&:hover": { color: "primary.main" } }}
+            sx={{
+              "&:hover": { color: "primary.main" },
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 2,
+              overflow: "hidden",
+              wordBreak: "break-word",
+              display: "-webkit-box",
+              textOverflow: "ellipsis",
+            }}
           >
             {item.name}
           </Text>

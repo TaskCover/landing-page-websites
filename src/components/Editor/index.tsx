@@ -86,7 +86,7 @@ const Editor = (props: EditorProps) => {
   const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.length) return;
     let newFiles = Array.from(event.target.files);
-
+    console.log(newFiles);
     newFiles = newFiles.reduce(
       (out: File[], file) => {
         if (ACCEPTS.includes(file.type)) {
@@ -132,7 +132,7 @@ const Editor = (props: EditorProps) => {
     () => (hasAttachment ? toolbarAttachment : TOOLBAR),
     [hasAttachment, toolbarAttachment],
   );
-  
+
   const onInit = useCallback(async () => {
     const RQuill = (await import("react-quill")).default;
     console.log(RQuill);
