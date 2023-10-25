@@ -2,9 +2,8 @@ import { useChat } from "store/chat/selectors";
 import ProfileHeader from "../common/ProfileHeader";
 import Box from "@mui/material/Box";
 import Avatar from "components/Avatar";
-import { SxProps, Typography } from "@mui/material";
+import { SxProps } from "@mui/material";
 import ProfileCircleIcon from "icons/ProfileCircleIcon";
-import ArrowDownIcon from "icons/ArrowDownIcon";
 import MediaFileIcon from "icons/MediaFileIcon";
 import LinkIcon from "icons/LinkIcon";
 import FileBasicIcon from "icons/FileBasicIcon";
@@ -16,48 +15,8 @@ import { AN_ERROR_TRY_AGAIN, NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import UserInfo from "./UserInfo";
 import GroupMediaProfile from "./GroupMediaProfile";
+import ItemProfile from "../common/ItemProfile";
 import useTheme from "hooks/useTheme";
-
-const ItemProfile = ({
-  Icon,
-  title,
-  onClick,
-}: {
-  Icon: React.ElementType;
-  title: string;
-  onClick: () => void;
-}) => {
-  return (
-    <Box
-      display="flex"
-      gap="1rem"
-      ml="1rem"
-      mr="1.5rem"
-      alignItems="center"
-      sx={{
-        cursor: "pointer",
-      }}
-      onClick={onClick}
-    >
-      <Icon
-        sx={{
-          fill: "none",
-          color: "#666666",
-          filter: "opacity(0.8)",
-        }}
-      />
-      <Typography>{title}</Typography>
-      <ArrowDownIcon
-        sx={{
-          ml: "auto",
-          transform: "rotate(180deg)",
-          filter: "opacity(0.5)",
-          cursor: "pointer",
-        }}
-      />
-    </Box>
-  );
-};
 
 interface UserLandingProps {
   displayUserInfo: boolean;
@@ -111,6 +70,11 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
     [onPrevious, onSetStateSearchMessage],
   );
 
+  const handleSetStep = (step: STEP_INFO) => {
+    setStepMedia(step);
+    setShowMedia(true);
+  };
+
   const resetForm = (step: STEP_INFO) => {
     setShowMedia(false);
     setTimeout(() => {
@@ -145,40 +109,34 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
             <ItemProfile
               Icon={ProfileCircleIcon}
               title={commonChatBox("chatBox.accountInformation")}
-              onClick={() => {
-                setStepMedia(STEP_INFO.USER);
-                setShowMedia(true);
-              }}
+              onClick={() => handleSetStep(STEP_INFO.USER)}
             />
             <ItemProfile
               Icon={MediaFileIcon}
               title={commonChatBox("chatBox.media")}
-              onClick={() => {
-                setStepMedia(STEP_INFO.MEDIA);
-                setShowMedia(true);
-              }}
+              onClick={() => handleSetStep(STEP_INFO.MEDIA)}
             />
             <ItemProfile
               Icon={LinkIcon}
               title={commonChatBox("chatBox.link")}
-              onClick={() => {
-                setStepMedia(STEP_INFO.LINK);
-                setShowMedia(true);
-              }}
+              onClick={() => handleSetStep(STEP_INFO.LINK)}
             />
             <ItemProfile
               Icon={FileBasicIcon}
               title={commonChatBox("chatBox.file")}
-              onClick={() => {
-                setStepMedia(STEP_INFO.FILE);
-                setShowMedia(true);
-              }}
+              onClick={() => handleSetStep(STEP_INFO.FILE)}
             />
           </Box>
         </Box>
       );
     }
-  }, [avatar, handleSelectMessage, stateSearch.isSearch, stateSearch.text, commonChatBox]);
+  }, [
+    avatar,
+    handleSelectMessage,
+    stateSearch.isSearch,
+    stateSearch.text,
+    commonChatBox,
+  ]);
 
   const renderMediaContent = useMemo(() => {
     switch (stepMedia) {

@@ -22,6 +22,7 @@ import { Sales } from "store/sales/reducer";
 import useGetEmployeeOptions from "./hooks/useGetEmployeeOptions";
 import { useSales } from "store/sales/selectors";
 import { SALE_DETAIL_PATH } from "constant/paths";
+import { Option, User } from "constant/types";
 
 interface IProps {
   item: Sales; // change to data type
@@ -30,7 +31,7 @@ const SaleItem = ({ item }: IProps) => {
   const { employeeOptions, onEndReachedEmployeeOptions, onSearchEmployee } =
     useGetEmployeeOptions();
   const { onUpdateDeal } = useSales();
-  const [owner, setOwner] = useState(item.owner.id);
+  const [owner, setOwner] = useState<string>(item.owner.id);
 
   const time = formatEstimateTime(item.estimate || 0);
 
@@ -38,10 +39,32 @@ const SaleItem = ({ item }: IProps) => {
     onUpdateDeal({ owner: data.owner, id: item.id });
   };
 
-  const avatar = useMemo(() => {
-    const result = employeeOptions.find((item) => item.value === owner);
-    return result?.avatar || "";
-  }, [JSON.stringify(item.owner)]);
+  const mappedOwners = useMemo(() => {
+    const result = [...employeeOptions];
+    const isExist = result.find((employee) => employee.value === item.owner.id);
+    if (!isExist) {
+      result.push({
+        label: item.owner?.fullname,
+        value: item.owner?.id,
+        avatar: item.owner?.avatar?.link,
+        subText: item.owner?.email,
+      });
+    }
+    return result;
+  }, [employeeOptions]);
+
+  const mappedowner = useMemo(() => {
+    const result = mappedOwners.find((item) => item.value === owner);
+    return (
+      result ||
+      ({
+        label: "",
+        value: "",
+        avatar: "",
+        subText: "",
+      } as Option)
+    );
+  }, [JSON.stringify(item.owner), owner]);
 
   return (
     <TableRow>
@@ -50,7 +73,7 @@ const SaleItem = ({ item }: IProps) => {
         href={getPath(SALE_DETAIL_PATH, undefined, { id: item.id })}
       >
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} src={avatar}></Avatar>
+          <Avatar size={32} src={mappedowner.avatar || ""}></Avatar>
           <Text
             variant="body2"
             color="text.primary"
@@ -83,7 +106,7 @@ const SaleItem = ({ item }: IProps) => {
           }}
           onChange={(name, value) => {
             onSubmit({ owner: value });
-            setOwner(value as string);
+            setOwner(value);
           }}
           size="small"
           hasAll={false}
@@ -92,7 +115,7 @@ const SaleItem = ({ item }: IProps) => {
             onSearchEmployee(name, value as string);
           }}
           value={owner}
-          options={employeeOptions}
+          options={mappedOwners}
         />
       </BodyCell>
       <BodyCell align="right">
@@ -110,7 +133,11 @@ const SaleItem = ({ item }: IProps) => {
       <BodyCell width="11%" size="small" align="right">
         {`${time}h`}
       </BodyCell>
-      <BodyCell align="right">{item.probability}</BodyCell>
+      <BodyCell align="right">
+        {formatNumber(item.probability, {
+          suffix: "%",
+        })}
+      </BodyCell>
       <BodyCell align="left">
         {formatDate(item.updated_time, DATE_FORMAT_SLASH)}
       </BodyCell>

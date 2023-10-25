@@ -85,8 +85,11 @@ const Detail = () => {
 
   const onResetAction = () => {
     setAction(undefined);
-    onUpdateTaskDetail();
   };
+
+  const onAfterSubmit = () => {
+    onUpdateTaskDetail();
+  }
 
   return (
     <Drawer
@@ -122,7 +125,7 @@ const Detail = () => {
 
               {/* ACTIONS */}
               {action === Action.CHANGE_PARENT_TASK && (
-                <MoveOtherTask subId={task.subTaskId} open onClose={onResetAction} />
+                <MoveOtherTask subId={task.subTaskId} open onClose={onResetAction} onAfterSubmit={onAfterSubmit} />
               )}
             </Stack>
           }

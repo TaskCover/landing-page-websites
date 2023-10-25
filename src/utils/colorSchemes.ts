@@ -48,6 +48,9 @@ const colorSchemes = {
         main: "#8950FC",
         light: "#EEE5FF",
       },
+      blue: {
+        light: "#E1F0FF",
+      },
       grey: {
         50: "#F7F7FD", // OK
         100: "#ECECF3", // OK

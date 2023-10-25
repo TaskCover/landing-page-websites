@@ -28,6 +28,7 @@ export const LayoutLang: LayoutDictionary = {
     timeTracking: "Theo dõi thời gian",
     resourcePlaning: "Kế hoạch tài nguyên",
     sales: "Giao dịch",
-    docs: 'Tài Liệu'
+    docs: 'Tài Liệu',
+    chat: "Tin nhắn",
   },
 };

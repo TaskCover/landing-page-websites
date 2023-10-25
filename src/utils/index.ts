@@ -258,8 +258,6 @@ export const serverQueriesOr = (
   } else {
     delete cleanData["query"];
   }
-  console.log('cleanData', cleanData);
-  
   return cleanData;
 };
 
@@ -424,7 +422,7 @@ export const renderTimeDiff = (ts: string | Date) => {
   }
 };
 
-export const formatEstimateTime = (time: string | number) => {
+export const formatEstimateTime = (time: string | number, isHour?: boolean) => {
   const totalHours = Math.floor(Number(time) / 60);
   const remainingMinutes = Math.floor(Number(time)) % 60;
 
@@ -432,5 +430,100 @@ export const formatEstimateTime = (time: string | number) => {
   const formattedMinutes =
     remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
 
+  if (isHour) {
+    return `${formattedHours}h`;
+  }
   return `${formattedHours}:${formattedMinutes}`;
+};
+
+export const formatNumberHourToTime = (time: number, isHour?: boolean) => {
+  const Hour = Math.floor(time);
+  const Minute = Math.floor((time - Hour) * 60);
+
+  const formattedHour = Hour < 10 ? `0${Hour}` : Hour;
+  const formattedMinute = Minute < 10 ? `0${Minute}` : Minute;
+
+  if (isHour) {
+    return `${formattedHour}h`;
+  }
+  return `${formattedHour}:${formattedMinute}h`;
+};
+
+export const deepEqual = (foo, bar) => {
+  const has = Object.prototype.hasOwnProperty;
+  let ctor, len;
+  if (foo === bar) return true;
+
+  if (foo && bar && (ctor = foo.constructor) === bar.constructor) {
+    if (ctor === Date) return foo.getTime() === bar.getTime();
+    if (ctor === RegExp) return foo.toString() === bar.toString();
+
+    if (ctor === Array) {
+      if ((len = foo.length) === bar.length) {
+        while (len-- && deepEqual(foo[len], bar[len]));
+      }
+      return len === -1;
+    }
+
+    if (!ctor || typeof foo === "object") {
+      len = 0;
+      for (ctor in foo) {
+        if (has.call(foo, ctor) && ++len && !has.call(bar, ctor)) return false;
+        if (!(ctor in bar) || !deepEqual(foo[ctor], bar[ctor])) return false;
+      }
+      return Object.keys(bar).length === len;
+    }
+  }
+
+  return foo !== foo && bar !== bar;
+};
+
+export const copyImage = (url: string) => {
+  const img = document.createElement("img");
+  img.src = url;
+  img.alt = "";
+  img?.setAttribute("crossorigin", "anonymous");
+  img.onload = (e) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(img, 0, 0);
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          return navigator.clipboard
+            .write([
+              new ClipboardItem({
+                ["image/png"]: blob,
+              }),
+            ])
+            .then(() => {
+              console.log("Copied");
+            });
+        }
+      },
+      "image/png",
+      0.9,
+    );
+  };
+};
+
+export const downloadImage = async (url: string, name: string) => {
+  try {
+    const copiedImage = await fetch(url);
+    const blobImage = await copiedImage.blob();
+    const href = URL.createObjectURL(blobImage);
+    const anchorElement = document.createElement("a");
+    anchorElement.href = href;
+    anchorElement.download = name;
+    document.body.appendChild(anchorElement);
+    anchorElement.click();
+
+    document.body.removeChild(anchorElement);
+    window.URL.revokeObjectURL(href);
+  } catch (error) {
+    throw new Error();
+  }
 };

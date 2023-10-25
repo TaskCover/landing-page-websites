@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataStatus } from "constant/enums";
 import { Paging } from "constant/types";
-import { Attachment, ChatLinkType, MediaType } from "./media/typeMedia";
+import { Attachment, ChatLinkType, MediaType, TypeMedia } from "./media/typeMedia";
 
 export type IChatItemInfo = IChatInfo & IChatGroup & IChatDirect;
 export interface IChatInfo {
+  status: string;
+  username: string;
+  usernames: any;
   _id: string;
   _updatedAt: string;
   name: string;
@@ -147,6 +150,8 @@ export interface MediaPreviewItem {
   link: string;
   name: string;
   object: string;
+  ts: string;
+  type: TypeMedia;
 }
 
 export interface ChatState {
@@ -198,9 +203,18 @@ export interface ChatState {
   groupMembers: any[];
   chatAttachments: any;
   deleteConversationStatus: DataStatus;
+  paramsConversation: ChatRequestCommon | {};
+  paramsLastMessage: LastMessagesRequest | {};
+  paramsUnreadMessage: UnReadMessageRequest | {};
+  typeDrawerChat: TypeDrawerChat;
+  isOpenInfoChat: boolean;
+  isChatDesktop: boolean;
 }
 
+export type TypeDrawerChat = 'group' | 'forward' | 'media' | 'file' | 'link' | 'info' | 'account' | 'group-modal'
 export type DirectionChat = "a" | "c" | "d";
+
+export type TypeParamsChat = 'paramsConversation' |  'paramsLastMessage' | 'paramsUnreadMessage'
 
 export interface AuthenRequestCommon {
   authToken: string;
@@ -321,6 +335,11 @@ export interface MessageBodyRequest {
   receiverUsername: string;
   message?: string;
   attachments?: Attachment[];
+  t: 'd' | 'c' | 'p';
+  roomId?: string;
+  userId?: string;
+  channel?: string;
+  authToken?: string;
 }
 
 export interface MessageSearchInfo {
@@ -335,7 +354,7 @@ export interface MessageSearchInfo {
 }
 
 export interface MessageSearchInfoRequest extends AuthenRequestCommon {
-  roomId: string;
+  roomId?: string;
   text: string;
   type: RoomType;
 }
@@ -355,6 +374,11 @@ export interface UnReadMessageInfo {
   roomId: string;
   info: UnreadUserInfo[];
   success: boolean;
+}
+
+export interface SetParamConversationProps {
+  type: TypeParamsChat,
+  value: any
 }
 
 export interface ReadMessageRequest extends AuthenRequestCommon {

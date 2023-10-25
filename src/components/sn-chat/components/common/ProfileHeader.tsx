@@ -229,7 +229,7 @@ const ProfileHeader = ({
               color: "#1BC5BD",
             }}
           >
-            Hủy
+            Cancel
           </Button>
         </>
       );

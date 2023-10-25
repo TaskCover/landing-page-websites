@@ -29,5 +29,6 @@ export const LayoutLang: LayoutDictionary = {
     resourcePlaning: "Resource Planing",
     sales: "Sales",
     docs: "Documents",
+    chat: "Chat",
   },
 };

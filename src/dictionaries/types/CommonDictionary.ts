@@ -82,6 +82,8 @@ export type CommonDictionary = {
     close: string;
     pause: string;
   };
+  show: string;
+  hide: string;
   searchBy: string;
   creationDate: string;
   creator: string;
@@ -106,6 +108,8 @@ export type CommonDictionary = {
   processing: string;
   aFewFilesInvalid: string;
   processingUpload: string;
+  day: string;
+  hour: string;
   cancel: string;
-  success: string
+  success: string;
 };

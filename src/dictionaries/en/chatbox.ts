@@ -32,5 +32,19 @@ export const ChatBoxLang: ChatBox = {
       text_3: "or the system will choose automatically",
     },
     accountInformation: "Account information",
+    added: "added",
+    removed: "removed",
+    group: {
+      add: '{user1} added {user2} to the group at {time}.',
+      remove: '{user1} removed {user2} from the group at {time}.',
+      lead_trans: '{user1} transferred admin rights to {user2} at {time}.',
+      lead_remove: '{user1} removed admin rights from {user2} at {time}.',
+      rename: '{user1} renamed the group to {name} at {time}.',
+      edit_avatar: '{user1} changed the group\'s avatar at {time}.',
+      rename_alert: 'Group name changed successfully!',
+      change_avatar_alert: 'Profile picture changed successfully!',
+      adminChange: 'Successfully transferred administrative rights.',
+      removeMember: 'Member has been removed from the group.'
+    }
   },
 };

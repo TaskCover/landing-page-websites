@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  IconButton,
-  InputAdornment,
-  Skeleton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { IconButton, InputAdornment, Skeleton, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, ElementType, FC, useEffect, useState } from "react";
 import { useChat } from "store/chat/selectors";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import SearchIcon from "icons/SearchIcon";
@@ -19,23 +13,33 @@ import { Employee } from "store/company/reducer";
 import SelectItem from "../components/SelectItem";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { STEP } from "store/chat/type";
-import { DataStatus } from "constant/enums";
+import useGetScreenMode from "hooks/useGetScreenMode";
 
-const AddGroup = () => {
+interface AddGroupProps {
+  callbackBackIcon?: any;
+  CustomCallBackIcon?: any;
+  onSelectNewGroup?: any;
+  isNew?: boolean;
+  type?: any;
+}
+
+const AddGroup: FC<AddGroupProps> = ({
+  callbackBackIcon,
+  onSelectNewGroup,
+  CustomCallBackIcon,
+  isNew,
+  type = null,
+}) => {
   const [textSearch, setTextSearch] = useState("");
   const [employeeSelected, setEmployeeSelected] = useState<any>({});
   const [employeeNameSelected, setEmployeeNameSelected] = useState<any>({});
   const [employeeIdSelected, setEmployeeIdSelected] = useState<any>({});
+  const { mobileMode } = useGetScreenMode();
 
   const {
     items,
     isFetching,
-    isIdle,
     error,
-    totalItems,
-    pageSize,
-    pageIndex,
-    totalPages,
     onGetEmployees,
     onApproveOrReject: onApproveOrRejectAction,
   } = useEmployeesOfCompany();
@@ -51,7 +55,12 @@ const AddGroup = () => {
     onCreateDirectMessageGroup,
     onAddMembers2Group,
     currStep,
-    onFetchGroupMembersMember
+    onFetchGroupMembersMember,
+    onSetDataTransfer,
+    onChangeListConversations,
+    convention,
+    isChatDesktop,
+    onCloseDrawer,
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -59,14 +68,20 @@ const AddGroup = () => {
   const { onAddSnackbar } = useSnackbar();
 
   useEffect(() => {
-    onGetEmployees(user?.company ?? "", {email: textSearch, fullname: textSearch, pageIndex: 0, pageSize: 30 });
+    onGetEmployees(user?.company ?? "", {
+      email: textSearch,
+      fullname: textSearch,
+      pageIndex: 0,
+      pageSize: 30,
+    });
   }, [onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
+    if (dataTransfer.isNew || isNew || type === "modal") return;
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
     });
-  }, [])
+  }, [dataTransfer, onFetchGroupMembersMember, isNew, type]);
 
   const handleSuccess = (result) => {
     if (result?.error) {
@@ -74,8 +89,27 @@ const AddGroup = () => {
       return;
     }
     onAddSnackbar(commonT("success"), "success");
-    onSetStep(STEP.CHAT_GROUP, !dataTransfer?.isNew ? dataTransfer : result?.payload?.group);
-    onSetRoomId(dataTransfer?.isNew ? result?.payload?.group?._id : dataTransfer?._id)
+    onSetRoomId(
+      dataTransfer?.isNew ? result?.payload?.group?._id : dataTransfer?._id,
+    );
+    const dataItem = !dataTransfer?.isNew
+      ? dataTransfer
+      : result?.payload?.group;
+
+    if (isChatDesktop) {
+      if (isNew) {
+        onCloseDrawer("account");
+      }
+      onSelectNewGroup(result?.payload?.group);
+      onSetDataTransfer(dataItem);
+      if (type === "modal") {
+        onChangeListConversations([result?.payload?.group].concat(convention));
+      } else {
+        onChangeListConversations([dataItem].concat(convention));
+      }
+      return;
+    }
+    onSetStep(STEP.CHAT_GROUP, dataItem);
   };
 
   const handleKeyDown = (event) => {
@@ -105,13 +139,13 @@ const AddGroup = () => {
   const handleCreateGroup = async () => {
     const memberAddGroup = Object.keys(employeeSelected).filter(
       (item) => employeeSelected[item] === true,
-    )
-    if (!Object.values(employeeIdSelected)?.filter(item=>item).length) {
+    );
+    if (!Object.values(employeeIdSelected)?.filter((item) => item).length) {
       onAddSnackbar("Please select at least one member!", "error");
       return;
     }
-    if (dataTransfer?.isNew) {
-      if(memberAddGroup.length > 0){
+    if (dataTransfer?.isNew || isNew) {
+      if (memberAddGroup.length > 0) {
         const result = await onCreateDirectMessageGroup({
           groupName: (() => {
             return (
@@ -126,7 +160,7 @@ const AddGroup = () => {
             (item) => employeeSelected[item] === true,
           ),
           type: "d",
-        });      
+        });
         handleSuccess(result);
       }
     } else {
@@ -150,6 +184,7 @@ const AddGroup = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
+        ...(mobileMode ? {} : { width: "100%" }),
       }}
     >
       <Box
@@ -158,22 +193,29 @@ const AddGroup = () => {
           alignItems: "center",
           gap: 1,
           padding: 2,
+          paddingLeft: "10px",
         }}
       >
-        <IconButton
-          sx={{
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            if(currStep === STEP.ADD_GROUP) {
-              onSetStep(STEP.CONVENTION);
-            } else {
-              onSetStep(prevStep);
-            }
-          }}
-        >
-          <ArrowDownIcon />
-        </IconButton>
+        {type !== "modal" && (
+          <IconButton
+            sx={{
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              if (callbackBackIcon) {
+                callbackBackIcon();
+                return;
+              }
+              if (currStep === STEP.ADD_GROUP) {
+                onSetStep(STEP.CONVENTION);
+              } else {
+                onSetStep(prevStep);
+              }
+            }}
+          >
+            {CustomCallBackIcon ? CustomCallBackIcon : <ArrowDownIcon />}
+          </IconButton>
+        )}
         <TextField
           size="small"
           sx={{
@@ -234,7 +276,12 @@ const AddGroup = () => {
               ? items
                   ?.filter(
                     (item) =>
-                      dataTransfer?.isNew || !dataTransfer?.isNew && !groupMembers?.map((m) => m._id)?.includes(item.id_rocket),
+                      dataTransfer?.isNew ||
+                      type === "modal" ||
+                      (!dataTransfer?.isNew &&
+                        !groupMembers
+                          ?.map((m) => m._id)
+                          ?.includes(item.id_rocket)),
                   )
                   ?.filter((m) => m.id_rocket !== user?.id_rocket)
                   .map((item, index) => {
@@ -258,7 +305,7 @@ const AddGroup = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: 1,
+          gap: mobileMode ? 1 : "0px",
           padding: 2,
         }}
       >
@@ -268,7 +315,14 @@ const AddGroup = () => {
           size="small"
           sx={defaultSx.button}
           onClick={() => {
-            if(currStep === STEP.ADD_GROUP) {
+            if (callbackBackIcon) {
+              callbackBackIcon();
+              if (isNew || type === "modal") {
+                onCloseDrawer("account");
+              }
+              return;
+            }
+            if (currStep === STEP.ADD_GROUP) {
               onSetStep(STEP.CONVENTION);
             } else {
               onSetStep(prevStep);

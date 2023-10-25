@@ -132,7 +132,7 @@ const Editor = (props: EditorProps) => {
     () => (hasAttachment ? toolbarAttachment : TOOLBAR),
     [hasAttachment, toolbarAttachment],
   );
-
+  
   const onInit = useCallback(async () => {
     const RQuill = (await import("react-quill")).default;
     console.log(RQuill);

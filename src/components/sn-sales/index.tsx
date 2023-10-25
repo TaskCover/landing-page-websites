@@ -21,7 +21,6 @@ import {
 import { useSales } from "store/sales/selectors";
 import useQueryParams from "hooks/useQueryParams";
 import { usePathname, useRouter } from "next-intl/client";
-import { useCompany } from "store/manager/selectors";
 import { formatEstimateTime } from "../../utils/index";
 import { useFetchEmployeeOptions } from "./hooks/useGetEmployeeOptions";
 

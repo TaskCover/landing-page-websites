@@ -27,5 +27,6 @@ export type LayoutDictionary = {
     resourcePlaning: string;
     sales: string;
     docs: string;
+    chat: string;
   };
 };
