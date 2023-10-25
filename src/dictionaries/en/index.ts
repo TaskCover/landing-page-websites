@@ -11,6 +11,7 @@ import {
   NS_TIME_TRACKING,
   NS_CHAT,
   NS_CHAT_BOX,
+  NS_DOCS,
 } from "constant/index";
 import { AccountLang } from "./account";
 import { AuthLang } from "./auth";
