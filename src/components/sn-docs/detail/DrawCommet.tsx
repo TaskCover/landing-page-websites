@@ -26,14 +26,8 @@ export const LayoutSlider = ({
         borderLeft: "1px #ECECF3 solid",
         zIndex: "30",
         position: "absolute",
-        right: {
-          sm: 24,
-          xs: -16,
-        },
-        top: {
-          sm: heightToolbar + 30,
-          xs: 0,
-        },
+        right: 0,
+        top: 0,
         padding: "16px 12px",
         maxWidth: "280px",
         width: "100%",

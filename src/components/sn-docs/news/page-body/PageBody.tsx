@@ -17,6 +17,7 @@ import { IDocDetail } from "components/sn-docs/detail/DocDetail";
 import DrawComment, {
   LayoutSlider,
 } from "components/sn-docs/detail/DrawCommet";
+import DrawSlider from "components/sn-docs/detail/DrawSlider";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
@@ -177,15 +178,11 @@ const PageBody = ({
         },
       }}
     >
-      {openComment && (
-        <LayoutSlider heightToolbar={minHeight}>
-          <DrawComment setOpenComment={setOpenComment}></DrawComment>
-        </LayoutSlider>
-      )}
       <div className={`${styles.content}} ${styles[theme]}`}>
         {editor && <MenuBarHeader editor={editor as Editor} />}
         <Box
           sx={{
+            position: "relative",
             background: "white",
             marginTop: "16px",
             padding: {
@@ -202,6 +199,16 @@ const PageBody = ({
           ${styles[pageInfo?.pageSettings?.font!]}
           `}
         >
+          {openComment && (
+            <LayoutSlider heightToolbar={minHeight}>
+              <DrawComment setOpenComment={setOpenComment}></DrawComment>
+            </LayoutSlider>
+          )}
+          {openSlider && (
+            <LayoutSlider heightToolbar={minHeight}>
+              <DrawSlider setOpenSlider={setOpenSlider}></DrawSlider>
+            </LayoutSlider>
+          )}
           <form className={`${styles.form_title}`}>
             <input
               id="title"

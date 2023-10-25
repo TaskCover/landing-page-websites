@@ -1,10 +1,16 @@
-import React, { memo } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import React, { memo, useState } from "react";
 import { Box, Stack } from "@mui/material";
 import { Text, Tooltip } from "components/shared";
 import CloseIcon from "icons/CloseIcon";
 import HistoryIcon from "icons/HistoryIcon";
 import RestoreIcon from "icons/RestoreIcon";
 import Avatar from "components/Avatar";
+import TextIcon from "icons/TextIcon";
+import { Switch } from "components/Filters";
+import { Fascinate } from "next/font/google";
 
 const HistoryDocItem = () => {
   return (
@@ -71,6 +77,18 @@ const DrawSlider = ({
 }: {
   setOpenSlider: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const [state, setState] = useState(2);
+
+  const [isLargeText, setLargeText] = useState(false);
+  const [isFull, setIsFull] = useState(false);
+
+  const onChangeText = (name: string, value: any) => {
+    setLargeText(value);
+  };
+  const onChangeFull = (name: string, value: any) => {
+    setIsFull(value);
+  };
+
   return (
     <>
       <Box
@@ -82,12 +100,31 @@ const DrawSlider = ({
       >
         <Box
           sx={{
-            padding: "4px",
-            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "24px",
           }}
         >
-          <HistoryIcon></HistoryIcon>
+          <Box
+            onClick={() => setState(1)}
+            sx={{
+              padding: "4px",
+              cursor: "pointer",
+            }}
+          >
+            <TextIcon active={state === 1}></TextIcon>
+          </Box>
+          <Box
+            sx={{
+              padding: "4px",
+              cursor: "pointer",
+            }}
+            onClick={() => setState(2)}
+          >
+            <HistoryIcon active={state === 2}></HistoryIcon>
+          </Box>
         </Box>
+
         <Box
           onClick={() => setOpenSlider(false)}
           sx={{
@@ -108,7 +145,8 @@ const DrawSlider = ({
           fontWeight: 600,
         }}
       >
-        Version history
+        {state === 1 && "Text options"}
+        {state === 2 && "Version history"}
       </Text>
       <Stack
         spacing={"16px"}
@@ -116,11 +154,55 @@ const DrawSlider = ({
           marginTop: "12px",
         }}
       >
-        <HistoryDocItem></HistoryDocItem>
-        <HistoryDocItem></HistoryDocItem>
-        <HistoryDocItem></HistoryDocItem>
-        <HistoryDocItem></HistoryDocItem>
-        <HistoryDocItem></HistoryDocItem>
+        {state === 1 && (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Text fontSize={14} fontWeight={600}>
+                Large text
+              </Text>
+              <Switch
+                name="text"
+                onChange={onChangeText}
+                size="small"
+                reverse
+                value={isLargeText}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Text fontSize={14} fontWeight={600}>
+                Full width
+              </Text>
+              <Switch
+                name="text"
+                onChange={onChangeFull}
+                size="small"
+                reverse
+                value={isFull}
+              />
+            </Box>
+          </>
+        )}
+        {state === 2 && (
+          <>
+            <HistoryDocItem></HistoryDocItem>
+            <HistoryDocItem></HistoryDocItem>
+            <HistoryDocItem></HistoryDocItem>
+            <HistoryDocItem></HistoryDocItem>
+            <HistoryDocItem></HistoryDocItem>
+          </>
+        )}
       </Stack>
     </>
   );
