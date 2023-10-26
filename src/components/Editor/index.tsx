@@ -12,7 +12,7 @@ import {
 } from "react";
 import { ReactQuillProps } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-// import "../../components/Editor/style.css";
+import "./style.css";
 import { IMAGES_ACCEPT } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import dynamic from "next/dynamic";
@@ -62,7 +62,6 @@ export type EditorProps = {
   onChangeFiles?: (files: File[]) => void;
   children?: React.ReactNode;
   files?: File[];
-  accepts?: string[];
   noCss?: boolean;
 } & Omit<ReactQuillProps, "children">;
 
@@ -72,7 +71,6 @@ const Editor = (props: EditorProps) => {
     onChangeFiles,
     children,
     files = [],
-    accepts,
     noCss,
     ...rest
   } = props;
@@ -88,15 +86,8 @@ const Editor = (props: EditorProps) => {
   const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.length) return;
     let newFiles = Array.from(event.target.files);
-    console.log(newFiles);
     newFiles = newFiles.reduce(
       (out: File[], file) => {
-        if (accepts) {
-          if (accepts.includes(file.type)) {
-            out.push(file);
-            return out;
-          }
-        }
         if (ACCEPTS.includes(file.type)) {
           out.push(file);
         }
@@ -143,7 +134,6 @@ const Editor = (props: EditorProps) => {
 
   const onInit = useCallback(async () => {
     const RQuill = (await import("react-quill")).default;
-    console.log(RQuill);
 
     const icons = RQuill.Quill.import("ui/icons");
     icons["attachment"] =
@@ -198,7 +188,7 @@ const Editor = (props: EditorProps) => {
         multiple
         component="input"
         type="file"
-        accept={accepts?.join(",") || ACCEPTS.join(",")}
+        accept={ACCEPTS.join(",")}
         display="none"
         ref={inputFileRef}
         onChange={onChangeFile}
