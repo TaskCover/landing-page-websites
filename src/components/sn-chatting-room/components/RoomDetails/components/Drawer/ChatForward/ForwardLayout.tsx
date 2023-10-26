@@ -7,6 +7,7 @@ import { ChatConventionItemRequest } from "store/chat/type";
 import { client } from "api/client";
 import { CHAT_API_URL } from "constant/index";
 import { useAuth } from "store/app/selectors";
+import { debounce } from "utils/index";
 
 const ForwardLayout = () => {
   const { onSetDrawerType, onCloseDrawer } = useChat();
@@ -17,20 +18,20 @@ const ForwardLayout = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onSearchTxt = (value) => {    
+  const onSearchTxt = debounce((value) => {
     setParam({
       text: value,
     });
-  };
+  }, 1000);
 
   const handleGetAllConversation = async (
     paramReq: ChatConventionItemRequest,
   ) => {
-    setLoading(true)
+    setLoading(true);
     const response = await client.post("getAllConversations", paramReq, {
       baseURL: CHAT_API_URL,
     });
-    setLoading(false) 
+    setLoading(false);
     setConversation(response.data);
   };
 

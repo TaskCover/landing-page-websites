@@ -61,6 +61,7 @@ const AddGroup: FC<AddGroupProps> = ({
     convention,
     isChatDesktop,
     onCloseDrawer,
+    onSetConversationInfo,
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -161,6 +162,9 @@ const AddGroup: FC<AddGroupProps> = ({
           ),
           type: "d",
         });
+        onSetRoomId(result.payload.group._id);
+        onSetDataTransfer(result.payload.group);
+        onSetConversationInfo(result.payload.group);
         handleSuccess(result);
       }
     } else {

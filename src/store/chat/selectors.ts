@@ -75,9 +75,13 @@ import {
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
 import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
+import { useRouter } from "next/navigation";
+import { r } from "@fullcalendar/resource/internal-common";
+import { CHATTING_ROOM_PATH } from "constant/paths";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { user } = useAuth();
   const {
     convention,
@@ -210,8 +214,8 @@ export const useChat = () => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       if (!params) return;
-      if(isChatDesktop){
-        if(dataTransfer._id?.length === 0) return;
+      if (isChatDesktop) {
+        if (dataTransfer._id?.length === 0) return;
         return await dispatch(
           getChatUrls({
             roomId: dataTransfer?._id,
@@ -230,7 +234,15 @@ export const useChat = () => {
         }),
       ).unwrap();
     },
-    [conversationInfo?.t, dataTransfer?._id, dataTransfer?.t, dispatch, isChatDesktop, roomId, user],
+    [
+      conversationInfo?.t,
+      dataTransfer?._id,
+      dataTransfer?.t,
+      dispatch,
+      isChatDesktop,
+      roomId,
+      user,
+    ],
   );
 
   const onSendMessage = useCallback(
@@ -257,10 +269,10 @@ export const useChat = () => {
     async (params: Omit<MessageSearchInfoRequest, "authToken" | "userId">) => {
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
-      if(params?.text?.length === 0) {
-        dispatch(resetSearchChatText())
+      if (params?.text?.length === 0) {
+        dispatch(resetSearchChatText());
         return;
-      };
+      }
       return await dispatch(
         searchChatText({
           authToken,
@@ -444,13 +456,12 @@ export const useChat = () => {
 
   const onGetChatAttachments = useCallback(
     async (params: Omit<ChatAttachmentsRequest, "authToken" | "userId">) => {
-      
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
       if (!(params?.roomType ?? (conversationInfo?.t as RoomType))) return;
       if ((params?.roomId ?? roomId ?? dataTransfer?._id).length === 0) return;
-      
-      if(isChatDesktop){
+
+      if (isChatDesktop) {
         return await dispatch(
           getChatAttachments({
             authToken,
@@ -460,21 +471,28 @@ export const useChat = () => {
             fileType: params?.fileType ?? "media",
           }),
         ).unwrap();
-      }
-      else {
-      return await dispatch(
-        getChatAttachments({
-          authToken,
-          userId,
-          roomId: params?.roomId  ?? roomId,
-          roomType:
-            params?.roomType ?? (conversationInfo?.t as RoomType) ?? "c",
-          fileType: params?.fileType ?? "media",
-        }),
-      ).unwrap();
+      } else {
+        return await dispatch(
+          getChatAttachments({
+            authToken,
+            userId,
+            roomId: params?.roomId ?? roomId,
+            roomType:
+              params?.roomType ?? (conversationInfo?.t as RoomType) ?? "c",
+            fileType: params?.fileType ?? "media",
+          }),
+        ).unwrap();
       }
     },
-    [conversationInfo?.t, dataTransfer?._id, dataTransfer?.t, dispatch, isChatDesktop, roomId, user],
+    [
+      conversationInfo?.t,
+      dataTransfer?._id,
+      dataTransfer?.t,
+      dispatch,
+      isChatDesktop,
+      roomId,
+      user,
+    ],
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -491,7 +509,7 @@ export const useChat = () => {
     lastMessage: MessageInfo;
     unreadCount: number;
     unreadsFrom: string;
-  }) => {    
+  }) => {
     dispatch(setLastMessage(newMessage));
   };
 
@@ -543,10 +561,13 @@ export const useChat = () => {
     },
     [dispatch, user],
   );
-  
-  const onChangeListConversations =  useCallback((newConversations: IChatInfo[]) => {
-    dispatch(setListNewConversation(newConversations ?? []));
-  }, [dispatch]);
+
+  const onChangeListConversations = useCallback(
+    (newConversations: IChatInfo[]) => {
+      dispatch(setListNewConversation(newConversations ?? []));
+    },
+    [dispatch],
+  );
 
   const onChangeGroupAvatar = useCallback(
     async (file: File, roomId: string) => {
@@ -555,7 +576,7 @@ export const useChat = () => {
       );
       const authToken = user?.["authToken"] ?? "";
       const userId = user?.["id_rocket"] ?? "";
-       await dispatch(
+      await dispatch(
         changeGroupAvatar({
           authToken,
           userId,
@@ -565,10 +586,10 @@ export const useChat = () => {
       );
       onSetDataTransfer({ ...dataTransfer, avatar: result?.payload?.download });
       const newConversations = convention?.map((item) => {
-        if(item._id === roomId){
-          return {...item, avatar: result?.payload?.download}
+        if (item._id === roomId) {
+          return { ...item, avatar: result?.payload?.download };
         }
-        return item
+        return item;
       });
       dispatch(setListNewConversation(newConversations ?? []));
       return;
@@ -737,6 +758,6 @@ export const useChat = () => {
     onResetConversationInfo,
     isChatDesktop,
     onSetChatDesktop,
-    onChangeListConversations
+    onChangeListConversations,
   };
 };
