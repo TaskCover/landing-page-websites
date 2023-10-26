@@ -234,6 +234,7 @@ const TodoList = () => {
         }
         sx={{
           backgroundColor: "background.paper",
+          marginBottom: 2,
         }}
       >
         <Stack

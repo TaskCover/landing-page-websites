@@ -11,7 +11,7 @@ const CommentSection = () => {
 
   return (
     <Stack>
-      <Text color="text.main" mb={3} variant="h4" textTransform="uppercase">
+      <Text color="text.main" mb={3} variant="h5" textTransform="uppercase">
         {salesT("detail.comment.title")}
       </Text>
       <CommentEditor />

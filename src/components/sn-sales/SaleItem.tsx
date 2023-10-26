@@ -31,7 +31,7 @@ const SaleItem = ({ item }: IProps) => {
   const { employeeOptions, onEndReachedEmployeeOptions, onSearchEmployee } =
     useGetEmployeeOptions();
   const { onUpdateDeal } = useSales();
-  const [owner, setOwner] = useState<string>(item.owner.id);
+  const [owner, setOwner] = useState<string>(item.owner?.id);
 
   const time = formatEstimateTime(item.estimate || 0);
 
@@ -41,7 +41,9 @@ const SaleItem = ({ item }: IProps) => {
 
   const mappedOwners = useMemo(() => {
     const result = [...employeeOptions];
-    const isExist = result.find((employee) => employee.value === item.owner.id);
+    const isExist = result.find(
+      (employee) => employee.value === item.owner?.id,
+    );
     if (!isExist) {
       result.push({
         label: item.owner?.fullname,
