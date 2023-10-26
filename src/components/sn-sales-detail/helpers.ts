@@ -1,4 +1,5 @@
-import { SALE_BILL_TYPE } from "constant/enums";
+import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
+import { SALE_BILL_TYPE, SERVICE_UNIT_OPTIONS } from "constant/enums";
 import { Todo } from "store/sales/reducer";
 
 export const SALE_BILL_TYPE_LABEL = {
@@ -29,4 +30,10 @@ export const reorderPriority = (list: Array<Todo>, index, sourceIndex) => {
     return acc;
   }, {});
   return result;
+};
+
+export const mappedUnit = {
+  [SERVICE_UNIT_OPTIONS.HOUR]: 1,
+  [SERVICE_UNIT_OPTIONS.DAY]: 8,
+  [SERVICE_UNIT_OPTIONS.PIECE]: 4,
 };

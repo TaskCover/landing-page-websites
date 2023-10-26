@@ -129,16 +129,27 @@ const SubItem = ({
       <Draggable draggableId={id} index={index}>
         {(provided, snapshot) => (
           <div ref={provided.innerRef} {...provided.draggableProps}>
-            <Grid2 container alignItems="center" spacing={2}>
+            <Grid2 container alignItems="center" mb={1}>
               <Grid2 container xs={12} md={7} alignItems="center" spacing={0.5}>
-                <Grid2 xs={1}>
+                <Grid2>
                   <IconButton noPadding {...provided.dragHandleProps}>
-                    <MoveDotIcon fontSize="small" sx={{ color: "grey.A200" }} />
+                    <MoveDotIcon
+                      fontSize="medium"
+                      sx={{ color: "grey.A200" }}
+                    />
                   </IconButton>
                 </Grid2>
-                <Grid2 xs={2} md={1}>
+                <Grid2
+                  height="fit-content"
+                  sx={{
+                    mr: 1,
+                  }}
+                >
                   <Checkbox
-                    size="small"
+                    size="medium"
+                    sx={{
+                      padding: 0,
+                    }}
                     checked={is_done}
                     onChange={onChangeStatus}
                   />

@@ -83,9 +83,6 @@ export const useGetHeaderColumn = (index: number) => {
         // minWidth: 170,
         width: "9%",
         align: "left",
-        sx: {
-          pl: 2,
-        },
       },
 
       {
@@ -180,6 +177,14 @@ export const useGetHeaderColumn = (index: number) => {
     ];
 
     if (isEdit) {
+      // list.unshift({
+      //   id: ServiceColumn.ACTION,
+      //   value: "",
+      //   width: "2%",
+      //   sx: {
+      //     pl: 2,
+      //   },
+      // });
       list.push({
         id: ServiceColumn.ACTION,
         value: "",
