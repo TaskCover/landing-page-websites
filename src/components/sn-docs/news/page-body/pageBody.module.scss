@@ -246,7 +246,7 @@
 }
 
 .dark {
-  background-color: $dark-background-secondary;
+  // background-color: $dark-background-secondary;
 
 
   .image_footer {
@@ -268,7 +268,8 @@
   }
 
   .page_content {
-    background-color: $dark-background-secondary;
+    background-color: $dark-background-tertiary;
+
 
     .page_header_options {
       .add_button {
