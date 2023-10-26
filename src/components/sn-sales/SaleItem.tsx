@@ -110,6 +110,12 @@ const SaleItem = ({ item }: IProps) => {
           rootSx={{
             width: "100%",
             px: "0!important",
+            [`& .MuiSelect-select`]: {
+              mr: "17px!important",
+            },
+            [`& .MuiSelect-icon`]: {
+              right: "-5px!important",
+            },
           }}
           sx={{
             width: "100%",
