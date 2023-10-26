@@ -71,6 +71,7 @@ export const NS_TIME_TRACKING = "timeTracking";
 export const NS_RESOURCE_PLANNING = "resourcePlanning";
 export const NS_CHAT = "chat";
 export const NS_CHAT_BOX = "chatbox";
+export const NS_DOCS = "documents";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 export const VIDEO_ACCEPT = ["video/mp4"];

@@ -202,7 +202,7 @@ export default memo(Editor);
 
 const ACCEPTS = [...IMAGES_ACCEPT, "video/mp4"];
 
-const COLORS = [
+export const COLORS = [
   "#000000",
   "#e60000",
   "#ff9900",

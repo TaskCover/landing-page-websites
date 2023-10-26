@@ -33,6 +33,10 @@ export const CHATTING_INFO_PATH = "/chat/{id}";
 
 export const SALE_DETAIL_PATH = "/sales/{id}";
 
+export const DOCS_PATH = "/documents";
+export const DOCS_DETAIL_PATH = "/documents/{id}";
+export const DOCS_CREATE_PATH = "/documents/create";
+
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
   SIGNUP_PATH,
@@ -62,6 +66,9 @@ export const AUTHORIZED_PATHS = {
     RESOURCE_PLANING_PATH,
     SALE_DETAIL_PATH,
     SALES_LIST_PATH,
+    DOCS_PATH,
+    DOCS_DETAIL_PATH,
+    DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
   ],
   [Permission.SA]: [
@@ -88,6 +95,9 @@ export const AUTHORIZED_PATHS = {
     RESOURCE_PLANING_PATH,
     SALES_LIST_PATH,
     SALE_DETAIL_PATH,
+    DOCS_PATH,
+    DOCS_DETAIL_PATH,
+    DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
