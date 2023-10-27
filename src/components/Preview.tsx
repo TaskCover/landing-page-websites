@@ -117,7 +117,6 @@ const Preview = (props: PreviewProps) => {
     children: titleChildren,
     ...titleProp
   } = titleProps || {};
-  const indexSlide = listAttachmentsDown?.findIndex((el) => el.link == src);
   const commonT = useTranslations(NS_COMMON);
 
   const onClose = () => {
@@ -131,6 +130,18 @@ const Preview = (props: PreviewProps) => {
     if (IMAGES_EXTENSION.includes(extension)) return `image/${extension}`;
     if (VIDEOS_EXTENSION.includes(extension)) return `video/${extension}`;
   };
+
+  const filterAttachment = (listData?: Attachment[]) => {
+    if (!listData) return [];
+    return listData.filter((data) => {
+      const extension = getExtension(data?.name);
+      return extension?.startsWith("image") || extension?.startsWith("video");
+    });
+  };
+
+  const indexSlide = filterAttachment(listAttachmentsDown)?.findIndex(
+    (el) => el.link == src,
+  );
 
   const handleChangeSlide = (_, to) => {
     const idAsUrl = listAttachmentsDown?.[to].link;
@@ -198,7 +209,7 @@ const Preview = (props: PreviewProps) => {
             transitionDuration={500}
             easing="ease"
           >
-            {listAttachmentsDown?.map((data, index) => (
+            {filterAttachment(listAttachmentsDown)?.map((data, index) => (
               <div
                 key={index}
                 style={{
@@ -220,7 +231,7 @@ const Preview = (props: PreviewProps) => {
                     alt="Image"
                     sx={{
                       maxWidth: "600px",
-                      maxHeight: '100%'
+                      maxHeight: "100%",
                     }}
                   />
                 )}

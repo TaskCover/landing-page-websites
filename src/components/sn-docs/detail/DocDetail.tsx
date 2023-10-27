@@ -26,7 +26,7 @@ const DocDetail = ({
       position={"relative"}
       sx={{
         display: "flex",
-        gap: { xs: open ? 3 : 1, md: 3 },
+        gap: { xs: open ? 3 : 0, md: 3 },
       }}
       px={{ md: 3 }}
       pt={{ md: 1, lg: 1.5 }}

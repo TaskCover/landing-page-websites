@@ -10,6 +10,7 @@ import { Text } from "components/shared";
 import { useAppSelector } from "store/hooks";
 import ArrowRight from "icons/ArrowRight";
 import { uuid } from "utils/index";
+import useTheme from "hooks/useTheme";
 
 export interface LeftSlideDocProps {
   open: boolean;
@@ -18,7 +19,7 @@ export interface LeftSlideDocProps {
 
 const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
   const dataFake = useAppSelector((state) => state.doc.docDetails.data);
-
+  const { isDarkMode } = useTheme();
   const [data, setData] = useState(dataFake);
 
   const docsT = useTranslations(NS_DOCS);
@@ -76,7 +77,7 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
           height: "100%",
           backgroundColor: {
             sm: "unset",
-            xs: "white",
+            xs: "background.paper",
           },
           width: "100%",
           zIndex: "39",
@@ -123,7 +124,7 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
             sx={{
               width: "100%",
               ".MuiOutlinedInput-root": {
-                backgroundColor: "white",
+                backgroundColor: "background.paper",
               },
             }}
           />

@@ -22,6 +22,18 @@ export type DocsDictionary = {
          project : string,
          projectStatus : string,
       }
-   }
+   },
+   createDoc: {
+    share:string,
+    copyLink: string,
+    comment: string,
+    slider: string,
+    more: string,
+    history: string,
+    text: string,
+    Ltext: string,
+    full: string,
+    restore : string,
+  }
 };
   

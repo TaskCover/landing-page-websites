@@ -50,6 +50,11 @@ export const TodoName = ({
   const [error, setError] = useState<string>("");
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (value[value.length - 1] === "\n") {
+      setName(value.slice(0, -1));
+      return;
+    }
     setName(event.target.value);
     setError("");
   };
@@ -63,7 +68,6 @@ export const TodoName = ({
     if (nameTrimmed) {
       setValue("todoItem.name", nameTrimmed);
       await onSubmit(getValues("todoItem"));
-      setName("");
     } else {
       setError(
         commonT("form.error.required", {
@@ -71,6 +75,7 @@ export const TodoName = ({
         }),
       );
     }
+    setName("");
   };
 
   return (
@@ -80,6 +85,7 @@ export const TodoName = ({
       //   xs: "column",
       //   sm: "row",
       // }}
+      justifyContent="space-between"
       width="100%"
       spacing={2}
     >
@@ -103,7 +109,10 @@ export const TodoName = ({
             fullWidth
             variant="filled"
             size="small"
+            placeholder={salesT("detail.todoList.addNew")}
+            focused
             onChange={onChange}
+            color="success"
             autoFocus={autoFocus}
             sx={{
               "& >div": {
@@ -112,6 +121,11 @@ export const TodoName = ({
               "& input": {
                 fontSize: 15,
               },
+              "& .MuiInputBase-root": {
+                padding: 0,
+              },
+
+              padding: 0,
             }}
           />
           {!!error && (
@@ -228,6 +242,10 @@ const TodoList = () => {
             })`}
           </Text>
         }
+        sx={{
+          backgroundColor: "background.paper",
+          marginBottom: 2,
+        }}
       >
         <Stack
           mt={2}

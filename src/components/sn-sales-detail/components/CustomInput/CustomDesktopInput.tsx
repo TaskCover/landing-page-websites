@@ -1,7 +1,14 @@
 import { InputBaseProps } from "@mui/material";
 import { Input, InputProps, Text, Tooltip } from "components/shared";
 import React, { memo } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import {
+  Controller,
+  FieldValues,
+  RegisterOptions,
+  useFormContext,
+  UseFormRegisterReturn,
+} from "react-hook-form";
+import CustomInput from "./CustomInput";
 
 interface IProps {
   isEdit?: boolean;
@@ -13,6 +20,7 @@ interface IProps {
   inputProps?;
   toolTipText?: string;
   type?: string;
+  rules?: RegisterOptions<FieldValues>;
   required?: boolean;
 }
 
@@ -26,6 +34,7 @@ const CustomDesktopInput = ({
   type = "string",
   toolTipText,
   value,
+  rules,
   required,
 }: IProps) => {
   const { register } = useFormContext();
@@ -33,36 +42,60 @@ const CustomDesktopInput = ({
   return (
     <div>
       {isEdit ? (
-        <Controller
+        // <Controller
+        //   control={control}
+        //   {...register(name)}
+        //   render={({ field }) => (
+        //     <Tooltip title={toolTipText}>
+        //       <div>
+        // {/* <Input
+        //   InputLabelProps={{
+        //     style: {
+        //       pointerEvents: "none",
+        //     },
+        //   }}
+        //   required={required}
+        //   InputProps={inputProps}
+        //   disabled={disabled}
+        //   multiline={type === "number" ? false : true}
+        //   maxRows={2}
+        //   minRows={1}
+        //   type={type}
+        //   sx={{
+        //     width: "100%",
+        //   }}
+        //   help erText={helperText}
+        //   {...field}
+        // /> */}
+        <CustomInput
           control={control}
-          {...register(name)}
-          render={({ field }) => (
-            <Tooltip title={toolTipText}>
-              <div>
-                <Input
-                  InputLabelProps={{
-                    style: {
-                      pointerEvents: "none",
-                    },
-                  }}
-                  required={required}
-                  InputProps={inputProps}
-                  disabled={disabled}
-                  multiline={type === "number" ? false : true}
-                  maxRows={2}
-                  minRows={1}
-                  type={type}
-                  sx={{
-                    width: "100%",
-                  }}
-                  helperText={helperText}
-                  {...field}
-                />
-              </div>
-            </Tooltip>
-          )}
+          register={register(name, {
+            required: {
+              value: required || false,
+              message: "This field is required",
+            },
+          })}
+          rules={rules}
+          name={name}
+          // InputLabelProps={{
+          //   style: {
+          //     pointerEvents: "none",
+          //   },
+          // }}
+          // required={required}
+          // InputProps={inputProps}
+
+          disabled={disabled}
+          // multiline={type === "number" ? false : true}
+          type={type}
+          helperText={helperText}
+          // {...field}
         />
       ) : (
+        //       </div>
+        //     </Tooltip>
+        //   )}
+        // />
         <Text
           variant="body2"
           sx={{

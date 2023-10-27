@@ -5,7 +5,6 @@ import { Text } from "components/shared";
 import { Comment } from "store/project/reducer";
 import Image from "next/image";
 import { formatDate } from "utils/index";
-import AttachmentPreview from "components/AttachmentPreview";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_PROJECT, NS_SALES } from "constant/index";
 import { Attachment } from "constant/types";
@@ -15,6 +14,7 @@ import { SalesComment } from "store/sales/reducer";
 import { useSaleDetail } from "store/sales/selectors";
 import Loading from "components/Loading";
 import { Dropdown } from "components/Filters";
+import AttachmentPreview from "./AttachmentPreview";
 
 type CommentsProps = {
   comments?: SalesComment[];
@@ -107,7 +107,7 @@ const CommentItem = (props: CommentItemProps) => {
         </Text>
       </Stack>
 
-      {!!content && type === "comments" && (
+      {!!content && (
         <Box
           sx={{
             fontSize: 14,

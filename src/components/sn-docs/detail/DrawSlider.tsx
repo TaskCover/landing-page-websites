@@ -11,8 +11,12 @@ import Avatar from "components/Avatar";
 import TextIcon from "icons/TextIcon";
 import { Switch } from "components/Filters";
 import { Fascinate } from "next/font/google";
+import { useTranslations } from "next-intl";
+import { NS_DOCS } from "constant/index";
 
 const HistoryDocItem = () => {
+  const docsT = useTranslations(NS_DOCS);
+
   return (
     <Box
       sx={{
@@ -58,7 +62,7 @@ const HistoryDocItem = () => {
           </Text>
         </Box>
       </Box>
-      <Tooltip title={"Restore"}>
+      <Tooltip title={docsT("createDoc.restore")}>
         <Box
           sx={{
             cursor: "pointer",
@@ -78,6 +82,7 @@ const DrawSlider = ({
   setOpenSlider: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [state, setState] = useState(2);
+  const docsT = useTranslations(NS_DOCS);
 
   const [isLargeText, setLargeText] = useState(false);
   const [isFull, setIsFull] = useState(false);
@@ -145,8 +150,8 @@ const DrawSlider = ({
           fontWeight: 600,
         }}
       >
-        {state === 1 && "Text options"}
-        {state === 2 && "Version history"}
+        {state === 1 && docsT("createDoc.text")}
+        {state === 2 && docsT("createDoc.history")}
       </Text>
       <Stack
         spacing={"16px"}
@@ -164,7 +169,7 @@ const DrawSlider = ({
               }}
             >
               <Text fontSize={14} fontWeight={600}>
-                Large text
+                {docsT("createDoc.Ltext")}
               </Text>
               <Switch
                 name="text"
@@ -182,7 +187,7 @@ const DrawSlider = ({
               }}
             >
               <Text fontSize={14} fontWeight={600}>
-                Full width
+                {docsT("createDoc.full")}
               </Text>
               <Switch
                 name="text"

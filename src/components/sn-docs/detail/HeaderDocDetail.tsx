@@ -14,11 +14,13 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import ModalShare from "./LeftSlide/modal/ModalShare";
 import { IDocDetail } from "./DocDetail";
+import { useTranslations } from "next-intl";
+import { NS_DOCS } from "constant/index";
 
 const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
   const [openShare, setOpenShare] = useState(false);
   const router = useRouter();
-
+  const docsT = useTranslations(NS_DOCS);
   return (
     <>
       <ModalShare
@@ -106,17 +108,17 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                 },
               }}
             >
-              <Tooltip title={"Chia sẻ"}>
+              <Tooltip title={docsT("createDoc.share")}>
                 <Box onClick={() => setOpenShare(true)} sx={styleButton}>
                   <ShareIcon></ShareIcon>
                 </Box>
               </Tooltip>
-              <Tooltip title={"Copy link"}>
+              <Tooltip title={docsT("createDoc.copyLink")}>
                 <Box sx={styleButton}>
                   <CopyIcon></CopyIcon>
                 </Box>
               </Tooltip>
-              <Tooltip title={"Bình luận"}>
+              <Tooltip title={docsT("createDoc.comment")}>
                 <Box
                   onClick={() => setOpenComment((value) => !value)}
                   sx={styleButton}
@@ -124,7 +126,7 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                   <CommentIcon></CommentIcon>
                 </Box>
               </Tooltip>
-              <Tooltip title={"Mở slide"}>
+              <Tooltip title={docsT("createDoc.slider")}>
                 <Box
                   onClick={() => setOpenSlider((value) => !value)}
                   sx={styleButton}
@@ -132,7 +134,7 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                   <OpenSidebarIcon></OpenSidebarIcon>
                 </Box>
               </Tooltip>
-              <Tooltip title={"Thêm"}>
+              <Tooltip title={docsT("createDoc.more")}>
                 <Box sx={styleButton}>
                   <MoreIcon></MoreIcon>
                 </Box>

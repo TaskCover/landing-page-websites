@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Stack } from "@mui/material";
 import { Text } from "components/shared";
+import { NS_DOCS } from "constant/index";
 import CloseIcon from "icons/CloseIcon";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import React, { memo, useState } from "react";
 
@@ -113,6 +115,8 @@ export const CommentDocsItem = () => {
 };
 
 const DrawComment = ({ setOpenComment }: IDrawComment) => {
+  const docsT = useTranslations(NS_DOCS);
+
   return (
     <>
       <Box
@@ -122,7 +126,7 @@ const DrawComment = ({ setOpenComment }: IDrawComment) => {
           justifyItems: "center",
         }}
       >
-        <Text>Comments (5)</Text>
+        <Text>{docsT("createDoc.comment")} (5)</Text>
         <Box
           onClick={() => setOpenComment(false)}
           sx={{

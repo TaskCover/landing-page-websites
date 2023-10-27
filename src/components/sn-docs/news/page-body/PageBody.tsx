@@ -18,6 +18,7 @@ import DrawComment, {
   LayoutSlider,
 } from "components/sn-docs/detail/DrawCommet";
 import DrawSlider from "components/sn-docs/detail/DrawSlider";
+import useTheme from "hooks/useTheme";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
@@ -38,7 +39,7 @@ const PageBody = ({
   const openLinkModal = () => setIsAddingNewLink(true);
   const { theme } = useContext(ThemeContext);
   const [minHeight, setMinHeight] = useState("100vh");
-
+  const { isDarkMode } = useTheme();
   const dispatch = useDispatch();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -183,8 +184,8 @@ const PageBody = ({
         <Box
           sx={{
             position: "relative",
-            background: "white",
             marginTop: "16px",
+            bgcolor: isDarkMode ? "#191919" : "white",
             padding: {
               sm: "32px 40px",
               xs: "12px",

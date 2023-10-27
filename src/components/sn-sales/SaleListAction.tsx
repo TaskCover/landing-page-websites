@@ -12,7 +12,6 @@ import { SORT_OPTIONS } from "constant/enums";
 import { useSales } from "store/sales/selectors";
 import { usePathname, useRouter } from "next-intl/client";
 import { getPath } from "utils/index";
-import { CompanyFilter } from "components/sn-company-detail/Employees/components";
 import AddSquareIcon from "icons/AddSquareIcon";
 import ExportModal from "./Modals/ExportModal";
 

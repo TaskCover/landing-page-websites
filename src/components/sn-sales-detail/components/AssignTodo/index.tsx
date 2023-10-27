@@ -86,7 +86,7 @@ const DisplayItem = ({
       </Text>
       <IconButton
         noPadding
-        sx={{ position: "relative", zIndex: 99 }}
+        sx={{ position: "relative", zIndex: 0 }}
         onClick={() => onRemoveAssign(user.value as string)}
       >
         <CircleCloseIcon sx={{ color: "grey.400" }} />

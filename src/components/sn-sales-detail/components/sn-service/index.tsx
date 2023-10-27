@@ -1,5 +1,5 @@
 "use client";
-import { Button, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import React, { useCallback, useContext } from "react";
 import ServiceTable from "./ServiceTable";
 import ServiceHeader from "./ServiceHeader/ServiceHeaderDesktop";
@@ -7,19 +7,20 @@ import { EditContext } from "./context/EditContext";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import useBreakpoint from "hooks/useBreakpoint";
 import ServiceHeaderMobile from "./ServiceHeader/ServiceHeaderMobile";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { FieldValue, useFieldArray, useFormContext } from "react-hook-form";
 import PlusIcon from "icons/PlusIcon";
 import { NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
 import { ServiceSection } from "store/sales/reducer";
 import { useSalesService } from "store/sales/selectors";
+import { Button } from "components/shared";
+import { useFetchOptions } from "components/sn-resource-planing/hooks/useGetOptions";
 
 const SaleService = () => {
   const { isMdSmaller } = useBreakpoint();
   const { setEdit } = useContext(EditContext);
   const { serviceSectionList } = useSalesService();
   const salesT = useTranslations(NS_SALES);
-
   const { control, setValue, getValues } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -28,8 +29,36 @@ const SaleService = () => {
 
   // const sectionsList = getValues("sectionsList");
   // TODO: Drag if needed
-  const onDragEnd = (result) => {
+  const onDragEnd = (result, provided) => {
     const { destination, source, draggableId } = result;
+    const sectionList = [...getValues("sectionsList")];
+    //if descId == sourceId => change position of draggableId
+    // if descId != sourceId => move draggableId to descId at the position index of descId
+    if (!destination) return;
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    )
+      return;
+    const desSectionIndex = destination.droppableId.split(".")[2];
+    const sourceSectionIndex = source.droppableId.split(".")[2];
+    const desSectionId = destination.droppableId.split(".")[1];
+    const sourceSectionId = source.droppableId.split(".")[1];
+
+    if (desSectionId === sourceSectionId) {
+      const section = sectionList[desSectionIndex];
+      const tmp = section.service[source.index];
+      section.service[source.index] = section.service[destination.index];
+      section.service[destination.index] = tmp;
+      setValue("sectionsList", sectionList, { shouldDirty: true });
+      return;
+    }
+    const desSection = sectionList[desSectionIndex];
+    const sourceSection = sectionList[sourceSectionIndex];
+    const draggable = sourceSection.service[source.index];
+    sourceSection.service.splice(source.index, 1);
+    desSection.service.splice(destination.index, 0, draggable);
+    setValue("sectionsList", sectionList, { shouldDirty: true });
   };
 
   const onAddSection = () => {
@@ -48,6 +77,7 @@ const SaleService = () => {
     },
     [serviceSectionList],
   );
+  useFetchOptions();
 
   return (
     <Stack spacing={2}>
@@ -59,6 +89,7 @@ const SaleService = () => {
           {fields.length === 0 && (
             <Button
               onClick={onAddSection}
+              variant="text"
               TouchRippleProps={{
                 style: {
                   display: "none",
@@ -66,12 +97,11 @@ const SaleService = () => {
               }}
               sx={{
                 display: "block",
-                width: "fit-content",
-                height: "fit-content",
                 "&.MuiButton-text:hover": {
                   color: "secondary.main",
                   textAlign: "center",
                 },
+                width: "fit-content",
               }}
               color="secondary"
               startIcon={
@@ -86,13 +116,17 @@ const SaleService = () => {
               {salesT("detail.service.addSection")}
             </Button>
           )}
-          <ServiceHeader />
+          {fields.length > 0 && <ServiceHeader />}
         </Stack>
         <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="droppable">
-            {(provided) => (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {fields?.map((section, index) => (
+          {fields?.map((section, index) => (
+            <Droppable
+              key={section.id}
+              direction="vertical"
+              droppableId={`sectionList.${section.id}.${index}`}
+            >
+              {(provided) => (
+                <div ref={provided.innerRef} {...provided.droppableProps}>
                   <ServiceTable
                     key={section.id}
                     index={index}
@@ -100,10 +134,10 @@ const SaleService = () => {
                     onAddSection={onAddSection}
                     section={section as ServiceSection}
                   />
-                ))}
-              </div>
-            )}
-          </Droppable>
+                </div>
+              )}
+            </Droppable>
+          ))}
         </DragDropContext>
       </Stack>
       {isMdSmaller && <ServiceHeaderMobile />}

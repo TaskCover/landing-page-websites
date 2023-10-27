@@ -25,6 +25,7 @@ const TabHeader = () => {
   const { saleDetail } = useSaleDetail();
   const { onUpdateDeal } = useSales();
   const { stageOptions } = useGetStageOptions();
+  const { saleRevenue } = useSaleDetail();
   const { push } = useRouter();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
@@ -66,7 +67,15 @@ const TabHeader = () => {
         sm: "center",
       }}
     >
-      <Stack direction="row" spacing={1}>
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          width: "50%",
+          flex: 1,
+        }}
+        alignItems={"center"}
+      >
         <Link href={getPath(SALES_LIST_PATH)}>
           <ArrowLeftIcon
             sx={{ color: "common.black" }}
@@ -76,13 +85,28 @@ const TabHeader = () => {
           />
         </Link>
         <Avatar size={32} src={saleDetail?.owner?.avatar?.link} />
-        <Text variant="h4">{saleDetail?.name}</Text>
+        <Text
+          variant="h5"
+          sx={{
+            width: "100%  ",
+            textAlign: "left",
+            WebkitLineClamp: 1,
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {saleDetail?.name}
+        </Text>
       </Stack>
       <Stack
         direction="row"
         justifyContent={{
           xs: "space-between",
           sm: "flex-end",
+        }}
+        sx={{
+          flex: 1,
         }}
         spacing={2}
         flexWrap={{ xs: "wrap", sm: "nowrap" }}
@@ -144,7 +168,7 @@ const TabHeader = () => {
           <CoinIcon />
           <Text variant="body2">
             Revenue:{" "}
-            {formatNumber(saleDetail?.revenue || 0, {
+            {formatNumber(saleRevenue || 0, {
               numberOfFixed: 2,
               prefix:
                 CURRENCY_SYMBOL[saleDetail?.currency || CURRENCY_CODE.USD],

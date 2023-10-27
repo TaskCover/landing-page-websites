@@ -27,10 +27,11 @@ import React, {
   useState,
 } from "react";
 import { Text } from "components/shared";
+import useTheme from "hooks/useTheme";
 
 const MenuBarHeader = ({ editor }: { editor: Editor }) => {
   const { theme } = useContext(ThemeContext);
-
+  const { isDarkMode } = useTheme();
   const isOnlyParagraph =
     !editor.isActive("bulletList") &&
     !editor.isActive("orderedList") &&
@@ -94,7 +95,7 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
         display: "flex",
         alignItems: "center",
         cursor: "pointer",
-        backgroundColor: "white",
+        bgcolor: "background.paper",
         zIndex: "10",
         rowGap: {
           sm: "16px",
@@ -104,7 +105,6 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
           sm: "6px",
           xs: "2px",
         },
-        background: "white",
         py: "3px",
         px: {
           sm: "16px",
@@ -125,7 +125,7 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
         },
 
         "button.active": {
-          bgcolor: "#E1F0FF",
+          bgcolor: isDarkMode ? "#1E1E1E" : "#E1F0FF",
         },
       }}
     >
@@ -308,13 +308,12 @@ export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
         display: "flex",
         alignItems: "center",
         cursor: "pointer",
-        backgroundColor: "white",
+        backgroundColor: "background.default",
         zIndex: "10",
         gap: {
           sm: "16px",
           xs: "8px",
         },
-        background: "white",
         py: "3px",
         px: {
           sm: "16px",

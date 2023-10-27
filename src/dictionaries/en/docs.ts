@@ -24,5 +24,17 @@ export const DocsLang: DocsDictionary = {
            project : 'Project',
            projectStatus : 'Project Status',
         }
-     }
+     },
+     createDoc: {
+      share: "Share",
+      copyLink: "Copy",
+      comment: "Comment",
+      slider: "Open slider",
+      more: "More",
+      history: "Version history",
+      text: "Text options",
+      Ltext: "Large Text",
+      full: "Full width",
+      restore : 'Restore'
+    },
 };
