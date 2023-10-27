@@ -107,7 +107,7 @@ const CommentItem = (props: CommentItemProps) => {
         </Text>
       </Stack>
 
-      {!!content && type === "comments" && (
+      {!!content && (
         <Box
           sx={{
             fontSize: 14,
