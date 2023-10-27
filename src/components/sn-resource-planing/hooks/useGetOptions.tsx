@@ -6,13 +6,16 @@ import { IOptionStructure } from "components/shared/TextFieldSelect";
 import { RESOURCE_ALLOCATION_TYPE } from "constant/enums";
 import { NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
+import { useSales } from "store/sales/selectors";
 
 export const useFetchOptions = () => {
   const { onGetProjects } = useProjects();
   const { onGetPositions } = usePositions();
+  const { onGetSales } = useSales();
   useEffect(() => {
     onGetProjects({ pageSize: -1, pageIndex: 0 });
     onGetPositions({ pageSize: -1, pageIndex: 0 });
+    onGetSales({ sort: "-1", pageSize: 200 });
   }, []);
 };
 
@@ -23,6 +26,7 @@ const useGetOptions = () => {
   // );
   const { items: projects } = useProjects();
   const { items: positions } = usePositions();
+  const { sales } = useSales();
   const commonT = useTranslations(NS_COMMON);
   const projectOptions: IOptionStructure[] = useMemo(() => {
     if (!_.isEmpty(projects)) {
@@ -50,6 +54,20 @@ const useGetOptions = () => {
     return [];
   }, [JSON.stringify(positions)]);
 
+  const salesOptions: IOptionStructure[] = useMemo(() => {
+    if (!_.isEmpty(sales)) {
+      const resolveSales = _.map(sales, (sale) => {
+        return {
+          label: sale?.name,
+          value: sale?.id,
+          data: sale,
+        };
+      });
+      return resolveSales;
+    }
+    return [];
+  }, [JSON.stringify(sales)]);
+
   const timeOptions = useMemo(
     () => [
       {
@@ -70,6 +88,7 @@ const useGetOptions = () => {
   return {
     projectOptions,
     timeOptions,
+    salesOptions,
     positionOptions,
   };
 };

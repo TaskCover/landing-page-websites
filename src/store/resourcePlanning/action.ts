@@ -35,6 +35,7 @@ export interface BookingData {
   allocation: number;
   allocation_type: string;
   note: string;
+  sale_id: string;
 }
 
 export const getBookingAll = createAsyncThunk(
@@ -101,7 +102,7 @@ export const updateBookingResource = createAsyncThunk(
   "resource/updateBooking",
   async (params: BookingData & { id: string }) => {
     try {
-      const response = await client.post(
+      const response = await client.patch(
         `${Endpoint.RESOURCE_PLANNING}/${params.id}`,
         params,
         {

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-import { DialogContent, Grid, Stack, Tab } from "@mui/material";
+import { DialogContent, DialogTitle, Grid, Stack, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import DefaultPopupLayout from "layouts/DefaultPopupLayout";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import ProjectTab from "./ProjectTab";
 import TimeOffTab from "./TimeoffTab";
+import { Text } from "components/shared";
 interface IProps {
   open: boolean;
   onClose(): void;
@@ -20,6 +21,7 @@ const EditBooking: React.FC<IProps> = ({
   bookingId,
   isProject,
 }) => {
+  console.log("🚀 ~ file: index.tsx:24 ~ bookingId:", bookingId);
   const [activeTabs, setActiveTabs] = useState(isProject ? "1" : "2");
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const commonT = useTranslations(NS_COMMON);
@@ -90,9 +92,19 @@ const EditBooking: React.FC<IProps> = ({
       </DialogContent>
     );
   };
+
+  const _renderTitle = () => {
+    return (
+      <Stack>
+        <Text>{resourceT("form.editBooking")}</Text>
+        <Stack direction={"row"} spacing={1}></Stack>
+      </Stack>
+    );
+  };
+
   return (
     <DefaultPopupLayout
-      title={"Edit booking"}
+      title={_renderTitle()}
       content={_renderMain()}
       open={open}
       onClose={onClose}

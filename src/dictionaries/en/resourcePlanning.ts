@@ -51,6 +51,7 @@ export const ResourcePlanningLang: ResourceDictionary = {
   },
   form: {
     title: "Resource Planning",
+    services: "Services",
     selectTimeOffCategory: "Select time off category",
     project: "Project",
     timeoff: "Time off",

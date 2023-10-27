@@ -11,11 +11,15 @@ import AllPeopleTab from "./AllPeopleTab";
 import MyScheduleTab from "./MyScheduleTab";
 import useTheme from "hooks/useTheme";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { useAuth } from "store/app/selectors";
+import ROLE from "components/sn-time-tracking/Component/Constants/Enums/Roles.enum";
+import { Permission } from "constant/enums";
 
 const ResourcePlanning = () => {
   const [tab, setTab] = useState("allPeople");
   const { isDarkMode } = useTheme();
   const { isSmSmaller } = useBreakpoint();
+  const { user } = useAuth();
   const t = useTranslations(NS_RESOURCE_PLANNING);
 
   return (
@@ -86,11 +90,13 @@ const ResourcePlanning = () => {
                 setTab(newValue)
               }
             >
-              <Tab
-                label={t("header.tab.allPeople")}
-                value="allPeople"
-                sx={tabStyles}
-              />
+              {user?.roles?.includes(Permission.AM) && (
+                <Tab
+                  label={t("header.tab.allPeople")}
+                  value="allPeople"
+                  sx={tabStyles}
+                />
+              )}
               <Tab
                 label={t("header.tab.mySchedule")}
                 value="mySchedule"
@@ -105,9 +111,11 @@ const ResourcePlanning = () => {
             viVN.components.MuiLocalizationProvider.defaultProps.localeText
           }
         >
-          <TabPanel value="allPeople">
-            <AllPeopleTab />
-          </TabPanel>
+          {user?.roles?.includes(Permission.AM) && (
+            <TabPanel value="allPeople">
+              <AllPeopleTab />
+            </TabPanel>
+          )}
           <TabPanel value="mySchedule">
             <MyScheduleTab />
           </TabPanel>

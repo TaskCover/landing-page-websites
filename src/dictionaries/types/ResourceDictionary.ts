@@ -52,7 +52,7 @@ export default interface ResourceDictionary {
 
     project: string;
     timeoff: string;
-
+    services: string;
     detail: string;
     role: string;
     dateRange: string;

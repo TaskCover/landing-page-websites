@@ -2,7 +2,10 @@
 
 import FullCalendar from "@fullcalendar/react";
 import React, { useMemo } from "react";
-import { IBookingAllFitler } from "store/resourcePlanning/action";
+import {
+  IBookingAllFitler,
+  updateBookingResource,
+} from "store/resourcePlanning/action";
 import { DEFAULT_BOOKING_ALL_FILTER, TAB_TYPE } from "./hepler";
 import dayjs from "dayjs";
 import { isEmpty } from "lodash";
@@ -29,6 +32,8 @@ import FilterHeader from "./components/FilterHeader";
 import ResourceHeaderContent from "./components/ResourceHeaderContent";
 import SlotLabelContent from "./components/SlotLabelContent";
 import useTheme from "hooks/useTheme";
+import EditBooking from "./modals/EditBooking";
+import { RESOURCE_EVENT_TYPE } from "constant/enums";
 
 export interface IEditState {
   isOpen: boolean;
@@ -53,6 +58,8 @@ const AllPeopleTab = () => {
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
   const { palette, isDarkMode } = useTheme();
+  const [parentResource, setParentResource] = React.useState<string>("");
+  const { updateBooking } = useBookingAll();
   const [isOpenEdit, setIsOpenEdit] = React.useState<IEditState>({
     isOpen: false,
     bookingId: "",
@@ -103,15 +110,27 @@ const AllPeopleTab = () => {
   const handleEventChange =
     (calendarRef: React.RefObject<FullCalendar>, isResize: boolean) =>
     ({ event, revert }) => {
-      const { type } = event.extendedProps;
+      const { type, campaignId, saleId, ...restData } = event.extendedProps;
       if (isResize && type === "campaign") return revert();
       if (type === "campaign") {
         // Campaign has been moved, compute diff and update each steps
         if (!calendarRef.current) return null;
       } else if (type === "step") {
-        // Step has been resized or move, update the campaign dates
+        // Step has been resized or move, update the campaign date
         if (!calendarRef.current) return null;
-        2;
+        const dateRange = event._instance.range;
+        updateBooking(
+          {
+            ...restData,
+            end_date: dayjs(dateRange.end).format("YYYY-MM-DD"),
+            start_date: dayjs(dateRange.start).format("YYYY-MM-DD"),
+            booking_type: restData.eventType,
+            time_off_type: restData.time_off_type,
+            sale_id: saleId,
+          },
+          restData.eventId,
+        );
+        return;
       }
     };
 
@@ -143,6 +162,8 @@ const AllPeopleTab = () => {
               position,
               allocation_type,
               total_hour,
+              time_off_type,
+              sale_id,
             } = props;
 
             return {
@@ -157,6 +178,8 @@ const AllPeopleTab = () => {
               allocation,
               allocation_type,
               total_hour,
+              time_off_type,
+              saleId: sale_id,
               eventType: booking_type,
               eventId,
             };
@@ -193,6 +216,10 @@ const AllPeopleTab = () => {
         eventType: booking?.booking_type,
         note: booking?.note,
         position: booking?.position,
+        allocation: booking?.allocation,
+        allocation_type: booking?.allocation_type,
+        total_hour: booking?.total_hour,
+        saleId: booking?.sale_id,
       })),
     }));
 
@@ -274,6 +301,7 @@ const AllPeopleTab = () => {
             const parentResource = resources.find(
               (item) => item.id === resource._resource.parentId,
             );
+
             const bookings = parentResource
               ? [...parentResource?.bookings]
               : [];
@@ -281,6 +309,12 @@ const AllPeopleTab = () => {
               bookings.pop()?.id === resource._resource.id ||
               bookings.length === 0;
 
+            let totalBookingHours = 0;
+            if (!resource._resource.parentId) {
+              totalBookingHours =
+                resources.find((item) => item.id === resource._resource.id)
+                  ?.total_hour || 0;
+            }
             // Content on the resource as a label
             return (
               <ResourceLabel
@@ -289,7 +323,8 @@ const AllPeopleTab = () => {
                 resources={resources}
                 isLastItem={isLastItem}
                 selectedResource={selectedResource}
-                totalhour={totalhour}
+                totalhour={totalBookingHours}
+                setParentResource={setParentResource}
                 setIsOpenCreate={setIsOpenCreate}
               />
             );
@@ -301,16 +336,17 @@ const AllPeopleTab = () => {
             );
           }}
           eventResize={handleEventChange(calendarRef, true)}
-          // eventDrop={handleEventChange(calendarRef, false)}
+          eventDrop={handleEventChange(calendarRef, false)}
         />
       </Box>
       <CreateBooking
         onClose={() => setIsOpenCreate(false)}
         open={isOpenCreate}
+        resourceId={parentResource}
       />
 
       {/* TODO: wait for confirm the edit function */}
-      {/* <EditBooking
+      <EditBooking
         isProject={isOpenEdit.isProject}
         bookingId={isOpenEdit.bookingId}
         onClose={() =>
@@ -321,7 +357,7 @@ const AllPeopleTab = () => {
           })
         }
         open={isOpenEdit.isOpen}
-      /> */}
+      />
     </Stack>
   );
 };

@@ -18,12 +18,14 @@ interface IResourceLabelProps {
   selectedResource: string[];
   totalhour: number;
   isLastItem: boolean;
+  setParentResource: (value: string) => void;
   handleCollapseToggle: (id: string) => void;
 }
 const ResourceLabel = ({
   resource,
   resources,
   setIsOpenCreate,
+  setParentResource,
   isLastItem,
   handleCollapseToggle,
   totalhour,
@@ -42,7 +44,10 @@ const ResourceLabel = ({
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const isActive = includes(selectedResource, resource._resource.id);
-
+  const handleOpenCreate = () => {
+    setIsOpenCreate(true);
+    setParentResource(resource._resource.parentId);
+  };
   if (type === "step") {
     return (
       <Grid
@@ -86,7 +91,7 @@ const ResourceLabel = ({
               color: "success.main",
             }}
             // startIcon={<AddIcon />}
-            onClick={() => setIsOpenCreate(true)}
+            onClick={() => handleOpenCreate()}
           >
             {resourceT("schedule.action.addBooking")}
           </Button>
@@ -193,7 +198,7 @@ const ResourceLabel = ({
               color: "success.main",
             }}
             // startIcon={<AddIcon />}
-            onClick={() => setIsOpenCreate(true)}
+            onClick={() => handleOpenCreate()}
           >
             {resourceT("schedule.action.addBooking")}
           </Button>

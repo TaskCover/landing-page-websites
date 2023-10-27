@@ -72,6 +72,7 @@ export const useBookingAll = () => {
   const { onAddSnackbar } = useSnackbar();
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const dispatch = useAppDispatch();
+  const { getMyBooking, myBookingFilter } = useMyBooking();
 
   const getBookingResource = async (params: IBookingAllFitler) => {
     const newParams = {
@@ -111,6 +112,7 @@ export const useBookingAll = () => {
       }),
     )
       .then(async () => {
+        await getMyBooking(myBookingFilter);
         await getBookingResource(bookingAllFilter);
         onAddSnackbar(resourceT("form.updateSuccess"), "success");
       })

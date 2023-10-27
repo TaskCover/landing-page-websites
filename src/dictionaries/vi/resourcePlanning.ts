@@ -51,6 +51,7 @@ export const ResourcePlanning: ResourceDictionary = {
   },
   form: {
     title: "Quản lý lịch trình",
+    services: "Dịch vụ",
     selectTimeOffCategory: "Chọn loại nghỉ phép",
     project: "Dự án",
     timeOffCategory: "Loại nghỉ phép",

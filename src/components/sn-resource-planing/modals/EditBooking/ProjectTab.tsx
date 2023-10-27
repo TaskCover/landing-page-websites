@@ -33,7 +33,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
 
   const { palette } = useTheme();
-  const { positionOptions, projectOptions, timeOptions } = useGetOptions();
+  const { projectOptions, timeOptions, salesOptions } = useGetOptions();
   const { bookingAll, updateBooking } = useBookingAll();
   const { schemaProject } = useGetSchemas();
 
@@ -64,7 +64,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
     resolver: yupResolver(schemaProject),
     defaultValues: {
       project_id: bookingEvent?.project_id || "",
-      position: bookingEvent?.position?.id || "",
+      sale_id: bookingEvent?.sale_id || "",
       dateRange: {
         startDate: bookingEvent?.start_date
           ? dayjs(bookingEvent?.start_date).toDate()
@@ -118,17 +118,17 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
       </Grid2>
       <Grid2 xs={12}>
         <Controller
-          name="position"
+          name="sale_id"
           control={controlProject}
           render={({ field }) => (
             <TextFieldSelect
               value={field.value}
               onChange={(event) => field.onChange(event.target.value)}
-              helperText={errorsProject.position?.message}
-              error={!!errorsProject.position?.message}
+              helperText={errorsProject.sale_id?.message}
+              error={!!errorsProject.sale_id?.message}
               required
-              options={positionOptions as IOptionStructure[]}
-              label={resourceT("form.role")}
+              options={salesOptions as IOptionStructure[]}
+              label={resourceT("form.services")}
             />
           )}
         />
