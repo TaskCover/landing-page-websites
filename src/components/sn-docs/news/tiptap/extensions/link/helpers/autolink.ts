@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   combineTransactionSteps,
   findChildrenInRange,
@@ -8,9 +9,9 @@ import { find, test } from "linkifyjs";
 import { MarkType } from "prosemirror-model";
 import { Plugin, PluginKey } from "prosemirror-state";
 
-type AutolinkOptions = {
-  type: MarkType;
-  validate?: (url: string) => boolean;
+export type AutolinkOptions = {
+  type: any;
+  validate?: any;
 };
 
 export function autolink(options: AutolinkOptions): Plugin {
