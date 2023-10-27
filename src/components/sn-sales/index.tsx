@@ -13,6 +13,7 @@ import { Stack } from "@mui/material";
 import { Text } from "components/shared";
 import {
   cleanObject,
+  formatCurrency,
   formatDate,
   formatNumber,
   getPath,
@@ -97,7 +98,7 @@ const SalesPage = () => {
               {salesT("list.table.revenue")}
             </Text>
             <Text variant="h6">
-              {formatNumber(totalRevenue, { prefix: "$" })}
+              {formatCurrency(totalRevenue, { prefix: "$" })}
             </Text>
           </Stack>
         ),
@@ -113,7 +114,7 @@ const SalesPage = () => {
               {salesT("list.table.pjRevenue")}
             </Text>
             <Text variant="h6">
-              {formatNumber(totalRevenuePJ, { prefix: "$" })}
+              {formatCurrency(totalRevenuePJ, { prefix: "$" })}
             </Text>
           </Stack>
         ),
