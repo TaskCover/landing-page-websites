@@ -109,6 +109,8 @@ export const TodoName = ({
             fullWidth
             variant="filled"
             size="small"
+            placeholder={salesT("detail.todoList.addNew")}
+            focused
             onChange={onChange}
             color="success"
             autoFocus={autoFocus}
