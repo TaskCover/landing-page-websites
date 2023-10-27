@@ -50,7 +50,12 @@ export const TodoName = ({
   const [error, setError] = useState<string>("");
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value.trim());
+    const { value } = event.target;
+    if (value[value.length - 1] === "\n") {
+      setName(value.slice(0, -1));
+      return;
+    }
+    setName(event.target.value);
     setError("");
   };
 
@@ -80,6 +85,7 @@ export const TodoName = ({
       //   xs: "column",
       //   sm: "row",
       // }}
+      justifyContent="space-between"
       width="100%"
       spacing={2}
     >
@@ -104,6 +110,7 @@ export const TodoName = ({
             variant="filled"
             size="small"
             onChange={onChange}
+            color="success"
             autoFocus={autoFocus}
             sx={{
               "& >div": {
@@ -115,6 +122,7 @@ export const TodoName = ({
               "& .MuiInputBase-root": {
                 padding: 0,
               },
+
               padding: 0,
             }}
           />
