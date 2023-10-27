@@ -181,31 +181,31 @@ export const Link = Mark.create<LinkOptions>({
   addProseMirrorPlugins() {
     const plugins = [];
 
-    if (this.options.autolink) {
-      plugins.push(
-        autolink({
-          type: this.type,
-          validate: this.options.validate,
-        })
-      );
-    }
+    // if (this.options.autolink) {
+    //   plugins.push(
+    //     autolink({
+    //       type: this.type,
+    //       validate: this.options.validate,
+    //     })
+    //   );
+    // }
 
-    if (this.options.openOnClick) {
-      plugins.push(
-        clickHandler({
-          type: this.type,
-        })
-      );
-    }
+    // if (this.options.openOnClick) {
+    //   plugins.push(
+    //     clickHandler({
+    //       type: this.type,
+    //     })
+    //   );
+    // }
 
-    if (this.options.linkOnPaste) {
-      plugins.push(
-        pasteHandler({
-          editor: this.editor,
-          type: this.type,
-        })
-      );
-    }
+    // if (this.options.linkOnPaste) {
+    //   plugins.push(
+    //     pasteHandler({
+    //       editor: this.editor,
+    //       type: this.type,
+    //     })
+    //   );
+    // }
 
     return plugins;
   },
