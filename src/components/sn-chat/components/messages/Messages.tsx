@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Box from "@mui/material/Box";
 import {
   MutableRefObject,
@@ -37,7 +38,9 @@ interface MessagesProps {
   mediaListPreview: MediaPreviewItem[];
   statusLoadMessage: DataStatus;
   stateMessage?: {
-    filePreview?: File | File[] | null;
+    // filePreview?: File | File[] | null;
+    // fix build
+    filePreview?: any;
     status: DataStatus;
   };
   focusMessage: MessageSearchInfo | null;
@@ -81,7 +84,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
-  
+
   const scrollHeightRef = useRef(0);
   const observer = useRef(
     new IntersectionObserver((entries) => {
@@ -90,7 +93,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         pageRef.current = pageRef.current + pageSize;
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         const clientHeight =
-          (messagesContentRef.current?.clientHeight || 0) + 50
+          (messagesContentRef.current?.clientHeight || 0) + 50;
         if (scrollHeightRef.current > clientHeight) {
           onRefetch(pageRef.current);
         }
@@ -154,13 +157,14 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     [isBottomScrollMessage],
   );
 
-  const initScrollIntoView = useCallback(() => {    
+  const initScrollIntoView = useCallback(() => {
     if (messagesContentRef.current) {
       const index = messagesContentRef.current?.scrollHeight
         ? Number(
-            messagesContentRef.current?.scrollHeight - scrollHeightRef.current || 0,
+            messagesContentRef.current?.scrollHeight -
+              scrollHeightRef.current || 0,
           )
-        : 0;      
+        : 0;
       messagesContentRef.current.scrollTo(0, index);
     }
   }, []);
@@ -193,48 +197,47 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
-
   const renderMessage = (message: MessageInfo) => {
-    let msg = '';
+    let msg = "";
     switch (message?.t) {
-      case 'au':
+      case "au":
         msg = commonChatBox("chatBox.group.add", {
           user1: message?.u?.username,
           user2: message?.msg,
-          time: getTimeStamp(message?.ts ?? '')
+          time: getTimeStamp(message?.ts ?? ""),
         });
         break;
-      case 'ru':
+      case "ru":
         msg = commonChatBox("chatBox.group.remove", {
           user1: message?.u?.username,
           user2: message?.msg,
-          time: getTimeStamp(message?.ts ?? '')
+          time: getTimeStamp(message?.ts ?? ""),
         });
         break;
-      case 'subscription-role-added':
+      case "subscription-role-added":
         msg = commonChatBox("chatBox.group.lead_trans", {
           user1: message?.u?.username,
           user2: message?.msg,
-          time: getTimeStamp(message?.ts ?? '')
+          time: getTimeStamp(message?.ts ?? ""),
         });
         break;
-      case 'subscription-role-removed':
+      case "subscription-role-removed":
         msg = commonChatBox("chatBox.group.lead_remove", {
           user1: message?.u?.username,
           user2: message?.msg,
-          time: getTimeStamp(message?.ts ?? '')
+          time: getTimeStamp(message?.ts ?? ""),
         });
         break;
-      case 'r':
+      case "r":
         msg = commonChatBox("chatBox.group.rename", {
           user1: message?.u?.username,
           name: message?.msg,
-          time: getTimeStamp(message?.ts ?? '')
+          time: getTimeStamp(message?.ts ?? ""),
         });
         break;
     }
     return msg;
-  }
+  };
 
   return (
     <>
@@ -249,7 +252,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           gap: "0.5rem",
           flexDirection: "column",
           overflow: "auto",
-          ...messages.length < 5 && { justifyContent: "flex-end" },
+          ...(messages.length < 5 && { justifyContent: "flex-end" }),
           height: "100vh",
 
           padding: "1rem",
@@ -311,16 +314,18 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                     textAlign: "center",
                   }}
                 >
-                    <Typography
-                      sx={{
-                        backgroundColor: isDarkMode ? '#5b5959' : '#f1f1f1',
-                        fontSize: '10px',
-                        padding: '2px 5px',
-                        borderRadius: '10px',
-                        display: 'inline-block',
-                      }}
-                    >{ renderMessage(message) }</Typography>
-                  </Box>
+                  <Typography
+                    sx={{
+                      backgroundColor: isDarkMode ? "#5b5959" : "#f1f1f1",
+                      fontSize: "10px",
+                      padding: "2px 5px",
+                      borderRadius: "10px",
+                      display: "inline-block",
+                    }}
+                  >
+                    {renderMessage(message)}
+                  </Typography>
+                </Box>
               )}
               {hasNextDay && (
                 <Typography
