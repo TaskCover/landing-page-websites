@@ -6,6 +6,7 @@ import { useChat } from "store/chat/selectors";
 import { MessageInfo, STEP } from "store/chat/type";
 import "../../../../components/Editor/style.css";
 import useTheme from "hooks/useTheme";
+import ForwardSmall from "icons/ForwardSmall";
 
 interface MessageLayoutProps {
   sessionId: string;
@@ -84,7 +85,24 @@ const MessageLayout = ({
           </>
         )}
         {/* Message content */}
-        {children}
+        {message?.alias ? (
+          <Box order={'2'}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                color: '#3699FF',
+                fontSize: '12px',
+              }}
+            >
+              <ForwardSmall />
+              {message?.alias}
+            </Box>
+            {children}
+          </Box>
+        ) : (
+            <>{ children }</>
+        )}
         {/* Avartar partner */}
         {!isCurrentUser && (
           <Box
