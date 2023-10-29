@@ -33,6 +33,7 @@ export const TodoName = ({
   onSubmit,
   value = "",
   owner,
+  onBlur,
   autoFocus,
   isAssign,
 }: {
@@ -40,6 +41,7 @@ export const TodoName = ({
   onSubmit: (name: TodoItemData) => Promise<any>;
   value?: string;
   owner?: User;
+  onBlur?: () => void;
   autoFocus?: boolean;
   isAssign?: boolean;
 }) => {
@@ -62,9 +64,9 @@ export const TodoName = ({
   const { saleDetail } = useSaleDetail();
   const { control, getValues, setValue } = useFormContext();
 
-  const onKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== "Enter") return;
+  const handleSubmit = async () => {
     const nameTrimmed = name?.trim();
+
     if (nameTrimmed) {
       setValue("todoItem.name", nameTrimmed);
       await onSubmit(getValues("todoItem"));
@@ -76,6 +78,16 @@ export const TodoName = ({
       );
     }
     setName("");
+  };
+
+  const onKeyDown = async (event, isBlur: boolean) => {
+    if (isBlur && onBlur) {
+      onBlur();
+      handleSubmit();
+      return;
+    }
+    if (event.key !== "Enter") return;
+    handleSubmit();
   };
 
   return (
@@ -94,9 +106,12 @@ export const TodoName = ({
           {isAssign && (
             <PlusIcon
               onClick={(event) =>
-                onKeyDown({
-                  key: "Enter",
-                } as React.KeyboardEvent<HTMLInputElement>)
+                onKeyDown(
+                  {
+                    key: "Enter",
+                  } as React.KeyboardEvent<HTMLInputElement>,
+                  false,
+                )
               }
               width={24}
               height={24}
@@ -104,8 +119,9 @@ export const TodoName = ({
           )}
           <TextField
             multiline
+            onBlur={(e) => onKeyDown(e, true)}
             value={name}
-            onKeyDown={onKeyDown}
+            onKeyDown={(e) => onKeyDown(e, false)}
             fullWidth
             variant="filled"
             size="small"
@@ -165,7 +181,6 @@ export const TodoName = ({
                 const onAssign = (name: string, value: User) => {
                   onChange(value.id);
                 };
-
                 return <AssignTodo {...rest} onAssign={onAssign} />;
               }}
             />

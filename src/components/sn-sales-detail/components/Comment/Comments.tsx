@@ -36,8 +36,9 @@ const Comments = () => {
 
   const filteredComments = useMemo(() => {
     if (!comments) return [];
-
-    if (comentType === "comments" || !comentType) return comments;
+    if (!comentType) return comments;
+    if (comentType === "comments")
+      return comments.filter((comment) => !comment.attachments.length);
     return comments.filter((comment) => comment.attachments.length > 0);
   }, [comments, comentType]);
 
@@ -85,6 +86,7 @@ const CommentItem = (props: CommentItemProps) => {
   const {
     creator: { body },
     content,
+
     type,
     attachments_down = [],
     created_time,

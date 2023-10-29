@@ -34,7 +34,7 @@ const SaleItem = ({ item }: IProps) => {
   const { onUpdateDeal } = useSales();
   const [owner, setOwner] = useState<string>(item.owner?.id);
   const { onSetRevenue } = useSaleDetail();
-  const time = formatEstimateTime(item.estimate || 0);
+  const time = item.estimate || 0;
 
   const onSubmit = (data) => {
     onUpdateDeal({ owner: data.owner, id: item.id });

@@ -221,6 +221,9 @@ const salesSlice = createSlice({
       }
     });
     builder.addCase(updateDeal.fulfilled, (state, action) => {
+      if (state.saleDetail) {
+        state.saleDetail.members = action.payload.members;
+      }
       const index = state.sales.findIndex(
         (item) => item.id === action.payload.id,
       );

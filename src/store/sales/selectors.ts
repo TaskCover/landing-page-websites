@@ -26,7 +26,7 @@ import {
 } from "./actions";
 import moment from "moment";
 import { useSnackbar } from "store/app/selectors";
-import { ServiceSection, Todo, setColumn, setRevenue } from "./reducer";
+import { ServiceSection, Todo, reset, setColumn, setRevenue } from "./reducer";
 import Item from "components/sn-cost-history/Item";
 import {
   ServiceColumn,
@@ -195,6 +195,11 @@ export const useSaleDetail = () => {
     },
     [dispatch],
   );
+
+  const onReset = useCallback(() => {
+    dispatch(setRevenue(0));
+    dispatch(reset());
+  }, [dispatch]);
   return {
     saleDetail,
     saleDetailError,
@@ -202,6 +207,7 @@ export const useSaleDetail = () => {
     isIdle,
     isFetching,
     saleRevenue,
+    onReset,
     onSetRevenue,
     onGetSaleDetail,
   };
@@ -213,6 +219,9 @@ export const useSalesTodo = () => {
     shallowEqual,
   );
   const dispatch = useAppDispatch();
+  const commonT = useTranslations(NS_COMMON);
+  const saleT = useTranslations(NS_SALES);
+  const { onAddSnackbar } = useSnackbar();
   const salesTodo = useMemo(() => {
     if (saleDetail) {
       return saleDetail.todo_list;
@@ -244,7 +253,16 @@ export const useSalesTodo = () => {
           ],
           deal_id: dealId,
         }),
-      ).unwrap();
+      )
+        .unwrap()
+        .then(() => {
+          onAddSnackbar(
+            commonT("notification.success", {
+              label: commonT("form.add"),
+            }),
+            "success",
+          );
+        });
     },
     [dispatch],
   );
@@ -270,7 +288,16 @@ export const useSalesTodo = () => {
             deal_id: dealId,
           },
         }),
-      ).unwrap();
+      )
+        .unwrap()
+        .then(() => {
+          onAddSnackbar(
+            commonT("notification.success", {
+              label: commonT("update"),
+            }),
+            "success",
+          );
+        });
     },
     [dispatch],
   );
@@ -281,7 +308,16 @@ export const useSalesTodo = () => {
           id,
           dealId,
         }),
-      ).unwrap();
+      )
+        .unwrap()
+        .then(() => {
+          onAddSnackbar(
+            commonT("notification.success", {
+              label: commonT("delete"),
+            }),
+            "success",
+          );
+        });
     },
     [dispatch],
   );

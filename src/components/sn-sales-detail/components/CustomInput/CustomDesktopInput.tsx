@@ -83,8 +83,7 @@ const CustomDesktopInput = ({
           //   },
           // }}
           // required={required}
-          // InputProps={inputProps}
-
+          inputProps={inputProps}
           disabled={disabled}
           // multiline={type === "number" ? false : true}
           type={type}
