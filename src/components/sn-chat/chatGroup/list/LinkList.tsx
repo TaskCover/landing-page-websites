@@ -1,4 +1,3 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "components/Link";
@@ -6,29 +5,35 @@ import Media from "components/Media";
 import { DataStatus } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useSnackbar } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
 
 const LinkList = () => {
-  const { chatLinks, chatLinksStatus, onGetChatUrls } = useChat();
+  const {
+    chatLinks,
+    chatLinksStatus,
+    conversationInfo,
+    roomId,
+    onGetChatUrls,
+  } = useChat();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
 
-  useEffect(() => {
-    const handleGetUrl = async () => {
-      try {
-        await onGetChatUrls();
-      } catch (error) {
-        onAddSnackbar(
-          typeof error === "string" ? error : commonT(AN_ERROR_TRY_AGAIN),
-          "error",
-        );
-      }
-    };
+  const handleGetUrl = useCallback(async () => {
+    try {
+      await onGetChatUrls({ type: conversationInfo?.t, roomId });
+    } catch (error) {
+      onAddSnackbar(
+        typeof error === "string" ? error : commonT(AN_ERROR_TRY_AGAIN),
+        "error",
+      );
+    }
+  }, [commonT, conversationInfo?.t, onAddSnackbar, onGetChatUrls, roomId]);
 
+  useEffect(() => {
     handleGetUrl();
-  }, [onAddSnackbar, onGetChatUrls, commonT]);
+  }, [handleGetUrl]);
 
   const chatLinkClone = useMemo(() => {
     return chatLinks?.reduce((result, current) => {
