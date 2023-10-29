@@ -1,7 +1,7 @@
 import { Stack, inputBaseClasses } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { Input, InputProps, Text } from "components/shared";
-import React, { forwardRef, memo } from "react";
+import React, { forwardRef, memo, useContext, useEffect, useRef } from "react";
 import {
   Control,
   Controller,
@@ -15,6 +15,7 @@ import { Option } from "constant/types";
 import { type } from "os";
 import { get } from "lodash";
 import { useFormContext } from "react-hook-form";
+import { scrollViewContext } from "components/sn-sales-detail/hooks/useScrollErrorField";
 export interface CustomInputProps {
   control: Control;
   label?: string;
@@ -56,7 +57,20 @@ const CustomInput = (props: CustomInputProps, ref) => {
   const {
     formState: { errors },
   } = useFormContext();
+  // const { scrollErrorField } = useScrollErrorField();
+  const scrollContext = useContext(scrollViewContext);
 
+  useEffect(() => {
+    // scrollErrorField(`${sectionKey}.${index}`);
+  }, [JSON.stringify(errors)]);
+  useEffect(() => {
+    if (errors) {
+      const error = get(errors, name);
+      if (error) {
+        scrollContext?.scrollErrorField(name || "");
+      }
+    }
+  }, [JSON.stringify(errors)]);
   return (
     <Grid2
       container
@@ -93,7 +107,7 @@ const CustomInput = (props: CustomInputProps, ref) => {
                 sx={{
                   width: "100%",
                   [`& .${inputBaseClasses.root}`]: {
-                    backgroundColor: "background.paper",
+                    backgroundColor: disabled ? "gray.300" : "background.paper",
                     pr: helperText ? 3 : 1,
                   },
                   [`& input::-webkit-inner-spin-button`]: {
@@ -106,6 +120,20 @@ const CustomInput = (props: CustomInputProps, ref) => {
                   [`& .MuiSvgIcon-root`]: {
                     display: "none",
                   },
+                  [`& > .Mui-disabled:first-child`]: {
+                    border: "1px solid #a5a5a5",
+                  },
+                }}
+                onKeyDown={(e) => {
+                  if (
+                    type === "number" &&
+                    (e.key === "e" ||
+                      e.key === "E" ||
+                      e.key === "-" ||
+                      e.key === "+")
+                  ) {
+                    e.preventDefault();
+                  }
                 }}
                 {...inputProps}
                 inputRef={ref}

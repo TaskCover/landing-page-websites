@@ -129,7 +129,7 @@ const SalesPage = () => {
             <Text variant="h6" color="grey.400">
               {salesT("list.table.time")}
             </Text>
-            <Text variant="h6">{formatEstimateTime(totalTime)}h</Text>
+            <Text variant="h6">{totalTime}h</Text>
           </Stack>
         ),
         minWidth: 100,

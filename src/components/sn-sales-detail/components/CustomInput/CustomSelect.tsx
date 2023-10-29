@@ -64,7 +64,7 @@ const CustomSelect = (props: CustomInputProps, ref) => {
                   width: "100%",
                   [`& .${inputBaseClasses.root}`]: {
                     backgroundColor: "background.paper",
-                    pr: helperText ? 3 : 0,
+                    pr: helperText ? 4 : 0,
                   },
                   [`& p:nth-child(2)`]: {
                     display: "none",

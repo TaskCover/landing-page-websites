@@ -15,6 +15,7 @@ import { ServiceSection } from "store/sales/reducer";
 import { useSalesService } from "store/sales/selectors";
 import { Button } from "components/shared";
 import { useFetchOptions } from "components/sn-resource-planing/hooks/useGetOptions";
+import { ScrollViewProvider } from "components/sn-sales-detail/hooks/useScrollErrorField";
 
 const SaleService = () => {
   const { isMdSmaller } = useBreakpoint();
@@ -118,27 +119,29 @@ const SaleService = () => {
           )}
           {fields.length > 0 && <ServiceHeader />}
         </Stack>
-        <DragDropContext onDragEnd={onDragEnd}>
-          {fields?.map((section, index) => (
-            <Droppable
-              key={section.id}
-              direction="vertical"
-              droppableId={`sectionList.${section.id}.${index}`}
-            >
-              {(provided) => (
-                <div ref={provided.innerRef} {...provided.droppableProps}>
-                  <ServiceTable
-                    key={section.id}
-                    index={index}
-                    onRemoveSection={() => onRemoveSection(index)}
-                    onAddSection={onAddSection}
-                    section={section as ServiceSection}
-                  />
-                </div>
-              )}
-            </Droppable>
-          ))}
-        </DragDropContext>
+        <ScrollViewProvider>
+          <DragDropContext onDragEnd={onDragEnd}>
+            {fields?.map((section, index) => (
+              <Droppable
+                key={section.id}
+                direction="vertical"
+                droppableId={`sectionList.${section.id}.${index}`}
+              >
+                {(provided) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    <ServiceTable
+                      key={section.id}
+                      index={index}
+                      onRemoveSection={() => onRemoveSection(index)}
+                      onAddSection={onAddSection}
+                      section={section as ServiceSection}
+                    />
+                  </div>
+                )}
+              </Droppable>
+            ))}
+          </DragDropContext>
+        </ScrollViewProvider>
       </Stack>
       {isMdSmaller && <ServiceHeaderMobile />}
     </Stack>

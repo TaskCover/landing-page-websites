@@ -35,7 +35,7 @@ const SalesDetail = () => {
   useFetchServiceSection();
 
   const { isFetching: isServiceFetching } = useSalesService();
-  const { saleDetail, isFetching } = useSaleDetail();
+  const { saleDetail, isFetching, onReset } = useSaleDetail();
   const { serviceSectionList } = useSalesService();
   const { isEdit } = useContext(EditContext);
   useEffect(() => {
@@ -73,6 +73,9 @@ const SalesDetail = () => {
     return reset();
   }, [saleDetail, serviceSectionList]);
 
+  useEffect(() => {
+    return () => onReset();
+  }, []);
   if (isFetching) return <Loading open />;
 
   return (
