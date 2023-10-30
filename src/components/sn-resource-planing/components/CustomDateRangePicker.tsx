@@ -183,6 +183,7 @@ const CustomDateRangePicker: React.FC<TextFieldInputProps> = ({
           toggle={() => toggle()}
           onChange={(range) => {
             setDateRange(range);
+            toggle();
             onChange && onChange(range);
           }}
           initialDateRange={dateRange}

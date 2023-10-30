@@ -21,6 +21,8 @@ import TextFieldSelect, {
   IOptionStructure,
 } from "components/shared/TextFieldSelect";
 import { useGetSchemas } from "../Schemas";
+import { useCalculateDetail } from "components/sn-resource-planing/hooks/useCalculateDetail";
+import TextStatus from "components/TextStatus";
 
 interface IProps {
   open: boolean;
@@ -80,6 +82,14 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
     },
   });
 
+  const { workedTime, estimate, leftToSchedule, scheduledTime } =
+    useCalculateDetail(
+      watchProject("sale_id"),
+      watchProject("project_id"),
+      bookingEvent.user_id,
+      bookingEvent.user_id,
+    );
+  // console.log(bookingEvent, "bookingEvent");
   const onSubmitProject = (data) => {
     const cleanData: BookingData = {
       ...data,
@@ -90,7 +100,6 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
     updateBooking(cleanData, bookingId);
     onClose();
   };
-
   useEffect(() => {
     if (!open) {
       resetProject();
@@ -225,7 +234,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
           }}
           onClick={() => setIsShowDetail(!isShowDetail)}
         >
-          <Typography
+          <TextStatus
             sx={{
               p: "4px 10px",
               background: "#FFECEC",
@@ -235,9 +244,12 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
               lineHeight: "18px",
               width: "max-content",
             }}
+            text=""
+            color={leftToSchedule > 0 ? "success" : "error"}
           >
-            -98h {resourceT("form.leftToSchedule").toLowerCase()}
-          </Typography>
+            {leftToSchedule || 0}h{" "}
+            {resourceT("form.leftToSchedule").toLowerCase()}
+          </TextStatus>
           <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
             <Typography
               sx={{
@@ -290,7 +302,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 display: "block",
               }}
             >
-              130h
+              {estimate}h
             </Typography>
           </Box>
           <Box
@@ -321,7 +333,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 display: "block",
               }}
             >
-              70h
+              {workedTime}h
             </Typography>
           </Box>
           <Box
@@ -352,7 +364,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 display: "block",
               }}
             >
-              112h
+              {scheduledTime}h
             </Typography>
           </Box>
           <Box
@@ -378,10 +390,10 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 fontSize: 14,
                 lineHeight: "18px",
                 fontWeight: 600,
-                color: "#F64E60",
+                color: leftToSchedule > 0 ? "green" : "#F64E60",
               }}
             >
-              -52h
+              {leftToSchedule}h
             </Typography>
           </Box>
         </Collapse>

@@ -21,7 +21,6 @@ const EditBooking: React.FC<IProps> = ({
   bookingId,
   isProject,
 }) => {
-  console.log("🚀 ~ file: index.tsx:24 ~ bookingId:", bookingId);
   const [activeTabs, setActiveTabs] = useState(isProject ? "1" : "2");
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const commonT = useTranslations(NS_COMMON);

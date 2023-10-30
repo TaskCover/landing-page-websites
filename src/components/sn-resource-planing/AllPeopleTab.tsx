@@ -34,6 +34,7 @@ import SlotLabelContent from "./components/SlotLabelContent";
 import useTheme from "hooks/useTheme";
 import EditBooking from "./modals/EditBooking";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
+import { useGetTotalScheduleTime } from "./hooks/useCalculateDetail";
 
 export interface IEditState {
   isOpen: boolean;
@@ -60,6 +61,7 @@ const AllPeopleTab = () => {
   const { palette, isDarkMode } = useTheme();
   const [parentResource, setParentResource] = React.useState<string>("");
   const { updateBooking } = useBookingAll();
+
   const [isOpenEdit, setIsOpenEdit] = React.useState<IEditState>({
     isOpen: false,
     bookingId: "",
@@ -130,7 +132,7 @@ const AllPeopleTab = () => {
           },
           restData.eventId,
         );
-        return;
+        return null;
       }
     };
 

@@ -3,7 +3,8 @@ import { Grid, Typography } from "@mui/material";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
 import React, { memo } from "react";
-import { formatNumberHourToTime } from "utils/index";
+import { formatNumber, formatNumberHourToTime } from "utils/index";
+import { useGetTotalScheduleTime } from "../hooks/useCalculateDetail";
 
 interface IProps {
   resource: ColHeaderContentArg;
@@ -11,7 +12,9 @@ interface IProps {
 }
 
 const ResourceHeaderContent = ({ totalhour }: IProps) => {
+  const { totalScheduleAll, totalScheduleTime } = useGetTotalScheduleTime();
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
+  const totalSchedulePerLeft = (totalhour / totalScheduleAll) * 100;
   // Header content on the resource table
   return (
     <Grid
@@ -28,7 +31,7 @@ const ResourceHeaderContent = ({ totalhour }: IProps) => {
           {resourceT("schedule.resourceHeader.available")}
         </Typography>
         <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
-          160 h
+          {totalScheduleAll} h
         </Typography>
       </Grid>
       <Grid item xs={1} md={2}>
@@ -46,7 +49,12 @@ const ResourceHeaderContent = ({ totalhour }: IProps) => {
             "schedule.resourceHeader.available",
           )}`}
         </Typography>
-        <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>0 %</Typography>
+        <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
+          {formatNumber(totalSchedulePerLeft, {
+            numberOfFixed: 2,
+            suffix: "%",
+          })}
+        </Typography>
       </Grid>
     </Grid>
   );

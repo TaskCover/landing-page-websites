@@ -10,6 +10,10 @@ import { isEmpty, includes } from "lodash";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import { IBookingItem, IBookingListItem } from "store/resourcePlanning/reducer";
+import {
+  useCalculateDetail,
+  useGetTotalScheduleTime,
+} from "../hooks/useCalculateDetail";
 
 interface IResourceLabelProps {
   resource: ResourceApi;
@@ -44,10 +48,15 @@ const ResourceLabel = ({
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const isActive = includes(selectedResource, resource._resource.id);
+  const { totalLeftToSchedule } = useGetTotalScheduleTime();
   const handleOpenCreate = () => {
     setIsOpenCreate(true);
     setParentResource(resource._resource.parentId);
   };
+
+  const schedulePerLeft =
+    (totalhour / totalLeftToSchedule[resource._resource.id]) * 100;
+
   if (type === "step") {
     return (
       <Grid
@@ -166,7 +175,7 @@ const ResourceLabel = ({
                 textAlign: "center",
               }}
             >
-              160 h
+              {totalLeftToSchedule[resource._resource.id]} h
             </Typography>
           </Grid>
           <Grid item xs={1} md={2}>
@@ -176,7 +185,7 @@ const ResourceLabel = ({
                 textAlign: "center",
               }}
             >
-              {formatNumber(totalhour, { numberOfFixed: 2 })}h
+              {formatNumber(totalhour, { numberOfFixed: 2, suffix: "h" })}
             </Typography>
           </Grid>
           <Grid item xs={1} md={2}>
@@ -186,7 +195,7 @@ const ResourceLabel = ({
                 textAlign: "center",
               }}
             >
-              0 %
+              {formatNumber(schedulePerLeft, { numberOfFixed: 2, suffix: "%" })}
             </Typography>
           </Grid>
         </Grid>
