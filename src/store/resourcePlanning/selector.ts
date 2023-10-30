@@ -72,6 +72,7 @@ export const useBookingAll = () => {
   const { onAddSnackbar } = useSnackbar();
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const dispatch = useAppDispatch();
+  const { getMyBooking, myBookingFilter } = useMyBooking();
 
   const getBookingResource = async (params: IBookingAllFitler) => {
     const newParams = {
@@ -88,22 +89,37 @@ export const useBookingAll = () => {
     [bookingAllStatus],
   );
 
+  const isLoading = useMemo(
+    () => bookingAllStatus === DataStatus.LOADING,
+    [bookingAllStatus],
+  );
+
   const totalHour = useMemo(
     () => bookingAll.reduce((prev, item) => prev + item.total_hour, 0),
     [bookingAll],
   );
-  const createBooking = async (data: BookingData) => {
+  const createBooking = async (
+    data: BookingData,
+    disableSnackbar?: boolean,
+  ) => {
     await dispatch(createBookingResource(data))
       .then(async () => {
         await getBookingResource(bookingAllFilter);
-        onAddSnackbar(resourceT("form.createSuccess"), "success");
+        await getMyBooking(myBookingFilter);
+        !disableSnackbar &&
+          onAddSnackbar(resourceT("form.createSuccess"), "success");
       })
       .catch((err) => {
-        onAddSnackbar(resourceT("form.createFailed"), "error");
+        !disableSnackbar &&
+          onAddSnackbar(resourceT("form.createFailed"), "error");
       });
   };
 
-  const updateBooking = async (data: BookingData, id: string) => {
+  const updateBooking = async (
+    data: BookingData,
+    id: string,
+    disableSnackbar?: boolean,
+  ) => {
     await dispatch(
       updateBookingResource({
         ...data,
@@ -111,11 +127,14 @@ export const useBookingAll = () => {
       }),
     )
       .then(async () => {
+        await getMyBooking(myBookingFilter);
         await getBookingResource(bookingAllFilter);
-        onAddSnackbar(resourceT("form.updateSuccess"), "success");
+        !disableSnackbar &&
+          onAddSnackbar(resourceT("form.updateSuccess"), "success");
       })
       .catch((err) => {
-        onAddSnackbar(resourceT("form.updateFailed"), "error");
+        !disableSnackbar &&
+          onAddSnackbar(resourceT("form.updateFailed"), "error");
       });
   };
   useEffect(() => {
@@ -127,6 +146,7 @@ export const useBookingAll = () => {
     bookingAllFilter,
     totalHour,
     createBooking,
+    isLoading,
     isReady,
     updateBooking,
     bookingAll,

@@ -21,6 +21,9 @@ import TextFieldSelect, {
   IOptionStructure,
 } from "components/shared/TextFieldSelect";
 import { useGetSchemas } from "../Schemas";
+import { useCalculateDetail } from "components/sn-resource-planing/hooks/useCalculateDetail";
+import TextStatus from "components/TextStatus";
+import { formatNumber } from "utils/index";
 
 interface IProps {
   open: boolean;
@@ -33,7 +36,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
 
   const { palette } = useTheme();
-  const { positionOptions, projectOptions, timeOptions } = useGetOptions();
+  const { projectOptions, timeOptions, salesOptions } = useGetOptions();
   const { bookingAll, updateBooking } = useBookingAll();
   const { schemaProject } = useGetSchemas();
 
@@ -64,7 +67,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
     resolver: yupResolver(schemaProject),
     defaultValues: {
       project_id: bookingEvent?.project_id || "",
-      position: bookingEvent?.position?.id || "",
+      sale_id: bookingEvent?.sale_id || "",
       dateRange: {
         startDate: bookingEvent?.start_date
           ? dayjs(bookingEvent?.start_date).toDate()
@@ -80,6 +83,14 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
     },
   });
 
+  const { workedTime, estimate, leftToSchedule, scheduledTime } =
+    useCalculateDetail(
+      watchProject("sale_id"),
+      watchProject("project_id"),
+      bookingEvent.user_id,
+      bookingEvent.user_id,
+    );
+  // console.log(bookingEvent, "bookingEvent");
   const onSubmitProject = (data) => {
     const cleanData: BookingData = {
       ...data,
@@ -90,7 +101,6 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
     updateBooking(cleanData, bookingId);
     onClose();
   };
-
   useEffect(() => {
     if (!open) {
       resetProject();
@@ -99,7 +109,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
 
   return (
     <Grid2 container spacing={2} sx={{ mt: 1 }}>
-      <Grid2 xs={12}>
+      {/* <Grid2 xs={12}>
         <Controller
           name="project_id"
           defaultValue={bookingEvent?.project_id}
@@ -115,20 +125,20 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
             />
           )}
         />
-      </Grid2>
+      </Grid2> */}
       <Grid2 xs={12}>
         <Controller
-          name="position"
+          name="sale_id"
           control={controlProject}
           render={({ field }) => (
             <TextFieldSelect
               value={field.value}
               onChange={(event) => field.onChange(event.target.value)}
-              helperText={errorsProject.position?.message}
-              error={!!errorsProject.position?.message}
+              helperText={errorsProject.sale_id?.message}
+              error={!!errorsProject.sale_id?.message}
               required
-              options={positionOptions as IOptionStructure[]}
-              label={resourceT("form.role")}
+              options={salesOptions as IOptionStructure[]}
+              label={resourceT("form.services")}
             />
           )}
         />
@@ -225,7 +235,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
           }}
           onClick={() => setIsShowDetail(!isShowDetail)}
         >
-          <Typography
+          <TextStatus
             sx={{
               p: "4px 10px",
               background: "#FFECEC",
@@ -235,9 +245,12 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
               lineHeight: "18px",
               width: "max-content",
             }}
+            text=""
+            color={leftToSchedule > 0 ? "success" : "error"}
           >
-            -98h {resourceT("form.leftToSchedule").toLowerCase()}
-          </Typography>
+            {formatNumber(leftToSchedule, { numberOfFixed: 0 }) || 0}h{" "}
+            {resourceT("form.leftToSchedule").toLowerCase()}
+          </TextStatus>
           <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
             <Typography
               sx={{
@@ -290,7 +303,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 display: "block",
               }}
             >
-              130h
+              {formatNumber(estimate, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
           <Box
@@ -321,7 +334,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 display: "block",
               }}
             >
-              70h
+              {formatNumber(workedTime, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
           <Box
@@ -352,7 +365,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 display: "block",
               }}
             >
-              112h
+              {formatNumber(scheduledTime, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
           <Box
@@ -378,10 +391,10 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 fontSize: 14,
                 lineHeight: "18px",
                 fontWeight: 600,
-                color: "#F64E60",
+                color: leftToSchedule > 0 ? "green" : "#F64E60",
               }}
             >
-              -52h
+              {formatNumber(leftToSchedule, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
         </Collapse>

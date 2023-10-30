@@ -14,11 +14,11 @@ export const useGetSchemas = () => {
         .required(
           commonT("form.error.required", { name: resourceT("form.project") }),
         ),
-      position: yup
+      sale_id: yup
         .string()
         .trim()
         .required(
-          commonT("form.error.required", { name: resourceT("form.role") }),
+          commonT("form.error.required", { name: resourceT("form.service") }),
         ),
       dateRange: yup
         .object()
