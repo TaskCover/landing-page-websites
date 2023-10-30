@@ -108,7 +108,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
 
   return (
     <Grid2 container spacing={2} sx={{ mt: 1 }}>
-      <Grid2 xs={12}>
+      {/* <Grid2 xs={12}>
         <Controller
           name="project_id"
           defaultValue={bookingEvent?.project_id}
@@ -124,7 +124,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
             />
           )}
         />
-      </Grid2>
+      </Grid2> */}
       <Grid2 xs={12}>
         <Controller
           name="sale_id"

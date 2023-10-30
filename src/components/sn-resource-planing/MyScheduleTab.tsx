@@ -60,6 +60,7 @@ const MyScheduleTab = () => {
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
   const { palette } = useTheme();
+  const [parentResource, setParentResource] = React.useState<string>("");
   const { updateBooking } = useBookingAll();
   const [isOpenEdit, setIsOpenEdit] = React.useState({
     isOpen: false,
@@ -301,6 +302,7 @@ const MyScheduleTab = () => {
 
             return (
               <ResourceLabel
+                setParentResource={setParentResource}
                 handleCollapseToggle={handleCollapseToggle}
                 isLastItem={isLastItem}
                 resource={resource}
@@ -321,11 +323,12 @@ const MyScheduleTab = () => {
         />
       </Box>
       <CreateBooking
+        resourceId={parentResource}
         onClose={() => setIsOpenCreate(false)}
         open={isOpenCreate}
       />
       {/* Wait for the edit funcion is confirmed */}
-      {/* <EditBooking
+      <EditBooking
         open={isOpenEdit.isOpen}
         bookingId={isOpenEdit.bookingId}
         isProject={isOpenEdit.isProject}
@@ -336,7 +339,7 @@ const MyScheduleTab = () => {
             bookingId: "",
           })
         }
-      /> */}
+      />
     </Stack>
   );
 };

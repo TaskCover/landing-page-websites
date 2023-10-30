@@ -36,7 +36,7 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
               mr: "auto",
             }}
           >
-            Create Booking
+            {resourceT("form.createBooking")}
           </Typography>
         </Box>
       }

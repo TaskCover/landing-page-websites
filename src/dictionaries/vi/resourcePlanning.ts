@@ -66,6 +66,19 @@ export const ResourcePlanning: ResourceDictionary = {
     estimate: "Ước tính",
     work: "Giờ làm",
     schedule: "Lên lịch",
+    editActions: {
+      delete: "Xóa lịch",
+      duplicate: "Nhân đôi lịch",
+      split: "Chia lịch",
+      openAdmin: "Mở ngân sách 'Quản trị'",
+      repeat: "Lặp lại lịch",
+      resolve: "Giải quyết lịch",
+    },
+    error: {
+      duplicate: "Không thể nhân đôi lịch",
+      repeat: "Không thể lặp lại lịch",
+      split: "Không thể chia lịch, khoảng ngày quá ngắn",
+    },
     timeOffType: {
       vacation: "Nghỉ phép",
       sick: "Nghỉ ốm",

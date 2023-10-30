@@ -70,6 +70,19 @@ export default interface ResourceDictionary {
       sick: string;
       other: string;
     };
+    editActions: {
+      duplicate: string;
+      split: string;
+      resolve: string;
+      delete: string;
+      repeat: string;
+      openAdmin: string;
+    };
+    error: {
+      split: string;
+      repeat: string;
+      duplicate: string;
+    };
     createSuccess: string;
     createFailed: string;
     editBooking: string;

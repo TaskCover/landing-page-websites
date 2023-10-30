@@ -230,7 +230,7 @@ const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
             text=""
             color={leftToSchedule > 0 ? "success" : "error"}
           >
-            {leftToSchedule || 0}h{" "}
+            {watchProject("sale_id") ? leftToSchedule || 0 : 0}h{" "}
             {resourceT("form.leftToSchedule").toLowerCase()}
           </TextStatus>
           <Tooltip
