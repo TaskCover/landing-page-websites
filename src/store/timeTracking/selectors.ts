@@ -91,12 +91,12 @@ export const useGetMyTimeSheet = () => {
     [dispatch],
   );
 
-  const onGetSameWorker = useCallback(
-    async (data: { id: string }) => {
-      return await dispatch(getSameWorker(data));
-    },
-    [dispatch],
-  );
+  // const onGetSameWorker = useCallback(
+  //   async (data: { id: string }) => {
+  //     return await dispatch(getSameWorker(data));
+  //   },
+  //   [dispatch],
+  // );
 
   return {
     params,
@@ -122,6 +122,6 @@ export const useGetMyTimeSheet = () => {
     onDeleteTimeSheet,
     onGetWorkLog,
     onPinTimeSheet,
-    onGetSameWorker,
+    // onGetSameWorker,
   };
 };
