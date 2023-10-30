@@ -16,10 +16,12 @@ import ROLE from "components/sn-time-tracking/Component/Constants/Enums/Roles.en
 import { Permission } from "constant/enums";
 
 const ResourcePlanning = () => {
-  const [tab, setTab] = useState("allPeople");
   const { isDarkMode } = useTheme();
   const { isSmSmaller } = useBreakpoint();
   const { user } = useAuth();
+  const [tab, setTab] = useState(
+    user?.roles?.includes(Permission.ST) ? "mySchedule" : "allPeople",
+  );
   const t = useTranslations(NS_RESOURCE_PLANNING);
 
   return (

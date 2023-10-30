@@ -23,6 +23,7 @@ import TextFieldSelect, {
 import { useGetSchemas } from "../Schemas";
 import { useCalculateDetail } from "components/sn-resource-planing/hooks/useCalculateDetail";
 import TextStatus from "components/TextStatus";
+import { formatNumber } from "utils/index";
 
 interface IProps {
   open: boolean;
@@ -247,7 +248,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
             text=""
             color={leftToSchedule > 0 ? "success" : "error"}
           >
-            {leftToSchedule || 0}h{" "}
+            {formatNumber(leftToSchedule, { numberOfFixed: 0 }) || 0}h{" "}
             {resourceT("form.leftToSchedule").toLowerCase()}
           </TextStatus>
           <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -302,7 +303,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 display: "block",
               }}
             >
-              {estimate}h
+              {formatNumber(estimate, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
           <Box
@@ -333,7 +334,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 display: "block",
               }}
             >
-              {workedTime}h
+              {formatNumber(workedTime, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
           <Box
@@ -364,7 +365,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 display: "block",
               }}
             >
-              {scheduledTime}h
+              {formatNumber(scheduledTime, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
           <Box
@@ -393,7 +394,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 color: leftToSchedule > 0 ? "green" : "#F64E60",
               }}
             >
-              {leftToSchedule}h
+              {formatNumber(leftToSchedule, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
         </Collapse>

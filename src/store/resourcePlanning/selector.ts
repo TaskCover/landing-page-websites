@@ -105,6 +105,7 @@ export const useBookingAll = () => {
     await dispatch(createBookingResource(data))
       .then(async () => {
         await getBookingResource(bookingAllFilter);
+        await getMyBooking(myBookingFilter);
         !disableSnackbar &&
           onAddSnackbar(resourceT("form.createSuccess"), "success");
       })

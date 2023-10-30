@@ -18,7 +18,6 @@ interface IProps {
 const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
   const [activeTabs, setActiveTabs] = useState("1");
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
-  console.log("crete", resourceId);
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     setActiveTabs(newValue);
   };

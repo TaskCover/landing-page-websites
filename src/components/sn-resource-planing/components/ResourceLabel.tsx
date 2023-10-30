@@ -175,7 +175,10 @@ const ResourceLabel = ({
                 textAlign: "center",
               }}
             >
-              {totalLeftToSchedule[resource._resource.id]} h
+              {formatNumber(totalLeftToSchedule[resource._resource.id], {
+                numberOfFixed: 0,
+              })}{" "}
+              h
             </Typography>
           </Grid>
           <Grid item xs={1} md={2}>
@@ -185,7 +188,7 @@ const ResourceLabel = ({
                 textAlign: "center",
               }}
             >
-              {formatNumber(totalhour, { numberOfFixed: 2, suffix: "h" })}
+              {formatNumber(totalhour, { numberOfFixed: 0, suffix: "h" })}
             </Typography>
           </Grid>
           <Grid item xs={1} md={2}>
