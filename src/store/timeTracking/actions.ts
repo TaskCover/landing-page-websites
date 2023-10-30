@@ -189,32 +189,32 @@ export const deleteTimeSheet = createAsyncThunk(
   },
 );
 
-// export const getSameWorker = createAsyncThunk(
-//   "timeTracking/sameWorker",
-//   async (data: { id: string }) => {
-//     try {
-//       const response = await client.get(
-//         `${Endpoint.SAME_WORKER}/${data.id}`,
-//         data,
-//         {
-//           baseURL: TIME_SHEET_API_URL,
-//         },
-//       );
+export const getSameWorker = createAsyncThunk(
+  "timeTracking/sameWorker",
+  async (data: { id: string }) => {
+    try {
+      const response = await client.get(
+        `${Endpoint.SAME_WORKER}/${data.id}`,
+        data,
+        {
+          baseURL: TIME_SHEET_API_URL,
+        },
+      );
 
-//       if (response?.status === HttpStatusCode.CREATED) {
-//         return response.data;
-//       }
-//       throw AN_ERROR_TRY_AGAIN;
-//     } catch (error) {
-//       throw error;
-//     }
-//   },
-// );
+      if (response?.status === HttpStatusCode.CREATED) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
 
-export const getSameWorker = async (data: { id: string }) => {
-  const res = await client.get(`${Endpoint.SAME_WORKER}/${data.id}`, data, {
-    baseURL: TIME_SHEET_API_URL,
-  });
+// export const getSameWorker = async (data: { id: string }) => {
+//   const res = await client.get(`${Endpoint.SAME_WORKER}/${data.id}`, data, {
+//     baseURL: TIME_SHEET_API_URL,
+//   });
 
-  return res.data;
-};
+//   return res.data;
+// };

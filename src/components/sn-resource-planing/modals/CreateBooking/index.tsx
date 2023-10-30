@@ -12,12 +12,13 @@ import TimeOffTab from "./TimeoffTab";
 interface IProps {
   open: boolean;
   onClose(): void;
+  resourceId: string;
 }
 
-const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
+const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
   const [activeTabs, setActiveTabs] = useState("1");
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
-
+  console.log("crete", resourceId);
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     setActiveTabs(newValue);
   };
@@ -35,7 +36,7 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
               mr: "auto",
             }}
           >
-            Create Booking
+            {resourceT("form.createBooking")}
           </Typography>
         </Box>
       }
@@ -89,7 +90,7 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose }) => {
             />
           </TabList>
           <TabPanel value="1" sx={{ p: 0 }}>
-            <ProjectTab onClose={onClose} open={open} />
+            <ProjectTab onClose={onClose} open={open} resourceId={resourceId} />
           </TabPanel>
           <TabPanel value="2" sx={{ p: 0 }}>
             <TimeOffTab onClose={onClose} open={open} />

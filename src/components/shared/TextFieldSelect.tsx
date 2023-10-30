@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import useTheme from "hooks/useTheme";
 import OutLineExpandIcon from "icons/OutLineExpandIcon";
+import Text from "./Text";
 
 export interface IOptionStructure {
   label: string;
@@ -81,9 +82,24 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
             // '&.Mui-selected, &.Mui-selected:hover, &:hover': {
             //   backgroundColor: CommonColors.mainColor,
             // },
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            width: "100%",
+
+            padding: "6px 16px",
+            overflow: "hidden",
           }}
         >
-          {option.label}
+          <Text
+            sx={{
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              width: "100%",
+            }}
+          >
+            {option.label}
+          </Text>
         </MenuItem>
       ));
     };
@@ -119,7 +135,6 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
               ? "#393939"
               : "grey.50",
             alignItems: "center",
-            width: "100%",
           }}
           ref={containerRef}
         >
@@ -130,6 +145,7 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
                 fontWeight: 400,
                 lineHeight: "18px",
                 userSelect: "none",
+                overflow: "hidden",
                 color: !!isDarkMode ? "#fff" : "grey.300",
               }}
               htmlFor={`input-field-${randomId}`}
@@ -165,6 +181,7 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
                   padding: "0 16px 0 0 ",
                   caretColor: !!isDarkMode ? "#fff" : "inherit",
                 },
+                maxWidth: "480px",
               }}
               MenuProps={{
                 anchorEl: containerRef.current,
@@ -180,6 +197,8 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
                 MenuListProps: {
                   sx: {
                     width: "100%",
+
+                    "& > li": {},
                   },
                 },
                 sx: {
