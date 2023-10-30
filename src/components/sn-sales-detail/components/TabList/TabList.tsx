@@ -7,7 +7,7 @@ import {
   NS_SALES,
 } from "constant/index";
 import { useTranslations } from "next-intl";
-import React, { memo, useMemo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import { getPath } from "utils/index";
 import { Stack, Tab, Tabs } from "@mui/material";
 import { Date, Dropdown } from "components/Filters";
@@ -94,13 +94,10 @@ const TabList = ({ value, onChange }: TabListProps) => {
   const onAssign = (name, assignees) => {
     setValue(name, assignees);
     const newAssignees = assignees.filter(
-      (item) =>
-        !saleDetail?.members?.find((member) => member.id === item.id) &&
-        item.id !== saleDetail?.owner.id,
+      (item) => item.id !== saleDetail?.owner.id,
     );
     onUpdateDeal({ id: getValues("id"), [name]: [...newAssignees] });
   };
-
   return (
     <Stack
       direction={{

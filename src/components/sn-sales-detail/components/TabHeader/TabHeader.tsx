@@ -25,6 +25,7 @@ const TabHeader = () => {
   const { saleDetail } = useSaleDetail();
   const { onUpdateDeal } = useSales();
   const { stageOptions } = useGetStageOptions();
+  const { saleRevenue } = useSaleDetail();
   const { push } = useRouter();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
@@ -70,9 +71,10 @@ const TabHeader = () => {
         direction="row"
         spacing={1}
         sx={{
-          width: "100%",
+          width: "50%",
           flex: 1,
         }}
+        alignItems={"center"}
       >
         <Link href={getPath(SALES_LIST_PATH)}>
           <ArrowLeftIcon
@@ -86,14 +88,11 @@ const TabHeader = () => {
         <Text
           variant="h5"
           sx={{
-            width: "100%",
+            width: "100%  ",
             textAlign: "left",
-            WebkitBoxOrient: "vertical",
-            WebkitLineClamp: 2,
-            lineHeight: 1.28,
+            WebkitLineClamp: 1,
             overflow: "hidden",
-            wordBreak: "break-word",
-            display: "-webkit-box",
+            whiteSpace: "nowrap",
             textOverflow: "ellipsis",
           }}
         >
@@ -169,7 +168,7 @@ const TabHeader = () => {
           <CoinIcon />
           <Text variant="body2">
             Revenue:{" "}
-            {formatNumber(saleDetail?.revenue || 0, {
+            {formatNumber(saleRevenue || 0, {
               numberOfFixed: 2,
               prefix:
                 CURRENCY_SYMBOL[saleDetail?.currency || CURRENCY_CODE.USD],

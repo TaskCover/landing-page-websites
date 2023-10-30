@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useEmployeeOptions } from "store/company/selectors";
+import { useSaleDetail } from "store/sales/selectors";
+import { useFormContext, useWatch } from "react-hook-form";
 
 const useGetEmployeeOptions = () => {
   const {
@@ -11,7 +13,6 @@ const useGetEmployeeOptions = () => {
     pageSize,
     filters,
   } = useEmployeeOptions();
-
   const onEndReachedEmployeeOptions = () => {
     if (isFetching || (totalPages && pageIndex >= totalPages)) return;
     onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
@@ -33,9 +34,26 @@ const useGetEmployeeOptions = () => {
     onSearchEmployee,
   };
 };
+export const useGetMemberOptions = () => {
+  const { options } = useEmployeeOptions();
+  const { control } = useFormContext() || { control: null };
+
+  const members = useWatch({
+    control,
+    name: "members",
+  });
+
+  const filteredOptions = useMemo(() => {
+    return options.filter((option) => {
+      return members?.find((member) => member.id === option.value);
+    });
+  }, [options, members]);
+
+  return { memberOptions: filteredOptions };
+};
 
 export const useFetchEmployeeOptions = () => {
-  const { onGetOptions, pageIndex, pageSize, filters } = useEmployeeOptions();
+  const { onGetOptions } = useEmployeeOptions();
 
   useEffect(() => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });

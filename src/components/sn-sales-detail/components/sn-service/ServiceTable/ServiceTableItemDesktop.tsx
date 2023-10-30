@@ -1,12 +1,21 @@
 import { Box, Stack, TableRow } from "@mui/material";
 import { BodyCell, StatusCell } from "components/Table";
 import { IconButton, Select, Text } from "components/shared";
-import React, { useCallback, useContext, useEffect, useMemo } from "react";
+import React, {
+  HtmlHTMLAttributes,
+  LegacyRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { EditContext } from "../context/EditContext";
 import { Draggable } from "react-beautiful-dnd";
 import MoveDotIcon from "icons/MoveDotIcon";
 import ServiceItemAction from "./ServiceItemAction";
 import { Service } from "store/sales/reducer";
+import { get } from "lodash";
 import { formatNumber } from "utils/index";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
@@ -31,6 +40,8 @@ import CustomDesktopInput from "../../CustomInput/CustomDesktopInput";
 import { useTranslations } from "next-intl";
 import { useGetServiceUnitOptions } from "components/sn-sales-detail/hooks/useGetServiceUnitOptions";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
+import { scrollViewContext } from "components/sn-sales-detail/hooks/useScrollErrorField";
+// import useScrollErrorField from "components/sn-sales-detail/hooks/useScrollErrorField";
 
 interface IProps {
   index: number;
@@ -48,7 +59,13 @@ const ServiceTableItem = ({
   onAction,
 }: IProps) => {
   const { isEdit } = useContext(EditContext);
-  const { register, control, getValues, setValue } = useFormContext();
+  const {
+    register,
+    control,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
   const { sectionColumns } = useSalesService();
   const [isLocked, setIsLocked] = React.useState(false);
   const saleT = useTranslations(NS_SALES);
@@ -56,6 +73,8 @@ const ServiceTableItem = ({
   const { saleDetail } = useSaleDetail();
   const { positionOptions } = useGetOptions();
   const currency = saleDetail?.currency;
+  const scrollContext = useContext(scrollViewContext);
+  // const { scrollErrorField } = useScrollErrorField();
   const { serviceUnitOptions } = useGetServiceUnitOptions();
   const [billType, unit, qty, price, discount] = useWatch({
     control,
@@ -105,6 +124,17 @@ const ServiceTableItem = ({
       service.unit ?? UNIT_OPTIONS[0].value,
     );
   }, [index, sectionKey]);
+
+  useEffect(() => {
+    if (billType === SALE_BILL_TYPE.ACTUAL) {
+      setValue(`${sectionKey}.${index}.estimate`, 0);
+    }
+    if (billType === SALE_BILL_TYPE.NON_BILLABLE) {
+      setValue(`${sectionKey}.${index}.price`, 0);
+      setValue(`${sectionKey}.${index}.qty`, 0);
+      setValue(`${sectionKey}.${index}.discount`, 0);
+    }
+  }, [billType]);
 
   return (
     <Draggable

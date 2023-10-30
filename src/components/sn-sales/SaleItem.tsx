@@ -14,13 +14,14 @@ import {
   formatNumber,
   formatEstimateTime,
   getPath,
+  formatCurrency,
 } from "utils/index";
 import { DATE_FORMAT_SLASH, NS_SALES } from "constant/index";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { Sales } from "store/sales/reducer";
 import useGetEmployeeOptions from "./hooks/useGetEmployeeOptions";
-import { useSales } from "store/sales/selectors";
+import { useSaleDetail, useSales } from "store/sales/selectors";
 import { SALE_DETAIL_PATH } from "constant/paths";
 import { Option, User } from "constant/types";
 
@@ -32,8 +33,8 @@ const SaleItem = ({ item }: IProps) => {
     useGetEmployeeOptions();
   const { onUpdateDeal } = useSales();
   const [owner, setOwner] = useState<string>(item.owner?.id);
-
-  const time = formatEstimateTime(item.estimate || 0);
+  const { onSetRevenue } = useSaleDetail();
+  const time = item.estimate || 0;
 
   const onSubmit = (data) => {
     onUpdateDeal({ owner: data.owner, id: item.id });
@@ -73,6 +74,7 @@ const SaleItem = ({ item }: IProps) => {
       <BodyCell
         align="left"
         href={getPath(SALE_DETAIL_PATH, undefined, { id: item.id })}
+        onClick={() => onSetRevenue(item.revenue)}
       >
         <Stack direction="row" alignItems="center" spacing={1}>
           <Avatar size={32} src={mappedowner.avatar || ""}></Avatar>
@@ -110,6 +112,12 @@ const SaleItem = ({ item }: IProps) => {
           rootSx={{
             width: "100%",
             px: "0!important",
+            [`& .MuiSelect-select`]: {
+              mr: "17px!important",
+            },
+            [`& .MuiSelect-icon`]: {
+              right: "-5px!important",
+            },
           }}
           sx={{
             width: "100%",
@@ -129,13 +137,13 @@ const SaleItem = ({ item }: IProps) => {
         />
       </BodyCell>
       <BodyCell align="right">
-        {formatNumber(item.revenue, {
+        {formatCurrency(item.revenue, {
           prefix: CURRENCY_SYMBOL[item.currency],
           numberOfFixed: 2,
         })}
       </BodyCell>
       <BodyCell align="right">
-        {formatNumber(item.revenuePJ, {
+        {formatCurrency(item.revenuePJ, {
           prefix: CURRENCY_SYMBOL[item.currency],
           numberOfFixed: 2,
         })}

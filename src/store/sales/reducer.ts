@@ -106,6 +106,7 @@ export interface SaleState {
   salesFilters: Omit<GetSalesListQueries, "pageIndex" | "pageSize">;
 
   saleDetail: Sales | null;
+  saleRevenue: number;
   saleDetailStatus: DataStatus;
   saleDetailError?: string;
 
@@ -139,6 +140,7 @@ const initState: SaleState = {
   },
 
   saleDetail: null,
+  saleRevenue: 0,
   saleDetailStatus: DataStatus.IDLE,
   saleDetailError: undefined,
 
@@ -171,6 +173,9 @@ const salesSlice = createSlice({
         });
       }
       state.sectionColumns[sectionIndex].columns = [...columns];
+    },
+    setRevenue: (state, action) => {
+      state.saleRevenue = action.payload;
     },
     reset: () => initState,
   },
@@ -216,6 +221,9 @@ const salesSlice = createSlice({
       }
     });
     builder.addCase(updateDeal.fulfilled, (state, action) => {
+      if (state.saleDetail) {
+        state.saleDetail.members = action.payload.members;
+      }
       const index = state.sales.findIndex(
         (item) => item.id === action.payload.id,
       );
@@ -325,4 +333,4 @@ const salesSlice = createSlice({
 });
 
 export const salesReducer = salesSlice.reducer;
-export const { setColumn, reset } = salesSlice.actions;
+export const { setColumn, reset, setRevenue } = salesSlice.actions;
