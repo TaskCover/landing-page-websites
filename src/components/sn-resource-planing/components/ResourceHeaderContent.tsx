@@ -39,8 +39,7 @@ const ResourceHeaderContent = ({ totalhour }: IProps) => {
           {resourceT("schedule.resourceHeader.schedule")}
         </Typography>
         <Typography sx={{ ...textHeadStyle, fontWeight: 600 }}>
-          {formatNumberHourToTime(totalhour)}
-          {/* {formatNumber(totalhour, { numberOfFixed: 2 })}h */}
+          {totalhour}h{/* {formatNumber(totalhour, { numberOfFixed: 2 })}h */}
         </Typography>
       </Grid>
       <Grid item xs={1} md={2}>
