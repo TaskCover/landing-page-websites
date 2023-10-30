@@ -21,6 +21,7 @@ export interface State {
   timeTracking: TimeTrackingState;
   tags: TagState;
   sales: SaleState;
+}
 
 export const store = configureStore({
   reducer: {
