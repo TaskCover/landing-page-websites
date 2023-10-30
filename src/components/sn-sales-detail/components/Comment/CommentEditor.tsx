@@ -4,13 +4,19 @@ import {
   ForwardedRef,
   forwardRef,
   memo,
+  useCallback,
   useMemo,
   useRef,
   useState,
 } from "react";
-import Editor from "components/Editor";
 import { useTranslations } from "next-intl";
-import { NS_COMMON, NS_PROJECT, NS_SALES } from "constant/index";
+import {
+  ACCEPT_MEDIA,
+  FILE_ACCEPT,
+  NS_COMMON,
+  NS_PROJECT,
+  NS_SALES,
+} from "constant/index";
 import { Stack } from "@mui/material";
 import { Button } from "components/shared";
 import { useSnackbar } from "store/app/selectors";
@@ -20,7 +26,6 @@ import {
   useSalesComment,
   useSalesTodo,
 } from "store/sales/selectors";
-import SalesDetail from "components/sn-sales-detail/SaleDetail";
 import { CommentData, DealData } from "store/sales/actions";
 import { Endpoint, client } from "api";
 import { getMessageErrorByAPI } from "utils/index";
@@ -29,6 +34,7 @@ import moment from "moment";
 import { SaleState, Sales } from "store/sales/reducer";
 import useToggle from "hooks/useToggle";
 import Loading from "components/Loading";
+import Editor from "./Editor";
 
 const CommentEditor = forwardRef(
   (_, ref: ForwardedRef<HTMLDivElement | null>) => {
@@ -47,6 +53,7 @@ const CommentEditor = forwardRef(
       setContent(isEmpty ? "" : value);
       editorRef.current = editor;
     };
+
     const onChangeFiles = (files: File[]) => {
       setFiles(files);
     };
@@ -112,6 +119,7 @@ const CommentEditor = forwardRef(
           onChange={onChange}
           onChangeFiles={onChangeFiles}
           value={content}
+          accepts={SUPPORTS}
           files={files}
         >
           <Stack
@@ -137,6 +145,11 @@ const CommentEditor = forwardRef(
 );
 
 CommentEditor.displayName = "CommentEditor";
+const SUPPORTS = [...ACCEPT_MEDIA, ...FILE_ACCEPT];
+const getExtension = (name: string) => {
+  const arr = name.split(".");
+  return arr[arr.length - 1];
+};
 
 export default memo(CommentEditor);
 

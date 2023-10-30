@@ -21,6 +21,7 @@ export interface CustomInputProps {
   disabled?: boolean;
   inputProps?: InputProps;
   options: Option[];
+  showSubText?: boolean;
   register: UseFormRegisterReturn;
 }
 
@@ -33,6 +34,7 @@ const CustomSelect = (props: CustomInputProps, ref) => {
     placeholder,
     helperText,
     options,
+    showSubText,
     defaultValue,
   } = props;
   return (
@@ -57,11 +59,15 @@ const CustomSelect = (props: CustomInputProps, ref) => {
               <Select
                 options={options}
                 placeholder={placeholder}
+                showSubText={showSubText}
                 sx={{
                   width: "100%",
                   [`& .${inputBaseClasses.root}`]: {
                     backgroundColor: "background.paper",
-                    pr: helperText ? 3 : 0,
+                    pr: helperText ? 4 : 0,
+                  },
+                  [`& p:nth-child(2)`]: {
+                    display: "none",
                   },
                 }}
                 {...inputProps}

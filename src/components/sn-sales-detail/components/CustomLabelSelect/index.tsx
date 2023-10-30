@@ -165,11 +165,16 @@ const CustomLabelSelect = (props: SelectProps) => {
               value === ID_PLACEHOLDER
                 ? "none"
                 : undefined,
+            // [`& td`]: {
+            //   width: "100%!important",
+            //   minWidth: "auto!important",
+            //   maxWidth: "auto!important",
+            // },
           }}
           key={option.value}
           value={option.value}
         >
-          <Stack direction="row" alignItems="start" spacing={1}>
+          <Stack direction="row" alignItems="start" spacing={1} width="100%">
             {option.value !== ID_PLACEHOLDER && hasAvatar && (
               <Avatar src={option?.avatar ?? UserPlaceholderImage} size={24} />
             )}
@@ -193,17 +198,21 @@ const CustomLabelSelect = (props: SelectProps) => {
                   alignItems: "center",
                   justifyContent: "start",
                   padding: 0,
+                  width: "100%!important",
+                  minWidth: "auto!important",
+                  maxWidth: "auto!important",
                 },
-
                 [`&.MuiSvgIcon-root`]: {
                   display: "none",
                 },
+                width: "100%",
               }}
               textProps={{
                 sx: {
                   fontSize: 12,
                   lineHeight: "20px",
                   px: 2,
+                  width: "100%",
                 },
               }}
               text={option.label}
@@ -231,13 +240,20 @@ const defaultSx = {
     "&:hover > svg": {
       color: "primary.main",
     },
-
+    width: "100%",
     border: "none",
     padding: 0,
 
     backgroundColor: "none",
     [`&.${inputBaseClasses.focused} > svg`]: {
       color: "primary.main",
+    },
+    [`& .MuiStack-root`]: {
+      width: "100%",
+    },
+
+    [`& svg`]: {
+      display: "none",
     },
     // "& > svg": {
     //   fontSize: 24,

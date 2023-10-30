@@ -8,6 +8,7 @@ import { useSnackbar } from "store/app/selectors";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_SALES } from "constant/index";
 import { SectionData } from "store/sales/actions";
+// import useScrollErrorField from "./useScrollErrorField";
 
 const useServiceHeader = () => {
   const { setEdit } = useContext(EditContext);

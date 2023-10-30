@@ -33,7 +33,6 @@ const useItemAction = (
   onRemoveSection: () => void,
   fields: Record<"id", string>[],
 ) => {
-  const { control, setValue, getValues } = useFormContext();
   const { onSetColumns, sectionColumns } = useSalesService();
   const onDuplicate = (serviceId) => {
     const service = fields.find((item) => item.id === serviceId);

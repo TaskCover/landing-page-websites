@@ -317,6 +317,46 @@ export const formatNumber = (
   );
 };
 
+export const formatCurrency = (
+  number?: number | null | string,
+  options: OptionFormatNumber = {},
+) => {
+  if (typeof number === "string") return number;
+  const {
+    numberOfFixed = 4,
+    emptyText = "--",
+    suffix,
+    prefix = "",
+    space = true,
+    ...localeOption
+  } = options;
+  const suffixParsed = suffix ? `${space ? " " : ""}${suffix}` : "";
+  if (!number && number !== 0) return emptyText + suffixParsed;
+  const num = Number(number || 0);
+  const maximumFractionDigits = Number.isInteger(num) ? 0 : numberOfFixed;
+  if (num > 10000000000) {
+    return (
+      prefix +
+      Math.round(num / 1000000)
+        .toLocaleString("en-US", {
+          maximumFractionDigits: 0,
+          ...localeOption,
+        })
+        .toString() +
+      "..." +
+      suffixParsed
+    );
+  }
+  return (
+    prefix +
+    num.toLocaleString("en-US", {
+      maximumFractionDigits,
+      ...localeOption,
+    }) +
+    suffixParsed
+  );
+};
+
 export const getPath = (
   basePath: string,
   queries?: Params,

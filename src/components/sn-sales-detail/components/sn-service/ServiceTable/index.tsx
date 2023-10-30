@@ -11,7 +11,12 @@ import React, {
 import ServiceTableItem from "./ServiceTableItemDesktop";
 import { Stack, TableBody } from "@mui/material";
 import { Button, IconButton, Text } from "components/shared";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DroppableProvided,
+} from "react-beautiful-dnd";
 import { EditContext } from "../context/EditContext";
 import PlusIcon from "icons/PlusIcon";
 import useBreakpoint from "hooks/useBreakpoint";
@@ -35,12 +40,18 @@ import {
 } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 import { useSalesService } from "store/sales/selectors";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
-import { CURRENCY_CODE, SALE_BILL_TYPE } from "constant/enums";
+import {
+  CURRENCY_CODE,
+  SALE_BILL_TYPE,
+  SERVICE_UNIT_OPTIONS,
+} from "constant/enums";
 import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
+import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 
 interface IProps {
   section: ServiceSection;
   index: number;
+  provided?: DroppableProvided;
   onAddSection: () => void;
   onRemoveSection: () => void;
 }
@@ -48,6 +59,7 @@ interface IProps {
 const ServiceTable = ({
   section,
   index,
+  provided,
   onAddSection,
   onRemoveSection,
 }: IProps) => {
@@ -56,6 +68,7 @@ const ServiceTable = ({
   const { isMdSmaller } = useBreakpoint();
   const { columns: defaultColumns } = useGetHeaderColumn(index);
   const { control, getValues } = useFormContext();
+  const { positionOptions } = useGetOptions();
   const { fields, append, remove, move } = useFieldArray({
     control,
     name: `sectionsList.${index}.service`,
@@ -69,21 +82,16 @@ const ServiceTable = ({
     fields,
   );
 
-  const onDragService = (result) => {
-    const { destination, source, draggableId } = result;
-    if (!destination) return;
-    move(source.index, destination.index);
-  };
-
   const onAddRow = () => {
     append({
       id: uuid(),
       name: "",
       desc: "",
+      serviceType: positionOptions[0]?.value,
       price: 0,
       billType: SALE_BILL_TYPE.FIX,
       qty: 0,
-      unit: UNIT_OPTIONS[0].value,
+      unit: SERVICE_UNIT_OPTIONS.DAY,
       tolBudget: 0,
     });
   };
@@ -131,17 +139,17 @@ const ServiceTable = ({
       }}
       width={"100%"}
     >
-      <Draggable draggableId={section.id} index={index}>
-        {(provided) => (
-          <div ref={provided.innerRef} {...provided.draggableProps}>
-            <Stack direction="column" spacing={2}>
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Stack direction="row" spacing={1} alignItems="center">
-                  {/* {isEdit && (
+      {/* <Draggable draggableId={section.id} index={index}>
+        {(provided) => ( */}
+      <div>
+        <Stack direction="column" spacing={2}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Stack direction="row" spacing={1} alignItems="center">
+              {/* {isEdit && (
                     <IconButton noPadding {...provided.dragHandleProps}>
                       <MoveDotIcon
                         fontSize="small"
@@ -149,8 +157,135 @@ const ServiceTable = ({
                       />
                     </IconButton>
                   )} */}
-                  <Text variant="h4">Section {index + 1}</Text>
-                  {isEdit && !isMdSmaller && (
+              <Text variant="h4">Section {index + 1}</Text>
+              {isEdit && !isMdSmaller && (
+                <SectionItemAction
+                  sectionIndex={index}
+                  sectionId={section.id}
+                  onChangeAction={onAction}
+                />
+              )}
+            </Stack>
+            <Button
+              onClick={onAddSection}
+              variant="text"
+              TouchRippleProps={{
+                style: {
+                  display: "none",
+                },
+              }}
+              sx={{
+                display: index !== 0 || !isEdit ? "none" : "block",
+                width: "fit-content",
+                height: "fit-content",
+                "&.MuiButton-text:hover": {
+                  color: "secondary.main",
+                  textAlign: "center",
+                },
+              }}
+              color="secondary"
+              startIcon={
+                <PlusIcon
+                  sx={{
+                    width: 18,
+                    height: 18,
+                  }}
+                />
+              }
+            >
+              {salesT("detail.service.addSection")}
+            </Button>
+          </Stack>
+          {/* Table layout desktop */}
+          {(!isMdSmaller || !isEdit) && (
+            <Stack
+              sx={{
+                overflow: {
+                  xs: "auto",
+                },
+                pr: 1,
+              }}
+            >
+              <TableLayout
+                headerList={headerList}
+                maxHeight={920}
+                headerProps={{
+                  sx: {
+                    px: 1,
+                    pl: isEdit ? 4 : 1,
+                  },
+                }}
+                sx={{
+                  minWidth: {
+                    md: isEdit ? 1625 : 1320,
+                    xs: isEdit ? "100%" : 1320,
+                    overflow: "visible",
+                  },
+                  [`&.MuiTableCell-root :first-child`]: {
+                    pl: 4,
+                  },
+                }}
+                position="relative"
+              >
+                {/* <DragDropContext onDragEnd={onDragService}>
+                      <Droppable droppableId="droppableService"> */}
+                {/* {(_) => ( */}
+                {fields?.map((item, serviceIndex) => (
+                  // <div
+                  //   key={item.id}
+                  //   ref={provided.innerRef}
+                  //   {...provided.draggableProps}
+                  // >
+                  <ServiceTableItem
+                    onAction={onAction}
+                    service={item as Service}
+                    index={serviceIndex}
+                    key={item.id}
+                    sectionIndex={index}
+                    sectionKey={`sectionsList.${index}.service`}
+                  />
+                  // </div>
+                ))}
+                {/* )} */}
+                {/* </Droppable> */}
+                {/* </DragDropContext> */}
+              </TableLayout>
+            </Stack>
+          )}
+
+          {isEdit && isMdSmaller && (
+            // <DragDropContext onDragEnd={onDragService}>
+            // <Droppable droppableId="droppableService">
+            // {(provided) => (
+            <div>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={2}
+                sx={{
+                  py: 2,
+                  px: 4,
+                  borderRadius: 2,
+                  backgroundColor: "blue.light",
+                }}
+                justifyContent="space-between"
+                width="100%"
+              >
+                <Stack direction="row" alignItems="center" spacing={2}>
+                  <Text variant="body2" fontSize={14} color={"grey.300"}>
+                    {salesT("detail.service.table.totalBuget")}:
+                  </Text>
+                  <Text
+                    variant="body2"
+                    color="primary.main"
+                    fontSize={16}
+                    fontWeight={600}
+                  >
+                    {totalBuget}
+                  </Text>
+                </Stack>
+                <Stack justifyContent="flex-end">
+                  {isEdit && (
                     <SectionItemAction
                       sectionIndex={index}
                       sectionId={section.id}
@@ -158,155 +293,27 @@ const ServiceTable = ({
                     />
                   )}
                 </Stack>
-                <Button
-                  onClick={onAddSection}
-                  variant="text"
-                  TouchRippleProps={{
-                    style: {
-                      display: "none",
-                    },
-                  }}
-                  sx={{
-                    display: index !== 0 || !isEdit ? "none" : "block",
-                    width: "fit-content",
-                    height: "fit-content",
-                    "&.MuiButton-text:hover": {
-                      color: "secondary.main",
-                      textAlign: "center",
-                    },
-                  }}
-                  color="secondary"
-                  startIcon={
-                    <PlusIcon
-                      sx={{
-                        width: 18,
-                        height: 18,
-                      }}
-                    />
-                  }
-                >
-                  {salesT("detail.service.addSection")}
-                </Button>
               </Stack>
-              {/* Table layout desktop */}
-              {(!isMdSmaller || !isEdit) && (
-                <Stack
-                  sx={{
-                    overflow: {
-                      xs: "auto",
-                    },
-                    pr: 1,
-                  }}
-                >
-                  <TableLayout
-                    headerList={headerList}
-                    maxHeight={920}
-                    headerProps={{
-                      sx: { px: 1 },
-                    }}
-                    sx={{
-                      minWidth: {
-                        md: 1320,
-                        xs: isEdit ? "100%" : 1320,
-                        overflow: "visible",
-                      },
-                    }}
-                    position="relative"
-                  >
-                    <DragDropContext onDragEnd={onDragService}>
-                      <Droppable droppableId="droppableService">
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                          >
-                            {fields?.map((item, serviceIndex) => (
-                              <ServiceTableItem
-                                onAction={onAction}
-                                service={item as Service}
-                                index={serviceIndex}
-                                key={item.id}
-                                sectionIndex={index}
-                                sectionKey={`sectionsList.${index}.service`}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </Droppable>
-                    </DragDropContext>
-                  </TableLayout>
-                </Stack>
-              )}
-
-              {isEdit && isMdSmaller && (
-                <DragDropContext onDragEnd={onDragService}>
-                  <Droppable droppableId="droppableService">
-                    {(provided) => (
-                      <div ref={provided.innerRef} {...provided.droppableProps}>
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          spacing={2}
-                          sx={{
-                            py: 2,
-                            px: 4,
-                            borderRadius: 2,
-                            backgroundColor: "blue.light",
-                          }}
-                          justifyContent="space-between"
-                          width="100%"
-                        >
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            spacing={2}
-                          >
-                            <Text
-                              variant="body2"
-                              fontSize={14}
-                              color={"grey.300"}
-                            >
-                              {salesT("detail.service.table.totalBuget")}:
-                            </Text>
-                            <Text
-                              variant="body2"
-                              color="primary.main"
-                              fontSize={16}
-                              fontWeight={600}
-                            >
-                              {totalBuget}
-                            </Text>
-                          </Stack>
-                          <Stack justifyContent="flex-end">
-                            {isEdit && (
-                              <SectionItemAction
-                                sectionIndex={index}
-                                sectionId={section.id}
-                                onChangeAction={onAction}
-                              />
-                            )}
-                          </Stack>
-                        </Stack>
-                        {fields?.map((item, serviceIndex) => (
-                          <ServiceTableItemMobile
-                            onAction={onAction}
-                            service={item as Service}
-                            index={serviceIndex}
-                            key={item.id}
-                            sectionIndex={index}
-                            sectionId={section.id}
-                            sectionKey={`sectionsList.${index}.service`}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-              )}
-            </Stack>
-          </div>
-        )}
-      </Draggable>
+              {fields?.map((item, serviceIndex) => (
+                <ServiceTableItemMobile
+                  onAction={onAction}
+                  service={item as Service}
+                  index={serviceIndex}
+                  key={item.id}
+                  sectionIndex={index}
+                  sectionId={section.id}
+                  sectionKey={`sectionsList.${index}.service`}
+                />
+              ))}
+            </div>
+            // )}
+            // </Droppable>
+            // </DragDropContext>
+          )}
+        </Stack>
+      </div>
+      {/* )} */}
+      {/* </Draggable> */}
       <Stack direction="row" spacing={2}>
         <Button
           onClick={onAddRow}
