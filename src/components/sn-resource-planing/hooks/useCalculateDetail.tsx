@@ -22,9 +22,9 @@ export const useCalculateDetail = (
   const {
     onGetMyTimeSheet,
     params,
-    sameWorker,
+    // sameWorker,
     items: timesheets,
-    onGetSameWorker,
+    // onGetSameWorker,
   } = useGetMyTimeSheet();
 
   const estimate = useMemo(() => {
@@ -52,9 +52,9 @@ export const useCalculateDetail = (
   // console.log(sameWorker, "sameWorker");
   useEffect(() => {
     onGetMyTimeSheet(params);
-    onGetSameWorker({
-      id: userId || "",
-    });
+    // onGetSameWorker({
+    //   id: userId || "",
+    // });
   }, []);
 
   return { estimate, workedTime, scheduledTime, leftToSchedule };
