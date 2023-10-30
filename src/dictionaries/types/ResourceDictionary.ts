@@ -52,7 +52,7 @@ export default interface ResourceDictionary {
 
     project: string;
     timeoff: string;
-
+    services: string;
     detail: string;
     role: string;
     dateRange: string;
@@ -69,6 +69,19 @@ export default interface ResourceDictionary {
       vacation: string;
       sick: string;
       other: string;
+    };
+    editActions: {
+      duplicate: string;
+      split: string;
+      resolve: string;
+      delete: string;
+      repeat: string;
+      openAdmin: string;
+    };
+    error: {
+      split: string;
+      repeat: string;
+      duplicate: string;
     };
     createSuccess: string;
     createFailed: string;

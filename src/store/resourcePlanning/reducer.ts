@@ -23,6 +23,7 @@ export interface IBookingItem {
   id: string;
   booking_type: string;
   project_id?: string;
+  sale_id?: string;
   position?: Partial<Position>;
   time_off_type?: TIME_OFF_TYPE;
   start_date: string;

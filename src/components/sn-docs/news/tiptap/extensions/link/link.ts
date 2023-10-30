@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Mark, markPasteRule, mergeAttributes } from "@tiptap/core";
 import { find, registerCustomProtocol } from "linkifyjs";
 
-import { autolink } from "./helpers/autolink";
+import { AutolinkOptions, autolink } from "./helpers/autolink";
 import { clickHandler } from "./helpers/clickHandler";
 import { pasteHandler } from "./helpers/pasteHandler";
 
@@ -179,15 +180,16 @@ export const Link = Mark.create<LinkOptions>({
   },
 
   addProseMirrorPlugins() {
-    const plugins = [];
+    const plugins :any = [];
+    const options : AutolinkOptions = {
+      type: this.type,
+      validate:this.options.validate
+    }
 
     if (this.options.autolink) {
       plugins.push(
-        autolink({
-          type: this.type,
-          validate: this.options.validate,
-        })
-      );
+        autolink(options)
+        );
     }
 
     if (this.options.openOnClick) {

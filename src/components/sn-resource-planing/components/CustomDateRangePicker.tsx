@@ -181,8 +181,10 @@ const CustomDateRangePicker: React.FC<TextFieldInputProps> = ({
         <DateRangePicker
           open={isOpenCalendar}
           toggle={() => toggle()}
+          minDate={new Date()}
           onChange={(range) => {
             setDateRange(range);
+            toggle();
             onChange && onChange(range);
           }}
           initialDateRange={dateRange}

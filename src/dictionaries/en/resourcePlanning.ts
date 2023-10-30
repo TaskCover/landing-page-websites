@@ -51,6 +51,7 @@ export const ResourcePlanningLang: ResourceDictionary = {
   },
   form: {
     title: "Resource Planning",
+    services: "Services",
     selectTimeOffCategory: "Select time off category",
     project: "Project",
     timeoff: "Time off",
@@ -68,6 +69,19 @@ export const ResourcePlanningLang: ResourceDictionary = {
       vacation: "Vacation",
       sick: "Sick leave",
       other: "Not available",
+    },
+    editActions: {
+      duplicate: "Duplicate booking",
+      delete: "Delete overbooking",
+      repeat: "Repeat booking",
+      split: "Split booking",
+      resolve: "Resolve overbooking",
+      openAdmin: "Open budget 'Administration'",
+    },
+    error: {
+      split: 'Cannot split booking, day range is too short',
+      duplicate: 'Cannot duplicate booking',
+      repeat: 'Cannot repeat booking',  
     },
     timeOffCategory: "Time off category",
     createSuccess: "Create booking successfully",

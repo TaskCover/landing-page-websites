@@ -22,7 +22,9 @@ import React, { memo, useMemo, useRef, useState } from "react";
 import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
 import Avatar from "components/Avatar";
 import { IconButton, Text } from "components/shared";
-import useGetEmployeeOptions from "components/sn-sales/hooks/useGetEmployeeOptions";
+import useGetEmployeeOptions, {
+  useGetMemberOptions,
+} from "components/sn-sales/hooks/useGetEmployeeOptions";
 import AvatarGroup, { AvatarProps } from "components/shared/AvatarGroup";
 import PlusIcon from "icons/PlusIcon";
 import { useFormContext } from "react-hook-form";
@@ -64,8 +66,6 @@ const DisplayItem = ({
   user: Option;
   onRemoveAssign: (id: string) => void;
 }) => {
-  const { employeeOptions } = useGetEmployeeOptions();
-
   const { isDarkMode } = useTheme();
 
   const { label } = (user ?? {}) as Option;
@@ -99,12 +99,9 @@ const AssignTodo = (props: AssignProps) => {
   const { onAssign: onChange, value, name } = props;
   const salesT = useTranslations(NS_SALES);
 
-  const {
-    employeeIsFetching,
-    employeeOptions,
-    onEndReachedEmployeeOptions,
-    onSearchEmployee,
-  } = useGetEmployeeOptions();
+  const { employeeIsFetching, onEndReachedEmployeeOptions, onSearchEmployee } =
+    useGetEmployeeOptions();
+  const { memberOptions } = useGetMemberOptions();
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -133,10 +130,10 @@ const AssignTodo = (props: AssignProps) => {
 
   const mappedOwner = useMemo(
     () =>
-      employeeOptions.find((option) => {
+      memberOptions.find((option) => {
         return option.value === value;
       }),
-    [employeeOptions, value],
+    [memberOptions, value],
   );
 
   const onRemoveAssign = (id) => {
@@ -175,7 +172,7 @@ const AssignTodo = (props: AssignProps) => {
             marginBottom: "6px",
           }}
         />
-        {employeeOptions.map((option) => {
+        {memberOptions.map((option) => {
           return (
             <MenuItem
               component={ButtonBase}

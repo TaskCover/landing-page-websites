@@ -12,7 +12,14 @@ type TextStatusProps = {
 } & Omit<TextProps, "color">;
 
 const TextStatus = (props: TextStatusProps) => {
-  const { text, color, width, namespace = NS_COMMON, ...rest } = props;
+  const {
+    text,
+    color,
+    width,
+    namespace = NS_COMMON,
+    children,
+    ...rest
+  } = props;
 
   const t = useTranslations(namespace);
 
@@ -30,7 +37,7 @@ const TextStatus = (props: TextStatusProps) => {
       minWidth={width}
       {...rest}
     >
-      {t(text)}
+      {children || t(text)}
     </Text>
   );
 };

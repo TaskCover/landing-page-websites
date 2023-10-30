@@ -19,7 +19,11 @@ import RedArrowIcon from "icons/RedArrowIcon";
 import GrayArrowIcon from "icons/GrayArrowIcon";
 import PlusIcon from "icons/PlusIcon";
 import TimeHeader from "./components/TimeHeader";
-import { useMyBooking, useResourceDate } from "store/resourcePlanning/selector";
+import {
+  useBookingAll,
+  useMyBooking,
+  useResourceDate,
+} from "store/resourcePlanning/selector";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
 import CreateBooking from "./modals/CreateBooking";
@@ -56,6 +60,8 @@ const MyScheduleTab = () => {
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
   const { palette } = useTheme();
+  const [parentResource, setParentResource] = React.useState<string>("");
+  const { updateBooking } = useBookingAll();
   const [isOpenEdit, setIsOpenEdit] = React.useState({
     isOpen: false,
     bookingId: "",
@@ -100,7 +106,7 @@ const MyScheduleTab = () => {
   const handleEventChange =
     (calendarRef: React.RefObject<FullCalendar>, isResize: boolean) =>
     ({ event, revert }) => {
-      const { type } = event.extendedProps;
+      const { type, saleId, ...restData } = event.extendedProps;
       if (isResize && type === "campaign") return revert();
       if (type === "campaign") {
         // Campaign has been moved, compute diff and update each steps
@@ -108,6 +114,19 @@ const MyScheduleTab = () => {
       } else if (type === "step") {
         // Step has been resized or move, update the campaign dates
         if (!calendarRef.current) return null;
+        const dateRange = event._instance.range;
+
+        updateBooking(
+          {
+            ...restData,
+            end_date: dayjs(dateRange.end).format("YYYY-MM-DD"),
+            start_date: dayjs(dateRange.start).format("YYYY-MM-DD"),
+            booking_type: restData.eventType,
+            time_off_type: restData.time_off_type,
+            sale_id: saleId,
+          },
+          restData.eventId,
+        );
       }
     };
 
@@ -133,6 +152,8 @@ const MyScheduleTab = () => {
         allocation,
         position,
         allocation_type,
+        sale_id,
+        time_off_type,
         total_hour,
       } = props;
 
@@ -146,6 +167,8 @@ const MyScheduleTab = () => {
         allocation,
         allocation_type,
         total_hour,
+        saleId: sale_id,
+        time_off_type,
         eventType: booking_type,
         eventId,
       };
@@ -279,6 +302,7 @@ const MyScheduleTab = () => {
 
             return (
               <ResourceLabel
+                setParentResource={setParentResource}
                 handleCollapseToggle={handleCollapseToggle}
                 isLastItem={isLastItem}
                 resource={resource}
@@ -295,15 +319,16 @@ const MyScheduleTab = () => {
             );
           }}
           eventResize={handleEventChange(calendarRef, true)}
-          // eventDrop={handleEventChange(calendarRef, false)}
+          eventDrop={handleEventChange(calendarRef, false)}
         />
       </Box>
       <CreateBooking
+        resourceId={parentResource}
         onClose={() => setIsOpenCreate(false)}
         open={isOpenCreate}
       />
       {/* Wait for the edit funcion is confirmed */}
-      {/* <EditBooking
+      <EditBooking
         open={isOpenEdit.isOpen}
         bookingId={isOpenEdit.bookingId}
         isProject={isOpenEdit.isProject}
@@ -314,7 +339,7 @@ const MyScheduleTab = () => {
             bookingId: "",
           })
         }
-      /> */}
+      />
     </Stack>
   );
 };

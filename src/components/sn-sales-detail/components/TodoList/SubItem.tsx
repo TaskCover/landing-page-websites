@@ -154,9 +154,16 @@ const SubItem = ({
                     onChange={onChangeStatus}
                   />
                 </Grid2>
-                <Grid2 xs={8} md={10}>
+                <Grid2 xs={8} md={9}>
                   {action === Action.RENAME ? (
-                    <TodoName onSubmit={onChangeName} value={name} autoFocus />
+                    <TodoName
+                      onSubmit={onChangeName}
+                      value={name}
+                      autoFocus
+                      onBlur={() => {
+                        setAction(undefined);
+                      }}
+                    />
                   ) : (
                     <Text
                       variant="body2"
@@ -174,57 +181,74 @@ const SubItem = ({
                 </Grid2>
               </Grid2>
 
-              <Grid2 xs={12} md={4} alignItems="center" spacing={1}>
-                <Stack direction="row" alignItems={"center"} spacing={1}>
-                  <Controller
-                    name={`todo_list.${id}.expiration_date`}
-                    control={control}
-                    render={({ field }) => {
-                      const { onChange, ...rest } = field;
-                      const onChangeDate = (e, value) => {
-                        onChange(value);
-                        onUpdateTodo(id, {
-                          dealId: saleDetail?.id || "",
-                          data: {
-                            expiration_date: value,
-                          } as TodoItemData,
-                        });
-                      };
-                      return (
-                        <Date
-                          label={salesT("detail.todoList.dueDate")}
-                          format={DATE_FORMAT_HYPHEN}
-                          onChange={onChangeDate}
-                          {...rest}
-                        />
-                      );
-                    }}
-                  />
-                  <Controller
-                    name={`todo_list.${id}.owner`}
-                    control={control}
-                    defaultValue={mappedOwner}
-                    render={({ field }) => {
-                      const { onChange, ...rest } = field;
-                      const onAssign = (name: string, value: User) => {
-                        onChange(value.id);
-                        onUpdateTodo(id, {
-                          dealId: saleDetail?.id || "",
-                          data: {
-                            owner: value.id,
-                          } as TodoItemData,
-                        });
-                      };
+              <Grid2
+                md={2}
+                container
+                direction="row"
+                alignItems="center"
+                spacing={1}
+              >
+                <Grid2 md={8} justifyContent="end" alignItems="center">
+                  <Stack direction="row" justifyContent="end">
+                    <Controller
+                      name={`todo_list.${id}.expiration_date`}
+                      control={control}
+                      render={({ field }) => {
+                        const { onChange, ...rest } = field;
+                        const onChangeDate = (e, value) => {
+                          onChange(value);
+                          onUpdateTodo(id, {
+                            dealId: saleDetail?.id || "",
+                            data: {
+                              expiration_date: value,
+                            } as TodoItemData,
+                          });
+                        };
+                        return (
+                          <Date
+                            label={salesT("detail.todoList.dueDate")}
+                            format={DATE_FORMAT_HYPHEN}
+                            onChange={onChangeDate}
+                            {...rest}
+                          />
+                        );
+                      }}
+                    />
+                  </Stack>
+                </Grid2>
+                <Grid2 md={4}>
+                  <Stack
+                    direction={"row"}
+                    spacing={0.5}
+                    justifyContent="start"
+                    alignItems="center"
+                  >
+                    <Controller
+                      name={`todo_list.${id}.owner`}
+                      control={control}
+                      defaultValue={mappedOwner}
+                      render={({ field }) => {
+                        const { onChange, ...rest } = field;
+                        const onAssign = (name: string, value: User) => {
+                          onChange(value.id);
+                          onUpdateTodo(id, {
+                            dealId: saleDetail?.id || "",
+                            data: {
+                              owner: value.id,
+                            } as TodoItemData,
+                          });
+                        };
 
-                      return <AssignTodo {...rest} onAssign={onAssign} />;
-                    }}
-                  />
-                  {/* <Actions todoId={todoId} onChangeAction={onChangeAction} /> */}
-                  <TrashIcon
-                    onClick={() => onChangeAction(Action.DELETE)}
-                    sx={{ cursor: "pointer" }}
-                  />
-                </Stack>
+                        return <AssignTodo {...rest} onAssign={onAssign} />;
+                      }}
+                    />
+                    {/* <Actions todoId={todoId} onChangeAction={onChangeAction} /> */}
+                    <TrashIcon
+                      onClick={() => onChangeAction(Action.DELETE)}
+                      sx={{ cursor: "pointer" }}
+                    />
+                  </Stack>
+                </Grid2>
               </Grid2>
             </Grid2>
           </div>

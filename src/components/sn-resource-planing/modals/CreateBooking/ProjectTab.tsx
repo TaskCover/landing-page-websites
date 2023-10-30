@@ -13,25 +13,31 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 import _ from "lodash";
 import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
-import { Button } from "components/shared";
+import { Button, Tooltip } from "components/shared";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 import { useBookingAll } from "store/resourcePlanning/selector";
 import dayjs from "dayjs";
 import { BookingData } from "store/resourcePlanning/action";
 import { RESOURCE_ALLOCATION_TYPE, RESOURCE_EVENT_TYPE } from "constant/enums";
 import { useGetSchemas } from "../Schemas";
+import { useCalculateDetail } from "components/sn-resource-planing/hooks/useCalculateDetail";
+import { StatusCell } from "components/Table";
+import TextStatus from "components/TextStatus";
+import { formatNumber } from "utils/index";
 
 interface IProps {
   open: boolean;
   onClose(): void;
+  resourceId: string;
 }
 
-const ProjectTab = ({ open, onClose }: IProps) => {
+const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
-
+  const [isShowTooltip, setIsShowTooltip] = useState(false);
   const { palette } = useTheme();
-  const { positionOptions, projectOptions, timeOptions } = useGetOptions();
+  const { positionOptions, projectOptions, timeOptions, salesOptions } =
+    useGetOptions();
   const { createBooking } = useBookingAll();
   const { schemaProject } = useGetSchemas();
   const commonT = useTranslations(NS_COMMON);
@@ -43,19 +49,24 @@ const ProjectTab = ({ open, onClose }: IProps) => {
     // clearErrors: clearErrorsProject,
     watch: watchProject,
     reset: resetProject,
-
     formState: { errors: errorsProject },
   } = useForm({
     resolver: yupResolver(schemaProject),
     defaultValues: {
       project_id: "",
-      position: "",
+      sale_id: "",
       dateRange: {},
       allocation: 0,
       allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
       note: "",
     },
   });
+  const { workedTime, estimate, leftToSchedule, scheduledTime } =
+    useCalculateDetail(
+      watchProject("sale_id"),
+      watchProject("project_id"),
+      resourceId,
+    );
 
   const onSubmitProject = (data) => {
     const cleanData: BookingData = {
@@ -73,6 +84,12 @@ const ProjectTab = ({ open, onClose }: IProps) => {
       resetProject();
     }
   }, [open]);
+
+  useEffect(() => {
+    if (!watchProject("sale_id")) {
+      setIsShowDetail(false);
+    }
+  }, [watchProject("sale_id"), isShowDetail]);
 
   return (
     <Grid2 container spacing={2} sx={{ mt: 1 }}>
@@ -94,17 +111,19 @@ const ProjectTab = ({ open, onClose }: IProps) => {
       </Grid2>
       <Grid2 xs={12}>
         <Controller
-          name="position"
+          name="sale_id"
           control={controlProject}
           render={({ field }) => (
             <TextFieldSelect
               value={field.value}
-              onChange={(event) => field.onChange(event.target.value)}
-              helperText={errorsProject.position?.message}
-              error={!!errorsProject.position?.message}
+              onChange={(event) => {
+                field.onChange(event.target.value);
+              }}
+              helperText={errorsProject.sale_id?.message}
+              error={!!errorsProject.sale_id?.message}
               required
-              options={positionOptions as IOptionStructure[]}
-              label={resourceT("form.role")}
+              options={salesOptions as IOptionStructure[]}
+              label={resourceT("form.services")}
             />
           )}
         />
@@ -201,40 +220,56 @@ const ProjectTab = ({ open, onClose }: IProps) => {
           }}
           onClick={() => setIsShowDetail(!isShowDetail)}
         >
-          <Typography
+          <TextStatus
             sx={{
               p: "4px 10px",
-              background: "#FFECEC",
-              color: "#F64E60",
               fontSize: 12,
               fontWeight: 600,
               lineHeight: "18px",
               width: "max-content",
             }}
+            text=""
+            color={leftToSchedule > 0 ? "success" : "error"}
           >
-            -98h {resourceT("form.leftToSchedule").toLowerCase()}
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
-            <Typography
-              sx={{
-                color: "#666666",
-                fontSize: 14,
-                fontWeight: 600,
-                lineHeight: "18px",
-                width: "max-content",
-              }}
-            >
-              {resourceT("form.detail")}
-            </Typography>
-            <ArrowDownIcon
-              width={16}
-              height={16}
-              sx={{
-                transform: isShowDetail ? "rotate(-90deg)" : "rotate(0deg)",
-                transition: "transform 0.3s ease",
-              }}
-            />
-          </Box>
+            {watchProject("sale_id")
+              ? formatNumber(leftToSchedule, { numberOfFixed: 0 }) || 0
+              : 0}
+            h {resourceT("form.leftToSchedule").toLowerCase()}
+          </TextStatus>
+          <Tooltip
+            title="Service is not selected"
+            placement="top"
+            arrow
+            open={isShowTooltip}
+            onClose={() => setIsShowTooltip(false)}
+            onOpen={() => {
+              if (!watchProject("sale_id")) {
+                setIsShowTooltip(true);
+              }
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
+              <Typography
+                sx={{
+                  color: "#666666",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  lineHeight: "18px",
+                  width: "max-content",
+                }}
+              >
+                {resourceT("form.detail")}
+              </Typography>
+              <ArrowDownIcon
+                width={16}
+                height={16}
+                sx={{
+                  transform: isShowDetail ? "rotate(-90deg)" : "rotate(0deg)",
+                  transition: "transform 0.3s ease",
+                }}
+              />
+            </Box>
+          </Tooltip>
         </Box>
         <Collapse in={isShowDetail}>
           <Box
@@ -266,9 +301,10 @@ const ProjectTab = ({ open, onClose }: IProps) => {
                 display: "block",
               }}
             >
-              130h
+              {formatNumber(estimate, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
+
           <Box
             sx={{
               display: "flex",
@@ -297,7 +333,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
                 display: "block",
               }}
             >
-              70h
+              {formatNumber(workedTime, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
           <Box
@@ -328,7 +364,7 @@ const ProjectTab = ({ open, onClose }: IProps) => {
                 display: "block",
               }}
             >
-              112h
+              {formatNumber(scheduledTime, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
           <Box
@@ -354,10 +390,10 @@ const ProjectTab = ({ open, onClose }: IProps) => {
                 fontSize: 14,
                 lineHeight: "18px",
                 fontWeight: 600,
-                color: "#F64E60",
+                color: leftToSchedule > 0 ? "green" : "#F64E60",
               }}
             >
-              -52h
+              {formatNumber(leftToSchedule, { numberOfFixed: 0 })}h
             </Typography>
           </Box>
         </Collapse>
