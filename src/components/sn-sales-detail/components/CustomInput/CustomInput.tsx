@@ -32,6 +32,7 @@ export interface CustomInputProps {
   minRows?: number;
   options?: Option[];
   rules?: RegisterOptions<FieldValues>;
+  isRound?: boolean;
   name?: string;
 }
 
@@ -49,9 +50,11 @@ const CustomInput = (props: CustomInputProps, ref) => {
     inputProps,
     placeholder,
     helperText,
+    isRound,
     rules,
     name,
     type = "string",
+
     defaultValue,
   } = props;
   const {
@@ -130,7 +133,8 @@ const CustomInput = (props: CustomInputProps, ref) => {
                     (e.key === "e" ||
                       e.key === "E" ||
                       e.key === "-" ||
-                      e.key === "+")
+                      e.key === "+" ||
+                      (e.key === "." && isRound))
                   ) {
                     e.preventDefault();
                   }

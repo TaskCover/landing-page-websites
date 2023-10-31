@@ -383,6 +383,7 @@ const ServiceTableItem = ({
                     isLocked || billType === SALE_BILL_TYPE.NON_BILLABLE
                   }
                   isEdit={isEdit}
+                  isRound
                   // helperText="pcs"
                   type="number"
                   inputProps={{
