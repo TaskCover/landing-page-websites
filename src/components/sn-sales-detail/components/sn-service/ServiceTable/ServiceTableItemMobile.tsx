@@ -200,6 +200,7 @@ const ServiceTableItemMobile = ({
                     disabled: isLocked,
                     type: "number",
                   }}
+                  isRound
                   label={saleT(`${prefixT}.quantity`)}
                   register={register(`${sectionKey}.${index}.qty`)}
                 />

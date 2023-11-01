@@ -19,6 +19,7 @@ interface IProps {
   helperText?: string;
   inputProps?;
   toolTipText?: string;
+  isRound?: boolean;
   type?: string;
   rules?: RegisterOptions<FieldValues>;
   required?: boolean;
@@ -33,6 +34,7 @@ const CustomDesktopInput = ({
   helperText,
   type = "string",
   toolTipText,
+  isRound,
   value,
   rules,
   required,
@@ -75,6 +77,7 @@ const CustomDesktopInput = ({
               message: "This field is required",
             },
           })}
+          isRound={isRound}
           rules={rules}
           name={name}
           // InputLabelProps={{
