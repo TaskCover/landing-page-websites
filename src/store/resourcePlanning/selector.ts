@@ -5,6 +5,7 @@ import {
   BookingData,
   IBookingAllFitler,
   createBookingResource,
+  deleteBookingResource,
   getBookingAll,
   getMyBookingResource,
   updateBookingResource,
@@ -102,6 +103,7 @@ export const useBookingAll = () => {
     data: BookingData,
     disableSnackbar?: boolean,
   ) => {
+    console.log(data);
     await dispatch(createBookingResource(data))
       .then(async () => {
         await getBookingResource(bookingAllFilter);
@@ -137,6 +139,20 @@ export const useBookingAll = () => {
           onAddSnackbar(resourceT("form.updateFailed"), "error");
       });
   };
+
+  const deleteBooking = async (id: string, disableSnackbar?: boolean) => {
+    await dispatch(deleteBookingResource(id))
+      .then(async () => {
+        await getBookingResource(bookingAllFilter);
+        await getMyBooking(myBookingFilter);
+        !disableSnackbar &&
+          onAddSnackbar(resourceT("form.deleteSuccess"), "success");
+      })
+      .catch((err) => {
+        !disableSnackbar &&
+          onAddSnackbar(resourceT("form.deleteFailed"), "error");
+      });
+  };
   useEffect(() => {
     if (bookingAllError) {
       onAddSnackbar(bookingAllError, "error");
@@ -146,6 +162,7 @@ export const useBookingAll = () => {
     bookingAllFilter,
     totalHour,
     createBooking,
+    deleteBooking,
     isLoading,
     isReady,
     updateBooking,

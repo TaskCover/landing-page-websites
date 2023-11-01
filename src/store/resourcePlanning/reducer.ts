@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   IBookingAllFitler,
   createBookingResource,
+  deleteBookingResource,
   getBookingAll,
   getMyBookingResource,
   resourceActionType,
@@ -132,6 +133,12 @@ export const resourcePlanningSlice = createSlice({
       .addCase(updateBookingResource.rejected, (state, action) => {
         state.bookingAllError = action.error.message || "";
         state.bookingAllStatus = DataStatus.FAILED;
+      })
+      .addCase(deleteBookingResource.pending, (state) => {
+        state.bookingAllStatus = DataStatus.LOADING;
+      })
+      .addCase(deleteBookingResource.fulfilled, (state, action) => {
+        state.bookingAllStatus = DataStatus.SUCCEEDED;
       });
   },
 });

@@ -1,5 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Typography, Collapse, Stack, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Collapse,
+  Stack,
+  useTheme,
+  CircularProgress,
+} from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import TextFieldSelect, {
   IOptionStructure,
@@ -29,6 +36,7 @@ interface IProps {
   open: boolean;
   onClose(): void;
   resourceId: string;
+  userId: string;
 }
 
 const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
@@ -38,7 +46,7 @@ const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
   const { palette } = useTheme();
   const { positionOptions, projectOptions, timeOptions, salesOptions } =
     useGetOptions();
-  const { createBooking } = useBookingAll();
+  const { createBooking, isLoading } = useBookingAll();
   const { schemaProject } = useGetSchemas();
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
@@ -71,6 +79,7 @@ const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
   const onSubmitProject = (data) => {
     const cleanData: BookingData = {
       ...data,
+      user_id: resourceId,
       start_date: dayjs(data.dateRange.startDate).format("YYYY-MM-DD"),
       end_date: dayjs(data.dateRange.endDate).format("YYYY-MM-DD"),
       booking_type: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
@@ -419,7 +428,7 @@ const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
             variant="contained"
             onClick={handleSubmitProject(onSubmitProject)}
           >
-            {resourceT("form.createBooking")}
+            {isLoading ? <CircularProgress /> : resourceT("form.createBooking")}
           </Button>
         </Stack>
       </Grid2>
