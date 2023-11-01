@@ -51,7 +51,7 @@ const ResourceLabel = ({
   const { totalLeftToSchedule } = useGetTotalScheduleTime();
   const handleOpenCreate = () => {
     setIsOpenCreate(true);
-    setParentResource(resource._resource.parentId);
+    setParentResource(resource._resource.parentId || resource._resource.id);
   };
 
   const schedulePerLeft =

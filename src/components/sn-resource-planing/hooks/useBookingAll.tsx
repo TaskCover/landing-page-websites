@@ -24,7 +24,7 @@ export const useFetchMyBooking = () => {
 export const useEditAction = () => {
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const commonT = useTranslations(NS_COMMON);
-  const { updateBooking, createBooking } = useBookingAll();
+  const { updateBooking, createBooking, deleteBooking } = useBookingAll();
   const { onAddSnackbar } = useSnackbar();
   const handleSplit = async (id, data) => {
     try {
@@ -54,7 +54,8 @@ export const useEditAction = () => {
         true,
       );
       return await Promise.all([updateFirstDate, updateSecondDate])
-        .then(() => {
+        .then(async () => {
+          await deleteBooking(id);
           onAddSnackbar(resourceT("form.updateSuccess"), "success");
         })
         .catch((e) => {
@@ -66,7 +67,21 @@ export const useEditAction = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteBooking(id)
+        .then(() => {
+          onAddSnackbar(resourceT("form.deleteSuccess"), "success");
+        })
+        .catch((e) => {
+          throw e;
+        });
+    } catch (e) {
+      onAddSnackbar(commonT("error.anErrorTryAgain"), "error");
+    }
+  };
   return {
+    handleDelete,
     handleSplit,
   };
 };

@@ -4,7 +4,7 @@ import CustomDateRangePicker from "components/sn-resource-planing/components/Cus
 import TextFieldInput from "components/shared/TextFieldInput";
 import { useEffect, useState } from "react";
 import useTheme from "hooks/useTheme";
-import { Stack } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useForm, Controller } from "react-hook-form";
@@ -23,15 +23,16 @@ import TextFieldSelect from "components/shared/TextFieldSelect";
 import { useGetSchemas } from "../Schemas";
 interface IProps {
   open: boolean;
+  resourceId: string;
   onClose(): void;
 }
 
-const TimeOffTab = ({ open, onClose }: IProps) => {
+const TimeOffTab = ({ open, onClose, resourceId }: IProps) => {
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
   const { palette } = useTheme();
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
-  const { createBooking } = useBookingAll();
+  const { createBooking, isLoading } = useBookingAll();
   const { timeOffOptions } = useGetTimeOffOptions();
   const { positionOptions, projectOptions } = useGetOptions();
   const { schemaTimeOff } = useGetSchemas();
@@ -67,6 +68,7 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
   const onSubmitTimeOff = (data) => {
     createBooking({
       ...data,
+      user_id: resourceId,
       booking_type: RESOURCE_EVENT_TYPE.TIME_OF_BOOKING,
       start_date: dayjs(data.dateRange.startDate).format("YYYY-MM-DD"),
       end_date: dayjs(data.dateRange.endDate).format("YYYY-MM-DD"),
@@ -214,7 +216,7 @@ const TimeOffTab = ({ open, onClose }: IProps) => {
             variant="contained"
             onClick={handleSubmitTimeOff(onSubmitTimeOff)}
           >
-            {resourceT("form.createBooking")}
+            {isLoading ? <CircularProgress /> : commonT("form.save")}
           </Button>
         </Stack>
       </Grid2>

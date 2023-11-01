@@ -94,6 +94,7 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
   const onSubmitProject = (data) => {
     const cleanData: BookingData = {
       ...data,
+      user_id: bookingId,
       start_date: dayjs(data.dateRange.startDate).format("YYYY-MM-DD"),
       end_date: dayjs(data.dateRange.endDate).format("YYYY-MM-DD"),
       booking_type: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,

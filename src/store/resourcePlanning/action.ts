@@ -36,6 +36,7 @@ export interface BookingData {
   allocation_type: string;
   note: string;
   sale_id: string;
+  user_id: string;
 }
 
 export const getBookingAll = createAsyncThunk(
@@ -105,6 +106,23 @@ export const updateBookingResource = createAsyncThunk(
       const response = await client.patch(
         `${Endpoint.RESOURCE_PLANNING}/${params.id}`,
         params,
+        {
+          baseURL: RESOURCE_API_URL,
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const deleteBookingResource = createAsyncThunk(
+  "resource/deleteBooking",
+  async (id: string) => {
+    try {
+      const response = await client.delete(
+        `${Endpoint.RESOURCE_PLANNING}/${id}`,
         {
           baseURL: RESOURCE_API_URL,
         },

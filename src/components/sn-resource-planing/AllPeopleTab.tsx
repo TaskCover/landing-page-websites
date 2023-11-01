@@ -124,6 +124,7 @@ const AllPeopleTab = () => {
         updateBooking(
           {
             ...restData,
+            user_id: campaignId,
             end_date: dayjs(dateRange.end).format("YYYY-MM-DD"),
             start_date: dayjs(dateRange.start).format("YYYY-MM-DD"),
             booking_type: restData.eventType,
@@ -303,7 +304,10 @@ const AllPeopleTab = () => {
             const parentResource = resources.find(
               (item) => item.id === resource._resource.parentId,
             );
-
+            console.log(
+              "🚀 ~ file: AllPeopleTab.tsx:306 ~ AllPeopleTab ~ resources:",
+              resources,
+            );
             const bookings = parentResource
               ? [...parentResource?.bookings]
               : [];

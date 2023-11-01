@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import _ from "lodash";
 import { DialogContent, Tab, Box, Typography } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -8,6 +8,7 @@ import DialogLayout from "components/DialogLayout";
 import { useTranslations } from "next-intl";
 import { NS_RESOURCE_PLANNING } from "constant/index";
 import TimeOffTab from "./TimeoffTab";
+import { useBookingAll } from "store/resourcePlanning/selector";
 
 interface IProps {
   open: boolean;
@@ -17,6 +18,7 @@ interface IProps {
 
 const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
   const [activeTabs, setActiveTabs] = useState("1");
+  const { bookingAll, isLoading } = useBookingAll();
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     setActiveTabs(newValue);
@@ -89,10 +91,15 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
             />
           </TabList>
           <TabPanel value="1" sx={{ p: 0 }}>
-            <ProjectTab onClose={onClose} open={open} resourceId={resourceId} />
+            <ProjectTab
+              onClose={onClose}
+              open={open}
+              resourceId={resourceId}
+              userId=""
+            />
           </TabPanel>
           <TabPanel value="2" sx={{ p: 0 }}>
-            <TimeOffTab onClose={onClose} open={open} />
+            <TimeOffTab onClose={onClose} open={open} resourceId={resourceId} />
           </TabPanel>
         </TabContext>
       </DialogContent>

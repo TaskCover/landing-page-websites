@@ -84,6 +84,7 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
   const onSubmitTimeOff = (data) => {
     createBooking({
       ...data,
+      user_id: bookingId,
       booking_type: RESOURCE_EVENT_TYPE.TIME_OF_BOOKING,
       start_date: dayjs(data.dateRange.startDate).format("YYYY-MM-DD"),
       end_date: dayjs(data.dateRange.endDate).format("YYYY-MM-DD"),
