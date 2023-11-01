@@ -91,6 +91,7 @@ const ServiceTable = ({
       price: 0,
       billType: SALE_BILL_TYPE.FIX,
       qty: 0,
+      discount: 0,
       unit: SERVICE_UNIT_OPTIONS.DAY,
       tolBudget: 0,
     });
