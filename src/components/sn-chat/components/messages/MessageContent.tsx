@@ -74,10 +74,10 @@ const MessageContent = ({
   unReadMessage,
 }: MessageContentProps) => {
   const textRef = useRef<HTMLDivElement>(null);
-  const {listSearchMessage} = useChat();
+  const { listSearchMessage } = useChat();
 
   const isUnReadCheck = unReadMessage.some((item) => item.unreadCount === 0);
-  const {isDarkMode} = useTheme();
+  const { isDarkMode } = useTheme();
   const isReadMessage = useMemo(() => {
     const timeMessage = new Date(message.ts);
     if (isGroup) {
@@ -122,15 +122,21 @@ const MessageContent = ({
   }, [message]);
 
   const renderBackgroundColor = useMemo(() => {
-    if(listSearchMessage.map(item => item.messageId).includes(message._id)) {
-      return isDarkMode ? "#F7F7FD" : "#3a3b3c" ;
+    if (listSearchMessage.map((item) => item.messageId).includes(message._id)) {
+      return isDarkMode ? "#333333" : "#EBF5FF";
     }
-    if(isCurrentUser) {
-      if(isDarkMode) return '#333333';
-      return "#EBF5FF"
+    if (isCurrentUser) {
+      if (isDarkMode) return "#333333";
+      return "#EBF5FF";
     }
     return isDarkMode ? "#3a3b3c" : "#F7F7FD";
   }, [isCurrentUser, isDarkMode, listSearchMessage, message._id]);
+
+  const renderBorderColor = useMemo(() => {
+    if (listSearchMessage.map((item) => item.messageId).includes(message._id)) {
+      return isDarkMode ? "#F7F7FD" : "#3699FF";
+    }
+  }, [isDarkMode, listSearchMessage, message._id]);
 
   if (message.msg) {
     return (
@@ -143,6 +149,7 @@ const MessageContent = ({
           padding: "0.5rem 1rem",
           borderRadius: "20px",
           backgroundColor: renderBackgroundColor,
+          border: `2px solid ${renderBorderColor}`,
           maxWidth: "270px",
         }}
         order={2}

@@ -145,19 +145,19 @@ const ChatList = () => {
     if (_conversations.length <= 0) return <NoData />;
 
     return (
-        <Box
-          display="flex"
-          flexDirection="column"
-          width="100%"
-          height="90vh"
-          sx={{
-            overflowX: "scroll",
-            bgcolor: isDarkMode ? "var(--mui-palette-grey-50)" : "white",
-          }}
-          ref={chatListRef}
-        >
-          {renderConversation(idActive)}
-        </Box>
+      <Box
+        display="flex"
+        flexDirection="column"
+        width="100%"
+        height="90vh"
+        sx={{
+          overflowX: "scroll",
+          bgcolor: isDarkMode ? "var(--mui-palette-grey-50)" : "white",
+        }}
+        ref={chatListRef}
+      >
+        {renderConversation(idActive)}
+      </Box>
     );
   };
 
