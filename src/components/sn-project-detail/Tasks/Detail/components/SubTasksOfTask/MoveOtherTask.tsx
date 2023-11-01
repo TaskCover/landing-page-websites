@@ -15,6 +15,7 @@ import { Option } from "constant/types";
 
 type MoveOtherTaskProps = {
   subId: string;
+  onAfterSubmit?: () => void
 } & Omit<DialogLayoutProps, "children" | "onSubmit">;
 
 const MoveOtherTask = (props: MoveOtherTaskProps) => {
@@ -67,7 +68,8 @@ const MoveOtherTask = (props: MoveOtherTaskProps) => {
         "success",
       );
       props.onClose();
-      onGetTaskList(newTaskListId);
+      await onGetTaskList(newTaskListId);
+      props.onAfterSubmit && props.onAfterSubmit()
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }

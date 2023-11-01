@@ -6,7 +6,14 @@ import { DATE_FORMAT_HYPHEN, NS_COMMON, NS_SALES } from "constant/index";
 import useToggle from "hooks/useToggle";
 import PlusIcon from "icons/PlusIcon";
 import { useTranslations } from "next-intl";
-import React, { ChangeEvent, memo, use, useMemo, useState } from "react";
+import React, {
+  ChangeEvent,
+  memo,
+  use,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { Controller, useForm, useFormContext, useWatch } from "react-hook-form";
 import { useSaleDetail, useSalesTodo } from "store/sales/selectors";
@@ -26,6 +33,7 @@ export const TodoName = ({
   onSubmit,
   value = "",
   owner,
+  onBlur,
   autoFocus,
   isAssign,
 }: {
@@ -33,6 +41,7 @@ export const TodoName = ({
   onSubmit: (name: TodoItemData) => Promise<any>;
   value?: string;
   owner?: User;
+  onBlur?: () => void;
   autoFocus?: boolean;
   isAssign?: boolean;
 }) => {
@@ -43,6 +52,11 @@ export const TodoName = ({
   const [error, setError] = useState<string>("");
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (value[value.length - 1] === "\n") {
+      setName(value.slice(0, -1));
+      return;
+    }
     setName(event.target.value);
     setError("");
   };
@@ -50,13 +64,12 @@ export const TodoName = ({
   const { saleDetail } = useSaleDetail();
   const { control, getValues, setValue } = useFormContext();
 
-  const onKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== "Enter") return;
+  const handleSubmit = async () => {
     const nameTrimmed = name?.trim();
+
     if (nameTrimmed) {
       setValue("todoItem.name", nameTrimmed);
       await onSubmit(getValues("todoItem"));
-      setName("");
     } else {
       setError(
         commonT("form.error.required", {
@@ -64,6 +77,17 @@ export const TodoName = ({
         }),
       );
     }
+    setName("");
+  };
+
+  const onKeyDown = async (event, isBlur: boolean) => {
+    if (isBlur && onBlur) {
+      onBlur();
+      handleSubmit();
+      return;
+    }
+    if (event.key !== "Enter") return;
+    handleSubmit();
   };
 
   return (
@@ -73,6 +97,7 @@ export const TodoName = ({
       //   xs: "column",
       //   sm: "row",
       // }}
+      justifyContent="space-between"
       width="100%"
       spacing={2}
     >
@@ -81,9 +106,12 @@ export const TodoName = ({
           {isAssign && (
             <PlusIcon
               onClick={(event) =>
-                onKeyDown({
-                  key: "Enter",
-                } as React.KeyboardEvent<HTMLInputElement>)
+                onKeyDown(
+                  {
+                    key: "Enter",
+                  } as React.KeyboardEvent<HTMLInputElement>,
+                  false,
+                )
               }
               width={24}
               height={24}
@@ -91,12 +119,16 @@ export const TodoName = ({
           )}
           <TextField
             multiline
+            onBlur={(e) => onKeyDown(e, true)}
             value={name}
-            onKeyDown={onKeyDown}
+            onKeyDown={(e) => onKeyDown(e, false)}
             fullWidth
             variant="filled"
             size="small"
+            placeholder={salesT("detail.todoList.addNew")}
+            focused
             onChange={onChange}
+            color="success"
             autoFocus={autoFocus}
             sx={{
               "& >div": {
@@ -105,6 +137,11 @@ export const TodoName = ({
               "& input": {
                 fontSize: 15,
               },
+              "& .MuiInputBase-root": {
+                padding: 0,
+              },
+
+              padding: 0,
             }}
           />
           {!!error && (
@@ -144,7 +181,6 @@ export const TodoName = ({
                 const onAssign = (name: string, value: User) => {
                   onChange(value.id);
                 };
-
                 return <AssignTodo {...rest} onAssign={onAssign} />;
               }}
             />
@@ -169,11 +205,12 @@ const TodoList = () => {
   const { onCreateTodo, onUpdateTodo, onUpdatePriority } = useSalesTodo();
 
   const todoListForm = useWatch({ control, name: "todo_list" });
+
   const todoList = useMemo(() => {
     return (Object.values(todoListForm ?? {}) as Array<Todo>).sort(
       (a, b) => a.priority - b.priority,
     );
-  }, [JSON.stringify(todoListForm)]);
+  }, [todoListForm]);
 
   const onSubmit = async (value) => {
     onCreateTodo({
@@ -185,25 +222,24 @@ const TodoList = () => {
       },
     });
   };
-
   const onDragEnd = async (result: DropResult) => {
     const { source, destination } = result;
-    const todoListArray = Object.values(todoListForm) as Array<Todo>;
+    const todoListArray = Object.values(todoList) as Array<Todo>;
     const reorderedObject = reorderPriority(
       todoListArray,
       destination?.index ?? 0,
       source?.index ?? 0,
-    );
+    ) as Record<string, Todo>;
 
     setValue("todo_list", reorderedObject);
     try {
       await Promise.all(
-        todoListArray.map((todo) =>
-          onUpdatePriority(todo.id, {
+        Object.values(reorderedObject).map((todo) => {
+          return onUpdatePriority(todo.id, {
             dealId: saleDetail?.id || "",
             priority: todo.priority,
-          }),
-        ),
+          });
+        }),
       );
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
@@ -221,12 +257,16 @@ const TodoList = () => {
             })`}
           </Text>
         }
+        sx={{
+          backgroundColor: "background.paper",
+          marginBottom: 2,
+        }}
       >
         <Stack
           mt={2}
           overflow={{
             xs: "auto",
-            md: "hidden",
+            lg: "hidden",
           }}
           width={{
             xs: "100%",

@@ -92,6 +92,8 @@ export const CommonLang: CommonDictionary = {
     title: "Xác nhận xóa",
     content: "Bạn có chắc chắn muốn xóa?",
   },
+  show: "Hiển thị",
+  hide: "Ẩn",
   upgradeAccount: "Nâng cấp tài khoản",
   clickGoDetail: "Nhấn để tới trang chi tiết {name}",
   waiting: "Đang chờ",
@@ -110,6 +112,8 @@ export const CommonLang: CommonDictionary = {
   aFewFilesInvalid:
     "Hệ thống chỉ hỗ trợ các định dạng file doc, docx, xlsx, xls, csv, mp3, mp4, png, jpeg, jpg, pdf, ppt, pptx, zip, rar. Vui lòng kiểm tra lại định dạng file đính kèm của bạn.",
   processingUpload: "Đang tải lên tệp tin...",
+  day: "ngày",
+  hour: "giờ",
   cancel: "Huỷ",
-  success: "Thành công!"
+  success: "Thành công!",
 };

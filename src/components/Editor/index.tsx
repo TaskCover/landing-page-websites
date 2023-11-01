@@ -86,7 +86,6 @@ const Editor = (props: EditorProps) => {
   const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.length) return;
     let newFiles = Array.from(event.target.files);
-
     newFiles = newFiles.reduce(
       (out: File[], file) => {
         if (ACCEPTS.includes(file.type)) {
@@ -135,7 +134,6 @@ const Editor = (props: EditorProps) => {
 
   const onInit = useCallback(async () => {
     const RQuill = (await import("react-quill")).default;
-    console.log(RQuill);
 
     const icons = RQuill.Quill.import("ui/icons");
     icons["attachment"] =
@@ -204,7 +202,7 @@ export default memo(Editor);
 
 const ACCEPTS = [...IMAGES_ACCEPT, "video/mp4"];
 
-const COLORS = [
+export const COLORS = [
   "#000000",
   "#e60000",
   "#ff9900",

@@ -17,7 +17,9 @@ import {
   STATEMENT_HISTORY_PATH,
   TIME_TRACKING_PATH,
   RESOURCE_PLANING_PATH,
+  CHATTING_ROOM_PATH,
   SALES_LIST_PATH,
+  DOCS_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -33,7 +35,9 @@ import { Permission } from "constant/enums";
 import useTheme from "hooks/useTheme";
 import MenuTimeTrackingIcon from "icons/MenuTimeTrackingIcon";
 import MenuResourcePlaningIcon from "icons/MenuResourcePlaningIcon";
+import MenuChatIcon from "icons/MenuChatIcon";
 import CardReceive from "icons/CardReceive";
+import MenuDocsIcon from "icons/MenuDocsIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -187,6 +191,7 @@ const DATA: MenuItemProps[] = [
     icon: <MenuDashboardIcon />,
     roles: [Permission.AM, Permission.ST],
   },
+
   {
     label: "menu.project",
     icon: <MenuProjectIcon />,
@@ -250,24 +255,36 @@ const DATA: MenuItemProps[] = [
     roles: [Permission.AM, Permission.ST],
   },
   {
+    label: "menu.docs",
+    href: DOCS_PATH,
+    icon: <MenuDocsIcon />,
+    roles: [Permission.AM, Permission.ST],
+  },
+  {
     label: "menu.resourcePlaning",
     href: RESOURCE_PLANING_PATH,
     icon: <MenuResourcePlaningIcon />,
     roles: [Permission.AM, Permission.ST],
   },
   {
+    label: "menu.chat",
+    href: CHATTING_ROOM_PATH,
+    icon: <MenuChatIcon />,
+    roles: [Permission.AM, Permission.ST],
+  },
+  {
     label: "menu.sales",
     href: SALES_LIST_PATH,
     icon: <CardReceive />,
-    roles: [Permission.AM, Permission.ST],
+    roles: [Permission.AM],
   },
 ];
 
 const checkIsActiveLink = (pathname: string, href?: string) => {
   return Boolean(
     pathname &&
-      href &&
-      (pathname === href ||
-        (href.length && href !== "/" && pathname.startsWith(href))),
+    href &&
+    (pathname === href ||
+      (href.length && href !== "/" && pathname.startsWith(href))),
   );
 };

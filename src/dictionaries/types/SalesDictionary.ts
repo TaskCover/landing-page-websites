@@ -20,6 +20,7 @@ export type SalesDictionary = {
       owner: string;
       tags: string;
       submit: string;
+      update: string;
     };
     table: {
       stage: string;
@@ -57,6 +58,45 @@ export type SalesDictionary = {
       assign: string;
       dueDate: string;
       addNew: string;
+    };
+    service: {
+      title: string;
+      table: {
+        name: string;
+        price: string;
+        description: string;
+        quantity: string;
+        estimate: string;
+        totalBuget: string;
+        position: string;
+        billType: string;
+        unit: string;
+        discount: string;
+        estTooltip: string;
+        markup: string;
+      };
+      billType: {
+        fix: string;
+        actual: string;
+        nonBillable: string;
+      };
+      unit: {
+        hour: string;
+        hourSubText: string;
+        day: string;
+        daySubText: string;
+        piece: string;
+        pieceSubText: string;
+      };
+      addSection: string;
+      addNewFromRateCard: string;
+      addNewRow: string;
+      duplicate: string;
+      showDiscount: string;
+      showMarkup: string;
+      showFixedPrice: string;
+      showEstimate: string;
+      ShowDescription: string;
     };
     comment: {
       title: string;

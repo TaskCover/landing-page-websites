@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import { IconButton } from "components/shared";
 import { useState } from "react";
-import DefaultPopupLayout from "components/sn-time-tracking/TimeTrackingModal/DefaultPopupLayout";
+import DefaultPopupLayout from "layouts/DefaultPopupLayout";
 import useTheme from "hooks/useTheme";
 
 interface ItemMemberDetailProp {
@@ -167,29 +167,28 @@ const ItemMemberDetail = ({
             {commonT("form.admin")}
           </Button>
         ) : (
-          admin &&
-          <>
-            <IconButton noPadding size="normal">
-              <MoreSquareIcon onClick={handleClick} />
-            </IconButton>
-            <Menu
-              id="demo-positioned-menu"
-              aria-labelledby="demo-positioned-button"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={() => setAnchorEl(null)}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              {true ? (
-                <>
-                  <MenuItem onClick={() => {
+          admin && (
+            <>
+              <IconButton noPadding size="normal">
+                <MoreSquareIcon onClick={handleClick} />
+              </IconButton>
+              <Menu
+                id="demo-positioned-menu"
+                aria-labelledby="demo-positioned-button"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
                     setShowPopup((pre) => ({
                       ...pre,
                       type: TYPE_POPUP.ADD_ADMIN,
@@ -197,18 +196,16 @@ const ItemMemberDetail = ({
                       title: commonChatBox("chatBox.addAsAdmin"),
                       content: <>{commonChatBox("chatBox.sureAddAsAdmin")}</>,
                     }));
-                  }}>
-                    {commonChatBox("chatBox.addAsAdmin")}
-                  </MenuItem>
-                  <MenuItem onClick={() => handleClickMenu("remove")}>
-                    {commonChatBox("chatBox.removeFromChat")}
-                  </MenuItem>
-                </>
-              ) : (
-                <></>
-              )}
-            </Menu>
-          </>
+                  }}
+                >
+                  {commonChatBox("chatBox.addAsAdmin")}
+                </MenuItem>
+                <MenuItem onClick={() => handleClickMenu("remove")}>
+                  {commonChatBox("chatBox.removeFromChat")}
+                </MenuItem>
+              </Menu>
+            </>
+          )
         )}
       </Box>
       <DefaultPopupLayout

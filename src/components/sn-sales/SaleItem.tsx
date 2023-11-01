@@ -14,14 +14,16 @@ import {
   formatNumber,
   formatEstimateTime,
   getPath,
+  formatCurrency,
 } from "utils/index";
 import { DATE_FORMAT_SLASH, NS_SALES } from "constant/index";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { Sales } from "store/sales/reducer";
 import useGetEmployeeOptions from "./hooks/useGetEmployeeOptions";
-import { useSales } from "store/sales/selectors";
+import { useSaleDetail, useSales } from "store/sales/selectors";
 import { SALE_DETAIL_PATH } from "constant/paths";
+import { Option, User } from "constant/types";
 
 interface IProps {
   item: Sales; // change to data type
@@ -30,33 +32,66 @@ const SaleItem = ({ item }: IProps) => {
   const { employeeOptions, onEndReachedEmployeeOptions, onSearchEmployee } =
     useGetEmployeeOptions();
   const { onUpdateDeal } = useSales();
-  const [owner, setOwner] = useState(item.owner.id);
-
-  const time = formatEstimateTime(item.estimate || 0);
+  const [owner, setOwner] = useState<string>(item.owner?.id);
+  const { onSetRevenue } = useSaleDetail();
+  const time = item.estimate || 0;
 
   const onSubmit = (data) => {
     onUpdateDeal({ owner: data.owner, id: item.id });
   };
 
-  const avatar = useMemo(() => {
-    const result = employeeOptions.find((item) => item.value === owner);
-    return result?.avatar || "";
-  }, [JSON.stringify(item.owner)]);
+  const mappedOwners = useMemo(() => {
+    const result = [...employeeOptions];
+    const isExist = result.find(
+      (employee) => employee.value === item.owner?.id,
+    );
+    if (!isExist) {
+      result.push({
+        label: item.owner?.fullname,
+        value: item.owner?.id,
+        avatar: item.owner?.avatar?.link,
+        subText: item.owner?.email,
+      });
+    }
+    return result;
+  }, [employeeOptions]);
+
+  const mappedowner = useMemo(() => {
+    const result = mappedOwners.find((item) => item.value === owner);
+    return (
+      result ||
+      ({
+        label: "",
+        value: "",
+        avatar: "",
+        subText: "",
+      } as Option)
+    );
+  }, [JSON.stringify(item.owner), owner]);
 
   return (
     <TableRow>
       <BodyCell
         align="left"
         href={getPath(SALE_DETAIL_PATH, undefined, { id: item.id })}
+        onClick={() => onSetRevenue(item.revenue)}
       >
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar size={32} src={avatar}></Avatar>
+          <Avatar size={32} src={mappedowner.avatar || ""}></Avatar>
           <Text
             variant="body2"
             color="text.primary"
             fontWeight={600}
             lineHeight={1.28}
-            sx={{ "&:hover": { color: "primary.main" } }}
+            sx={{
+              "&:hover": { color: "primary.main" },
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 2,
+              overflow: "hidden",
+              wordBreak: "break-word",
+              display: "-webkit-box",
+              textOverflow: "ellipsis",
+            }}
           >
             {item.name}
           </Text>
@@ -77,13 +112,19 @@ const SaleItem = ({ item }: IProps) => {
           rootSx={{
             width: "100%",
             px: "0!important",
+            [`& .MuiSelect-select`]: {
+              mr: "17px!important",
+            },
+            [`& .MuiSelect-icon`]: {
+              right: "-5px!important",
+            },
           }}
           sx={{
             width: "100%",
           }}
           onChange={(name, value) => {
             onSubmit({ owner: value });
-            setOwner(value as string);
+            setOwner(value);
           }}
           size="small"
           hasAll={false}
@@ -92,17 +133,17 @@ const SaleItem = ({ item }: IProps) => {
             onSearchEmployee(name, value as string);
           }}
           value={owner}
-          options={employeeOptions}
+          options={mappedOwners}
         />
       </BodyCell>
       <BodyCell align="right">
-        {formatNumber(item.revenue, {
+        {formatCurrency(item.revenue, {
           prefix: CURRENCY_SYMBOL[item.currency],
           numberOfFixed: 2,
         })}
       </BodyCell>
       <BodyCell align="right">
-        {formatNumber(item.revenuePJ, {
+        {formatCurrency(item.revenuePJ, {
           prefix: CURRENCY_SYMBOL[item.currency],
           numberOfFixed: 2,
         })}
@@ -110,7 +151,11 @@ const SaleItem = ({ item }: IProps) => {
       <BodyCell width="11%" size="small" align="right">
         {`${time}h`}
       </BodyCell>
-      <BodyCell align="right">{item.probability}</BodyCell>
+      <BodyCell align="right">
+        {formatNumber(item.probability, {
+          suffix: "%",
+        })}
+      </BodyCell>
       <BodyCell align="left">
         {formatDate(item.updated_time, DATE_FORMAT_SLASH)}
       </BodyCell>

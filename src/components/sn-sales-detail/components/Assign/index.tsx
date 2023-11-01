@@ -52,11 +52,19 @@ const defaultSx = {
 
 type AssignProps = {
   value: User[];
+  isFilter?: boolean;
   onAssign: (name: string, data: User[]) => void;
 };
 
-const DisplayItem = ({ users }: { users: User[] }) => {
+const DisplayItem = ({
+  users,
+  isFilter,
+}: {
+  users: User[];
+  isFilter?: boolean;
+}) => {
   const { employeeOptions } = useGetEmployeeOptions();
+
   const salesT = useTranslations(NS_SALES);
 
   const avatars: AvatarProps[] = users?.map((option) => {
@@ -104,9 +112,14 @@ const Assign = (props: AssignProps) => {
 
   const onAssign = (user: Option) => {
     const selectedItem = value.find((item) => item.id === user.value);
-    const newSeleted = [...value];
+
+    const newSeleted = JSON.parse(JSON.stringify(value));
+
     if (selectedItem) {
-      newSeleted.splice(newSeleted.indexOf(selectedItem), 1);
+      newSeleted.splice(
+        newSeleted.findIndex((item) => user.value === item.id),
+        1,
+      );
     } else {
       newSeleted.push({
         id: user.value as string,
@@ -117,16 +130,19 @@ const Assign = (props: AssignProps) => {
         },
       } as User);
     }
+
     onChange && onChange("members", newSeleted);
   };
 
   return (
-    <PopoverLayout label={<DisplayItem users={value} />} ref={buttonRef}>
+    <PopoverLayout
+      label={<DisplayItem users={value} isFilter={props.isFilter} />}
+      ref={buttonRef}
+    >
       <MenuList onScroll={onScroll} component={Box} sx={{ pb: 0 }}>
         <Search
           name="members.email"
           onChange={onChangeSearch}
-          emitWhenEnter
           style={{
             marginLeft: "10px",
             marginRight: "10px",

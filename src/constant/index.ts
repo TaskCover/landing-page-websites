@@ -10,6 +10,8 @@ export const TIME_SHEET_API_URL = process.env.TIME_SHEET_API_URL as string;
 export const CHAT_API_URL = process.env.CHAT_API_URL as string;
 export const SALE_API_URL = process.env.SALE_API_URL as string;
 export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
+export const RESOURCE_API_URL = process.env.RESOURCE_API_URL as string;
+
 export const DARK_THEME_MEDIA_SYSTEM = "(prefers-color-scheme: dark)";
 
 export const DATE_FORMAT_FORM = "yyyy-MM-dd";
@@ -66,7 +68,10 @@ export const NS_COMPANY = "company";
 export const NS_MANAGER = "manager";
 export const NS_SALES = "sales";
 export const NS_TIME_TRACKING = "timeTracking";
+export const NS_RESOURCE_PLANNING = "resourcePlanning";
+export const NS_CHAT = "chat";
 export const NS_CHAT_BOX = "chatbox";
+export const NS_DOCS = "documents";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 export const VIDEO_ACCEPT = ["video/mp4"];

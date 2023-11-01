@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Box from "@mui/material/Box";
 import {
   MutableRefObject,
@@ -21,8 +22,11 @@ import MessageLayout from "../messages/MessageLayout";
 import MessageContent from "./MessageContent";
 import { formatDate, sleep } from "utils/index";
 import Typography from "@mui/material/Typography";
-import { nameMonthList } from "constant/index";
+import { nameMonthList, NS_CHAT_BOX } from "constant/index";
 import React from "react";
+import { useTranslations } from "next-intl";
+import useTheme from "hooks/useTheme";
+import { useChat } from "store/chat/selectors";
 
 interface MessagesProps {
   sessionId: string;
@@ -34,12 +38,16 @@ interface MessagesProps {
   mediaListPreview: MediaPreviewItem[];
   statusLoadMessage: DataStatus;
   stateMessage?: {
-    filePreview?: File | File[] | null;
+    // filePreview?: File | File[] | null;
+    // fix build
+    filePreview?: any;
     status: DataStatus;
   };
   focusMessage: MessageSearchInfo | null;
   unReadMessage: UnreadUserInfo[];
   onRefetch: (page: number) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  wrapperMessageSx?: any;
 }
 
 type MessageHandle = {
@@ -64,15 +72,19 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     focusMessage,
     unReadMessage,
     onRefetch,
+    wrapperMessageSx,
   }: MessagesProps,
   ref,
 ) => {
   const [firstElement, setFirstElement] = useState(null);
   const [isBottomScrollMessage, setBottomScrollMessage] = useState(false);
-
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
+  const { isDarkMode } = useTheme();
+  const { isChatDesktop } = useChat();
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
+
   const scrollHeightRef = useRef(0);
   const observer = useRef(
     new IntersectionObserver((entries) => {
@@ -81,7 +93,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         pageRef.current = pageRef.current + pageSize;
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         const clientHeight =
-          (messagesContentRef.current?.clientHeight || 0) + 100;
+          (messagesContentRef.current?.clientHeight || 0) + 50;
         if (scrollHeightRef.current > clientHeight) {
           onRefetch(pageRef.current);
         }
@@ -185,6 +197,48 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
+  const renderMessage = (message: MessageInfo) => {
+    let msg = "";
+    switch (message?.t) {
+      case "au":
+        msg = commonChatBox("chatBox.group.add", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? ""),
+        });
+        break;
+      case "ru":
+        msg = commonChatBox("chatBox.group.remove", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? ""),
+        });
+        break;
+      case "subscription-role-added":
+        msg = commonChatBox("chatBox.group.lead_trans", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? ""),
+        });
+        break;
+      case "subscription-role-removed":
+        msg = commonChatBox("chatBox.group.lead_remove", {
+          user1: message?.u?.username,
+          user2: message?.msg,
+          time: getTimeStamp(message?.ts ?? ""),
+        });
+        break;
+      case "r":
+        msg = commonChatBox("chatBox.group.rename", {
+          user1: message?.u?.username,
+          name: message?.msg,
+          time: getTimeStamp(message?.ts ?? ""),
+        });
+        break;
+    }
+    return msg;
+  };
+
   return (
     <>
       <Box
@@ -198,8 +252,13 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           gap: "0.5rem",
           flexDirection: "column",
           overflow: "auto",
-          height: "100%",
-          padding: "1rem 1rem 0 1rem",
+          ...(messages.length < 5 && { justifyContent: "flex-end" }),
+          height: "100vh",
+
+          padding: "1rem",
+          ...(!!wrapperMessageSx
+            ? { ...wrapperMessageSx }
+            : { height: "100%" }),
         }}
       >
         {messages.map((message, index) => {
@@ -223,6 +282,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           const showDate = `${nextTimeMessage.getDate()} ${
             nameMonthList[Number(nextTimeMessage.getMonth())]
           } ${isShowYear ? nextTimeMessage.getFullYear() : ""}`.trim();
+
           return (
             <React.Fragment key={index}>
               {!message?.t ? (
@@ -249,21 +309,23 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
                   />
                 </MessageLayout>
               ) : (
-                  <Box
+                <Box
+                  sx={{
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography
                     sx={{
-                      textAlign: 'center',
+                      backgroundColor: isDarkMode ? "#5b5959" : "#f1f1f1",
+                      fontSize: "10px",
+                      padding: "2px 5px",
+                      borderRadius: "10px",
+                      display: "inline-block",
                     }}
                   >
-                    <Typography
-                      sx={{
-                        backgroundColor: '#f1f1f1',
-                        fontSize: '10px',
-                        padding: '2px 5px',
-                        borderRadius: '10px',
-                        display: 'inline-block',
-                      }}
-                    >{message?.u?.username} {message?.t === 'au' ? 'added' : (message?.t === 'ru' ? 'removed' : message?.t)} {message?.msg} ({getTimeStamp(message?.ts ?? '')})</Typography>
-                  </Box>
+                    {renderMessage(message)}
+                  </Typography>
+                </Box>
               )}
               {hasNextDay && (
                 <Typography

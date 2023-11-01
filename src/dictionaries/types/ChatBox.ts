@@ -30,5 +30,19 @@ export type ChatBox = {
       text_3: string;
     },
     accountInformation: string,
+    added: string,
+    removed: string,
+    group: {
+      add: string,
+      remove: string,
+      lead_trans: string,
+      lead_remove,
+      edit_avatar: string,
+      rename: string,
+      rename_alert: string,
+      change_avatar_alert: string,
+      adminChange: string,
+      removeMember: string,
+    }
   };
 };

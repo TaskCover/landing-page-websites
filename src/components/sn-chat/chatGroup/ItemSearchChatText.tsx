@@ -28,7 +28,8 @@ const ItemSearchChatText = ({
         marginBottom: 1,
         // cursor: "pointer",
         ":hover": {
-          backgroundColor: isDarkMode ? "#3a3b3c" : "#F7F7FD"        },
+          backgroundColor: isDarkMode ? "#3a3b3c" : "#F7F7FD",
+        },
       }}
       p={1}
       onClick={onClickItem}
@@ -51,7 +52,11 @@ const ItemSearchChatText = ({
           {fullname}
         </Typography>
         <Typography variant="caption" color="#999999">
-          {matchedText}
+          <div
+            dangerouslySetInnerHTML={{
+              __html: matchedText,
+            }}
+          />
         </Typography>
       </Box>
       <Typography

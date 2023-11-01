@@ -1,3 +1,4 @@
+import { on } from "events";
 import { DataStatus, SORT_OPTIONS } from "constant/enums";
 import { useCallback, useEffect, useMemo } from "react";
 import { shallowEqual } from "react-redux";
@@ -6,24 +7,39 @@ import {
   CommentData,
   DealData,
   GetSalesListQueries,
+  SectionData,
   TodoData,
   TodoItemData,
   createComment,
   createDeal,
+  createServiceSection,
   createTodo,
+  deleteSection,
   deleteTodo,
   getDetailDeal,
   getSales,
+  getServices,
   updateDeal,
   updatePriority,
+  updateServiceSection,
   updateTodo,
 } from "./actions";
 import moment from "moment";
 import { useSnackbar } from "store/app/selectors";
-import { Todo } from "./reducer";
+import { ServiceSection, Todo, reset, setColumn, setRevenue } from "./reducer";
+import Item from "components/sn-cost-history/Item";
+import {
+  ServiceColumn,
+  defaultShowColumns,
+  useGetHeaderColumn,
+} from "components/sn-sales-detail/hooks/useGetHeaderColumn";
+import { useTranslations } from "next-intl";
+import { NS_COMMON, NS_SALES } from "constant/index";
 
 export const useSales = () => {
   const { onAddSnackbar } = useSnackbar();
+  const commonT = useTranslations(NS_COMMON);
+  const saleT = useTranslations(NS_SALES);
   const dispatch = useAppDispatch();
   const { sales, salesFilters, salesError, salesStatus } = useAppSelector(
     (state) => state.sales,
@@ -70,6 +86,7 @@ export const useSales = () => {
         name: data.dealName,
         members,
         company_id: data.company,
+        tags: data.tags,
       };
 
       await dispatch(createDeal(convertedBody)).then(() => {
@@ -78,6 +95,12 @@ export const useSales = () => {
           newPageIndex =
             totalItems % pageSize === 0 ? totalPages + 1 : totalPages;
         }
+        onAddSnackbar(
+          commonT("notification.success", {
+            label: saleT("list.newDealForm.submit"),
+          }),
+          "success",
+        );
         onGetSales({
           ...salesFilters,
           pageIndex: 1,
@@ -104,11 +127,21 @@ export const useSales = () => {
         members: data.members,
         status: data.status,
         company_id: data.company,
+        tags: data.tags,
         start_date,
       };
-      await dispatch(updateDeal({ id: data.id, data: convertedBody }));
+      await dispatch(updateDeal({ id: data.id, data: convertedBody })).then(
+        () => {
+          onAddSnackbar(
+            commonT("notification.success", {
+              label: saleT("list.newDealForm.update"),
+            }),
+            "success",
+          );
+        },
+      );
     },
-    [dispatch],
+    [dispatch, JSON.stringify(salesFilters)],
   );
 
   useEffect(() => {
@@ -139,10 +172,8 @@ export const useSales = () => {
 
 export const useSaleDetail = () => {
   const dispatch = useAppDispatch();
-  const { saleDetail, saleDetailError, saleDetailStatus } = useAppSelector(
-    (state) => state.sales,
-    shallowEqual,
-  );
+  const { saleDetail, saleDetailError, saleDetailStatus, saleRevenue } =
+    useAppSelector((state) => state.sales, shallowEqual);
   const isIdle = useMemo(
     () => saleDetailStatus === DataStatus.IDLE,
     [saleDetailStatus],
@@ -158,13 +189,26 @@ export const useSaleDetail = () => {
     },
     [dispatch],
   );
+  const onSetRevenue = useCallback(
+    (revenue: number) => {
+      dispatch(setRevenue(revenue));
+    },
+    [dispatch],
+  );
 
+  const onReset = useCallback(() => {
+    dispatch(setRevenue(0));
+    dispatch(reset());
+  }, [dispatch]);
   return {
     saleDetail,
     saleDetailError,
     saleDetailStatus,
     isIdle,
     isFetching,
+    saleRevenue,
+    onReset,
+    onSetRevenue,
     onGetSaleDetail,
   };
 };
@@ -175,6 +219,9 @@ export const useSalesTodo = () => {
     shallowEqual,
   );
   const dispatch = useAppDispatch();
+  const commonT = useTranslations(NS_COMMON);
+  const saleT = useTranslations(NS_SALES);
+  const { onAddSnackbar } = useSnackbar();
   const salesTodo = useMemo(() => {
     if (saleDetail) {
       return saleDetail.todo_list;
@@ -206,7 +253,16 @@ export const useSalesTodo = () => {
           ],
           deal_id: dealId,
         }),
-      ).unwrap();
+      )
+        .unwrap()
+        .then(() => {
+          onAddSnackbar(
+            commonT("notification.success", {
+              label: commonT("form.add"),
+            }),
+            "success",
+          );
+        });
     },
     [dispatch],
   );
@@ -226,12 +282,22 @@ export const useSalesTodo = () => {
           data: {
             todo_list: {
               ...data,
+              owner: data.owner ?? "",
               expiration_date: expiration_date,
             },
             deal_id: dealId,
           },
         }),
-      ).unwrap();
+      )
+        .unwrap()
+        .then(() => {
+          onAddSnackbar(
+            commonT("notification.success", {
+              label: commonT("update"),
+            }),
+            "success",
+          );
+        });
     },
     [dispatch],
   );
@@ -242,7 +308,16 @@ export const useSalesTodo = () => {
           id,
           dealId,
         }),
-      ).unwrap();
+      )
+        .unwrap()
+        .then(() => {
+          onAddSnackbar(
+            commonT("notification.success", {
+              label: commonT("delete"),
+            }),
+            "success",
+          );
+        });
     },
     [dispatch],
   );
@@ -276,11 +351,10 @@ export const useSalesTodo = () => {
 };
 
 export const useSalesComment = () => {
-  const { saleDetail, commentsStatus, commentsError } = useAppSelector(
-    (state) => state.sales,
-    shallowEqual,
-  );
+  const { saleDetail, commentsStatus, commentsError, sectionColumns } =
+    useAppSelector((state) => state.sales, shallowEqual);
   const dispatch = useAppDispatch();
+
   const salesComment = useMemo(() => {
     if (saleDetail) {
       return saleDetail.comments;
@@ -310,5 +384,112 @@ export const useSalesComment = () => {
     isIdle,
     isFetching,
     onCreateComment,
+  };
+};
+
+export const useSalesService = () => {
+  const { saleDetail } = useSaleDetail();
+  const {
+    serviceSectionList,
+    serviceSection,
+    servicesError,
+    servicesStatus,
+    sectionColumns,
+  } = useAppSelector((state) => state.sales, shallowEqual);
+  const dispatch = useAppDispatch();
+  const isIdle = useMemo(
+    () => servicesStatus === DataStatus.IDLE,
+    [servicesStatus],
+  );
+  const isFetching = useMemo(
+    () => servicesStatus === DataStatus.LOADING,
+    [servicesStatus],
+  );
+
+  const isSuccessful = useMemo(
+    () => servicesStatus === DataStatus.SUCCEEDED,
+    [servicesStatus],
+  );
+
+  const onGetService = useCallback(
+    async (dealId) => {
+      await dispatch(getServices({ dealId }));
+    },
+    [dispatch],
+  );
+
+  const onUpdateSection = useCallback(
+    async ({ sectionId, data }: { sectionId: string; data: SectionData }) => {
+      await dispatch(updateServiceSection({ sectionId, data }));
+    },
+    [dispatch],
+  );
+
+  const onCreateSection = useCallback(
+    async ({
+      dealId,
+      data,
+      start_date,
+    }: {
+      dealId: string;
+      start_date: string;
+      data: SectionData[];
+    }) => {
+      const newData = data.map((item) => ({
+        ...item,
+        services: item.service,
+      }));
+
+      await dispatch(
+        createServiceSection({
+          dealId,
+          data: newData as SectionData[],
+          start_date,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  const onSetColumns = (
+    sectionIndex: number,
+    col: ServiceColumn | ServiceColumn[],
+  ) => {
+    const columns = sectionColumns[sectionIndex]
+      ? [...sectionColumns[sectionIndex].columns]
+      : [...defaultShowColumns];
+
+    if (col instanceof Array) {
+      dispatch(setColumn({ sectionIndex, columns: col }));
+      return;
+    }
+    const isExisted = columns.includes(col);
+    if (isExisted) {
+      columns.splice(columns.indexOf(col), 1);
+    } else {
+      columns.push(col);
+    }
+
+    dispatch(setColumn({ sectionIndex, columns }));
+  };
+  const onDeleteSection = useCallback(
+    async (sectionId: string) => {
+      await dispatch(deleteSection({ sectionId }));
+    },
+    [dispatch],
+  );
+  return {
+    serviceSectionList,
+    serviceSection,
+    servicesError,
+    isSuccessful,
+    isIdle,
+    isFetching,
+    sectionColumns,
+    onGetService,
+    onCreateSection,
+    onUpdateSection,
+    onSetColumns,
+    onDeleteSection,
   };
 };
