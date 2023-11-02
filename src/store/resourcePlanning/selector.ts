@@ -103,8 +103,8 @@ export const useBookingAll = () => {
     data: BookingData,
     disableSnackbar?: boolean,
   ) => {
-    console.log(data);
     await dispatch(createBookingResource(data))
+      .unwrap()
       .then(async () => {
         await getBookingResource(bookingAllFilter);
         await getMyBooking(myBookingFilter);
@@ -128,6 +128,7 @@ export const useBookingAll = () => {
         id,
       }),
     )
+      .unwrap()
       .then(async () => {
         await getMyBooking(myBookingFilter);
         await getBookingResource(bookingAllFilter);
@@ -142,6 +143,7 @@ export const useBookingAll = () => {
 
   const deleteBooking = async (id: string, disableSnackbar?: boolean) => {
     await dispatch(deleteBookingResource(id))
+      .unwrap()
       .then(async () => {
         await getBookingResource(bookingAllFilter);
         await getMyBooking(myBookingFilter);
@@ -153,11 +155,11 @@ export const useBookingAll = () => {
           onAddSnackbar(resourceT("form.deleteFailed"), "error");
       });
   };
-  useEffect(() => {
-    if (bookingAllError) {
-      onAddSnackbar(bookingAllError, "error");
-    }
-  }, [bookingAllError]);
+  // useEffect(() => {
+  //   if (bookingAllError) {
+  //     onAddSnackbar(bookingAllError, "error");
+  //   }
+  // }, [bookingAllError]);
   return {
     bookingAllFilter,
     totalHour,
@@ -187,11 +189,11 @@ export const useMyBooking = () => {
     await dispatch(getMyBookingResource(params));
   };
 
-  useEffect(() => {
-    if (myBookingError) {
-      onAddSnackbar(myBookingError, "error");
-    }
-  }, [myBookingError]);
+  // useEffect(() => {
+  //   if (myBookingError) {
+  //     onAddSnackbar(myBookingError, "error");
+  //   }
+  // }, [myBookingError]);
 
   return {
     myBooking,

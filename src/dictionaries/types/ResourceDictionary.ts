@@ -88,5 +88,7 @@ export default interface ResourceDictionary {
     editBooking: string;
     updateSuccess: string;
     updateFailed: string;
+    deleteFailed: string;
+    deleteSuccess: string;
   };
 }

@@ -79,9 +79,9 @@ export const ResourcePlanningLang: ResourceDictionary = {
       openAdmin: "Open budget 'Administration'",
     },
     error: {
-      split: 'Cannot split booking, day range is too short',
-      duplicate: 'Cannot duplicate booking',
-      repeat: 'Cannot repeat booking',  
+      split: "Cannot split booking, day range is too short",
+      duplicate: "Cannot duplicate booking",
+      repeat: "Cannot repeat booking",
     },
     timeOffCategory: "Time off category",
     createSuccess: "Create booking successfully",
@@ -89,5 +89,7 @@ export const ResourcePlanningLang: ResourceDictionary = {
     editBooking: "Edit booking",
     updateSuccess: "Update booking successfully",
     updateFailed: "Update booking failed",
+    deleteSuccess: "Delete booking successfully",
+    deleteFailed: "Delete booking failed",
   },
 };

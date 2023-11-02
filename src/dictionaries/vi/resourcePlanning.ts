@@ -89,5 +89,7 @@ export const ResourcePlanning: ResourceDictionary = {
     editBooking: "Sửa lịch",
     updateFailed: "Cập nhật lịch thất bại",
     updateSuccess: "Cập nhật lịch thành công",
+    deleteFailed: "Xóa lịch thất bại",
+    deleteSuccess: "Xóa lịch thành công",
   },
 };
