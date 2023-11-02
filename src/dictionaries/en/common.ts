@@ -43,6 +43,7 @@ export const CommonLang: CommonDictionary = {
     save: "Save",
     cancel: "Cancel",
     add: "Add",
+    forward: "Forward",
     admin: "Admin",
   },
   notification: {
