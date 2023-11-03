@@ -84,7 +84,9 @@ export const useBookingAll = () => {
 
     await dispatch(getBookingAll(params));
   };
-
+  const onSetBookingFilter = (filter: IBookingAllFitler) => {
+    dispatch(setBookingAllFilter(filter));
+  };
   const isReady = useMemo(
     () => bookingAllStatus === DataStatus.SUCCEEDED,
     [bookingAllStatus],
@@ -103,8 +105,8 @@ export const useBookingAll = () => {
     data: BookingData,
     disableSnackbar?: boolean,
   ) => {
-    console.log(data);
     await dispatch(createBookingResource(data))
+      .unwrap()
       .then(async () => {
         await getBookingResource(bookingAllFilter);
         await getMyBooking(myBookingFilter);
@@ -128,6 +130,7 @@ export const useBookingAll = () => {
         id,
       }),
     )
+      .unwrap()
       .then(async () => {
         await getMyBooking(myBookingFilter);
         await getBookingResource(bookingAllFilter);
@@ -142,6 +145,7 @@ export const useBookingAll = () => {
 
   const deleteBooking = async (id: string, disableSnackbar?: boolean) => {
     await dispatch(deleteBookingResource(id))
+      .unwrap()
       .then(async () => {
         await getBookingResource(bookingAllFilter);
         await getMyBooking(myBookingFilter);
@@ -153,11 +157,11 @@ export const useBookingAll = () => {
           onAddSnackbar(resourceT("form.deleteFailed"), "error");
       });
   };
-  useEffect(() => {
-    if (bookingAllError) {
-      onAddSnackbar(bookingAllError, "error");
-    }
-  }, [bookingAllError]);
+  // useEffect(() => {
+  //   if (bookingAllError) {
+  //     onAddSnackbar(bookingAllError, "error");
+  //   }
+  // }, [bookingAllError]);
   return {
     bookingAllFilter,
     totalHour,
@@ -168,6 +172,7 @@ export const useBookingAll = () => {
     updateBooking,
     bookingAll,
     bookingAllError,
+    setBookingAllFilter: onSetBookingFilter,
     getBookingResource,
   };
 };
@@ -177,7 +182,9 @@ export const useMyBooking = () => {
     useAppSelector((state) => state.resourcePlanning);
   const { onAddSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
-
+  const onSetMyBookingFilter = (filter: IBookingAllFitler) => {
+    dispatch(setBookingAllFilter(filter));
+  };
   const isReady = useMemo(
     () => myBookingStatus === DataStatus.SUCCEEDED,
     [myBookingStatus],
@@ -187,11 +194,11 @@ export const useMyBooking = () => {
     await dispatch(getMyBookingResource(params));
   };
 
-  useEffect(() => {
-    if (myBookingError) {
-      onAddSnackbar(myBookingError, "error");
-    }
-  }, [myBookingError]);
+  // useEffect(() => {
+  //   if (myBookingError) {
+  //     onAddSnackbar(myBookingError, "error");
+  //   }
+  // }, [myBookingError]);
 
   return {
     myBooking,
@@ -199,5 +206,6 @@ export const useMyBooking = () => {
     myBookingFilter,
     isReady,
     getMyBooking,
+    setMyBookingFilter: onSetMyBookingFilter,
   };
 };

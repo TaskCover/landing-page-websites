@@ -1,7 +1,7 @@
 "use client";
 
 import FullCalendar from "@fullcalendar/react";
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import {
   IBookingAllFitler,
   updateBookingResource,
@@ -35,6 +35,9 @@ import useTheme from "hooks/useTheme";
 import EditBooking from "./modals/EditBooking";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
 import { useGetTotalScheduleTime } from "./hooks/useCalculateDetail";
+import { TIME_OFF_TYPE } from "components/sn-sales/helpers";
+import PlusIcon from "icons/PlusIcon";
+import { Button } from "components/shared";
 
 export interface IEditState {
   isOpen: boolean;
@@ -52,7 +55,7 @@ const AllPeopleTab = () => {
   );
   prevFilters.current = filters;
 
-  const { bookingAll, bookingAllFilter } = useBookingAll();
+  const { bookingAll, bookingAllFilter, setBookingAllFilter } = useBookingAll();
   const { selectedDate, updateDate } = useResourceDate();
   const [resources, setResources] = React.useState<IBookingListItem[]>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
@@ -89,6 +92,12 @@ const AllPeopleTab = () => {
   useFetchOptions();
   useFetchBookingAll();
 
+  // useEffect(() => {
+  //   if (filters) {
+  //     setBookingAllFilter(filters);
+  //   }
+  // }, [filters]);
+
   React.useEffect(() => {
     if (bookingAll) setResources(bookingAll);
   }, [bookingAll]);
@@ -111,7 +120,7 @@ const AllPeopleTab = () => {
 
   const handleEventChange =
     (calendarRef: React.RefObject<FullCalendar>, isResize: boolean) =>
-    ({ event, revert }) => {
+    async ({ event, revert }) => {
       const { type, campaignId, saleId, ...restData } = event.extendedProps;
       if (isResize && type === "campaign") return revert();
       if (type === "campaign") {
@@ -121,7 +130,7 @@ const AllPeopleTab = () => {
         // Step has been resized or move, update the campaign date
         if (!calendarRef.current) return null;
         const dateRange = event._instance.range;
-        updateBooking(
+        await updateBooking(
           {
             ...restData,
             user_id: campaignId,
@@ -132,7 +141,7 @@ const AllPeopleTab = () => {
             sale_id: saleId,
           },
           restData.eventId,
-        );
+        ).catch(() => revert());
         return null;
       }
     };
@@ -151,82 +160,116 @@ const AllPeopleTab = () => {
   };
 
   // Convert resource bookings to event content for render
-  const getEvents = () =>
-    resources
-      ?.map(
-        ({ id, bookings, fullname }) =>
-          bookings.map((props) => {
-            const {
-              id: eventId,
-              start_date: from,
-              end_date: to,
-              booking_type,
-              allocation,
-              position,
-              allocation_type,
-              total_hour,
-              time_off_type,
-              sale_id,
-            } = props;
+  const getEvents = useCallback(
+    () =>
+      resources
+        ?.map(
+          ({ id, bookings, fullname }) =>
+            bookings.map((props) => {
+              const {
+                id: eventId,
+                start_date: from,
+                end_date: to,
+                booking_type,
+                allocation,
+                position,
+                allocation_type,
+                total_hour,
+                time_off_type,
+                user_id,
+                sale_id,
+                project_id,
+              } = props;
+              return {
+                resourceId:
+                  (project_id && `${user_id}.${project_id}`) || eventId,
+                start: dayjs(from).toDate(),
+                end: dayjs(to).toDate(),
+                allDay: true,
+                type: "step",
+                campaignId: id,
+                position,
+                name: fullname,
+                allocation,
+                user_id: eventId,
+                allocation_type,
+                total_hour,
+                time_off_type,
+                saleId: sale_id,
+                eventType: booking_type,
+                eventId,
+              };
+            }),
 
-            return {
-              resourceId: eventId.toString(),
-              start: dayjs(from).toDate(),
-              end: dayjs(to).toDate(),
-              allDay: true,
-              type: "step",
-              campaignId: id,
-              position,
-              name: fullname,
-              allocation,
-              allocation_type,
-              total_hour,
-              time_off_type,
-              saleId: sale_id,
-              eventType: booking_type,
-              eventId,
-            };
-          }),
-        // TODO: remove if the label has no info
-        // .concat([
-        //   {
-        //     resourceId: id,
-        //     start: dayjs(filters?.start_date).toDate(),
-        //     end: dayjs(filters?.end_date).toDate(),
-        //     allDay: true,
-        //     type: "campaign",
-        //     campaignId: id,
-        //     name: fullname,
-        //     position: {},
-        //     allocation: 0,
-        //     allocation_type: "",
-        //     total_hour: 0,
-        //     eventType: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
-        //     eventId: id,
-        //   },
-        // ]),
-      )
-      .flat();
+          // TODO: remove if the label has no info
+          // .concat([
+          //   {
+          //     resourceId: id,
+          //     start: dayjs(filters?.start_date).toDate(),
+          //     end: dayjs(filters?.end_date).toDate(),
+          //     allDay: true,
+          //     type: "campaign",
+          //     campaignId: id,
+          //     name: fullname,
+          //     position: {},
+          //     allocation: 0,
+          //     allocation_type: "",
+          //     total_hour: 0,
+          //     eventType: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
+          //     eventId: id,
+          //   },
+          // ]),
+        )
+        .flat(),
+    [resources],
+  );
 
   // convert the resource to resource content for render
-  const getResources = () =>
-    resources?.map((resource) => ({
-      ...resource,
-      children: resource?.bookings.map((booking) => ({
-        id: booking?.id,
-        name: booking?.project?.name,
-        type: "step",
-        eventType: booking?.booking_type,
-        note: booking?.note,
-        position: booking?.position,
-        allocation: booking?.allocation,
-        allocation_type: booking?.allocation_type,
-        total_hour: booking?.total_hour,
-        saleId: booking?.sale_id,
-      })),
-    }));
+  const getResources = useCallback(() => {
+    const result = resources?.map((resource) => {
+      const resourceEvent = {
+        ...resource,
+        user_id: resource.id,
+        children: resource?.bookings.map((booking) => ({
+          id:
+            (booking?.project_id &&
+              `${booking.user_id}.${booking?.project_id}`) ||
+            booking?.id,
+          name: booking?.project?.name,
+          type: "step",
+          eventType: booking?.booking_type,
+          note: booking?.note,
+          position: booking?.position,
+          allocation: booking?.allocation,
+          allocation_type: booking?.allocation_type,
+          total_hour: booking?.total_hour,
+          user_id: booking?.user_id,
+          saleId: booking?.sale_id,
+        })),
+      };
+
+      resourceEvent.children.push({
+        id: `${resource.id}.end`,
+        name: "",
+        allocation: 0,
+        total_hour: 0,
+        allocation_type: "",
+        eventType: "",
+        note: "",
+        position: {},
+        saleId: "",
+        user_id: resource.id,
+        type: "end",
+      });
+
+      return resourceEvent;
+    });
+
+    return result;
+  }, [resources]);
 
   const mappedResources = getResources();
+
   const mappedEvents = getEvents();
 
   useGetOptions();
@@ -269,7 +312,18 @@ const AllPeopleTab = () => {
         setFilters={setFilters}
         calendarRef={calendarRef}
       />
-      <Box sx={{ ...defaultStyle, overflowX: "scroll" }}>
+      <Box
+        sx={{
+          ...defaultStyle,
+          overflowX: "scroll",
+          "& .fc-theme-standard td:last-child": {
+            borderBottom: "none!important",
+          },
+          // "& .fc-theme-standard td:nth-last-child(2)": {
+          //   border: "none!important",
+          // },
+        }}
+      >
         <FullCalendar
           ref={calendarRef}
           plugins={[resourceTimelinePlugin, interactionPlugin]}
@@ -280,8 +334,33 @@ const AllPeopleTab = () => {
           weekends={true}
           editable={true}
           eventResourceEditable={true}
+          eventDurationEditable={true}
           headerToolbar={false}
+          selectable={true}
+          selectMirror={true}
+          eventDragStart={(arg) => {
+            const { event } = arg;
+            if (event.extendedProps.type === "campaign") {
+              return false;
+            }
+          }}
           duration={{ weeks: 1 }}
+          select={(arg) => {
+            const { start, end } = arg;
+            const start_date = dayjs(start).format("YYYY-MM-DD");
+            const end_date = dayjs(end).format("YYYY-MM-DD");
+            const resource = resources.find(
+              (item) => item.id === selectedResource[0],
+            );
+            // if (!resource) return;
+            // const { id, fullname } = resource;
+            // updateBookingResource({
+            //   id,
+            //   start_date,
+            //   end_date,
+            // });
+            setIsOpenCreate(true);
+          }}
           slotDuration={{
             days: 1,
           }}
@@ -300,17 +379,38 @@ const AllPeopleTab = () => {
               />
             );
           }}
-          resourceLabelContent={({ resource }) => {
+          resourceLabelContent={({ resource, view }) => {
             const parentResource = resources.find(
               (item) => item.id === resource._resource.parentId,
             );
-            console.log(
-              "🚀 ~ file: AllPeopleTab.tsx:306 ~ AllPeopleTab ~ resources:",
-              resources,
-            );
+
+            if (resource._resource.extendedProps.type === "end") {
+              console.log(
+                "🚀 ~ file: AllPeopleTab.tsx:387 ~ AllPeopleTab ~ resource:",
+                resource._resource.extendedProps.user_id,
+              );
+
+              return (
+                <Button
+                  variant="text"
+                  startIcon={<PlusIcon />}
+                  sx={{
+                    color: "success.main",
+                  }}
+                  // startIcon={<AddIcon />}
+                  onClick={() => {
+                    setIsOpenCreate(true);
+                    setParentResource(resource._resource.extendedProps.user_id);
+                  }}
+                >
+                  {resourceT("schedule.action.addBooking")}
+                </Button>
+              );
+            }
             const bookings = parentResource
               ? [...parentResource?.bookings]
               : [];
+
             const isLastItem =
               bookings.pop()?.id === resource._resource.id ||
               bookings.length === 0;

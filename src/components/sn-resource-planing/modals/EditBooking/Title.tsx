@@ -1,4 +1,6 @@
 import { Stack } from "@mui/material";
+import ConfirmDialog from "components/ConfirmDialog";
+import Loading from "components/Loading";
 import { Button, Text, Tooltip } from "components/shared";
 import { useEditAction } from "components/sn-resource-planing/hooks/useBookingAll";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
@@ -8,7 +10,7 @@ import RepeatIcon from "icons/RepeatIcon";
 import SplitIcon from "icons/SplitIcon";
 import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { IBookingItem } from "store/resourcePlanning/reducer";
 import { useBookingAll } from "store/resourcePlanning/selector";
 
@@ -21,8 +23,9 @@ const Title = ({
 }) => {
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const commonT = useTranslations(NS_COMMON);
-  const { handleSplit, handleDelete } = useEditAction();
+  const { handleSplit, handleDelete, handleDuplicate } = useEditAction();
   const { bookingAll, isLoading } = useBookingAll();
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false);
 
   const bookingEvent: IBookingItem = useMemo(() => {
     const booking =
@@ -35,18 +38,32 @@ const Title = ({
     return booking;
   }, [JSON.stringify(bookingAll), bookingId]);
 
-  const onHandleSplit = async () => {
+  const onHandleSplit = async (e) => {
+    e.stopPropagation();
     await handleSplit(bookingId, bookingEvent).finally(() => {
       onClose();
     });
   };
 
-  const onHandleDelete = async () => {
+  const onHandleDelete = async (e) => {
+    e.stopPropagation();
+
     await handleDelete(bookingId).finally(() => {
       onClose();
     });
   };
 
+  const onHandleDuplicate = async (e) => {
+    e.stopPropagation();
+
+    await handleDuplicate(bookingId, bookingEvent).finally(() => {
+      onClose();
+    });
+  };
+
+  if (isLoading) {
+    return <Loading open />;
+  }
   return (
     <Stack>
       <Text
@@ -66,7 +83,7 @@ const Title = ({
           arrow
         >
           <Button
-            onClick={() => onHandleSplit()}
+            onClick={(e) => onHandleSplit(e)}
             variant="text"
             TouchRippleProps={{
               style: {
@@ -145,7 +162,12 @@ const Title = ({
               },
             }}
           >
-            <DuplicateIcon width={30} height={30} fontSize="small" />
+            <DuplicateIcon
+              width={30}
+              height={30}
+              fontSize="small"
+              onClick={(e) => onHandleDuplicate(true)}
+            />
           </Button>
         </Tooltip>
         <Tooltip
@@ -154,7 +176,7 @@ const Title = ({
           arrow
         >
           <Button
-            onClick={() => onHandleDelete()}
+            onClick={(e) => setIsConfirmDelete(true)}
             variant="text"
             TouchRippleProps={{
               style: {
@@ -179,6 +201,13 @@ const Title = ({
           </Button>
         </Tooltip>
       </Stack>
+      <ConfirmDialog
+        onSubmit={(e) => onHandleDelete(e)}
+        title={commonT("confirmDelete.title")}
+        onClose={() => setIsConfirmDelete(false)}
+        open={isConfirmDelete}
+        content={commonT("confirmDelete.content")}
+      />
     </Stack>
   );
 };

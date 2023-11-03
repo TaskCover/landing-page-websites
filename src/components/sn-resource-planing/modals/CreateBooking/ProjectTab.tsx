@@ -36,10 +36,10 @@ interface IProps {
   open: boolean;
   onClose(): void;
   resourceId: string;
-  userId: string;
+  userId?: string;
 }
 
-const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
+const ProjectTab = ({ open, onClose, resourceId, userId }: IProps) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
   const [isShowTooltip, setIsShowTooltip] = useState(false);
@@ -79,7 +79,7 @@ const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
   const onSubmitProject = (data) => {
     const cleanData: BookingData = {
       ...data,
-      user_id: resourceId,
+      user_id: userId,
       start_date: dayjs(data.dateRange.startDate).format("YYYY-MM-DD"),
       end_date: dayjs(data.dateRange.endDate).format("YYYY-MM-DD"),
       booking_type: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,

@@ -43,15 +43,19 @@ const ResourceLabel = ({
     position,
     eventType,
     note,
+    project,
     bookings: parentBookings,
-  } = resource.extendedProps;
+  } = resource._resource.extendedProps;
+
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const isActive = includes(selectedResource, resource._resource.id);
   const { totalLeftToSchedule } = useGetTotalScheduleTime();
   const handleOpenCreate = () => {
     setIsOpenCreate(true);
-    setParentResource(resource._resource.parentId || resource._resource.id);
+    setParentResource(
+      resource._resource.extendedProps.user_id || resource._resource.id,
+    );
   };
 
   const schedulePerLeft =
@@ -92,7 +96,7 @@ const ResourceLabel = ({
             </Typography>
           </Stack>
         </Grid>
-        {isLastItem && (
+        {/* {isLastItem && (
           <Button
             variant="text"
             startIcon={<PlusIcon />}
@@ -104,7 +108,7 @@ const ResourceLabel = ({
           >
             {resourceT("schedule.action.addBooking")}
           </Button>
-        )}
+        )} */}
         <Grid item xs={5} />
       </Grid>
     );
@@ -202,7 +206,7 @@ const ResourceLabel = ({
             </Typography>
           </Grid>
         </Grid>
-        {parentBookings?.length === 0 && (
+        {/* {parentBookings?.length === 0 && (
           <Button
             variant="text"
             startIcon={<PlusIcon />}
@@ -214,7 +218,7 @@ const ResourceLabel = ({
           >
             {resourceT("schedule.action.addBooking")}
           </Button>
-        )}
+        )} */}
       </Grid>
     </Grid>
   );

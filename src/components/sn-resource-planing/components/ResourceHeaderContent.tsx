@@ -23,7 +23,7 @@ const ResourceHeaderContent = ({ totalhour }: IProps) => {
         xs: 2,
         md: 1,
       }}
-      sx={{ width: 1 }}
+      sx={{ width: 1, backgroundColor: "grey.50" }}
     >
       <Grid item xs={4} md={5} />
       <Grid item xs={1} md={2}>
