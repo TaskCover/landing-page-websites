@@ -162,7 +162,15 @@ const SubItem = ({
                   />
                 </Grid2>
                 <Grid2 xs={8} md={9}>
-                  {action === Action.RENAME ? (
+                  <TodoName
+                    onSubmit={onChangeName}
+                    value={nameTodo}
+                    autoFocus={false}
+                    onBlur={() => {
+                      setAction(undefined);
+                    }}
+                  />
+                  {/* {action === Action.RENAME ? (
                     <TodoName
                       onSubmit={onChangeName}
                       value={nameTodo}
@@ -184,7 +192,7 @@ const SubItem = ({
                     >
                       {name}
                     </Text>
-                  )}
+                  )} */}
                 </Grid2>
               </Grid2>
 

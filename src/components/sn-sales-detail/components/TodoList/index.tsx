@@ -48,9 +48,10 @@ export const TodoName = ({
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
   const ref = React.useRef<HTMLInputElement>(null);
-
+  const innerRef = React.useRef<HTMLInputElement>(null);
   const [name, setName] = useState<string>(value);
   const [error, setError] = useState<string>("");
+  const [isSubmited, setIsSubmited] = useState<boolean>(false);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.stopPropagation();
@@ -60,10 +61,9 @@ export const TodoName = ({
       return;
     }
     setName(event.target.value);
-    setError("");
+    isAssign && setError("");
   };
 
-  const { saleDetail } = useSaleDetail();
   const { control, getValues, setValue } = useFormContext();
 
   const handleSubmit = async () => {
@@ -71,7 +71,9 @@ export const TodoName = ({
 
     if (nameTrimmed) {
       setValue("todoItem.name", nameTrimmed);
+      setName(nameTrimmed);
       if (nameTrimmed !== value) await onSubmit(getValues("todoItem"));
+      setError("");
     } else {
       setError(
         commonT("form.error.required", {
@@ -79,20 +81,30 @@ export const TodoName = ({
         }),
       );
     }
-    setName("");
+    isAssign && setName("");
   };
 
-  const onKeyDown = async (event, isBlur: boolean) => {
-    event.stopPropagation();
+  const onKeyDown = useCallback(
+    async (event, isBlur: boolean) => {
+      event.stopPropagation();
+      if (isSubmited) {
+        setIsSubmited(false);
+        return;
+      }
 
-    if (isBlur && onBlur) {
-      onBlur();
-      handleSubmit();
-      return;
-    }
-    if (event.key !== "Enter") return;
-    handleSubmit();
-  };
+      if (isBlur && onBlur) {
+        onBlur();
+        await handleSubmit();
+        return;
+      }
+      if (event.key !== "Enter") return;
+      setIsSubmited(true);
+      await handleSubmit().then(() => {
+        innerRef.current?.blur();
+      });
+    },
+    [isSubmited, name],
+  );
 
   return (
     <Grid2
@@ -123,8 +135,8 @@ export const TodoName = ({
           )}
           <TextField
             multiline
-            onBlur={(e) => onKeyDown(e, true)}
-            onKeyDown={(e) => onKeyDown(e, false)}
+            // onBlur={(e) => onKeyDown(e, true)}
+            // onKeyDown={(e) => onKeyDown(e, false)}
             value={name}
             fullWidth
             ref={ref}
@@ -133,10 +145,14 @@ export const TodoName = ({
             inputProps={{
               onBlur: (e) => onKeyDown(e, true),
               onKeyDown: (e) => onKeyDown(e, false),
+              ref: innerRef,
+            }}
+            onSelect={(e) => {
+              e.stopPropagation();
             }}
             placeholder={salesT("detail.todoList.addNew")}
-            focused
             onChange={onChange}
+            focused={isAssign}
             color="success"
             autoFocus={autoFocus}
             sx={{
@@ -145,11 +161,21 @@ export const TodoName = ({
               },
               "& input": {
                 fontSize: 15,
+                cursor: "pointer",
               },
               "& .MuiInputBase-root": {
                 padding: 0,
+                cursor: "pointer",
               },
-
+              "& .MuiInputBase-input": {
+                cursor: "pointer",
+              },
+              "& .MuiInputBase-root:before": {
+                borderBottom: "none",
+              },
+              "& .MuiInputBase-root:hover::before": {
+                borderBottom: "none!important",
+              },
               padding: 0,
             }}
           />
