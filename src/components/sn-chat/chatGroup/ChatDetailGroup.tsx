@@ -112,11 +112,11 @@ const ChatDetailGroup = (props) => {
       if (result?.error) {
         return onAddSnackbar(result?.error?.message, "error");
       }
-      (await onChangeGroupRole({
-        groupId: dataTransfer?._id,
-        userIdToChange: user?.id_rocket ?? "",
-        newRole: "removeOwner",
-      })) as any;
+      // (await onChangeGroupRole({
+      //   groupId: dataTransfer?._id,
+      //   userIdToChange: user?.id_rocket ?? "",
+      //   newRole: "removeOwner",
+      // })) as any;
       onAddSnackbar(commonChatBox("chatBox.group.adminChange"), "success");
     } else {
       const result = (await onRemoveGroupMember({
@@ -250,7 +250,7 @@ const ChatDetailGroup = (props) => {
             showPopup?.content
           )}
         </Box>
-        {![TYPE_POPUP.NEW_ADMIN, TYPE_POPUP.RENAME_GROUP].includes(showPopup?.type) && (
+        {[TYPE_POPUP.FORWARD_MESSAGE].includes(showPopup?.type) && (
           <ForwardLayout />
         )}
         {![TYPE_POPUP.NEW_ADMIN].includes(showPopup?.type) && (

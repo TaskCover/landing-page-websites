@@ -34,8 +34,11 @@ const AccountInfoHeader = ({
 
   const [textSearch, setTextSearch] = useState("");
   const commonChatBox = useTranslations(NS_CHAT_BOX);
+  const [avatar, setAvatar] = useState<string | undefined>(dataTransfer?.avatar);
 
-  console.log(textSearch);
+  useEffect(() => {
+    setAvatar(dataTransfer?.avatar);
+  }, [dataTransfer?.avatar]);
 
   useEffect(() => {
     (async () => {
@@ -58,46 +61,62 @@ const AccountInfoHeader = ({
     if (isGroup) {
       return (
         <>
-          <div style={{ position: "relative" }}>
-            <ImageList
-              sx={{ width: 56, height: 56, margin: 0 }}
-              cols={2}
-              rowHeight={164}
-            >
+          <div
+            onClick={() => {
+              onSetStep(STEP.CHAT_DETAIL_GROUP);
+            }}
+            style={{ position: "relative", cursor: 'pointer' }}>
+            {avatar ? (
               <Avatar
                 alt="Avatar"
-                size={25}
+                size={56}
+                src={avatar || undefined}
                 style={{
-                  borderRadius: "5px",
+                  borderRadius: "10px",
                 }}
+                onError={() => setAvatar(undefined)}
               />
-              <Avatar
-                alt="Avatar"
-                size={25}
-                style={{
-                  borderRadius: "5px",
-                }}
-              />
-              <Avatar
-                alt="Avatar"
-                size={25}
-                style={{
-                  borderRadius: "5px",
-                }}
-              />
-              {usersCount - 3 > 0 ? (
-                <Box
-                  sx={{
-                    textAlign: "center",
-                    borderRadius: "5px",
-                    backgroundColor: "#3078F1",
-                    color: "white",
-                  }}
+            ): (
+                <ImageList
+                  sx={{ width: 56, height: 56, margin: 0 }}
+                  cols={2}
+                  rowHeight={164}
                 >
-                  <Typography variant="caption">+ {usersCount - 3}</Typography>
-                </Box>
-              ) : null}
-            </ImageList>
+                  <Avatar
+                    alt="Avatar"
+                    size={25}
+                    style={{
+                      borderRadius: "5px",
+                    }}
+                  />
+                  <Avatar
+                    alt="Avatar"
+                    size={25}
+                    style={{
+                      borderRadius: "5px",
+                    }}
+                  />
+                  <Avatar
+                    alt="Avatar"
+                    size={25}
+                    style={{
+                      borderRadius: "5px",
+                    }}
+                  />
+                  {usersCount - 3 > 0 ? (
+                    <Box
+                      sx={{
+                        textAlign: "center",
+                        borderRadius: "5px",
+                        backgroundColor: "#3078F1",
+                        color: "white",
+                      }}
+                    >
+                      <Typography variant="caption">+ {usersCount - 3}</Typography>
+                    </Box>
+                  ) : null}
+                </ImageList>
+            )}
             <IconButton
               style={{
                 width: 5,
@@ -112,7 +131,11 @@ const AccountInfoHeader = ({
             </IconButton>
           </div>
           <Box
+            onClick={() => {
+              onSetStep(STEP.CHAT_DETAIL_GROUP);
+            }}
             sx={{
+              cursor: 'pointer',
               display: "flex",
               flexDirection: "column",
             }}
@@ -121,9 +144,6 @@ const AccountInfoHeader = ({
               variant="inherit"
               fontWeight="bold"
               style={{ cursor: "pointer" }}
-              onClick={() => {
-                onSetStep(STEP.CHAT_DETAIL_GROUP);
-              }}
             >
               {name ? name : dataTransfer?.fname?.replaceAll("_", " ")}
             </Typography>
@@ -131,16 +151,6 @@ const AccountInfoHeader = ({
               {commonChatBox("chatBox.active")}
             </Typography>
           </Box>
-          {/* <IconButton
-            sx={{
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              onSetStep(STEP.CHAT_DETAIL_GROUP);
-            }}
-          >
-            <ArrowRightIcon />
-          </IconButton> */}
         </>
       );
     }
@@ -202,7 +212,7 @@ const AccountInfoHeader = ({
             </Typography>
             <IconButton
               onClick={() => {
-                onSetStep(STEP.ADD_GROUP, { ...dataTransfer, isNew: !isGroup });
+                onSetStep(STEP.CHAT_GROUP, dataTransfer);
               }}
               sx={{
                 width: "26px",

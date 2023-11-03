@@ -185,7 +185,7 @@ const ChatForward: FC<Props> = (props) => {
                 position: "absolute",
                 left: 14,
                 top: 10,
-                background: isDarkMode ? "#1e1e1e" : "white",
+                background: '#ffffff00',
               }}
             >
               Message
@@ -224,7 +224,7 @@ const ChatForward: FC<Props> = (props) => {
                   isRead={true}
                 />
               ) : (
-                <div
+                  <div
                   dangerouslySetInnerHTML={{
                     __html: dataTransfer?.message?.msg,
                   }}
@@ -280,7 +280,7 @@ const ChatForward: FC<Props> = (props) => {
             size="small"
             onClick={handleForwardMessage}
           >
-            {commonT("form.add")}
+            {commonT("form.forward")}
           </Button>
         </Box>
       </Box>
