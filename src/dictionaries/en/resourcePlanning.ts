@@ -83,6 +83,7 @@ export const ResourcePlanningLang: ResourceDictionary = {
       duplicate: "Cannot duplicate booking",
       repeat: "Cannot repeat booking",
     },
+    confirmDelete: "Are you sure to delete?",
     timeOffCategory: "Time off category",
     createSuccess: "Create booking successfully",
     createFailed: "Create booking failed",

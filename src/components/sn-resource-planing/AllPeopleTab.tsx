@@ -1,7 +1,7 @@
 "use client";
 
 import FullCalendar from "@fullcalendar/react";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import {
   IBookingAllFitler,
   updateBookingResource,
@@ -35,6 +35,9 @@ import useTheme from "hooks/useTheme";
 import EditBooking from "./modals/EditBooking";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
 import { useGetTotalScheduleTime } from "./hooks/useCalculateDetail";
+import { TIME_OFF_TYPE } from "components/sn-sales/helpers";
+import PlusIcon from "icons/PlusIcon";
+import { Button } from "components/shared";
 
 export interface IEditState {
   isOpen: boolean;
@@ -52,7 +55,7 @@ const AllPeopleTab = () => {
   );
   prevFilters.current = filters;
 
-  const { bookingAll, bookingAllFilter } = useBookingAll();
+  const { bookingAll, bookingAllFilter, setBookingAllFilter } = useBookingAll();
   const { selectedDate, updateDate } = useResourceDate();
   const [resources, setResources] = React.useState<IBookingListItem[]>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
@@ -88,6 +91,12 @@ const AllPeopleTab = () => {
   };
   useFetchOptions();
   useFetchBookingAll();
+
+  // useEffect(() => {
+  //   if (filters) {
+  //     setBookingAllFilter(filters);
+  //   }
+  // }, [filters]);
 
   React.useEffect(() => {
     if (bookingAll) setResources(bookingAll);
@@ -182,7 +191,7 @@ const AllPeopleTab = () => {
                 position,
                 name: fullname,
                 allocation,
-                user_id,
+                user_id: eventId,
                 allocation_type,
                 total_hour,
                 time_off_type,
@@ -191,6 +200,7 @@ const AllPeopleTab = () => {
                 eventId,
               };
             }),
+
           // TODO: remove if the label has no info
           // .concat([
           //   {
@@ -215,10 +225,11 @@ const AllPeopleTab = () => {
   );
 
   // convert the resource to resource content for render
-  const getResources = useCallback(
-    () =>
-      resources?.map((resource) => ({
+  const getResources = useCallback(() => {
+    const result = resources?.map((resource) => {
+      const resourceEvent = {
         ...resource,
+        user_id: resource.id,
         children: resource?.bookings.map((booking) => ({
           id:
             (booking?.project_id &&
@@ -235,9 +246,27 @@ const AllPeopleTab = () => {
           user_id: booking?.user_id,
           saleId: booking?.sale_id,
         })),
-      })),
-    [resources],
-  );
+      };
+
+      resourceEvent.children.push({
+        id: `${resource.id}.end`,
+        name: "",
+        allocation: 0,
+        total_hour: 0,
+        allocation_type: "",
+        eventType: "",
+        note: "",
+        position: {},
+        saleId: "",
+        user_id: resource.id,
+        type: "end",
+      });
+
+      return resourceEvent;
+    });
+
+    return result;
+  }, [resources]);
 
   const mappedResources = getResources();
 
@@ -283,7 +312,18 @@ const AllPeopleTab = () => {
         setFilters={setFilters}
         calendarRef={calendarRef}
       />
-      <Box sx={{ ...defaultStyle, overflowX: "scroll" }}>
+      <Box
+        sx={{
+          ...defaultStyle,
+          overflowX: "scroll",
+          "& .fc-theme-standard td:last-child": {
+            borderBottom: "none!important",
+          },
+          // "& .fc-theme-standard td:nth-last-child(2)": {
+          //   border: "none!important",
+          // },
+        }}
+      >
         <FullCalendar
           ref={calendarRef}
           plugins={[resourceTimelinePlugin, interactionPlugin]}
@@ -339,14 +379,38 @@ const AllPeopleTab = () => {
               />
             );
           }}
-          resourceLabelContent={({ resource }) => {
+          resourceLabelContent={({ resource, view }) => {
             const parentResource = resources.find(
               (item) => item.id === resource._resource.parentId,
             );
 
+            if (resource._resource.extendedProps.type === "end") {
+              console.log(
+                "🚀 ~ file: AllPeopleTab.tsx:387 ~ AllPeopleTab ~ resource:",
+                resource._resource.extendedProps.user_id,
+              );
+
+              return (
+                <Button
+                  variant="text"
+                  startIcon={<PlusIcon />}
+                  sx={{
+                    color: "success.main",
+                  }}
+                  // startIcon={<AddIcon />}
+                  onClick={() => {
+                    setIsOpenCreate(true);
+                    setParentResource(resource._resource.extendedProps.user_id);
+                  }}
+                >
+                  {resourceT("schedule.action.addBooking")}
+                </Button>
+              );
+            }
             const bookings = parentResource
               ? [...parentResource?.bookings]
               : [];
+
             const isLastItem =
               bookings.pop()?.id === resource._resource.id ||
               bookings.length === 0;

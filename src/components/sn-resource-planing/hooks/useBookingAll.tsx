@@ -7,7 +7,6 @@ import { useBookingAll, useMyBooking } from "store/resourcePlanning/selector";
 
 export const useFetchBookingAll = () => {
   const { bookingAllFilter, getBookingResource } = useBookingAll();
-
   useEffect(() => {
     getBookingResource(bookingAllFilter);
   }, [bookingAllFilter]);
@@ -55,8 +54,10 @@ export const useEditAction = () => {
       );
       return await Promise.all([updateFirstDate, updateSecondDate])
         .then(async () => {
-          await deleteBooking(id);
-          onAddSnackbar(resourceT("form.updateSuccess"), "success");
+          await deleteBooking(id, true).then(() => {
+            onAddSnackbar(resourceT("form.updateSuccess"), "success");
+          });
+          // onAddSnackbar(resourceT("form.updateSuccess"), "success");
         })
         .catch((e) => {
           throw e;
@@ -71,7 +72,7 @@ export const useEditAction = () => {
     try {
       await deleteBooking(id)
         .then(() => {
-          onAddSnackbar(resourceT("form.deleteSuccess"), "success");
+          // onAddSnackbar(resourceT("form.deleteSuccess"), "success");
         })
         .catch((e) => {
           throw e;
@@ -80,8 +81,24 @@ export const useEditAction = () => {
       onAddSnackbar(commonT("error.anErrorTryAgain"), "error");
     }
   };
+
+  const handleDuplicate = async (id, data) => {
+    try {
+      await createBooking(data)
+        .then(() => {
+          // onAddSnackbar(resourceT("form.duplicateSuccess"), "success");
+        })
+        .catch((e) => {
+          throw e;
+        });
+    } catch (e) {
+      onAddSnackbar(commonT("error.anErrorTryAgain"), "error");
+    }
+  };
+
   return {
     handleDelete,
+    handleDuplicate,
     handleSplit,
   };
 };

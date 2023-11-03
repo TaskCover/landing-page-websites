@@ -84,7 +84,9 @@ export const useBookingAll = () => {
 
     await dispatch(getBookingAll(params));
   };
-
+  const onSetBookingFilter = (filter: IBookingAllFitler) => {
+    dispatch(setBookingAllFilter(filter));
+  };
   const isReady = useMemo(
     () => bookingAllStatus === DataStatus.SUCCEEDED,
     [bookingAllStatus],
@@ -170,6 +172,7 @@ export const useBookingAll = () => {
     updateBooking,
     bookingAll,
     bookingAllError,
+    setBookingAllFilter: onSetBookingFilter,
     getBookingResource,
   };
 };
@@ -179,7 +182,9 @@ export const useMyBooking = () => {
     useAppSelector((state) => state.resourcePlanning);
   const { onAddSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
-
+  const onSetMyBookingFilter = (filter: IBookingAllFitler) => {
+    dispatch(setBookingAllFilter(filter));
+  };
   const isReady = useMemo(
     () => myBookingStatus === DataStatus.SUCCEEDED,
     [myBookingStatus],
@@ -201,5 +206,6 @@ export const useMyBooking = () => {
     myBookingFilter,
     isReady,
     getMyBooking,
+    setMyBookingFilter: onSetMyBookingFilter,
   };
 };

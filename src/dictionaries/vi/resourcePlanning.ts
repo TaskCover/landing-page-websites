@@ -84,6 +84,7 @@ export const ResourcePlanning: ResourceDictionary = {
       sick: "Nghỉ ốm",
       other: "Khác",
     },
+    confirmDelete: "Bạn có chắc chắn muốn xóa?",
     createFailed: "Tạo lịch thất bại",
     createSuccess: "Tạo lịch thành công",
     editBooking: "Sửa lịch",

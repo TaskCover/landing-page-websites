@@ -95,7 +95,7 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
               onClose={onClose}
               open={open}
               resourceId={resourceId}
-              userId=""
+              userId={resourceId}
             />
           </TabPanel>
           <TabPanel value="2" sx={{ p: 0 }}>
