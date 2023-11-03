@@ -14,19 +14,19 @@ const defaultSx = {
     minWidth: 120,
     mx: 1.5,
     borderRadius: "0.25rem",
+    border: "1px solid var(--brand-primary, #3699FF)",
+    color: "var(--brand-primary, #3699FF)",
+  },
+  buttonConfirm: {
+    minWidth: 120,
+    mx: 1.5,
+    borderRadius: "0.25rem",
     background: "var(--brand-primary, #3699FF)",
     color: "#fff",
     border: "1px solid var(--brand-primary, #3699FF)",
     "&:hover": {
       background: "var(--brand-primary, #3699FF)",
     },
-  },
-  buttonConfirm: {
-    minWidth: 120,
-    mx: 1.5,
-    borderRadius: "0.25rem",
-    border: "1px solid var(--brand-primary, #3699FF)",
-    color: "var(--brand-primary, #3699FF)",
   },
 };
 
@@ -44,7 +44,7 @@ export const useActionGroupDetails = () => {
     onDeleteConversationGroup,
     onGetAllConvention,
     onChangeListConversations,
-    convention
+    convention,
   } = useChat();
 
   const { user } = useAuth();
@@ -215,12 +215,30 @@ export const useActionGroupDetails = () => {
   };
 
   const onChangeConversationWhenLeave = useCallback(() => {
-    const indexCurrentData = convention?.findIndex((item) => item._id === dataTransfer?._id);
-    const newConversations = convention?.filter((item) => item._id !== dataTransfer?._id);
-    onSetDataTransfer(convention[indexCurrentData + 1] ?? convention[indexCurrentData - 1] ?? {})
-    onSetConversationInfo(convention[indexCurrentData + 1] ?? convention[indexCurrentData - 1] ?? {})
+    const indexCurrentData = convention?.findIndex(
+      (item) => item._id === dataTransfer?._id,
+    );
+    const newConversations = convention?.filter(
+      (item) => item._id !== dataTransfer?._id,
+    );
+    onSetDataTransfer(
+      convention[indexCurrentData + 1] ??
+        convention[indexCurrentData - 1] ??
+        {},
+    );
+    onSetConversationInfo(
+      convention[indexCurrentData + 1] ??
+        convention[indexCurrentData - 1] ??
+        {},
+    );
     onChangeListConversations(newConversations);
-  }, [convention, dataTransfer?._id, onChangeListConversations, onSetConversationInfo, onSetDataTransfer])
+  }, [
+    convention,
+    dataTransfer?._id,
+    onChangeListConversations,
+    onSetConversationInfo,
+    onSetDataTransfer,
+  ]);
 
   const handlePopup = async () => {
     const renameGroupApi = async () => {
@@ -243,12 +261,12 @@ export const useActionGroupDetails = () => {
         );
       } else {
         const newConversations = convention?.map((item) => {
-          if(item._id === dataTransfer?._id) {
-              return dataTransferNew
-          } 
+          if (item._id === dataTransfer?._id) {
+            return dataTransferNew;
+          }
           return item;
         });
-        onChangeListConversations(newConversations)
+        onChangeListConversations(newConversations);
         onSetDataTransfer(dataTransferNew);
         onAddSnackbar(commonT("success"), "success");
       }
@@ -288,7 +306,7 @@ export const useActionGroupDetails = () => {
           type: "p",
           roomId: dataTransfer?._id,
         });
-        onChangeConversationWhenLeave()
+        onChangeConversationWhenLeave();
         handleSuccess(result);
         break;
       case TYPE_POPUP.LEAVE_MEMBER:
@@ -297,7 +315,7 @@ export const useActionGroupDetails = () => {
       case TYPE_POPUP.LEAVE_AND_NEW_ADD:
         await addAndRemove(userId, user?.id_rocket ?? "");
         await left();
-        onChangeConversationWhenLeave()
+        onChangeConversationWhenLeave();
         break;
       case TYPE_POPUP.LEAVE_OWNER:
         //NEW OWNER RANDOM
@@ -307,7 +325,7 @@ export const useActionGroupDetails = () => {
         if (!random) return onAddSnackbar("Error!", "error"); // Handle delete group
         await addAndRemove(random, user?.id_rocket ?? "");
         await left();
-        onChangeConversationWhenLeave()
+        onChangeConversationWhenLeave();
         break;
       case TYPE_POPUP.RENAME_GROUP:
         await renameGroupApi();

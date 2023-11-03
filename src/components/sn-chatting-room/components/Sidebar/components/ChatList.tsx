@@ -24,6 +24,7 @@ const ChatList = () => {
     onSetDataTransfer,
     onSetConversationInfo,
     onGetAllConvention,
+    onResetSearchChatText,
     conversationPaging: { pageIndex, pageSize, textSearch: initText },
   } = useChat();
   const { user } = useAuth();
@@ -122,6 +123,7 @@ const ChatList = () => {
     onSetRoomId(chatInfo._id);
     onSetDataTransfer(chatInfo);
     onSetConversationInfo(chatInfo);
+    onResetSearchChatText();
   };
 
   const renderConversation = (idActive: string) => {

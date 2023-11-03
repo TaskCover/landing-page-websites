@@ -319,18 +319,19 @@ const AddGroup: FC<AddGroupProps> = ({
           size="small"
           sx={defaultSx.button}
           onClick={() => {
-            if (callbackBackIcon) {
-              callbackBackIcon();
-              if (isNew || type === "modal") {
-                onCloseDrawer("account");
-              }
-              return;
-            }
-            if (currStep === STEP.ADD_GROUP) {
-              onSetStep(STEP.CONVENTION);
-            } else {
-              onSetStep(prevStep);
-            }
+            onCloseDrawer("account");
+            // if (callbackBackIcon) {
+            //   // callbackBackIcon();
+            //   // if (isNew || type === "modal") {
+            //   //   onCloseDrawer("account");
+            //   // }
+            //   // return;
+            // }
+            // if (currStep === STEP.ADD_GROUP) {
+            //   onSetStep(STEP.CONVENTION);
+            // } else {
+            //   onSetStep(prevStep);
+            // }
           }}
         >
           {commonT("form.cancel")}

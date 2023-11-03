@@ -42,7 +42,7 @@ const RoomHeader = () => {
     onResetConversationInfo,
     onCloseDrawer,
     roomId,
-    onSetDataTransfer
+    onSetDataTransfer,
   } = useChat();
   const [search, setSearchText] = useState({
     text: "",
@@ -54,7 +54,7 @@ const RoomHeader = () => {
   );
 
   const onResetSearchText = useCallback(() => {
-    setSearchText({text: "", isOpen: false} );
+    setSearchText({ text: "", isOpen: false });
   }, []);
 
   const handleSearchChatText = useCallback(async () => {
@@ -98,13 +98,12 @@ const RoomHeader = () => {
     setCurrentIndex(listSearchMessage?.length);
   }, [listSearchMessage?.length]);
 
-
   useEffect(() => {
-    onResetSearchText()
+    onResetSearchText();
     onResetConversationInfo();
-    onCloseDrawer('info')
-  }, [ onResetSearchText, onResetConversationInfo, onCloseDrawer, roomId])
-  
+    onCloseDrawer("info");
+  }, [onResetSearchText, onResetConversationInfo, onCloseDrawer, roomId]);
+
   return (
     <Box
       width="100%"
@@ -121,8 +120,33 @@ const RoomHeader = () => {
         gap="20px"
         alignItems="center"
       >
-        {search?.isOpen ? (
-          <Box display="flex" gap="10px">
+        <>
+          <Avatar
+            src={currentConversation?.avatar}
+            sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
+          />
+          <Box display="flex" flexDirection="column" gap="4px">
+            <Typography
+              variant="h6"
+              color={isDarkMode ? "white" : "var(--Black, #212121)"}
+            >
+              {currentConversation?.t !== "d"
+                ? currentConversation?.name?.replaceAll("_", " ")
+                : currentConversation?.name}
+            </Typography>
+            <Typography variant="body2" color="var(--Gray3, #999)">
+              Online
+            </Typography>
+          </Box>
+        </>
+        {search?.isOpen && (
+          <Box
+            display="flex"
+            gap="10px"
+            sx={{
+              width: "70%",
+            }}
+          >
             <Paper
               component="form"
               sx={{
@@ -132,7 +156,9 @@ const RoomHeader = () => {
                 height: "40px",
                 borderRadius: "8px",
                 boxShadow: "none",
-                ...isDarkMode ? { background: "#1e1e1e", color: 'white' } : {},
+                ...(isDarkMode
+                  ? { background: "#1e1e1e", color: "white" }
+                  : {}),
                 ...(!mobileMode
                   ? { width: "400px" }
                   : { width: "80%", border: "1px solid" }),
@@ -148,7 +174,9 @@ const RoomHeader = () => {
                 onChange={(e) => debounceSearchText(e.target.value)}
                 sx={{
                   width: "100%",
-                  ...isDarkMode ? { background: "#1e1e1e", color: 'white' } : { background: 'white' },
+                  ...(isDarkMode
+                    ? { background: "#1e1e1e", color: "white" }
+                    : { background: "white" }),
                   fontSize: 14,
                   "& .MuiInputBase-input": {
                     padding: "0px !important",
@@ -162,41 +190,21 @@ const RoomHeader = () => {
                 }}
               />
             </Paper>
-            {search?.text?.length > 0 && listSearchMessage?.length > 0 ? (
+            {search?.text?.length > 0 && listSearchMessage?.length > 0 && (
               <Box display="flex" gap="10px" width="240px" alignItems="center">
                 <Text variant="body2" className="text-option">
                   {listSearchMessage?.length} matches
                 </Text>
                 <IconButton
-                  sx={{ p: "5px", bgcolor: isDarkMode ? "#3a3b3c" :  "white" }}
+                  sx={{ p: "5px", bgcolor: isDarkMode ? "#3a3b3c" : "white" }}
                   aria-label="search"
                   onClick={onDirectToMessage}
                 >
                   <ArrowCircleUp />
                 </IconButton>
               </Box>
-            ) : (
-              ""
             )}
           </Box>
-        ) : (
-          <>
-            <Avatar
-              src={currentConversation?.avatar}
-              sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
-            />
-            <Box display="flex" flexDirection="column" gap="4px">
-              <Typography
-                variant="h6"
-                color={isDarkMode ? "white" : "var(--Black, #212121)"}
-              >
-               {currentConversation?.t !== 'd' ? currentConversation?.name?.replaceAll('_', ' ') : currentConversation?.name}
-              </Typography>
-              <Typography variant="body2" color="var(--Gray3, #999)">
-                Online
-              </Typography>
-            </Box>
-          </>
         )}
       </Box>
       <Box
@@ -222,8 +230,11 @@ const RoomHeader = () => {
             color: "transparent",
           }}
           onClick={() => {
-              onSetDrawerType("group");
-              onSetDataTransfer({ ...currentConversation, isNew: currentConversation?.t === 'd' });
+            onSetDrawerType("group");
+            onSetDataTransfer({
+              ...currentConversation,
+              isNew: currentConversation?.t === "d",
+            });
           }}
         >
           <ProfileAdd />

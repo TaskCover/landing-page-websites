@@ -79,7 +79,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
       </Box>
       <Box
         sx={{
-          height: "180px",
+          maxHeight: "400px",
           overflow: "auto",
           width: "100%",
         }}

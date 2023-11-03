@@ -6,7 +6,7 @@ import useGetScreenMode from "hooks/useGetScreenMode";
 import RoomHeaderMobile from "./components/RoomHeaderMobile";
 import { useChat } from "store/chat/selectors";
 
-export const DrawerChatIgnore = ['forward', 'group-modal'];
+export const DrawerChatIgnore = ["forward", "group-modal"];
 const RoomDetails = () => {
   const { mobileMode, extraDesktopMode } = useGetScreenMode();
   const { isOpenInfoChat, typeDrawerChat, onCloseDrawer } = useChat();
