@@ -21,7 +21,7 @@ import {
   changeGroupAvatar,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useEffect } from "react";
 import { shallowEqual } from "react-redux";
 import {
   AddMember2GroupRequest,
@@ -128,6 +128,11 @@ export const useChat = () => {
     isOpenInfoChat,
     isChatDesktop,
   } = useAppSelector((state) => state.chat, shallowEqual);
+
+  useEffect(() => {
+    console.log({ messageInfo });
+  }, [messageInfo]);
+
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
     shallowEqual,
@@ -264,6 +269,11 @@ export const useChat = () => {
     },
     [conversationInfo, dispatch, user, dataTransfer],
   );
+
+  const onResetSearchChatText = useCallback(async () => {
+    dispatch(resetSearchChatText());
+    return;
+  }, [dispatch]);
 
   const onSearchChatText = useCallback(
     async (params: Omit<MessageSearchInfoRequest, "authToken" | "userId">) => {
@@ -759,5 +769,9 @@ export const useChat = () => {
     isChatDesktop,
     onSetChatDesktop,
     onChangeListConversations,
+<<<<<<< Updated upstream
+=======
+    onResetSearchChatText,
+>>>>>>> Stashed changes
   };
 };

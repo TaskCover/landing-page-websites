@@ -18,7 +18,7 @@ import {
 } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 import Skeleton from "@mui/material/Skeleton";
-import MessageLayout from "../messages/MessageLayout";
+import MessageLayout from "./MessageLayout";
 import MessageContent from "./MessageContent";
 import { formatDate, sleep } from "utils/index";
 import Typography from "@mui/material/Typography";
@@ -230,7 +230,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         break;
       case "r":
         msg = commonChatBox("chatBox.group.rename", {
-          user1: message?.u?.username,
+          user1: message?.u?.name,
           name: message?.msg,
           time: getTimeStamp(message?.ts ?? ""),
         });
