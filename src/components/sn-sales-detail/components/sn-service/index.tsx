@@ -20,6 +20,7 @@ import useGetOptions, {
 import { ScrollViewProvider } from "components/sn-sales-detail/hooks/useScrollErrorField";
 import { uuid } from "utils/index";
 import { SALE_BILL_TYPE, SERVICE_UNIT_OPTIONS } from "constant/enums";
+import { defaultShowColumns } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 
 const SaleService = () => {
   const { isMdSmaller } = useBreakpoint();
