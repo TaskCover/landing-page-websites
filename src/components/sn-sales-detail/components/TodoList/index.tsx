@@ -47,21 +47,23 @@ export const TodoName = ({
 }) => {
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
-
+  const ref = React.useRef<HTMLInputElement>(null);
+  const innerRef = React.useRef<HTMLInputElement>(null);
   const [name, setName] = useState<string>(value);
   const [error, setError] = useState<string>("");
+  const [isSubmited, setIsSubmited] = useState<boolean>(false);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
     const { value } = event.target;
     if (value[value.length - 1] === "\n") {
       setName(value.slice(0, -1));
       return;
     }
     setName(event.target.value);
-    setError("");
+    isAssign && setError("");
   };
 
-  const { saleDetail } = useSaleDetail();
   const { control, getValues, setValue } = useFormContext();
 
   const handleSubmit = async () => {
@@ -69,7 +71,9 @@ export const TodoName = ({
 
     if (nameTrimmed) {
       setValue("todoItem.name", nameTrimmed);
-      await onSubmit(getValues("todoItem"));
+      setName(nameTrimmed);
+      if (nameTrimmed !== value) await onSubmit(getValues("todoItem"));
+      setError("");
     } else {
       setError(
         commonT("form.error.required", {
@@ -77,18 +81,30 @@ export const TodoName = ({
         }),
       );
     }
-    setName("");
+    isAssign && setName("");
   };
 
-  const onKeyDown = async (event, isBlur: boolean) => {
-    if (isBlur && onBlur) {
-      onBlur();
-      handleSubmit();
-      return;
-    }
-    if (event.key !== "Enter") return;
-    handleSubmit();
-  };
+  const onKeyDown = useCallback(
+    async (event, isBlur: boolean) => {
+      event.stopPropagation();
+      if (isSubmited) {
+        setIsSubmited(false);
+        return;
+      }
+
+      if (isBlur && onBlur) {
+        onBlur();
+        await handleSubmit();
+        return;
+      }
+      if (event.key !== "Enter") return;
+      setIsSubmited(true);
+      await handleSubmit().then(() => {
+        innerRef.current?.blur();
+      });
+    },
+    [isSubmited, name],
+  );
 
   return (
     <Grid2
@@ -105,29 +121,38 @@ export const TodoName = ({
         <Stack direction="row" alignItems="center" spacing={2}>
           {isAssign && (
             <PlusIcon
-              onClick={(event) =>
+              onClick={(event) => {
                 onKeyDown(
                   {
                     key: "Enter",
                   } as React.KeyboardEvent<HTMLInputElement>,
                   false,
-                )
-              }
+                );
+              }}
               width={24}
               height={24}
             />
           )}
           <TextField
             multiline
-            onBlur={(e) => onKeyDown(e, true)}
+            // onBlur={(e) => onKeyDown(e, true)}
+            // onKeyDown={(e) => onKeyDown(e, false)}
             value={name}
-            onKeyDown={(e) => onKeyDown(e, false)}
             fullWidth
+            ref={ref}
             variant="filled"
             size="small"
+            inputProps={{
+              onBlur: (e) => onKeyDown(e, true),
+              onKeyDown: (e) => onKeyDown(e, false),
+              ref: innerRef,
+            }}
+            onSelect={(e) => {
+              e.stopPropagation();
+            }}
             placeholder={salesT("detail.todoList.addNew")}
-            focused
             onChange={onChange}
+            focused={isAssign}
             color="success"
             autoFocus={autoFocus}
             sx={{
@@ -136,11 +161,21 @@ export const TodoName = ({
               },
               "& input": {
                 fontSize: 15,
+                cursor: "pointer",
               },
               "& .MuiInputBase-root": {
                 padding: 0,
+                cursor: "pointer",
               },
-
+              "& .MuiInputBase-input": {
+                cursor: "pointer",
+              },
+              "& .MuiInputBase-root:before": {
+                borderBottom: "none",
+              },
+              "& .MuiInputBase-root:hover::before": {
+                borderBottom: "none!important",
+              },
               padding: 0,
             }}
           />
@@ -240,7 +275,12 @@ const TodoList = () => {
             priority: todo.priority,
           });
         }),
-      );
+      ).then(() => {
+        onAddSnackbar(
+          commonT("notification.success", { label: commonT("update") }),
+          "success",
+        );
+      });
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
@@ -259,7 +299,7 @@ const TodoList = () => {
         }
         sx={{
           backgroundColor: "background.paper",
-          marginBottom: 2,
+          padding: 0,
         }}
       >
         <Stack

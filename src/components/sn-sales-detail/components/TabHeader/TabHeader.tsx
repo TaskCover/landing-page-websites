@@ -33,9 +33,9 @@ const TabHeader = () => {
 
   const { control, handleSubmit, getValues } = useFormContext();
 
-  const onSubmit = (name, value) => {
+  const onSubmit = async (name, value) => {
     try {
-      onUpdateDeal({ id: saleDetail?.id, [name]: value });
+      await onUpdateDeal({ id: saleDetail?.id, [name]: value });
     } catch (error) {
       console.log(error);
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
@@ -50,6 +50,18 @@ const TabHeader = () => {
       })),
     [],
   );
+
+  const saleRevenueCal = useMemo(() => {
+    const sectionsList = getValues("sectionsList");
+    const total = sectionsList?.reduce((prev, section) => {
+      const total = section?.service?.reduce((prev, service) => {
+        return prev + (service?.totalBuget || 0);
+      }, 0);
+      return prev + total;
+    }, 0);
+    return total;
+  }, [getValues("sectionsList")]);
+
   return (
     <Stack
       direction={{
@@ -66,6 +78,7 @@ const TabHeader = () => {
         xs: "flex-start",
         sm: "center",
       }}
+      overflow="hidden"
     >
       <Stack
         direction="row"
@@ -168,7 +181,7 @@ const TabHeader = () => {
           <CoinIcon />
           <Text variant="body2">
             Revenue:{" "}
-            {formatNumber(saleRevenue || 0, {
+            {formatNumber(saleRevenueCal || saleRevenue || 0, {
               numberOfFixed: 2,
               prefix:
                 CURRENCY_SYMBOL[saleDetail?.currency || CURRENCY_CODE.USD],

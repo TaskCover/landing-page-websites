@@ -93,6 +93,7 @@ export type SalesDictionary = {
       addNewRow: string;
       duplicate: string;
       showDiscount: string;
+      addService: string;
       showMarkup: string;
       showFixedPrice: string;
       showEstimate: string;

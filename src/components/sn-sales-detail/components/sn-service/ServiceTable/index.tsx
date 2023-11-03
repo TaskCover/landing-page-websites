@@ -122,7 +122,7 @@ const ServiceTable = ({
       return prev;
     }, [] as CellProps[]);
 
-    if (isEdit) {
+    if (isEdit && !list.find((item) => item.id === ServiceColumn.ACTION)) {
       list.push({
         id: ServiceColumn.ACTION,
         value: "",

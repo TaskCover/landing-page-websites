@@ -93,6 +93,7 @@ export const salesLang: SalesDictionary = {
       addNewFromRateCard: "Thêm mới từ thẻ giá",
       addNewRow: "Thêm mới hàng",
       addSection: "Thêm mục",
+      addService: "Thêm dịch vụ",
       duplicate: "Nhân bản",
       showDiscount: "{isShow} giảm giá",
       showFixedPrice: "{isShow} giá cố định",
