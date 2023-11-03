@@ -230,7 +230,7 @@ const ChatForward: FC<Props> = (props) => {
                   isRead={true}
                 />
               ) : (
-                  <div
+                <div
                   dangerouslySetInnerHTML={{
                     __html: dataTransfer?.message?.msg,
                   }}
