@@ -10,7 +10,7 @@ import { Employee } from "store/company/reducer";
 import useTheme from "hooks/useTheme";
 
 interface SelectItemProp {
-  employeeIdSelected: object;
+  employeeIdSelected?: object;
   employee: Employee;
   onClick?: (event: ChangeEvent<HTMLInputElement>) => void;
   checkbox?: boolean;
