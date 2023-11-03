@@ -48,6 +48,7 @@ const SalesDetail = () => {
     comments?.sort((a, b) => {
       return moment(b.created_time).isAfter(moment(a.created_time)) ? 1 : -1;
     });
+
     const todo_list: Record<string, Todo> = sortedTodoList.reduce(
       (acc, todo, index) => {
         acc[todo.id] = {
@@ -71,7 +72,7 @@ const SalesDetail = () => {
     });
 
     return reset();
-  }, [saleDetail, serviceSectionList]);
+  }, [serviceSectionList, saleDetail]);
 
   useEffect(() => {
     return () => onReset();

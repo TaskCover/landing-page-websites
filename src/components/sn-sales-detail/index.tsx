@@ -39,7 +39,6 @@ const SaleForm = ({ params }) => {
       deletedSections: [],
       sectionsList: [],
     },
-    reValidateMode: "onBlur",
   });
 
   return (

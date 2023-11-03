@@ -130,16 +130,16 @@ export const useSales = () => {
         tags: data.tags,
         start_date,
       };
-      await dispatch(updateDeal({ id: data.id, data: convertedBody })).then(
-        () => {
+      await dispatch(updateDeal({ id: data.id, data: convertedBody }))
+        .unwrap()
+        .then((value) => {
           onAddSnackbar(
             commonT("notification.success", {
               label: saleT("list.newDealForm.update"),
             }),
             "success",
           );
-        },
-      );
+        });
     },
     [dispatch, JSON.stringify(salesFilters)],
   );

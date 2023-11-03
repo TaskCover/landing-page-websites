@@ -47,6 +47,9 @@ const defaultSx = {
         color: "common.white",
       },
     },
+    "& .MuiCheckbox-root": {
+      padding: 1,
+    },
   },
 };
 
@@ -163,7 +166,7 @@ const Assign = (props: AssignProps) => {
               <Stack
                 direction="row"
                 alignItems="center"
-                spacing={0}
+                spacing={1}
                 width="100%"
               >
                 <Checkbox checked={checked} />

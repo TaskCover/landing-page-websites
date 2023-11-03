@@ -92,6 +92,7 @@ export const SalesLang: SalesDictionary = {
       addNewFromRateCard: "Add new from rate card",
       addNewRow: "Add new row",
       addSection: "Add section",
+      addService: "Add service",
       duplicate: "Duplicate",
       showDiscount: "{isShow} Discount",
       showMarkup: "{isShow} Markup",

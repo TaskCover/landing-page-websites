@@ -62,9 +62,10 @@ const CustomSelect = (props: CustomInputProps, ref) => {
                 showSubText={showSubText}
                 sx={{
                   width: "100%",
-                  [`& .${inputBaseClasses.root}`]: {
+                  [`&.${inputBaseClasses.root}`]: {
                     backgroundColor: "background.paper",
                     pr: helperText ? 4 : 0,
+                    overflow: "hidden",
                   },
                   [`& p:nth-child(2)`]: {
                     display: "none",

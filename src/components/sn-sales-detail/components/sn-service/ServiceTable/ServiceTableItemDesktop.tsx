@@ -113,7 +113,7 @@ const ServiceTableItem = ({
     if (typeof service.tolBudget !== "number") {
       return parseFloat(service.tolBudget);
     }
-    const result = ((qty * price) / mappedUnit[unit]) * (1 - discount / 100);
+    const result = qty * price * (1 - discount / 100);
     setValue(`${sectionKey}.${index}.tolBudget`, result.toFixed(2));
     return service.tolBudget;
   }, [service.tolBudget, qty, price, unit, discount]);
@@ -230,6 +230,8 @@ const ServiceTableItem = ({
                             [`& .MuiInputBase-root`]: {
                               px: 1,
                               backgroundColor: "background.paper",
+                              pl: 0,
+                              gap: 1,
                             },
                           }}
                         />
@@ -512,7 +514,13 @@ const ServiceTableItem = ({
               </BodyCell>
 
               {isEdit && (
-                <BodyCell sx={{ padding: 0, position: "relative" }}>
+                <BodyCell
+                  sx={{
+                    padding: 0,
+                    position: "relative",
+                    maxWidth: "max-content",
+                  }}
+                >
                   <Stack
                     direction={"row"}
                     spacing={0}

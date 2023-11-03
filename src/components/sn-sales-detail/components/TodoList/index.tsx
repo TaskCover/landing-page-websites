@@ -47,11 +47,13 @@ export const TodoName = ({
 }) => {
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
+  const ref = React.useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState<string>(value);
   const [error, setError] = useState<string>("");
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
     const { value } = event.target;
     if (value[value.length - 1] === "\n") {
       setName(value.slice(0, -1));
@@ -69,7 +71,7 @@ export const TodoName = ({
 
     if (nameTrimmed) {
       setValue("todoItem.name", nameTrimmed);
-      await onSubmit(getValues("todoItem"));
+      if (nameTrimmed !== value) await onSubmit(getValues("todoItem"));
     } else {
       setError(
         commonT("form.error.required", {
@@ -81,6 +83,8 @@ export const TodoName = ({
   };
 
   const onKeyDown = async (event, isBlur: boolean) => {
+    event.stopPropagation();
+
     if (isBlur && onBlur) {
       onBlur();
       handleSubmit();
@@ -105,14 +109,14 @@ export const TodoName = ({
         <Stack direction="row" alignItems="center" spacing={2}>
           {isAssign && (
             <PlusIcon
-              onClick={(event) =>
+              onClick={(event) => {
                 onKeyDown(
                   {
                     key: "Enter",
                   } as React.KeyboardEvent<HTMLInputElement>,
                   false,
-                )
-              }
+                );
+              }}
               width={24}
               height={24}
             />
@@ -120,11 +124,16 @@ export const TodoName = ({
           <TextField
             multiline
             onBlur={(e) => onKeyDown(e, true)}
-            value={name}
             onKeyDown={(e) => onKeyDown(e, false)}
+            value={name}
             fullWidth
+            ref={ref}
             variant="filled"
             size="small"
+            inputProps={{
+              onBlur: (e) => onKeyDown(e, true),
+              onKeyDown: (e) => onKeyDown(e, false),
+            }}
             placeholder={salesT("detail.todoList.addNew")}
             focused
             onChange={onChange}
@@ -240,7 +249,12 @@ const TodoList = () => {
             priority: todo.priority,
           });
         }),
-      );
+      ).then(() => {
+        onAddSnackbar(
+          commonT("notification.success", { label: commonT("update") }),
+          "success",
+        );
+      });
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
@@ -259,7 +273,7 @@ const TodoList = () => {
         }
         sx={{
           backgroundColor: "background.paper",
-          marginBottom: 2,
+          padding: 0,
         }}
       >
         <Stack

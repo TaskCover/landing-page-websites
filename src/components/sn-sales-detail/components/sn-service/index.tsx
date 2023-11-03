@@ -14,8 +14,12 @@ import { useTranslations } from "next-intl";
 import { ServiceSection } from "store/sales/reducer";
 import { useSalesService } from "store/sales/selectors";
 import { Button } from "components/shared";
-import { useFetchOptions } from "components/sn-resource-planing/hooks/useGetOptions";
+import useGetOptions, {
+  useFetchOptions,
+} from "components/sn-resource-planing/hooks/useGetOptions";
 import { ScrollViewProvider } from "components/sn-sales-detail/hooks/useScrollErrorField";
+import { uuid } from "utils/index";
+import { SALE_BILL_TYPE, SERVICE_UNIT_OPTIONS } from "constant/enums";
 
 const SaleService = () => {
   const { isMdSmaller } = useBreakpoint();
@@ -23,6 +27,7 @@ const SaleService = () => {
   const { serviceSectionList } = useSalesService();
   const salesT = useTranslations(NS_SALES);
   const { control, setValue, getValues } = useFormContext();
+  const { positionOptions } = useGetOptions();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "sectionsList",
@@ -63,7 +68,24 @@ const SaleService = () => {
   };
 
   const onAddSection = () => {
-    append({} as ServiceSection);
+    append({
+      id: uuid(),
+      service: [
+        {
+          id: uuid(),
+          name: "",
+          desc: "",
+          serviceType: positionOptions[0]?.value,
+          price: 0,
+          billType: SALE_BILL_TYPE.FIX,
+          qty: 0,
+          discount: 0,
+          unit: SERVICE_UNIT_OPTIONS.DAY,
+          tolBudget: 0,
+        },
+      ],
+    });
+    setEdit(true);
   };
 
   const onRemoveSection = useCallback(
@@ -72,7 +94,7 @@ const SaleService = () => {
         (getValues("deletedSections") as Array<string>) || [];
       setValue("deletedSections", [
         ...deletedSections,
-        serviceSectionList[index].id,
+        serviceSectionList[index]?.id,
       ]);
       remove(index);
     },
@@ -114,7 +136,7 @@ const SaleService = () => {
                 />
               }
             >
-              {salesT("detail.service.addSection")}
+              {salesT("detail.service.addService")}
             </Button>
           )}
           {fields.length > 0 && <ServiceHeader />}

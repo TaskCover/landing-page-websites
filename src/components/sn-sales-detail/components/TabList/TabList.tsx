@@ -98,6 +98,7 @@ const TabList = ({ value, onChange }: TabListProps) => {
     );
     onUpdateDeal({ id: getValues("id"), [name]: [...newAssignees] });
   };
+
   return (
     <Stack
       direction={{

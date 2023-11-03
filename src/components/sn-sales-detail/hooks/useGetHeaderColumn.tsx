@@ -188,7 +188,7 @@ export const useGetHeaderColumn = (index: number) => {
       list.push({
         id: ServiceColumn.ACTION,
         value: "",
-        width: "2%",
+        width: "3%",
       });
     }
     return list;

@@ -10,7 +10,7 @@ import {
 } from "constant/index";
 import useToggle from "hooks/useToggle";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useSnackbar } from "store/app/selectors";
 import { TodoName } from ".";
@@ -54,8 +54,9 @@ const SubItem = ({
   const { onAddSnackbar } = useSnackbar();
   const { onDeleteTodo, onUpdateTodo } = useSalesTodo();
   const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
-
+  const [isChecked, setIsChecked] = useState<boolean>(is_done);
   const [action, setAction] = useState<Action | undefined>();
+  const [nameTodo, setNameTodo] = useState<string>(name);
   const { control } = useFormContext();
 
   const commonT = useTranslations(NS_COMMON);
@@ -77,15 +78,19 @@ const SubItem = ({
       data: {
         name: value.name,
       } as TodoItemData,
+    }).then(() => {
+      setNameTodo(value.name);
     });
   };
 
   const onChangeName = async (value: TodoItemData) => {
-    onUpdateTodo(id, {
+    await onUpdateTodo(id, {
       dealId: saleDetail?.id || "",
       data: {
         name: value.name,
       } as TodoItemData,
+    }).then(() => {
+      setNameTodo(value.name);
     });
     setAction(undefined);
   };
@@ -108,11 +113,13 @@ const SubItem = ({
   };
 
   const onChangeStatus = async (_, checked: boolean) => {
-    onUpdateTodo(id, {
+    await onUpdateTodo(id, {
       dealId: saleDetail?.id || "",
       data: {
         is_done: !is_done,
       } as TodoItemData,
+    }).then(() => {
+      setIsChecked(checked);
     });
   };
 
@@ -150,7 +157,7 @@ const SubItem = ({
                     sx={{
                       padding: 0,
                     }}
-                    checked={is_done}
+                    checked={isChecked}
                     onChange={onChangeStatus}
                   />
                 </Grid2>
@@ -158,7 +165,7 @@ const SubItem = ({
                   {action === Action.RENAME ? (
                     <TodoName
                       onSubmit={onChangeName}
-                      value={name}
+                      value={nameTodo}
                       autoFocus
                       onBlur={() => {
                         setAction(undefined);
@@ -168,11 +175,11 @@ const SubItem = ({
                     <Text
                       variant="body2"
                       sx={{
-                        textDecoration: is_done ? "line-through" : undefined,
+                        textDecoration: isChecked ? "line-through" : undefined,
                       }}
                       noWrap
                       textOverflow={"ellipsis"}
-                      onClick={onEditName}
+                      onClick={() => onEditName()}
                       mt={0.25}
                     >
                       {name}

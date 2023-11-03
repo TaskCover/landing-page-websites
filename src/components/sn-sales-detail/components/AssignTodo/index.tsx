@@ -183,7 +183,7 @@ const AssignTodo = (props: AssignProps) => {
               <Stack
                 direction="row"
                 alignItems="center"
-                spacing={0}
+                spacing={1}
                 width="100%"
               >
                 <Avatar
