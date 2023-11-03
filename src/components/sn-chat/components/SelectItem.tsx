@@ -15,7 +15,7 @@ interface SelectItemProp {
   onClick?: (event: ChangeEvent<HTMLInputElement>) => void;
   checkbox?: boolean;
   onClickItem?: () => void;
-  forwardMess: boolean;
+  forwardMess?: boolean;
 }
 const SelectItem = ({
   employeeIdSelected = {},

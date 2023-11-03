@@ -180,22 +180,6 @@ const ChatForward: FC<Props> = (props) => {
               position: "relative",
             }}
           >
-<<<<<<< Updated upstream
-            {!isChatDesktop ? <Typography
-              sx={{
-                color: !isDarkMode ? "#1e1e1e" : "white",
-                fontSize: "0.75rem",
-                fontWeight: 400,
-                lineHeight: "1rem",
-                position: "absolute",
-                left: 14,
-                top: 10,
-                background: '#ffffff00',
-              }}
-            >
-              Message
-            </Typography> : null }
-=======
             {!isChatDesktop ? (
               <Typography
                 sx={{
@@ -212,7 +196,6 @@ const ChatForward: FC<Props> = (props) => {
                 Message
               </Typography>
             ) : null}
->>>>>>> Stashed changes
             <div
               style={{
                 resize: "vertical",
@@ -247,7 +230,7 @@ const ChatForward: FC<Props> = (props) => {
                   isRead={true}
                 />
               ) : (
-                  <div
+                <div
                   dangerouslySetInnerHTML={{
                     __html: dataTransfer?.message?.msg,
                   }}

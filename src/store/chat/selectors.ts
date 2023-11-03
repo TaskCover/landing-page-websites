@@ -769,9 +769,6 @@ export const useChat = () => {
     isChatDesktop,
     onSetChatDesktop,
     onChangeListConversations,
-<<<<<<< Updated upstream
-=======
     onResetSearchChatText,
->>>>>>> Stashed changes
   };
 };
