@@ -73,7 +73,7 @@ export const useWSChat = () => {
         "sender_userId" | "sender_authToken" | "receiverUsername" | "t"
       >,
     ) => {
-      if (message.message && message.message.trim()?.length > 0) {        
+      if (message.message && message.message.trim()?.length > 0) {
         ws?.send(
           JSON.stringify({
             msg: "method",
@@ -208,7 +208,7 @@ export const useWSChat = () => {
       ws.onclose = (e) => {
         if (
           ws &&
-          (e.code !== 3001) &&
+          e.code !== 3001 &&
           (ws.readyState === ws.CLOSING || ws.readyState === ws.CLOSED)
         ) {
           reConnect();

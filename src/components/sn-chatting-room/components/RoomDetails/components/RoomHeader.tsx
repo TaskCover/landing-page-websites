@@ -48,18 +48,24 @@ const RoomHeader = () => {
     text: "",
     isOpen: false,
   });
-  
+
   const [currentIndex, setCurrentIndex] = useState<number>(
     listSearchMessage?.length,
   );
 
   const onResetSearchText = useCallback(() => {
+<<<<<<< Updated upstream
     setSearchText({ text: "", isOpen: false });
+=======
+    setSearchText((prev) => ({
+      ...prev,
+      text: "",
+    }));
+>>>>>>> Stashed changes
   }, []);
 
   const handleSearchChatText = useCallback(async () => {
     try {
-      if (!search?.isOpen) return;
       await onSearchChatText({
         text: search?.text,
         type: currentConversation?.t as RoomType,
@@ -205,6 +211,29 @@ const RoomHeader = () => {
               </Box>
             )}
           </Box>
+<<<<<<< Updated upstream
+=======
+        ) : (
+          <>
+            <Avatar
+              src={currentConversation?.avatar}
+              sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
+            />
+            <Box display="flex" flexDirection="column" gap="4px">
+              <Typography
+                variant="h6"
+                color={isDarkMode ? "white" : "var(--Black, #212121)"}
+              >
+                {currentConversation?.t !== "d"
+                  ? currentConversation?.name?.replaceAll("_", " ")
+                  : currentConversation?.name}
+              </Typography>
+              <Typography variant="body2" color="var(--Gray3, #999)">
+                Online
+              </Typography>
+            </Box>
+          </>
+>>>>>>> Stashed changes
         )}
       </Box>
       <Box

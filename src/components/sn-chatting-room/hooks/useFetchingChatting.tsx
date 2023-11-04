@@ -15,34 +15,39 @@ const defaultParam = {
 
 export interface useFetchingChattingReturns {
   onFilterConversation: (name: string, value: string) => void;
-  onChangeParamsConversation: (params: ParamState) => void
+  onChangeParamsConversation: (params: ParamState) => void;
 }
 
 const useFetchingChatting = (): useFetchingChattingReturns => {
   const [params, setParams] = useState<ParamState>(defaultParam as ParamState);
-  const { onGetAllConvention, convention: conversations, onSetConversationInfo: onSelectRoom, onSetRoomId, onSetChatDesktop } = useChat();
+  const {
+    onGetAllConvention,
+    convention: conversations,
+    onSetConversationInfo: onSelectRoom,
+    onSetRoomId,
+    onSetChatDesktop,
+  } = useChat();
 
   const { mobileMode } = useGetScreenMode();
 
-  const { onAddSnackbar } = useSnackbar()
+  const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
 
-
-  const handleGetConversation = useCallback(async ({ body }: { body: ParamState }) => {        
+  const handleGetConversation = useCallback(
+    async ({ body }: { body: ParamState }) => {
       try {
-          await onGetAllConvention({
-          ...body 
-          });
+        await onGetAllConvention({
+          ...body,
+        });
       } catch (error) {
-          onAddSnackbar(
-              typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
-              "error",
-          );
+        onAddSnackbar(
+          typeof error === "string" ? error : t(AN_ERROR_TRY_AGAIN),
+          "error",
+        );
       }
-  },
-      [onAddSnackbar, onGetAllConvention, t],
+    },
+    [onAddSnackbar, onGetAllConvention, t],
   );
-  
 
   useEffect(() => {
     handleGetConversation({ body: params });
@@ -51,18 +56,29 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
   useEffect(() => {
     if (mobileMode) return;
     if (conversations?.length > 0) {
+      console.log(conversations[0], "conversations[0]");
+
       onSelectRoom(conversations[0]);
       onSetRoomId(conversations[0]?._id);
-      onSetChatDesktop()
+
+      onSetChatDesktop();
     }
-  }, [conversations, mobileMode, onSelectRoom, onSetRoomId, params?.text?.length, onSetChatDesktop]);  
+  }, [
+    conversations,
+    mobileMode,
+    onSelectRoom,
+    onSetRoomId,
+    params?.text?.length,
+    onSetChatDesktop,
+  ]);
 
   const onChangeParamsConversation = (params: ParamState) => {
-    setParams(params)
-  }
+    setParams(params);
+  };
 
   return {
-    onFilterConversation: (name: string, value: string) => setParams({ ...params, [name]: value as string }),
+    onFilterConversation: (name: string, value: string) =>
+      setParams({ ...params, [name]: value as string }),
     onChangeParamsConversation,
   };
 };

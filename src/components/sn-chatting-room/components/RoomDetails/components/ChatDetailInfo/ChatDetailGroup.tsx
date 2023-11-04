@@ -22,6 +22,7 @@ interface ChatDetailGroupProps extends Partial<ChatDetailInfoProps> {
   _renderContentPopup: () => JSX.Element;
   showPopup: any;
   setShowPopup: any;
+  currentName?: string;
 }
 
 const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
@@ -40,7 +41,10 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
   return (
     <>
       <ChatDetailInfoMenuItem
-        text={"Group Name: " + currentConversation?.name?.replaceAll("_", " ")}
+        text={
+          "Group Name: " + props.currentName ??
+          currentConversation?.name?.replaceAll("_", " ")
+        }
         icon={GroupNameIcon}
         callBackOpenDrawer={() =>
           props?.setShowPopup((pre) => ({
