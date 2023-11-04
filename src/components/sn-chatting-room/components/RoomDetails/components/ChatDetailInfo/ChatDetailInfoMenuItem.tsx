@@ -20,7 +20,6 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
   const { onSetDrawerType } = useChat();
   // Handler to open the drawer.
   const onOpenDrawer = useCallback(() => {
-    props?.callBackOpenDrawer && props.callBackOpenDrawer();
     if (props.dontOpenDrawer) {
       return;
     }

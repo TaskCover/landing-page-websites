@@ -107,7 +107,6 @@ const RoomHeader = () => {
 
   useEffect(() => {
     onResetSearchText();
-    onResetConversationInfo();
     onCloseDrawer("info");
   }, [onResetSearchText, onResetConversationInfo, onCloseDrawer, roomId]);
 

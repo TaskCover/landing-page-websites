@@ -18,22 +18,11 @@ export interface useChatDetailInfoReturns {
   onChangeTypeDrawer: (type: string) => void;
 }
 
-export const useChatDetailInfo = (): useChatDetailInfoReturns => {
-  const {
-    onGetUserInfo,
-    onGetChatAttachments,
-    onGetChatUrls,
-    dataTransfer: currentConversation,
-  } = useChat();
-
-  console.log(currentConversation.username, "currentConversation");
-
-  const callbackOpenAccount = useCallback(
-    (username) => {
-      onGetUserInfo(currentConversation?.username);
-    },
-    [currentConversation, onGetUserInfo],
-  );
+export const useChatDetailInfo = ({
+  currentConversation,
+  conversationInfo,
+}): useChatDetailInfoReturns => {
+  const { onGetChatAttachments, onGetChatUrls } = useChat();
 
   const callbackChatAttachment = useCallback(
     (fileType: "link" | "media" | "file") => {
@@ -56,35 +45,32 @@ export const useChatDetailInfo = (): useChatDetailInfoReturns => {
       });
   }, [currentConversation]);
 
-  const menuItems: MenuItem[] = useMemo(
-    () => [
-      {
-        text: "Account infomation",
-        icon: AccountProfileIcon,
-        callback: (username) => callbackOpenAccount(username),
-        type: "account",
-      },
-      {
-        text: "Media file",
-        icon: MediaFileIcon,
-        callback: () => callbackChatAttachment("media"),
-        type: "media",
-      },
-      {
-        text: "Link",
-        icon: LinkIcon,
-        callback: () => callbackChatUrls(),
-        type: "link",
-      },
-      {
-        text: "File",
-        icon: FileBasicIcon,
-        callback: () => callbackChatAttachment("file"),
-        type: "file",
-      },
-    ],
-    [callbackOpenAccount, callbackChatAttachment, callbackChatUrls],
-  );
+  const menuItems: MenuItem[] = [
+    {
+      text: "Account infomation",
+      icon: AccountProfileIcon,
+      callback: () => console.log("account info"),
+      type: "account",
+    },
+    {
+      text: "Media file",
+      icon: MediaFileIcon,
+      callback: () => callbackChatAttachment("media"),
+      type: "media",
+    },
+    {
+      text: "Link",
+      icon: LinkIcon,
+      callback: () => callbackChatUrls(),
+      type: "link",
+    },
+    {
+      text: "File",
+      icon: FileBasicIcon,
+      callback: () => callbackChatAttachment("file"),
+      type: "file",
+    },
+  ];
 
   const onChangeTypeDrawer = (type: string) => {
     const onCallBackByType = menuItems.find(

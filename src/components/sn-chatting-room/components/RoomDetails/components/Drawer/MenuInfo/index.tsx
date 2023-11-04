@@ -13,9 +13,17 @@ import { useChatDetailInfo } from "components/sn-chatting-room/hooks/useChatDeta
 const MenuInfo = () => {
   const { isDarkMode } = useTheme();
   const { extraDesktopMode } = useGetScreenMode();
-  const { menuItems } = useChatDetailInfo();
+  const {
+    onCloseDrawer,
+    dataTransfer: currentConversation,
+    conversationInfo,
+  } = useChat();
 
-  const { onCloseDrawer, dataTransfer: currentConversation } = useChat();
+  const { menuItems } = useChatDetailInfo({
+    currentConversation,
+    conversationInfo,
+  });
+
   const renderColorByType = useMemo(() => {
     if (currentConversation?.t === "d") {
       if (isDarkMode) return "#313130";
@@ -88,9 +96,7 @@ const MenuInfo = () => {
                 key={index}
                 text={item.text}
                 icon={item.icon}
-                callBackOpenDrawer={() =>
-                  item.callback(currentConversation?.username)
-                }
+                callBackOpenDrawer={item.callback}
                 type={item?.type}
               />
             ))
