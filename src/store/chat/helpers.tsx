@@ -33,6 +33,9 @@ export const useWSChat = () => {
           count: 1,
           offset: 0,
         };
+
+      console.log(paramReq, "paramReq");
+
       return await onGetConventionById(paramReq);
     },
     [onGetConventionById],
@@ -191,7 +194,6 @@ export const useWSChat = () => {
 
   const reConnect = () => {
     setTimeout(() => {
-      console.log("reConnect");
       const wsNew = connectSocket();
       connectMessage(wsNew);
     }, 100);

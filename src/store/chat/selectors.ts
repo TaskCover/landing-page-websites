@@ -130,10 +130,6 @@ export const useChat = () => {
     detailConversationStatus,
   } = useAppSelector((state) => state.chat, shallowEqual);
 
-  useEffect(() => {
-    console.log({ messageInfo });
-  }, [messageInfo]);
-
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
     shallowEqual,

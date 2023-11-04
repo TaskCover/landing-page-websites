@@ -1,4 +1,4 @@
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, CircularProgress } from "@mui/material";
 import AccountInfoHeader from "./InfoHeader";
 import AccountInfoItem from "./AccountInfoItem";
 import { UserInfo } from "store/app/reducer";
@@ -17,9 +17,11 @@ const mapperDataToInfo = (partnerInfo: Partial<UserInfo>) => ({
 
 const AccountInfo = () => {
   const { extraDesktopMode } = useGetScreenMode();
-  const { partnerInfo } = useChat();
+  const { partnerInfo, isFetchingDetail } = useChat();
   const t = useTranslations(NS_AUTH);
   const { isDarkMode } = useTheme();
+
+  console.log(isFetchingDetail, "isFetchingDetail");
 
   const { dataTransfer: currentConversation, onSetDrawerType } = useChat();
   return (
@@ -36,42 +38,55 @@ const AccountInfo = () => {
         height: "100%",
       }}
     >
-      <AccountInfoHeader onClose={() => onSetDrawerType("info")} />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-        }}
-      >
-        <Avatar
-          src={currentConversation?.avatar}
-          sx={{
-            height: "80px",
-            width: "80px",
-            flexShrink: "0",
-            borderRadius: "10px",
-          }}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "flex-start",
-          alignSelf: "stretch",
-          flexDirection: "column",
-          padding: "0px 12px",
-        }}
-      >
-        {partnerInfo &&
-          Object.keys(mapperDataToInfo(partnerInfo))?.map((key) => (
-            <AccountInfoItem
-              key={key}
-              label={t(`signup.form.title.${key}`)}
-              value={mapperDataToInfo(partnerInfo)[key]}
+      {isFetchingDetail ? (
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          height="60vh"
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          <AccountInfoHeader onClose={() => onSetDrawerType("info")} />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+            }}
+          >
+            <Avatar
+              src={currentConversation?.avatar}
+              sx={{
+                height: "80px",
+                width: "80px",
+                flexShrink: "0",
+                borderRadius: "10px",
+              }}
             />
-          ))}
-      </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "flex-start",
+              alignSelf: "stretch",
+              flexDirection: "column",
+              padding: "0px 12px",
+            }}
+          >
+            {partnerInfo &&
+              Object.keys(mapperDataToInfo(partnerInfo))?.map((key) => (
+                <AccountInfoItem
+                  key={key}
+                  label={t(`signup.form.title.${key}`)}
+                  value={mapperDataToInfo(partnerInfo)[key]}
+                />
+              ))}
+          </Box>
+        </>
+      )}
     </Box>
   );
 };

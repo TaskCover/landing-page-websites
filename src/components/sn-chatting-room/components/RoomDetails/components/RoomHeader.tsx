@@ -44,6 +44,7 @@ const RoomHeader = () => {
     roomId,
     onSetDataTransfer,
     isFetchingDetail,
+    conversationInfo,
   } = useChat();
   const [search, setSearchText] = useState({
     text: "",
@@ -212,7 +213,7 @@ const RoomHeader = () => {
                     : currentConversation?.name}
                 </Typography>
                 <Typography variant="body2" color="var(--Gray3, #999)">
-                  Online
+                  {currentConversation?.status}
                 </Typography>
               </Box>
             </>

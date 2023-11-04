@@ -12,7 +12,10 @@ const DrawerInfoChat = () => {
     typeDrawerChat,
     onSetDrawerType,
     onSetConversationInfo,
+    isFetchingDetail,
   } = useChat();
+
+  console.log(isFetchingDetail, "isFetchingDetail");
 
   const DrawerObjs = useMemo(
     () => ({
