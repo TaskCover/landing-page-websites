@@ -92,29 +92,6 @@ const MessageContent = ({
 
   useEffect(() => {
     if (message.msg && textRef.current) {
-      // const parser = new DOMParser();
-      // const html = parser.parseFromString(message.msg, "text/html");
-      // const body = html.body;
-      // const isCodeBlock = message.msg.indexOf("<pre");
-
-      // console.log(message.msg, isCodeBlock > -1);
-      // if (isCodeBlock > -1) {
-      //   for (let i = 0; i < body.children.length; i++) {
-      //     const element = body.children[i];
-      //     if (element.getElementsByClassName("ql-syntax") != undefined) {
-      //       const content = hljs.highlightAuto(element.textContent || "", [
-      //         "javascript",
-      //         "html",
-      //       ]).value;
-      //       element.innerHTML = content;
-      //     }
-      //   }
-      //   textRef.current.innerHTML = body.innerHTML;
-      // } else {
-      //   textRef.current.innerHTML = linkifyHtml(message.msg, {
-      //     target: "_blank",
-      //   });
-      // }
       textRef.current.innerHTML = linkifyHtml(message.msg, {
         target: "_blank",
       });

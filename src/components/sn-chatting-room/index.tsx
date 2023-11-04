@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SNChat } from "./components";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { Box, Typography } from "@mui/material";
@@ -19,8 +19,17 @@ const ChattingRoom = () => {
   const { mobileMode } = useGetScreenMode();
   const { onFilterConversation, onChangeParamsConversation } =
     useFetchingChatting();
-  const { conversationInfo: currentConversation, dataTransfer } = useChat();
+  const {
+    conversationInfo: currentConversation,
+    dataTransfer,
+    onSetChatDesktop,
+  } = useChat();
   const contentModalChatting = useModalChatting();
+
+  useEffect(() => {
+    onSetChatDesktop(true);
+  }, [onSetChatDesktop]);
+
   return (
     <Box
       sx={{
@@ -43,7 +52,7 @@ const ChattingRoom = () => {
               alignItems="center"
               justifyContent="center"
               width="100%"
-              height="90vh"
+              height="94vh"
             >
               <Typography variant="h3">Please select a conversation</Typography>
             </Box>

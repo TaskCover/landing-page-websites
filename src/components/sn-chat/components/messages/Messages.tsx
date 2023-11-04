@@ -252,6 +252,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
           display: "flex",
           gap: "0.5rem",
           flexDirection: "column",
+          justifyContent: "flex-end",
           overflow: "auto",
           ...(messages.length < 5 && { justifyContent: "flex-end" }),
           height: "100vh",

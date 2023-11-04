@@ -308,13 +308,13 @@ const ChatDetailGroup = (props) => {
     const renameGroupApi = async () => {
       const dataTransferNew = {
         ...dataTransfer,
-        name: renameGroup,
-        fname: renameGroup,
+        name: renameGroup.replace("_", " "),
+        fname: renameGroup.replace("_", " "),
       };
 
       const renameResult = (await onRenameGroup({
         roomId: dataTransfer?._id,
-        name: renameGroup,
+        name: renameGroup.replace(" ", "_"),
       })) as any;
 
       if (renameResult?.error) {
