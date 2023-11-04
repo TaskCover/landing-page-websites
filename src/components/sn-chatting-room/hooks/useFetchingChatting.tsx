@@ -20,7 +20,7 @@ export interface useFetchingChattingReturns {
 
 const useFetchingChatting = (): useFetchingChattingReturns => {
   const [params, setParams] = useState<ParamState>(defaultParam as ParamState);
-  const { onGetAllConvention, onSetConversationInfo: onSelectRoom } = useChat();
+  const { onGetAllConvention } = useChat();
 
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);

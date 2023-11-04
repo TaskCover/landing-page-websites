@@ -6,6 +6,7 @@ import NewGroupIcon from "icons/NewGroupIcon";
 import SearchIcon from "icons/SearchIcon";
 import { debounce } from "utils/index";
 import { useChat } from "store/chat/selectors";
+import { useRef } from "react";
 
 const SearchBar = ({ onFilterConversation }) => {
   const { mobileMode } = useGetScreenMode();
@@ -15,6 +16,8 @@ const SearchBar = ({ onFilterConversation }) => {
   const debounceSearchText = debounce((text: string) => {
     onFilterConversation("text", text);
   }, 1000);
+
+  const inputRef = useRef<any>(null);
 
   return (
     <>
@@ -55,10 +58,11 @@ const SearchBar = ({ onFilterConversation }) => {
             sx={{ p: "10px", color: isDarkMode ? "white" : "#999999" }}
             aria-label="search"
           >
-            <SearchIcon />
+            <SearchIcon onClick={() => inputRef.current.focus()} />
           </IconButton>
 
           <InputBase
+            inputRef={inputRef}
             size="small"
             placeholder="Search name"
             sx={{

@@ -88,7 +88,9 @@ const MenuInfo = () => {
                 key={index}
                 text={item.text}
                 icon={item.icon}
-                callBackOpenDrawer={item.callback}
+                callBackOpenDrawer={() =>
+                  item.callback(currentConversation?.username)
+                }
                 type={item?.type}
               />
             ))

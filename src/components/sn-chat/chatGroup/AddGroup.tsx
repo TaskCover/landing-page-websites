@@ -294,6 +294,10 @@ const AddGroup: FC<AddGroupProps> = ({
                   .map((item, index) => {
                     return (
                       <SelectItem
+                        checked={
+                          employeeIdSelected?.hasOwnProperty(item.id_rocket) ||
+                          employeeIdSelected[item.id_rocket as any] === true
+                        }
                         checkbox
                         employee={item}
                         key={index}

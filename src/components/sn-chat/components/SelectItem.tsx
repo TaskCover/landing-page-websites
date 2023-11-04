@@ -10,20 +10,18 @@ import { Employee } from "store/company/reducer";
 import useTheme from "hooks/useTheme";
 
 interface SelectItemProp {
-  employeeIdSelected?: object;
   employee: Employee;
   onClick?: (event: ChangeEvent<HTMLInputElement>) => void;
   checkbox?: boolean;
   onClickItem?: () => void;
-  forwardMess?: boolean;
+  checked?: boolean;
 }
 const SelectItem = ({
-  employeeIdSelected = {},
+  checked,
   employee,
   onClick,
   checkbox,
   onClickItem,
-  forwardMess = false,
 }: SelectItemProp) => {
   const { fullname, email, avatar } = employee;
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -45,27 +43,13 @@ const SelectItem = ({
       onClick={onClickItem}
     >
       {checkbox && (
-        <>
-          {forwardMess ? (
-            <Checkbox
-              checked={
-                employeeIdSelected?.hasOwnProperty(employee._id) &&
-                employeeIdSelected[employee._id] === true
-              }
-              onChange={onClick}
-              {...label}
-              icon={<CircleUnchecked />}
-              checkedIcon={<CircleCheckedFilled />}
-            />
-          ) : (
-            <Checkbox
-              onChange={onClick}
-              {...label}
-              icon={<CircleUnchecked />}
-              checkedIcon={<CircleCheckedFilled />}
-            />
-          )}
-        </>
+        <Checkbox
+          checked={checked}
+          onChange={onClick}
+          {...label}
+          icon={<CircleUnchecked />}
+          checkedIcon={<CircleCheckedFilled />}
+        />
       )}
       <Avatar
         src={avatar?.link}

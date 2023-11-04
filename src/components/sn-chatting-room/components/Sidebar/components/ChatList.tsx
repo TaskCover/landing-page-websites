@@ -127,16 +127,18 @@ const ChatList = () => {
   }, [conversations, user]);
 
   const handleClickConversation = (chatInfo: IChatItemInfo) => {
-    onSetRoomId(chatInfo._id);
-    onSetDataTransfer(chatInfo);
-    onSetConversationInfo(chatInfo);
-    onResetSearchChatText();
-    if (chatInfo?.t)
-      if (chatInfo?.t !== "d") {
-        onSetStep(STEP.CHAT_GROUP, chatInfo);
-      } else {
-        onSetStep(STEP.CHAT_ONE, chatInfo);
-      }
+    try {
+      onSetRoomId(chatInfo._id);
+      onSetDataTransfer(chatInfo);
+      onSetConversationInfo(chatInfo);
+      onResetSearchChatText();
+      if (chatInfo?.t)
+        if (chatInfo?.t !== "d") {
+          onSetStep(STEP.CHAT_GROUP, chatInfo);
+        } else {
+          onSetStep(STEP.CHAT_ONE, chatInfo);
+        }
+    } catch (error) {}
   };
 
   const renderConversation = (idActive: string) => {

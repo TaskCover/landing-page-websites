@@ -34,8 +34,6 @@ export const useWSChat = () => {
           offset: 0,
         };
 
-      console.log(paramReq, "paramReq");
-
       return await onGetConventionById(paramReq);
     },
     [onGetConventionById],

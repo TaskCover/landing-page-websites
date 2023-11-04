@@ -250,8 +250,6 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     setChat(chat);
   }, [messages]);
 
-  console.log(chat, "chat");
-
   return (
     <>
       <Box

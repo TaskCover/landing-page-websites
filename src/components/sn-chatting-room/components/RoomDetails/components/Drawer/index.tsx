@@ -15,8 +15,6 @@ const DrawerInfoChat = () => {
     isFetchingDetail,
   } = useChat();
 
-  console.log(isFetchingDetail, "isFetchingDetail");
-
   const DrawerObjs = useMemo(
     () => ({
       info: <MenuInfo />,

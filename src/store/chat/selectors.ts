@@ -254,8 +254,6 @@ export const useChat = () => {
 
   const onSendMessage = useCallback(
     async (message: Partial<MessageBodyRequest>) => {
-      console.log(message, "message");
-
       await dispatch(
         sendMessages({
           sender_userId: user?.["id_rocket"] || "",

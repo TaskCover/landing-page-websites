@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Avatar,
   Box,
@@ -50,6 +50,8 @@ const RoomHeader = () => {
     text: "",
     isOpen: false,
   });
+
+  const inputRef = useRef<any>(null);
 
   const [currentIndex, setCurrentIndex] = useState<number>(
     listSearchMessage?.length,
@@ -152,10 +154,11 @@ const RoomHeader = () => {
                 }}
               >
                 <IconButton sx={{ p: "10px" }} aria-label="search">
-                  <SearchIcon />
+                  <SearchIcon onClick={() => inputRef?.current?.focus()} />
                 </IconButton>
 
                 <InputBase
+                  inputRef={inputRef}
                   size="small"
                   placeholder="Search text"
                   onChange={(e) => debounceSearchText(e.target.value)}

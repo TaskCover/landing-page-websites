@@ -21,8 +21,6 @@ const AccountInfo = () => {
   const t = useTranslations(NS_AUTH);
   const { isDarkMode } = useTheme();
 
-  console.log(isFetchingDetail, "isFetchingDetail");
-
   const { dataTransfer: currentConversation, onSetDrawerType } = useChat();
   return (
     <Box
