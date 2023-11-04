@@ -124,16 +124,13 @@ const ChatList = () => {
     onSetRoomId(chatInfo._id);
     onSetDataTransfer(chatInfo);
     onSetConversationInfo(chatInfo);
-<<<<<<< Updated upstream
     onResetSearchChatText();
-=======
     if (chatInfo?.t)
       if (chatInfo?.t !== "d") {
         onSetStep(STEP.CHAT_GROUP, chatInfo);
       } else {
         onSetStep(STEP.CHAT_ONE, chatInfo);
       }
->>>>>>> Stashed changes
   };
 
   const renderConversation = (idActive: string) => {
