@@ -9,7 +9,7 @@ import React, {
 import { Box } from "@mui/material";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import ChatItemLayout from "components/sn-chat/components/chat/ChatItemLayout";
-import { DirectionChat, IChatItemInfo } from "store/chat/type";
+import { DirectionChat, IChatItemInfo, STEP } from "store/chat/type";
 import { useDeepCompareMemo } from "hooks/useDeepCompare";
 import useTheme from "hooks/useTheme";
 import { useChat } from "store/chat/selectors";
@@ -26,6 +26,7 @@ const ChatList = () => {
     onGetAllConvention,
     onResetSearchChatText,
     conversationPaging: { pageIndex, pageSize, textSearch: initText },
+    onSetStep,
   } = useChat();
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
@@ -124,6 +125,12 @@ const ChatList = () => {
     onSetDataTransfer(chatInfo);
     onSetConversationInfo(chatInfo);
     onResetSearchChatText();
+    if (chatInfo?.t)
+      if (chatInfo?.t !== "d") {
+        onSetStep(STEP.CHAT_GROUP, chatInfo);
+      } else {
+        onSetStep(STEP.CHAT_ONE, chatInfo);
+      }
   };
 
   const renderConversation = (idActive: string) => {

@@ -82,19 +82,12 @@ export const useActionGroupDetails = () => {
       if (result?.error) {
         return onAddSnackbar(result?.error?.message, "error");
       }
-      (await onChangeGroupRole({
-        groupId: dataTransfer?._id,
-        userIdToChange: user?.id_rocket ?? "",
-        newRole: "removeOwner",
-      })) as any;
-    } else {
-      const result = (await onRemoveGroupMember({
-        groupId: dataTransfer?._id,
-        userIdToKick: member?._id,
-      })) as any;
-      if (result?.error) {
-        return onAddSnackbar(result?.error?.message, "error");
-      }
+      // (await onChangeGroupRole({
+      //   groupId: dataTransfer?._id,
+      //   userIdToChange: user?.id_rocket ?? "",
+      //   newRole: "removeOwner",
+      // })) as any;
+      onAddSnackbar(commonChatBox("chatBox.group.adminChange"), "success");
     }
     onAddSnackbar(commonT("success"), "success");
     if (dataTransfer?._id !== "GENERAL") {

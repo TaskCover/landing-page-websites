@@ -252,6 +252,8 @@ export const useChat = () => {
 
   const onSendMessage = useCallback(
     async (message: Partial<MessageBodyRequest>) => {
+      console.log(message, "message");
+
       await dispatch(
         sendMessages({
           sender_userId: user?.["id_rocket"] || "",
@@ -267,7 +269,19 @@ export const useChat = () => {
         }),
       );
     },
-    [conversationInfo, dispatch, user, dataTransfer],
+    [
+      dispatch,
+      user,
+      conversationInfo?.username,
+      conversationInfo?._id,
+      conversationInfo?.t,
+      conversationInfo?.name,
+      dataTransfer?.username,
+      dataTransfer?._id,
+      dataTransfer?.t,
+      dataTransfer?.name,
+      roomId,
+    ],
   );
 
   const onResetSearchChatText = useCallback(async () => {

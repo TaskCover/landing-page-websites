@@ -90,7 +90,11 @@ const MenuInfo = () => {
             />
           ))
         ) : (
-          <ChatDetailGroup menuItems={menuItems} {...propsActionGroupDetail} />
+          <ChatDetailGroup
+            currentName={currentConversation?.name?.replaceAll("_", " ")}
+            menuItems={menuItems}
+            {...propsActionGroupDetail}
+          />
         )}
       </Box>
     </Box>

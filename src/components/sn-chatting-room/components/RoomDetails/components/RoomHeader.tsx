@@ -48,18 +48,20 @@ const RoomHeader = () => {
     text: "",
     isOpen: false,
   });
-  
+
   const [currentIndex, setCurrentIndex] = useState<number>(
     listSearchMessage?.length,
   );
 
   const onResetSearchText = useCallback(() => {
-    setSearchText({ text: "", isOpen: false });
+    setSearchText((prev) => ({
+      ...prev,
+      text: "",
+    }));
   }, []);
 
   const handleSearchChatText = useCallback(async () => {
     try {
-      if (!search?.isOpen) return;
       await onSearchChatText({
         text: search?.text,
         type: currentConversation?.t as RoomType,

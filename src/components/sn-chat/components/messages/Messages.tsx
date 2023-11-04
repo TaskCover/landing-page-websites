@@ -89,12 +89,17 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   const observer = useRef(
     new IntersectionObserver((entries) => {
       const first = entries[0];
+      console.log("scroll 1");
+
       if (first.isIntersecting) {
+        console.log("scroll 2");
+
         pageRef.current = pageRef.current + pageSize;
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         const clientHeight =
           (messagesContentRef.current?.clientHeight || 0) + 50;
         if (scrollHeightRef.current > clientHeight) {
+          console.log("scroll 3");
           onRefetch(pageRef.current);
         }
       }
