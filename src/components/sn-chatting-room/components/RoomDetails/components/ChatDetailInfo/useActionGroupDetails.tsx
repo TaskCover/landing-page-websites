@@ -62,7 +62,7 @@ export const useActionGroupDetails = () => {
   const [userId, setUserId] = useState("");
   const { onAddSnackbar } = useSnackbar();
   const [showPopup, setShowPopup] = useState(init);
-  const [renameGroup, setRenameGroup] = useState("");
+  const [renameGroup, setRenameGroup] = useState();
 
   const { isDarkMode } = useTheme();
 
@@ -109,6 +109,9 @@ export const useActionGroupDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataTransfer]);
 
+  useEffect(() => {
+    setRenameGroup(dataTransfer.name);
+  }, [dataTransfer.name]);
   const handleNewAdd = () => {
     setShowPopup((pre) => ({
       ...pre,
