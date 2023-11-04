@@ -145,7 +145,7 @@ const AccountInfoHeader = ({
               fontWeight="bold"
               style={{ cursor: "pointer" }}
             >
-              {name ? name : dataTransfer?.fname?.replaceAll("_", " ")}
+              {dataTransfer?.fname ? dataTransfer?.fname?.replaceAll("_", " ") : dataTransfer?.name ? dataTransfer?.name?.replaceAll("_", " ") : name }
             </Typography>
             <Typography variant="caption" color="#999999">
               {commonChatBox("chatBox.active")}
