@@ -26,8 +26,8 @@ const TYPES = [
 
 const StorageInfo = () => {
   const { extraDesktopMode } = useGetScreenMode();
-  const {isDarkMode} =  useTheme();
-  const {typeDrawerChat, onSetDrawerType} = useChat();
+  const { isDarkMode } = useTheme();
+  const { typeDrawerChat, onSetDrawerType } = useChat();
 
   return (
     <Box
@@ -36,13 +36,14 @@ const StorageInfo = () => {
         alignItems: "center",
         flexDirection: "column",
         width: extraDesktopMode ? "424px" : "272px",
-        height: extraDesktopMode ? "948px" : "730px",
+        // height: extraDesktopMode ? "948px" : "730px",
         gap: "12px",
-        backgroundColor: isDarkMode ? "#313130": "var(--Gray0, #F7F7FD)",
+        backgroundColor: isDarkMode ? "#313130" : "var(--Gray0, #F7F7FD)",
+        overflow: "auto",
       }}
     >
       <InfoHeader
-        onClose={() => onSetDrawerType('info')}
+        onClose={() => onSetDrawerType("info")}
         title="Chat detail info"
       />
       <Box
@@ -76,9 +77,9 @@ const StorageInfo = () => {
         ))}
       </Box>
       <Box>
-        {typeDrawerChat === "media" && <MediaContent /> }
-        {typeDrawerChat === 'link' && <LinkContent />}
-        {typeDrawerChat === 'file' && <FileContent />}
+        {typeDrawerChat === "media" && <MediaContent />}
+        {typeDrawerChat === "link" && <LinkContent />}
+        {typeDrawerChat === "file" && <FileContent />}
       </Box>
     </Box>
   );

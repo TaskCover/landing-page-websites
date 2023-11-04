@@ -203,28 +203,28 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     switch (message?.t) {
       case "au":
         msg = commonChatBox("chatBox.group.add", {
-          user1: message?.u?.username,
+          user1: message?.u?.name,
           user2: message?.msg,
           time: getTimeStamp(message?.ts ?? ""),
         });
         break;
       case "ru":
         msg = commonChatBox("chatBox.group.remove", {
-          user1: message?.u?.username,
+          user1: message?.u?.name,
           user2: message?.msg,
           time: getTimeStamp(message?.ts ?? ""),
         });
         break;
       case "subscription-role-added":
         msg = commonChatBox("chatBox.group.lead_trans", {
-          user1: message?.u?.username,
+          user1: message?.u?.name,
           user2: message?.msg,
           time: getTimeStamp(message?.ts ?? ""),
         });
         break;
       case "subscription-role-removed":
         msg = commonChatBox("chatBox.group.lead_remove", {
-          user1: message?.u?.username,
+          user1: message?.u?.name,
           user2: message?.msg,
           time: getTimeStamp(message?.ts ?? ""),
         });
@@ -250,13 +250,16 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         }}
         sx={{
           display: "flex",
+          flexDirection: messages.length < 10 ? "column-reverse" : "column",
           gap: "0.5rem",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          overflow: "auto",
-          ...(messages.length < 5 && { justifyContent: "flex-end" }),
+          overflowY: "scroll",
           height: "100vh",
 
+          ...(messages.length < 10
+            ? {}
+            : {
+                flex: "1 1 auto",
+              }),
           padding: "1rem",
           ...(!!wrapperMessageSx
             ? { ...wrapperMessageSx }

@@ -271,7 +271,6 @@ const RoomHeader = () => {
         </Box>
         <ChatDetailInfo />
       </Box>
-      {isFetching && <LinearProgress color="primary" />}
     </>
   );
 };

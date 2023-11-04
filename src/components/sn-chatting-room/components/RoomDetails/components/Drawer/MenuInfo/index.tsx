@@ -34,9 +34,10 @@ const MenuInfo = () => {
         alignItems: "center",
         flexDirection: "column",
         width: extraDesktopMode ? "424px" : "272px",
-        height: extraDesktopMode ? "948px" : "730px",
+        // height: extraDesktopMode ? "948px" : "730px",
         backgroundColor: renderColorByType,
         gap: "12px",
+        overflow: "auto",
       }}
     >
       <ChatDetailInfoHeader onClose={() => onCloseDrawer("info")} />
