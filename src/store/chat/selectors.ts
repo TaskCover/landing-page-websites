@@ -127,6 +127,7 @@ export const useChat = () => {
     typeDrawerChat,
     isOpenInfoChat,
     isChatDesktop,
+    detailConversationStatus,
   } = useAppSelector((state) => state.chat, shallowEqual);
 
   useEffect(() => {
@@ -149,6 +150,11 @@ export const useChat = () => {
   const isError = useMemo(
     () => conversationStatus === DataStatus.FAILED,
     [conversationStatus],
+  );
+
+  const isFetchingDetail = useMemo(
+    () => detailConversationStatus === DataStatus.LOADING,
+    [detailConversationStatus],
   );
 
   const onGetAllConvention = useCallback(
@@ -711,6 +717,7 @@ export const useChat = () => {
     isError,
     isIdle,
     isFetching,
+    isFetchingDetail,
     pageIndex,
     pageSize,
     totalItems,

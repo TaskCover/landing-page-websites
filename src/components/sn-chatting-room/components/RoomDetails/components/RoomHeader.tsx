@@ -37,14 +37,13 @@ const RoomHeader = () => {
     onSearchChatText,
     listSearchMessage,
     onSetStateSearchMessage,
-    onSetStep,
     onSetDrawerType,
     dataTransfer: currentConversation,
     onResetConversationInfo,
     onCloseDrawer,
     roomId,
     onSetDataTransfer,
-    isFetching,
+    isFetchingDetail,
   } = useChat();
   const [search, setSearchText] = useState({
     text: "",
@@ -59,6 +58,7 @@ const RoomHeader = () => {
     setSearchText((prev) => ({
       ...prev,
       text: "",
+      isOpen: false,
     }));
   }, []);
 
@@ -125,26 +125,7 @@ const RoomHeader = () => {
           gap="20px"
           alignItems="center"
         >
-          <>
-            <Avatar
-              src={currentConversation?.avatar}
-              sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
-            />
-            <Box display="flex" flexDirection="column" gap="4px">
-              <Typography
-                variant="h6"
-                color={isDarkMode ? "white" : "var(--Black, #212121)"}
-              >
-                {currentConversation?.t !== "d"
-                  ? currentConversation?.name?.replaceAll("_", " ")
-                  : currentConversation?.name}
-              </Typography>
-              <Typography variant="body2" color="var(--Gray3, #999)">
-                Online
-              </Typography>
-            </Box>
-          </>
-          {search?.isOpen && (
+          {search?.isOpen ? (
             <Box
               display="flex"
               gap="10px"
@@ -215,6 +196,26 @@ const RoomHeader = () => {
                 </Box>
               )}
             </Box>
+          ) : (
+            <>
+              <Avatar
+                src={currentConversation?.avatar}
+                sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
+              />
+              <Box display="flex" flexDirection="column" gap="4px">
+                <Typography
+                  variant="h6"
+                  color={isDarkMode ? "white" : "var(--Black, #212121)"}
+                >
+                  {currentConversation?.t !== "d"
+                    ? currentConversation?.name?.replaceAll("_", " ")
+                    : currentConversation?.name}
+                </Typography>
+                <Typography variant="body2" color="var(--Gray3, #999)">
+                  Online
+                </Typography>
+              </Box>
+            </>
           )}
         </Box>
         <Box
@@ -267,7 +268,7 @@ const RoomHeader = () => {
         </Box>
         <ChatDetailInfo />
       </Box>
-      {isFetching && <LinearProgress color="primary" />}
+      {isFetchingDetail && <LinearProgress color="primary" />}
     </>
   );
 };

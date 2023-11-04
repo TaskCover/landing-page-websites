@@ -36,6 +36,7 @@ const MessageLayout = ({
     onSetDrawerType,
   } = useChat();
   const { isDarkMode } = useTheme();
+
   return (
     <>
       <Box
@@ -92,13 +93,13 @@ const MessageLayout = ({
         )}
         {/* Message content */}
         {message?.alias ? (
-          <Box order={'2'}>
+          <Box order={"2"}>
             <Box
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                color: '#3699FF',
-                fontSize: '12px',
+                display: "flex",
+                alignItems: "center",
+                color: "#3699FF",
+                fontSize: "12px",
               }}
             >
               <ForwardSmall />
@@ -107,7 +108,7 @@ const MessageLayout = ({
             {children}
           </Box>
         ) : (
-            <>{ children }</>
+          <>{children}</>
         )}
         {/* Avartar partner */}
         {!isCurrentUser && (

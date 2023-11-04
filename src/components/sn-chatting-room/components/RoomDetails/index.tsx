@@ -14,7 +14,7 @@ const RoomDetails = () => {
   return (
     <Box
       width="100%"
-      height="90vh"
+      height="94vh"
       display="flex"
       justifyContent="space-between"
       flexDirection="column"

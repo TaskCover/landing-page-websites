@@ -62,7 +62,7 @@ export const useActionGroupDetails = () => {
   const [userId, setUserId] = useState("");
   const { onAddSnackbar } = useSnackbar();
   const [showPopup, setShowPopup] = useState(init);
-  const [renameGroup, setRenameGroup] = useState("");
+  const [renameGroup, setRenameGroup] = useState<string>();
 
   const { isDarkMode } = useTheme();
 
@@ -108,6 +108,10 @@ export const useActionGroupDetails = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataTransfer]);
+
+  useEffect(() => {
+    setRenameGroup(dataTransfer.name);
+  }, [dataTransfer.name]);
 
   const handleNewAdd = () => {
     setShowPopup((pre) => ({
@@ -237,14 +241,15 @@ export const useActionGroupDetails = () => {
 
   const handlePopup = async () => {
     const renameGroupApi = async () => {
+      if (!renameGroup) return;
       const dataTransferNew = {
         ...dataTransfer,
-        name: renameGroup,
-        fname: renameGroup,
+        name: renameGroup.replace("_", " "),
+        fname: renameGroup.replace("_", " "),
       };
       const renameResult = (await onRenameGroup({
         roomId: dataTransfer?._id,
-        name: renameGroup,
+        name: renameGroup.replace(" ", "_"),
       })) as any;
 
       if (renameResult?.error) {

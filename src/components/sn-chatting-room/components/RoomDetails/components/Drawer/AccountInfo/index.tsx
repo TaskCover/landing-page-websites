@@ -19,9 +19,9 @@ const AccountInfo = () => {
   const { extraDesktopMode } = useGetScreenMode();
   const { partnerInfo } = useChat();
   const t = useTranslations(NS_AUTH);
-  const {isDarkMode} =  useTheme();
+  const { isDarkMode } = useTheme();
 
-  const {dataTransfer: currentConversation, onSetDrawerType} = useChat();
+  const { dataTransfer: currentConversation, onSetDrawerType } = useChat();
   return (
     <Box
       sx={{
@@ -29,12 +29,14 @@ const AccountInfo = () => {
         alignItems: "center",
         flexDirection: "column",
         width: extraDesktopMode ? "424px" : "272px",
-        height: extraDesktopMode ? "948px" : "730px",
+        // height: extraDesktopMode ? "948px" : "730px",
         gap: "12px",
-        backgroundColor: isDarkMode ? "#313130": "var(--Gray0, #F7F7FD)",
+        backgroundColor: isDarkMode ? "#313130" : "var(--Gray0, #F7F7FD)",
+        overflow: "auto",
+        height: "100%",
       }}
     >
-      <AccountInfoHeader onClose={() => onSetDrawerType('info')} />
+      <AccountInfoHeader onClose={() => onSetDrawerType("info")} />
       <Box
         sx={{
           display: "flex",

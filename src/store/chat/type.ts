@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataStatus } from "constant/enums";
 import { Paging } from "constant/types";
-import { Attachment, ChatLinkType, MediaType, TypeMedia } from "./media/typeMedia";
+import {
+  Attachment,
+  ChatLinkType,
+  MediaType,
+  TypeMedia,
+} from "./media/typeMedia";
 
 export type IChatItemInfo = IChatInfo & IChatGroup & IChatDirect;
 export interface IChatInfo {
@@ -158,6 +163,7 @@ export interface ChatState {
   convention: IChatItemInfo[];
   mediaListConversation: MediaPreviewItem[];
   conversationStatus: DataStatus;
+  detailConversationStatus: DataStatus;
   conversationPaging: Paging & {
     isReloadPageCurrent?: boolean;
     textSearch: string;
@@ -211,10 +217,21 @@ export interface ChatState {
   isChatDesktop: boolean;
 }
 
-export type TypeDrawerChat = 'group' | 'forward' | 'media' | 'file' | 'link' | 'info' | 'account' | 'group-modal'
+export type TypeDrawerChat =
+  | "group"
+  | "forward"
+  | "media"
+  | "file"
+  | "link"
+  | "info"
+  | "account"
+  | "group-modal";
 export type DirectionChat = "a" | "c" | "d";
 
-export type TypeParamsChat = 'paramsConversation' |  'paramsLastMessage' | 'paramsUnreadMessage'
+export type TypeParamsChat =
+  | "paramsConversation"
+  | "paramsLastMessage"
+  | "paramsUnreadMessage";
 
 export interface AuthenRequestCommon {
   authToken: string;
@@ -335,7 +352,7 @@ export interface MessageBodyRequest {
   receiverUsername: string;
   message?: string;
   attachments?: Attachment[];
-  t: 'd' | 'c' | 'p';
+  t: "d" | "c" | "p";
   roomId?: string;
   userId?: string;
   channel?: string;
@@ -377,8 +394,8 @@ export interface UnReadMessageInfo {
 }
 
 export interface SetParamConversationProps {
-  type: TypeParamsChat,
-  value: any
+  type: TypeParamsChat;
+  value: any;
 }
 
 export interface ReadMessageRequest extends AuthenRequestCommon {

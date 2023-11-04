@@ -161,7 +161,7 @@ const AddGroup: FC<AddGroupProps> = ({
             ...Object.keys(employeeSelected).filter(
               (item) => employeeSelected[item] === true,
             ),
-            ...(dataTransfer ? [dataTransfer?.username] : []),
+            ...(dataTransfer.username ? [dataTransfer?.username] : []),
           ],
           type: "d",
         });
