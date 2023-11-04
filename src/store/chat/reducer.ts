@@ -143,7 +143,14 @@ const chatSlice = createSlice({
     },
     setMessage: (state, action: PayloadAction<MessageInfo | null>) => {
       if (action.payload) {
-        state.messageInfo.push(action.payload);
+        if (
+          state.messageInfo.findIndex(
+            (message) => message._id === action.payload?._id,
+          ) === -1
+        ) {
+          state.messageInfo.push(action.payload);
+        }
+
         if (action.payload.attachments?.length > 0) {
           const mediaMessages: MediaPreviewItem[] = action.payload.attachments
             .filter(

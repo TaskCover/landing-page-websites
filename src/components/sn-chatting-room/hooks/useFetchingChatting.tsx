@@ -20,15 +20,7 @@ export interface useFetchingChattingReturns {
 
 const useFetchingChatting = (): useFetchingChattingReturns => {
   const [params, setParams] = useState<ParamState>(defaultParam as ParamState);
-  const {
-    onGetAllConvention,
-    convention: conversations,
-    onSetConversationInfo: onSelectRoom,
-    onSetRoomId,
-    onSetChatDesktop,
-  } = useChat();
-
-  const { mobileMode } = useGetScreenMode();
+  const { onGetAllConvention, onSetConversationInfo: onSelectRoom } = useChat();
 
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
@@ -52,25 +44,6 @@ const useFetchingChatting = (): useFetchingChattingReturns => {
   useEffect(() => {
     handleGetConversation({ body: params });
   }, [handleGetConversation, params]);
-
-  useEffect(() => {
-    if (mobileMode) return;
-    if (conversations?.length > 0) {
-      console.log(conversations[0], "conversations[0]");
-
-      onSelectRoom(conversations[0]);
-      onSetRoomId(conversations[0]?._id);
-
-      onSetChatDesktop();
-    }
-  }, [
-    conversations,
-    mobileMode,
-    onSelectRoom,
-    onSetRoomId,
-    params?.text?.length,
-    onSetChatDesktop,
-  ]);
 
   const onChangeParamsConversation = (params: ParamState) => {
     setParams(params);

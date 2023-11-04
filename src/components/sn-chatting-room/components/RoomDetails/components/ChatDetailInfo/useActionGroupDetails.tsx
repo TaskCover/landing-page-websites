@@ -45,6 +45,7 @@ export const useActionGroupDetails = () => {
     onGetAllConvention,
     onChangeListConversations,
     convention,
+    onCloseDrawer,
   } = useChat();
 
   const { user } = useAuth();
@@ -205,6 +206,7 @@ export const useActionGroupDetails = () => {
       offset: 0,
       count: 10,
     });
+    onCloseDrawer("account");
   };
 
   const onChangeConversationWhenLeave = useCallback(() => {
@@ -242,7 +244,7 @@ export const useActionGroupDetails = () => {
       };
       const renameResult = (await onRenameGroup({
         roomId: dataTransfer?._id,
-        name: renameGroup.replaceAll(" ", "_"),
+        name: renameGroup,
       })) as any;
 
       if (renameResult?.error) {
@@ -304,6 +306,7 @@ export const useActionGroupDetails = () => {
         break;
       case TYPE_POPUP.LEAVE_MEMBER:
         await left();
+        onChangeConversationWhenLeave();
         break;
       case TYPE_POPUP.LEAVE_AND_NEW_ADD:
         await addAndRemove(userId, user?.id_rocket ?? "");
@@ -314,6 +317,7 @@ export const useActionGroupDetails = () => {
         //NEW OWNER RANDOM
         const random = groupMembers
           ?.filter((m) => m._id !== user?.id_rocket)
+          ?.filter((m) => m.roles.includes("member"))
           ?.pop()?._id;
         if (!random) return onAddSnackbar("Error!", "error"); // Handle delete group
         await addAndRemove(random, user?.id_rocket ?? "");
