@@ -87,6 +87,7 @@ const initialState: ChatState = {
   typeDrawerChat: "info",
   isOpenInfoChat: false,
   isChatDesktop: false,
+  detailConversationStatus: DataStatus.IDLE,
 };
 
 const isConversation = (type: string) => {
@@ -404,17 +405,20 @@ const chatSlice = createSlice({
       })
       // getPartnerInfoById
       .addCase(getUserInfoById.pending, (state, action) => {
+        state.detailConversationStatus = DataStatus.LOADING;
         state.partnerInfoStatus = DataStatus.LOADING;
       })
       .addCase(
         getUserInfoById.fulfilled,
         (state, action: PayloadAction<UserInfo>) => {
           state.partnerInfo = action.payload || null;
+          state.detailConversationStatus = DataStatus.SUCCEEDED;
           state.partnerInfoStatus = DataStatus.SUCCEEDED;
         },
       )
       .addCase(getUserInfoById.rejected, (state, action) => {
         state.partnerInfo = null;
+        state.detailConversationStatus = DataStatus.FAILED;
         state.partnerInfoStatus = DataStatus.FAILED;
       })
       // getChatUrls

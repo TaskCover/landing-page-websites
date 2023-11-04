@@ -40,6 +40,7 @@ const StorageInfo = () => {
         gap: "12px",
         backgroundColor: isDarkMode ? "#313130" : "var(--Gray0, #F7F7FD)",
         overflow: "auto",
+        height: "100%",
       }}
     >
       <InfoHeader

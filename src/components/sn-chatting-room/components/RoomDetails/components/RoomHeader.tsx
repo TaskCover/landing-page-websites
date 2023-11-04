@@ -43,7 +43,7 @@ const RoomHeader = () => {
     onCloseDrawer,
     roomId,
     onSetDataTransfer,
-    isFetching,
+    isFetchingDetail,
   } = useChat();
   const [search, setSearchText] = useState({
     text: "",
@@ -268,6 +268,7 @@ const RoomHeader = () => {
         </Box>
         <ChatDetailInfo />
       </Box>
+      {isFetchingDetail && <LinearProgress color="primary" />}
     </>
   );
 };
