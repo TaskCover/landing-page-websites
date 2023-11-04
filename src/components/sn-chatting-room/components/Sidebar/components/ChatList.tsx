@@ -6,7 +6,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Box } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import ChatItemLayout from "components/sn-chat/components/chat/ChatItemLayout";
 import { DirectionChat, IChatItemInfo, STEP } from "store/chat/type";
@@ -27,6 +32,7 @@ const ChatList = () => {
     onResetSearchChatText,
     conversationPaging: { pageIndex, pageSize, textSearch: initText },
     onSetStep,
+    isFetching,
   } = useChat();
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
@@ -151,22 +157,27 @@ const ChatList = () => {
   };
 
   const renderConversations = (idActive: string) => {
-    if (_conversations.length <= 0) return <NoData />;
+    if (_conversations.length <= 0 && !isFetching) {
+      return <NoData />;
+    }
 
     return (
-      <Box
-        display="flex"
-        flexDirection="column"
-        width="100%"
-        height="90vh"
-        sx={{
-          overflowX: "scroll",
-          bgcolor: isDarkMode ? "var(--mui-palette-grey-50)" : "white",
-        }}
-        ref={chatListRef}
-      >
-        {renderConversation(idActive)}
-      </Box>
+      <>
+        {isFetching && <LinearProgress color="primary" />}
+        <Box
+          display="flex"
+          flexDirection="column"
+          width="100%"
+          height="90vh"
+          sx={{
+            overflowX: "scroll",
+            bgcolor: isDarkMode ? "var(--mui-palette-grey-50)" : "white",
+          }}
+          ref={chatListRef}
+        >
+          {renderConversation(idActive)}
+        </Box>
+      </>
     );
   };
 

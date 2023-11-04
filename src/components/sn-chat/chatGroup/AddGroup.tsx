@@ -157,9 +157,12 @@ const AddGroup: FC<AddGroupProps> = ({
               `...${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`
             );
           })(),
-          members: Object.keys(employeeSelected).filter(
-            (item) => employeeSelected[item] === true,
-          ),
+          members: [
+            ...Object.keys(employeeSelected).filter(
+              (item) => employeeSelected[item] === true,
+            ),
+            ...(dataTransfer ? [dataTransfer?.username] : []),
+          ],
           type: "d",
         });
         onSetRoomId(result.payload.group._id);

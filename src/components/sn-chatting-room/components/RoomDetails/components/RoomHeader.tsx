@@ -4,6 +4,7 @@ import {
   Box,
   IconButton,
   InputBase,
+  LinearProgress,
   Paper,
   Typography,
 } from "@mui/material";
@@ -43,6 +44,7 @@ const RoomHeader = () => {
     onCloseDrawer,
     roomId,
     onSetDataTransfer,
+    isFetching,
   } = useChat();
   const [search, setSearchText] = useState({
     text: "",
@@ -107,158 +109,166 @@ const RoomHeader = () => {
   }, [onResetSearchText, onResetConversationInfo, onCloseDrawer, roomId]);
 
   return (
-    <Box
-      width="100%"
-      display="flex"
-      justifyContent="space-between"
-      height="77px"
-      padding="10px"
-      bgcolor={isDarkMode ? "#3a3b3c" : "var(--Gray0, #F7F7FD)"}
-    >
+    <>
       <Box
         width="100%"
         display="flex"
+        justifyContent="space-between"
+        height="77px"
         padding="10px"
-        gap="20px"
-        alignItems="center"
+        bgcolor={isDarkMode ? "#3a3b3c" : "var(--Gray0, #F7F7FD)"}
       >
-        <>
-          <Avatar
-            src={currentConversation?.avatar}
-            sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
-          />
-          <Box display="flex" flexDirection="column" gap="4px">
-            <Typography
-              variant="h6"
-              color={isDarkMode ? "white" : "var(--Black, #212121)"}
-            >
-              {currentConversation?.t !== "d"
-                ? currentConversation?.name?.replaceAll("_", " ")
-                : currentConversation?.name}
-            </Typography>
-            <Typography variant="body2" color="var(--Gray3, #999)">
-              Online
-            </Typography>
-          </Box>
-        </>
-        {search?.isOpen && (
-          <Box
-            display="flex"
-            gap="10px"
-            sx={{
-              width: "70%",
-            }}
-          >
-            <Paper
-              component="form"
+        <Box
+          width="100%"
+          display="flex"
+          padding="10px"
+          gap="20px"
+          alignItems="center"
+        >
+          <>
+            <Avatar
+              src={currentConversation?.avatar}
+              sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
+            />
+            <Box display="flex" flexDirection="column" gap="4px">
+              <Typography
+                variant="h6"
+                color={isDarkMode ? "white" : "var(--Black, #212121)"}
+              >
+                {currentConversation?.t !== "d"
+                  ? currentConversation?.name?.replaceAll("_", " ")
+                  : currentConversation?.name}
+              </Typography>
+              <Typography variant="body2" color="var(--Gray3, #999)">
+                Online
+              </Typography>
+            </Box>
+          </>
+          {search?.isOpen && (
+            <Box
+              display="flex"
+              gap="10px"
               sx={{
-                p: "2px 4px",
-                display: "flex",
-                alignItems: "center",
-                height: "40px",
-                borderRadius: "8px",
-                boxShadow: "none",
-                ...(isDarkMode
-                  ? { background: "#1e1e1e", color: "white" }
-                  : {}),
-                ...(!mobileMode
-                  ? { width: "400px" }
-                  : { width: "80%", border: "1px solid" }),
+                width: "70%",
               }}
             >
-              <IconButton sx={{ p: "10px" }} aria-label="search">
-                <SearchIcon />
-              </IconButton>
-
-              <InputBase
-                size="small"
-                placeholder="Search text"
-                onChange={(e) => debounceSearchText(e.target.value)}
+              <Paper
+                component="form"
                 sx={{
-                  width: "100%",
+                  p: "2px 4px",
+                  display: "flex",
+                  alignItems: "center",
+                  height: "40px",
+                  borderRadius: "8px",
+                  boxShadow: "none",
                   ...(isDarkMode
                     ? { background: "#1e1e1e", color: "white" }
-                    : { background: "white" }),
-                  fontSize: 14,
-                  "& .MuiInputBase-input": {
-                    padding: "0px !important",
-                  },
+                    : {}),
+                  ...(!mobileMode
+                    ? { width: "400px" }
+                    : { width: "80%", border: "1px solid" }),
                 }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }
-                }}
-              />
-            </Paper>
-            {search?.text?.length > 0 && listSearchMessage?.length > 0 && (
-              <Box display="flex" gap="10px" width="240px" alignItems="center">
-                <Text variant="body2" className="text-option">
-                  {listSearchMessage?.length} matches
-                </Text>
-                <IconButton
-                  sx={{ p: "5px", bgcolor: isDarkMode ? "#3a3b3c" : "white" }}
-                  aria-label="search"
-                  onClick={onDirectToMessage}
-                >
-                  <ArrowCircleUp />
+              >
+                <IconButton sx={{ p: "10px" }} aria-label="search">
+                  <SearchIcon />
                 </IconButton>
-              </Box>
-            )}
-          </Box>
-        )}
+
+                <InputBase
+                  size="small"
+                  placeholder="Search text"
+                  onChange={(e) => debounceSearchText(e.target.value)}
+                  sx={{
+                    width: "100%",
+                    ...(isDarkMode
+                      ? { background: "#1e1e1e", color: "white" }
+                      : { background: "white" }),
+                    fontSize: 14,
+                    "& .MuiInputBase-input": {
+                      padding: "0px !important",
+                    },
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }
+                  }}
+                />
+              </Paper>
+              {search?.text?.length > 0 && listSearchMessage?.length > 0 && (
+                <Box
+                  display="flex"
+                  gap="10px"
+                  width="240px"
+                  alignItems="center"
+                >
+                  <Text variant="body2" className="text-option">
+                    {listSearchMessage?.length} matches
+                  </Text>
+                  <IconButton
+                    sx={{ p: "5px", bgcolor: isDarkMode ? "#3a3b3c" : "white" }}
+                    aria-label="search"
+                    onClick={onDirectToMessage}
+                  >
+                    <ArrowCircleUp />
+                  </IconButton>
+                </Box>
+              )}
+            </Box>
+          )}
+        </Box>
+        <Box
+          justifyContent="flex-end"
+          width="100%"
+          display="flex"
+          padding="10px"
+          gap="4px"
+          alignItems="center"
+        >
+          <IconButton
+            sx={{
+              color:
+                colorSchemes[isDarkMode ? "dark" : "light"].palette.secondary
+                  .main,
+            }}
+            onClick={onOpenSearchMessage}
+          >
+            {search?.isOpen ? <CloseIcon /> : <SearchIcon />}
+          </IconButton>
+          <IconButton
+            sx={{
+              color: "transparent",
+            }}
+            onClick={() => {
+              onSetDrawerType("group");
+              onSetDataTransfer({
+                ...currentConversation,
+                isNew: currentConversation?.t === "d",
+              });
+            }}
+          >
+            <ProfileAdd />
+          </IconButton>
+          <IconButton
+            sx={{
+              color: "transparent",
+            }}
+          >
+            <VideoCallIcon />
+          </IconButton>
+          <IconButton
+            sx={{
+              color: "transparent",
+            }}
+            onClick={() => onSetDrawerType("info")}
+          >
+            <SidebarIcon />
+          </IconButton>
+        </Box>
+        <ChatDetailInfo />
       </Box>
-      <Box
-        justifyContent="flex-end"
-        width="100%"
-        display="flex"
-        padding="10px"
-        gap="4px"
-        alignItems="center"
-      >
-        <IconButton
-          sx={{
-            color:
-              colorSchemes[isDarkMode ? "dark" : "light"].palette.secondary
-                .main,
-          }}
-          onClick={onOpenSearchMessage}
-        >
-          {search?.isOpen ? <CloseIcon /> : <SearchIcon />}
-        </IconButton>
-        <IconButton
-          sx={{
-            color: "transparent",
-          }}
-          onClick={() => {
-            onSetDrawerType("group");
-            onSetDataTransfer({
-              ...currentConversation,
-              isNew: currentConversation?.t === "d",
-            });
-          }}
-        >
-          <ProfileAdd />
-        </IconButton>
-        <IconButton
-          sx={{
-            color: "transparent",
-          }}
-        >
-          <VideoCallIcon />
-        </IconButton>
-        <IconButton
-          sx={{
-            color: "transparent",
-          }}
-          onClick={() => onSetDrawerType("info")}
-        >
-          <SidebarIcon />
-        </IconButton>
-      </Box>
-      <ChatDetailInfo />
-    </Box>
+      {isFetching && <LinearProgress color="primary" />}
+    </>
   );
 };
 

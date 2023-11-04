@@ -314,7 +314,7 @@ const ChatDetailGroup = (props) => {
 
       const renameResult = (await onRenameGroup({
         roomId: dataTransfer?._id,
-        name: renameGroup.replaceAll(" ", "_"),
+        name: renameGroup,
       })) as any;
 
       if (renameResult?.error) {
