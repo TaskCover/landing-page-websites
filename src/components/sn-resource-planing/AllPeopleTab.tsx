@@ -182,6 +182,7 @@ const AllPeopleTab = () => {
                 total_hour,
                 time_off_type,
                 user_id,
+                project,
                 sale_id,
                 project_id,
               } = props;
@@ -199,6 +200,7 @@ const AllPeopleTab = () => {
                 user_id: eventId,
                 allocation_type,
                 total_hour,
+                avatarUrl: project?.avatar?.link,
                 time_off_type,
                 saleId: sale_id,
                 eventType: booking_type,
@@ -250,10 +252,10 @@ const AllPeopleTab = () => {
           total_hour: booking?.total_hour,
           time_off_type: booking?.time_off_type,
           user_id: booking?.user_id,
+          avatarUrl: booking.project?.owner?.avatar?.link,
           saleId: booking?.sale_id,
         })),
       };
-
       resourceEvent.children.push({
         id: `${resource.id}.end`,
         name: "",
@@ -265,13 +267,13 @@ const AllPeopleTab = () => {
         position: {},
         time_off_type: undefined,
         saleId: "",
+        avatarUrl: "",
         user_id: resource.id,
         type: "end",
       });
 
       return resourceEvent;
     });
-
     return result;
   }, [resources]);
 
@@ -297,7 +299,7 @@ const AllPeopleTab = () => {
       border: "none!important",
     },
     "& .fc-datagrid-cell-frame": {
-      // height: 'auto!important',
+      height: "auto!important",
     },
     "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander":
       {

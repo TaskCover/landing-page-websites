@@ -4,7 +4,7 @@ import Avatar from "components/Avatar";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import PlusIcon from "icons/PlusIcon";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { formatNumber } from "utils/index";
 import { isEmpty, includes } from "lodash";
 import { useTranslations } from "next-intl";
@@ -15,6 +15,8 @@ import {
   useGetTotalScheduleTime,
 } from "../hooks/useCalculateDetail";
 import { useGetTimeOffOptions } from "components/sn-sales/hooks/useGetTimeOffOptions";
+import { useProject, useProjects } from "store/project/selectors";
+import { useAuth } from "store/app/selectors";
 
 interface IResourceLabelProps {
   resource: ResourceApi;
@@ -23,6 +25,7 @@ interface IResourceLabelProps {
   selectedResource: string[];
   totalhour: number;
   isLastItem: boolean;
+  isMybooking?: boolean;
   setParentResource: (value: string) => void;
   handleCollapseToggle: (id: string) => void;
 }
@@ -39,12 +42,14 @@ const ResourceLabel = ({
   const {
     name,
     company,
+    isMybooking,
     type,
     fullname,
     position,
     eventType,
     note,
     project,
+    user_id,
     bookings: parentBookings,
   } = resource._resource.extendedProps;
 
@@ -53,7 +58,8 @@ const ResourceLabel = ({
   const isActive = includes(selectedResource, resource._resource.id);
   const { totalLeftToSchedule } = useGetTotalScheduleTime();
   const { timeOffOptions } = useGetTimeOffOptions();
-
+  const { user } = useAuth();
+  const { onGetProject, item: projectDetail } = useProject();
   const handleOpenCreate = () => {
     setIsOpenCreate(true);
     setParentResource(
@@ -72,6 +78,26 @@ const ResourceLabel = ({
 
   const schedulePerLeft =
     (totalhour / totalLeftToSchedule[resource._resource.id]) * 100;
+
+  const ownerAvatar = user?.avatar?.link;
+
+  const avatarUrl = useMemo(() => {
+    if (eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING) {
+      return projectDetail?.owner?.avatar?.link;
+    }
+    if (user_id === user?.id || isMybooking) {
+      return ownerAvatar;
+    }
+    // TODO: return other user avt
+    return;
+  }, [projectDetail, project?.id, user]);
+
+  useEffect(() => {
+    if (project?.id) {
+      onGetProject(project?.id);
+    }
+    `  `;
+  }, [project?.id]);
 
   if (type === "step") {
     return (
@@ -98,7 +124,7 @@ const ResourceLabel = ({
             columnGap: 1,
           }}
         >
-          <Avatar size={36} />
+          <Avatar src={avatarUrl} size={36} />
           <Stack direction={"column"}>
             <Typography sx={{ fontSize: 14, lineBreak: "auto", width: 1 }}>
               {eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING
@@ -172,7 +198,7 @@ const ResourceLabel = ({
                 xs: 1,
               }}
             >
-              <Avatar size={32} />
+              <Avatar size={32} src={avatarUrl} />
               <Box>
                 <Typography sx={{ fontSize: 14 }}>{fullname}</Typography>
                 <Typography sx={{ color: "#666666", fontSize: 14 }}>
@@ -230,7 +256,10 @@ const ResourceLabel = ({
         <Button
           variant="text"
           sx={{
-            display: !isActive ? "none" : "flex",
+            display:
+              !isActive || (!isActive && parentBookings?.length !== 0)
+                ? "none"
+                : "flex",
             mt: 2,
             color: "success.main",
           }}

@@ -132,6 +132,16 @@ export const useEditAction = () => {
     }
   };
 
+  const handleRepeat = (id, time, week, data) => {
+    while (time--) {
+      const newDate = dayjs(week).add(time, "week").toDate();
+      createBooking({
+        ...data,
+        start_date: dayjs(newDate).format("YYYY-MM-DD"),
+        end_date: dayjs(newDate).format("YYYY-MM-DD"),
+      });
+    }
+  };
   return {
     handleDelete,
     handleDuplicate,

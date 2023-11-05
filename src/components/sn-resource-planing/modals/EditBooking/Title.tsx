@@ -1,4 +1,4 @@
-import { CircularProgress, Stack } from "@mui/material";
+import { CircularProgress, Menu, MenuItem, Stack } from "@mui/material";
 import ConfirmDialog from "components/ConfirmDialog";
 import Loading from "components/Loading";
 import { Button, Text, Tooltip } from "components/shared";
@@ -9,6 +9,7 @@ import DuplicateIcon from "icons/DuplicateIcon";
 import RepeatIcon from "icons/RepeatIcon";
 import SplitIcon from "icons/SplitIcon";
 import TrashIcon from "icons/TrashIcon";
+import { Dropdown } from "@mui/base";
 import { useTranslations } from "next-intl";
 import React, { useMemo, useState } from "react";
 import { IBookingItem } from "store/resourcePlanning/reducer";
@@ -27,6 +28,7 @@ const Title = ({
     useEditAction();
   const { bookingAll } = useBookingAll();
   const [isConfirmDelete, setIsConfirmDelete] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const bookingEvent: IBookingItem = useMemo(() => {
     const booking =
@@ -114,12 +116,14 @@ const Title = ({
           arrow
         >
           <Button
+            id="repeat-button"
             variant="text"
             TouchRippleProps={{
               style: {
                 display: "none",
               },
             }}
+            onClick={(e) => setIsOpen(!isOpen)}
             size="extraSmall"
             sx={{
               maxWidth: "fit-content",
@@ -141,6 +145,7 @@ const Title = ({
             )}
           </Button>
         </Tooltip>
+
         <Tooltip
           title={resourceT("form.editActions.duplicate")}
           placement="top"
@@ -175,6 +180,7 @@ const Title = ({
             )}
           </Button>
         </Tooltip>
+
         <Tooltip
           title={resourceT("form.editActions.delete")}
           placement="top"
@@ -218,4 +224,4 @@ const Title = ({
   );
 };
 
-export default Title;
+export default React.forwardRef(Title);

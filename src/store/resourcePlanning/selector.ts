@@ -121,8 +121,7 @@ export const useBookingAll = () => {
         });
       })
       .catch((err) => {
-        !disableSnackbar &&
-          onAddSnackbar(resourceT("form.createFailed"), "error");
+        !disableSnackbar && onAddSnackbar(err.message, "error");
       })
       .finally(() => {
         setLoading(false);
@@ -152,8 +151,7 @@ export const useBookingAll = () => {
         });
       })
       .catch((err) => {
-        !disableSnackbar &&
-          onAddSnackbar(resourceT("form.updateFailed"), "error");
+        !disableSnackbar && onAddSnackbar(err.message, "error");
       })
       .finally(() => {
         setLoading(false);
@@ -173,8 +171,7 @@ export const useBookingAll = () => {
         });
       })
       .catch((err) => {
-        !disableSnackbar &&
-          onAddSnackbar(resourceT("form.deleteFailed"), "error");
+        !disableSnackbar && onAddSnackbar(err.message, "error");
       })
       .finally(() => {
         setLoading(false);

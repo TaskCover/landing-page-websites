@@ -174,10 +174,10 @@ const MyScheduleTab = () => {
           allocation,
           allocation_type,
           total_hour,
+          eventType: booking_type,
           name: project?.name,
           saleId: sale_id,
           time_off_type,
-          eventType: booking_type,
           eventId,
         };
       }) as ResourceInput,
@@ -209,6 +209,7 @@ const MyScheduleTab = () => {
             `${resource.user_id}.${resource?.project_id}`) ||
           resource?.id,
         type: "step",
+        eventType: resource?.booking_type,
         // children: resource?.bookings?.map((booking) => ({
         //   id: booking?.id,
         //   name: booking?.project?.name,
@@ -226,6 +227,7 @@ const MyScheduleTab = () => {
       booking_type: "project",
       created_time: "",
       note: "",
+      eventType: "end",
       end_date: "",
       position: {},
       user_id: "",
@@ -277,7 +279,7 @@ const MyScheduleTab = () => {
       border: "none!important",
     },
     "& .fc-datagrid-cell-frame": {
-      height: "auto!important",
+      // height: "auto!important",
     },
     "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander":
       {
@@ -356,6 +358,7 @@ const MyScheduleTab = () => {
                 isLastItem={isLastItem}
                 resource={resource}
                 resources={resources}
+                isMybooking={true}
                 selectedResource={selectedResource}
                 setIsOpenCreate={setIsOpenCreate}
                 totalhour={totalhour}

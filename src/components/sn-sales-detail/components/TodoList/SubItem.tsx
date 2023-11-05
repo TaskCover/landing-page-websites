@@ -165,6 +165,7 @@ const SubItem = ({
                   <TodoName
                     onSubmit={onChangeName}
                     value={nameTodo}
+                    isChecked={isChecked}
                     autoFocus={false}
                     onBlur={() => {
                       setAction(undefined);

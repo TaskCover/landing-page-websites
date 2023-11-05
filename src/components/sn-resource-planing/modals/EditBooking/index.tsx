@@ -52,7 +52,7 @@ const EditBooking: React.FC<IProps> = ({
         }}
       >
         <TabContext value={activeTabs}>
-          <TabList
+          {/* <TabList
             onChange={handleTabChange}
             sx={{
               "& .MuiTabs-flexContainer": {
@@ -95,7 +95,7 @@ const EditBooking: React.FC<IProps> = ({
                 fontWeight: 600,
               }}
             />
-          </TabList>
+          </TabList> */}
           <TabPanel
             value="1"
             sx={{
