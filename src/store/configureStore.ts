@@ -11,6 +11,7 @@ import chatReducer from "store/chat/reducer";
 import { SaleState, salesReducer } from "./sales/reducer";
 import { resourcePlanningReducer } from "./resourcePlanning/reducer";
 import { TagState, tagsReducer } from "./tags/reducer";
+import  docReducer,  { IDocs } from "./docs/reducer";
 
 export interface State {
   app: AppState;
@@ -21,6 +22,7 @@ export interface State {
   timeTracking: TimeTrackingState;
   tags: TagState;
   sales: SaleState;
+  docs: IDocs
 }
 
 export const store = configureStore({
@@ -34,6 +36,7 @@ export const store = configureStore({
     chat: chatReducer,
     tags: tagsReducer,
     sales: salesReducer,
+    doc: docReducer,
     resourcePlanning: resourcePlanningReducer,
   },
   middleware: (getDefaultMiddleware) =>

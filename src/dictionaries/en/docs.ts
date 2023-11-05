@@ -12,7 +12,7 @@ export const DocsLang: DocsDictionary = {
         search: 'Search documents',
         group : {
             group: "Group",
-           none : 'No',
+           none : 'None',
            creator : 'Creator',
            project : 'Project',
         },
@@ -35,6 +35,7 @@ export const DocsLang: DocsDictionary = {
       text: "Text options",
       Ltext: "Large Text",
       full: "Full width",
-      restore : 'Restore'
+      restore : 'Restore',
+      name: "Document Name",
     },
 };
