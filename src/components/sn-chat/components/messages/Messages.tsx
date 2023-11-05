@@ -110,6 +110,24 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     }),
   );
 
+  const isScrolling = useMemo(() => {
+    if (!messagesContentRef?.current) return false;
+    console.log(
+      messagesContentRef?.current?.scrollHeight >
+        messagesContentRef?.current?.clientHeight,
+      "messagesContentRef?.current?.scrollHeight >",
+    );
+
+    return (
+      messagesContentRef?.current?.scrollHeight >
+        messagesContentRef?.current?.clientHeight ||
+      messagesContentRef?.current?.scrollWidth >
+        messagesContentRef?.current?.clientWidth
+    );
+  }, []);
+
+  console.log(isScrolling, "isScrolling");
+
   const getTimeStamp = (time: string | Date) => {
     const date = new Date(time);
     const lastHours = date.getHours();
@@ -250,13 +268,6 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     return msg;
   };
 
-  useEffect(() => {
-    let chat = [...messages];
-    if (messages.length > 0 && messages.length < 10) {
-      chat = chat.reverse();
-    }
-  }, [messages]);
-
   return (
     <>
       <Box
@@ -267,13 +278,15 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         }}
         sx={{
           display: "flex",
-          flexDirection: messages.length < 10 ? "column-reverse" : "column",
+          flexDirection: "column",
           gap: "0.5rem",
           overflowY: "scroll",
           height: "100vh",
 
-          ...(messages.length < 10
-            ? {}
+          ...(messages.length < 5
+            ? {
+                justifyContent: "flex-end",
+              }
             : {
                 flex: "1 1 auto",
               }),
