@@ -59,8 +59,6 @@ const AccountInfoHeader = ({
     }
   };
 
-  console.log(accountInfo, "accountInfo");
-
   const _renderChatGroup = () => {
     if (isGroup) {
       return (

@@ -125,8 +125,6 @@ const RoomHeader = () => {
     onCloseDrawer("info");
   }, [onResetSearchText, onResetConversationInfo, onCloseDrawer, roomId]);
 
-  console.log(selectSearchIndex);
-
   return (
     <>
       <Box
