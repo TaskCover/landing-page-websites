@@ -78,6 +78,23 @@ const AddGroup: FC<AddGroupProps> = ({
   }, [onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
+    if (dataTransfer?.currentSelects?.uids?.length) {
+      setEmployeeSelected({
+        ...employeeSelected,
+        [dataTransfer?.currentSelects?.username ?? ""]: true,
+      });
+      setEmployeeNameSelected({
+        ...employeeNameSelected,
+        [dataTransfer?.currentSelects?.name ?? ""]: true,
+      });
+      setEmployeeIdSelected({
+        ...employeeIdSelected,
+        [dataTransfer?.currentSelects?.uids?.at(0) ?? ""]: true,
+      });
+    }
+  }, [dataTransfer?.currentSelects])
+
+  useEffect(() => {
     if (dataTransfer.isNew || isNew || type === "modal") return;
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
@@ -209,15 +226,7 @@ const AddGroup: FC<AddGroupProps> = ({
               cursor: "pointer",
             }}
             onClick={() => {
-              if (callbackBackIcon) {
-                callbackBackIcon();
-                return;
-              }
-              if (currStep === STEP.ADD_GROUP) {
-                onSetStep(STEP.CONVENTION);
-              } else {
-                onSetStep(prevStep);
-              }
+              onSetStep(dataTransfer?.openFrom ? dataTransfer?.openFrom : STEP.CHAT_GROUP);
             }}
           >
             {CustomCallBackIcon ? CustomCallBackIcon : <ArrowDownIcon />}
@@ -326,19 +335,7 @@ const AddGroup: FC<AddGroupProps> = ({
           size="small"
           sx={defaultSx.button}
           onClick={() => {
-            onCloseDrawer("account");
-            // if (callbackBackIcon) {
-            //   // callbackBackIcon();
-            //   // if (isNew || type === "modal") {
-            //   //   onCloseDrawer("account");
-            //   // }
-            //   // return;
-            // }
-            // if (currStep === STEP.ADD_GROUP) {
-            //   onSetStep(STEP.CONVENTION);
-            // } else {
-            //   onSetStep(prevStep);
-            // }
+            onSetStep(dataTransfer?.openFrom ? dataTransfer?.openFrom : STEP.CHAT_GROUP);
           }}
         >
           {commonT("form.cancel")}

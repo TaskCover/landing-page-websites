@@ -94,7 +94,7 @@ const ChatDetailGroup = (props) => {
     setRenameGroup(dataTransfer?.name?.replaceAll("_", " "));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataTransfer]);
-
+  
   useEffect(() => {
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
