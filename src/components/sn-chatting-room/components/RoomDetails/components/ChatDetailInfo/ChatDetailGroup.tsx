@@ -3,7 +3,7 @@ import GroupNameIcon from "icons/GroupNameIcon";
 import { TYPE_POPUP } from "components/sn-chat/chatGroup/ChatDetailGroup";
 import ItemMemberDetail from "components/sn-chat/chatGroup/ItemMemberDetail";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, styled } from "@mui/material";
 import ChatDetailInfoMenuItem from "./ChatDetailInfoMenuItem";
 import { useTranslations } from "next-intl";
 import { NS_CHAT_BOX } from "constant/index";
@@ -81,12 +81,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
             />
           ))}
       </Box>
-      <Box
-        sx={{
-          overflow: "auto",
-          width: "100%",
-        }}
-      >
+      <CustomBox>
         {groupMembers?.map((member, index) => (
           <ItemMemberDetail
             key={index}
@@ -100,7 +95,7 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
             admin={owner}
           />
         ))}
-      </Box>
+      </CustomBox>
       <Box
         sx={{
           display: "flex",
@@ -203,3 +198,12 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
 };
 
 export default ChatDetailGroup;
+
+const CustomBox = styled(Box)`
+  overflow: auto;
+  width: 100%;
+  @media (max-width: 1540px) {
+    max-height: 160px;
+  }
+  max-height: 200px;
+`;

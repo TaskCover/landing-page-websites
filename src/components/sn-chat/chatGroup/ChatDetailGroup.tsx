@@ -112,11 +112,11 @@ const ChatDetailGroup = (props) => {
       if (result?.error) {
         return onAddSnackbar(result?.error?.message, "error");
       }
-      // (await onChangeGroupRole({
-      //   groupId: dataTransfer?._id,
-      //   userIdToChange: user?.id_rocket ?? "",
-      //   newRole: "removeOwner",
-      // })) as any;
+      (await onChangeGroupRole({
+        groupId: dataTransfer?._id,
+        userIdToChange: user?.id_rocket ?? "",
+        newRole: "removeOwner",
+      })) as any;
       onAddSnackbar(commonChatBox("chatBox.group.adminChange"), "success");
     } else {
       const result = (await onRemoveGroupMember({
@@ -308,13 +308,13 @@ const ChatDetailGroup = (props) => {
     const renameGroupApi = async () => {
       const dataTransferNew = {
         ...dataTransfer,
-        name: renameGroup.replace("_", " "),
-        fname: renameGroup.replace("_", " "),
+        name: renameGroup.replaceAll("_", " "),
+        fname: renameGroup.replaceAll("_", " "),
       };
 
       const renameResult = (await onRenameGroup({
         roomId: dataTransfer?._id,
-        name: renameGroup.replace(" ", "_"),
+        name: renameGroup.replaceAll(" ", "_"),
       })) as any;
 
       if (renameResult?.error) {

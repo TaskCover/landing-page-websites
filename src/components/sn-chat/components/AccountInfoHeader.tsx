@@ -34,7 +34,9 @@ const AccountInfoHeader = ({
 
   const [textSearch, setTextSearch] = useState("");
   const commonChatBox = useTranslations(NS_CHAT_BOX);
-  const [avatar, setAvatar] = useState<string | undefined>(dataTransfer?.avatar);
+  const [avatar, setAvatar] = useState<string | undefined>(
+    dataTransfer?.avatar,
+  );
 
   useEffect(() => {
     setAvatar(dataTransfer?.avatar);
@@ -65,7 +67,8 @@ const AccountInfoHeader = ({
             onClick={() => {
               onSetStep(STEP.CHAT_DETAIL_GROUP);
             }}
-            style={{ position: "relative", cursor: 'pointer' }}>
+            style={{ position: "relative", cursor: "pointer" }}
+          >
             {avatar ? (
               <Avatar
                 alt="Avatar"
@@ -76,46 +79,48 @@ const AccountInfoHeader = ({
                 }}
                 onError={() => setAvatar(undefined)}
               />
-            ): (
-                <ImageList
-                  sx={{ width: 56, height: 56, margin: 0 }}
-                  cols={2}
-                  rowHeight={164}
-                >
-                  <Avatar
-                    alt="Avatar"
-                    size={25}
-                    style={{
+            ) : (
+              <ImageList
+                sx={{ width: 56, height: 56, margin: 0 }}
+                cols={2}
+                rowHeight={164}
+              >
+                <Avatar
+                  alt="Avatar"
+                  size={25}
+                  style={{
+                    borderRadius: "5px",
+                  }}
+                />
+                <Avatar
+                  alt="Avatar"
+                  size={25}
+                  style={{
+                    borderRadius: "5px",
+                  }}
+                />
+                <Avatar
+                  alt="Avatar"
+                  size={25}
+                  style={{
+                    borderRadius: "5px",
+                  }}
+                />
+                {usersCount - 3 > 0 ? (
+                  <Box
+                    sx={{
+                      textAlign: "center",
                       borderRadius: "5px",
+                      backgroundColor: "#3078F1",
+                      color: "white",
                     }}
-                  />
-                  <Avatar
-                    alt="Avatar"
-                    size={25}
-                    style={{
-                      borderRadius: "5px",
-                    }}
-                  />
-                  <Avatar
-                    alt="Avatar"
-                    size={25}
-                    style={{
-                      borderRadius: "5px",
-                    }}
-                  />
-                  {usersCount - 3 > 0 ? (
-                    <Box
-                      sx={{
-                        textAlign: "center",
-                        borderRadius: "5px",
-                        backgroundColor: "#3078F1",
-                        color: "white",
-                      }}
-                    >
-                      <Typography variant="caption">+ {usersCount - 3}</Typography>
-                    </Box>
-                  ) : null}
-                </ImageList>
+                  >
+                    <Typography variant="caption">
+                      + {usersCount - 3}
+                    </Typography>
+                  </Box>
+                ) : null}
+              </ImageList>
             )}
             <IconButton
               style={{
@@ -135,7 +140,7 @@ const AccountInfoHeader = ({
               onSetStep(STEP.CHAT_DETAIL_GROUP);
             }}
             sx={{
-              cursor: 'pointer',
+              cursor: "pointer",
               display: "flex",
               flexDirection: "column",
             }}

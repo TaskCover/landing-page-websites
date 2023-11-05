@@ -89,6 +89,15 @@ export const useActionGroupDetails = () => {
       //   newRole: "removeOwner",
       // })) as any;
       onAddSnackbar(commonChatBox("chatBox.group.adminChange"), "success");
+    } else {
+      const result = (await onRemoveGroupMember({
+        groupId: dataTransfer?._id,
+        userIdToKick: member?._id,
+      })) as any;
+      if (result?.error) {
+        return onAddSnackbar(result?.error?.message, "error");
+      }
+      onAddSnackbar(commonChatBox("chatBox.group.removeMember"), "success");
     }
     onAddSnackbar(commonT("success"), "success");
     if (dataTransfer?._id !== "GENERAL") {
@@ -110,7 +119,7 @@ export const useActionGroupDetails = () => {
   }, [dataTransfer]);
 
   useEffect(() => {
-    setRenameGroup(dataTransfer.name.replace("_", " "));
+    setRenameGroup(dataTransfer.name.replaceAll("_", " "));
   }, [dataTransfer.name]);
 
   const handleNewAdd = () => {
@@ -244,12 +253,12 @@ export const useActionGroupDetails = () => {
       if (!renameGroup) return;
       const dataTransferNew = {
         ...dataTransfer,
-        name: renameGroup.replace("_", " "),
-        fname: renameGroup.replace("_", " "),
+        name: renameGroup.replaceAll("_", " "),
+        fname: renameGroup.replaceAll("_", " "),
       };
       const renameResult = (await onRenameGroup({
         roomId: dataTransfer?._id,
-        name: renameGroup.replace(" ", "_"),
+        name: renameGroup.replaceAll(" ", "_"),
       })) as any;
 
       if (renameResult?.error) {
@@ -282,13 +291,15 @@ export const useActionGroupDetails = () => {
       }
     };
     const addAndRemove = async (add: string, remove: string) => {
-      const addOwnerResult = (await onChangeGroupRole({
-        groupId: dataTransfer?._id,
-        userIdToChange: add,
-        newRole: "addOwner",
-      })) as any;
-      if (addOwnerResult?.error) {
-        return onAddSnackbar(addOwnerResult?.error?.message, "error");
+      if (add) {
+        const addOwnerResult = (await onChangeGroupRole({
+          groupId: dataTransfer?._id,
+          userIdToChange: add,
+          newRole: "addOwner",
+        })) as any;
+        if (addOwnerResult?.error) {
+          return onAddSnackbar(addOwnerResult?.error?.message, "error");
+        }
       }
       const removeOwner = (await onChangeGroupRole({
         groupId: dataTransfer?._id,
@@ -324,7 +335,7 @@ export const useActionGroupDetails = () => {
           ?.filter((m) => m._id !== user?.id_rocket)
           ?.filter((m) => m.roles.includes("member"))
           ?.pop()?._id;
-        if (!random) return onAddSnackbar("Error!", "error"); // Handle delete group
+
         await addAndRemove(random, user?.id_rocket ?? "");
         await left();
         onChangeConversationWhenLeave();

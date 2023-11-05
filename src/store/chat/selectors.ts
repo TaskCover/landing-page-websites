@@ -71,6 +71,7 @@ import {
   setChatDesktop,
   setListNewConversation,
   resetSearchChatText,
+  setSelectSearchIndex,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -81,7 +82,6 @@ import { CHATTING_ROOM_PATH } from "constant/paths";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
-  const router = useRouter();
   const { user } = useAuth();
   const {
     convention,
@@ -128,6 +128,7 @@ export const useChat = () => {
     isOpenInfoChat,
     isChatDesktop,
     detailConversationStatus,
+    selectSearchIndex,
   } = useAppSelector((state) => state.chat, shallowEqual);
 
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
@@ -339,6 +340,13 @@ export const useChat = () => {
   const onSetStep = useCallback(
     (step: STEP, dataTransfer?: any) => {
       dispatch(setStep({ step, dataTransfer }));
+    },
+    [dispatch],
+  );
+
+  const onSetIndexSearch = useCallback(
+    (index) => {
+      dispatch(setSelectSearchIndex(index));
     },
     [dispatch],
   );
@@ -785,5 +793,7 @@ export const useChat = () => {
     onSetChatDesktop,
     onChangeListConversations,
     onResetSearchChatText,
+    selectSearchIndex,
+    onSetIndexSearch,
   };
 };

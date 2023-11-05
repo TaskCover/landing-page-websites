@@ -209,10 +209,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
             border: "2px solid #ffffff",
             backgroundColor: "#55C000",
             borderRadius: "50%",
-            visibility:
-              isDirectMessage || statusPartner === "online"
-                ? "visible"
-                : "hidden",
+            visibility: statusPartner === "online" ? "visible" : "hidden",
           },
         }}
       >

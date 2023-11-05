@@ -100,14 +100,6 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
     });
   }, [dataTransfer?.t, onGetUnReadMessages]);
 
-  const depsCallback = [
-    dataTransfer,
-    onAddSnackbar,
-    onGetLastMessages,
-    roomId,
-    t,
-  ];
-
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
       ? stateSearchMessage?.offset + initPageIndex

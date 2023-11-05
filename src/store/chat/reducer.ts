@@ -88,6 +88,7 @@ const initialState: ChatState = {
   isOpenInfoChat: false,
   isChatDesktop: false,
   detailConversationStatus: DataStatus.IDLE,
+  selectSearchIndex: 0,
 };
 
 const isConversation = (type: string) => {
@@ -101,6 +102,9 @@ const chatSlice = createSlice({
     reset: () => initialState,
     setChatDesktop: (state, action) => {
       state.isChatDesktop = action.payload;
+    },
+    setSelectSearchIndex: (state, action) => {
+      state.selectSearchIndex = action.payload;
     },
     resetConversationInfo: (state) => {
       state.conversationInfo = null;
@@ -560,6 +564,7 @@ export const {
   setChatDesktop,
   setListNewConversation,
   resetSearchChatText,
+  setSelectSearchIndex,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
