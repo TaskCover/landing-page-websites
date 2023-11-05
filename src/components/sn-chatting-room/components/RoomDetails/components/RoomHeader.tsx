@@ -99,7 +99,7 @@ const RoomHeader = () => {
       )
         return;
       const newIndex =
-        type === "down" ? selectSearchIndex + 1 : selectSearchIndex - 1;
+        type === "up" ? selectSearchIndex + 1 : selectSearchIndex - 1;
       if (newIndex === -1 || newIndex > listSearchMessage.length - 1) return;
       onSetIndexSearch(newIndex);
       const message = listSearchMessage[newIndex];
