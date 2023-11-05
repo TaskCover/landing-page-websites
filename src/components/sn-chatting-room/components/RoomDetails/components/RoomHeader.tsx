@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Avatar,
   Box,
@@ -44,11 +44,14 @@ const RoomHeader = () => {
     roomId,
     onSetDataTransfer,
     isFetchingDetail,
+    conversationInfo,
   } = useChat();
   const [search, setSearchText] = useState({
     text: "",
     isOpen: false,
   });
+
+  const inputRef = useRef<any>(null);
 
   const [currentIndex, setCurrentIndex] = useState<number>(
     listSearchMessage?.length,
@@ -104,7 +107,6 @@ const RoomHeader = () => {
 
   useEffect(() => {
     onResetSearchText();
-    onResetConversationInfo();
     onCloseDrawer("info");
   }, [onResetSearchText, onResetConversationInfo, onCloseDrawer, roomId]);
 
@@ -151,10 +153,11 @@ const RoomHeader = () => {
                 }}
               >
                 <IconButton sx={{ p: "10px" }} aria-label="search">
-                  <SearchIcon />
+                  <SearchIcon onClick={() => inputRef?.current?.focus()} />
                 </IconButton>
 
                 <InputBase
+                  inputRef={inputRef}
                   size="small"
                   placeholder="Search text"
                   onChange={(e) => debounceSearchText(e.target.value)}
@@ -212,7 +215,7 @@ const RoomHeader = () => {
                     : currentConversation?.name}
                 </Typography>
                 <Typography variant="body2" color="var(--Gray3, #999)">
-                  Online
+                  {currentConversation?.status}
                 </Typography>
               </Box>
             </>

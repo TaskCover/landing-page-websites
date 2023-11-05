@@ -84,6 +84,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
+  const [chat, setChat] = useState<Array<MessageInfo>>([]);
 
   const scrollHeightRef = useRef(0);
   const observer = useRef(
@@ -198,6 +199,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     };
   }, [firstElement, messagesContentRef]);
 
+  useEffect(() => {}, []);
   const renderMessage = (message: MessageInfo) => {
     let msg = "";
     switch (message?.t) {
@@ -232,13 +234,21 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
       case "r":
         msg = commonChatBox("chatBox.group.rename", {
           user1: message?.u?.name,
-          name: message?.msg,
+          name: message?.msg?.replace("_", " "),
           time: getTimeStamp(message?.ts ?? ""),
         });
         break;
     }
     return msg;
   };
+
+  useEffect(() => {
+    let chat = [...messages];
+    if (messages.length > 0 && messages.length < 10) {
+      chat = chat.reverse();
+    }
+    setChat(chat);
+  }, [messages]);
 
   return (
     <>

@@ -142,8 +142,10 @@ const ChatForward: FC<Props> = (props) => {
                   ?.filter((item) => item?.name)
                   ?.map((item, index) => (
                     <SelectItem
-                      forwardMess
-                      employeeIdSelected={employeeIdSelected}
+                      checked={
+                        employeeIdSelected?.hasOwnProperty(item._id) &&
+                        employeeIdSelected[item._id] === true
+                      }
                       checkbox
                       onClick={(event) => handleClickConversation(item, event)}
                       employee={

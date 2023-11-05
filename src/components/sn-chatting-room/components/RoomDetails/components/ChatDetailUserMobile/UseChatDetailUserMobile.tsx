@@ -49,6 +49,7 @@ export const useChatDetailUserMobile = ({
   );
 
   const handleOpenAccountInfoMobile = useCallback(() => {
+
     if (currentConversation?.usernames[0]) {
       setAccountInfoShow(true);
       onGetUserInfo(currentConversation?.usernames[0]);

@@ -17,16 +17,14 @@ interface ChatDetailInfoMenuItemProps {
 const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
   props,
 ) => {
-  const { onSetDrawerType, isFetchingDetail } = useChat();
+  const { onSetDrawerType } = useChat();
   // Handler to open the drawer.
   const onOpenDrawer = useCallback(() => {
-    props?.callBackOpenDrawer && props.callBackOpenDrawer();
     if (props.dontOpenDrawer) {
       return;
     }
-    if (isFetchingDetail) return;
     onSetDrawerType(props?.type as TypeDrawerChat);
-  }, [isFetchingDetail]);
+  }, []);
 
   const [isRotated, setIsRotated] = useState(false);
 

@@ -130,10 +130,6 @@ export const useChat = () => {
     detailConversationStatus,
   } = useAppSelector((state) => state.chat, shallowEqual);
 
-  useEffect(() => {
-    console.log({ messageInfo });
-  }, [messageInfo]);
-
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
     shallowEqual,
@@ -258,8 +254,6 @@ export const useChat = () => {
 
   const onSendMessage = useCallback(
     async (message: Partial<MessageBodyRequest>) => {
-      console.log(message, "message");
-
       await dispatch(
         sendMessages({
           sender_userId: user?.["id_rocket"] || "",

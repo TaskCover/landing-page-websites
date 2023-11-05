@@ -10,7 +10,8 @@ import { useChat } from "store/chat/selectors";
 
 const RoomHeaderMobile = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const {conversationInfo: currentConversation, onResetConversationInfo } = useChat()
+  const { conversationInfo: currentConversation, onResetConversationInfo } =
+    useChat();
   // Handler to open the drawer.
   const openDrawer = () => {
     setIsDrawerOpen(true);
@@ -146,10 +147,12 @@ const RoomHeaderMobile = () => {
           {groupAvatar}
           <Box display="flex" flexDirection="column" gap="4px">
             <Typography variant="h6" color="#FFF">
-              {currentConversation?.t !== 'd' ? currentConversation?.name?.replaceAll('_', ' ') : currentConversation?.name}
+              {currentConversation?.t !== "d"
+                ? currentConversation?.name?.replaceAll("_", " ")
+                : currentConversation?.name}
             </Typography>
             <Typography variant="body2" color="rgba(255, 255, 255, 0.60)">
-              Online
+              {currentConversation?.status}
             </Typography>
           </Box>
         </Box>

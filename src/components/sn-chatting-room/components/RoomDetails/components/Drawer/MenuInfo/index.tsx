@@ -13,13 +13,17 @@ import { useChatDetailInfo } from "components/sn-chatting-room/hooks/useChatDeta
 const MenuInfo = () => {
   const { isDarkMode } = useTheme();
   const { extraDesktopMode } = useGetScreenMode();
-  const { menuItems } = useChatDetailInfo();
-
   const {
     onCloseDrawer,
     dataTransfer: currentConversation,
-    isFetchingDetail,
+    conversationInfo,
   } = useChat();
+
+  const { menuItems } = useChatDetailInfo({
+    currentConversation,
+    conversationInfo,
+  });
+
   const renderColorByType = useMemo(() => {
     if (currentConversation?.t === "d") {
       if (isDarkMode) return "#313130";
@@ -45,70 +49,66 @@ const MenuInfo = () => {
         height: "100%",
       }}
     >
-      {isFetchingDetail ? (
-        <CircularProgress />
-      ) : (
-        <>
-          <ChatDetailInfoHeader onClose={() => onCloseDrawer("info")} />
-          <Box
+      <>
+        <ChatDetailInfoHeader onClose={() => onCloseDrawer("info")} />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            position: "relative",
+          }}
+        >
+          <Avatar
+            src={currentConversation?.avatar}
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-              position: "relative",
+              height: "80px",
+              width: "80px",
+              flexShrink: "0",
+              borderRadius: "10px",
             }}
+          />
+          {currentConversation?.t !== "d" && <UploadAvatarGroup />}
+        </Box>
+        <Box>
+          <Typography
+            variant="h6"
+            color={isDarkMode ? "white" : "var(--Black, #212121)"}
+            sx={{ textAlign: "center" }}
           >
-            <Avatar
-              src={currentConversation?.avatar}
-              sx={{
-                height: "80px",
-                width: "80px",
-                flexShrink: "0",
-                borderRadius: "10px",
-              }}
-            />
-            {currentConversation?.t !== "d" && <UploadAvatarGroup />}
-          </Box>
-          <Box>
-            <Typography
-              variant="h6"
-              color={isDarkMode ? "white" : "var(--Black, #212121)"}
-              sx={{ textAlign: "center" }}
-            >
-              {currentConversation?.t !== "d"
-                ? currentConversation?.name?.replaceAll("_", " ")
-                : currentConversation?.name}
-            </Typography>
-          </Box>{" "}
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "flex-start",
-              alignSelf: "stretch",
-              flexDirection: "column",
-              padding: "0px 12px",
-            }}
-          >
-            {currentConversation?.t === "d" ? (
-              menuItems.map((item, index) => (
-                <ChatDetailInfoMenuItem
-                  key={index}
-                  text={item.text}
-                  icon={item.icon}
-                  callBackOpenDrawer={item.callback}
-                  type={item?.type}
-                />
-              ))
-            ) : (
-              <ChatDetailGroup
-                currentName={currentConversation?.name?.replaceAll("_", " ")}
-                menuItems={menuItems}
-                {...propsActionGroupDetail}
+            {currentConversation?.t !== "d"
+              ? currentConversation?.name?.replaceAll("_", " ")
+              : currentConversation?.name}
+          </Typography>
+        </Box>{" "}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            alignSelf: "stretch",
+            flexDirection: "column",
+            padding: "0px 12px",
+          }}
+        >
+          {currentConversation?.t === "d" ? (
+            menuItems.map((item, index) => (
+              <ChatDetailInfoMenuItem
+                key={index}
+                text={item.text}
+                icon={item.icon}
+                callBackOpenDrawer={item.callback}
+                type={item?.type}
               />
-            )}
-          </Box>
-        </>
-      )}
+            ))
+          ) : (
+            <ChatDetailGroup
+              currentName={currentConversation?.name?.replaceAll("_", " ")}
+              menuItems={menuItems}
+              {...propsActionGroupDetail}
+            />
+          )}
+        </Box>
+      </>
     </Box>
   );
 };
