@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import ConfirmDialog from "components/ConfirmDialog";
 import Loading from "components/Loading";
 import { Button, Text, Tooltip } from "components/shared";
@@ -23,8 +23,9 @@ const Title = ({
 }) => {
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const commonT = useTranslations(NS_COMMON);
-  const { handleSplit, handleDelete, handleDuplicate } = useEditAction();
-  const { bookingAll, isLoading } = useBookingAll();
+  const { handleSplit, handleDelete, handleDuplicate, isLoading } =
+    useEditAction();
+  const { bookingAll } = useBookingAll();
   const [isConfirmDelete, setIsConfirmDelete] = useState(false);
 
   const bookingEvent: IBookingItem = useMemo(() => {
@@ -32,9 +33,9 @@ const Title = ({
       bookingAll
         .find((item) => item.bookings.find((i) => i.id === bookingId))
         ?.bookings.find((i) => i.id === bookingId) || ({} as IBookingItem);
-    if (booking.booking_type !== RESOURCE_EVENT_TYPE.PROJECT_BOOKING) {
-      return {} as IBookingItem;
-    }
+    // if (booking.booking_type !== RESOURCE_EVENT_TYPE.PROJECT_BOOKING) {
+    //   return {} as IBookingItem;
+    // }
     return booking;
   }, [JSON.stringify(bookingAll), bookingId]);
 
@@ -47,23 +48,19 @@ const Title = ({
 
   const onHandleDelete = async (e) => {
     e.stopPropagation();
-
     await handleDelete(bookingId).finally(() => {
       onClose();
     });
   };
 
   const onHandleDuplicate = async (e) => {
-    e.stopPropagation();
+    e.stopPropagation && e.stopPropagation();
 
     await handleDuplicate(bookingId, bookingEvent).finally(() => {
       onClose();
     });
   };
 
-  if (isLoading) {
-    return <Loading open />;
-  }
   return (
     <Stack>
       <Text
@@ -104,7 +101,11 @@ const Title = ({
               },
             }}
           >
-            <SplitIcon width={30} height={30} fontSize="small" />
+            {isLoading.split ? (
+              <CircularProgress size={20} />
+            ) : (
+              <SplitIcon width={30} height={30} fontSize="small" />
+            )}
           </Button>
         </Tooltip>
         <Tooltip
@@ -133,7 +134,11 @@ const Title = ({
               },
             }}
           >
-            <RepeatIcon width={30} height={30} fontSize="small" />
+            {isLoading.repeat ? (
+              <CircularProgress size={20} />
+            ) : (
+              <RepeatIcon width={30} height={30} fontSize="small" />
+            )}
           </Button>
         </Tooltip>
         <Tooltip
@@ -148,6 +153,7 @@ const Title = ({
                 display: "none",
               },
             }}
+            onClick={(e) => onHandleDuplicate(true)}
             size="extraSmall"
             sx={{
               maxWidth: "fit-content",
@@ -162,12 +168,11 @@ const Title = ({
               },
             }}
           >
-            <DuplicateIcon
-              width={30}
-              height={30}
-              fontSize="small"
-              onClick={(e) => onHandleDuplicate(true)}
-            />
+            {isLoading.duplicate ? (
+              <CircularProgress size={20} />
+            ) : (
+              <DuplicateIcon width={30} height={30} fontSize="small" />
+            )}
           </Button>
         </Tooltip>
         <Tooltip
@@ -206,6 +211,7 @@ const Title = ({
         title={commonT("confirmDelete.title")}
         onClose={() => setIsConfirmDelete(false)}
         open={isConfirmDelete}
+        pending={isLoading.delete}
         content={commonT("confirmDelete.content")}
       />
     </Stack>

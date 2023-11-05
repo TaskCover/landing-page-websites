@@ -6,7 +6,7 @@ import {
   EXAMPLE_DATA,
   TAB_TYPE,
   weekdays,
-} from "./hepler";
+} from "./helper";
 import dayjs from "dayjs";
 import { isEmpty, includes } from "lodash";
 import { Box } from "@mui/system";

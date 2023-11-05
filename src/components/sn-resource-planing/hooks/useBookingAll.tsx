@@ -1,7 +1,7 @@
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSnackbar } from "store/app/selectors";
 import { useBookingAll, useMyBooking } from "store/resourcePlanning/selector";
 
@@ -23,9 +23,19 @@ export const useFetchMyBooking = () => {
 export const useEditAction = () => {
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const commonT = useTranslations(NS_COMMON);
+  const [isLoading, setIsLoading] = useState({
+    split: false,
+    delete: false,
+    duplicate: false,
+    repeat: false,
+  });
   const { updateBooking, createBooking, deleteBooking } = useBookingAll();
   const { onAddSnackbar } = useSnackbar();
   const handleSplit = async (id, data) => {
+    setIsLoading({
+      ...isLoading,
+      split: true,
+    });
     try {
       const { start_date, end_date } = data;
       const middlePointDay = Math.floor(
@@ -41,7 +51,7 @@ export const useEditAction = () => {
       const updateFirstDate = createBooking(
         {
           ...data,
-          start_date: dayjs(middleDate).add(1, "days").format("YYYY-MM-DD"),
+          start_date: dayjs(middleDate).format("YYYY-MM-DD"),
         },
         true,
       );
@@ -61,6 +71,12 @@ export const useEditAction = () => {
         })
         .catch((e) => {
           throw e;
+        })
+        .finally(() => {
+          setIsLoading({
+            ...isLoading,
+            split: false,
+          });
         });
     } catch (e) {
       console.log(e);
@@ -69,6 +85,10 @@ export const useEditAction = () => {
   };
 
   const handleDelete = async (id) => {
+    setIsLoading({
+      ...isLoading,
+      delete: true,
+    });
     try {
       await deleteBooking(id)
         .then(() => {
@@ -76,6 +96,12 @@ export const useEditAction = () => {
         })
         .catch((e) => {
           throw e;
+        })
+        .finally(() => {
+          setIsLoading({
+            ...isLoading,
+            delete: false,
+          });
         });
     } catch (e) {
       onAddSnackbar(commonT("error.anErrorTryAgain"), "error");
@@ -83,6 +109,10 @@ export const useEditAction = () => {
   };
 
   const handleDuplicate = async (id, data) => {
+    setIsLoading({
+      ...isLoading,
+      duplicate: true,
+    });
     try {
       await createBooking(data)
         .then(() => {
@@ -90,6 +120,12 @@ export const useEditAction = () => {
         })
         .catch((e) => {
           throw e;
+        })
+        .finally(() => {
+          setIsLoading({
+            ...isLoading,
+            duplicate: false,
+          });
         });
     } catch (e) {
       onAddSnackbar(commonT("error.anErrorTryAgain"), "error");
@@ -100,5 +136,6 @@ export const useEditAction = () => {
     handleDelete,
     handleDuplicate,
     handleSplit,
+    isLoading,
   };
 };

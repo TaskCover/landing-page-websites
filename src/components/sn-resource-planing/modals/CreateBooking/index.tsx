@@ -45,7 +45,14 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
       onClose={onClose}
       sx={{ width: 600, minHeight: 500 }}
     >
-      <DialogContent>
+      <DialogContent
+        sx={{
+          "&.MuiDialogContent-root": {
+            pb: "0px!important",
+          },
+          position: "relative",
+        }}
+      >
         <TabContext value={activeTabs}>
           <TabList
             onChange={handleTabChange}

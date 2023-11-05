@@ -43,7 +43,10 @@ const ResourcePlanning = () => {
     >
       <Grid
         container
-        sx={{ display: isSmSmaller ? "block" : "none", padding: "10px" }}
+        sx={{
+          display: isSmSmaller ? "block" : "none",
+          padding: "10px",
+        }}
       >
         <Grid
           item
@@ -62,8 +65,10 @@ const ResourcePlanning = () => {
         <Grid
           container
           sx={{
-            backgroundColor: isDarkMode ? "#212121" : "#FFFFFF",
             height: isSmSmaller ? "110px" : "auto",
+            "&.MuiGrid-root": {
+              backgroundColor: "background.default",
+            },
             alignItems: "center",
           }}
         >
@@ -77,6 +82,7 @@ const ResourcePlanning = () => {
                     ? "0.9fr 1.2fr 0.9fr"
                     : "repeat(3, 1fr)",
                 },
+
                 "& .MuiTab-root": {
                   textTransform: "unset",
                   fontSize: "16px",
