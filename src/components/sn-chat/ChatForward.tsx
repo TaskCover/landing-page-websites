@@ -42,6 +42,7 @@ const ChatForward: FC<Props> = (props) => {
     isChatDesktop,
     onSetDataTransfer,
     onGetAllConvention,
+    onSetConversationInfo,
   } = useChat();
 
   useEffect(() => {
@@ -82,11 +83,13 @@ const ChatForward: FC<Props> = (props) => {
           type: "a",
         });
       } else {
-        if (dataTransfer?.t === "d") {
-          onSetStep(STEP.CHAT_ONE, dataTransfer);
-        } else {
-          onSetStep(STEP.CHAT_GROUP, dataTransfer);
-        }
+        console.log({ dataTransfer });
+        const targetEmployeeId = Object.keys(employeeIdSelected).filter((item) => employeeIdSelected[item])?.at(-1);
+        const target = (isChatDesktop ? props?.conversations : convention)?.filter(i => i?._id === targetEmployeeId)?.at(-1);
+        console.log({ dataTransfer, targetEmployeeId, target });
+        onSetDataTransfer(target);
+        onSetConversationInfo(target);
+        onSetStep(target.t === "d" ? STEP.CHAT_ONE : STEP.CHAT_GROUP, target);
       }
     });
   };
@@ -101,13 +104,13 @@ const ChatForward: FC<Props> = (props) => {
       >
         <Box
           sx={{
-            height: "240px",
+            height: "290px",
           }}
         >
           <Box
             overflow="auto"
             style={{
-              height: "230px",
+              height: "290px",
             }}
           >
             {props?.loading || isFetching || error ? (
@@ -169,7 +172,6 @@ const ChatForward: FC<Props> = (props) => {
                 fontWeight: 600,
                 lineHeight: "1rem",
                 padding: "1rem",
-                background: isDarkMode ? "#1e1e1e" : "white",
               }}
             >
               Message
@@ -190,7 +192,6 @@ const ChatForward: FC<Props> = (props) => {
                   position: "absolute",
                   left: 14,
                   top: 10,
-                  background: isDarkMode ? "#1e1e1e" : "white",
                 }}
               >
                 Message
