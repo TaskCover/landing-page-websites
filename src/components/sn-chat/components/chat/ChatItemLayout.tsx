@@ -24,17 +24,15 @@ const ChatItemLayout = ({
   const { lastMessage } = chatInfo || {};
   const { isDarkMode } = useTheme();
 
-  const renderColorByType = useMemo(() => 
-    {
-      if(isDarkMode){
-        if(isActive) return "#313130"
-        return "#3a3b3c"
-      }else {
-        if(isActive) return "#F7F7FD"
-        return "white"
-      }
+  const renderColorByType = useMemo(() => {
+    if (isDarkMode) {
+      if (isActive) return "#313130";
+      return "#3a3b3c";
+    } else {
+      if (isActive) return "#F7F7FD";
+      return "white";
     }
-  , [isActive, isDarkMode])
+  }, [isActive, isDarkMode]);
 
   return (
     <Box
