@@ -31,6 +31,7 @@ import TextColorIcon from "icons/TextColorIcon";
 import BgIcon from "icons/BgIcon";
 import DeleteUserIcon from "icons/DeleteUserIcon";
 import DeleteDocs from "icons/DeleteDocs";
+import { ColorTypeDropDown } from "../../menu/bubble-menu/ColorTypeDropDown";
 
 export const DBlockNodeView: React.FC<NodeViewProps> = ({
   node,
@@ -43,6 +44,9 @@ export const DBlockNodeView: React.FC<NodeViewProps> = ({
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null,
   );
+  const [anchorElColor, setAnchorElColor] =
+    React.useState<HTMLButtonElement | null>(null);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -142,7 +146,11 @@ export const DBlockNodeView: React.FC<NodeViewProps> = ({
                     Copy link to block
                   </Text>
                 </MenuItem>
-                <MenuItem component={ButtonBase} sx={sxConfig.item}>
+                <MenuItem
+                  onClick={(e) => setAnchorElColor(e.currentTarget)}
+                  component={ButtonBase}
+                  sx={sxConfig.item}
+                >
                   <TextColorIcon></TextColorIcon>
                   <Text variant="body2" color="grey.400">
                     Text color
@@ -196,6 +204,44 @@ export const DBlockNodeView: React.FC<NodeViewProps> = ({
             isTable ? styles.margin_left : ""
           }`}
         />
+        <Popover
+          anchorEl={anchorElColor}
+          open={Boolean(anchorElColor)}
+          onClose={() => setAnchorElColor(null)}
+          anchorOrigin={{
+            vertical: "center",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "center",
+            horizontal: "left",
+          }}
+          sx={{
+            [`& .${popoverClasses.paper}`]: {
+              backgroundImage: "none",
+              minWidth: 190,
+              maxWidth: 190,
+            },
+          }}
+          slotProps={{
+            paper: {
+              sx: {
+                borderRadius: 1,
+              },
+            },
+          }}
+        >
+          <Stack
+            py={2}
+            sx={{
+              boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.1)",
+              border: "1px solid",
+              borderTopWidth: 0,
+              borderColor: "grey.100",
+              borderRadius: 1,
+            }}
+          ></Stack>
+        </Popover>
       </NodeViewWrapper>
     </>
   );

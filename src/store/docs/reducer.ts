@@ -153,7 +153,7 @@ const initialState: IDocs = {
     }
   },
   id: '',
-  project_id: "",
+  project_id: "all",
   title: 'No Name',
   content: '',
   description: '',

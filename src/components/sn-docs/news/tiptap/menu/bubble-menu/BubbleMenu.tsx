@@ -10,20 +10,6 @@ import { MenuBarHeaderEdit } from "components/sn-docs/news/page-body/MenuBarHead
 export const CustomBubbleMenu = ({ editor }) => {
   const { theme } = useContext(ThemeContext);
 
-  const memoizedButtons = useMemo(() => {
-    return generalButtons.map((btn) => (
-      <div
-        className={`${styles.bubble_menu_button}`}
-        onClick={() => btn.action(editor)}
-        key={btn.tooltip}
-      >
-        <div className={`${styles[btn.iconDetail[1]]}`}>
-          {btn.iconDetail[0]}
-        </div>
-      </div>
-    ));
-  }, [editor]);
-
   return (
     <BubbleMenu
       editor={editor}
