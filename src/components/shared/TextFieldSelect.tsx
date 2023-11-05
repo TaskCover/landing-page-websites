@@ -14,8 +14,6 @@ import {
 } from "@mui/material";
 import useTheme from "hooks/useTheme";
 import OutLineExpandIcon from "icons/OutLineExpandIcon";
-import Text from "./Text";
-
 export interface IOptionStructure {
   label: string;
   value: string;
@@ -28,6 +26,7 @@ interface IProps extends SelectProps {
   disabled?: boolean;
   placeholder?: string;
   helperText?: string;
+  hiddenIcon?: boolean;
 }
 
 const TextFieldSelect: React.FC<IProps> = React.forwardRef(
@@ -44,6 +43,7 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
       helperText,
       sx,
       options,
+      hiddenIcon = false,
       ...props
     },
     ref,
@@ -82,24 +82,9 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
             // '&.Mui-selected, &.Mui-selected:hover, &:hover': {
             //   backgroundColor: CommonColors.mainColor,
             // },
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            width: "100%",
-
-            padding: "6px 16px",
-            overflow: "hidden",
           }}
         >
-          <Text
-            sx={{
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              width: "100%",
-            }}
-          >
-            {option.label}
-          </Text>
+          {option.label}
         </MenuItem>
       ));
     };
@@ -135,6 +120,7 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
               ? "#393939"
               : "grey.50",
             alignItems: "center",
+            width: "100%",
           }}
           ref={containerRef}
         >
@@ -145,7 +131,6 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
                 fontWeight: 400,
                 lineHeight: "18px",
                 userSelect: "none",
-                overflow: "hidden",
                 color: !!isDarkMode ? "#fff" : "grey.300",
               }}
               htmlFor={`input-field-${randomId}`}
@@ -181,7 +166,6 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
                   padding: "0 16px 0 0 ",
                   caretColor: !!isDarkMode ? "#fff" : "inherit",
                 },
-                maxWidth: "480px",
               }}
               MenuProps={{
                 anchorEl: containerRef.current,
@@ -197,8 +181,6 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
                 MenuListProps: {
                   sx: {
                     width: "100%",
-
-                    "& > li": {},
                   },
                 },
                 sx: {
@@ -222,13 +204,15 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
               {_renderOptions()}
             </Select>
           </Stack>
-          <OutLineExpandIcon
-            sx={{
-              width: "16px",
-              transition: "all ease 0.25s",
-              transform: isFocus ? "rotate(180deg)" : "rotate(0deg)",
-            }}
-          />
+          {!hiddenIcon && (
+            <OutLineExpandIcon
+              sx={{
+                width: "16px",
+                transition: "all ease 0.25s",
+                transform: isFocus ? "rotate(180deg)" : "rotate(0deg)",
+              }}
+            />
+          )}
         </Box>
         {helperText ? (
           <FormHelperText

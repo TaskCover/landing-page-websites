@@ -23,17 +23,7 @@ export type DocsDictionary = {
          projectStatus : string,
       }
    },
-   createDoc: {
-    share:string,
-    copyLink: string,
-    comment: string,
-    slider: string,
-    more: string,
-    history: string,
-    text: string,
-    Ltext: string,
-    full: string,
-    restore : string,
-  }
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   createDoc: any
 };
   

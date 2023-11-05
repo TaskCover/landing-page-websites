@@ -12,7 +12,7 @@ export const DocsLang: DocsDictionary = {
     search: "Tìm kiếm tài liệu",
     group: {
       group: "Nhóm",
-      none: "Không",
+      none: "Trống",
       creator: "Người sáng tạo",
       project: "Dự án",
     },
@@ -35,6 +35,7 @@ export const DocsLang: DocsDictionary = {
     text: "Tùy chọn văn bản",
     Ltext: "Văn bản lớn",
     full: "Chiều rộng đầy đủ",
-    restore :"Khôi phục"
+    restore :"Khôi phục",
+    name : "Tên tài liệu" 
   },
 };

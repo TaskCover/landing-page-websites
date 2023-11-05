@@ -13,7 +13,7 @@ export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
 export const RESOURCE_API_URL = process.env.RESOURCE_API_URL as string;
 
 export const DARK_THEME_MEDIA_SYSTEM = "(prefers-color-scheme: dark)";
-
+export const DOCS_API_URL = process.env.DOCS_API_URL as string;
 export const DATE_FORMAT_FORM = "yyyy-MM-dd";
 
 export const DATE_FORMAT_SLASH = "dd/MM/yyyy";
