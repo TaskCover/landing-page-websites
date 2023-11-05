@@ -215,6 +215,7 @@ export interface ChatState {
   typeDrawerChat: TypeDrawerChat;
   isOpenInfoChat: boolean;
   isChatDesktop: boolean;
+  selectSearchIndex: number;
 }
 
 export type TypeDrawerChat =

@@ -24,7 +24,7 @@ import { useSnackbar } from "store/app/selectors";
 import { useChat } from "store/chat/selectors";
 import { debounce } from "utils/index";
 import { Text } from "components/shared";
-import { ArrowCircleUp } from "@mui/icons-material";
+import { ArrowCircleDown, ArrowCircleUp } from "@mui/icons-material";
 import { RoomType, STEP } from "store/chat/type";
 
 const RoomHeader = () => {
@@ -44,7 +44,8 @@ const RoomHeader = () => {
     roomId,
     onSetDataTransfer,
     isFetchingDetail,
-    conversationInfo,
+    onSetIndexSearch,
+    selectSearchIndex,
   } = useChat();
   const [search, setSearchText] = useState({
     text: "",
@@ -53,16 +54,13 @@ const RoomHeader = () => {
 
   const inputRef = useRef<any>(null);
 
-  const [currentIndex, setCurrentIndex] = useState<number>(
-    listSearchMessage?.length,
-  );
-
   const onResetSearchText = useCallback(() => {
     setSearchText((prev) => ({
       ...prev,
       text: "",
       isOpen: false,
     }));
+    onSetIndexSearch(0);
   }, []);
 
   const handleSearchChatText = useCallback(async () => {
@@ -93,22 +91,41 @@ const RoomHeader = () => {
     handleSearchChatText();
   }, [handleSearchChatText]);
 
-  const onDirectToMessage = useCallback(() => {
-    const newIndex = currentIndex - 1;
-    if (newIndex < 0 || newIndex > listSearchMessage.length - 1) return;
-    setCurrentIndex(newIndex);
-    const message = listSearchMessage[newIndex];
-    onSetStateSearchMessage(message);
-  }, [currentIndex, listSearchMessage, onSetStateSearchMessage]);
+  const onDirectToMessage = useCallback(
+    (type) => {
+      if (
+        selectSearchIndex < 0 ||
+        selectSearchIndex > listSearchMessage.length - 1
+      )
+        return;
+      const newIndex =
+        type === "down" ? selectSearchIndex + 1 : selectSearchIndex - 1;
+      if (newIndex === -1 || newIndex > listSearchMessage.length - 1) return;
+      onSetIndexSearch(newIndex);
+      const message = listSearchMessage[newIndex];
+      if (newIndex < 5) return;
+      onSetStateSearchMessage(message);
+    },
+    [
+      listSearchMessage,
+      onSetIndexSearch,
+      onSetStateSearchMessage,
+      selectSearchIndex,
+    ],
+  );
 
   useEffect(() => {
-    setCurrentIndex(listSearchMessage?.length);
-  }, [listSearchMessage?.length]);
+    if (listSearchMessage?.length > 0) {
+      onSetIndexSearch(listSearchMessage?.length - 1);
+    }
+  }, [listSearchMessage?.length, onSetIndexSearch]);
 
   useEffect(() => {
     onResetSearchText();
     onCloseDrawer("info");
   }, [onResetSearchText, onResetConversationInfo, onCloseDrawer, roomId]);
+
+  console.log(selectSearchIndex);
 
   return (
     <>
@@ -187,14 +204,22 @@ const RoomHeader = () => {
                   alignItems="center"
                 >
                   <Text variant="body2" className="text-option">
+                    {listSearchMessage?.length - selectSearchIndex} of{" "}
                     {listSearchMessage?.length} matches
                   </Text>
                   <IconButton
                     sx={{ p: "5px", bgcolor: isDarkMode ? "#3a3b3c" : "white" }}
                     aria-label="search"
-                    onClick={onDirectToMessage}
+                    onClick={() => onDirectToMessage("up")}
                   >
                     <ArrowCircleUp />
+                  </IconButton>
+                  <IconButton
+                    sx={{ p: "5px", bgcolor: isDarkMode ? "#3a3b3c" : "white" }}
+                    aria-label="search"
+                    onClick={() => onDirectToMessage("down")}
+                  >
+                    <ArrowCircleDown />
                   </IconButton>
                 </Box>
               )}

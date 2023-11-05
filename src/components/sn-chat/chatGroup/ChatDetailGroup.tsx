@@ -112,11 +112,11 @@ const ChatDetailGroup = (props) => {
       if (result?.error) {
         return onAddSnackbar(result?.error?.message, "error");
       }
-      // (await onChangeGroupRole({
-      //   groupId: dataTransfer?._id,
-      //   userIdToChange: user?.id_rocket ?? "",
-      //   newRole: "removeOwner",
-      // })) as any;
+      (await onChangeGroupRole({
+        groupId: dataTransfer?._id,
+        userIdToChange: user?.id_rocket ?? "",
+        newRole: "removeOwner",
+      })) as any;
       onAddSnackbar(commonChatBox("chatBox.group.adminChange"), "success");
     } else {
       const result = (await onRemoveGroupMember({

@@ -74,7 +74,7 @@ const MessageContent = ({
   unReadMessage,
 }: MessageContentProps) => {
   const textRef = useRef<HTMLDivElement>(null);
-  const { listSearchMessage } = useChat();
+  const { listSearchMessage, selectSearchIndex } = useChat();
 
   const isUnReadCheck = unReadMessage.some((item) => item.unreadCount === 0);
   const { isDarkMode } = useTheme();
@@ -110,10 +110,12 @@ const MessageContent = ({
   }, [isCurrentUser, isDarkMode, listSearchMessage, message._id]);
 
   const renderBorderColor = useMemo(() => {
-    if (listSearchMessage.map((item) => item.messageId).includes(message._id)) {
+    const findMessage = listSearchMessage[selectSearchIndex];
+    if (!findMessage) return "#F7F7FD";
+    if (findMessage?.messageId.includes(message._id)) {
       return isDarkMode ? "#F7F7FD" : "#3699FF";
     }
-  }, [isDarkMode, listSearchMessage, message._id]);
+  }, [isDarkMode, listSearchMessage, message._id, selectSearchIndex]);
 
   if (message.msg) {
     return (
