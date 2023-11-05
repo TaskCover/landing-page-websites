@@ -140,7 +140,7 @@ const SaleService = () => {
               {salesT("detail.service.addService")}
             </Button>
           )}
-          {fields.length > 0 && <ServiceHeader />}
+          <ServiceHeader />
         </Stack>
         <ScrollViewProvider>
           <DragDropContext onDragEnd={onDragEnd}>

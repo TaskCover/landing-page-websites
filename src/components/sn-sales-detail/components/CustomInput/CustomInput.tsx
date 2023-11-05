@@ -111,6 +111,7 @@ const CustomInput = (props: CustomInputProps, ref) => {
     //   }
     // }
   };
+
   return (
     <Grid2
       container
@@ -135,7 +136,6 @@ const CustomInput = (props: CustomInputProps, ref) => {
             const { onChange: onFieldChange, ...rest } = field;
             const handleChange = (e) => {
               onFieldChange(e);
-              trigger(name);
               inputProps?.onChange && inputProps.onChange(e);
             };
             return !select ? (

@@ -76,7 +76,7 @@ const ServiceTableItem = ({
   const scrollContext = useContext(scrollViewContext);
   // const { scrollErrorField } = useScrollErrorField();
   const { serviceUnitOptions } = useGetServiceUnitOptions();
-  const [billType, unit, qty, price, discount] = useWatch({
+  const [billType, unit, qty, price, discount, tolBudgetForm] = useWatch({
     control,
     name: [
       `${sectionKey}.${index}.billType`,
@@ -84,6 +84,7 @@ const ServiceTableItem = ({
       `${sectionKey}.${index}.qty`,
       `${sectionKey}.${index}.price`,
       `${sectionKey}.${index}.discount`,
+      `${sectionKey}.${index}.tolBudget`,
     ],
   });
 
@@ -110,13 +111,13 @@ const ServiceTableItem = ({
   }, [service.billType]);
 
   const tolBuget = useMemo(() => {
-    if (typeof service.tolBudget !== "number") {
-      return parseFloat(service.tolBudget);
-    }
+    // if (typeof service.tolBudget !== "number") {
+    //   return parseFloat(service.tolBudget);
+    // }
     const result = qty * price * (1 - discount / 100);
     setValue(`${sectionKey}.${index}.tolBudget`, result.toFixed(2));
-    return service.tolBudget;
-  }, [service.tolBudget, qty, price, unit, discount]);
+    return result;
+  }, [tolBudgetForm, qty, price, unit, discount]);
 
   useEffect(() => {
     setValue(

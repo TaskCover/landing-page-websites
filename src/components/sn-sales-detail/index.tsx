@@ -39,6 +39,7 @@ const SaleForm = ({ params }) => {
       deletedSections: [],
       sectionsList: [],
     },
+    mode: "onChange",
   });
 
   return (
