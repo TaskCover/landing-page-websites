@@ -81,22 +81,32 @@ const SalesDetail = () => {
 
   return (
     <FixedLayout
-      maxHeight={920}
+      maxHeight={1020}
       maxWidth={{
         xs: 1120,
         xl: 1450,
       }}
       sx={{
-        overflowY: "auto",
+        overflowY: "hidden",
       }}
     >
       <TabHeader />
       <TabList value={tab} onChange={onChangeTab} />
       <TabContext value={tab}>
-        <TabPanel value={SALES_DETAIL_TAB.FEED}>
+        <TabPanel
+          sx={{
+            overflowY: "auto",
+          }}
+          value={SALES_DETAIL_TAB.FEED}
+        >
           <SaleFeed />
         </TabPanel>
-        <TabPanel value={SALES_DETAIL_TAB.SERVICE}>
+        <TabPanel
+          sx={{
+            overflowY: "auto",
+          }}
+          value={SALES_DETAIL_TAB.SERVICE}
+        >
           <SaleService />
         </TabPanel>
       </TabContext>

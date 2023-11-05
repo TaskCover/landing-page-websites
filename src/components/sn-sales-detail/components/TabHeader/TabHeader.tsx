@@ -19,13 +19,19 @@ import React, { useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useSnackbar } from "store/app/selectors";
 import { useSaleDetail, useSales } from "store/sales/selectors";
-import { formatNumber, getMessageErrorByAPI, getPath } from "utils/index";
+import {
+  cleanObject,
+  formatNumber,
+  getMessageErrorByAPI,
+  getPath,
+} from "utils/index";
 
 const TabHeader = () => {
   const { saleDetail } = useSaleDetail();
   const { onUpdateDeal } = useSales();
   const { stageOptions } = useGetStageOptions();
   const { saleRevenue } = useSaleDetail();
+  const { salesFilters, pageIndex, pageSize } = useSales();
   const { push } = useRouter();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
@@ -62,6 +68,11 @@ const TabHeader = () => {
     return total;
   }, [getValues("sectionsList")]);
 
+  const prevListPath = getPath(SALES_LIST_PATH, {
+    ...cleanObject(salesFilters),
+    pageIndex,
+    pageSize,
+  });
   return (
     <Stack
       direction={{
@@ -71,8 +82,9 @@ const TabHeader = () => {
       spacing={2}
       padding={{
         xs: 0,
-        sm: 3,
+        sm: "0.5rem 1rem",
       }}
+      minHeight="62px"
       justifyContent="space-between"
       alignItems={{
         xs: "flex-start",
@@ -89,7 +101,7 @@ const TabHeader = () => {
         }}
         alignItems={"center"}
       >
-        <Link href={getPath(SALES_LIST_PATH)}>
+        <Link href={prevListPath} textAlign="center">
           <ArrowLeftIcon
             sx={{ color: "common.black" }}
             height={24}

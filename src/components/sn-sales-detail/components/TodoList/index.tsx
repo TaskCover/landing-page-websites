@@ -65,6 +65,10 @@ export const TodoName = ({
   };
 
   const { control, getValues, setValue } = useFormContext();
+  const todoItemName = useWatch({
+    control,
+    name: "todoItem.name",
+  });
 
   const handleSubmit = async () => {
     const nameTrimmed = name?.trim();
@@ -72,7 +76,10 @@ export const TodoName = ({
     if (nameTrimmed) {
       setValue("todoItem.name", nameTrimmed);
       setName(nameTrimmed);
-      if (nameTrimmed !== value) await onSubmit(getValues("todoItem"));
+      if (nameTrimmed !== value) {
+        await onSubmit(getValues("todoItem"));
+      }
+
       setError("");
     } else {
       setError(
@@ -86,7 +93,7 @@ export const TodoName = ({
 
   const onKeyDown = useCallback(
     async (event, isBlur: boolean) => {
-      event.stopPropagation();
+      event.stopPropagation && event.stopPropagation();
       if (isSubmited) {
         setIsSubmited(false);
         return;
@@ -94,6 +101,8 @@ export const TodoName = ({
 
       if (isBlur && onBlur) {
         onBlur();
+        setIsSubmited(true);
+
         await handleSubmit();
         return;
       }

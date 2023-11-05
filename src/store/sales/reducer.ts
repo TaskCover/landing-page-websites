@@ -312,7 +312,7 @@ const salesSlice = createSlice({
       state.servicesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
     });
     builder.addCase(updateServiceSection.fulfilled, (state, action) => {
-      state.serviceSection = action.payload.service;
+      // state.serviceSection = action.payload.service;
       state.servicesStatus = DataStatus.SUCCEEDED;
     });
     builder.addCase(updateServiceSection.rejected, (state, action) => {

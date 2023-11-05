@@ -50,6 +50,9 @@ const defaultSx = {
         color: "common.white",
       },
     },
+    "&.MuiButtonBase-root": {
+      pr: "0.25rem",
+    },
   },
 };
 
@@ -193,7 +196,7 @@ const AssignTodo = (props: AssignProps) => {
                 <Stack
                   alignItems="flex-start"
                   sx={{
-                    "&": { maxWidth: "90%", width: "100%" },
+                    "&": { maxWidth: "90%", width: "90%" },
                     "& > p ": {
                       whiteSpace: "nowrap",
                       overflow: "hidden",
