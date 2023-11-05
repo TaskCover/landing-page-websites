@@ -296,7 +296,7 @@ const AccountInfoHeader = ({
                   color: "white",
                 }}
                 onClick={() => {
-                  onSetStep(STEP.ADD_MEMBER);
+                  onSetStep(STEP.ADD_MEMBER, { ...dataTransfer, openFrom: currStep });
                 }}
               >
                 <ProfileAdd />

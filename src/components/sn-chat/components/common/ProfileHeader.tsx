@@ -127,7 +127,9 @@ const ProfileHeader = ({
         )}
 
         <IconButton
-          onClick={() => handleCreateGroup()}
+          onClick={() => {
+            onSetStep(STEP.ADD_GROUP, { isNew: true, currentSelects: dataTransfer });
+          }}
           sx={{
             color: "white",
           }}
