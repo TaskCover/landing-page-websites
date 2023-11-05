@@ -47,15 +47,16 @@ const CommentEditor = forwardRef(
     const { control, setValue } = useFormContext();
     const [content, setContent] = useState<string>("");
     const [files, setFiles] = useState<File[]>([]);
-
+    const [fileLoaded, setFileLoaded] = useState<string[]>([]);
     const onChange = (value: string, delta, _, editor: UnprivilegedEditor) => {
       const isEmpty = value === VALUE_AS_EMPTY;
       setContent(isEmpty ? "" : value);
       editorRef.current = editor;
     };
 
-    const onChangeFiles = (files: File[]) => {
+    const onChangeFiles = (files: File[], data: string[]) => {
       setFiles(files);
+      setFileLoaded(data);
     };
 
     const { saleDetail, onGetSaleDetail } = useSaleDetail();
@@ -77,19 +78,20 @@ const CommentEditor = forwardRef(
         const data = {
           deal_id: saleDetail?.id || "",
           content: editorRef.current?.getHTML() ?? content,
+          attachments: fileLoaded,
         } as CommentData;
-        if (files.length) {
-          data.attachments = [];
-          const promises = files.map((file) => {
-            return client.upload(Endpoint.UPLOAD_LINK, file);
-          });
-          const results = await Promise.allSettled(promises);
-          results.forEach((result) => {
-            if (result.status === "fulfilled" && result.value) {
-              (data.attachments as string[]).push(result.value);
-            }
-          });
-        }
+        // if (files.length) {
+        //   data.attachments = [];
+        //   const promises = files.map((file) => {
+        //     return client.upload(Endpoint.UPLOAD_LINK, file);
+        //   });
+        //   const results = await Promise.allSettled(promises);
+        //   results.forEach((result) => {
+        //     if (result.status === "fulfilled" && result.value) {
+        //       (data.attachments as string[]).push(result.value);
+        //     }
+        //   });
+        // }
         const newData = await onCreateComment(data);
         if (newData) {
           //   onGetTaskList(taskListId);
@@ -101,6 +103,7 @@ const CommentEditor = forwardRef(
           // setValue("comments", newComments);
           setContent("");
           setFiles([]);
+          setFileLoaded([]);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ((ref as any)?.current as HTMLDivElement)?.scrollIntoView();
         }

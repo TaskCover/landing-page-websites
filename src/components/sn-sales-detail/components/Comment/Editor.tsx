@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Stack } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import {
   ChangeEvent,
   memo,
@@ -17,6 +17,7 @@ import { IMAGES_ACCEPT } from "constant/index";
 import dynamic from "next/dynamic";
 import hljs from "highlight.js";
 import AttachmentPreview from "./AttachmentPreview";
+import { Endpoint, client } from "api";
 
 const ReactQuill = dynamic(
   () => {
@@ -59,7 +60,7 @@ const ReactQuill = dynamic(
 
 export type EditorProps = {
   hasAttachment?: boolean;
-  onChangeFiles?: (files: File[]) => void;
+  onChangeFiles?: (files: File[], data: string[]) => void;
   children?: React.ReactNode;
   files?: File[];
   accepts?: string[];
@@ -78,17 +79,17 @@ const Editor = (props: EditorProps) => {
     ...rest
   } = props;
   const [value, setValue] = useState("");
-
+  const [isLoadingFile, setIsLoadingFile] = useState(false);
   const inputFileRef = useRef<HTMLInputElement | null>(null);
-
+  const [loadedFiles, setLoadedFiles] = useState<string[]>([]);
   const urlFiles = useMemo(
     () => files.map((file) => URL.createObjectURL(file)),
     [files],
   );
 
-  const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.length) return;
-    let newFiles = Array.from(event.target.files);
+    let newFiles: File[] = Array.from(event.target.files);
     newFiles = newFiles.reduce(
       (out: File[], file) => {
         if (accepts) {
@@ -104,14 +105,33 @@ const Editor = (props: EditorProps) => {
       },
       [...files],
     );
-    onChangeFiles && onChangeFiles(newFiles);
+    const data = [];
+    if (newFiles.length) {
+      setIsLoadingFile(true);
+      const promises = newFiles.map((file) => {
+        return client.upload(Endpoint.UPLOAD_LINK, file);
+      });
+      const results = await Promise.allSettled(promises).finally(() => {
+        setIsLoadingFile(false);
+      });
+      results.forEach((result) => {
+        if (result.status === "fulfilled" && result.value) {
+          (data as string[]).push(result.value);
+        }
+      });
+    }
+    setLoadedFiles(data);
+    onChangeFiles && onChangeFiles(newFiles, data);
   };
 
   const onRemove = (index: number) => {
     return () => {
       const newFiles = [...files];
       newFiles.splice(index, 1);
-      onChangeFiles && onChangeFiles(newFiles);
+      const data = [...loadedFiles];
+      data.splice(index, 1);
+      setLoadedFiles(data);
+      onChangeFiles && onChangeFiles(newFiles, data);
     };
   };
 
@@ -192,6 +212,20 @@ const Editor = (props: EditorProps) => {
             onRemove={onRemove(index)}
           />
         ))}
+        {isLoadingFile && (
+          <Stack
+            sx={{
+              backgroundColor: "#ECF0F3",
+              width: 60,
+              height: 60,
+              m: 1,
+            }}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress size={16} />
+          </Stack>
+        )}
       </Stack>
       <Box
         multiple

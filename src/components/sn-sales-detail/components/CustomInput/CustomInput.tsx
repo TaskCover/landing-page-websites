@@ -148,8 +148,8 @@ const CustomInput = (props: CustomInputProps, ref) => {
                 error={get(errors, `${name}.message`)}
                 sx={{
                   width: "100%",
-                  [`& .${inputBaseClasses.root}`]: {
-                    backgroundColor: disabled ? "gray.300" : "background.paper",
+                  "& .MuiInputBase-root": {
+                    backgroundColor: disabled ? "#F7F7FD" : "background.paper",
                     pr: helperText ? 3 : 1,
                   },
                   [`& input::-webkit-inner-spin-button`]: {
@@ -163,7 +163,7 @@ const CustomInput = (props: CustomInputProps, ref) => {
                     display: "none",
                   },
                   [`& > .Mui-disabled:first-child`]: {
-                    border: "1px solid #a5a5a5",
+                    backgroundColor: disabled ? "gray.300" : "background.paper",
                   },
                 }}
                 onKeyDown={handleFilterNumber}
@@ -196,7 +196,8 @@ const CustomInput = (props: CustomInputProps, ref) => {
             variant="body2"
             color="grey.300"
             sx={{
-              backgroundColor: "background.paper",
+              backgroundColor: disabled ? "gray.50" : "Background.paper",
+
               padding: 1,
             }}
           >
