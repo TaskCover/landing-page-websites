@@ -27,6 +27,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
 import { useChat } from "store/chat/selectors";
+import useGetLastChatting from "components/sn-chatting-room/hooks/useGetLastChatting";
 
 interface MessagesProps {
   sessionId: string;
@@ -80,11 +81,13 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   const [isBottomScrollMessage, setBottomScrollMessage] = useState(false);
   const commonChatBox = useTranslations(NS_CHAT_BOX);
   const { isDarkMode } = useTheme();
-  const { isChatDesktop } = useChat();
+  const { isChatDesktop, dataTransfer } = useChat();
+
+  const { getLastMessage } = useGetLastChatting();
+
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
-  const [chat, setChat] = useState<Array<MessageInfo>>([]);
 
   const scrollHeightRef = useRef(0);
   const observer = useRef(
@@ -97,7 +100,11 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         const clientHeight =
           (messagesContentRef.current?.clientHeight || 0) + 50;
         if (scrollHeightRef.current > clientHeight) {
-          onRefetch(pageRef.current);
+          if (isChatDesktop) {
+            getLastMessage(pageRef.current, 10);
+          } else {
+            onRefetch(pageRef.current);
+          }
         }
       }
     }),
@@ -184,6 +191,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     messagesContentRef,
     initScrollIntoView,
     statusLoadMessage,
+    dataTransfer,
   ]);
 
   useEffect(() => {
@@ -192,14 +200,14 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     if (currentElement) {
       currentObserver.observe(currentElement);
     }
+
     return () => {
       if (currentElement) {
         currentObserver.unobserve(currentElement);
       }
     };
-  }, [firstElement, messagesContentRef]);
+  }, [firstElement, isChatDesktop, messagesContentRef]);
 
-  useEffect(() => {}, []);
   const renderMessage = (message: MessageInfo) => {
     let msg = "";
     switch (message?.t) {
@@ -234,7 +242,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
       case "r":
         msg = commonChatBox("chatBox.group.rename", {
           user1: message?.u?.name,
-          name: message?.msg?.replace("_", " "),
+          name: message?.msg?.replaceAll("_", " "),
           time: getTimeStamp(message?.ts ?? ""),
         });
         break;
@@ -247,7 +255,6 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     if (messages.length > 0 && messages.length < 10) {
       chat = chat.reverse();
     }
-    setChat(chat);
   }, [messages]);
 
   return (

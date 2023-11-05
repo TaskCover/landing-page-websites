@@ -110,7 +110,7 @@ export const useActionGroupDetails = () => {
   }, [dataTransfer]);
 
   useEffect(() => {
-    setRenameGroup(dataTransfer.name.replace("_", " "));
+    setRenameGroup(dataTransfer.name.replaceAll("_", " "));
   }, [dataTransfer.name]);
 
   const handleNewAdd = () => {
@@ -244,12 +244,12 @@ export const useActionGroupDetails = () => {
       if (!renameGroup) return;
       const dataTransferNew = {
         ...dataTransfer,
-        name: renameGroup.replace("_", " "),
-        fname: renameGroup.replace("_", " "),
+        name: renameGroup.replaceAll("_", " "),
+        fname: renameGroup.replaceAll("_", " "),
       };
       const renameResult = (await onRenameGroup({
         roomId: dataTransfer?._id,
-        name: renameGroup.replace(" ", "_"),
+        name: renameGroup.replaceAll(" ", "_"),
       })) as any;
 
       if (renameResult?.error) {
