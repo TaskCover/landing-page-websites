@@ -4,7 +4,7 @@ import CustomDateRangePicker from "components/sn-resource-planing/components/Cus
 import TextFieldInput from "components/shared/TextFieldInput";
 import { useEffect, useMemo, useState } from "react";
 import useTheme from "hooks/useTheme";
-import { Stack } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import { useTranslations } from "next-intl";
 import { useForm, Controller } from "react-hook-form";
@@ -22,6 +22,7 @@ import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 import { IBookingItem } from "store/resourcePlanning/reducer";
 import TextFieldSelect from "components/shared/TextFieldSelect";
 import { useGetSchemas } from "../Schemas";
+import { updateBookingResource } from "store/resourcePlanning/action";
 interface IProps {
   open: boolean;
   onClose(): void;
@@ -33,7 +34,7 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
   const { palette } = useTheme();
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
-  const { createBooking } = useBookingAll();
+  const { createBooking, loading, updateBooking } = useBookingAll();
   const { timeOffOptions } = useGetTimeOffOptions();
   const { positionOptions, projectOptions } = useGetOptions();
   const { bookingAll } = useBookingAll();
@@ -68,6 +69,7 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
           ? dayjs(bookingEvent?.end_date).toDate()
           : undefined,
       },
+      user_id: bookingEvent?.user_id,
       allocation: bookingEvent?.allocation || 0,
       allocation_type:
         bookingEvent?.allocation_type || RESOURCE_ALLOCATION_TYPE.HOUR,
@@ -81,23 +83,27 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
     }
   }, [open]);
 
-  const onSubmitTimeOff = (data) => {
-    createBooking({
-      ...data,
-      user_id: bookingId,
-      booking_type: RESOURCE_EVENT_TYPE.TIME_OF_BOOKING,
-      start_date: dayjs(data.dateRange.startDate).format("YYYY-MM-DD"),
-      end_date: dayjs(data.dateRange.endDate).format("YYYY-MM-DD"),
-      time_off_type: data.categoryTimeOff,
-      position: positionOptions[0].value,
-      allocation_type: data.allocation_type,
-      project_id: projectOptions[0].value,
+  const onSubmitTimeOff = async (data) => {
+    await updateBooking(
+      {
+        ...data,
+        user_id: bookingEvent?.user_id,
+        booking_type: RESOURCE_EVENT_TYPE.TIME_OF_BOOKING,
+        start_date: dayjs(data.dateRange.startDate).format("YYYY-MM-DD"),
+        end_date: dayjs(data.dateRange.endDate).format("YYYY-MM-DD"),
+        time_off_type: data.categoryTimeOff,
+        position: positionOptions[0].value,
+        allocation_type: data.allocation_type,
+        project_id: projectOptions[0].value,
+      },
+      bookingEvent.id,
+    ).then(() => {
+      onClose();
     });
-    onClose();
   };
 
   return (
-    <Grid2 container spacing={2} sx={{ mt: 1 }}>
+    <Grid2 container spacing={2} sx={{ pt: 1, mb: 0 }}>
       <Grid2 xs={12}>
         <Controller
           name="categoryTimeOff"
@@ -209,7 +215,16 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
           }}
         />
       </Grid2>
-      <Grid2 xs={12}>
+      <Grid2
+        xs={12}
+        sx={{
+          position: "sticky",
+          bottom: 0,
+          pb: 2,
+          pt: 1,
+          backgroundColor: "background.paper",
+        }}
+      >
         <Stack direction="row" justifyContent="center" gap={3}>
           <Button
             variant="primaryOutlined"
@@ -230,7 +245,11 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
             variant="contained"
             onClick={handleSubmitTimeOff(onSubmitTimeOff)}
           >
-            {resourceT("form.editBooking")}
+            {loading ? (
+              <CircularProgress color="inherit" size={24} />
+            ) : (
+              resourceT("form.editBooking")
+            )}
           </Button>
         </Stack>
       </Grid2>

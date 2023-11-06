@@ -36,6 +36,7 @@ export const TodoName = ({
   onBlur,
   autoFocus,
   isAssign,
+  isChecked,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: (name: TodoItemData) => Promise<any>;
@@ -43,6 +44,7 @@ export const TodoName = ({
   owner?: User;
   onBlur?: () => void;
   autoFocus?: boolean;
+  isChecked: boolean;
   isAssign?: boolean;
 }) => {
   const commonT = useTranslations(NS_COMMON);
@@ -178,6 +180,7 @@ export const TodoName = ({
               },
               "& .MuiInputBase-input": {
                 cursor: "pointer",
+                textDecoration: isChecked ? "line-through" : "none",
               },
               "& .MuiInputBase-root:before": {
                 borderBottom: "none",
@@ -185,6 +188,7 @@ export const TodoName = ({
               "& .MuiInputBase-root:hover::before": {
                 borderBottom: "none!important",
               },
+
               padding: 0,
             }}
           />
@@ -341,7 +345,7 @@ const TodoList = () => {
           </DragDropContext>
 
           <Stack direction="row" alignItems="center" spacing={1} width="100%">
-            <TodoName isAssign onSubmit={onSubmit} />
+            <TodoName isAssign onSubmit={onSubmit} isChecked={false} />
           </Stack>
         </Stack>
       </Collapse>

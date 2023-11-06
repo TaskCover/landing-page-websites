@@ -21,7 +21,7 @@ import {
   TAB_TYPE,
   endOfWeek,
   startOfWeek,
-} from "../hepler";
+} from "../helper";
 import { Button } from "components/shared";
 
 const FilterHeader = ({ type }: { type: TAB_TYPE }) => {

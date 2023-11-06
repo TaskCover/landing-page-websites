@@ -6,7 +6,7 @@ import {
   IBookingAllFitler,
   updateBookingResource,
 } from "store/resourcePlanning/action";
-import { DEFAULT_BOOKING_ALL_FILTER, TAB_TYPE } from "./hepler";
+import { DEFAULT_BOOKING_ALL_FILTER, TAB_TYPE } from "./helper";
 import dayjs from "dayjs";
 import { isEmpty } from "lodash";
 import { Box } from "@mui/system";
@@ -63,7 +63,7 @@ const AllPeopleTab = () => {
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
   const { palette, isDarkMode } = useTheme();
   const [parentResource, setParentResource] = React.useState<string>("");
-  const { updateBooking } = useBookingAll();
+  const { updateBooking, loading } = useBookingAll();
 
   const [isOpenEdit, setIsOpenEdit] = React.useState<IEditState>({
     isOpen: false,
@@ -147,17 +147,22 @@ const AllPeopleTab = () => {
     };
 
   // Toggle the resource
-  const handleCollapseToggle = (itemId: string) => {
-    if (selectedResource.includes(itemId)) {
-      setSelectedResource(selectedResource.filter((id) => id !== itemId));
-    } else {
-      setSelectedResource([...selectedResource, itemId]);
-    }
-    const collapseButton = document.querySelectorAll(
-      `td[data-resource-id="${itemId}"][role="gridcell"] > div > div > span.fc-datagrid-expander`,
-    ) as NodeListOf<HTMLElement>;
-    if (collapseButton[0]) collapseButton[0].click();
-  };
+  const handleCollapseToggle = useCallback(
+    (itemId: string) => {
+      if (selectedResource.includes(itemId)) {
+        setSelectedResource(
+          selectedResource.filter((id) => id !== itemId && !id.includes("end")),
+        );
+      } else {
+        setSelectedResource([...selectedResource, itemId]);
+      }
+      const collapseButton = document.querySelectorAll(
+        `td[data-resource-id="${itemId}"][role="gridcell"] > div > div > span.fc-datagrid-expander`,
+      ) as NodeListOf<HTMLElement>;
+      if (collapseButton[0]) collapseButton[0].click();
+    },
+    [selectedResource],
+  );
 
   // Convert resource bookings to event content for render
   const getEvents = useCallback(
@@ -177,6 +182,7 @@ const AllPeopleTab = () => {
                 total_hour,
                 time_off_type,
                 user_id,
+                project,
                 sale_id,
                 project_id,
               } = props;
@@ -194,6 +200,7 @@ const AllPeopleTab = () => {
                 user_id: eventId,
                 allocation_type,
                 total_hour,
+                avatarUrl: project?.avatar?.link,
                 time_off_type,
                 saleId: sale_id,
                 eventType: booking_type,
@@ -243,11 +250,12 @@ const AllPeopleTab = () => {
           allocation: booking?.allocation,
           allocation_type: booking?.allocation_type,
           total_hour: booking?.total_hour,
+          time_off_type: booking?.time_off_type,
           user_id: booking?.user_id,
+          avatarUrl: booking.project?.owner?.avatar?.link,
           saleId: booking?.sale_id,
         })),
       };
-
       resourceEvent.children.push({
         id: `${resource.id}.end`,
         name: "",
@@ -257,14 +265,15 @@ const AllPeopleTab = () => {
         eventType: "",
         note: "",
         position: {},
+        time_off_type: undefined,
         saleId: "",
+        avatarUrl: "",
         user_id: resource.id,
         type: "end",
       });
 
       return resourceEvent;
     });
-
     return result;
   }, [resources]);
 
@@ -290,7 +299,7 @@ const AllPeopleTab = () => {
       border: "none!important",
     },
     "& .fc-datagrid-cell-frame": {
-      // height: 'auto!important',
+      height: "auto!important",
     },
     "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander":
       {
@@ -304,6 +313,7 @@ const AllPeopleTab = () => {
       background: palette.grey[50],
     },
   };
+
   return (
     <Stack direction="column" rowGap={2}>
       <FilterHeader type={TAB_TYPE.ALL} />
@@ -384,12 +394,11 @@ const AllPeopleTab = () => {
               (item) => item.id === resource._resource.parentId,
             );
 
-            if (resource._resource.extendedProps.type === "end") {
-              console.log(
-                "🚀 ~ file: AllPeopleTab.tsx:387 ~ AllPeopleTab ~ resource:",
-                resource._resource.extendedProps.user_id,
-              );
+            if (parentResource?.bookings.length === 0) {
+              return;
+            }
 
+            if (resource._resource.extendedProps.type === "end") {
               return (
                 <Button
                   variant="text"

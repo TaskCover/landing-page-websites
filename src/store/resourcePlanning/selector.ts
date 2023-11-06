@@ -17,7 +17,7 @@ import {
   setDatePicker,
 } from "./reducer";
 import { useSnackbar } from "store/app/selectors";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DataStatus } from "constant/enums";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
@@ -73,6 +73,8 @@ export const useBookingAll = () => {
   const { onAddSnackbar } = useSnackbar();
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
+
   const { getMyBooking, myBookingFilter } = useMyBooking();
 
   const getBookingResource = async (params: IBookingAllFitler) => {
@@ -105,17 +107,24 @@ export const useBookingAll = () => {
     data: BookingData,
     disableSnackbar?: boolean,
   ) => {
+    setLoading(true);
     await dispatch(createBookingResource(data))
       .unwrap()
       .then(async () => {
-        await getBookingResource(bookingAllFilter);
-        await getMyBooking(myBookingFilter);
-        !disableSnackbar &&
-          onAddSnackbar(resourceT("form.createSuccess"), "success");
+        await Promise.all([
+          getMyBooking(myBookingFilter),
+          getBookingResource(bookingAllFilter),
+        ]).then(() => {
+          !disableSnackbar &&
+            onAddSnackbar(resourceT("form.createSuccess"), "success");
+          setLoading(false);
+        });
       })
       .catch((err) => {
-        !disableSnackbar &&
-          onAddSnackbar(resourceT("form.createFailed"), "error");
+        !disableSnackbar && onAddSnackbar(err.message, "error");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -124,6 +133,7 @@ export const useBookingAll = () => {
     id: string,
     disableSnackbar?: boolean,
   ) => {
+    setLoading(true);
     await dispatch(
       updateBookingResource({
         ...data,
@@ -132,14 +142,19 @@ export const useBookingAll = () => {
     )
       .unwrap()
       .then(async () => {
-        await getMyBooking(myBookingFilter);
-        await getBookingResource(bookingAllFilter);
-        !disableSnackbar &&
-          onAddSnackbar(resourceT("form.updateSuccess"), "success");
+        await Promise.all([
+          getMyBooking(myBookingFilter),
+          getBookingResource(bookingAllFilter),
+        ]).then(() => {
+          !disableSnackbar &&
+            onAddSnackbar(resourceT("form.updateSuccess"), "success");
+        });
       })
       .catch((err) => {
-        !disableSnackbar &&
-          onAddSnackbar(resourceT("form.updateFailed"), "error");
+        !disableSnackbar && onAddSnackbar(err.message, "error");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -147,14 +162,19 @@ export const useBookingAll = () => {
     await dispatch(deleteBookingResource(id))
       .unwrap()
       .then(async () => {
-        await getBookingResource(bookingAllFilter);
-        await getMyBooking(myBookingFilter);
-        !disableSnackbar &&
-          onAddSnackbar(resourceT("form.deleteSuccess"), "success");
+        await Promise.all([
+          getMyBooking(myBookingFilter),
+          getBookingResource(bookingAllFilter),
+        ]).then(() => {
+          !disableSnackbar &&
+            onAddSnackbar(resourceT("form.deleteSuccess"), "success");
+        });
       })
       .catch((err) => {
-        !disableSnackbar &&
-          onAddSnackbar(resourceT("form.deleteFailed"), "error");
+        !disableSnackbar && onAddSnackbar(err.message, "error");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
   // useEffect(() => {
@@ -168,6 +188,7 @@ export const useBookingAll = () => {
     createBooking,
     deleteBooking,
     isLoading,
+    loading,
     isReady,
     updateBooking,
     bookingAll,
