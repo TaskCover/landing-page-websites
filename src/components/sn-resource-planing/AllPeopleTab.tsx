@@ -299,7 +299,7 @@ const AllPeopleTab = () => {
       border: "none!important",
     },
     "& .fc-datagrid-cell-frame": {
-      height: "auto!important",
+      // height: "auto!important",
     },
     "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander":
       {
