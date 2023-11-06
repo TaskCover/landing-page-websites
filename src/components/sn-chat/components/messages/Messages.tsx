@@ -112,11 +112,6 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
 
   const isScrolling = useMemo(() => {
     if (!messagesContentRef?.current) return false;
-    console.log(
-      messagesContentRef?.current?.scrollHeight >
-        messagesContentRef?.current?.clientHeight,
-      "messagesContentRef?.current?.scrollHeight >",
-    );
 
     return (
       messagesContentRef?.current?.scrollHeight >
@@ -125,8 +120,6 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         messagesContentRef?.current?.clientWidth
     );
   }, []);
-
-  console.log(isScrolling, "isScrolling");
 
   const getTimeStamp = (time: string | Date) => {
     const date = new Date(time);
