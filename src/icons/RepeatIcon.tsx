@@ -12,7 +12,7 @@ const RepeatIcon = (props: SvgIconProps) => {
     >
       <path
         d="M9.10999 5.08039C9.97999 4.82039 10.94 4.65039 12 4.65039C16.79 4.65039 20.67 8.53039 20.67 13.3204C20.67 18.1104 16.79 21.9904 12 21.9904C7.20999 21.9904 3.32999 18.1104 3.32999 13.3204C3.32999 11.5404 3.86999 9.88039 4.78999 8.50039"
-        stroke="#666666"
+        stroke="currentColor"
         stroke-width="1.5"
         fill="none"
         stroke-linecap="round"
@@ -20,7 +20,7 @@ const RepeatIcon = (props: SvgIconProps) => {
       />
       <path
         d="M7.87 5.32L10.76 2"
-        stroke="#666666"
+        stroke="currentColor"
         stroke-width="1.5"
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -28,7 +28,7 @@ const RepeatIcon = (props: SvgIconProps) => {
       />
       <path
         d="M7.87 5.32031L11.24 7.78031"
-        stroke="#666666"
+        stroke="currentColor"
         stroke-width="1.5"
         fill="none"
         stroke-linecap="round"

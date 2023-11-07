@@ -2,7 +2,7 @@ import { SlotLabelContentArg } from "@fullcalendar/core";
 import { Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import React from "react";
-import { weekdays } from "../hepler";
+import { weekdays } from "../helper";
 import useTheme from "hooks/useTheme";
 
 interface IProps {

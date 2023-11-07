@@ -32,7 +32,7 @@ const TimeOffTab = ({ open, onClose, resourceId }: IProps) => {
   const { palette } = useTheme();
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
-  const { createBooking, isLoading } = useBookingAll();
+  const { createBooking, loading } = useBookingAll();
   const { timeOffOptions } = useGetTimeOffOptions();
   const { positionOptions, projectOptions } = useGetOptions();
   const { schemaTimeOff } = useGetSchemas();
@@ -216,7 +216,11 @@ const TimeOffTab = ({ open, onClose, resourceId }: IProps) => {
             variant="contained"
             onClick={handleSubmitTimeOff(onSubmitTimeOff)}
           >
-            {isLoading ? <CircularProgress /> : commonT("form.save")}
+            {loading ? (
+              <CircularProgress color="inherit" size={24} />
+            ) : (
+              commonT("form.save")
+            )}
           </Button>
         </Stack>
       </Grid2>

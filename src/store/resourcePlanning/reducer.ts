@@ -11,7 +11,7 @@ import {
 import dayjs from "dayjs";
 import { Position } from "store/company/reducer";
 import { Project } from "store/project/reducer";
-import { DEFAULT_BOOKING_ALL_FILTER } from "components/sn-resource-planing/hepler";
+import { DEFAULT_BOOKING_ALL_FILTER } from "components/sn-resource-planing/helper";
 import { DataStatus } from "constant/enums";
 import { TIME_OFF_TYPE } from "components/sn-sales/helpers";
 

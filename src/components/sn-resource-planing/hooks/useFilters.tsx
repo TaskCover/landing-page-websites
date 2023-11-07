@@ -1,5 +1,5 @@
 import React from "react";
-import { DEFAULT_BOOKING_ALL_FILTER } from "../hepler";
+import { DEFAULT_BOOKING_ALL_FILTER } from "../helper";
 import { IBookingAllFitler } from "store/resourcePlanning/action";
 
 const useFilters = () => {
