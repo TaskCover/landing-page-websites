@@ -1,12 +1,10 @@
 "use client";
 import ChangeCover from "../change-cover-panel";
 import DrawSlider from "components/sn-docs/detail/DrawSlider";
-import MenuBarHeader from "./MenuBarHeader";
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./pageBody.module.scss";
 import useTheme from "hooks/useTheme";
 import { Box } from "@mui/material";
-import { Editor } from "@tiptap/core";
 import { getExtensions } from "../tiptap/extensions/starter-kit";
 import { IDocDetail } from "components/sn-docs/detail/DocDetail";
 import { ThemeContext } from "../context/ThemeContext";
@@ -138,11 +136,9 @@ const PageBody = ({
       }}
     >
       <div className={`${styles.content}} ${styles[theme]}`}>
-        {editor && <MenuBarHeader editor={editor as Editor} />}
         <Box
           sx={{
             position: "relative",
-            marginTop: "16px",
             bgcolor: isDarkMode ? "#191919" : "white",
             padding: {
               sm: "32px 40px",

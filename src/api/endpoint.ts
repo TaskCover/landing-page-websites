@@ -96,5 +96,6 @@ export const Endpoint = {
     UPDATE_DOCS: '/docs/{id}',
     DETAIL_DOCS: '/docs/detail/',
     HISTORY_DOCS: '/docs/history/{id}',
-    PERM_DOCS: '/docs/perm/{id}'
+    ADD_PERM_DOCS: '/docs/add-perm/',
+    PERM_DOCS: '/docs/perm/'
 };

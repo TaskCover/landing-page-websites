@@ -94,6 +94,7 @@ export interface IDocs {
     info: {}
     data: ItemDocsProps
   };
+  prem : {},
   project_id: string,
   pageInfo : PageState | null;
   workspaceInfo: WorkspaceState | null,
@@ -111,8 +112,9 @@ const initialState: IDocs = {
   docOptionsStatus: DataStatus.IDLE,
   docOptionsPaging: DEFAULT_PAGING,
   docOptionsFilters: {},
-
   docInfo : {},
+  prem : "",
+
   docDetails : {
     info: {},
     data: {
@@ -227,6 +229,9 @@ const docSlice = createSlice({
         state.description = '';
         state.project_id = ''
       },
+      changePermDoc : (state, action ) => {
+        state.prem = action.payload
+      }
 
     },
     extraReducers: (builder) => {
@@ -284,6 +289,6 @@ const docSlice = createSlice({
 });
 
 
-export const {createPage ,clearPage ,setPage , setWorkspace , clearWorkspace , changeContentDoc, changeDocInfo , changeId, changeTitle , getDocDetails , resetDocDetail , changeProjectId ,changeDescription} = docSlice.actions
+export const {createPage ,clearPage ,setPage , setWorkspace , clearWorkspace , changeContentDoc, changeDocInfo , changeId, changeTitle , getDocDetails , resetDocDetail , changeProjectId ,changeDescription , changePermDoc} = docSlice.actions
 
 export default docSlice.reducer;

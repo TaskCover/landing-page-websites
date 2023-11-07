@@ -69,6 +69,7 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
               <SelectProjectInDoc></SelectProjectInDoc>
               <Text pr={"2px"}>/</Text>
               <TextField
+                placeholder="Nhập Tên Doc"
                 variant="outlined"
                 sx={{
                   fieldset: {
@@ -118,7 +119,7 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                 /
               </Text>
               <TextField
-                placeholder="Nhập Tên DocgetExtensions"
+                placeholder="Nhập Tên Doc"
                 variant="outlined"
                 sx={{
                   fieldset: {

@@ -10,7 +10,7 @@ import { ThemeProvider } from "../news/context/ThemeContext";
 const PageDocDetail = () => {
   const [openComment, setOpenComment] = useState(false);
   const [openSlider, setOpenSlider] = useState(false);
-
+  
   return (
     <ThemeProvider>
       <NewPageContextProvider>
