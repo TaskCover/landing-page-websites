@@ -255,12 +255,6 @@ const DATA: MenuItemProps[] = [
     roles: [Permission.AM, Permission.ST],
   },
   {
-    label: "menu.docs",
-    href: DOCS_PATH,
-    icon: <MenuDocsIcon />,
-    roles: [Permission.AM, Permission.ST],
-  },
-  {
     label: "menu.resourcePlaning",
     href: RESOURCE_PLANING_PATH,
     icon: <MenuResourcePlaningIcon />,
@@ -278,6 +272,12 @@ const DATA: MenuItemProps[] = [
     icon: <CardReceive />,
     roles: [Permission.AM],
   },
+  {
+    label: "menu.docs",
+    href: DOCS_PATH,
+    icon: <MenuDocsIcon />,
+    roles: [Permission.AM, Permission.ST],
+  }
 ];
 
 const checkIsActiveLink = (pathname: string, href?: string) => {
