@@ -5,7 +5,7 @@ import CommentSection from "../components/Comment";
 
 const SaleFeed = () => {
   return (
-    <Stack>
+    <Stack gap={4}>
       <TodoList />
       <CommentSection />
     </Stack>

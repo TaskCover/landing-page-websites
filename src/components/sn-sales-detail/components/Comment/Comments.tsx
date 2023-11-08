@@ -26,7 +26,7 @@ const Comments = () => {
   const salesT = useTranslations(NS_SALES);
   const commonT = useTranslations(NS_COMMON);
   const { isFetching } = useSaleDetail();
-  const [comentType, setCommentType] = useState("comments");
+  const [comentType, setCommentType] = useState("");
   const { control, getValues } = useFormContext();
   const [listAttachmentsDown, setListAttachmentsDown] = useState<Attachment[]>(
     [],
@@ -65,7 +65,6 @@ const Comments = () => {
             },
           ]}
           name="type"
-          hasAll={false}
         />
       </Stack>
       {filteredComments?.map((comment) => (

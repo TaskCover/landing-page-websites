@@ -94,7 +94,7 @@ const ChatDetailGroup = (props) => {
     setRenameGroup(dataTransfer?.name?.replaceAll("_", " "));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataTransfer]);
-
+  
   useEffect(() => {
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
@@ -250,7 +250,7 @@ const ChatDetailGroup = (props) => {
             showPopup?.content
           )}
         </Box>
-        {![TYPE_POPUP.NEW_ADMIN, TYPE_POPUP.RENAME_GROUP].includes(showPopup?.type) && (
+        {[TYPE_POPUP.FORWARD_MESSAGE].includes(showPopup?.type) && (
           <ForwardLayout />
         )}
         {![TYPE_POPUP.NEW_ADMIN].includes(showPopup?.type) && (
@@ -308,8 +308,8 @@ const ChatDetailGroup = (props) => {
     const renameGroupApi = async () => {
       const dataTransferNew = {
         ...dataTransfer,
-        name: renameGroup,
-        fname: renameGroup,
+        name: renameGroup.replaceAll("_", " "),
+        fname: renameGroup.replaceAll("_", " "),
       };
 
       const renameResult = (await onRenameGroup({

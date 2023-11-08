@@ -24,6 +24,7 @@ import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { getFiltersFromQueries, removeDuplicateItem } from "utils/index";
 
 export interface Employee extends User {
+  _id: string;
   created_time: string;
   department: string;
   is_active: boolean;

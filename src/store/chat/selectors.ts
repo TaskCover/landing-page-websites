@@ -21,7 +21,7 @@ import {
   changeGroupAvatar,
 } from "./actions";
 import { DataStatus, PayStatus } from "constant/enums";
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useEffect } from "react";
 import { shallowEqual } from "react-redux";
 import {
   AddMember2GroupRequest,
@@ -71,6 +71,7 @@ import {
   setChatDesktop,
   setListNewConversation,
   resetSearchChatText,
+  setSelectSearchIndex,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -81,7 +82,6 @@ import { CHATTING_ROOM_PATH } from "constant/paths";
 
 export const useChat = () => {
   const dispatch = useAppDispatch();
-  const router = useRouter();
   const { user } = useAuth();
   const {
     convention,
@@ -127,7 +127,10 @@ export const useChat = () => {
     typeDrawerChat,
     isOpenInfoChat,
     isChatDesktop,
+    detailConversationStatus,
+    selectSearchIndex,
   } = useAppSelector((state) => state.chat, shallowEqual);
+
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.chat.conversationPaging,
     shallowEqual,
@@ -144,6 +147,11 @@ export const useChat = () => {
   const isError = useMemo(
     () => conversationStatus === DataStatus.FAILED,
     [conversationStatus],
+  );
+
+  const isFetchingDetail = useMemo(
+    () => detailConversationStatus === DataStatus.LOADING,
+    [detailConversationStatus],
   );
 
   const onGetAllConvention = useCallback(
@@ -262,8 +270,25 @@ export const useChat = () => {
         }),
       );
     },
-    [conversationInfo, dispatch, user, dataTransfer],
+    [
+      dispatch,
+      user,
+      conversationInfo?.username,
+      conversationInfo?._id,
+      conversationInfo?.t,
+      conversationInfo?.name,
+      dataTransfer?.username,
+      dataTransfer?._id,
+      dataTransfer?.t,
+      dataTransfer?.name,
+      roomId,
+    ],
   );
+
+  const onResetSearchChatText = useCallback(async () => {
+    dispatch(resetSearchChatText());
+    return;
+  }, [dispatch]);
 
   const onSearchChatText = useCallback(
     async (params: Omit<MessageSearchInfoRequest, "authToken" | "userId">) => {
@@ -315,6 +340,13 @@ export const useChat = () => {
   const onSetStep = useCallback(
     (step: STEP, dataTransfer?: any) => {
       dispatch(setStep({ step, dataTransfer }));
+    },
+    [dispatch],
+  );
+
+  const onSetIndexSearch = useCallback(
+    (index) => {
+      dispatch(setSelectSearchIndex(index));
     },
     [dispatch],
   );
@@ -687,6 +719,7 @@ export const useChat = () => {
     isError,
     isIdle,
     isFetching,
+    isFetchingDetail,
     pageIndex,
     pageSize,
     totalItems,
@@ -759,5 +792,8 @@ export const useChat = () => {
     isChatDesktop,
     onSetChatDesktop,
     onChangeListConversations,
+    onResetSearchChatText,
+    selectSearchIndex,
+    onSetIndexSearch,
   };
 };

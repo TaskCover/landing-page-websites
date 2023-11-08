@@ -33,6 +33,7 @@ export const useWSChat = () => {
           count: 1,
           offset: 0,
         };
+
       return await onGetConventionById(paramReq);
     },
     [onGetConventionById],
@@ -73,7 +74,7 @@ export const useWSChat = () => {
         "sender_userId" | "sender_authToken" | "receiverUsername" | "t"
       >,
     ) => {
-      if (message.message && message.message.trim()?.length > 0) {        
+      if (message.message && message.message.trim()?.length > 0) {
         ws?.send(
           JSON.stringify({
             msg: "method",
@@ -191,7 +192,6 @@ export const useWSChat = () => {
 
   const reConnect = () => {
     setTimeout(() => {
-      console.log("reConnect");
       const wsNew = connectSocket();
       connectMessage(wsNew);
     }, 100);
@@ -208,7 +208,7 @@ export const useWSChat = () => {
       ws.onclose = (e) => {
         if (
           ws &&
-          (e.code !== 3001) &&
+          e.code !== 3001 &&
           (ws.readyState === ws.CLOSING || ws.readyState === ws.CLOSED)
         ) {
           reConnect();

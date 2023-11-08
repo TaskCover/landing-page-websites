@@ -48,6 +48,7 @@ const SalesDetail = () => {
     comments?.sort((a, b) => {
       return moment(b.created_time).isAfter(moment(a.created_time)) ? 1 : -1;
     });
+
     const todo_list: Record<string, Todo> = sortedTodoList.reduce(
       (acc, todo, index) => {
         acc[todo.id] = {
@@ -71,7 +72,7 @@ const SalesDetail = () => {
     });
 
     return reset();
-  }, [saleDetail, serviceSectionList]);
+  }, [serviceSectionList, saleDetail]);
 
   useEffect(() => {
     return () => onReset();
@@ -80,22 +81,32 @@ const SalesDetail = () => {
 
   return (
     <FixedLayout
-      maxHeight={920}
+      maxHeight={1020}
       maxWidth={{
         xs: 1120,
         xl: 1450,
       }}
       sx={{
-        overflowY: "auto",
+        overflowY: "hidden",
       }}
     >
       <TabHeader />
       <TabList value={tab} onChange={onChangeTab} />
       <TabContext value={tab}>
-        <TabPanel value={SALES_DETAIL_TAB.FEED}>
+        <TabPanel
+          sx={{
+            overflowY: "auto",
+          }}
+          value={SALES_DETAIL_TAB.FEED}
+        >
           <SaleFeed />
         </TabPanel>
-        <TabPanel value={SALES_DETAIL_TAB.SERVICE}>
+        <TabPanel
+          sx={{
+            overflowY: "auto",
+          }}
+          value={SALES_DETAIL_TAB.SERVICE}
+        >
           <SaleService />
         </TabPanel>
       </TabContext>

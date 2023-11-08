@@ -6,7 +6,7 @@ import {
   EXAMPLE_DATA,
   TAB_TYPE,
   weekdays,
-} from "./hepler";
+} from "./helper";
 import dayjs from "dayjs";
 import { isEmpty, includes } from "lodash";
 import { Box } from "@mui/system";
@@ -41,6 +41,8 @@ import FilterHeader from "./components/FilterHeader";
 import SlotLabelContent from "./components/SlotLabelContent";
 import ResourceHeaderContent from "./components/ResourceHeaderContent";
 import useTheme from "hooks/useTheme";
+import { TIME_OFF_TYPE } from "components/sn-sales/helpers";
+import { Button } from "components/shared";
 
 const MyScheduleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -124,6 +126,7 @@ const MyScheduleTab = () => {
             booking_type: restData.eventType,
             time_off_type: restData.time_off_type,
             sale_id: saleId,
+            user_id: user?.id,
           },
           restData.eventId,
         );
@@ -142,37 +145,44 @@ const MyScheduleTab = () => {
     if (collapseButton[0]) collapseButton[0].click();
   };
 
-  const getEvents = () =>
-    resources.map((props: IBookingItem) => {
-      const {
-        id: eventId,
-        start_date: from,
-        end_date: to,
-        booking_type,
-        allocation,
-        position,
-        allocation_type,
-        sale_id,
-        time_off_type,
-        total_hour,
-      } = props;
+  const getEvents = useCallback(
+    () =>
+      resources.map((props: IBookingItem) => {
+        const {
+          id: eventId,
+          start_date: from,
+          end_date: to,
+          booking_type,
+          allocation,
+          position,
+          allocation_type,
+          sale_id,
+          project_id,
+          project,
+          user_id,
+          time_off_type,
+          total_hour,
+        } = props;
 
-      return {
-        resourceId: eventId.toString(),
-        start: dayjs(from).toDate(),
-        end: dayjs(to).toDate(),
-        allDay: true,
-        type: "step",
-        position,
-        allocation,
-        allocation_type,
-        total_hour,
-        saleId: sale_id,
-        time_off_type,
-        eventType: booking_type,
-        eventId,
-      };
-    }) as ResourceInput;
+        return {
+          resourceId: (project_id && `${user?.id}.${project_id}`) || eventId,
+          start: dayjs(from).toDate(),
+          end: dayjs(to).toDate(),
+          allDay: true,
+          type: "step",
+          position,
+          allocation,
+          allocation_type,
+          total_hour,
+          eventType: booking_type,
+          name: project?.name,
+          saleId: sale_id,
+          time_off_type,
+          eventId,
+        };
+      }) as ResourceInput,
+    [JSON.stringify(resources)],
+  );
   // TODO: remove if label has no content
   // .concat([
   //   {
@@ -193,7 +203,13 @@ const MyScheduleTab = () => {
     const result =
       resources?.map((resource: IBookingItem) => ({
         ...resource,
+        name: resource?.project?.name,
+        id:
+          (resource?.project_id &&
+            `${resource.user_id}.${resource?.project_id}`) ||
+          resource?.id,
         type: "step",
+        eventType: resource?.booking_type,
         // children: resource?.bookings?.map((booking) => ({
         //   id: booking?.id,
         //   name: booking?.project?.name,
@@ -203,6 +219,26 @@ const MyScheduleTab = () => {
         //   position: booking?.position,
         // })),
       })) || [];
+    result.push({
+      id: "end",
+      name: "",
+      allocation: 0,
+      allocation_type: "percent",
+      booking_type: "project",
+      created_time: "",
+      note: "",
+      eventType: "end",
+      end_date: "",
+      position: {},
+      user_id: "",
+      project: {},
+      project_id: "",
+      sale_id: "",
+      start_date: "",
+      time_off_type: TIME_OFF_TYPE.OTHER,
+      type: "step",
+      total_hour: 160,
+    });
     return [
       {
         id: user?.id,
@@ -243,7 +279,7 @@ const MyScheduleTab = () => {
       border: "none!important",
     },
     "& .fc-datagrid-cell-frame": {
-      height: "auto!important",
+      // height: "auto!important",
     },
     "& .fc-icon, & .fc-datagrid-expander-placeholder, & .fc-datagrid-expander":
       {
@@ -299,6 +335,21 @@ const MyScheduleTab = () => {
             // const bookings = parentResource?.bookings || [];
             const isLastItem =
               resources[resources.length - 1]?.id === resource._resource.id;
+            if (resource._resource.id === "end") {
+              return (
+                <Button
+                  variant="text"
+                  startIcon={<PlusIcon />}
+                  sx={{
+                    color: "success.main",
+                  }}
+                  // startIcon={<AddIcon />}
+                  onClick={() => setIsOpenCreate(true)}
+                >
+                  {resourceT("schedule.action.addBooking")}
+                </Button>
+              );
+            }
 
             return (
               <ResourceLabel
@@ -307,6 +358,7 @@ const MyScheduleTab = () => {
                 isLastItem={isLastItem}
                 resource={resource}
                 resources={resources}
+                isMybooking={true}
                 selectedResource={selectedResource}
                 setIsOpenCreate={setIsOpenCreate}
                 totalhour={totalhour}

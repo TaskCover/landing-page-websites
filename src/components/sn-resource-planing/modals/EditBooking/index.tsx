@@ -14,15 +14,6 @@ import { useTranslations } from "next-intl";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import ProjectTab from "./ProjectTab";
 import TimeOffTab from "./TimeoffTab";
-import { Button, Text } from "components/shared";
-import SplitIcon from "icons/SplitIcon";
-import TrashIcon from "icons/TrashIcon";
-import DuplicateIcon from "icons/DuplicateIcon";
-import { useEditAction } from "components/sn-resource-planing/hooks/useBookingAll";
-import { useBookingAll } from "store/resourcePlanning/selector";
-import { IBookingItem } from "store/resourcePlanning/reducer";
-import { RESOURCE_EVENT_TYPE } from "constant/enums";
-import RepeatIcon from "icons/RepeatIcon";
 import Title from "./Title";
 interface IProps {
   open: boolean;
@@ -51,9 +42,17 @@ const EditBooking: React.FC<IProps> = ({
 
   const _renderMain = () => {
     return (
-      <DialogContent>
+      <DialogContent
+        sx={{
+          "&.MuiDialogContent-root": {
+            pb: "0px!important",
+          },
+          position: "relative",
+          overflowX: "auto ",
+        }}
+      >
         <TabContext value={activeTabs}>
-          <TabList
+          {/* <TabList
             onChange={handleTabChange}
             sx={{
               "& .MuiTabs-flexContainer": {
@@ -71,6 +70,7 @@ const EditBooking: React.FC<IProps> = ({
                   color: "#3699FF",
                 },
               },
+              position: "sticky",
             }}
           >
             <Tab
@@ -95,11 +95,23 @@ const EditBooking: React.FC<IProps> = ({
                 fontWeight: 600,
               }}
             />
-          </TabList>
-          <TabPanel value="1" sx={{ p: 0 }}>
+          </TabList> */}
+          <TabPanel
+            value="1"
+            sx={{
+              p: 0,
+            }}
+          >
             <ProjectTab bookingId={bookingId} open={open} onClose={onClose} />
           </TabPanel>
-          <TabPanel value="2" sx={{ p: 0 }}>
+          <TabPanel
+            value="2"
+            sx={{
+              p: 0,
+              mb: 0,
+              mt: 0,
+            }}
+          >
             <TimeOffTab open={open} onClose={onClose} bookingId={bookingId} />
           </TabPanel>
         </TabContext>

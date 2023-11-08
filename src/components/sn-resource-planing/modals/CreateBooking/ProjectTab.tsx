@@ -36,17 +36,17 @@ interface IProps {
   open: boolean;
   onClose(): void;
   resourceId: string;
-  userId: string;
+  userId?: string;
 }
 
-const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
+const ProjectTab = ({ open, onClose, resourceId, userId }: IProps) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
   const [isShowTooltip, setIsShowTooltip] = useState(false);
   const { palette } = useTheme();
   const { positionOptions, projectOptions, timeOptions, salesOptions } =
     useGetOptions();
-  const { createBooking, isLoading } = useBookingAll();
+  const { createBooking, loading } = useBookingAll();
   const { schemaProject } = useGetSchemas();
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
@@ -76,16 +76,17 @@ const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
       resourceId,
     );
 
-  const onSubmitProject = (data) => {
+  const onSubmitProject = async (data) => {
     const cleanData: BookingData = {
       ...data,
-      user_id: resourceId,
+      user_id: userId,
       start_date: dayjs(data.dateRange.startDate).format("YYYY-MM-DD"),
       end_date: dayjs(data.dateRange.endDate).format("YYYY-MM-DD"),
       booking_type: RESOURCE_EVENT_TYPE.PROJECT_BOOKING,
     };
-    createBooking(cleanData);
-    onClose();
+    await createBooking(cleanData).then(() => {
+      onClose();
+    });
   };
 
   useEffect(() => {
@@ -280,7 +281,12 @@ const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
             </Box>
           </Tooltip>
         </Box>
-        <Collapse in={isShowDetail}>
+        <Collapse
+          in={isShowDetail}
+          sx={{
+            mb: 2,
+          }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -407,7 +413,16 @@ const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
           </Box>
         </Collapse>
       </Grid2>
-      <Grid2 xs={12}>
+      <Grid2
+        xs={12}
+        sx={{
+          position: "sticky",
+          bottom: 0,
+          pb: 2,
+          pt: 1,
+          backgroundColor: "background.paper",
+        }}
+      >
         <Stack direction="row" justifyContent="center" gap={3}>
           <Button
             variant="primaryOutlined"
@@ -428,7 +443,11 @@ const ProjectTab = ({ open, onClose, resourceId }: IProps) => {
             variant="contained"
             onClick={handleSubmitProject(onSubmitProject)}
           >
-            {isLoading ? <CircularProgress /> : resourceT("form.createBooking")}
+            {loading ? (
+              <CircularProgress color="inherit" size={24} />
+            ) : (
+              resourceT("form.createBooking")
+            )}
           </Button>
         </Stack>
       </Grid2>

@@ -84,10 +84,13 @@ export const ResourcePlanning: ResourceDictionary = {
       sick: "Nghỉ ốm",
       other: "Khác",
     },
+    confirmDelete: "Bạn có chắc chắn muốn xóa?",
     createFailed: "Tạo lịch thất bại",
     createSuccess: "Tạo lịch thành công",
     editBooking: "Sửa lịch",
     updateFailed: "Cập nhật lịch thất bại",
     updateSuccess: "Cập nhật lịch thành công",
+    deleteFailed: "Xóa lịch thất bại",
+    deleteSuccess: "Xóa lịch thành công",
   },
 };

@@ -47,6 +47,9 @@ const defaultSx = {
         color: "common.white",
       },
     },
+    "& .MuiCheckbox-root": {
+      padding: 1,
+    },
   },
 };
 
@@ -139,7 +142,16 @@ const Assign = (props: AssignProps) => {
       label={<DisplayItem users={value} isFilter={props.isFilter} />}
       ref={buttonRef}
     >
-      <MenuList onScroll={onScroll} component={Box} sx={{ pb: 0 }}>
+      <MenuList
+        onScroll={onScroll}
+        component={Box}
+        sx={{
+          pb: 0,
+          "& >button": {
+            pr: "5px!important",
+          },
+        }}
+      >
         <Search
           name="members.email"
           onChange={onChangeSearch}
@@ -156,17 +168,26 @@ const Assign = (props: AssignProps) => {
             <MenuItem
               component={ButtonBase}
               onClick={() => onAssign(option)}
-              sx={defaultSx.item}
+              sx={{
+                ...defaultSx.item,
+              }}
               key={option.value}
               disabled={isDisabled}
             >
               <Stack
                 direction="row"
                 alignItems="center"
-                spacing={0}
+                spacing={1}
                 width="100%"
               >
-                <Checkbox checked={checked} />
+                <Checkbox
+                  checked={checked}
+                  sx={{
+                    "&.MuiButtonBase-root": {
+                      padding: 0,
+                    },
+                  }}
+                />
                 <Avatar
                   src={option?.avatar ?? UserPlaceholderImage}
                   size={24}
@@ -174,12 +195,14 @@ const Assign = (props: AssignProps) => {
                 <Stack
                   alignItems="flex-start"
                   sx={{
-                    "&": { maxWidth: "90%", width: "100%" },
+                    maxWidth: "90%",
+                    width: "85%",
                     "& > p ": {
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       width: "90%",
+                      pr: "1rem",
                       textAlign: "left",
                     },
                   }}

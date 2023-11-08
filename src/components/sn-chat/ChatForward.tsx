@@ -42,6 +42,7 @@ const ChatForward: FC<Props> = (props) => {
     isChatDesktop,
     onSetDataTransfer,
     onGetAllConvention,
+    onSetConversationInfo,
   } = useChat();
 
   useEffect(() => {
@@ -82,11 +83,13 @@ const ChatForward: FC<Props> = (props) => {
           type: "a",
         });
       } else {
-        if (dataTransfer?.t === "d") {
-          onSetStep(STEP.CHAT_ONE, dataTransfer);
-        } else {
-          onSetStep(STEP.CHAT_GROUP, dataTransfer);
-        }
+        console.log({ dataTransfer });
+        const targetEmployeeId = Object.keys(employeeIdSelected).filter((item) => employeeIdSelected[item])?.at(-1);
+        const target = (isChatDesktop ? props?.conversations : convention)?.filter(i => i?._id === targetEmployeeId)?.at(-1);
+        console.log({ dataTransfer, targetEmployeeId, target });
+        onSetDataTransfer(target);
+        onSetConversationInfo(target);
+        onSetStep(target.t === "d" ? STEP.CHAT_ONE : STEP.CHAT_GROUP, target);
       }
     });
   };
@@ -101,13 +104,13 @@ const ChatForward: FC<Props> = (props) => {
       >
         <Box
           sx={{
-            height: "240px",
+            height: "290px",
           }}
         >
           <Box
             overflow="auto"
             style={{
-              height: "230px",
+              height: "290px",
             }}
           >
             {props?.loading || isFetching || error ? (
@@ -139,6 +142,10 @@ const ChatForward: FC<Props> = (props) => {
                   ?.filter((item) => item?.name)
                   ?.map((item, index) => (
                     <SelectItem
+                      checked={
+                        employeeIdSelected?.hasOwnProperty(item._id) &&
+                        employeeIdSelected[item._id] === true
+                      }
                       checkbox
                       onClick={(event) => handleClickConversation(item, event)}
                       employee={
@@ -158,38 +165,40 @@ const ChatForward: FC<Props> = (props) => {
         </Box>
 
         <Box>
-        {isChatDesktop ? <Typography
+          {isChatDesktop ? (
+            <Typography
               sx={{
-                borderTop: '1px solid #E0E0E0',
+                borderTop: "1px solid #E0E0E0",
                 color: !isDarkMode ? "#1e1e1e" : "white",
                 fontSize: "0.85rem",
                 fontWeight: 600,
                 lineHeight: "1rem",
-                padding: '1rem',
-                background: isDarkMode ? "#1e1e1e" : "white",
+                padding: "1rem",
               }}
             >
               Message
-            </Typography> : null }
+            </Typography>
+          ) : null}
           <Box
             sx={{
               position: "relative",
             }}
           >
-            {!isChatDesktop ? <Typography
-              sx={{
-                color: !isDarkMode ? "#1e1e1e" : "white",
-                fontSize: "0.75rem",
-                fontWeight: 400,
-                lineHeight: "1rem",
-                position: "absolute",
-                left: 14,
-                top: 10,
-                background: isDarkMode ? "#1e1e1e" : "white",
-              }}
-            >
-              Message
-            </Typography> : null }
+            {!isChatDesktop ? (
+              <Typography
+                sx={{
+                  color: !isDarkMode ? "#1e1e1e" : "white",
+                  fontSize: "0.75rem",
+                  fontWeight: 400,
+                  lineHeight: "1rem",
+                  position: "absolute",
+                  left: 14,
+                  top: 10,
+                }}
+              >
+                Message
+              </Typography>
+            ) : null}
             <div
               style={{
                 resize: "vertical",
@@ -198,15 +207,15 @@ const ChatForward: FC<Props> = (props) => {
                 borderRadius: "0.25rem",
                 background: isDarkMode ? "#1e1e1e" : "var(--gray-0, #F7F7FD)",
                 border: "none",
-                fontFamily: "Open Sans",
-                fontSize: "0.875rem",
+                // fontFamily: "Open Sans",
+                fontSize: "16px",
                 fontStyle: "normal",
                 fontWeight: 400,
                 lineHeight: "1.375rem",
                 ...(isChatDesktop
                   ? {
                       display: "flex",
-                      justifyContent: "center",
+                      justifyContent: "flex-start",
                       height: "120px",
                     }
                   : { height: "70px" }),
@@ -237,7 +246,7 @@ const ChatForward: FC<Props> = (props) => {
               sx={{
                 color: "var(--gray-3, #999)",
                 textAlign: "right",
-                fontSize: "0.75rem",
+                fontSize: "16px",
                 fontWeight: 400,
                 lineHeight: "1rem",
               }}
@@ -280,7 +289,7 @@ const ChatForward: FC<Props> = (props) => {
             size="small"
             onClick={handleForwardMessage}
           >
-            {commonT("form.add")}
+            {commonT("form.forward")}
           </Button>
         </Box>
       </Box>

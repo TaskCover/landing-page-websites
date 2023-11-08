@@ -103,7 +103,7 @@ export const updateBookingResource = createAsyncThunk(
   "resource/updateBooking",
   async (params: BookingData & { id: string }) => {
     try {
-      const response = await client.patch(
+      const response = await client.put(
         `${Endpoint.RESOURCE_PLANNING}/${params.id}`,
         params,
         {

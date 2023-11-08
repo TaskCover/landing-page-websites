@@ -87,6 +87,8 @@ const initialState: ChatState = {
   typeDrawerChat: "info",
   isOpenInfoChat: false,
   isChatDesktop: false,
+  detailConversationStatus: DataStatus.IDLE,
+  selectSearchIndex: 0,
 };
 
 const isConversation = (type: string) => {
@@ -100,6 +102,9 @@ const chatSlice = createSlice({
     reset: () => initialState,
     setChatDesktop: (state, action) => {
       state.isChatDesktop = action.payload;
+    },
+    setSelectSearchIndex: (state, action) => {
+      state.selectSearchIndex = action.payload;
     },
     resetConversationInfo: (state) => {
       state.conversationInfo = null;
@@ -143,7 +148,14 @@ const chatSlice = createSlice({
     },
     setMessage: (state, action: PayloadAction<MessageInfo | null>) => {
       if (action.payload) {
-        state.messageInfo.push(action.payload);
+        if (
+          state.messageInfo.findIndex(
+            (message) => message._id === action.payload?._id,
+          ) === -1
+        ) {
+          state.messageInfo.push(action.payload);
+        }
+
         if (action.payload.attachments?.length > 0) {
           const mediaMessages: MediaPreviewItem[] = action.payload.attachments
             .filter(
@@ -397,17 +409,20 @@ const chatSlice = createSlice({
       })
       // getPartnerInfoById
       .addCase(getUserInfoById.pending, (state, action) => {
+        state.detailConversationStatus = DataStatus.LOADING;
         state.partnerInfoStatus = DataStatus.LOADING;
       })
       .addCase(
         getUserInfoById.fulfilled,
         (state, action: PayloadAction<UserInfo>) => {
           state.partnerInfo = action.payload || null;
+          state.detailConversationStatus = DataStatus.SUCCEEDED;
           state.partnerInfoStatus = DataStatus.SUCCEEDED;
         },
       )
       .addCase(getUserInfoById.rejected, (state, action) => {
         state.partnerInfo = null;
+        state.detailConversationStatus = DataStatus.FAILED;
         state.partnerInfoStatus = DataStatus.FAILED;
       })
       // getChatUrls
@@ -549,6 +564,7 @@ export const {
   setChatDesktop,
   setListNewConversation,
   resetSearchChatText,
+  setSelectSearchIndex,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

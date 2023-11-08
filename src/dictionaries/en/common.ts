@@ -43,10 +43,11 @@ export const CommonLang: CommonDictionary = {
     save: "Save",
     cancel: "Cancel",
     add: "Add",
+    forward: "Forward",
     admin: "Admin",
   },
   notification: {
-    imageTypeInvalid:
+    imageTypeInvalid: 
       "File type is invalid. Currently the system only support PNG, JPEG, JPG",
     success: "{label} successfully!",
   },

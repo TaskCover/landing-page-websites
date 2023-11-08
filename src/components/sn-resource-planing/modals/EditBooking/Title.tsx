@@ -1,4 +1,6 @@
-import { Stack } from "@mui/material";
+import { CircularProgress, Menu, MenuItem, Stack } from "@mui/material";
+import ConfirmDialog from "components/ConfirmDialog";
+import Loading from "components/Loading";
 import { Button, Text, Tooltip } from "components/shared";
 import { useEditAction } from "components/sn-resource-planing/hooks/useBookingAll";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
@@ -7,8 +9,9 @@ import DuplicateIcon from "icons/DuplicateIcon";
 import RepeatIcon from "icons/RepeatIcon";
 import SplitIcon from "icons/SplitIcon";
 import TrashIcon from "icons/TrashIcon";
+import { Dropdown } from "@mui/base";
 import { useTranslations } from "next-intl";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { IBookingItem } from "store/resourcePlanning/reducer";
 import { useBookingAll } from "store/resourcePlanning/selector";
 
@@ -21,28 +24,41 @@ const Title = ({
 }) => {
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const commonT = useTranslations(NS_COMMON);
-  const { handleSplit, handleDelete } = useEditAction();
-  const { bookingAll, isLoading } = useBookingAll();
+  const { handleSplit, handleDelete, handleDuplicate, isLoading } =
+    useEditAction();
+  const { bookingAll } = useBookingAll();
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const bookingEvent: IBookingItem = useMemo(() => {
     const booking =
       bookingAll
         .find((item) => item.bookings.find((i) => i.id === bookingId))
         ?.bookings.find((i) => i.id === bookingId) || ({} as IBookingItem);
-    if (booking.booking_type !== RESOURCE_EVENT_TYPE.PROJECT_BOOKING) {
-      return {} as IBookingItem;
-    }
+    // if (booking.booking_type !== RESOURCE_EVENT_TYPE.PROJECT_BOOKING) {
+    //   return {} as IBookingItem;
+    // }
     return booking;
   }, [JSON.stringify(bookingAll), bookingId]);
 
-  const onHandleSplit = async () => {
+  const onHandleSplit = async (e) => {
+    e.stopPropagation();
     await handleSplit(bookingId, bookingEvent).finally(() => {
       onClose();
     });
   };
 
-  const onHandleDelete = async () => {
+  const onHandleDelete = async (e) => {
+    e.stopPropagation();
     await handleDelete(bookingId).finally(() => {
+      onClose();
+    });
+  };
+
+  const onHandleDuplicate = async (e) => {
+    e.stopPropagation && e.stopPropagation();
+
+    await handleDuplicate(bookingId, bookingEvent).finally(() => {
       onClose();
     });
   };
@@ -66,7 +82,7 @@ const Title = ({
           arrow
         >
           <Button
-            onClick={() => onHandleSplit()}
+            onClick={(e) => onHandleSplit(e)}
             variant="text"
             TouchRippleProps={{
               style: {
@@ -87,7 +103,11 @@ const Title = ({
               },
             }}
           >
-            <SplitIcon width={30} height={30} fontSize="small" />
+            {isLoading.split ? (
+              <CircularProgress size={20} />
+            ) : (
+              <SplitIcon width={30} height={30} fontSize="small" />
+            )}
           </Button>
         </Tooltip>
         <Tooltip
@@ -96,12 +116,14 @@ const Title = ({
           arrow
         >
           <Button
+            id="repeat-button"
             variant="text"
             TouchRippleProps={{
               style: {
                 display: "none",
               },
             }}
+            onClick={(e) => setIsOpen(!isOpen)}
             size="extraSmall"
             sx={{
               maxWidth: "fit-content",
@@ -116,9 +138,14 @@ const Title = ({
               },
             }}
           >
-            <RepeatIcon width={30} height={30} fontSize="small" />
+            {isLoading.repeat ? (
+              <CircularProgress size={20} />
+            ) : (
+              <RepeatIcon width={30} height={30} fontSize="small" />
+            )}
           </Button>
         </Tooltip>
+
         <Tooltip
           title={resourceT("form.editActions.duplicate")}
           placement="top"
@@ -131,6 +158,7 @@ const Title = ({
                 display: "none",
               },
             }}
+            onClick={(e) => onHandleDuplicate(true)}
             size="extraSmall"
             sx={{
               maxWidth: "fit-content",
@@ -145,16 +173,21 @@ const Title = ({
               },
             }}
           >
-            <DuplicateIcon width={30} height={30} fontSize="small" />
+            {isLoading.duplicate ? (
+              <CircularProgress size={20} />
+            ) : (
+              <DuplicateIcon width={30} height={30} fontSize="small" />
+            )}
           </Button>
         </Tooltip>
+
         <Tooltip
           title={resourceT("form.editActions.delete")}
           placement="top"
           arrow
         >
           <Button
-            onClick={() => onHandleDelete()}
+            onClick={(e) => setIsConfirmDelete(true)}
             variant="text"
             TouchRippleProps={{
               style: {
@@ -179,8 +212,16 @@ const Title = ({
           </Button>
         </Tooltip>
       </Stack>
+      <ConfirmDialog
+        onSubmit={(e) => onHandleDelete(e)}
+        title={commonT("confirmDelete.title")}
+        onClose={() => setIsConfirmDelete(false)}
+        open={isConfirmDelete}
+        pending={isLoading.delete}
+        content={commonT("confirmDelete.content")}
+      />
     </Stack>
   );
 };
 
-export default Title;
+export default React.forwardRef(Title);

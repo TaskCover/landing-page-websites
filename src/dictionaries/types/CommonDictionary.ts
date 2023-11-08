@@ -40,6 +40,7 @@ export type CommonDictionary = {
     save: string;
     cancel: string;
     add: string;
+    forward: string;
     admin: string;
   };
   notification: {

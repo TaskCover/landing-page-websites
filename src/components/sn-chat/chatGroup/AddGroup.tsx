@@ -78,6 +78,23 @@ const AddGroup: FC<AddGroupProps> = ({
   }, [onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
+    if (dataTransfer?.currentSelects?.uids?.length) {
+      setEmployeeSelected({
+        ...employeeSelected,
+        [dataTransfer?.currentSelects?.username ?? ""]: true,
+      });
+      setEmployeeNameSelected({
+        ...employeeNameSelected,
+        [dataTransfer?.currentSelects?.name ?? ""]: true,
+      });
+      setEmployeeIdSelected({
+        ...employeeIdSelected,
+        [dataTransfer?.currentSelects?.uids?.at(0) ?? ""]: true,
+      });
+    }
+  }, [dataTransfer?.currentSelects])
+
+  useEffect(() => {
     if (dataTransfer.isNew || isNew || type === "modal") return;
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
@@ -157,9 +174,12 @@ const AddGroup: FC<AddGroupProps> = ({
               `...${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`
             );
           })(),
-          members: Object.keys(employeeSelected).filter(
-            (item) => employeeSelected[item] === true,
-          ),
+          members: [
+            ...Object.keys(employeeSelected).filter(
+              (item) => employeeSelected[item] === true,
+            ),
+            ...(dataTransfer.username ? [dataTransfer?.username] : []),
+          ],
           type: "d",
         });
         onSetRoomId(result.payload.group._id);
@@ -206,15 +226,7 @@ const AddGroup: FC<AddGroupProps> = ({
               cursor: "pointer",
             }}
             onClick={() => {
-              if (callbackBackIcon) {
-                callbackBackIcon();
-                return;
-              }
-              if (currStep === STEP.ADD_GROUP) {
-                onSetStep(STEP.CONVENTION);
-              } else {
-                onSetStep(prevStep);
-              }
+              onSetStep(dataTransfer?.openFrom ? dataTransfer?.openFrom : STEP.CHAT_GROUP);
             }}
           >
             {CustomCallBackIcon ? CustomCallBackIcon : <ArrowDownIcon />}
@@ -291,6 +303,10 @@ const AddGroup: FC<AddGroupProps> = ({
                   .map((item, index) => {
                     return (
                       <SelectItem
+                        checked={
+                          employeeIdSelected?.hasOwnProperty(item.id_rocket) ||
+                          employeeIdSelected[item.id_rocket as any] === true
+                        }
                         checkbox
                         employee={item}
                         key={index}
@@ -319,18 +335,7 @@ const AddGroup: FC<AddGroupProps> = ({
           size="small"
           sx={defaultSx.button}
           onClick={() => {
-            if (callbackBackIcon) {
-              callbackBackIcon();
-              if (isNew || type === "modal") {
-                onCloseDrawer("account");
-              }
-              return;
-            }
-            if (currStep === STEP.ADD_GROUP) {
-              onSetStep(STEP.CONVENTION);
-            } else {
-              onSetStep(prevStep);
-            }
+            onSetStep(dataTransfer?.openFrom ? dataTransfer?.openFrom : STEP.CHAT_GROUP);
           }}
         >
           {commonT("form.cancel")}

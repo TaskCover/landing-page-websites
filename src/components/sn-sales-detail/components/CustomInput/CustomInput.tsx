@@ -1,7 +1,14 @@
 import { Stack, inputBaseClasses } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { Input, InputProps, Text } from "components/shared";
-import React, { forwardRef, memo, useContext, useEffect, useRef } from "react";
+import React, {
+  ClipboardEventHandler,
+  forwardRef,
+  memo,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import {
   Control,
   Controller,
@@ -59,10 +66,10 @@ const CustomInput = (props: CustomInputProps, ref) => {
   } = props;
   const {
     formState: { errors },
+    trigger,
   } = useFormContext();
   // const { scrollErrorField } = useScrollErrorField();
   const scrollContext = useContext(scrollViewContext);
-
   useEffect(() => {
     // scrollErrorField(`${sectionKey}.${index}`);
   }, [JSON.stringify(errors)]);
@@ -74,6 +81,37 @@ const CustomInput = (props: CustomInputProps, ref) => {
       }
     }
   }, [JSON.stringify(errors)]);
+
+  const handleFilterNumber = (e) => {
+    if (
+      type === "number" &&
+      (e.key === "e" ||
+        e.key === "E" ||
+        e.key === "-" ||
+        e.key === "+" ||
+        (e.key === "." && isRound))
+    ) {
+      e.preventDefault();
+    }
+  };
+  const handleFilterNumberOnPaste = (event) => {
+    const patse = event.clipboardData?.getData("text");
+    if (
+      type === "number" &&
+      (/[^\.\d]|\.\./g.test(patse) || (isRound && /\./g.test(patse)))
+    ) {
+      event.preventDefault();
+      return;
+    }
+    // TODO: base on logic is filter or not
+    // if (type === "number") {
+    //   patse = patse.replaceAll(/[^\.\d]|\.\./g, "");
+    //   if (isRound) {
+    //     patse = patse.replaceAll(".", "");
+    //   }
+    // }
+  };
+
   return (
     <Grid2
       container
@@ -106,11 +144,12 @@ const CustomInput = (props: CustomInputProps, ref) => {
                 minRows={minRows}
                 multiline={multiline}
                 placeholder={placeholder}
+                onPaste={(e) => handleFilterNumberOnPaste(e)}
                 error={get(errors, `${name}.message`)}
                 sx={{
                   width: "100%",
-                  [`& .${inputBaseClasses.root}`]: {
-                    backgroundColor: disabled ? "gray.300" : "background.paper",
+                  "& .MuiInputBase-root": {
+                    backgroundColor: disabled ? "#F7F7FD" : "background.paper",
                     pr: helperText ? 3 : 1,
                   },
                   [`& input::-webkit-inner-spin-button`]: {
@@ -124,21 +163,10 @@ const CustomInput = (props: CustomInputProps, ref) => {
                     display: "none",
                   },
                   [`& > .Mui-disabled:first-child`]: {
-                    border: "1px solid #a5a5a5",
+                    backgroundColor: disabled ? "gray.300" : "background.paper",
                   },
                 }}
-                onKeyDown={(e) => {
-                  if (
-                    type === "number" &&
-                    (e.key === "e" ||
-                      e.key === "E" ||
-                      e.key === "-" ||
-                      e.key === "+" ||
-                      (e.key === "." && isRound))
-                  ) {
-                    e.preventDefault();
-                  }
-                }}
+                onKeyDown={handleFilterNumber}
                 {...inputProps}
                 inputRef={ref}
                 onChange={(e) => handleChange(e)}
@@ -168,7 +196,8 @@ const CustomInput = (props: CustomInputProps, ref) => {
             variant="body2"
             color="grey.300"
             sx={{
-              backgroundColor: "background.paper",
+              backgroundColor: disabled ? "gray.50" : "Background.paper",
+
               padding: 1,
             }}
           >

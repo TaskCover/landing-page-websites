@@ -131,25 +131,25 @@ export const sendMessages = createAsyncThunk(
     // c for channel sendMessageToChannel
     const paramsByType = {
       d: {
-        "sender_authToken": param.sender_authToken,    
-        "sender_userId": param.sender_userId,
-        "receiverUsername": param.receiverUsername,
-        "attachments": param.attachments,
+        sender_authToken: param.sender_authToken,
+        sender_userId: param.sender_userId,
+        receiverUsername: param.receiverUsername,
+        attachments: param.attachments,
       },
-      p : {
-        "authToken": param.authToken,    
-        "userId": param.userId,
-        "roomId": param.roomId,
-        "attachments": param.attachments,  
+      p: {
+        authToken: param.authToken,
+        userId: param.userId,
+        roomId: param.roomId,
+        attachments: param.attachments,
       },
-      c : {
-        "authToken": param.authToken,    
-        "userId": param.userId,
-        "channel": param.channel,
-        "attachments": param.attachments,  
-      }
-    }
-    if(!t) return;
+      c: {
+        authToken: param.authToken,
+        userId: param.userId,
+        channel: param.channel,
+        attachments: param.attachments,
+      },
+    };
+    if (!t) return;
     try {
       const response = await client.post(objUrl[t], paramsByType[t], {
         baseURL: CHAT_API_URL,

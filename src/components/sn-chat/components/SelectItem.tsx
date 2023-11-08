@@ -14,8 +14,10 @@ interface SelectItemProp {
   onClick?: (event: ChangeEvent<HTMLInputElement>) => void;
   checkbox?: boolean;
   onClickItem?: () => void;
+  checked?: boolean;
 }
 const SelectItem = ({
+  checked,
   employee,
   onClick,
   checkbox,
@@ -42,6 +44,7 @@ const SelectItem = ({
     >
       {checkbox && (
         <Checkbox
+          checked={checked}
           onChange={onClick}
           {...label}
           icon={<CircleUnchecked />}

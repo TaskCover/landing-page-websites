@@ -19,13 +19,19 @@ import React, { useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useSnackbar } from "store/app/selectors";
 import { useSaleDetail, useSales } from "store/sales/selectors";
-import { formatNumber, getMessageErrorByAPI, getPath } from "utils/index";
+import {
+  cleanObject,
+  formatNumber,
+  getMessageErrorByAPI,
+  getPath,
+} from "utils/index";
 
 const TabHeader = () => {
   const { saleDetail } = useSaleDetail();
   const { onUpdateDeal } = useSales();
   const { stageOptions } = useGetStageOptions();
   const { saleRevenue } = useSaleDetail();
+  const { salesFilters, pageIndex, pageSize } = useSales();
   const { push } = useRouter();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
@@ -33,9 +39,9 @@ const TabHeader = () => {
 
   const { control, handleSubmit, getValues } = useFormContext();
 
-  const onSubmit = (name, value) => {
+  const onSubmit = async (name, value) => {
     try {
-      onUpdateDeal({ id: saleDetail?.id, [name]: value });
+      await onUpdateDeal({ id: saleDetail?.id, [name]: value });
     } catch (error) {
       console.log(error);
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
@@ -50,6 +56,23 @@ const TabHeader = () => {
       })),
     [],
   );
+
+  const saleRevenueCal = useMemo(() => {
+    const sectionsList = getValues("sectionsList");
+    const total = sectionsList?.reduce((prev, section) => {
+      const total = section?.service?.reduce((prev, service) => {
+        return prev + (service?.totalBuget || 0);
+      }, 0);
+      return prev + total;
+    }, 0);
+    return total;
+  }, [getValues("sectionsList")]);
+
+  const prevListPath = getPath(SALES_LIST_PATH, {
+    ...cleanObject(salesFilters),
+    pageIndex,
+    pageSize,
+  });
   return (
     <Stack
       direction={{
@@ -59,13 +82,15 @@ const TabHeader = () => {
       spacing={2}
       padding={{
         xs: 0,
-        sm: 3,
+        sm: "0.5rem 1rem",
       }}
+      minHeight="62px"
       justifyContent="space-between"
       alignItems={{
         xs: "flex-start",
         sm: "center",
       }}
+      overflow="hidden"
     >
       <Stack
         direction="row"
@@ -76,7 +101,7 @@ const TabHeader = () => {
         }}
         alignItems={"center"}
       >
-        <Link href={getPath(SALES_LIST_PATH)}>
+        <Link href={prevListPath} textAlign="center">
           <ArrowLeftIcon
             sx={{ color: "common.black" }}
             height={24}
@@ -168,7 +193,7 @@ const TabHeader = () => {
           <CoinIcon />
           <Text variant="body2">
             Revenue:{" "}
-            {formatNumber(saleRevenue || 0, {
+            {formatNumber(saleRevenueCal || saleRevenue || 0, {
               numberOfFixed: 2,
               prefix:
                 CURRENCY_SYMBOL[saleDetail?.currency || CURRENCY_CODE.USD],

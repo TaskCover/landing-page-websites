@@ -42,6 +42,7 @@ export const CommonLang: CommonDictionary = {
     save: "Lưu",
     cancel: "Hủy bỏ",
     add: "Thêm",
+    forward: "Chuyển tiếp",
     admin: "Quản lý",
   },
   notification: {

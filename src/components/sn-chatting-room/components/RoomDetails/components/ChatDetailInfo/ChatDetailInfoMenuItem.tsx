@@ -10,22 +10,21 @@ interface ChatDetailInfoMenuItemProps {
   icon: JSX.ElementType;
   callBackOpenDrawer?: () => void;
   callBackIcon?: JSX.ElementType;
-  type?: string,
-  dontOpenDrawer?: boolean
+  type?: string;
+  dontOpenDrawer?: boolean;
 }
 
 const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
   props,
 ) => {
-
-  const {onSetDrawerType} = useChat()
+  const { onSetDrawerType } = useChat();
   // Handler to open the drawer.
   const onOpenDrawer = useCallback(() => {
-      props?.callBackOpenDrawer && props.callBackOpenDrawer() 
-      if(props.dontOpenDrawer){
-        return;
-      }
-      onSetDrawerType(props?.type as TypeDrawerChat)
+    props.callBackOpenDrawer && props.callBackOpenDrawer();
+    if (props.dontOpenDrawer) {
+      return;
+    }
+    onSetDrawerType(props?.type as TypeDrawerChat);
   }, []);
 
   const [isRotated, setIsRotated] = useState(false);
@@ -34,7 +33,7 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
     ? { transform: "rotate(90deg)" }
     : {};
 
-    const {isDarkMode} = useTheme()
+  const { isDarkMode } = useTheme();
   return (
     <Box
       sx={{
@@ -66,11 +65,14 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
           <props.icon
             sx={{
               fill: "none",
-              color: isDarkMode ? 'white' : "#666666",
+              color: isDarkMode ? "white" : "#666666",
               filter: "opacity(0.8)",
             }}
           />
-          <Typography variant="body2" color={isDarkMode ? 'white' :"var(--Black, #212121)"}>
+          <Typography
+            variant="body2"
+            color={isDarkMode ? "white" : "var(--Black, #212121)"}
+          >
             {props.text}
           </Typography>
         </Box>
@@ -84,19 +86,26 @@ const ChatDetailInfoMenuItem: React.FC<ChatDetailInfoMenuItemProps> = (
             alignItems: "center",
           }}
         >
-          {props?.callBackOpenDrawer ? <IconButton onClick={onOpenDrawer}>
-          {props?.callBackIcon ? <props.callBackIcon /> : <ArrowDownIcon
-              sx={{
-                ml: "auto",
-                transform: "rotate(180deg)",
-                filter: "opacity(0.5)",
-                cursor: "pointer",
-              }}
-            />}
-          </IconButton> : '' }
+          {props?.callBackOpenDrawer ? (
+            <IconButton onClick={onOpenDrawer}>
+              {props?.callBackIcon ? (
+                <props.callBackIcon />
+              ) : (
+                <ArrowDownIcon
+                  sx={{
+                    ml: "auto",
+                    transform: "rotate(180deg)",
+                    filter: "opacity(0.5)",
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+            </IconButton>
+          ) : (
+            ""
+          )}
         </Box>
       </Box>
-
     </Box>
   );
 };

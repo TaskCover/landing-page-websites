@@ -15,10 +15,11 @@ const ChatDetailInfo = () => {
 
   const styleDrawerOpen = useMemo(
     () =>
-    (isOpenInfoChat &&  !DrawerChatIgnore.includes(typeDrawerChat)) ? { width: extraDesktopMode ? "424px" : "272px" } : { width: 0 },
+      isOpenInfoChat && !DrawerChatIgnore.includes(typeDrawerChat)
+        ? { width: extraDesktopMode ? "424px" : "272px" }
+        : { width: 0 },
     [extraDesktopMode, isOpenInfoChat, typeDrawerChat],
   );
-
 
   return (
     <Drawer
@@ -30,13 +31,14 @@ const ChatDetailInfo = () => {
           width: extraDesktopMode ? "424px" : "272px",
           boxSizing: "border-box",
           border: "none",
+          height: "100%",
         },
       }}
       variant="persistent"
       anchor="right"
-      open={isOpenInfoChat &&  !DrawerChatIgnore.includes(typeDrawerChat)}
+      open={isOpenInfoChat && !DrawerChatIgnore.includes(typeDrawerChat)}
     >
-        <DrawerInfoChat  />
+      <DrawerInfoChat />
     </Drawer>
   );
 };

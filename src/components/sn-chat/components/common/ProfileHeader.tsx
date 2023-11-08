@@ -1,3 +1,4 @@
+
 import { SxProps } from "@mui/material";
 import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -12,6 +13,11 @@ import SearchRoundIcon from "icons/SearchRoundIcon";
 import VideoCallIcon from "icons/VideoCallIcon";
 import { useCallback, useEffect, useState } from "react";
 
+import { useChat } from "store/chat/selectors";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
+import { useAuth, useSnackbar } from "store/app/selectors";
+import { STEP } from "store/chat/type";
 interface ProfileHeaderProps {
   textSearch?: string;
   isSearch?: boolean;
@@ -44,6 +50,43 @@ const ProfileHeader = ({
   );
   const { sx: containerSx, ...containerProp } = containerProps || {};
   const { sx: nameSx, ...nameProp } = nameProps || {};
+
+  const {
+    prevStep,
+    dataTransfer,
+    groupMembers,
+    onSetRoomId,
+    onSetStep,
+    onCreateDirectMessageGroup,
+    onAddMembers2Group,
+    currStep,
+    onFetchGroupMembersMember,
+    onSetDataTransfer,
+    onChangeListConversations,
+    convention,
+    isChatDesktop,
+    onCloseDrawer,
+    onSetConversationInfo,
+  } = useChat();
+  const commonT = useTranslations(NS_COMMON);
+
+  const { user } = useAuth();
+  const { onAddSnackbar } = useSnackbar();
+
+  const handleCreateGroup = async () => {
+    const result = await onCreateDirectMessageGroup({
+      groupName: (() => {
+        return `${dataTransfer?.username?.slice(0, 8) }...-and-me...${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`;
+      })(),
+      members: [dataTransfer?.username],
+      type: "d",
+    });
+    onSetRoomId(result.payload.group._id);
+    onSetDataTransfer(result.payload.group);
+    onSetConversationInfo(result.payload.group);
+    onAddSnackbar(commonT("success"), "success");
+    onSetStep(STEP.CHAT_GROUP, result?.payload?.group);
+  };
 
   useEffect(() => {
     setOpenSearch(isSearch || false);
@@ -84,19 +127,15 @@ const ProfileHeader = ({
         )}
 
         <IconButton
+          onClick={() => {
+            onSetStep(STEP.ADD_GROUP, { isNew: true, currentSelects: dataTransfer });
+          }}
           sx={{
             color: "white",
           }}
         >
           <ProfileAdd />
         </IconButton>
-        {/* <IconButton
-          sx={{
-            color: "white",
-          }}
-        >
-          <VideoCallIcon />
-        </IconButton> */}
       </>
     );
   }, [onSearch]);

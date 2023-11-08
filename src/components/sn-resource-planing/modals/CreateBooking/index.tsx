@@ -24,6 +24,10 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
     setActiveTabs(newValue);
   };
 
+  const handleOnClose = () => {
+    setActiveTabs("1");
+    onClose();
+  };
   return (
     <DialogLayout
       renderHeader={
@@ -42,10 +46,17 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
         </Box>
       }
       open={open}
-      onClose={onClose}
+      onClose={handleOnClose}
       sx={{ width: 600, minHeight: 500 }}
     >
-      <DialogContent>
+      <DialogContent
+        sx={{
+          "&.MuiDialogContent-root": {
+            pb: "0px!important",
+          },
+          position: "relative",
+        }}
+      >
         <TabContext value={activeTabs}>
           <TabList
             onChange={handleTabChange}
@@ -92,14 +103,18 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
           </TabList>
           <TabPanel value="1" sx={{ p: 0 }}>
             <ProjectTab
-              onClose={onClose}
+              onClose={handleOnClose}
               open={open}
               resourceId={resourceId}
-              userId=""
+              userId={resourceId}
             />
           </TabPanel>
           <TabPanel value="2" sx={{ p: 0 }}>
-            <TimeOffTab onClose={onClose} open={open} resourceId={resourceId} />
+            <TimeOffTab
+              onClose={handleOnClose}
+              open={open}
+              resourceId={resourceId}
+            />
           </TabPanel>
         </TabContext>
       </DialogContent>

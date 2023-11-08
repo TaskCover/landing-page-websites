@@ -4,7 +4,7 @@ import Forward from "icons/Forward";
 import { useState } from "react";
 import { useChat } from "store/chat/selectors";
 import { MessageInfo, STEP } from "store/chat/type";
-import "../../../../components/Editor/style.css";
+import "../../../Editor/style.css";
 import useTheme from "hooks/useTheme";
 import ForwardSmall from "icons/ForwardSmall";
 
@@ -25,11 +25,18 @@ const MessageLayout = ({
   hasNextMessageFromSameUser,
   messageProps,
 }: MessageLayoutProps) => {
-  const isCurrentUser = message.u.username === sessionId;  
+  const isCurrentUser = message.u.username === sessionId;
   const { sx, ...props } = messageProps || {};
   const [isForward, setIsForward] = useState(true);
-  const { onSetStep, dataTransfer, isChatDesktop, onSetDataTransfer, onSetDrawerType } = useChat();
+  const {
+    onSetStep,
+    dataTransfer,
+    isChatDesktop,
+    onSetDataTransfer,
+    onSetDrawerType,
+  } = useChat();
   const { isDarkMode } = useTheme();
+
   return (
     <>
       <Box
@@ -62,9 +69,9 @@ const MessageLayout = ({
               <Box
                 className="mouse-pointer"
                 onClick={() => {
-                  if(isChatDesktop){
+                  if (isChatDesktop) {
                     onSetDataTransfer({ ...dataTransfer, message });
-                    onSetDrawerType('forward')
+                    onSetDrawerType("forward");
                   } else {
                     onSetStep(STEP.CHAT_FORWARD, { ...dataTransfer, message });
                   }
@@ -86,13 +93,13 @@ const MessageLayout = ({
         )}
         {/* Message content */}
         {message?.alias ? (
-          <Box order={'2'}>
+          <Box order={"2"}>
             <Box
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                color: '#3699FF',
-                fontSize: '12px',
+                display: "flex",
+                alignItems: "center",
+                color: "#3699FF",
+                fontSize: "12px",
               }}
             >
               <ForwardSmall />
@@ -101,7 +108,7 @@ const MessageLayout = ({
             {children}
           </Box>
         ) : (
-            <>{ children }</>
+          <>{children}</>
         )}
         {/* Avartar partner */}
         {!isCurrentUser && (
@@ -110,7 +117,6 @@ const MessageLayout = ({
             sx={{
               display: "flex",
               alignItems: "center",
-              
             }}
           >
             {!isCurrentUser && (

@@ -83,10 +83,13 @@ export default interface ResourceDictionary {
       repeat: string;
       duplicate: string;
     };
+    confirmDelete: string;
     createSuccess: string;
     createFailed: string;
     editBooking: string;
     updateSuccess: string;
     updateFailed: string;
+    deleteFailed: string;
+    deleteSuccess: string;
   };
 }

@@ -154,7 +154,13 @@ const SalesPage = () => {
   useFetchEmployeeOptions();
   return (
     <>
-      <FixedLayout>
+      <FixedLayout
+        maxHeight={920}
+        maxWidth={{
+          xs: 1120,
+          xl: 1450,
+        }}
+      >
         <SaleListAction />
         <TableLayout
           maxHeight={860}

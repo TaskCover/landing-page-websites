@@ -6,21 +6,23 @@ import useGetScreenMode from "hooks/useGetScreenMode";
 import RoomHeaderMobile from "./components/RoomHeaderMobile";
 import { useChat } from "store/chat/selectors";
 
-export const DrawerChatIgnore = ['forward', 'group-modal'];
+export const DrawerChatIgnore = ["forward", "group-modal"];
 const RoomDetails = () => {
   const { mobileMode, extraDesktopMode } = useGetScreenMode();
-  const { isOpenInfoChat, typeDrawerChat, onCloseDrawer } = useChat();
+  const { isOpenInfoChat, typeDrawerChat, onCloseDrawer, dataTransfer } =
+    useChat();
 
   return (
     <Box
       width="100%"
-      height="90vh"
+      height="94vh"
       display="flex"
       justifyContent="space-between"
       flexDirection="column"
     >
       {mobileMode ? <RoomHeaderMobile /> : <RoomHeader />}
       <Conversation
+        key={dataTransfer?._id}
         wrapperInputSx={{
           ...(isOpenInfoChat && !DrawerChatIgnore?.includes(typeDrawerChat)
             ? {

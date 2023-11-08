@@ -34,13 +34,12 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
     onUploadAndSendFile,
     isChatDesktop,
     isOpenInfoChat,
-    typeDrawerChat
+    typeDrawerChat,
   } = useChat();
   const { user } = useAuth();
 
   const { sendMessage } = useWSChat();
-  const { extraDesktopMode } =
-    useGetScreenMode();
+  const { extraDesktopMode } = useGetScreenMode();
 
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
@@ -65,9 +64,15 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
   const currentRoomType = useMemo(() => {
     return dataTransfer?.t ?? "d";
   }, [dataTransfer]);
-  
-  const account = useMemo(() => (convention?.find((item) => item._id === (isChatDesktop ? dataTransfer?._id : roomId))), [convention, dataTransfer?._id, isChatDesktop, roomId]);
-  
+
+  const account = useMemo(
+    () =>
+      convention?.find(
+        (item) => item._id === (isChatDesktop ? dataTransfer?._id : roomId),
+      ),
+    [convention, dataTransfer?._id, isChatDesktop, roomId],
+  );
+
   const getLastMessage = useCallback(
     async (page?: number, size?: number) => {
       if (currentRoomId?.length === 0) return;
@@ -94,14 +99,6 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
       type: dataTransfer?.t ?? "d",
     });
   }, [dataTransfer?.t, onGetUnReadMessages]);
-
-  const depsCallback = [
-    dataTransfer,
-    onAddSnackbar,
-    onGetLastMessages,
-    roomId,
-    t,
-  ];
 
   useEffect(() => {
     const countNew = stateSearchMessage?.offset
@@ -144,7 +141,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
     },
     [files, onUploadAndSendFile, sendMessage],
   );
-  
+
   return (
     <>
       <Messages
@@ -152,7 +149,7 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
         pageSize={pageSize}
         sessionId={user?.["username"]}
         isGroup={isGroup}
-        avatarPartner={account?.avatar ?? conversationInfo?.avatar  ?? undefined}
+        avatarPartner={account?.avatar ?? conversationInfo?.avatar ?? undefined}
         initialMessage={messageInfo}
         mediaListPreview={mediaListConversation}
         stateMessage={stateSendMessage}
@@ -164,16 +161,14 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
         }}
         ref={inputRef}
         {...(isChatDesktop && {
-            wrapperMessageSx: {
-              ...(isOpenInfoChat && !DrawerChatIgnore.includes(typeDrawerChat)
-                ? {
-                    width: `calc(100% - ${
-                      extraDesktopMode ? "424px" : "272px"
-                    })`,
-                  }
-                : {}),
-            },
-          })}
+          wrapperMessageSx: {
+            ...(isOpenInfoChat && !DrawerChatIgnore.includes(typeDrawerChat)
+              ? {
+                  width: `calc(100% - ${extraDesktopMode ? "424px" : "272px"})`,
+                }
+              : {}),
+          },
+        })}
       />
       <ChatInput
         isLoading={false}

@@ -18,7 +18,7 @@ import {
 } from "store/chat/type";
 import { DataStatus } from "constant/enums";
 import Skeleton from "@mui/material/Skeleton";
-import MessageLayout from "../messages/MessageLayout";
+import MessageLayout from "./MessageLayout";
 import MessageContent from "./MessageContent";
 import { formatDate, sleep } from "utils/index";
 import Typography from "@mui/material/Typography";
@@ -27,6 +27,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
 import { useChat } from "store/chat/selectors";
+import useGetLastChatting from "components/sn-chatting-room/hooks/useGetLastChatting";
 
 interface MessagesProps {
   sessionId: string;
@@ -80,7 +81,10 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   const [isBottomScrollMessage, setBottomScrollMessage] = useState(false);
   const commonChatBox = useTranslations(NS_CHAT_BOX);
   const { isDarkMode } = useTheme();
-  const { isChatDesktop } = useChat();
+  const { isChatDesktop, dataTransfer } = useChat();
+
+  const { getLastMessage } = useGetLastChatting();
+
   const pageRef = useRef(pageIndex);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
@@ -89,17 +93,33 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   const observer = useRef(
     new IntersectionObserver((entries) => {
       const first = entries[0];
+
       if (first.isIntersecting) {
         pageRef.current = pageRef.current + pageSize;
         scrollHeightRef.current = messagesContentRef.current?.scrollHeight || 0;
         const clientHeight =
           (messagesContentRef.current?.clientHeight || 0) + 50;
         if (scrollHeightRef.current > clientHeight) {
-          onRefetch(pageRef.current);
+          if (isChatDesktop) {
+            getLastMessage(pageRef.current, 10);
+          } else {
+            onRefetch(pageRef.current);
+          }
         }
       }
     }),
   );
+
+  const isScrolling = useMemo(() => {
+    if (!messagesContentRef?.current) return false;
+
+    return (
+      messagesContentRef?.current?.scrollHeight >
+        messagesContentRef?.current?.clientHeight ||
+      messagesContentRef?.current?.scrollWidth >
+        messagesContentRef?.current?.clientWidth
+    );
+  }, []);
 
   const getTimeStamp = (time: string | Date) => {
     const date = new Date(time);
@@ -182,6 +202,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     messagesContentRef,
     initScrollIntoView,
     statusLoadMessage,
+    dataTransfer,
   ]);
 
   useEffect(() => {
@@ -190,48 +211,49 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
     if (currentElement) {
       currentObserver.observe(currentElement);
     }
+
     return () => {
       if (currentElement) {
         currentObserver.unobserve(currentElement);
       }
     };
-  }, [firstElement, messagesContentRef]);
+  }, [firstElement, isChatDesktop, messagesContentRef]);
 
   const renderMessage = (message: MessageInfo) => {
     let msg = "";
     switch (message?.t) {
       case "au":
         msg = commonChatBox("chatBox.group.add", {
-          user1: message?.u?.username,
+          user1: message?.u?.name,
           user2: message?.msg,
           time: getTimeStamp(message?.ts ?? ""),
         });
         break;
       case "ru":
         msg = commonChatBox("chatBox.group.remove", {
-          user1: message?.u?.username,
+          user1: message?.u?.name,
           user2: message?.msg,
           time: getTimeStamp(message?.ts ?? ""),
         });
         break;
       case "subscription-role-added":
         msg = commonChatBox("chatBox.group.lead_trans", {
-          user1: message?.u?.username,
+          user1: message?.u?.name,
           user2: message?.msg,
           time: getTimeStamp(message?.ts ?? ""),
         });
         break;
       case "subscription-role-removed":
         msg = commonChatBox("chatBox.group.lead_remove", {
-          user1: message?.u?.username,
+          user1: message?.u?.name,
           user2: message?.msg,
           time: getTimeStamp(message?.ts ?? ""),
         });
         break;
       case "r":
         msg = commonChatBox("chatBox.group.rename", {
-          user1: message?.u?.username,
-          name: message?.msg,
+          user1: message?.u?.name,
+          name: message?.msg?.replaceAll("_", " "),
           time: getTimeStamp(message?.ts ?? ""),
         });
         break;
@@ -249,12 +271,18 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
         }}
         sx={{
           display: "flex",
-          gap: "0.5rem",
           flexDirection: "column",
-          overflow: "auto",
-          ...(messages.length < 5 && { justifyContent: "flex-end" }),
+          gap: "0.5rem",
+          overflowY: "scroll",
           height: "100vh",
 
+          ...(messages.length < 5
+            ? {
+                justifyContent: "flex-end",
+              }
+            : {
+                flex: "1 1 auto",
+              }),
           padding: "1rem",
           ...(!!wrapperMessageSx
             ? { ...wrapperMessageSx }

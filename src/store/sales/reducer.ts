@@ -222,14 +222,18 @@ const salesSlice = createSlice({
     });
     builder.addCase(updateDeal.fulfilled, (state, action) => {
       if (state.saleDetail) {
+        state.saleDetail.probability = action.payload.probability;
+        state.saleDetail.status = action.payload.status;
         state.saleDetail.members = action.payload.members;
+        state.saleDetail.start_date = action.payload.start_date;
+        // state.saleDetail.todo_list = action.payload.todo_list;
       }
-      const index = state.sales.findIndex(
-        (item) => item.id === action.payload.id,
-      );
-      if (index !== -1) {
-        state.sales[index] = Object.assign(state.sales[index], action.payload);
-      }
+      // const index = state.sales.findIndex(
+      //   (item) => item.id === action.payload.id,
+      // );
+      // if (index !== -1) {
+      //   state.sales[index] = Object.assign(state.sales[index], action.payload);
+      // }
     });
     builder.addCase(updateDeal.rejected, (state, action) => {
       state.saleDetailError = action.error.message ?? AN_ERROR_TRY_AGAIN;
@@ -256,7 +260,7 @@ const salesSlice = createSlice({
       }
     });
     builder.addCase(createTodo.rejected, (state, action) => {
-      state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+      // state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
     });
     builder.addCase(updateTodo.fulfilled, (state, action) => {
       if (state.saleDetail) {
@@ -308,7 +312,7 @@ const salesSlice = createSlice({
       state.servicesError = action.error.message ?? AN_ERROR_TRY_AGAIN;
     });
     builder.addCase(updateServiceSection.fulfilled, (state, action) => {
-      state.serviceSection = action.payload.service;
+      // state.serviceSection = action.payload.service;
       state.servicesStatus = DataStatus.SUCCEEDED;
     });
     builder.addCase(updateServiceSection.rejected, (state, action) => {

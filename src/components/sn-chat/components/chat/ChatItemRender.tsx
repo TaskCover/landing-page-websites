@@ -123,9 +123,9 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
           fontWeight={isUnReadMessage ? 700 : 600}
           fontSize="14px"
           lineHeight="18px"
-          color={isDarkMode? "white" : "black"}
+          color={isDarkMode ? "white" : "black"}
         >
-          {isGroup ? name?.replaceAll('_', ' ') : name}
+          {isGroup ? name?.replaceAll("_", " ") : name}
         </Typography>
         <Typography
           ref={lastMessageRef}
@@ -209,10 +209,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
             border: "2px solid #ffffff",
             backgroundColor: "#55C000",
             borderRadius: "50%",
-            visibility:
-              isDirectMessage && statusPartner === "online"
-                ? "visible"
-                : "hidden",
+            visibility: statusPartner === "online" ? "visible" : "hidden",
           },
         }}
       >

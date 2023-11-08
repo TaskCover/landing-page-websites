@@ -4,7 +4,7 @@ import Avatar from "components/Avatar";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import PlusIcon from "icons/PlusIcon";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { formatNumber } from "utils/index";
 import { isEmpty, includes } from "lodash";
 import { useTranslations } from "next-intl";
@@ -14,6 +14,9 @@ import {
   useCalculateDetail,
   useGetTotalScheduleTime,
 } from "../hooks/useCalculateDetail";
+import { useGetTimeOffOptions } from "components/sn-sales/hooks/useGetTimeOffOptions";
+import { useProject, useProjects } from "store/project/selectors";
+import { useAuth } from "store/app/selectors";
 
 interface IResourceLabelProps {
   resource: ResourceApi;
@@ -22,6 +25,7 @@ interface IResourceLabelProps {
   selectedResource: string[];
   totalhour: number;
   isLastItem: boolean;
+  isMybooking?: boolean;
   setParentResource: (value: string) => void;
   handleCollapseToggle: (id: string) => void;
 }
@@ -38,24 +42,62 @@ const ResourceLabel = ({
   const {
     name,
     company,
+    isMybooking,
     type,
     fullname,
     position,
     eventType,
     note,
+    project,
+    user_id,
     bookings: parentBookings,
-  } = resource.extendedProps;
+  } = resource._resource.extendedProps;
+
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const isActive = includes(selectedResource, resource._resource.id);
   const { totalLeftToSchedule } = useGetTotalScheduleTime();
+  const { timeOffOptions } = useGetTimeOffOptions();
+  const { user } = useAuth();
+  const { onGetProject, item: projectDetail } = useProject();
   const handleOpenCreate = () => {
     setIsOpenCreate(true);
-    setParentResource(resource._resource.parentId || resource._resource.id);
+    setParentResource(
+      resource._resource.extendedProps.user_id || resource._resource.id,
+    );
   };
+
+  const timeOffType = useMemo(() => {
+    if (eventType === RESOURCE_EVENT_TYPE.TIME_OF_BOOKING) {
+      return timeOffOptions.find(
+        (item) => resource._resource.extendedProps.time_off_type === item.value,
+      )?.label;
+    }
+    return "";
+  }, [timeOffOptions]);
 
   const schedulePerLeft =
     (totalhour / totalLeftToSchedule[resource._resource.id]) * 100;
+
+  const ownerAvatar = user?.avatar?.link;
+
+  const avatarUrl = useMemo(() => {
+    if (eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING) {
+      return projectDetail?.owner?.avatar?.link;
+    }
+    if (user_id === user?.id || isMybooking) {
+      return ownerAvatar;
+    }
+    // TODO: return other user avt
+    return;
+  }, [projectDetail, project?.id, user]);
+
+  useEffect(() => {
+    if (project?.id) {
+      onGetProject(project?.id);
+    }
+    `  `;
+  }, [project?.id]);
 
   if (type === "step") {
     return (
@@ -82,17 +124,19 @@ const ResourceLabel = ({
             columnGap: 1,
           }}
         >
-          <Avatar size={36} />
+          <Avatar src={avatarUrl} size={36} />
           <Stack direction={"column"}>
             <Typography sx={{ fontSize: 14, lineBreak: "auto", width: 1 }}>
-              {eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING ? name : note}
+              {eventType === RESOURCE_EVENT_TYPE.PROJECT_BOOKING
+                ? name
+                : timeOffType}
             </Typography>
             <Typography sx={{ fontSize: 12, lineBreak: "auto", width: 1 }}>
               {position?.name}
             </Typography>
           </Stack>
         </Grid>
-        {isLastItem && (
+        {/* {isLastItem && (
           <Button
             variant="text"
             startIcon={<PlusIcon />}
@@ -104,13 +148,20 @@ const ResourceLabel = ({
           >
             {resourceT("schedule.action.addBooking")}
           </Button>
-        )}
+        )} */}
         <Grid item xs={5} />
       </Grid>
     );
   }
   return (
-    <Grid container>
+    <Grid
+      container
+      sx={{
+        "&:hover": {
+          background: "#E1F0FFB2",
+        },
+      }}
+    >
       <Grid
         item
         xs={12}
@@ -118,11 +169,10 @@ const ResourceLabel = ({
           width: 1,
           py: 2,
           cursor: "pointer",
-          "&:hover": {
-            background: "#E1F0FFB2",
-          },
         }}
-        onClick={() => handleCollapseToggle(resource._resource.id)}
+        onClick={() => {
+          handleCollapseToggle(resource._resource.id);
+        }}
       >
         <Grid
           container
@@ -148,7 +198,7 @@ const ResourceLabel = ({
                 xs: 1,
               }}
             >
-              <Avatar size={32} />
+              <Avatar size={32} src={avatarUrl} />
               <Box>
                 <Typography sx={{ fontSize: 14 }}>{fullname}</Typography>
                 <Typography sx={{ color: "#666666", fontSize: 14 }}>
@@ -202,19 +252,22 @@ const ResourceLabel = ({
             </Typography>
           </Grid>
         </Grid>
-        {parentBookings?.length === 0 && (
-          <Button
-            variant="text"
-            startIcon={<PlusIcon />}
-            sx={{
-              color: "success.main",
-            }}
-            // startIcon={<AddIcon />}
-            onClick={() => handleOpenCreate()}
-          >
-            {resourceT("schedule.action.addBooking")}
-          </Button>
-        )}
+
+        <Button
+          variant="text"
+          sx={{
+            display:
+              !isActive || (!isActive && parentBookings?.length !== 0)
+                ? "none"
+                : "flex",
+            mt: 2,
+            color: "success.main",
+          }}
+          startIcon={<PlusIcon />}
+          onClick={() => handleOpenCreate()}
+        >
+          {resourceT("schedule.action.addBooking")}
+        </Button>
       </Grid>
     </Grid>
   );
