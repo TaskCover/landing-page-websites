@@ -6,21 +6,19 @@ on:
       - dev
 
 jobs:
-  deploy:
+  lintTest:
+    name: Lint
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Deploy project nextjs
-        env:
-          SERVERID: ${{ vars.SERVERID }}
-          PASS: ${{vars.PASS}}
-          GIT_PASS: ${{vars.GIT_PASS}}
+      - name: Install Dependencies
         run: |
-          sudo apt-get install -y openssh-client
-          sudo apt-get install sshpass
-          echo "Deploying ..."
-          sshpass -p $PASS ssh -o StrictHostKeyChecking=no root@$SERVERID "cd ../saas-web-app/ && git pull origin dev && npm install && npm run build && pm2 restart saas-web-app"
-          echo "All Done !!!"
+          echo "Running Installing Dependencies ..."
+          npm install
+      - name: Run Linting
+        run: |
+          echo "Running Linting tests ..."
+          npm run lint
+        env:
+          CI: true
