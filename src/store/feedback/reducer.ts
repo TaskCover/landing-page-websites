@@ -48,10 +48,8 @@ const feedbackSlice = createSlice({
         state.feedbacksStatus = DataStatus.SUCCEEDED;
         const sortedData = payload.data?.data?.sort((a, b) => {
           // Sử dụng toán tử so sánh để so sánh theo thời gian tạo mới nhất
-          const timestampA = new Date(a.created_time).getTime();
-          console.log(timestampA);
+          const timestampA = new Date(a.created_time).getTime();;
           const timestampB = new Date(b.created_time).getTime();
-          console.log(timestampB);
           return timestampB - timestampA;
         });
         state.feedbacks = sortedData;
