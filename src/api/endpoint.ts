@@ -97,7 +97,7 @@ export const Endpoint = {
  DETAIL_DOCS: '/docs/detail/',
  HISTORY_DOCS: '/docs/history/{id}',
  ADD_PERM_DOCS: '/docs/add-perm/',
- PERM_DOCS: '/docs/perm/'
+ PERM_DOCS: '/docs/perm/',
 
   //feedback
   FEEDBACK :"/feedback",
