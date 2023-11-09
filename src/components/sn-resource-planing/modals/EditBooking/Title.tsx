@@ -17,6 +17,8 @@ import { useBookingAll } from "store/resourcePlanning/selector";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnackbar } from "store/app/selectors";
+import dayjs from "dayjs";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 const Title = ({
   bookingId,
@@ -28,8 +30,13 @@ const Title = ({
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
-  const { handleSplit, handleDelete, handleDuplicate, isLoading } =
-    useEditAction();
+  const {
+    handleSplit,
+    handleDelete,
+    handleDuplicate,
+    isLoading,
+    handleRepeat,
+  } = useEditAction();
   const { bookingAll } = useBookingAll();
   const [perUnit, setPerUnit] = useState(1);
   const [isConfirmDelete, setIsConfirmDelete] = useState(false);
@@ -49,6 +56,8 @@ const Title = ({
   const {
     control,
     handleSubmit,
+    watch,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -64,6 +73,7 @@ const Title = ({
       }),
     ),
   });
+
   const onHandleSplit = async (e) => {
     e.stopPropagation();
     await handleSplit(bookingId, bookingEvent).finally(() => {
@@ -86,11 +96,18 @@ const Title = ({
     });
   };
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async () => {
+    if (errors) return;
+
+    const time = getValues("time");
+    const perUnit = getValues("perUnit");
+    const unit = getValues("unit");
+
+    handleRepeat(time, perUnit, unit, bookingEvent).finally(() => {
+      onClose();
+    });
   };
 
-  console.log(errors);
   return (
     <Stack>
       <Text
@@ -179,6 +196,7 @@ const Title = ({
           <Menu
             anchorEl={document.getElementById("repeat-button")}
             open={isOpen}
+            onClose={() => setIsOpen(false)}
             MenuListProps={{
               "aria-labelledby": "basic-button",
             }}
@@ -191,7 +209,8 @@ const Title = ({
             <Stack
               direction="row"
               sx={{
-                p: 3,
+                px: 3,
+                py: 1,
               }}
               justifyContent="start"
               alignItems="center"
@@ -219,7 +238,7 @@ const Title = ({
                   <Select
                     {...field}
                     sx={{
-                      width: "100px",
+                      width: "120px",
                       textAlign: "center",
                     }}
                     options={[
@@ -236,8 +255,15 @@ const Title = ({
                 )}
               />
             </Stack>
-            <Stack>
-              <Text>{resourceT("form.repeatTime")}</Text>
+            <Stack
+              direction="row"
+              px={3}
+              py={1}
+              justifyContent="start"
+              alignItems="center"
+              gap={1}
+            >
+              <Text>{resourceT("form.repeatTimes")}</Text>
               <Controller
                 name="time"
                 control={control}
@@ -252,14 +278,24 @@ const Title = ({
                   />
                 )}
               />
+              <Text>
+                {resourceT("form.time", {
+                  count: watch("time"),
+                })}
+              </Text>
             </Stack>
             <Button
               variant="contained"
               color="primary"
               type="submit"
+              pending={isLoading.repeat}
+              sx={{
+                mx: 3,
+                my: 1,
+              }}
               onClick={(e) => {
-                e.stopPropagation();
-                handleSubmit(onSubmit);
+                console.log("onSubmit");
+                onSubmit();
               }}
             >
               Create Booking

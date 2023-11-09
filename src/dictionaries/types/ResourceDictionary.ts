@@ -85,6 +85,7 @@ export default interface ResourceDictionary {
     };
     week: string;
     time: string;
+    month: string;
     repeatTimes: string;
     confirmDelete: string;
     createSuccess: string;

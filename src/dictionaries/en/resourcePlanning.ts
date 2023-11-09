@@ -86,6 +86,7 @@ export const ResourcePlanningLang: ResourceDictionary = {
     week: "Weeks",
     time: "Times",
     repeatTimes: "Repeat for",
+    month: "Months",
     confirmDelete: "Are you sure to delete?",
     timeOffCategory: "Time off category",
     createSuccess: "Create booking successfully",

@@ -132,14 +132,42 @@ export const useEditAction = () => {
     }
   };
 
-  const handleRepeat = (id, time, week, data) => {
-    while (time--) {
-      const newDate = dayjs(week).add(time, "week").toDate();
-      createBooking({
-        ...data,
-        start_date: dayjs(newDate).format("YYYY-MM-DD"),
-        end_date: dayjs(newDate).format("YYYY-MM-DD"),
-      });
+  const handleRepeat = async (times, week, unit, data) => {
+    setIsLoading({
+      ...isLoading,
+      repeat: true,
+    });
+    try {
+      const promise = [] as Promise<void>[];
+      for (let i = 1; i <= times; i++) {
+        const newStartDate = dayjs(data.start_date)
+          .add(i * week, unit)
+          .toDate();
+        const newEndDate = dayjs(data.end_date)
+          .add(i * week, unit)
+          .toDate();
+
+        promise.push(
+          createBooking({
+            ...data,
+            start_date: dayjs(newStartDate).format("YYYY-MM-DD"),
+            end_date: dayjs(newEndDate).format("YYYY-MM-DD"),
+          }),
+        );
+      }
+      await Promise.all(promise)
+        .then(() => {
+          setIsLoading({
+            ...isLoading,
+            repeat: false,
+          });
+          onAddSnackbar(resourceT("form.repeatSuccess"), "success");
+        })
+        .catch((e) => {
+          throw e;
+        });
+    } catch (e) {
+      onAddSnackbar(commonT("error.anErrorTryAgain"), "error");
     }
   };
   return {
