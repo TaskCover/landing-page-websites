@@ -174,6 +174,10 @@ const ChatForward: FC<Props> = (props) => {
                 fontWeight: 600,
                 lineHeight: "1rem",
                 padding: "1rem",
+                background: isDarkMode ? "#1e1e1e" : "var(--gray-0, #F7F7FD)",
+                width: '92%',
+                paddingBottom: '5px',
+                paddingTop: '3px',
               }}
             >
               Message
@@ -192,8 +196,12 @@ const ChatForward: FC<Props> = (props) => {
                   fontWeight: 400,
                   lineHeight: "1rem",
                   position: "absolute",
-                  left: 14,
-                  top: 10,
+                  left: 12,
+                  top: 0,
+                  background: isDarkMode ? "#1e1e1e" : "var(--gray-0, #F7F7FD)",
+                  width: '92%',
+                  paddingBottom: '5px',
+                  paddingTop: '5px',
                 }}
               >
                 Message
@@ -201,17 +209,16 @@ const ChatForward: FC<Props> = (props) => {
             ) : null}
             <div
               style={{
-                resize: "vertical",
                 width: "100%",
                 padding: isChatDesktop ? "14px" : "28px 14px 14px",
                 borderRadius: "0.25rem",
                 background: isDarkMode ? "#1e1e1e" : "var(--gray-0, #F7F7FD)",
                 border: "none",
-                // fontFamily: "Open Sans",
                 fontSize: "16px",
                 fontStyle: "normal",
                 fontWeight: 400,
                 lineHeight: "1.375rem",
+                paddingTop: '10px',
                 ...(isChatDesktop
                   ? {
                       display: "flex",
