@@ -107,7 +107,7 @@ const SelectTypeProject = (props: SelectTypeProjectProps) => {
             flexWrap="wrap"
             marginTop='0 !important'
           >
-            {selectedValue.value && <DisplayItem {...selectedValue} />}
+            {selectedValue?.value && <DisplayItem {...selectedValue} />}
           </Stack>
         </Stack>
 
@@ -159,7 +159,7 @@ const SelectTypeProject = (props: SelectTypeProjectProps) => {
           />
           <MenuList component={Stack} spacing={2}>
             {filterOptions.map((item, index) => {
-              const isChecked = filterOptions.some((item) => item.value === selectedValue.value);
+              const isChecked = filterOptions.some((item) => item.value === selectedValue?.value);
               return (
                 <TypeProjectItem
                   key={item.value}
