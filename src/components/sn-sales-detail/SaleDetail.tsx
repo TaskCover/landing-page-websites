@@ -81,11 +81,13 @@ const SalesDetail = () => {
 
   return (
     <FixedLayout
-      maxHeight={1020}
-      maxWidth={{
-        xs: 1120,
-        xl: 1450,
-      }}
+      // maxHeight={1020}
+      // maxWidth={{
+      //   xs: 1120,
+      //   xl: 1450,
+      // }}
+      maxHeight="100vh - 4rem"
+      maxWidth="100vw - 160px"
       sx={{
         overflowY: "hidden",
       }}

@@ -222,6 +222,7 @@ const ServiceTable = ({
                     xs: isEdit ? "100%" : 1320,
                     overflow: "visible",
                   },
+                  width: "100%",
                   [`&.MuiTableCell-root :first-child`]: {
                     pl: 4,
                   },

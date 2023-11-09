@@ -49,7 +49,7 @@ const AttachmentPreview = (props: AttachmentPreviewProps) => {
 
   const extension = useMemo(() => {
     const arr = name.split(".");
-    return arr[arr.length - 1];
+    return arr[arr.length - 1].toLowerCase();
   }, [name]);
 
   const fileIcon = useMemo(() => {
