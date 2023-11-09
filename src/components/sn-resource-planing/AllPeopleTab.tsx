@@ -10,7 +10,7 @@ import { DEFAULT_BOOKING_ALL_FILTER, TAB_TYPE } from "./helper";
 import dayjs from "dayjs";
 import { isEmpty } from "lodash";
 import { Box } from "@mui/system";
-import { Grid, Stack, Typography } from "@mui/material";
+import { CircularProgress, Grid, Stack, Typography } from "@mui/material";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import interactionPlugin from "@fullcalendar/interaction";
 import { ResourceInput } from "@fullcalendar/resource";
@@ -55,7 +55,8 @@ const AllPeopleTab = () => {
   );
   prevFilters.current = filters;
 
-  const { bookingAll, bookingAllFilter, setBookingAllFilter } = useBookingAll();
+  const { bookingAll, bookingAllFilter, setBookingAllFilter, isLoading } =
+    useBookingAll();
   const { selectedDate, updateDate } = useResourceDate();
   const [resources, setResources] = React.useState<IBookingListItem[]>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
@@ -92,11 +93,11 @@ const AllPeopleTab = () => {
   useFetchOptions();
   useFetchBookingAll();
 
-  // useEffect(() => {
-  //   if (filters) {
-  //     setBookingAllFilter(filters);
-  //   }
-  // }, [filters]);
+  useEffect(() => {
+    if (filters) {
+      setBookingAllFilter(filters);
+    }
+  }, [filters]);
 
   React.useEffect(() => {
     if (bookingAll) setResources(bookingAll);
@@ -198,6 +199,7 @@ const AllPeopleTab = () => {
                 name: fullname,
                 allocation,
                 user_id: eventId,
+                project: project,
                 allocation_type,
                 total_hour,
                 avatarUrl: project?.avatar?.link,
@@ -250,6 +252,7 @@ const AllPeopleTab = () => {
           allocation: booking?.allocation,
           allocation_type: booking?.allocation_type,
           total_hour: booking?.total_hour,
+          project: booking?.project,
           time_off_type: booking?.time_off_type,
           user_id: booking?.user_id,
           avatarUrl: booking.project?.owner?.avatar?.link,
@@ -267,6 +270,7 @@ const AllPeopleTab = () => {
         position: {},
         time_off_type: undefined,
         saleId: "",
+        project: undefined,
         avatarUrl: "",
         user_id: resource.id,
         type: "end",

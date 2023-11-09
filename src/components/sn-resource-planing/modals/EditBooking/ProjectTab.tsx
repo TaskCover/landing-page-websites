@@ -150,6 +150,21 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 required
                 options={salesOptions as IOptionStructure[]}
                 label={resourceT("form.services")}
+                sx={{
+                  overflow: "hidden",
+                  "& .Muibox-root .MuiBox-root": {
+                    overflow: "hidden",
+                    justifyContent: "space-between",
+                    maxWidth: "90%",
+                  },
+                  "& .MuiStack-root": {
+                    width: "90%",
+                  },
+                  "& .MuiSelect-select": {
+                    pr: "16px!important",
+                  },
+                }}
+               
               />
             )}
           />

@@ -4,7 +4,7 @@ import Avatar from "components/Avatar";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import PlusIcon from "icons/PlusIcon";
-import React, { useEffect, useMemo } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import { formatNumber } from "utils/index";
 import { isEmpty, includes } from "lodash";
 import { useTranslations } from "next-intl";
@@ -17,6 +17,8 @@ import {
 import { useGetTimeOffOptions } from "components/sn-sales/hooks/useGetTimeOffOptions";
 import { useProject, useProjects } from "store/project/selectors";
 import { useAuth } from "store/app/selectors";
+import { useEmployees } from "store/company/selectors";
+import { useFetchDetail } from "../hooks/useFetchDetail";
 
 interface IResourceLabelProps {
   resource: ResourceApi;
@@ -35,6 +37,7 @@ const ResourceLabel = ({
   setIsOpenCreate,
   setParentResource,
   isLastItem,
+  isMybooking,
   handleCollapseToggle,
   totalhour,
   selectedResource,
@@ -42,7 +45,6 @@ const ResourceLabel = ({
   const {
     name,
     company,
-    isMybooking,
     type,
     fullname,
     position,
@@ -59,7 +61,7 @@ const ResourceLabel = ({
   const { totalLeftToSchedule } = useGetTotalScheduleTime();
   const { timeOffOptions } = useGetTimeOffOptions();
   const { user } = useAuth();
-  const { onGetProject, item: projectDetail } = useProject();
+  const { projectDetail, userDetail } = useFetchDetail(project?.id, user_id);
   const handleOpenCreate = () => {
     setIsOpenCreate(true);
     setParentResource(
@@ -88,16 +90,8 @@ const ResourceLabel = ({
     if (user_id === user?.id || isMybooking) {
       return ownerAvatar;
     }
-    // TODO: return other user avt
-    return;
-  }, [projectDetail, project?.id, user]);
-
-  useEffect(() => {
-    if (project?.id) {
-      onGetProject(project?.id);
-    }
-    `  `;
-  }, [project?.id]);
+    return userDetail?.avatar?.link;
+  }, [projectDetail, project?.id, user, userDetail]);
 
   if (type === "step") {
     return (
@@ -278,4 +272,4 @@ const textHeadStyle = {
   fontWeight: 400,
 };
 
-export default ResourceLabel;
+export default memo(ResourceLabel);

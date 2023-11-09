@@ -146,6 +146,7 @@ export const useEditAction = () => {
     handleDelete,
     handleDuplicate,
     handleSplit,
+    handleRepeat,
     isLoading,
   };
 };

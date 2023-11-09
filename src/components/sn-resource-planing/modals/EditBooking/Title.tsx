@@ -1,9 +1,9 @@
 import { CircularProgress, Menu, MenuItem, Stack } from "@mui/material";
 import ConfirmDialog from "components/ConfirmDialog";
 import Loading from "components/Loading";
-import { Button, Text, Tooltip } from "components/shared";
+import { Button, Input, Select, Text, Tooltip } from "components/shared";
 import { useEditAction } from "components/sn-resource-planing/hooks/useBookingAll";
-import { RESOURCE_EVENT_TYPE } from "constant/enums";
+import * as yup from "yup";
 import { NS_COMMON, NS_RESOURCE_PLANNING } from "constant/index";
 import DuplicateIcon from "icons/DuplicateIcon";
 import RepeatIcon from "icons/RepeatIcon";
@@ -14,6 +14,9 @@ import { useTranslations } from "next-intl";
 import React, { useMemo, useState } from "react";
 import { IBookingItem } from "store/resourcePlanning/reducer";
 import { useBookingAll } from "store/resourcePlanning/selector";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useSnackbar } from "store/app/selectors";
 
 const Title = ({
   bookingId,
@@ -24,12 +27,14 @@ const Title = ({
 }) => {
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const commonT = useTranslations(NS_COMMON);
+  const { onAddSnackbar } = useSnackbar();
   const { handleSplit, handleDelete, handleDuplicate, isLoading } =
     useEditAction();
   const { bookingAll } = useBookingAll();
+  const [perUnit, setPerUnit] = useState(1);
   const [isConfirmDelete, setIsConfirmDelete] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
+  const [isOpenDropdown, setIsOpenDropdown] = useState(false);
   const bookingEvent: IBookingItem = useMemo(() => {
     const booking =
       bookingAll
@@ -41,6 +46,24 @@ const Title = ({
     return booking;
   }, [JSON.stringify(bookingAll), bookingId]);
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      perUnit: 1,
+      unit: "week",
+      time: 1,
+    },
+    resolver: yupResolver(
+      yup.object().shape({
+        perUnit: yup.number().min(0).max(40),
+        unit: yup.string(),
+        time: yup.number().min(0).max(40),
+      }),
+    ),
+  });
   const onHandleSplit = async (e) => {
     e.stopPropagation();
     await handleSplit(bookingId, bookingEvent).finally(() => {
@@ -63,6 +86,11 @@ const Title = ({
     });
   };
 
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  console.log(errors);
   return (
     <Stack>
       <Text
@@ -89,6 +117,7 @@ const Title = ({
                 display: "none",
               },
             }}
+            disabled={isLoading.split}
             size="extraSmall"
             sx={{
               maxWidth: "fit-content",
@@ -118,6 +147,7 @@ const Title = ({
           <Button
             id="repeat-button"
             variant="text"
+            disabled={isLoading.repeat}
             TouchRippleProps={{
               style: {
                 display: "none",
@@ -145,6 +175,97 @@ const Title = ({
             )}
           </Button>
         </Tooltip>
+        <Dropdown open={isOpenDropdown}>
+          <Menu
+            anchorEl={document.getElementById("repeat-button")}
+            open={isOpen}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+            sx={{
+              "& > .MuiButtonBase-root:hover": {
+                backgroundColor: "transparent",
+              },
+            }}
+          >
+            <Stack
+              direction="row"
+              sx={{
+                p: 3,
+              }}
+              justifyContent="start"
+              alignItems="center"
+              gap={1}
+            >
+              <Text>{resourceT("form.repeatTimes")}</Text>
+              <Controller
+                name="perUnit"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    type="number"
+                    sx={{
+                      width: "100px",
+                      textAlign: "center",
+                    }}
+                  />
+                )}
+              />
+              <Controller
+                name="unit"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    sx={{
+                      width: "100px",
+                      textAlign: "center",
+                    }}
+                    options={[
+                      {
+                        label: resourceT("form.week"),
+                        value: "week",
+                      },
+                      {
+                        label: resourceT("form.month"),
+                        value: "month",
+                      },
+                    ]}
+                  />
+                )}
+              />
+            </Stack>
+            <Stack>
+              <Text>{resourceT("form.repeatTime")}</Text>
+              <Controller
+                name="time"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    type="number"
+                    sx={{
+                      width: "100px",
+                      textAlign: "center",
+                    }}
+                  />
+                )}
+              />
+            </Stack>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSubmit(onSubmit);
+              }}
+            >
+              Create Booking
+            </Button>
+          </Menu>
+        </Dropdown>
 
         <Tooltip
           title={resourceT("form.editActions.duplicate")}
@@ -158,6 +279,7 @@ const Title = ({
                 display: "none",
               },
             }}
+            disabled={isLoading.duplicate}
             onClick={(e) => onHandleDuplicate(true)}
             size="extraSmall"
             sx={{
