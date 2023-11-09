@@ -12,6 +12,7 @@ import { SaleState, salesReducer } from "./sales/reducer";
 import { resourcePlanningReducer } from "./resourcePlanning/reducer";
 import { TagState, tagsReducer } from "./tags/reducer";
 import  docReducer,  { IDocs } from "./docs/reducer";
+import { feedbackReducer } from "./feedback/reducer";
 
 export interface State {
   app: AppState;
@@ -38,6 +39,8 @@ export const store = configureStore({
     sales: salesReducer,
     doc: docReducer,
     resourcePlanning: resourcePlanningReducer,
+    //feedback
+    feedback : feedbackReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

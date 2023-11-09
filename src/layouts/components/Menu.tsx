@@ -20,6 +20,7 @@ import {
   CHATTING_ROOM_PATH,
   SALES_LIST_PATH,
   DOCS_PATH,
+  FEEDBACK_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -38,6 +39,7 @@ import MenuResourcePlaningIcon from "icons/MenuResourcePlaningIcon";
 import MenuChatIcon from "icons/MenuChatIcon";
 import CardReceive from "icons/CardReceive";
 import MenuDocsIcon from "icons/MenuDocsIcon";
+import FeedbackIcon from "icons/FeedbackIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -277,14 +279,27 @@ const DATA: MenuItemProps[] = [
     href: DOCS_PATH,
     icon: <MenuDocsIcon />,
     roles: [Permission.AM, Permission.ST],
-  }
+  },
+  // Feedback
+  {
+    label: "menu.feedback",
+    icon: <FeedbackIcon />,
+    subs: [
+      {
+        label: "menu.feedbackList",
+        href: FEEDBACK_PATH,
+        roles: [Permission.SA],
+      },
+    ],
+    roles: [Permission.SA],
+  },
 ];
 
 const checkIsActiveLink = (pathname: string, href?: string) => {
   return Boolean(
     pathname &&
-    href &&
-    (pathname === href ||
-      (href.length && href !== "/" && pathname.startsWith(href))),
+      href &&
+      (pathname === href ||
+        (href.length && href !== "/" && pathname.startsWith(href))),
   );
 };

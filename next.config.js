@@ -19,6 +19,7 @@ const nextConfig = {
     SALE_API_URL: process.env.SALE_API_URL,
     NEXT_APP_WS_URL: process.env.NEXT_APP_WS_URL,
     RESOURCE_API_URL: process.env.RESOURCE_API_URL,
+    FEEDBACK_API_URL : process.env.FEEDBACK_API_URL,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
