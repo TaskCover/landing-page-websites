@@ -191,12 +191,19 @@ const CustomInput = (props: CustomInputProps, ref) => {
           top={13}
           justifyContent={"center"}
           alignItems={"center"}
+          sx={{
+            "& .MuiStack-root": {
+              backgroundColor: disabled ? "gray.50" : "background.paper",
+            },
+            display: helperText ? "flex" : "none",
+            pointerEvents: "none",
+          }}
         >
           <Text
             variant="body2"
             color="grey.300"
             sx={{
-              backgroundColor: disabled ? "gray.50" : "Background.paper",
+              backgroundColor: disabled ? "gray.50" : "background.paper",
 
               padding: 1,
             }}

@@ -2,6 +2,7 @@ import { CellProps, TableLayout } from "components/Table";
 import { NS_COMMON, NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
 import React, {
+  memo,
   useCallback,
   useContext,
   useEffect,
@@ -130,7 +131,7 @@ const ServiceTable = ({
       });
     }
     return list;
-  }, [sectionColumns, isEdit]);
+  }, [JSON.stringify(sectionColumns), isEdit]);
 
   return (
     <Stack

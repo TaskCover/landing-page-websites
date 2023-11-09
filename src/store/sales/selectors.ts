@@ -255,13 +255,14 @@ export const useSalesTodo = () => {
         }),
       )
         .unwrap()
-        .then(() => {
+        .then((res) => {
           onAddSnackbar(
             commonT("notification.success", {
               label: commonT("form.add"),
             }),
             "success",
           );
+          return res;
         });
     },
     [dispatch],
