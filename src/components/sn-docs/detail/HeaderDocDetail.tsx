@@ -30,6 +30,7 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
     dispatch(changeTitle(e));
   };
   const { isSmSmaller } = useBreakpoint();
+
   return (
     <>
       <ModalShare

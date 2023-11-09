@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import PlusIcon from "icons/PlusIcon";
@@ -14,6 +15,15 @@ import { useDocs } from "store/docs/selectors";
 import NoneIcon from "icons/NoneIcon";
 import FilterSearchDocs from "./FilterSearchDocs/FilterSearchDocs";
 
+function convertStringToArray(inputString) {
+  let idArray = inputString.split(",");
+
+  let resultArray = idArray.map((id) => {
+    return { id: id, name: "" };
+  });
+
+  return resultArray;
+}
 const Actions = () => {
   const companyT = useTranslations(NS_COMPANY);
   const commonT = useTranslations(NS_COMMON);
@@ -23,15 +33,9 @@ const Actions = () => {
   const pathname = usePathname();
   const { push } = useRouter();
 
-  const [queries, setQueries] = useState<Params>({});
-
+  const [queries, setQueries] = useState<any>({});
   const grOptions = useMemo(
     () => Group_OPTIONS.map((item) => ({ ...item, label: docsT(item.label) })),
-    [companyT],
-  );
-
-  const filterOptions = useMemo(
-    () => Filter_Options.map((item) => ({ ...item, label: docsT(item.label) })),
     [companyT],
   );
 
@@ -40,12 +44,33 @@ const Actions = () => {
   };
 
   const onSearch = () => {
-    const path = getPath(pathname, queries);
+    let newQueries = {
+      ...queries,
+      page: 1,
+    };
+
+    if (queries?.user_id?.length > 0) {
+      const newListId = queries?.user_id?.map((person) => `${person.id}`);
+
+      newQueries = {
+        ...queries,
+        user_id: newListId.join(","),
+      };
+    }
+    const path = getPath(pathname, newQueries);
     push(path);
   };
 
   useEffect(() => {
-    setQueries(filters);
+    let newFilter = filters;
+
+    if (filters?.user_id) {
+      newFilter = {
+        ...filters,
+        user_id: convertStringToArray(filters?.user_id),
+      };
+    }
+    setQueries(newFilter);
   }, [filters]);
 
   return (

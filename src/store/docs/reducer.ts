@@ -77,7 +77,7 @@ export interface IDocs {
   docsStatus: DataStatus;
   docsPaging: Paging;
   docsError?: string;
-  docsFilters: Omit<unknown, "pageIndex" | "pageSize">;
+  docsFilters: any;
   title: string;
   docOptions: any[];
   docOptionsStatus: DataStatus;
@@ -239,8 +239,8 @@ const docSlice = createSlice({
         const prefixKey = action.meta.arg["concat"]
           ? "docOptions"
           : "docs";
-
         state[`${prefixKey}Status`] = DataStatus.LOADING;
+        state.docsFilters = getFiltersFromQueries(action.meta.arg);
         state[`${prefixKey}Filters`] = getFiltersFromQueries(action.meta.arg);
 
         if (action.meta.arg?.concat && action.meta.arg.pageIndex === 1) {

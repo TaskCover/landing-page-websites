@@ -25,7 +25,6 @@ const useDocs = () => {
   const { pageIndex, pageSize, totalDocs, totalPages } = useAppSelector(state => state.doc.docsPaging)
 
 
-
   const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
   const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
 
