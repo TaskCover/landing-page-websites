@@ -37,6 +37,9 @@ export const DOCS_PATH = "/documents";
 export const DOCS_DETAIL_PATH = "/documents/{id}";
 export const DOCS_CREATE_PATH = "/documents/create";
 
+// Feedback
+export const FEEDBACK_PATH = "/feedback";
+
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
   SIGNUP_PATH,
@@ -45,6 +48,8 @@ const AUTHORIZED_LOGGED_IN_PATHS = [
   RESET_PASSWORD_PATH,
   CHANGE_PASSWORD_PATH,
   ACCOUNT_INFO_PATH,
+  // Feedback
+  FEEDBACK_PATH
 ];
 
 export const AUTHORIZED_PATHS = {
@@ -70,6 +75,8 @@ export const AUTHORIZED_PATHS = {
     DOCS_DETAIL_PATH,
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
+    // Feedback
+    FEEDBACK_PATH
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -79,6 +86,8 @@ export const AUTHORIZED_PATHS = {
     COMPANY_DETAIL_PATH,
     STATEMENT_HISTORY_PATH,
     UPGRADE_ACCOUNT_PATH,
+    // Feedback
+    FEEDBACK_PATH
   ],
   [Permission.ST]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -99,6 +108,8 @@ export const AUTHORIZED_PATHS = {
     DOCS_DETAIL_PATH,
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
+    // Feedback
+    FEEDBACK_PATH
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };
