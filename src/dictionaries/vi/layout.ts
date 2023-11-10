@@ -33,5 +33,8 @@ export const LayoutLang: LayoutDictionary = {
     //feedback
     feedback: "Đánh giá",
     feedbackList: "Danh sách đánh giá",
+    blog:"Bài viết",
+    blogList:"Danh sách bài viết",
+    blogCategoryList:"Danh sách danh mục",
   },
 };

@@ -13,6 +13,8 @@ import { resourcePlanningReducer } from "./resourcePlanning/reducer";
 import { TagState, tagsReducer } from "./tags/reducer";
 import  docReducer,  { IDocs } from "./docs/reducer";
 import { feedbackReducer } from "./feedback/reducer";
+import { BlogState, blogReducer } from "./blog/reducer";
+import { categoryBlogReducer } from "./blog-category/reducer";
 
 export interface State {
   app: AppState;
@@ -23,7 +25,8 @@ export interface State {
   timeTracking: TimeTrackingState;
   tags: TagState;
   sales: SaleState;
-  docs: IDocs
+  docs: IDocs,
+  blogs :BlogState;
 }
 
 export const store = configureStore({
@@ -41,6 +44,8 @@ export const store = configureStore({
     resourcePlanning: resourcePlanningReducer,
     //feedback
     feedback : feedbackReducer,
+    blogs: blogReducer,
+    categoryBlogs : categoryBlogReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

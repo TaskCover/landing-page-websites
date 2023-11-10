@@ -31,5 +31,9 @@ export type LayoutDictionary = {
     //feedback
     feedback: string;
     feedbackList: string;
+    //blog
+    blog :string;
+    blogList:string;
+    blogCategoryList:string;
   };
 };
