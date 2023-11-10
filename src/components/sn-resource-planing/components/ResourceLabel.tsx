@@ -93,6 +93,10 @@ const ResourceLabel = ({
     return userDetail?.avatar?.link;
   }, [projectDetail, project?.id, user, userDetail]);
 
+  const isAddbutton = useMemo(() => {
+    return (isActive && parentBookings?.length === 0) || !isActive;
+  }, [isActive, JSON.stringify(parentBookings)]);
+
   if (type === "step") {
     return (
       <Grid
@@ -247,21 +251,20 @@ const ResourceLabel = ({
           </Grid>
         </Grid>
 
-        <Button
-          variant="text"
-          sx={{
-            display:
-              !isActive || (!isActive && parentBookings?.length !== 0)
-                ? "none"
-                : "flex",
-            mt: 2,
-            color: "success.main",
-          }}
-          startIcon={<PlusIcon />}
-          onClick={() => handleOpenCreate()}
-        >
-          {resourceT("schedule.action.addBooking")}
-        </Button>
+        {isAddbutton && (
+          <Button
+            variant="text"
+            sx={{
+              // display: isAddbutton ? "flex" : "none",
+              mt: 2,
+              color: "success.main",
+            }}
+            startIcon={<PlusIcon />}
+            onClick={() => handleOpenCreate()}
+          >
+            {resourceT("schedule.action.addBooking")}
+          </Button>
+        )}
       </Grid>
     </Grid>
   );

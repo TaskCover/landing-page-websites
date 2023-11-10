@@ -84,6 +84,8 @@ export default interface ResourceDictionary {
       duplicate: string;
     };
     week: string;
+    numberOf: string;
+    weekOrMonth: string;
     time: string;
     month: string;
     repeatTimes: string;

@@ -1,11 +1,8 @@
 "use client";
 
 import FullCalendar from "@fullcalendar/react";
-import React, { useCallback, useEffect, useMemo } from "react";
-import {
-  IBookingAllFitler,
-  updateBookingResource,
-} from "store/resourcePlanning/action";
+import React, { use, useCallback, useEffect, useMemo } from "react";
+import { IBookingAllFitler } from "store/resourcePlanning/action";
 import { DEFAULT_BOOKING_ALL_FILTER, TAB_TYPE } from "./helper";
 import dayjs from "dayjs";
 import { isEmpty } from "lodash";
@@ -13,7 +10,6 @@ import { Box } from "@mui/system";
 import { CircularProgress, Grid, Stack, Typography } from "@mui/material";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import interactionPlugin from "@fullcalendar/interaction";
-import { ResourceInput } from "@fullcalendar/resource";
 import TimeHeader from "./components/TimeHeader";
 import {
   useBookingAll,
@@ -33,9 +29,6 @@ import ResourceHeaderContent from "./components/ResourceHeaderContent";
 import SlotLabelContent from "./components/SlotLabelContent";
 import useTheme from "hooks/useTheme";
 import EditBooking from "./modals/EditBooking";
-import { RESOURCE_EVENT_TYPE } from "constant/enums";
-import { useGetTotalScheduleTime } from "./hooks/useCalculateDetail";
-import { TIME_OFF_TYPE } from "components/sn-sales/helpers";
 import PlusIcon from "icons/PlusIcon";
 import { Button } from "components/shared";
 
@@ -100,7 +93,10 @@ const AllPeopleTab = () => {
   }, [filters]);
 
   React.useEffect(() => {
-    if (bookingAll) setResources(bookingAll);
+    if (bookingAll) {
+      setResources(bookingAll);
+      setSelectedResource([...bookingAll?.map((item) => item.id)]);
+    }
   }, [bookingAll]);
 
   React.useEffect(() => {
@@ -259,23 +255,24 @@ const AllPeopleTab = () => {
           saleId: booking?.sale_id,
         })),
       };
-      resourceEvent.children.push({
-        id: `${resource.id}.end`,
-        name: "",
-        allocation: 0,
-        total_hour: 0,
-        allocation_type: "",
-        eventType: "",
-        note: "",
-        position: {},
-        time_off_type: undefined,
-        saleId: "",
-        project: undefined,
-        avatarUrl: "",
-        user_id: resource.id,
-        type: "end",
-      });
-
+      if (resourceEvent.children?.length !== 0) {
+        resourceEvent.children.push({
+          id: `${resource.id}.end`,
+          name: "",
+          allocation: 0,
+          total_hour: 0,
+          allocation_type: "",
+          eventType: "",
+          note: "",
+          position: {},
+          time_off_type: undefined,
+          saleId: "",
+          project: undefined,
+          avatarUrl: "",
+          user_id: resource.id,
+          type: "end",
+        });
+      }
       return resourceEvent;
     });
     return result;
@@ -378,8 +375,8 @@ const AllPeopleTab = () => {
           slotDuration={{
             days: 1,
           }}
-          resources={mappedResources as ResourceInput}
-          events={mappedEvents as ResourceInput}
+          resources={mappedResources}
+          events={mappedEvents}
           slotLabelContent={(arg) => {
             // Content label for each slot on calendar
             return <SlotLabelContent arg={arg} />;

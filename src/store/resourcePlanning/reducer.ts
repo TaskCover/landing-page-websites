@@ -85,6 +85,9 @@ export const resourcePlanningSlice = createSlice({
     setBookingAllFilter: (state, action) => {
       state.bookingAllFilter = action.payload;
     },
+    setMyBookingFilter: (state, action) => {
+      state.myBookingFilter = action.payload;
+    },
     setDatePicker: (state, action) => {
       state.datePicker = action.payload;
     },
@@ -144,5 +147,9 @@ export const resourcePlanningSlice = createSlice({
 });
 
 export const resourcePlanningReducer = resourcePlanningSlice.reducer;
-export const { setBookingAllFilter, setCurrentDate, setDatePicker } =
-  resourcePlanningSlice.actions;
+export const {
+  setBookingAllFilter,
+  setCurrentDate,
+  setDatePicker,
+  setMyBookingFilter,
+} = resourcePlanningSlice.actions;

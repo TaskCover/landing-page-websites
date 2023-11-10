@@ -17,8 +17,6 @@ import { useBookingAll } from "store/resourcePlanning/selector";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnackbar } from "store/app/selectors";
-import dayjs from "dayjs";
-import { ConstructionOutlined } from "@mui/icons-material";
 
 const Title = ({
   bookingId,
@@ -29,7 +27,6 @@ const Title = ({
 }) => {
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const commonT = useTranslations(NS_COMMON);
-  const { onAddSnackbar } = useSnackbar();
   const {
     handleSplit,
     handleDelete,
@@ -67,11 +64,35 @@ const Title = ({
     },
     resolver: yupResolver(
       yup.object().shape({
-        perUnit: yup.number().min(0).max(40),
+        perUnit: yup
+          .number()
+          .required(
+            commonT("form.error.required", {
+              name: resourceT("form.numberOf", {
+                type: "",
+              }),
+            }),
+          )
+          .min(
+            1,
+            commonT("form.error.minAndMax", {
+              name: resourceT("form.numberOf", {
+                type: "",
+              }),
+              min: 1,
+              max: 40,
+            }),
+          )
+          .max(40, commonT("form.error.minAndMax", { min: 1, max: 40 })),
         unit: yup.string(),
-        time: yup.number().min(0).max(40),
+        time: yup
+          .number()
+          .required(commonT("form.error.required"))
+          .min(1, commonT("form.error.minAndMax", { min: 1, max: 40 }))
+          .max(40, commonT("form.error.minAndMax", { min: 1, max: 40 })),
       }),
     ),
+    mode: "all",
   });
 
   const onHandleSplit = async (e) => {
@@ -96,18 +117,17 @@ const Title = ({
     });
   };
 
-  const onSubmit = async () => {
-    if (errors) return;
-
+  const onSubmit = async (data) => {
     const time = getValues("time");
     const perUnit = getValues("perUnit");
     const unit = getValues("unit");
 
-    handleRepeat(time, perUnit, unit, bookingEvent).finally(() => {
+    await handleRepeat(time, perUnit, unit, bookingEvent).finally(() => {
       onClose();
     });
   };
 
+  console.log(errors);
   return (
     <Stack>
       <Text
@@ -185,11 +205,7 @@ const Title = ({
               },
             }}
           >
-            {isLoading.repeat ? (
-              <CircularProgress size={20} />
-            ) : (
-              <RepeatIcon width={30} height={30} fontSize="small" />
-            )}
+            <RepeatIcon width={30} height={30} fontSize="small" />
           </Button>
         </Tooltip>
         <Dropdown open={isOpenDropdown}>
@@ -223,6 +239,7 @@ const Title = ({
                 render={({ field }) => (
                   <Input
                     {...field}
+                    error={errors.perUnit?.message}
                     type="number"
                     sx={{
                       width: "100px",
@@ -271,6 +288,7 @@ const Title = ({
                   <Input
                     {...field}
                     type="number"
+                    error={errors.time?.message}
                     sx={{
                       width: "100px",
                       textAlign: "center",
@@ -287,18 +305,17 @@ const Title = ({
             <Button
               variant="contained"
               color="primary"
-              type="submit"
+              disabled={isLoading.repeat}
               pending={isLoading.repeat}
               sx={{
                 mx: 3,
                 my: 1,
               }}
               onClick={(e) => {
-                console.log("onSubmit");
-                onSubmit();
+                handleSubmit(onSubmit)();
               }}
             >
-              Create Booking
+              {resourceT("form.editActions.repeat")}
             </Button>
           </Menu>
         </Dropdown>

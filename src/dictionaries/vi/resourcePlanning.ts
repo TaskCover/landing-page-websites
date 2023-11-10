@@ -87,6 +87,8 @@ export const ResourcePlanning: ResourceDictionary = {
     repeatTimes: "Lặp lại",
     week: "Tuần",
     time: "Lần",
+    numberOf: "Số lần {type}",
+    weekOrMonth: "Tuần hoặc tháng",
     month: "Tháng",
     confirmDelete: "Bạn có chắc chắn muốn xóa?",
     createFailed: "Tạo lịch thất bại",

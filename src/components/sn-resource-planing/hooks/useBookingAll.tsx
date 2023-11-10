@@ -148,11 +148,14 @@ export const useEditAction = () => {
           .toDate();
 
         promise.push(
-          createBooking({
-            ...data,
-            start_date: dayjs(newStartDate).format("YYYY-MM-DD"),
-            end_date: dayjs(newEndDate).format("YYYY-MM-DD"),
-          }),
+          createBooking(
+            {
+              ...data,
+              start_date: dayjs(newStartDate).format("YYYY-MM-DD"),
+              end_date: dayjs(newEndDate).format("YYYY-MM-DD"),
+            },
+            true,
+          ),
         );
       }
       await Promise.all(promise)
@@ -161,7 +164,12 @@ export const useEditAction = () => {
             ...isLoading,
             repeat: false,
           });
-          onAddSnackbar(resourceT("form.repeatSuccess"), "success");
+          onAddSnackbar(
+            commonT("notification.success", {
+              label: resourceT("form.editActions.repeat"),
+            }),
+            "success",
+          );
         })
         .catch((e) => {
           throw e;

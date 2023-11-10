@@ -84,6 +84,8 @@ export const ResourcePlanningLang: ResourceDictionary = {
       repeat: "Cannot repeat booking",
     },
     week: "Weeks",
+    numberOf: "Number of {type}",
+    weekOrMonth: "Weeks or months",
     time: "Times",
     repeatTimes: "Repeat for",
     month: "Months",
