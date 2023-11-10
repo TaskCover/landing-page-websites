@@ -39,6 +39,10 @@ export const DOCS_CREATE_PATH = "/documents/create";
 
 // Feedback
 export const FEEDBACK_PATH = "/feedback";
+//blogs
+export const BLOGS_PATH = "/blogs";
+export const BLOG_CATEGORY_PATH = "/blog-category";
+export const BLOGS_DETAIL_PATH = "/blogs/{id}";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -87,7 +91,11 @@ export const AUTHORIZED_PATHS = {
     STATEMENT_HISTORY_PATH,
     UPGRADE_ACCOUNT_PATH,
     // Feedback
-    FEEDBACK_PATH
+    FEEDBACK_PATH,
+    //blog
+    BLOGS_PATH,
+    BLOG_CATEGORY_PATH,
+    BLOGS_DETAIL_PATH,
   ],
   [Permission.ST]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,

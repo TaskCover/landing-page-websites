@@ -102,4 +102,9 @@ export const Endpoint = {
   //feedback
   FEEDBACK :"/feedback",
   RESPONDFEEDBACK : "/feedback/{id}/response",
+
+  // blog
+  CATEGORY_BLOG :"/category",
+  BLOGS : "/post",
+  DETAIL_BLOG: "/post/{id}",
 };

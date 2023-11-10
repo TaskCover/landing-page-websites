@@ -33,5 +33,9 @@ export const LayoutLang: LayoutDictionary = {
     //feedback
     feedback: "Feedback",
     feedbackList: "Feedback List",
+    //blog,category
+    blog:"Blogs",
+    blogList:"Blog List",
+    blogCategoryList :"Category List",
   },
 };

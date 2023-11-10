@@ -13,6 +13,8 @@ export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
 export const RESOURCE_API_URL = process.env.RESOURCE_API_URL as string;
 //feedback
 export const FEEDBACK_API_URL = process.env.FEEDBACK_API_URL as string;
+// BLOG
+export const BLOG_API_URL = process.env.BLOG_API_URL as string;
 
 export const DARK_THEME_MEDIA_SYSTEM = "(prefers-color-scheme: dark)";
 export const DOCS_API_URL = process.env.DOCS_API_URL as string;
@@ -89,6 +91,8 @@ export const NS_CHAT_BOX = "chatbox";
 export const NS_DOCS = "documents";
 //Feedback
 export const NS_FEEDBACK = "feeback";
+//blog
+export const NS_BLOG = "blog";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 export const VIDEO_ACCEPT = ["video/mp4"];
