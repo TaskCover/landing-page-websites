@@ -21,8 +21,8 @@ import { Locale } from "constant/types";
 import { AbstractIntlMessages } from "next-intl";
 import NextIntlProvider from "./NextIntlProvider";
 import { getProfile } from "store/app/actions";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 // import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const AUTH_PATHS = [SIGNUP_PATH, FORGOT_PASSWORD_PATH, RESET_PASSWORD_PATH];
 
