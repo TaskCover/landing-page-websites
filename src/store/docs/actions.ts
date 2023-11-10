@@ -4,21 +4,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Endpoint, client } from "api";
 import { HttpStatusCode } from "constant/enums";
 
-
-export const addPage = async (payload) => {  
-    try {
-
-    } catch (error) {
-      throw error;
-    }
-  };
-
   export const getDocs = createAsyncThunk(
     "docs/get",
-    async ({
-      concat,
-      ...queries
-    }: any) => {
+    async ({...queries }: any) => {
       try {
         const response = await client.get(Endpoint.DOCS, queries,
            {
@@ -26,7 +14,7 @@ export const addPage = async (payload) => {
         });
 
         if (response?.status === HttpStatusCode.OK) {
-          return { ...response.data, concat };
+          return { ...response.data };
         }
         throw AN_ERROR_TRY_AGAIN;
       } catch (error) {

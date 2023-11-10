@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React, { memo, useState } from "react";
 import { FilterSearchDocsProps, sxConfig } from "./FilterSearchDocs";
-import { Text } from "components/shared";
+import { Input, Text } from "components/shared";
 import { useTranslations } from "next-intl";
 import { NS_DOCS } from "constant/index";
 import { SelectMembers } from "components/sn-projects/components";
@@ -22,24 +22,6 @@ const FilterName = ({ onChange, queries }: FilterSearchDocsProps) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const onChangeField = (name: string, newValue?: any) => {
-    formik.setFieldValue(name, newValue);
-    onChange(name, newValue);
-  };
-
-  const onSubmit = () => {
-    console.log("first");
-  };
-
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      members: queries.member,
-      owner: queries.owner,
-    },
-    onSubmit,
-  });
 
   return (
     <>
@@ -80,15 +62,11 @@ const FilterName = ({ onChange, queries }: FilterSearchDocsProps) => {
           },
         }}
       >
-        <Stack
-          sx={{
-            boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.1)",
-            border: "1px solid",
-            borderTopWidth: 0,
-            borderColor: "grey.100",
-            borderRadius: 1,
-          }}
-        ></Stack>
+        <Input
+          onChange={(e) => onChange("name", e.target.value)}
+          value={queries?.name}
+          placeholder="Nhập tên doc"
+        ></Input>
       </Popover>
     </>
   );

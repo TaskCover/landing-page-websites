@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prefer-const */
 import FormLayout from "components/FormLayout";
 import React, {
   Dispatch,
@@ -10,12 +12,22 @@ import { Box, Stack } from "@mui/material";
 import { Select } from "components/shared";
 import { useMemberOptions } from "store/project/selectors";
 import { useTranslations } from "next-intl";
-import { NS_COMMON, NS_PROJECT, DEFAULT_PAGING } from "constant/index";
+import {
+  NS_COMMON,
+  NS_PROJECT,
+  DEFAULT_PAGING,
+  DOCS_API_URL,
+} from "constant/index";
 import { useFormik } from "formik";
 import { useParams } from "next/navigation";
 import { useEmployees } from "store/company/selectors";
 import { Option } from "constant/types";
 import useQueryParams from "hooks/useQueryParams";
+import { Endpoint, client } from "api";
+import { useAppSelector } from "store/hooks";
+import { Http } from "@mui/icons-material";
+import { HttpStatusCode } from "constant/enums";
+import { useSnackbar } from "store/app/selectors";
 
 interface ModalShareProps {
   setOpenShare: React.Dispatch<SetStateAction<boolean>>;
@@ -24,7 +36,7 @@ interface ModalShareProps {
 
 interface initType {
   people: string | number | null | undefined;
-  access: number;
+  access: string;
   email: string | number | null | undefined;
 }
 
@@ -43,23 +55,42 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
     onDeleteEmployees,
   } = useEmployees();
   const commonT = useTranslations(NS_COMMON);
-  const projectT = useTranslations(NS_PROJECT);
-  const [search, setSearch] = useState("");
   const { initQuery, isReady, query } = useQueryParams();
-  const [queries, setQueries] = useState({});
+  const id = useAppSelector((data) => data.doc.id);
 
-  const onChangeQueries = (name: string, value: never) => {
-    setQueries((prevQueries) => ({ ...prevQueries, [name]: value }));
-  };
+  const { onAddSnackbar } = useSnackbar();
 
   const onSubmit = async (values) => {
+    let value: any = {
+      owner: values?.people,
+      perm: values?.access,
+      isPublic: values?.people === "ALL",
+    };
+
+    // if (values?.people === "ALL") {
+    //   value = {
+    //     perm: values?.access,
+    //     isPublic: values?.people === "ALL",
+    //   };
+    // }
+
+    const res = await client.put(Endpoint.ADD_PERM_DOCS + id, value, {
+      baseURL: "http://103.196.145.232:6813/api/v1",
+    });
+
+    if (
+      res.status === HttpStatusCode.OK ||
+      res.status === HttpStatusCode.CREATED
+    ) {
+      onAddSnackbar("Thành Công", "success");
+    }
     try {
     } catch (error) {}
   };
 
   const init: initType = {
-    people: "all",
-    access: 1,
+    people: "ALL",
+    access: "FULL",
     email: "",
   };
 
@@ -78,26 +109,26 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
 
   const option2 = [
     {
-      value: "all",
+      value: "ALL",
       label: "All employee",
     },
     ...options,
   ];
   const optionAccess = [
     {
-      value: 1,
+      value: "FULL",
       label: "Full access",
     },
     {
-      value: 2,
+      value: "VIEW",
       label: "Can view",
     },
     {
-      value: 3,
+      value: "EDIT",
       label: "Can edit",
     },
     {
-      value: 4,
+      value: "COMMENT",
       label: "Can comment",
     },
   ];
@@ -120,6 +151,7 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
+      onSubmit={formik.handleSubmit}
       label={"Sharing options"}
     >
       <Stack direction={{ sm: "row" }} spacing={2}>

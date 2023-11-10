@@ -1,31 +1,28 @@
-/* eslint-disable no-var */
 "use client";
 import ChangeCover from "../change-cover-panel";
 import DrawSlider from "components/sn-docs/detail/DrawSlider";
-import MenuBarHeader from "./MenuBarHeader";
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./pageBody.module.scss";
 import useTheme from "hooks/useTheme";
 import { Box } from "@mui/material";
-import { debounce } from "lodash";
-import { Editor } from "@tiptap/core";
 import { getExtensions } from "../tiptap/extensions/starter-kit";
 import { IDocDetail } from "components/sn-docs/detail/DocDetail";
+import { ThemeContext } from "../context/ThemeContext";
+import { Tiptap } from "../tiptap/Tiptap";
+import { useAppSelector } from "store/hooks";
+import { useDispatch } from "react-redux";
+import { useDocs } from "store/docs/selectors";
+import { useEditor } from "@tiptap/react";
+/* eslint-disable no-var */
 import {
   changeContentDoc,
   changeDescription,
   resetDocDetail,
 } from "store/docs/reducer";
-import { ThemeContext } from "../context/ThemeContext";
-import { Tiptap } from "../tiptap/Tiptap";
-import { useAppSelector } from "store/hooks";
-import { useDispatch } from "react-redux";
-import { useEditor } from "@tiptap/react";
 import DrawComment, {
   LayoutSlider,
 } from "components/sn-docs/detail/DrawCommet";
 
-import { useDocs } from "store/docs/selectors";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
@@ -100,24 +97,15 @@ const PageBody = ({
     },
   });
 
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     // editor?.setEditable(!pageInfo?.pageSettings?.lock!);
-  //     editor?.commands.setContent(content);
-  //   }, 0);
-
-  //   return () => clearTimeout(timeoutId);
-  // }, []);
-
   useEffect(() => {
     const updateMinHeight = () => {
-      const windowHeight: number = window.innerHeight; // Chiều cao của viewport
+      const windowHeight: number = window.innerHeight;
       const elementPosition: DOMRect | undefined = document
         .getElementById("is-edit-text")
-        ?.getBoundingClientRect(); // Vị trí của phần tử trong viewport
+        ?.getBoundingClientRect();
       if (elementPosition) {
         const newMinHeight: string =
-          windowHeight - (elementPosition.top + 50) + "px"; // Tính toán giá trị mới cho minHeight
+          windowHeight - (elementPosition.top + 50) + "px"; //
         setMinHeight(newMinHeight);
       }
     };
@@ -125,10 +113,8 @@ const PageBody = ({
     window.addEventListener("scroll", updateMinHeight);
     window.addEventListener("resize", updateMinHeight);
 
-    // Đảm bảo cập nhật ban đầu khi trang được tải
     updateMinHeight();
 
-    // Clean up listeners khi component unmount
     return () => {
       window.removeEventListener("scroll", updateMinHeight);
       window.removeEventListener("resize", updateMinHeight);
@@ -150,11 +136,9 @@ const PageBody = ({
       }}
     >
       <div className={`${styles.content}} ${styles[theme]}`}>
-        {editor && <MenuBarHeader editor={editor as Editor} />}
         <Box
           sx={{
             position: "relative",
-            marginTop: "16px",
             bgcolor: isDarkMode ? "#191919" : "white",
             padding: {
               sm: "32px 40px",

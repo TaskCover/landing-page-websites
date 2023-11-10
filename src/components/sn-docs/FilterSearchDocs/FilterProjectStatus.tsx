@@ -7,14 +7,19 @@ import {
   Popover,
   Stack,
   popoverClasses,
+  selectClasses,
+  Theme,
 } from "@mui/material";
-import React, { memo, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { FilterSearchDocsProps, sxConfig } from "./FilterSearchDocs";
 import { Text } from "components/shared";
 import { useTranslations } from "next-intl";
-import { NS_DOCS } from "constant/index";
+import { NS_COMMON, NS_DOCS } from "constant/index";
 import { SelectMembers } from "components/sn-projects/components";
 import { useFormik } from "formik";
+import TextFieldSelect from "components/shared/TextFieldSelect";
+import { Dropdown } from "components/Filters";
+import { STATUS_OPTIONS } from "components/sn-projects/components/helpers";
 
 const FilterProjectStatus = ({ onChange, queries }: FilterSearchDocsProps) => {
   const docsT = useTranslations(NS_DOCS);
@@ -22,24 +27,21 @@ const FilterProjectStatus = ({ onChange, queries }: FilterSearchDocsProps) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const commonT = useTranslations(NS_COMMON);
 
-  const onChangeField = (name: string, newValue?: any) => {
-    formik.setFieldValue(name, newValue);
-    onChange(name, newValue);
-  };
-
-  const onSubmit = () => {
-    console.log("first");
-  };
-
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      members: queries.member,
-      owner: queries.owner,
-    },
-    onSubmit,
-  });
+  const statusOptions = useMemo(() => {
+    const res = STATUS_OPTIONS.map((item) => ({
+      ...item,
+      label: commonT(item.label),
+    }));
+    return [
+      {
+        label: "None",
+        value: "",
+      },
+      ...res,
+    ];
+  }, [commonT]);
 
   return (
     <>
@@ -80,7 +82,7 @@ const FilterProjectStatus = ({ onChange, queries }: FilterSearchDocsProps) => {
           },
         }}
       >
-        <Stack
+        <Box
           sx={{
             boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.1)",
             border: "1px solid",
@@ -89,13 +91,16 @@ const FilterProjectStatus = ({ onChange, queries }: FilterSearchDocsProps) => {
             borderRadius: 1,
           }}
         >
-          <SelectMembers
-            name="members"
-            value={formik.values?.members}
-            onChange={onChangeField}
-            ignoreId={formik.values?.owner}
+          <TextFieldSelect
+            value={queries?.project_status}
+            onChange={(e) => {
+              onChange("project_status", e.target.value);
+            }}
+            options={statusOptions}
+            label={commonT("status")}
+            sx={{ flex: 1 }}
           />
-        </Stack>
+        </Box>
       </Popover>
     </>
   );

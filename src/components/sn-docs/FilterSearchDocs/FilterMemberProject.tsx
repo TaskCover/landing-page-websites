@@ -8,13 +8,18 @@ import {
   Stack,
   popoverClasses,
 } from "@mui/material";
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { FilterSearchDocsProps } from "./FilterSearchDocs";
 import { Select, Text } from "components/shared";
 import { useTranslations } from "next-intl";
-import { NS_COMMON, NS_DOCS } from "constant/index";
+import { NS_COMMON, NS_DOCS, NS_TIME_TRACKING } from "constant/index";
 import { useFormik } from "formik";
 import { useEmployeeOptions } from "store/company/selectors";
+import TextFieldSelect, {
+  IOptionStructure,
+} from "components/shared/TextFieldSelect";
+import _ from "lodash";
+import { useProjects } from "store/project/selectors";
 
 const FilterMemberProject = ({ onChange, queries }: FilterSearchDocsProps) => {
   const docsT = useTranslations(NS_DOCS);
@@ -23,47 +28,32 @@ const FilterMemberProject = ({ onChange, queries }: FilterSearchDocsProps) => {
     setAnchorEl(null);
   };
   const commonT = useTranslations(NS_COMMON);
+  const { items: projects, onGetProjects } = useProjects();
 
-  const {
-    options: employeeOptions,
-    onGetOptions,
-    isFetching,
-    filters,
-    pageSize,
-    pageIndex,
-    totalPages,
-  } = useEmployeeOptions();
+  const timeT = useTranslations(NS_TIME_TRACKING);
+  const [projectOptions, setProjectOptions] = useState<IOptionStructure[]>([]);
 
-  const onChangeField = (name: string, newValue?: any) => {
-    formik.setFieldValue(name, newValue);
-    onChange(name, newValue);
-  };
+  useEffect(() => {
+    onGetProjects({ pageSize: -1, pageIndex: 0 });
+  }, []);
 
-  const onChangeSearch = (name: string, newValue?: string | number) => {
-    onGetOptions({ pageIndex: 1, pageSize: 20, [name]: newValue });
-  };
-
-  const onGetEmployeeOptions = () => {
-    onGetOptions({ pageIndex: 1, pageSize: 20 });
-  };
-
-  const onSubmit = () => {
-    console.log("first");
-  };
-
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      members: queries.member,
-      owner: queries.owner,
-    },
-    onSubmit,
-  });
-
-  const onEndReached = () => {
-    if (isFetching || (totalPages && pageIndex >= totalPages)) return;
-    onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
-  };
+  useEffect(() => {
+    if (!_.isEmpty(projects)) {
+      const resolveProjects = _.map(projects, (project) => {
+        return {
+          label: project?.name,
+          value: project?.id,
+        };
+      });
+      setProjectOptions([
+        {
+          label: "None",
+          value: ''
+        },
+        ...resolveProjects,
+      ]);
+    }
+  }, [projects]);
 
   return (
     <>
@@ -113,23 +103,14 @@ const FilterMemberProject = ({ onChange, queries }: FilterSearchDocsProps) => {
             borderRadius: 1,
           }}
         >
-          <Select
-            options={employeeOptions}
-            title={docsT("assigner")}
-            name="owner"
-            hasAvatar
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values?.owner}
-            rootSx={sxConfig.input}
-            fullWidth
-            onEndReached={onEndReached}
-            onChangeSearch={onChangeSearch}
-            searchProps={{
-              value: filters?.email,
-              placeholder: commonT("searchBy", { name: "email" }),
+          <TextFieldSelect
+            value={queries?.project}
+            onChange={(e) => {
+              onChange("project", e.target.value);
             }}
-            onOpen={onGetEmployeeOptions}
+            options={projectOptions}
+            label={timeT("modal.Project")}
+            sx={{ flex: 1 }}
           />
         </Stack>
       </Popover>
