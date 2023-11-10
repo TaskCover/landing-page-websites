@@ -32,7 +32,7 @@ export type BlogData = {
     id?: string;
     title?: string;
     content?: string;
-    background?: AttachmentsBlogs | undefined;
+    background?: AttachmentsBlogs | undefined |string;
     published?: boolean;
     category?: Category[];
     tag?: string[];
@@ -40,6 +40,7 @@ export type BlogData = {
     attachments?: AttachmentsBlogs[] |undefined,
     created_time?: Date,
     created_by?: CreateByUser,
+    ignoreId?:string,
 }
 export type GetBlogListQueries = BaseQueries_Feedback & {
     searchKey?: string;

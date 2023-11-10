@@ -1,7 +1,7 @@
 import { Button, Grid, Stack } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
-import { Editor, Input, Select, Upload } from "components/shared";
+import {  Input, Select, Upload } from "components/shared";
 import { DataAction } from "constant/enums";
 import { NS_BLOG, NS_COMMON } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
@@ -18,12 +18,10 @@ import { Controller, useForm } from "react-hook-form";
 import { useTagOptions, useTags } from "store/tags/selector";
 import SelectMultiple from "./SelectMultiple";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CategoryBlogData } from "store/blog-category/reducer";
+import Editor from "./Editor";
 
-export type BlogForm = Omit<BlogData, "category" | "background"> & {
-  category?: CategoryBlogData[];
-  background?: string | File;
-};
+export type BlogForm = BlogData;
+
 type FormProps = {
   initialValues: BlogForm;
   type: DataAction;
@@ -112,11 +110,13 @@ const Form = (props: FormProps) => {
   const onChangeField = (name: string, newValue?: any) => {
     formik.setFieldValue(name, newValue);
   };
+  
   const onChangeContent = (value: string, delta, _, editor: UnprivilegedEditor) => {
     const isEmpty = value === VALUE_AS_EMPTY;
     setContent(isEmpty ? "" : value);
     editorRef.current = editor;
   };
+
   const onChangeAttactment = (files: File[]) => {
     setFiles(files);
   };
@@ -227,7 +227,7 @@ const Form = (props: FormProps) => {
                     name="category"
                     value={formik.values?.category}
                     onChange={onChangeField}
-                    ignoreId={formik.values?.owner}
+                    ignoreId={formik.values?.ignoreId}
                   />
                 )}
               />
@@ -289,7 +289,9 @@ const Form = (props: FormProps) => {
                 <UploadFile
                   title={blogT("blogForm.background")}
                   name="background"
-                  value={formik.values?.background}
+                  value={ typeof formik.values.background === "string"
+                  ? formik.values.background
+                  : undefined}
                   onChange={onChangeBackGround}
                 />
 
@@ -307,10 +309,8 @@ const Form = (props: FormProps) => {
                   placeholder={blogT("blogForm.content")}
                   onChange={onChangeContent}
                   onChangeFiles={onChangeAttactment}
-                  title={blogT("blogForm.content")}
                   value={content}
                   files={files}
-                  name="content"
                 >
                   <Stack
                     direction="row"
