@@ -164,7 +164,6 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                     pr: "16px!important",
                   },
                 }}
-               
               />
             )}
           />
@@ -214,8 +213,12 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                   label={resourceT("form.allocation")}
                   placeholder="8h"
                   sx={{
-                    borderRight: "1px solid #BABCC6",
+                    "& > .MuiBox-root": {
+                      borderRadius: 0,
+                      borderRight: "1px solid #BABCC6",
+                    },
                   }}
+                  type="number"
                   helperText={errorsProject.allocation?.message}
                   error={!!errorsProject.allocation?.message}
                   {...field}

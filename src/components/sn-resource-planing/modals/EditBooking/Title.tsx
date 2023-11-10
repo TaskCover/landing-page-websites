@@ -83,13 +83,40 @@ const Title = ({
               max: 40,
             }),
           )
-          .max(40, commonT("form.error.minAndMax", { min: 1, max: 40 })),
+          .max(
+            40,
+            commonT("form.error.minAndMax", {
+              name: resourceT("form.numberOf", {
+                type: "",
+              }),
+              min: 1,
+              max: 40,
+            }),
+          ),
         unit: yup.string(),
         time: yup
           .number()
           .required(commonT("form.error.required"))
-          .min(1, commonT("form.error.minAndMax", { min: 1, max: 40 }))
-          .max(40, commonT("form.error.minAndMax", { min: 1, max: 40 })),
+          .min(
+            1,
+            commonT("form.error.minAndMax", {
+              name: resourceT("form.numberOf", {
+                type: "",
+              }),
+              min: 1,
+              max: 40,
+            }),
+          )
+          .max(
+            40,
+            commonT("form.error.minAndMax", {
+              name: resourceT("form.numberOf", {
+                type: "",
+              }),
+              min: 1,
+              max: 40,
+            }),
+          ),
       }),
     ),
     mode: "all",
@@ -127,7 +154,6 @@ const Title = ({
     });
   };
 
-  console.log(errors);
   return (
     <Stack>
       <Text
@@ -226,27 +252,45 @@ const Title = ({
               direction="row"
               sx={{
                 px: 3,
-                py: 1,
+                mt: 2,
               }}
               justifyContent="start"
-              alignItems="center"
+              alignItems="start"
               gap={1}
             >
               <Text>{resourceT("form.repeatTimes")}</Text>
               <Controller
                 name="perUnit"
                 control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    error={errors.perUnit?.message}
-                    type="number"
-                    sx={{
-                      width: "100px",
-                      textAlign: "center",
-                    }}
-                  />
-                )}
+                render={({ field }) => {
+                  const { onChange, ...rest } = field;
+                  const handleChange = (e) => {
+                    onChange(e.target.value || 0);
+                    setPerUnit(e.target.value);
+                  };
+                  return (
+                    <Input
+                      onChange={handleChange}
+                      {...rest}
+                      error={errors.perUnit?.message}
+                      type="number"
+                      sx={{
+                        width: "100px",
+                        textAlign: "center",
+                        "& .MuiInputBase-input": {
+                          p: "0 !important",
+                        },
+                        "& .MuiInputBase-root": {
+                          mt: "-10px",
+                          p: "0.5rem !important",
+                        },
+                        "& MuiFormHelperText-root": {
+                          m: "0 !important",
+                        },
+                      }}
+                    />
+                  );
+                }}
               />
               <Controller
                 name="unit"
@@ -257,6 +301,16 @@ const Title = ({
                     sx={{
                       width: "120px",
                       textAlign: "center",
+                      "& .MuiInputBase-input": {
+                        p: "0 !important",
+                      },
+                      "& .MuiInputBase-root": {
+                        mt: "-10px",
+                        p: "0.5rem !important",
+                      },
+                      "& MuiFormHelperText-root": {
+                        m: "0 !important",
+                      },
                     }}
                     options={[
                       {
@@ -275,26 +329,44 @@ const Title = ({
             <Stack
               direction="row"
               px={3}
-              py={1}
+              mt={2}
               justifyContent="start"
-              alignItems="center"
+              alignItems="start"
               gap={1}
             >
               <Text>{resourceT("form.repeatTimes")}</Text>
               <Controller
                 name="time"
                 control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    type="number"
-                    error={errors.time?.message}
-                    sx={{
-                      width: "100px",
-                      textAlign: "center",
-                    }}
-                  />
-                )}
+                render={({ field }) => {
+                  const { onChange, ...rest } = field;
+                  const handleChange = (e) => {
+                    onChange(e.target.value || 0);
+                    setPerUnit(e.target.value);
+                  };
+                  return (
+                    <Input
+                      onChange={handleChange}
+                      {...rest}
+                      type="number"
+                      error={errors.time?.message}
+                      sx={{
+                        width: "100px",
+                        textAlign: "center",
+                        "& .MuiInputBase-input": {
+                          p: "0 !important",
+                        },
+                        "& .MuiInputBase-root": {
+                          mt: "-10px",
+                          p: "0.5rem !important",
+                        },
+                        "& MuiFormHelperText-root": {
+                          m: "0 !important",
+                        },
+                      }}
+                    />
+                  );
+                }}
               />
               <Text>
                 {resourceT("form.time", {

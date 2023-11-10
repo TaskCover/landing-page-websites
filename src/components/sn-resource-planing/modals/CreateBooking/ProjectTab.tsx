@@ -225,7 +225,10 @@ const ProjectTab = ({ open, onClose, resourceId, userId }: IProps) => {
                 label={resourceT("form.allocation")}
                 placeholder="8h"
                 sx={{
-                  borderRight: "1px solid #BABCC6",
+                  "& > .MuiBox-root": {
+                    borderRadius: 0,
+                    borderRight: "1px solid #BABCC6",
+                  },
                 }}
                 helperText={errorsProject.allocation?.message}
                 error={!!errorsProject.allocation?.message}

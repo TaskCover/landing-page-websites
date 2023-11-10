@@ -97,6 +97,7 @@ const AllPeopleTab = () => {
       setResources(bookingAll);
       setSelectedResource([...bookingAll?.map((item) => item.id)]);
     }
+    calendarRef.current?.getApi().refetchResources();
   }, [bookingAll]);
 
   React.useEffect(() => {
@@ -347,7 +348,6 @@ const AllPeopleTab = () => {
           eventResourceEditable={true}
           eventDurationEditable={true}
           headerToolbar={false}
-          selectable={true}
           selectMirror={true}
           eventDragStart={(arg) => {
             const { event } = arg;

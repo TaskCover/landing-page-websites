@@ -166,8 +166,12 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
                   label={resourceT("form.allocation")}
                   placeholder="8h"
                   sx={{
-                    borderRight: "1px solid #BABCC6",
+                    "& > .MuiBox-root": {
+                      borderRadius: 0,
+                      borderRight: "1px solid #BABCC6",
+                    },
                   }}
+                  type="number"
                   helperText={errorsTimeOff.allocation?.message}
                   error={!!errorsTimeOff.allocation?.message}
                   {...field}
