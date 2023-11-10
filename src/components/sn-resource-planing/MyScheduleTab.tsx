@@ -1,5 +1,5 @@
 import FullCalendar from "@fullcalendar/react";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { IBookingAllFitler } from "store/resourcePlanning/action";
 import {
   DEFAULT_BOOKING_ALL_FILTER,
@@ -56,7 +56,7 @@ const MyScheduleTab = () => {
 
   const { selectedDate, updateDate } = useResourceDate();
   const { user } = useAuth();
-  const { getMyBooking, myBooking } = useMyBooking();
+  const { getMyBooking, myBooking, setMyBookingFilter } = useMyBooking();
   const [resources, setResources] = React.useState<IBookingItem[]>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
@@ -90,6 +90,12 @@ const MyScheduleTab = () => {
   };
 
   useFetchMyBooking();
+
+  useEffect(() => {
+    if (filters) {
+      setMyBookingFilter(filters);
+    }
+  }, [filters]);
 
   React.useEffect(() => {
     if (myBooking) setResources(myBooking);
@@ -159,7 +165,6 @@ const MyScheduleTab = () => {
           sale_id,
           project_id,
           project,
-          user_id,
           time_off_type,
           total_hour,
         } = props;
@@ -219,26 +224,28 @@ const MyScheduleTab = () => {
         //   position: booking?.position,
         // })),
       })) || [];
-    result.push({
-      id: "end",
-      name: "",
-      allocation: 0,
-      allocation_type: "percent",
-      booking_type: "project",
-      created_time: "",
-      note: "",
-      eventType: "end",
-      end_date: "",
-      position: {},
-      user_id: "",
-      project: {},
-      project_id: "",
-      sale_id: "",
-      start_date: "",
-      time_off_type: TIME_OFF_TYPE.OTHER,
-      type: "step",
-      total_hour: 160,
-    });
+    if (resources?.length > 0) {
+      result.push({
+        id: "end",
+        name: "",
+        allocation: 0,
+        allocation_type: "percent",
+        booking_type: "project",
+        created_time: "",
+        note: "",
+        eventType: "end",
+        end_date: "",
+        position: {},
+        user_id: "",
+        project: {},
+        project_id: "",
+        sale_id: "",
+        start_date: "",
+        time_off_type: TIME_OFF_TYPE.OTHER,
+        type: "step",
+        total_hour: 160,
+      });
+    }
     return [
       {
         id: user?.id,

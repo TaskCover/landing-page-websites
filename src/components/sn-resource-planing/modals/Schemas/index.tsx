@@ -105,7 +105,7 @@ export const useGetSchemas = () => {
       //   .string()
       //   .required("Thời gian làm việc không được bỏ trống"),
       user_id: yup.string(),
-      allocation: yup.number().notRequired(),
+      allocation: yup.number(),
       allocation_type: yup.string().notRequired(),
       note: yup.string().trim().notRequired(),
     })

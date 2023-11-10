@@ -43,6 +43,7 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
       helperText,
       sx,
       options,
+      MenuProps,
       hiddenIcon = false,
       ...props
     },
@@ -190,6 +191,7 @@ const TextFieldSelect: React.FC<IProps> = React.forwardRef(
                   " .MuiMenuItem-root": {
                     color: !!isDarkMode ? "common.white" : "common.black",
                   },
+                  ...MenuProps?.sx,
                 },
               }}
               onOpen={() => setIsFocus(true)}

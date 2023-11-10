@@ -150,6 +150,20 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 required
                 options={salesOptions as IOptionStructure[]}
                 label={resourceT("form.services")}
+                sx={{
+                  overflow: "hidden",
+                  "& .Muibox-root .MuiBox-root": {
+                    overflow: "hidden",
+                    justifyContent: "space-between",
+                    maxWidth: "90%",
+                  },
+                  "& .MuiStack-root": {
+                    width: "90%",
+                  },
+                  "& .MuiSelect-select": {
+                    pr: "16px!important",
+                  },
+                }}
               />
             )}
           />
@@ -199,8 +213,12 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                   label={resourceT("form.allocation")}
                   placeholder="8h"
                   sx={{
-                    borderRight: "1px solid #BABCC6",
+                    "& > .MuiBox-root": {
+                      borderRadius: 0,
+                      borderRight: "1px solid #BABCC6",
+                    },
                   }}
+                  type="number"
                   helperText={errorsProject.allocation?.message}
                   error={!!errorsProject.allocation?.message}
                   {...field}
