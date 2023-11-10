@@ -72,7 +72,7 @@ const SalesDetail = () => {
     });
 
     return reset();
-  }, [serviceSectionList, saleDetail]);
+  }, [JSON.stringify(serviceSectionList), JSON.stringify(saleDetail)]);
 
   useEffect(() => {
     return () => onReset();

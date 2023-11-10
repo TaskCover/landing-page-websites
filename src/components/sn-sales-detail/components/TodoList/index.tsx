@@ -24,7 +24,7 @@ import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { TodoItemData } from "store/sales/actions";
 import { Todo } from "store/sales/reducer";
 import { TaskDetail } from "store/project/reducer";
-import { getMessageErrorByAPI } from "utils/index";
+import { getMessageErrorByAPI, uuid } from "utils/index";
 import { reorderPriority } from "components/sn-sales-detail/helpers";
 import { on } from "events";
 import { useSnackbar } from "store/app/selectors";
@@ -255,19 +255,30 @@ const TodoList = () => {
   const todoListForm = useWatch({ control, name: "todo_list" });
 
   const todoList = useMemo(() => {
-    return (Object.values(todoListForm ?? {}) as Array<Todo>).sort(
-      (a, b) => a.priority - b.priority,
-    );
+    return (Object.values(todoListForm ?? {}) as Array<Todo>).sort((a, b) => {
+      if (a.priority > b.priority) return 1;
+      return -1;
+    });
   }, [todoListForm]);
 
   const onSubmit = async (value) => {
-    onCreateTodo({
+    const newTodo = {
+      ...value,
+      priority: value.priority || todoList.length + 1,
+      owner: value.owner?.id || value.owner,
+    };
+    await onCreateTodo({
       dealId: saleDetail?.id || "",
-      data: {
-        ...value,
-        priority: value.priority || todoList.length + 1,
-        owner: value.owner?.id || value.owner,
-      },
+      data: newTodo,
+    }).then((res) => {
+      const todoListObject = res.deal_update.todo_list.reduce((acc, todo) => {
+        acc[todo.id] = {
+          ...todo,
+        };
+        return acc;
+      }, {});
+
+      setValue("todo_list", todoListObject);
     });
   };
   const onDragEnd = async (result: DropResult) => {
@@ -332,7 +343,7 @@ const TodoList = () => {
                 <div ref={provided.innerRef} {...provided.droppableProps}>
                   {todoList?.map((todo, index) => (
                     <SubItem
-                      key={todo.id}
+                      key={todo?.id}
                       todo={todo}
                       dealId={saleDetail?.id || ""}
                       index={index}

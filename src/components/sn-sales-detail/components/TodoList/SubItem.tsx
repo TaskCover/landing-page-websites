@@ -105,6 +105,14 @@ const SubItem = ({
 
   const onDelete = async () => {
     onDeleteTodo(id, saleDetail?.id || "");
+    const todoList = getValues("todo_list");
+    const newTodoList = Object.keys(todoList).reduce((prev, key) => {
+      if (key !== id) {
+        prev[key] = todoList[key];
+      }
+      return prev;
+    }, {});
+    setValue("todo_list", newTodoList, { shouldDirty: true });
     setAction(undefined);
   };
 

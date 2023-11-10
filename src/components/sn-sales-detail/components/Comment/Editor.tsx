@@ -64,6 +64,7 @@ export type EditorProps = {
   children?: React.ReactNode;
   files?: File[];
   accepts?: string[];
+  setIsProcessing?: (value: boolean) => void;
   noCss?: boolean;
 } & Omit<ReactQuillProps, "children">;
 
@@ -73,6 +74,7 @@ const Editor = (props: EditorProps) => {
     onChangeFiles,
     children,
     files = [],
+    setIsProcessing,
     className,
     accepts,
     noCss,
@@ -89,6 +91,7 @@ const Editor = (props: EditorProps) => {
 
   const onChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.length) return;
+    setIsProcessing && setIsProcessing(true);
     let newFiles: File[] = Array.from(event.target.files);
     newFiles = newFiles.reduce(
       (out: File[], file) => {
@@ -108,11 +111,18 @@ const Editor = (props: EditorProps) => {
     const data = [];
     if (newFiles.length) {
       setIsLoadingFile(true);
-      const promises = newFiles.map((file) => {
-        return client.upload(Endpoint.UPLOAD_LINK, file);
+      const promises = newFiles.map((file: File) => {
+        const fileUpload = new File([file], file.name, {
+          type:
+            file.type === "application/x-zip-compressed"
+              ? "application/zip"
+              : file.type,
+        });
+        return client.upload(Endpoint.UPLOAD_LINK, fileUpload);
       });
       const results = await Promise.allSettled(promises).finally(() => {
         setIsLoadingFile(false);
+        setIsProcessing && setIsProcessing(false);
       });
       results.forEach((result) => {
         if (result.status === "fulfilled" && result.value) {
