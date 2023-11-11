@@ -265,7 +265,7 @@ const ChatDetailGroup = (props) => {
           >
             <Button
               type="button"
-              variant="primary"
+              variant="outlined"
               size="small"
               sx={defaultSx.buttonCancel}
               onClick={handleClosePopup}
@@ -273,7 +273,7 @@ const ChatDetailGroup = (props) => {
               {commonT("form.cancel")}
             </Button>
             <Button
-              variant="primaryOutlined"
+              variant="primary"
               sx={defaultSx.buttonConfirm}
               type="button"
               size="small"
