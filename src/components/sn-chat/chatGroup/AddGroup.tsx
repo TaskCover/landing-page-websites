@@ -47,14 +47,12 @@ const AddGroup: FC<AddGroupProps> = ({
   const { user } = useAuth();
 
   const {
-    prevStep,
     dataTransfer,
     groupMembers,
     onSetRoomId,
     onSetStep,
     onCreateDirectMessageGroup,
     onAddMembers2Group,
-    currStep,
     onFetchGroupMembersMember,
     onSetDataTransfer,
     onChangeListConversations,
@@ -62,6 +60,7 @@ const AddGroup: FC<AddGroupProps> = ({
     isChatDesktop,
     onCloseDrawer,
     onSetConversationInfo,
+    onGetLastMessages,
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -115,16 +114,23 @@ const AddGroup: FC<AddGroupProps> = ({
       : result?.payload?.group;
 
     if (isChatDesktop) {
-      if (isNew) {
-        onCloseDrawer("account");
-      }
       onSelectNewGroup(result?.payload?.group);
       onSetDataTransfer(dataItem);
-      if (type === "modal") {
-        onChangeListConversations([result?.payload?.group].concat(convention));
+      if (isNew) {
+        if (type === "modal") {
+          onChangeListConversations(
+            [result?.payload?.group].concat(convention),
+          );
+        } else {
+          onChangeListConversations([dataItem].concat(convention));
+        }
       } else {
-        onChangeListConversations([dataItem].concat(convention));
+        onGetLastMessages({
+          roomId: dataTransfer?._id,
+          type: dataTransfer?.t,
+        });
       }
+      onCloseDrawer("account");
       return;
     }
     onSetStep(STEP.CHAT_GROUP, dataItem);
