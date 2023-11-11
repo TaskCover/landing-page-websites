@@ -265,7 +265,7 @@ const ChatDetailGroup = (props) => {
           >
             <Button
               type="button"
-              variant="outlined"
+              variant="primaryOutlined"
               size="small"
               sx={defaultSx.buttonCancel}
               onClick={handleClosePopup}
