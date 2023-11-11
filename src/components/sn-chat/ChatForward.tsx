@@ -84,8 +84,12 @@ const ChatForward: FC<Props> = (props) => {
         });
       } else {
         console.log({ dataTransfer });
-        const targetEmployeeId = Object.keys(employeeIdSelected).filter((item) => employeeIdSelected[item])?.at(-1);
-        const target = (isChatDesktop ? props?.conversations : convention)?.filter(i => i?._id === targetEmployeeId)?.at(-1);
+        const targetEmployeeId = Object.keys(employeeIdSelected)
+          .filter((item) => employeeIdSelected[item])
+          ?.at(-1);
+        const target = (isChatDesktop ? props?.conversations : convention)
+          ?.filter((i) => i?._id === targetEmployeeId)
+          ?.at(-1);
         console.log({ dataTransfer, targetEmployeeId, target });
         onSetDataTransfer(target);
         onSetConversationInfo(target);
@@ -104,13 +108,17 @@ const ChatForward: FC<Props> = (props) => {
       >
         <Box
           sx={{
-            height: "290px",
+            ...(isChatDesktop
+              ? { height: "fix-content", maxHeight: "200px" }
+              : { height: "290px" }),
           }}
         >
           <Box
             overflow="auto"
             style={{
-              height: "290px",
+              ...(isChatDesktop
+                ? { height: "fix-content", maxHeight: "200px" }
+                : { height: "290px" }),
             }}
           >
             {props?.loading || isFetching || error ? (
@@ -175,9 +183,9 @@ const ChatForward: FC<Props> = (props) => {
                 lineHeight: "1rem",
                 padding: "1rem",
                 background: isDarkMode ? "#1e1e1e" : "var(--gray-0, #F7F7FD)",
-                width: '92%',
-                paddingBottom: '5px',
-                paddingTop: '3px',
+                width: "92%",
+                paddingBottom: "5px",
+                paddingTop: "3px",
               }}
             >
               Message
@@ -199,9 +207,9 @@ const ChatForward: FC<Props> = (props) => {
                   left: 12,
                   top: 0,
                   background: isDarkMode ? "#1e1e1e" : "var(--gray-0, #F7F7FD)",
-                  width: '92%',
-                  paddingBottom: '5px',
-                  paddingTop: '5px',
+                  width: "92%",
+                  paddingBottom: "5px",
+                  paddingTop: "5px",
                 }}
               >
                 Message
@@ -218,7 +226,7 @@ const ChatForward: FC<Props> = (props) => {
                 fontStyle: "normal",
                 fontWeight: 400,
                 lineHeight: "1.375rem",
-                paddingTop: '10px',
+                paddingTop: "10px",
                 ...(isChatDesktop
                   ? {
                       display: "flex",

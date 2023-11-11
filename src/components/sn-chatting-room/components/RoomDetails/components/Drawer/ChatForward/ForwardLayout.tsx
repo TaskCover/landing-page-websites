@@ -45,6 +45,7 @@ const ForwardLayout = () => {
       count: 30,
       authToken,
       userId,
+      company: user?.company,
     });
   }, [param, user]);
 
