@@ -208,13 +208,15 @@ const ItemMemberDetail = ({
           )
         )}
       </Box>
-      <DefaultPopupLayout
-        title={showPopup?.title}
-        content={_renderContentPopup()}
-        open={showPopup?.statusPopup}
-        onClose={handleClosePopup}
-        sx={{ width: showPopup?.widthPopup }}
-      />
+      {showPopup?.statusPopup && (
+        <DefaultPopupLayout
+          title={showPopup?.title}
+          content={_renderContentPopup()}
+          open={showPopup?.statusPopup}
+          onClose={handleClosePopup}
+          sx={{ width: showPopup?.widthPopup }}
+        />
+      )}
     </Box>
   );
 };

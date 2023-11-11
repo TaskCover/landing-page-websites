@@ -142,7 +142,7 @@ const RoomHeader = () => {
           gap="20px"
           alignItems="center"
         >
-          <Box display="flex" alignItems="center" gap={"10px"} width={200}>
+          <Box display="flex" alignItems="center" gap={"10px"} minWidth={200}>
             <Avatar
               src={currentConversation?.avatar}
               sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
@@ -184,7 +184,7 @@ const RoomHeader = () => {
                     ? { background: "#1e1e1e", color: "white" }
                     : {}),
                   ...(!mobileMode
-                    ? { width: "400px" }
+                    ? { width: "200px" }
                     : { width: "80%", border: "1px solid" }),
                 }}
               >
