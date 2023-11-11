@@ -83,8 +83,8 @@ const ItemMemberDetail = ({
           }}
         >
           <Button
+            variant="primary"
             type="button"
-            variant="primaryOutlined"
             size="small"
             sx={defaultSx.buttonCancel}
             onClick={handleClosePopup}
@@ -92,7 +92,7 @@ const ItemMemberDetail = ({
             {commonT("form.cancel")}
           </Button>
           <Button
-            variant="primary"
+            variant="primaryOutlined"
             sx={defaultSx.buttonConfirm}
             type="button"
             size="small"
@@ -220,7 +220,7 @@ const ItemMemberDetail = ({
 };
 
 const defaultSx = {
-  buttonCancel: {
+  buttonConfirm: {
     minWidth: 120,
     mx: 1.5,
     borderRadius: "0.25rem",
@@ -231,7 +231,7 @@ const defaultSx = {
       background: "var(--brand-primary, #3699FF)",
     },
   },
-  buttonConfirm: {
+  buttonCancel: {
     minWidth: 120,
     mx: 1.5,
     borderRadius: "0.25rem",
