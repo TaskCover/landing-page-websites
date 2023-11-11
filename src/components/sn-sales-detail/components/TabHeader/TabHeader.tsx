@@ -73,6 +73,7 @@ const TabHeader = () => {
     pageIndex,
     pageSize,
   });
+
   return (
     <Stack
       direction={{
@@ -188,10 +189,20 @@ const TabHeader = () => {
           justifyContent={"center"}
           alignItems="center"
           spacing={1}
+          sx={{
+            maxWidth: "200px",
+          }}
         >
           {/* Add coin icon here */}
           <CoinIcon />
-          <Text variant="body2">
+          <Text
+            variant="body2"
+            sx={{
+              maxWidth: "100%",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+            }}
+          >
             Revenue:{" "}
             {formatNumber(saleRevenueCal || saleRevenue || 0, {
               numberOfFixed: 2,
