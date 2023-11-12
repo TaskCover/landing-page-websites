@@ -9,8 +9,7 @@ import { useChat } from "store/chat/selectors";
 export const DrawerChatIgnore = ["forward", "group-modal"];
 const RoomDetails = () => {
   const { mobileMode, extraDesktopMode } = useGetScreenMode();
-  const { isOpenInfoChat, typeDrawerChat, onCloseDrawer, dataTransfer } =
-    useChat();
+  const { isOpenInfoChat, typeDrawerChat, dataTransfer } = useChat();
 
   return (
     <Box
