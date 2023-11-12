@@ -186,13 +186,15 @@ const ChatDetailGroup: FC<ChatDetailGroupProps> = (props) => {
           </Box>
         )}
       </Box>
-      <DefaultPopupLayout
-        title={props?.showPopup?.title}
-        content={props?._renderContentPopup()}
-        open={props?.showPopup?.statusPopup}
-        onClose={props?.handleClosePopup}
-        sx={{ width: props?.showPopup?.widthPopup }}
-      />
+      {props?.showPopup?.statusPopup && (
+        <DefaultPopupLayout
+          title={props?.showPopup?.title}
+          content={props?._renderContentPopup()}
+          open={props?.showPopup?.statusPopup}
+          onClose={props?.handleClosePopup}
+          sx={{ width: props?.showPopup?.widthPopup }}
+        />
+      )}
     </>
   );
 };

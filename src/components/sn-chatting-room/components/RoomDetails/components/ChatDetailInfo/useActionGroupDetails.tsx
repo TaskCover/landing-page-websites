@@ -133,8 +133,8 @@ export const useActionGroupDetails = () => {
   };
 
   const handleClosePopup = () => {
+    setShowPopup({ ...showPopup, statusPopup: false });
     setRenameGroup(dataTransfer?.name);
-    setShowPopup(init);
   };
 
   const _renderContentPopup = () => {

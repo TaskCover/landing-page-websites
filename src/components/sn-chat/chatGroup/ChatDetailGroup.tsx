@@ -94,7 +94,7 @@ const ChatDetailGroup = (props) => {
     setRenameGroup(dataTransfer?.name?.replaceAll("_", " "));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataTransfer]);
-  
+
   useEffect(() => {
     onFetchGroupMembersMember({
       roomId: dataTransfer?._id,
@@ -635,13 +635,15 @@ const ChatDetailGroup = (props) => {
           </Box>
         </Box>
       </Box>
-      <DefaultPopupLayout
-        title={showPopup?.title}
-        content={_renderContentPopup()}
-        open={showPopup?.statusPopup}
-        onClose={handleClosePopup}
-        sx={{ width: showPopup?.widthPopup }}
-      />
+      {showPopup?.statusPopup && (
+        <DefaultPopupLayout
+          title={showPopup?.title}
+          content={_renderContentPopup()}
+          open={showPopup?.statusPopup}
+          onClose={handleClosePopup}
+          sx={{ width: showPopup?.widthPopup }}
+        />
+      )}
     </>
   );
 };

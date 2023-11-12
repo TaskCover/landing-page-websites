@@ -142,7 +142,28 @@ const RoomHeader = () => {
           gap="20px"
           alignItems="center"
         >
-          {search?.isOpen ? (
+          <Box display="flex" alignItems="center" gap={"10px"} minWidth={200}>
+            <Avatar
+              src={currentConversation?.avatar}
+              sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
+            />
+            <Box display="flex" flexDirection="column" gap="4px">
+              <Typography
+                variant="h6"
+                color={isDarkMode ? "white" : "var(--Black, #212121)"}
+                textOverflow="ellipsis"
+                overflow="hidden"
+              >
+                {currentConversation?.t !== "d"
+                  ? currentConversation?.name?.replaceAll("_", " ")
+                  : currentConversation?.name}
+              </Typography>
+              <Typography variant="body2" color="var(--Gray3, #999)">
+                {currentConversation?.status}
+              </Typography>
+            </Box>
+          </Box>
+          {search?.isOpen && (
             <Box
               display="flex"
               gap="10px"
@@ -163,7 +184,7 @@ const RoomHeader = () => {
                     ? { background: "#1e1e1e", color: "white" }
                     : {}),
                   ...(!mobileMode
-                    ? { width: "400px" }
+                    ? { width: "200px" }
                     : { width: "80%", border: "1px solid" }),
                 }}
               >
@@ -222,26 +243,6 @@ const RoomHeader = () => {
                 </Box>
               )}
             </Box>
-          ) : (
-            <>
-              <Avatar
-                src={currentConversation?.avatar}
-                sx={{ height: "56px", width: "56px", borderRadius: "10px" }}
-              />
-              <Box display="flex" flexDirection="column" gap="4px">
-                <Typography
-                  variant="h6"
-                  color={isDarkMode ? "white" : "var(--Black, #212121)"}
-                >
-                  {currentConversation?.t !== "d"
-                    ? currentConversation?.name?.replaceAll("_", " ")
-                    : currentConversation?.name}
-                </Typography>
-                <Typography variant="body2" color="var(--Gray3, #999)">
-                  {currentConversation?.status}
-                </Typography>
-              </Box>
-            </>
           )}
         </Box>
         <Box

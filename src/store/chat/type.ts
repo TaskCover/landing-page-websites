@@ -245,6 +245,7 @@ export interface ChatRequestCommon extends AuthenRequestCommon {
 }
 export interface ChatConventionItemRequest extends ChatRequestCommon {
   text: string;
+  company?: string;
 }
 
 export interface LastMessagesRequest extends ChatRequestCommon {
