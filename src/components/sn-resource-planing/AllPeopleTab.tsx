@@ -2,7 +2,10 @@
 
 import FullCalendar from "@fullcalendar/react";
 import React, { use, useCallback, useEffect, useMemo } from "react";
-import { IBookingAllFitler } from "store/resourcePlanning/action";
+import {
+  IBookingAllFitler,
+  updateBookingResource,
+} from "store/resourcePlanning/action";
 import { DEFAULT_BOOKING_ALL_FILTER, TAB_TYPE } from "./helper";
 import dayjs from "dayjs";
 import { isEmpty } from "lodash";
@@ -52,6 +55,7 @@ const AllPeopleTab = () => {
     useBookingAll();
   const { selectedDate, updateDate } = useResourceDate();
   const [resources, setResources] = React.useState<IBookingListItem[]>([]);
+  const [selectedDateRange, setSelectedDateRange] = React.useState<Date[]>([]);
   const calendarRef = React.useRef<FullCalendar>(null);
   const [selectedResource, setSelectedResource] = React.useState<string[]>([]);
   const [isOpenCreate, setIsOpenCreate] = React.useState(false);
@@ -349,6 +353,7 @@ const AllPeopleTab = () => {
           eventDurationEditable={true}
           headerToolbar={false}
           selectMirror={true}
+          selectable={true}
           eventDragStart={(arg) => {
             const { event } = arg;
             if (event.extendedProps.type === "campaign") {
@@ -357,19 +362,13 @@ const AllPeopleTab = () => {
           }}
           duration={{ weeks: 1 }}
           select={(arg) => {
-            const { start, end } = arg;
-            const start_date = dayjs(start).format("YYYY-MM-DD");
-            const end_date = dayjs(end).format("YYYY-MM-DD");
-            const resource = resources.find(
-              (item) => item.id === selectedResource[0],
-            );
+            const { startStr, endStr } = arg;
+
+            const start_date = dayjs(startStr).toDate();
+
+            const end_date = dayjs(endStr).toDate();
             // if (!resource) return;
-            // const { id, fullname } = resource;
-            // updateBookingResource({
-            //   id,
-            //   start_date,
-            //   end_date,
-            // });
+            setSelectedDateRange([start_date, end_date]);
             setIsOpenCreate(true);
           }}
           slotDuration={{
@@ -456,9 +455,13 @@ const AllPeopleTab = () => {
         />
       </Box>
       <CreateBooking
-        onClose={() => setIsOpenCreate(false)}
+        onClose={() => {
+          setSelectedDateRange([]);
+          setIsOpenCreate(false);
+        }}
         open={isOpenCreate}
         resourceId={parentResource}
+        selectedDateRange={selectedDateRange}
       />
 
       {/* TODO: wait for confirm the edit function */}

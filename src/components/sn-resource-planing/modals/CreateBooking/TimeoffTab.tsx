@@ -24,10 +24,16 @@ import { useGetSchemas } from "../Schemas";
 interface IProps {
   open: boolean;
   resourceId: string;
+  selectedDateRange?: Date[];
   onClose(): void;
 }
 
-const TimeOffTab = ({ open, onClose, resourceId }: IProps) => {
+const TimeOffTab = ({
+  open,
+  onClose,
+  resourceId,
+  selectedDateRange,
+}: IProps) => {
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
   const { palette } = useTheme();
   const commonT = useTranslations(NS_COMMON);
@@ -50,8 +56,8 @@ const TimeOffTab = ({ open, onClose, resourceId }: IProps) => {
     defaultValues: {
       categoryTimeOff: "",
       dateRange: {
-        startDate: undefined,
-        endDate: undefined,
+        startDate: selectedDateRange?.[0] || undefined,
+        endDate: selectedDateRange?.[1] || undefined,
       },
       allocation: 0,
       allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,

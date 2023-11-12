@@ -36,10 +36,17 @@ interface IProps {
   open: boolean;
   onClose(): void;
   resourceId: string;
+  selectedDateRange?: Date[];
   userId?: string;
 }
 
-const ProjectTab = ({ open, onClose, resourceId, userId }: IProps) => {
+const ProjectTab = ({
+  open,
+  onClose,
+  resourceId,
+  userId,
+  selectedDateRange,
+}: IProps) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
   const [isShowTooltip, setIsShowTooltip] = useState(false);
@@ -63,7 +70,10 @@ const ProjectTab = ({ open, onClose, resourceId, userId }: IProps) => {
     defaultValues: {
       project_id: "",
       sale_id: "",
-      dateRange: {},
+      dateRange: {
+        startDate: selectedDateRange?.[0] || undefined,
+        endDate: selectedDateRange?.[1] || undefined,
+      },
       allocation: 0,
       allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
       note: "",
