@@ -144,6 +144,8 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   };
 
   const scrollMessage = async () => {
+    console.log("scrollMessage");
+
     clearScrollContentMessage();
     await sleep(500);
     if (focusMessageRef.current) {
@@ -289,6 +291,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
             : { height: "100%" }),
         }}
       >
+        {messages.length < 15 && <Box height={"400px"} />}
         {messages.map((message, index) => {
           // Need to separate this cluster into a separate component
           const isCurrentUser = message.u.username === sessionId;
