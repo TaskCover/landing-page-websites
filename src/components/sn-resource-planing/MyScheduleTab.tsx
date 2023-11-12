@@ -94,11 +94,15 @@ const MyScheduleTab = () => {
   useEffect(() => {
     if (filters) {
       setMyBookingFilter(filters);
+      setSelectedResource([]);
     }
   }, [filters]);
 
   React.useEffect(() => {
-    if (myBooking) setResources(myBooking);
+    if (myBooking) {
+      setResources(myBooking);
+      setSelectedResource([user?.id as string]);
+    }
   }, [myBooking]);
 
   React.useEffect(() => {

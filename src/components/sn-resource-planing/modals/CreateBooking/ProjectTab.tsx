@@ -74,10 +74,11 @@ const ProjectTab = ({
         startDate: selectedDateRange?.[0] || undefined,
         endDate: selectedDateRange?.[1] || undefined,
       },
-      allocation: 0,
+      allocation: 1,
       allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
       note: "",
     },
+    mode: "all",
   });
   const { workedTime, estimate, leftToSchedule, scheduledTime } =
     useCalculateDetail(

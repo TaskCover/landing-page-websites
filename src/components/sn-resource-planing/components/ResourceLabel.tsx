@@ -57,11 +57,15 @@ const ResourceLabel = ({
 
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
-  const isActive = includes(selectedResource, resource._resource.id);
+
   const { totalLeftToSchedule } = useGetTotalScheduleTime();
   const { timeOffOptions } = useGetTimeOffOptions();
   const { user } = useAuth();
   const { projectDetail, userDetail } = useFetchDetail(project?.id, user_id);
+  const isActive = useMemo(
+    () => includes(selectedResource, resource._resource.id),
+    [selectedResource],
+  );
   const handleOpenCreate = () => {
     setIsOpenCreate(true);
     setParentResource(
@@ -95,7 +99,7 @@ const ResourceLabel = ({
 
   const isAddbutton = useMemo(() => {
     return (isActive && parentBookings?.length === 0) || !isActive;
-  }, [isActive, JSON.stringify(parentBookings)]);
+  }, [isActive, JSON.stringify(parentBookings), isMybooking]);
 
   if (type === "step") {
     return (

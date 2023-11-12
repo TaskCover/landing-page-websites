@@ -93,15 +93,23 @@ const AllPeopleTab = () => {
   useEffect(() => {
     if (filters) {
       setBookingAllFilter(filters);
+      setSelectedResource([]);
     }
   }, [filters]);
 
   React.useEffect(() => {
+    let delay;
     if (bookingAll) {
       setResources(bookingAll);
-      setSelectedResource([...bookingAll?.map((item) => item.id)]);
+      delay = setTimeout(() => {
+        setSelectedResource([...bookingAll?.map((item) => item.id)]);
+      }, 500);
+    } else {
+      setSelectedResource([]);
     }
+
     calendarRef.current?.getApi().refetchResources();
+    return () => clearTimeout(delay);
   }, [bookingAll]);
 
   React.useEffect(() => {
