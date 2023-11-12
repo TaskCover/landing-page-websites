@@ -101,6 +101,7 @@ export const salesLang: SalesDictionary = {
       showEstimate: "{isShow} ước tính",
       ShowDescription: "{isShow} mô tả",
     },
+    assignedUser: "Không thể bỏ chọn thành viên được phân công",
     comment: {
       title: "Bình luận",
       placeholder: "Viết bình luận",

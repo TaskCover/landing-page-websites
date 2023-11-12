@@ -99,6 +99,7 @@ export type SalesDictionary = {
       showEstimate: string;
       ShowDescription: string;
     };
+    assignedUser: string;
     comment: {
       title: string;
       placeholder: string;

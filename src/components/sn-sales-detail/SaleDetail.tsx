@@ -104,6 +104,7 @@ const SalesDetail = () => {
         <TabPanel
           sx={{
             overflowY: "auto",
+            pt: 0,
           }}
           value={SALES_DETAIL_TAB.SERVICE}
         >

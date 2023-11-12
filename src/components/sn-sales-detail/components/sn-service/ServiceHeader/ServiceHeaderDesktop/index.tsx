@@ -46,7 +46,7 @@ const ServiceHeader = () => {
         </Stack>
       ) : (
         !isMdSmaller && (
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={2} sx={{}}>
             <Button variant="outlined" onClick={onCancel}>
               {commonT("form.cancel")}
             </Button>

@@ -43,9 +43,10 @@ const CommentEditor = forwardRef(
     const { onAddSnackbar } = useSnackbar();
     const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
     const [isLoadingFile, setIsLoadingFile] = useState<boolean>(false);
-
     const editorRef = useRef<UnprivilegedEditor | undefined>();
     const { control, setValue } = useFormContext();
+    const [newFiles, setNewFiles] = useState<File[]>([]);
+
     const [content, setContent] = useState<string>("");
     const [files, setFiles] = useState<File[]>([]);
     const [fileLoaded, setFileLoaded] = useState<string[]>([]);
@@ -57,7 +58,7 @@ const CommentEditor = forwardRef(
 
     const onChangeFiles = (files: File[], data: string[]) => {
       setFiles(files);
-      setFileLoaded(data);
+      setFileLoaded((files) => files.concat(data));
     };
 
     const { saleDetail, onGetSaleDetail } = useSaleDetail();
@@ -122,6 +123,17 @@ const CommentEditor = forwardRef(
           hasAttachment
           placeholder={salesT("detail.comment.placeholder")}
           onChange={onChange}
+          onChangeNewsfiles={(localFiles) => {
+            if (localFiles) {
+              setNewFiles(localFiles);
+              return;
+            }
+            setNewFiles((files) => {
+              files.pop();
+              return files;
+            });
+          }}
+          newFiles={newFiles}
           onChangeFiles={onChangeFiles}
           value={content}
           setIsProcessing={setIsLoadingFile}

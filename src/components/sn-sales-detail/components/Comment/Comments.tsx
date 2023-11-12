@@ -117,6 +117,11 @@ const CommentItem = (props: CommentItemProps) => {
               marginBlockEnd: 0,
               wordBreak: "break-all",
             },
+            "& img": {
+              maxWidth: "100%",
+              height: "auto",
+              objectFit: "contain",
+            },
           }}
           className="html"
           dangerouslySetInnerHTML={{ __html: content }}
