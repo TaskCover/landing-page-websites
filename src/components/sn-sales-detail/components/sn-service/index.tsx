@@ -27,6 +27,7 @@ const SaleService = () => {
   const { setEdit } = useContext(EditContext);
   const { serviceSectionList } = useSalesService();
   const salesT = useTranslations(NS_SALES);
+  const { isEdit } = useContext(EditContext);
   const { control, setValue, getValues } = useFormContext();
   const { positionOptions } = useGetOptions();
   const { fields, append, remove } = useFieldArray({
@@ -104,9 +105,16 @@ const SaleService = () => {
   useFetchOptions();
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} position="relative">
       <Stack spacing={2}>
         <Stack
+          sx={{
+            position: isEdit ? "sticky" : "relative",
+            top: 0,
+            zIndex: 1000,
+            padding: "20px 0px",
+            backgroundColor: "background.paper",
+          }}
           direction="row"
           justifyContent={fields.length === 0 ? "space-between" : "flex-end"}
         >
