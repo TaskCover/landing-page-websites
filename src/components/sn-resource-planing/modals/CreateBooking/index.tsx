@@ -13,17 +13,22 @@ import { useBookingAll } from "store/resourcePlanning/selector";
 interface IProps {
   open: boolean;
   onClose(): void;
+  selectedDateRange?: Date[];
   resourceId: string;
 }
 
-const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
+const CreateBooking: React.FC<IProps> = ({
+  open,
+  onClose,
+  resourceId,
+  selectedDateRange,
+}) => {
   const [activeTabs, setActiveTabs] = useState("1");
   const { bookingAll, isLoading } = useBookingAll();
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     setActiveTabs(newValue);
   };
-
   const handleOnClose = () => {
     setActiveTabs("1");
     onClose();
@@ -107,12 +112,14 @@ const CreateBooking: React.FC<IProps> = ({ open, onClose, resourceId }) => {
               open={open}
               resourceId={resourceId}
               userId={resourceId}
+              selectedDateRange={selectedDateRange}
             />
           </TabPanel>
           <TabPanel value="2" sx={{ p: 0 }}>
             <TimeOffTab
               onClose={handleOnClose}
               open={open}
+              selectedDateRange={selectedDateRange}
               resourceId={resourceId}
             />
           </TabPanel>

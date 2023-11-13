@@ -49,11 +49,17 @@ export const useGetSchemas = () => {
         .required(
           commonT("form.error.required", { name: resourceT("form.dateRange") }),
         ),
-      // TODO: may not use yet, will remove if the schemas is not used
-      // workingTime: yup
-      //   .string()
-      //   .required("Thời gian làm việc không được bỏ trống"),
-      allocation: yup.number().notRequired(),
+      allocation: yup
+        .number()
+        .transform((value) => (isNaN(value) ? 0 : value))
+        .min(
+          1,
+          commonT("form.error.gte", {
+            name: resourceT("form.allocation"),
+            name2: 1,
+          }),
+        )
+        .notRequired(),
       allocation_type: yup.string().notRequired(),
       user_id: yup.string(),
       note: yup.string().trim().notRequired(),
@@ -105,7 +111,17 @@ export const useGetSchemas = () => {
       //   .string()
       //   .required("Thời gian làm việc không được bỏ trống"),
       user_id: yup.string(),
-      allocation: yup.number(),
+      allocation: yup
+        .number()
+        .transform((value) => (isNaN(value) ? 0 : value))
+        .min(
+          1,
+          commonT("form.error.gte", {
+            name: resourceT("form.allocation"),
+            name2: 1,
+          }),
+        )
+        .notRequired(),
       allocation_type: yup.string().notRequired(),
       note: yup.string().trim().notRequired(),
     })

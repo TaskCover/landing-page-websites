@@ -89,7 +89,7 @@ const EventContents = ({ event, setIsOpenEdit }: IEventContentsProps) => {
       {checkedEventType.icon}
       <Tooltip
         title={resourceT("schedule.time.eventTime", {
-          day,
+          day: isNaN(day) ? 1 : day,
           allocation,
           unit,
         })}
@@ -107,7 +107,7 @@ const EventContents = ({ event, setIsOpenEdit }: IEventContentsProps) => {
           }}
         >
           {resourceT("schedule.time.eventTime", {
-            day,
+            day: isNaN(day) ? 1 : day,
             allocation,
             unit,
           })}
