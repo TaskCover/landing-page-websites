@@ -59,10 +59,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
     const day = dateObject.getDate();
 
     // Tạo chuỗi mới với định dạng yyyy/mm/dd
-    const formattedDate = `${year}/${month.toString().padStart(2, "0")}/${day
-      .toString()
-      .padStart(2, "0")}`;
-
+    const formattedDate = `${day.toString().padStart(2, "0")}/${month.toString().padStart(2, "0")}/${year}`;
     return formattedDate;
   };
 

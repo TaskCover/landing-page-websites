@@ -15,16 +15,18 @@ import { usePositionOptions } from "store/global/selectors";
 import { NS_COMMON, NS_CAREER } from "constant/index";
 import { useTranslations } from "next-intl";
 import Form from "./components/Form";
-
 import { TEXT_PAY_STATUS_CAREER } from "./helpers/helpers";
 import { FeedbackStatus } from "store/feedback/actions";
 import { useFeedback } from "store/feedback/selectors";
 import { SearchStatus } from "store/career/action";
+import { CareergDataForm } from "store/career/type";
+import { useCareer } from "store/career/selectors";
 
 const Actions = () => {
   const careerT = useTranslations(NS_CAREER);
   const commonT = useTranslations(NS_COMMON);
-  const { filters, page, size, onGetFeedback } = useFeedback();
+  const { filters, page, size, onCreateNewCareer, onGetCareer } = useCareer();
+  const [isShow, onShow, onHide] = useToggle();
   // const { onCreateNewCategory } = useCategoryBlog();
 
   // const [isShow, onShow, onHide] = useToggle();
@@ -69,7 +71,7 @@ const Actions = () => {
     const path = getPath(pathname, queries);
     push(path);
 
-    onGetFeedback({ ...queries, page, size });
+    onGetCareer({ ...queries, page, size });
   };
 
   useEffect(() => {
@@ -110,7 +112,7 @@ const Actions = () => {
           </Text>
 
           <Button
-            // onClick={onShow}
+            onClick={onShow}
             startIcon={<PlusIcon />}
             size="extraSmall"
             variant="primary"
@@ -183,15 +185,15 @@ const Actions = () => {
           </Button>
         </Stack>
       </Stack>
-      {/* {isShow && (
+      {isShow && (
         <Form
           open={isShow}
           onClose={onHide}
           type={DataAction.CREATE}
-          initialValues={INITIAL_VALUES as unknown as CategoryBlogDataForm}
-          onSubmit={onCreateNewCategory}
+          initialValues={INITIAL_VALUES as unknown as CareergDataForm}
+          onSubmit={onCreateNewCareer}
         />
-      )} */}
+      )}
     </>
   );
 };
@@ -208,3 +210,14 @@ const PAYMENT_OPTIONS = [
     value: SearchStatus.IS_CLOSED,
   },
 ];
+
+const INITIAL_VALUES = {
+  title: "",
+  description:"",
+  location:"",
+  start_time:"",
+  end_time:"",
+  numberOfHires:"",
+  is_opening:"",
+  slug:"",
+};

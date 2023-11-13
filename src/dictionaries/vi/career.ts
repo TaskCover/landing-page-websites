@@ -8,6 +8,8 @@ export const CareerLang: CareerDictionary = {
         },
     },
 
+    title_form: "Nghề nghiệp",
+
     actions: {
         search: "Tìm kiếm"
     },
@@ -25,8 +27,9 @@ export const CareerLang: CareerDictionary = {
             is_closed: "Đang đóng",
         },
         responsed : "Note",
-        endtime : "Đến",
+        endtime : "đến",
     },
+
     status: "Trạng thái",
     is_opening: "Đang mở",
     is_closed: "Đang đóng",
@@ -44,7 +47,7 @@ export const CareerLang: CareerDictionary = {
    
     career_success: {
         notification: {
-            success_responsed: "Phản Hồi Thành Công",
+            success_responsed: `{label} thành công`,
         },
     },
 

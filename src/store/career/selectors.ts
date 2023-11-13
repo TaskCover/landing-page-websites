@@ -2,7 +2,8 @@ import { DataStatus } from "constant/enums";
 import { useCallback, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { GetCareerListQueries, getAllCareer } from "./action";
+import { CareerData, GetCareerListQueries, getAllCareer, postCareer } from "./action";
+import { CareergDataForm } from "./type";
 
 export const useCareer = () => {
   const dispatch = useAppDispatch();
@@ -28,20 +29,28 @@ export const useCareer = () => {
     [dispatch],
   );
 
-//   const onRespondToFeedback = useCallback(
-//     async (id: string, data: FeedbackData, Token: string | undefined |null) => {
-//       try {
-//         return await dispatch(respondToFeedback({ id, data, Token })).unwrap();
-//       } catch (error) {
-//         throw error;
-//       }
-//     }, [dispatch]
-//   )
+  const onCreateNewCareer = useCallback(
+    async (data: CareergDataForm) => {
+      return await dispatch(postCareer(data)).unwrap();
+    },
+    [dispatch],
+  );
+
+
+  //   const onRespondToFeedback = useCallback(
+  //     async (id: string, data: FeedbackData, Token: string | undefined |null) => {
+  //       try {
+  //         return await dispatch(respondToFeedback({ id, data, Token })).unwrap();
+  //       } catch (error) {
+  //         throw error;
+  //       }
+  //     }, [dispatch]
+  //   )
 
 
   return {
     onGetCareer,
-    // onRespondToFeedback,
+    onCreateNewCareer,
     items,
     totalItems,
     total_page,

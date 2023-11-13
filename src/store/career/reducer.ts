@@ -1,5 +1,5 @@
 import { DataStatus } from "constant/enums";
-import { CareerData, GetCareerListQueries, getAllCareer } from "./action";
+import { CareerData, GetCareerListQueries, getAllCareer, postCareer } from "./action";
 import { Paging_Career } from "constant/types";
 import { DEFAULT_PAGING_CAREER } from "constant/index";
 import { createSlice } from "@reduxjs/toolkit";
@@ -57,6 +57,9 @@ const careerSlice = createSlice({
             .addCase(getAllCareer.rejected, (state, action) => {
                 state.careersStatus = DataStatus.FAILED;
                 state.careersError = action.error?.message;
+            })
+            .addCase(postCareer.fulfilled, (state, action: { payload }) => {
+                
             })
     },
 });

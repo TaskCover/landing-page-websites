@@ -10,6 +10,8 @@ export type CareerDictionary={
     actions: {
         search: string
     },
+
+    title_form: string,
     
     careerTable: {
         id: string,

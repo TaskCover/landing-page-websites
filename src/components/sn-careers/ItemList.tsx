@@ -34,14 +34,14 @@ const ItemList = () => {
     () => [
       { value: careerT("careerTable.title"), width: "15%", align: "left" },
       { value: careerT("careerTable.location"), width: "15%", align: "left" },
-      { value: careerT("careerTable.time"), width: "19%", align: "left" },
+      { value: careerT("careerTable.time"), width: "20%", align: "left" },
       { value: careerT("careerTable.numberOfHires"), width: "10%", align: "left" },
       {
         value: careerT("careerTable.description"),
         width: "25%",
         align: "left",
       },
-      { value: careerT("status"), width: "11%", align: "left" },
+      { value: careerT("status"), width: "10%", align: "left" },
       { value: careerT("careerTable.responsed"), width: "5%", align: "left" },
     ],
     [careerT],

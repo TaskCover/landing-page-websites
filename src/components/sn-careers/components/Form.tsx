@@ -1,10 +1,14 @@
-import { CardContent, Grid, Stack, TextField, Typography } from "@mui/material";
+import { CardContent, Grid, Radio, Stack, TextField, Typography } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import {
   AN_ERROR_TRY_AGAIN,
   NS_COMMON,
-  NS_FEEDBACK,
+  NS_CAREER
 } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
 import { memo, useMemo } from "react";
@@ -13,38 +17,43 @@ import * as Yup from "yup";
 import { getMessageErrorByAPI } from "utils/index";
 import { DataAction } from "constant/enums";
 import { useTranslations } from "next-intl";
-import { FeedbackData } from "store/feedback/actions";
+import { CareerData } from "store/career/action";
+import { CareergDataForm } from "store/career/type";
+
 type FormProps = {
-  initialValues: FeedbackData;
+  initialValues: CareergDataForm;
   type: DataAction;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit: (values: FeedbackData) => Promise<any>;
+  onSubmit: (values: CareergDataForm) => Promise<any>;
 } & Omit<DialogLayoutProps, "children" | "onSubmit">;
 
 const Form = (props: FormProps) => {
   const { initialValues, type, onSubmit: onSubmitProps, ...rest } = props;
   const { onAddSnackbar } = useSnackbar();
-  const feedbackT = useTranslations(NS_FEEDBACK);
+  const careerT = useTranslations(NS_CAREER);
   const commonT = useTranslations(NS_COMMON);
 
   const label = useMemo(() => {
+    console.log("Đã vào đây");
+    console.log(DataAction);
     switch (type) {
+      case DataAction.CREATE:
+        return commonT("createNew");
       case DataAction.UPDATE:
-        // alert("")
         return commonT("update");
       default:
         return "";
     }
   }, [commonT, type]);
 
-  const onSubmit = async (values: FeedbackData) => {
+  const onSubmit = async (values: CareergDataForm) => {
     try {
       const newItem = await onSubmitProps(values);
       // console.log("Đã Vào đây");
       // console.log(newItem);
       if (newItem) {
         onAddSnackbar(
-          feedbackT("Feedback_success.notification.success_responsed"),
+          careerT("career_success.notification.success_responsed", { label }),
           "success",
         );
         // console.log("Đã vào đây");
@@ -67,7 +76,7 @@ const Form = (props: FormProps) => {
 
   const touchedErrors = useMemo(() => {
     return Object.entries(formik.errors).reduce(
-      (out: FormikErrors<FeedbackData>, [key, error]) => {
+      (out: FormikErrors<CareerData>, [key, error]) => {
         if (formik.touched[key]) {
           out[key] = error;
         }
@@ -85,62 +94,168 @@ const Form = (props: FormProps) => {
   return (
     <FormLayout
       sx={{
-        minWidth: { xs: "calc(100vw - 24px)", lg: 800},
-        maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
+        minWidth: { xs: "calc(100vw - 24px)", lg: 800 },
+        maxWidth: { xs: "calc(100vw - 24px)", sm: 1200 },
         minHeight: "auto",
+        color: "black"
       }}
-      label={`${feedbackT("form_Feedback.label_form_update")}`}
+      label={`${label} ${careerT("title_form")}`}
       onSubmit={formik.handleSubmit}
       disabled={disabled}
       submitting={formik.isSubmitting}
       {...rest}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12} md={5}>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {initialValues.name}
-            </Typography>
-            <Typography sx={{ mb: 1 }} variant="body2" color="#212121">
-              {feedbackT("feedbackTable.phone")}: {initialValues.phone}
-            </Typography>
-            <Typography sx={{ mb: 1 }} variant="body2" color="#424242">
-              {feedbackT("feedbackTable.email")}: {initialValues.email}
-            </Typography>
-            <hr />
-            <Typography sx={{ mb: 1 }} color="#424242" variant="h5">
-              {feedbackT("feedbackTable.title")}: {initialValues.title}
-            </Typography>
-            <Typography variant="body2" color="#212121">
-              {feedbackT("feedbackTable.content")}: {initialValues.content}
-            </Typography>
-          </CardContent>
+        <Grid item xs={12} md={12}>
+
         </Grid>
-        <Grid item xs={12} md={7}>
-          <Stack spacing={2} py={3}>
-            <TextField
-              id="outlined-multiline-static"
-              label={feedbackT("form_Feedback.responsed_content")}
-              multiline
-              focused
-              color="secondary"
-              required
-              name="responsed_content"
-              rows={4}
-              placeholder={feedbackT("form_Feedback.placeholder")}
-              value={formik.values?.responsed_content}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                !!commonT(touchedErrors?.responsed_content, {
-                  name: "responsed_content",
-                })
-              }
-              helperText={commonT(touchedErrors?.responsed_content, {
-                name: feedbackT("form_Feedback.responsed_content"),
-              })}
+        <Grid item xs={12} md={6}>
+          <TextField
+            required
+            id="outlined-required"
+            label={careerT("form_career.title")}
+            fullWidth
+            size="small"
+            focused
+            color="secondary"
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            required
+            id="outlined-required"
+            label={careerT("form_career.slug")}
+            fullWidth
+            size="small"
+            focused
+            color="secondary"
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}
+          >
+            <DatePicker
+              label= {careerT("form_career.start_time")}
+              defaultValue={dayjs()}
+              sx={{
+                width: "100%",
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#29c9c1",
+                  borderColor: "#29c9c1",
+                },
+                "& .MuiInputLabel-root": {  // Quy tắc cho MuiInputLabel khi không focus
+                  color: "#29c9c1",
+                  borderColor: "#29c9c1",
+                },
+                "& .MuiOutlinedInput-root": {
+                  "&:hover > fieldset": {
+                    borderColor: "#29c9c1",
+                  },
+                  '& fieldset': {
+                    borderColor: '#29c9c1',
+                  },
+                  height: "45px",
+                  borderRadius: "6px",
+                  borderColor: "#29c9c1",  // Quy tắc cho borderColor khi không hover
+                },
+              }}
             />
-          </Stack>
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}
+          >
+            <DatePicker
+              label= {careerT("form_career.end_time")}
+              defaultValue={dayjs()}
+              sx={{
+                width: "100%",
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#29c9c1",
+                  borderColor: "#29c9c1",
+                },
+                "& .MuiInputLabel-root": {  // Quy tắc cho MuiInputLabel khi không focus
+                  color: "#29c9c1",
+                  borderColor: "#29c9c1",
+                },
+                "& .MuiOutlinedInput-root": {
+                  "&:hover > fieldset": {
+                    borderColor: "#29c9c1",
+                  },
+                  '& fieldset': {
+                    borderColor: '#29c9c1',
+                  },
+                  height: "45px",
+                  borderRadius: "6px",
+                  borderColor: "#29c9c1",  // Quy tắc cho borderColor khi không hover
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={6} md={6}>
+          <TextField
+            required
+            id="outlined-required"
+            label={careerT("form_career.location")}
+            fullWidth
+            size="small"
+            focused
+            color="secondary"
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            id="outlined-number"
+            label={careerT("form_career.numberOfHires")}
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            focused
+            fullWidth
+            size="small"
+            color="secondary"
+          />
+        </Grid>
+        <Grid item xs={12} md={12}>
+          {/* <Radio
+            checked={selectedValue === 'a'}
+            onChange={handleChange}
+            value="a"
+            name="radio-buttons"
+            inputProps={{ 'aria-label': 'A' }}
+          />
+          <Radio
+            checked={selectedValue === 'b'}
+            onChange={handleChange}
+            value="b"
+            name="radio-buttons"
+            inputProps={{ 'aria-label': 'B' }}
+          /> */}
+        </Grid>
+        <Grid item xs={12} md={12}>
+          <TextField
+            id="outlined-multiline-static"
+            label={careerT("form_career.description")}
+            multiline
+            focused
+            color="secondary"
+            required
+            name="responsed_content"
+            rows={4}
+            placeholder={careerT("form_Feedback.placeholder")}
+            fullWidth
+            size="small"
+          // error={
+          //   !!commonT(touchedErrors?.responsed_content, {
+          //     name: "responsed_content",
+          //   })
+          // }
+          // helperText={commonT(touchedErrors?.responsed_content, {
+          //   name: careerT("form_Feedback.responsed_content"),
+          // })}
+          />
         </Grid>
       </Grid>
     </FormLayout>
@@ -150,5 +265,5 @@ const Form = (props: FormProps) => {
 export default memo(Form);
 
 export const validationSchema = Yup.object().shape({
-  responsed_content: Yup.string().trim().required("form.error.required"),
+
 });

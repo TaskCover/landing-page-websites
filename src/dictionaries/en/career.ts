@@ -7,6 +7,8 @@ export const CareerLang: CareerDictionary = {
         }
     },
 
+    title_form: "Career",
+
     actions: {
         search: "search"
     },
@@ -44,7 +46,7 @@ export const CareerLang: CareerDictionary = {
 
     career_success: {
         notification: {
-            success_responsed: "Successful career",
+            success_responsed: "{label} Successful career",
         },
     },
 
