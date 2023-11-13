@@ -32,20 +32,31 @@ export type BlogData = {
     id?: string;
     title?: string;
     content?: string;
-    background?: AttachmentsBlogs | undefined;
+    background_down?: AttachmentsBlogs | undefined;
     published?: boolean;
     category?: Category[];
     tag?: string[];
     slug?: string,
-    attachments?: AttachmentsBlogs[] |undefined,
+    attachments_down?: AttachmentsBlogs[] |undefined,
     created_time?: Date,
     created_by?: CreateByUser,
+    ignoredId?: string,
 }
 export type GetBlogListQueries = BaseQueries_Feedback & {
     searchKey?: string;
     published?: boolean;
 };
 
+export type CommentBlogData = {
+    id: string;
+    content: string;
+    name: string;
+    email:string;
+    created_time: Date;
+    reply_to : string;
+    post_slug : string;
+    replies?: CommentBlogData[];
+  };
 
 export const getAllBlogs = createAsyncThunk(
     "blogs/getAllBlogs",
@@ -99,11 +110,11 @@ export const updateBlog = createAsyncThunk("blogs/updateBlog",
 export const getBlogBySlug = createAsyncThunk(
     "blogs/getBlogBySlug", async (id: string) => {
         try {
-            const response = await client.get(Endpoint.BLOGS, id, {
+            const response = await client.get(Endpoint.BLOGS + "/"+id,{}, {
                 baseURL: BLOG_API_URL,
             });
             if (response?.status === HttpStatusCode.OK) {
-                return response.data;
+                return response.data[0];
             }
             throw AN_ERROR_TRY_AGAIN;
         } catch (error) {
@@ -111,3 +122,32 @@ export const getBlogBySlug = createAsyncThunk(
         }
     }
 );
+
+
+export const getRelatedBlog =  createAsyncThunk(
+    "blogs/getRelatedBlog", async(id:string)=>{
+        try{
+            const response = await client.get(Endpoint.BLOGS + "/"+id +"/related",{}, {
+                baseURL: BLOG_API_URL,
+            });
+            if (response?.status === HttpStatusCode.OK) {
+                return response.data;
+            }
+            throw AN_ERROR_TRY_AGAIN;
+        }catch (error){
+            throw error;
+        }
+    }
+);
+
+export const getBlogComments =  createAsyncThunk(
+    "blogs/getBlogComments",async(id:string)=>{
+        const response = await client.get(Endpoint.BLOGS + "/"+id +"/comment",{}, {
+            baseURL: BLOG_API_URL,
+        });
+        if (response?.status === HttpStatusCode.OK) {
+            return response.data;
+        }
+        throw AN_ERROR_TRY_AGAIN;
+    }
+)

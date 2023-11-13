@@ -10,35 +10,32 @@ import {
 } from "react";
 import Editor from "components/Editor";
 import { useTranslations } from "next-intl";
-import { NS_COMMON, NS_PROJECT, NS_SALES } from "constant/index";
+import { NS_COMMON, NS_PROJECT } from "constant/index";
 import { Stack } from "@mui/material";
 import { Button } from "components/shared";
-import { useSnackbar } from "store/app/selectors";
-import { UnprivilegedEditor } from "react-quill";
-import {
-  useSaleDetail,
-  useSalesComment,
-  useSalesTodo,
-} from "store/sales/selectors";
-import SalesDetail from "components/sn-sales-detail/SaleDetail";
-import { CommentData, DealData } from "store/sales/actions";
 import { Endpoint, client } from "api";
+import { useTaskDetail } from "store/project/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { useFormContext } from "react-hook-form";
-import moment from "moment";
-import { SaleState, Sales } from "store/sales/reducer";
-import useToggle from "hooks/useToggle";
-import Loading from "components/Loading";
+import { useSnackbar } from "store/app/selectors";
+import { CommentTaskData } from "store/project/actions";
+import { UnprivilegedEditor } from "react-quill";
 
 const CommentEditor = forwardRef(
   (_, ref: ForwardedRef<HTMLDivElement | null>) => {
     const commonT = useTranslations(NS_COMMON);
-    const salesT = useTranslations(NS_SALES);
+    const projectT = useTranslations(NS_PROJECT);
+    const {
+      task,
+      taskListId,
+      subTaskId,
+      taskId,
+      onCommentTask,
+      onGetTaskList,
+    } = useTaskDetail();
     const { onAddSnackbar } = useSnackbar();
-    const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
 
     const editorRef = useRef<UnprivilegedEditor | undefined>();
-    const { control, setValue } = useFormContext();
+
     const [content, setContent] = useState<string>("");
     const [files, setFiles] = useState<File[]>([]);
 
@@ -51,9 +48,6 @@ const CommentEditor = forwardRef(
       setFiles(files);
     };
 
-    const { saleDetail, onGetSaleDetail } = useSaleDetail();
-    const { onCreateComment } = useSalesComment();
-
     const disabled = useMemo(
       () =>
         (!content?.trim()?.length ||
@@ -63,19 +57,21 @@ const CommentEditor = forwardRef(
     );
 
     const onSubmit = async () => {
-      //   if (!taskListId || !taskId) return;
+      if (!taskListId || !taskId) return;
 
       try {
-        onProcessingTrue();
         const data = {
-          deal_id: saleDetail?.id || "",
+          task: taskId,
+          task_list: taskListId,
+          sub_task: subTaskId,
           content: editorRef.current?.getHTML() ?? content,
-        } as CommentData;
+        } as CommentTaskData;
         if (files.length) {
           data.attachments = [];
           const promises = files.map((file) => {
             return client.upload(Endpoint.UPLOAD_LINK, file);
           });
+
           const results = await Promise.allSettled(promises);
           results.forEach((result) => {
             if (result.status === "fulfilled" && result.value) {
@@ -83,15 +79,9 @@ const CommentEditor = forwardRef(
             }
           });
         }
-        const newData = await onCreateComment(data);
+        const newData = await onCommentTask(data);
         if (newData) {
-          //   onGetTaskList(taskListId);
-          const newComments: Sales["comments"] = newData.deal_update.comments;
-          newComments.sort((a, b) =>
-            moment(b.created_time).isAfter(a.created_time) ? 1 : -1,
-          );
-          onGetSaleDetail(saleDetail?.id || "");
-          // setValue("comments", newComments);
+          onGetTaskList(taskListId);
           setContent("");
           setFiles([]);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -99,39 +89,34 @@ const CommentEditor = forwardRef(
         }
       } catch (error) {
         onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-      } finally {
-        onProcessingFalse();
       }
     };
 
     return (
-      <>
-        <Editor
-          hasAttachment
-          placeholder={salesT("detail.comment.placeholder")}
-          onChange={onChange}
-          onChangeFiles={onChangeFiles}
-          value={content}
-          files={files}
+      <Editor
+        hasAttachment
+        placeholder={projectT("taskDetail.writeComment")}
+        onChange={onChange}
+        onChangeFiles={onChangeFiles}
+        value={content}
+        files={files}
+      >
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mt={2}
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mt={2}
+          <Button
+            disabled={disabled}
+            onClick={onSubmit}
+            variant="primary"
+            size="small"
           >
-            <Button
-              disabled={disabled}
-              onClick={onSubmit}
-              variant="primary"
-              size="small"
-            >
-              {salesT("detail.comment.submit")}
-            </Button>
-          </Stack>
-        </Editor>
-        <Loading open={isProcessing} />
-      </>
+            {projectT("taskDetail.sendComment")}
+          </Button>
+        </Stack>
+      </Editor>
     );
   },
 );

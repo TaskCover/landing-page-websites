@@ -6,6 +6,9 @@ import {
     GetBlogListQueries,
     createNewBlogs,
     getAllBlogs,
+    getBlogBySlug,
+    getBlogComments,
+    getRelatedBlog,
     updateBlog,
 } from "./actions";
 import { DataStatus } from "constant/enums";
@@ -13,7 +16,7 @@ import { BlogForm } from "components/sn-blogs/components/Form";
 
 export const useBlogs = () => {
     const dispatch = useAppDispatch();
-    const { blogs: items, blogsStatus: status, blogsError: error, blogsFilters: filters, blog: item } = useAppSelector(
+    const { blogs: items, blogsStatus: status, blogsError: error, blogsFilters: filters, blog: item,relatedBlogs,listBlogComment } = useAppSelector(
         (state) => state.blogs,
         shallowEqual,
     );
@@ -49,10 +52,35 @@ export const useBlogs = () => {
         },
         [dispatch],
     );
-    const onGetBlogBySlug = async (slug: string) => {
-        return await dispatch(onGetBlogBySlug(slug)).unwrap();
-    };
+    const onGetBlogBySlug = useCallback(
+        async (slug: string) => {
+            try {
+                return await dispatch(getBlogBySlug(slug)).unwrap();
+            } catch (error) {
+                throw error;
+            }
+        }, [dispatch,]
+    );
 
+    const onGetRelatedBlogs = useCallback(
+        async (slug: string) => {
+            try {
+                return await dispatch(getRelatedBlog(slug)).unwrap();
+            } catch (error) {
+                throw error;
+            }
+        }, [dispatch],
+    )
+
+    const onGetBlogComments =  useCallback(
+        async(slug :  string)=>{
+            try{
+                return await dispatch(getBlogComments(slug)).unwrap();
+            }catch(error){
+                throw error;
+            }
+        },[dispatch],
+    )
     return {
         onGetBlogs,
         onUpdateBlog,
@@ -69,5 +97,9 @@ export const useBlogs = () => {
         filters,
         onGetBlogBySlug,
         item,
+        onGetRelatedBlogs,
+        relatedBlogs,
+        listBlogComment,
+        onGetBlogComments,
     };
 };
