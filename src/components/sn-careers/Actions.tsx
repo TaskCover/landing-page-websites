@@ -8,7 +8,7 @@ import { Clear, Dropdown, Refresh, Search } from "components/Filters";
 import { getPath } from "utils/index";
 import { usePathname, useRouter } from "next-intl/client";
 import useToggle from "hooks/useToggle";
-import { DataAction} from "constant/enums";
+import { DataAction } from "constant/enums";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { GetEmployeeListQueries } from "store/company/actions";
 import { usePositionOptions } from "store/global/selectors";
@@ -16,13 +16,15 @@ import { NS_COMMON, NS_CAREER } from "constant/index";
 import { useTranslations } from "next-intl";
 import Form from "./components/Form";
 
-import { TEXT_PAY_STATUS_FEEDBACK } from "./helpers/helpers";
+import { TEXT_PAY_STATUS_CAREER } from "./helpers/helpers";
 import { FeedbackStatus } from "store/feedback/actions";
 import { useFeedback } from "store/feedback/selectors";
+import { SearchStatus } from "store/career/action";
 
 const Actions = () => {
   const careerT = useTranslations(NS_CAREER);
-  const {filters, page, size, onGetFeedback} = useFeedback();
+  const commonT = useTranslations(NS_COMMON);
+  const { filters, page, size, onGetFeedback } = useFeedback();
   // const { onCreateNewCategory } = useCategoryBlog();
 
   // const [isShow, onShow, onHide] = useToggle();
@@ -43,7 +45,7 @@ const Actions = () => {
   const onChangeQueries = (name, value) => {
     if (name === "status") {
       const addQueries = {
-        status: typeof value === "string" ? value : undefined,
+        isOpening: typeof value === "string" ? value : undefined,
         is_approve: typeof value === "number" ? value : undefined,
       };
       // Truyền trạng thái hiện tại (queries) vào hàm setQueries để có thể sử dụng nó trong lambda function
@@ -62,7 +64,7 @@ const Actions = () => {
     }
   };
 
-  // Tìm kiếm 
+  // Tìm kiếm
   const onSearch = () => {
     const path = getPath(pathname, queries);
     push(path);
@@ -74,7 +76,6 @@ const Actions = () => {
     // console.log(filters);
     setQueries(filters);
   }, [filters]);
-
 
   // console.log(queries);
 
@@ -93,6 +94,10 @@ const Actions = () => {
           justifyContent="space-between"
           width="100%"
           spacing={{ xs: 2, md: 0 }}
+          sx={{
+            display: {md: "flex" },
+            height: 32,
+          }}
         >
           <Text
             variant="h4"
@@ -103,8 +108,17 @@ const Actions = () => {
           >
             {careerT("career_title_view.title")}
           </Text>
-        </Stack>
 
+          <Button
+            // onClick={onShow}
+            startIcon={<PlusIcon />}
+            size="extraSmall"
+            variant="primary"
+            sx={{ height: 32, px: ({ spacing }) => `${spacing(2)}!important` }}
+          >
+            {commonT("createNew")}
+          </Button>
+        </Stack>
         <Stack
           direction="row"
           alignItems="center"
@@ -125,10 +139,12 @@ const Actions = () => {
             name="status"
             onChange={onChangeQueries}
             value={
-              queries?.is_approve ? Number(queries?.is_approve) : queries?.status
+              queries?.is_approve
+                ? Number(queries?.is_approve)
+                : queries?.isOpening
             }
           />
-          
+
           {/* Tìm Kiếm */}
           <Search
             placeholder={careerT("actions.search")}
@@ -138,7 +154,7 @@ const Actions = () => {
             value={queries?.searchKey}
             rootSx={{ height: { xs: 32, md: 32 } }}
           />
-          
+
           {/* Laptop */}
           <Button
             size="extraSmall"
@@ -182,8 +198,13 @@ const Actions = () => {
 
 export default memo(Actions);
 const PAYMENT_OPTIONS = [
-  { label: TEXT_PAY_STATUS_FEEDBACK[FeedbackStatus.RESPONSED], value: FeedbackStatus.RESPONSED },
+  {
+    label: TEXT_PAY_STATUS_CAREER[SearchStatus.IS_OPENING],
+    value: SearchStatus.IS_OPENING,
+  },
 
-  { label: TEXT_PAY_STATUS_FEEDBACK[FeedbackStatus.WATTING_RESPONSE], value: FeedbackStatus.WATTING_RESPONSE },
-
+  {
+    label: TEXT_PAY_STATUS_CAREER[SearchStatus.IS_CLOSED],
+    value: SearchStatus.IS_CLOSED,
+  },
 ];

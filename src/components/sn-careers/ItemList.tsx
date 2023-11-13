@@ -7,7 +7,7 @@ import {
   CellProps,
   TableLayout,
 } from "components/Table";
-import { NS_FEEDBACK } from "constant/index";
+import { NS_CAREER } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import { HEADER_HEIGHT } from "layouts/Header";
 import Pagination from "components/Pagination";
@@ -18,33 +18,33 @@ import DesktopCells from "./components/DesktopCells";
 import MobileContentCells from "./components/MobileContentCell";
 import useQueryParams from "hooks/useQueryParams";
 import {getPath } from "utils/index";
-import { useFeedback } from "store/feedback/selectors";
 import { usePathname, useRouter } from "next-intl/client";
+import { useCareer } from "store/career/selectors";
 
 const ItemList = () => {
-  const feedbackT = useTranslations(NS_FEEDBACK);
+  const careerT = useTranslations(NS_CAREER);
   const { isMdSmaller } = useBreakpoint();
   // const { loading, categories } = useSelector((state: RootState) => state.categoryBlogs);
   const { initQuery, isReady, query } = useQueryParams();
-  const { onGetFeedback, items, totalItems, total_page, page, size, isIdle } = useFeedback();
+  const { onGetCareer, items, totalItems, total_page, page, size, isIdle } = useCareer();
   const pathname = usePathname();
   const { push } = useRouter();
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
-      { value: feedbackT("feedbackTable.name"), width: "15%", align: "left" },
-      { value: feedbackT("feedbackTable.phone"), width: "10%", align: "left" },
-      { value: feedbackT("feedbackTable.email"), width: "20%", align: "left" },
-      { value: feedbackT("feedbackTable.title"), width: "15%", align: "left" },
+      { value: careerT("careerTable.title"), width: "15%", align: "left" },
+      { value: careerT("careerTable.location"), width: "15%", align: "left" },
+      { value: careerT("careerTable.time"), width: "19%", align: "left" },
+      { value: careerT("careerTable.numberOfHires"), width: "10%", align: "left" },
       {
-        value: feedbackT("feedbackTable.content"),
-        width: "24%",
+        value: careerT("careerTable.description"),
+        width: "25%",
         align: "left",
       },
-      { value: feedbackT("feedbackTable.status"), width: "11%", align: "left" },
-      { value: feedbackT("feedbackTable.responsed"), width: "5%", align: "left" },
+      { value: careerT("status"), width: "11%", align: "left" },
+      { value: careerT("careerTable.responsed"), width: "5%", align: "left" },
     ],
-    [feedbackT],
+    [careerT],
   );
 
   const onChangeQueries = (queries: { [key: string]: any }) => {
@@ -52,7 +52,7 @@ const ItemList = () => {
     const path = getPath(pathname, newQueries);
     push(path);
 
-    onGetFeedback(newQueries);
+    onGetCareer(newQueries);
   };
 
   const onChangePage = (newPage: number) => {
@@ -76,8 +76,8 @@ const ItemList = () => {
 
   useEffect(() => {
     if (!isReady) return;
-    onGetFeedback({ ...initQuery });
-  }, [initQuery, isReady, onGetFeedback]);
+    onGetCareer({ ...initQuery });
+  }, [initQuery, isReady, onGetCareer]);
 
   console.log(items);
   // console.log(total_page);

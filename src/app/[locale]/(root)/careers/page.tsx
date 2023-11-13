@@ -1,5 +1,5 @@
 import Wrapper from "components/Wrapper";
-import { Actions, ItemList } from "components/sn-career";
+import { Actions, ItemList } from "components/sn-careers";
 // import { Actions, ItemList } from "components/sn-blogs";
 import { NS_CAREER } from "constant/index";
 import { Metadata } from "next";
@@ -15,7 +15,7 @@ export default function Page(){
     return(
         <Wrapper overflow="auto">
             <Actions/>
-            {/* <ItemList/> */}
+            <ItemList/>
         </Wrapper>
     );
 }

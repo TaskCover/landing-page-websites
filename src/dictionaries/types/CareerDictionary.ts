@@ -17,13 +17,14 @@ export type CareerDictionary={
         slug: string,
         description: string,
         location: string,
-        start_time:string,
-        end_time:string,
+        time:string,
         numberOfHires:string,
         statusList: {
             is_opening: string,
             is_closed: string,
         },
+        responsed : string,
+        endtime : string,
     },
 
     status: string,

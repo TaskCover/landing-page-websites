@@ -17,13 +17,14 @@ export const CareerLang: CareerDictionary = {
         slug: "Slug",
         description: "Description",
         location: "Location",
-        start_time: "Start time",
-        end_time: "End time",
+        time: "Time",
         numberOfHires: "Number of hires",
         statusList: {
             is_opening: "Opening",
             is_closed: "Closing",
         },
+        responsed : "Note",
+        endtime : "-"
     },
     
     status: "Status",

@@ -1,27 +1,31 @@
-import { AddIcCallOutlined } from "@mui/icons-material";
 import { Chip, Fab, IconButton, Tooltip } from "@mui/material";
 import { BodyCell } from "components/Table";
-import { ACCESS_TOKEN_STORAGE_KEY, NS_FEEDBACK } from "constant/index";
+import {
+  ACCESS_TOKEN_STORAGE_KEY,
+  NS_CAREER,
+  NS_FEEDBACK,
+} from "constant/index";
 import { useTranslations } from "next-intl";
 import { memo, useState } from "react";
-import { FeedbackData } from "store/feedback/actions";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import { DataAction } from "constant/enums";
 import Form from "./Form";
-import { useFeedback } from "store/feedback/selectors";
 import { clientStorage } from "utils/storage";
+import { CareerData } from "store/career/action";
+import { useCareer } from "store/career/selectors";
 
 type DesktopCellsProps = {
-  item: FeedbackData;
+  item: CareerData;
 };
 
 const DesktopCells = (props: DesktopCellsProps) => {
-  const { onRespondToFeedback, onGetFeedback, items, totalItems, total_page, page, size, isIdle} = useFeedback();
-  const feedbackT = useTranslations(NS_FEEDBACK);
-  const [item, setItem] = useState<FeedbackData>();
+  const { onGetCareer, items, totalItems, total_page, page, size, isIdle } =
+    useCareer();
+  const careerT = useTranslations(NS_CAREER);
+  const [item, setItem] = useState<CareerData>();
   const [action, setAction] = useState<DataAction | undefined>();
 
-  const onActionToItem = (action: DataAction, item?: FeedbackData) => {
+  const onActionToItem = (action: DataAction, item?: CareerData) => {
     return () => {
       if (action === DataAction.DELETE) {
         //Không Có chức năng này
@@ -38,56 +42,72 @@ const DesktopCells = (props: DesktopCellsProps) => {
     setAction(undefined);
   };
 
-  const onResponsedContent = async (data: FeedbackData) => {
-    if (!item) return; // Nếu item là undefined, thoát khỏi hàm
-    // console.log(data);
-    const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
-    return await onRespondToFeedback(data.id as string, data, accessToken);
-    // console.log(accessToken);
-    // return 200;
+  // const onResponsedContent = async (data: FeedbackData) => {
+  //   if (!item) return; // Nếu item là undefined, thoát khỏi hàm
+  //   // console.log(data);
+  //   const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+  //   return await onRespondToFeedback(data.id as string, data, accessToken);
+  //   // console.log(accessToken);
+  //   // return 200;
+  // };
+  const chuyen_dinh_dang_ngay = (dateString) => {
+    const dateObject = new Date(dateString);
+
+    // Lấy thông tin ngày, tháng, năm
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth() + 1;
+    const day = dateObject.getDate();
+
+    // Tạo chuỗi mới với định dạng yyyy/mm/dd
+    const formattedDate = `${year}/${month.toString().padStart(2, "0")}/${day
+      .toString()
+      .padStart(2, "0")}`;
+
+    return formattedDate;
   };
 
   return (
     <>
-      <BodyCell align="left">{props.item.name}</BodyCell>
-      <BodyCell align="left">{props.item.phone}</BodyCell>
-      <BodyCell align="left">{props.item.email}</BodyCell>
       <BodyCell align="left">{props.item.title}</BodyCell>
-      <BodyCell align="left">{props.item.content}</BodyCell>
+      <BodyCell align="left">{props.item.location}</BodyCell>
+      <BodyCell align="left">
+        {chuyen_dinh_dang_ngay(props.item.start_time)} {careerT("careerTable.endtime")} {chuyen_dinh_dang_ngay(props.item.end_time)}
+      </BodyCell>
+      <BodyCell align="left">{props.item.numberOfHires}</BodyCell>
+      <BodyCell align="left">{props.item.description}</BodyCell>
       {/* <BodyCell align="left">{item.responsed_content}</BodyCell> */}
       <BodyCell align="left">
-        {props.item.status === "WATTING_RESPONSE" ? (
+        {props.item.is_opening === true ? (
           <Chip
             size="small"
-            label={feedbackT("feedbackTable.statusList.watting_response")}
-            color="primary"
+            label={careerT("careerTable.statusList.is_opening")}
+            color="success"
           />
         ) : (
           <Chip
             size="small"
-            label={feedbackT("feedbackTable.statusList.responsed")}
-            color="success"
-
+            label={careerT("careerTable.statusList.is_closed")}
+            color="primary"
           />
         )}
       </BodyCell>
       <BodyCell align="left">
-        {props.item.status === "WATTING_RESPONSE" ? (
-          <Tooltip title={feedbackT("feedbackTable.editResponsed")}>
+        {/* {props.item.is_opening === true ? (
+          <Tooltip title={careerT("careerTable.editResponsed")}>
             <IconButton color="primary" size="large" onClick={onActionToItem(DataAction.UPDATE, props.item)} >
               <ForwardToInboxIcon />
             </IconButton>
           </Tooltip>
         ) : (
           <></>
-        )}
-        {/* <Tooltip title={feedbackT("feedbackTable.editResponsed")}>
+        )} */}
+        {/* <Tooltip title={careerT("careerTable.editResponsed")}>
             <IconButton color="primary" size="large" onClick={onActionToItem(DataAction.UPDATE, item)} >
               <ForwardToInboxIcon />
             </IconButton>
           </Tooltip>*/}
-      </BodyCell> 
-      {action === DataAction.UPDATE && (
+      </BodyCell>
+      {/* {action === DataAction.UPDATE && (
         <Form
           open
           onClose={onResetAction}
@@ -109,7 +129,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
           }
           onSubmit={onResponsedContent}
         />
-      )}
+      )} */}
     </>
   );
 };

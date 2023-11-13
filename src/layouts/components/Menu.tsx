@@ -303,17 +303,17 @@ const DATA: MenuItemProps[] = [
     icon: <MenuBlogIcon />,
     subs: [
       {
-        label:"menu.blogCategoryList",
-        roles:[Permission.SA],
-        href:BLOG_CATEGORY_PATH
+        label: "menu.blogCategoryList",
+        roles: [Permission.SA],
+        href: BLOG_CATEGORY_PATH,
       },
       {
         label: "menu.blogList",
-        href :BLOGS_PATH,
-        roles:[Permission.SA]
-      }
+        href: BLOGS_PATH,
+        roles: [Permission.SA],
+      },
     ],
-    roles: [Permission.SA]
+    roles: [Permission.SA],
   },
   //Carrer
   {
