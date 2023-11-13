@@ -1,6 +1,6 @@
 import { AlertColor } from "@mui/material";
 import { FILE_MAP, Status, ThemeMode } from "./enums";
-import { Mode, Paging, PagingItem, Paging_Feedback } from "./types";
+import { Mode, Paging, PagingItem, Paging_Career, Paging_Feedback } from "./types";
 
 export const AUTH_API_URL = process.env.AUTH_API_URL as string;
 export const API_URL = process.env.API_URL as string;
@@ -15,6 +15,8 @@ export const RESOURCE_API_URL = process.env.RESOURCE_API_URL as string;
 export const FEEDBACK_API_URL = process.env.FEEDBACK_API_URL as string;
 // BLOG
 export const BLOG_API_URL = process.env.BLOG_API_URL as string;
+// CAREER
+export const CAREER_API_URL = process.env.CAREER_API_URL as string;
 
 export const DARK_THEME_MEDIA_SYSTEM = "(prefers-color-scheme: dark)";
 export const DOCS_API_URL = process.env.DOCS_API_URL as string;
@@ -42,6 +44,13 @@ export const DEFAULT_PAGING_FEEDBACK: Paging_Feedback = {
   size: DEFAULT_PAGE_SIZE,
   totalItems: DEFAULT_PAGE_TOTAL,
 };
+
+export const DEFAULT_PAGING_CAREER: Paging_Career = {
+  page: DEFAULT_PAGE_INDEX,
+  size: DEFAULT_PAGE_SIZE,
+  totalItems: DEFAULT_PAGE_TOTAL,
+};
+
 export const  DEFAULT_PAGING_ITEM : PagingItem ={
   page: DEFAULT_PAGE_INDEX,
   size: DEFAULT_PAGE_SIZE,
@@ -93,6 +102,8 @@ export const NS_DOCS = "documents";
 export const NS_FEEDBACK = "feeback";
 //blog
 export const NS_BLOG = "blog";
+//Cereer
+export const NS_CAREER = "career";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 export const VIDEO_ACCEPT = ["video/mp4"];

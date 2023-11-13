@@ -14,6 +14,7 @@ import {
   NS_CHAT,
   NS_FEEDBACK,
   NS_BLOG,
+  NS_CAREER,
 } from "constant/index";
 
 import { AccountLang } from "./account";
@@ -31,6 +32,7 @@ import { ChatLang } from "./chat";
 import { DocsLang } from "./docs";
 import { FeedbackLang } from "./feedback";
 import { BlogLang } from "./blog";
+import { CareerLang } from "./career";
 
 export default {
   [NS_COMMON]: CommonLang,
@@ -48,4 +50,5 @@ export default {
   [NS_DOCS]: DocsLang,
   [NS_FEEDBACK]: FeedbackLang,
   [NS_BLOG]:BlogLang,
+  [NS_CAREER]: CareerLang,
 };

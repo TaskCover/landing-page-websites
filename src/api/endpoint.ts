@@ -107,4 +107,6 @@ export const Endpoint = {
   CATEGORY_BLOG :"/category",
   BLOGS : "/post",
   DETAIL_BLOG: "/post/{id}",
+  //carrer
+  CAREER:"/job-post"
 };

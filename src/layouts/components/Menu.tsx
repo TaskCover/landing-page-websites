@@ -23,6 +23,7 @@ import {
   FEEDBACK_PATH,
   BLOG_CATEGORY_PATH,
   BLOGS_PATH,
+  CAREER_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -43,6 +44,7 @@ import CardReceive from "icons/CardReceive";
 import MenuDocsIcon from "icons/MenuDocsIcon";
 import FeedbackIcon from "icons/FeedbackIcon";
 import MenuBlogIcon from "icons/MenuBlogIcon";
+import CareerIcon from "icons/CareerIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -312,6 +314,19 @@ const DATA: MenuItemProps[] = [
       }
     ],
     roles: [Permission.SA]
+  },
+  //Carrer
+  {
+    label: "menu.career",
+    icon: <CareerIcon />,
+    subs: [
+      {
+        label: "menu.careerList",
+        href: CAREER_PATH,
+        roles: [Permission.SA],
+      },
+    ],
+    roles: [Permission.SA],
   },
 ];
 
