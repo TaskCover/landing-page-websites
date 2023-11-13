@@ -43,6 +43,7 @@ export const FEEDBACK_PATH = "/feedback";
 export const BLOGS_PATH = "/blogs";
 export const BLOG_CATEGORY_PATH = "/blog-category";
 export const BLOGS_DETAIL_PATH = "/blogs/{id}";
+export const BLOGS_RELATED_PATH = "/blogs/{id}/related";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -96,6 +97,7 @@ export const AUTHORIZED_PATHS = {
     BLOGS_PATH,
     BLOG_CATEGORY_PATH,
     BLOGS_DETAIL_PATH,
+    BLOGS_RELATED_PATH,
   ],
   [Permission.ST]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,

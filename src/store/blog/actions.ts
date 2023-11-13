@@ -32,12 +32,12 @@ export type BlogData = {
     id?: string;
     title?: string;
     content?: string;
-    background?: AttachmentsBlogs | undefined |string;
+    background_down?: AttachmentsBlogs | undefined;
     published?: boolean;
     category?: Category[];
     tag?: string[];
     slug?: string,
-    attachments?: AttachmentsBlogs[] |undefined,
+    attachments_down?: AttachmentsBlogs[] |undefined,
     created_time?: Date,
     created_by?: CreateByUser,
     ignoreId?:string,
@@ -100,11 +100,11 @@ export const updateBlog = createAsyncThunk("blogs/updateBlog",
 export const getBlogBySlug = createAsyncThunk(
     "blogs/getBlogBySlug", async (id: string) => {
         try {
-            const response = await client.get(Endpoint.BLOGS, id, {
+            const response = await client.get(Endpoint.BLOGS + "/"+id,{}, {
                 baseURL: BLOG_API_URL,
             });
             if (response?.status === HttpStatusCode.OK) {
-                return response.data;
+                return response.data[0];
             }
             throw AN_ERROR_TRY_AGAIN;
         } catch (error) {
@@ -112,3 +112,21 @@ export const getBlogBySlug = createAsyncThunk(
         }
     }
 );
+
+
+export const getRelatedBlog =  createAsyncThunk(
+    "blogs/getRelatedBlog", async(id:string)=>{
+        try{
+            const response = await client.get(Endpoint.BLOGS + "/"+id +"/related",{}, {
+                baseURL: BLOG_API_URL,
+            });
+            if (response?.status === HttpStatusCode.OK) {
+                return response.data;
+            }
+            throw AN_ERROR_TRY_AGAIN;
+        }catch (error){
+            throw error;
+        }
+    }
+);
+
