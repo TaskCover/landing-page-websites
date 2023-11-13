@@ -100,6 +100,7 @@ export const SalesLang: SalesDictionary = {
       showEstimate: "{isShow} Estimate",
       ShowDescription: "{isShow} Description",
     },
+    assignedUser: "This user is already assigned to a todo item",
     comment: {
       title: "Write your comment",
       placeholder: "write something on comment",
