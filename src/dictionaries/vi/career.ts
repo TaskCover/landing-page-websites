@@ -43,11 +43,14 @@ export const CareerLang: CareerDictionary = {
         end_time: "Thời gian kết thức",
         numberOfHires: "Số lượng tuyển dụng",
         is_opening: "Tình trạng",
+        opening: "Mở",
+        closed: "Đóng",
     },
    
     career_success: {
         notification: {
             success_responsed: `{label} thành công`,
+            error_responsed_date: "Kiểm tra lại ngày"
         },
     },
 

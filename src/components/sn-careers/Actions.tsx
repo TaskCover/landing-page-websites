@@ -12,7 +12,7 @@ import { DataAction } from "constant/enums";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { GetEmployeeListQueries } from "store/company/actions";
 import { usePositionOptions } from "store/global/selectors";
-import { NS_COMMON, NS_CAREER } from "constant/index";
+import { NS_COMMON, NS_CAREER, ACCESS_TOKEN_STORAGE_KEY } from "constant/index";
 import { useTranslations } from "next-intl";
 import Form from "./components/Form";
 import { TEXT_PAY_STATUS_CAREER } from "./helpers/helpers";
@@ -21,10 +21,12 @@ import { useFeedback } from "store/feedback/selectors";
 import { SearchStatus } from "store/career/action";
 import { CareergDataForm } from "store/career/type";
 import { useCareer } from "store/career/selectors";
+import { clientStorage } from "utils/storage";
 
 const Actions = () => {
   const careerT = useTranslations(NS_CAREER);
   const commonT = useTranslations(NS_COMMON);
+  const [item, setItem] = useState<CareergDataForm>();
   const { filters, page, size, onCreateNewCareer, onGetCareer } = useCareer();
   const [isShow, onShow, onHide] = useToggle();
   // const { onCreateNewCategory } = useCategoryBlog();
@@ -78,6 +80,13 @@ const Actions = () => {
     // console.log(filters);
     setQueries(filters);
   }, [filters]);
+
+
+  const onResponsedContent = async (data: CareergDataForm) => {
+    const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+    console.log(data);
+    return 200;
+  };
 
   // console.log(queries);
 
@@ -191,7 +200,7 @@ const Actions = () => {
           onClose={onHide}
           type={DataAction.CREATE}
           initialValues={INITIAL_VALUES as unknown as CareergDataForm}
-          onSubmit={onCreateNewCareer}
+          onSubmit={onResponsedContent}
         />
       )}
     </>
@@ -218,6 +227,6 @@ const INITIAL_VALUES = {
   start_time:"",
   end_time:"",
   numberOfHires:"",
-  is_opening:"",
+  is_opening: "true",
   slug:"",
 };

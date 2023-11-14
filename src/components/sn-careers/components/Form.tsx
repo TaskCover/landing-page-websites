@@ -1,17 +1,22 @@
-import { CardContent, Grid, Radio, Stack, TextField, Typography } from "@mui/material";
+import {
+  CardContent,
+  FormControlLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
-import {
-  AN_ERROR_TRY_AGAIN,
-  NS_COMMON,
-  NS_CAREER
-} from "constant/index";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_CAREER } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
-import { memo, useMemo } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import { useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
 import { getMessageErrorByAPI } from "utils/index";
@@ -33,9 +38,15 @@ const Form = (props: FormProps) => {
   const careerT = useTranslations(NS_CAREER);
   const commonT = useTranslations(NS_COMMON);
 
+  //ngày tháng năm
+  const [value_start_time, setValue_Start_Time] = React.useState<Dayjs | null>(
+    dayjs("13/01/2002"),
+  );
+  const [value_end_time, setValue_End_Time] = React.useState<Dayjs | null>(
+    dayjs("13/01/2002"),
+  );
+
   const label = useMemo(() => {
-    console.log("Đã vào đây");
-    console.log(DataAction);
     switch (type) {
       case DataAction.CREATE:
         return commonT("createNew");
@@ -48,18 +59,15 @@ const Form = (props: FormProps) => {
 
   const onSubmit = async (values: CareergDataForm) => {
     try {
+      console.log(values);
       const newItem = await onSubmitProps(values);
-      // console.log("Đã Vào đây");
-      // console.log(newItem);
       if (newItem) {
         onAddSnackbar(
           careerT("career_success.notification.success_responsed", { label }),
           "success",
         );
-        // console.log("Đã vào đây");
         props.onClose();
       } else {
-        // console.log("Đã Vào Đây Lỗi");
         throw AN_ERROR_TRY_AGAIN;
       }
     } catch (error) {
@@ -91,13 +99,54 @@ const Form = (props: FormProps) => {
     [touchedErrors, formik.isSubmitting],
   );
 
+  //tạo slug
+  const createSlugFromName = (name) => {
+    const slug = name.toLowerCase().replace(/ /g, "-");
+    return slug;
+  };
+  //lắng nghe thay đổi title rồi sinh slug
+  const handleChangeName = (event) => {
+    const nameValue = event.target.value;
+    // Thực hiện logic để tạo slug từ nameValue
+    const slugValue = createSlugFromName(nameValue);
+    // Cập nhật giá trị của name và slug trong formik
+    formik.setFieldValue("name", nameValue);
+    formik.setFieldValue("slug", slugValue);
+  };
+
+  //lắng nghe thay đổi ngày tháng
+  const handleChangeDate = (type, event) => {
+    switch (type) {
+      case "start_time":
+        const selectedStartDate = new Date(event);
+        if (selectedStartDate >= new Date()) {
+          formik.setFieldValue("start_time", event);
+        } else {
+          formik.setFieldValue("start_time", "");
+          onAddSnackbar("Snackbar message here", "error");
+        }
+        break;
+      case "end_time":
+        const selectedEndDate = new Date(event);
+        const selectedStartDates = new Date(formik.values.start_time);
+        if (selectedEndDate > selectedStartDates) {
+          formik.setFieldValue("end_time", event);
+        } else {
+          formik.setFieldValue("end_time", "");
+          onAddSnackbar("Snackbar message here", "error");
+        }
+        break;
+      default:
+    }
+  };
+
   return (
     <FormLayout
       sx={{
         minWidth: { xs: "calc(100vw - 24px)", lg: 800 },
         maxWidth: { xs: "calc(100vw - 24px)", sm: 1200 },
         minHeight: "auto",
-        color: "black"
+        color: "black",
       }}
       label={`${label} ${careerT("title_form")}`}
       onSubmit={formik.handleSubmit}
@@ -106,9 +155,7 @@ const Form = (props: FormProps) => {
       {...rest}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12} md={12}>
-
-        </Grid>
+        <Grid item xs={12} md={12}></Grid>
         <Grid item xs={12} md={6}>
           <TextField
             required
@@ -118,6 +165,21 @@ const Form = (props: FormProps) => {
             size="small"
             focused
             color="secondary"
+            name="title"
+            onChange={(e) => {
+              handleChangeName(e);
+              formik.handleChange(e); // Đảm bảo formik cũng nhận được sự thay đổi
+            }}
+            onBlur={formik.handleBlur}
+            value={formik.values?.title}
+            error={
+              !!commonT(touchedErrors?.title, {
+                name: "title",
+              })
+            }
+            helperText={commonT(touchedErrors?.title, {
+              name: careerT("form_career.title"),
+            })}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -129,21 +191,37 @@ const Form = (props: FormProps) => {
             size="small"
             focused
             color="secondary"
+            name="slug"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values?.slug}
+            error={
+              !!commonT(touchedErrors?.slug, {
+                name: "responsed_content",
+              })
+            }
+            helperText={commonT(touchedErrors?.slug, {
+              name: careerT("form_career.slug"),
+            })}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}
-          >
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              label= {careerT("form_career.start_time")}
-              defaultValue={dayjs()}
+              label={careerT("form_career.start_time")}
+              format="DD/MM/YYYY"
+              value={formik.values?.start_time || value_start_time}
+              onChange={(newValue) => {
+                handleChangeDate("start_time", newValue);
+              }}
               sx={{
                 width: "100%",
                 "& .MuiInputLabel-root.Mui-focused": {
                   color: "#29c9c1",
                   borderColor: "#29c9c1",
                 },
-                "& .MuiInputLabel-root": {  // Quy tắc cho MuiInputLabel khi không focus
+                "& .MuiInputLabel-root": {
+                  // Quy tắc cho MuiInputLabel khi không focus
                   color: "#29c9c1",
                   borderColor: "#29c9c1",
                 },
@@ -151,30 +229,34 @@ const Form = (props: FormProps) => {
                   "&:hover > fieldset": {
                     borderColor: "#29c9c1",
                   },
-                  '& fieldset': {
-                    borderColor: '#29c9c1',
+                  "& fieldset": {
+                    borderColor: "#29c9c1",
                   },
                   height: "45px",
                   borderRadius: "6px",
-                  borderColor: "#29c9c1",  // Quy tắc cho borderColor khi không hover
+                  borderColor: "#29c9c1", // Quy tắc cho borderColor khi không hover
                 },
               }}
             />
           </LocalizationProvider>
         </Grid>
         <Grid item xs={12} md={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}
-          >
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              label= {careerT("form_career.end_time")}
-              defaultValue={dayjs()}
+              label={careerT("form_career.end_time")}
+              format="DD/MM/YYYY"
+              value={formik.values?.end_time || value_end_time}
+              onChange={(newValue) => {
+                handleChangeDate("end_time", newValue);
+              }}
               sx={{
                 width: "100%",
                 "& .MuiInputLabel-root.Mui-focused": {
                   color: "#29c9c1",
                   borderColor: "#29c9c1",
                 },
-                "& .MuiInputLabel-root": {  // Quy tắc cho MuiInputLabel khi không focus
+                "& .MuiInputLabel-root": {
+                  // Quy tắc cho MuiInputLabel khi không focus
                   color: "#29c9c1",
                   borderColor: "#29c9c1",
                 },
@@ -182,18 +264,18 @@ const Form = (props: FormProps) => {
                   "&:hover > fieldset": {
                     borderColor: "#29c9c1",
                   },
-                  '& fieldset': {
-                    borderColor: '#29c9c1',
+                  "& fieldset": {
+                    borderColor: "#29c9c1",
                   },
                   height: "45px",
                   borderRadius: "6px",
-                  borderColor: "#29c9c1",  // Quy tắc cho borderColor khi không hover
+                  borderColor: "#29c9c1", // Quy tắc cho borderColor khi không hover
                 },
               }}
             />
           </LocalizationProvider>
         </Grid>
-        <Grid item xs={6} md={6}>
+        <Grid item xs={12} md={6}>
           <TextField
             required
             id="outlined-required"
@@ -202,6 +284,18 @@ const Form = (props: FormProps) => {
             size="small"
             focused
             color="secondary"
+            name="location"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values?.location}
+            error={
+              !!commonT(touchedErrors?.location, {
+                name: "responsed_content",
+              })
+            }
+            helperText={commonT(touchedErrors?.slug, {
+              name: careerT("form_career.location"),
+            })}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -216,23 +310,19 @@ const Form = (props: FormProps) => {
             fullWidth
             size="small"
             color="secondary"
+            name="numberOfHires"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values?.numberOfHires}
+            error={
+              !!commonT(touchedErrors?.numberOfHires, {
+                name: "responsed_content",
+              })
+            }
+            helperText={commonT(touchedErrors?.numberOfHires, {
+              name: careerT("form_career.numberOfHires"),
+            })}
           />
-        </Grid>
-        <Grid item xs={12} md={12}>
-          {/* <Radio
-            checked={selectedValue === 'a'}
-            onChange={handleChange}
-            value="a"
-            name="radio-buttons"
-            inputProps={{ 'aria-label': 'A' }}
-          />
-          <Radio
-            checked={selectedValue === 'b'}
-            onChange={handleChange}
-            value="b"
-            name="radio-buttons"
-            inputProps={{ 'aria-label': 'B' }}
-          /> */}
         </Grid>
         <Grid item xs={12} md={12}>
           <TextField
@@ -242,21 +332,46 @@ const Form = (props: FormProps) => {
             focused
             color="secondary"
             required
-            name="responsed_content"
+            name="description"
             rows={4}
-            placeholder={careerT("form_Feedback.placeholder")}
             fullWidth
             size="small"
-          // error={
-          //   !!commonT(touchedErrors?.responsed_content, {
-          //     name: "responsed_content",
-          //   })
-          // }
-          // helperText={commonT(touchedErrors?.responsed_content, {
-          //   name: careerT("form_Feedback.responsed_content"),
-          // })}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values?.description}
+            error={
+              !!commonT(touchedErrors?.description, {
+                name: "description",
+              })
+            }
+            helperText={commonT(touchedErrors?.description, {
+              name: careerT("form_career.description"),
+            })}
           />
         </Grid>
+        <Grid item xs={12} md={12}>
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="is_opening"
+            defaultValue={initialValues.is_opening}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values?.is_opening}
+          >
+            <FormControlLabel
+              value="true"
+              control={<Radio />}
+              label={careerT("form_career.opening")}
+            />
+            <FormControlLabel
+              value="false"
+              control={<Radio />}
+              label={careerT("form_career.closed")}
+            />
+          </RadioGroup>
+        </Grid>
+        <Grid item xs={12} md={12}></Grid>
       </Grid>
     </FormLayout>
   );
@@ -265,5 +380,9 @@ const Form = (props: FormProps) => {
 export default memo(Form);
 
 export const validationSchema = Yup.object().shape({
-
+  title: Yup.string().trim().required("form.error.required"),
+  slug: Yup.string().trim().required("form.error.required"),
+  location: Yup.string().trim().required("form.error.required"),
+  description: Yup.string().trim().required("form.error.required"),
+  numberOfHires: Yup.string().trim().required("form.error.required"),
 });

@@ -42,11 +42,14 @@ export type CareerDictionary={
         end_time:string,
         numberOfHires:string,
         is_opening: string,
+        opening: string,
+        closed: string,
     }
 
     career_success:{
         notification:{
             success_responsed: string,
+            error_responsed_date: string,
         },
     },
 

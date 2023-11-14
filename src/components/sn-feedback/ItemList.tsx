@@ -79,7 +79,7 @@ const ItemList = () => {
     onGetFeedback({ ...initQuery });
   }, [initQuery, isReady, onGetFeedback]);
 
-  console.log(items);
+  // console.log(items);
   // console.log(total_page);
   // console.log(page);
   // console.log(size);

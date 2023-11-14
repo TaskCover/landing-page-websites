@@ -41,12 +41,15 @@ export const CareerLang: CareerDictionary = {
         start_time: "Start time",
         end_time: "End time",
         numberOfHires: "Number of hires",
-        is_opening: "Status"
+        is_opening: "Status",
+        opening: "Open",
+        closed: "Closed",
     },
 
     career_success: {
         notification: {
             success_responsed: "{label} Successful career",
+            error_responsed_date: "Error Date",
         },
     },
 
