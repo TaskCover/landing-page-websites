@@ -235,13 +235,14 @@ const AccountInfoHeader = ({
               "& .MuiInputBase-root": {
                 color: "black",
                 borderRadius: "10px",
-                border: "1px solid transparent",
               },
+              "& fieldset": { border: 'none' },
             }}
             placeholder="Search"
             fullWidth
             onKeyDown={handleKeyDown}
             InputProps={{
+              disableUnderline: true, // <== added this
               startAdornment: (
                 <InputAdornment position="start">
                   <SearchIcon
