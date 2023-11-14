@@ -52,19 +52,6 @@ const DesktopCells = (props: DesktopCellsProps) => {
     };
   };
 
-  const onResetAction = () => {
-    setAction(undefined);
-  };
-
-  // const onResponsedContent = async (data: FeedbackData) => {
-  //   if (!item) return; // Nếu item là undefined, thoát khỏi hàm
-  //   // console.log(data);
-  //   const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
-  //   return await onRespondToFeedback(data.id as string, data, accessToken);
-  //   // console.log(accessToken);
-  //   // return 200;
-  // };
-  
   const chuyen_dinh_dang_ngay = (dateString) => {
     const dateObject = new Date(dateString);
 
@@ -107,55 +94,6 @@ const DesktopCells = (props: DesktopCellsProps) => {
           />
         )}
       </BodyCell>
-      <BodyCell align="left">
-        <div>
-          <IconButton
-            aria-label="more"
-            id="long-button"
-            aria-controls={open ? "long-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleClick}
-          >
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              "aria-labelledby": "long-button",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleClose}><EditIcon color="primary"/></MenuItem>
-            <MenuItem onClick={handleClose}><DeleteIcon sx={{ color: pink[500] }}/></MenuItem>
-          </Menu>
-        </div>
-      </BodyCell>
-      {/* {action === DataAction.UPDATE && (
-        <Form
-          open
-          onClose={onResetAction}
-          type={DataAction.UPDATE}
-          initialValues={
-            {
-              id: props.item?.id,
-              name: props.item?.name,
-              phone: props.item?.phone,
-              email: props.item?.email,
-              title: props.item?.title,
-              content: props.item?.content,
-              status: props.item?.status,
-              created_time: props.item?.created_time,
-              responsed_by: props.item?.responsed_by,
-              responsed_content: props.item?.responsed_content,
-              responsed_time: props.item?.responsed_time,
-            } as FeedbackData
-          }
-          onSubmit={onResponsedContent}
-        />
-      )} */}
     </>
   );
 };

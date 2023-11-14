@@ -61,4 +61,9 @@ export const CareerLang: CareerDictionary = {
         key: "Danh mục nghề nghiệp",
         title : "Danh Sách Danh mục nghề nghiệp",
     },
+
+    confirmRemove: {
+        title: "Xác nhận loại bỏ danh mục",
+        content: "Bạn chắc chắn muốn loại bỏ danh mục này ?"
+    },
 }

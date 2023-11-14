@@ -60,4 +60,9 @@ export const CareerLang: CareerDictionary = {
         key: "Review career category ",
         title: "List of reviews",
     },
+
+    confirmRemove: {
+        content: "Are you sure to remove this category ? ",
+        title: "Confirm remove category",
+    },
 }

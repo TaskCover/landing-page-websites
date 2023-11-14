@@ -55,10 +55,10 @@ export const getAllCareer = createAsyncThunk(
 );
 
 export const postCareer = createAsyncThunk("postCareer",
-  async ({data, Token }: {data: CareergDataForm, Token: string | undefined | null }) => {
+  async ({ data, Token }: { data: CareergDataForm, Token: string | undefined | null }) => {
     // console.log(data);
     try {
-      const response = await client.post(Endpoint.CAREER, data, 
+      const response = await client.post(Endpoint.CAREER, data,
         {
           method: "POST",
           headers: {
@@ -74,6 +74,35 @@ export const postCareer = createAsyncThunk("postCareer",
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
       throw error;
+    }
+  }
+);
+
+export const upadteCareer = createAsyncThunk(
+  "upadteCareer",
+  async ({ id, data, Token }: { id: string, data: CareergDataForm, Token: string | undefined | null }) => {
+    try {
+      // console.log(Token);
+      const response = await client.put(StringFormat(Endpoint.UPADATECAREER, { id }),
+        data,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          Authorization: `${Token}`,
+          baseURL: CAREER_API_URL,
+        },
+      );
+      console.log(response?.status);
+      if (response?.status === HttpStatusCode.CREATED) {
+        // console.log(response);
+        // console.log(response.data?.id ? response.data : response.data?.body);
+        return response.data?.id ? response.data : response.data?.body;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw AN_ERROR_TRY_AGAIN;
     }
   }
 );

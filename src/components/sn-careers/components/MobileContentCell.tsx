@@ -35,18 +35,6 @@ const MobileContentCell = (props: MobileContentCellProps) => {
     };
   };
 
-  const onResetAction = () => {
-    setAction(undefined);
-  };
-
-  const onResponsedContent = async (data: CareerData) => {
-    if (!item) return; // Nếu item là undefined, thoát khỏi hàm
-    // console.log(data);
-    //Thực Hiện phản hồi và trả về
-    // return await onUpdateCategoryBlog(item.id as string, data);
-    return 200;
-  };
-
   const chuyen_dinh_dang_ngay = (dateString) => {
     const dateObject = new Date(dateString);
 
@@ -93,40 +81,6 @@ const MobileContentCell = (props: MobileContentCellProps) => {
               color="primary"
             />
           )}
-          {/* <BodyCell align="left">
-            {props.item.status === "WATTING_RESPONSE" ? (
-              <Tooltip title={careerT("careerTable.editResponsed")}>
-                <IconButton color="primary" size="large" onClick={onActionToItem(DataAction.UPDATE, props.item)}>
-                  <ForwardToInboxIcon />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              <></>
-            )}
-          </BodyCell> */}
-          {/* {action === DataAction.UPDATE && (
-            <Form
-              open
-              onClose={onResetAction}
-              type={DataAction.UPDATE}
-              initialValues={
-                {
-                  id: props.item?.id,
-                  name: props.item?.name,
-                  phone: props.item?.phone,
-                  email: props.item?.email,
-                  title: props.item?.title,
-                  content: props.item?.content,
-                  status: props.item?.status,
-                  created_time: props.item?.created_time,
-                  responsed_by: props.item?.responsed_by,
-                  responsed_content: props.item?.responsed_content,
-                  responsed_time: props.item?.responsed_time,
-                } as FeedbackData
-              }
-              onSubmit={onResponsedContent}
-            />
-          )} */}
         </InformationItem>
       </Stack>
     </BodyCell>

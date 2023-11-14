@@ -40,10 +40,10 @@ const Form = (props: FormProps) => {
 
   //ngày tháng năm
   const [value_start_time, setValue_Start_Time] = React.useState<Dayjs | null>(
-    dayjs("13/01/2002"),
+    dayjs(initialValues.start_time),
   );
   const [value_end_time, setValue_End_Time] = React.useState<Dayjs | null>(
-    dayjs("13/01/2002"),
+    dayjs(initialValues.end_time),
   );
 
   const label = useMemo(() => {
@@ -51,6 +51,10 @@ const Form = (props: FormProps) => {
       case DataAction.CREATE:
         return commonT("createNew");
       case DataAction.UPDATE:
+        // console.log(initialValues);
+        // console.log("Đã vào đây");
+        // console.log(value_start_time);
+        // console.log(value_end_time);
         return commonT("update");
       default:
         return "";
@@ -130,7 +134,7 @@ const Form = (props: FormProps) => {
   //lắng nghe thay đổi ngày tháng
   const handleChangeDate = (type, event) => {
     switch (type) {
-      case "start_time":
+      case 1:
         const selectedStartDate = chuyen_dinh_dang_ngay(event);
         const selected = chuyen_dinh_dang_ngay(new Date());
         if (selectedStartDate >= selected) {
@@ -140,7 +144,7 @@ const Form = (props: FormProps) => {
           onAddSnackbar("Snackbar message here", "error");
         }
         break;
-      case "end_time":
+      case 2:
         const selectedEndDate = chuyen_dinh_dang_ngay(event);
         const selectedStartDates = formik.values.start_time;
         if (selectedEndDate >= selectedStartDates) {
@@ -225,9 +229,9 @@ const Form = (props: FormProps) => {
             <DatePicker
               label={careerT("form_career.start_time")}
               format="DD/MM/YYYY"
-              value={formik.values?.start_time || value_start_time}
+              value={value_start_time}
               onChange={(newValue) => {
-                handleChangeDate("start_time", newValue);
+                handleChangeDate(1, newValue);
               }}
               sx={{
                 width: "100%",
@@ -260,9 +264,9 @@ const Form = (props: FormProps) => {
             <DatePicker
               label={careerT("form_career.end_time")}
               format="DD/MM/YYYY"
-              value={formik.values?.end_time || value_end_time}
+              value={value_end_time}
               onChange={(newValue) => {
-                handleChangeDate("end_time", newValue);
+                handleChangeDate(2, newValue);
               }}
               sx={{
                 width: "100%",

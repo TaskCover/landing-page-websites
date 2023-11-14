@@ -2,7 +2,7 @@ import { DataStatus } from "constant/enums";
 import { useCallback, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { CareerData, GetCareerListQueries, getAllCareer, postCareer } from "./action";
+import { CareerData, GetCareerListQueries, getAllCareer, postCareer, upadteCareer } from "./action";
 import { CareergDataForm } from "./type";
 
 export const useCareer = () => {
@@ -39,6 +39,16 @@ export const useCareer = () => {
     }, [dispatch]
   );
 
+  const onUpdateCareer = useCallback(
+    async (id: string, data: CareergDataForm, Token: string | undefined |null) => {
+      try {
+        return await dispatch(upadteCareer({ id, data, Token })).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    }, [dispatch]
+  )
+
 
   //   const onRespondToFeedback = useCallback(
   //     async (id: string, data: FeedbackData, Token: string | undefined |null) => {
@@ -54,6 +64,7 @@ export const useCareer = () => {
   return {
     onGetCareer,
     onCreateNewCareer,
+    onUpdateCareer,
     items,
     totalItems,
     total_page,

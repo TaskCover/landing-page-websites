@@ -60,4 +60,9 @@ export type CareerDictionary={
         key: string,
         title : string,
     },
+
+    confirmRemove: {
+        title: string,
+        content: string
+    },
 }

@@ -1,8 +1,8 @@
 import { DataStatus } from "constant/enums";
-import { CareerData, GetCareerListQueries, getAllCareer, postCareer } from "./action";
+import { CareerData, GetCareerListQueries, getAllCareer, postCareer, upadteCareer } from "./action";
 import { Paging_Career } from "constant/types";
 import { DEFAULT_PAGING_CAREER } from "constant/index";
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 
 export interface FeedbackState {
@@ -61,6 +61,24 @@ const careerSlice = createSlice({
             .addCase(postCareer.fulfilled, (state, { payload }) => {
                 // console.log(payload);
                 state.careers.unshift(payload);
+            })
+            .addCase(upadteCareer.fulfilled, (state, action: PayloadAction<CareerData>) => {
+                // // console.log("Đã vào đây");
+                const indexUpdated = state.careers.findIndex(
+                    (item) => item.id === action.payload.id,
+                );
+                // console.log(indexUpdated);
+
+                if (indexUpdated !== -1) {
+                    state.careers[indexUpdated] = Object.assign(
+                        state.careers[indexUpdated],
+                        action.payload,
+                    );
+                }
+
+                if (state.career?.id === action.payload.id) {
+                    state.career = action.payload;
+                }
             })
     },
 });

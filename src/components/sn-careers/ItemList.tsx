@@ -7,7 +7,7 @@ import {
   CellProps,
   TableLayout,
 } from "components/Table";
-import { NS_CAREER } from "constant/index";
+import { ACCESS_TOKEN_STORAGE_KEY, NS_CAREER } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import { HEADER_HEIGHT } from "layouts/Header";
 import Pagination from "components/Pagination";
@@ -17,18 +17,28 @@ import { memo, useEffect, useMemo, useState } from "react";
 import DesktopCells from "./components/DesktopCells";
 import MobileContentCells from "./components/MobileContentCell";
 import useQueryParams from "hooks/useQueryParams";
-import {getPath } from "utils/index";
+import { getPath } from "utils/index";
 import { usePathname, useRouter } from "next-intl/client";
 import { useCareer } from "store/career/selectors";
+import { DataAction } from "constant/enums";
+import { CareerData } from "store/career/action";
+import ConfirmDialog from "components/ConfirmDialog";
+import Form from "./components/Form";
+import { CareergDataForm } from "store/career/type";
+import { clientStorage } from "utils/storage";
 
 const ItemList = () => {
   const careerT = useTranslations(NS_CAREER);
   const { isMdSmaller } = useBreakpoint();
   // const { loading, categories } = useSelector((state: RootState) => state.categoryBlogs);
   const { initQuery, isReady, query } = useQueryParams();
-  const { onGetCareer, items, totalItems, total_page, page, size, isIdle } = useCareer();
+  const { onGetCareer, onUpdateCareer, items, totalItems, total_page, page, size, isIdle } = useCareer();
   const pathname = usePathname();
   const { push } = useRouter();
+  const [action, setAction] = useState<DataAction | undefined>();
+  const [item, setItem] = useState<CareerData>();
+  const [careerId, setCareerId] = useState<string | undefined>();
+
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -79,11 +89,46 @@ const ItemList = () => {
     onGetCareer({ ...initQuery });
   }, [initQuery, isReady, onGetCareer]);
 
-  // console.log(items);
-  // console.log(total_page);
-  // console.log(page);
-  // console.log(size);
-  // console.log(totalItems);
+  const onActionToItem = (action: DataAction, item?: CareerData) => {
+    return () => {
+      if (action === DataAction.DELETE) {
+        setCareerId(item?.slug);
+      } else {
+        item && setItem(item);
+      }
+      setAction(action);
+    };
+  };
+
+  const onResetAction = () => {
+    setItem(undefined);
+    setAction(undefined);
+    setCareerId(undefined);
+  };
+
+  const onUpdateCareer_submit = async (id: string, data: CareergDataForm) => {
+    if (!item) return; // Nếu item là undefined, thoát khỏi hàm
+    console.log(data);
+    console.log(id);
+    // return 200;
+    const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+    return await onUpdateCareer(id as string, data, accessToken);
+  };
+
+  //định dạng ngày
+  const chuyen_dinh_dang_ngay = (dateString) => {
+    // console.log(dateString);
+    const dateObject = new Date(dateString);
+
+    // Lấy thông tin ngày, tháng, năm
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth() + 1;
+    const day = dateObject.getDate();
+
+    // Tạo chuỗi mới với định dạng yyyy/mm/dd
+    const formattedDate = `${year}/${month.toString().padStart(2, "0")}/${day.toString().padStart(2, "0")}`;
+    return formattedDate;
+  };
 
   return (
     <>
@@ -125,6 +170,8 @@ const ItemList = () => {
                       p: { xs: "4px!important", lg: 1 },
                     },
                   }}
+                  onEdit={onActionToItem(DataAction.UPDATE, item)}
+                  hasPopup={false}
                 />
               </TableRow>
             );
@@ -140,6 +187,27 @@ const ItemList = () => {
           onChangeSize={onChangeSize}
         />
       </FixedLayout>
+
+      {action === DataAction.UPDATE && (
+        <Form
+          open
+          onClose={onResetAction}
+          type={DataAction.UPDATE}
+          initialValues={
+            {
+              title: item?.title,
+              description: item?.description,
+              location: item?.location,
+              start_time: chuyen_dinh_dang_ngay(item?.start_time),
+              end_time: chuyen_dinh_dang_ngay(item?.end_time),
+              numberOfHires: item?.numberOfHires,
+              is_opening: String(item?.is_opening),
+              slug: item?.slug,
+            } as CareergDataForm
+          }
+          onSubmit={(values) => onUpdateCareer_submit(String(item?.id), values)}
+        />
+      )}
     </>
   );
 };
