@@ -108,17 +108,34 @@ const ChatForward: FC<Props> = (props) => {
       >
         <Box
           sx={{
+            marginBottom: '24px',
             ...(isChatDesktop
               ? { height: "fix-content", maxHeight: "200px" }
-              : { height: "290px" }),
+              : { height: "295px" }),
           }}
         >
           <Box
             overflow="auto"
+            sx={{
+              height: "100%",
+              "&::-webkit-scrollbar": {
+                width: "0.4em",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "white",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "#ECECF3",
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                background: "#ECECF3",
+              },
+              marginBottom: '24px',
+            }}
             style={{
               ...(isChatDesktop
                 ? { height: "fix-content", maxHeight: "200px" }
-                : { height: "290px" }),
+                : { height: "295px" }),
             }}
           >
             {props?.loading || isFetching || error ? (
@@ -215,7 +232,7 @@ const ChatForward: FC<Props> = (props) => {
                 Message
               </Typography>
             ) : null}
-            <div
+            <Box
               style={{
                 width: "100%",
                 padding: isChatDesktop ? "14px" : "28px 14px 14px",
@@ -238,6 +255,26 @@ const ChatForward: FC<Props> = (props) => {
                 overflowX: "hidden",
                 color: isDarkMode ? "white" : "var(--black, #212121)",
               }}
+              sx={{
+                height: "100%",
+                "&::-webkit-scrollbar": {
+                  width: "0.4em",
+                },
+                "&::-webkit-scrollbar-track": {
+                  background: "white",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "#ECECF3",
+                },
+                "&::-webkit-scrollbar-thumb:hover": {
+                  background: "#ECECF3",
+                },
+                "& p": {
+                  marginBottom: '0px',
+                  fontSize: '14px',
+                  lineBreak: 'anywhere',
+                }
+              }}
             >
               {dataTransfer?.message?.attachments?.length > 0 ? (
                 <AttachmentContent
@@ -248,13 +285,13 @@ const ChatForward: FC<Props> = (props) => {
                   isRead={true}
                 />
               ) : (
-                <div
+                  <div
                   dangerouslySetInnerHTML={{
                     __html: dataTransfer?.message?.msg,
                   }}
                 />
               )}
-            </div>
+            </Box>
           </Box>
           {dataTransfer?.message?.attachments?.length === 0 ? (
             <Typography
