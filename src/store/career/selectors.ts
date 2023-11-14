@@ -30,10 +30,13 @@ export const useCareer = () => {
   );
 
   const onCreateNewCareer = useCallback(
-    async (data: CareergDataForm) => {
-      return await dispatch(postCareer(data)).unwrap();
-    },
-    [dispatch],
+    async (data: CareergDataForm, Token: string | undefined | null) => {
+      try {
+        return await dispatch(postCareer({ data, Token })).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    }, [dispatch]
   );
 
 

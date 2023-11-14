@@ -55,11 +55,20 @@ export const getAllCareer = createAsyncThunk(
 );
 
 export const postCareer = createAsyncThunk("postCareer",
-  async (career: CareergDataForm) => {
+  async ({data, Token }: {data: CareergDataForm, Token: string | undefined | null }) => {
+    // console.log(data);
     try {
-      const response = await client.post(Endpoint.CAREER, career, { baseURL: CAREER_API_URL });
-
-      if (response?.status === HttpStatusCode.OK) {
+      const response = await client.post(Endpoint.CAREER, data, 
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          Authorization: `${Token}`,
+          baseURL: CAREER_API_URL,
+        },
+      );
+      if (response?.status === HttpStatusCode.CREATED) {
         return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;

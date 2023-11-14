@@ -84,8 +84,8 @@ const Actions = () => {
 
   const onResponsedContent = async (data: CareergDataForm) => {
     const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
-    console.log(data);
-    return 200;
+    // return 200;
+    return await onCreateNewCareer(data, accessToken);
   };
 
   // console.log(queries);

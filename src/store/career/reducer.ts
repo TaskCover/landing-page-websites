@@ -58,8 +58,9 @@ const careerSlice = createSlice({
                 state.careersStatus = DataStatus.FAILED;
                 state.careersError = action.error?.message;
             })
-            .addCase(postCareer.fulfilled, (state, action: { payload }) => {
-                
+            .addCase(postCareer.fulfilled, (state, { payload }) => {
+                // console.log(payload);
+                state.careers.unshift(payload);
             })
     },
 });

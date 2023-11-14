@@ -1,4 +1,4 @@
-import { Chip, Fab, IconButton, Tooltip } from "@mui/material";
+import { Chip, Fab, IconButton, Menu, Tooltip } from "@mui/material";
 import { BodyCell } from "components/Table";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
@@ -6,13 +6,18 @@ import {
   NS_FEEDBACK,
 } from "constant/index";
 import { useTranslations } from "next-intl";
-import { memo, useState } from "react";
+import React, { memo, useState } from "react";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import { DataAction } from "constant/enums";
 import Form from "./Form";
 import { clientStorage } from "utils/storage";
 import { CareerData } from "store/career/action";
 import { useCareer } from "store/career/selectors";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MenuItem from '@mui/material/MenuItem';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { pink } from "@mui/material/colors";
 
 type DesktopCellsProps = {
   item: CareerData;
@@ -24,6 +29,15 @@ const DesktopCells = (props: DesktopCellsProps) => {
   const careerT = useTranslations(NS_CAREER);
   const [item, setItem] = useState<CareerData>();
   const [action, setAction] = useState<DataAction | undefined>();
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const onActionToItem = (action: DataAction, item?: CareerData) => {
     return () => {
@@ -50,6 +64,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
   //   // console.log(accessToken);
   //   // return 200;
   // };
+  
   const chuyen_dinh_dang_ngay = (dateString) => {
     const dateObject = new Date(dateString);
 
@@ -59,7 +74,9 @@ const DesktopCells = (props: DesktopCellsProps) => {
     const day = dateObject.getDate();
 
     // Tạo chuỗi mới với định dạng yyyy/mm/dd
-    const formattedDate = `${day.toString().padStart(2, "0")}/${month.toString().padStart(2, "0")}/${year}`;
+    const formattedDate = `${day.toString().padStart(2, "0")}/${month
+      .toString()
+      .padStart(2, "0")}/${year}`;
     return formattedDate;
   };
 
@@ -68,7 +85,9 @@ const DesktopCells = (props: DesktopCellsProps) => {
       <BodyCell align="left">{props.item.title}</BodyCell>
       <BodyCell align="left">{props.item.location}</BodyCell>
       <BodyCell align="left">
-        {chuyen_dinh_dang_ngay(props.item.start_time)} {careerT("careerTable.endtime")} {chuyen_dinh_dang_ngay(props.item.end_time)}
+        {chuyen_dinh_dang_ngay(props.item.start_time)}{" "}
+        {careerT("careerTable.endtime")}{" "}
+        {chuyen_dinh_dang_ngay(props.item.end_time)}
       </BodyCell>
       <BodyCell align="left">{props.item.numberOfHires}</BodyCell>
       <BodyCell align="left">{props.item.description}</BodyCell>
@@ -89,20 +108,30 @@ const DesktopCells = (props: DesktopCellsProps) => {
         )}
       </BodyCell>
       <BodyCell align="left">
-        {/* {props.item.is_opening === true ? (
-          <Tooltip title={careerT("careerTable.editResponsed")}>
-            <IconButton color="primary" size="large" onClick={onActionToItem(DataAction.UPDATE, props.item)} >
-              <ForwardToInboxIcon />
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <></>
-        )} */}
-        {/* <Tooltip title={careerT("careerTable.editResponsed")}>
-            <IconButton color="primary" size="large" onClick={onActionToItem(DataAction.UPDATE, item)} >
-              <ForwardToInboxIcon />
-            </IconButton>
-          </Tooltip>*/}
+        <div>
+          <IconButton
+            aria-label="more"
+            id="long-button"
+            aria-controls={open ? "long-menu" : undefined}
+            aria-expanded={open ? "true" : undefined}
+            aria-haspopup="true"
+            onClick={handleClick}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            id="long-menu"
+            MenuListProps={{
+              "aria-labelledby": "long-button",
+            }}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}><EditIcon color="primary"/></MenuItem>
+            <MenuItem onClick={handleClose}><DeleteIcon sx={{ color: pink[500] }}/></MenuItem>
+          </Menu>
+        </div>
       </BodyCell>
       {/* {action === DataAction.UPDATE && (
         <Form

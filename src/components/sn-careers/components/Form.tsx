@@ -59,7 +59,6 @@ const Form = (props: FormProps) => {
 
   const onSubmit = async (values: CareergDataForm) => {
     try {
-      console.log(values);
       const newItem = await onSubmitProps(values);
       if (newItem) {
         onAddSnackbar(
@@ -110,27 +109,43 @@ const Form = (props: FormProps) => {
     // Thực hiện logic để tạo slug từ nameValue
     const slugValue = createSlugFromName(nameValue);
     // Cập nhật giá trị của name và slug trong formik
-    formik.setFieldValue("name", nameValue);
+    formik.setFieldValue("title", nameValue);
     formik.setFieldValue("slug", slugValue);
+  };
+
+  //định dạng ngày
+  const chuyen_dinh_dang_ngay = (dateString) => {
+    const dateObject = new Date(dateString);
+
+    // Lấy thông tin ngày, tháng, năm
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth() + 1;
+    const day = dateObject.getDate();
+
+    // Tạo chuỗi mới với định dạng yyyy/mm/dd
+    const formattedDate = `${year}/${month.toString().padStart(2, "0")}/${day.toString().padStart(2, "0")}`;
+    return formattedDate;
   };
 
   //lắng nghe thay đổi ngày tháng
   const handleChangeDate = (type, event) => {
     switch (type) {
       case "start_time":
-        const selectedStartDate = new Date(event);
-        if (selectedStartDate >= new Date()) {
-          formik.setFieldValue("start_time", event);
+        const selectedStartDate = chuyen_dinh_dang_ngay(event);
+        const selected = chuyen_dinh_dang_ngay(new Date());
+        if (selectedStartDate >= selected) {
+          formik.setFieldValue("start_time", selectedStartDate);
         } else {
           formik.setFieldValue("start_time", "");
           onAddSnackbar("Snackbar message here", "error");
         }
         break;
       case "end_time":
-        const selectedEndDate = new Date(event);
-        const selectedStartDates = new Date(formik.values.start_time);
-        if (selectedEndDate > selectedStartDates) {
-          formik.setFieldValue("end_time", event);
+        const selectedEndDate = chuyen_dinh_dang_ngay(event);
+        const selectedStartDates = formik.values.start_time;
+        if (selectedEndDate >= selectedStartDates) {
+          
+          formik.setFieldValue("end_time", selectedEndDate);
         } else {
           formik.setFieldValue("end_time", "");
           onAddSnackbar("Snackbar message here", "error");

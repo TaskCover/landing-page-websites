@@ -4,7 +4,7 @@ export interface CareergDataForm {
     location: string;
     start_time: string;
     end_time: string;
-    numberOfHires: string;
+    numberOfHires: number;
     is_opening: string;
     slug: string;
 }
