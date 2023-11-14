@@ -42,7 +42,8 @@ export const BlogLang: BlogDictionary = {
         category: "Category",
         tag: "Tag",
         statusBlog: "Status",
-        slug: "Slug"
+        slug: "Slug",
+        created_time : "Create Time",
     },
     published: "Published",
     draft: "Draft",
@@ -66,5 +67,9 @@ export const BlogLang: BlogDictionary = {
         true: "Published",
         false: "Draft",
     },
+    comment:{
+        writeComment: "Write comment ...",
+        sendComment:"Send comment"
+    }
 }
 

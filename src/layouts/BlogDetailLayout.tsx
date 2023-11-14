@@ -1,8 +1,7 @@
 "use client";
 
 import Wrapper from "components/Wrapper";
-import { TabList } from "components/sn-company-detail/components";
-import { BLOGS_DETAIL_PATH, COMPANIES_PATH } from "constant/paths";
+import { BLOGS_DETAIL_PATH, BLOGS_PATH } from "constant/paths";
 import { usePathname } from "next-intl/client";
 import { useEffect, useMemo, useRef } from "react";
 import { useHeaderConfig } from "store/app/selectors";
@@ -46,7 +45,7 @@ const BlogDetailLayout = ({ children, id }: BlogDetailLayoutProps) => {
             ? JSON.parse(dataStringifyRef.current)
             : {};
 
-        const prevPath = getPath(COMPANIES_PATH, parsedQueries);
+        const prevPath = getPath(BLOGS_PATH, parsedQueries);
 
         onUpdateHeaderConfig({
             title: item?.slug,

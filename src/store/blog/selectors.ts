@@ -3,10 +3,13 @@ import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
     BlogData,
+    CommentBlogData,
     GetBlogListQueries,
+    createBlogComment,
     createNewBlogs,
     getAllBlogs,
     getBlogBySlug,
+    getBlogComments,
     getRelatedBlog,
     updateBlog,
 } from "./actions";
@@ -15,7 +18,7 @@ import { BlogForm } from "components/sn-blogs/components/Form";
 
 export const useBlogs = () => {
     const dispatch = useAppDispatch();
-    const { blogs: items, blogsStatus: status, blogsError: error, blogsFilters: filters, blog: item,relatedBlogs } = useAppSelector(
+    const { blogs: items, blogsStatus: status, blogsError: error, blogsFilters: filters, blog: item,relatedBlogs,listBlogComment } = useAppSelector(
         (state) => state.blogs,
         shallowEqual,
     );
@@ -71,6 +74,26 @@ export const useBlogs = () => {
         }, [dispatch],
     )
 
+    const onGetBlogComments =  useCallback(
+        async(slug :  string)=>{
+            try{
+                return await dispatch(getBlogComments(slug)).unwrap();
+            }catch(error){
+                throw error;
+            }
+        },[dispatch],
+    )
+    const onCreateCommentBlog = useCallback (
+        async (id: string, cmt: CommentBlogData) => {
+            try {
+                return await dispatch(createBlogComment({ id,cmt })).unwrap();
+            } catch (error) {
+                throw error;
+            }
+        },[dispatch]
+    )
+
+
     return {
         onGetBlogs,
         onUpdateBlog,
@@ -88,6 +111,9 @@ export const useBlogs = () => {
         onGetBlogBySlug,
         item,
         onGetRelatedBlogs,
-        relatedBlogs
+        relatedBlogs,
+        listBlogComment,
+        onGetBlogComments,
+        onCreateCommentBlog,
     };
 };

@@ -40,13 +40,24 @@ export type BlogData = {
     attachments_down?: AttachmentsBlogs[] |undefined,
     created_time?: Date,
     created_by?: CreateByUser,
-    ignoreId?:string,
+    ignoredId?: string,
 }
 export type GetBlogListQueries = BaseQueries_Feedback & {
     searchKey?: string;
     published?: boolean;
 };
 
+export type CommentBlogData = {
+    id: string;
+    content: string;
+    name: string;
+    email:string;
+    created_time: Date;
+    reply_to : string;
+    post_slug : string;
+    replies?: CommentBlogData[];
+    avatar : string,
+  };
 
 export const getAllBlogs = createAsyncThunk(
     "blogs/getAllBlogs",
@@ -130,3 +141,35 @@ export const getRelatedBlog =  createAsyncThunk(
     }
 );
 
+export const getBlogComments =  createAsyncThunk(
+    "blogs/getBlogComments",async(id:string)=>{
+        const response = await client.get(Endpoint.BLOGS + "/"+id +"/comment",{}, {
+            baseURL: BLOG_API_URL,
+        });
+        if (response?.status === HttpStatusCode.OK) {
+            return response.data;
+        }
+        throw AN_ERROR_TRY_AGAIN;
+    }
+)
+
+export const createBlogComment =  createAsyncThunk(
+    "blogs/createBlogComment", async ({ id, cmt,Token }: { id: string, cmt: CommentBlogData, Token: string | undefined | null }) => {
+        try {
+            const response = await client.post(Endpoint.BLOGS + "/"+id +"/comment", cmt, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                Authorization: `${Token}`,
+                baseURL: BLOG_API_URL,
+              },);
+            if (response?.status === HttpStatusCode.CREATED) {
+                return response.data;
+            }
+            throw AN_ERROR_TRY_AGAIN;
+        } catch (error) {
+            throw error;
+        }
+    }
+)
