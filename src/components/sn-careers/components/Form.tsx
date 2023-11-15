@@ -132,27 +132,56 @@ const Form = (props: FormProps) => {
   };
 
   //lắng nghe thay đổi ngày tháng
-  const handleChangeDate = (type, event) => {
-    switch (type) {
+  const handleChangeDate = (types, event) => {
+    switch (types) {
       case 1:
         const selectedStartDate = chuyen_dinh_dang_ngay(event);
         const selected = chuyen_dinh_dang_ngay(new Date());
-        if (selectedStartDate >= selected) {
-          formik.setFieldValue("start_time", selectedStartDate);
-        } else {
-          formik.setFieldValue("start_time", "");
-          onAddSnackbar("Snackbar message here", "error");
+        switch (type) {
+          case DataAction.CREATE:
+            if (selectedStartDate >= selected && String(DataAction.CREATE) === "2") {
+              formik.setFieldValue("start_time", selectedStartDate);
+            } else {
+              setValue_Start_Time(dayjs(new Date()));
+              formik.setFieldValue("start_time", dayjs(new Date()));
+              onAddSnackbar("Snackbar message here", "error");
+            }
+            break;
+          case DataAction.UPDATE:
+            if (selectedStartDate >= chuyen_dinh_dang_ngay(initialValues.start_time) && String(DataAction.UPDATE) === "3") {
+              formik.setFieldValue("start_time", selectedStartDate);
+            } else {
+              setValue_Start_Time(dayjs(initialValues.start_time));
+              formik.setFieldValue("start_time", initialValues.start_time);
+              onAddSnackbar("Snackbar message here", "error");
+            }
+            break;
+          default:
         }
         break;
       case 2:
         const selectedEndDate = chuyen_dinh_dang_ngay(event);
         const selectedStartDates = formik.values.start_time;
-        if (selectedEndDate >= selectedStartDates) {
-          
-          formik.setFieldValue("end_time", selectedEndDate);
-        } else {
-          formik.setFieldValue("end_time", "");
-          onAddSnackbar("Snackbar message here", "error");
+        switch (type) {
+          case DataAction.CREATE:
+            if (selectedEndDate >= selectedStartDates && String(DataAction.CREATE) === "2") {
+              formik.setFieldValue("end_time", selectedEndDate);
+            } else {
+              setValue_End_Time(dayjs(new Date()));
+              formik.setFieldValue("end_time", dayjs(new Date()));
+              onAddSnackbar("Snackbar message here", "error");
+            }
+            break;
+          case DataAction.UPDATE:
+            if (selectedEndDate >= chuyen_dinh_dang_ngay(initialValues.end_time) && String(DataAction.DETAIL) === "3") {
+              formik.setFieldValue("start_time", selectedEndDate);
+            } else {
+              setValue_Start_Time(dayjs(initialValues.end_time));
+              formik.setFieldValue("start_time", initialValues.end_time);
+              onAddSnackbar("Snackbar message here", "error");
+            }
+            break;
+          default:
         }
         break;
       default:
