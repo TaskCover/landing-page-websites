@@ -22,6 +22,7 @@ const MenuInfo = () => {
     dataTransfer: currentConversation,
     conversationInfo,
     groupMembers,
+    isChatDesktop,
   } = useChat();
 
   const { user } = useAuth();
@@ -123,7 +124,7 @@ const MenuInfo = () => {
             />
           )}
         </Box>
-        {currentConversation?.t !== "d" && (
+        {isChatDesktop && currentConversation?.t !== "d" && (
           <Box
             sx={{
               display: "flex",
