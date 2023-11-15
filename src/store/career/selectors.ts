@@ -2,7 +2,7 @@ import { DataStatus } from "constant/enums";
 import { useCallback, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { CareerData, GetCareerListQueries, getAllCareer, postCareer, upadteCareer } from "./action";
+import { CareerData, GetCareerListQueries, getAllCareer, getCareerBySlug, postCareer, upadteCareer } from "./action";
 import { CareergDataForm } from "./type";
 
 export const useCareer = () => {
@@ -12,12 +12,14 @@ export const useCareer = () => {
     careersStatus: status,
     careersError: error,
     careersFilters: filters,
+    career: item,
   } = useAppSelector((state) => state.career, shallowEqual);
 
   const { page, size, totalItems, total_page } = useAppSelector(
     (state) => state.career.careersPaging,
     shallowEqual,
   );
+  
 
   const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
   const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
@@ -40,7 +42,7 @@ export const useCareer = () => {
   );
 
   const onUpdateCareer = useCallback(
-    async (id: string, data: CareergDataForm, Token: string | undefined |null) => {
+    async (id: string, data: CareergDataForm, Token: string | undefined | null) => {
       try {
         return await dispatch(upadteCareer({ id, data, Token })).unwrap();
       } catch (error) {
@@ -49,23 +51,17 @@ export const useCareer = () => {
     }, [dispatch]
   )
 
-
-  //   const onRespondToFeedback = useCallback(
-  //     async (id: string, data: FeedbackData, Token: string | undefined |null) => {
-  //       try {
-  //         return await dispatch(respondToFeedback({ id, data, Token })).unwrap();
-  //       } catch (error) {
-  //         throw error;
-  //       }
-  //     }, [dispatch]
-  //   )
-
+  const onGetCareerBySlug = async (slug: string) => {
+    return await dispatch(getCareerBySlug(slug)).unwrap();
+  };
 
   return {
     onGetCareer,
     onCreateNewCareer,
     onUpdateCareer,
+    onGetCareerBySlug,
     items,
+    item,
     totalItems,
     total_page,
     page,

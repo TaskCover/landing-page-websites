@@ -106,3 +106,19 @@ export const upadteCareer = createAsyncThunk(
     }
   }
 );
+
+export const getCareerBySlug = createAsyncThunk(
+  "getCareerBySlug", async (id: string) => {
+      try {
+          const response = await client.get(Endpoint.DETAIL_CAREER, id, {
+              baseURL: CAREER_API_URL,
+          });
+          if (response?.status === HttpStatusCode.OK) {
+              return response.data;
+          }
+          throw AN_ERROR_TRY_AGAIN;
+      } catch (error) {
+          throw error;
+      }
+  }
+);

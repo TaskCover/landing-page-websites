@@ -45,7 +45,7 @@ export const BLOG_CATEGORY_PATH = "/blog-category";
 export const BLOGS_DETAIL_PATH = "/blogs/{id}";
 //Carrer
 export const CAREER_PATH = "/careers";
-
+export const CAREER_DETAIL_PATH = "/careers/{id}";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
