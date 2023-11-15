@@ -36,10 +36,17 @@ interface IProps {
   open: boolean;
   onClose(): void;
   resourceId: string;
+  selectedDateRange?: Date[];
   userId?: string;
 }
 
-const ProjectTab = ({ open, onClose, resourceId, userId }: IProps) => {
+const ProjectTab = ({
+  open,
+  onClose,
+  resourceId,
+  userId,
+  selectedDateRange,
+}: IProps) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
   const [isShowTooltip, setIsShowTooltip] = useState(false);
@@ -63,11 +70,15 @@ const ProjectTab = ({ open, onClose, resourceId, userId }: IProps) => {
     defaultValues: {
       project_id: "",
       sale_id: "",
-      dateRange: {},
-      allocation: 0,
+      dateRange: {
+        startDate: selectedDateRange?.[0] || undefined,
+        endDate: selectedDateRange?.[1] || undefined,
+      },
+      allocation: 1,
       allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
       note: "",
     },
+    mode: "all",
   });
   const { workedTime, estimate, leftToSchedule, scheduledTime } =
     useCalculateDetail(
@@ -115,6 +126,23 @@ const ProjectTab = ({ open, onClose, resourceId, userId }: IProps) => {
               options={projectOptions}
               label={resourceT("form.project")}
               {...field}
+              sx={{
+                overflow: "hidden",
+                "& .Muibox-root .MuiBox-root": {
+                  overflow: "hidden",
+                  justifyContent: "space-between",
+                  maxWidth: "100%",
+                },
+                "& .MuiStack-root": {
+                  width: "100%",
+                },
+                "& .MuiSelect-selet": {
+                  pr: 0,
+                },
+                "& .MuiSelect-select": {
+                  pr: "16px!important",
+                },
+              }}
             />
           )}
         />
@@ -134,6 +162,31 @@ const ProjectTab = ({ open, onClose, resourceId, userId }: IProps) => {
               required
               options={salesOptions as IOptionStructure[]}
               label={resourceT("form.services")}
+              sx={{
+                "& .Muibox-root .MuiBox-root": {
+                  overflow: "hidden",
+                  justifyContent: "space-between",
+                  maxWidth: "95%",
+                  gap: 1,
+                },
+                "& .MuiStack-root": {
+                  width: "95%",
+                },
+                "& .MuiSelect-select": {
+                  pr: "16px!important",
+                },
+              }}
+              // MenuProps={{
+              //   sx: {
+              //     "& .MuiMenuItem-root": {
+              //       overflow: "hidden",
+              //       textOverflow: "ellipsis",
+              //       whiteSpace: "nowrap",
+              //       wordBreak: "break-word",
+              //       maxWidth: "98%",
+              //     },
+              //   },
+              // }}
             />
           )}
         />
@@ -183,7 +236,10 @@ const ProjectTab = ({ open, onClose, resourceId, userId }: IProps) => {
                 label={resourceT("form.allocation")}
                 placeholder="8h"
                 sx={{
-                  borderRight: "1px solid #BABCC6",
+                  "& > .MuiBox-root": {
+                    borderRadius: 0,
+                    borderRight: "1px solid #BABCC6",
+                  },
                 }}
                 helperText={errorsProject.allocation?.message}
                 error={!!errorsProject.allocation?.message}

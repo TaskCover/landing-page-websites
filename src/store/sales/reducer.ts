@@ -222,10 +222,10 @@ const salesSlice = createSlice({
     });
     builder.addCase(updateDeal.fulfilled, (state, action) => {
       if (state.saleDetail) {
-        state.saleDetail.probability = action.payload.probability;
-        state.saleDetail.status = action.payload.status;
-        state.saleDetail.members = action.payload.members;
-        state.saleDetail.start_date = action.payload.start_date;
+        // state.saleDetail.probability = action.payload.probability;
+        // state.saleDetail.status = action.payload.status;
+        // state.saleDetail.members = action.payload.members;
+        // state.saleDetail.start_date = action.payload.start_date;
         // state.saleDetail.todo_list = action.payload.todo_list;
       }
       // const index = state.sales.findIndex(
@@ -256,7 +256,7 @@ const salesSlice = createSlice({
     });
     builder.addCase(createTodo.fulfilled, (state, action) => {
       if (state.saleDetail) {
-        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+        // state.saleDetail.todo_list = action.payload.deal_update.todo_list;
       }
     });
     builder.addCase(createTodo.rejected, (state, action) => {
@@ -264,7 +264,7 @@ const salesSlice = createSlice({
     });
     builder.addCase(updateTodo.fulfilled, (state, action) => {
       if (state.saleDetail) {
-        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+        // state.saleDetail.todo_list = action.payload.deal_update.todo_list;
       }
     });
     builder.addCase(updateTodo.rejected, (state, action) => {
@@ -272,7 +272,7 @@ const salesSlice = createSlice({
     });
     builder.addCase(deleteTodo.fulfilled, (state, action) => {
       if (state.saleDetail) {
-        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+        // state.saleDetail.todo_list = action.payload.deal_update.todo_list;
       }
     });
     builder.addCase(deleteTodo.rejected, (state, action) => {
@@ -280,7 +280,7 @@ const salesSlice = createSlice({
     });
     builder.addCase(createComment.fulfilled, (state, action) => {
       if (state.saleDetail) {
-        state.saleDetail.todo_list = action.payload.deal_update.todo_list;
+        // state.saleDetail.todo_list = action.payload.deal_update.todo_list;
       }
     });
     builder.addCase(getServices.pending, (state, action) => {

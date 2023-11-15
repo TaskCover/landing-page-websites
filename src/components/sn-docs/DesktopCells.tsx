@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { memo } from "react";
 import { BodyCell } from "components/Table";
-import { DATE_TIME_FORMAT_SLASH } from "constant/index";
+import {
+  DATE_TIME_FORMAT_HYPHEN,
+  DATE_TIME_FORMAT_SLASH,
+} from "constant/index";
 import { formatDate, formatNumber } from "utils/index";
 import { Position } from "store/company/reducer";
 import { Text } from "components/shared";
@@ -13,8 +16,34 @@ type DesktopCellsProps = {
   item: any;
 };
 
+function formatTime(dateTimeString) {
+  const time: any = new Date(dateTimeString);
+  const currentTime: any = new Date();
+  const timeDifference: any = currentTime - time;
+  const minutes = Math.floor(timeDifference / (1000 * 60));
+  const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+  if (minutes < 60) {
+    return `${minutes} minutes ago`;
+  } else if (hours < 24) {
+    return `${hours} hours ago`;
+  } else if (days < 7) {
+    return `${days} days ago`;
+  } else {
+    const formattedHours = time.getHours().toString().padStart(2, "0");
+    const formattedMinutes = time.getMinutes().toString().padStart(2, "0");
+    const formattedDay = time.getDate().toString().padStart(2, "0");
+    const formattedMonth = (time.getMonth() + 1).toString().padStart(2, "0");
+    const formattedYear = time.getFullYear();
+
+    return `${formattedHours}:${formattedMinutes} ${formattedDay}-${formattedMonth}-${formattedYear}`;
+  }
+}
+
 const DesktopCells = (props: DesktopCellsProps) => {
   const { item } = props;
+
   return (
     <TableRow>
       <BodyCell align="left">
@@ -24,10 +53,12 @@ const DesktopCells = (props: DesktopCellsProps) => {
           </Text>
         </Link>
       </BodyCell>
-      <BodyCell tooltip={formatDate(item.created_time, DATE_TIME_FORMAT_SLASH)}>
-        {formatDate(item.created_time)}
+      <BodyCell
+      // tooltip={formatDate(item.created_time, DATE_TIME_FORMAT_HYPHEN)}
+      >
+        {formatDate(item.created_time, DATE_TIME_FORMAT_HYPHEN)}
       </BodyCell>
-      <BodyCell>{formatDate(item.updated_time)}</BodyCell>
+      <BodyCell>{formatTime(item.updated_time)}</BodyCell>
       <BodyCell sx={{ py: "10px" }} align="center">
         {item?.created_by?.id ? (
           <Stack

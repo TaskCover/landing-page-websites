@@ -84,11 +84,12 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
           : undefined,
       },
       user_id: bookingEvent?.user_id,
-      allocation: bookingEvent?.allocation || 0,
+      allocation: bookingEvent?.allocation || 1,
       allocation_type:
         bookingEvent?.allocation_type || RESOURCE_ALLOCATION_TYPE.HOUR,
       note: bookingEvent?.note || "",
     },
+    mode: "all",
   });
 
   const { workedTime, estimate, leftToSchedule, scheduledTime } =
@@ -150,6 +151,20 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                 required
                 options={salesOptions as IOptionStructure[]}
                 label={resourceT("form.services")}
+                sx={{
+                  overflow: "hidden",
+                  "& .Muibox-root .MuiBox-root": {
+                    overflow: "hidden",
+                    justifyContent: "space-between",
+                    maxWidth: "90%",
+                  },
+                  "& .MuiStack-root": {
+                    width: "90%",
+                  },
+                  "& .MuiSelect-select": {
+                    pr: "16px!important",
+                  },
+                }}
               />
             )}
           />
@@ -199,8 +214,12 @@ const ProjectTab = ({ open, onClose, bookingId }: IProps) => {
                   label={resourceT("form.allocation")}
                   placeholder="8h"
                   sx={{
-                    borderRight: "1px solid #BABCC6",
+                    "& > .MuiBox-root": {
+                      borderRadius: 0,
+                      borderRight: "1px solid #BABCC6",
+                    },
                   }}
+                  type="number"
                   helperText={errorsProject.allocation?.message}
                   error={!!errorsProject.allocation?.message}
                   {...field}

@@ -24,10 +24,16 @@ import { useGetSchemas } from "../Schemas";
 interface IProps {
   open: boolean;
   resourceId: string;
+  selectedDateRange?: Date[];
   onClose(): void;
 }
 
-const TimeOffTab = ({ open, onClose, resourceId }: IProps) => {
+const TimeOffTab = ({
+  open,
+  onClose,
+  resourceId,
+  selectedDateRange,
+}: IProps) => {
   const [isFocusAllocation, setIsFocusAllocation] = useState(false);
   const { palette } = useTheme();
   const commonT = useTranslations(NS_COMMON);
@@ -50,13 +56,14 @@ const TimeOffTab = ({ open, onClose, resourceId }: IProps) => {
     defaultValues: {
       categoryTimeOff: "",
       dateRange: {
-        startDate: undefined,
-        endDate: undefined,
+        startDate: selectedDateRange?.[0] || undefined,
+        endDate: selectedDateRange?.[1] || undefined,
       },
-      allocation: 0,
+      allocation: 1,
       allocation_type: RESOURCE_ALLOCATION_TYPE.HOUR,
       note: "",
     },
+    mode: "all",
   });
 
   useEffect(() => {
@@ -144,8 +151,12 @@ const TimeOffTab = ({ open, onClose, resourceId }: IProps) => {
                   label={resourceT("form.allocation")}
                   placeholder="8h"
                   sx={{
-                    borderRight: "1px solid #BABCC6",
+                    "& > .MuiBox-root": {
+                      borderRadius: 0,
+                      borderRight: "1px solid #BABCC6",
+                    },
                   }}
+                  type="number"
                   helperText={errorsTimeOff.allocation?.message}
                   error={!!errorsTimeOff.allocation?.message}
                   {...field}

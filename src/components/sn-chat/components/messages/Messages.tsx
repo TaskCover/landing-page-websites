@@ -124,16 +124,16 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   const getTimeStamp = (time: string | Date) => {
     const date = new Date(time);
     const lastHours = date.getHours();
-    let half = "AM";
+    let half = " AM";
     if (lastHours === undefined) {
       return "";
     }
     if (lastHours > 12) {
       date.setHours(lastHours - 12);
-      half = "PM";
+      half = " PM";
     }
     if (lastHours === 0) date.setHours(12);
-    if (lastHours === 12) half = "PM";
+    if (lastHours === 12) half = " PM";
     return `${formatDate(date, "HH:mm")}${half}`;
   };
 

@@ -34,11 +34,6 @@ const FilterMemberEdit = ({ onChange, queries }: FilterSearchDocsProps) => {
     totalPages,
   } = useEmployeeOptions();
 
-  const onChangeField = (name: string, newValue?: any) => {
-    formik.setFieldValue(name, newValue);
-    onChange(name, newValue);
-  };
-
   const onChangeSearch = (name: string, newValue?: string | number) => {
     onGetOptions({ pageIndex: 1, pageSize: 20, [name]: newValue });
   };
@@ -47,23 +42,18 @@ const FilterMemberEdit = ({ onChange, queries }: FilterSearchDocsProps) => {
     onGetOptions({ pageIndex: 1, pageSize: 20 });
   };
 
-  const onSubmit = () => {
-    console.log("first");
-  };
-
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      members: queries.member,
-      owner: queries.owner,
-    },
-    onSubmit,
-  });
-
   const onEndReached = () => {
     if (isFetching || (totalPages && pageIndex >= totalPages)) return;
     onGetOptions({ ...filters, pageSize, pageIndex: pageIndex + 1 });
   };
+
+  const options = [
+    {
+      label: "none",
+      value: "",
+    },
+    ...employeeOptions,
+  ];
 
   return (
     <>
@@ -114,13 +104,13 @@ const FilterMemberEdit = ({ onChange, queries }: FilterSearchDocsProps) => {
           }}
         >
           <Select
-            options={employeeOptions}
+            options={options}
             title={docsT("filter.filter.lastEdited")}
-            name="owner"
             hasAvatar
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values?.owner}
+            onChange={(e) => {
+              onChange("lastEdit", e.target.value);
+            }}
+            value={queries.lastEdit}
             rootSx={sxConfig.input}
             fullWidth
             onEndReached={onEndReached}

@@ -42,9 +42,11 @@ const CommentEditor = forwardRef(
     const salesT = useTranslations(NS_SALES);
     const { onAddSnackbar } = useSnackbar();
     const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
-
+    const [isLoadingFile, setIsLoadingFile] = useState<boolean>(false);
     const editorRef = useRef<UnprivilegedEditor | undefined>();
     const { control, setValue } = useFormContext();
+    const [newFiles, setNewFiles] = useState<File[]>([]);
+
     const [content, setContent] = useState<string>("");
     const [files, setFiles] = useState<File[]>([]);
     const [fileLoaded, setFileLoaded] = useState<string[]>([]);
@@ -56,7 +58,7 @@ const CommentEditor = forwardRef(
 
     const onChangeFiles = (files: File[], data: string[]) => {
       setFiles(files);
-      setFileLoaded(data);
+      setFileLoaded((files) => files.concat(data));
     };
 
     const { saleDetail, onGetSaleDetail } = useSaleDetail();
@@ -64,10 +66,11 @@ const CommentEditor = forwardRef(
 
     const disabled = useMemo(
       () =>
-        (!content?.trim()?.length ||
+        isLoadingFile ||
+        ((!content?.trim()?.length ||
           !editorRef.current?.getText()?.trim()?.length) &&
-        !files.length,
-      [content, files.length],
+          !files.length),
+      [content, files.length, isLoadingFile],
     );
 
     const onSubmit = async () => {
@@ -120,8 +123,20 @@ const CommentEditor = forwardRef(
           hasAttachment
           placeholder={salesT("detail.comment.placeholder")}
           onChange={onChange}
+          onChangeNewsfiles={(localFiles) => {
+            if (localFiles) {
+              setNewFiles(localFiles);
+              return;
+            }
+            setNewFiles((files) => {
+              files.pop();
+              return files;
+            });
+          }}
+          newFiles={newFiles}
           onChangeFiles={onChangeFiles}
           value={content}
+          setIsProcessing={setIsLoadingFile}
           accepts={SUPPORTS}
           files={files}
         >
@@ -148,7 +163,11 @@ const CommentEditor = forwardRef(
 );
 
 CommentEditor.displayName = "CommentEditor";
-const SUPPORTS = [...ACCEPT_MEDIA, ...FILE_ACCEPT];
+const SUPPORTS = [
+  ...ACCEPT_MEDIA,
+  ...FILE_ACCEPT,
+  "application/x-zip-compressed",
+];
 const getExtension = (name: string) => {
   const arr = name.split(".");
   return arr[arr.length - 1];

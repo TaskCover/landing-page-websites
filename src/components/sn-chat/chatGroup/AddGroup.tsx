@@ -47,14 +47,12 @@ const AddGroup: FC<AddGroupProps> = ({
   const { user } = useAuth();
 
   const {
-    prevStep,
     dataTransfer,
     groupMembers,
     onSetRoomId,
     onSetStep,
     onCreateDirectMessageGroup,
     onAddMembers2Group,
-    currStep,
     onFetchGroupMembersMember,
     onSetDataTransfer,
     onChangeListConversations,
@@ -62,6 +60,7 @@ const AddGroup: FC<AddGroupProps> = ({
     isChatDesktop,
     onCloseDrawer,
     onSetConversationInfo,
+    onGetLastMessages,
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
@@ -78,6 +77,7 @@ const AddGroup: FC<AddGroupProps> = ({
   }, [onGetEmployees, textSearch, user?.company]);
 
   useEffect(() => {
+    if (isChatDesktop) return;
     if (dataTransfer?.currentSelects?.uids?.length) {
       setEmployeeSelected({
         ...employeeSelected,
@@ -92,7 +92,7 @@ const AddGroup: FC<AddGroupProps> = ({
         [dataTransfer?.currentSelects?.uids?.at(0) ?? ""]: true,
       });
     }
-  }, [dataTransfer?.currentSelects])
+  }, [dataTransfer?.currentSelects]);
 
   useEffect(() => {
     if (dataTransfer.isNew || isNew || type === "modal") return;
@@ -115,16 +115,23 @@ const AddGroup: FC<AddGroupProps> = ({
       : result?.payload?.group;
 
     if (isChatDesktop) {
-      if (isNew) {
-        onCloseDrawer("account");
-      }
       onSelectNewGroup(result?.payload?.group);
       onSetDataTransfer(dataItem);
-      if (type === "modal") {
-        onChangeListConversations([result?.payload?.group].concat(convention));
+      if (isNew) {
+        if (type === "modal") {
+          onChangeListConversations(
+            [result?.payload?.group].concat(convention),
+          );
+        } else {
+          onChangeListConversations([dataItem].concat(convention));
+        }
       } else {
-        onChangeListConversations([dataItem].concat(convention));
+        onGetLastMessages({
+          roomId: dataTransfer?._id,
+          type: dataTransfer?.t,
+        });
       }
+      onCloseDrawer("account");
       return;
     }
     onSetStep(STEP.CHAT_GROUP, dataItem);
@@ -226,7 +233,16 @@ const AddGroup: FC<AddGroupProps> = ({
               cursor: "pointer",
             }}
             onClick={() => {
-              onSetStep(dataTransfer?.openFrom ? dataTransfer?.openFrom : STEP.CHAT_GROUP);
+              if (callbackBackIcon) {
+                callbackBackIcon();
+                return;
+              } else {
+                onSetStep(
+                  dataTransfer?.openFrom
+                    ? dataTransfer?.openFrom
+                    : STEP.CHAT_GROUP,
+                );
+              }
             }}
           >
             {CustomCallBackIcon ? CustomCallBackIcon : <ArrowDownIcon />}
@@ -335,7 +351,15 @@ const AddGroup: FC<AddGroupProps> = ({
           size="small"
           sx={defaultSx.button}
           onClick={() => {
-            onSetStep(dataTransfer?.openFrom ? dataTransfer?.openFrom : STEP.CHAT_GROUP);
+            if (isChatDesktop) {
+              onCloseDrawer("account");
+            } else {
+              onSetStep(
+                dataTransfer?.openFrom
+                  ? dataTransfer?.openFrom
+                  : STEP.CHAT_GROUP,
+              );
+            }
           }}
         >
           {commonT("form.cancel")}

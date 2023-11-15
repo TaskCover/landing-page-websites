@@ -12,6 +12,8 @@ import {
   NS_DOCS,
   NS_TIME_TRACKING,
   NS_CHAT,
+  NS_FEEDBACK,
+  NS_BLOG,
 } from "constant/index";
 
 import { AccountLang } from "./account";
@@ -27,6 +29,8 @@ import { TimeTrackingLang } from "./timetracking";
 import { ChatBoxLang } from "./chatbox";
 import { ChatLang } from "./chat";
 import { DocsLang } from "./docs";
+import { FeedbackLang } from "./feedback";
+import { BlogLang } from "./blog";
 
 export default {
   [NS_COMMON]: CommonLang,
@@ -42,4 +46,6 @@ export default {
   [NS_CHAT]: ChatLang,
   [NS_CHAT_BOX]: ChatBoxLang,
   [NS_DOCS]: DocsLang,
+  [NS_FEEDBACK]: FeedbackLang,
+  [NS_BLOG]:BlogLang,
 };

@@ -335,9 +335,13 @@ export const formatCurrency = (
   const num = Number(number || 0);
   const maximumFractionDigits = Number.isInteger(num) ? 0 : numberOfFixed;
   if (num > 10000000000) {
+    let newNum = num / 1000000;
+    while (newNum > 10000000) {
+      newNum /= 10;
+    }
     return (
       prefix +
-      Math.round(num / 1000000)
+      Math.round(newNum)
         .toLocaleString("en-US", {
           maximumFractionDigits: 0,
           ...localeOption,

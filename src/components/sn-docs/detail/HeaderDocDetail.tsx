@@ -1,27 +1,23 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import _ from "lodash";
-import { Box, Button, Input, Stack, TextField } from "@mui/material";
-import { Text, Tooltip } from "components/shared";
-import useTheme from "hooks/useTheme";
 import BackIcon from "icons/BackIcon";
 import CommentIcon from "icons/CommentIcon";
 import CopyIcon from "icons/CopyIcon";
-import MoreDotIcon from "icons/MoreDotIcon";
+import ModalShare from "./LeftSlide/modal/ModalShare";
 import MoreIcon from "icons/MoreIcon";
 import OpenSidebarIcon from "icons/OpenSidebarIcon";
+import React, { useState } from "react";
+import SelectProjectInDoc from "./SelectProjectInDoc";
 import ShareIcon from "icons/ShareIcon";
-import React, { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import ModalShare from "./LeftSlide/modal/ModalShare";
+import { Box, Stack, TextField } from "@mui/material";
+import { changeTitle } from "store/docs/reducer";
 import { IDocDetail } from "./DocDetail";
-import { useTranslations } from "next-intl";
 import { NS_DOCS } from "constant/index";
+import { Text, Tooltip } from "components/shared";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { changeProjectId, changeTitle } from "store/docs/reducer";
-import TextFieldSelect from "components/shared/TextFieldSelect";
-import { useProjects } from "store/project/selectors";
-import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import useBreakpoint from "hooks/useBreakpoint";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
   const [openShare, setOpenShare] = useState(false);
@@ -29,30 +25,11 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
   const docsT = useTranslations(NS_DOCS);
   const dispatch = useAppDispatch();
   const title = useAppSelector((e) => e.doc.title);
-  const { project_id } = useAppSelector((state) => state.doc);
   const [valueCopy, copy] = useCopyToClipboard();
   const handleChange = (e) => {
     dispatch(changeTitle(e));
   };
-  const [projectOptions, setProjectOptions] = useState<any[]>([]);
-  const { items: projects, onGetProjects } = useProjects();
-  const [valueProject, setValueProject] = useState<any>("");
-
-  useEffect(() => {
-    if (!_.isEmpty(projects)) {
-      const resolveProjects = _.map(projects, (project) => {
-        return {
-          label: project?.name,
-          value: project?.id,
-        };
-      });
-      setProjectOptions(resolveProjects);
-    }
-  }, [projects]);
-
-  useEffect(() => {
-    onGetProjects({ pageSize: -1, pageIndex: 0 });
-  }, []);
+  const { isSmSmaller } = useBreakpoint();
 
   return (
     <>
@@ -67,13 +44,57 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
           borderColor="grey.100"
           spacing={{ xs: 2, md: 3 }}
           px={1}
-          mt={{ md: 1, lg: 1.5 }}
           mb={{ xs: 1.5, md: 1, lg: 1.5 }}
           py={"16px"}
           bgcolor={"background.paper"}
         >
+          {isSmSmaller && (
+            <Box
+              sx={{
+                display: {
+                  xs: "flex",
+                  sm: "none",
+                },
+                height: {
+                  sm: "0px",
+                },
+                alignItems: "center",
+              }}
+            >
+              <BackIcon
+                sx={{
+                  cursor: "pointer",
+                }}
+                onClick={() => router.back()}
+              ></BackIcon>
+              <SelectProjectInDoc></SelectProjectInDoc>
+              <Text pr={"2px"}>/</Text>
+              <TextField
+                placeholder="Nhập Tên Doc"
+                variant="outlined"
+                sx={{
+                  fieldset: {
+                    border: "none",
+                  },
+                  input: {
+                    padding: 0,
+                  },
+                  padding: 0,
+                  outline: "none",
+                  border: "none",
+                  backgroundColor: "transparent",
+                }}
+                value={title}
+                onChange={(e) => handleChange(e.target.value)}
+              ></TextField>
+            </Box>
+          )}
+
           <Box
             sx={{
+              px: {
+                xs: "10px",
+              },
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -94,42 +115,12 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                 }}
                 onClick={() => router.back()}
               ></BackIcon>
-              {/* Select Project */}
-              <TextFieldSelect
-                hiddenIcon
-                options={projectOptions}
-                sx={{
-                  bgcolor: "transparent",
-                  flex: 1,
-                  width: "170px",
-                  maxWidth: "170px",
-                  overflow: "hidden",
-                  height: "auto",
-                  label: {
-                    border: "none",
-                    padding: 0,
-                    height: "auto",
-                  },
-                  input: {
-                    border: "none",
-                    padding: 0,
-                    height: "auto",
-                  },
-                  ".MuiInputBase-root": {
-                    backgroundColor: "background.paper",
-                  },
-                  ".MuiSelect-select": {
-                    padding: "0px",
-                  },
-                }}
-                value={project_id}
-                onChange={(e) => {
-                  dispatch(changeProjectId(e.target.value as string));
-                  setValueProject(e.target.value);
-                }}
-              />
-              <Text>/</Text>
+              <SelectProjectInDoc></SelectProjectInDoc>
+              <Text pl={"3px"} pr={"6px"}>
+                /
+              </Text>
               <TextField
+                placeholder="Nhập Tên Doc"
                 variant="outlined"
                 sx={{
                   fieldset: {
@@ -221,75 +212,6 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                 </Tooltip>
               </Box>
             </Box>
-          </Box>
-          <Box
-            sx={{
-              display: {
-                xs: "flex",
-                sm: "none",
-              },
-              height: {
-                sm: "0px",
-              },
-              alignItems: "center",
-            }}
-          >
-            <BackIcon
-              sx={{
-                cursor: "pointer",
-              }}
-              onClick={() => router.back()}
-            ></BackIcon>
-            <TextFieldSelect
-              hiddenIcon
-              options={projectOptions}
-              sx={{
-                bgcolor: "transparent",
-                flex: 1,
-                width: "150px",
-                maxWidth: "150px",
-                overflow: "hidden",
-                height: "auto",
-                label: {
-                  border: "none",
-                  padding: 0,
-                  height: "auto",
-                },
-                input: {
-                  border: "none",
-                  padding: 0,
-                  height: "auto",
-                },
-                ".MuiInputBase-root": {
-                  backgroundColor: "background.paper",
-                },
-                ".MuiSelect-select": {
-                  padding: "0px",
-                },
-              }}
-              value={project_id}
-              onChange={(e) => {
-                dispatch(changeProjectId(e.target.value as string));
-                setValueProject(e.target.value);
-              }}
-            />
-            <TextField
-              variant="outlined"
-              sx={{
-                fieldset: {
-                  border: "none",
-                },
-                input: {
-                  padding: 0,
-                },
-                padding: 0,
-                outline: "none",
-                border: "none",
-                backgroundColor: "transparent",
-              }}
-              value={title}
-              onChange={(e) => handleChange(e.target.value)}
-            ></TextField>
           </Box>
         </Stack>
       </Box>

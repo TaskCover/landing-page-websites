@@ -4,7 +4,7 @@ import Avatar from "components/Avatar";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import PlusIcon from "icons/PlusIcon";
-import React, { useEffect, useMemo } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import { formatNumber } from "utils/index";
 import { isEmpty, includes } from "lodash";
 import { useTranslations } from "next-intl";
@@ -17,6 +17,8 @@ import {
 import { useGetTimeOffOptions } from "components/sn-sales/hooks/useGetTimeOffOptions";
 import { useProject, useProjects } from "store/project/selectors";
 import { useAuth } from "store/app/selectors";
+import { useEmployees } from "store/company/selectors";
+import { useFetchDetail } from "../hooks/useFetchDetail";
 
 interface IResourceLabelProps {
   resource: ResourceApi;
@@ -35,6 +37,7 @@ const ResourceLabel = ({
   setIsOpenCreate,
   setParentResource,
   isLastItem,
+  isMybooking,
   handleCollapseToggle,
   totalhour,
   selectedResource,
@@ -42,7 +45,6 @@ const ResourceLabel = ({
   const {
     name,
     company,
-    isMybooking,
     type,
     fullname,
     position,
@@ -55,11 +57,15 @@ const ResourceLabel = ({
 
   const commonT = useTranslations(NS_COMMON);
   const resourceT = useTranslations(NS_RESOURCE_PLANNING);
-  const isActive = includes(selectedResource, resource._resource.id);
+
   const { totalLeftToSchedule } = useGetTotalScheduleTime();
   const { timeOffOptions } = useGetTimeOffOptions();
   const { user } = useAuth();
-  const { onGetProject, item: projectDetail } = useProject();
+  const { projectDetail, userDetail } = useFetchDetail(project?.id, user_id);
+  const isActive = useMemo(
+    () => includes(selectedResource, resource._resource.id),
+    [selectedResource],
+  );
   const handleOpenCreate = () => {
     setIsOpenCreate(true);
     setParentResource(
@@ -88,16 +94,12 @@ const ResourceLabel = ({
     if (user_id === user?.id || isMybooking) {
       return ownerAvatar;
     }
-    // TODO: return other user avt
-    return;
-  }, [projectDetail, project?.id, user]);
+    return userDetail?.avatar?.link;
+  }, [projectDetail, project?.id, user, userDetail]);
 
-  useEffect(() => {
-    if (project?.id) {
-      onGetProject(project?.id);
-    }
-    `  `;
-  }, [project?.id]);
+  const isAddbutton = useMemo(() => {
+    return (isActive && parentBookings?.length === 0) || !isActive;
+  }, [isActive, JSON.stringify(parentBookings), isMybooking]);
 
   if (type === "step") {
     return (
@@ -253,21 +255,20 @@ const ResourceLabel = ({
           </Grid>
         </Grid>
 
-        <Button
-          variant="text"
-          sx={{
-            display:
-              !isActive || (!isActive && parentBookings?.length !== 0)
-                ? "none"
-                : "flex",
-            mt: 2,
-            color: "success.main",
-          }}
-          startIcon={<PlusIcon />}
-          onClick={() => handleOpenCreate()}
-        >
-          {resourceT("schedule.action.addBooking")}
-        </Button>
+        {isAddbutton && (
+          <Button
+            variant="text"
+            sx={{
+              // display: isAddbutton ? "flex" : "none",
+              mt: 2,
+              color: "success.main",
+            }}
+            startIcon={<PlusIcon />}
+            onClick={() => handleOpenCreate()}
+          >
+            {resourceT("schedule.action.addBooking")}
+          </Button>
+        )}
       </Grid>
     </Grid>
   );
@@ -278,4 +279,4 @@ const textHeadStyle = {
   fontWeight: 400,
 };
 
-export default ResourceLabel;
+export default memo(ResourceLabel);

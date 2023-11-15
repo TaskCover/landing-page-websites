@@ -72,7 +72,7 @@ const SalesDetail = () => {
     });
 
     return reset();
-  }, [serviceSectionList, saleDetail]);
+  }, [JSON.stringify(serviceSectionList), JSON.stringify(saleDetail)]);
 
   useEffect(() => {
     return () => onReset();
@@ -82,11 +82,13 @@ const SalesDetail = () => {
   return (
     <FixedLayout
       maxHeight={1020}
-      maxWidth={{
-        xs: 1120,
-        xl: 1450,
-      }}
+      // maxWidth={{
+      //   xs: 1120,
+      //   xl: 1450,
+      // }}
       sx={{
+        width: "100%",
+        minWidth: "95%",
         overflowY: "hidden",
       }}
     >
@@ -104,6 +106,7 @@ const SalesDetail = () => {
         <TabPanel
           sx={{
             overflowY: "auto",
+            pt: 0,
           }}
           value={SALES_DETAIL_TAB.SERVICE}
         >

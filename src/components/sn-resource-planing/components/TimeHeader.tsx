@@ -1,6 +1,6 @@
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { MobileDatePicker } from "@mui/x-date-pickers";
-import { Stack } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import dayjs from "dayjs";
 import useTheme from "hooks/useTheme";
 import React, { useEffect, useRef, useState } from "react";
@@ -11,7 +11,10 @@ import { DEFAULT_BOOKING_ALL_FILTER } from "../helper";
 import FullCalendar from "@fullcalendar/react";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { useResourceDate } from "store/resourcePlanning/selector";
+import {
+  useBookingAll,
+  useResourceDate,
+} from "store/resourcePlanning/selector";
 import { isEmpty } from "lodash";
 import { useTranslations } from "next-intl";
 import { NS_RESOURCE_PLANNING } from "constant/index";
@@ -23,6 +26,7 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
     currentDate,
     updateCurrentDate,
   } = useResourceDate();
+  const { isLoading } = useBookingAll();
   const [isOpen, setIsOpen] = useState(false);
   const { palette } = useTheme();
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);
@@ -264,6 +268,7 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
         >
           <Button
             variant="contained"
+            disabled={isLoading}
             sx={{
               ...changeWeekButtonStyles,
               padding: 0,
@@ -307,6 +312,7 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
             {resourceT("schedule.time.thisWeek").toUpperCase()}
           </Button>
           <Button
+            disabled={isLoading}
             variant="contained"
             sx={{
               ...changeWeekButtonStyles,

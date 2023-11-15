@@ -61,9 +61,12 @@ const ReactQuill = dynamic(
 export type EditorProps = {
   hasAttachment?: boolean;
   onChangeFiles?: (files: File[], data: string[]) => void;
+  newFiles?: File[];
+  onChangeNewsfiles: (files?: File[]) => void;
   children?: React.ReactNode;
   files?: File[];
   accepts?: string[];
+  setIsProcessing?: (value: boolean) => void;
   noCss?: boolean;
 } & Omit<ReactQuillProps, "children">;
 
@@ -73,9 +76,12 @@ const Editor = (props: EditorProps) => {
     onChangeFiles,
     children,
     files = [],
+    setIsProcessing,
     className,
     accepts,
     noCss,
+    newFiles = [],
+    onChangeNewsfiles,
     ...rest
   } = props;
   const [value, setValue] = useState("");
@@ -87,42 +93,63 @@ const Editor = (props: EditorProps) => {
     [files],
   );
 
-  const onChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files?.length) return;
-    let newFiles: File[] = Array.from(event.target.files);
-    newFiles = newFiles.reduce(
-      (out: File[], file) => {
-        if (accepts) {
-          if (accepts.includes(file.type)) {
-            out.push(file);
-            return out;
+  const onChangeFile = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      event.stopPropagation();
+
+      if (!event.target.files?.length) return;
+      setIsProcessing && setIsProcessing(true);
+      let localFiles: File[] = Array.from(event.target.files).concat(newFiles);
+
+      onChangeNewsfiles(localFiles);
+      localFiles = localFiles.reduce(
+        (out: File[], file) => {
+          if (accepts) {
+            if (accepts.includes(file.type)) {
+              out.push(file);
+              return out;
+            }
           }
-        }
-        if (ACCEPTS.includes(file.type)) {
-          out.push(file);
-        }
-        return out;
-      },
-      [...files],
-    );
-    const data = [];
-    if (newFiles.length) {
-      setIsLoadingFile(true);
-      const promises = newFiles.map((file) => {
-        return client.upload(Endpoint.UPLOAD_LINK, file);
-      });
-      const results = await Promise.allSettled(promises).finally(() => {
-        setIsLoadingFile(false);
-      });
-      results.forEach((result) => {
-        if (result.status === "fulfilled" && result.value) {
-          (data as string[]).push(result.value);
-        }
-      });
-    }
-    setLoadedFiles(data);
-    onChangeFiles && onChangeFiles(newFiles, data);
-  };
+          if (ACCEPTS.includes(file.type)) {
+            out.push(file);
+          }
+          return out;
+        },
+        [...files],
+      );
+      const data = [...loadedFiles];
+      if (localFiles.length) {
+        setIsLoadingFile(true);
+        const promises = localFiles.map(async (file: File) => {
+          const fileUpload = new File([file], file.name, {
+            type:
+              file.type === "application/x-zip-compressed"
+                ? "application/zip"
+                : file.type,
+          });
+          return await client.upload(Endpoint.UPLOAD_LINK, fileUpload);
+        });
+        const results = await Promise.allSettled(promises).finally(() => {
+          setIsLoadingFile(false);
+
+          setIsProcessing && setIsProcessing(false);
+        });
+        results.forEach((result) => {
+          onChangeNewsfiles();
+          if (result.status === "fulfilled" && result.value) {
+            (data as string[]).push(result.value);
+          }
+        });
+      }
+      setLoadedFiles(data);
+      onChangeFiles && onChangeFiles(localFiles, data);
+    },
+    [accepts, files, loadedFiles, newFiles],
+  );
+  console.log(
+    "🚀 ~ file: Editor.tsx:99 ~ onChangeFile ~ localFiles:",
+    newFiles,
+  );
 
   const onRemove = (index: number) => {
     return () => {
@@ -212,20 +239,24 @@ const Editor = (props: EditorProps) => {
             onRemove={onRemove(index)}
           />
         ))}
-        {isLoadingFile && (
-          <Stack
-            sx={{
-              backgroundColor: "#ECF0F3",
-              width: 60,
-              height: 60,
-              m: 1,
-            }}
-            justifyContent="center"
-            alignItems="center"
-          >
-            <CircularProgress size={16} />
-          </Stack>
-        )}
+        {(isLoadingFile || newFiles.length != 0) &&
+          newFiles.map((files, index) => {
+            return (
+              <Stack
+                key={files.name + index}
+                sx={{
+                  backgroundColor: "#ECF0F3",
+                  width: 60,
+                  height: 60,
+                  m: 1,
+                }}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <CircularProgress size={16} />
+              </Stack>
+            );
+          })}
       </Stack>
       <Box
         multiple

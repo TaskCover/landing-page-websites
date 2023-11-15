@@ -30,5 +30,11 @@ export const LayoutLang: LayoutDictionary = {
     sales: "Giao dịch",
     docs: 'Tài Liệu',
     chat: "Tin nhắn",
+    //feedback
+    feedback: "Đánh giá",
+    feedbackList: "Danh sách đánh giá",
+    blog:"Bài viết",
+    blogList:"Danh sách bài viết",
+    blogCategoryList:"Danh sách danh mục",
   },
 };

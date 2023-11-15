@@ -28,6 +28,7 @@ import PlusIcon from "icons/PlusIcon";
 import { useFormContext } from "react-hook-form";
 import { Option, User } from "constant/types";
 import { useSaleDetail } from "store/sales/selectors";
+import { useSnackbar } from "store/app/selectors";
 
 const WRONG_NUMBER = 10;
 
@@ -91,6 +92,9 @@ const DisplayItem = ({
 const Assign = (props: AssignProps) => {
   const { onAssign: onChange, value } = props;
   const { saleDetail } = useSaleDetail();
+  const saleT = useTranslations(NS_SALES);
+  const { onAddSnackbar } = useSnackbar();
+  const { getValues } = useFormContext();
   const {
     employeeIsFetching,
     employeeOptions,
@@ -115,9 +119,17 @@ const Assign = (props: AssignProps) => {
 
   const onAssign = (user: Option) => {
     const selectedItem = value.find((item) => item.id === user.value);
-
+    const todoList = getValues("todo_list");
     const newSeleted = JSON.parse(JSON.stringify(value));
 
+    const isAsisgned = Object.keys(todoList).some((key) => {
+      return todoList[key].owner === user.value;
+    });
+
+    if (isAsisgned) {
+      onAddSnackbar(saleT("detail.assignedUser"), "error");
+      return;
+    }
     if (selectedItem) {
       newSeleted.splice(
         newSeleted.findIndex((item) => user.value === item.id),

@@ -10,7 +10,7 @@ import {
 import { useBookingAll, useMyBooking } from "store/resourcePlanning/selector";
 import useGetOptions from "../hooks/useGetOptions";
 import { setBookingAllFilter } from "store/resourcePlanning/reducer";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { cleanObject, stringifyURLSearchParams } from "utils/index";
 import useQueryParams from "hooks/useQueryParams";
@@ -33,15 +33,14 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
   const { bookingAllFilter, getBookingResource } = useBookingAll();
   const { getMyBooking, myBookingFilter } = useMyBooking();
   const pathname = usePathname();
-  const { push } = useRouter();
+  const { push, replace } = useRouter();
   const { initQuery, query } = useQueryParams();
   const { positionOptions } = useGetOptions();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSearch = () => {
+  const onSearch = useCallback(() => {
     const newQueries = { ...queries };
     const queryString = stringifyURLSearchParams(newQueries);
-    push(`${pathname}${queryString}`);
     switch (type) {
       case TAB_TYPE.ALL:
         getBookingResource(newQueries);
@@ -50,7 +49,7 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
         getMyBooking(newQueries);
         break;
     }
-  };
+  }, [queries, type]);
 
   const positions = useMemo(() => {
     const result = [...positionOptions];

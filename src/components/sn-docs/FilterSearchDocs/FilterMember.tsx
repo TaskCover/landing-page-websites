@@ -24,22 +24,8 @@ const FilterMember = ({ onChange, queries }: FilterSearchDocsProps) => {
   };
 
   const onChangeField = (name: string, newValue?: any) => {
-    formik.setFieldValue(name, newValue);
     onChange(name, newValue);
   };
-
-  const onSubmit = () => {
-    console.log("first");
-  };
-
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      members: queries.member,
-      owner: queries.owner,
-    },
-    onSubmit,
-  });
 
   return (
     <>
@@ -90,10 +76,10 @@ const FilterMember = ({ onChange, queries }: FilterSearchDocsProps) => {
           }}
         >
           <SelectMembers
-            name="members"
-            value={formik.values?.members}
+            name="user_id"
+            value={queries?.user_id}
             onChange={onChangeField}
-            ignoreId={formik.values?.owner}
+            // ignoreId={queries?.owner}
           />
         </Stack>
       </Popover>

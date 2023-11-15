@@ -11,6 +11,7 @@ const defaultParam = {
   offset: 0,
   text: "",
   type: "a",
+  company: "fpt",
 };
 
 export interface useFetchingChattingReturns {

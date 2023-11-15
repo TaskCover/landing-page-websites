@@ -15,6 +15,7 @@ import {
   setBookingAllFilter,
   setCurrentDate,
   setDatePicker,
+  setMyBookingFilter,
 } from "./reducer";
 import { useSnackbar } from "store/app/selectors";
 import { useEffect, useMemo, useState } from "react";
@@ -203,14 +204,19 @@ export const useMyBooking = () => {
     useAppSelector((state) => state.resourcePlanning);
   const { onAddSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
+
   const onSetMyBookingFilter = (filter: IBookingAllFitler) => {
-    dispatch(setBookingAllFilter(filter));
+    dispatch(setMyBookingFilter(filter));
   };
   const isReady = useMemo(
     () => myBookingStatus === DataStatus.SUCCEEDED,
     [myBookingStatus],
   );
 
+  const isLoading = useMemo(
+    () => myBookingStatus === DataStatus.LOADING,
+    [myBookingStatus],
+  );
   const getMyBooking = async (params: IBookingAllFitler) => {
     await dispatch(getMyBookingResource(params));
   };
@@ -226,6 +232,7 @@ export const useMyBooking = () => {
     myBookingError,
     myBookingFilter,
     isReady,
+    isLoading,
     getMyBooking,
     setMyBookingFilter: onSetMyBookingFilter,
   };

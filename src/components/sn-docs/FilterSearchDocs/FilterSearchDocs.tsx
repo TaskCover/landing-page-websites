@@ -1,15 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Box,
-  ButtonBase,
-  MenuItem,
-  MenuList,
-  Popover,
-  Stack,
-  popoverClasses,
-} from "@mui/material";
+import { Box, MenuList, Popover, Stack, popoverClasses } from "@mui/material";
 import { Text } from "components/shared";
-import { NS_DOCS } from "constant/index";
+import { NS_COMMON, NS_DOCS } from "constant/index";
 import ChevronIcon from "icons/ChevronIcon";
 import { useTranslations } from "next-intl";
 import React, { memo, useState } from "react";
@@ -17,7 +9,6 @@ import FilterMember from "./FilterMember";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import FilterMemberEdit from "./FilterMemberEdit";
 import FilterMemberProject from "./FilterMemberProject";
-import FilterName from "./FilterName";
 import FilterProjectStatus from "./FilterProjectStatus";
 
 export interface FilterSearchDocsProps {
@@ -28,9 +19,18 @@ export interface FilterSearchDocsProps {
 const FilterSearchDocs = ({ onChange, queries }: FilterSearchDocsProps) => {
   const docsT = useTranslations(NS_DOCS);
   const [anchorEl, setAnchorEl] = useState<any>(null);
+  const commonT = useTranslations(NS_COMMON);
+
+  const isHasValue =
+    queries?.user_id ||
+    queries?.project ||
+    queries?.lastEdit ||
+    queries?.project_status;
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <>
       <Box
@@ -45,10 +45,19 @@ const FilterSearchDocs = ({ onChange, queries }: FilterSearchDocsProps) => {
           cursor: "pointer",
         }}
       >
-        <Text color={"gray.400"} fontSize={"14px"}>
+        <Text color={"gray.400"} fontWeight={600} fontSize={"14px"}>
           {docsT("filter.filter.filter")}
         </Text>
-        <ChevronIcon fontSize="small"></ChevronIcon>
+        <Box
+          sx={{
+            color: isHasValue ? "primary.main" : "grey.400",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ChevronIcon fontSize="small"></ChevronIcon>
+        </Box>
       </Box>
       <Popover
         anchorEl={anchorEl}
@@ -73,7 +82,6 @@ const FilterSearchDocs = ({ onChange, queries }: FilterSearchDocsProps) => {
           paper: {
             sx: {
               borderRadius: 1,
-              mt: 0.5,
             },
           },
         }}
@@ -87,13 +95,13 @@ const FilterSearchDocs = ({ onChange, queries }: FilterSearchDocsProps) => {
             borderRadius: 1,
           }}
         >
-          <MenuList component={Box} sx={{ py: 2 }}>
+          <MenuList component={Box} sx={{ py: 1 }}>
             <FilterMember queries={queries} onChange={onChange}></FilterMember>
             <FilterMemberEdit
               queries={queries}
               onChange={onChange}
             ></FilterMemberEdit>
-            <FilterName queries={queries} onChange={onChange}></FilterName>
+            {/* <FilterName queries={queries} onChange={onChange}></FilterName> */}
             <FilterMemberProject
               queries={queries}
               onChange={onChange}

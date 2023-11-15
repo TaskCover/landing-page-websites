@@ -90,11 +90,21 @@ export const Endpoint = {
   SAME_WORKER: "timesheets/same-worker",
 
 
-    // Docs
-    DOCS : "/docs",
-    CREATE_DOCS: "/docs",
-    UPDATE_DOCS: '/docs/{id}',
-    DETAIL_DOCS: '/docs/detail/',
-    HISTORY_DOCS: '/docs/history/{id}',
-    PERM_DOCS: '/docs/perm/{id}'
+ // Docs
+ DOCS : "/docs",
+ CREATE_DOCS: "/docs",
+ UPDATE_DOCS: '/docs/{id}',
+ DETAIL_DOCS: '/docs/detail/',
+ HISTORY_DOCS: '/docs/history/{id}',
+ ADD_PERM_DOCS: '/docs/add-perm/',
+ PERM_DOCS: '/docs/perm/',
+
+  //feedback
+  FEEDBACK :"/feedback",
+  RESPONDFEEDBACK : "/feedback/{id}/response",
+
+  // blog
+  CATEGORY_BLOG :"/category",
+  BLOGS : "/post",
+  DETAIL_BLOG: "/post/{id}",
 };

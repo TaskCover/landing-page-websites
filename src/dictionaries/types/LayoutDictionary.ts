@@ -28,5 +28,12 @@ export type LayoutDictionary = {
     sales: string;
     docs: string;
     chat: string;
+    //feedback
+    feedback: string;
+    feedbackList: string;
+    //blog
+    blog :string;
+    blogList:string;
+    blogCategoryList:string;
   };
 };

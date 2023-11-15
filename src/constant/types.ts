@@ -10,6 +10,19 @@ export interface Option {
   subText?: string;
 }
 
+export interface Paging_Feedback {
+  page: number;
+  size: number;
+  total_page?: number;
+  totalItems?: number;
+}
+export interface PagingItem{
+  page: number;
+  size: number;
+  total_page?: number;
+  totalItems?: number;
+}
+
 export interface Size {
   width?: number;
   height?: number;
@@ -28,6 +41,11 @@ export type ErrorResponse = {
 export interface BaseQueries {
   pageIndex?: number;
   pageSize?: number;
+}
+
+export interface BaseQueries_Feedback {
+  page?: number;
+  size?: number;
 }
 
 export interface User {

@@ -30,5 +30,12 @@ export const LayoutLang: LayoutDictionary = {
     sales: "Sales",
     docs: "Documents",
     chat: "Chat",
+    //feedback
+    feedback: "Feedback",
+    feedbackList: "Feedback List",
+    //blog,category
+    blog:"Blogs",
+    blogList:"Blog List",
+    blogCategoryList :"Category List",
   },
 };

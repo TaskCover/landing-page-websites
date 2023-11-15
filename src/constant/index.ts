@@ -1,6 +1,6 @@
 import { AlertColor } from "@mui/material";
 import { FILE_MAP, Status, ThemeMode } from "./enums";
-import { Mode, Paging } from "./types";
+import { Mode, Paging, PagingItem, Paging_Feedback } from "./types";
 
 export const AUTH_API_URL = process.env.AUTH_API_URL as string;
 export const API_URL = process.env.API_URL as string;
@@ -11,6 +11,10 @@ export const CHAT_API_URL = process.env.CHAT_API_URL as string;
 export const SALE_API_URL = process.env.SALE_API_URL as string;
 export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
 export const RESOURCE_API_URL = process.env.RESOURCE_API_URL as string;
+//feedback
+export const FEEDBACK_API_URL = process.env.FEEDBACK_API_URL as string;
+// BLOG
+export const BLOG_API_URL = process.env.BLOG_API_URL as string;
 
 export const DARK_THEME_MEDIA_SYSTEM = "(prefers-color-scheme: dark)";
 export const DOCS_API_URL = process.env.DOCS_API_URL as string;
@@ -25,11 +29,24 @@ export const DATE_TIME_FORMAT_HYPHEN = `${SHORT_TIME_FORMAT} ${DATE_FORMAT_HYPHE
 
 export const DEFAULT_PAGE_INDEX = 1;
 export const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_PAGE_TOTAL = 10;
+
 
 export const DEFAULT_PAGING: Paging = {
   pageIndex: DEFAULT_PAGE_INDEX,
   pageSize: DEFAULT_PAGE_SIZE,
 };
+
+export const DEFAULT_PAGING_FEEDBACK: Paging_Feedback = {
+  page: DEFAULT_PAGE_INDEX,
+  size: DEFAULT_PAGE_SIZE,
+  totalItems: DEFAULT_PAGE_TOTAL,
+};
+export const  DEFAULT_PAGING_ITEM : PagingItem ={
+  page: DEFAULT_PAGE_INDEX,
+  size: DEFAULT_PAGE_SIZE,
+  totalItems: DEFAULT_PAGE_TOTAL,
+}
 
 export const SCROLL_ID = "scroll-id";
 
@@ -72,6 +89,10 @@ export const NS_RESOURCE_PLANNING = "resourcePlanning";
 export const NS_CHAT = "chat";
 export const NS_CHAT_BOX = "chatbox";
 export const NS_DOCS = "documents";
+//Feedback
+export const NS_FEEDBACK = "feeback";
+//blog
+export const NS_BLOG = "blog";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 export const VIDEO_ACCEPT = ["video/mp4"];
