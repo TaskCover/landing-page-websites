@@ -274,6 +274,7 @@ const ChatEditor = (props: EditorProps) => {
       // direction={isChatDesktop ? "column-reverse" : "column"}
       className="editor"
       sx={{
+        height: '100px',
         "& .ql-snow": {
           border: "unset !important",
           borderTop: "1px solid #ECECF3!important",
@@ -330,7 +331,7 @@ const ChatEditor = (props: EditorProps) => {
           sx={{
             position: "absolute",
             right: "1rem",
-            bottom: "0.7rem",
+            bottom: "15px",
             display: "flex",
             flexDirection: "row",
             gap: "0.5rem",
