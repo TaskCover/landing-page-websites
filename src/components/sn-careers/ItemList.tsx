@@ -108,8 +108,8 @@ const ItemList = () => {
 
   const onUpdateCareer_submit = async (id: string, data: CareergDataForm) => {
     if (!item) return; // Nếu item là undefined, thoát khỏi hàm
-    console.log(data);
-    console.log(id);
+    // console.log(data);
+    // console.log(id);
     // return 200;
     const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
     return await onUpdateCareer(id as string, data, accessToken);
