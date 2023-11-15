@@ -46,6 +46,7 @@ export const useActionGroupDetails = () => {
     onChangeListConversations,
     convention,
     onCloseDrawer,
+    onResetDataTransfer,
   } = useChat();
 
   const { user } = useAuth();
@@ -223,29 +224,18 @@ export const useActionGroupDetails = () => {
   };
 
   const onChangeConversationWhenLeave = useCallback(() => {
-    const indexCurrentData = convention?.findIndex(
-      (item) => item._id === dataTransfer?._id,
-    );
     const newConversations = convention?.filter(
       (item) => item._id !== dataTransfer?._id,
     );
-    onSetDataTransfer(
-      convention[indexCurrentData + 1] ??
-        convention[indexCurrentData - 1] ??
-        {},
-    );
-    onSetConversationInfo(
-      convention[indexCurrentData + 1] ??
-        convention[indexCurrentData - 1] ??
-        {},
-    );
+    onResetDataTransfer();
+    onSetConversationInfo(null);
     onChangeListConversations(newConversations);
   }, [
     convention,
     dataTransfer?._id,
     onChangeListConversations,
     onSetConversationInfo,
-    onSetDataTransfer,
+    onResetDataTransfer,
   ]);
 
   const handlePopup = async () => {

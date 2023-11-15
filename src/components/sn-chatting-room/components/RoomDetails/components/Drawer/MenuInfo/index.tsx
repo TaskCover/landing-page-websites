@@ -9,6 +9,10 @@ import { useActionGroupDetails } from "../../ChatDetailInfo/useActionGroupDetail
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { useChat } from "store/chat/selectors";
 import { useChatDetailInfo } from "components/sn-chatting-room/hooks/useChatDetailInfo";
+import { useAuth } from "store/app/selectors";
+import { TYPE_POPUP } from "components/sn-chat/chatGroup/ChatDetailGroup";
+import { useTranslations } from "next-intl";
+import { NS_CHAT_BOX } from "constant/index";
 
 const MenuInfo = () => {
   const { isDarkMode } = useTheme();
@@ -17,7 +21,11 @@ const MenuInfo = () => {
     onCloseDrawer,
     dataTransfer: currentConversation,
     conversationInfo,
+    groupMembers,
+    isChatDesktop,
   } = useChat();
+
+  const { user } = useAuth();
 
   const { menuItems } = useChatDetailInfo({
     currentConversation,
@@ -34,6 +42,13 @@ const MenuInfo = () => {
   }, [isDarkMode, currentConversation?.t]);
 
   const propsActionGroupDetail = useActionGroupDetails();
+
+  //check owner
+  const owners = Object.values(groupMembers).filter((item) =>
+    item.roles.includes("owner"),
+  );
+  const owner = owners.some((obj) => obj._id === user?.id_rocket);
+  const commonChatBox = useTranslations(NS_CHAT_BOX);
 
   return (
     <Box
@@ -57,6 +72,7 @@ const MenuInfo = () => {
             flexDirection: "column",
             gap: "12px",
             position: "relative",
+            paddingTop: "80px",
           }}
         >
           <Avatar
@@ -108,6 +124,110 @@ const MenuInfo = () => {
             />
           )}
         </Box>
+        {isChatDesktop && currentConversation?.t !== "d" && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              alignItems: "center",
+              flexDirection: "column",
+              position: "fixed",
+              bottom: "0px",
+              maxWidth: "267px",
+              background: "white",
+              height: "60px",
+              boxShadow: "rgba(0, 0, 0, 0.1) 0px 10px 50px;",
+            }}
+          >
+            {owner && (
+              <Box sx={{ marginBottom: 1 }}>
+                <Typography
+                  variant="caption"
+                  color="#F64E60"
+                  fontSize={14}
+                  fontWeight={600}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => {
+                    propsActionGroupDetail?.setShowPopup((pre) => ({
+                      ...pre,
+                      type: TYPE_POPUP.DELETE,
+                      statusPopup: true,
+                      title: commonChatBox("chatBox.deleteGroup"),
+                      content: <>{commonChatBox("chatBox.sureRemoveGroup")}</>,
+                      actionType: 0,
+                    }));
+                  }}
+                >
+                  {commonChatBox("chatBox.deleteGroup")}
+                </Typography>
+              </Box>
+            )}
+            {groupMembers.length > 1 && (
+              <Box sx={{ textAlign: "center" }}>
+                <Typography
+                  variant="caption"
+                  color="#F64E60"
+                  fontSize={14}
+                  fontWeight={600}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => {
+                    if (owner) {
+                      propsActionGroupDetail?.setShowPopup((pre) => ({
+                        ...pre,
+                        type: TYPE_POPUP.LEAVE_OWNER,
+                        statusPopup: true,
+                        title: commonChatBox("chatBox.leaveGroup"),
+                        content: (
+                          <Box
+                            sx={{
+                              textAlign: "center",
+                            }}
+                          >
+                            <Typography>
+                              {commonChatBox(
+                                "chatBox.leaveGroupConfirm.text_1",
+                              )}
+                            </Typography>
+                            <Typography>
+                              {commonChatBox(
+                                "chatBox.leaveGroupConfirm.text_2",
+                              )}{" "}
+                              <span
+                                style={{
+                                  color: "var(--brand-primary, #3699FF)",
+                                  cursor: "pointer",
+                                }}
+                                onClick={propsActionGroupDetail?.handleNewAdd}
+                              >
+                                {commonChatBox("chatBox.selectAdminNew")}
+                              </span>
+                            </Typography>
+                            <Typography>
+                              {commonChatBox(
+                                "chatBox.leaveGroupConfirm.text_3",
+                              )}
+                            </Typography>
+                          </Box>
+                        ),
+                      }));
+                    } else {
+                      propsActionGroupDetail.setShowPopup((pre) => ({
+                        ...pre,
+                        type: TYPE_POPUP.LEAVE_MEMBER,
+                        statusPopup: true,
+                        title: commonChatBox("chatBox.leaveGroup"),
+                        content: <>{commonChatBox("chatBox.sureLeaveGroup")}</>,
+                      }));
+                    }
+                  }}
+                >
+                  {commonChatBox("chatBox.leaveGroup")}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        )}
       </>
     </Box>
   );
