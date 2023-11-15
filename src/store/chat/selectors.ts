@@ -72,7 +72,6 @@ import {
   setListNewConversation,
   resetSearchChatText,
   setSelectSearchIndex,
-  resetDataTransfer,
 } from "./reducer";
 import { Attachment, UrlsQuery } from "./media/typeMedia";
 import { getChatUrls, uploadFile } from "./media/actionMedia";
@@ -370,9 +369,6 @@ export const useChat = () => {
     dispatch(setRoomId(id));
   };
 
-  const onResetDataTransfer = () => {
-    dispatch(resetDataTransfer());
-  };
   const onSetStateSearchMessage = useCallback(
     async (message: MessageSearchInfo | null) => {
       const messageSearch = message ? { ...message } : null;
@@ -799,6 +795,5 @@ export const useChat = () => {
     onResetSearchChatText,
     selectSearchIndex,
     onSetIndexSearch,
-    onResetDataTransfer,
   };
 };

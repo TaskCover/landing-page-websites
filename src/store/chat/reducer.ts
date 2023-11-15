@@ -143,9 +143,6 @@ const chatSlice = createSlice({
         state.dataTransfer = action.payload;
       }
     },
-    resetDataTransfer: (state) => {
-      state.dataTransfer = {};
-    },
     setConversationInfo: (state, action) => {
       state.conversationInfo = action.payload;
     },
@@ -568,7 +565,6 @@ export const {
   setListNewConversation,
   resetSearchChatText,
   setSelectSearchIndex,
-  resetDataTransfer,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

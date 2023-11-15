@@ -103,7 +103,7 @@ const RoomHeader = () => {
       if (newIndex === -1 || newIndex > listSearchMessage.length - 1) return;
       onSetIndexSearch(newIndex);
       const message = listSearchMessage[newIndex];
-      // if (newIndex < 5) return;
+      if (newIndex < 5) return;
       onSetStateSearchMessage(message);
     },
     [
