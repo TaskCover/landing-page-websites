@@ -1,8 +1,5 @@
 "use client";
-
 import CareerDetaiLayout from "layouts/CareerDetaiLayout";
-
-
 type RootLayoutProps = {
   children: React.ReactNode;
   params: {

@@ -104,6 +104,8 @@ export const NS_FEEDBACK = "feeback";
 export const NS_BLOG = "blog";
 //Cereer
 export const NS_CAREER = "career";
+//Applicants
+export const NS_APPLICANTS= "applicants";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 export const VIDEO_ACCEPT = ["video/mp4"];

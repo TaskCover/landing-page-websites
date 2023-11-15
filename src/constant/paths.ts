@@ -46,6 +46,7 @@ export const BLOGS_DETAIL_PATH = "/blogs/{id}";
 //Carrer
 export const CAREER_PATH = "/careers";
 export const CAREER_DETAIL_PATH = "/careers/{id}";
+export const APPLICANTS_DETAIL_PATH = "/careers/{id}/applicants";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -100,7 +101,8 @@ export const AUTHORIZED_PATHS = {
     BLOG_CATEGORY_PATH,
     BLOGS_DETAIL_PATH,
     //Carrer
-    CAREER_PATH
+    CAREER_PATH,
+    CAREER_DETAIL_PATH
   ],
   [Permission.ST]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,

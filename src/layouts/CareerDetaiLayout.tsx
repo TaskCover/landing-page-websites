@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useHeaderConfig } from "store/app/selectors";
 import { useCareer } from "store/career/selectors";
 import { getPath } from "utils/index";
-
+import { TabList } from "components/sn-career-detail/components";
 
 type CareerDetaiLayoutProps = {
     children: React.ReactNode;
@@ -62,6 +62,7 @@ const CareerDetaiLayout = ({ children, id }: CareerDetaiLayoutProps) => {
 
     return (
         <Wrapper overflow="auto" inFrame={isCareerDetailPath}>
+            <TabList />
             {children}
         </Wrapper>
     );
