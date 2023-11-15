@@ -1,5 +1,5 @@
 import { DataStatus } from "constant/enums";
-import { CareerData, GetCareerListQueries, getAllCareer, postCareer, upadteCareer } from "./action";
+import { CareerData, GetCareerListQueries, getAllCareer, getCareerBySlug, postCareer, upadteCareer } from "./action";
 import { Paging_Career } from "constant/types";
 import { DEFAULT_PAGING_CAREER } from "constant/index";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
@@ -77,6 +77,10 @@ const careerSlice = createSlice({
                 }
 
                 if (state.career?.id === action.payload.id) {
+                    state.career = action.payload;
+                }
+            }).addCase(getCareerBySlug.fulfilled, (state, action: PayloadAction<CareerData>) => {
+                if (state?.career?.id === action.payload.id) {
                     state.career = action.payload;
                 }
             })

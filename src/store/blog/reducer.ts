@@ -25,7 +25,7 @@ export interface BlogState {
     blogsPaging: PagingItem;
     blogsError?: string;
     blogsFilters: Omit<GetBlogCategoryListQueries, "page" | "size">;
-    blog?:BlogData
+    blog?: BlogData
 }
 type BlogStatistic = {
     searchKey?: string | undefined;
@@ -71,9 +71,9 @@ export const blogSlice = createSlice({
             }).addCase(getBlogBySlug.fulfilled, (state, action: PayloadAction<BlogData>) => {
                 if (state?.blog?.id === action.payload.id) {
                     state.blog = action.payload;
-                  }
+                }
             }
-)
+            )
     },
 });
 export const { reset } = blogSlice.actions;

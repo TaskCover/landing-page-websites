@@ -3,6 +3,7 @@ import { BodyCell } from "components/Table";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
   NS_CAREER,
+  NS_COMMON,
   NS_FEEDBACK,
 } from "constant/index";
 import { useTranslations } from "next-intl";
@@ -14,10 +15,12 @@ import { clientStorage } from "utils/storage";
 import { CareerData } from "store/career/action";
 import { useCareer } from "store/career/selectors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import MenuItem from '@mui/material/MenuItem';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import MenuItem from "@mui/material/MenuItem";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { pink } from "@mui/material/colors";
+import { CAREER_DETAIL_PATH } from "constant/paths";
+import { getPath } from "utils/index";
 
 type DesktopCellsProps = {
   item: CareerData;
@@ -27,6 +30,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
   const { onGetCareer, items, totalItems, total_page, page, size, isIdle } =
     useCareer();
   const careerT = useTranslations(NS_CAREER);
+  const commonT = useTranslations(NS_COMMON);
   const [item, setItem] = useState<CareerData>();
   const [action, setAction] = useState<DataAction | undefined>();
 
@@ -69,7 +73,18 @@ const DesktopCells = (props: DesktopCellsProps) => {
 
   return (
     <>
-      <BodyCell align="left">{props.item.title}</BodyCell>
+      <BodyCell
+        align="left"
+        href={getPath(CAREER_DETAIL_PATH, undefined, { id: String(props.item.slug)})}
+        linkProps={{
+          sx: { color: "text.primary" },
+          tooltip: commonT("clickGoDetail", {
+            name: careerT("title_form"),
+          }),
+        }}
+      >
+        {props.item.title}
+      </BodyCell>
       <BodyCell align="left">{props.item.location}</BodyCell>
       <BodyCell align="left">
         {chuyen_dinh_dang_ngay(props.item.start_time)}{" "}

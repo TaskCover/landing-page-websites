@@ -110,5 +110,6 @@ export const Endpoint = {
   //carrer
   CAREER:"/job-post",
 
-  UPADATECAREER: "/job-post/{id}"
+  UPADATECAREER: "/job-post/{id}",
+  DETAIL_CAREER: "/post/{id}",
 };
