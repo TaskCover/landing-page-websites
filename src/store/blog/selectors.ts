@@ -84,9 +84,9 @@ export const useBlogs = () => {
         },[dispatch],
     )
     const onCreateCommentBlog = useCallback (
-        async (id: string, cmt: CommentBlogData) => {
+        async (id: string, cmt: CommentBlogData, Token: string |null) => {
             try {
-                return await dispatch(createBlogComment({ id,cmt })).unwrap();
+                return await dispatch(createBlogComment({ id,cmt,Token })).unwrap();
             } catch (error) {
                 throw error;
             }
