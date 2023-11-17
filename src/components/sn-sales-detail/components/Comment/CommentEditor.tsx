@@ -42,6 +42,7 @@ const CommentEditor = forwardRef(
     const salesT = useTranslations(NS_SALES);
     const { onAddSnackbar } = useSnackbar();
     const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
+    const [isLoadingFile, setIsLoadingFile] = useState<boolean>(false);
 
     const editorRef = useRef<UnprivilegedEditor | undefined>();
     const { control, setValue } = useFormContext();
@@ -64,10 +65,11 @@ const CommentEditor = forwardRef(
 
     const disabled = useMemo(
       () =>
-        (!content?.trim()?.length ||
+        isLoadingFile ||
+        ((!content?.trim()?.length ||
           !editorRef.current?.getText()?.trim()?.length) &&
-        !files.length,
-      [content, files.length],
+          !files.length),
+      [content, files.length, isLoadingFile],
     );
 
     const onSubmit = async () => {
@@ -122,6 +124,7 @@ const CommentEditor = forwardRef(
           onChange={onChange}
           onChangeFiles={onChangeFiles}
           value={content}
+          setIsProcessing={setIsLoadingFile}
           accepts={SUPPORTS}
           files={files}
         >
@@ -148,7 +151,11 @@ const CommentEditor = forwardRef(
 );
 
 CommentEditor.displayName = "CommentEditor";
-const SUPPORTS = [...ACCEPT_MEDIA, ...FILE_ACCEPT];
+const SUPPORTS = [
+  ...ACCEPT_MEDIA,
+  ...FILE_ACCEPT,
+  "application/x-zip-compressed",
+];
 const getExtension = (name: string) => {
   const arr = name.split(".");
   return arr[arr.length - 1];

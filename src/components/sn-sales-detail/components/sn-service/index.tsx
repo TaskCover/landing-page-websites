@@ -1,6 +1,6 @@
 "use client";
 import { Stack } from "@mui/material";
-import React, { useCallback, useContext } from "react";
+import React, { memo, useCallback, useContext } from "react";
 import ServiceTable from "./ServiceTable";
 import ServiceHeader from "./ServiceHeader/ServiceHeaderDesktop";
 import { EditContext } from "./context/EditContext";
@@ -99,7 +99,7 @@ const SaleService = () => {
       ]);
       remove(index);
     },
-    [serviceSectionList],
+    [JSON.stringify(serviceSectionList)],
   );
   useFetchOptions();
 
