@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { BlogData, createNewBlogs, getAllBlogs, getBlogBySlug } from "./actions";
+import { BlogData, CommentBlogData, createBlogComment, createNewBlogs, getAllBlogs, getBlogBySlug, getBlogComments, getRelatedBlog } from "./actions";
 import { DataStatus } from "constant/enums";
 import { PagingItem } from "constant/types";
 import { GetBlogCategoryListQueries } from "store/blog-category/actions";
@@ -25,7 +25,9 @@ export interface BlogState {
     blogsPaging: PagingItem;
     blogsError?: string;
     blogsFilters: Omit<GetBlogCategoryListQueries, "page" | "size">;
-    blog?:BlogData
+    blog?: BlogData,
+    relatedBlogs: BlogData[],
+    listBlogComment: CommentBlogData[],
 }
 type BlogStatistic = {
     searchKey?: string | undefined;
@@ -35,7 +37,9 @@ const initialState: BlogState = {
     blogs: [],
     blogsStatus: DataStatus.IDLE,
     blogsPaging: DEFAULT_PAGING_ITEM,
-    blogsFilters: {}
+    blogsFilters: {},
+    relatedBlogs: [],
+    listBlogComment: [],
 }
 
 export const blogSlice = createSlice({
@@ -69,11 +73,14 @@ export const blogSlice = createSlice({
             }).addCase(createNewBlogs.fulfilled, (state, action: PayloadAction<BlogForm>) => {
                 // state.blogs.unshift(act);
             }).addCase(getBlogBySlug.fulfilled, (state, action: PayloadAction<BlogData>) => {
-                if (state?.blog?.id === action.payload.id) {
-                    state.blog = action.payload;
-                  }
-            }
-)
+                state.blog = action.payload;
+            }).addCase(getRelatedBlog.fulfilled, (state, { payload }) => {
+                state.relatedBlogs = payload;
+            }).addCase(getBlogComments.fulfilled, (state, { payload }) => {
+                state.listBlogComment = payload;
+            }).addCase(createBlogComment.fulfilled,  (state, action: PayloadAction<CommentBlogData>) => {
+                state.listBlogComment.push(action.payload);
+            })
     },
 });
 export const { reset } = blogSlice.actions;

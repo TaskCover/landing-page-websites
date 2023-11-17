@@ -43,6 +43,7 @@ export type BlogDictionary = {
         category: string,
         tag: string,
         statusBlog: string,
+        created_time : string,
     },
     published: string,
     draft: string,
@@ -66,4 +67,8 @@ export type BlogDictionary = {
         true: string,
         false: string,
     },
+    comment : {
+        writeComment :string;
+        sendComment :string;
+    }
 }

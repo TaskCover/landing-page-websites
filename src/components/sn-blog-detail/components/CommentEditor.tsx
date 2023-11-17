@@ -4,134 +4,92 @@ import {
   ForwardedRef,
   forwardRef,
   memo,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import Editor from "components/Editor";
 import { useTranslations } from "next-intl";
-import { NS_COMMON, NS_PROJECT, NS_SALES } from "constant/index";
+import { ACCESS_TOKEN_STORAGE_KEY, NS_BLOG, NS_COMMON } from "constant/index";
 import { Stack } from "@mui/material";
 import { Button } from "components/shared";
-import { useSnackbar } from "store/app/selectors";
-import { UnprivilegedEditor } from "react-quill";
-import {
-  useSaleDetail,
-  useSalesComment,
-  useSalesTodo,
-} from "store/sales/selectors";
-import SalesDetail from "components/sn-sales-detail/SaleDetail";
-import { CommentData, DealData } from "store/sales/actions";
-import { Endpoint, client } from "api";
 import { getMessageErrorByAPI } from "utils/index";
-import { useFormContext } from "react-hook-form";
-import moment from "moment";
-import { SaleState, Sales } from "store/sales/reducer";
-import useToggle from "hooks/useToggle";
-import Loading from "components/Loading";
+import { useAuth, useSnackbar } from "store/app/selectors";
+import { UnprivilegedEditor } from "react-quill";
+import { useBlogs } from "store/blog/selectors";
+import { CommentBlogData } from "store/blog/actions";
+import { useParams } from "next/navigation";
+import { clientStorage } from "utils/storage";
+
+// CommentEditor.tsx
+interface CommentEditorProps {
+  postId: string;
+  replyToCommentId: string | null;
+  resetReplyToCommentId: () => void;
+  forwardedRef: React.ForwardedRef<HTMLDivElement | null>;
+}
 
 const CommentEditor = forwardRef(
-  (_, ref: ForwardedRef<HTMLDivElement | null>) => {
+  ({ postId, replyToCommentId, resetReplyToCommentId, forwardedRef }: CommentEditorProps, ref: ForwardedRef<HTMLDivElement | null>) => {
     const commonT = useTranslations(NS_COMMON);
-    const salesT = useTranslations(NS_SALES);
+    const blogT = useTranslations(NS_BLOG);
+    const { onCreateCommentBlog } = useBlogs();
     const { onAddSnackbar } = useSnackbar();
-    const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
+    const { user } = useAuth();
 
     const editorRef = useRef<UnprivilegedEditor | undefined>();
-    const { control, setValue } = useFormContext();
     const [content, setContent] = useState<string>("");
-    const [files, setFiles] = useState<File[]>([]);
 
     const onChange = (value: string, delta, _, editor: UnprivilegedEditor) => {
       const isEmpty = value === VALUE_AS_EMPTY;
       setContent(isEmpty ? "" : value);
       editorRef.current = editor;
     };
-    const onChangeFiles = (files: File[]) => {
-      setFiles(files);
-    };
-
-    const { saleDetail, onGetSaleDetail } = useSaleDetail();
-    const { onCreateComment } = useSalesComment();
-
-    const disabled = useMemo(
-      () =>
-        (!content?.trim()?.length ||
-          !editorRef.current?.getText()?.trim()?.length) &&
-        !files.length,
-      [content, files.length],
-    );
 
     const onSubmit = async () => {
-      //   if (!taskListId || !taskId) return;
-
       try {
-        onProcessingTrue();
         const data = {
-          deal_id: saleDetail?.id || "",
+          name: user?.fullname,
+          email: user?.email,
+          reply_to: replyToCommentId ?? "",
           content: editorRef.current?.getHTML() ?? content,
-        } as CommentData;
-        if (files.length) {
-          data.attachments = [];
-          const promises = files.map((file) => {
-            return client.upload(Endpoint.UPLOAD_LINK, file);
-          });
-          const results = await Promise.allSettled(promises);
-          results.forEach((result) => {
-            if (result.status === "fulfilled" && result.value) {
-              (data.attachments as string[]).push(result.value);
-            }
-          });
-        }
-        const newData = await onCreateComment(data);
+          post_slug: postId,
+          avatar: user?.avatar?.link,
+        } as CommentBlogData;
+
+        const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+        const newData = await onCreateCommentBlog(postId, data, accessToken);
         if (newData) {
-          //   onGetTaskList(taskListId);
-          const newComments: Sales["comments"] = newData.deal_update.comments;
-          newComments.sort((a, b) =>
-            moment(b.created_time).isAfter(a.created_time) ? 1 : -1,
-          );
-          onGetSaleDetail(saleDetail?.id || "");
-          // setValue("comments", newComments);
           setContent("");
-          setFiles([]);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ((ref as any)?.current as HTMLDivElement)?.scrollIntoView();
+          resetReplyToCommentId();
+          ((forwardedRef as any)?.current as HTMLDivElement)?.scrollIntoView();
         }
       } catch (error) {
         onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-      } finally {
-        onProcessingFalse();
       }
     };
 
     return (
-      <>
-        <Editor
-          hasAttachment
-          placeholder={salesT("detail.comment.placeholder")}
-          onChange={onChange}
-          onChangeFiles={onChangeFiles}
-          value={content}
-          files={files}
+      <Editor
+        hasAttachment
+        placeholder={blogT("comment.writeComment")}
+        onChange={onChange}
+        value={content}
+      >
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mt={2}
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mt={2}
+          <Button
+            onClick={onSubmit}
+            variant="primary"
+            size="small"
           >
-            <Button
-              disabled={disabled}
-              onClick={onSubmit}
-              variant="primary"
-              size="small"
-            >
-              {salesT("detail.comment.submit")}
-            </Button>
-          </Stack>
-        </Editor>
-        <Loading open={isProcessing} />
-      </>
+            {blogT("comment.sendComment")}
+          </Button>
+        </Stack>
+      </Editor>
     );
   },
 );
@@ -139,5 +97,65 @@ const CommentEditor = forwardRef(
 CommentEditor.displayName = "CommentEditor";
 
 export default memo(CommentEditor);
+
+
+
+
+// const CommentEditor = forwardRef(
+//   ({ postIdOrSlug }, ref: ForwardedRef<HTMLDivElement | null>) => {
+//     const commonT = useTranslations(NS_COMMON);
+//     const blogT = useTranslations(NS_BLOG);
+//     const { onCreateCommentBlog } = useBlogs();
+//     const { onAddSnackbar } = useSnackbar();
+
+//     const editorRef = useRef<UnprivilegedEditor | undefined>();
+//     const [content, setContent] = useState<string>("");
+
+//     const onChange = (value: string, delta, _, editor: UnprivilegedEditor) => {
+//       const isEmpty = value === VALUE_AS_EMPTY;
+//       setContent(isEmpty ? "" : value);
+//       editorRef.current = editor;
+//     };
+
+//     const onSubmit = async () => {
+//       try {
+//         const data = {
+//           name: "",
+//           email: "",
+//           reply_to: "",
+//           content: editorRef.current?.getHTML() ?? content,
+//           post_slug: postIdOrSlug,
+//         } as CommentBlogData;
+
+//         const newData = await onCreateCommentBlog(postIdOrSlug, data);
+//         if (newData) {
+//           setContent("");
+//           ((ref as any)?.current as HTMLDivElement)?.scrollIntoView();
+//         }
+//       } catch (error) {
+//         onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+//       }
+//     };
+
+//     return (
+//       <Editor
+//         hasAttachment
+//         placeholder={blogT("comment.writeComment")}
+//         onChange={onChange}
+//         value={content}
+//       >
+//         <Stack direction="row" alignItems="center" justifyContent="space-between" mt={2}>
+//           <Button onClick={onSubmit} variant="primary" size="small">
+//             {blogT("comment.sendComment")}
+//           </Button>
+//         </Stack>
+//       </Editor>
+//     );
+//   },
+// );
+
+// CommentEditor.displayName = "CommentEditor";
+
+// export default memo(CommentEditor);
 
 const VALUE_AS_EMPTY = "<p><br></p>";
