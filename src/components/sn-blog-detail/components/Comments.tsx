@@ -1,13 +1,14 @@
+"use client"
 import { Box, Divider, Stack } from '@mui/material';
 import { Button, Text } from 'components/shared';
 import { useParams } from 'next/navigation';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import  { memo, useEffect, useRef, useState } from 'react';
 import { CommentBlogData } from 'store/blog/actions';
 import { useBlogs } from 'store/blog/selectors';
 import { formatDate } from 'utils/index';
 import CommentEditor from './CommentEditor';
 import Avatar from 'components/Avatar';
-
+import React from 'react';
 // Comment.tsx
 interface CommentProps {
   comment: CommentBlogData;
@@ -44,7 +45,7 @@ const Comment = ({ comment, commentsMap, onReply }: CommentProps) => {
             size="small" onClick={() => handleReply(comment.id)} style={{ marginRight: 8,maxHeight:30 }} >Reply
             </Button>
         </Stack>
-        <div
+        <Stack
           sx={{
             fontSize: 14,
             '& *': {

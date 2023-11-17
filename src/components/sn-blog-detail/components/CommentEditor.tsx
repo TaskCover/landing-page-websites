@@ -57,7 +57,7 @@ const CommentEditor = forwardRef(
         } as CommentBlogData;
 
         const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
-        const newData = await onCreateCommentBlog(postId, data, accessToken);
+        const newData = await onCreateCommentBlog(postId, data, accessToken as string);
         if (newData) {
           setContent("");
           resetReplyToCommentId();
