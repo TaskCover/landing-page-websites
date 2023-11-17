@@ -280,7 +280,7 @@ const DesktopInformation = (props) => {
                     paddingRight: "16px",
                 }}>
                   <Link href={data.link} style={{ textDecoration : "none"}}>
-                    <Item>
+                    <Item sx={{ height: "100%" }}>
                         {
                             fileIcon(data.extension, data.link)
                         }

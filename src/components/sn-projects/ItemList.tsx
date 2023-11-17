@@ -55,7 +55,7 @@ const ItemList = () => {
       { value: "#", width: "5%", align: "center" },
       {
         value: commonT("name"),
-        width: "30%",
+        width: "25%",
         align: "left",
       },
       {
@@ -63,7 +63,12 @@ const ItemList = () => {
         width: "25%",
         align: "left",
       },
-      { value: commonT("status"), width: "25%" },
+      {
+        value: commonT("creationDate"),
+        width: "15%",
+        align: "left",
+      },
+      { value: commonT("status"), width: "20%" },
       { value: "", width: "5%" },
     ],
     [commonT],
@@ -72,7 +77,7 @@ const ItemList = () => {
     () => [
       {
         value: commonT("name"),
-        width: "25%",
+        width: "20%",
         align: "left",
       },
       {
@@ -80,7 +85,12 @@ const ItemList = () => {
         width: "25%",
         align: "left",
       },
-      { value: commonT("status"), width: "30%" },
+      {
+        value: commonT("creationDate"),
+        width: "15%",
+        align: "left",
+      },
+      { value: commonT("status"), width: "25%" },
       { value: "", width: "10%" },
     ],
     [commonT],
