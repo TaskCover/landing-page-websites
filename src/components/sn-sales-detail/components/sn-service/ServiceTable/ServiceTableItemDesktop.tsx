@@ -101,7 +101,7 @@ const ServiceTableItem = ({
       if (!sectionColumns[sectionIndex]) return true;
       return sectionColumns[sectionIndex].columns.includes(cols);
     },
-    [sectionColumns],
+    [JSON.stringify(sectionColumns)],
   );
 
   const defaultBillType = useMemo(() => {
