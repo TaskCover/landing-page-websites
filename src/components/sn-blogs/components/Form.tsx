@@ -18,10 +18,13 @@ import { Controller, useForm } from "react-hook-form";
 import { useTagOptions, useTags } from "store/tags/selector";
 import SelectMultiple from "./SelectMultiple";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Editor from "./Editor";
+import { CategoryBlogData } from "store/blog-category/reducer";
+import Editor from "components/Editor";
 
-export type BlogForm = BlogData;
-
+export type BlogForm = Omit<BlogData, "category" | "background"> & {
+  category?: CategoryBlogData[];
+  background?: string | File;
+};
 type FormProps = {
   initialValues: BlogForm;
   type: DataAction;
@@ -110,13 +113,11 @@ const Form = (props: FormProps) => {
   const onChangeField = (name: string, newValue?: any) => {
     formik.setFieldValue(name, newValue);
   };
-  
   const onChangeContent = (value: string, delta, _, editor: UnprivilegedEditor) => {
     const isEmpty = value === VALUE_AS_EMPTY;
     setContent(isEmpty ? "" : value);
     editorRef.current = editor;
   };
-
   const onChangeAttactment = (files: File[]) => {
     setFiles(files);
   };
@@ -227,7 +228,7 @@ const Form = (props: FormProps) => {
                     name="category"
                     value={formik.values?.category}
                     onChange={onChangeField}
-                    ignoreId={formik.values?.ignoreId}
+                    ignoreId={formik.values?.ignoredId}
                   />
                 )}
               />
@@ -289,9 +290,7 @@ const Form = (props: FormProps) => {
                 <UploadFile
                   title={blogT("blogForm.background")}
                   name="background"
-                  value={ typeof formik.values.background === "string"
-                  ? formik.values.background
-                  : undefined}
+                  value={formik.values?.background}
                   onChange={onChangeBackGround}
                 />
 

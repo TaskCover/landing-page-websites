@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import React, { memo } from "react";
 import { BlogData } from "store/blog/actions";
 import { BLOGS_DETAIL_PATH } from "constant/paths";
-import { getPath } from "utils/index";
+import { formatDate, getPath } from "utils/index";
 
 type MobileContentCellProps = {
     item: BlogData;
@@ -32,7 +32,6 @@ const MobileContentCell = (props: MobileContentCellProps) => {
                 <Stack direction="row" alignItems="center" spacing={2}>
                     <Text variant="h6">{item.title}</Text>
                 </Stack>
-                <InformationItem label={blogT("content")}>{item.content}</InformationItem>
                 <InformationItem label={blogT("category")}>
                     {item.category?.map((cate, index) => (
                         <Text key={index}>{cate.name}</Text>
@@ -45,6 +44,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
                         <Text key={index}>{tag}</Text>
                     ))}
                 </InformationItem>
+                <InformationItem label={blogT("created_time")}>{formatDate(item?.created_time, "HH:mm - dd/MM/yyyy")}</InformationItem>
                 <InformationItem label={blogT("blogList.statusBlog")}>
                     {!item.published ? (
                         <Chip
