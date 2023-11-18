@@ -119,7 +119,7 @@ const SalesPage = () => {
           </Stack>
         ),
         minWidth: 100,
-        width: "10%",
+        width: "15%",
       },
       {
         value: salesT("list.table.time"),
