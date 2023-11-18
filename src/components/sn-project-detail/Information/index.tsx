@@ -29,6 +29,7 @@ import FileIcon from "../../../icons/FileIcon";
 import {useParams} from "next/navigation";
 import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
 import Link from '@mui/material/Link';
+import AttachmentPreview from "../Tasks/Detail/components/AttachmentPreview";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -60,6 +61,14 @@ export default memo(InformationProjectPage);
 const DesktopInformation = (props) => {
   const {attachments} = props;
   const { item } = useProject();
+
+  const filtered_images = attachments.filter((attachment) => {
+    return attachment.type === "image/jpeg" || attachment.type === "image/png";
+  });
+  
+  console.log("list file ảnh", filtered_images);
+  
+  
 
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);

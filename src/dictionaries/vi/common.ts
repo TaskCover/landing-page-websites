@@ -83,7 +83,7 @@ export const CommonLang: CommonDictionary = {
   statusEnum: {
     inprogress: "Đang thực hiện",
     active: "Hoạt động",
-    close: "Kết thúc",
+    close: "Hoàn thành",
     pause: "Tạm dừng",
   },
   searchBy: "Tìm kiếm theo {name}",
