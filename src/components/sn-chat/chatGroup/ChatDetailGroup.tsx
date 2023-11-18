@@ -112,11 +112,11 @@ const ChatDetailGroup = (props) => {
       if (result?.error) {
         return onAddSnackbar(result?.error?.message, "error");
       }
-      (await onChangeGroupRole({
-        groupId: dataTransfer?._id,
-        userIdToChange: user?.id_rocket ?? "",
-        newRole: "removeOwner",
-      })) as any;
+      // (await onChangeGroupRole({
+      //   groupId: dataTransfer?._id,
+      //   userIdToChange: user?.id_rocket ?? "",
+      //   newRole: "removeOwner",
+      // })) as any;
       onAddSnackbar(commonChatBox("chatBox.group.adminChange"), "success");
     } else {
       const result = (await onRemoveGroupMember({
@@ -308,13 +308,13 @@ const ChatDetailGroup = (props) => {
     const renameGroupApi = async () => {
       const dataTransferNew = {
         ...dataTransfer,
-        name: renameGroup.replaceAll("_", " "),
-        fname: renameGroup.replaceAll("_", " "),
+        name: renameGroup.replace("_", " "),
+        fname: renameGroup.replace("_", " "),
       };
 
       const renameResult = (await onRenameGroup({
         roomId: dataTransfer?._id,
-        name: renameGroup.replaceAll(" ", "_"),
+        name: renameGroup.replace(" ", "_"),
       })) as any;
 
       if (renameResult?.error) {
@@ -538,6 +538,101 @@ const ChatDetailGroup = (props) => {
               admin={owner}
             />
           ))}
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Box>
+            {owner && (
+              <Box sx={{ marginBottom: 1 }}>
+                <Typography
+                  variant="caption"
+                  color="#F64E60"
+                  fontSize={14}
+                  fontWeight={600}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setShowPopup((pre) => ({
+                      ...pre,
+                      type: TYPE_POPUP.DELETE,
+                      statusPopup: true,
+                      title: commonChatBox("chatBox.deleteGroup"),
+                      content: <>{commonChatBox("chatBox.sureRemoveGroup")}</>,
+                      actionType: 0,
+                    }));
+                  }}
+                >
+                  {commonChatBox("chatBox.deleteGroup")}
+                </Typography>
+              </Box>
+            )}
+            {groupMembers.length > 1 && (
+              <Box sx={{ textAlign: "center" }}>
+                <Typography
+                  variant="caption"
+                  color="#F64E60"
+                  fontSize={14}
+                  fontWeight={600}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => {
+                    if (owner) {
+                      setShowPopup((pre) => ({
+                        ...pre,
+                        type: TYPE_POPUP.LEAVE_OWNER,
+                        statusPopup: true,
+                        title: commonChatBox("chatBox.leaveGroup"),
+                        content: (
+                          <Box
+                            sx={{
+                              textAlign: "center",
+                            }}
+                          >
+                            <Typography>
+                              {commonChatBox(
+                                "chatBox.leaveGroupConfirm.text_1",
+                              )}
+                            </Typography>
+                            <Typography>
+                              {commonChatBox(
+                                "chatBox.leaveGroupConfirm.text_2",
+                              )}{" "}
+                              <span
+                                style={{
+                                  color: "var(--brand-primary, #3699FF)",
+                                  cursor: "pointer",
+                                }}
+                                onClick={handleNewAdd}
+                              >
+                                {commonChatBox("chatBox.selectAdminNew")}
+                              </span>
+                            </Typography>
+                            <Typography>
+                              {commonChatBox(
+                                "chatBox.leaveGroupConfirm.text_3",
+                              )}
+                            </Typography>
+                          </Box>
+                        ),
+                      }));
+                    } else {
+                      setShowPopup((pre) => ({
+                        ...pre,
+                        type: TYPE_POPUP.LEAVE_MEMBER,
+                        statusPopup: true,
+                        title: commonChatBox("chatBox.leaveGroup"),
+                        content: <>{commonChatBox("chatBox.sureLeaveGroup")}</>,
+                      }));
+                    }
+                  }}
+                >
+                  {commonChatBox("chatBox.leaveGroup")}
+                </Typography>
+              </Box>
+            )}
+          </Box>
         </Box>
       </Box>
       <DefaultPopupLayout
