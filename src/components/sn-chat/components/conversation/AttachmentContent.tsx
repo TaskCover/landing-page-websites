@@ -132,6 +132,7 @@ const AttachmentContent = ({
       {
         <Box
           sx={{
+            marginTop: '17px',
             display: "flex",
             flexDirection: "row",
             flexWrap: "wrap",

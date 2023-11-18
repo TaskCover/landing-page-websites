@@ -203,6 +203,7 @@ const ChatForward: FC<Props> = (props) => {
                 width: "92%",
                 paddingBottom: "5px",
                 paddingTop: "3px",
+                zIndex: '1',
               }}
             >
               Message
@@ -227,6 +228,7 @@ const ChatForward: FC<Props> = (props) => {
                   width: "92%",
                   paddingBottom: "5px",
                   paddingTop: "5px",
+                  zIndex: '1',
                 }}
               >
                 Message
