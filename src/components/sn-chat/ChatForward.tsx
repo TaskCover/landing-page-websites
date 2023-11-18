@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box } from "@mui/system";
 import SelectItem from "./components/SelectItem";
-import TextareaAutosize from "@mui/base/TextareaAutosize";
 import { Skeleton, Typography } from "@mui/material";
 import { Button } from "components/shared";
 import { useChat } from "store/chat/selectors";
@@ -83,10 +82,8 @@ const ChatForward: FC<Props> = (props) => {
           type: "a",
         });
       } else {
-        console.log({ dataTransfer });
         const targetEmployeeId = Object.keys(employeeIdSelected).filter((item) => employeeIdSelected[item])?.at(-1);
         const target = (isChatDesktop ? props?.conversations : convention)?.filter(i => i?._id === targetEmployeeId)?.at(-1);
-        console.log({ dataTransfer, targetEmployeeId, target });
         onSetDataTransfer(target);
         onSetConversationInfo(target);
         onSetStep(target.t === "d" ? STEP.CHAT_ONE : STEP.CHAT_GROUP, target);
@@ -196,9 +193,10 @@ const ChatForward: FC<Props> = (props) => {
                 lineHeight: "1rem",
                 padding: "1rem",
                 background: isDarkMode ? "#1e1e1e" : "var(--gray-0, #F7F7FD)",
-                width: '92%',
-                paddingBottom: '5px',
-                paddingTop: '3px',
+                width: "92%",
+                paddingBottom: "5px",
+                paddingTop: "3px",
+                zIndex: '1',
               }}
             >
               Message
@@ -220,9 +218,10 @@ const ChatForward: FC<Props> = (props) => {
                   left: 12,
                   top: 0,
                   background: isDarkMode ? "#1e1e1e" : "var(--gray-0, #F7F7FD)",
-                  width: '92%',
-                  paddingBottom: '5px',
-                  paddingTop: '5px',
+                  width: "92%",
+                  paddingBottom: "5px",
+                  paddingTop: "5px",
+                  zIndex: '1',
                 }}
               >
                 Message
