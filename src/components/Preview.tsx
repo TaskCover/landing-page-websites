@@ -74,7 +74,7 @@ export const TitlePreview = ({
           <CopyWhiteIcon color="inherit" />
           Copy
         </Text>
-        <Text
+        {/* <Text
           display="inline-flex"
           gap="0.3rem"
           sx={{
@@ -83,7 +83,7 @@ export const TitlePreview = ({
         >
           <RedoIcon color="inherit" />
           Forward
-        </Text>
+        </Text> */}
         <Text
           display="inline-flex"
           gap="0.3rem"
