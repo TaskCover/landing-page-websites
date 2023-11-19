@@ -31,13 +31,19 @@ import { FILE_ACCEPT, IMAGES_ACCEPT } from "constant/index";
 import Link from '@mui/material/Link';
 import Preview, { TitlePreview } from "components/Preview";
 import { copyImage, downloadImage } from "utils/index";
+import { MediaType, TypeMedia } from "store/chat/media/typeMedia";
 
 type InformationItemProps = StackProps & {
   label: string;
   children?: string | number | React.ReactNode;
   color?: string;
 };
-
+export type MediaInfo = MediaType & {
+  type: TypeMedia;
+};
+export type MediaPreview = Partial<MediaInfo> & {
+  isPreview: boolean;
+};
 const InformationProjectPage = () => {
   const { item, isFetching, error } = useProject();
   const { items, onGetProjectAttachment } = useProjectAttachment();
@@ -69,9 +75,14 @@ const DesktopInformation = (props) => {
 
   console.log("filtered_images", filtered_images);
 
-
   const [openPreview, setOpenPreview] = useState(false);
   const [selectedImageData, setSelectedImageData] = useState({ type: "", src: "", name: "", listData: [] });
+
+  const [mediaPreview, setMediaPreview] = useState<MediaPreview>({
+    isPreview: false,
+    url: "",
+    type: "image_url",
+  });
 
   const handleOpenPreview = (type, src, name, listData) => {
     setSelectedImageData({ type, src, name, listData });
@@ -139,6 +150,12 @@ const DesktopInformation = (props) => {
       return <FileIcon sx={{ fontSize: 40 }} />
     }
   }
+
+  const handleChangeSlide = (url) => {
+    const info = filtered_images.find((item) => item.url === url);
+    console.log("info", info);
+    setMediaPreview((state) => ({ ...info, isPreview: true }));
+  };
 
   return (
     <>
@@ -304,8 +321,8 @@ const DesktopInformation = (props) => {
                 href={data.link}
                 style={{ textDecoration: "none" }}
                 onClick={(e) => {
-                  e.preventDefault();
-                  handleOpenPreview(data.type, data.link, data.name, data.listData);
+                  e.preventDefault();                  
+                  handleOpenPreview(data.type, data.link, data.name, filtered_images);
                 }}>
                 <Item sx={{ height: "100%" }}>
                   {
@@ -393,6 +410,7 @@ const DesktopInformation = (props) => {
                 />
               ),
             }}
+            onStartChangeSlide={handleChangeSlide}
           />
         )}
       </Grid>
