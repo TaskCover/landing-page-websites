@@ -6,7 +6,7 @@ import useToggle from "hooks/useToggle";
 import PlusIcon from "icons/PlusIcon";
 import { memo, useEffect, useMemo, useState } from "react";
 import { BLOG_STATUS } from "./helpers/helpers";
-import { BlogData, BlogStatus } from "store/blog/actions";
+import { BlogData, BlogFormData, BlogStatus } from "store/blog/actions";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import Form from "./components/Form";
 import { DataAction } from "constant/enums";
@@ -143,7 +143,7 @@ const Actions = () => {
                     open={isShow}
                     onClose={onHide}
                     type={DataAction.CREATE}
-                    initialValues={INITIAL_VALUES as BlogData}
+                    initialValues={INITIAL_VALUES as BlogFormData}
                     onSubmit={onCreateNewBlog}
                 />
             )}
@@ -158,7 +158,7 @@ const BLOG_STATUS_OPTIONS = [
 const INITIAL_VALUES = {
     title: "",
     content: "",
-    background: "",
+    published :true,
     category: [],
     tag: [],
     slug: ""
