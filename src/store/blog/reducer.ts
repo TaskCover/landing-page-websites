@@ -72,14 +72,11 @@ export const blogSlice = createSlice({
             }).addCase(createNewBlogs.fulfilled, (state, action: PayloadAction<BlogFormData>) => {
                 state.blogsStatus = DataStatus.SUCCEEDED;
             }).addCase(getBlogBySlug.fulfilled, (state, action: PayloadAction<BlogData>) => {
-                state.blog = action.payload;
-            }).addCase(getRelatedBlog.fulfilled, (state, { payload }) => {
-                state.relatedBlogs = payload;
-            }).addCase(getBlogComments.fulfilled, (state, { payload }) => {
-                state.listBlogComment = payload;
-            }).addCase(createBlogComment.fulfilled,  (state, action: PayloadAction<CommentBlogData>) => {
-                state.listBlogComment.push(action.payload);
-            })
+                if (state?.blog?.id === action.payload.id) {
+                    state.blog = action.payload;
+                  }
+            }
+)
     },
 });
 export const { reset } = blogSlice.actions;

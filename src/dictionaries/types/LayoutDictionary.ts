@@ -35,5 +35,8 @@ export type LayoutDictionary = {
     blog :string;
     blogList:string;
     blogCategoryList:string;
+    //carrer
+    career:string;
+    careerList:string;
   };
 };
