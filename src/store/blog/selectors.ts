@@ -8,6 +8,7 @@ import {
     GetBlogListQueries,
     createBlogComment,
     createNewBlogs,
+    deleteBlog,
     getAllBlogs,
     getBlogBySlug,
     getBlogComments,
@@ -111,7 +112,7 @@ export const useBlogs = () => {
                     data.attachments = attachmentUploadResponses.map((response) => response.payload.object);
                 }
                 const Token = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
-                return await dispatch(createNewBlogs({data,Token: Token ?? null })).unwrap();
+                return await dispatch(createNewBlogs({ data, Token: Token ?? null })).unwrap();
             } catch (error) {
                 console.error("Error:", error);
             }
@@ -120,7 +121,25 @@ export const useBlogs = () => {
 
 
     );
+    const onApproveOrReject = useCallback(
+        async () => {
+            return null;
+        },
+        [dispatch]
+    );
 
+  const onDeleteBlog = useCallback(
+    async (blogIds: string[]) => {
+      try {
+        console.log("ids : " + blogIds);
+        const Token = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+        return await dispatch(deleteBlog({ ids: blogIds, Token: Token })).unwrap();
+      } catch (error) {
+        throw error;
+      }
+    },
+    [dispatch]
+  );
 
     return {
         onGetBlogs,
@@ -143,5 +162,7 @@ export const useBlogs = () => {
         listBlogComment,
         onGetBlogComments,
         onCreateCommentBlog,
+        onApproveOrReject,
+        onDeleteBlog
     };
 };

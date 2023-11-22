@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { BlogData, BlogFormData, CommentBlogData, createBlogComment, createNewBlogs, getAllBlogs, getBlogBySlug, getBlogComments, getRelatedBlog } from "./actions";
+import { BlogData, BlogFormData, CommentBlogData, createBlogComment, createNewBlogs, deleteBlog, getAllBlogs, getBlogBySlug, getBlogComments, getRelatedBlog } from "./actions";
 import { DataStatus } from "constant/enums";
 import { PagingItem } from "constant/types";
 import { GetBlogCategoryListQueries } from "store/blog-category/actions";
@@ -72,13 +72,23 @@ export const blogSlice = createSlice({
             }).addCase(createNewBlogs.fulfilled, (state, action: PayloadAction<BlogFormData>) => {
                 state.blogsStatus = DataStatus.SUCCEEDED;
             }).addCase(getBlogBySlug.fulfilled, (state, action: PayloadAction<BlogData>) => {
-                if (state?.blog?.id === action.payload.id) {
                     state.blog = action.payload;
+            }).addCase(deleteBlog.fulfilled, (state, action: PayloadAction<string[]>) => {
+                const deletedIds = action.payload;
+                deletedIds.forEach((deletedId) => {
+                  const indexDeleted = state.blogs.findIndex((item) => item.slug === deletedId);
+                  if (indexDeleted !== -1) {
+                    state.blogs.splice(indexDeleted, 1);
                   }
-            }
-)
+                });
+              })
+              .addCase(deleteBlog.rejected, (state, action) => {
+                state.blogsStatus = DataStatus.FAILED;
+                state.blogsError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+              });
+      },
     },
-});
+);
 export const { reset } = blogSlice.actions;
 export const blogReducer = blogSlice.reducer;
 export default blogSlice.reducer;
