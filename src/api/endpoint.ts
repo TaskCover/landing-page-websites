@@ -110,7 +110,6 @@ export const Endpoint = {
   GET_BLOG_COMMENT : "/post/{id}/comment",
   //carrer
   CAREER:"/job-post",
-
   UPADATECAREER: "/job-post/{id}",
   DETAIL_CAREER: "/post/{id}",
 };

@@ -101,6 +101,9 @@ export const AUTHORIZED_PATHS = {
     BLOGS_PATH,
     BLOG_CATEGORY_PATH,
     BLOGS_DETAIL_PATH,
+    //Carrer
+    CAREER_PATH,
+    CAREER_DETAIL_PATH,
     BLOGS_RELATED_PATH,
   ],
   [Permission.ST]: [
