@@ -26,7 +26,7 @@ export const salesLang: SalesDictionary = {
     },
     table: {
       stage: "Giai đoạn",
-      pjRevenue: "Doanh thu PJ",
+      pjRevenue: "Doanh thu dự án",
       revenue: "Doanh thu",
       time: "Thời gian",
       owner: "Chủ sở hữu",
@@ -101,6 +101,7 @@ export const salesLang: SalesDictionary = {
       showEstimate: "{isShow} ước tính",
       ShowDescription: "{isShow} mô tả",
     },
+    assignedUser: "Không thể bỏ chọn thành viên được phân công",
     comment: {
       title: "Bình luận",
       placeholder: "Viết bình luận",

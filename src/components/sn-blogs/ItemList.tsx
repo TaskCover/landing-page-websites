@@ -79,9 +79,9 @@ totalItems;
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
       { value: blogT("blogList.title"), width: "20%", align: "left" },
-      { value: blogT("blogList.content"), width: "25%", align: "left" },
       { value: blogT("blogList.category"), width: "20%", align: "left" },
       { value: blogT("blogList.tag"), width: "20%", align: "left" },
+      { value: blogT("blogList.created_time"), width: "15%", align: "left" },
       { value: blogT("blogList.statusBlog"), width: "10%", align: "left" },
     ], [blogT],
   );

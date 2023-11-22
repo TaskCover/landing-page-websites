@@ -43,6 +43,7 @@ export const BlogLang: BlogDictionary = {
         tag: "Nhãn dán",
         statusBlog:"Trạng thái",
         slug:"Slug",
+        created_time : "Ngày tạo",
     },
     published: "Xuất bản",
     draft: "Bản nháp",
@@ -66,4 +67,8 @@ export const BlogLang: BlogDictionary = {
         true: "Xuất bản",
         false: "Nháp"
     },
+    comment:{
+        writeComment :"Viết bình luận",
+        sendComment : "Gửi bình luận"
+    }
 }

@@ -70,11 +70,12 @@ const TimeOffTab = ({ open, onClose, bookingId }: IProps) => {
           : undefined,
       },
       user_id: bookingEvent?.user_id,
-      allocation: bookingEvent?.allocation || 0,
+      allocation: bookingEvent?.allocation || 1,
       allocation_type:
         bookingEvent?.allocation_type || RESOURCE_ALLOCATION_TYPE.HOUR,
       note: bookingEvent?.note || "",
     },
+    mode: "all",
   });
 
   useEffect(() => {

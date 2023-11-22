@@ -32,6 +32,7 @@ const ChatList = () => {
     onResetSearchChatText,
     conversationPaging: { pageIndex, pageSize, textSearch: initText },
     onSetStep,
+    onSetStateSearchMessage,
     isFetching,
   } = useChat();
   const { user } = useAuth();
@@ -131,6 +132,7 @@ const ChatList = () => {
       onSetRoomId(chatInfo._id);
       onSetDataTransfer(chatInfo);
       onSetConversationInfo(chatInfo);
+      onSetStateSearchMessage(null);
       onResetSearchChatText();
       if (chatInfo?.t)
         if (chatInfo?.t !== "d") {

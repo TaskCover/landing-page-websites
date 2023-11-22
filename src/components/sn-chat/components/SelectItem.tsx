@@ -33,6 +33,7 @@ const SelectItem = ({
         display: "flex",
         alignItems: "center",
         gap: "0.5rem",
+        paddingLeft: '0px',
         marginBottom: 1,
         // cursor: "pointer",
         ":hover": {
@@ -44,6 +45,9 @@ const SelectItem = ({
     >
       {checkbox && (
         <Checkbox
+          sx={{
+            paddingLeft: '0px',
+          }}
           checked={checked}
           onChange={onClick}
           {...label}

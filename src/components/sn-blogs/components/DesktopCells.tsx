@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { memo } from "react";
 import { BlogData } from "store/blog/actions";
 import { BLOGS_DETAIL_PATH } from "constant/paths";
-import { getPath } from "utils/index";
+import { formatDate, getPath } from "utils/index";
 
 type DesktopCellsProps = {
     item: BlogData;
@@ -21,11 +21,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
                 tooltip: blogT("clickGoDetail", {
                     name: blogT("companyList.company"),
                 }),
-            }}
-            >{item.title}</BodyCell>
-            <BodyCell align="left">
-                {item.content}
-            </BodyCell>
+            }}>{item.title}</BodyCell>
             <BodyCell align="left">
                 {item.category?.map((cate, index) => (
                     <Chip key={index} variant="outlined" label={cate.name} size="small" />
@@ -35,6 +31,9 @@ const DesktopCells = (props: DesktopCellsProps) => {
                 {item.tag?.map((tag, index) => (
                     <Chip key={index} variant="outlined" label={tag} size="small" />
                 ))}
+            </BodyCell>
+            <BodyCell align="left">
+            {formatDate(item?.created_time, "HH:mm - dd/MM/yyyy")}
             </BodyCell>
             <BodyCell align="left">
                 {!item.published ? (

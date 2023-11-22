@@ -3,6 +3,7 @@ import { BodyCell } from "components/Table";
 import { Project } from "store/project/reducer";
 import { getPath } from "utils/index";
 import { PROJECT_TASKS_PATH } from "constant/paths";
+import { formatDate } from "utils/index";
 import Avatar from "components/Avatar";
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
@@ -45,6 +46,9 @@ const DesktopCells = (props: DesktopCellsProps) => {
       </BodyCell>
       <BodyCell align="left" sx={{ paddingLeft: 0 }}>
         <Assigner value={item?.owner?.id} id={item.id} rootSx={{ "& > svg": { display: 'none' } }} placeholder={item?.owner ? '' : commonT("form.title.noAssigner")} />
+      </BodyCell>
+      <BodyCell align="left">
+        {formatDate(item.start_date)}
       </BodyCell>
       {item.status ? (
         <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
