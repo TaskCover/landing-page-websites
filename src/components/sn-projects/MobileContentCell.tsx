@@ -1,9 +1,8 @@
 import { memo } from "react";
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
-import TextStatus from "components/TextStatus";
-import { COLOR_STATUS, TEXT_STATUS } from "./components/helpers";
-import { BodyCell, StatusCell } from "components/Table";
+import { formatDate } from "utils/index";
+import { BodyCell } from "components/Table";
 import { Project } from "store/project/reducer";
 import { PROJECT_TASKS_PATH } from "constant/paths";
 import { getPath } from "utils/index";
@@ -52,6 +51,9 @@ const MobileContentCell = (props: MobileContentCellProps) => {
       </BodyCell>
       <BodyCell align="left" sx={{ px: 0.5 }}>
         {item?.owner?.fullname}
+      </BodyCell>
+      <BodyCell align="left">
+        {formatDate(item.start_date)}
       </BodyCell>
       {item.status ? (
         <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>

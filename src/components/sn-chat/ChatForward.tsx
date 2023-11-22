@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box } from "@mui/system";
 import SelectItem from "./components/SelectItem";
-import TextareaAutosize from "@mui/base/TextareaAutosize";
 import { Skeleton, Typography } from "@mui/material";
 import { Button } from "components/shared";
 import { useChat } from "store/chat/selectors";

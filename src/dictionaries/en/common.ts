@@ -84,8 +84,8 @@ export const CommonLang: CommonDictionary = {
   statusEnum: {
     inprogress: "In progress",
     active: "Activated",
-    close: "Closed",
-    pause: "Paused",
+    close: "Completed",
+    pause: "Paused"
   },
   searchBy: "Search by {name}",
   creationDate: "Creation date",
@@ -106,7 +106,7 @@ export const CommonLang: CommonDictionary = {
   noData: "No data.",
   unauthorized: "Your account does not have permission to access this page!",
   duplicate: "Duplicate",
-  move: "Move",
+  move: "Move task to",
   rename: "Rename",
   all: "All",
   clickToViewLarge: "Click to view larger",

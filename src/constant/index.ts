@@ -65,9 +65,9 @@ export const TEXT_STATUS: { [key in Status]: string } = {
 };
 
 export const COLOR_STATUS: { [key in Status]: AlertColor } = {
-  [Status.ACTIVE]: "success",
-  [Status.CLOSE]: "error",
-  [Status.PAUSE]: "warning",
+  [Status.ACTIVE]: "warning",
+  [Status.CLOSE]: "success",
+  [Status.PAUSE]: "error",
 };
 
 export const STATUS_OPTIONS = [
