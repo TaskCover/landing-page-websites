@@ -3,6 +3,7 @@ import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
     BlogData,
+    BlogFormData,
     CommentBlogData,
     GetBlogListQueries,
     createBlogComment,
@@ -12,13 +13,17 @@ import {
     getBlogComments,
     getRelatedBlog,
     updateBlog,
+    uploadFile,
 } from "./actions";
 import { DataStatus } from "constant/enums";
-import { BlogForm } from "components/sn-blogs/components/Form";
+import { clientStorage } from "utils/storage";
+import { ACCESS_TOKEN_STORAGE_KEY, IMAGES_ACCEPT } from "constant/index";
+import { Attachment } from "constant/types";
+import { object } from "yup";
 
 export const useBlogs = () => {
     const dispatch = useAppDispatch();
-    const { blogs: items, blogsStatus: status, blogsError: error, blogsFilters: filters, blog: item,relatedBlogs,listBlogComment } = useAppSelector(
+    const { blogs: items, blogsStatus: status, blogsError: error, blogsFilters: filters, blog: item, relatedBlogs, listBlogComment } = useAppSelector(
         (state) => state.blogs,
         shallowEqual,
     );
@@ -31,21 +36,13 @@ export const useBlogs = () => {
 
     const onGetBlogs = useCallback(
         async (queries: GetBlogListQueries) => {
-            // alert(id);
-            // alert(JSON.stringify(queries));
             await dispatch(getAllBlogs({ ...queries }));
         },
         [dispatch],
     );
 
-    const onCreateNewBlog = useCallback(
-        async (data: BlogForm) => {
-            return await dispatch(createNewBlogs(data)).unwrap();
-        },
-        [dispatch],
-    );
     const onUpdateBlog = useCallback(
-        async (id: string, blog: BlogForm) => {
+        async (id: string, blog: BlogData) => {
             try {
                 return await dispatch(updateBlog({ id, blog })).unwrap();
             } catch (error) {
@@ -74,24 +71,55 @@ export const useBlogs = () => {
         }, [dispatch],
     )
 
-    const onGetBlogComments =  useCallback(
-        async(slug :  string)=>{
-            try{
-                return await dispatch(getBlogComments(slug)).unwrap();
-            }catch(error){
-                throw error;
-            }
-        },[dispatch],
-    )
-    const onCreateCommentBlog = useCallback (
-        async (id: string, cmt: CommentBlogData, Token: string |null) => {
+    const onGetBlogComments = useCallback(
+        async (slug: string) => {
             try {
-                return await dispatch(createBlogComment({ id,cmt,Token })).unwrap();
+                return await dispatch(getBlogComments(slug)).unwrap();
             } catch (error) {
                 throw error;
             }
-        },[dispatch]
+        }, [dispatch],
     )
+    const onCreateCommentBlog = useCallback(
+        async (id: string, cmt: CommentBlogData, Token: string | null) => {
+            try {
+                return await dispatch(createBlogComment({ id, cmt, Token })).unwrap();
+            } catch (error) {
+                console.error("Error submitting form:", error);
+                throw error;
+            }
+        }, [dispatch]
+    )
+
+    const onCreateNewBlog = useCallback(
+        async (data: BlogFormData) => {
+            try {
+                if (data.backgroundUpload) {
+                    const backgroundUploadResponse = await dispatch(
+                        uploadFile({
+                            file: data.backgroundUpload,
+                        }),
+                    );
+                    data.background = backgroundUploadResponse.payload.object;
+                }
+                // Upload attachmentsUpload
+                if (data.attachmentsUpload && data.attachmentsUpload.length > 0) {
+                    const attachmentUploadPromises = data.attachmentsUpload.map((file) =>
+                        dispatch(uploadFile({ file }))
+                    );
+                    const attachmentUploadResponses = await Promise.all(attachmentUploadPromises);
+                    data.attachments = attachmentUploadResponses.map((response) => response.payload.object);
+                }
+                const Token = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+                return await dispatch(createNewBlogs({data,Token: Token ?? null })).unwrap();
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        },
+        [dispatch],
+
+
+    );
 
 
     return {

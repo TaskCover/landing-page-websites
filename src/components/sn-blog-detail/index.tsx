@@ -183,9 +183,9 @@ const renderContentWithAttachments = (content: string, attachments: AttachmentsB
             <div className="blog-post">
                 <div className="content" dangerouslySetInnerHTML={{ __html: attachmentPlaceholders[0] }} />
                 <div className="attachments">
-                    {attachments.map((attachment, index) => (
-                        <AttachmentComponent key={index} attachment={attachment} />
-                    ))}
+                {attachments && attachments.length > 0 && attachments.map((attachment, index) => (
+                    <AttachmentComponent key={index} attachment={attachment} />
+                ))}
                 </div>
             </div>
         );

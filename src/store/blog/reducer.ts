@@ -1,11 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { BlogData, CommentBlogData, createBlogComment, createNewBlogs, getAllBlogs, getBlogBySlug, getBlogComments, getRelatedBlog } from "./actions";
+import { BlogData, BlogFormData, CommentBlogData, createBlogComment, createNewBlogs, getAllBlogs, getBlogBySlug, getBlogComments, getRelatedBlog } from "./actions";
 import { DataStatus } from "constant/enums";
 import { PagingItem } from "constant/types";
 import { GetBlogCategoryListQueries } from "store/blog-category/actions";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING, DEFAULT_PAGING_ITEM } from "constant/index";
 import { getFiltersFromQueries } from "utils/index";
-import { BlogForm } from "components/sn-blogs/components/Form";
 
 export interface CategoryBlog {
     id: string;
@@ -70,8 +69,8 @@ export const blogSlice = createSlice({
             .addCase(getAllBlogs.rejected, (state, action) => {
                 state.blogsStatus = DataStatus.FAILED;
                 state.blogsError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
-            }).addCase(createNewBlogs.fulfilled, (state, action: PayloadAction<BlogForm>) => {
-                // state.blogs.unshift(act);
+            }).addCase(createNewBlogs.fulfilled, (state, action: PayloadAction<BlogFormData>) => {
+                state.blogsStatus = DataStatus.SUCCEEDED;
             }).addCase(getBlogBySlug.fulfilled, (state, action: PayloadAction<BlogData>) => {
                 state.blog = action.payload;
             }).addCase(getRelatedBlog.fulfilled, (state, { payload }) => {
