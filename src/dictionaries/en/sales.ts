@@ -46,6 +46,7 @@ export const SalesLang: SalesDictionary = {
       orientation: "Orientation",
       pagesize: "Page size",
     },
+    noOptionText: "No option, create new one",
   },
   detail: {
     tab: {

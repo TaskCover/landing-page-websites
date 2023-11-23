@@ -86,6 +86,7 @@ export const getSales = createAsyncThunk(
           total_page: data.totalPages,
           page: data.page - 1,
           data: data.docs,
+          totalDetail: data.total,
         };
 
         return refactorRawItemListResponse(formattedData);

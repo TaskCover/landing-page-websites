@@ -57,16 +57,16 @@ const TabHeader = () => {
     [],
   );
 
-  const saleRevenueCal = useMemo(() => {
-    const sectionsList = getValues("sectionsList");
-    const total = sectionsList?.reduce((prev, section) => {
-      const total = section?.service?.reduce((prev, service) => {
-        return prev + (service?.totalBuget || 0);
-      }, 0);
-      return prev + total;
-    }, 0);
-    return total;
-  }, [getValues("sectionsList")]);
+  // const saleRevenueCal = useMemo(() => {
+  //   const sectionsList = getValues("sectionsList");
+  //   const total = sectionsList?.reduce((prev, section) => {
+  //     const total = section?.service?.reduce((prev, service) => {
+  //       return prev + (service?.totalBuget || 0);
+  //     }, 0);
+  //     return prev + total;
+  //   }, 0);
+  //   return total;
+  // }, [getValues("sectionsList")]);
 
   const prevListPath = getPath(SALES_LIST_PATH, {
     ...cleanObject(salesFilters),
@@ -204,7 +204,7 @@ const TabHeader = () => {
             }}
           >
             Revenue:{" "}
-            {formatNumber(saleRevenueCal || saleRevenue || 0, {
+            {formatNumber(saleDetail?.total.revenue || saleRevenue || 0, {
               numberOfFixed: 2,
               prefix:
                 CURRENCY_SYMBOL[saleDetail?.currency || CURRENCY_CODE.USD],

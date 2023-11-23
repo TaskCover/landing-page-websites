@@ -75,19 +75,20 @@ const SalesPage = () => {
       {
         value: commonT("name"),
         align: "left",
-        width: "15%",
+        width: "20%",
         minWidth: 160,
       },
       {
         value: salesT("list.table.stage"),
-        width: "15%",
+        align: "center",
+        width: "10%",
         minWidth: 160,
       },
       {
         value: salesT("list.table.owner"),
         align: "left",
         width: "10%",
-        minWidth: 160,
+        minWidth: 130,
       },
       {
         value: salesT("list.table.revenue"),
@@ -98,26 +99,31 @@ const SalesPage = () => {
               {salesT("list.table.revenue")}
             </Text>
             <Text variant="h6">
-              {formatCurrency(totalRevenue, { prefix: "$" })}
+              {formatCurrency(totalRevenue, { prefix: "$", numberOfFixed: 2 })}
             </Text>
           </Stack>
         ),
         minWidth: 100,
-        width: "10%",
+        width: "11%",
       },
       {
         value: salesT("list.table.pjRevenue"),
         align: "right",
-        component: (props) => (
-          <Stack {...props} alignItems="flex-end">
-            <Text variant="h6" color="grey.400">
-              {salesT("list.table.pjRevenue")}
-            </Text>
-            <Text variant="h6">
-              {formatCurrency(totalRevenuePJ, { prefix: "$" })}
-            </Text>
-          </Stack>
-        ),
+        component: (props) => {
+          return (
+            <Stack {...props} alignItems="flex-end">
+              <Text variant="h6" color="grey.400">
+                {salesT("list.table.pjRevenue")}
+              </Text>
+              <Text variant="h6">
+                {formatCurrency(totalRevenuePJ, {
+                  prefix: "$",
+                  numberOfFixed: 2,
+                })}
+              </Text>
+            </Stack>
+          );
+        },
         minWidth: 100,
         width: "10%",
       },
@@ -129,11 +135,13 @@ const SalesPage = () => {
             <Text variant="h6" color="grey.400">
               {salesT("list.table.time")}
             </Text>
-            <Text variant="h6">{totalTime}h</Text>
+            <Text variant="h6">
+              {formatNumber(totalTime, { numberOfFixed: 0 })}h
+            </Text>
           </Stack>
         ),
         minWidth: 100,
-        width: "10%",
+        width: "8%",
       },
       {
         value: salesT("list.table.probability"),

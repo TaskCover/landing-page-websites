@@ -44,6 +44,7 @@ export type SalesDictionary = {
       orientation: string;
       pagesize: string;
     };
+    noOptionText: string;
   };
   detail: {
     tab: {

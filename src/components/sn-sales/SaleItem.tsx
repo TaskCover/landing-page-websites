@@ -2,11 +2,12 @@
 
 import { TableRow, Stack } from "@mui/material";
 import { BodyCell, StatusCell } from "components/Table";
-import React, { memo, use, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import {
   COLOR_STAGE_STATUS,
   TEXT_STAGE_STATUS,
   CURRENCY_SYMBOL,
+  mappingStageStatusOptions,
 } from "./helpers";
 import { Dropdown } from "components/Filters";
 import {
@@ -15,6 +16,7 @@ import {
   formatEstimateTime,
   getPath,
   formatCurrency,
+  getMessageErrorByAPI,
 } from "utils/index";
 import { DATE_FORMAT_SLASH, NS_SALES } from "constant/index";
 import Avatar from "components/Avatar";
@@ -24,20 +26,39 @@ import useGetEmployeeOptions from "./hooks/useGetEmployeeOptions";
 import { useSaleDetail, useSales } from "store/sales/selectors";
 import { SALE_DETAIL_PATH } from "constant/paths";
 import { Option, User } from "constant/types";
+import { useGetStageOptions } from "components/sn-sales-detail/hooks/useGetDealDetail";
+import LabelStatusCell from "./components/LabelStatusCell";
+import { useSnackbar } from "store/app/selectors";
+import { useTranslations } from "next-intl";
 
 interface IProps {
   item: Sales; // change to data type
 }
 const SaleItem = ({ item }: IProps) => {
+  const commonT = useTranslations(NS_SALES);
   const { employeeOptions, onEndReachedEmployeeOptions, onSearchEmployee } =
     useGetEmployeeOptions();
   const { onUpdateDeal } = useSales();
+  const { onAddSnackbar } = useSnackbar();
   const [owner, setOwner] = useState<string>(item.owner?.id);
+  const [stage, setStage] = useState<string>(item.status);
+  const [probability, setProbability] = useState<number>(item.probability + 1);
+
   const { onSetRevenue } = useSaleDetail();
   const time = item.estimate || 0;
 
-  const onSubmit = (data) => {
-    onUpdateDeal({ owner: data.owner, id: item.id });
+  const onSubmit = async (data) => {
+    try {
+      await onUpdateDeal({
+        owner: data.owner,
+        id: item.id,
+        status: data.status,
+        probability: data.probability,
+      });
+    } catch (error) {
+      console.log(error);
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    }
   };
 
   const mappedOwners = useMemo(() => {
@@ -55,6 +76,15 @@ const SaleItem = ({ item }: IProps) => {
     }
     return result;
   }, [employeeOptions]);
+
+  const mappingProbabilityOptions: Option[] = useMemo(
+    () =>
+      Array.from(new Array(11), (value, index) => ({
+        label: `${index * 10}%`,
+        value: index * 10 + 1,
+      })),
+    [],
+  );
 
   const mappedowner = useMemo(() => {
     const result = mappedOwners.find((item) => item.value === owner);
@@ -86,7 +116,7 @@ const SaleItem = ({ item }: IProps) => {
             sx={{
               "&:hover": { color: "primary.main" },
               WebkitBoxOrient: "vertical",
-              WebkitLineClamp: 2,
+              WebkitLineClamp: 1,
               overflow: "hidden",
               wordBreak: "break-word",
               display: "-webkit-box",
@@ -97,15 +127,19 @@ const SaleItem = ({ item }: IProps) => {
           </Text>
         </Stack>
       </BodyCell>
-      <StatusCell
-        color={COLOR_STAGE_STATUS[item.status]}
-        text={TEXT_STAGE_STATUS[item.status]}
-        namespace={NS_SALES}
-        width="120px"
-        size="small"
-      >
-        {item.stage}
-      </StatusCell>
+
+      <BodyCell>
+        <LabelStatusCell
+          fullWidth
+          options={mappingStageStatusOptions}
+          value={stage}
+          defaultValue={stage}
+          onChange={(e) => {
+            onSubmit({ status: e.target.value });
+            setStage(e.target.value);
+          }}
+        ></LabelStatusCell>
+      </BodyCell>
       <BodyCell align="left">
         <Dropdown
           name="owner"
@@ -148,13 +182,31 @@ const SaleItem = ({ item }: IProps) => {
           numberOfFixed: 2,
         })}
       </BodyCell>
-      <BodyCell width="11%" size="small" align="right">
+      <BodyCell width="9%" size="small" align="right">
         {`${time}h`}
       </BodyCell>
       <BodyCell align="right">
-        {formatNumber(item.probability, {
-          suffix: "%",
-        })}
+        <Dropdown
+          name="probability"
+          rootSx={{
+            width: "100%",
+            px: "0!important",
+            [`& .MuiSelect-select`]: {
+              mr: "20px!important",
+            },
+            // [`& .MuiSelect-icon`]: {
+            //   right: "-5px!important",
+            // },
+          }}
+          onChange={(name, value) => {
+            onSubmit({ probability: value - 1 });
+            setProbability(value);
+          }}
+          size="small"
+          hasAll={false}
+          value={probability}
+          options={mappingProbabilityOptions}
+        />
       </BodyCell>
       <BodyCell align="left">
         {formatDate(item.updated_time, DATE_FORMAT_SLASH)}
