@@ -307,16 +307,8 @@ const Form = (props: FormProps) => {
               title={blogT("blogForm.background")}
               name="backgroundUpload"
               value={formik.values?.backgroundUpload}
-              onChange={onChangeField} // Pass your custom function here
+              onChange={onChangeField} 
             />
-            <FormControlLabel control={
-              <Checkbox
-                checked={formik.values.published}
-                onChange={formik.handleChange}
-                name="published"
-                value={formik.values.published}
-              />
-            } label={blogT("blogForm.published")} />
           </Stack>
         </Grid>
         <Grid item xs={7}>

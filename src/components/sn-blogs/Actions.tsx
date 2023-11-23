@@ -21,6 +21,7 @@ const Actions = () => {
     const [isShow, onShow, onHide] = useToggle();
     const [queries, setQueries] = useState<Params>({});
     const { onCreateNewBlog, filters, size, page, onGetBlogs } = useBlogs();
+
     const pathname = usePathname();
     const { push } = useRouter();
 
@@ -28,8 +29,8 @@ const Actions = () => {
     const blogOptions = useMemo(
         () =>
             BLOG_STATUS_OPTIONS.map((item) => (
-                { ...item, label:  item.label }
-                )),
+                { ...item, label: item.label }
+            )),
         [],
     );
 
@@ -40,12 +41,11 @@ const Actions = () => {
 
         onGetBlogs({ ...queries, page: 1, size });
     };
-   
+
     const onChangeQueries = (name: string, value: unknown) => {
         if (name === "published") {
             const addQueries = {
                 published: typeof value === "string" ? value : undefined,
-                searchKey: typeof value === "boolean" ? value : undefined,
             };
             setQueries((prevQueries) => ({ ...prevQueries, ...addQueries }));
         } else {
@@ -75,7 +75,7 @@ const Actions = () => {
                         alignItems={{ md: "center" }}
                         justifyContent="space-between"
                         px={{ xs: 0, md: 3 }}>
-                    {blogT("blogCategory.title")}
+                        {blogT("blogCategory.title")}
                     </Text>
                     <Button
                         onClick={onShow}
@@ -109,12 +109,13 @@ const Actions = () => {
                         value={queries?.searchKey}
                         rootSx={{ height: { xs: 32, md: 32 } }}
                     />
+
                     <Dropdown
-                         placeholder={blogT("actions.status")}
+                        placeholder={blogT("actions.status")}
                         options={blogOptions}
                         name="published"
                         onChange={onChangeQueries}
-                        value={queries?.published ? queries.published : queries?.searchKey}
+                        value={queries?.published !== undefined ? queries.published : null}
                     />
                     <Button
                         size="extraSmall"
@@ -158,7 +159,7 @@ const BLOG_STATUS_OPTIONS = [
 const INITIAL_VALUES = {
     title: "",
     content: "",
-    published :true,
+    published: false,
     category: [],
     tag: [],
     slug: ""

@@ -51,6 +51,10 @@ export type BlogDictionary = {
         createBlog: string,
         search: string,
         status: string,
+        delete: {
+            title:string,
+            confirm:string
+        }
     },
     blogForm: {
         key: string,
