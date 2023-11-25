@@ -238,6 +238,7 @@ const AddDealModal = ({ open, onClose }: IProps) => {
                 options={tagsOptions}
                 onSelect={onSelect}
                 error={error?.message}
+                noOptionText={salesT(`list.noOptionText`)}
                 onInputChange={(value) => onSearchTags(value)}
                 onEndReached={onEndReachedProjectTypeOptions}
                 loading={projectTypeIsFetching}

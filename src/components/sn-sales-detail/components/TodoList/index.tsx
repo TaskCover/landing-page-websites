@@ -9,7 +9,6 @@ import { useTranslations } from "next-intl";
 import React, {
   ChangeEvent,
   memo,
-  use,
   useCallback,
   useMemo,
   useState,
@@ -112,6 +111,9 @@ export const TodoName = ({
       setIsSubmited(true);
       await handleSubmit().then(() => {
         innerRef.current?.blur();
+        if (isAssign) {
+          innerRef.current?.focus();
+        }
       });
     },
     [isSubmited, name],
@@ -256,8 +258,8 @@ const TodoList = () => {
 
   const todoList = useMemo(() => {
     return (Object.values(todoListForm ?? {}) as Array<Todo>).sort((a, b) => {
-      if (a.priority > b.priority) return 1;
-      return -1;
+      if (a.priority > b.priority) return -1;
+      return 1;
     });
   }, [todoListForm]);
 

@@ -28,9 +28,12 @@ import useWindowSize from "hooks/useWindowSize";
 import { useSidebar } from "store/app/selectors";
 import { useTranslations } from "next-intl";
 import { uuid } from "utils/index";
+import HeaderSortCell from "./HeaderSortCell";
 
 export type CellProps = TableCellProps & {
   value: string | React.ReactNode;
+  sort?: boolean;
+  name?: string;
   width?: string | number;
   minWidth?: number;
 };
@@ -45,9 +48,15 @@ type TableLayoutProps = {
   hasSelectAll?: boolean;
   onCreate?: () => void;
   onEdit?: () => void;
+  orderDirection?: "asc" | "desc";
+  orderBy?: string | null;
   headerProps?: TableCellProps;
   containerHeaderProps?: BoxProps;
   accessKey?: string;
+  handleRequestSort?: (
+    event: React.MouseEvent<unknown>,
+    property: string,
+  ) => void;
   onLayout?: (refs) => void;
 } & StackProps;
 
@@ -61,8 +70,11 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     noData,
     hasSelectAll,
     onCreate,
+    orderDirection = "asc",
+    orderBy = null,
     onEdit,
     headerProps = {},
+    handleRequestSort,
     accessKey,
     containerHeaderProps = {},
     onLayout,
@@ -75,6 +87,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     containerHeaderProps;
 
   const [bodySx, setBodySx] = useState<SxProps>({});
+
   const size = useWindowSize();
   const { isExpandedSidebar } = useSidebar();
 
@@ -145,44 +158,87 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
         <Table>
           <TableHead>
             <TableRow>
-              {headerList.map(({ sx: sxItem, ...item }, index) => (
-                <CellHeader
-                  key={uuid()}
-                  {...item}
-                  width={item.width ?? `${100 / nOfColumnsNotWidthFixed}%`}
-                  sx={
-                    {
-                      maxWidth:
-                        item.width ?? `${100 / nOfColumnsNotWidthFixed}%`,
-                      minWidth: item?.minWidth,
-                      ...sxItem,
-                      ...sxHeaderProps,
-                    } as CellProps["sx"]
-                  }
-                  isStart={index === 0}
-                  isEnd={index === headerList.length - 1}
-                  {...restHeaderProps}
-                  ref={refs[index]}
-                >
-                  {hasSelectAll && index == 0 ? (
-                    <Box>
-                      <Grid
-                        container
-                        direction="row"
-                        justifyContent="center"
-                        alignItems="center"
-                      >
-                        <Grid item xs={2}>
-                          {children}
+              {headerList.map(({ sx: sxItem, component, ...item }, index) =>
+                item.sort ? (
+                  <HeaderSortCell
+                    key={uuid()}
+                    {...item}
+                    direction={orderDirection}
+                    active={orderBy === item.name}
+                    component={component}
+                    handleRequestSort={handleRequestSort}
+                    width={item.width ?? `${100 / nOfColumnsNotWidthFixed}%`}
+                    sx={
+                      {
+                        maxWidth:
+                          item.width ?? `${100 / nOfColumnsNotWidthFixed}%`,
+                        minWidth: item?.minWidth,
+                        ...sxItem,
+                        ...sxHeaderProps,
+                      } as CellProps["sx"]
+                    }
+                    isStart={index === 0}
+                    isEnd={index === headerList.length - 1}
+                    {...restHeaderProps}
+                    ref={refs[index]}
+                  >
+                    {hasSelectAll && index == 0 ? (
+                      <Box>
+                        <Grid
+                          container
+                          direction="row"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <Grid item xs={2}>
+                            {children}
+                          </Grid>
+                          <Grid xs={10}>{item.value}</Grid>
                         </Grid>
-                        <Grid xs={10}>{item.value}</Grid>
-                      </Grid>
-                    </Box>
-                  ) : (
-                    item.value
-                  )}
-                </CellHeader>
-              ))}
+                      </Box>
+                    ) : (
+                      item.value
+                    )}
+                  </HeaderSortCell>
+                ) : (
+                  <CellHeader
+                    key={uuid()}
+                    {...item}
+                    width={item.width ?? `${100 / nOfColumnsNotWidthFixed}%`}
+                    sx={
+                      {
+                        maxWidth:
+                          item.width ?? `${100 / nOfColumnsNotWidthFixed}%`,
+                        minWidth: item?.minWidth,
+                        ...sxItem,
+                        ...sxHeaderProps,
+                      } as CellProps["sx"]
+                    }
+                    isStart={index === 0}
+                    isEnd={index === headerList.length - 1}
+                    {...restHeaderProps}
+                    ref={refs[index]}
+                  >
+                    {hasSelectAll && index == 0 ? (
+                      <Box>
+                        <Grid
+                          container
+                          direction="row"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <Grid item xs={2}>
+                            {children}
+                          </Grid>
+                          <Grid xs={10}>{item.value}</Grid>
+                        </Grid>
+                      </Box>
+                    ) : (
+                      item.value
+                    )}
+                  </CellHeader>
+                ),
+              )}
             </TableRow>
           </TableHead>
         </Table>

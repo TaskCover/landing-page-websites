@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Endpoint } from "api";
 import Wrapper from "components/Wrapper";
@@ -6,6 +6,7 @@ import { NS_COMMON, NS_SALES } from "constant/index";
 import { useTranslations } from "next-intl";
 import React, { memo, useEffect } from "react";
 import { useHeaderConfig } from "store/app/selectors";
+import SortProvider from "./context/useSortContext";
 
 interface IProps {
   children: React.ReactNode;
@@ -34,9 +35,11 @@ const SalesWrapper: React.FC<IProps> = ({ children }) => {
   }, [commonT, onUpdateHeaderConfig, salesT]);
 
   return (
-    <Wrapper overflow="auto" inFrame>
-      {children}
-    </Wrapper>
+    <SortProvider>
+      <Wrapper overflow="auto" inFrame>
+        {children}
+      </Wrapper>
+    </SortProvider>
   );
 };
 export default memo(SalesWrapper);

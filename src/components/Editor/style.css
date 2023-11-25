@@ -94,3 +94,7 @@
 .mouse-pointer {
   cursor: pointer;
 }
+
+.MuiAutocomplete-noOptions {
+  color: var(--mui-palette-grey-400) !important;
+}
