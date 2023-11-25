@@ -17,6 +17,7 @@ import { IMAGES_ACCEPT } from "constant/index";
 import AttachmentPreview from "components/AttachmentPreview";
 import dynamic from "next/dynamic";
 import hljs from "highlight.js";
+import { replaceDescriptionBr } from "components/sn-project-detail/Tasks/helpers";
 
 const ReactQuill = dynamic(
   () => {
@@ -127,10 +128,10 @@ const Editor = (props: EditorProps) => {
     [],
   );
 
-  const toolbar = useMemo(
-    () => (hasAttachment ? toolbarAttachment : TOOLBAR),
-    [hasAttachment, toolbarAttachment],
-  );
+  const toolbar = useMemo(() => (hasAttachment ? toolbarAttachment : TOOLBAR), [
+    hasAttachment,
+    toolbarAttachment,
+  ]);
 
   const onInit = useCallback(async () => {
     const RQuill = (await import("react-quill")).default;
@@ -144,6 +145,12 @@ const Editor = (props: EditorProps) => {
     onInit();
   }, [onInit]);
 
+  useEffect(() => {
+    if (props.value && value.length === 0) {
+      setValue(replaceDescriptionBr(props.value as string, ""));
+    }
+  }, [props.value]);
+
   return (
     <Stack className="editor">
       <ReactQuill
@@ -154,8 +161,8 @@ const Editor = (props: EditorProps) => {
           syntax: true,
         }}
         className={noCss ? "nocss" : ""}
-        value={value}
         onChange={setValue}
+        value={value}
         {...rest}
       />
       <Stack

@@ -8,6 +8,8 @@ import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
 import { getEditorName } from "components/shared/Editor";
 import { UnprivilegedEditor } from "react-quill";
+import { SignalWifiStatusbarConnectedNoInternet4Outlined } from "@mui/icons-material";
+import { replaceDescriptionBr } from "../../helpers";
 
 type DescriptionTaskProps = {
   onClose: () => void;
@@ -39,9 +41,7 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
       }
       const data = { description: text };
       if (text) {
-        data.description = (
-          window[getEditorName(DESCRIPTION_EDITOR)] as UnprivilegedEditor
-        ).getHTML();
+        data.description = replaceDescriptionBr(text);
       }
       const newData = await onUpdateTask(data, taskListId, taskId, subTaskId);
       if (newData) {
