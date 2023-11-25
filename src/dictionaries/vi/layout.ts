@@ -36,5 +36,7 @@ export const LayoutLang: LayoutDictionary = {
     blog:"Bài viết",
     blogList:"Danh sách bài viết",
     blogCategoryList:"Danh sách danh mục",
+    career:"Nghề nghiệp",
+    careerList: "Danh sách nghề nghiệp",
   },
 };

@@ -51,6 +51,10 @@ export const BlogLang: BlogDictionary = {
         createBlog: " Create new",
         search: "Search",
         status: "Status",
+        delete:{
+            title : "Confirm delete blog ",
+            confirm : "Are you sure to remove blog ?"
+        }
     },
     blogForm: {
         key: "blog",

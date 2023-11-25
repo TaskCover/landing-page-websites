@@ -26,7 +26,7 @@ export const SalesLang: SalesDictionary = {
     },
     table: {
       stage: "Stage",
-      pjRevenue: "PJ Revenue",
+      pjRevenue: "Project Revenue",
       revenue: "Revenue",
       time: "Time",
       owner: "Owner",

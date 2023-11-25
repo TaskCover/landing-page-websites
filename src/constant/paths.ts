@@ -44,6 +44,10 @@ export const BLOGS_PATH = "/blogs";
 export const BLOG_CATEGORY_PATH = "/blog-category";
 export const BLOGS_DETAIL_PATH = "/blogs/{id}";
 export const BLOGS_RELATED_PATH = "/blogs/{id}/related";
+//Carrer
+export const CAREER_PATH = "/careers";
+export const CAREER_DETAIL_PATH = "/careers/{id}";
+export const APPLICANTS_DETAIL_PATH = "/careers/{id}/applicants";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -54,7 +58,7 @@ const AUTHORIZED_LOGGED_IN_PATHS = [
   CHANGE_PASSWORD_PATH,
   ACCOUNT_INFO_PATH,
   // Feedback
-  FEEDBACK_PATH
+  FEEDBACK_PATH,
 ];
 
 export const AUTHORIZED_PATHS = {
@@ -81,7 +85,7 @@ export const AUTHORIZED_PATHS = {
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
     // Feedback
-    FEEDBACK_PATH
+    FEEDBACK_PATH,
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -97,6 +101,9 @@ export const AUTHORIZED_PATHS = {
     BLOGS_PATH,
     BLOG_CATEGORY_PATH,
     BLOGS_DETAIL_PATH,
+    //Carrer
+    CAREER_PATH,
+    CAREER_DETAIL_PATH,
     BLOGS_RELATED_PATH,
   ],
   [Permission.ST]: [
@@ -119,7 +126,7 @@ export const AUTHORIZED_PATHS = {
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
     // Feedback
-    FEEDBACK_PATH
+    FEEDBACK_PATH,
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };

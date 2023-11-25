@@ -50,7 +50,11 @@ export const BlogLang: BlogDictionary = {
     actions: {
         createBlog: "Thêm mới",
         search: "Tìm kiếm",
-        status: "Trạng thái"
+        status: "Trạng thái",
+        delete:{
+            title:"Xác nhận xóa bài viết",
+            confirm:"Bạn muốn xóa bài viết ?"
+        }
     },
     blogForm: {
         key: "bài viết",

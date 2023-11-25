@@ -2,12 +2,14 @@ import { Chip, Stack, Tooltip } from "@mui/material";
 import { BodyCell } from "components/Table";
 import { IconButton, Text } from "components/shared";
 import { memo, useState } from "react";
-import { NS_FEEDBACK } from "constant/index";
+import { ACCESS_TOKEN_STORAGE_KEY, NS_FEEDBACK } from "constant/index";
 import { useTranslations } from "next-intl";
 import { FeedbackData } from "store/feedback/actions";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import { DataAction } from "constant/enums";
 import Form from "./Form";
+import { clientStorage } from "utils/storage";
+import { useFeedback } from "store/feedback/selectors";
 
 type MobileContentCellProps = {
   item: FeedbackData;
@@ -19,6 +21,7 @@ type InformationItemProps = {
 
 const MobileContentCell = (props: MobileContentCellProps) => {
   const feedbackT = useTranslations(NS_FEEDBACK);
+  const { onRespondToFeedback } = useFeedback();
   const [item, setItem] = useState<FeedbackData>();
   const [action, setAction] = useState<DataAction | undefined>();
 
@@ -42,8 +45,8 @@ const MobileContentCell = (props: MobileContentCellProps) => {
   const onResponsedContent = async (data: FeedbackData) => {
     if (!item) return; // Nếu item là undefined, thoát khỏi hàm
     // console.log(data);
-    //Thực Hiện phản hồi và trả về
-    // return await onUpdateCategoryBlog(item.id as string, data);
+    const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+    return await onRespondToFeedback(data.id as string, data, accessToken);
     return 200;
   };
 

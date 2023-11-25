@@ -26,7 +26,7 @@ export const salesLang: SalesDictionary = {
     },
     table: {
       stage: "Giai đoạn",
-      pjRevenue: "Doanh thu PJ",
+      pjRevenue: "Doanh thu dự án",
       revenue: "Doanh thu",
       time: "Thời gian",
       owner: "Chủ sở hữu",

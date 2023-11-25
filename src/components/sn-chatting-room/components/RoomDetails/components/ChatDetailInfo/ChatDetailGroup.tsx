@@ -204,8 +204,5 @@ export default ChatDetailGroup;
 const CustomBox = styled(Box)`
   overflow: auto;
   width: 100%;
-  @media (max-width: 1540px) {
-    max-height: 160px;
-  }
-  max-height: 200px;
+  padding-bottom: 110px;
 `;

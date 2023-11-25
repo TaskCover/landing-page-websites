@@ -225,7 +225,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   alignItems="center"
                   sx={{ ml: { xs: 2, md: 6 }, }}
                 >
-                  <PlusIcon sx={{ color: '#0bb783' }} />
+                  <PlusIcon sx={{ color: '#666666' }} />
                   <TextField
                     label={projectT("detailTasks.addNewTask")}
                     value={taskName}
@@ -240,7 +240,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                       "& >div": {
                         bgcolor: "transparent!important",
                         "&:after": {
-                          borderBottomColor: "#0bb783 !important",
+                          borderBottomColor: "#666666 !important",
                         },
                         "&:before": {
                           borderBottom: "unset !important",
@@ -257,7 +257,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                       "& >label": {
                         fontWeight: "600 !important",
                         fontSize: "14px",
-                        color: "#0bb783 !important",
+                        color: "#666666 !important",
                       },
                     }}
                   />

@@ -153,7 +153,13 @@ const UserInformation = () => {
           {accountT("accountInformation.title")}
         </Text>
         <Stack width={90} height={90} borderRadius="50%" position="relative">
-          <Avatar size={90} src={previewImage} alt={user.fullname} />
+        <Avatar
+          size={90}
+          src={previewImage}
+          alt={user.fullname}
+          onClick={isEdit ? onChooseFile : onEditTrue}
+          style={{ cursor: "pointer" }}
+        />
           {isEdit && (
             <>
               <IconButton
@@ -194,7 +200,7 @@ const UserInformation = () => {
         </Stack>
         {!isEdit && (
           <Button onClick={onEditTrue} variant="secondary" size="small">
-            {accountT("accountInformation.updateAccount")}
+            {accountT("accountInformation.changeInformation")}
           </Button>
         )}
 

@@ -167,7 +167,7 @@ const SalesPage = () => {
           );
         },
         minWidth: 100,
-        width: "10%",
+        width: "15%",
       },
       {
         name: "estimate",

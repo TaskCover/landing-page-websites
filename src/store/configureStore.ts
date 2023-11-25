@@ -15,6 +15,7 @@ import  docReducer,  { IDocs } from "./docs/reducer";
 import { feedbackReducer } from "./feedback/reducer";
 import { BlogState, blogReducer } from "./blog/reducer";
 import { categoryBlogReducer } from "./blog-category/reducer";
+import { CareerReducer } from "./career/reducer";
 
 export interface State {
   app: AppState;
@@ -46,6 +47,8 @@ export const store = configureStore({
     feedback : feedbackReducer,
     blogs: blogReducer,
     categoryBlogs : categoryBlogReducer,
+    //career
+    career : CareerReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

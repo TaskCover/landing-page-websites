@@ -66,7 +66,7 @@ const Upload = (props: UploadProps) => {
                     border="1px solid"
                     borderColor="grey.50"
                 >
-                    <Image
+                    <Image   onClick={onChooseFile}
                         src={previewImage}
                         width={value ? 200 : 100}
                         height={value ? 200 : 100}

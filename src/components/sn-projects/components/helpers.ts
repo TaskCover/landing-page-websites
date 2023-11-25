@@ -8,9 +8,9 @@ export const TEXT_STATUS: { [key in ProjectStatus]: string } = {
 };
 
 export const COLOR_STATUS: { [key in ProjectStatus]: AlertColor } = {
-  [ProjectStatus.ACTIVE]: "success",
-  [ProjectStatus.PAUSE]: "warning",
-  [ProjectStatus.CLOSE]: "error",
+  [ProjectStatus.ACTIVE]: "warning",
+  [ProjectStatus.PAUSE]: "error",
+  [ProjectStatus.CLOSE]: "success",
 };
 
 export type Member = {

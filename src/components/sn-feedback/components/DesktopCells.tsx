@@ -16,7 +16,7 @@ type DesktopCellsProps = {
 };
 
 const DesktopCells = (props: DesktopCellsProps) => {
-  const { onRespondToFeedback, onGetFeedback, items, totalItems, total_page, page, size, isIdle} = useFeedback();
+  const { onRespondToFeedback} = useFeedback();
   const feedbackT = useTranslations(NS_FEEDBACK);
   const [item, setItem] = useState<FeedbackData>();
   const [action, setAction] = useState<DataAction | undefined>();

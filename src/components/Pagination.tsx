@@ -53,6 +53,26 @@ const Pagination = (props: PaginationProps) => {
       spacing={{ md: 2 }}
       {...containerProps}
     >
+      <MuiPagination
+        count={totalPages}
+        variant="outlined"
+        shape="rounded"
+        onChange={onChange}
+        sx={{
+          [`& .${paginationItemClasses.root}`]: {
+            fontWeight: 600,
+          },
+          [`& .${paginationItemClasses.selected}`]: {
+            backgroundColor: ({ palette }) =>
+              `${palette.primary.main}!important`,
+            borderColor: "primary.main",
+            color: "common.white",
+          },
+          ...sx,
+        }}
+        {...rest}
+      />
+
       <Stack
         direction="row"
         alignItems="center"
@@ -74,25 +94,7 @@ const Pagination = (props: PaginationProps) => {
         </Text>
       </Stack>
 
-      <MuiPagination
-        count={totalPages}
-        variant="outlined"
-        shape="rounded"
-        onChange={onChange}
-        sx={{
-          [`& .${paginationItemClasses.root}`]: {
-            fontWeight: 600,
-          },
-          [`& .${paginationItemClasses.selected}`]: {
-            backgroundColor: ({ palette }) =>
-              `${palette.primary.main}!important`,
-            borderColor: "primary.main",
-            color: "common.white",
-          },
-          ...sx,
-        }}
-        {...rest}
-      />
+
     </Stack>
   );
 };

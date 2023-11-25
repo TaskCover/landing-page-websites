@@ -37,5 +37,8 @@ export const LayoutLang: LayoutDictionary = {
     blog:"Blogs",
     blogList:"Blog List",
     blogCategoryList :"Category List",
+    //carrer
+    career:"Career",
+    careerList: "Career List",
   },
 };

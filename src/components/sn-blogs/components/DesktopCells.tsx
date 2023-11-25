@@ -14,6 +14,26 @@ type DesktopCellsProps = {
 const DesktopCells = (props: DesktopCellsProps) => {
     const blogT = useTranslations(NS_BLOG);
     const { item } = props;
+    const formatDateWithCustomFormat = (dateString) => {
+        const date = new Date(dateString);
+
+        const timeOptions = {
+            hour: 'numeric' as const,
+            minute: 'numeric' as const,
+            hour12: true as const,
+        };
+
+        const dateOptions = {
+            month: 'short' as const,
+            day: 'numeric' as const,
+            year: 'numeric' as const,
+        };
+
+        const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
+        const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(date);
+
+        return `${formattedTime} | ${formattedDate}`;
+    };
     return (
         <>
             <BodyCell align="left" href={getPath(BLOGS_DETAIL_PATH, undefined, { id: item.slug as string })} linkProps={{
@@ -33,7 +53,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
                 ))}
             </BodyCell>
             <BodyCell align="left">
-            {formatDate(item?.created_time, "HH:mm - dd/MM/yyyy")}
+                {formatDateWithCustomFormat(item?.created_time)}
             </BodyCell>
             <BodyCell align="left">
                 {!item.published ? (
