@@ -60,10 +60,10 @@ export const ProjectLang: ProjectDictionary = {
       filter: {
         all: "Tất cả",
         file: "Tệp",
-        image: "Ảnh"
+        image: "Ảnh",
       },
       noData: "Không có tệp nào",
-    }
+    },
   },
   detailMembers: {
     head: {
@@ -184,6 +184,13 @@ export const ProjectLang: ProjectDictionary = {
   detailActivities: {
     head: {
       title: "Hoạt động dự án | Taskcover",
+    },
+  },
+  errors: {
+    form: {
+      add_sub_task: {
+        required: "Tên công việc không được trống",
+      },
     },
   },
 };

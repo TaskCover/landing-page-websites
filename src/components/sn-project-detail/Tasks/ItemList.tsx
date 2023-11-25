@@ -1,6 +1,13 @@
 "use client";
 
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   reorder,
   TaskFormData,
@@ -9,18 +16,10 @@ import {
   DraggableTask,
   MoreList,
 } from "./components";
-import { isTaskListChecked, isTaskChecked, isSubTaskChecked } from './helpers'
+import { isTaskListChecked, isTaskChecked, isSubTaskChecked } from "./helpers";
 import { Button, Checkbox, Text, TextProps } from "components/shared";
-import {
-  CircularProgress,
-  Stack,
-  TextField,
-} from "@mui/material";
-import {
-  getMessageErrorByAPI,
-  debounce,
-  formatDate,
-} from "utils/index";
+import { CircularProgress, Stack, TextField } from "@mui/material";
+import { getMessageErrorByAPI, debounce, formatDate } from "utils/index";
 import { CellProps, TableLayout } from "components/Table";
 import PlusIcon from "icons/PlusIcon";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
@@ -54,9 +53,7 @@ import SelectStatusTask from "components/sn-projects/components/SelectStatusTask
 import AssignerTask from "components/sn-projects/components/AssignerTask";
 import Content from "./components/Content";
 import Description from "./components/Description";
-import {
-  Date
-} from "components/Filters";
+import { Date } from "components/Filters";
 
 const ItemList = () => {
   const {
@@ -73,7 +70,12 @@ const ItemList = () => {
     totalPages,
     onResetTasks,
   } = useTasksOfProject();
-  const { onUpdateTaskDetail, onUpdateTaskParent, onGetTaskList, onUpdateTask } = useTaskDetail();
+  const {
+    onUpdateTaskDetail,
+    onUpdateTaskParent,
+    onGetTaskList,
+    onUpdateTask,
+  } = useTaskDetail();
   const [isAllChecked, setIsAllChecked] = useState(false);
   const filtersRef = useRef<Params>({});
   const pageIndexRef = useRef<number>(pageIndex);
@@ -116,15 +118,14 @@ const ItemList = () => {
   const [taskName, setTaskName] = useState<string>("");
   const [errorTaskName, setErrorTaskName] = useState<string>("");
   const [taskIdSelected, setTaskIdSelected] = useState<string>("");
-  const noData = useMemo(
-    () => !isIdle && totalItems === 0,
-    [isIdle, totalItems],
-  );
+  const noData = useMemo(() => !isIdle && totalItems === 0, [
+    isIdle,
+    totalItems,
+  ]);
 
-  const baseTop = useMemo(
-    () => (selectedList.length ? 106 : 62),
-    [selectedList.length],
-  );
+  const baseTop = useMemo(() => (selectedList.length ? 106 : 62), [
+    selectedList.length,
+  ]);
 
   const getTotalItemCount = (taskList: TaskList) => {
     let totalCount = taskList.tasks.length;
@@ -141,7 +142,7 @@ const ItemList = () => {
     let totalCount = 0;
 
     for (const taskList of dataList) {
-      totalCount++
+      totalCount++;
       totalCount += getTotalItemCount(taskList);
     }
 
@@ -221,7 +222,7 @@ const ItemList = () => {
       { value: commonT("form.title.endDate"), width: "10%" },
       { value: commonT("status"), width: "10.5%" },
       { value: commonT("form.title.description"), width: "15%" },
-      { value: "", width: "2%", align: 'center' },
+      { value: "", width: "2%", align: "center" },
     ],
     [commonT, projectT],
   );
@@ -236,7 +237,7 @@ const ItemList = () => {
     taskId?: string,
     subTaskId?: string,
     taskListName?: string,
-    taskName?: string
+    taskName?: string,
   ) => {
     return () => {
       onUpdateTaskDetail(
@@ -245,8 +246,8 @@ const ItemList = () => {
           : undefined,
       );
       onUpdateTaskParent(
-        taskListName && taskName ? { taskListName, taskName } : undefined
-      )
+        taskListName && taskName ? { taskListName, taskName } : undefined,
+      );
     };
   };
 
@@ -266,7 +267,7 @@ const ItemList = () => {
         { [name]: value },
         taskListId,
         taskId,
-        subTaskId
+        subTaskId,
       );
       if (newData) {
         onAddSnackbar(
@@ -419,7 +420,10 @@ const ItemList = () => {
 
         // remove task list
         const indexSelectTaskList = newSelectedList.findIndex(
-          (selected) => selected.taskListId === taskList.id && !selected.taskId && !selected.subTaskId,
+          (selected) =>
+            selected.taskListId === taskList.id &&
+            !selected.taskId &&
+            !selected.subTaskId,
         );
 
         if (indexSelectTaskList !== -1) {
@@ -431,7 +435,12 @@ const ItemList = () => {
     };
   };
 
-  const onToggleSubTask = (newChecked: boolean, taskList: TaskList, task: Task, subTask: Task) => {
+  const onToggleSubTask = (
+    newChecked: boolean,
+    taskList: TaskList,
+    task: Task,
+    subTask: Task,
+  ) => {
     return () => {
       const newSelectedList = [...selectedList];
 
@@ -474,7 +483,6 @@ const ItemList = () => {
         //     taskListName: taskList.name,
         //   });
         // }
-
       } else {
         const indexSelectedSubTask = selectedList.findIndex(
           (item) =>
@@ -487,17 +495,18 @@ const ItemList = () => {
           newSelectedList.splice(indexSelectedSubTask, 1);
 
         // remove task
-        const indexSelectedTask = newSelectedList.findIndex(
-          (item) => {
-            return item?.taskId === task.id && !item?.subTaskId
-          }
-        );
+        const indexSelectedTask = newSelectedList.findIndex((item) => {
+          return item?.taskId === task.id && !item?.subTaskId;
+        });
         if (indexSelectedTask !== -1)
           newSelectedList.splice(indexSelectedTask, 1);
 
         // remove task list
         const indexSelectedTaskList = newSelectedList.findIndex(
-          (item) => item?.taskListId === taskList.id && !item?.taskId && !item?.subTaskId,
+          (item) =>
+            item?.taskListId === taskList.id &&
+            !item?.taskId &&
+            !item?.subTaskId,
         );
         if (indexSelectedTaskList !== -1)
           newSelectedList.splice(indexSelectedTaskList, 1);
@@ -510,7 +519,11 @@ const ItemList = () => {
     setSelectedList([]);
   };
 
-  const directlySelected = (taskListItem: TaskList, task: Task, subTask?: Task): Selected => {
+  const directlySelected = (
+    taskListItem: TaskList,
+    task: Task,
+    subTask?: Task,
+  ): Selected => {
     return {
       taskListId: taskListItem.id,
       taskListName: taskListItem.name,
@@ -519,8 +532,8 @@ const ItemList = () => {
       subTaskId: subTask?.id,
       subTaskName: subTask?.name,
       checked: true,
-    }
-  }
+    };
+  };
 
   const onMoveTaskList = async (
     sourceTaskListId: string,
@@ -833,7 +846,12 @@ const ItemList = () => {
     }
   };
 
-  const changeAssignerTask = async ({ taskListId, taskId, subTaskId, newValue }) => {
+  const changeAssignerTask = async ({
+    taskListId,
+    taskId,
+    subTaskId,
+    newValue,
+  }) => {
     try {
       if (!taskListId || !taskId) {
         throw AN_ERROR_TRY_AGAIN;
@@ -853,9 +871,14 @@ const ItemList = () => {
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
-  }
+  };
 
-  const changeStatusTask = async ({ taskListId, taskId, subTaskId, newValue }) => {
+  const changeStatusTask = async ({
+    taskListId,
+    taskId,
+    subTaskId,
+    newValue,
+  }) => {
     try {
       if (!newValue || !taskListId || !taskId) {
         throw AN_ERROR_TRY_AGAIN;
@@ -876,7 +899,7 @@ const ItemList = () => {
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
-  }
+  };
 
   useEventListener("scroll", onScroll, undefined, SCROLL_ID);
 
@@ -953,7 +976,7 @@ const ItemList = () => {
       <FixedLayout flex={1}>
         <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
           {dataList.map((taskListItem, indexTaskList) => {
-            const isChecked = isTaskListChecked(selectedList, taskListItem.id)
+            const isChecked = isTaskListChecked(selectedList, taskListItem.id);
 
             return (
               <DroppableTaskList
@@ -968,7 +991,7 @@ const ItemList = () => {
                 index={indexTaskList}
               >
                 {taskListItem.tasks.map((task, taskIndex) => {
-                  const isChecked = isTaskChecked(selectedList, task.id)
+                  const isChecked = isTaskChecked(selectedList, task.id);
 
                   const isHide = hideIds.includes(task.id);
 
@@ -978,11 +1001,7 @@ const ItemList = () => {
                       id={task.id}
                       index={taskIndex}
                       checked={isChecked}
-                      onChange={onToggleTask(
-                        !isChecked,
-                        taskListItem,
-                        task,
-                      )}
+                      onChange={onToggleTask(!isChecked, taskListItem, task)}
                       isHide={isHide}
                       isHovered={hoveredId === task.id}
                       onMouseEnter={() => setHoveredId(task.id)}
@@ -1018,18 +1037,65 @@ const ItemList = () => {
                             textAlign="left"
                             noWrap
                             tooltip={task.name}
-                            onClick={onSetTask(task, taskListItem.id, task.id, undefined, taskListItem.name, task.name)}
+                            onClick={onSetTask(
+                              task,
+                              taskListItem.id,
+                              task.id,
+                              undefined,
+                              taskListItem.name,
+                              task.name,
+                            )}
                           >
                             {task.name}
                           </Content>
-                          <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%', paddingLeft: 0 }}>
-                            <AssignerTask value={task?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} placeholder={task?.owner ? '' : commonT("form.title.noAssigner")} />
+                          <Content
+                            sx={{
+                              display: "flex",
+                              justifyContent: "start",
+                              width: "100%",
+                              paddingLeft: 0,
+                            }}
+                          >
+                            <AssignerTask
+                              value={task?.owner?.id}
+                              onHandler={(newValue) =>
+                                changeAssignerTask({
+                                  taskListId: taskListItem.id,
+                                  taskId: task.id,
+                                  subTaskId: "",
+                                  newValue,
+                                })
+                              }
+                              placeholder={
+                                task?.owner
+                                  ? ""
+                                  : commonT("form.title.noAssigner")
+                              }
+                            />
                           </Content>
-                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', '* > p ': { color: 'unset', fontWeight: 'normal' } }}>
+                          <Content
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              width: "100%",
+                              "* > p ": {
+                                color: "unset",
+                                fontWeight: "normal",
+                              },
+                            }}
+                          >
                             <Date
                               label={commonT("form.title.selectTime")}
                               name="start_date"
-                              onChange={(name, value) => onUpdateTimeTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', name, value })}
+                              onChange={(name, value) =>
+                                onUpdateTimeTask({
+                                  taskListId: taskListItem.id,
+                                  taskId: task.id,
+                                  subTaskId: "",
+                                  name,
+                                  value,
+                                })
+                              }
                               value={task?.start_date}
                               iconProps={{
                                 sx: { fontSize: 16 },
@@ -1037,26 +1103,86 @@ const ItemList = () => {
                             />
                           </Content>
 
-                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', '* > p ': { color: 'unset', fontWeight: 'normal' } }}>
+                          <Content
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              width: "100%",
+                              "* > p ": {
+                                color: "unset",
+                                fontWeight: "normal",
+                              },
+                            }}
+                          >
                             <Date
                               label={commonT("form.title.selectTime")}
                               name="end_date"
-                              onChange={(name, value) => onUpdateTimeTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', name, value })}
+                              onChange={(name, value) =>
+                                onUpdateTimeTask({
+                                  taskListId: taskListItem.id,
+                                  taskId: task.id,
+                                  subTaskId: "",
+                                  name,
+                                  value,
+                                })
+                              }
                               value={task?.end_date}
                               iconProps={{
                                 sx: { fontSize: 16 },
                               }}
                             />
                           </Content>
-                          <Content noWrap={false} whiteSpace="nowrap" sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}>
-                            <SelectStatusTask value={task.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: '', newValue })} />
+                          <Content
+                            noWrap={false}
+                            whiteSpace="nowrap"
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              width: "100%",
+                              paddingX: "0",
+                            }}
+                          >
+                            <SelectStatusTask
+                              value={task.status}
+                              onHandler={(newValue) =>
+                                changeStatusTask({
+                                  taskListId: taskListItem.id,
+                                  taskId: task.id,
+                                  subTaskId: "",
+                                  newValue,
+                                })
+                              }
+                            />
                           </Content>
-                          <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center', overflow: 'hidden', '& > p': { lineHeight: '30px'} }}>
+                          <Content
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              width: "100%",
+                              alignItem: "center",
+                              overflow: "hidden",
+                              "& > p": { lineHeight: "30px" },
+                            }}
+                          >
                             <Description>{task?.description}</Description>
                           </Content>
-                          <Content sx={{ display: { xs: "none", md: "flex", alignItem: 'center', position: 'relative', right: '16px'  } }}>
+                          <Content
+                            sx={{
+                              display: {
+                                xs: "none",
+                                md: "flex",
+                                alignItem: "center",
+                                position: "relative",
+                                right: "16px",
+                              },
+                            }}
+                          >
                             <MoreList
-                              selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task)]}
+                              selectedList={
+                                selectedList.length
+                                  ? selectedList
+                                  : [directlySelected(taskListItem, task)]
+                              }
                               onReset={onResetSelected}
                             />
                           </Content>
@@ -1071,7 +1197,10 @@ const ItemList = () => {
                                   style={{ minHeight: 1 }}
                                 >
                                   {task?.sub_tasks?.map((subTask) => {
-                                    const isChecked = isSubTaskChecked(selectedList, subTask.id)
+                                    const isChecked = isSubTaskChecked(
+                                      selectedList,
+                                      subTask.id,
+                                    );
                                     return (
                                       <>
                                         <Stack
@@ -1132,30 +1261,94 @@ const ItemList = () => {
                                                 task.id,
                                                 subTask.id,
                                                 taskListItem.name,
-                                                task.name
+                                                task.name,
                                               )}
                                             >
                                               {subTask.name}
                                             </Content>
-                                            <Content sx={{ display: 'flex', justifyContent: 'start', width: '100%', paddingLeft: 0 }}>
-                                              <AssignerTask value={subTask?.owner?.id} onHandler={(newValue) => changeAssignerTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} placeholder={subTask?.owner ? '' : commonT("form.title.noAssigner")} />
+                                            <Content
+                                              sx={{
+                                                display: "flex",
+                                                justifyContent: "start",
+                                                width: "100%",
+                                                paddingLeft: 0,
+                                              }}
+                                            >
+                                              <AssignerTask
+                                                value={subTask?.owner?.id}
+                                                onHandler={(newValue) =>
+                                                  changeAssignerTask({
+                                                    taskListId: taskListItem.id,
+                                                    taskId: task.id,
+                                                    subTaskId: subTask.id,
+                                                    newValue,
+                                                  })
+                                                }
+                                                placeholder={
+                                                  subTask?.owner
+                                                    ? ""
+                                                    : commonT(
+                                                        "form.title.noAssigner",
+                                                      )
+                                                }
+                                              />
                                             </Content>
-                                            <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', '* > p ': { color: 'unset', fontWeight: 'normal' } }}>
+                                            <Content
+                                              sx={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                width: "100%",
+                                                "* > p ": {
+                                                  color: "unset",
+                                                  fontWeight: "normal",
+                                                },
+                                              }}
+                                            >
                                               <Date
-                                                label={commonT("form.title.selectTime")}
+                                                label={commonT(
+                                                  "form.title.selectTime",
+                                                )}
                                                 name="start_date"
-                                                onChange={(name, value) => onUpdateTimeTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, name, value })}
+                                                onChange={(name, value) =>
+                                                  onUpdateTimeTask({
+                                                    taskListId: taskListItem.id,
+                                                    taskId: task.id,
+                                                    subTaskId: subTask.id,
+                                                    name,
+                                                    value,
+                                                  })
+                                                }
                                                 value={subTask?.start_date}
                                                 iconProps={{
                                                   sx: { fontSize: 16 },
                                                 }}
                                               />
                                             </Content>
-                                            <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', '* > p ': { color: 'unset', fontWeight: 'normal' } }}>
+                                            <Content
+                                              sx={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                width: "100%",
+                                                "* > p ": {
+                                                  color: "unset",
+                                                  fontWeight: "normal",
+                                                },
+                                              }}
+                                            >
                                               <Date
-                                                label={commonT("form.title.selectTime")}
+                                                label={commonT(
+                                                  "form.title.selectTime",
+                                                )}
                                                 name="end_date"
-                                                onChange={(name, value) => onUpdateTimeTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, name, value })}
+                                                onChange={(name, value) =>
+                                                  onUpdateTimeTask({
+                                                    taskListId: taskListItem.id,
+                                                    taskId: task.id,
+                                                    subTaskId: subTask.id,
+                                                    name,
+                                                    value,
+                                                  })
+                                                }
                                                 value={subTask?.end_date}
                                                 iconProps={{
                                                   sx: { fontSize: 16 },
@@ -1165,12 +1358,36 @@ const ItemList = () => {
                                             <Content
                                               noWrap={false}
                                               whiteSpace="nowrap"
-                                              sx={{ display: 'flex', justifyContent: 'center', width: '100%', paddingX: '0' }}
+                                              sx={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                width: "100%",
+                                                paddingX: "0",
+                                              }}
                                             >
-                                              <SelectStatusTask value={subTask.status} onHandler={(newValue) => changeStatusTask({ taskListId: taskListItem.id, taskId: task.id, subTaskId: subTask.id, newValue })} />
+                                              <SelectStatusTask
+                                                value={subTask.status}
+                                                onHandler={(newValue) =>
+                                                  changeStatusTask({
+                                                    taskListId: taskListItem.id,
+                                                    taskId: task.id,
+                                                    subTaskId: subTask.id,
+                                                    newValue,
+                                                  })
+                                                }
+                                              />
                                             </Content>
 
-                                            <Content sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItem: 'center', overflow: 'hidden', '& > p': { lineHeight: '30px'} }}>
+                                            <Content
+                                              sx={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                width: "100%",
+                                                alignItem: "center",
+                                                overflow: "hidden",
+                                                "& > p": { lineHeight: "30px" },
+                                              }}
+                                            >
                                               <Description>
                                                 {subTask.description}
                                               </Description>
@@ -1178,9 +1395,22 @@ const ItemList = () => {
                                           </Stack>
                                           <MoreList
                                             sx={{
-                                              display: { xs: "none", md: "flex" },
+                                              display: {
+                                                xs: "none",
+                                                md: "flex",
+                                              },
                                             }}
-                                            selectedList={selectedList.length ? selectedList : [directlySelected(taskListItem, task, subTask)]}
+                                            selectedList={
+                                              selectedList.length
+                                                ? selectedList
+                                                : [
+                                                    directlySelected(
+                                                      taskListItem,
+                                                      task,
+                                                      subTask,
+                                                    ),
+                                                  ]
+                                            }
                                             onReset={onResetSelected}
                                           />
                                         </Stack>

@@ -38,6 +38,7 @@ export type SelectProps = InputProps & {
   hasIcon?: boolean;
   showSubText?: boolean;
   onOpen?: Function;
+  emitSearchWhenEnter?: boolean
 };
 
 const ID_PLACEHOLDER = uuid();
@@ -58,6 +59,7 @@ const Select = (props: SelectProps) => {
     hasAvatar,
     showSubText = true,
     hasIcon,
+    emitSearchWhenEnter,
     ...rest
   } = props;
 
@@ -146,7 +148,7 @@ const Select = (props: SelectProps) => {
             sx={{ mt: 1 }}
             name="email"
             onChange={onChangeSearch}
-            emitWhenEnter
+            emitWhenEnter={emitSearchWhenEnter}
             search={searchProps?.value}
             onKeyDown={onKeyDown}
             {...searchProps}
