@@ -36,6 +36,8 @@ import Loading from "components/Loading";
 import MoveTaskList from "../MoveTaskList";
 import { string } from "yup";
 import ConfirmDialog from "components/ConfirmDialog";
+import HierarchyIcon from "icons/HierarchyIcon";
+import AddSubTask from "../AddSubTask";
 
 type MoreListProps = {
   selectedList: Selected[];
@@ -47,6 +49,7 @@ enum Action {
   DUPLICATE = 1,
   MOVE,
   DELETE,
+  ADD_SUB_TASK,
 }
 
 const MoreList = (props: MoreListProps) => {
@@ -494,7 +497,7 @@ const MoreList = (props: MoreListProps) => {
           [`& .${popoverClasses.paper}`]: {
             backgroundImage: "none",
             minWidth: 150,
-            maxWidth: 150,
+            maxWidth: 200,
           },
         }}
         slotProps={{
@@ -517,6 +520,18 @@ const MoreList = (props: MoreListProps) => {
           }}
         >
           <MenuList component={Box} sx={{ py: 0 }}>
+            {taskListIds.length > 0 && (
+              <MenuItem
+                onClick={onSetTType(Action.ADD_SUB_TASK)}
+                component={ButtonBase}
+                sx={sxConfig.item}
+              >
+                <HierarchyIcon sx={{ color: "grey.400" }} fontSize="medium" />
+                <Text ml={2} variant="body2" color="grey.400">
+                  {projectT("taskDetail.addSubTasks")}
+                </Text>
+              </MenuItem>
+            )}
             <MenuItem
               onClick={onDuplicate}
               component={ButtonBase}
@@ -577,6 +592,17 @@ const MoreList = (props: MoreListProps) => {
           title={projectT("detailTasks.confirmDeleteTasks.title")}
           content={projectT("detailTasks.confirmDeleteTasks.content")}
           onSubmit={onDelete}
+        />
+      )}
+      {type === Action.ADD_SUB_TASK && (
+        <AddSubTask
+          open
+          taskListId={props?.selectedList[0]?.taskListId}
+          taskId={props?.selectedList[0]?.taskId}
+          onClose={onSetTType()}
+          title={projectT("taskDetail.addSubTasks")}
+          content={projectT("taskDetail.addSubTasks")}
+          setIsSubmitting={setIsSubmitting}
         />
       )}
     </>

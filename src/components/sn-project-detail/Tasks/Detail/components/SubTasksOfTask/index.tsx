@@ -153,30 +153,30 @@ const TaskName = ({
   };
 
   return (
-    <Stack width="100%">
-      <TextField
-        value={name}
-        onKeyDown={onKeyDown}
-        fullWidth
-        variant="filled"
-        size="small"
-        onChange={onChange}
-        autoFocus={autoFocus}
-        sx={{
-          "& >div": {
-            bgcolor: "transparent!important",
-          },
-          "& input": {
-            fontSize: 15,
-          },
-        }}
-      />
-      {!!error && (
-        <Text variant="caption" color="error">
-          {error}
-        </Text>
-      )}
-    </Stack>
+      <Stack width="100%">
+        <TextField
+          value={name}
+          onKeyDown={onKeyDown}
+          fullWidth
+          variant="filled"
+          size="small"
+          onChange={onChange}
+          autoFocus={autoFocus}
+          sx={{
+            "& >div": {
+              bgcolor: "transparent!important",
+            },
+            "& input": {
+              fontSize: 15,
+            },
+          }}
+        />
+        {!!error && (
+          <Text variant="caption" color="error">
+            {error}
+          </Text>
+        )}
+      </Stack>
   );
 };
 
