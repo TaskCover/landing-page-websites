@@ -267,7 +267,7 @@ const SubTaskItem = (props: Task & { subId: string }) => {
         task: taskId,
         sub_task: subId,
       });
-      onGetTaskList(taskListId);
+      await onGetTaskList(taskListId);
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     } finally {

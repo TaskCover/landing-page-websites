@@ -57,9 +57,9 @@ export type ProjectDictionary = {
         all: string;
         file: string;
         image: string;
-      },
+      };
       noData: string;
-    }
+    };
   };
   detailMembers: {
     head: {
@@ -179,6 +179,13 @@ export type ProjectDictionary = {
   detailActivities: {
     head: {
       title: string;
+    };
+  };
+  errors: {
+    form: {
+      add_sub_task: {
+        required: string;
+      };
     };
   };
 };

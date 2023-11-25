@@ -26,6 +26,12 @@ const AddTaskList = (props: MoveTaskListProps) => {
   const commonT = useTranslations(NS_COMMON);
   const { onCreateTask } = useTasksOfProject();
 
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .trim()
+      .required(projectT("errors.form.add_sub_task.required")),
+  });
+
   const onSubmit = async (values: typeof INITIAL_VALUES) => {
     if (!taskListId || !taskId) return;
     try {
@@ -79,6 +85,7 @@ const AddTaskList = (props: MoveTaskListProps) => {
     >
       <Stack width="100%" spacing={2} py={3}>
         <TextField
+          placeholder={projectT("detailTasks.form.title.name")}
           value={formik.values?.name}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -109,7 +116,3 @@ export default memo(AddTaskList);
 const INITIAL_VALUES = {
   name: "",
 };
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required("form.error.required"),
-});
