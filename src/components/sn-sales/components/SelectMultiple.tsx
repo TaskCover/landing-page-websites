@@ -41,6 +41,7 @@ const SelectMultiple = ({
   loading = true,
 }: IProps) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
+
   return (
     <Autocomplete
       getOptionLabel={(option) => option?.label || ""}

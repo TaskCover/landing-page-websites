@@ -31,7 +31,6 @@ export const DEFAULT_PAGE_INDEX = 1;
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_PAGE_TOTAL = 10;
 
-
 export const DEFAULT_PAGING: Paging = {
   pageIndex: DEFAULT_PAGE_INDEX,
   pageSize: DEFAULT_PAGE_SIZE,
@@ -42,11 +41,11 @@ export const DEFAULT_PAGING_FEEDBACK: Paging_Feedback = {
   size: DEFAULT_PAGE_SIZE,
   totalItems: DEFAULT_PAGE_TOTAL,
 };
-export const  DEFAULT_PAGING_ITEM : PagingItem ={
+export const DEFAULT_PAGING_ITEM: PagingItem = {
   page: DEFAULT_PAGE_INDEX,
   size: DEFAULT_PAGE_SIZE,
   totalItems: DEFAULT_PAGE_TOTAL,
-}
+};
 
 export const SCROLL_ID = "scroll-id";
 
@@ -148,3 +147,8 @@ export const nameMonthList = [
   "November",
   "December",
 ];
+
+export const timeLocale = {
+  en: "en-US",
+  vi: "vi-VN",
+};

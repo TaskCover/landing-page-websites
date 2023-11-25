@@ -39,9 +39,14 @@ const SaleService = () => {
   const onDragEnd = (result, provided) => {
     const { destination, source, draggableId } = result;
     const sectionList = [...getValues("sectionsList")];
+
     //if descId == sourceId => change position of draggableId
     // if descId != sourceId => move draggableId to descId at the position index of descId
     if (!destination) return;
+    if (destination.droppableId === "sectionList") {
+      swap(source.index, destination.index);
+      return;
+    }
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -152,7 +157,9 @@ const SaleService = () => {
                 />
               }
             >
-              {salesT("detail.service.addService")}
+              {!isEdit
+                ? salesT("detail.service.addService")
+                : salesT("detail.service.addSection")}
             </Button>
           )}
           <ServiceHeader />

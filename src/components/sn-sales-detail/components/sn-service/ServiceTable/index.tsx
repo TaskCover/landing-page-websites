@@ -150,7 +150,7 @@ const ServiceTable = ({
         >
           {/* <Draggable draggableId={section.id} index={index}>
         {(provided) => ( */}
-          <Stack direction="column" spacing={2}>
+          <Stack direction="column" spacing={2} {...provided.dragHandleProps}>
             <Stack
               direction="row"
               alignItems="center"
@@ -158,7 +158,7 @@ const ServiceTable = ({
             >
               <Stack direction="row" spacing={1} alignItems="center">
                 {isEdit && (
-                  <IconButton noPadding {...provided.dragHandleProps}>
+                  <IconButton noPadding>
                     <MoveDotIcon fontSize="small" sx={{ color: "grey.A200" }} />
                   </IconButton>
                 )}

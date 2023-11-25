@@ -18,7 +18,7 @@ import {
   formatCurrency,
   getMessageErrorByAPI,
 } from "utils/index";
-import { DATE_FORMAT_SLASH, NS_SALES } from "constant/index";
+import { DATE_FORMAT_SLASH, NS_SALES, timeLocale } from "constant/index";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { Sales } from "store/sales/reducer";
@@ -29,15 +29,18 @@ import { Option, User } from "constant/types";
 import { useGetStageOptions } from "components/sn-sales-detail/hooks/useGetDealDetail";
 import LabelStatusCell from "./components/LabelStatusCell";
 import { useSnackbar } from "store/app/selectors";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import dayjs from "dayjs";
 
 interface IProps {
+  setShouldLoad: (value: boolean) => void;
   item: Sales; // change to data type
 }
-const SaleItem = ({ item }: IProps) => {
+const SaleItem = ({ item, setShouldLoad }: IProps) => {
   const commonT = useTranslations(NS_SALES);
   const { employeeOptions, onEndReachedEmployeeOptions, onSearchEmployee } =
     useGetEmployeeOptions();
+  const locale = useLocale();
   const { onUpdateDeal } = useSales();
   const { onAddSnackbar } = useSnackbar();
   const [owner, setOwner] = useState<string>(item.owner?.id);
@@ -49,6 +52,7 @@ const SaleItem = ({ item }: IProps) => {
 
   const onSubmit = async (data) => {
     try {
+      setShouldLoad(false);
       await onUpdateDeal({
         owner: data.owner,
         id: item.id,
@@ -58,6 +62,7 @@ const SaleItem = ({ item }: IProps) => {
     } catch (error) {
       console.log(error);
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      throw error;
     }
   };
 
@@ -85,6 +90,12 @@ const SaleItem = ({ item }: IProps) => {
       })),
     [],
   );
+
+  useEffect(() => {
+    setStage(item.status);
+    setProbability(item.probability + 1);
+    setOwner(item.owner?.id);
+  }, [item.owner, item.status, item.probability]);
 
   const mappedowner = useMemo(() => {
     const result = mappedOwners.find((item) => item.value === owner);
@@ -182,7 +193,7 @@ const SaleItem = ({ item }: IProps) => {
           numberOfFixed: 2,
         })}
       </BodyCell>
-      <BodyCell width="9%" size="small" align="right">
+      <BodyCell size="small" align="right">
         {`${time}h`}
       </BodyCell>
       <BodyCell align="right">
@@ -198,9 +209,10 @@ const SaleItem = ({ item }: IProps) => {
             //   right: "-5px!important",
             // },
           }}
-          onChange={(name, value) => {
-            onSubmit({ probability: value - 1 });
-            setProbability(value);
+          onChange={async (name, value) => {
+            await onSubmit({ probability: value - 1 }).then(() => {
+              setProbability(value);
+            });
           }}
           size="small"
           hasAll={false}
@@ -209,10 +221,14 @@ const SaleItem = ({ item }: IProps) => {
         />
       </BodyCell>
       <BodyCell align="left">
-        {formatDate(item.updated_time, DATE_FORMAT_SLASH)}
+        {dayjs(item.updated_time).toDate().toLocaleString(timeLocale[locale], {
+          month: "short",
+          year: "numeric",
+          day: "numeric",
+        })}
       </BodyCell>
     </TableRow>
   );
 };
 
-export default memo(SaleItem);
+export default SaleItem;

@@ -124,6 +124,7 @@ export const useSales = () => {
       await dispatch(updateDeal({ id: data.id, data: convertedBody }))
         .unwrap()
         .then((value) => {
+          onGetSales(salesFilters);
           onAddSnackbar(
             commonT("notification.success", {
               label: saleT("list.newDealForm.update"),
