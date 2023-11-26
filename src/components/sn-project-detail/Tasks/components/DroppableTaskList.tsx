@@ -104,19 +104,19 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
   ) => {
     if (event.key !== "Enter") return;
     const nameTrimmed = taskName?.trim();
-    const newItem = await onCreateTask(
-      {
-        task_list: taskListId,
-        name: nameTrimmed,
-        description: "",
-        end_date: "",
-        start_date: "",
-      },
-    );
+    const newItem = await onCreateTask({
+      task_list: taskListId,
+      name: nameTrimmed,
+      description: "",
+      end_date: "",
+      start_date: "",
+    });
     if (newItem) {
       setTaskName("");
       onAddSnackbar(
-        projectT("detailTasks.notification.taskSuccess", { label: commonT("createNew") }),
+        projectT("detailTasks.notification.taskSuccess", {
+          label: commonT("createNew"),
+        }),
         "success",
       );
     }
@@ -200,7 +200,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                     setSelectedList={setSelectedList}
                   />
                 </Stack>
-                <Button
+                {/* <Button
                   onClick={onShowCreate}
                   startIcon={<PlusIcon />}
                   variant="text"
@@ -211,27 +211,25 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   }}
                 >
                   {projectT("detailTasks.addNewTask")}
-                </Button>
+                </Button> */}
               </Stack>
 
               {isShow && props.children}
               {provided.placeholder}
 
-              {isShow &&
+              {/* {isShow && (
                 <Stack
                   width="100%"
                   direction="row"
                   spacing={0}
                   alignItems="center"
-                  sx={{ ml: { xs: 2, md: 6 }, }}
+                  sx={{ ml: { xs: 2, md: 6 } }}
                 >
-                  <PlusIcon sx={{ color: '#0bb783' }} />
+                  <PlusIcon sx={{ color: "#0bb783" }} />
                   <TextField
                     label={projectT("detailTasks.addNewTask")}
                     value={taskName}
-                    onKeyDown={(e) =>
-                      onKeyDownTaskName(e, id)
-                    }
+                    onKeyDown={(e) => onKeyDownTaskName(e, id)}
                     fullWidth
                     variant="filled"
                     size="small"
@@ -262,7 +260,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                     }}
                   />
                 </Stack>
-              }
+              )} */}
             </div>
           );
         }}
@@ -291,6 +289,7 @@ enum Action {
   DUPLICATE,
   MOVE,
   DELETE,
+  ADD_NEW_TASK,
 }
 
 export const MoreList = (props: MoreListProps) => {
@@ -310,10 +309,9 @@ export const MoreList = (props: MoreListProps) => {
 
   const projectId = useMemo(() => params?.id, [params?.id]) as string;
 
-  const taskListNameList = useMemo(
-    () => items.map((task) => task.name),
-    [items],
-  );
+  const taskListNameList = useMemo(() => items.map((task) => task.name), [
+    items,
+  ]);
   const taskIds = useMemo(() => {
     const indexTaskList = items.findIndex((item) => item.id === id);
     if (indexTaskList === -1) return [];
@@ -339,6 +337,10 @@ export const MoreList = (props: MoreListProps) => {
       onClose();
       setType(action);
     };
+  };
+
+  const onCreateTaskHandle = async (data: TaskFormData) => {
+    return await onCreateTask(data, id);
   };
 
   const onUpdateTaskList = async (values: Omit<TaskListData, "project">) => {
@@ -458,8 +460,8 @@ export const MoreList = (props: MoreListProps) => {
         sx={{
           [`& .${popoverClasses.paper}`]: {
             backgroundImage: "none",
-            minWidth: 150,
-            maxWidth: 150,
+            minWidth: 180,
+            maxWidth: 180,
           },
         }}
         slotProps={{
@@ -482,6 +484,16 @@ export const MoreList = (props: MoreListProps) => {
           }}
         >
           <MenuList component={Box} sx={{ py: 0 }}>
+            <MenuItem
+              onClick={onSetTType(Action.ADD_NEW_TASK)}
+              component={ButtonBase}
+              sx={sxConfig.item}
+            >
+              <PlusIcon sx={{ color: "grey.400" }} fontSize="medium" />
+              <Text ml={2} variant="body2" color="grey.400">
+                {projectT("detailTasks.addNewTask")}
+              </Text>
+            </MenuItem>
             <MenuItem
               onClick={onSetTType(Action.RENAME)}
               component={ButtonBase}
@@ -528,6 +540,13 @@ export const MoreList = (props: MoreListProps) => {
         </Stack>
       </Popover>
       <Loading open={!!msg} message={msg} />
+
+      <Form
+        open={type === Action.ADD_NEW_TASK}
+        onClose={onSetTType()}
+        type={DataAction.CREATE}
+        onSubmit={onCreateTaskHandle}
+      />
 
       {type === Action.RENAME && (
         <TaskListForm
