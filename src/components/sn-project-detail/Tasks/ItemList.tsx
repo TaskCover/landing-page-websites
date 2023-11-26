@@ -1251,6 +1251,9 @@ const ItemList = () => {
                                             overflow="hidden"
                                           >
                                             <Content
+                                              sx={{
+                                                pl: 3,
+                                              }}
                                               color="text.primary"
                                               textAlign="left"
                                               noWrap

@@ -1,9 +1,12 @@
 import {
   Box,
   ButtonBase,
+  Fade,
+  Grow,
   MenuItem,
   MenuList,
   Popover,
+  Popper,
   Stack,
   popoverClasses,
 } from "@mui/material";
@@ -490,7 +493,7 @@ const MoreList = (props: MoreListProps) => {
         task: taskId,
         sub_task: subTaskId,
       });
-      onGetTaskList(taskListId);
+      await onGetTaskList(taskListId);
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     } finally {
@@ -503,137 +506,136 @@ const MoreList = (props: MoreListProps) => {
       <IconButton
         disabled={!selectedList.length}
         noPadding
-        onClick={onOpen}
+        onClick={(e) => {
+          if(Boolean(anchorEl)) {
+            onClose()
+          }
+          else {
+            onOpen(e)
+          }
+        }}
         {...rest}
       >
         <MoreDotIcon fontSize="medium" sx={{ color: "grey.300" }} />
       </IconButton>
-      <Popover
-        id={popoverId}
+      <Popper
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
-        onClose={onClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
         sx={{
           [`& .${popoverClasses.paper}`]: {
-            backgroundImage: "none",
+            backgroundImage: "white",
             minWidth: 150,
-            maxWidth: 200,
+            maxWidth: 250,
           },
         }}
-        slotProps={{
-          paper: {
-            sx: {
-              borderRadius: 1,
-              mt: 0.5,
-            },
-          },
-        }}
+        transition
+        placement={'bottom-start'}
       >
-        <Stack
-          py={2}
-          sx={{
-            boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.1)",
-            border: "1px solid",
-            borderTopWidth: 0,
-            borderColor: "grey.100",
-            borderRadius: 1,
-          }}
-        >
-          <MenuList component={Box} sx={{ py: 0 }}>
-            {taskListIds.length > 0 && (
-              <MenuItem
-                onClick={onSetTType(Action.ADD_SUB_TASK)}
-                component={ButtonBase}
-                sx={sxConfig.item}
-              >
-                <HierarchyIcon sx={{ color: "grey.400" }} fontSize="medium" />
-                <Text ml={2} variant="body2" color="grey.400">
-                  {projectT("taskDetail.addSubTasks")}
-                </Text>
-              </MenuItem>
-            )}
-            <MenuItem
-              onClick={onDuplicate}
-              component={ButtonBase}
-              sx={sxConfig.item}
+        {({ TransitionProps }) => (
+          <Grow {...TransitionProps} timeout={350}>
+            <Stack
+              py={2}
+              sx={{
+                boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.2)",
+                border: "1px solid",
+                borderTopWidth: 0,
+                borderColor: "grey.100",
+                borderRadius: 1,
+                bgcolor: "background.paper",
+              }}
             >
-              <DuplicateIcon sx={{ color: "grey.400" }} fontSize="medium" />
-              <Text ml={2} variant="body2" color="grey.400">
-                {commonT("duplicate")}
-              </Text>
-            </MenuItem>
-            {taskListIds.length === 0 && (
-              <MenuItem
-                onClick={onConvertToTask}
-                component={ButtonBase}
-                sx={sxConfig.item}
-              >
-                <ConvertIcon sx={{ color: "grey.400" }} fontSize="medium" />
-                <Text ml={2} variant="body2" color="grey.400">
-                  {projectT("taskDetail.convertToTask")}
-                </Text>
-              </MenuItem>
-            )}
-            {taskListIds.length === 0 && (
-              <MenuItem
-                onClick={onSetTType(Action.CHANGE_PARENT_TASK)}
-                component={ButtonBase}
-                sx={sxConfig.item}
-              >
-                <ChangeIcon sx={{ color: "grey.400" }} fontSize="medium" />
-                <Text ml={2} variant="body2" color="grey.400">
-                  {projectT("taskDetail.changeParentTask")}
-                </Text>
-              </MenuItem>
-            )}
-            {taskListIds.length > 0 && (
-              <Tooltip
-                title={
-                  taskListIds.length
-                    ? ""
-                    : projectT("detailTasks.noTasksToMove")
-                }
-              >
-                <Stack direction="row" alignItems="center">
+              <MenuList component={Box} sx={{ py: 0 }}>
+                {taskListIds.length > 0 && (
                   <MenuItem
-                    onClick={onSetTType(Action.MOVE)}
+                    onClick={onSetTType(Action.ADD_SUB_TASK)}
                     component={ButtonBase}
                     sx={sxConfig.item}
-                    disabled={!taskListIds.length}
                   >
-                    <MoveArrowIcon
+                    <HierarchyIcon
                       sx={{ color: "grey.400" }}
                       fontSize="medium"
                     />
                     <Text ml={2} variant="body2" color="grey.400">
-                      {commonT("move")}
+                      {projectT("taskDetail.addSubTasks")}
                     </Text>
                   </MenuItem>
-                </Stack>
-              </Tooltip>
-            )}
+                )}
+                <MenuItem
+                  onClick={onDuplicate}
+                  component={ButtonBase}
+                  sx={sxConfig.item}
+                >
+                  <DuplicateIcon sx={{ color: "grey.400" }} fontSize="medium" />
+                  <Text ml={2} variant="body2" color="grey.400">
+                    {commonT("duplicate")}
+                  </Text>
+                </MenuItem>
+                {taskListIds.length === 0 && (
+                  <MenuItem
+                    onClick={onConvertToTask}
+                    component={ButtonBase}
+                    sx={sxConfig.item}
+                  >
+                    <ConvertIcon sx={{ color: "grey.400" }} fontSize="medium" />
+                    <Text ml={2} variant="body2" color="grey.400">
+                      {projectT("taskDetail.convertToTask")}
+                    </Text>
+                  </MenuItem>
+                )}
+                {taskListIds.length === 0 && (
+                  <MenuItem
+                    onClick={onSetTType(Action.CHANGE_PARENT_TASK)}
+                    component={ButtonBase}
+                    sx={sxConfig.item}
+                  >
+                    <ChangeIcon sx={{ color: "grey.400" }} fontSize="medium" />
+                    <Text ml={2} variant="body2" color="grey.400">
+                      {projectT("taskDetail.changeParentTask")}
+                    </Text>
+                  </MenuItem>
+                )}
+                {taskListIds.length > 0 && (
+                  <Tooltip
+                    title={
+                      taskListIds.length
+                        ? ""
+                        : projectT("detailTasks.noTasksToMove")
+                    }
+                  >
+                    <Stack direction="row" alignItems="center">
+                      <MenuItem
+                        onClick={onSetTType(Action.MOVE)}
+                        component={ButtonBase}
+                        sx={sxConfig.item}
+                        disabled={!taskListIds.length}
+                      >
+                        <MoveArrowIcon
+                          sx={{ color: "grey.400" }}
+                          fontSize="medium"
+                        />
+                        <Text ml={2} variant="body2" color="grey.400">
+                          {commonT("move")}
+                        </Text>
+                      </MenuItem>
+                    </Stack>
+                  </Tooltip>
+                )}
 
-            <MenuItem
-              onClick={onSetTType(Action.DELETE)}
-              component={ButtonBase}
-              sx={sxConfig.item}
-            >
-              <TrashIcon color="error" fontSize="medium" />
-              <Text ml={2} variant="body2" color="error.main">
-                {commonT("delete")}
-              </Text>
-            </MenuItem>
-          </MenuList>
-        </Stack>
-      </Popover>
+                <MenuItem
+                  onClick={onSetTType(Action.DELETE)}
+                  component={ButtonBase}
+                  sx={sxConfig.item}
+                >
+                  <TrashIcon color="error" fontSize="medium" />
+                  <Text ml={2} variant="body2" color="error.main">
+                    {commonT("delete")}
+                  </Text>
+                </MenuItem>
+              </MenuList>
+            </Stack>
+          </Grow>
+        )}
+      </Popper>
       <Loading open={isSubmitting} message={msg} />
       {type === Action.MOVE && (
         <MoveTaskList
