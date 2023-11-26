@@ -7,6 +7,8 @@ import {
   Stack,
   popoverClasses,
   TextField,
+  Popper,
+  Grow,
 } from "@mui/material";
 import { Button, Checkbox, IconButton, Text } from "components/shared";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
@@ -217,7 +219,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
               {isShow && props.children}
               {provided.placeholder}
 
-              {/* {isShow && (
+              {isShow && (
                 <Stack
                   width="100%"
                   direction="row"
@@ -225,7 +227,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   alignItems="center"
                   sx={{ ml: { xs: 2, md: 6 } }}
                 >
-                  <PlusIcon sx={{ color: "#0bb783" }} />
+                  <PlusIcon sx={{ color: "#0bb783", mt: 0.5 }} />
                   <TextField
                     label={projectT("detailTasks.addNewTask")}
                     value={taskName}
@@ -260,7 +262,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                     }}
                   />
                 </Stack>
-              )} */}
+              )}
             </div>
           );
         }}
@@ -441,104 +443,107 @@ export const MoreList = (props: MoreListProps) => {
 
   return (
     <>
-      <IconButton noPadding onClick={onOpen}>
-        <MoreDotIcon fontSize="small" sx={{ color: "grey.300" }} />
-      </IconButton>
-      <Popover
-        id={popoverId}
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={onClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        sx={{
-          [`& .${popoverClasses.paper}`]: {
-            backgroundImage: "none",
-            minWidth: 180,
-            maxWidth: 180,
-          },
-        }}
-        slotProps={{
-          paper: {
-            sx: {
-              borderRadius: 1,
-              mt: 0.5,
-            },
-          },
+      <IconButton
+        noPadding
+        onClick={(e) => {
+          if (Boolean(anchorEl)) {
+            onClose();
+          } else {
+            onOpen(e);
+          }
         }}
       >
-        <Stack
-          py={2}
-          sx={{
-            boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.1)",
-            border: "1px solid",
-            borderTopWidth: 0,
-            borderColor: "grey.100",
-            borderRadius: 1,
-          }}
-        >
-          <MenuList component={Box} sx={{ py: 0 }}>
-            <MenuItem
-              onClick={onSetTType(Action.ADD_NEW_TASK)}
-              component={ButtonBase}
-              sx={sxConfig.item}
+        <MoreDotIcon fontSize="small" sx={{ color: "grey.300" }} />
+      </IconButton>
+
+      <Popper
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        sx={{
+          [`& .${popoverClasses.paper}`]: {
+            backgroundImage: "white",
+            minWidth: 200,
+            maxWidth: 250,
+          },
+          zIndex: 2
+        }}
+        transition
+        placement={"bottom-start"}
+      >
+        {({ TransitionProps }) => (
+          <Grow {...TransitionProps} timeout={350}>
+            <Stack
+              py={2}
+              sx={{
+                boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.5)",
+                border: "1px solid",
+                borderTopWidth: 0,
+                borderColor: "grey.100",
+                borderRadius: 1,
+                bgcolor: "background.paper",
+              }}
             >
-              <PlusIcon sx={{ color: "grey.400" }} fontSize="medium" />
-              <Text ml={2} variant="body2" color="grey.400">
-                {projectT("detailTasks.addNewTask")}
-              </Text>
-            </MenuItem>
-            <MenuItem
-              onClick={onSetTType(Action.RENAME)}
-              component={ButtonBase}
-              sx={sxConfig.item}
-            >
-              <PencilIcon sx={{ color: "grey.400" }} fontSize="medium" />
-              <Text ml={2} variant="body2" color="grey.400">
-                {commonT("rename")}
-              </Text>
-            </MenuItem>
-            <MenuItem
-              onClick={onDuplicateTaskList}
-              component={ButtonBase}
-              sx={sxConfig.item}
-            >
-              <DuplicateIcon sx={{ color: "grey.400" }} fontSize="medium" />
-              <Text ml={2} variant="body2" color="grey.400">
-                {commonT("duplicate")}
-              </Text>
-            </MenuItem>
-            {!!taskIds.length && (
-              <MenuItem
-                onClick={onSetTType(Action.MOVE)}
-                component={ButtonBase}
-                sx={sxConfig.item}
-              >
-                <MoveArrowIcon sx={{ color: "grey.400" }} fontSize="medium" />
-                <Text ml={2} variant="body2" color="grey.400">
-                  {commonT("move")}
-                </Text>
-              </MenuItem>
-            )}
-            <MenuItem
-              onClick={onSetTType(Action.DELETE)}
-              component={ButtonBase}
-              sx={sxConfig.item}
-            >
-              <TrashIcon color="error" fontSize="medium" />
-              <Text ml={2} variant="body2" color="error.main">
-                {commonT("delete")}
-              </Text>
-            </MenuItem>
-          </MenuList>
-        </Stack>
-      </Popover>
+              <MenuList component={Box} sx={{ py: 0 }}>
+                <MenuItem
+                  onClick={onSetTType(Action.ADD_NEW_TASK)}
+                  component={ButtonBase}
+                  sx={sxConfig.item}
+                >
+                  <PlusIcon sx={{ color: "grey.400" }} fontSize="medium" />
+                  <Text ml={2} variant="body2" color="grey.400">
+                    {projectT("detailTasks.addNewTask")}
+                  </Text>
+                </MenuItem>
+                <MenuItem
+                  onClick={onSetTType(Action.RENAME)}
+                  component={ButtonBase}
+                  sx={sxConfig.item}
+                >
+                  <PencilIcon sx={{ color: "grey.400" }} fontSize="medium" />
+                  <Text ml={2} variant="body2" color="grey.400">
+                    {commonT("rename")}
+                  </Text>
+                </MenuItem>
+                <MenuItem
+                  onClick={onDuplicateTaskList}
+                  component={ButtonBase}
+                  sx={sxConfig.item}
+                >
+                  <DuplicateIcon sx={{ color: "grey.400" }} fontSize="medium" />
+                  <Text ml={2} variant="body2" color="grey.400">
+                    {commonT("duplicate")}
+                  </Text>
+                </MenuItem>
+                {!!taskIds.length && (
+                  <MenuItem
+                    onClick={onSetTType(Action.MOVE)}
+                    component={ButtonBase}
+                    sx={sxConfig.item}
+                  >
+                    <MoveArrowIcon
+                      sx={{ color: "grey.400" }}
+                      fontSize="medium"
+                    />
+                    <Text ml={2} variant="body2" color="grey.400">
+                      {commonT("move")}
+                    </Text>
+                  </MenuItem>
+                )}
+                <MenuItem
+                  onClick={onSetTType(Action.DELETE)}
+                  component={ButtonBase}
+                  sx={sxConfig.item}
+                >
+                  <TrashIcon color="error" fontSize="medium" />
+                  <Text ml={2} variant="body2" color="error.main">
+                    {commonT("delete")}
+                  </Text>
+                </MenuItem>
+              </MenuList>
+            </Stack>
+          </Grow>
+        )}
+      </Popper>
       <Loading open={!!msg} message={msg} />
 
       <Form
