@@ -227,7 +227,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   alignItems="center"
                   sx={{ ml: { xs: 2, md: 6 } }}
                 >
-                  <PlusIcon sx={{ color: "#0bb783", mt: 0.5 }} />
+                  <PlusIcon sx={{ color: "#999999", mt: 0.5 }} />
                   <TextField
                     label={projectT("detailTasks.addNewTask")}
                     value={taskName}
