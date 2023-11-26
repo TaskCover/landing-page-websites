@@ -91,6 +91,7 @@ export enum CURRENCY_CODE {
   BRL = "BRL",
   RUB = "RUB",
   CNY = "CNY",
+  VND = "VND",
 }
 
 export enum RESOURCE_EVENT_TYPE {

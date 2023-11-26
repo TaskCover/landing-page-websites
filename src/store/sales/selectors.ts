@@ -41,10 +41,8 @@ export const useSales = () => {
   const commonT = useTranslations(NS_COMMON);
   const saleT = useTranslations(NS_SALES);
   const dispatch = useAppDispatch();
-  const { sales, salesFilters, salesError, salesStatus } = useAppSelector(
-    (state) => state.sales,
-    shallowEqual,
-  );
+  const { sales, saleTotal, salesFilters, salesError, salesStatus } =
+    useAppSelector((state) => state.sales, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.sales.salesPaging,
     shallowEqual,
@@ -56,17 +54,10 @@ export const useSales = () => {
     [salesStatus],
   );
 
-  const totalRevenue = useMemo(() => {
-    return sales.reduce((prev, data) => prev + data.revenue, 0);
-  }, [sales]);
+  const totalRevenue = saleTotal?.revenue || 0;
 
-  const totalRevenuePJ = useMemo(() => {
-    return sales.reduce((prev, data) => prev + data.revenuePJ, 0);
-  }, [sales]);
-
-  const totalTime = useMemo(() => {
-    return sales.reduce((prev, data) => prev + data.estimate, 0);
-  }, [sales]);
+  const totalRevenuePJ = saleTotal?.revenuePJ || 0;
+  const totalTime = saleTotal?.estimate || 0;
 
   const onGetSales = useCallback(
     async (queries: GetSalesListQueries) => {
@@ -133,6 +124,7 @@ export const useSales = () => {
       await dispatch(updateDeal({ id: data.id, data: convertedBody }))
         .unwrap()
         .then((value) => {
+          onGetSales(salesFilters);
           onAddSnackbar(
             commonT("notification.success", {
               label: saleT("list.newDealForm.update"),

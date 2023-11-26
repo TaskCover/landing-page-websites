@@ -94,7 +94,7 @@ const TabList = ({ value, onChange }: TabListProps) => {
   const onAssign = (name, assignees) => {
     setValue(name, assignees);
     const newAssignees = assignees.filter(
-      (item) => item.id !== saleDetail?.owner.id,
+      (item) => item.id !== saleDetail?.owner?.id,
     );
     onUpdateDeal({ id: getValues("id"), [name]: [...newAssignees] });
   };
@@ -139,6 +139,11 @@ const TabList = ({ value, onChange }: TabListProps) => {
         direction={{
           xs: "row-reverse",
           sm: "row",
+        }}
+        sx={{
+          [`& .react-datepicker-popper`]: {
+            zIndex: 9999,
+          },
         }}
         alignItems="center"
         spacing={3}

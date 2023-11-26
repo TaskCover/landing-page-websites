@@ -15,6 +15,7 @@ interface IProps {
   ) => void;
   loading?: boolean;
   onEndReached?: () => void;
+  noOptionText?: string;
   sx?: SxProps;
   error?: string;
   value?: Option;
@@ -33,12 +34,14 @@ const SelectMultiple = ({
   onSelect,
   sx,
   onEndReached,
+  noOptionText,
   error,
   onInputChange,
   onOpen,
   loading = true,
 }: IProps) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
+
   return (
     <Autocomplete
       getOptionLabel={(option) => option?.label || ""}
@@ -48,6 +51,7 @@ const SelectMultiple = ({
       onOpen={() => onOpen && onOpen()}
       onEnded={onEndReached}
       limitTags={limitTags}
+      noOptionsText={noOptionText}
       renderInput={(params) => (
         <Input
           rootSx={{
