@@ -1,4 +1,4 @@
-"use client"
+"use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Text from "@tiptap/extension-text";
 import Dropcursor from "@tiptap/extension-dropcursor";
@@ -15,6 +15,7 @@ import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
+import { Comment } from "@sereneinserenade/tiptap-comment-extension";
 
 import { DBlock } from "./d-block";
 import Document from "./doc";
@@ -37,9 +38,13 @@ import { storage } from "../../config/firebase";
 import { uuid } from "utils/index";
 interface GetExtensionsProps {
   openLinkModal: () => void;
+  onCommentActivated: (commentId: string) => void;
 }
 
-export const getExtensions = ({ openLinkModal }: GetExtensionsProps) => {
+export const getExtensions = ({
+  openLinkModal,
+  onCommentActivated,
+}: GetExtensionsProps) => {
   return [
     // Necessary
     Document,
@@ -60,6 +65,15 @@ export const getExtensions = ({ openLinkModal }: GetExtensionsProps) => {
     Italic,
     Strike,
     Underline,
+    Comment.configure({
+      HTMLAttributes: {
+        class: "comment",
+      },
+      onCommentActivated: (commentId: string) => {
+        console.log("comment id: >>", commentId);
+        onCommentActivated(commentId);
+      },
+    }),
     Code,
     Link.configure({
       autolink: true,

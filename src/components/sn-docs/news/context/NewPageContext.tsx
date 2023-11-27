@@ -34,6 +34,10 @@ export const NewPageContext = createContext<any>({
     fullWidth: true,
     lock: false,
   },
+  selectedCommentId: null,
+  setSelectedCommentId: function () {},
+  openCommentDialog: false,
+  setCommentDialogOpen: function () {},
 });
 
 export const NewPageContextProvider: React.FC<{ children: any }> = ({
@@ -43,6 +47,7 @@ export const NewPageContextProvider: React.FC<{ children: any }> = ({
     url: "",
     verticalPosition: 0,
   });
+  const [comments, setComments] = useState([]);
   const [content, setContent] = useState({
     type: "doc",
     content: [
@@ -56,6 +61,7 @@ export const NewPageContextProvider: React.FC<{ children: any }> = ({
       },
     ],
   });
+  const [openCommentDialog, setCommentDialogOpen] = useState<boolean>(false);
   const [pageSettings, setPageSettings] = useState({
     font: "san-serif",
     smallText: false,
@@ -63,6 +69,8 @@ export const NewPageContextProvider: React.FC<{ children: any }> = ({
     lock: false,
   });
 
+  const [selectedComment, setSelectedComment] = useState(null);
+  const [isAddingNewLink, setIsAddingNewLink] = useState(false);
   return (
     <NewPageContext.Provider
       value={{
@@ -72,6 +80,14 @@ export const NewPageContextProvider: React.FC<{ children: any }> = ({
         setContent,
         pageSettings,
         setPageSettings,
+        selectedComment,
+        setSelectedComment,
+        openCommentDialog,
+        setCommentDialogOpen,
+        comments,
+        setComments,
+        isAddingNewLink,
+        setIsAddingNewLink,
       }}
     >
       {children}

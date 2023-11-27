@@ -45,6 +45,7 @@ import MenuDocsIcon from "icons/MenuDocsIcon";
 import FeedbackIcon from "icons/FeedbackIcon";
 import MenuBlogIcon from "icons/MenuBlogIcon";
 import CareerIcon from "icons/CareerIcon";
+import DocsItem from "icons/DocsItem";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -261,6 +262,7 @@ const DATA: MenuItemProps[] = [
     icon: <MenuTimeTrackingIcon />,
     roles: [Permission.AM, Permission.ST],
   },
+
   {
     label: "menu.resourcePlaning",
     href: RESOURCE_PLANING_PATH,

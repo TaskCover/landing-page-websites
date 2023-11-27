@@ -1,20 +1,21 @@
 "use client";
-import DownIcon from "../asset/icons/DownIcon";
-import IconBold from "../asset/iconsMenuTipTap/IconBold";
-import IconCode from "../asset/iconsMenuTipTap/IconCode";
-import IconComment from "../asset/iconsMenuTipTap/IconComment";
-import IconItaic from "../asset/iconsMenuTipTap/IconItaic";
-import IconLi from "../asset/iconsMenuTipTap/IconLi";
-import IconLi2 from "../asset/iconsMenuTipTap/IconLi2";
-import IconLineText from "../asset/iconsMenuTipTap/IconLineText";
-import IconLineTextCenter from "../asset/iconsMenuTipTap/IconLineTextCenter";
-import IconLink from "../asset/iconsMenuTipTap/IconLink";
-import styles from "../tiptap/menu/bubble-menu/nodeTypeDropDown.module.scss";
+import DownIcon from "../../asset/icons/DownIcon";
+import IconBold from "../../asset/iconsMenuTipTap/IconBold";
+import IconCode from "../../asset/iconsMenuTipTap/IconCode";
+import IconComment from "../../asset/iconsMenuTipTap/IconComment";
+import IconItaic from "../../asset/iconsMenuTipTap/IconItaic";
+import IconLi from "../../asset/iconsMenuTipTap/IconLi";
+import IconLi2 from "../../asset/iconsMenuTipTap/IconLi2";
+import IconLineText from "../../asset/iconsMenuTipTap/IconLineText";
+import IconLineTextCenter from "../../asset/iconsMenuTipTap/IconLineTextCenter";
+import IconLink from "../../asset/iconsMenuTipTap/IconLink";
+import styles from "components/sn-docs/news/tiptap/menu/bubble-menu/nodeTypeDropDown.module.scss";
+// /menu/bubble-menu/nodeTypeDropDown.module.scss";
 import Tippy from "@tippyjs/react";
-import toggleButtonStyles from "../tiptap/menu/bubble-menu/nodeTypeToggle.module.scss";
+import toggleButtonStyles from "components/sn-docs/news/tiptap/menu/bubble-menu/nodeTypeToggle.module.scss";
 import { Box } from "@mui/material";
 import { Editor } from "@tiptap/core";
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, {
@@ -24,10 +25,12 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { Text } from "components/shared";
 import useTheme from "hooks/useTheme";
+import { NewPageContext } from "../../context/NewPageContext";
 
 const MenuBarHeader = ({ editor }: { editor: Editor }) => {
   const { theme } = useContext(ThemeContext);
@@ -263,8 +266,12 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
     </Box>
   );
 };
+
 export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
   const { theme } = useContext(ThemeContext);
+  const { selectedComment, openCommentDialog, setCommentDialogOpen } =
+    useContext(NewPageContext);
+
   const { isDarkMode } = useTheme();
   const isOnlyParagraph =
     !editor.isActive("bulletList") &&
@@ -460,7 +467,12 @@ export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
       >
         <IconLi2></IconLi2>
       </button>
-      <button>
+      <button
+        onClick={() => {
+          setCommentDialogOpen(!openCommentDialog);
+          editor.chain().focus().setComment(selectedComment!).run();
+        }}
+      >
         <IconComment></IconComment>
       </button>
       <button

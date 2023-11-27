@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-import React, { useContext } from "react";
 import Picker from "@emoji-mart/react";
-import twemoji from "twemoji";
-import styles from "./emojiSelector.module.scss";
+import React, { useContext } from "react";
 import { useDispatch } from "react-redux";
-import { ThemeContext } from "../context/ThemeContext";
+import { setPage } from "store/docs/reducer";
 import { useAppSelector } from "store/hooks";
-import { setPage, setWorkspace } from "store/docs/reducer";
-import { PageType } from "../types/Page";
+import twemoji from "twemoji";
+import { ThemeContext } from "../../context/ThemeContext";
+import { PageType } from "../../types/Page";
+import styles from "../scss/emojiSelector.module.scss";
 
 type EmojiSelectorProps = {
   openPicker: boolean;

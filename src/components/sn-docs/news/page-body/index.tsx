@@ -1,8 +1,9 @@
 "use client";
+
 import ChangeCover from "../change-cover-panel";
 import DrawSlider from "components/sn-docs/detail/DrawSlider";
 import React, { useContext, useEffect, useState } from "react";
-import styles from "./pageBody.module.scss";
+import styles from "./scss/pageBody.module.scss";
 import useTheme from "hooks/useTheme";
 import { Box } from "@mui/material";
 import { getExtensions } from "../tiptap/extensions/starter-kit";
@@ -12,7 +13,7 @@ import { Tiptap } from "../tiptap/Tiptap";
 import { useAppSelector } from "store/hooks";
 import { useDispatch } from "react-redux";
 import { useDocs } from "store/docs/selectors";
-import { useEditor } from "@tiptap/react";
+import { Editor, useEditor } from "@tiptap/react";
 /* eslint-disable no-var */
 import {
   changeContentDoc,
@@ -22,6 +23,8 @@ import {
 import DrawComment, {
   LayoutSlider,
 } from "components/sn-docs/detail/DrawCommet";
+import useDebounce from "hooks/useDebounce";
+import useDocEditor from "../hook/useDocEditor";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
@@ -51,13 +54,14 @@ const PageBody = ({
   const dispatch = useDispatch();
   const [mounted, setMounted] = useState(false);
   const { handleUpdateDoc } = useDocs();
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    dispatch(changeDescription(e.target.value));
-  };
+  const [handleTitleChange] = useDebounce((value: string): void => {
+    console.log(value);
+    dispatch(changeDescription(value));
+  }, 200);
 
-  const handleContentUpdate = (content: any) => {
+  const [handleContentUpdate] = useDebounce((content: any) => {
     dispatch(changeContentDoc(content));
-  };
+  }, 200);
 
   useEffect(() => {
     const data = {
@@ -82,20 +86,7 @@ const PageBody = ({
     }
   }, [content]);
 
-  const editor = useEditor({
-    content: content,
-    extensions: getExtensions({ openLinkModal }),
-    editorProps: {
-      attributes: {
-        class: `main-editor`,
-        spellCheck: "false",
-        suppressContentEditableWarning: "true",
-      },
-    },
-    onUpdate: ({ editor }) => {
-      handleContentUpdate(editor.getHTML());
-    },
-  });
+  const editor = useDocEditor() as Editor;
 
   useEffect(() => {
     const updateMinHeight = () => {
@@ -112,7 +103,6 @@ const PageBody = ({
 
     window.addEventListener("scroll", updateMinHeight);
     window.addEventListener("resize", updateMinHeight);
-
     updateMinHeight();
 
     return () => {
@@ -168,9 +158,9 @@ const PageBody = ({
             <input
               id="title"
               type="text"
-              value={description}
+              defaultValue={description}
               placeholder="Enter document title..."
-              onChange={handleTitleChange}
+              onChange={(e) => handleTitleChange(e.target.value)}
               maxLength={36}
               autoComplete="off"
               spellCheck="false"

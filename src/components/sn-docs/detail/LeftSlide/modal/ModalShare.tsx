@@ -61,11 +61,16 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
   const { onAddSnackbar } = useSnackbar();
 
   const onSubmit = async (values) => {
-    let value: any = {
-      owner: values?.people,
-      perm: values?.access,
-      isPublic: values?.people === "ALL",
-    };
+    const payload =
+      values?.people === "ALL"
+        ? {
+            isPublic: true,
+          }
+        : {
+            owner: values?.people,
+            perm: values?.access,
+            isPublic: false,
+          };
 
     // if (values?.people === "ALL") {
     //   value = {
@@ -74,7 +79,7 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
     //   };
     // }
 
-    const res = await client.put(Endpoint.ADD_PERM_DOCS + id, value, {
+    const res = await client.put(Endpoint.ADD_PERM_DOCS + id, payload, {
       baseURL: "http://103.196.145.232:6813/api/v1",
     });
 

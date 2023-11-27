@@ -145,6 +145,7 @@ export const CommandList = React.forwardRef(
             <div className={`${styles.title}`}>Heading 1</div>
           </div>
         </div>
+
         <div
           onClick={() => {
             editor
@@ -173,6 +174,7 @@ export const CommandList = React.forwardRef(
             <div className={`${styles.title}`}>Heading 2</div>
           </div>
         </div>
+
         <div
           onClick={() => {
             editor
@@ -201,6 +203,7 @@ export const CommandList = React.forwardRef(
             <div className={`${styles.title}`}>Heading 3</div>
           </div>
         </div>
+
         <div
           onClick={() => {
             editor
@@ -229,6 +232,7 @@ export const CommandList = React.forwardRef(
             <div className={`${styles.title}`}>Heading 4</div>
           </div>
         </div>
+
         <div
           onClick={() => {
             editor.chain().focus().deleteRange(range).toggleBulletList().run();
@@ -252,6 +256,7 @@ export const CommandList = React.forwardRef(
             <div className={`${styles.title}`}>Bullet list</div>
           </div>
         </div>
+
         <div
           onClick={() => {
             editor.chain().focus().deleteRange(range).toggleOrderedList().run();
@@ -275,6 +280,7 @@ export const CommandList = React.forwardRef(
             <div className={`${styles.title}`}>Numbered list</div>
           </div>
         </div>
+
         <div
           onClick={() => {
             editor.chain().focus().deleteRange(range).toggleTaskList().run();
@@ -298,6 +304,7 @@ export const CommandList = React.forwardRef(
             <div className={`${styles.title}`}>To do list</div>
           </div>
         </div>
+
         <div
           onClick={() => {
             editor
@@ -325,8 +332,10 @@ export const CommandList = React.forwardRef(
             <div className={`${styles.title}`}>Table</div>
           </div>
         </div>
+
         <div
           onClick={() => {
+            console.log("toggle block code");
             editor.chain().focus().deleteRange(range).toggleCode().run();
           }}
           className={`
