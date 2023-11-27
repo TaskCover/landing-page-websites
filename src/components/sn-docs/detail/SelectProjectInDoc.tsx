@@ -27,7 +27,6 @@ const SelectProjectInDoc = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   useEffect(() => {
     const active = projects.find((e) => e.id === project_id);
     setProjectActive(active || null);

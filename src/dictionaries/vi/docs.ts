@@ -5,6 +5,8 @@ export const DocsLang: DocsDictionary = {
   title: "Tài liệu",
   button: {
     add: "Thêm",
+    comment: "Nhận xét",
+    cancel: "Hủy",
   },
   filter: {
     all: "Tất cả",
@@ -35,7 +37,7 @@ export const DocsLang: DocsDictionary = {
     text: "Tùy chọn văn bản",
     Ltext: "Văn bản lớn",
     full: "Chiều rộng đầy đủ",
-    restore :"Khôi phục",
-    name : "Tên tài liệu" 
+    restore: "Khôi phục",
+    name: "Tên tài liệu",
   },
 };

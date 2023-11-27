@@ -1,39 +1,37 @@
 "use client";
-import ChangeCover from "../change-cover-panel";
-import DrawSlider from "components/sn-docs/detail/DrawSlider";
-import React, { useContext, useEffect, useState } from "react";
-import styles from "./pageBody.module.scss";
-import useTheme from "hooks/useTheme";
+
 import { Box } from "@mui/material";
-import { getExtensions } from "../tiptap/extensions/starter-kit";
+import { Editor } from "@tiptap/react";
 import { IDocDetail } from "components/sn-docs/detail/DocDetail";
-import { ThemeContext } from "../context/ThemeContext";
-import { Tiptap } from "../tiptap/Tiptap";
-import { useAppSelector } from "store/hooks";
+import DrawSlider from "components/sn-docs/detail/DrawSlider";
+import useTheme from "hooks/useTheme";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useDocs } from "store/docs/selectors";
-import { useEditor } from "@tiptap/react";
+import { useAppSelector } from "store/hooks";
+import ChangeCover from "../change-cover-panel";
+import { ThemeContext } from "../context/ThemeContext";
+import { Tiptap } from "../tiptap/Tiptap";
+import styles from "./scss/pageBody.module.scss";
 /* eslint-disable no-var */
+import DrawComment, {
+  LayoutSlider,
+} from "components/sn-docs/detail/DrawComment";
+import useDebounce from "hooks/useDebounce";
 import {
   changeContentDoc,
   changeDescription,
   resetDocDetail,
 } from "store/docs/reducer";
-import DrawComment, {
-  LayoutSlider,
-} from "components/sn-docs/detail/DrawCommet";
+import useDocEditor from "../hook/useDocEditor";
+import { NewPageContext } from "../context/NewPageContext";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-const PageBody = ({
-  openComment,
-  openSlider,
-  setOpenComment,
-  setOpenSlider,
-}: IDocDetail) => {
+const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
   const pageInfo = useAppSelector((state) => state.doc.pageInfo);
   const {
     content,
@@ -46,18 +44,15 @@ const PageBody = ({
   const [isAddingNewLink, setIsAddingNewLink] = useState(false);
   const openLinkModal = () => setIsAddingNewLink(true);
   const { theme } = useContext(ThemeContext);
+  const { openComment } = useContext(NewPageContext);
   const [minHeight, setMinHeight] = useState("100vh");
   const { isDarkMode } = useTheme();
   const dispatch = useDispatch();
   const [mounted, setMounted] = useState(false);
   const { handleUpdateDoc } = useDocs();
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    dispatch(changeDescription(e.target.value));
-  };
-
-  const handleContentUpdate = (content: any) => {
-    dispatch(changeContentDoc(content));
-  };
+  const [handleTitleChange] = useDebounce((value: string): void => {
+    dispatch(changeDescription(value));
+  }, 200);
 
   useEffect(() => {
     const data = {
@@ -82,20 +77,7 @@ const PageBody = ({
     }
   }, [content]);
 
-  const editor = useEditor({
-    content: content,
-    extensions: getExtensions({ openLinkModal }),
-    editorProps: {
-      attributes: {
-        class: `main-editor`,
-        spellCheck: "false",
-        suppressContentEditableWarning: "true",
-      },
-    },
-    onUpdate: ({ editor }) => {
-      handleContentUpdate(editor.getHTML());
-    },
-  });
+  const editor = useDocEditor() as Editor;
 
   useEffect(() => {
     const updateMinHeight = () => {
@@ -112,7 +94,6 @@ const PageBody = ({
 
     window.addEventListener("scroll", updateMinHeight);
     window.addEventListener("resize", updateMinHeight);
-
     updateMinHeight();
 
     return () => {
@@ -156,7 +137,7 @@ const PageBody = ({
         >
           {openComment && (
             <LayoutSlider heightToolbar={minHeight}>
-              <DrawComment setOpenComment={setOpenComment}></DrawComment>
+              <DrawComment />
             </LayoutSlider>
           )}
           {openSlider && (
@@ -168,9 +149,9 @@ const PageBody = ({
             <input
               id="title"
               type="text"
-              value={description}
+              defaultValue={description}
               placeholder="Enter document title..."
-              onChange={handleTitleChange}
+              onChange={(e) => handleTitleChange(e.target.value)}
               maxLength={36}
               autoComplete="off"
               spellCheck="false"

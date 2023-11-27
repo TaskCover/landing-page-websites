@@ -5,7 +5,7 @@ import { generalButtons } from "./buttons";
 import styles from "./bubbleMenu.module.scss";
 import React, { useContext, useMemo } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
-import { MenuBarHeaderEdit } from "components/sn-docs/news/page-body/MenuBarHeader";
+import { MenuBarHeaderEdit } from "components/sn-docs/news/page-body/components/MenuBarHeader";
 
 export const CustomBubbleMenu = ({ editor }) => {
   const { theme } = useContext(ThemeContext);

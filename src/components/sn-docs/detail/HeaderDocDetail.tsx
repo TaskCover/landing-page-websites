@@ -1,42 +1,43 @@
 "use client";
+import { Box, Stack, TextField } from "@mui/material";
+import { Text, Tooltip } from "components/shared";
+import { NS_DOCS } from "constant/index";
+import useBreakpoint from "hooks/useBreakpoint";
+import useDebounce from "hooks/useDebounce";
 import BackIcon from "icons/BackIcon";
 import CommentIcon from "icons/CommentIcon";
 import CopyIcon from "icons/CopyIcon";
-import ModalShare from "./LeftSlide/modal/ModalShare";
 import MoreIcon from "icons/MoreIcon";
 import OpenSidebarIcon from "icons/OpenSidebarIcon";
-import React, { useState } from "react";
-import SelectProjectInDoc from "./SelectProjectInDoc";
 import ShareIcon from "icons/ShareIcon";
-import { Box, Stack, TextField } from "@mui/material";
-import { changeTitle } from "store/docs/reducer";
-import { IDocDetail } from "./DocDetail";
-import { NS_DOCS } from "constant/index";
-import { Text, Tooltip } from "components/shared";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import useBreakpoint from "hooks/useBreakpoint";
+import { useRouter } from "next/navigation";
+import { useContext, useState } from "react";
+import { changeTitle } from "store/docs/reducer";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { IDocDetail } from "./DocDetail";
+import ModalShare from "./LeftSlide/modal/ModalShare";
+import SelectProjectInDoc from "./SelectProjectInDoc";
+import { NewPageContext } from "../news/context/NewPageContext";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
+const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
   const [openShare, setOpenShare] = useState(false);
   const router = useRouter();
   const docsT = useTranslations(NS_DOCS);
   const dispatch = useAppDispatch();
-  const title = useAppSelector((e) => e.doc.title);
+  const title = useAppSelector((state) => state.doc.title);
   const [valueCopy, copy] = useCopyToClipboard();
-  const handleChange = (e) => {
-    dispatch(changeTitle(e));
-  };
   const { isSmSmaller } = useBreakpoint();
+  const { setOpenComment } = useContext(NewPageContext);
+
+  const [debounceChange] = useDebounce((value: string) => {
+    dispatch(changeTitle(value));
+  }, 200);
 
   return (
     <>
-      <ModalShare
-        setOpenShare={setOpenShare}
-        openShare={openShare}
-      ></ModalShare>
+      <ModalShare setOpenShare={setOpenShare} openShare={openShare} />
       <Box px={{ md: 3 }}>
         <Stack
           justifyContent="space-between"
@@ -66,7 +67,7 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                   cursor: "pointer",
                 }}
                 onClick={() => router.back()}
-              ></BackIcon>
+              />
               <SelectProjectInDoc></SelectProjectInDoc>
               <Text pr={"2px"}>/</Text>
               <TextField
@@ -84,9 +85,9 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                   border: "none",
                   backgroundColor: "transparent",
                 }}
-                value={title}
-                onChange={(e) => handleChange(e.target.value)}
-              ></TextField>
+                defaultValue={title}
+                onChange={(e) => debounceChange(e.target.value)}
+              />
             </Box>
           )}
 
@@ -114,8 +115,8 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                   cursor: "pointer",
                 }}
                 onClick={() => router.back()}
-              ></BackIcon>
-              <SelectProjectInDoc></SelectProjectInDoc>
+              />
+              <SelectProjectInDoc />
               <Text pl={"3px"} pr={"6px"}>
                 /
               </Text>
@@ -134,9 +135,9 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                   border: "none",
                   backgroundColor: "transparent",
                 }}
-                value={title}
-                onChange={(e) => handleChange(e.target.value)}
-              ></TextField>
+                defaultValue={title}
+                onChange={(e) => debounceChange(e.target.value)}
+              />
             </Box>
             <Box
               sx={{
@@ -169,7 +170,7 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
               >
                 <Tooltip title={docsT("createDoc.share")}>
                   <Box onClick={() => setOpenShare(true)} sx={styleButton}>
-                    <ShareIcon></ShareIcon>
+                    <ShareIcon />
                   </Box>
                 </Tooltip>
                 <Tooltip
@@ -186,28 +187,34 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                     }}
                     sx={styleButton}
                   >
-                    <CopyIcon></CopyIcon>
+                    <CopyIcon />
                   </Box>
                 </Tooltip>
                 <Tooltip title={docsT("createDoc.comment")}>
                   <Box
-                    onClick={() => setOpenComment((value) => !value)}
+                    onClick={() => {
+                      setOpenComment((value) => !value);
+                      setOpenSlider(false);
+                    }}
                     sx={styleButton}
                   >
-                    <CommentIcon></CommentIcon>
+                    <CommentIcon />
                   </Box>
                 </Tooltip>
                 <Tooltip title={docsT("createDoc.slider")}>
                   <Box
-                    onClick={() => setOpenSlider((value) => !value)}
+                    onClick={() => {
+                      setOpenSlider((value) => !value);
+                      setOpenComment(false);
+                    }}
                     sx={styleButton}
                   >
-                    <OpenSidebarIcon></OpenSidebarIcon>
+                    <OpenSidebarIcon />
                   </Box>
                 </Tooltip>
                 <Tooltip title={docsT("createDoc.more")}>
                   <Box sx={styleButton}>
-                    <MoreIcon></MoreIcon>
+                    <MoreIcon />
                   </Box>
                 </Tooltip>
               </Box>

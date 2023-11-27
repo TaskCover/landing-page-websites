@@ -20,13 +20,13 @@ const PageDocDetail = () => {
             setOpenComment={setOpenComment}
             openSlider={openSlider}
             setOpenSlider={setOpenSlider}
-          ></HeaderDocDetail>
+          />
           <DocDetail
             openComment={openComment}
             setOpenComment={setOpenComment}
             openSlider={openSlider}
             setOpenSlider={setOpenSlider}
-          ></DocDetail>
+          />
         </Box>
       </NewPageContextProvider>
     </ThemeProvider>

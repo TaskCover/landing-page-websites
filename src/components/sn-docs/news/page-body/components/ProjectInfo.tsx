@@ -7,8 +7,8 @@ import githubImg from "../asset/images/profile/github.jpg";
 import twitterImg from "../asset/images/profile/twitter.jpg";
 import linkedInImg from "../asset/images/profile/linkedin.jpg";
 import cvImg from "../asset/images/profile/cv.jpg";
-import styles from "./projectInfo.module.scss";
-import { ThemeContext } from "../context/ThemeContext";
+import styles from "../scss/projectInfo.module.scss";
+import { ThemeContext } from "../../context/ThemeContext";
 
 type ProjectInfoProps = {
   open: boolean;

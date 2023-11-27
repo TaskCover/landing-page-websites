@@ -1,12 +1,12 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { EditorContent } from "@tiptap/react";
+import { Editor, EditorContent } from "@tiptap/react";
 import CustomBubbleMenu from "./menu/bubble-menu";
 import "./styles.css";
-import EditorStyled from "./style";
+import { useRef } from "react";
 
-export const Tiptap = ({ editor }: { editor: any }) => {
+export const Tiptap = ({ editor }: { editor: Editor }) => {
   return (
     editor && (
       <>

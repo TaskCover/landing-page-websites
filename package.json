@@ -32,6 +32,7 @@
     "@mui/x-date-pickers": "^6.9.2",
     "@mui/x-date-pickers-pro": "^6.9.2",
     "@reduxjs/toolkit": "^1.9.5",
+    "@sereneinserenade/tiptap-comment-extension": "^0.0.6",
     "@svgr/webpack": "^8.1.0",
     "@tippyjs/react": "^4.2.6",
     "@tiptap/core": "^2.0.3",

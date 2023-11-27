@@ -15,6 +15,7 @@ type RootLayoutProps = {
 const RootLayout = ({ children, params: { id } }: RootLayoutProps) => {
   const { handleGetDocDetail } = useDocs();
   const isView = useAppSelector((data) => data.doc.prem);
+
   useLayoutEffect(() => {
     if (id) {
       handleGetDocDetail(id);

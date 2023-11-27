@@ -5,6 +5,9 @@
   height: 0;
   pointer-events: none;
 }
+.ProseMirror .comment {
+  border-bottom: 4px solid #2196f3;
+}
 
 * {
   outline: none;

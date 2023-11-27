@@ -1,3 +1,5 @@
+import { User } from "constant/types";
+
 export type PageSettingsType = {
   font: string;
   smallText: boolean;
@@ -28,4 +30,12 @@ export type PageType = {
   workspaceId: string;
   createdAt: Date;
   updatedAt?: Date;
+};
+
+export declare type TComment = {
+  user: Partial<User>;
+  content: string;
+  id: string;
+  replies: Array<Comment>;
+  createdAt: Date;
 };

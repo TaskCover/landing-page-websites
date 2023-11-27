@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Stack } from "@mui/material";
+import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { NS_DOCS } from "constant/index";
+import { formatDistance } from "date-fns";
 import CloseIcon from "icons/CloseIcon";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
-import React, { memo, useState } from "react";
-
-interface IDrawComment {
-  setOpenComment: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import React, { useContext } from "react";
+import { NewPageContext } from "../news/context/NewPageContext";
+import { TComment } from "../news/types/Page";
+import useTheme from "hooks/useTheme";
 
 export const LayoutSlider = ({
   children,
@@ -33,7 +33,7 @@ export const LayoutSlider = ({
         padding: "16px 12px",
         maxWidth: "280px",
         width: "100%",
-        bgcolor: "background.default",
+        // bgcolor: "background.default",
         height: {
           sm: height,
           // xs: heightContent + height,
@@ -47,25 +47,25 @@ export const LayoutSlider = ({
   );
 };
 
-export const CommentDocsItem = () => {
+export const CommentItem: React.FC<TComment> = (props) => {
+  const { activeCommentId } = useContext(NewPageContext);
+  const { isDarkMode } = useTheme();
+  const isActiveComment = activeCommentId === props.id;
+  const activeBgColor = isDarkMode ? "grey.50" : "primary.light";
   return (
     <Box
       sx={{
         display: "flex",
         alignItems: "start",
-        gap: "5px",
+        gap: "8px",
+        padding: "4px",
+        borderRadius: "4px",
+        bgcolor: isActiveComment ? activeBgColor : "inherit",
+        color: "ButtonText",
       }}
     >
-      <Box
-        sx={{
-          width: "28px",
-          height: "28px",
-          borderRadius: "100%",
-          backgroundColor: "#ECECF3",
-        }}
-      >
-        {/* <Image src={} alt=""></Image> */}
-      </Box>
+      <Avatar src={props.user.avatar?.link} size={32} />
+
       <Box
         sx={{
           flex: 1,
@@ -84,20 +84,20 @@ export const CommentDocsItem = () => {
               fontWeight: "600",
             }}
           >
-            Jenny Wilson
+            {props.user.fullname}
           </Text>
           <Text
             sx={{
-              fontSize: "8px",
+              fontSize: "10px",
               fontWeight: "300",
             }}
           >
-            06:42 am
+            {formatDistance(props.createdAt, new Date(), { addSuffix: true })}
           </Text>
         </Box>
         <Text
           sx={{
-            fontSize: "10px",
+            fontSize: "12px",
             fontWeight: "400",
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -106,16 +106,17 @@ export const CommentDocsItem = () => {
             WebkitBoxOrient: "vertical",
           }}
         >
-          Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
-          fugit, sed quia consequuntur ma
+          {props.content}
         </Text>
       </Box>
     </Box>
   );
 };
 
-const DrawComment = ({ setOpenComment }: IDrawComment) => {
+const DrawComment = () => {
   const docsT = useTranslations(NS_DOCS);
+  const { openComment, setOpenComment, comments, activeCommentId } =
+    useContext(NewPageContext);
 
   return (
     <>
@@ -126,9 +127,11 @@ const DrawComment = ({ setOpenComment }: IDrawComment) => {
           justifyItems: "center",
         }}
       >
-        <Text>{docsT("createDoc.comment")} (5)</Text>
+        <Text>
+          {docsT("createDoc.comment")} ({comments.length})
+        </Text>
         <Box
-          onClick={() => setOpenComment(false)}
+          onClick={() => setOpenComment(!openComment)}
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -137,7 +140,7 @@ const DrawComment = ({ setOpenComment }: IDrawComment) => {
             cursor: "pointer",
           }}
         >
-          <CloseIcon></CloseIcon>
+          <CloseIcon />
         </Box>
       </Box>
       <Stack
@@ -146,18 +149,9 @@ const DrawComment = ({ setOpenComment }: IDrawComment) => {
           marginTop: "16px",
         }}
       >
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
-        <CommentDocsItem></CommentDocsItem>
+        {comments.map((cmt: TComment) => (
+          <CommentItem key={cmt.id} {...cmt} />
+        ))}
       </Stack>
     </>
   );
