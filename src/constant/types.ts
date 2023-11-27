@@ -24,7 +24,7 @@ export interface Paging_Career {
   totalItems?: number;
 }
 
-export interface PagingItem{
+export interface PagingItem {
   page: number;
   size: number;
   total_page?: number;

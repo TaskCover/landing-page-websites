@@ -31,7 +31,9 @@ export const useTags = () => {
   const isSucceeded = tagsStatus === DataStatus.SUCCEEDED;
 
   const onCreateTags = async (tag: TagData) => {
-    await dispatch(createTags(tag));
+    return (await dispatch(createTags(tag))
+      .unwrap()
+      .then((res) => res)) as TagData;
   };
 
   const onGetTags = (name?: string) => {

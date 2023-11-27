@@ -30,19 +30,23 @@ const SaleService = () => {
   const { isEdit } = useContext(EditContext);
   const { control, setValue, getValues } = useFormContext();
   const { positionOptions } = useGetOptions();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, swap } = useFieldArray({
     control,
     name: "sectionsList",
   });
 
   // const sectionsList = getValues("sectionsList");
-  // TODO: Drag if needed
   const onDragEnd = (result, provided) => {
     const { destination, source, draggableId } = result;
     const sectionList = [...getValues("sectionsList")];
+
     //if descId == sourceId => change position of draggableId
     // if descId != sourceId => move draggableId to descId at the position index of descId
     if (!destination) return;
+    if (destination.droppableId === "sectionList") {
+      swap(source.index, destination.index);
+      return;
+    }
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -72,6 +76,7 @@ const SaleService = () => {
   const onAddSection = () => {
     append({
       id: uuid(),
+      name: `Section ${fields.length + 1}`,
       service: [
         {
           id: uuid(),
@@ -84,6 +89,9 @@ const SaleService = () => {
           discount: 0,
           unit: SERVICE_UNIT_OPTIONS.DAY,
           tolBudget: 0,
+          rate: 0,
+          estimateUSD: 0,
+          tolBudgetUSD: 0,
         },
       ],
     });
@@ -118,24 +126,29 @@ const SaleService = () => {
           direction="row"
           justifyContent={fields.length === 0 ? "space-between" : "flex-end"}
         >
-          {fields.length === 0 && (
+          {(isEdit || fields.length === 0) && (
             <Button
               onClick={onAddSection}
-              variant="text"
-              TouchRippleProps={{
-                style: {
-                  display: "none",
-                },
-              }}
+              variant="contained"
+              size="medium"
+              // TouchRippleProps={{
+              //   style: {
+              //     display: "none",
+              //   },
+              // }}
               sx={{
-                display: "block",
-                "&.MuiButton-text:hover": {
-                  color: "secondary.main",
-                  textAlign: "center",
+                // display: "block",
+                // "&.MuiButton-text:hover": {
+                //   color: "secondary.main",
+                //   textAlign: "center",
+                // },
+                [`&.MuiButtonBase-root`]: {
+                  px: "10px!important",
+                  py: "8px!important",
                 },
                 width: "fit-content",
               }}
-              color="secondary"
+              // color="primary"
               startIcon={
                 <PlusIcon
                   sx={{
@@ -145,33 +158,42 @@ const SaleService = () => {
                 />
               }
             >
-              {salesT("detail.service.addService")}
+              {!isEdit
+                ? salesT("detail.service.addService")
+                : salesT("detail.service.addSection")}
             </Button>
           )}
           <ServiceHeader />
         </Stack>
         <ScrollViewProvider>
-          <DragDropContext onDragEnd={onDragEnd}>
-            {fields?.map((section, index) => (
+          <Stack
+            sx={{
+              height: "max-content",
+            }}
+          >
+            <DragDropContext onDragEnd={onDragEnd}>
               <Droppable
-                key={section.id}
+                type="section"
                 direction="vertical"
-                droppableId={`sectionList.${section.id}.${index}`}
+                droppableId={`sectionList`}
               >
                 {(provided) => (
                   <div ref={provided.innerRef} {...provided.droppableProps}>
-                    <ServiceTable
-                      key={section.id}
-                      index={index}
-                      onRemoveSection={() => onRemoveSection(index)}
-                      onAddSection={onAddSection}
-                      section={section as ServiceSection}
-                    />
+                    {fields?.map((section, index) => (
+                      <ServiceTable
+                        key={section.id}
+                        index={index}
+                        onRemoveSection={() => onRemoveSection(index)}
+                        onAddSection={onAddSection}
+                        section={section as ServiceSection}
+                      />
+                    ))}
+                    {provided.placeholder}
                   </div>
                 )}
               </Droppable>
-            ))}
-          </DragDropContext>
+            </DragDropContext>
+          </Stack>
         </ScrollViewProvider>
       </Stack>
       {isMdSmaller && <ServiceHeaderMobile />}
