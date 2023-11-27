@@ -22,7 +22,7 @@ import MoreDotIcon from "icons/MoreDotIcon";
 import MoveArrowIcon from "icons/MoveArrowIcon";
 import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
-import { memo, MouseEvent, useId, useMemo, useState } from "react";
+import { memo, MouseEvent, useId, useMemo, useRef, useState } from "react";
 import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
 import { Selected, genName } from "./helpers";
 import { Task, TaskList } from "store/project/reducer";
@@ -44,6 +44,7 @@ import AddSubTask from "../AddSubTask";
 import ConvertIcon from "icons/ConvertIcon";
 import ChangeIcon from "icons/ChangeIcon";
 import MoveOtherTask from "../Detail/components/SubTasksOfTask/MoveOtherTask";
+import { useOnClickOutside } from "hooks/useOnClickOutside";
 
 type MoreListProps = {
   selectedList: Selected[];
@@ -73,6 +74,12 @@ const MoreList = (props: MoreListProps) => {
   } = useTasksOfProject();
 
   const { onConvertSubTaskToTask, onGetTaskList } = useTaskDetail();
+
+  const handleClickOutside = () => {
+    onClose();
+  };
+
+  const ref = useOnClickOutside(handleClickOutside);
 
   const projectT = useTranslations(NS_PROJECT);
   const { onAddSnackbar } = useSnackbar();
@@ -507,11 +514,10 @@ const MoreList = (props: MoreListProps) => {
         disabled={!selectedList.length}
         noPadding
         onClick={(e) => {
-          if(Boolean(anchorEl)) {
-            onClose()
-          }
-          else {
-            onOpen(e)
+          if (Boolean(anchorEl)) {
+            onClose();
+          } else {
+            onOpen(e);
           }
         }}
         {...rest}
@@ -519,6 +525,7 @@ const MoreList = (props: MoreListProps) => {
         <MoreDotIcon fontSize="medium" sx={{ color: "grey.300" }} />
       </IconButton>
       <Popper
+        ref={ref}
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         sx={{
@@ -527,9 +534,10 @@ const MoreList = (props: MoreListProps) => {
             minWidth: 150,
             maxWidth: 250,
           },
+          zIndex: 1000,
         }}
         transition
-        placement={'bottom-start'}
+        placement={"bottom-start"}
       >
         {({ TransitionProps }) => (
           <Grow {...TransitionProps} timeout={350}>

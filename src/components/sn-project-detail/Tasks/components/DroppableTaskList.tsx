@@ -30,6 +30,7 @@ import {
   useId,
   useMemo,
   useState,
+  useEffect,
 } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import Form from "../Form";
@@ -47,6 +48,7 @@ import ConfirmDialog from "components/ConfirmDialog";
 import DialogLayout from "components/DialogLayout";
 import Loading from "components/Loading";
 import useBreakpoint from "hooks/useBreakpoint";
+import { useOnClickOutside } from "hooks/useOnClickOutside";
 
 type DroppableTaskListProps = {
   id: string;
@@ -326,6 +328,12 @@ export const MoreList = (props: MoreListProps) => {
   const [type, setType] = useState<Action | undefined>();
   const [msg, setMsg] = useState<string | undefined>();
 
+  const handleClickOutside = () => {
+    onClose();
+  };
+
+  const ref = useOnClickOutside(handleClickOutside);
+
   const onOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -465,10 +473,11 @@ export const MoreList = (props: MoreListProps) => {
             minWidth: 200,
             maxWidth: 250,
           },
-          zIndex: 2
+          zIndex: 1000,
         }}
         transition
         placement={"bottom-start"}
+        ref={ref}
       >
         {({ TransitionProps }) => (
           <Grow {...TransitionProps} timeout={350}>
