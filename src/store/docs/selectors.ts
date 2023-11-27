@@ -6,13 +6,17 @@ import { getDocs } from "./actions";
 import { Endpoint, client } from "api";
 import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import { useRouter } from "next-intl/client";
-import { changeDocInfo, changeId, changePermDoc, getDocDetails } from './reducer';
+import {
+  changeDocInfo,
+  changeId,
+  changePermDoc,
+  getDocDetails,
+} from "./reducer";
 import { useSnackbar } from "store/app/selectors";
 
-
 const useDocs = () => {
-  const [loading, setLoading] = useState(false)
-  const IdUser = useAppSelector(data => data?.app?.user?.id)
+  const [loading, setLoading] = useState(false);
+  const IdUser = useAppSelector((data) => data?.app?.user?.id);
 
   const { push } = useRouter();
   const dispatch = useAppDispatch();
@@ -22,8 +26,9 @@ const useDocs = () => {
     docsError: error,
     docsFilters: filters,
   } = useAppSelector((state) => state.doc, shallowEqual);
-  const { pageIndex, pageSize, totalDocs, totalPages } = useAppSelector(state => state.doc.docsPaging)
-
+  const { pageIndex, pageSize, totalDocs, totalPages } = useAppSelector(
+    (state) => state.doc.docsPaging,
+  );
 
   const isIdle = useMemo(() => status === DataStatus.IDLE, [status]);
   const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
@@ -33,10 +38,10 @@ const useDocs = () => {
       await dispatch(getDocs(queries));
     },
     [dispatch],
-  )
+  );
 
   const onCreateDoc = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await client.post(
         Endpoint.DOCS,
@@ -46,51 +51,58 @@ const useDocs = () => {
           // "project_id":"78537730-5155-11ee-a41a-97ec118da8c5",
         },
         {
-          baseURL: 'http://103.196.145.232:6813/api/v1',
+          baseURL: "http://103.196.145.232:6813/api/v1",
         },
       );
 
       if (response?.status === HttpStatusCode.CREATED) {
-        dispatch(changeDocInfo(response.data))
-        push(`/documents/${response.data.id}`)
+        dispatch(changeDocInfo(response.data));
+        push(`/documents/${response.data.id}`);
       }
-      setLoading(false)
+      setLoading(false);
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       throw error;
     }
-
   };
 
   const handleUpdateDoc = async (data, id) => {
+    console.log("data", data);
     await client.put(Endpoint.DOCS + `/${id}`, data, {
-      baseURL: 'http://103.196.145.232:6813/api/v1',
-    })
-  }
+      baseURL: "http://103.196.145.232:6813/api/v1",
+    });
+  };
 
   const handleGetDocDetail = async (id) => {
-
-    const resPrem = await client.get(Endpoint.PERM_DOCS + id, {}, {
-      baseURL: 'http://103.196.145.232:6813/api/v1',
-    })
-    const isView = resPrem.data.find(e => e?.user?.id === IdUser)
+    const resPrem = await client.get(
+      Endpoint.PERM_DOCS + id,
+      {},
+      {
+        baseURL: "http://103.196.145.232:6813/api/v1",
+      },
+    );
+    const isView = resPrem.data.find((e) => e?.user?.id === IdUser);
 
     dispatch(changeId(id));
-    dispatch(changePermDoc(isView?.perm || ''))
+    dispatch(changePermDoc(isView?.perm || ""));
 
-    if(!isView?.perm) {
-      return
+    if (!isView?.perm) {
+      return;
     }
 
-    const res = await client.get(Endpoint.DETAIL_DOCS + id, {}, {
-      baseURL: 'http://103.196.145.232:6813/api/v1',
-    })
+    const res = await client.get(
+      Endpoint.DETAIL_DOCS + id,
+      {},
+      {
+        baseURL: "http://103.196.145.232:6813/api/v1",
+      },
+    );
 
     if (res.status === HttpStatusCode.OK) {
       dispatch(getDocDetails(res.data));
     }
-  }
+  };
 
   return {
     items,
@@ -107,10 +119,8 @@ const useDocs = () => {
     onCreateDoc,
     loading,
     handleUpdateDoc,
-    handleGetDocDetail
-  }
-}
+    handleGetDocDetail,
+  };
+};
 
-
-
-export { useDocs }
+export { useDocs };

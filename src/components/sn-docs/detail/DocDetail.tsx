@@ -5,6 +5,7 @@ import LeftSlideDoc from "./LeftSlide/LeftSlideDoc";
 import { Box } from "@mui/material";
 import EditDocs from "./EditDocs";
 import PageBody from "../news/page-body";
+import CommentDialog from "../news/page-body/components/CommentDialog";
 
 export interface IDocDetail {
   openComment: boolean;
@@ -32,13 +33,14 @@ const DocDetail = ({
       pt={{ md: 1, lg: 1.5 }}
       pb={{ xs: 1.5, md: 1, lg: 1.5 }}
     >
-      <LeftSlideDoc open={open} setOpen={setOpen}></LeftSlideDoc>
+      <LeftSlideDoc open={open} setOpen={setOpen} />
       <PageBody
         openSlider={openSlider}
         setOpenSlider={setOpenSlider}
         openComment={openComment}
         setOpenComment={setOpenComment}
-      ></PageBody>
+      />
+      <CommentDialog />
     </Box>
   );
 };

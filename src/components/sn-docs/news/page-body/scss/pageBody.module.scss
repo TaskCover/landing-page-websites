@@ -1,4 +1,4 @@
-@use "../styles/abstracts/colors" as *;
+@use "../../styles/abstracts/colors" as *;
 
 .form_title {
   transition: padding 1s;
@@ -32,14 +32,13 @@
       font-weight: 600;
       padding-left: 0;
       color: $dark-color-tertiary;
-  
+
       &::placeholder {
         color: #999999;
       }
     }
   }
 }
-
 
 .dark .form_title {
   input {
@@ -49,7 +48,6 @@
     }
   }
 }
-
 
 .content {
   overflow-y: auto;
@@ -160,8 +158,6 @@
       }
     }
 
-    
-
     .editor {
       margin: 0 50px;
       transition: margin 1s;
@@ -207,7 +203,6 @@
     }
   }
 
-
   .small_text {
     form {
       input {
@@ -248,7 +243,6 @@
 .dark {
   // background-color: $dark-background-secondary;
 
-
   .image_footer {
     background-color: $dark-background-primary;
 
@@ -270,7 +264,6 @@
   .page_content {
     background-color: $dark-background-tertiary;
 
-
     .page_header_options {
       .add_button {
         fill: $color-primary;
@@ -280,7 +273,6 @@
         }
       }
     }
-
 
     .project {
       border: none;
@@ -310,7 +302,6 @@
       .emoji_display {
         img {
           left: 16px;
-          
         }
       }
 
