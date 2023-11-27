@@ -1196,14 +1196,18 @@ const ItemList = () => {
                                   {...taskDropProvided.droppableProps}
                                   style={{ minHeight: 1 }}
                                 >
-                                  {task?.sub_tasks?.map((subTask) => {
+                                  {task?.sub_tasks?.map((subTask, i) => {
                                     const isChecked = isSubTaskChecked(
                                       selectedList,
                                       subTask.id,
                                     );
+                                    const lastEl =
+                                      i ===
+                                        (task?.sub_tasks?.length ?? 1) - 1;
                                     return (
                                       <>
                                         <Stack
+                                          position={"relative"}
                                           key={subTask.id}
                                           direction="row"
                                           alignItems="center"
@@ -1225,6 +1229,25 @@ const ItemList = () => {
                                             },
                                             "&:hover >.checkbox": {
                                               opacity: 1,
+                                            },
+                                            "&::before": {
+                                              position: "absolute",
+                                              left: "35px",
+                                              top: "0px",
+                                              "border-left": "2px solid gray",
+                                              "border-bottom": "2px solid gray",
+                                              content: "''",
+                                              width: "6px",
+                                              height: "20px",
+                                            },
+                                            "&::after": {
+                                              position: "absolute",
+                                              left: "35px",
+                                              bottom: "0px",
+                                              "border-left": "2px solid gray",
+                                              content: "''",
+                                              width: "0px",
+                                              height: lastEl ? "0px" : "20px",
                                             },
                                           }}
                                         >
