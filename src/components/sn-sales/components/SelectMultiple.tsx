@@ -1,9 +1,10 @@
 import React, { memo, SyntheticEvent } from "react";
 import { Autocomplete, SxProps, MenuItem, Stack, Chip } from "@mui/material";
 import { Option } from "constant/types";
-import { Input, Text } from "components/shared";
+import { Button, Input, Text } from "components/shared";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import { uuid } from "utils/index";
+import PlusIcon from "icons/PlusIcon";
 
 interface IProps {
   label: string;
@@ -51,7 +52,34 @@ const SelectMultiple = ({
       onOpen={() => onOpen && onOpen()}
       onEnded={onEndReached}
       limitTags={limitTags}
-      noOptionsText={noOptionText}
+      noOptionsText={
+        <Button
+          variant="text"
+          startIcon={<PlusIcon />}
+          size="medium"
+          TouchRippleProps={{
+            style: {
+              display: "none",
+            },
+          }}
+          onClick={() => onEnter && onEnter(inputRef.current?.value)}
+          sx={{
+            display: "block",
+            "&.MuiButton-text:hover": {
+              color: "secondary.main",
+              textAlign: "center",
+            },
+            [`&.MuiButtonBase-root`]: {
+              px: "10px!important",
+              py: "8px!important",
+            },
+            color: "secondary.main",
+            width: "100%",
+          }}
+        >
+          {noOptionText}
+        </Button>
+      }
       renderInput={(params) => (
         <Input
           rootSx={{

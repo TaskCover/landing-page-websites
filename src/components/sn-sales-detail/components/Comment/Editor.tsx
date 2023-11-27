@@ -146,10 +146,6 @@ const Editor = (props: EditorProps) => {
     },
     [accepts, files, loadedFiles, newFiles],
   );
-  console.log(
-    "🚀 ~ file: Editor.tsx:99 ~ onChangeFile ~ localFiles:",
-    newFiles,
-  );
 
   const onRemove = (index: number) => {
     return () => {

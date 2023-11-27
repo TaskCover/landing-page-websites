@@ -18,7 +18,7 @@ import {
   formatCurrency,
   getMessageErrorByAPI,
 } from "utils/index";
-import { DATE_FORMAT_SLASH, NS_SALES, timeLocale } from "constant/index";
+import { DATE_LOCALE_FORMAT, NS_SALES } from "constant/index";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { Sales } from "store/sales/reducer";
@@ -40,7 +40,6 @@ const SaleItem = ({ item, setShouldLoad }: IProps) => {
   const commonT = useTranslations(NS_SALES);
   const { employeeOptions, onEndReachedEmployeeOptions, onSearchEmployee } =
     useGetEmployeeOptions();
-  const locale = useLocale();
   const { onUpdateDeal } = useSales();
   const { onAddSnackbar } = useSnackbar();
   const [owner, setOwner] = useState<string>(item.owner?.id);
@@ -221,11 +220,7 @@ const SaleItem = ({ item, setShouldLoad }: IProps) => {
         />
       </BodyCell>
       <BodyCell align="left">
-        {dayjs(item.updated_time).toDate().toLocaleString(timeLocale[locale], {
-          month: "short",
-          year: "numeric",
-          day: "numeric",
-        })}
+        {dayjs(item.updated_time).format(DATE_LOCALE_FORMAT)}
       </BodyCell>
     </TableRow>
   );
