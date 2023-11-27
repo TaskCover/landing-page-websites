@@ -162,7 +162,9 @@ const ServiceTable = ({
                     <MoveDotIcon fontSize="small" sx={{ color: "grey.A200" }} />
                   </IconButton>
                 )}
-                <Text variant="h4">Section {index + 1}</Text>
+                <Text variant="h4">
+                  {section.name || `Section ${index + 1}`}
+                </Text>
                 {isEdit && !isMdSmaller && (
                   <SectionItemAction
                     sectionIndex={index}
@@ -241,7 +243,13 @@ const ServiceTable = ({
                     type="service"
                   >
                     {(provided) => (
-                      <div ref={provided.innerRef} {...provided.droppableProps}>
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        style={{
+                          minHeight: 40,
+                        }}
+                      >
                         {fields?.map((item, serviceIndex) => (
                           <ServiceTableItem
                             onAction={onAction}
@@ -252,6 +260,7 @@ const ServiceTable = ({
                             sectionKey={`sectionsList.${index}.service`}
                           />
                         ))}
+                        {provided.placeholder}
                       </div>
                     )}
                   </Droppable>

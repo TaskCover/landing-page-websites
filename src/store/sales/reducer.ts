@@ -93,6 +93,7 @@ export interface SaleTotal {
 
 export interface ServiceSection {
   id: string;
+  name?: string;
   start_date: string;
   servie: Service[];
   createdAt: string;

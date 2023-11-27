@@ -34,6 +34,7 @@ export const LONG_TIME_FORMAT = "HH:mm:ss";
 export const SHORT_TIME_FORMAT = "HH:mm";
 export const DATE_TIME_FORMAT_SLASH = `${SHORT_TIME_FORMAT} ${DATE_FORMAT_SLASH}`;
 export const DATE_TIME_FORMAT_HYPHEN = `${SHORT_TIME_FORMAT} ${DATE_FORMAT_HYPHEN}`;
+export const DATE_LOCALE_FORMAT = "DD MMM, YYYY";
 
 export const DEFAULT_PAGE_INDEX = 1;
 export const DEFAULT_PAGE_SIZE = 10;

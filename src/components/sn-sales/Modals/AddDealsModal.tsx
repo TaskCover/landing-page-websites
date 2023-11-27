@@ -13,6 +13,8 @@ import useGetEmployeeOptions from "../hooks/useGetEmployeeOptions";
 import { useSales } from "store/sales/selectors";
 import useGetProjectTypeOptions from "../hooks/useGetProjectTypeOptions";
 import { useTagOptions, useTags } from "store/tags/selector";
+import { Tag } from "store/tags/reducer";
+import { TagData } from "store/tags/actions";
 
 interface IProps {
   open: boolean;
@@ -205,7 +207,7 @@ const AddDealModal = ({ open, onClose }: IProps) => {
               const mappingData = data.map((item) => item.value);
               onChange(mappingData);
             };
-            const onEnter = (value: string | undefined) => {
+            const onEnter = async (value: string | undefined) => {
               if (!value) return;
               const tags = getValues("tags") ?? [];
               const isExisted = tagsOptions.find(
@@ -227,11 +229,17 @@ const AddDealModal = ({ open, onClose }: IProps) => {
                 ]);
                 return;
               }
-              onCreateTags({
+              await onCreateTags({
                 name: value,
+              }).then((res: TagData) => {
+                onSelect(null, [
+                  ...convertedTags,
+                  {
+                    label: value,
+                    value: res?.id,
+                  },
+                ]);
               });
-              // setValue("tags", [...tags, isExisted.value]);
-              // onSelect(null, cno);
             };
             return (
               <SelectMultiple

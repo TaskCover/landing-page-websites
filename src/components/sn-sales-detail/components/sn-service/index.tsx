@@ -76,6 +76,7 @@ const SaleService = () => {
   const onAddSection = () => {
     append({
       id: uuid(),
+      name: `Section ${fields.length + 1}`,
       service: [
         {
           id: uuid(),
@@ -187,6 +188,7 @@ const SaleService = () => {
                         section={section as ServiceSection}
                       />
                     ))}
+                    {provided.placeholder}
                   </div>
                 )}
               </Droppable>

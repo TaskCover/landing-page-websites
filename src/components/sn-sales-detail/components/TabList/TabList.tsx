@@ -4,6 +4,7 @@ import Link from "components/Link";
 import {
   DATE_FORMAT_HYPHEN,
   DATE_FORMAT_SLASH,
+  DATE_LOCALE_FORMAT,
   NS_SALES,
 } from "constant/index";
 import { useTranslations } from "next-intl";
@@ -161,7 +162,7 @@ const TabList = ({ value, onChange }: TabListProps) => {
             return (
               <Date
                 label="Start Date"
-                format={DATE_FORMAT_HYPHEN}
+                format={DATE_FORMAT_SLASH}
                 onChange={onChangeDate}
                 {...rest}
               />

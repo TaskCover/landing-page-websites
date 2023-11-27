@@ -45,6 +45,7 @@ const TabHeader = () => {
     } catch (error) {
       console.log(error);
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      throw error;
     }
   };
 
@@ -162,9 +163,10 @@ const TabHeader = () => {
           defaultValue={(saleDetail?.probability || 0) + 1}
           render={({ field }) => {
             const { onChange, value, ...rest } = field;
-            const onSelect = (name: string, value: number) => {
-              onSubmit(name, value - 1);
-              onChange(value - 1);
+            const onSelect = async (name: string, value: number) => {
+              await onSubmit(name, value - 1).then(() => {
+                onChange(value - 1);
+              });
             };
             return (
               <Dropdown
