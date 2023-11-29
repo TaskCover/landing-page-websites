@@ -1,6 +1,6 @@
 "use client";
 import FixedLayout from "components/FixedLayout";
-import React, { use, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TabList, { SALES_DETAIL_TAB } from "./components/TabList/TabList";
 import TabHeader from "./components/TabHeader/TabHeader";
 import { useFetchDealDetail } from "./hooks/useGetDealDetail";
@@ -42,7 +42,7 @@ const SalesDetail = () => {
     if (!saleDetail) return;
 
     const sortedTodoList = [...saleDetail?.todo_list].sort((a, b) =>
-      a.priority - b.priority ? 1 : -1,
+      a.priority - b.priority ? -1 : 1,
     );
     const comments = [...saleDetail?.comments];
     comments?.sort((a, b) => {

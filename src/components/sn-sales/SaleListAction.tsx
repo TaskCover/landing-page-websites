@@ -185,6 +185,10 @@ const SalesListAction = () => {
           <Search
             name="search_key"
             placeholder={commonT("search")}
+            onEnter={(name, value) => {
+              onChangeQueries(name, value);
+              onSearch();
+            }}
             onChange={(name, value) => onChangeQueries(name, value)}
             sx={{ width: 210 }}
             value={queries?.search_key}

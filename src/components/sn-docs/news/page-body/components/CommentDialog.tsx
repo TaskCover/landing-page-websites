@@ -15,6 +15,7 @@ import { useEditor } from "@tiptap/react";
 import { getExtensions } from "../../tiptap/extensions/starter-kit";
 import useDocEditor from "../../hook/useDocEditor";
 
+
 export class Comment {
   user: Partial<User>;
   content: string;
@@ -37,6 +38,8 @@ export default function CommentDialog() {
     comments,
     setComments,
     setActiveCommentId,
+
+
   } = React.useContext(NewPageContext);
   const { user } = useAuth();
   const t = useTranslations(NS_DOCS);
@@ -59,6 +62,8 @@ export default function CommentDialog() {
 
     handleClose();
   };
+
+
   return (
     <Dialog open={openCommentDialog} onClose={handleClose}>
       <DialogTitle sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>

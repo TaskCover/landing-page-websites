@@ -1,7 +1,7 @@
 import { useCallback, useContext, useState } from "react";
 import { EditContext } from "../components/sn-service/context/EditContext";
 import { useFormContext } from "react-hook-form";
-import { useSalesService } from "store/sales/selectors";
+import { useSaleDetail, useSalesService } from "store/sales/selectors";
 import { reset } from "linkifyjs";
 import { ServiceSection, setColumn } from "store/sales/reducer";
 import { useSnackbar } from "store/app/selectors";
@@ -19,6 +19,7 @@ const useServiceHeader = () => {
     onCreateSection,
     onUpdateSection,
   } = useSalesService();
+  const { onGetSaleDetail } = useSaleDetail();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
@@ -110,7 +111,8 @@ const useServiceHeader = () => {
         ...deletedList,
         createSection,
       ]).then(async () => {
-        await onGetService(getValues("id"));
+        // await onGetService(getValues("id"));
+        await onGetSaleDetail(getValues("id"));
         return true;
       });
 

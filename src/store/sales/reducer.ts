@@ -63,6 +63,7 @@ export interface Sales {
   revenuePJ: number;
   todoItem: Todo;
   estimate: number;
+  total: SaleTotal;
   activity: string[];
 }
 
@@ -84,8 +85,15 @@ export interface Service {
   creator: string;
 }
 
+export interface SaleTotal {
+  revenue: number;
+  revenuePJ: number;
+  estimate: number;
+}
+
 export interface ServiceSection {
   id: string;
+  name?: string;
   start_date: string;
   servie: Service[];
   createdAt: string;
@@ -98,14 +106,18 @@ export interface SectionColumnsProps {
   id: string;
   columns: ServiceColumn[];
 }
+
+export type TotalListResponse = ItemListResponse & { totalDetail: SaleTotal };
 export interface SaleState {
   sales: Sales[];
+  saleTotal: SaleTotal;
   salesStatus: DataStatus;
   salesPaging: Paging;
   salesError?: string;
   salesFilters: Omit<GetSalesListQueries, "pageIndex" | "pageSize">;
 
   saleDetail: Sales | null;
+  saleTotalDetail: SaleTotal;
   saleRevenue: number;
   saleDetailStatus: DataStatus;
   saleDetailError?: string;
@@ -125,6 +137,7 @@ export interface SaleState {
 
   sectionColumns: SectionColumnsProps[];
 }
+
 const defaultCol = [
   {
     id: ServiceColumn.NAME,
@@ -132,6 +145,11 @@ const defaultCol = [
 ];
 const initState: SaleState = {
   sales: [],
+  saleTotal: {
+    revenue: 0,
+    revenuePJ: 0,
+    estimate: 0,
+  },
   salesStatus: DataStatus.IDLE,
   salesPaging: DEFAULT_PAGING,
   salesError: undefined,
@@ -140,6 +158,11 @@ const initState: SaleState = {
   },
 
   saleDetail: null,
+  saleTotalDetail: {
+    revenue: 0,
+    revenuePJ: 0,
+    estimate: 0,
+  },
   saleRevenue: 0,
   saleDetailStatus: DataStatus.IDLE,
   saleDetailError: undefined,
@@ -190,16 +213,18 @@ const salesSlice = createSlice({
         action.meta.arg.pageSize || DEFAULT_PAGING.pageSize,
       );
     });
-    builder.addCase(
-      getSales.fulfilled,
-      (state, action: PayloadAction<ItemListResponse>) => {
-        const { items, ...paging } = action.payload;
+    builder.addCase(getSales.fulfilled, (state, action) => {
+      const {
+        items,
+        totalDetail: total,
+        ...paging
+      } = action.payload as TotalListResponse;
 
-        state.sales = items as Sales[];
-        state.salesStatus = DataStatus.SUCCEEDED;
-        state.salesPaging = Object.assign(state.salesPaging, paging);
-      },
-    );
+      state.sales = items as Sales[];
+      state.saleTotal = total as SaleTotal;
+      state.salesStatus = DataStatus.SUCCEEDED;
+      state.salesPaging = Object.assign(state.salesPaging, paging);
+    });
     builder.addCase(getSales.rejected, (state, action) => {
       state.salesStatus = DataStatus.FAILED;
       state.salesError = action.error.message ?? AN_ERROR_TRY_AGAIN;

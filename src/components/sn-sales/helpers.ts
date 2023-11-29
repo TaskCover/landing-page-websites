@@ -62,4 +62,5 @@ export const CURRENCY_SYMBOL: Record<CURRENCY_CODE, string> = {
   [CURRENCY_CODE.BRL]: "R$",
   [CURRENCY_CODE.RUB]: "₽",
   [CURRENCY_CODE.CNY]: "¥",
+  [CURRENCY_CODE.VND]: "₫",
 };

@@ -38,6 +38,7 @@ export type SelectProps = InputProps & {
   hasIcon?: boolean;
   showSubText?: boolean;
   onOpen?: Function;
+  emitSearchWhenEnter?: boolean;
 };
 
 const ID_PLACEHOLDER = uuid();
@@ -58,6 +59,7 @@ const Select = (props: SelectProps) => {
     hasAvatar,
     showSubText = true,
     hasIcon,
+    emitSearchWhenEnter,
     ...rest
   } = props;
 
@@ -70,7 +72,7 @@ const Select = (props: SelectProps) => {
     [options, value],
   );
 
-  const optionList = useMemo(() => {
+  const optionList = (useMemo(() => {
     if (hasAll || placeholder) {
       return [
         {
@@ -82,7 +84,7 @@ const Select = (props: SelectProps) => {
       ];
     }
     return options;
-  }, [hasAll, placeholder, options, hasValue, commonT]) as unknown as Option[];
+  }, [hasAll, placeholder, options, hasValue, commonT]) as unknown) as Option[];
 
   const onOpenSelect = () => {
     props?.onOpen && props.onOpen();
@@ -140,18 +142,16 @@ const Select = (props: SelectProps) => {
       {...rest}
     >
       {!!onChangeSearch && isShow && (
-        <ListSubheader>
-          <Search
-            fullWidth
-            sx={{ mt: 1 }}
-            name="email"
-            onChange={onChangeSearch}
-            emitWhenEnter
-            search={searchProps?.value}
-            onKeyDown={onKeyDown}
-            {...searchProps}
-          />
-        </ListSubheader>
+        <Search
+          fullWidth
+          sx={{ mt: 1, px: 2, my: 1 }}
+          name="email"
+          onChange={onChangeSearch}
+          emitWhenEnter={emitSearchWhenEnter}
+          search={searchProps?.value}
+          onKeyDown={onKeyDown}
+          {...searchProps}
+        />
       )}
       {optionList?.map((option) => (
         <MenuItem

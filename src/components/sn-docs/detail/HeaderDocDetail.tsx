@@ -35,6 +35,10 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
     dispatch(changeTitle(value));
   }, 200);
 
+  const [debounceChange] = useDebounce((value: string) => {
+    dispatch(changeTitle(value));
+  }, 200);
+
   return (
     <>
       <ModalShare setOpenShare={setOpenShare} openShare={openShare} />
@@ -86,6 +90,7 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
                   backgroundColor: "transparent",
                 }}
                 defaultValue={title}
+                value={title}
                 onChange={(e) => debounceChange(e.target.value)}
               />
             </Box>
@@ -136,6 +141,7 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
                   backgroundColor: "transparent",
                 }}
                 defaultValue={title}
+                title={title}
                 onChange={(e) => debounceChange(e.target.value)}
               />
             </Box>

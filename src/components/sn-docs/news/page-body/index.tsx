@@ -45,12 +45,6 @@ const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
   const openLinkModal = () => setIsAddingNewLink(true);
   const { theme } = useContext(ThemeContext);
   const { openComment } = useContext(NewPageContext);
-  const [minHeight, setMinHeight] = useState("100vh");
-  const { isDarkMode } = useTheme();
-  const dispatch = useDispatch();
-  const [mounted, setMounted] = useState(false);
-  const { handleUpdateDoc } = useDocs();
-  const [handleTitleChange] = useDebounce((value: string): void => {
     dispatch(changeDescription(value));
   }, 200);
 

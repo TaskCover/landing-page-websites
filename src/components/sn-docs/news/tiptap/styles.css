@@ -4,6 +4,9 @@
   float: left;
   height: 0;
   pointer-events: none;
+  .comment {
+    border-bottom: 1px solid yellow;
+  }
 }
 .ProseMirror .comment {
   border-bottom: 4px solid #2196f3;

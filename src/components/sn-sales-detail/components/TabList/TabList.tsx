@@ -4,6 +4,7 @@ import Link from "components/Link";
 import {
   DATE_FORMAT_HYPHEN,
   DATE_FORMAT_SLASH,
+  DATE_LOCALE_FORMAT,
   NS_SALES,
 } from "constant/index";
 import { useTranslations } from "next-intl";
@@ -94,7 +95,7 @@ const TabList = ({ value, onChange }: TabListProps) => {
   const onAssign = (name, assignees) => {
     setValue(name, assignees);
     const newAssignees = assignees.filter(
-      (item) => item.id !== saleDetail?.owner.id,
+      (item) => item.id !== saleDetail?.owner?.id,
     );
     onUpdateDeal({ id: getValues("id"), [name]: [...newAssignees] });
   };
@@ -140,6 +141,11 @@ const TabList = ({ value, onChange }: TabListProps) => {
           xs: "row-reverse",
           sm: "row",
         }}
+        sx={{
+          [`& .react-datepicker-popper`]: {
+            zIndex: 9999,
+          },
+        }}
         alignItems="center"
         spacing={3}
       >
@@ -156,7 +162,7 @@ const TabList = ({ value, onChange }: TabListProps) => {
             return (
               <Date
                 label="Start Date"
-                format={DATE_FORMAT_HYPHEN}
+                format={DATE_FORMAT_SLASH}
                 onChange={onChangeDate}
                 {...rest}
               />

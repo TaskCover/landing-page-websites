@@ -46,6 +46,7 @@ export const salesLang: SalesDictionary = {
       orientation: "Hướng",
       pagesize: "Kích thước trang",
     },
+    noOptionText: "Không có tùy chọn, tạo mới",
   },
   detail: {
     tab: {

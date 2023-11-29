@@ -1,4 +1,7 @@
 "use client";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import DownIcon from "../../asset/icons/DownIcon";
 import IconBold from "../../asset/iconsMenuTipTap/IconBold";
 import IconCode from "../../asset/iconsMenuTipTap/IconCode";
@@ -10,13 +13,12 @@ import IconLineText from "../../asset/iconsMenuTipTap/IconLineText";
 import IconLineTextCenter from "../../asset/iconsMenuTipTap/IconLineTextCenter";
 import IconLink from "../../asset/iconsMenuTipTap/IconLink";
 import styles from "components/sn-docs/news/tiptap/menu/bubble-menu/nodeTypeDropDown.module.scss";
-// /menu/bubble-menu/nodeTypeDropDown.module.scss";
 import Tippy from "@tippyjs/react";
 import toggleButtonStyles from "components/sn-docs/news/tiptap/menu/bubble-menu/nodeTypeToggle.module.scss";
 import { Box } from "@mui/material";
 import { Editor } from "@tiptap/core";
 import { ThemeContext } from "../../context/ThemeContext";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 
 import React, {
   Fragment,
@@ -33,6 +35,7 @@ import useTheme from "hooks/useTheme";
 import { NewPageContext } from "../../context/NewPageContext";
 import { Comment } from "./CommentDialog";
 import { useAuth } from "store/app/selectors";
+
 
 const MenuBarHeader = ({ editor }: { editor: Editor }) => {
   const { theme } = useContext(ThemeContext);
@@ -212,6 +215,7 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={editor.isActive("bold") ? "active" : ""}
       >
+
         <IconBold />
       </button>
       <button
@@ -322,7 +326,6 @@ export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
     setComments([...comments, newComment]);
     editor?.commands.setComment(newComment.id);
     setActiveCommentId(newComment.id);
-    // setTimeout(focusCommentWithActiveId);
   };
 
   return (

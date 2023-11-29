@@ -60,10 +60,10 @@ export const ProjectLang: ProjectDictionary = {
       filter: {
         all: "All",
         file: "File",
-        image: "Image"
+        image: "Image",
       },
       noData: "No data",
-    }
+    },
   },
   detailMembers: {
     head: {
@@ -184,6 +184,13 @@ export const ProjectLang: ProjectDictionary = {
   detailActivities: {
     head: {
       title: "Activities of Project",
+    },
+  },
+  errors: {
+    form: {
+      add_sub_task: {
+        required: "Task name is required",
+      },
     },
   },
 };

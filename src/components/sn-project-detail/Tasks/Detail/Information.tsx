@@ -443,6 +443,9 @@ const Information = () => {
                             "& *": {
                               wordBreak: "break-all",
                             },
+                            "& p": {
+                              marginY: 0
+                            }
                           }}
                           className="html"
                           dangerouslySetInnerHTML={{

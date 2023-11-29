@@ -80,6 +80,7 @@ export const NewPageContextProvider: React.FC<{ children: any }> = ({
         setContent,
         pageSettings,
         setPageSettings,
+
         activeCommentId,
         setActiveCommentId,
         openCommentDialog,
