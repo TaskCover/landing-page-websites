@@ -69,7 +69,7 @@ export const ItemDocProject = ({ items, data }) => {
             fontWeight: 600,
           }}
         >
-          {data?.name || "Không Thuộc Project"}
+          {data?.name || "No name"}
         </Text>
       </Box>
       {items?.length > 0 &&
