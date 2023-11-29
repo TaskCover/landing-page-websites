@@ -1,19 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import styled from "@emotion/styled";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Stack,
-  TableRow,
-} from "@mui/material";
-import Avatar from "components/Avatar";
-import { BodyCell } from "components/Table";
-import { Text } from "components/shared";
-import { DATE_TIME_FORMAT_HYPHEN } from "constant/index";
-import useTheme from "hooks/useTheme";
 import { memo } from "react";
-import { formatDate } from "utils/index";
+import { BodyCell } from "components/Table";
+import {
+  DATE_TIME_FORMAT_HYPHEN,
+  DATE_TIME_FORMAT_SLASH,
+} from "constant/index";
+import { formatDate, formatNumber } from "utils/index";
+import { Position } from "store/company/reducer";
+import { Text } from "components/shared";
+import Avatar from "components/Avatar";
+import { Stack, TableRow } from "@mui/material";
+import Link from "next/link";
 
 type DesktopCellsProps = {
   item: any;
@@ -46,75 +43,46 @@ function formatTime(dateTimeString) {
 
 const DesktopCells = (props: DesktopCellsProps) => {
   const { item } = props;
-  const { isDarkMode } = useTheme();
 
   return (
-    <BodyCell align="left" padding="none" colSpan={4}>
-      <StyledAccordion defaultExpanded={true}>
-        <AccordionSummary
-          sx={{ bgcolor: isDarkMode ? "grey.50" : "primary.light" }}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
+    <>
+      <BodyCell align="left">
+        <Link href={`/documents/${item.id}`}>
           <Text fontWeight={600} fontSize={14}>
             {item?.name}
           </Text>
-        </AccordionSummary>
-        <AccordionDetails sx={{ padding: 0 }}>
-          {Array.isArray(item.documents) &&
-            item.documents.map((doc) => (
-              <TableRow>
-                <BodyCell align="left">{doc?.name}</BodyCell>
-                <BodyCell>
-                  {formatDate(doc.created_time, DATE_TIME_FORMAT_HYPHEN)}
-                </BodyCell>
-                <BodyCell>{formatTime(doc.updated_time)}</BodyCell>
-                <BodyCell sx={{ py: "10px" }} align="center">
-                  {doc?.created_by?.id ? (
-                    <Stack
-                      // justifyContent={"center"}
-                      direction="row"
-                      alignItems="center"
-                      spacing={1}
-                    >
-                      <Avatar size={32} src={doc.created_by?.avatar?.link} />
-                      <Stack
-                        justifyContent={"start"}
-                        alignItems={"start"}
-                        direction={"column"}
-                      >
-                        <Text fontWeight={600} fontSize={14}>
-                          {doc.created_by?.fullname}
-                        </Text>
-                        <Text fontWeight={400} fontSize={14}>
-                          {doc?.created_by?.position?.name}
-                        </Text>
-                      </Stack>
-                    </Stack>
-                  ) : null}
-                </BodyCell>
-              </TableRow>
-            ))}
-        </AccordionDetails>
-      </StyledAccordion>
-    </BodyCell>
+        </Link>
+      </BodyCell>
+      <BodyCell>
+        {formatDate(item.created_time, DATE_TIME_FORMAT_HYPHEN)}
+      </BodyCell>
+      <BodyCell>{formatTime(item.updated_time)}</BodyCell>
+      <BodyCell sx={{ py: "10px" }} align="center">
+        {item?.created_by?.id ? (
+          <Stack
+            justifyContent={"center"}
+            direction="row"
+            alignItems="center"
+            spacing={1}
+          >
+            <Avatar size={32} src={item.created_by?.avatar?.link} />
+            <Stack
+              justifyContent={"start"}
+              alignItems={"start"}
+              direction={"column"}
+            >
+              <Text fontWeight={600} fontSize={14}>
+                {item.created_by?.fullname}
+              </Text>
+              <Text fontWeight={400} fontSize={14}>
+                {item?.created_by?.position?.name}
+              </Text>
+            </Stack>
+          </Stack>
+        ) : null}
+      </BodyCell>
+    </>
   );
 };
-
-const StyledAccordion = styled(Accordion)(() => {
-  const { isDarkMode } = useTheme();
-  return {
-    "&.MuiAccordion-root": {
-      width: "100%",
-      border: "none",
-      borderBottomWidth: "1px",
-      borderBottomStyle: "solid",
-      borderBottomColor: "#2196f350",
-      borderRadius: 0,
-      boxShadow: "none",
-      backgroundColor: isDarkMode ? "grey.50" : "primary.light",
-    },
-  };
-});
 
 export default memo(DesktopCells);

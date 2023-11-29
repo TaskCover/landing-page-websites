@@ -128,14 +128,7 @@ const Actions = () => {
             value={queries?.search_key}
             sx={{ width: 200, minWidth: 200 }}
           />
-          {/* 
-          <Dropdown
-            placeholder={docsT("filter.fields")}
-            options={grOptions}
-            name="fields"
-            onChange={onChangeQueries}
-            value={Number(queries?.fields)}
-          /> */}
+
           <Dropdown
             placeholder={docsT("filter.group.group")}
             options={grOptions}
@@ -144,10 +137,7 @@ const Actions = () => {
             onChange={onChangeQueries}
             value={Number(queries?.group)}
           />
-          <FilterSearchDocs
-            queries={queries}
-            onChange={onChangeQueries}
-          ></FilterSearchDocs>
+          <FilterSearchDocs queries={queries} onChange={onChangeQueries} />
           <Button
             size="extraSmall"
             sx={{

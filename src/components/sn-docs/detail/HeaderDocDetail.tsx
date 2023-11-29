@@ -1,4 +1,7 @@
 "use client";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Box, Stack, TextField } from "@mui/material";
 import { Text, Tooltip } from "components/shared";
 import { NS_DOCS } from "constant/index";
@@ -19,7 +22,6 @@ import { IDocDetail } from "./DocDetail";
 import ModalShare from "./LeftSlide/modal/ModalShare";
 import SelectProjectInDoc from "./SelectProjectInDoc";
 import { NewPageContext } from "../news/context/NewPageContext";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
   const [openShare, setOpenShare] = useState(false);
@@ -30,10 +32,6 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
   const [valueCopy, copy] = useCopyToClipboard();
   const { isSmSmaller } = useBreakpoint();
   const { setOpenComment } = useContext(NewPageContext);
-
-  const [debounceChange] = useDebounce((value: string) => {
-    dispatch(changeTitle(value));
-  }, 200);
 
   const [debounceChange] = useDebounce((value: string) => {
     dispatch(changeTitle(value));
