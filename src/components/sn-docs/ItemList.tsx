@@ -2,22 +2,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { memo, useEffect, useMemo, useState } from "react";
-import { TableRow } from "@mui/material";
-import { TableLayout, CellProps } from "components/Table";
-import useQueryParams from "hooks/useQueryParams";
-import { usePathname, useRouter } from "next-intl/client";
-import useBreakpoint from "hooks/useBreakpoint";
-import MobileContentCell from "./MobileContentCell";
-import DesktopCells from "./DesktopCells";
-import { getPath } from "utils/index";
-import { DEFAULT_PAGING } from "constant/index";
-import Pagination from "components/Pagination";
+import { Skeleton, TableCell, TableRow } from "@mui/material";
 import FixedLayout from "components/FixedLayout";
-import { useDocs } from "store/docs/selectors";
-import ItemDoc, { ItemDocProject } from "./ItemDoc";
+import Pagination from "components/Pagination";
+import { CellProps, TableLayout } from "components/Table";
+import { DEFAULT_PAGING } from "constant/index";
+import useBreakpoint from "hooks/useBreakpoint";
+import useQueryParams from "hooks/useQueryParams";
 import _ from "lodash";
-import { C } from "@fullcalendar/core/internal-common";
+import { usePathname, useRouter } from "next-intl/client";
+import { memo, useEffect, useMemo, useState } from "react";
+import { useDocs } from "store/docs/selectors";
+import { getPath } from "utils/index";
+import DesktopCells from "./DesktopCells";
+import { RowGroup } from "./ItemDoc";
+import MobileContentCell from "./MobileContentCell";
+
+export declare type TDocumentGroup = {
+  _id: string;
+  name: string;
+  documents: Array<{ [key: string]: any }>;
+};
 
 const ItemList = () => {
   const {
@@ -29,18 +34,9 @@ const ItemList = () => {
     pageSize,
     totalItems,
     totalPages,
+    filters,
     onGetDocs,
   } = useDocs();
-
-  const docsGroupByProject = _.groupBy(items, (item) => item.project_id?._id);
-  const docs = Object.keys(docsGroupByProject).map((key) => {
-    const project =
-      key !== "undefined"
-        ? { _id: key, name: docsGroupByProject[key][0].project_id?.name }
-        : { _id: crypto.randomUUID(), name: "No name" };
-    return { ...project, documents: docsGroupByProject[key] };
-  });
-  console.log("docs", docs);
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
 
@@ -87,7 +83,7 @@ const ItemList = () => {
 
     return [...additionalHeaderList] as CellProps[];
   }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
-
+  console.log(items);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (queries) => {
     const newQueries = { ...query, ...queries };
@@ -110,38 +106,62 @@ const ItemList = () => {
     onGetDocs({ ...DEFAULT_PAGING, ...initQuery });
   }, [initQuery, isReady, onGetDocs]);
 
-  const [listCreate, setListCreate] = useState([]);
-  const [listProject, setListProject] = useState([]);
+  // const [listCreate, setListCreate] = useState<Array<TDocumentGroup>>([]);
+  // const [listProject, setListProject] = useState<Array<TDocumentGroup>>([]);
+  const [docsGroups, setDocsGroups] = useState<Array<TDocumentGroup>>([]);
+  // useEffect(() => {
+  //   const getGroupDocs = () => {
+  //     switch (query?.group) {
+  //       case "2": {
+  //         const docsGroupByCreator = _.groupBy(
+  //           items,
+  //           (item) => item.created_by?._id,
+  //         );
+  //         const groupedDocs = Object.keys(docsGroupByCreator).map((key) => {
+  //           const creator =
+  //             key !== "undefined"
+  //               ? {
+  //                   _id: key,
+  //                   name: docsGroupByCreator[key][0].created_by?.fullname,
+  //                 }
+  //               : { _id: crypto.randomUUID(), name: "Unknown" };
+  //           return { ...creator, documents: docsGroupByCreator[key] };
+  //         }) as Array<TDocumentGroup>;
+  //         setDocsGroups(groupedDocs);
 
-  useEffect(() => {
-    setListCreate([]);
-    const res: any = [];
-    for (let i = 0; i < items.length; i++) {
-      let createdById = items[i].created_by ? items[i].created_by.id : null;
+  //         break;
+  //       }
 
-      if (!res.some((item) => item && item.id === createdById)) {
-        res.push(items[i].created_by);
-      }
-    }
-    setListCreate(res);
-  }, [items]);
+  //       case "3": {
+  //         const docsGroupByProject = _.groupBy(
+  //           items,
+  //           (item) => item.project_id?._id,
+  //         );
+  //         console.log(docsGroupByProject);
+  //         const groupedDocs = Object.keys(docsGroupByProject).map((key) => {
+  //           const project =
+  //             key !== "undefined"
+  //               ? {
+  //                   _id: key,
+  //                   name: docsGroupByProject[key][0].project_id?.name,
+  //                 }
+  //               : { _id: crypto.randomUUID(), name: "No name" };
+  //           return { ...project, documents: docsGroupByProject[key] };
+  //         }) as Array<TDocumentGroup>;
+  //         // console.log(docsGroups);
+  //         setDocsGroups(groupedDocs);
 
-  useEffect(() => {
-    setListProject([]);
-    const res: any = [];
-    for (let i = 0; i < items.length; i++) {
-      let projectById = items[i].project_id ? items[i].project_id.id : null;
-
-      if (!res.some((item) => item && item.id === projectById)) {
-        res.push(items[i].project_id);
-      }
-    }
-
-    let filteredArray = res.filter((item) => item !== null);
-    let nullItems = res.find((item) => item === null);
-    filteredArray = filteredArray.concat(nullItems);
-    setListProject(filteredArray);
-  }, [items]);
+  //         break;
+  //       }
+  //       default:
+  //         console.log(1);
+  //         setDocsGroups([]);
+  //         break;
+  //     }
+  //   };
+  //   getGroupDocs();
+  // }, [items, filters, query?.group]);
+  // console.log(docsGroups);
 
   return (
     <>
@@ -156,9 +176,10 @@ const ItemList = () => {
             sx: { px: { xs: 0.5, md: 2 } },
           }}
         >
-          {(!query?.group || query?.group == 1) &&
-            docs.length > 0 &&
-            docs.map((item) => {
+          {/* {isFetching && <TablePending prepareCols={headerList.length} />} */}
+          {(!query?.group || query?.group === 1) &&
+            items.length > 0 &&
+            items.map((item) => {
               return (
                 <TableRow key={item._id}>
                   {!isMdSmaller ? (
@@ -170,28 +191,24 @@ const ItemList = () => {
               );
             })}
 
-          {query?.group == 2 &&
-            listCreate.map((e: any) => {
-              const data = items.filter(
-                (value) => value?.created_by?.id === e?.id,
-              );
-              return <ItemDoc key={e?.id} items={data} data={e}></ItemDoc>;
-            })}
-          {query?.group == 3 &&
-            listProject.map((e: any) => {
-              if (e === undefined) {
-                return;
-              }
-
-              const rowItems = items.filter(
-                (value) => value?.project_id?.id === e?.id,
-              );
+          {query?.group == "2" &&
+            items.map((item) => {
               return (
-                <ItemDocProject
-                  key={e?.id}
-                  items={rowItems}
-                  data={e}
-                ></ItemDocProject>
+                <RowGroup
+                  key={item?._id}
+                  title={item.creator?.fullname || "Unknown"}
+                  item={item}
+                />
+              );
+            })}
+          {query?.group == "3" &&
+            items.map((item) => {
+              return (
+                <RowGroup
+                  key={item?._id}
+                  title={item.project?.name || "No name"}
+                  item={item}
+                />
               );
             })}
         </TableLayout>
@@ -208,6 +225,20 @@ const ItemList = () => {
       </FixedLayout>
     </>
   );
+};
+
+const TablePending = ({ prepareRows = 5, prepareCols }) => {
+  const preRenderCells = Array.apply(null, Array(prepareCols)).map((_, i) => i);
+  const preRenderRows = Array.apply(null, Array(prepareRows)).map((_, j) => j);
+  return preRenderRows.map((_, i) => (
+    <TableRow key={i}>
+      {preRenderCells.map((_, j) => (
+        <TableCell key={j}>
+          <Skeleton height={100} />
+        </TableCell>
+      ))}
+    </TableRow>
+  ));
 };
 
 export default memo(ItemList);

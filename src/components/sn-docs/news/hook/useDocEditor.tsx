@@ -4,6 +4,7 @@ import { getExtensions } from "../tiptap/extensions/starter-kit";
 import useDebounce from "hooks/useDebounce";
 import { useAppDispatch } from "store/hooks";
 import { changeContentDoc } from "store/docs/reducer";
+import { useContext, useRef } from "react";
 
 export default function useDocEditor() {
   const {
@@ -11,6 +12,7 @@ export default function useDocEditor() {
     setContent,
     setIsAddingNewLink,
     setActiveCommentId,
+    setOpenComment,
   } = useContext(NewPageContext);
 
   const dispatch = useAppDispatch();
@@ -43,16 +45,6 @@ export default function useDocEditor() {
       setContent(editor.getJSON());
       anchorRef.current = transaction.selection.anchor;
       await handleContentUpdate(editor.getHTML());
-      console.log(transaction.selection.anchor);
-      setTimeout(() => {
-        editor.chain().setTextSelection(anchorRef.current).run();
-        editor.commands.focus(anchorRef.current);
-      });
-    },
-
-    onTransaction: ({ editor, transaction }) => {
-      editor.chain().setTextSelection(anchorRef.current).run();
-      editor.commands.focus(anchorRef.current);
     },
   });
 }

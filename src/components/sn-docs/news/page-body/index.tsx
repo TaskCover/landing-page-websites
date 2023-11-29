@@ -41,10 +41,14 @@ const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
     project_id,
   } = useAppSelector((state) => state.doc);
   const [openChangeCover, setOpenChangeCover] = useState<boolean>(false);
-  const [isAddingNewLink, setIsAddingNewLink] = useState(false);
-  const openLinkModal = () => setIsAddingNewLink(true);
   const { theme } = useContext(ThemeContext);
   const { openComment } = useContext(NewPageContext);
+  const [minHeight, setMinHeight] = useState("100vh");
+  const { isDarkMode } = useTheme();
+  const dispatch = useDispatch();
+  const [mounted, setMounted] = useState(false);
+  const { handleUpdateDoc } = useDocs();
+  const [handleTitleChange] = useDebounce((value: string): void => {
     dispatch(changeDescription(value));
   }, 200);
 
