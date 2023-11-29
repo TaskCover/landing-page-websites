@@ -8,6 +8,9 @@
     border-bottom: 1px solid yellow;
   }
 }
+.ProseMirror .comment {
+  border-bottom: 4px solid #2196f3;
+}
 
 * {
   outline: none;

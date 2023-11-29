@@ -1,5 +1,7 @@
 "use client";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Text from "@tiptap/extension-text";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import GapCursor from "@tiptap/extension-gapcursor";
@@ -70,7 +72,6 @@ export const getExtensions = ({
         class: "comment",
       },
       onCommentActivated: (commentId: string) => {
-        console.log("comment id: >>", commentId);
         onCommentActivated(commentId);
       },
     }),

@@ -1,4 +1,7 @@
 "use client";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import DownIcon from "../../asset/icons/DownIcon";
 import IconBold from "../../asset/iconsMenuTipTap/IconBold";
 import IconCode from "../../asset/iconsMenuTipTap/IconCode";
@@ -10,13 +13,12 @@ import IconLineText from "../../asset/iconsMenuTipTap/IconLineText";
 import IconLineTextCenter from "../../asset/iconsMenuTipTap/IconLineTextCenter";
 import IconLink from "../../asset/iconsMenuTipTap/IconLink";
 import styles from "components/sn-docs/news/tiptap/menu/bubble-menu/nodeTypeDropDown.module.scss";
-// /menu/bubble-menu/nodeTypeDropDown.module.scss";
 import Tippy from "@tippyjs/react";
 import toggleButtonStyles from "components/sn-docs/news/tiptap/menu/bubble-menu/nodeTypeToggle.module.scss";
 import { Box } from "@mui/material";
 import { Editor } from "@tiptap/core";
 import { ThemeContext } from "../../context/ThemeContext";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 
 import React, {
   Fragment,
@@ -31,6 +33,9 @@ import React, {
 import { Text } from "components/shared";
 import useTheme from "hooks/useTheme";
 import { NewPageContext } from "../../context/NewPageContext";
+import { Comment } from "./CommentDialog";
+import { useAuth } from "store/app/selectors";
+
 
 const MenuBarHeader = ({ editor }: { editor: Editor }) => {
   const { theme } = useContext(ThemeContext);
@@ -210,25 +215,26 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={editor.isActive("bold") ? "active" : ""}
       >
-        <IconBold></IconBold>
+
+        <IconBold />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={editor.isActive("italic") ? "active" : ""}
       >
-        <IconItaic></IconItaic>
+        <IconItaic />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         className={editor.isActive("underline") ? "active" : ""}
       >
-        <IconLineText></IconLineText>
+        <IconLineText />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={editor.isActive("strike") ? "active" : ""}
       >
-        <IconLineTextCenter></IconLineTextCenter>
+        <IconLineTextCenter />
       </button>
       <button
         value="link"
@@ -252,16 +258,16 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={editor.isActive("orderedList") ? "active" : ""}
       >
-        <IconLi2></IconLi2>
+        <IconLi2 />
       </button>
       <button>
-        <IconComment></IconComment>
+        <IconComment />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleCode().run()}
         className={editor.isActive("code") ? "active" : ""}
       >
-        <IconCode></IconCode>
+        <IconCode />
       </button>
     </Box>
   );
@@ -269,9 +275,15 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
 
 export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
   const { theme } = useContext(ThemeContext);
-  const { selectedComment, openCommentDialog, setCommentDialogOpen } =
-    useContext(NewPageContext);
-
+  const {
+    activeCommentId,
+    setActiveCommentId,
+    comments,
+    setComments,
+    openCommentDialog,
+    setCommentDialogOpen,
+  } = useContext(NewPageContext);
+  const { user } = useAuth();
   const { isDarkMode } = useTheme();
   const isOnlyParagraph =
     !editor.isActive("bulletList") &&
@@ -307,6 +319,13 @@ export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
       return;
     }
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+  };
+
+  const setComment = () => {
+    const newComment = new Comment(user, "");
+    setComments([...comments, newComment]);
+    editor?.commands.setComment(newComment.id);
+    setActiveCommentId(newComment.id);
   };
 
   return (
@@ -470,7 +489,7 @@ export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
       <button
         onClick={() => {
           setCommentDialogOpen(!openCommentDialog);
-          editor.chain().focus().setComment(selectedComment!).run();
+          setComment();
         }}
       >
         <IconComment></IconComment>

@@ -1,42 +1,37 @@
 "use client";
 
-import ChangeCover from "../change-cover-panel";
-import DrawSlider from "components/sn-docs/detail/DrawSlider";
-import React, { useContext, useEffect, useState } from "react";
-import styles from "./scss/pageBody.module.scss";
-import useTheme from "hooks/useTheme";
 import { Box } from "@mui/material";
-import { getExtensions } from "../tiptap/extensions/starter-kit";
+import { Editor } from "@tiptap/react";
 import { IDocDetail } from "components/sn-docs/detail/DocDetail";
-import { ThemeContext } from "../context/ThemeContext";
-import { Tiptap } from "../tiptap/Tiptap";
-import { useAppSelector } from "store/hooks";
+import DrawSlider from "components/sn-docs/detail/DrawSlider";
+import useTheme from "hooks/useTheme";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useDocs } from "store/docs/selectors";
-import { Editor, useEditor } from "@tiptap/react";
+import { useAppSelector } from "store/hooks";
+import ChangeCover from "../change-cover-panel";
+import { ThemeContext } from "../context/ThemeContext";
+import { Tiptap } from "../tiptap/Tiptap";
+import styles from "./scss/pageBody.module.scss";
 /* eslint-disable no-var */
+import DrawComment, {
+  LayoutSlider,
+} from "components/sn-docs/detail/DrawComment";
+import useDebounce from "hooks/useDebounce";
 import {
   changeContentDoc,
   changeDescription,
   resetDocDetail,
 } from "store/docs/reducer";
-import DrawComment, {
-  LayoutSlider,
-} from "components/sn-docs/detail/DrawCommet";
-import useDebounce from "hooks/useDebounce";
 import useDocEditor from "../hook/useDocEditor";
+import { NewPageContext } from "../context/NewPageContext";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-const PageBody = ({
-  openComment,
-  openSlider,
-  setOpenComment,
-  setOpenSlider,
-}: IDocDetail) => {
+const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
   const pageInfo = useAppSelector((state) => state.doc.pageInfo);
   const {
     content,
@@ -49,18 +44,8 @@ const PageBody = ({
   const [isAddingNewLink, setIsAddingNewLink] = useState(false);
   const openLinkModal = () => setIsAddingNewLink(true);
   const { theme } = useContext(ThemeContext);
-  const [minHeight, setMinHeight] = useState("100vh");
-  const { isDarkMode } = useTheme();
-  const dispatch = useDispatch();
-  const [mounted, setMounted] = useState(false);
-  const { handleUpdateDoc } = useDocs();
-  const [handleTitleChange] = useDebounce((value: string): void => {
-    console.log(value);
+  const { openComment } = useContext(NewPageContext);
     dispatch(changeDescription(value));
-  }, 200);
-
-  const [handleContentUpdate] = useDebounce((content: any) => {
-    dispatch(changeContentDoc(content));
   }, 200);
 
   useEffect(() => {
@@ -146,7 +131,7 @@ const PageBody = ({
         >
           {openComment && (
             <LayoutSlider heightToolbar={minHeight}>
-              <DrawComment setOpenComment={setOpenComment}></DrawComment>
+              <DrawComment />
             </LayoutSlider>
           )}
           {openSlider && (

@@ -12,15 +12,16 @@ import OpenSidebarIcon from "icons/OpenSidebarIcon";
 import ShareIcon from "icons/ShareIcon";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { changeTitle } from "store/docs/reducer";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { IDocDetail } from "./DocDetail";
 import ModalShare from "./LeftSlide/modal/ModalShare";
 import SelectProjectInDoc from "./SelectProjectInDoc";
+import { NewPageContext } from "../news/context/NewPageContext";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
+const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
   const [openShare, setOpenShare] = useState(false);
   const router = useRouter();
   const docsT = useTranslations(NS_DOCS);
@@ -28,6 +29,11 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
   const title = useAppSelector((state) => state.doc.title);
   const [valueCopy, copy] = useCopyToClipboard();
   const { isSmSmaller } = useBreakpoint();
+  const { setOpenComment } = useContext(NewPageContext);
+
+  const [debounceChange] = useDebounce((value: string) => {
+    dispatch(changeTitle(value));
+  }, 200);
 
   const [debounceChange] = useDebounce((value: string) => {
     dispatch(changeTitle(value));
@@ -187,28 +193,34 @@ const HeaderDocDetail = ({ setOpenComment, setOpenSlider }: IDocDetail) => {
                     }}
                     sx={styleButton}
                   >
-                    <CopyIcon></CopyIcon>
+                    <CopyIcon />
                   </Box>
                 </Tooltip>
                 <Tooltip title={docsT("createDoc.comment")}>
                   <Box
-                    onClick={() => setOpenComment((value) => !value)}
+                    onClick={() => {
+                      setOpenComment((value) => !value);
+                      setOpenSlider(false);
+                    }}
                     sx={styleButton}
                   >
-                    <CommentIcon></CommentIcon>
+                    <CommentIcon />
                   </Box>
                 </Tooltip>
                 <Tooltip title={docsT("createDoc.slider")}>
                   <Box
-                    onClick={() => setOpenSlider((value) => !value)}
+                    onClick={() => {
+                      setOpenSlider((value) => !value);
+                      setOpenComment(false);
+                    }}
                     sx={styleButton}
                   >
-                    <OpenSidebarIcon></OpenSidebarIcon>
+                    <OpenSidebarIcon />
                   </Box>
                 </Tooltip>
                 <Tooltip title={docsT("createDoc.more")}>
                   <Box sx={styleButton}>
-                    <MoreIcon></MoreIcon>
+                    <MoreIcon />
                   </Box>
                 </Tooltip>
               </Box>

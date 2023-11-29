@@ -8,7 +8,7 @@ import ReactQuill from "react-quill";
 import { Box, Stack } from "@mui/material";
 import "react-quill/dist/quill.snow.css";
 import "./style.css";
-import DrawComment, { LayoutSlider } from "./DrawCommet";
+import DrawComment, { LayoutSlider } from "./DrawComment";
 import { Text } from "components/shared";
 import CloseIcon from "icons/CloseIcon";
 import DrawSlider from "./DrawSlider";

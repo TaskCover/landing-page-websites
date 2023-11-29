@@ -15,7 +15,8 @@ import { useEditor } from "@tiptap/react";
 import { getExtensions } from "../../tiptap/extensions/starter-kit";
 import useDocEditor from "../../hook/useDocEditor";
 
-class Comment {
+
+export class Comment {
   user: Partial<User>;
   content: string;
   id: string;
@@ -34,8 +35,11 @@ export default function CommentDialog() {
   const {
     openCommentDialog,
     setCommentDialogOpen,
+    comments,
     setComments,
-    setSelectedComment,
+    setActiveCommentId,
+
+
   } = React.useContext(NewPageContext);
   const { user } = useAuth();
   const t = useTranslations(NS_DOCS);
@@ -48,11 +52,17 @@ export default function CommentDialog() {
 
   const handleAddComment = () => {
     const newComment = new Comment(user, comment);
-    setComments((prev) => [...prev, newComment]);
-    setSelectedComment(newComment.id);
+    setComments((prev) => {
+      const latestComment = prev.at(-1);
+      prev[prev.length - 1] = { ...latestComment, content: comment };
+      return prev;
+    });
+    setActiveCommentId(newComment.id);
     editor?.commands.setComment(newComment.id);
+
     handleClose();
   };
+
 
   return (
     <Dialog open={openCommentDialog} onClose={handleClose}>
@@ -79,7 +89,10 @@ export default function CommentDialog() {
         <Button sx={{ textTransform: "none" }} onClick={handleClose}>
           {t("button.cancel")}
         </Button>
-        <Button sx={{ textTransform: "none" }} onClick={handleAddComment}>
+        <Button
+          sx={{ textTransform: "none" }}
+          onClick={() => handleAddComment()}
+        >
           {t("button.comment")}
         </Button>
       </DialogActions>

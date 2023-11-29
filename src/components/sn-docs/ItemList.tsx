@@ -16,6 +16,8 @@ import Pagination from "components/Pagination";
 import FixedLayout from "components/FixedLayout";
 import { useDocs } from "store/docs/selectors";
 import ItemDoc, { ItemDocProject } from "./ItemDoc";
+import _ from "lodash";
+import { C } from "@fullcalendar/core/internal-common";
 
 const ItemList = () => {
   const {
@@ -30,6 +32,15 @@ const ItemList = () => {
     onGetDocs,
   } = useDocs();
 
+  const docsGroupByProject = _.groupBy(items, (item) => item.project_id?._id);
+  const docs = Object.keys(docsGroupByProject).map((key) => {
+    const project =
+      key !== "undefined"
+        ? { _id: key, name: docsGroupByProject[key][0].project_id?.name }
+        : { _id: crypto.randomUUID(), name: "No name" };
+    return { ...project, documents: docsGroupByProject[key] };
+  });
+  console.log("docs", docs);
   const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
 
@@ -146,10 +157,10 @@ const ItemList = () => {
           }}
         >
           {(!query?.group || query?.group == 1) &&
-            items.length > 0 &&
-            items?.map((item) => {
+            docs.length > 0 &&
+            docs.map((item) => {
               return (
-                <TableRow key={item.id}>
+                <TableRow key={item._id}>
                   {!isMdSmaller ? (
                     <DesktopCells item={item} />
                   ) : (
@@ -172,13 +183,13 @@ const ItemList = () => {
                 return;
               }
 
-              const data = items.filter(
+              const rowItems = items.filter(
                 (value) => value?.project_id?.id === e?.id,
               );
               return (
                 <ItemDocProject
                   key={e?.id}
-                  items={data}
+                  items={rowItems}
                   data={e}
                 ></ItemDocProject>
               );
