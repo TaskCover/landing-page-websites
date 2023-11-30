@@ -60,7 +60,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
       <BodyCell sx={{ py: "10px" }} align="center">
         {item?.created_by?.id ? (
           <Stack
-            justifyContent={"center"}
+            // justifyContent={"center"}
             direction="row"
             alignItems="center"
             spacing={1}

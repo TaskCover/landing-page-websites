@@ -121,3 +121,10 @@ export enum SERVICE_UNIT_OPTIONS {
   DAY = "day",
   PIECE = "piece",
 }
+
+export enum DocGroupByEnum {
+  CREATED_BY = "created_by",
+  UPDATED_BY = "updated_by",
+  OWNER = "owner",
+  PROJECT_ID = "project_id",
+}

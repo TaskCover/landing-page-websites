@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 import { useDocs } from "store/docs/selectors";
 import NoneIcon from "icons/NoneIcon";
 import FilterSearchDocs from "./FilterSearchDocs/FilterSearchDocs";
+import { DocGroupByEnum } from "constant/enums";
 
 function convertStringToArray(inputString) {
   let idArray = inputString.split(",");
@@ -43,6 +44,7 @@ const Actions = () => {
     setQueries((prevQueries) => ({ ...prevQueries, [name]: value }));
   };
 
+  // console.log("queries", queries);
   const onSearch = () => {
     let newQueries = {
       ...queries,
@@ -130,12 +132,13 @@ const Actions = () => {
           />
 
           <Dropdown
-            placeholder={docsT("filter.group.group")}
+            placeholder={docsT("filter.group.none")}
             options={grOptions}
-            name="group"
+            name="group_by"
             hasAll={false}
             onChange={onChangeQueries}
-            value={Number(queries?.group)}
+            defaultValue={queries?.group_by}
+            value={queries?.group_by}
           />
           <FilterSearchDocs queries={queries} onChange={onChangeQueries} />
           <Button
@@ -172,9 +175,16 @@ const Actions = () => {
 export default memo(Actions);
 
 const Group_OPTIONS = [
-  { label: "filter.group.none", value: 1, icon: <NoneIcon></NoneIcon> },
-  { label: "filter.filter.creator", value: 2, icon: <NoneIcon></NoneIcon> },
-  { label: "filter.filter.project", value: 3, icon: <NoneIcon></NoneIcon> },
+  {
+    label: "filter.filter.creator",
+    value: DocGroupByEnum.CREATED_BY,
+    icon: <NoneIcon></NoneIcon>,
+  },
+  {
+    label: "filter.filter.project",
+    value: DocGroupByEnum.PROJECT_ID,
+    icon: <NoneIcon></NoneIcon>,
+  },
 ];
 const Filter_Options = [
   { label: "filter.filter.creator", value: 1 },
