@@ -104,7 +104,7 @@ const EditDocs = ({
           heightContent={heightContent}
           height={height}
         >
-          <DrawComment setOpenComment={setOpenComment}></DrawComment>
+          <DrawComment ></DrawComment>
         </LayoutSlider>
       )}
       {openSlider && (
