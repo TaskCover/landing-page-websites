@@ -12,13 +12,15 @@ import { DEFAULT_PAGING } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import useQueryParams from "hooks/useQueryParams";
 import { usePathname, useRouter } from "next-intl/client";
-import { memo, useEffect, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 import { useDocs } from "store/docs/selectors";
 import { getPath } from "utils/index";
 import DesktopCells from "./DesktopCells";
 import { RowGroup } from "./ItemDoc";
 import MobileContentCell from "./MobileContentCell";
 import { DocGroupByEnum } from "constant/enums";
+import { QueueRounded } from "@mui/icons-material";
+import { useSearchParams } from "next/navigation";
 
 export declare type TDocumentGroup = {
   _id: string;
@@ -39,12 +41,11 @@ const ItemList = () => {
     filters,
     onGetDocs,
   } = useDocs();
-  const { push } = useRouter();
+  const { push, replace } = useRouter();
   const { isMdSmaller } = useBreakpoint();
-
   const pathname = usePathname();
   const { initQuery, isReady, query } = useQueryParams();
-
+  const searchParams = useSearchParams()!;
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
       {
@@ -77,7 +78,6 @@ const ItemList = () => {
     ],
     [],
   );
-
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
       ? mobileHeaderList
@@ -85,6 +85,7 @@ const ItemList = () => {
 
     return [...additionalHeaderList] as CellProps[];
   }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
+
   const onChangeQueries = (queries) => {
     const newQueries = { ...query, ...queries };
     const path = getPath(pathname, newQueries);
@@ -100,11 +101,30 @@ const ItemList = () => {
   const onChangeSize = (newPageSize: number) => {
     onChangeQueries({ page: 1, size: newPageSize });
   };
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams);
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams],
+  );
 
   useEffect(() => {
+    if (!searchParams.get("group_by"))
+      push(
+        pathname +
+          "?" +
+          createQueryString("group_by", DocGroupByEnum.PROJECT_ID),
+      );
     if (!isReady) return;
-    onGetDocs({ ...DEFAULT_PAGING, ...initQuery });
-  }, [initQuery, isReady, onGetDocs]);
+    onGetDocs({
+      ...DEFAULT_PAGING,
+      ...initQuery,
+      group_by: !query?.group_by ? DocGroupByEnum.PROJECT_ID : query.group_by,
+    });
+  }, [initQuery, isReady, onGetDocs, query, searchParams]);
 
   return (
     <>
@@ -120,7 +140,7 @@ const ItemList = () => {
           }}
         >
           {isFetching && <TablePending prepareCols={headerList.length} />}
-          {!query?.group &&
+          {!query?.group_by &&
             Array.isArray(items[0]?.docs) &&
             items[0]?.docs.map((item) => {
               return (
@@ -140,7 +160,7 @@ const ItemList = () => {
                 <RowGroup
                   key={item?._id}
                   title={item.groupInfo?.fullname || "Unknown"}
-                  item={item}
+                  item={item.docs}
                 />
               );
             })}
@@ -149,8 +169,14 @@ const ItemList = () => {
               return (
                 <RowGroup
                   key={item?._id}
-                  title={item.groupInfo?.name || "No name"}
-                  item={item}
+                  title={
+                    item.groupInfo
+                      ? `${item.groupInfo.name}  #${
+                          item.groupInfo?.number || 0
+                        }`
+                      : "No name"
+                  }
+                  items={item.docs}
                 />
               );
             })}

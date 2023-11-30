@@ -54,7 +54,7 @@ export const SingleRow = ({ items, data }) => {
   );
 };
 export const RowGroup = (props) => {
-  const { item, title } = props;
+  const { items, title } = props;
   const { isMdSmaller } = useBreakpoint();
   const { isDarkMode } = useTheme();
   return (
@@ -71,8 +71,8 @@ export const RowGroup = (props) => {
             </Text>
           </AccordionSummary>
           <AccordionDetails sx={{ padding: 0 }}>
-            {Array.isArray(item?.docs) &&
-              item.docs.map((doc) => {
+            {Array.isArray(items) &&
+              items.map((doc) => {
                 return (
                   <TableRow>
                     {!isMdSmaller ? (
