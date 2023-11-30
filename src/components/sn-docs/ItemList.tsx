@@ -21,6 +21,7 @@ import MobileContentCell from "./MobileContentCell";
 import { DocGroupByEnum } from "constant/enums";
 import { QueueRounded } from "@mui/icons-material";
 import { useSearchParams } from "next/navigation";
+import { URLSearchParams } from "url";
 
 export declare type TDocumentGroup = {
   _id: string;
@@ -103,7 +104,9 @@ const ItemList = () => {
   };
   const createQueryString = useCallback(
     (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams);
+      const params = new URLSearchParams(
+        searchParams as unknown as URLSearchParams,
+      );
       params.set(name, value);
 
       return params.toString();
