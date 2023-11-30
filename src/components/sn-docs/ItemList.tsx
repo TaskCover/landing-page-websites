@@ -103,7 +103,7 @@ const ItemList = () => {
   };
   const createQueryString = useCallback(
     (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams);
+      const params = new URLSearchParams(searchParams as unknown as Record<string, string>);
       params.set(name, value);
 
       return params.toString();
