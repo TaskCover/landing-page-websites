@@ -1,6 +1,8 @@
+"use client";
+
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 import { Skeleton, TableCell, TableRow } from "@mui/material";
 import FixedLayout from "components/FixedLayout";
@@ -9,14 +11,14 @@ import { CellProps, TableLayout } from "components/Table";
 import { DEFAULT_PAGING } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import useQueryParams from "hooks/useQueryParams";
-import _ from "lodash";
 import { usePathname, useRouter } from "next-intl/client";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo } from "react";
 import { useDocs } from "store/docs/selectors";
 import { getPath } from "utils/index";
 import DesktopCells from "./DesktopCells";
 import { RowGroup } from "./ItemDoc";
 import MobileContentCell from "./MobileContentCell";
+import { DocGroupByEnum } from "constant/enums";
 
 export declare type TDocumentGroup = {
   _id: string;
@@ -83,8 +85,6 @@ const ItemList = () => {
 
     return [...additionalHeaderList] as CellProps[];
   }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
-  console.log(items);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (queries) => {
     const newQueries = { ...query, ...queries };
     const path = getPath(pathname, newQueries);
@@ -106,63 +106,6 @@ const ItemList = () => {
     onGetDocs({ ...DEFAULT_PAGING, ...initQuery });
   }, [initQuery, isReady, onGetDocs]);
 
-  // const [listCreate, setListCreate] = useState<Array<TDocumentGroup>>([]);
-  // const [listProject, setListProject] = useState<Array<TDocumentGroup>>([]);
-  const [docsGroups, setDocsGroups] = useState<Array<TDocumentGroup>>([]);
-  // useEffect(() => {
-  //   const getGroupDocs = () => {
-  //     switch (query?.group) {
-  //       case "2": {
-  //         const docsGroupByCreator = _.groupBy(
-  //           items,
-  //           (item) => item.created_by?._id,
-  //         );
-  //         const groupedDocs = Object.keys(docsGroupByCreator).map((key) => {
-  //           const creator =
-  //             key !== "undefined"
-  //               ? {
-  //                   _id: key,
-  //                   name: docsGroupByCreator[key][0].created_by?.fullname,
-  //                 }
-  //               : { _id: crypto.randomUUID(), name: "Unknown" };
-  //           return { ...creator, documents: docsGroupByCreator[key] };
-  //         }) as Array<TDocumentGroup>;
-  //         setDocsGroups(groupedDocs);
-
-  //         break;
-  //       }
-
-  //       case "3": {
-  //         const docsGroupByProject = _.groupBy(
-  //           items,
-  //           (item) => item.project_id?._id,
-  //         );
-  //         console.log(docsGroupByProject);
-  //         const groupedDocs = Object.keys(docsGroupByProject).map((key) => {
-  //           const project =
-  //             key !== "undefined"
-  //               ? {
-  //                   _id: key,
-  //                   name: docsGroupByProject[key][0].project_id?.name,
-  //                 }
-  //               : { _id: crypto.randomUUID(), name: "No name" };
-  //           return { ...project, documents: docsGroupByProject[key] };
-  //         }) as Array<TDocumentGroup>;
-  //         // console.log(docsGroups);
-  //         setDocsGroups(groupedDocs);
-
-  //         break;
-  //       }
-  //       default:
-  //         console.log(1);
-  //         setDocsGroups([]);
-  //         break;
-  //     }
-  //   };
-  //   getGroupDocs();
-  // }, [items, filters, query?.group]);
-  // console.log(docsGroups);
-
   return (
     <>
       <FixedLayout>
@@ -176,10 +119,10 @@ const ItemList = () => {
             sx: { px: { xs: 0.5, md: 2 } },
           }}
         >
-          {/* {isFetching && <TablePending prepareCols={headerList.length} />} */}
-          {(!query?.group || query?.group === 1) &&
-            items.length > 0 &&
-            items.map((item) => {
+          {isFetching && <TablePending prepareCols={headerList.length} />}
+          {!query?.group &&
+            Array.isArray(items[0]?.docs) &&
+            items[0]?.docs.map((item) => {
               return (
                 <TableRow key={item._id}>
                   {!isMdSmaller ? (
@@ -191,22 +134,22 @@ const ItemList = () => {
               );
             })}
 
-          {query?.group == "2" &&
+          {query?.group_by == DocGroupByEnum.CREATED_BY &&
             items.map((item) => {
               return (
                 <RowGroup
                   key={item?._id}
-                  title={item.creator?.fullname || "Unknown"}
+                  title={item.groupInfo?.fullname || "Unknown"}
                   item={item}
                 />
               );
             })}
-          {query?.group == "3" &&
+          {query?.group_by === DocGroupByEnum.PROJECT_ID &&
             items.map((item) => {
               return (
                 <RowGroup
                   key={item?._id}
-                  title={item.project?.name || "No name"}
+                  title={item.groupInfo?.name || "No name"}
                   item={item}
                 />
               );
@@ -234,7 +177,7 @@ const TablePending = ({ prepareRows = 5, prepareCols }) => {
     <TableRow key={i}>
       {preRenderCells.map((_, j) => (
         <TableCell key={j}>
-          <Skeleton height={100} />
+          <Skeleton height={100} width="100%" />
         </TableCell>
       ))}
     </TableRow>
