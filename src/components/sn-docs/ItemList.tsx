@@ -8,20 +8,18 @@ import { Skeleton, TableCell, TableRow } from "@mui/material";
 import FixedLayout from "components/FixedLayout";
 import Pagination from "components/Pagination";
 import { CellProps, TableLayout } from "components/Table";
+import { DocGroupByEnum } from "constant/enums";
 import { DEFAULT_PAGING } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import useQueryParams from "hooks/useQueryParams";
 import { usePathname, useRouter } from "next-intl/client";
+import { useSearchParams } from "next/navigation";
 import { memo, useCallback, useEffect, useMemo } from "react";
 import { useDocs } from "store/docs/selectors";
 import { getPath } from "utils/index";
 import DesktopCells from "./DesktopCells";
 import { RowGroup } from "./ItemDoc";
 import MobileContentCell from "./MobileContentCell";
-import { DocGroupByEnum } from "constant/enums";
-import { QueueRounded } from "@mui/icons-material";
-import { useSearchParams } from "next/navigation";
-import { URLSearchParams } from "url";
 
 export declare type TDocumentGroup = {
   _id: string;
@@ -105,7 +103,7 @@ const ItemList = () => {
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(
-        searchParams as unknown as URLSearchParams,
+        searchParams as unknown as typeof URLSearchParams.prototype,
       );
       params.set(name, value);
 
@@ -142,7 +140,6 @@ const ItemList = () => {
             sx: { px: { xs: 0.5, md: 2 } },
           }}
         >
-          {isFetching && <TablePending prepareCols={headerList.length} />}
           {!query?.group_by &&
             Array.isArray(items[0]?.docs) &&
             items[0]?.docs.map((item) => {
@@ -163,7 +160,7 @@ const ItemList = () => {
                 <RowGroup
                   key={item?._id}
                   title={item.groupInfo?.fullname || "Unknown"}
-                  item={item.docs}
+                  items={item.docs}
                 />
               );
             })}
