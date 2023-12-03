@@ -197,7 +197,9 @@ const ItemList = () => {
 };
 
 const TablePending = ({ prepareRows = 5, prepareCols }) => {
+  // eslint-disable-next-line prefer-spread
   const preRenderCells = Array.apply(null, Array(prepareCols)).map((_, i) => i);
+  // eslint-disable-next-line prefer-spread
   const preRenderRows = Array.apply(null, Array(prepareRows)).map((_, j) => j);
   return preRenderRows.map((_, i) => (
     <TableRow key={i}>
