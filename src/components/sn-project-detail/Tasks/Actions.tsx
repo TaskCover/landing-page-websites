@@ -134,8 +134,8 @@ const Actions = () => {
         spacing={{ xs: 1, md: 3 }}
         py={{ xs: 0.75 }}
         mt={{ sm: 1.25, md: 0 }}
-        position="sticky"
-        top={{ xs: 108, md: 36 }}
+        position="relative"
+        // top={{ xs: 108, md: 36 }}
         zIndex={12}
         bgcolor="background.paper"
       >

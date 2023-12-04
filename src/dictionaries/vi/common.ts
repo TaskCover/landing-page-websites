@@ -87,6 +87,7 @@ export const CommonLang: CommonDictionary = {
     pause: "Tạm dừng",
   },
   searchBy: "Tìm kiếm theo {name}",
+  searchByLabel: "Tìm kiếm theo",
   creationDate: "Ngày tạo",
   creator: "Người tạo",
   confirmDelete: {

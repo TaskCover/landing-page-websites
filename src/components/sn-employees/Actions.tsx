@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useMemo, useEffect, useRef, useState } from "react";
-import { Stack } from "@mui/material";
+import { FormControl, InputLabel, Select, Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import { Clear, Dropdown, Refresh, Search } from "components/Filters";
@@ -30,8 +30,12 @@ const Actions = () => {
   const companyT = useTranslations(NS_COMPANY);
   const commonT = useTranslations(NS_COMMON);
 
-  const { filters, onGetEmployees, pageSize, onCreateEmployee } =
-    useEmployees();
+  const {
+    filters,
+    onGetEmployees,
+    pageSize,
+    onCreateEmployee,
+  } = useEmployees();
 
   const [isShow, onShow, onHide] = useToggle();
 
@@ -39,6 +43,7 @@ const Actions = () => {
   const { push } = useRouter();
 
   const [queries, setQueries] = useState<Params>({});
+  const [filterField, setFilterField] = useState("email");
 
   const paymentOptions = useMemo(
     () =>
@@ -134,11 +139,23 @@ const Actions = () => {
           minWidth={{ md: "fit-content" }}
         >
           <Search
-            placeholder={commonT("searchBy", { name: "email" })}
-            name="email"
+            placeholder={commonT("searchBy", { name: filterField })}
+            name={filterField}
             onChange={onChangeQueries}
-            value={queries?.email}
+            value={queries[filterField]}
             sx={{ width: 200, minWidth: 200 }}
+          />
+          <Dropdown
+            placeholder={commonT("searchByLabel")}
+            options={[
+              { label: "email", value: "email" },
+              { label: "name", value: "fullname" },
+            ]}
+            name="filter_field"
+            onChange={(name, value) => {
+              setFilterField(value);
+            }}
+            value={filterField}
           />
           <Dropdown
             placeholder={commonT("position")}

@@ -88,6 +88,7 @@ export const CommonLang: CommonDictionary = {
     pause: "Paused"
   },
   searchBy: "Search by {name}",
+  searchByLabel: "Search by",
   creationDate: "Creation date",
   creator: "Creator",
   confirmDelete: {
