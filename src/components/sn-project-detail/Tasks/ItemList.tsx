@@ -948,8 +948,8 @@ const ItemList = () => {
         />
       )}
       <Stack
-        position="sticky"
-        top={baseTop + 18}
+        position="relative"
+        // top={baseTop + 18}
         zIndex={12}
         display={{ xs: "none", md: "flex" }}
         bgcolor="background.default"
