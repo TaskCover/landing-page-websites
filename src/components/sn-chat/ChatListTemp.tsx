@@ -101,6 +101,11 @@ const ChatListTemp = () => {
     }));
   };
 
+  const handleCloseChatBox = () => {
+    setShowPopup(init);
+    setOpen(false);
+  };
+
   window.addEventListener("resize", () => {
     browserWidth = window.innerWidth;
     if (browserWidth < 768) {
@@ -198,7 +203,7 @@ const ChatListTemp = () => {
                   backgroundColor: isDarkMode ? "#303130" : "white",
                 }}
               >
-                {open && <SwitchChat />}
+                {open && <SwitchChat onCloseChatBox={handleCloseChatBox} />}
               </Box>
             </Box>
           </Grow>

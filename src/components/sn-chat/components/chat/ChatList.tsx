@@ -12,7 +12,7 @@ import { useTranslations } from "next-intl";
 import { useWSChat } from "store/chat/helpers";
 import useTheme from "hooks/useTheme";
 
-const ChatList = () => {
+const ChatList = ({ onCloseChatBox }) => {
   const { user } = useAuth();
   const {
     isError,
@@ -149,6 +149,10 @@ const ChatList = () => {
     };
   }, [lastElement, observer]);
 
+  const handleCloseChatBox = () => {
+    onCloseChatBox();
+  };
+
   return (
     <Box
       height="inherit"
@@ -166,7 +170,7 @@ const ChatList = () => {
           backgroundColor: "#3699FF",
         }}
       >
-        <Typography color="white" variant="h4">
+        <Typography color="white" variant="h4" onClick={handleCloseChatBox}>
           {commonChatBox("chatBox.chat")}
         </Typography>
         <TextField
