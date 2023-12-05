@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 "use client";
 
 import React, {
@@ -28,6 +29,7 @@ import {
   NS_COMMON,
   NS_PROJECT,
   DATE_FORMAT_HYPHEN,
+  DATE_LOCALE_FORMAT
 } from "constant/index";
 import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
 import useQueryParams from "hooks/useQueryParams";
@@ -54,6 +56,7 @@ import AssignerTask from "components/sn-projects/components/AssignerTask";
 import Content from "./components/Content";
 import Description from "./components/Description";
 import { Date } from "components/Filters";
+import dayjs from "dayjs";
 
 const ItemList = () => {
   const {
