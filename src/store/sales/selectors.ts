@@ -104,6 +104,9 @@ export const useSales = () => {
   );
   const onUpdateDeal = useCallback(
     async (data) => {
+      if (data.probability === 0) {
+        return Promise.reject("bạn không thể giảm tiến độ");
+      }
       const start_date =
         (data.start_date &&
           moment(data.start_date, "DD-MM-YYYY").format("YYYY-MM-DD")) ||

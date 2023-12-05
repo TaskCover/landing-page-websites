@@ -42,7 +42,7 @@ const AddDealModal = ({ open, onClose }: IProps) => {
   } = useGetProjectTypeOptions();
 
   const { onCreateDeal } = useSales();
-  const { tagsOptions, onSearchTags } = useTagOptions();
+  const { tagsOptions, isTagLoading, onSearchTags } = useTagOptions();
   const { onCreateTags } = useTags();
   //create form
   const commonT = useTranslations(NS_COMMON);
@@ -206,6 +206,7 @@ const AddDealModal = ({ open, onClose }: IProps) => {
             const onSelect = (e, data) => {
               const mappingData = data.map((item) => item.value);
               onChange(mappingData);
+              onSearchTags("");
             };
             const onEnter = async (value: string | undefined) => {
               if (!value) return;
@@ -249,7 +250,7 @@ const AddDealModal = ({ open, onClose }: IProps) => {
                 noOptionText={salesT(`list.noOptionText`)}
                 onInputChange={(value) => onSearchTags(value)}
                 onEndReached={onEndReachedProjectTypeOptions}
-                loading={projectTypeIsFetching}
+                loading={isTagLoading}
                 onEnter={onEnter}
                 label={salesT(`${salesFormTranslatePrefix}.tags`)}
               />

@@ -37,6 +37,9 @@ export type SalesDictionary = {
       prospect: string;
       waitingApprove: string;
       negotiation: string;
+      open: string;
+      wonDeal: string;
+      lostDeal: string;
     };
     exportView: {
       title: string;
