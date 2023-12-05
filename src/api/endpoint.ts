@@ -68,6 +68,9 @@ export const Endpoint = {
 
   COST_HISTORY: "/cost-history",
 
+  PROJECT_BUDGET: "/budgets/all",
+  PROJECT_BUDGET_CREATE: "/budgets",
+
   POSITIONS_ALL: "/positions/all",
   POSITIONS: "/positions",
   POSITION_ITEM: "/positions/{id}",
@@ -89,27 +92,26 @@ export const Endpoint = {
   PIN: "/timesheets/pin",
   SAME_WORKER: "timesheets/same-worker",
 
-
- // Docs
- DOCS : "/docs",
- CREATE_DOCS: "/docs",
- UPDATE_DOCS: '/docs/{id}',
- DETAIL_DOCS: '/docs/detail/',
- HISTORY_DOCS: '/docs/history/{id}',
- ADD_PERM_DOCS: '/docs/add-perm/',
- PERM_DOCS: '/docs/perm/',
+  // Docs
+  DOCS: "/docs",
+  CREATE_DOCS: "/docs",
+  UPDATE_DOCS: "/docs/{id}",
+  DETAIL_DOCS: "/docs/detail/",
+  HISTORY_DOCS: "/docs/history/{id}",
+  ADD_PERM_DOCS: "/docs/add-perm/",
+  PERM_DOCS: "/docs/perm/",
 
   //feedback
-  FEEDBACK :"/feedback",
-  RESPONDFEEDBACK : "/feedback/{id}/response",
+  FEEDBACK: "/feedback",
+  RESPONDFEEDBACK: "/feedback/{id}/response",
 
   // blog
-  CATEGORY_BLOG :"/category",
-  BLOGS : "/post",
+  CATEGORY_BLOG: "/category",
+  BLOGS: "/post",
   DETAIL_BLOG: "/post/{id}",
-  GET_BLOG_COMMENT : "/post/{id}/comment",
+  GET_BLOG_COMMENT: "/post/{id}/comment",
   //carrer
-  CAREER:"/job-post",
+  CAREER: "/job-post",
   UPADATECAREER: "/job-post/{id}",
   DETAIL_CAREER: "/post/{id}",
 };

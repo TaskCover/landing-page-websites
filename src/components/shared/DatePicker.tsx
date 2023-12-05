@@ -53,6 +53,43 @@ const DatePicker = (props: DatePickerProps) => {
   );
 };
 
+export const DateTimePicker = (props: DatePickerProps) => {
+  const {
+    title,
+    placeholder,
+    required,
+    disabled,
+    pickerProps,
+    onChange,
+    value,
+    name,
+    ...rest
+  } = props;
+
+  const locale = useLocale();
+
+  const onChangeDate = (date: Date | null) => {
+    onChange(name, date || undefined);
+  };
+
+  return (
+    <LibDatePicker
+      selected={value ? new Date(value) : null}
+      placeholderText={placeholder}
+      title={title}
+      onChange={onChangeDate}
+      required={required}
+      disabled={disabled}
+      name={name}
+      {...pickerProps}
+      locale={locale}
+      dateFormat="dd/MM/yyyy HH:mm"
+      showTimeSelect={true}
+      customInput={<DatePickerInput {...rest} />}
+    />
+  );
+};
+
 export default memo(DatePicker);
 
 const DatePickerInput = forwardRef((props: InputProps, ref) => {

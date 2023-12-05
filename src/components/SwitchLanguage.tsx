@@ -3,7 +3,9 @@ import {
   Stack,
   StackProps,
   switchClasses,
-  SxProps, Select, MenuItem,
+  SxProps,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Locale } from "constant/types";
 import { useLocale } from "next-intl";
@@ -29,42 +31,52 @@ const SwitchLanguage = (props: StackProps) => {
 
   const langData = [
     {
-      img: '/images/img-vn-flag.png',
-      alt: 'Vietnamese Flag',
+      img: "/images/img-vn-flag.png",
+      alt: "Vietnamese Flag",
       content: commonT("i18n.vn"),
-      value: 'vi'
+      value: "vi",
     },
     {
-      img: '/images/img-usa-flag.png',
-      alt: 'USA Flag',
+      img: "/images/img-usa-flag.png",
+      alt: "USA Flag",
       content: commonT("i18n.en"),
-      value: 'en'
+      value: "en",
     },
-  ]
+  ];
 
   return (
     <Stack {...props}>
       <Select
         value={locale}
         onChange={onChangeValue}
-        disableUnderline={true}
         sx={{
           ...defaultSx,
-          boxShadow: 'none',
-          '.MuiOutlinedInput-notchedOutline': { border: 0 }
-        }
-        }
+          boxShadow: "none",
+          ".MuiOutlinedInput-notchedOutline": { border: "0 !important" },
+        }}
       >
-        {
-          langData.map(item => (
-            <MenuItem value={item.value} key={item.value} sx={{ '* > p': { marginY: '8px' } }}>
-              <div style={{ display: "flex", alignItems: 'center', justifyContent: 'center' }}>
-                <img src={item.img} alt={item.alt} style={{ marginRight: "5px", width: "24px", height: "24px" }} />
-                <p>{item.content}</p>
-              </div>
-            </MenuItem>
-          ))
-        }
+        {langData.map((item) => (
+          <MenuItem
+            value={item.value}
+            key={item.value}
+            sx={{ "* > p": { marginY: "8px" } }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src={item.img}
+                alt={item.alt}
+                style={{ marginRight: "5px", width: "24px", height: "24px" }}
+              />
+              <p>{item.content}</p>
+            </div>
+          </MenuItem>
+        ))}
       </Select>
       <Link
         ref={linkRef}
@@ -73,7 +85,6 @@ const SwitchLanguage = (props: StackProps) => {
         sx={{ display: "none" }}
       />
     </Stack>
-
   );
 };
 
