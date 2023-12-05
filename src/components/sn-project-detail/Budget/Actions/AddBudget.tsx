@@ -21,7 +21,7 @@ const AddBudget = () => {
         size="extraSmall"
         variant="primary"
         id="add_new_id"
-        sx={{ height: { xs: 32, lg: 40 } }}
+        sx={{ height: { xs: 24, lg: 32 } }}
       >
         {projectT("budget.action.addBudget")}
       </Button>
