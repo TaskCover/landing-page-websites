@@ -5,6 +5,7 @@ import {
   CircularProgress,
   ListSubheader,
   MenuItem,
+  MenuList,
   Stack,
   inputBaseClasses,
   selectClasses,
@@ -21,6 +22,7 @@ import useToggle from "hooks/useToggle";
 import Text from "./Text";
 import { SearchProps } from "components/Filters/Search";
 import Image from "next/image";
+import { Menu } from "@mui/base";
 
 export type SelectProps = InputProps & {
   options: Option[];
@@ -125,16 +127,16 @@ const Select = (props: SelectProps) => {
         open: isShow,
         onOpen: onOpenSelect,
         onClose,
-        MenuProps: {
-          PaperProps: {
-            onScroll,
-          },
-          MenuListProps: {
-            sx: {
-              maxHeight: 300,
-            },
-          },
-        },
+        // MenuProps: {
+        //   PaperProps: {
+        //     onScroll: false,
+        //   },
+        //   MenuListProps: {
+        //     sx: {
+        //       maxHeight: 300,
+        //     },
+        //   },
+        // },
       }}
       rootSx={defaultSx.input}
       value={hasValue ? value : showPlaceholder ? ID_PLACEHOLDER : ""}
@@ -153,44 +155,53 @@ const Select = (props: SelectProps) => {
           {...searchProps}
         />
       )}
-      {optionList?.map((option) => (
-        <MenuItem
-          sx={{
-            ...defaultSx.item,
-            display:
-              (!hasValue && option.value === ID_PLACEHOLDER) ||
-              value === ID_PLACEHOLDER
-                ? "none"
-                : undefined,
-          }}
-          key={option.value}
-          value={option.value}
+      {isShow && (
+        <MenuList
+          sx={{ maxHeight: "200px", overflowY: "scroll", padding: "0px" }}
         >
-          <Stack direction="row" alignItems="center" spacing={1}>
-            {option.value !== ID_PLACEHOLDER && hasAvatar && (
-              <Avatar src={option?.avatar ?? UserPlaceholderImage} size={24} />
-            )}
-            {hasIcon && !!option?.icon && (
-              <Image
-                src={option.icon as string}
-                width={18}
-                height={18}
-                alt="icon"
-              />
-            )}
-            <Stack>
-              <Text variant="body2" className="text-option">
-                {option.label}
-              </Text>
-              {showSubText && (
-                <Text variant="body2" className="sub">
-                  {option.subText}
-                </Text>
-              )}
-            </Stack>
-          </Stack>
-        </MenuItem>
-      ))}
+          {optionList?.map((option) => (
+            <MenuItem
+              sx={{
+                ...defaultSx.item,
+                display:
+                  (!hasValue && option.value === ID_PLACEHOLDER) ||
+                  value === ID_PLACEHOLDER
+                    ? "none"
+                    : undefined,
+              }}
+              key={option.value}
+              value={option.value}
+            >
+              <Stack direction="row" alignItems="center" spacing={1}>
+                {option.value !== ID_PLACEHOLDER && hasAvatar && (
+                  <Avatar
+                    src={option?.avatar ?? UserPlaceholderImage}
+                    size={24}
+                  />
+                )}
+                {hasIcon && !!option?.icon && (
+                  <Image
+                    src={option.icon as string}
+                    width={18}
+                    height={18}
+                    alt="icon"
+                  />
+                )}
+                <Stack>
+                  <Text variant="body2" className="text-option">
+                    {option.label}
+                  </Text>
+                  {showSubText && (
+                    <Text variant="body2" className="sub">
+                      {option.subText}
+                    </Text>
+                  )}
+                </Stack>
+              </Stack>
+            </MenuItem>
+          ))}
+        </MenuList>
+      )}
 
       {pending && (
         <MenuItem sx={defaultSx.item} value={ID_PENDING}>

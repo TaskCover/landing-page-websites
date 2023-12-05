@@ -26,6 +26,7 @@ export type GetEmployeeListQueries = BaseQueries & {
   status?: boolean;
   company?: string;
   date?: string;
+  searchType?: 'and' | 'or' | 'eq'
 };
 
 export type EmployeeData = {

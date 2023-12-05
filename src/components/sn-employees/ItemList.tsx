@@ -143,7 +143,7 @@ const ItemList = () => {
     const path = getPath(pathname, newQueries);
     push(path);
 
-    onGetEmployees(newQueries);
+    onGetEmployees({ ...newQueries, searchType: "or" });
   };
 
   const onChangePage = (newPage: number) => {
@@ -183,7 +183,7 @@ const ItemList = () => {
 
   useEffect(() => {
     if (!isReady) return;
-    onGetEmployees({ ...DEFAULT_PAGING, ...initQuery });
+    onGetEmployees({ ...DEFAULT_PAGING, ...initQuery, searchType: "or" });
   }, [initQuery, isReady, onGetEmployees]);
 
   useEffect(() => {
