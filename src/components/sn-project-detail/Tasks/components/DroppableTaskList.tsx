@@ -182,7 +182,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   </IconButton>
                   <Text
                     variant={isXlSmaller ? "h6" : "h5"}
-                    color="grey.300"
+                    color="#666666"
                     onClick={onShowPreviewName}
                     noWrap
                     sx={{ cursor: "pointer" }}
@@ -194,7 +194,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                     ml={0.5}
                     variant="h5"
                     fontWeight={400}
-                    color="grey.300"
+                    color="#666666"
                   >
                     {`(${count})`}
                   </Text>
@@ -259,7 +259,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                       "& >label": {
                         fontWeight: "600 !important",
                         fontSize: "14px",
-                        color: "#666666 !important",
+                        color: "#999999 !important",
                       },
                     }}
                   />
