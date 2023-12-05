@@ -498,7 +498,7 @@ export const MoreList = (props: MoreListProps) => {
                   component={ButtonBase}
                   sx={sxConfig.item}
                 >
-                  <PlusIcon sx={{ color: "grey.400" }} fontSize="medium" />
+                  {/* <PlusIcon sx={{ color: "grey.400" }} fontSize="medium" /> */}
                   <Text ml={2} variant="body2" color="grey.400">
                     {projectT("detailTasks.addNewTask")}
                   </Text>

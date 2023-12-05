@@ -19,6 +19,7 @@ export enum CompanyStatus {
 }
 
 export type GetEmployeeListQueries = BaseQueries & {
+  fullname?: string;
   email?: string;
   position?: string;
   is_pay_user?: boolean;
@@ -55,7 +56,7 @@ export const getEmployees = createAsyncThunk(
   }: GetEmployeeListQueries & { concat?: boolean }) => {
     queries = serverQueries(
       { ...queries, sort: "created_time=-1" },
-      ["email"],
+      ["email", "fullname"],
       undefined,
       ["status"],
     ) as GetEmployeeListQueries;
@@ -80,6 +81,7 @@ export const getEmployeeOptions = createAsyncThunk(
   async (queries: BaseQueries & { email?: string }) => {
     queries = serverQueries({ ...queries, sort: "created_time=-1" }, [
       "email",
+      "fullname"
     ]) as GetEmployeeListQueries;
 
     try {

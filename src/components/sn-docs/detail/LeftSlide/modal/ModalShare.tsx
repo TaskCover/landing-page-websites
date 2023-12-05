@@ -1,33 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prefer-const */
-import FormLayout from "components/FormLayout";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { Box, Stack } from "@mui/material";
-import { Select } from "components/shared";
-import { useMemberOptions } from "store/project/selectors";
-import { useTranslations } from "next-intl";
-import {
-  NS_COMMON,
-  NS_PROJECT,
-  DEFAULT_PAGING,
-  DOCS_API_URL,
-} from "constant/index";
-import { useFormik } from "formik";
-import { useParams } from "next/navigation";
-import { useEmployees } from "store/company/selectors";
-import { Option } from "constant/types";
-import useQueryParams from "hooks/useQueryParams";
+import { Stack } from "@mui/material";
 import { Endpoint, client } from "api";
-import { useAppSelector } from "store/hooks";
-import { Http } from "@mui/icons-material";
+import FormLayout from "components/FormLayout";
+import { Select } from "components/shared";
 import { HttpStatusCode } from "constant/enums";
+import { DEFAULT_PAGING, NS_COMMON } from "constant/index";
+import { Option } from "constant/types";
+import { useFormik } from "formik";
+import useQueryParams from "hooks/useQueryParams";
+import { useTranslations } from "next-intl";
+import React, { SetStateAction, useEffect } from "react";
 import { useSnackbar } from "store/app/selectors";
+import { useEmployees } from "store/company/selectors";
+import { useAppSelector } from "store/hooks";
 
 interface ModalShareProps {
   setOpenShare: React.Dispatch<SetStateAction<boolean>>;
@@ -176,12 +162,12 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
           rootSx={sxConfig.input}
           fullWidth
           onChangeSearch={onChangeSearch}
-          //   onEndReached={onEndReached}
         />
         <Select
           options={optionAccess}
           title={"Access"}
           name="access"
+          sx={{ "& .MuiMenu-paper": { zIndex: 100 } }}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values?.access}

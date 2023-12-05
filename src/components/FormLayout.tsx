@@ -92,7 +92,7 @@ const defaultSx = {
   root: {
     minWidth: { xs: "calc(100vw - 24px)", sm: 850 },
     px: 0,
-    zIndex: 1200
+    zIndex: 50,
   },
   bottom: {
     borderTop: "1px solid",

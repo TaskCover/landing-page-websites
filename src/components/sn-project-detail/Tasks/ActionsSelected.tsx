@@ -67,8 +67,8 @@ const ActionsSelected = (props: ActionsSelectedProps) => {
       bgcolor={isDarkMode ? "background.default" : "primary.light"}
       px={1.5}
       py={{ xs: 1, md: 0.75 }}
-      position="sticky"
-      top={{ xs: 209, md: 80 }}
+      position="relative"
+      // top={{ xs: 209, md: 80 }}
       zIndex={12}
     >
       <Stack
