@@ -33,7 +33,6 @@ const DatePicker = (props: DatePickerProps) => {
   const locale = useLocale();
 
   const onChangeDate = (date: Date | null) => {
-    console.log("date", date);
     onChange(name, date || undefined);
   };
 
