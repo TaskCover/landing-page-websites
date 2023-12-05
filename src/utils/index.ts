@@ -127,6 +127,22 @@ export const getFiltersFromQueries = (
   }, {});
 };
 
+export const formatDocResponseToItemResponse = (data: {
+  totalDocs: number;
+  totalPages: number;
+  page: number;
+  limit: number;
+  docs: any[];
+}) => {
+  return {
+    total: data.totalDocs,
+    total_page: data.totalPages,
+    page: data.page - 1,
+    data: data.docs,
+    pageSize: data.limit,
+  };
+};
+
 export const refactorRawItemListResponse = (rawData: {
   page: number;
   total: number;
