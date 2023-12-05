@@ -1,5 +1,12 @@
-import React, { memo, SyntheticEvent } from "react";
-import { Autocomplete, SxProps, MenuItem, Stack, Chip } from "@mui/material";
+import React, { memo, ReactNode, SyntheticEvent, useEffect } from "react";
+import {
+  Autocomplete,
+  SxProps,
+  MenuItem,
+  Stack,
+  Chip,
+  CircularProgress,
+} from "@mui/material";
 import { Option } from "constant/types";
 import { Button, Input, Text } from "components/shared";
 import ArrowDownIcon from "icons/ArrowDownIcon";
@@ -39,19 +46,35 @@ const SelectMultiple = ({
   error,
   onInputChange,
   onOpen,
-  loading = true,
+  loading,
 }: IProps) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const innerRef = React.useRef<HTMLUListElement>(null);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.scrollTop = 0;
+    }
+  }, []);
   return (
     <Autocomplete
       getOptionLabel={(option) => option?.label || ""}
       multiple
-      autoSelect
       fullWidth
-      onOpen={() => onOpen && onOpen()}
+      onOpen={(e) => {
+        onOpen && onOpen();
+      }}
       onEnded={onEndReached}
       limitTags={limitTags}
+      ListboxProps={{
+        autoFocus: false,
+      }}
+      ListboxComponent={(props) => (
+        <ul {...props} ref={innerRef}>
+          {props.children}
+        </ul>
+      )}
+      autoFocus={false}
       noOptionsText={
         <Button
           variant="text"
@@ -110,6 +133,7 @@ const SelectMultiple = ({
             }}
             key={option.value}
             value={option.value}
+            autoFocus={false}
           >
             <Stack direction="row" alignItems="center" spacing={1}>
               {option.value !== ID_PLACEHOLDER && (
@@ -153,11 +177,14 @@ const SelectMultiple = ({
           );
         });
       }}
-      loading={loading}
+      // loading={loading}
       options={options}
       onInputChange={(event, value) => onInputChange && onInputChange(value)}
       isOptionEqualToValue={(option, value) => option.value === value.value}
-      onChange={(event, value) => onSelect(event, value)}
+      onChange={(event, value) => {
+        onSelect(event, value);
+        if (inputRef.current) inputRef.current.value = "";
+      }}
     />
   );
 };
