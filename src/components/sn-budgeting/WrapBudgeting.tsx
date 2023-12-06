@@ -9,7 +9,7 @@ export const WrapBudgeting = () => {
   return (
     <>
       <Action projectId={String(projectId ?? "")} />
-      <Item />
+      <Item projectId={String(projectId ?? "")} />
     </>
   );
 };

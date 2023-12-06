@@ -55,6 +55,7 @@ export const getProjectBudgetList = createAsyncThunk(
     let userId: string = "";
     let startDate: string = "";
     let endDate: string = "";
+    let projectId: string = "";
 
     if (queries.group_by) {
       groupBy = queries.group_by;
@@ -76,6 +77,11 @@ export const getProjectBudgetList = createAsyncThunk(
       delete queries.end_date;
     }
 
+    if (queries.project_id) {
+      projectId = queries.project_id;
+      delete queries.project_id;
+    }
+
     const newQueries = serverQueries(queries);
 
     if (groupBy !== "") {
@@ -92,6 +98,10 @@ export const getProjectBudgetList = createAsyncThunk(
 
     if (endDate !== "") {
       newQueries.end_date = endDate;
+    }
+
+    if (projectId !== "") {
+      newQueries.project_id = projectId;
     }
 
     const response = await saleClient.get(Endpoint.PROJECT_BUDGET, newQueries);
