@@ -5,7 +5,6 @@ import { Text } from "components/shared";
 import { usePathname } from "next-intl/client";
 import MenuDashboardIcon from "icons/MenuDashboardIcon";
 import {
-  AUTHORIZED_PATHS,
   COMPANIES_PATH,
   COST_HISTORY_PATH,
   EMPLOYEES_PATH,
@@ -24,9 +23,9 @@ import {
   BLOG_CATEGORY_PATH,
   BLOGS_PATH,
   CAREER_PATH,
+  BUDGETING_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
-import MenuTaskIcon from "icons/MenuTaskIcon";
 import MenuCompanyIcon from "icons/MenuCompanyIcon";
 import Collapse from "./Collapse";
 import { useAuth, useSidebar } from "store/app/selectors";
@@ -45,7 +44,7 @@ import MenuDocsIcon from "icons/MenuDocsIcon";
 import FeedbackIcon from "icons/FeedbackIcon";
 import MenuBlogIcon from "icons/MenuBlogIcon";
 import CareerIcon from "icons/CareerIcon";
-import DocsItem from "icons/DocsItem";
+import WalletMoneyIcon from "icons/WalletMoneyIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -262,7 +261,12 @@ const DATA: MenuItemProps[] = [
     icon: <MenuTimeTrackingIcon />,
     roles: [Permission.AM, Permission.ST],
   },
-
+  {
+    label: "menu.budgeting",
+    icon: <WalletMoneyIcon style={{ color: '#3699FF' }} />,
+    href: BUDGETING_PATH,
+    roles: [Permission.AM, Permission.ST],
+  },
   {
     label: "menu.resourcePlaning",
     href: RESOURCE_PLANING_PATH,

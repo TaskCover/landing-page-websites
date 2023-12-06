@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation";
 import Filter from "components/sn-project-detail/Budget/Actions/Filter";
 import { TProjectBudgetListQueries } from "store/project/budget/action";
 
-const Search = () => {
+const Search = ({ projectId }: { projectId?: string }) => {
   const [queries, setQueries] = useState<any>({});
 
   const projectT = useTranslations(NS_PROJECT);
@@ -37,6 +37,9 @@ const Search = () => {
 
   const onSearch = () => {
     let newQueries: TProjectBudgetListQueries = {};
+    if (projectId) {
+      newQueries.project_id = projectId;
+    }
     if (
       typeof queries?.user_id === "object" &&
       Array.isArray(queries.user_id) &&

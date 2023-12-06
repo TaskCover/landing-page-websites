@@ -2,15 +2,12 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { shallowEqual } from "react-redux";
 import { useCallback, useMemo } from "react";
 import { DataStatus } from "constant/enums";
-import {
-  GetProjectListQueries,
-  ProjectData,
-  updateProject,
-} from "store/project/actions";
+import { ProjectData, updateProject } from "store/project/actions";
 import {
   createProjectBudget,
   getProjectBudgetList,
   TProjectBudgetCreateParam,
+  TProjectBudgetListQueries,
 } from "store/project/budget/action";
 
 export const useBudgets = () => {
@@ -37,7 +34,7 @@ export const useBudgets = () => {
   );
 
   const triggerGetProjectBudget = useCallback(
-    async (queries?: GetProjectListQueries) =>
+    async (queries?: TProjectBudgetListQueries) =>
       await dispatch(getProjectBudgetList(queries ?? {})),
     [dispatch],
   );

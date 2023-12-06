@@ -198,6 +198,7 @@ export const ProjectLang: ProjectDictionary = {
       start_date: "Ngày bắt đầu",
       end_date: "Ngày kết thúc",
       owner: "Người tạo",
+      project_id: "Project ID",
     },
     createBudgetSuccess: "Thêm chi phí mới thành công",
     table: {
