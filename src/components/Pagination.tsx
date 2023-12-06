@@ -48,8 +48,9 @@ const Pagination = (props: PaginationProps) => {
     <Stack
       direction={{ xs: "column-reverse", sm: "row" }}
       alignItems="center"
-      justifyContent={{ xs: "center", md: "space-between" }}
+      justifyContent={{ xs: "center", md: "flex-start" }}
       width="100%"
+      padding={2}
       spacing={{ md: 2 }}
       {...containerProps}
     >
