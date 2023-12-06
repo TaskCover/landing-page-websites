@@ -145,6 +145,11 @@ const Actions = () => {
             onChange={onChangeQueries}
             value={queries["email"]}
             sx={{ width: 200, minWidth: 200 }}
+            onKeyDown={(e) => {
+              if(e.key === 'Enter') {
+                onSearch()
+              }
+            }}
           />
           <Dropdown
             placeholder={commonT("position")}
