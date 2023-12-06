@@ -10,7 +10,7 @@ import {
 import { Option } from "constant/types";
 import { Button, Input, Text } from "components/shared";
 import ArrowDownIcon from "icons/ArrowDownIcon";
-import { uuid } from "utils/index";
+import { debounce, uuid } from "utils/index";
 import PlusIcon from "icons/PlusIcon";
 
 interface IProps {
@@ -64,6 +64,7 @@ const SelectMultiple = ({
       onOpen={(e) => {
         onOpen && onOpen();
       }}
+      loadingText={<CircularProgress size={20} />}
       onEnded={onEndReached}
       limitTags={limitTags}
       ListboxProps={{
@@ -76,32 +77,34 @@ const SelectMultiple = ({
       )}
       autoFocus={false}
       noOptionsText={
-        <Button
-          variant="text"
-          startIcon={<PlusIcon />}
-          size="medium"
-          TouchRippleProps={{
-            style: {
-              display: "none",
-            },
-          }}
-          onClick={() => onEnter && onEnter(inputRef.current?.value)}
-          sx={{
-            display: "block",
-            "&.MuiButton-text:hover": {
+        noOptionText && (
+          <Button
+            variant="text"
+            startIcon={<PlusIcon />}
+            size="medium"
+            TouchRippleProps={{
+              style: {
+                display: "none",
+              },
+            }}
+            onClick={() => onEnter && onEnter(inputRef.current?.value)}
+            sx={{
+              display: "block",
+              "&.MuiButton-text:hover": {
+                color: "secondary.main",
+                textAlign: "center",
+              },
+              [`&.MuiButtonBase-root`]: {
+                px: "10px!important",
+                py: "8px!important",
+              },
               color: "secondary.main",
-              textAlign: "center",
-            },
-            [`&.MuiButtonBase-root`]: {
-              px: "10px!important",
-              py: "8px!important",
-            },
-            color: "secondary.main",
-            width: "100%",
-          }}
-        >
-          {noOptionText}
-        </Button>
+              width: "100%",
+            }}
+          >
+            {noOptionText}
+          </Button>
+        )
       }
       renderInput={(params) => (
         <Input
@@ -177,13 +180,16 @@ const SelectMultiple = ({
           );
         });
       }}
-      // loading={loading}
+      loading={loading}
       options={options}
-      onInputChange={(event, value) => onInputChange && onInputChange(value)}
+      onInputChange={(event, value) => {
+        debounce(() => {
+          onInputChange && onInputChange(value);
+        }, 800);
+      }}
       isOptionEqualToValue={(option, value) => option.value === value.value}
       onChange={(event, value) => {
         onSelect(event, value);
-        if (inputRef.current) inputRef.current.value = "";
       }}
     />
   );

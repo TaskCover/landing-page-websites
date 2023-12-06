@@ -29,7 +29,7 @@ import {
 const TabHeader = () => {
   const { saleDetail } = useSaleDetail();
   const { onUpdateDeal } = useSales();
-  const { stageOptions } = useGetStageOptions();
+  const { stageOptions, stageStatusOptions } = useGetStageOptions();
   const { saleRevenue } = useSaleDetail();
   const { salesFilters, pageIndex, pageSize } = useSales();
   const { push } = useRouter();
@@ -86,46 +86,48 @@ const TabHeader = () => {
         xs: 0,
         sm: "0.5rem 1rem",
       }}
-      minHeight="62px"
+      minHeight={{
+        xs: "128px",
+        md: "64px",
+      }}
       justifyContent="space-between"
       alignItems={{
         xs: "flex-start",
-        sm: "center",
+        md: "center",
       }}
       overflow="hidden"
     >
-      <Stack
-        direction="row"
-        spacing={1}
+      <Link
         sx={{
-          width: "50%",
-          flex: 1,
+          maxWidth: "50%",
+          textDecoration: "none",
         }}
-        alignItems={"center"}
+        href={prevListPath}
+        textAlign="center"
       >
-        <Link href={prevListPath} textAlign="center">
+        <Stack direction="row" spacing={1} alignItems={"center"}>
           <ArrowLeftIcon
             sx={{ color: "common.black" }}
             height={24}
             width={24}
             color="inherit"
           />
-        </Link>
-        <Avatar size={32} src={saleDetail?.owner?.avatar?.link} />
-        <Text
-          variant="h5"
-          sx={{
-            width: "100%  ",
-            textAlign: "left",
-            WebkitLineClamp: 1,
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {saleDetail?.name}
-        </Text>
-      </Stack>
+          <Avatar size={32} src={saleDetail?.owner?.avatar?.link} />
+          <Text
+            variant="h5"
+            sx={{
+              width: "100%",
+              textAlign: "left",
+              WebkitLineClamp: 1,
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {saleDetail?.name}
+          </Text>
+        </Stack>
+      </Link>
       <Stack
         direction="row"
         justifyContent={{
@@ -138,6 +140,26 @@ const TabHeader = () => {
         spacing={2}
         flexWrap={{ xs: "wrap", sm: "nowrap" }}
       >
+        <Controller
+          control={control}
+          name="stage"
+          defaultValue={saleDetail?.stage || 0}
+          render={({ field }) => {
+            const { onChange, ...rest } = field;
+            const onSelect = (name: string, value: string) => {
+              onChange(value);
+              onSubmit(name, value);
+            };
+            return (
+              <Dropdown
+                hasAll={false}
+                options={stageStatusOptions}
+                {...rest}
+                onChange={onSelect}
+              />
+            );
+          }}
+        />
         <Controller
           control={control}
           name="status"
