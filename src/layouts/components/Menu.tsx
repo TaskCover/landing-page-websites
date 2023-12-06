@@ -337,14 +337,7 @@ const DATA: MenuItemProps[] = [
     label: "menu.billing",
     icon: <BillingIcon />,
     href: BILLING_PATH,
-    // subs: [
-    //   {
-    //     label: "menu.billing",
-    //     href: BILLING_PATH,
-    //     roles: [Permission.SA],
-    //   },
-    // ],
-    roles: [Permission.SA],
+    roles: [Permission.AM, Permission.ST],
   },
 ];
 

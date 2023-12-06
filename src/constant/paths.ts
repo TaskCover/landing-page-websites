@@ -86,9 +86,7 @@ export const AUTHORIZED_PATHS = {
     DOCS_DETAIL_PATH,
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
-    // Feedback
     FEEDBACK_PATH,
-    // Billing
     BILLING_PATH
   ],
   [Permission.SA]: [
@@ -108,9 +106,7 @@ export const AUTHORIZED_PATHS = {
     //Carrer
     CAREER_PATH,
     CAREER_DETAIL_PATH,
-    BLOGS_RELATED_PATH,
-     // Billing
-     BILLING_PATH
+    BLOGS_RELATED_PATH,    
   ],
   [Permission.ST]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -131,10 +127,8 @@ export const AUTHORIZED_PATHS = {
     DOCS_DETAIL_PATH,
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
-    // Feedback
     FEEDBACK_PATH,
-     // Billing
-     BILLING_PATH
+    BILLING_PATH
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };
