@@ -74,7 +74,7 @@ const TimeCreate: React.FC<IProps> = ({
 
   const schema = yup
     .object({
-      project_id: yup.string().trim().required("Project is a required field"),
+      project_id: yup.string().trim().notRequired(),
       position: yup.string().trim().required("Position is a required field"),
       start_time: yup
         .string()
@@ -98,6 +98,7 @@ const TimeCreate: React.FC<IProps> = ({
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -239,21 +240,7 @@ const TimeCreate: React.FC<IProps> = ({
           }}
           spacing="20px"
         >
-          <Controller
-            name="project_id"
-            control={control}
-            render={({ field }) => (
-              <TextFieldSelect
-                options={projectOptions}
-                label={timeT("modal.Project")}
-                sx={{ flex: 1 }}
-                required
-                error={Boolean(errors?.project_id?.message)}
-                helperText={errors?.project_id?.message}
-                {...(field as any)}
-              />
-            )}
-          />
+          
           <Controller
             name="type"
             control={control}
@@ -293,6 +280,23 @@ const TimeCreate: React.FC<IProps> = ({
               />
             )}
           />
+          {watch("type") === "Work time" && (
+            <Controller
+              name="project_id"
+              control={control}
+              render={({ field }) => (
+              <TextFieldSelect
+                options={projectOptions}
+                label={timeT("modal.Project")}
+                sx={{ flex: 1 }}
+                // required
+                error={Boolean(errors?.project_id?.message)}
+                helperText={errors?.project_id?.message}
+                {...(field as any)}
+              />
+            )}
+          />
+          )}
           {/* <Controller
             name="position"
             control={control}
