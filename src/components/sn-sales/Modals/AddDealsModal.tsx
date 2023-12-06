@@ -206,7 +206,7 @@ const AddDealModal = ({ open, onClose }: IProps) => {
             const onSelect = (e, data) => {
               const mappingData = data.map((item) => item.value);
               onChange(mappingData);
-              onSearchTags("");
+              // onSearchTags("");
             };
             const onEnter = async (value: string | undefined) => {
               if (!value) return;
