@@ -293,13 +293,7 @@ const DATA: MenuItemProps[] = [
   {
     label: "menu.feedback",
     icon: <FeedbackIcon />,
-    subs: [
-      {
-        label: "menu.feedbackList",
-        href: FEEDBACK_PATH,
-        roles: [Permission.SA],
-      },
-    ],
+    href: FEEDBACK_PATH,
     roles: [Permission.SA],
   },
   {
@@ -323,13 +317,7 @@ const DATA: MenuItemProps[] = [
   {
     label: "menu.career",
     icon: <CareerIcon />,
-    subs: [
-      {
-        label: "menu.careerList",
-        href: CAREER_PATH,
-        roles: [Permission.SA],
-      },
-    ],
+    href: CAREER_PATH,
     roles: [Permission.SA],
   },
   //Billing
