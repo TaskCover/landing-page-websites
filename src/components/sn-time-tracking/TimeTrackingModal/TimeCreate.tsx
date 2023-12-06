@@ -196,6 +196,7 @@ const TimeCreate: React.FC<IProps> = ({
       onUpdateTimeSheet({
         ...resolveData,
         id: selectedEvent?.extendedProps?.id,
+        project_id: resolveData.project_id as string,
       })
         .then((res) => {
           if (currentScreen === "myTime") {
@@ -211,7 +212,10 @@ const TimeCreate: React.FC<IProps> = ({
           onClose();
         });
     } else {
-      onCreateTimeSheet(resolveData)
+      onCreateTimeSheet({
+        ...resolveData,
+        project_id: resolveData.project_id || "",
+      })
         .then(() => {
           onAddSnackbar("Create timesheet success", "success");
           onClose();
