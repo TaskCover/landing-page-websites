@@ -38,5 +38,6 @@ export const LayoutLang: LayoutDictionary = {
     blogCategoryList:"Danh sách danh mục",
     career:"Nghề nghiệp",
     careerList: "Danh sách nghề nghiệp",
+    billing:"Hóa đơn"
   },
 };
