@@ -48,6 +48,8 @@ export const BLOGS_RELATED_PATH = "/blogs/{id}/related";
 export const CAREER_PATH = "/careers";
 export const CAREER_DETAIL_PATH = "/careers/{id}";
 export const APPLICANTS_DETAIL_PATH = "/careers/{id}/applicants";
+//Billing
+export const BILLING_PATH = "/billing";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -84,8 +86,8 @@ export const AUTHORIZED_PATHS = {
     DOCS_DETAIL_PATH,
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
-    // Feedback
     FEEDBACK_PATH,
+    BILLING_PATH
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -104,7 +106,7 @@ export const AUTHORIZED_PATHS = {
     //Carrer
     CAREER_PATH,
     CAREER_DETAIL_PATH,
-    BLOGS_RELATED_PATH,
+    BLOGS_RELATED_PATH,    
   ],
   [Permission.ST]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -125,8 +127,8 @@ export const AUTHORIZED_PATHS = {
     DOCS_DETAIL_PATH,
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
-    // Feedback
     FEEDBACK_PATH,
+    BILLING_PATH
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };

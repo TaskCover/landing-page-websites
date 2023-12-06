@@ -38,5 +38,6 @@ export type LayoutDictionary = {
     //carrer
     career:string;
     careerList:string;
+    billing:string;
   };
 };

@@ -11,11 +11,12 @@ import chatReducer from "store/chat/reducer";
 import { SaleState, salesReducer } from "./sales/reducer";
 import { resourcePlanningReducer } from "./resourcePlanning/reducer";
 import { TagState, tagsReducer } from "./tags/reducer";
-import  docReducer,  { IDocs } from "./docs/reducer";
+import docReducer, { IDocs } from "./docs/reducer";
 import { feedbackReducer } from "./feedback/reducer";
 import { BlogState, blogReducer } from "./blog/reducer";
 import { categoryBlogReducer } from "./blog-category/reducer";
 import { CareerReducer } from "./career/reducer";
+import { BillingState, billingReducer } from "./billing/reducer";
 
 export interface State {
   app: AppState;
@@ -26,8 +27,9 @@ export interface State {
   timeTracking: TimeTrackingState;
   tags: TagState;
   sales: SaleState;
-  docs: IDocs,
-  blogs :BlogState;
+  docs: IDocs;
+  blogs: BlogState;
+  billing: BillingState;
 }
 
 export const store = configureStore({
@@ -44,11 +46,12 @@ export const store = configureStore({
     doc: docReducer,
     resourcePlanning: resourcePlanningReducer,
     //feedback
-    feedback : feedbackReducer,
+    feedback: feedbackReducer,
     blogs: blogReducer,
-    categoryBlogs : categoryBlogReducer,
+    categoryBlogs: categoryBlogReducer,
     //career
-    career : CareerReducer,
+    career: CareerReducer,
+    billing: billingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

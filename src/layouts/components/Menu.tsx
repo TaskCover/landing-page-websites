@@ -24,6 +24,7 @@ import {
   BLOG_CATEGORY_PATH,
   BLOGS_PATH,
   CAREER_PATH,
+  BILLING_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
 import MenuTaskIcon from "icons/MenuTaskIcon";
@@ -46,6 +47,7 @@ import FeedbackIcon from "icons/FeedbackIcon";
 import MenuBlogIcon from "icons/MenuBlogIcon";
 import CareerIcon from "icons/CareerIcon";
 import DocsItem from "icons/DocsItem";
+import BillingIcon from "icons/BillingIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -291,13 +293,7 @@ const DATA: MenuItemProps[] = [
   {
     label: "menu.feedback",
     icon: <FeedbackIcon />,
-    subs: [
-      {
-        label: "menu.feedbackList",
-        href: FEEDBACK_PATH,
-        roles: [Permission.SA],
-      },
-    ],
+    href: FEEDBACK_PATH,
     roles: [Permission.SA],
   },
   {
@@ -321,14 +317,15 @@ const DATA: MenuItemProps[] = [
   {
     label: "menu.career",
     icon: <CareerIcon />,
-    subs: [
-      {
-        label: "menu.careerList",
-        href: CAREER_PATH,
-        roles: [Permission.SA],
-      },
-    ],
+    href: CAREER_PATH,
     roles: [Permission.SA],
+  },
+  //Billing
+  {
+    label: "menu.billing",
+    icon: <BillingIcon />,
+    href: BILLING_PATH,
+    roles: [Permission.AM, Permission.ST],
   },
 ];
 
