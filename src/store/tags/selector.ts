@@ -2,7 +2,7 @@ import { DataStatus } from "constant/enums";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { TagData, createTags, getTags } from "./actions";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Option } from "constant/types";
 
 export const useFetchTags = () => {
@@ -27,8 +27,14 @@ export const useTags = () => {
   );
   const dispatch = useAppDispatch();
 
-  const isLoading = tagsStatus === DataStatus.LOADING;
-  const isSucceeded = tagsStatus === DataStatus.SUCCEEDED;
+  const isLoading = useMemo(
+    () => tagsStatus === DataStatus.LOADING,
+    [tagsStatus],
+  );
+  const isSucceeded = useMemo(
+    () => tagsStatus === DataStatus.SUCCEEDED,
+    [tagsStatus],
+  );
 
   const onCreateTags = async (tag: TagData) => {
     return (await dispatch(createTags(tag))
@@ -55,7 +61,7 @@ export const useTags = () => {
 
 export const useTagOptions = () => {
   const [tagsOptions, setTagsOptions] = useState<Option[]>([]);
-  const { tags, onGetTags } = useTags();
+  const { tags, onGetTags, isLoading } = useTags();
 
   useFetchTags();
 
@@ -75,5 +81,6 @@ export const useTagOptions = () => {
   return {
     onSearchTags,
     tagsOptions,
+    isTagLoading: isLoading,
   };
 };

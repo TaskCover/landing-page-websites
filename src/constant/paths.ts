@@ -21,7 +21,7 @@ export const ACCOUNT_INFO_PATH = "/user-information";
 export const UPGRADE_ACCOUNT_PATH = "/upgrade-account";
 export const PROJECT_TASKS_PATH = "/projects/{id}/tasks";
 export const PROJECT_ACTIVITIES_PATH = "/projects/{id}/activities";
-export const PROJECT_COST_HISTORY_PATH = "/projects/{id}/cost-history";
+export const PROJECT_BUDGET_PATH = "/projects/{id}/budget";
 export const PROJECT_MEMBERS_PATH = "/projects/{id}/members";
 export const PROJECT_INFORMATION_PATH = "/projects/{id}";
 
@@ -74,7 +74,7 @@ export const AUTHORIZED_PATHS = {
     PROJECT_TASKS_PATH,
     PROJECT_INFORMATION_PATH,
     PROJECT_MEMBERS_PATH,
-    PROJECT_COST_HISTORY_PATH,
+    PROJECT_BUDGET_PATH,
     PROJECT_ACTIVITIES_PATH,
     MY_COMPANY_PATH,
     HOME_PATH,
@@ -115,7 +115,7 @@ export const AUTHORIZED_PATHS = {
     PROJECT_TASKS_PATH,
     PROJECT_INFORMATION_PATH,
     PROJECT_MEMBERS_PATH,
-    PROJECT_COST_HISTORY_PATH,
+    PROJECT_BUDGET_PATH,
     PROJECT_ACTIVITIES_PATH,
     MY_COMPANY_PATH,
     HOME_PATH,

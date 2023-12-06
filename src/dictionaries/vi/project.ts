@@ -29,11 +29,10 @@ export const ProjectLang: ProjectDictionary = {
       choosePositionFirst: "Bạn cần chọn chức vụ cho thành viên này trước!",
     },
   },
-
   tabList: {
     tasks: "Công việc",
     activities: "Hoạt động",
-    costHistory: "Lịch sử chi phí",
+    budget: "Chi phí",
     members: "Thành viên",
     information: "Thông tin",
   },
@@ -185,6 +184,44 @@ export const ProjectLang: ProjectDictionary = {
     head: {
       title: "Hoạt động dự án | Taskcover",
     },
+  },
+  budget: {
+    head: {
+      title: "Chi phí của dự án | Taskcover",
+    },
+    action: {
+      addBudget: "Thêm chi phí",
+      addBudgetTitleModal: "Thêm chi phí mới"
+    },
+    form: {
+      name: "Tên",
+      start_date: "Ngày bắt đầu",
+      end_date: "Ngày kết thúc",
+      owner: "Người tạo",
+    },
+    createBudgetSuccess: "Thêm chi phí mới thành công",
+    table: {
+      budget: "Tên / Trạng thái",
+      owner: "Người tạo",
+      cost: "Chi phí",
+      budgetTimeUsed: "Thời gian đã dùng",
+      workTime: "Work Time",
+      estimateTime: "Estimate Time",
+    },
+    groupBy: {
+      dateCreated: 'Ngày tạo',
+      dateUpdated: 'Ngày cập nhật',
+      startDate: 'Ngày bắt đầu',
+      endDate: 'Ngày kết thúc',
+      owner: 'Người tạo',
+      status: 'Trạng thái',
+    },
+    filter: {
+      owner: 'Người tạo',
+      time: 'Thời gian',
+    },
+    titleGroupBy: 'Group By',
+    titleFilter: 'Lọc'
   },
   errors: {
     form: {

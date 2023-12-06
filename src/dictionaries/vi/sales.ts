@@ -39,6 +39,9 @@ export const salesLang: SalesDictionary = {
       prospect: "Triển vọng",
       waitingApprove: "Chờ phê duyệt",
       negotiation: "Thương Lượng",
+      open: "Mở",
+      wonDeal: "Giao dịch thành công",
+      lostDeal: "Giao dịch thất bại",
     },
     exportView: {
       title: "Xuất chế độ xem",

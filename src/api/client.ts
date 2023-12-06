@@ -6,6 +6,7 @@ import {
   API_URL,
   AUTH_API_URL,
   REFRESH_TOKEN_STORAGE_KEY,
+  SALE_API_URL,
   UPLOAD_API_URL,
 } from "constant";
 import { HttpStatusCode } from "constant/enums";
@@ -106,14 +107,17 @@ axios.interceptors.response.use(
 );
 
 const RequestClient = class {
-  constructor() {
-    //
+  private readonly defaultConfig: {};
+
+  constructor(config = {}) {
+    this.defaultConfig = config;
   }
 
   async get(endpoint: string, params = {}, configs = {}) {
     try {
       const response = await axios.get(endpoint, {
         params,
+        ...this.defaultConfig,
         ...configs,
       });
 
@@ -125,7 +129,10 @@ const RequestClient = class {
 
   async post(endpoint: string, body: {}, configs = {}) {
     try {
-      const response = await axios.post(endpoint, body, configs);
+      const response = await axios.post(endpoint, body, {
+        ...this.defaultConfig,
+        ...configs,
+      });
 
       return response;
     } catch (error) {
@@ -135,7 +142,10 @@ const RequestClient = class {
 
   async put(endpoint: string, body: {}, configs = {}) {
     try {
-      const response = await axios.put(endpoint, body, configs);
+      const response = await axios.put(endpoint, body, {
+        ...this.defaultConfig,
+        ...configs,
+      });
       return response;
     } catch (error) {
       throw error;
@@ -144,7 +154,10 @@ const RequestClient = class {
 
   async patch(endpoint: string, body: {}, configs = {}) {
     try {
-      const response = await axios.patch(endpoint, body, configs);
+      const response = await axios.patch(endpoint, body, {
+        ...this.defaultConfig,
+        ...configs,
+      });
       return response;
     } catch (error) {
       throw error;
@@ -153,7 +166,10 @@ const RequestClient = class {
 
   async delete(endpoint: string, configs = {}) {
     try {
-      const response = await axios.delete(endpoint, configs);
+      const response = await axios.delete(endpoint, {
+        ...this.defaultConfig,
+        ...configs,
+      });
       return response;
     } catch (error) {
       throw error;
@@ -195,3 +211,7 @@ const signOut = () => {
   clientStorage.remove(REFRESH_TOKEN_STORAGE_KEY);
   window.location.reload();
 };
+
+export const saleClient = new RequestClient({
+  baseURL: SALE_API_URL,
+});

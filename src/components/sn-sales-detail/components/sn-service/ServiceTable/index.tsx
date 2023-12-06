@@ -91,13 +91,12 @@ const ServiceTable = ({
       desc: "",
       serviceType: positionOptions[0]?.value,
       price: 0,
+      estimate: 0,
       billType: SALE_BILL_TYPE.FIX,
       qty: 0,
       discount: 0,
       unit: SERVICE_UNIT_OPTIONS.DAY,
       tolBudget: 0,
-      estimateUSD: 0,
-      tolBudgetUSD: 0,
     });
   };
 

@@ -137,7 +137,6 @@ const SaleItem = ({ item, setShouldLoad }: IProps) => {
           </Text>
         </Stack>
       </BodyCell>
-
       <BodyCell>
         <LabelStatusCell
           fullWidth

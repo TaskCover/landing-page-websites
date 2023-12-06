@@ -127,6 +127,22 @@ export const getFiltersFromQueries = (
   }, {});
 };
 
+export const formatDocResponseToItemResponse = (data: {
+  totalDocs: number;
+  totalPages: number;
+  page: number;
+  limit: number;
+  docs: any[];
+}) => {
+  return {
+    total: data.totalDocs,
+    total_page: data.totalPages,
+    page: data.page - 1,
+    data: data.docs,
+    pageSize: data.limit,
+  };
+};
+
 export const refactorRawItemListResponse = (rawData: {
   page: number;
   total: number;
@@ -142,7 +158,7 @@ export const refactorRawItemListResponse = (rawData: {
   } as ItemListResponse;
 };
 
-const KEYS = ["page", "size", "sort"];
+const KEYS = ["page", "size", "sort", "searchType"];
 
 export const serverQueries = (
   {
@@ -194,9 +210,14 @@ export const serverQueries = (
 
   const cleanData = cleanObject(data);
 
-  if (cleanData["query"].length) {
+  if (cleanData["query"].length && rest.searchType === 'or') {
+    cleanData["query"] = `or(${cleanData["query"].join(",")})`;
+  } else if(cleanData["query"].length && rest.searchType === 'and') {
     cleanData["query"] = `and(${cleanData["query"].join(",")})`;
-  } else {
+  }  else if(cleanData["query"].length && rest.searchType === 'eq') {
+    cleanData["query"] = `eq(${cleanData["query"].join(",")})`;
+  } 
+  else {
     delete cleanData["query"];
   }
 

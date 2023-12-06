@@ -1,9 +1,16 @@
-import React, { memo, SyntheticEvent } from "react";
-import { Autocomplete, SxProps, MenuItem, Stack, Chip } from "@mui/material";
+import React, { memo, ReactNode, SyntheticEvent, useEffect } from "react";
+import {
+  Autocomplete,
+  SxProps,
+  MenuItem,
+  Stack,
+  Chip,
+  CircularProgress,
+} from "@mui/material";
 import { Option } from "constant/types";
 import { Button, Input, Text } from "components/shared";
 import ArrowDownIcon from "icons/ArrowDownIcon";
-import { uuid } from "utils/index";
+import { debounce, uuid } from "utils/index";
 import PlusIcon from "icons/PlusIcon";
 
 interface IProps {
@@ -39,46 +46,65 @@ const SelectMultiple = ({
   error,
   onInputChange,
   onOpen,
-  loading = true,
+  loading,
 }: IProps) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const innerRef = React.useRef<HTMLUListElement>(null);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.scrollTop = 0;
+    }
+  }, []);
   return (
     <Autocomplete
       getOptionLabel={(option) => option?.label || ""}
       multiple
-      autoSelect
       fullWidth
-      onOpen={() => onOpen && onOpen()}
+      onOpen={(e) => {
+        onOpen && onOpen();
+      }}
+      loadingText={<CircularProgress size={20} />}
       onEnded={onEndReached}
       limitTags={limitTags}
+      ListboxProps={{
+        autoFocus: false,
+      }}
+      ListboxComponent={(props) => (
+        <ul {...props} ref={innerRef}>
+          {props.children}
+        </ul>
+      )}
+      autoFocus={false}
       noOptionsText={
-        <Button
-          variant="text"
-          startIcon={<PlusIcon />}
-          size="medium"
-          TouchRippleProps={{
-            style: {
-              display: "none",
-            },
-          }}
-          onClick={() => onEnter && onEnter(inputRef.current?.value)}
-          sx={{
-            display: "block",
-            "&.MuiButton-text:hover": {
+        noOptionText && (
+          <Button
+            variant="text"
+            startIcon={<PlusIcon />}
+            size="medium"
+            TouchRippleProps={{
+              style: {
+                display: "none",
+              },
+            }}
+            onClick={() => onEnter && onEnter(inputRef.current?.value)}
+            sx={{
+              display: "block",
+              "&.MuiButton-text:hover": {
+                color: "secondary.main",
+                textAlign: "center",
+              },
+              [`&.MuiButtonBase-root`]: {
+                px: "10px!important",
+                py: "8px!important",
+              },
               color: "secondary.main",
-              textAlign: "center",
-            },
-            [`&.MuiButtonBase-root`]: {
-              px: "10px!important",
-              py: "8px!important",
-            },
-            color: "secondary.main",
-            width: "100%",
-          }}
-        >
-          {noOptionText}
-        </Button>
+              width: "100%",
+            }}
+          >
+            {noOptionText}
+          </Button>
+        )
       }
       renderInput={(params) => (
         <Input
@@ -110,6 +136,7 @@ const SelectMultiple = ({
             }}
             key={option.value}
             value={option.value}
+            autoFocus={false}
           >
             <Stack direction="row" alignItems="center" spacing={1}>
               {option.value !== ID_PLACEHOLDER && (
@@ -155,9 +182,15 @@ const SelectMultiple = ({
       }}
       loading={loading}
       options={options}
-      onInputChange={(event, value) => onInputChange && onInputChange(value)}
+      onInputChange={(event, value) => {
+        debounce(() => {
+          onInputChange && onInputChange(value);
+        }, 800);
+      }}
       isOptionEqualToValue={(option, value) => option.value === value.value}
-      onChange={(event, value) => onSelect(event, value)}
+      onChange={(event, value) => {
+        onSelect(event, value);
+      }}
     />
   );
 };
