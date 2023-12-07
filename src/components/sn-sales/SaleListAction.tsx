@@ -30,7 +30,7 @@ const SalesListAction = () => {
   const salesT = useTranslations(NS_SALES);
 
   const [queries, setQueries] = useState<Params>({
-    sort: SORT_OPTIONS.DESC,
+    sort: "DESC",
   });
 
   const onOpenModal = (modal) => {
