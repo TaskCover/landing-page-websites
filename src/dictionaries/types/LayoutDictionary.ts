@@ -24,6 +24,7 @@ export type LayoutDictionary = {
     companyList: string;
     statementHistory: string;
     timeTracking: string;
+    budgeting: string;
     resourcePlaning: string;
     sales: string;
     docs: string;

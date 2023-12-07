@@ -9,23 +9,23 @@ import {
   DEFAULT_PAGING,
   NS_PROJECT,
 } from "constant/index";
-import { useParams } from "next/navigation";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
 import { HEADER_HEIGHT } from "../../../layouts/Header";
-import { Stack, TableRow } from "@mui/material";
+import { Box, Stack, TableRow } from "@mui/material";
 import MobileContentCell from "components/sn-project-detail/Members/MobileContentCell";
 import Pagination from "components/Pagination";
-import FixedLayout from "components/FixedLayout";
 import { formatDate, getPath } from "utils/index";
 import { useMembersOfProject } from "store/project/selectors";
-import { TProjectBudgets } from "store/project/budget/action";
+import { TBudgetListQueries, TBudgets } from "store/project/budget/action";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import useQueryParams from "hooks/useQueryParams";
 import { usePathname, useRouter } from "next-intl/client";
+import { BUDGET_DETAIL_PATH } from "constant/paths";
+import Link from "components/Link";
 
-const Item = () => {
-  const [budgets, setBudgets] = useState<TProjectBudgets>([]);
+const Item = ({ projectId }: { projectId?: string }) => {
+  const [budgets, setBudgets] = useState<TBudgets>([]);
 
   const {
     items: budgetItems,
@@ -43,35 +43,27 @@ const Item = () => {
 
   const { isMdSmaller } = useBreakpoint();
   const projectT = useTranslations(NS_PROJECT);
-  const params = useParams();
   const pathname = usePathname();
   const { initQuery, isReady, query } = useQueryParams();
   const { push } = useRouter();
 
-  const projectId = useMemo(() => params.id, [params.id]) as string;
-
   useEffect(() => {
-    if (!isReady || !projectId) return;
-    getBudget({ ...DEFAULT_PAGING, ...initQuery });
-  }, [initQuery, isReady, getBudget, projectId]);
-
-  useEffect(() => {
-    onGetMembersOfProject(projectId, {});
-  }, []);
+    if (!isReady) return;
+    const query: TBudgetListQueries = {
+      ...DEFAULT_PAGING,
+      ...initQuery,
+    };
+    if (projectId) {
+      query.project_id = projectId;
+    }
+    getBudget(query);
+  }, [initQuery, isReady, getBudget]);
 
   useEffect(() => {
     if (!budgetItems || !members || budgetItems.length == 0) return;
-    const newBudgetData: TProjectBudgets = [];
+    const newBudgetData: TBudgets = [];
     budgetItems.map((budget) => {
       budget = { ...budget };
-      members.map((member) => {
-        if (member.id === budget.owner) {
-          budget.owner = member;
-        }
-      });
-      if (typeof budget.owner === "string") {
-        budget.owner = null;
-      }
       budget.created_time = formatDate(
         budget.created_time,
         DATE_TIME_FORMAT_SLASH,
@@ -121,64 +113,78 @@ const Item = () => {
   };
 
   return (
-    <>
-      <FixedLayout>
-        <TableLayout
-          headerList={headerList}
-          pending={isFetching}
-          error={error as string}
-          noData={!isIdle && totalItems === 0}
-          px={{ xs: 0, md: 3 }}
-          containerHeaderProps={{
-            sx: {
-              maxHeight: { xs: 0, md: undefined },
-              minHeight: { xs: 0, md: HEADER_HEIGHT },
-            },
-          }}
-        >
-          {budgets?.map((budget) => {
-            return (
-              <TableRow key={budget.id}>
-                {isMdSmaller ? (
-                  <MobileContentCell item={budget} />
-                ) : (
-                  <>
-                    <BodyCell align="center">{budget.name}</BodyCell>
-                    <BodyCell align="left">
-                      {budget.owner && typeof budget.owner === "object" && (
-                        <Stack direction="row" alignItems="center">
-                          <Avatar src={budget?.owner?.avatar?.link} size={35} />
-                          <Text
-                            paddingLeft="5px"
-                            sx={{ width: "calc(100% - 35px)" }}
-                          >
-                            {budget.owner?.fullname}
-                          </Text>
-                        </Stack>
-                      )}
-                    </BodyCell>
-                    <BodyCell align="center">--</BodyCell>
-                    <BodyCell align="center">--</BodyCell>
-                    <BodyCell align="center">--</BodyCell>
-                    <BodyCell align="center">--</BodyCell>
-                  </>
-                )}
-              </TableRow>
-            );
-          })}
-        </TableLayout>
+    <Box>
+      <TableLayout
+        headerList={headerList}
+        pending={isFetching}
+        error={error as string}
+        noData={!isIdle && totalItems === 0}
+        px={{ xs: 0, md: 3 }}
+        containerHeaderProps={{
+          sx: {
+            maxHeight: { xs: 0, md: undefined },
+            minHeight: { xs: 0, md: HEADER_HEIGHT },
+          },
+        }}
+      >
+        {budgets?.map((budget) => {
+          return (
+            <TableRow key={budget.id}>
+              {isMdSmaller ? (
+                <MobileContentCell item={budget} />
+              ) : (
+                <>
+                  <BodyCell align="center">
+                    <Link
+                      href={getPath(BUDGET_DETAIL_PATH, undefined, {
+                        id: budget.id as string,
+                      })}
+                      underline="none"
+                      sx={{
+                        color: "inherit",
+                        "&:hover": {
+                          color: "primary.main",
+                        },
+                        fontSize: 14,
+                      }}
+                    >
+                      {budget.name}
+                    </Link>
+                  </BodyCell>
+                  <BodyCell align="left">
+                    {budget.owner && typeof budget.owner === "object" && (
+                      <Stack direction="row" alignItems="center">
+                        <Avatar src={budget?.owner?.avatar?.link} size={35} />
+                        <Text
+                          paddingLeft="5px"
+                          sx={{ width: "calc(100% - 35px)" }}
+                        >
+                          {budget.owner?.fullname}
+                        </Text>
+                      </Stack>
+                    )}
+                  </BodyCell>
+                  <BodyCell align="center">--</BodyCell>
+                  <BodyCell align="center">--</BodyCell>
+                  <BodyCell align="center">--</BodyCell>
+                  <BodyCell align="center">--</BodyCell>
+                </>
+              )}
+            </TableRow>
+          );
+        })}
+      </TableLayout>
 
-        <Pagination
-          totalItems={totalItems}
-          totalPages={totalPages}
-          page={pageIndex}
-          pageSize={pageSize}
-          containerProps={{ px: { md: 3 }, py: 1 }}
-          onChangePage={onChangePage}
-          onChangeSize={onChangeSize}
-        />
-      </FixedLayout>
-    </>
+      <Pagination
+        totalItems={totalItems}
+        totalPages={totalPages}
+        page={pageIndex}
+        pageSize={pageSize}
+        containerProps={{ px: { md: 3 }, py: 1 }}
+        onChangePage={onChangePage}
+        onChangeSize={onChangeSize}
+      />
+    </Box>
   );
 };
 

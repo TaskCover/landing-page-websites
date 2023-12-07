@@ -10,10 +10,10 @@ import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import { BaseQueries } from "constant/types";
 import { saleClient } from "../../../api/client";
 
-export type TProjectBudget = any;
-export type TProjectBudgets = TProjectBudget[];
+export type TBudget = any;
+export type TBudgets = TBudget[];
 
-export type TProjectBudgetCreateParam = {
+export type TBudgetCreateParam = {
   project_id: string;
   name: string;
   start_date: string;
@@ -21,22 +21,23 @@ export type TProjectBudgetCreateParam = {
   owner: string;
 };
 
-export type TProjectBudgetListQueries = BaseQueries & {
+export type TBudgetListQueries = BaseQueries & {
   sort?: string;
   group_by?: string;
   user_id?: string;
   start_date?: string;
   end_date?: string;
+  project_id?: string;
 };
 
-export type TProjectBudgetListFilter = Omit<
-  TProjectBudgetListQueries,
+export type TBudgetListFilter = Omit<
+  TBudgetListQueries,
   "pageIndex" | "pageSize"
 >;
 
 export const getProjectBudgetList = createAsyncThunk(
   "project/getProjectBudgetList",
-  async (queries: TProjectBudgetListQueries) => {
+  async (queries: TBudgetListQueries) => {
     queries = { ...queries };
 
     if (queries?.sort !== "updated_time=-1") {
@@ -54,6 +55,7 @@ export const getProjectBudgetList = createAsyncThunk(
     let userId: string = "";
     let startDate: string = "";
     let endDate: string = "";
+    let projectId: string = "";
 
     if (queries.group_by) {
       groupBy = queries.group_by;
@@ -75,6 +77,11 @@ export const getProjectBudgetList = createAsyncThunk(
       delete queries.end_date;
     }
 
+    if (queries.project_id) {
+      projectId = queries.project_id;
+      delete queries.project_id;
+    }
+
     const newQueries = serverQueries(queries);
 
     if (groupBy !== "") {
@@ -93,7 +100,11 @@ export const getProjectBudgetList = createAsyncThunk(
       newQueries.end_date = endDate;
     }
 
-    const response = await saleClient.get(Endpoint.PROJECT_BUDGET, newQueries);
+    if (projectId !== "") {
+      newQueries.project_id = projectId;
+    }
+
+    const response = await saleClient.get(Endpoint.BUDGET_ALL, newQueries);
 
     if (response?.status !== HttpStatusCode.OK) {
       throw AN_ERROR_TRY_AGAIN;
@@ -106,8 +117,8 @@ export const getProjectBudgetList = createAsyncThunk(
 
 export const createProjectBudget = createAsyncThunk(
   "project/createProjectBudget",
-  async (param: TProjectBudgetCreateParam) => {
-    const url = Endpoint.PROJECT_BUDGET_CREATE;
+  async (param: TBudgetCreateParam) => {
+    const url = Endpoint.BUDGET_CREATE;
     const response = await saleClient.post(url, param);
 
     if (response?.status !== HttpStatusCode.CREATED) {

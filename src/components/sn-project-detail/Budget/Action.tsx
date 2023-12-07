@@ -5,7 +5,7 @@ import { Stack } from "@mui/material";
 import AddBudget from "components/sn-project-detail/Budget/Actions/AddBudget";
 import Search from "components/sn-project-detail/Budget/Actions/Search";
 
-const Action = () => {
+const Action = ({ projectId }: { projectId?: string }) => {
   return (
     <Stack
       direction="row"
@@ -16,8 +16,8 @@ const Action = () => {
       px={{ xs: 0, md: 3 }}
       display={{ xs: "none", md: "flex" }}
     >
-      <AddBudget />
-      <Search />
+      <AddBudget projectId={projectId} />
+      <Search projectId={projectId} />
     </Stack>
   );
 };

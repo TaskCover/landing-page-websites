@@ -1,7 +1,7 @@
 import { CircularProgress, Stack } from "@mui/material";
 import { memo } from "react";
 import DialogLayout, { DialogLayoutProps } from "./DialogLayout";
-import { Button, Text } from "./shared";
+import { Button } from "./shared";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 
@@ -12,6 +12,7 @@ type FormLayoutProps = {
   disabled?: boolean;
   submitting?: boolean;
   pending?: boolean;
+  bodyFlex?: number;
   renderHeader?: React.ReactNode;
 } & DialogLayoutProps;
 
@@ -30,6 +31,7 @@ const FormLayout = (props: FormLayoutProps) => {
     submitWhenEnter = true,
     onSubmit,
     renderHeader,
+    bodyFlex = 1,
     ...rest
   } = props;
   return (
@@ -73,7 +75,7 @@ const FormLayout = (props: FormLayoutProps) => {
       submitWhenEnter={submitWhenEnter}
       {...rest}
     >
-      <Stack flex={1} overflow="auto">
+      <Stack flex={bodyFlex} overflow="auto">
         {pending ? (
           <CircularProgress
             size={24}

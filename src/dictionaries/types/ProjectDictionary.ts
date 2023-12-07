@@ -194,6 +194,7 @@ export type ProjectDictionary = {
       start_date: string;
       end_date: string;
       owner: string;
+      project_id: string;
     },
     createBudgetSuccess: string;
     table: {

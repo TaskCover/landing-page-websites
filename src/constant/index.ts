@@ -117,6 +117,8 @@ export const NS_CAREER = "career";
 export const NS_APPLICANTS = "applicants";
 //Billing
 export const NS_BILLING = "billing";
+//Budgeting
+export const NS_BUDGETING = 'budgeting';
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 export const VIDEO_ACCEPT = ["video/mp4"];
