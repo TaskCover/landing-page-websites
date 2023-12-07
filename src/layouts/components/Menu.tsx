@@ -265,15 +265,22 @@ const DATA: MenuItemProps[] = [
     roles: [Permission.AM, Permission.ST],
   },
   {
+    label: "menu.resourcePlaning",
+    href: RESOURCE_PLANING_PATH,
+    icon: <MenuResourcePlaningIcon />,
+    roles: [Permission.AM, Permission.ST],
+  },
+  {
     label: "menu.budgeting",
     icon: <WalletMoneyIcon style={{ color: '#3699FF' }} />,
     href: BUDGETING_PATH,
     roles: [Permission.AM, Permission.ST],
   },
+  //Billing
   {
-    label: "menu.resourcePlaning",
-    href: RESOURCE_PLANING_PATH,
-    icon: <MenuResourcePlaningIcon />,
+    label: "menu.billing",
+    icon: <BillingIcon />,
+    href: BILLING_PATH,
     roles: [Permission.AM, Permission.ST],
   },
   {
@@ -324,13 +331,6 @@ const DATA: MenuItemProps[] = [
     icon: <CareerIcon />,
     href: CAREER_PATH,
     roles: [Permission.SA],
-  },
-  //Billing
-  {
-    label: "menu.billing",
-    icon: <BillingIcon />,
-    href: BILLING_PATH,
-    roles: [Permission.AM, Permission.ST],
   },
 ];
 
