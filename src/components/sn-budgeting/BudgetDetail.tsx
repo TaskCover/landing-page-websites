@@ -21,6 +21,8 @@ import useToggle from "hooks/useToggle";
 import { Expenses } from "components/sn-budgeting/TabDetail/Expenses";
 import { Invoice } from "components/sn-budgeting/TabDetail/Invoice";
 import { Recurring } from "./TabDetail/Recurring";
+import { Service } from "./TabDetail/Service";
+import EditIcon from "icons/EditIcon";
 
 enum TABS {
   FEED = "Feed",
@@ -35,7 +37,7 @@ export const BudgetDetail = () => {
   const [isOpenModalTime, openModalTime, hideModalTime] = useToggle();
   const [isShowLoadingTab, openLoadingTab, hideLoadingTab] = useToggle();
   const [budget, setBudget] = useState<TBudget | null>(null);
-  const [activeTab, setActiveTab] = useState<string>(TABS.RECURRING);
+  const [activeTab, setActiveTab] = useState<string>(TABS.SERVICES);
   const { id } = useParams();
 
   const budgetDetailQuery = useBudgetByIdQuery(String(id));
@@ -175,6 +177,18 @@ export const BudgetDetail = () => {
               {budgetT("toolbar.addInvoice")}
             </Button>
           )}
+          {activeTab === TABS.SERVICES && (
+            <Button
+              onClick={() => {}}
+              id="budget_edit_service"
+              startIcon={<EditIcon />}
+              variant="primary"
+              size="small"
+              sx={{ height: "40px", mx: "2px" }}
+            >
+              {budgetT("toolbar.serviceEdit")}
+            </Button>
+          )}
         </Stack>
       </Stack>
       <ModalAddTime
@@ -200,6 +214,7 @@ export const BudgetDetail = () => {
           {activeTab === TABS.EXPENSES && <Expenses />}
           {activeTab === TABS.INVOICES && <Invoice />}
           {activeTab === TABS.RECURRING && <Recurring />}
+          {activeTab === TABS.SERVICES && <Service />}
         </Box>
       </Box>
     </Box>

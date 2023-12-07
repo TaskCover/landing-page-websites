@@ -8,6 +8,7 @@ export type BudgetingDictionary = {
         addTime: string;
         addExpense: string;
         addInvoice: string;
+        serviceEdit: string;
     },
     status: {
         open: string;
@@ -41,6 +42,14 @@ export type BudgetingDictionary = {
         amountUnpaid: string;
         dueDate: string
     },
+	tabService: {
+		index: {
+			name: string;
+			workingTime: string;
+			price: string;
+			cost: string;
+		}
+	},
     dialog: {
         titleModalAdd: string;
         date: string;

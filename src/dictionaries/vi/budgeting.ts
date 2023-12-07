@@ -10,6 +10,7 @@ export const BudgetingLang: BudgetingDictionary = {
         addTime: 'Time',
         addExpense: 'Expense',
         addInvoice: 'Invoice',
+        serviceEdit: 'Edit',
     },
     status: {
         open: 'Open',
@@ -43,6 +44,14 @@ export const BudgetingLang: BudgetingDictionary = {
         amountUnpaid: 'Amount unpaid',
         dueDate: 'Due Date',
     },
+	tabService: {
+		index: {
+			name: "Name",
+			workingTime: "Working time",
+			price: "Price",
+			cost: "Cost",
+		}
+	},
     dialog: {
         titleModalAdd: "Add time entry",
         date: 'Date',
