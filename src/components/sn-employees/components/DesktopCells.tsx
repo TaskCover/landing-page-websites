@@ -5,6 +5,10 @@ import { DATE_TIME_FORMAT_SLASH, NS_COMPANY, DATE_LOCALE_FORMAT } from "constant
 import { formatDate } from "utils/index";
 import { TEXT_STATUS, COLOR_STATUS } from "../helpers";
 import dayjs from "dayjs";
+import { Text } from "components/shared";
+import { Stack } from "@mui/material";
+import Avatar from "components/Avatar";
+
 
 type DesktopCellsProps = {
   item: Employee;
@@ -14,7 +18,12 @@ const DesktopCells = (props: DesktopCellsProps) => {
   const { item } = props;
   return (
     <>
-      <BodyCell align="left">{item.fullname}</BodyCell>
+      <BodyCell align="left">
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Avatar size={32} src={item?.avatar?.link} />
+          <Text variant="h6">{item.fullname}</Text>
+        </Stack>
+      </BodyCell>
       <BodyCell align="left" noWrap>
         {item.email}
       </BodyCell>
