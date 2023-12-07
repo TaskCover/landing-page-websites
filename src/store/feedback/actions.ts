@@ -60,9 +60,9 @@ export const respondToFeedback = createAsyncThunk(
   async ({ id, data, Token }: { id: string, data: FeedbackData, Token: string | undefined | null }) => {
     try {
       const respondToFeedback = {
-        content: data.responsed_content
+        content: data.responsed_content,
+        title : data.title
       } as Responsed_Feedback
-      // console.log(StringFormat(Endpoint.RESPONDFEEDBACK, { id }));
       const response = await client.post(StringFormat(Endpoint.RESPONDFEEDBACK, { id }),
         respondToFeedback,
         {

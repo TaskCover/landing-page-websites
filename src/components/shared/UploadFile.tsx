@@ -70,7 +70,7 @@ const Upload = (props: UploadProps) => {
                         src={previewImage}
                         width={value ? 200 : 100}
                         height={value ? 200 : 100}
-                        alt="Image"
+                        alt="Image" style={{objectFit:"contain"}}
                     />
                 </Stack>
 

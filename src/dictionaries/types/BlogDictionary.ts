@@ -53,8 +53,11 @@ export type BlogDictionary = {
         status: string,
         delete: {
             title:string,
-            confirm:string
-        }
+            confirm:string,
+            remove:string,
+        },
+        published:string,
+        draft:string,
     },
     blogForm: {
         key: string,

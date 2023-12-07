@@ -16,7 +16,7 @@ export const FeedbackLang: FeedbackDictionary = {
         name: "Người gửi",
         phone: "Di động",
         email: "Email",
-        title: "Tiêu đề",
+        subject: "Tiêu đề",
         content: "Nội dung",
         status: "Trạng thái",
         responsed: "Note",

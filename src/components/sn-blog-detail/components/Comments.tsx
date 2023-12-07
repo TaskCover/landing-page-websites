@@ -113,7 +113,7 @@ const CommentsTreeView = () => {
   return (
     <Stack spacing={2}>
       {commentsMap['']?.map((comment) => (
-          <Comment comment={comment} commentsMap={commentsMap} onReply={handleReply} />
+          <Comment comment={comment} commentsMap={commentsMap} onReply={handleReply}  key={comment.id} />
       ))}
     </Stack>
   );
