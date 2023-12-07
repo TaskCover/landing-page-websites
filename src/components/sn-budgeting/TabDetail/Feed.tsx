@@ -1,0 +1,99 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import {
+  TBudgetFeeds,
+  useBudgetGetFeedQuery,
+} from "../../../queries/budgeting/get-feed";
+import React, { useEffect, useState } from "react";
+import { TBudget } from "store/project/budget/action";
+import { Alert, Stack } from "@mui/material";
+import Avatar from "components/Avatar";
+import { Text } from "components/shared";
+import { useTranslations } from "next-intl";
+import {
+  DATE_FORMAT_HYPHEN,
+  DATE_LOCALE_FORMAT,
+  NS_BUDGETING,
+  SHORT_TIME_FORMAT,
+} from "constant/index";
+import { formatDate } from "utils/index";
+import { BadgeCustom } from "components/sn-budgeting/BadgeCustom";
+
+const FeedAction: Record<string, string> = {
+  CREATE_BUDGET: "create",
+};
+
+export const Feed = ({ budget }: { budget: TBudget }) => {
+  const [feeds, setFeeds] = useState<TBudgetFeeds>([]);
+  const { id: budgetId } = useParams();
+  const budgetFeedQuery = useBudgetGetFeedQuery(String(budgetId));
+  const budgetT = useTranslations(NS_BUDGETING);
+
+  useEffect(() => {
+    if (budgetFeedQuery) {
+      setFeeds(budgetFeedQuery.data.docs);
+    }
+  }, [budgetFeedQuery]);
+
+  return (
+    <Stack p="30px">
+      <Stack direction="row">
+        {feeds.map((feed, index) => (
+          <Stack
+            key={`budget-feed-${index}`}
+            direction="row"
+            alignItems="start"
+          >
+            <Avatar size={40} src={budget.created_by.avatar.link} />
+            <Stack px="10px">
+              <Text fontSize="16px" fontWeight="bold" mb="5px">
+                {budgetT(`actionStatus.${FeedAction[feed.action]}`)}
+              </Text>
+              <Stack direction="row" gap={1} alignItems="center" mb="5px">
+                <Text>Created</Text>
+                <BadgeCustom text={feed.data.name} />
+              </Stack>
+              <Stack direction="row" gap={1} alignItems="center" mb="5px">
+                <Text>Responsible set to</Text>
+                <BadgeCustom text={feed.data.owner.fullname} />
+              </Stack>
+              <Stack direction="row" gap={1} alignItems="center" mb="5px">
+                <Text>Currency set to</Text>
+                <BadgeCustom text={feed.data.currency} />
+              </Stack>
+              <Stack direction="row" gap={1} alignItems="center" mb="5px">
+                <Text>Company set to</Text>
+                <BadgeCustom text={feed.data.company} />
+              </Stack>
+              <Stack direction="row" gap={1} alignItems="center" mb="5px">
+                <Text>Deal type set to</Text>
+                <BadgeCustom text={"Client"} />
+              </Stack>
+              <Stack direction="row" gap={1} alignItems="center" mb="5px">
+                <Text>Start date set to</Text>
+                <BadgeCustom
+                  text={formatDate(feed.data.start_date, DATE_LOCALE_FORMAT)}
+                />
+              </Stack>
+              <Stack direction="row" gap={1} alignItems="center" mb="5px">
+                <Text>End date set to</Text>
+                <BadgeCustom
+                  text={formatDate(feed.data.end_date, DATE_LOCALE_FORMAT)}
+                />
+              </Stack>
+            </Stack>
+            <Stack textAlign="center">
+              <Text sx={{ color: "gray.300", fontSize: "14px" }}>
+                {formatDate(feed.created_time, SHORT_TIME_FORMAT)}
+              </Text>
+              <Text sx={{ color: "gray.300", fontSize: "14px" }}>
+                {formatDate(feed.created_time, DATE_FORMAT_HYPHEN)}
+              </Text>
+            </Stack>
+          </Stack>
+        ))}
+      </Stack>
+    </Stack>
+  );
+};

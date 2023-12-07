@@ -68,8 +68,10 @@ export const Endpoint = {
 
   COST_HISTORY: "/cost-history",
 
-  PROJECT_BUDGET: "/budgets/all",
-  PROJECT_BUDGET_CREATE: "/budgets",
+  BUDGET_ALL: "/budgets/all",
+  BUDGET_CREATE: "/budgets",
+  BUDGET_GET_BY_ID: "budgets/budget-by-id/{id}",
+  BUDGET_GET_FEED: "budgets/feed/{id}",
 
   POSITIONS_ALL: "/positions/all",
   POSITIONS: "/positions",

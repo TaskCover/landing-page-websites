@@ -16,17 +16,16 @@ import MobileContentCell from "components/sn-project-detail/Members/MobileConten
 import Pagination from "components/Pagination";
 import { formatDate, getPath } from "utils/index";
 import { useMembersOfProject } from "store/project/selectors";
-import {
-  TProjectBudgetListQueries,
-  TProjectBudgets,
-} from "store/project/budget/action";
+import { TBudgetListQueries, TBudgets } from "store/project/budget/action";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import useQueryParams from "hooks/useQueryParams";
 import { usePathname, useRouter } from "next-intl/client";
+import { BUDGET_DETAIL_PATH } from "constant/paths";
+import Link from "components/Link";
 
 const Item = ({ projectId }: { projectId?: string }) => {
-  const [budgets, setBudgets] = useState<TProjectBudgets>([]);
+  const [budgets, setBudgets] = useState<TBudgets>([]);
 
   const {
     items: budgetItems,
@@ -50,7 +49,7 @@ const Item = ({ projectId }: { projectId?: string }) => {
 
   useEffect(() => {
     if (!isReady) return;
-    const query: TProjectBudgetListQueries = {
+    const query: TBudgetListQueries = {
       ...DEFAULT_PAGING,
       ...initQuery,
     };
@@ -62,7 +61,7 @@ const Item = ({ projectId }: { projectId?: string }) => {
 
   useEffect(() => {
     if (!budgetItems || !members || budgetItems.length == 0) return;
-    const newBudgetData: TProjectBudgets = [];
+    const newBudgetData: TBudgets = [];
     budgetItems.map((budget) => {
       budget = { ...budget };
       budget.created_time = formatDate(
@@ -135,7 +134,23 @@ const Item = ({ projectId }: { projectId?: string }) => {
                 <MobileContentCell item={budget} />
               ) : (
                 <>
-                  <BodyCell align="center">{budget.name}</BodyCell>
+                  <BodyCell align="center">
+                    <Link
+                      href={getPath(BUDGET_DETAIL_PATH, undefined, {
+                        id: budget.id as string,
+                      })}
+                      underline="none"
+                      sx={{
+                        color: "inherit",
+                        "&:hover": {
+                          color: "primary.main",
+                        },
+                        fontSize: 14,
+                      }}
+                    >
+                      {budget.name}
+                    </Link>
+                  </BodyCell>
                   <BodyCell align="left">
                     {budget.owner && typeof budget.owner === "object" && (
                       <Stack direction="row" alignItems="center">

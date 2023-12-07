@@ -10,10 +10,10 @@ import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import { BaseQueries } from "constant/types";
 import { saleClient } from "../../../api/client";
 
-export type TProjectBudget = any;
-export type TProjectBudgets = TProjectBudget[];
+export type TBudget = any;
+export type TBudgets = TBudget[];
 
-export type TProjectBudgetCreateParam = {
+export type TBudgetCreateParam = {
   project_id: string;
   name: string;
   start_date: string;
@@ -21,7 +21,7 @@ export type TProjectBudgetCreateParam = {
   owner: string;
 };
 
-export type TProjectBudgetListQueries = BaseQueries & {
+export type TBudgetListQueries = BaseQueries & {
   sort?: string;
   group_by?: string;
   user_id?: string;
@@ -30,14 +30,14 @@ export type TProjectBudgetListQueries = BaseQueries & {
   project_id?: string;
 };
 
-export type TProjectBudgetListFilter = Omit<
-  TProjectBudgetListQueries,
+export type TBudgetListFilter = Omit<
+  TBudgetListQueries,
   "pageIndex" | "pageSize"
 >;
 
 export const getProjectBudgetList = createAsyncThunk(
   "project/getProjectBudgetList",
-  async (queries: TProjectBudgetListQueries) => {
+  async (queries: TBudgetListQueries) => {
     queries = { ...queries };
 
     if (queries?.sort !== "updated_time=-1") {
@@ -104,7 +104,7 @@ export const getProjectBudgetList = createAsyncThunk(
       newQueries.project_id = projectId;
     }
 
-    const response = await saleClient.get(Endpoint.PROJECT_BUDGET, newQueries);
+    const response = await saleClient.get(Endpoint.BUDGET_ALL, newQueries);
 
     if (response?.status !== HttpStatusCode.OK) {
       throw AN_ERROR_TRY_AGAIN;
@@ -117,8 +117,8 @@ export const getProjectBudgetList = createAsyncThunk(
 
 export const createProjectBudget = createAsyncThunk(
   "project/createProjectBudget",
-  async (param: TProjectBudgetCreateParam) => {
-    const url = Endpoint.PROJECT_BUDGET_CREATE;
+  async (param: TBudgetCreateParam) => {
+    const url = Endpoint.BUDGET_CREATE;
     const response = await saleClient.post(url, param);
 
     if (response?.status !== HttpStatusCode.CREATED) {

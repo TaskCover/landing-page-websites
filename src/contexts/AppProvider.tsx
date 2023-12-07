@@ -23,6 +23,7 @@ import NextIntlProvider from "./NextIntlProvider";
 import { getProfile } from "store/app/actions";
 // import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const AUTH_PATHS = [SIGNUP_PATH, FORGOT_PASSWORD_PATH, RESET_PASSWORD_PATH];
 
@@ -82,12 +83,16 @@ const AppProvider = ({
     });
   }, [onSetViewHeight]);
 
+  const queryClient: QueryClient = new QueryClient();
+
   return (
     <NextIntlProvider locale={locale} messages={messages}>
       <ThemeProvider>
-        <Provider store={store}>
-          <AuthWrapper>{children}</AuthWrapper>
-        </Provider>
+        <QueryClientProvider client={queryClient}>
+          <Provider store={store}>
+            <AuthWrapper>{children}</AuthWrapper>
+          </Provider>
+        </QueryClientProvider>
       </ThemeProvider>
     </NextIntlProvider>
   );

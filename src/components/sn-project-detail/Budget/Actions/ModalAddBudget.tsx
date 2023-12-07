@@ -7,7 +7,7 @@ import FormLayout from "components/FormLayout";
 import { MenuList, Stack } from "@mui/material";
 import { Input, Select } from "components/shared";
 import { FormikErrors, useFormik } from "formik";
-import { TProjectBudgetCreateParam } from "store/project/budget/action";
+import { TBudgetCreateParam } from "store/project/budget/action";
 import * as Yup from "yup";
 import { useEmployeeOptions } from "store/company/selectors";
 import { formatDate, getMessageErrorByAPI } from "utils/index";
@@ -62,7 +62,7 @@ const ModalAddBudget = (props: Props) => {
     }, 300);
   }, [bodyModalRef.current, rest.open]);
 
-  const onSubmit = async (param: TProjectBudgetCreateParam) => {
+  const onSubmit = async (param: TBudgetCreateParam) => {
     if (param.start_date) {
       param.start_date = formatDate(param.start_date, DATE_FORMAT_FORM);
     }
@@ -134,7 +134,7 @@ const ModalAddBudget = (props: Props) => {
     }, timeWaitReadyElement);
   };
 
-  const initialValues: TProjectBudgetCreateParam = {
+  const initialValues: TBudgetCreateParam = {
     project_id: projectId,
     name: "",
     end_date: "",
@@ -159,7 +159,7 @@ const ModalAddBudget = (props: Props) => {
 
   const touchedErrors = useMemo(() => {
     return Object.entries(formik.errors).reduce(
-      (out: FormikErrors<TProjectBudgetCreateParam>, [key, error]) => {
+      (out: FormikErrors<TBudgetCreateParam>, [key, error]) => {
         if (formik.touched[key]) {
           out[key] = error;
         }

@@ -50,10 +50,7 @@ import {
 import { Position } from "store/company/reducer";
 import { subDays } from "date-fns";
 import { BudgetReducer } from "store/project/budget/reducer";
-import {
-  TProjectBudgetListFilter,
-  TProjectBudgets,
-} from "store/project/budget/action";
+import { TBudgetListFilter, TBudgets } from "store/project/budget/action";
 
 export interface Member {
   id: string;
@@ -243,11 +240,11 @@ export interface ProjectState {
   activitiesFilters: GetActivitiesQueries;
   attachments?: AttachmentOfProject[];
 
-  budgets?: TProjectBudgets;
+  budgets?: TBudgets;
   budgetStatus: DataStatus;
   budgetPaging: Paging;
   budgetError?: string;
-  budgetFilters: TProjectBudgetListFilter;
+  budgetFilters: TBudgetListFilter;
 }
 
 export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {
