@@ -74,11 +74,11 @@ const SalesListAction = () => {
     () => [
       {
         label: salesT("list.filter.decending"),
-        value: SORT_OPTIONS.DESC,
+        value: "DESC",
       },
       {
         label: salesT("list.filter.ascending"),
-        value: SORT_OPTIONS.ASC,
+        value: "ASC",
       },
     ],
     [salesT],
@@ -178,7 +178,7 @@ const SalesListAction = () => {
             hasAll={false}
             onChange={(name, value) => onChangeQueries(name, value)}
             options={SORT_FITLER}
-            value={queries?.sort || SORT_OPTIONS.DESC}
+            value={queries?.sort || "DESC"}
           />
         </Stack>
         <Stack direction="row" alignItems="center" gap={2} flexWrap={"wrap"}>
