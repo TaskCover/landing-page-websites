@@ -48,6 +48,7 @@ import CareerIcon from "icons/CareerIcon";
 import DocsItem from "icons/DocsItem";
 import BillingIcon from "icons/BillingIcon";
 import WalletMoneyIcon from "icons/WalletMoneyIcon";
+import BudgetIcon from "icons/BudgetIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -272,7 +273,8 @@ const DATA: MenuItemProps[] = [
   },
   {
     label: "menu.budgeting",
-    icon: <WalletMoneyIcon style={{ color: '#3699FF' }} />,
+    // icon: <WalletMoneyIcon style={{ color: '#3699FF' }} />,
+    icon: <BudgetIcon />,
     href: BUDGETING_PATH,
     roles: [Permission.AM, Permission.ST],
   },
