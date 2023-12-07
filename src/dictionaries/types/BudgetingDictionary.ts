@@ -6,8 +6,8 @@ export type BudgetingDictionary = {
     toolbar: {
         date: string;
         addTime: string;
-        addExpense: String;
-        addInvoice: String;
+        addExpense: string;
+        addInvoice: string;
     },
     status: {
         open: string;
@@ -52,5 +52,14 @@ export type BudgetingDictionary = {
         cancelBtnText: string;
         addBtnText: string;
         editBtnText: string;
-    }
+    },
+	dialogRecurring: {
+		titleModalAdd: string;
+		cancelBtnText: string;
+        addBtnText: string;
+        editBtnText: string;
+		recurringInterval: string;
+		nextOccurrence: string;
+		stopRecurring: string;
+	}
 }

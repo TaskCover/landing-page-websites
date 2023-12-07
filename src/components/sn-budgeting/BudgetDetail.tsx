@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useBudgetByIdQuery } from "../../queries/budgeting/get-by-id";
 import React, { useEffect, useState } from "react";
 import { TBudget } from "store/project/budget/action";
-import { Box, Stack } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import Avatar from "components/Avatar";
 import { Button, Text } from "components/shared";
 import { NS_BUDGETING } from "constant/index";
@@ -20,6 +20,7 @@ import { ModalAddTime } from "components/sn-budgeting/TabDetail/ModalAddTime";
 import useToggle from "hooks/useToggle";
 import { Expenses } from "components/sn-budgeting/TabDetail/Expenses";
 import { Invoice } from "components/sn-budgeting/TabDetail/Invoice";
+import { Recurring } from "./TabDetail/Recurring";
 
 enum TABS {
   FEED = "Feed",
@@ -32,8 +33,9 @@ enum TABS {
 
 export const BudgetDetail = () => {
   const [isOpenModalTime, openModalTime, hideModalTime] = useToggle();
+  const [isShowLoadingTab, openLoadingTab, hideLoadingTab] = useToggle();
   const [budget, setBudget] = useState<TBudget | null>(null);
-  const [activeTab, setActiveTab] = useState<string>(TABS.INVOICES);
+  const [activeTab, setActiveTab] = useState<string>(TABS.RECURRING);
   const { id } = useParams();
 
   const budgetDetailQuery = useBudgetByIdQuery(String(id));
@@ -44,6 +46,15 @@ export const BudgetDetail = () => {
       setBudget(budgetDetailQuery.data);
     }
   }, [budgetDetailQuery]);
+
+  const changeActiveTab = (newTab: string) => {
+    if (window["timeoutHideLoadingTab"]) {
+      clearTimeout(window["timeoutHideLoadingTab"]);
+    }
+    openLoadingTab();
+    setActiveTab(newTab);
+    window["timeoutHideLoadingTab"] = setTimeout(hideLoadingTab, 500);
+  };
 
   if (!budget) return <></>;
 
@@ -122,7 +133,7 @@ export const BudgetDetail = () => {
                     borderColor: "primary.main",
                   },
                 }}
-                onClick={() => setActiveTab(currentTab)}
+                onClick={() => changeActiveTab(currentTab)}
               >
                 {currentTab}
               </Box>
@@ -171,10 +182,26 @@ export const BudgetDetail = () => {
         onClose={hideModalTime}
         projectId={budget.project.id}
       />
-      {activeTab === TABS.FEED && <Feed budget={budget} />}
-      {activeTab === TABS.TIME && <Time />}
-      {activeTab === TABS.EXPENSES && <Expenses />}
-      {activeTab === TABS.INVOICES && <Invoice />}
+      <Box position="relative">
+        <Stack
+          p="50px"
+          alignItems="center"
+          position="absolute"
+          width="100%"
+          top={0}
+          left={0}
+          display={isShowLoadingTab ? "flex" : "none"}
+        >
+          <CircularProgress />
+        </Stack>
+        <Box sx={{ opacity: isShowLoadingTab ? 0 : 1 }}>
+          {activeTab === TABS.FEED && <Feed budget={budget} />}
+          {activeTab === TABS.TIME && <Time />}
+          {activeTab === TABS.EXPENSES && <Expenses />}
+          {activeTab === TABS.INVOICES && <Invoice />}
+          {activeTab === TABS.RECURRING && <Recurring />}
+        </Box>
+      </Box>
     </Box>
   );
 };

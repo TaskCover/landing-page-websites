@@ -54,5 +54,14 @@ export const BudgetingLang: BudgetingDictionary = {
         cancelBtnText: 'Cancel',
         addBtnText: 'Add',
         editBtnText: 'Edit',
-    }
+    },
+	dialogRecurring: {
+		titleModalAdd: 'Make this Recurring Budget',
+		cancelBtnText: 'Cancel',
+        addBtnText: 'Make recurring',
+        editBtnText: 'Edit recurring',
+		recurringInterval: "Recurring Interval",
+		nextOccurrence: "Next Occurrence",
+		stopRecurring: "Stop Recurring",
+	}
 }
