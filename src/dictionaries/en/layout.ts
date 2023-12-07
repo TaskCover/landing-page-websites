@@ -41,5 +41,6 @@ export const LayoutLang: LayoutDictionary = {
     //carrer
     career:"Career",
     careerList: "Career List",
+    billing: "Billing"
   },
 };

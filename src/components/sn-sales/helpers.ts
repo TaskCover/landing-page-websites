@@ -25,10 +25,6 @@ export const COLOR_STAGE_STATUS: { [key in SALE_STAGE]: string } = {
 
 export const mappingStageStatusOptions: Option[] = [
   {
-    label: TEXT_STAGE_STATUS[SALE_STAGE.OPEN],
-    value: SALE_STAGE.OPEN,
-  },
-  {
     label: TEXT_STAGE_STATUS[SALE_STAGE.LEAD],
     value: SALE_STAGE.LEAD,
   },
@@ -47,6 +43,13 @@ export const mappingStageStatusOptions: Option[] = [
   {
     label: TEXT_STAGE_STATUS[SALE_STAGE.NEGOTIATION],
     value: SALE_STAGE.NEGOTIATION,
+  },
+];
+
+export const mappingStatusOptions: Option[] = [
+  {
+    label: TEXT_STAGE_STATUS[SALE_STAGE.OPEN],
+    value: SALE_STAGE.OPEN,
   },
   {
     label: TEXT_STAGE_STATUS[SALE_STAGE.WON_DEAL],

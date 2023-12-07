@@ -23,6 +23,8 @@ export const FEEDBACK_API_URL = process.env.FEEDBACK_API_URL as string;
 export const BLOG_API_URL = process.env.BLOG_API_URL as string;
 // CAREER
 export const CAREER_API_URL = process.env.CAREER_API_URL as string;
+//Billing
+export const BILLING_API_URL = process.env.BILLING_API_URL as string;
 
 export const DARK_THEME_MEDIA_SYSTEM = "(prefers-color-scheme: dark)";
 export const DOCS_API_URL = process.env.DOCS_API_URL as string;
@@ -104,6 +106,7 @@ export const NS_RESOURCE_PLANNING = "resourcePlanning";
 export const NS_CHAT = "chat";
 export const NS_CHAT_BOX = "chatbox";
 export const NS_DOCS = "documents";
+
 //Feedback
 export const NS_FEEDBACK = "feeback";
 //blog
@@ -112,6 +115,8 @@ export const NS_BLOG = "blog";
 export const NS_CAREER = "career";
 //Applicants
 export const NS_APPLICANTS = "applicants";
+//Billing
+export const NS_BILLING = "billing";
 //Budgeting
 export const NS_BUDGETING = 'budgeting';
 

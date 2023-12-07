@@ -116,4 +116,10 @@ export const Endpoint = {
   CAREER: "/job-post",
   UPADATECAREER: "/job-post/{id}",
   DETAIL_CAREER: "/post/{id}",
+
+  //Billing
+  BILLING: "/bill",
+  DETAIL_BILLING: "",
+  EXPORT_BILLING: "bill/export/{id}",
+  INTERACTION_BILLING: "/bill_interaction",
 };

@@ -119,6 +119,7 @@ export const useSales = () => {
         name: data.dealName,
         probability: data.probability,
         members: data.members,
+        stage: data.stage,
         status: data.status,
         company_id: data.company,
         tags: data.tags,

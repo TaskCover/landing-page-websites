@@ -6,13 +6,14 @@ import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 
 type FormLayoutProps = {
-  label: string;
+  label?: string;
   submitText?: string;
   cancelText?: string;
   disabled?: boolean;
   submitting?: boolean;
   pending?: boolean;
   bodyFlex?: number;
+  renderHeader?: React.ReactNode;
 } & DialogLayoutProps;
 
 const FormLayout = (props: FormLayoutProps) => {
@@ -29,6 +30,7 @@ const FormLayout = (props: FormLayoutProps) => {
     pending,
     submitWhenEnter = true,
     onSubmit,
+    renderHeader,
     bodyFlex = 1,
     ...rest
   } = props;
@@ -41,7 +43,7 @@ const FormLayout = (props: FormLayoutProps) => {
       bottomProps={{
         sx: defaultSx.bottom,
       }}
-      renderHeader={label}
+      renderHeader={label ?? renderHeader}
       contentProps={{ sx: { px: 3 } }}
       renderBottom={
         <>
