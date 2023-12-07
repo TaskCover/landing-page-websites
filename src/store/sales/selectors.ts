@@ -96,7 +96,7 @@ export const useSales = () => {
           ...salesFilters,
           pageIndex: 1,
           pageSize: 10,
-          sort: SORT_OPTIONS.DESC,
+          sort: "DESC",
         });
       });
     },

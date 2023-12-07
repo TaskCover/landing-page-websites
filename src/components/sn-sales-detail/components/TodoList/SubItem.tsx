@@ -5,6 +5,7 @@ import {
   DATE_FORMAT_FORM,
   DATE_FORMAT_HYPHEN,
   DATE_FORMAT_SLASH,
+  DATE_PICKER_FORMAT,
   NS_COMMON,
   NS_SALES,
 } from "constant/index";
@@ -27,6 +28,7 @@ import { TodoItemData } from "store/sales/actions";
 import TrashIcon from "icons/TrashIcon";
 import MoveDotIcon from "icons/MoveDotIcon";
 import { formatDate } from "utils/index";
+import dayjs from "dayjs";
 
 export enum Action {
   RENAME = 1,
@@ -224,14 +226,16 @@ const SubItem = ({
                           onUpdateTodo(id, {
                             dealId: saleDetail?.id || "",
                             data: {
-                              expiration_date: value,
+                              expiration_date: dayjs(
+                                value,
+                                "MM/DD/YYYY",
+                              ).format("DD-MM-YYYY"),
                             } as TodoItemData,
                           });
                         };
                         return (
                           <Date
                             label={salesT("detail.todoList.dueDate")}
-                            format={DATE_FORMAT_HYPHEN}
                             onChange={onChangeDate}
                             {...rest}
                           />
