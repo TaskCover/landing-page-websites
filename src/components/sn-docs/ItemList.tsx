@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-import { Skeleton, TableCell, TableRow } from "@mui/material";
+import { Skeleton, Stack, TableCell, TableRow } from "@mui/material";
 import FixedLayout from "components/FixedLayout";
 import Pagination from "components/Pagination";
 import { CellProps, TableLayout } from "components/Table";
@@ -20,6 +20,7 @@ import { getPath } from "utils/index";
 import DesktopCells from "./DesktopCells";
 import { RowGroup } from "./ItemDoc";
 import MobileContentCell from "./MobileContentCell";
+import Avatar from "components/Avatar";
 
 export declare type TDocumentGroup = {
   _id: string;
@@ -168,16 +169,26 @@ const ItemList = () => {
             items.map((item) => {
               return (
                 <RowGroup
-                  key={item?._id}
-                  title={
-                    item.groupInfo
-                      ? `${item.groupInfo.name}  #${
-                          item.groupInfo?.number || 0
-                        }`
-                      : "No name"
-                  }
-                  items={item.docs}
-                />
+                key={item?._id}
+                title={
+                  item.groupInfo ? (
+                    <>
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <Avatar
+                          size={32}
+                          alt={item.groupInfo.name}
+                          src={item.groupInfo.avatar.link}
+                          style={{ marginRight: "8px" }}
+                        />
+                        {`${item.groupInfo.name} #${item.groupInfo?.number || 0}`}
+                      </Stack>
+                    </>
+                  ) : (
+                    "No project"
+                  )
+                }
+                items={item.docs}
+              />
               );
             })}
         </TableLayout>
