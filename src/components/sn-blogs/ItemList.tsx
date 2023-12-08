@@ -84,7 +84,7 @@ totalItems;
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
       { value: blogT("blogList.title"), width: "20%", align: "left" },
-      { value: blogT("blogList.category"), width: "20%", align: "left" },
+      { value: blogT("blogList.slug"), width: "20%", align: "left" },
       { value: blogT("blogList.tag"), width: "20%", align: "left" },
       { value: blogT("blogList.created_time"), width: "20%", align: "left" },
       { value: blogT("blogList.statusBlog"), width: "10%", align: "left" },
@@ -184,7 +184,7 @@ totalItems;
             <IconButton
               size="small"
               onClick={onApproveOrReject(BlogStatus.PUBLISHED)}
-              tooltip={blogT("approve")}
+              tooltip={blogT("actions.published")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -200,7 +200,7 @@ totalItems;
             <IconButton
               size="small"
               onClick={onApproveOrReject(BlogStatus.DRAFT)}
-              tooltip={blogT("reject")}
+              tooltip={blogT("actions.draft")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -216,7 +216,7 @@ totalItems;
             <IconButton
               size="small"
               onClick={onApproveOrReject(BlogStatus.DRAFT)}
-              tooltip={blogT("actions.delete")}
+              tooltip={blogT("actions.delete.remove")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
