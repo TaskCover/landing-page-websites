@@ -8,6 +8,7 @@ import DocsItem from "icons/DocsItem";
 import IconAdd from "icons/IconAdd";
 import React, { memo } from "react";
 import MorePoper from "./MorePoper";
+import { IDocument } from "constant/types";
 
 export interface ItemDocsProps {
   onClick?: any;
@@ -19,13 +20,13 @@ export interface ItemDocsProps {
   id?: string;
   children: ItemDocsProps[];
 }
-interface ItemDocs {
+type TDocumentListProps = {
   isFirst?: boolean;
-  data: ItemDocsProps;
+  data: IDocument;
   onClick: any;
-}
+};
 
-const ItemDoc = ({ title, id, onClick }: ItemDocsProps) => {
+const Document = ({ title, id, onClick }: ItemDocsProps) => {
   return (
     <>
       <Box
@@ -78,15 +79,11 @@ const ItemDoc = ({ title, id, onClick }: ItemDocsProps) => {
   );
 };
 
-const ItemDocs = ({ data, isFirst, onClick }: ItemDocs) => {
+const DocumentList: React.FC<TDocumentListProps> = ({ data, onClick }) => {
   return (
     <>
-      <ItemDoc
-        onClick={onClick}
-        children={data.children}
-        title={data.title}
-      ></ItemDoc>
-      {data.children && (
+      <Document onClick={onClick} children={data?.child} title={data?.name} />
+      {data?.child && (
         <Box
           sx={{
             marginLeft: {
@@ -95,13 +92,16 @@ const ItemDocs = ({ data, isFirst, onClick }: ItemDocs) => {
             },
           }}
         >
-          {data?.children?.map((e: ItemDocsProps) => {
-            return <ItemDocs onClick={onClick} key={e.id} data={e}></ItemDocs>;
-          })}
+          {Array.isArray(data?.child) &&
+            data?.child?.map((item: IDocument) => {
+              return (
+                <DocumentList onClick={onClick} key={item._id} data={item} />
+              );
+            })}
         </Box>
       )}
     </>
   );
 };
 
-export default memo(ItemDocs);
+export default memo(DocumentList);

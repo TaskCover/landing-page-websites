@@ -15,7 +15,7 @@ type MobileContentCellProps = {
 const MobileContentCell = (props: MobileContentCellProps) => {
   const { item } = props;
   return (
-    <TableRow>
+    <>
       <BodyCell align="left" sx={{ px: "10px" }}>
         <Link href={`/documents/${item.id}`}>
           <Text fontWeight={600} fontSize={12}>
@@ -57,7 +57,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           </Stack>
         ) : null}
       </BodyCell>
-    </TableRow>
+    </>
   );
 };
 

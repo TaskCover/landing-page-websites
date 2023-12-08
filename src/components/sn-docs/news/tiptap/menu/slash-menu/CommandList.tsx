@@ -335,7 +335,6 @@ export const CommandList = React.forwardRef(
 
         <div
           onClick={() => {
-            console.log("toggle block code");
             editor.chain().focus().deleteRange(range).toggleCode().run();
           }}
           className={`
