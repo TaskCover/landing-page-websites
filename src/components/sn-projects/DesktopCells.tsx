@@ -49,8 +49,10 @@ const DesktopCells = (props: DesktopCellsProps) => {
         <Assigner value={item?.owner?.id} id={item.id} rootSx={{ "& > svg": { display: 'none' } }} placeholder={item?.owner ? '' : commonT("form.title.noAssigner")} />
       </BodyCell>
       <BodyCell align="left">
-        {/* {formatDate(item.start_date)} */}
         {item.start_date ? dayjs(item.start_date).format(DATE_LOCALE_FORMAT) : ""}
+      </BodyCell>
+      <BodyCell align="left">
+        {item.end_date ? dayjs(item.end_date).format(DATE_LOCALE_FORMAT) : ""}
       </BodyCell>
       {item.status ? (
         <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
