@@ -57,6 +57,9 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         {/* {formatDate(item.start_date)} */}
         {item.start_date ? dayjs(item.start_date).format(DATE_LOCALE_FORMAT) : ""}
       </BodyCell>
+      <BodyCell align="left">
+        {item.end_date ? dayjs(item.end_date).format(DATE_LOCALE_FORMAT) : ""}
+      </BodyCell>
       {item.status ? (
         <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
           <SelectStatus value={item.status} id={item.id} />
