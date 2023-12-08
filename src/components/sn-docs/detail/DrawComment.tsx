@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Stack } from "@mui/material";
+import { Box, IconButton, Stack } from "@mui/material";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { NS_DOCS } from "constant/index";
@@ -8,9 +8,11 @@ import CloseIcon from "icons/CloseIcon";
 import { useTranslations } from "next-intl";
 import React, { useContext } from "react";
 import { NewPageContext } from "../news/context/NewPageContext";
-import { TComment } from "../news/types/Page";
-import useTheme from "hooks/useTheme";
 
+import useTheme from "hooks/useTheme";
+import { useGetCommentsQuery } from "store/docs/api";
+import { useParams } from "next/navigation";
+import { IComment } from "constant/types";
 export const LayoutSlider = ({
   children,
   heightToolbar,
@@ -25,7 +27,8 @@ export const LayoutSlider = ({
   return (
     <Box
       sx={{
-        borderLeft: "1px #ECECF3 solid",
+        border: "1px solid",
+        borderColor: "grey.100",
         zIndex: "30",
         position: "absolute",
         right: 0,
@@ -33,10 +36,9 @@ export const LayoutSlider = ({
         padding: "16px 12px",
         maxWidth: "280px",
         width: "100%",
-        // bgcolor: "background.default",
+        bgcolor: "background.paper",
         height: {
           sm: height,
-          // xs: heightContent + height,
           xs: "100%",
         },
         overflow: "auto",
@@ -47,10 +49,10 @@ export const LayoutSlider = ({
   );
 };
 
-export const CommentItem: React.FC<TComment> = (props) => {
+export const CommentItem: React.FC<IComment> = (props) => {
   const { activeCommentId } = useContext(NewPageContext);
   const { isDarkMode } = useTheme();
-  const isActiveComment = activeCommentId === props.id;
+  const isActiveComment = activeCommentId === props.position?.position;
   const activeBgColor = isDarkMode ? "grey.50" : "primary.light";
   return (
     <Box
@@ -64,7 +66,7 @@ export const CommentItem: React.FC<TComment> = (props) => {
         color: "ButtonText",
       }}
     >
-      <Avatar src={props.user.avatar?.link} size={32} />
+      <Avatar src={props?.created_by?.avatar?.link} size={32} />
 
       <Box
         sx={{
@@ -84,7 +86,7 @@ export const CommentItem: React.FC<TComment> = (props) => {
               fontWeight: "600",
             }}
           >
-            {props.user.fullname}
+            {props?.created_by?.fullname}
           </Text>
           <Text
             sx={{
@@ -92,7 +94,7 @@ export const CommentItem: React.FC<TComment> = (props) => {
               fontWeight: "300",
             }}
           >
-            {formatDistance(props.createdAt, new Date(), { addSuffix: true })}
+            {/* {formatDistance(props?.createdAt, new Date(), { addSuffix: true })} */}
           </Text>
         </Box>
         <Text
@@ -115,6 +117,8 @@ export const CommentItem: React.FC<TComment> = (props) => {
 
 const DrawComment = () => {
   const docsT = useTranslations(NS_DOCS);
+  const { id } = useParams();
+  const { data } = useGetCommentsQuery({ docId: id });
   const { openComment, setOpenComment, comments, activeCommentId } =
     useContext(NewPageContext);
 
@@ -125,33 +129,30 @@ const DrawComment = () => {
           display: "flex",
           justifyContent: "space-between",
           justifyItems: "center",
+          alignItems: "center",
+          bgcolor: "background.paper",
         }}
       >
         <Text>
-          {docsT("createDoc.comment")} ({comments.length})
+          {docsT("createDoc.comment")} ({data?.length})
         </Text>
-        <Box
+        <IconButton
+          sx={{ width: 32, height: 32, aspectRatio: 1, borderRadius: "9999px" }}
           onClick={() => setOpenComment(!openComment)}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "4px",
-            cursor: "pointer",
-          }}
         >
-          <CloseIcon />
-        </Box>
+          <CloseIcon sx={{ fontSize: 16 }} />
+        </IconButton>
       </Box>
       <Stack
         spacing={"16px"}
+        bgcolor="background.paper"
+        zIndex={999}
         sx={{
           marginTop: "16px",
         }}
       >
-        {comments.map((cmt: TComment) => (
-          <CommentItem key={cmt.id} {...cmt} />
-        ))}
+        {Array.isArray(data) &&
+          data?.map((cmt: IComment) => <CommentItem key={cmt._id} {...cmt} />)}
       </Stack>
     </>
   );

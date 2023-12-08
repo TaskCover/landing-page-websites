@@ -28,6 +28,7 @@ export default function useDocEditor() {
       openLinkModal: () => setIsAddingNewLink(true),
       onCommentActivated: (commentId: string) => {
         if (commentId) {
+          console.log(commentId);
           setActiveCommentId(commentId);
           setOpenComment(true);
         }

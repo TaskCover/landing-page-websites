@@ -5,12 +5,14 @@ import { Search } from "components/Filters";
 import { NS_DOCS } from "constant/index";
 import { useTranslations } from "next-intl";
 import React, { memo, useState } from "react";
-import ItemDocs from "./ItemDocs";
+import DocumentList from "./ItemDocs";
 import { Text } from "components/shared";
 import { useAppSelector } from "store/hooks";
 import ArrowRight from "icons/ArrowRight";
 import { uuid } from "utils/index";
 import useTheme from "hooks/useTheme";
+import { useGetDocDetailQuery } from "store/docs/api";
+import { useParams } from "next/navigation";
 
 export interface LeftSlideDocProps {
   open: boolean;
@@ -19,12 +21,16 @@ export interface LeftSlideDocProps {
 
 const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
   const dataFake = useAppSelector((state) => state.doc.docDetails.data);
-  const { isDarkMode } = useTheme();
+  const { id } = useParams();
+
+  const { data: document, isLoading } = useGetDocDetailQuery(id as string);
+
   const [data, setData] = useState(dataFake);
 
   const docsT = useTranslations(NS_DOCS);
   const [search, setSearch] = useState("");
   const onChangeQueries = (name: string, value: any) => {
+    console.log("search value :>>", value);
     setSearch(value);
   };
 
@@ -102,7 +108,7 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
             transform: open ? "rotate(180deg)" : "unset",
           }}
         >
-          <ArrowRight></ArrowRight>
+          <ArrowRight />
         </Box>
         <Box
           sx={{
@@ -138,7 +144,7 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
             >
               Page
             </Text>
-            <ItemDocs onClick={handleAddChild} isFirst data={data}></ItemDocs>
+            <DocumentList onClick={handleAddChild} data={document} />
           </Box>
         </Box>
       </Box>

@@ -128,3 +128,10 @@ export enum DocGroupByEnum {
   OWNER = "owner",
   PROJECT_ID = "project_id",
 }
+
+export const DocAccessibility = {
+  FULL_ACCESS: "Full access",
+  VIEW: "Can view",
+  EDIT: "Can edit",
+  COMMENT: "Can comment",
+} as const;

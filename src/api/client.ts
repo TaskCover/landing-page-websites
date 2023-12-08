@@ -188,7 +188,7 @@ const RequestClient = class {
 
 const client = new RequestClient();
 
-export { client };
+export { client, axios };
 
 const signOut = () => {
   clientStorage.remove(ACCESS_TOKEN_STORAGE_KEY);
