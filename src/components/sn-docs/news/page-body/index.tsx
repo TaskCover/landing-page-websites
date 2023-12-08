@@ -1,11 +1,11 @@
 "use client";
 
-import { Box } from "@mui/material";
+import { Box, TextareaAutosize } from "@mui/material";
 import { Editor } from "@tiptap/react";
 import { IDocDetail } from "components/sn-docs/detail/DocDetail";
 import DrawSlider from "components/sn-docs/detail/DrawSlider";
 import useTheme from "hooks/useTheme";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useDocs } from "store/docs/selectors";
 import { useAppSelector } from "store/hooks";
@@ -25,6 +25,8 @@ import {
 } from "store/docs/reducer";
 import useDocEditor from "../hook/useDocEditor";
 import { NewPageContext } from "../context/NewPageContext";
+import { DocAccessibility } from "constant/enums";
+import styled from "@emotion/styled";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
@@ -34,6 +36,7 @@ import { NewPageContext } from "../context/NewPageContext";
 const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
   const pageInfo = useAppSelector((state) => state.doc.pageInfo);
   const {
+    perm,
     content,
     id,
     title: name,
@@ -101,6 +104,16 @@ const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
     };
   }, []);
 
+  const canEdit = useMemo<boolean>(() => {
+    return Object.keys(DocAccessibility)
+      .filter(
+        (key) =>
+          key === ("FULL_ACCESS" as keyof typeof DocAccessibility) ||
+          key === ("EDIT" as keyof typeof DocAccessibility),
+      )
+      .includes(perm);
+  }, [perm]);
+
   return (
     <Box
       sx={{
@@ -144,19 +157,22 @@ const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
             </LayoutSlider>
           )}
           <form className={`${styles.form_title}`}>
-            <input
+            <Textarea
+              maxRows={3}
               id="title"
-              type="text"
+              disabled={!canEdit}
               defaultValue={description}
               placeholder="Enter document title..."
               onChange={(e) => handleTitleChange(e.target.value)}
-              maxLength={36}
               autoComplete="off"
               spellCheck="false"
             />
           </form>
-          <div className={`${styles.editor}`}>
-            <Tiptap editor={editor} />
+          <div
+            className={`${styles.editor}`}
+            style={{ pointerEvents: canEdit ? "auto" : "none" }}
+          >
+            <Tiptap editor={editor} disabled={!canEdit} />
           </div>
         </Box>
       </div>
@@ -167,5 +183,23 @@ const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
     </Box>
   );
 };
+
+const Textarea = styled(TextareaAutosize)`
+  border: none;
+  outline: none;
+  font-size: 48px;
+  appearance: none;
+  font-family: inherit;
+  font-weight: 800;
+  resize: none;
+  min-width: 100%;
+  background-color: transparent;
+  color: inherit;
+  padding-left: 1rem;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 export default PageBody;

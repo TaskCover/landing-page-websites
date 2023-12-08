@@ -104,7 +104,7 @@ const EditDocs = ({
           heightContent={heightContent}
           height={height}
         >
-          <DrawComment ></DrawComment>
+          <DrawComment></DrawComment>
         </LayoutSlider>
       )}
       {openSlider && (
@@ -228,7 +228,7 @@ const EditDocs = ({
             placeholder="Enter document title..."
             value={title}
             onChange={setTitle}
-          ></ReactQuill>
+          />
         </div>
         <ReactQuill
           placeholder="Enter document content..."
@@ -238,7 +238,7 @@ const EditDocs = ({
           ref={contentRef}
           value={content}
           onChange={setContent}
-        ></ReactQuill>
+        />
       </Box>
     </>
   );

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable-next-line react-hooks/exhaustive-deps */
+
 import { EditorContent } from "@tiptap/react";
 import { debounce } from "lodash";
 import { useContext, useEffect, useState } from "react";
@@ -26,7 +28,6 @@ export const NewPageTiptap = () => {
     return () => {
       savePageContent.cancel();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handleContentUpdate]);
 
   const editor = useDocEditor();
@@ -39,7 +40,6 @@ export const NewPageTiptap = () => {
     }, 0);
 
     return () => clearTimeout(timeoutId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

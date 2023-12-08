@@ -1,20 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { memo, useState } from "react";
-import { Box, Stack } from "@mui/material";
+import { Box, IconButton, Stack } from "@mui/material";
+import { client } from "api";
+import { AxiosError, AxiosRequestConfig, HttpStatusCode } from "axios";
+import Avatar from "components/Avatar";
+import { Switch } from "components/Filters";
 import { Text, Tooltip } from "components/shared";
+import { DOCS_API_URL, NS_DOCS } from "constant/index";
+import { User } from "constant/types";
+import { format } from "date-fns";
 import CloseIcon from "icons/CloseIcon";
 import HistoryIcon from "icons/HistoryIcon";
 import RestoreIcon from "icons/RestoreIcon";
-import Avatar from "components/Avatar";
 import TextIcon from "icons/TextIcon";
-import { Switch } from "components/Filters";
-import { Fascinate } from "next/font/google";
 import { useTranslations } from "next-intl";
-import { NS_DOCS } from "constant/index";
+import { useParams } from "next/navigation";
+import React, { memo, useEffect, useState } from "react";
 
-const HistoryDocItem = () => {
+declare type TDocHistory = {
+  _id: string;
+  doc: string;
+  user: Partial<User>;
+  action: any;
+  // "UPDATE_NAME";
+  time: Date;
+  old: string;
+  new: string;
+};
+
+const HistoryDocItem: React.FC<{ data: TDocHistory }> = ({ data }) => {
   const docsT = useTranslations(NS_DOCS);
 
   return (
@@ -32,7 +47,7 @@ const HistoryDocItem = () => {
             fontWeight: 600,
           }}
         >
-          15 May 2020 8:00 am
+          {format(new Date(data?.time), "d MMM yyyy h:mm a")}
         </Text>
         <Box
           sx={{
@@ -50,7 +65,10 @@ const HistoryDocItem = () => {
               borderRadius: "100%",
             }}
           >
-            {/* <Avatar></Avatar> */}
+            <Avatar
+              size={16}
+              src={data.user?.avatar?.link || "https://picsum.photos/60"}
+            />
           </Box>
           <Text
             sx={{
@@ -58,7 +76,7 @@ const HistoryDocItem = () => {
               fontWeight: 600,
             }}
           >
-            vuhaithuongnute@gmail.com
+            {data.user?.email || "Unknown"}
           </Text>
         </Box>
       </Box>
@@ -69,12 +87,63 @@ const HistoryDocItem = () => {
             p: "4px",
           }}
         >
-          <RestoreIcon></RestoreIcon>
+          <RestoreIcon />
         </Box>
       </Tooltip>
     </Box>
   );
 };
+
+function useGetDocHistory(
+  docId: string,
+  params?: AxiosRequestConfig["params"],
+): {
+  data: Array<TDocHistory>;
+  isLoading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+} {
+  const [fetchingState, setFetchingState] = useState({
+    isLoading: false,
+    isError: false,
+    isSuccess: false,
+  });
+  const [documentUpdateHistory, setDocumentUpdateHistory] = useState([]);
+
+  useEffect(() => {
+    const getDocsHistory = async (
+      docId: string,
+      params?: AxiosRequestConfig["params"],
+    ) => {
+      try {
+        setFetchingState((prev) => ({ ...prev, isLoading: true }));
+        const response = await client.get(
+          DOCS_API_URL + "/docs/history/" + docId,
+          {
+            params,
+          },
+        );
+
+        if (response.status !== HttpStatusCode.Ok)
+          throw new Error("Failed to get documents history");
+        setDocumentUpdateHistory(response.data?.docs);
+        setFetchingState((prev) => ({ ...prev, isSuccess: true }));
+      } catch (error) {
+        const axiosError = error as unknown as AxiosError;
+        setDocumentUpdateHistory([]);
+        setFetchingState((prev) => ({
+          ...prev,
+          isError: true,
+          isLoading: false,
+        }));
+        console.error(axiosError.message);
+      }
+    };
+    getDocsHistory(docId);
+  }, [docId]);
+
+  return { data: documentUpdateHistory, ...fetchingState };
+}
 
 const DrawSlider = ({
   setOpenSlider,
@@ -83,10 +152,13 @@ const DrawSlider = ({
 }) => {
   const [state, setState] = useState(2);
   const docsT = useTranslations(NS_DOCS);
-
+  const params = useParams();
   const [isLargeText, setLargeText] = useState(false);
   const [isFull, setIsFull] = useState(false);
-
+  const { data } = useGetDocHistory(params.id as unknown as string, {
+    sort_by: "Desc",
+    order_by: "time",
+  });
   const onChangeText = (name: string, value: any) => {
     setLargeText(value);
   };
@@ -117,7 +189,7 @@ const DrawSlider = ({
               cursor: "pointer",
             }}
           >
-            <TextIcon active={state === 1}></TextIcon>
+            <TextIcon active={state === 1} />
           </Box>
           <Box
             sx={{
@@ -126,22 +198,16 @@ const DrawSlider = ({
             }}
             onClick={() => setState(2)}
           >
-            <HistoryIcon active={state === 2}></HistoryIcon>
+            <HistoryIcon active={state === 2} />
           </Box>
         </Box>
 
-        <Box
+        <IconButton
           onClick={() => setOpenSlider(false)}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "4px",
-            cursor: "pointer",
-          }}
+          sx={{ width: 32, height: 32, aspectRatio: 1, borderRadius: "9999px" }}
         >
-          <CloseIcon></CloseIcon>
-        </Box>
+          <CloseIcon sx={{ fontSize: 16 }} />
+        </IconButton>
       </Box>
       <Text
         sx={{
@@ -166,6 +232,7 @@ const DrawSlider = ({
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                bgcolor: "background.paper",
               }}
             >
               <Text fontSize={14} fontWeight={600}>
@@ -199,15 +266,9 @@ const DrawSlider = ({
             </Box>
           </>
         )}
-        {state === 2 && (
-          <>
-            <HistoryDocItem></HistoryDocItem>
-            <HistoryDocItem></HistoryDocItem>
-            <HistoryDocItem></HistoryDocItem>
-            <HistoryDocItem></HistoryDocItem>
-            <HistoryDocItem></HistoryDocItem>
-          </>
-        )}
+        {state === 2 &&
+          Array.isArray(data) &&
+          data.map((item) => <HistoryDocItem data={item} key={item._id} />)}
       </Stack>
     </>
   );
