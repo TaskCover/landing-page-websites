@@ -3,11 +3,10 @@ import { client } from "api/client";
 import { Endpoint } from "api/endpoint";
 import { HttpStatusCode, Status } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, AN_ERROR_TRY_RELOAD_PAGE } from "constant/index";
-import { BaseQueries } from "constant/types";
+import { BaseQueries, Option } from "constant/types";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
-import { Task, TaskList } from "./reducer";
-import { Option } from "constant/types";
+import { Task } from "./reducer";
 
 export enum ProjectStatus {
   ACTIVE = "ACTIVE",
@@ -22,9 +21,7 @@ export enum DependencyStatus {
 }
 
 export type GetProjectListQueries = BaseQueries & {
-  saved?: boolean;
   sort?: string;
-  status?: ProjectStatus;
 };
 
 export type GetMembersOfProjectQueries = BaseQueries & {

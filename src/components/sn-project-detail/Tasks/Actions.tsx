@@ -11,12 +11,9 @@ import {
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import {
-  Clear,
   Date,
   Dropdown,
-  Refresh,
   Search,
-  Switch,
 } from "components/Filters";
 import {
   useMemberOptions,
@@ -134,8 +131,8 @@ const Actions = () => {
         spacing={{ xs: 1, md: 3 }}
         py={{ xs: 0.75 }}
         mt={{ sm: 1.25, md: 0 }}
-        position="sticky"
-        top={{ xs: 108, md: 36 }}
+        position="relative"
+        // top={{ xs: 108, md: 36 }}
         zIndex={12}
         bgcolor="background.paper"
       >
@@ -210,6 +207,10 @@ const Actions = () => {
             name="tasks.name"
             onChange={onChangeQueries}
             value={queries?.["tasks.name"]}
+            onEnter={(name, value) => {
+              onChangeQueries(name, value);
+              onSearch();
+            }}
             sx={{
               width: { xs: is1440Larger ? 220 : 160 },
               minWidth: { xs: is1440Larger ? 220 : 160 },

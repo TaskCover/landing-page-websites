@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 "use client";
 
 import React, {
@@ -28,6 +29,7 @@ import {
   NS_COMMON,
   NS_PROJECT,
   DATE_FORMAT_HYPHEN,
+  DATE_LOCALE_FORMAT
 } from "constant/index";
 import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
 import useQueryParams from "hooks/useQueryParams";
@@ -54,6 +56,7 @@ import AssignerTask from "components/sn-projects/components/AssignerTask";
 import Content from "./components/Content";
 import Description from "./components/Description";
 import { Date } from "components/Filters";
+import dayjs from "dayjs";
 
 const ItemList = () => {
   const {
@@ -948,8 +951,8 @@ const ItemList = () => {
         />
       )}
       <Stack
-        position="sticky"
-        top={baseTop + 18}
+        position="relative"
+        // top={baseTop + 18}
         zIndex={12}
         display={{ xs: "none", md: "flex" }}
         bgcolor="background.default"
@@ -996,458 +999,476 @@ const ItemList = () => {
                   const isHide = hideIds.includes(task.id);
 
                   return (
-                    <DraggableTask
-                      key={task.id}
-                      id={task.id}
-                      index={taskIndex}
-                      checked={isChecked}
-                      onChange={onToggleTask(!isChecked, taskListItem, task)}
-                      isHide={isHide}
-                      isHovered={hoveredId === task.id}
-                      onMouseEnter={() => setHoveredId(task.id)}
-                      onMouseLeave={() => setHoveredId(undefined)}
-                      setHideIds={setHideIds}
-                    >
-                      <Stack
-                        width="100%"
-                        overflow="hidden"
-                        sx={{
-                          // transform: "translateX(-45px)",
-                          ml: -5.625,
-                        }}
+                    <div style={{ position: 'relative' }}>
+                      <DraggableTask
+                        key={task.id}
+                        id={task.id}
+                        index={taskIndex}
+                        checked={isChecked}
+                        onChange={onToggleTask(!isChecked, taskListItem, task)}
+                        isHide={isHide}
+                        isHovered={hoveredId === task.id}
+                        onMouseEnter={() => setHoveredId(task.id)}
+                        onMouseLeave={() => setHoveredId(undefined)}
+                        setHideIds={setHideIds}
                       >
                         <Stack
-                          direction={{ md: "row" }}
-                          alignItems={{
-                            xs: "flex-start",
-                            md: "center",
-                          }}
-                          minHeight={38}
-                          maxHeight={{ md: 38 }}
                           width="100%"
-                          sx={{ ...sx.task, ml: 4 }}
-                          // sx={sx.task}
                           overflow="hidden"
-                          borderBottom={{ md: "1px solid" }}
-                          borderColor={{ md: "grey.100" }}
+                          sx={{
+                            // transform: "translateX(-45px)",
+                            ml: -5.625,
+                            "&::before": {
+                              position: "absolute",
+                              left: "110px",
+                              top: "22px",
+                              "border-left": "1px solid gray",
+                              content: "''",
+                              width: "1px",
+                              height: task?.sub_tasks?.length ? "20px" : "0px",
+                              display: isHide ? 'none' : 'block'
+                            },
+                          }}
                         >
-                          <Content
-                            color="text.primary"
-                            fontWeight={600}
-                            textAlign="left"
-                            noWrap
-                            tooltip={task.name}
-                            onClick={onSetTask(
-                              task,
-                              taskListItem.id,
-                              task.id,
-                              undefined,
-                              taskListItem.name,
-                              task.name,
-                            )}
-                          >
-                            {task.name}
-                          </Content>
-                          <Content
-                            sx={{
-                              display: "flex",
-                              justifyContent: "start",
-                              width: "100%",
-                              paddingLeft: 0,
+                          <Stack
+                            direction={{ md: "row" }}
+                            alignItems={{
+                              xs: "flex-start",
+                              md: "center",
                             }}
+                            minHeight={38}
+                            maxHeight={{ md: 38 }}
+                            width="100%"
+                            sx={{ ...sx.task, ml: 4 }}
+                            // sx={sx.task}
+                            overflow="hidden"
+                            borderBottom={{ md: "1px solid" }}
+                            borderColor={{ md: "grey.100" }}
                           >
-                            <AssignerTask
-                              value={task?.owner?.id}
-                              onHandler={(newValue) =>
-                                changeAssignerTask({
-                                  taskListId: taskListItem.id,
-                                  taskId: task.id,
-                                  subTaskId: "",
-                                  newValue,
-                                })
-                              }
-                              placeholder={
-                                task?.owner
-                                  ? ""
-                                  : commonT("form.title.noAssigner")
-                              }
-                            />
-                          </Content>
-                          <Content
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              width: "100%",
-                              "* > p ": {
-                                color: "unset",
-                                fontWeight: "normal",
-                              },
-                            }}
-                          >
-                            <Date
-                              label={commonT("form.title.selectTime")}
-                              name="start_date"
-                              onChange={(name, value) =>
-                                onUpdateTimeTask({
-                                  taskListId: taskListItem.id,
-                                  taskId: task.id,
-                                  subTaskId: "",
-                                  name,
-                                  value,
-                                })
-                              }
-                              value={task?.start_date}
-                              iconProps={{
-                                sx: { fontSize: 16 },
+                            <Content
+                              color="text.primary"
+                              fontWeight={600}
+                              textAlign="left"
+                              noWrap
+                              tooltip={task.name}
+                              onClick={onSetTask(
+                                task,
+                                taskListItem.id,
+                                task.id,
+                                undefined,
+                                taskListItem.name,
+                                task.name,
+                              )}
+                            >
+                              {task.name}
+                            </Content>
+                            <Content
+                              sx={{
+                                display: "flex",
+                                justifyContent: "start",
+                                width: "100%",
+                                paddingLeft: 0,
                               }}
-                            />
-                          </Content>
+                            >
+                              <AssignerTask
+                                value={task?.owner?.id}
+                                onHandler={(newValue) =>
+                                  changeAssignerTask({
+                                    taskListId: taskListItem.id,
+                                    taskId: task.id,
+                                    subTaskId: "",
+                                    newValue,
+                                  })
+                                }
+                                placeholder={
+                                  task?.owner
+                                    ? ""
+                                    : commonT("form.title.noAssigner")
+                                }
+                              />
+                            </Content>
+                            <Content
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "100%",
+                                "* > p ": {
+                                  color: "unset",
+                                  fontWeight: "normal",
+                                },
+                              }}
+                            >
+                              <Date
+                                label={commonT("form.title.selectTime")}
+                                name="start_date"
+                                onChange={(name, value) =>
+                                  onUpdateTimeTask({
+                                    taskListId: taskListItem.id,
+                                    taskId: task.id,
+                                    subTaskId: "",
+                                    name,
+                                    value,
+                                  })
+                                }
+                                value={task?.start_date}
+                                iconProps={{
+                                  sx: { fontSize: 16 },
+                                }}
+                              />
+                            </Content>
 
-                          <Content
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              width: "100%",
-                              "* > p ": {
-                                color: "unset",
-                                fontWeight: "normal",
-                              },
-                            }}
-                          >
-                            <Date
-                              label={commonT("form.title.selectTime")}
-                              name="end_date"
-                              onChange={(name, value) =>
-                                onUpdateTimeTask({
-                                  taskListId: taskListItem.id,
-                                  taskId: task.id,
-                                  subTaskId: "",
-                                  name,
-                                  value,
-                                })
-                              }
-                              value={task?.end_date}
-                              iconProps={{
-                                sx: { fontSize: 16 },
+                            <Content
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "100%",
+                                "* > p ": {
+                                  color: "unset",
+                                  fontWeight: "normal",
+                                },
                               }}
-                            />
-                          </Content>
-                          <Content
-                            noWrap={false}
-                            whiteSpace="nowrap"
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              width: "100%",
-                              paddingX: "0",
-                            }}
-                          >
-                            <SelectStatusTask
-                              value={task.status}
-                              onHandler={(newValue) =>
-                                changeStatusTask({
-                                  taskListId: taskListItem.id,
-                                  taskId: task.id,
-                                  subTaskId: "",
-                                  newValue,
-                                })
-                              }
-                            />
-                          </Content>
-                          <Content
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              width: "100%",
-                              alignItem: "center",
-                              overflow: "hidden",
-                              "& > p": { lineHeight: "30px" },
-                            }}
-                          >
-                            <Description>{task?.description}</Description>
-                          </Content>
-                          <Content
-                            sx={{
-                              display: {
-                                xs: "none",
-                                md: "flex",
+                            >
+                              <Date
+                                label={commonT("form.title.selectTime")}
+                                name="end_date"
+                                onChange={(name, value) =>
+                                  onUpdateTimeTask({
+                                    taskListId: taskListItem.id,
+                                    taskId: task.id,
+                                    subTaskId: "",
+                                    name,
+                                    value,
+                                  })
+                                }
+                                value={task?.end_date}
+                                iconProps={{
+                                  sx: { fontSize: 16 },
+                                }}
+                              />
+                            </Content>
+                            <Content
+                              noWrap={false}
+                              whiteSpace="nowrap"
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "100%",
+                                paddingX: "0",
+                              }}
+                            >
+                              <SelectStatusTask
+                                value={task.status}
+                                onHandler={(newValue) =>
+                                  changeStatusTask({
+                                    taskListId: taskListItem.id,
+                                    taskId: task.id,
+                                    subTaskId: "",
+                                    newValue,
+                                  })
+                                }
+                              />
+                            </Content>
+                            <Content
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "100%",
                                 alignItem: "center",
-                                position: "relative",
-                                right: "16px",
-                              },
-                            }}
-                          >
-                            <MoreList
-                              selectedList={
-                                selectedList.length
-                                  ? selectedList
-                                  : [directlySelected(taskListItem, task)]
-                              }
-                              onReset={onResetSelected}
-                            />
-                          </Content>
-                        </Stack>
-                        {!isHide && (
-                          <>
-                            <Droppable droppableId={task.id}>
-                              {(taskDropProvided) => (
-                                <div
-                                  ref={taskDropProvided.innerRef}
-                                  {...taskDropProvided.droppableProps}
-                                  style={{ minHeight: 1 }}
-                                >
-                                  {task?.sub_tasks?.map((subTask, i) => {
-                                    const isChecked = isSubTaskChecked(
-                                      selectedList,
-                                      subTask.id,
-                                    );
-                                    const lastEl =
-                                      i ===
+                                overflow: "hidden",
+                                "& > p": { lineHeight: "30px" },
+                              }}
+                            >
+                              <Description>{task?.description}</Description>
+                            </Content>
+                            <Content
+                              sx={{
+                                display: {
+                                  xs: "none",
+                                  md: "flex",
+                                  alignItem: "center",
+                                  position: "relative",
+                                  right: "16px",
+                                },
+                              }}
+                            >
+                              <MoreList
+                                selectedList={
+                                  selectedList.length
+                                    ? selectedList
+                                    : [directlySelected(taskListItem, task)]
+                                }
+                                onReset={onResetSelected}
+                              />
+                            </Content>
+                          </Stack>
+                          {!isHide && (
+                            <>
+                              <Droppable droppableId={task.id}>
+                                {(taskDropProvided) => (
+                                  <div
+                                    ref={taskDropProvided.innerRef}
+                                    {...taskDropProvided.droppableProps}
+                                    style={{ minHeight: 1 }}
+                                  >
+                                    {task?.sub_tasks?.map((subTask, i) => {
+                                      const isChecked = isSubTaskChecked(
+                                        selectedList,
+                                        subTask.id,
+                                      );
+                                      const lastEl =
+                                        i ===
                                         (task?.sub_tasks?.length ?? 1) - 1;
-                                    return (
-                                      <>
-                                        <Stack
-                                          position={"relative"}
-                                          key={subTask.id}
-                                          direction="row"
-                                          alignItems="center"
-                                          minHeight={38}
-                                          overflow="hidden"
-                                          borderBottom={{
-                                            md: "1px solid",
-                                          }}
-                                          borderColor={{
-                                            md: "grey.100",
-                                          }}
-                                          maxHeight={{ md: 38 }}
-                                          sx={{
-                                            "& >.checkbox": {
-                                              opacity: isChecked ? 1 : 0,
-                                              userSelect: isChecked
-                                                ? undefined
-                                                : "none",
-                                            },
-                                            "&:hover >.checkbox": {
-                                              opacity: 1,
-                                            },
-                                            "&::before": {
-                                              position: "absolute",
-                                              left: "35px",
-                                              top: "0px",
-                                              "border-left": "2px solid gray",
-                                              "border-bottom": "2px solid gray",
-                                              content: "''",
-                                              width: "6px",
-                                              height: "20px",
-                                            },
-                                            "&::after": {
-                                              position: "absolute",
-                                              left: "35px",
-                                              bottom: "0px",
-                                              "border-left": "2px solid gray",
-                                              content: "''",
-                                              width: "0px",
-                                              height: lastEl ? "0px" : "20px",
-                                            },
-                                          }}
-                                        >
-                                          <Checkbox
-                                            className="checkbox"
-                                            size="small"
-                                            checked={isChecked}
-                                            onChange={onToggleSubTask(
-                                              !isChecked,
-                                              taskListItem,
-                                              task,
-                                              subTask,
-                                            )}
-                                          />
+                                      return (
+                                        <>
                                           <Stack
-                                            direction={{
-                                              md: "row",
-                                            }}
-                                            alignItems={{
-                                              xs: "flex-start",
-                                              md: "center",
-                                            }}
-                                            sx={sx.subTask}
+                                            position={"relative"}
+                                            key={subTask.id}
+                                            direction="row"
+                                            alignItems="center"
+                                            minHeight={38}
                                             overflow="hidden"
-                                          >
-                                            <Content
-                                              sx={{
-                                                pl: 3,
-                                              }}
-                                              color="text.primary"
-                                              textAlign="left"
-                                              noWrap
-                                              tooltip={subTask.name}
-                                              onClick={onSetTask(
-                                                subTask,
-                                                taskListItem.id,
-                                                task.id,
-                                                subTask.id,
-                                                taskListItem.name,
-                                                task.name,
-                                              )}
-                                            >
-                                              {subTask.name}
-                                            </Content>
-                                            <Content
-                                              sx={{
-                                                display: "flex",
-                                                justifyContent: "start",
-                                                width: "100%",
-                                                paddingLeft: 0,
-                                              }}
-                                            >
-                                              <AssignerTask
-                                                value={subTask?.owner?.id}
-                                                onHandler={(newValue) =>
-                                                  changeAssignerTask({
-                                                    taskListId: taskListItem.id,
-                                                    taskId: task.id,
-                                                    subTaskId: subTask.id,
-                                                    newValue,
-                                                  })
-                                                }
-                                                placeholder={
-                                                  subTask?.owner
-                                                    ? ""
-                                                    : commonT(
-                                                        "form.title.noAssigner",
-                                                      )
-                                                }
-                                              />
-                                            </Content>
-                                            <Content
-                                              sx={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                width: "100%",
-                                                "* > p ": {
-                                                  color: "unset",
-                                                  fontWeight: "normal",
-                                                },
-                                              }}
-                                            >
-                                              <Date
-                                                label={commonT(
-                                                  "form.title.selectTime",
-                                                )}
-                                                name="start_date"
-                                                onChange={(name, value) =>
-                                                  onUpdateTimeTask({
-                                                    taskListId: taskListItem.id,
-                                                    taskId: task.id,
-                                                    subTaskId: subTask.id,
-                                                    name,
-                                                    value,
-                                                  })
-                                                }
-                                                value={subTask?.start_date}
-                                                iconProps={{
-                                                  sx: { fontSize: 16 },
-                                                }}
-                                              />
-                                            </Content>
-                                            <Content
-                                              sx={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                width: "100%",
-                                                "* > p ": {
-                                                  color: "unset",
-                                                  fontWeight: "normal",
-                                                },
-                                              }}
-                                            >
-                                              <Date
-                                                label={commonT(
-                                                  "form.title.selectTime",
-                                                )}
-                                                name="end_date"
-                                                onChange={(name, value) =>
-                                                  onUpdateTimeTask({
-                                                    taskListId: taskListItem.id,
-                                                    taskId: task.id,
-                                                    subTaskId: subTask.id,
-                                                    name,
-                                                    value,
-                                                  })
-                                                }
-                                                value={subTask?.end_date}
-                                                iconProps={{
-                                                  sx: { fontSize: 16 },
-                                                }}
-                                              />
-                                            </Content>
-                                            <Content
-                                              noWrap={false}
-                                              whiteSpace="nowrap"
-                                              sx={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                width: "100%",
-                                                paddingX: "0",
-                                              }}
-                                            >
-                                              <SelectStatusTask
-                                                value={subTask.status}
-                                                onHandler={(newValue) =>
-                                                  changeStatusTask({
-                                                    taskListId: taskListItem.id,
-                                                    taskId: task.id,
-                                                    subTaskId: subTask.id,
-                                                    newValue,
-                                                  })
-                                                }
-                                              />
-                                            </Content>
-
-                                            <Content
-                                              sx={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                width: "100%",
-                                                alignItem: "center",
-                                                overflow: "hidden",
-                                                "& > p": { lineHeight: "30px" },
-                                              }}
-                                            >
-                                              <Description>
-                                                {subTask.description}
-                                              </Description>
-                                            </Content>
-                                          </Stack>
-                                          <MoreList
+                                            borderBottom={{
+                                              md: "1px solid",
+                                            }}
+                                            borderColor={{
+                                              md: "grey.100",
+                                            }}
+                                            maxHeight={{ md: 38 }}
                                             sx={{
-                                              display: {
-                                                xs: "none",
-                                                md: "flex",
+                                              "& >.checkbox": {
+                                                opacity: isChecked ? 1 : 0,
+                                                userSelect: isChecked
+                                                  ? undefined
+                                                  : "none",
+                                              },
+                                              "&:hover >.checkbox": {
+                                                opacity: 1,
+                                              },
+                                              "&::before": {
+                                                position: "absolute",
+                                                left: "35px",
+                                                top: "0px",
+                                                "border-left": "1px solid gray",
+                                                "border-bottom":
+                                                  "1px solid gray",
+                                                content: "''",
+                                                width: "6px",
+                                                height: "20px",
+                                              },
+                                              "&::after": {
+                                                position: "absolute",
+                                                left: "35px",
+                                                bottom: "0px",
+                                                "border-left": "1px solid gray",
+                                                content: "''",
+                                                width: "0px",
+                                                height: lastEl ? "0px" : "20px",
                                               },
                                             }}
-                                            selectedList={
-                                              selectedList.length
-                                                ? selectedList
-                                                : [
-                                                    directlySelected(
-                                                      taskListItem,
-                                                      task,
-                                                      subTask,
-                                                    ),
-                                                  ]
-                                            }
-                                            onReset={onResetSelected}
-                                          />
-                                        </Stack>
-                                      </>
-                                    );
-                                  })}
-                                  {taskDropProvided.placeholder}
-                                </div>
-                              )}
-                            </Droppable>
-                            {/* <Stack
+                                          >
+                                            <Checkbox
+                                              className="checkbox"
+                                              size="small"
+                                              checked={isChecked}
+                                              onChange={onToggleSubTask(
+                                                !isChecked,
+                                                taskListItem,
+                                                task,
+                                                subTask,
+                                              )}
+                                            />
+                                            <Stack
+                                              direction={{
+                                                md: "row",
+                                              }}
+                                              alignItems={{
+                                                xs: "flex-start",
+                                                md: "center",
+                                              }}
+                                              sx={sx.subTask}
+                                              overflow="hidden"
+                                            >
+                                              <Content
+                                                sx={{
+                                                  pl: 3,
+                                                }}
+                                                color="text.primary"
+                                                textAlign="left"
+                                                noWrap
+                                                tooltip={subTask.name}
+                                                onClick={onSetTask(
+                                                  subTask,
+                                                  taskListItem.id,
+                                                  task.id,
+                                                  subTask.id,
+                                                  taskListItem.name,
+                                                  task.name,
+                                                )}
+                                              >
+                                                {subTask.name}
+                                              </Content>
+                                              <Content
+                                                sx={{
+                                                  display: "flex",
+                                                  justifyContent: "start",
+                                                  width: "100%",
+                                                  paddingLeft: 0,
+                                                }}
+                                              >
+                                                <AssignerTask
+                                                  value={subTask?.owner?.id}
+                                                  onHandler={(newValue) =>
+                                                    changeAssignerTask({
+                                                      taskListId:
+                                                        taskListItem.id,
+                                                      taskId: task.id,
+                                                      subTaskId: subTask.id,
+                                                      newValue,
+                                                    })
+                                                  }
+                                                  placeholder={
+                                                    subTask?.owner
+                                                      ? ""
+                                                      : commonT(
+                                                          "form.title.noAssigner",
+                                                        )
+                                                  }
+                                                />
+                                              </Content>
+                                              <Content
+                                                sx={{
+                                                  display: "flex",
+                                                  justifyContent: "center",
+                                                  width: "100%",
+                                                  "* > p ": {
+                                                    color: "unset",
+                                                    fontWeight: "normal",
+                                                  },
+                                                }}
+                                              >
+                                                <Date
+                                                  label={commonT(
+                                                    "form.title.selectTime",
+                                                  )}
+                                                  name="start_date"
+                                                  onChange={(name, value) =>
+                                                    onUpdateTimeTask({
+                                                      taskListId:
+                                                        taskListItem.id,
+                                                      taskId: task.id,
+                                                      subTaskId: subTask.id,
+                                                      name,
+                                                      value,
+                                                    })
+                                                  }
+                                                  value={subTask?.start_date}
+                                                  iconProps={{
+                                                    sx: { fontSize: 16 },
+                                                  }}
+                                                />
+                                              </Content>
+                                              <Content
+                                                sx={{
+                                                  display: "flex",
+                                                  justifyContent: "center",
+                                                  width: "100%",
+                                                  "* > p ": {
+                                                    color: "unset",
+                                                    fontWeight: "normal",
+                                                  },
+                                                }}
+                                              >
+                                                <Date
+                                                  label={commonT(
+                                                    "form.title.selectTime",
+                                                  )}
+                                                  name="end_date"
+                                                  onChange={(name, value) =>
+                                                    onUpdateTimeTask({
+                                                      taskListId:
+                                                        taskListItem.id,
+                                                      taskId: task.id,
+                                                      subTaskId: subTask.id,
+                                                      name,
+                                                      value,
+                                                    })
+                                                  }
+                                                  value={subTask?.end_date}
+                                                  iconProps={{
+                                                    sx: { fontSize: 16 },
+                                                  }}
+                                                />
+                                              </Content>
+                                              <Content
+                                                noWrap={false}
+                                                whiteSpace="nowrap"
+                                                sx={{
+                                                  display: "flex",
+                                                  justifyContent: "center",
+                                                  width: "100%",
+                                                  paddingX: "0",
+                                                }}
+                                              >
+                                                <SelectStatusTask
+                                                  value={subTask.status}
+                                                  onHandler={(newValue) =>
+                                                    changeStatusTask({
+                                                      taskListId:
+                                                        taskListItem.id,
+                                                      taskId: task.id,
+                                                      subTaskId: subTask.id,
+                                                      newValue,
+                                                    })
+                                                  }
+                                                />
+                                              </Content>
+
+                                              <Content
+                                                sx={{
+                                                  display: "flex",
+                                                  justifyContent: "center",
+                                                  width: "100%",
+                                                  alignItem: "center",
+                                                  overflow: "hidden",
+                                                  "& > p": {
+                                                    lineHeight: "30px",
+                                                  },
+                                                }}
+                                              >
+                                                <Description>
+                                                  {subTask.description}
+                                                </Description>
+                                              </Content>
+                                            </Stack>
+                                            <MoreList
+                                              sx={{
+                                                display: {
+                                                  xs: "none",
+                                                  md: "flex",
+                                                },
+                                              }}
+                                              selectedList={
+                                                selectedList.length
+                                                  ? selectedList
+                                                  : [
+                                                      directlySelected(
+                                                        taskListItem,
+                                                        task,
+                                                        subTask,
+                                                      ),
+                                                    ]
+                                              }
+                                              onReset={onResetSelected}
+                                            />
+                                          </Stack>
+                                        </>
+                                      );
+                                    })}
+                                    {taskDropProvided.placeholder}
+                                  </div>
+                                )}
+                              </Droppable>
+                              {/* <Stack
                               width="100%"
                               direction="row"
                               spacing={1}
@@ -1494,15 +1515,16 @@ const ItemList = () => {
                               />
                             </Stack> */}
 
-                            {!!errorTaskName && (
-                              <Text variant="caption" color="error">
-                                {errorTaskName}
-                              </Text>
-                            )}
-                          </>
-                        )}
-                      </Stack>
-                    </DraggableTask>
+                              {!!errorTaskName && (
+                                <Text variant="caption" color="error">
+                                  {errorTaskName}
+                                </Text>
+                              )}
+                            </>
+                          )}
+                        </Stack>
+                      </DraggableTask>
+                    </div>
                   );
                 })}
               </DroppableTaskList>

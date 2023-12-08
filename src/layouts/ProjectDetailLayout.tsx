@@ -82,8 +82,8 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
       inFrame={isMembersOfProjectPath}
     >
       <Stack
-        position="sticky"
-        top={0}
+        position="relative"
+        // top={0}
         zIndex={12}
         // bgcolor="background.paper"
         bgcolor={isDarkMode ? "background.default" : "background.paper"}

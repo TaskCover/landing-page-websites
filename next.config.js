@@ -23,6 +23,7 @@ const nextConfig = {
     BLOG_API_URL: process.env.BLOG_API_URL,
     CAREER_API_URL: process.env.CAREER_API_URL,
     DOCS_API_URL: process.env.DOCS_API_URL,
+    BILLING_API_URL: process.env.BILLING_API_URL,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",

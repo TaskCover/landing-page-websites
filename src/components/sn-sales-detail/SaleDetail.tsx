@@ -54,9 +54,6 @@ const SalesDetail = () => {
         acc[todo.id] = {
           ...todo,
           priority: todo.priority,
-          expiration_date:
-            todo.expiration_date &&
-            formatDate(todo.expiration_date, DATE_FORMAT_HYPHEN),
         };
         return acc;
       },

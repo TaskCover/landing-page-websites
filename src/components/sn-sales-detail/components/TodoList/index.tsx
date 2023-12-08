@@ -2,7 +2,12 @@ import { Stack, TextField } from "@mui/material";
 import { Date } from "components/Filters";
 import Loading from "components/Loading";
 import { Collapse, Text } from "components/shared";
-import { DATE_FORMAT_HYPHEN, NS_COMMON, NS_SALES } from "constant/index";
+import {
+  DATE_FORMAT_HYPHEN,
+  DATE_PICKER_FORMAT,
+  NS_COMMON,
+  NS_SALES,
+} from "constant/index";
 import useToggle from "hooks/useToggle";
 import PlusIcon from "icons/PlusIcon";
 import { useTranslations } from "next-intl";
@@ -27,6 +32,7 @@ import { getMessageErrorByAPI, uuid } from "utils/index";
 import { reorderPriority } from "components/sn-sales-detail/helpers";
 import { on } from "events";
 import { useSnackbar } from "store/app/selectors";
+import dayjs from "dayjs";
 
 export const TodoName = ({
   onSubmit,
@@ -215,7 +221,6 @@ export const TodoName = ({
                 return (
                   <Date
                     label={salesT("detail.todoList.dueDate")}
-                    format={DATE_FORMAT_HYPHEN}
                     onChange={onChangeDate}
                     {...rest}
                   />
@@ -268,7 +273,11 @@ const TodoList = () => {
       ...value,
       priority: value.priority || todoList.length + 1,
       owner: value.owner?.id || value.owner,
+      expiration_date: dayjs(value.expiration_date, DATE_PICKER_FORMAT).format(
+        "DD-MM-YYYY",
+      ),
     };
+
     await onCreateTodo({
       dealId: saleDetail?.id || "",
       data: newTodo,
@@ -276,6 +285,10 @@ const TodoList = () => {
       const todoListObject = res.deal_update.todo_list.reduce((acc, todo) => {
         acc[todo.id] = {
           ...todo,
+          expiration_date: dayjs(
+            todo.expiration_date,
+            "YYYY-MM-DD",
+          ).toISOString(),
         };
         return acc;
       }, {});

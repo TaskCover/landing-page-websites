@@ -8,6 +8,8 @@ export const FORGOT_PASSWORD_PATH = "/forgot-password";
 export const RESET_PASSWORD_PATH = "/reset-password";
 export const CHANGE_PASSWORD_PATH = "/change-password";
 export const PROJECTS_PATH = "/projects";
+export const BUDGETING_PATH = "/budgeting";
+export const BUDGET_DETAIL_PATH = "/budgeting/{id}";
 export const EMPLOYEES_PATH = "/employees";
 export const COST_HISTORY_PATH = "/cost-history";
 export const POSITIONS_PATH = "/positions";
@@ -21,7 +23,7 @@ export const ACCOUNT_INFO_PATH = "/user-information";
 export const UPGRADE_ACCOUNT_PATH = "/upgrade-account";
 export const PROJECT_TASKS_PATH = "/projects/{id}/tasks";
 export const PROJECT_ACTIVITIES_PATH = "/projects/{id}/activities";
-export const PROJECT_COST_HISTORY_PATH = "/projects/{id}/cost-history";
+export const PROJECT_BUDGET_PATH = "/projects/{id}/budget";
 export const PROJECT_MEMBERS_PATH = "/projects/{id}/members";
 export const PROJECT_INFORMATION_PATH = "/projects/{id}";
 
@@ -48,6 +50,8 @@ export const BLOGS_RELATED_PATH = "/blogs/{id}/related";
 export const CAREER_PATH = "/careers";
 export const CAREER_DETAIL_PATH = "/careers/{id}";
 export const APPLICANTS_DETAIL_PATH = "/careers/{id}/applicants";
+//Billing
+export const BILLING_PATH = "/billing";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -72,7 +76,7 @@ export const AUTHORIZED_PATHS = {
     PROJECT_TASKS_PATH,
     PROJECT_INFORMATION_PATH,
     PROJECT_MEMBERS_PATH,
-    PROJECT_COST_HISTORY_PATH,
+    PROJECT_BUDGET_PATH,
     PROJECT_ACTIVITIES_PATH,
     MY_COMPANY_PATH,
     HOME_PATH,
@@ -84,8 +88,11 @@ export const AUTHORIZED_PATHS = {
     DOCS_DETAIL_PATH,
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
-    // Feedback
     FEEDBACK_PATH,
+    BILLING_PATH,
+    // Budgeting
+    BUDGETING_PATH,
+    BUDGET_DETAIL_PATH,
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -113,7 +120,7 @@ export const AUTHORIZED_PATHS = {
     PROJECT_TASKS_PATH,
     PROJECT_INFORMATION_PATH,
     PROJECT_MEMBERS_PATH,
-    PROJECT_COST_HISTORY_PATH,
+    PROJECT_BUDGET_PATH,
     PROJECT_ACTIVITIES_PATH,
     MY_COMPANY_PATH,
     HOME_PATH,
@@ -125,8 +132,11 @@ export const AUTHORIZED_PATHS = {
     DOCS_DETAIL_PATH,
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
-    // Feedback
     FEEDBACK_PATH,
+    BILLING_PATH,
+    // Budgeting
+    BUDGETING_PATH,
+    BUDGET_DETAIL_PATH,
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };

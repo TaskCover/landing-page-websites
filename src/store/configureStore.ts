@@ -17,6 +17,7 @@ import { BlogState, blogReducer } from "./blog/reducer";
 import { categoryBlogReducer } from "./blog-category/reducer";
 import { CareerReducer } from "./career/reducer";
 import documentApi from "./docs/api";
+import { BillingState, billingReducer } from "./billing/reducer";
 
 export interface State {
   app: AppState;
@@ -29,6 +30,7 @@ export interface State {
   sales: SaleState;
   docs: IDocs;
   blogs: BlogState;
+  billing: BillingState;
 }
 
 export const store = configureStore({
@@ -51,6 +53,7 @@ export const store = configureStore({
     //career
     career: CareerReducer,
     [documentApi.reducerPath]: documentApi.reducer,
+    billing: billingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

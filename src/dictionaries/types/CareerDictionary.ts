@@ -32,7 +32,8 @@ export type CareerDictionary={
     status: string,
     is_opening: string,
     is_closed: string,
-
+    Closed:string,
+    ReOpen:string,
     form_career : {
         title: string,
         slug: string,
@@ -65,4 +66,5 @@ export type CareerDictionary={
         title: string,
         content: string
     },
+    update:string,
 }

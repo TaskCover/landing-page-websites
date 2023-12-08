@@ -1,4 +1,7 @@
-import { mappingStageStatusOptions } from "components/sn-sales/helpers";
+import {
+  mappingStageStatusOptions,
+  mappingStatusOptions,
+} from "components/sn-sales/helpers";
 import { NS_SALES } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import { useTranslations } from "next-intl";
@@ -21,7 +24,13 @@ export const useGetStageOptions = () => {
     label: salesT(item.label),
   }));
 
+  const stageStatusOptions = mappingStatusOptions.map((item) => ({
+    ...item,
+    label: salesT(item.label),
+  }));
+
   return {
+    stageStatusOptions,
     stageOptions,
   };
 };

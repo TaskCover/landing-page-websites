@@ -4,6 +4,7 @@ import {
   AN_ERROR_TRY_RELOAD_PAGE,
   DARK_THEME_MEDIA_SYSTEM,
   DATE_FORMAT_SLASH,
+  DATE_LOCALE_FORMAT,
 } from "constant/index";
 import { ItemListResponse, OptionFormatNumber } from "constant/types";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
@@ -127,6 +128,22 @@ export const getFiltersFromQueries = (
   }, {});
 };
 
+export const formatDocResponseToItemResponse = (data: {
+  totalDocs: number;
+  totalPages: number;
+  page: number;
+  limit: number;
+  docs: any[];
+}) => {
+  return {
+    total: data.totalDocs,
+    total_page: data.totalPages,
+    page: data.page - 1,
+    data: data.docs,
+    pageSize: data.limit,
+  };
+};
+
 export const refactorRawItemListResponse = (rawData: {
   page: number;
   total: number;
@@ -142,7 +159,7 @@ export const refactorRawItemListResponse = (rawData: {
   } as ItemListResponse;
 };
 
-const KEYS = ["page", "size", "sort"];
+const KEYS = ["page", "size", "sort", "searchType"];
 
 export const serverQueries = (
   {
@@ -194,8 +211,12 @@ export const serverQueries = (
 
   const cleanData = cleanObject(data);
 
-  if (cleanData["query"].length) {
+  if (cleanData["query"].length && rest.searchType === "or") {
+    cleanData["query"] = `or(${cleanData["query"].join(",")})`;
+  } else if (cleanData["query"].length && rest.searchType === "and") {
     cleanData["query"] = `and(${cleanData["query"].join(",")})`;
+  } else if (cleanData["query"].length && rest.searchType === "eq") {
+    cleanData["query"] = `eq(${cleanData["query"].join(",")})`;
   } else {
     delete cleanData["query"];
   }
@@ -273,6 +294,15 @@ export const formatDate = (
   const year = dateObj.getFullYear();
 
   if (year === 1 || year === 1970) return fallback ?? "";
+
+  if (format === DATE_LOCALE_FORMAT) {
+    return dateObj.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
   const day = `0${dateObj.getDate()}`.substr(-2);
   const month = `0${dateObj.getMonth() + 1}`.substr(-2);
   const hours = `0${dateObj.getHours()}`.substr(-2);

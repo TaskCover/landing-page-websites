@@ -2,7 +2,7 @@ import { Badge, Chip, Stack } from "@mui/material";
 import Link from "components/Link";
 import { BodyCell } from "components/Table";
 import { Text } from "components/shared";
-import { NS_BLOG } from "constant/index";
+import { NS_BLOG, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import React, { memo } from "react";
 import { BlogData } from "store/blog/actions";
@@ -19,12 +19,13 @@ type InformationItemProps = {
 
 const MobileContentCell = (props: MobileContentCellProps) => {
     const blogT = useTranslations(NS_BLOG);
+    const commonT = useTranslations(NS_COMMON);
 
     const { item } = props;
     return (
         <BodyCell align="left">
             <Stack spacing={2} py={1.5}>
-                <Link sx={{ color: "text.primary" }} tooltip={blogT("clickGoDetail", { name: blogT("companyList.company"), })}
+                <Link sx={{ color: "text.primary" }} tooltip={commonT("clickGoDetail", { name: blogT("title"), })}
                     href={getPath(BLOGS_DETAIL_PATH, undefined, { id: item.slug as string })}
                     underline="none"
                 />
@@ -32,11 +33,8 @@ const MobileContentCell = (props: MobileContentCellProps) => {
                 <Stack direction="row" alignItems="center" spacing={2}>
                     <Text variant="h6">{item.title}</Text>
                 </Stack>
-                <InformationItem label={blogT("category")}>
-                    {item.category?.map((cate, index) => (
-                        <Text key={index}>{cate.name}</Text>
-
-                    ))}
+                <InformationItem label={blogT("slug")}>
+                   {item.slug}
                 </InformationItem>
 
                 <InformationItem label={blogT("tag")}>

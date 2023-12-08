@@ -10,7 +10,8 @@ import { Text } from "components/shared";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
 import { Saved, SelectStatus, Assigner } from "./components";
 import { useTranslations } from "next-intl";
-import { NS_COMMON } from "constant/index";
+import { NS_COMMON, DATE_LOCALE_FORMAT} from "constant/index";
+import dayjs from "dayjs";
 
 type DesktopCellsProps = {
   item: Project;
@@ -48,7 +49,8 @@ const DesktopCells = (props: DesktopCellsProps) => {
         <Assigner value={item?.owner?.id} id={item.id} rootSx={{ "& > svg": { display: 'none' } }} placeholder={item?.owner ? '' : commonT("form.title.noAssigner")} />
       </BodyCell>
       <BodyCell align="left">
-        {formatDate(item.start_date)}
+        {/* {formatDate(item.start_date)} */}
+        {item.start_date ? dayjs(item.start_date).format(DATE_LOCALE_FORMAT) : ""}
       </BodyCell>
       {item.status ? (
         <BodyCell sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>

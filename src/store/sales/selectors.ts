@@ -96,7 +96,7 @@ export const useSales = () => {
           ...salesFilters,
           pageIndex: 1,
           pageSize: 10,
-          sort: SORT_OPTIONS.DESC,
+          sort: "DESC",
         });
       });
     },
@@ -104,6 +104,9 @@ export const useSales = () => {
   );
   const onUpdateDeal = useCallback(
     async (data) => {
+      if (data.probability === 0) {
+        return Promise.reject("bạn không thể giảm tiến độ");
+      }
       const start_date =
         (data.start_date &&
           moment(data.start_date, "DD-MM-YYYY").format("YYYY-MM-DD")) ||
@@ -116,6 +119,7 @@ export const useSales = () => {
         name: data.dealName,
         probability: data.probability,
         members: data.members,
+        stage: data.stage,
         status: data.status,
         company_id: data.company,
         tags: data.tags,
