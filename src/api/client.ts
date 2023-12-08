@@ -103,6 +103,7 @@ const createAxiosInstance = (baseUrl: string) => {
         sleep(1000);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         axiosInstance.request(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (error as AxiosError).config as AxiosRequestConfig<any>,
         );
       }
@@ -233,3 +234,5 @@ export const saleClient = new RequestClient({
 
 export const saleClientInstance: AxiosInstance =
   createAxiosInstance(SALE_API_URL);
+
+export { axios };
