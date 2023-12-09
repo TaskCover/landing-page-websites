@@ -12,7 +12,7 @@ export const budgetByIdQuery = (id: string): Promise<any> => {
 
 export const useBudgetByIdQuery = (id: string): any | undefined => {
   const { data } = useQuery({
-    queryKey: [BUDGET_GET_BY_ID_QK],
+    queryKey: [BUDGET_GET_BY_ID_QK, id],
     queryFn: () => budgetByIdQuery(id),
     retry: 0,
     staleTime: Infinity,

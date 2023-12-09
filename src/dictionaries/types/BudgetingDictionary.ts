@@ -6,8 +6,9 @@ export type BudgetingDictionary = {
     toolbar: {
         date: string;
         addTime: string;
-        addExpense: String;
-        addInvoice: String;
+        addExpense: string;
+        addInvoice: string;
+        serviceEdit: string;
     },
     status: {
         open: string;
@@ -41,6 +42,22 @@ export type BudgetingDictionary = {
         amountUnpaid: string;
         dueDate: string
     },
+	tabService: {
+		index: {
+			name: string;
+			workingTime: string;
+			price: string;
+			cost: string;
+		},
+		section: {
+			serviceName: string;
+			serviceType: string;
+			billingType: string;
+			unit: string;
+			tracking: string;
+			estimate: string;
+		}
+	},
     dialog: {
         titleModalAdd: string;
         date: string;
@@ -52,5 +69,18 @@ export type BudgetingDictionary = {
         cancelBtnText: string;
         addBtnText: string;
         editBtnText: string;
-    }
+    },
+	dialogRecurring: {
+		titleModalAdd: string;
+		cancelBtnText: string;
+        addBtnText: string;
+        editBtnText: string;
+		recurringInterval: string;
+		nextOccurrence: string;
+		stopRecurring: string;
+	},
+	delete: {
+		titleConfirmDelete: string;
+		contentConfirmDelete: string;
+	}
 }

@@ -52,11 +52,11 @@ export const Feed = ({ budget }: { budget: TBudget }) => {
               </Text>
               <Stack direction="row" gap={1} alignItems="center" mb="5px">
                 <Text>Created</Text>
-                <BadgeCustom text={feed.data.name} />
+                <BadgeCustom text={feed.budget_id.created_by.fullname} />
               </Stack>
               <Stack direction="row" gap={1} alignItems="center" mb="5px">
                 <Text>Responsible set to</Text>
-                <BadgeCustom text={feed.data.owner.fullname} />
+                <BadgeCustom text={feed.budget_id.owner.fullname} />
               </Stack>
               <Stack direction="row" gap={1} alignItems="center" mb="5px">
                 <Text>Currency set to</Text>
@@ -64,7 +64,7 @@ export const Feed = ({ budget }: { budget: TBudget }) => {
               </Stack>
               <Stack direction="row" gap={1} alignItems="center" mb="5px">
                 <Text>Company set to</Text>
-                <BadgeCustom text={feed.data.company} />
+                <BadgeCustom text={feed.budget_id.company} />
               </Stack>
               <Stack direction="row" gap={1} alignItems="center" mb="5px">
                 <Text>Deal type set to</Text>

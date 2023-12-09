@@ -15,14 +15,10 @@ import { useTranslations } from "next-intl";
 import { formatDate } from "utils/index";
 import { IconButton, Text, Tooltip } from "components/shared";
 import MoreDotIcon from "../../../icons/MoreDotIcon";
-import HierarchyIcon from "../../../icons/HierarchyIcon";
-import DuplicateIcon from "../../../icons/DuplicateIcon";
-import ConvertIcon from "../../../icons/ConvertIcon";
-import ChangeIcon from "../../../icons/ChangeIcon";
-import MoveArrowIcon from "../../../icons/MoveArrowIcon";
 import TrashIcon from "../../../icons/TrashIcon";
 import { useState } from "react";
 import { useOnClickOutside } from "hooks/useOnClickOutside";
+import EditIcon from "icons/EditIcon";
 
 type TTemplate = {
   date: string;
@@ -125,12 +121,12 @@ export const Time = () => {
                             component={ButtonBase}
                             sx={{ width: "100%", py: 1, px: 2 }}
                           >
-                            <DuplicateIcon
+                            <EditIcon
                               sx={{ color: "grey.400" }}
                               fontSize="medium"
                             />
                             <Text ml={2} variant="body2" color="grey.400">
-                              duplicate
+                              Edit
                             </Text>
                           </MenuItem>
                           <MenuItem
@@ -140,7 +136,7 @@ export const Time = () => {
                           >
                             <TrashIcon color="error" fontSize="medium" />
                             <Text ml={2} variant="body2" color="error.main">
-                              delete
+                              Delete
                             </Text>
                           </MenuItem>
                         </MenuList>

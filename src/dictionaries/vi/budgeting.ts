@@ -10,6 +10,7 @@ export const BudgetingLang: BudgetingDictionary = {
         addTime: 'Time',
         addExpense: 'Expense',
         addInvoice: 'Invoice',
+        serviceEdit: 'Edit',
     },
     status: {
         open: 'Open',
@@ -43,6 +44,22 @@ export const BudgetingLang: BudgetingDictionary = {
         amountUnpaid: 'Amount unpaid',
         dueDate: 'Due Date',
     },
+	tabService: {
+		index: {
+			name: "Name",
+			workingTime: "Working time",
+			price: "Price",
+			cost: "Cost",
+		},
+		section: {
+			serviceName: "Service Name",
+			serviceType: "Service Type",
+			billingType: "Billing Type",
+			unit: "Unit",
+			tracking: "Tracking",
+			estimate: "Estimate",
+		}
+	},
     dialog: {
         titleModalAdd: "Add time entry",
         date: 'Date',
@@ -54,5 +71,18 @@ export const BudgetingLang: BudgetingDictionary = {
         cancelBtnText: 'Cancel',
         addBtnText: 'Add',
         editBtnText: 'Edit',
-    }
+    },
+	dialogRecurring: {
+		titleModalAdd: 'Make this Recurring Budget',
+		cancelBtnText: 'Cancel',
+        addBtnText: 'Make recurring',
+        editBtnText: 'Edit recurring',
+		recurringInterval: "Recurring Interval",
+		nextOccurrence: "Next Occurrence",
+		stopRecurring: "Stop Recurring",
+	},
+	delete: {
+		titleConfirmDelete: "Xác Nhận Xóa",
+		contentConfirmDelete: "Bạn có chắc chắn muốn xóa?",
+	}
 }
