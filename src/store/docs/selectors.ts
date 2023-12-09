@@ -1,18 +1,17 @@
-import { shallowEqual } from "react-redux";
-import { DataStatus, HttpStatusCode } from "constant/enums";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useMemo, useCallback, useState } from "react";
-import { getDocs } from "./actions";
 import { Endpoint, client } from "api";
+import { DataStatus, HttpStatusCode } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN } from "constant/index";
 import { useRouter } from "next-intl/client";
+import { useCallback, useMemo, useState } from "react";
+import { shallowEqual } from "react-redux";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { getDocs } from "./actions";
 import {
   changeDocInfo,
   changeId,
   changePermDoc,
   getDocDetails,
 } from "./reducer";
-import { useSnackbar } from "store/app/selectors";
 
 const useDocs = () => {
   const [loading, setLoading] = useState(false);
@@ -68,7 +67,6 @@ const useDocs = () => {
   };
 
   const handleUpdateDoc = async (data, id) => {
-    console.log("data", data);
     await client.put(Endpoint.DOCS + `/${id}`, data, {
       baseURL: "http://103.196.145.232:6813/api/v1",
     });

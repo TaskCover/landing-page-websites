@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Accordion,
@@ -14,45 +16,6 @@ import DesktopCells from "./DesktopCells";
 import MobileContentCell from "./MobileContentCell";
 import styled from "@emotion/styled";
 
-export const SingleRow = ({ items, data }) => {
-  const { isMdSmaller } = useBreakpoint();
-  const { isDarkMode } = useTheme();
-  return (
-    <>
-      <Box
-        sx={{
-          backgroundColor: isDarkMode ? "#1E1E1E" : "#E1F0FF",
-          p: {
-            md: "18px",
-            xs: "16px 4px 16px 4px",
-          },
-        }}
-      >
-        <Text
-          sx={{
-            fontSize: {
-              md: 16,
-              xs: 14,
-            },
-            fontWeight: 600,
-          }}
-        >
-          {data?.fullname}
-        </Text>
-      </Box>
-      {items?.length > 0 &&
-        items?.map((item) => (
-          <TableRow key={item.id}>
-            {!isMdSmaller ? (
-              <DesktopCells item={item} />
-            ) : (
-              <MobileContentCell item={item} />
-            )}
-          </TableRow>
-        ))}
-    </>
-  );
-};
 export const RowGroup = (props) => {
   const { items, title } = props;
   const { isMdSmaller } = useBreakpoint();
@@ -70,7 +33,7 @@ export const RowGroup = (props) => {
               {title}
             </Text>
           </AccordionSummary>
-          <AccordionDetails sx={{ padding: 0 }}>
+          <AccordionDetails sx={{ padding: 0, width: "100%" }}>
             {Array.isArray(items) &&
               items.map((doc) => {
                 return (

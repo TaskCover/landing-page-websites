@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-import { Skeleton, TableCell, TableRow } from "@mui/material";
+import { Skeleton, Stack, TableCell, TableRow } from "@mui/material";
 import FixedLayout from "components/FixedLayout";
 import Pagination from "components/Pagination";
 import { CellProps, TableLayout } from "components/Table";
@@ -20,6 +20,8 @@ import { getPath } from "utils/index";
 import DesktopCells from "./DesktopCells";
 import { RowGroup } from "./ItemDoc";
 import MobileContentCell from "./MobileContentCell";
+import { useGetDocsQuery } from "store/docs/api";
+import Avatar from "components/Avatar";
 
 export declare type TDocumentGroup = {
   _id: string;
@@ -28,23 +30,13 @@ export declare type TDocumentGroup = {
 };
 
 const ItemList = () => {
-  const {
-    items,
-    isFetching,
-    isIdle,
-    error,
-    pageIndex,
-    pageSize,
-    totalItems,
-    totalPages,
-    filters,
-    onGetDocs,
-  } = useDocs();
-  const { push, replace } = useRouter();
+  const { push } = useRouter();
   const { isMdSmaller } = useBreakpoint();
   const pathname = usePathname();
-  const { initQuery, isReady, query } = useQueryParams();
+  const { query } = useQueryParams();
+  const { data, isLoading } = useGetDocsQuery(query);
   const searchParams = useSearchParams()!;
+
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
       {
@@ -89,24 +81,22 @@ const ItemList = () => {
     const newQueries = { ...query, ...queries };
     const path = getPath(pathname, newQueries);
     push(path);
-
-    onGetDocs(newQueries);
   };
 
   const onChangePage = (newPage: number) => {
-    onChangeQueries({ page: newPage, size: pageSize });
+    onChangeQueries({ page: newPage, size: query.size });
   };
 
   const onChangeSize = (newPageSize: number) => {
     onChangeQueries({ page: 1, size: newPageSize });
   };
+
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(
         searchParams as unknown as typeof URLSearchParams.prototype,
       );
       params.set(name, value);
-
       return params.toString();
     },
     [searchParams],
@@ -117,45 +107,28 @@ const ItemList = () => {
       push(
         pathname +
           "?" +
-          createQueryString("group_by", DocGroupByEnum.PROJECT_ID),
+          [
+            createQueryString("group_by", DocGroupByEnum.PROJECT_ID),
+            createQueryString("size", "50"),
+          ].join("&"),
       );
-    if (!isReady) return;
-    onGetDocs({
-      ...DEFAULT_PAGING,
-      ...initQuery,
-      group_by: !query?.group_by ? DocGroupByEnum.PROJECT_ID : query.group_by,
-    });
-  }, [initQuery, isReady, onGetDocs, query, searchParams]);
+  }, []);
 
   return (
     <>
       <FixedLayout>
         <TableLayout
           headerList={headerList}
-          pending={isFetching}
-          error={error as string}
-          noData={!isIdle && items?.length === 0}
+          pending={isLoading}
+          noData={data?.totalDocs === 0}
           px={{ xs: 0, md: 3 }}
           headerProps={{
             sx: { px: { xs: 0.5, md: 2 } },
           }}
         >
-          {!query?.group_by &&
-            Array.isArray(items[0]?.docs) &&
-            items[0]?.docs.map((item) => {
-              return (
-                <TableRow key={item._id}>
-                  {!isMdSmaller ? (
-                    <DesktopCells item={item} />
-                  ) : (
-                    <MobileContentCell item={item} />
-                  )}
-                </TableRow>
-              );
-            })}
-
           {query?.group_by == DocGroupByEnum.CREATED_BY &&
-            items.map((item) => {
+            Array.isArray(data?.docs) &&
+            data?.docs.map((item) => {
               return (
                 <RowGroup
                   key={item?._id}
@@ -165,28 +138,39 @@ const ItemList = () => {
               );
             })}
           {query?.group_by === DocGroupByEnum.PROJECT_ID &&
-            items.map((item) => {
+            Array.isArray(data?.docs) &&
+            data?.docs.map((item) => {
               return (
                 <RowGroup
-                  key={item?._id}
-                  title={
-                    item.groupInfo
-                      ? `${item.groupInfo.name}  #${
-                          item.groupInfo?.number || 0
-                        }`
-                      : "No name"
-                  }
-                  items={item.docs}
-                />
+                key={item?._id}
+                title={
+                  item.groupInfo ? (
+                    <>
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <Avatar
+                          size={32}
+                          alt={item.groupInfo.name}
+                          src={item.groupInfo.avatar.link}
+                          style={{ marginRight: "8px" }}
+                        />
+                        {`${item.groupInfo.name} #${item.groupInfo?.number || 0}`}
+                      </Stack>
+                    </>
+                  ) : (
+                    "No project"
+                  )
+                }
+                items={item.docs}
+              />
               );
             })}
         </TableLayout>
 
         <Pagination
-          totalItems={totalItems}
-          totalPages={totalPages}
-          page={pageIndex}
-          pageSize={pageSize}
+          totalItems={data?.totalDocs}
+          totalPages={data?.totalPages}
+          page={data?.page}
+          pageSize={+query.size}
           containerProps={{ px: { md: 3 }, py: 1 }}
           onChangePage={onChangePage}
           onChangeSize={onChangeSize}

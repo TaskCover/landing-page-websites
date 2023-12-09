@@ -16,7 +16,7 @@ export const FeedbackLang : FeedbackDictionary={
         name: "Name",
         phone: "Phone",
         email: "Email",
-        title: "Title",
+        subject: "Subject",
         content: "Content",
         status: "Status",
         responsed: "Note",

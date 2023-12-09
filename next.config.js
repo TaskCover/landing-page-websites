@@ -22,6 +22,7 @@ const nextConfig = {
     FEEDBACK_API_URL: process.env.FEEDBACK_API_URL,
     BLOG_API_URL: process.env.BLOG_API_URL,
     CAREER_API_URL: process.env.CAREER_API_URL,
+    DOCS_API_URL: process.env.DOCS_API_URL,
     BILLING_API_URL: process.env.BILLING_API_URL,
   },
   compiler: {
@@ -33,6 +34,10 @@ const nextConfig = {
       {
         protocol: "http",
         hostname: "103.196.145.232",
+      },
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
       },
     ],
   },
