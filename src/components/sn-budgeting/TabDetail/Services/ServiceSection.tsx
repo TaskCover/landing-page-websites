@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { Button } from "components/shared";
+import { Button, IconButton } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { getMessageErrorByAPI, uuid } from "utils/index";
@@ -12,10 +12,13 @@ import {
 } from "queries/budgeting/service-add";
 import { useParams } from "next/navigation";
 import dayjs from "dayjs";
-import { NS_COMMON } from "constant/index";
+import { NS_BUDGETING, NS_COMMON } from "constant/index";
 import { useSnackbar } from "store/app/selectors";
 import { useTranslations } from "next-intl";
 import { useBudgetGetServiceQuery } from "queries/budgeting/service-list";
+import ConfirmDialog from "components/ConfirmDialog";
+import useToggle from "hooks/useToggle";
+import TrashIcon from "icons/TrashIcon";
 
 type Props = {
   onCloseEdit?: () => void;
@@ -28,14 +31,17 @@ type TForm = {
 export const ServiceSection = ({ onCloseEdit }: Props) => {
   const { control, setValue, handleSubmit, getValues } = useForm<TForm>();
   const [errors, setErrors] = useState<TErrors>({});
+  const [isOpenConfirm, openConfirm, closeConfirm] = useToggle();
+  const [indexWaitDelete, setIndexWaitDelete] = useState<number | null>(null);
   const [sections, setSections] = useState<any>(null);
   const { id: budgetId } = useParams();
   const budgetServiceAdd = useBudgetServiceAdd();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
+  const budgetT = useTranslations(NS_BUDGETING);
   const serviceQuery = useBudgetGetServiceQuery(String(budgetId));
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: "sections",
     control,
   });
@@ -161,6 +167,21 @@ export const ServiceSection = ({ onCloseEdit }: Props) => {
     });
   };
 
+  const openConfirmDelete = (index: number) => {
+    setIndexWaitDelete(index);
+    openConfirm();
+  };
+
+  const cancelConfirmDelete = () => {
+    setIndexWaitDelete(null);
+    closeConfirm();
+  };
+
+  const acceptDelete = () => {
+    if (indexWaitDelete) remove(indexWaitDelete);
+    cancelConfirmDelete();
+  };
+
   return (
     <Box>
       <Stack direction="row" gap={2} justifyContent="end" p="15px">
@@ -183,16 +204,28 @@ export const ServiceSection = ({ onCloseEdit }: Props) => {
       <Box>
         {fields.map((field, index) => (
           <Box key={field.id}>
-            <Typography
-              component="h3"
-              fontSize={24}
-              fontWeight="bold"
-              px={2}
-              py={1}
-              sx={{ color: "grey.300" }}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              {field.title}
-            </Typography>
+              <Typography
+                component="h3"
+                fontSize={24}
+                fontWeight="bold"
+                px={2}
+                py={1}
+                sx={{ color: "grey.300" }}
+              >
+                {field.title}
+              </Typography>
+              <IconButton onClick={() => openConfirmDelete(index)}>
+                <TrashIcon
+                  fontSize="medium"
+                  sx={{ color: "error.main", cursor: "pointer" }}
+                />
+              </IconButton>
+            </Stack>
             <ServiceSectionRow
               fieldIndex={index}
               updateValue={handleChangeValue}
@@ -218,6 +251,13 @@ export const ServiceSection = ({ onCloseEdit }: Props) => {
           Add section
         </Button>
       </Box>
+      <ConfirmDialog
+        open={isOpenConfirm}
+        onClose={cancelConfirmDelete}
+        onSubmit={acceptDelete}
+        title={budgetT("delete.titleConfirmDelete")}
+        content={budgetT("delete.contentConfirmDelete")}
+      />
     </Box>
   );
 };
