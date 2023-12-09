@@ -8,6 +8,7 @@ import { type } from "os";
 import { config } from "process";
 import { Category } from "store/blog-category/reducer";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
+import { string } from "yup";
 
 export enum BlogStatus {
   PUBLISHED = "true",
@@ -43,6 +44,7 @@ export type BlogData = {
   created_time?: Date,
   created_by?: CreateByUser,
   ignoredId?: string,
+  categories?: Category[],
 };
 
 
@@ -125,15 +127,9 @@ export const createNewBlogs = createAsyncThunk(
         baseURL: BLOG_API_URL,
       });
 
-      console.log("Response:", response);
-      console.log("Response Data:", JSON.stringify(response.data));
-
       if (response?.status === HttpStatusCode.CREATED) {
-        window.location.assign('/blogs');
         return response.data;
       }
-      console.log("Request Payload:", response);
-
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
       console.error("Error:", error);
@@ -141,31 +137,6 @@ export const createNewBlogs = createAsyncThunk(
     }
   }
 );
-
-// function getFileExtension(fileName: string): string {
-//     const dotIndex = fileName.lastIndexOf('.');
-//     return dotIndex === -1 ? '' : fileName.slice(dotIndex + 1);
-//   }
-
-//   export async function getFileData(data: any): Promise<FileResponse> {
-//     var url = `${FILE_API_GET_URL||"http://103.196.145.232:6807/api/v1"}${Endpoint.UPLOAD_LINK}/${data.file.name}?type=image/${getFileExtension(data.file.name)}`;
-//     const additionalHeaders: Record<string, string> = {
-//         'token': `${data.token}`,
-//         // Add other headers as needed
-//     };
-//     const headers: AxiosRequestConfig['headers'] = {
-//         'Authorization': `Bearer ${data.token}`,
-//         'Content-Type': 'application/json',
-//         ...additionalHeaders, // Add additional headers
-//     };
-//     try {
-//         const response = await axios.get(url, { headers });
-//         return response.data as FileResponse;
-//     } catch (error) {
-//         console.error(error);
-//         throw new Error('Failed to fetch budget data');
-//     }
-//   }
 
 export const updateBlog = createAsyncThunk("blogs/updateBlog",
   async ({ id, blog }: { id: string, blog: BlogData }) => {
@@ -220,6 +191,7 @@ export const getRelatedBlog = createAsyncThunk(
 
 export const getBlogComments = createAsyncThunk(
   "blogs/getBlogComments", async (id: string) => {
+    console.log("id " + id);
     const response = await client.get(Endpoint.BLOGS + "/" + id + "/comment", {}, {
       baseURL: BLOG_API_URL,
     });
@@ -304,4 +276,44 @@ export const deleteBlog = createAsyncThunk(
       throw error;
     }
   },
+);
+// Update published
+export const updatePublished = createAsyncThunk(
+  'blogs/updatePublished',
+  async ({ blogList, published, Token }: { blogList: BlogData[]; published: boolean; Token: string | undefined | null }) => {
+    try {
+      const promises = blogList.map(async (element) => {
+        const item = {
+          content: element.content,
+          background: element.background_down?.object,
+          slug: element.slug,
+          published: published,
+          title: element.title,
+          tag: element.tag,
+          attachments: element.attachments_down?.map(att => att.object),
+          category: element.categories?.map(cate => cate.id),
+        } as BlogFormData
+        const response = await client.put(
+          `${Endpoint.BLOGS}/${element.id}`,
+          item,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `${Token}`,
+            },
+            baseURL: BLOG_API_URL,
+          }
+        );
+        if (response?.status !== HttpStatusCode.CREATED) {
+          throw AN_ERROR_TRY_AGAIN;
+        }
+        return response.data;
+      });
+      const results = await Promise.all(promises);
+      return results;
+    } catch (error) {
+      throw error;
+    }
+  }
 );

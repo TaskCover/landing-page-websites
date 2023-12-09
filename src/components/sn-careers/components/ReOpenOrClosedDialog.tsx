@@ -10,12 +10,12 @@ import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { BlogData } from "store/blog/actions";
 
-type ApproveOrRejectConfirmProps = ConfirmDialogProps & {
+type ReOpenOrClosedDialogProps = ConfirmDialogProps & {
   items?: BlogData[];
   action: string;
 };
 
-const ApproveOrRejectConfirm = (props: ApproveOrRejectConfirmProps) => {
+const ReOpenOrClosedDialog = (props: ReOpenOrClosedDialogProps) => {
   const { items = [], onSubmit: onSubmitProps, action, ...rest } = props;
   const commonT = useTranslations(NS_COMMON);
 
@@ -51,4 +51,4 @@ const ApproveOrRejectConfirm = (props: ApproveOrRejectConfirmProps) => {
   );
 };
 
-export default memo(ApproveOrRejectConfirm);
+export default memo(ReOpenOrClosedDialog);

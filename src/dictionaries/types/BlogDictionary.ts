@@ -44,6 +44,7 @@ export type BlogDictionary = {
         tag: string,
         statusBlog: string,
         created_time : string,
+        relatedBlogs:string,
     },
     published: string,
     draft: string,
@@ -58,6 +59,10 @@ export type BlogDictionary = {
         },
         published:string,
         draft:string,
+        update:{
+            title:string,
+            content:string,
+        }
     },
     blogForm: {
         key: string,

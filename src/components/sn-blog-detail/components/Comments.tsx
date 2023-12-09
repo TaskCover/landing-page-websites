@@ -23,7 +23,7 @@ const Comment = ({ comment, commentsMap, onReply }: CommentProps) => {
   const handleReply = (commentId: string) => {
     setReplyToCommentId((prevId) => (prevId === commentId ? null : commentId));
   };
-
+  const avatarSrc = comment.avatar || '';
   const resetReplyToCommentId = () => {
     setReplyToCommentId(null);
   };
@@ -33,7 +33,7 @@ const Comment = ({ comment, commentsMap, onReply }: CommentProps) => {
       <Stack style={{ paddingLeft: comment.reply_to ? 4 : 0 }}>
         <Stack direction="row" justifyContent="space-between" spacing={1}>
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar size={32} src={comment.avatar} />
+            <Avatar size={32} src={avatarSrc} />
             <Stack>
               <Text variant="h6">{comment.name ?? "--"}</Text>
               <Text variant="caption" color="grey.400">

@@ -30,13 +30,14 @@ import { Checkbox, IconButton } from "components/shared";
 import PencilIcon from "icons/PencilIcon";
 import CloseSquareIcon from "icons/CloseSquareIcon";
 import CircleTickIcon from "icons/CircleTickIcon";
+import ReOpenOrClosedDialog from "./components/ReOpenOrClosedDialog";
 
 const ItemList = () => {
   const careerT = useTranslations(NS_CAREER);
   const { isMdSmaller } = useBreakpoint();
   // const { loading, categories } = useSelector((state: RootState) => state.categoryBlogs);
   const { initQuery, isReady, query } = useQueryParams();
-  const { onGetCareer, onUpdateCareer, items, totalItems, total_page, page, size, isIdle } = useCareer();
+  const { onGetCareer, onUpdateCareer, items, totalItems, total_page, page, size, isIdle,onUpdateCareerStatus : onApproveOrRejectAction, } = useCareer();
   const pathname = usePathname();
   const { push } = useRouter();
   const [action, setAction] = useState<DataAction | undefined>();
@@ -45,6 +46,8 @@ const ItemList = () => {
   const [selectedList, setSelectedList] = useState<CareerData[]>([]);
 
   const [act, setAct] = useState<SearchStatus | undefined>();
+  const [id, setId] = useState<string | undefined>();
+  const [status, setStatus] = useState<SearchStatus | undefined>();
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -123,6 +126,10 @@ const ItemList = () => {
       setAction(action);
     };
   };
+  const textAction = useMemo(
+    () => (action !== undefined ? careerT(TEXT_ACTION[action]) : ""),
+    [action, careerT],
+  );
 
   const onResetAction = () => {
     setItem(undefined);
@@ -170,23 +177,42 @@ const ItemList = () => {
   const onApproveOrReject = (type: SearchStatus, id?: string) => {
     return () => {
       setAct(type);
+      setAction(DataAction.OTHER)
       setCareerId(id);
+      setStatus(type);
     };
+  };
+  const onSubmitReOpenOrClosed = async () => {
+    if (action === undefined) return;
+    const ids = id ? [id] : selectedList.map((item) => item.slug);
+    const listItem = selectedList;
+    try {
+     const listUpdate =  await onApproveOrRejectAction(listItem as CareerData[],status as unknown as boolean);
+        setAction(undefined);
+        setSelectedList([]);
+        setId(undefined);
+        setStatus(undefined);
+        return listUpdate;
+    } catch (error) {
+      throw error;
+    }
   };
   return (
     <>
       <FixedLayout>
-      {!!selectedList.length && (
           <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{ xs: 2, md: 3 }}
-            px={{ xs: 0.75, md: 3 }}
-            py={{ xs: 1.125, md: 3 }}
-            pb={{ md: 0.25 }}
-            justifyContent={{ xs: "flex-end", md: "flex-start" }}
-            bgcolor={{ xs: "grey.50", md: "transparent" }}
-          >
+          direction="row"
+          alignItems="center"
+          spacing={2}
+          pb={0.25}
+          border="1px solid"
+          borderColor="grey.100"
+          borderBottom="none"
+          sx={{ borderTopLeftRadius: 1, borderTopRightRadius: 1 }}
+          px={{ xs: 0.75, md: 1.125 }}
+          py={1.125}
+          mx={{ xs: 0, md: 3 }}
+        >
             <Checkbox
               checked={isCheckedAll}
               onChange={onChangeAll}
@@ -205,6 +231,7 @@ const ItemList = () => {
                 },
               }}
               variant="contained"
+              disabled={!selectedList.length}
             >
               <CircleTickIcon filled={false} fontSize="small" />
             </IconButton>
@@ -221,12 +248,12 @@ const ItemList = () => {
                 },
               }}
               variant="contained"
+              disabled={!selectedList.length}
             >
               <CloseSquareIcon fontSize="small" />
             </IconButton>
 
           </Stack>
-        )}
         <Stack
           direction="row"
           alignItems="center"
@@ -294,6 +321,19 @@ const ItemList = () => {
         />
       </FixedLayout>
 
+      <ReOpenOrClosedDialog
+        open={action === DataAction.OTHER}
+        onClose={onResetAction}
+        title={careerT("actions.update.title", { label: textAction })}
+        content={careerT("actions.update.content", {
+          label: textAction,
+          count: id ? 1 : selectedList.length,
+        })}
+        items={id ? undefined : selectedList}
+        onSubmit={onSubmitReOpenOrClosed}
+        action={textAction}
+      />
+
       {action === DataAction.UPDATE && (
         <Form
           open
@@ -324,3 +364,8 @@ const MOBILE_HEADER_LIST = [{ value: "", width: "100%", align: "left" }];
 function onAddSnackbar(arg0: string, arg1: string) {
   throw new Error("Function not implemented.");
 }
+
+const TEXT_ACTION: { [key in SearchStatus]: string } = {
+  [SearchStatus.IS_CLOSED]: "Closed",
+  [SearchStatus.IS_OPENING]: "ReOpen",
+};
