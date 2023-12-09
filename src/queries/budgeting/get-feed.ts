@@ -15,7 +15,7 @@ export const budgetGetFeedQuery = (id: string): Promise<any> => {
 
 export const useBudgetGetFeedQuery = (id: string): any | undefined => {
   const { data } = useQuery({
-    queryKey: [BUDGET_GET_FEED_QK],
+    queryKey: [BUDGET_GET_FEED_QK, id],
     queryFn: () => budgetGetFeedQuery(id),
     retry: 0,
     staleTime: 10000,

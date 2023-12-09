@@ -30,7 +30,7 @@ import PlusIcon from "icons/PlusIcon";
 import TrashIcon from "icons/TrashIcon";
 import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { TError, TErrors, TSectionData } from "./ServiceUtil";
 
 type TForm = {
@@ -41,12 +41,14 @@ type Props = {
   fieldIndex: number;
   updateValue: (index: number, data: TSectionData[]) => void;
   errors: TErrors;
+  serviceData: any[];
 };
 
 export const ServiceSectionRow = ({
   fieldIndex,
   updateValue,
   errors,
+  serviceData,
 }: Props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [indexWaitDelete, setIndexWaitDelete] = useState<number | null>(null);
@@ -116,7 +118,6 @@ export const ServiceSectionRow = ({
 
   useEffect(() => {
     onGetPositions({});
-    createEmptyRow();
   }, []);
 
   useEffect(() => {
@@ -125,6 +126,25 @@ export const ServiceSectionRow = ({
     });
     return () => subscription.unsubscribe();
   }, [watch]);
+
+  useEffect(() => {
+    if (!serviceData) return;
+    serviceData.map((service) => {
+      const estimate: number = service.estimate;
+      const hour = Math.floor(estimate / 60);
+      const minute = estimate - hour * 60;
+
+      append({
+        id: uuid(),
+        name: service.name,
+        type: service.serviceType,
+        billingType: service.billType,
+        unit: service.unit,
+        tracking: { time: 0, booking: 0 },
+        estimate: dayjs().hour(hour).minute(minute).toString(),
+      });
+    });
+  }, [serviceData]);
 
   const createEmptyRow = () => {
     append({
@@ -197,6 +217,7 @@ export const ServiceSectionRow = ({
             watch(`data.${index}.billingType`) === "billable"
               ? billingBillable
               : billingNonBillable;
+          const defautlEstimate = getValues(`data.${index}.estimate`);
           return (
             <TableRow key={field.id}>
               <BodyCell sx={{ p: 1 }}>
@@ -329,6 +350,7 @@ export const ServiceSectionRow = ({
                   slotProps={{ textField: { size: "small" } }}
                   views={["hours", "minutes"]}
                   format="HH:mm"
+                  defaultValue={defautlEstimate ? dayjs(defautlEstimate) : null}
                   sx={{
                     "& .MuiInputBase-input": { textAlign: "center" },
                     "& .MuiOutlinedInput-notchedOutline": {

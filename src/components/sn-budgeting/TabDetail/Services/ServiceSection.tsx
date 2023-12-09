@@ -5,16 +5,17 @@ import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { getMessageErrorByAPI, uuid } from "utils/index";
 import { ServiceSectionRow } from "./ServiceSectionRow";
 import { TErrors, TSection, TSectionData } from "./ServiceUtil";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TBudgetServiceForm,
   useBudgetServiceAdd,
 } from "queries/budgeting/service-add";
 import { useParams } from "next/navigation";
 import dayjs from "dayjs";
-import { DATE_FORMAT_FORM, NS_COMMON } from "constant/index";
+import { NS_COMMON } from "constant/index";
 import { useSnackbar } from "store/app/selectors";
 import { useTranslations } from "next-intl";
+import { useBudgetGetServiceQuery } from "queries/budgeting/service-list";
 
 type Props = {
   onCloseEdit?: () => void;
@@ -27,15 +28,32 @@ type TForm = {
 export const ServiceSection = ({ onCloseEdit }: Props) => {
   const { control, setValue, handleSubmit, getValues } = useForm<TForm>();
   const [errors, setErrors] = useState<TErrors>({});
+  const [sections, setSections] = useState<any>(null);
   const { id: budgetId } = useParams();
   const budgetServiceAdd = useBudgetServiceAdd();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
+  const serviceQuery = useBudgetGetServiceQuery(String(budgetId));
 
   const { fields, append } = useFieldArray({
     name: "sections",
     control,
   });
+
+  useEffect(() => {
+    if (!serviceQuery || !serviceQuery.data?.sections) return;
+    const serviceData: any[] = [];
+    const sectionData = serviceQuery.data.sections;
+    sectionData.map((section, index: number) => {
+      append({
+        id: uuid(),
+        title: section.name,
+        data: [],
+      });
+      serviceData[index] = section.services;
+    });
+    setSections(serviceData);
+  }, [serviceQuery]);
 
   const handleChangeValue = (index: number, data: TSectionData[]) => {
     setValue(`sections.${index}.data`, data);
@@ -104,7 +122,7 @@ export const ServiceSection = ({ onCloseEdit }: Props) => {
 
     const form: TBudgetServiceForm = {
       budget_id: String(budgetId),
-      start_date: dayjs().format(DATE_FORMAT_FORM),
+      start_date: dayjs().format("YYYY-MM-DD"),
       sections: [],
     };
 
@@ -179,6 +197,7 @@ export const ServiceSection = ({ onCloseEdit }: Props) => {
               fieldIndex={index}
               updateValue={handleChangeValue}
               errors={errors}
+              serviceData={sections[index]}
             />
           </Box>
         ))}
