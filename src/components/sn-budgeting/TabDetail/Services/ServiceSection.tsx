@@ -97,7 +97,10 @@ export const ServiceSection = ({ onCloseEdit }: Props) => {
   };
 
   const onSubmit: SubmitHandler<TForm> = ({ sections }) => {
-    if (!handleValidateServices()) return;
+    if (!handleValidateServices()) {
+      onAddSnackbar("Please insert required field", "error");
+      return;
+    }
 
     const form: TBudgetServiceForm = {
       budget_id: String(budgetId),

@@ -216,7 +216,11 @@ export const BudgetDetail = () => {
           {activeTab === TABS.INVOICES && <Invoice />}
           {activeTab === TABS.RECURRING && <Recurring />}
           {activeTab === TABS.SERVICES && (
-            <Service isEdit={isEditService} onCloseEdit={offEditService} />
+            <Service
+              isEdit={isEditService}
+              onCloseEdit={offEditService}
+              onOpenEdit={onEditService}
+            />
           )}
         </Box>
       </Box>

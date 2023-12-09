@@ -43,7 +43,11 @@ const TemplateData: TSection[] = [
     cost: "$250,10",
   },
 ];
-export const ServiceAreaSection = () => {
+export const ServiceAreaSection = ({
+  onOpenEdit,
+}: {
+  onOpenEdit?: () => void;
+}) => {
   const [sections, setSections] = useState<TSection[]>([]);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const budgetT = useTranslations(NS_BUDGETING);
@@ -77,6 +81,12 @@ export const ServiceAreaSection = () => {
                   direction="row"
                   alignItems="center"
                   justifyContent="center"
+                  onClick={onOpenEdit}
+                  sx={{
+                    cursor: "pointer",
+                    "&:hover": { color: "primary.main" },
+                    "&:hover svg": { color: "primary.main" },
+                  }}
                 >
                   <ExpandCircleDownOutlinedIcon
                     sx={{ color: "grey.300", mr: 1 }}

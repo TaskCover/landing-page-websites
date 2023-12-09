@@ -6,15 +6,16 @@ import { ServiceSection } from "./Services/ServiceSection";
 type Props = {
   isEdit?: boolean;
   onCloseEdit?: () => void;
+  onOpenEdit?: () => void;
 };
 
-export const Service = ({ isEdit = false, onCloseEdit }: Props) => {
+export const Service = ({ isEdit = false, onCloseEdit, onOpenEdit }: Props) => {
   return isEdit ? (
     <ServiceSection onCloseEdit={onCloseEdit} />
   ) : (
     <Box>
       <ServiceAreaTotal />
-      <ServiceAreaSection />
+      <ServiceAreaSection onOpenEdit={onOpenEdit} />
     </Box>
   );
 };
