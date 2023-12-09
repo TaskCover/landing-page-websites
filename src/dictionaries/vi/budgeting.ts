@@ -50,6 +50,14 @@ export const BudgetingLang: BudgetingDictionary = {
 			workingTime: "Working time",
 			price: "Price",
 			cost: "Cost",
+		},
+		section: {
+			serviceName: "Service Name",
+			serviceType: "Service Type",
+			billingType: "Billing Type",
+			unit: "Unit",
+			tracking: "Tracking",
+			estimate: "Estimate",
 		}
 	},
     dialog: {
@@ -72,5 +80,9 @@ export const BudgetingLang: BudgetingDictionary = {
 		recurringInterval: "Recurring Interval",
 		nextOccurrence: "Next Occurrence",
 		stopRecurring: "Stop Recurring",
+	},
+	delete: {
+		titleConfirmDelete: "Xác Nhận Xóa",
+		contentConfirmDelete: "Bạn có chắc chắn muốn xóa?",
 	}
 }

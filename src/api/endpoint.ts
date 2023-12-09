@@ -70,8 +70,9 @@ export const Endpoint = {
 
   BUDGET_ALL: "/budgets/all",
   BUDGET_CREATE: "/budgets",
-  BUDGET_GET_BY_ID: "budgets/budget-by-id/{id}",
-  BUDGET_GET_FEED: "budgets/feed/{id}",
+  BUDGET_GET_BY_ID: "/budgets/budget-by-id/{id}",
+  BUDGET_GET_FEED: "/budgets/feed/{id}",
+  BUDGET_SERVICE_ADD: "/budgets/service",
 
   POSITIONS_ALL: "/positions/all",
   POSITIONS: "/positions",

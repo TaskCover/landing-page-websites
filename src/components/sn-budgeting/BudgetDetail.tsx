@@ -36,6 +36,7 @@ enum TABS {
 export const BudgetDetail = () => {
   const [isOpenModalTime, openModalTime, hideModalTime] = useToggle();
   const [isShowLoadingTab, openLoadingTab, hideLoadingTab] = useToggle();
+  const [isEditService, onEditService, offEditService] = useToggle();
   const [budget, setBudget] = useState<TBudget | null>(null);
   const [activeTab, setActiveTab] = useState<string>(TABS.SERVICES);
   const { id } = useParams();
@@ -177,9 +178,9 @@ export const BudgetDetail = () => {
               {budgetT("toolbar.addInvoice")}
             </Button>
           )}
-          {activeTab === TABS.SERVICES && (
+          {activeTab === TABS.SERVICES && !isEditService && (
             <Button
-              onClick={() => {}}
+              onClick={onEditService}
               id="budget_edit_service"
               startIcon={<EditIcon />}
               variant="primary"
@@ -214,7 +215,9 @@ export const BudgetDetail = () => {
           {activeTab === TABS.EXPENSES && <Expenses />}
           {activeTab === TABS.INVOICES && <Invoice />}
           {activeTab === TABS.RECURRING && <Recurring />}
-          {activeTab === TABS.SERVICES && <Service />}
+          {activeTab === TABS.SERVICES && (
+            <Service isEdit={isEditService} onCloseEdit={offEditService} />
+          )}
         </Box>
       </Box>
     </Box>

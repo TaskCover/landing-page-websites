@@ -48,6 +48,14 @@ export type BudgetingDictionary = {
 			workingTime: string;
 			price: string;
 			cost: string;
+		},
+		section: {
+			serviceName: string;
+			serviceType: string;
+			billingType: string;
+			unit: string;
+			tracking: string;
+			estimate: string;
 		}
 	},
     dialog: {
@@ -70,5 +78,9 @@ export type BudgetingDictionary = {
 		recurringInterval: string;
 		nextOccurrence: string;
 		stopRecurring: string;
+	},
+	delete: {
+		titleConfirmDelete: string;
+		contentConfirmDelete: string;
 	}
 }
