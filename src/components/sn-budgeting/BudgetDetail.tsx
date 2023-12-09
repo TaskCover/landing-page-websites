@@ -36,7 +36,7 @@ enum TABS {
 export const BudgetDetail = () => {
   const [isOpenModalTime, openModalTime, hideModalTime] = useToggle();
   const [isShowLoadingTab, openLoadingTab, hideLoadingTab] = useToggle();
-  const [isEditService, onEditService, offEditService] = useToggle(true);
+  const [isEditService, onEditService, offEditService] = useToggle();
   const [budget, setBudget] = useState<TBudget | null>(null);
   const [activeTab, setActiveTab] = useState<string>(TABS.SERVICES);
   const { id } = useParams();

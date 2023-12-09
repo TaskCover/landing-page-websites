@@ -15,7 +15,7 @@ export const useBudgetGetServiceQuery = (id: string): any | undefined => {
     queryKey: [BUDGET_GET_SERVICE_QK, id],
     queryFn: () => budgetGetServiceQuery(id),
     retry: 0,
-    staleTime: 10000,
+    staleTime: Infinity,
   });
   return data;
 };

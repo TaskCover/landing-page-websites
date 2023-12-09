@@ -18,6 +18,8 @@ import ExpandCircleDownOutlinedIcon from "@mui/icons-material/ExpandCircleDownOu
 import { PTag } from "./ServiceUtil";
 import { IconButton, Text } from "components/shared";
 import MoreDotIcon from "icons/MoreDotIcon";
+import { useParams } from "next/navigation";
+import { useBudgetGetServiceQuery } from "queries/budgeting/service-list";
 
 type TSection = {
   id: string;
@@ -50,11 +52,24 @@ export const ServiceAreaSection = ({
 }) => {
   const [sections, setSections] = useState<TSection[]>([]);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const { id: idBudget } = useParams();
+  const serviceQuery = useBudgetGetServiceQuery(String(idBudget));
   const budgetT = useTranslations(NS_BUDGETING);
 
   useEffect(() => {
-    setSections(TemplateData);
-  }, []);
+    if (!serviceQuery) return;
+    const sectionData: TSection[] = [];
+    serviceQuery.data.sections.map((section) => {
+      sectionData.push({
+        id: section.id,
+        name: section.name,
+        workingTime: "0 / 0 hrs",
+        price: "0",
+        cost: "0",
+      });
+    });
+    setSections(sectionData);
+  }, [serviceQuery]);
 
   const refClickOutSide = useOnClickOutside(() => setAnchorEl(null));
 
