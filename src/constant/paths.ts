@@ -8,6 +8,8 @@ export const FORGOT_PASSWORD_PATH = "/forgot-password";
 export const RESET_PASSWORD_PATH = "/reset-password";
 export const CHANGE_PASSWORD_PATH = "/change-password";
 export const PROJECTS_PATH = "/projects";
+export const BUDGETING_PATH = "/budgeting";
+export const BUDGET_DETAIL_PATH = "/budgeting/{id}";
 export const EMPLOYEES_PATH = "/employees";
 export const COST_HISTORY_PATH = "/cost-history";
 export const POSITIONS_PATH = "/positions";
@@ -95,6 +97,10 @@ export const AUTHORIZED_PATHS = {
     BILLING_CREATE_PATH,
     BILLING_INFO_PATH,
     BILLING_DETAIL_PATH,
+    BILLING_PATH,
+    // Budgeting
+    BUDGETING_PATH,
+    BUDGET_DETAIL_PATH,
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -140,6 +146,10 @@ export const AUTHORIZED_PATHS = {
     BILLING_CREATE_PATH,
     BILLING_INFO_PATH,
     BILLING_DETAIL_PATH,
+    BILLING_PATH,
+    // Budgeting
+    BUDGETING_PATH,
+    BUDGET_DETAIL_PATH,
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };

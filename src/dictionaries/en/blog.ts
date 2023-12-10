@@ -44,6 +44,7 @@ export const BlogLang: BlogDictionary = {
         statusBlog: "Status",
         slug: "Slug",
         created_time : "Create Time",
+        relatedBlogs : "Related Blogs",
     },
     published: "Published",
     draft: "Draft",
@@ -53,7 +54,14 @@ export const BlogLang: BlogDictionary = {
         status: "Status",
         delete:{
             title : "Confirm delete blog ",
-            confirm : "Are you sure to remove blog ?"
+            confirm : "Are you sure to remove blog ?",
+            remove : "Remove",
+        },
+        draft:"Draft",
+        published : "Published",
+        update:{
+            title:"Are you sure to update?",
+            content:"Update"
         }
     },
     blogForm: {

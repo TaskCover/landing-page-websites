@@ -15,7 +15,7 @@ export const useFetchOptions = () => {
   useEffect(() => {
     onGetProjects({ pageSize: -1, pageIndex: 0 });
     onGetPositions({ pageSize: -1, pageIndex: 0 });
-    onGetSales({ sort: "-1", pageSize: 200 });
+    onGetSales({ sort: "DESC", pageSize: 200 });
   }, []);
 };
 

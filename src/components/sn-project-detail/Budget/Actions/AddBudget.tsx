@@ -8,7 +8,7 @@ import { NS_PROJECT } from "constant/index";
 import useToggle from "hooks/useToggle";
 import ModalAddBudget from "components/sn-project-detail/Budget/Actions/ModalAddBudget";
 
-const AddBudget = () => {
+const AddBudget = ({ projectId }: { projectId?: string }) => {
   const projectT = useTranslations(NS_PROJECT);
   const [isOpenModalAddBudget, showOpenModalAddBudget, hideModalAddBudget] =
     useToggle();
@@ -28,6 +28,7 @@ const AddBudget = () => {
       <ModalAddBudget
         open={isOpenModalAddBudget}
         onClose={hideModalAddBudget}
+        projectId={projectId}
       />
     </>
   );

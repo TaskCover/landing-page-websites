@@ -19,7 +19,6 @@ import {
   memo,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import CellBody, { HEIGHT_ROW } from "./BodyCell";
@@ -29,13 +28,16 @@ import { useSidebar } from "store/app/selectors";
 import { useTranslations } from "next-intl";
 import { uuid } from "utils/index";
 import HeaderSortCell from "./HeaderSortCell";
+import { Text } from "components/shared";
 
 export type CellProps = TableCellProps & {
   value: string | React.ReactNode;
   sort?: boolean;
   name?: string;
+  data?: string;
   width?: string | number;
   minWidth?: number;
+  minwidth?: number | string;
 };
 
 type TableLayoutProps = {
@@ -58,6 +60,7 @@ type TableLayoutProps = {
     property: string,
   ) => void;
   onLayout?: (refs) => void;
+  titleColor?: string;
 } & StackProps;
 
 const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
@@ -77,6 +80,7 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
     handleRequestSort,
     accessKey,
     containerHeaderProps = {},
+    titleColor = "grey.400",
     onLayout,
     ...rest
   } = props;
@@ -233,8 +237,19 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
                           <Grid xs={10}>{item.value}</Grid>
                         </Grid>
                       </Box>
+                    ) : item.data ? (
+                      <>
+                        <Text variant="h6" color={titleColor}>
+                          {item.value}
+                        </Text>
+                        <Text variant="h5" color="grey.400">
+                          {item.data}
+                        </Text>
+                      </>
                     ) : (
-                      item.value
+                      <Text variant="h6" color={titleColor}>
+                        {item.value}
+                      </Text>
                     )}
                   </CellHeader>
                 ),

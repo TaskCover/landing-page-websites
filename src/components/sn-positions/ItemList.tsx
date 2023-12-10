@@ -52,17 +52,17 @@ const ItemList = () => {
       { value: "#", width: "5%", align: "center" },
       {
         value: commonT("name"),
-        width: "25%",
+        width: "20%",
         align: "left",
       },
       {
         value: commonT("creator"),
-        width: "20%",
-        align: "left",
+        width: "30%",
+        align: "center",
       },
-      { value: commonT("creationDate"), width: "20%" },
-      { value: companyT("positions.numberOfEmployees"), width: "20%" },
-      { value: "", width: "10%" },
+      { value: commonT("creationDate"), width: "20%" , align: "center",},
+      { value: companyT("positions.numberOfEmployees"), width: "20%" , align: "center",},
+      { value: "", width: "5%" },
     ],
     [commonT, companyT],
   );

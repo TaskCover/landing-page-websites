@@ -4,6 +4,7 @@
 
 import { Box, Stack, TextField } from "@mui/material";
 import { Text, Tooltip } from "components/shared";
+import { DocAccessibility } from "constant/enums";
 import { NS_DOCS } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import useDebounce from "hooks/useDebounce";
@@ -14,27 +15,30 @@ import MoreIcon from "icons/MoreIcon";
 import OpenSidebarIcon from "icons/OpenSidebarIcon";
 import ShareIcon from "icons/ShareIcon";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useContext, useState } from "react";
-import { changeTitle } from "store/docs/reducer";
-import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useGetDocDetailQuery, useUpdateDocMutation } from "store/docs/api";
+import { useAppSelector } from "store/hooks";
+import { NewPageContext } from "../news/context/NewPageContext";
 import { IDocDetail } from "./DocDetail";
 import ModalShare from "./LeftSlide/modal/ModalShare";
 import SelectProjectInDoc from "./SelectProjectInDoc";
-import { NewPageContext } from "../news/context/NewPageContext";
+import useTheme from "hooks/useTheme";
 
 const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
   const [openShare, setOpenShare] = useState(false);
   const router = useRouter();
+  const { id } = useParams();
+  const { isDarkMode } = useTheme();
+  const doc = useAppSelector((state) => state.doc);
   const docsT = useTranslations(NS_DOCS);
-  const dispatch = useAppDispatch();
-  const title = useAppSelector((state) => state.doc.title);
+  const { data: document } = useGetDocDetailQuery(id as string);
+  const [updateDoc] = useUpdateDocMutation();
   const [valueCopy, copy] = useCopyToClipboard();
   const { isSmSmaller } = useBreakpoint();
   const { setOpenComment } = useContext(NewPageContext);
-
   const [debounceChange] = useDebounce((value: string) => {
-    dispatch(changeTitle(value));
+    updateDoc({ id: id as string, payload: { name: value } });
   }, 200);
 
   return (
@@ -87,8 +91,7 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
                   border: "none",
                   backgroundColor: "transparent",
                 }}
-                defaultValue={title}
-                value={title}
+                value={document?.name}
                 onChange={(e) => debounceChange(e.target.value)}
               />
             </Box>
@@ -138,8 +141,8 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
                   border: "none",
                   backgroundColor: "transparent",
                 }}
-                defaultValue={title}
-                title={title}
+                defaultValue={document?.name}
+                title={document?.name}
                 onChange={(e) => debounceChange(e.target.value)}
               />
             </Box>
@@ -161,7 +164,9 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
                 },
               }}
             >
-              <Text color={"success.main"}>Full access</Text>
+              <Text color={"success.main"}>
+                {DocAccessibility[doc.perm as keyof typeof DocAccessibility]}
+              </Text>
               <Box
                 sx={{
                   display: "flex",
@@ -211,7 +216,10 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
                       setOpenSlider((value) => !value);
                       setOpenComment(false);
                     }}
-                    sx={styleButton}
+                    sx={{
+                      ...styleButton,
+                      color: isDarkMode ? "white" : "#212429",
+                    }}
                   >
                     <OpenSidebarIcon />
                   </Box>

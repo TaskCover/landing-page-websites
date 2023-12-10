@@ -1,16 +1,21 @@
 import { memo, useEffect, useState } from "react";
-import { Stack } from "@mui/material";
-import { Dropdown } from "components/Filters";
+import { Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Dropdown, Search as SearchInput } from "components/Filters";
 import { Button } from "components/shared";
 import { useTranslations } from "next-intl";
-import { DATE_FORMAT_FORM, NS_COMMON, NS_PROJECT } from "constant/index";
+import {
+  DATE_FORMAT_FORM,
+  NS_BUDGETING,
+  NS_COMMON,
+  NS_PROJECT,
+} from "constant/index";
 import { formatDate, getPath } from "utils/index";
 import { usePathname, useRouter } from "next-intl/client";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import Filter from "components/sn-project-detail/Budget/Actions/Filter";
-import { TProjectBudgetListQueries } from "store/project/budget/action";
+import { TBudgetListQueries } from "store/project/budget/action";
 
-const Search = () => {
+const Search = ({ projectId }: { projectId?: string }) => {
   const [queries, setQueries] = useState<any>({});
 
   const projectT = useTranslations(NS_PROJECT);
@@ -36,7 +41,10 @@ const Search = () => {
   };
 
   const onSearch = () => {
-    let newQueries: TProjectBudgetListQueries = {};
+    let newQueries: TBudgetListQueries = {};
+    if (projectId) {
+      newQueries.project_id = projectId;
+    }
     if (
       typeof queries?.user_id === "object" &&
       Array.isArray(queries.user_id) &&
@@ -117,3 +125,64 @@ const Search = () => {
 };
 
 export default memo(Search);
+
+export const SearchWithOnlyInput = () => {
+  const [queries, setQueries] = useState<any>({});
+  const { id: projectId } = useParams();
+  const projectT = useTranslations(NS_BUDGETING);
+  const { breakpoints } = useTheme();
+  const is1440Larger = useMediaQuery(breakpoints.up(1440));
+  const param = useSearchParams();
+  const pathname = usePathname();
+  const { push } = useRouter();
+
+  useEffect(() => {
+    const newQueries = {};
+    param.forEach((value, key) => {
+      newQueries[key] = value;
+    });
+    setQueries(newQueries);
+  }, []);
+
+  const onSearch = () => {
+    let newQueries: TBudgetListQueries = {};
+
+    if (projectId) {
+      newQueries.project_id = String(projectId);
+    }
+
+    const path = getPath(pathname, {
+      ...queries,
+      ...newQueries,
+      pageIndex: 1,
+    });
+
+    push(path);
+  };
+
+  const onChangeQueries = (name: string, value?: string) => {
+    setQueries({
+      ...queries,
+      [name]: value ?? "",
+    });
+    // clearTimeout(window["timeoutStartSearch"]);
+    // window["timeoutStartSearch"] = setTimeout(onSearch, 1000);
+  };
+
+  return (
+    <SearchInput
+      placeholder={projectT("toolbar.search")}
+      name="search_key"
+      onChange={onChangeQueries}
+      onEnter={(name: string, value?: string) => {
+        onChangeQueries(name, value ?? "");
+        onSearch();
+      }}
+      value={queries.search_key ?? ""}
+      sx={{
+        width: { xs: is1440Larger ? 250 : 180 },
+        minWidth: { xs: is1440Larger ? 250 : 180 },
+      }}
+    />
+  );
+};

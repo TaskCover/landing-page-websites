@@ -15,6 +15,7 @@ import { useDocs } from "store/docs/selectors";
 import NoneIcon from "icons/NoneIcon";
 import FilterSearchDocs from "./FilterSearchDocs/FilterSearchDocs";
 import { DocGroupByEnum } from "constant/enums";
+import { useAppSelector } from "store/hooks";
 
 function convertStringToArray(inputString) {
   let idArray = inputString.split(",");
@@ -30,10 +31,9 @@ const Actions = () => {
   const commonT = useTranslations(NS_COMMON);
   const docsT = useTranslations(NS_DOCS);
   const { filters, onCreateDoc, loading } = useDocs();
-
+  const { perm } = useAppSelector((state) => state.doc);
   const pathname = usePathname();
   const { push } = useRouter();
-
   const [queries, setQueries] = useState<any>({});
   const grOptions = useMemo(
     () => Group_OPTIONS.map((item) => ({ ...item, label: docsT(item.label) })),
@@ -132,7 +132,7 @@ const Actions = () => {
           />
 
           <Dropdown
-            placeholder={docsT("filter.group.none")}
+            // placeholder={docsT("filter.group.none")}
             options={grOptions}
             name="group_by"
             hasAll={false}

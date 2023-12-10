@@ -7,7 +7,11 @@ import DatePicker, {
 } from "react-datepicker";
 import CalendarIcon from "icons/CalendarIcon";
 import { formatDate } from "utils/index";
-import { DATE_FORMAT_FORM, DATE_FORMAT_HYPHEN, DATE_LOCALE_FORMAT } from "constant/index";
+import {
+  DATE_FORMAT_FORM,
+  DATE_FORMAT_HYPHEN,
+  DATE_LOCALE_FORMAT,
+} from "constant/index";
 import { vi, enUS } from "date-fns/locale";
 import { format as formatFns } from "date-fns";
 import { useLocale } from "next-intl";
@@ -66,9 +70,7 @@ const FDate = (props: DateProps) => {
         {/* {value
           ? formatDate(refactorDate(value, format)?.getTime() as number)
           : label} */}
-          {value
-          ? dayjs(value).format(DATE_LOCALE_FORMAT)
-          : label}
+        {value ? dayjs(value).format(DATE_LOCALE_FORMAT) : label}
       </Text>
       <DatePicker
         ref={ref}

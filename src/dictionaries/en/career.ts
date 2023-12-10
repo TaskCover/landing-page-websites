@@ -10,7 +10,11 @@ export const CareerLang: CareerDictionary = {
     title_form: "Career",
 
     actions: {
-        search: "search"
+        search: "search",
+        update:{
+            title:"Are you sure to update?",
+            content:"Update {label}"
+        }
     },
 
     careerTable: {
@@ -32,7 +36,8 @@ export const CareerLang: CareerDictionary = {
     status: "Status",
     is_opening: "Opening",
     is_closed: "Closing",
-
+    Closed:"Closed",
+    ReOpen:"Re Open",
     form_career: {
         title: "Title",
         slug: "Slug",
@@ -65,4 +70,5 @@ export const CareerLang: CareerDictionary = {
         content: "Are you sure to remove this category ? ",
         title: "Confirm remove category",
     },
+    update:"Update",
 }

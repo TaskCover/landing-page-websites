@@ -27,7 +27,6 @@ const ApproveOrRejectConfirm = (props: ApproveOrRejectConfirmProps) => {
       if (isSubmitting) return;
       setIsSubmitting(true);
       const ids = onSubmitProps && (await onSubmitProps());
-
       if (ids?.length) {
         onAddSnackbar(
           commonT("notification.success", { label: action }),
@@ -47,13 +46,6 @@ const ApproveOrRejectConfirm = (props: ApproveOrRejectConfirmProps) => {
   return (
     <ConfirmDialog onSubmit={onSubmit} pending={isSubmitting} {...rest}>
       <Stack alignItems="center" spacing={2} my={3} flex={1}>
-        {items.map((item) => (
-          <Stack direction="row" width={275} key={item.id} spacing={1.5}>
-            <Stack>
-              <Text variant="body2">{item.title}</Text>
-            </Stack>
-          </Stack>
-        ))}
       </Stack>
     </ConfirmDialog>
   );

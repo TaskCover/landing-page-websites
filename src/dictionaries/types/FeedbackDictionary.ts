@@ -16,7 +16,7 @@ export type FeedbackDictionary={
         name: string,
         phone: string,
         email: string,
-        title: string,
+        subject: string,
         content: string,
         status:string,
         responsed:string,

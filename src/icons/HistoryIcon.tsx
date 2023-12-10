@@ -1,7 +1,12 @@
+import useTheme from "hooks/useTheme";
 import React from "react";
 
 const HistoryIcon = ({ active }: { active: boolean }) => {
-  const color = active ? "#3699FF" : "black";
+  const theme = useTheme();
+  const inActiveColor = theme.isDarkMode ? "white" : "black";
+  const activeColor = "#3699FF";
+  const color = active ? activeColor : inActiveColor;
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

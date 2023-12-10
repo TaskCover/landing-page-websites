@@ -11,7 +11,11 @@ export const CareerLang: CareerDictionary = {
     title_form: "Nghề nghiệp",
 
     actions: {
-        search: "Tìm kiếm"
+        search: "Tìm kiếm",
+        update:{
+            title:"Bạn có muốn cập nhật trạng thái ?",
+            content:"Cập nhật trạng thái {label}"
+        }
     },
 
     careerTable: {
@@ -33,7 +37,8 @@ export const CareerLang: CareerDictionary = {
     status: "Trạng thái",
     is_opening: "Đang mở",
     is_closed: "Đang đóng",
-
+    Closed:"Dừng tuyển dụng",
+    ReOpen:"Bắt đầu tuyển dụng lại",
     form_career: {
         title: "Tiêu đề",
         slug: "Đường dẫn",
@@ -66,4 +71,5 @@ export const CareerLang: CareerDictionary = {
         title: "Xác nhận loại bỏ danh mục",
         content: "Bạn chắc chắn muốn loại bỏ danh mục này ?"
     },
+    update :"Sửa"
 }
