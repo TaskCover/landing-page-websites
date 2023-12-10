@@ -5,24 +5,43 @@ import {
   MenuItem,
   MenuList,
   Popper,
+  PopperProps,
   Stack,
   popoverClasses,
 } from "@mui/material";
 import { useOnClickOutside } from "hooks/useOnClickOutside";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, useMemo, useState } from "react";
 import Text from "./Text";
 
 type Props = {
   anchorEl: any;
   setAnchorEl: (el: any) => void;
+  placement?: PopperProps["placement"];
+  maxWidth?: string | number;
+  autoWidth?: boolean;
 };
 
 export const PopperMenu = ({
   anchorEl,
   setAnchorEl,
+  maxWidth = 250,
+  placement = "bottom-end",
+  autoWidth = false,
   children,
 }: PropsWithChildren<Props>) => {
   const refClickOutSide = useOnClickOutside(() => setAnchorEl(null));
+  const [width, setWidth] = useState<number | string>(0);
+
+  useEffect(() => {
+    if (!anchorEl) {
+      setTimeout(() => {
+        setWidth(0);
+      }, 300);
+    } else {
+      setWidth(anchorEl.offsetWidth + "px");
+    }
+  }, [anchorEl]);
+
   return (
     <Popper
       ref={refClickOutSide}
@@ -32,12 +51,13 @@ export const PopperMenu = ({
         [`& .${popoverClasses.paper}`]: {
           backgroundImage: "white",
           minWidth: 150,
-          maxWidth: 250,
+          maxWidth,
         },
         zIndex: 1000,
+        ...(autoWidth && { width }),
       }}
       transition
-      placement={"bottom-end"}
+      placement={placement}
     >
       {({ TransitionProps }) => (
         <Grow {...TransitionProps} timeout={350}>
