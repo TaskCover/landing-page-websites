@@ -1,26 +1,22 @@
 "use client";
 
-import { memo, useState, useEffect, useMemo } from "react";
-import { Box, Link, Stack, Theme, selectClasses } from "@mui/material";
+import { Link, Stack, Theme, selectClasses } from "@mui/material";
+import { Dropdown, Search } from "components/Filters";
 import { Button, Text } from "components/shared";
-import PlusIcon from "icons/PlusIcon";
-import { Dropdown, Search, Switch } from "components/Filters";
-import { INITIAL_VALUES, STATUS_OPTIONS } from "./components/helpers";
-import { useProjects } from "store/project/selectors";
-import { getPath } from "utils/index";
-import { usePathname, useRouter } from "next-intl/client";
+import { NS_BILLING, NS_COMMON } from "constant/index";
 import useToggle from "hooks/useToggle";
-import { DataAction } from "constant/enums";
-import Form, { ProjectDataForm } from "./Form";
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import { useTranslations } from "next-intl";
-import { NS_BILLING, NS_COMMON, NS_PROJECT } from "constant/index";
-import FileExcelIcon from "icons/FileExcelIcon";
 import AddSquareIcon from "icons/AddSquareIcon";
 import ArrowExport from "icons/ArrowExport";
+import PlusIcon from "icons/PlusIcon";
+import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "next-intl/client";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { memo, useEffect, useMemo, useState } from "react";
+import { useProjects } from "store/project/selectors";
+import { getPath } from "utils/index";
 import ExportView from "./Modals/ExportView";
-import InvoiceModal from "./Modals/InvoiceModal";
-
+import { STATUS_OPTIONS } from "./components/helpers";
+import { BILLING_CREATE_PATH } from "constant/paths";
 
 const Actions = () => {
   const { filters, onGetProjects, pageSize, onCreateProject } = useProjects();
@@ -91,11 +87,11 @@ const Actions = () => {
   };
 
   const onCloseModalExport = () => {
-        setExportModel(false);
+    setExportModel(false);
   };
 
   return (
-      <Stack
+    <Stack
       direction={{
         md: "row",
         xs: "column",
@@ -128,7 +124,9 @@ const Actions = () => {
         </Text>
         <Stack direction={"row"} gap={2}>
           <Button
-            onClick={() => onOpenModal()}
+            onClick={() => {
+              push(BILLING_CREATE_PATH);
+            }}
             size="small"
             variant="contained"
             sx={{ height: 40, width: "fit-content" }}
@@ -207,14 +205,19 @@ const Actions = () => {
             <Stack direction="row" alignItems="center" mt={0.5} gap={2}>
               <PlusIcon
                 sx={{
-                  display: { xs: "none", md: "block"},
-                  alignItems:"center",
+                  display: { xs: "none", md: "block" },
+                  alignItems: "center",
                   width: 18,
                   height: 18,
-                  color:"#1BC5BD" 
+                  color: "#1BC5BD",
                 }}
               />
-              <Text sx={{ display: { xs: "none", md: "block" } }} color="#1BC5BD">{billingT("list.filter.add")}</Text>
+              <Text
+                sx={{ display: { xs: "none", md: "block" } }}
+                color="#1BC5BD"
+              >
+                {billingT("list.filter.add")}
+              </Text>
             </Stack>
           </Link>
         </Stack>
@@ -247,14 +250,11 @@ const Actions = () => {
         open={dealModel}
         onClose={() => onCloseModal(modalName.DEAL)}
       /> */}
-      <ExportView
-        open={exportModel}
-        onClose={() => onCloseModalExport()}
-      />
-      <InvoiceModal
+      <ExportView open={exportModel} onClose={() => onCloseModalExport()} />
+      {/* <InvoiceModal
         open={isOpenModal}
         onClose={() => onCloseModal()}
-      />
+      /> */}
     </Stack>
   );
 };

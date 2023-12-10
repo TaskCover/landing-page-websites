@@ -14,14 +14,16 @@ export const BillingLang: BillingDictionary = {
     form: {
       title: {
         for_invoice: "Lập hóa đơn",
-        uninvoiced_time_expenses: "",
-        uninvoiced_amount: "",
-        display_service: "",
-        subsidiary: "",
-        subTotal: "",
-        vat: "",
-        total: "",
-        invoice_preview: "",
+        uninvoiced_time_expenses: "Không lập hóa đơn thời gian và chi phí",
+        uninvoiced_amount: "Không lập hóa đơn số lượng",
+        display_service: "Dịch vụ hiển thị ",
+        subsidiary: "Công ty con",
+        subTotal: "Tổng phụ",
+        vat: "VAT",
+        total: "Tổng cộng",
+        invoice_preview: "Xem trước hóa đơn",
+        display_expenses: "Chi phí trưng bày",
+        of_the_budget_revenue: " Trong thu ngân sách",
       },
       step: {
         title: {
@@ -60,6 +62,7 @@ export const BillingLang: BillingDictionary = {
       },
       button: {
         nextStep: "Bước tiếp theo",
+        submit: "Xác nhận",
       },
     },
     table: {

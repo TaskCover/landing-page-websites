@@ -22,6 +22,8 @@ export const BillingLang: BillingDictionary = {
         vat: "VAT",
         total: "Total",
         invoice_preview: "Invoice preview",
+        display_expenses: "Display expenses as",
+        of_the_budget_revenue: "of the budget revenue",
       },
       step: {
         title: {
@@ -60,6 +62,7 @@ export const BillingLang: BillingDictionary = {
       },
       button: {
         nextStep: "Next step",
+        submit: "Submit",
       },
     },
     table: {

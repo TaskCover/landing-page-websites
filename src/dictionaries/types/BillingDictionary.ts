@@ -20,6 +20,8 @@ export type BillingDictionary = {
         vat: string;
         total: string;
         invoice_preview: string;
+        display_expenses: string;
+        of_the_budget_revenue: string;
       };
       step: {
         title: {
@@ -55,6 +57,7 @@ export type BillingDictionary = {
       };
       button: {
         nextStep: string;
+        submit: string;
       };
       filter: {
         add: string;
