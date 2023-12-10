@@ -23,11 +23,13 @@ import { NewPageContext } from "../news/context/NewPageContext";
 import { IDocDetail } from "./DocDetail";
 import ModalShare from "./LeftSlide/modal/ModalShare";
 import SelectProjectInDoc from "./SelectProjectInDoc";
+import useTheme from "hooks/useTheme";
 
 const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
   const [openShare, setOpenShare] = useState(false);
   const router = useRouter();
   const { id } = useParams();
+  const { isDarkMode } = useTheme();
   const doc = useAppSelector((state) => state.doc);
   const docsT = useTranslations(NS_DOCS);
   const { data: document } = useGetDocDetailQuery(id as string);
@@ -214,7 +216,10 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
                       setOpenSlider((value) => !value);
                       setOpenComment(false);
                     }}
-                    sx={styleButton}
+                    sx={{
+                      ...styleButton,
+                      color: isDarkMode ? "white" : "#212429",
+                    }}
                   >
                     <OpenSidebarIcon />
                   </Box>

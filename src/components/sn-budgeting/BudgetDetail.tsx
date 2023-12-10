@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { TBudget } from "store/project/budget/action";
 import { Box, CircularProgress, Stack } from "@mui/material";
 import Avatar from "components/Avatar";
-import { Button, Text } from "components/shared";
+import { Button, DatePicker, IconButton, Text } from "components/shared";
 import { NS_BUDGETING } from "constant/index";
 import { useTranslations } from "next-intl";
 import CloseIcon from "../../icons/CloseIcon";
@@ -23,6 +23,11 @@ import { Invoice } from "components/sn-budgeting/TabDetail/Invoice";
 import { Recurring } from "./TabDetail/Recurring";
 import { Service } from "./TabDetail/Service";
 import EditIcon from "icons/EditIcon";
+import OpenSidebarIcon from "icons/OpenSidebarIcon";
+import { BudgetRightSidebar } from "./BudgetRightSidebar";
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import EyeIcon from "icons/EyeIcon";
+import dayjs from "dayjs";
 
 enum TABS {
   FEED = "Feed",
@@ -37,8 +42,10 @@ export const BudgetDetail = () => {
   const [isOpenModalTime, openModalTime, hideModalTime] = useToggle();
   const [isShowLoadingTab, openLoadingTab, hideLoadingTab] = useToggle();
   const [isEditService, onEditService, offEditService] = useToggle();
+  const [isOpenRightSidebar, showRightSidebar, hideRightSidebar] = useToggle();
   const [budget, setBudget] = useState<TBudget | null>(null);
   const [activeTab, setActiveTab] = useState<string>(TABS.FEED);
+  const [dateFilter, setDateFilter] = useState<any>("");
   const { id } = useParams();
 
   const budgetDetailQuery = useBudgetByIdQuery(String(id));
@@ -79,8 +86,31 @@ export const BudgetDetail = () => {
           </Stack>
         </Stack>
         <Stack direction="row" alignItems="center">
+          <DatePicker
+            onChange={(name, date) => {
+              if (!date) return;
+              setDateFilter(dayjs(date.toString()).format("YYYY-MM-DD"));
+            }}
+            name="name"
+            size="small"
+            value={dateFilter}
+          />
+          <IconButton sx={{ color: "grey.300" }}>
+            <EyeIcon sx={{ fontSize: "26px" }} />
+          </IconButton>
+          <IconButton sx={{ color: "grey.300" }}>
+            <ShareOutlinedIcon />
+          </IconButton>
+          <IconButton
+            sx={{ color: "grey.300" }}
+            onClick={isOpenRightSidebar ? hideRightSidebar : showRightSidebar}
+          >
+            <OpenSidebarIcon />
+          </IconButton>
           <Link href={BUDGETING_PATH}>
-            <CloseIcon fontSize="medium" sx={{ color: "grey.400" }} />
+            <IconButton>
+              <CloseIcon fontSize="medium" sx={{ color: "grey.300" }} />
+            </IconButton>
           </Link>
         </Stack>
       </Stack>
@@ -197,33 +227,55 @@ export const BudgetDetail = () => {
         onClose={hideModalTime}
         projectId={budget.project.id}
       />
-      <Box position="relative">
-        <Stack
-          p="50px"
-          alignItems="center"
-          position="absolute"
-          width="100%"
-          top={0}
-          left={0}
-          display={isShowLoadingTab ? "flex" : "none"}
+      <Stack direction="row">
+        <Box
+          position="relative"
+          sx={{
+            width: isOpenRightSidebar ? "calc(100% - 350px)" : "100%",
+            transition: "all .2s",
+          }}
         >
-          <CircularProgress />
-        </Stack>
-        <Box sx={{ opacity: isShowLoadingTab ? 0 : 1 }}>
-          {activeTab === TABS.FEED && <Feed budget={budget} />}
-          {activeTab === TABS.TIME && <Time />}
-          {activeTab === TABS.EXPENSES && <Expenses />}
-          {activeTab === TABS.INVOICES && <Invoice />}
-          {activeTab === TABS.RECURRING && <Recurring />}
-          {activeTab === TABS.SERVICES && (
-            <Service
-              isEdit={isEditService}
-              onCloseEdit={offEditService}
-              onOpenEdit={onEditService}
-            />
-          )}
+          <Stack
+            p="50px"
+            alignItems="center"
+            position="absolute"
+            width="100%"
+            top={0}
+            left={0}
+            display={isShowLoadingTab ? "flex" : "none"}
+          >
+            <CircularProgress />
+          </Stack>
+          <Box sx={{ opacity: isShowLoadingTab ? 0 : 1 }}>
+            {activeTab === TABS.FEED && <Feed budget={budget} />}
+            {activeTab === TABS.TIME && <Time />}
+            {activeTab === TABS.EXPENSES && <Expenses />}
+            {activeTab === TABS.INVOICES && <Invoice />}
+            {activeTab === TABS.RECURRING && <Recurring />}
+            {activeTab === TABS.SERVICES && (
+              <Service
+                isEdit={isEditService}
+                onCloseEdit={offEditService}
+                onOpenEdit={onEditService}
+              />
+            )}
+          </Box>
         </Box>
-      </Box>
+        <Box
+          sx={{
+            width: "350px",
+            borderLeft: "2px solid",
+            borderColor: "grey.200",
+            p: 2,
+            transition: "all .2s",
+            position: isOpenRightSidebar ? "relative" : "absolute",
+            zIndex: isOpenRightSidebar ? 10 : -1,
+            right: isOpenRightSidebar ? 0 : "-350px",
+          }}
+        >
+          <BudgetRightSidebar />
+        </Box>
+      </Stack>
     </Box>
   );
 };
