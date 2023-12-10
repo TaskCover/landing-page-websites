@@ -108,11 +108,11 @@ const FormStepTwo = (props: IProps) => {
         user: [],
         status: "unpaid",
       };
-      delete data["express"];
-      delete data["itemBy"];
-      delete data["itemByAmount"];
-      delete data["itemByTime"];
-      delete data["itemPercent"];
+      // delete data["express"];
+      // delete data["itemBy"];
+      // delete data["itemByAmount"];
+      // delete data["itemByTime"];
+      // delete data["itemPercent"];
 
       onCreateBilling(data);
       setActiveStep?.(1);
