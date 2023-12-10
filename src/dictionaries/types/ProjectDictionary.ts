@@ -195,16 +195,26 @@ export type ProjectDictionary = {
       end_date: string;
       owner: string;
       project_id: string;
-    },
+    };
     createBudgetSuccess: string;
     table: {
       budget: string;
       owner: string;
       cost: string;
       budgetTimeUsed: string;
+      budgetedTimeUse: string;
       workTime: string;
       estimateTime: string;
-    },
+      revenue: string;
+      margin: string;
+      budgetUsed: string;
+      budgetTotal: string;
+      workedTime: string;
+      billableTime: string;
+      invoiced: string;
+      company: string;
+      project: string;
+    };
     groupBy: {
       dateCreated: string;
       dateUpdated: string;
@@ -212,11 +222,11 @@ export type ProjectDictionary = {
       endDate: string;
       owner: string;
       status: string;
-    },
+    };
     filter: {
       owner: string;
       time: string;
-    },
+    };
     titleGroupBy: string;
     titleFilter: string;
   };

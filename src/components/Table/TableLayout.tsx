@@ -37,6 +37,7 @@ export type CellProps = TableCellProps & {
   data?: string;
   width?: string | number;
   minWidth?: number;
+  minwidth?: number | string;
 };
 
 type TableLayoutProps = {

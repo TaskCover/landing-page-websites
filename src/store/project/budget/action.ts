@@ -28,6 +28,7 @@ export type TBudgetListQueries = BaseQueries & {
   start_date?: string;
   end_date?: string;
   project_id?: string;
+  search_key?: string;
 };
 
 export type TBudgetListFilter = Omit<
@@ -51,60 +52,32 @@ export const getProjectBudgetList = createAsyncThunk(
       // So, I added 1 here.
     }
 
-    let groupBy: string = "";
-    let userId: string = "";
-    let startDate: string = "";
-    let endDate: string = "";
-    let projectId: string = "";
+    const listKeySearchInParam: string[] = [
+      "group_by",
+      "user_id",
+      "start_date",
+      "end_date",
+      "project_id",
+      "search_key",
+    ];
 
-    if (queries.group_by) {
-      groupBy = queries.group_by;
-      delete queries.group_by;
+    const dataSearchInParam: Record<
+      (typeof listKeySearchInParam)[number],
+      string | undefined | null
+    > = {};
+
+    for (const key in queries) {
+      if (listKeySearchInParam.indexOf(key) === -1) {
+        continue;
+      }
+      dataSearchInParam[key] = queries[key];
+      delete queries[key];
     }
 
-    if (queries.user_id) {
-      userId = queries.user_id;
-      delete queries.user_id;
-    }
-
-    if (queries.start_date) {
-      startDate = queries.start_date;
-      delete queries.start_date;
-    }
-
-    if (queries.end_date) {
-      endDate = queries.end_date;
-      delete queries.end_date;
-    }
-
-    if (queries.project_id) {
-      projectId = queries.project_id;
-      delete queries.project_id;
-    }
-
-    const newQueries = serverQueries(queries);
-
-    if (groupBy !== "") {
-      newQueries.group_by = groupBy;
-    }
-
-    if (userId !== "") {
-      newQueries.user_id = userId;
-    }
-
-    if (startDate !== "") {
-      newQueries.start_date = startDate;
-    }
-
-    if (endDate !== "") {
-      newQueries.end_date = endDate;
-    }
-
-    if (projectId !== "") {
-      newQueries.project_id = projectId;
-    }
-
-    const response = await saleClient.get(Endpoint.BUDGET_ALL, newQueries);
+    const response = await saleClient.get(Endpoint.BUDGET_ALL, {
+      ...serverQueries(queries),
+      ...dataSearchInParam,
+    });
 
     if (response?.status !== HttpStatusCode.OK) {
       throw AN_ERROR_TRY_AGAIN;

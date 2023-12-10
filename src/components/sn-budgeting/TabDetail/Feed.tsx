@@ -7,7 +7,7 @@ import {
 } from "../../../queries/budgeting/get-feed";
 import React, { useEffect, useState } from "react";
 import { TBudget } from "store/project/budget/action";
-import { Alert, Stack } from "@mui/material";
+import { Alert, Box, Stack } from "@mui/material";
 import Avatar from "components/Avatar";
 import { Text } from "components/shared";
 import { useTranslations } from "next-intl";
@@ -22,6 +22,7 @@ import { BadgeCustom } from "components/sn-budgeting/BadgeCustom";
 
 const FeedAction: Record<string, string> = {
   CREATE_BUDGET: "create",
+  CREATE_BUDGET_SERVICE: "create_service",
 };
 
 export const Feed = ({ budget }: { budget: TBudget }) => {
@@ -38,12 +39,20 @@ export const Feed = ({ budget }: { budget: TBudget }) => {
 
   return (
     <Stack p="30px">
-      <Stack direction="row">
-        {feeds.map((feed, index) => (
+      {feeds.map((feed, index) => (
+        <Box key={`budget-feed-${index}`}>
           <Stack
-            key={`budget-feed-${index}`}
             direction="row"
             alignItems="start"
+            display="inline-flex"
+            sx={{
+              pb: 1,
+              mb: 2,
+              ...(index + 1 < feeds.length && {
+                borderBottom: "2px solid",
+                borderColor: "grey.200",
+              }),
+            }}
           >
             <Avatar size={40} src={budget.created_by.avatar.link} />
             <Stack px="10px">
@@ -60,7 +69,9 @@ export const Feed = ({ budget }: { budget: TBudget }) => {
               </Stack>
               <Stack direction="row" gap={1} alignItems="center" mb="5px">
                 <Text>Currency set to</Text>
-                <BadgeCustom text={feed.data.currency} />
+                <BadgeCustom
+                  text={feed.data.currency ?? feed.budget_id.currency}
+                />
               </Stack>
               <Stack direction="row" gap={1} alignItems="center" mb="5px">
                 <Text>Company set to</Text>
@@ -79,7 +90,10 @@ export const Feed = ({ budget }: { budget: TBudget }) => {
               <Stack direction="row" gap={1} alignItems="center" mb="5px">
                 <Text>End date set to</Text>
                 <BadgeCustom
-                  text={formatDate(feed.data.end_date, DATE_LOCALE_FORMAT)}
+                  text={formatDate(
+                    feed.data.end_date ?? feed.budget_id.end_date,
+                    DATE_LOCALE_FORMAT,
+                  )}
                 />
               </Stack>
             </Stack>
@@ -92,8 +106,8 @@ export const Feed = ({ budget }: { budget: TBudget }) => {
               </Text>
             </Stack>
           </Stack>
-        ))}
-      </Stack>
+        </Box>
+      ))}
     </Stack>
   );
 };
