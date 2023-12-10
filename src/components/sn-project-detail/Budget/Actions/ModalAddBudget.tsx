@@ -227,6 +227,17 @@ const ModalAddBudget = (props: Props) => {
               })}
               rootSx={sxInput}
               fullWidth
+              pickerProps={{
+                onFocus() {
+                  toggleFocusInputDate(true);
+                },
+                onBlur() {
+                  toggleFocusInputDate(false);
+                },
+                onClickOutside() {
+                  toggleFocusInputDate(false);
+                },
+              }}
             />
             <DateTimePicker
               title={projectT("budget.form.end_date")}
