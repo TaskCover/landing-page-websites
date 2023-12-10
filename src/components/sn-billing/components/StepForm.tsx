@@ -64,7 +64,12 @@ const StepForm = (props: StepProps) => {
   //   };
 
   return (
-    <Box sx={{ width: "85%" }} alignItems={"center"} textAlign={"center"}>
+    <Box
+      sx={{ width: "100%" }}
+      alignItems={"center"}
+      textAlign={"center"}
+      py={3}
+    >
       <Stepper activeStep={activeStep}>
         {listSteps?.map((label, index) => {
           const stepProps: { completed?: boolean } = {};

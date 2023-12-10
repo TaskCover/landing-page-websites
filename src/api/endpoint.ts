@@ -117,4 +117,10 @@ export const Endpoint = {
   DETAIL_BILLING: "",
   EXPORT_BILLING: "bill/export/{id}",
   INTERACTION_BILLING: "/bill_interaction",
+
+  //Budget
+  BUDGET: "/budgets/all",
+  DETAIL_BUDGET: "/budgets/budget-by-id/{id}",
+  CREATE_SERVICE_BUDGET: "/budgets/service",
+  SERVICE_BY_BUDGET: "/budgets/service/{id}",
 };

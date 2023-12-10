@@ -15,7 +15,7 @@ export default function Page() {
   return (
     <Wrapper>
       {/* <Actions /> */}
-      <ItemList />
+      <CreatePage />
     </Wrapper>
   );
 }

@@ -50,6 +50,9 @@ export const CAREER_DETAIL_PATH = "/careers/{id}";
 export const APPLICANTS_DETAIL_PATH = "/careers/{id}/applicants";
 //Billing
 export const BILLING_PATH = "/billing";
+export const BILLING_CREATE_PATH = "/billing/create";
+export const BILLING_INFO_PATH = "/billing/{id}";
+export const BILLING_DETAIL_PATH = "/billing/detail";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -89,7 +92,10 @@ export const AUTHORIZED_PATHS = {
     // Feedback
     FEEDBACK_PATH,
     // Billing
-    BILLING_PATH
+    BILLING_PATH,
+    BILLING_CREATE_PATH,
+    BILLING_INFO_PATH,
+    BILLING_DETAIL_PATH,
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -109,8 +115,11 @@ export const AUTHORIZED_PATHS = {
     CAREER_PATH,
     CAREER_DETAIL_PATH,
     BLOGS_RELATED_PATH,
-     // Billing
-     BILLING_PATH
+    // Billing
+    BILLING_PATH,
+    BILLING_CREATE_PATH,
+    BILLING_INFO_PATH,
+    BILLING_DETAIL_PATH,
   ],
   [Permission.ST]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -133,8 +142,11 @@ export const AUTHORIZED_PATHS = {
     CHATTING_ROOM_PATH,
     // Feedback
     FEEDBACK_PATH,
-     // Billing
-     BILLING_PATH
+    // Billing
+    BILLING_PATH,
+    BILLING_CREATE_PATH,
+    BILLING_INFO_PATH,
+    BILLING_DETAIL_PATH,
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };

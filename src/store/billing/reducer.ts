@@ -9,17 +9,79 @@ import {
   DependencyStatus,
   // GetActivitiesQueries,
   GetBillingListQueries,
+  createBilling,
   getBillingList,
+  getBudgetDetail,
+  getBudgetList,
+  getServiceBudget,
 } from "./actions";
 import { cl } from "@fullcalendar/core/internal-common";
 
-export interface Budgets {
+export interface Project {
+  _id: string;
   id: string;
   name: string;
-  project: string;
-  status: number;
+  number: string;
+  owner: string;
+  members: Member[];
+  start_date: string;
+  end_date: string;
+  expected_cost: number;
+  working_hours: number;
+  description: string;
+  type_project: string;
+  created_time: string;
+  created_by: string;
+  is_active: boolean;
+  status: string;
+  saved: boolean;
+  company: string;
+  avatar: [
+    {
+      object: string;
+      name: string;
+      link: string;
+    },
+  ];
+  working_hours_real: number;
+  actual_costs: number;
+  currency: string;
+  updated_by: string;
+  updated_time: string;
+}
+
+export interface Member {
+  id: string;
+  email: string;
+  date_in: string;
+}
+
+export interface Owner {
+  id: string;
+  email: string;
+  roles: string[];
+  company: string;
+  fullname: string;
+}
+
+export interface Budgets {
+  _id: string;
+  id: string;
+  name: string;
+  project: Project;
+  created_time: string;
+  updated_time: string;
+  owner: Owner;
+  currency: string;
+  start_date: string;
+  end_date: string;
+  budget_number: number;
+  po_number: number;
+  __v: number;
+  company: string;
+  estimate: number;
   revenue: number;
-  for_invoicing: number;
+  revenuePJ: number;
 }
 export interface Invoice {
   id?: string;
@@ -77,6 +139,25 @@ export interface PaymentDetail {
   amount: number;
   note: string;
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Service {
+  id: string;
+  name: string;
+  desc: string;
+  serviceType: string;
+  billType: string;
+  unit: string;
+  estimate: number;
+  qty: number;
+  price: number;
+  discount: number;
+  markUp: number;
+  tolBudget: number;
+  createdAt: string;
+  updateAt: string;
+  creator: string;
+  _id: string;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Feed {}
@@ -108,10 +189,13 @@ export interface BillingState {
   paging: Paging;
   error?: string;
   filters: Omit<GetBillingListQueries, "pageIndex" | "pageSize">;
-
+  budgets?: Budgets[];
+  serviceBudgets?: any;
+  budgetDetail?: Budgets;
   item?: Billing;
   itemStatus: DataStatus;
   itemError?: string;
+  createStatus?: boolean;
 }
 
 // export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {
@@ -158,6 +242,84 @@ const billingSlice = createSlice({
       .addCase(getBillingList.rejected, (state, action) => {
         state.status = DataStatus.FAILED;
         state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(getBudgetList.pending, (state, action) => {
+        state.status = DataStatus.LOADING;
+        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.paging.pageIndex = Number(
+        //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        // );
+        // state.paging.pageSize = Number(
+        //   action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        // );
+      })
+      .addCase(getBudgetList.fulfilled, (state, { payload }) => {
+        // const { items, ...paging } = action.payload;
+        const data = payload?.docs;
+
+        state.budgets = data as Budgets[];
+        state.status = DataStatus.SUCCEEDED;
+        state.error = undefined;
+        // state.paging = Object.assign(state.paging, paging);
+      })
+      .addCase(getBudgetList.rejected, (state, action) => {
+        state.status = DataStatus.FAILED;
+        state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(getServiceBudget.pending, (state, action) => {
+        state.status = DataStatus.LOADING;
+        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.paging.pageIndex = Number(
+        //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        // );
+        // state.paging.pageSize = Number(
+        //   action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        // );
+      })
+      .addCase(getServiceBudget.fulfilled, (state, { payload }) => {
+        // const { items, ...paging } = action.payload;
+
+        state.serviceBudgets = payload?.sections;
+        state.status = DataStatus.SUCCEEDED;
+        state.error = undefined;
+        // state.paging = Object.assign(state.paging, paging);
+      })
+      .addCase(getServiceBudget.rejected, (state, action) => {
+        state.status = DataStatus.FAILED;
+        state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(getBudgetDetail.pending, (state, action) => {
+        state.status = DataStatus.LOADING;
+        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.paging.pageIndex = Number(
+        //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        // );
+        // state.paging.pageSize = Number(
+        //   action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        // );
+      })
+      .addCase(getBudgetDetail.fulfilled, (state, { payload }) => {
+        // const { items, ...paging } = action.payload;
+        const data = payload;
+
+        state.budgetDetail = data as Budgets;
+        state.status = DataStatus.SUCCEEDED;
+        state.error = undefined;
+        // state.paging = Object.assign(state.paging, paging);
+      })
+      .addCase(getBudgetDetail.rejected, (state, action) => {
+        state.status = DataStatus.FAILED;
+        state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(createBilling.pending, (state, action) => {
+        state.createStatus = false;
+      })
+      .addCase(createBilling.fulfilled, (state, action) => {
+        state.createStatus = true;
+      })
+      .addCase(createBilling.rejected, (state, action) => {
+        state.createStatus = false;
+        // state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
       }),
   // .addCase(
   //   createProject.fulfilled,

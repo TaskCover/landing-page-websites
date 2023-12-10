@@ -37,7 +37,7 @@ export const STATUS_OPTIONS = [
 ];
 
 export enum ATTACHMENT_TYPE {
-  ALL = '0',
-  IMAGE = '1',
-  FILE = '2',
+  ALL = "0",
+  IMAGE = "1",
+  FILE = "2",
 }

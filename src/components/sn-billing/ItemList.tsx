@@ -220,7 +220,7 @@ const ItemList = () => {
               (selected) => selected?.id === item.id,
             );
             return (
-              <TableRow key={item.id}>
+              <TableRow key={item?.id}>
                 <BodyCell sx={{ pl: { xs: 0.5, md: 2 } }}>
                   <Checkbox
                     checked={indexSelected !== -1}
