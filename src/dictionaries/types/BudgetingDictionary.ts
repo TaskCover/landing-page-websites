@@ -9,6 +9,7 @@ export type BudgetingDictionary = {
         addExpense: string;
         addInvoice: string;
         serviceEdit: string;
+		search: string;
     },
     status: {
         open: string;
@@ -16,6 +17,7 @@ export type BudgetingDictionary = {
     },
     actionStatus: {
         create: string;
+		create_service: string;
     },
     tabTime: {
         service: string;

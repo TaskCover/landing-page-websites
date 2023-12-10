@@ -8,7 +8,11 @@ export type CareerDictionary={
     },
 
     actions: {
-        search: string
+        search: string,
+        update:{
+            title:string,
+            content:string,
+        }
     },
 
     title_form: string,

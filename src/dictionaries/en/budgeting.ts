@@ -11,13 +11,15 @@ export const BudgetingLang: BudgetingDictionary = {
         addExpense: 'Expense',
         addInvoice: 'Invoice',
         serviceEdit: 'Edit',
+		search: 'Search'
     },
     status: {
         open: 'Open',
         close: 'Close',
     },
     actionStatus: {
-        create: 'Budget was created'
+        create: 'Budget was created',
+		create_service: "Budget service was created"
     },
     tabTime: {
         service: 'Service',

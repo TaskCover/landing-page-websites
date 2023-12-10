@@ -11,7 +11,11 @@ export const CareerLang: CareerDictionary = {
     title_form: "Nghề nghiệp",
 
     actions: {
-        search: "Tìm kiếm"
+        search: "Tìm kiếm",
+        update:{
+            title:"Bạn có muốn cập nhật trạng thái ?",
+            content:"Cập nhật trạng thái {label}"
+        }
     },
 
     careerTable: {

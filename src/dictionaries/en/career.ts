@@ -10,7 +10,11 @@ export const CareerLang: CareerDictionary = {
     title_form: "Career",
 
     actions: {
-        search: "search"
+        search: "search",
+        update:{
+            title:"Are you sure to update?",
+            content:"Update {label}"
+        }
     },
 
     careerTable: {

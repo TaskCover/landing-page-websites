@@ -44,6 +44,7 @@ export const BlogLang: BlogDictionary = {
         statusBlog:"Trạng thái",
         slug:"Đường dẫn",
         created_time : "Ngày tạo",
+        relatedBlogs:"Bài viết liên quan"
     },
     published: "Xuất bản",
     draft: "Bản nháp",
@@ -58,6 +59,10 @@ export const BlogLang: BlogDictionary = {
         },
         draft : "Nháp",
         published:"Xuất bản",
+        update:{
+            title:"Bạn có muốn cập nhật trạng thái ?",
+            content:"Cập nhật trạng thái"
+        }
     },
     blogForm: {
         key: "bài viết",

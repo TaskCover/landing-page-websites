@@ -44,6 +44,7 @@ export const BlogLang: BlogDictionary = {
         statusBlog: "Status",
         slug: "Slug",
         created_time : "Create Time",
+        relatedBlogs : "Related Blogs",
     },
     published: "Published",
     draft: "Draft",
@@ -58,6 +59,10 @@ export const BlogLang: BlogDictionary = {
         },
         draft:"Draft",
         published : "Published",
+        update:{
+            title:"Are you sure to update?",
+            content:"Update"
+        }
     },
     blogForm: {
         key: "blog",
