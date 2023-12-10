@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { TBudget } from "store/project/budget/action";
 import { Box, CircularProgress, Stack } from "@mui/material";
 import Avatar from "components/Avatar";
-import { Button, IconButton, Text } from "components/shared";
+import { Button, DatePicker, IconButton, Text } from "components/shared";
 import { NS_BUDGETING } from "constant/index";
 import { useTranslations } from "next-intl";
 import CloseIcon from "../../icons/CloseIcon";
@@ -25,6 +25,9 @@ import { Service } from "./TabDetail/Service";
 import EditIcon from "icons/EditIcon";
 import OpenSidebarIcon from "icons/OpenSidebarIcon";
 import { BudgetRightSidebar } from "./BudgetRightSidebar";
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import EyeIcon from "icons/EyeIcon";
+import dayjs from "dayjs";
 
 enum TABS {
   FEED = "Feed",
@@ -42,6 +45,7 @@ export const BudgetDetail = () => {
   const [isOpenRightSidebar, showRightSidebar, hideRightSidebar] = useToggle();
   const [budget, setBudget] = useState<TBudget | null>(null);
   const [activeTab, setActiveTab] = useState<string>(TABS.FEED);
+  const [dateFilter, setDateFilter] = useState<any>("");
   const { id } = useParams();
 
   const budgetDetailQuery = useBudgetByIdQuery(String(id));
@@ -82,6 +86,21 @@ export const BudgetDetail = () => {
           </Stack>
         </Stack>
         <Stack direction="row" alignItems="center">
+          <DatePicker
+            onChange={(name, date) => {
+              if (!date) return;
+              setDateFilter(dayjs(date.toString()).format("YYYY-MM-DD"));
+            }}
+            name="name"
+            size="small"
+            value={dateFilter}
+          />
+          <IconButton sx={{ color: "grey.300" }}>
+            <EyeIcon sx={{ fontSize: "26px" }} />
+          </IconButton>
+          <IconButton sx={{ color: "grey.300" }}>
+            <ShareOutlinedIcon />
+          </IconButton>
           <IconButton
             sx={{ color: "grey.300" }}
             onClick={isOpenRightSidebar ? hideRightSidebar : showRightSidebar}
