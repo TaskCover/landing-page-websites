@@ -1,9 +1,7 @@
-"use client";
-
 import { memo } from "react";
 import { Stack } from "@mui/material";
-import AddBudget from "components/sn-project-detail/Budget/Actions/AddBudget";
-import Search from "components/sn-project-detail/Budget/Actions/Search";
+import AddBudget from "./Actions/AddBudget";
+import { SearchWithOnlyInput } from "./Actions/Search";
 
 const Action = ({ projectId }: { projectId?: string }) => {
   return (
@@ -17,7 +15,7 @@ const Action = ({ projectId }: { projectId?: string }) => {
       display={{ xs: "none", md: "flex" }}
     >
       <AddBudget projectId={projectId} />
-      <Search projectId={projectId} />
+      <SearchWithOnlyInput />
     </Stack>
   );
 };

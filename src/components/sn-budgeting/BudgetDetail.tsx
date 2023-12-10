@@ -38,7 +38,7 @@ export const BudgetDetail = () => {
   const [isShowLoadingTab, openLoadingTab, hideLoadingTab] = useToggle();
   const [isEditService, onEditService, offEditService] = useToggle();
   const [budget, setBudget] = useState<TBudget | null>(null);
-  const [activeTab, setActiveTab] = useState<string>(TABS.SERVICES);
+  const [activeTab, setActiveTab] = useState<string>(TABS.FEED);
   const { id } = useParams();
 
   const budgetDetailQuery = useBudgetByIdQuery(String(id));

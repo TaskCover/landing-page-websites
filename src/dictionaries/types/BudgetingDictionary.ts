@@ -9,6 +9,7 @@ export type BudgetingDictionary = {
         addExpense: string;
         addInvoice: string;
         serviceEdit: string;
+		search: string;
     },
     status: {
         open: string;

@@ -11,6 +11,7 @@ export const BudgetingLang: BudgetingDictionary = {
         addExpense: 'Expense',
         addInvoice: 'Invoice',
         serviceEdit: 'Edit',
+		search: 'Search'
     },
     status: {
         open: 'Open',

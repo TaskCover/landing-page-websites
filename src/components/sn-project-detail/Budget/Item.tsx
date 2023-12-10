@@ -39,25 +39,28 @@ const Item = ({ projectId }: { projectId?: string }) => {
     get: getBudget,
   } = useBudgets();
 
-  const { items: members, onGetMembersOfProject } = useMembersOfProject();
+  const { items: members } = useMembersOfProject();
 
   const { isMdSmaller } = useBreakpoint();
   const projectT = useTranslations(NS_PROJECT);
   const pathname = usePathname();
-  const { initQuery, isReady, query } = useQueryParams();
+  const { initQuery, isReady, query: queryParam } = useQueryParams();
   const { push } = useRouter();
 
   useEffect(() => {
     if (!isReady) return;
+
     const query: TBudgetListQueries = {
       ...DEFAULT_PAGING,
-      ...initQuery,
+      ...queryParam,
     };
+
     if (projectId) {
       query.project_id = projectId;
     }
+
     getBudget(query);
-  }, [initQuery, isReady, getBudget]);
+  }, [isReady, getBudget, queryParam]);
 
   useEffect(() => {
     if (!budgetItems || !members || budgetItems.length == 0) return;
@@ -99,7 +102,7 @@ const Item = ({ projectId }: { projectId?: string }) => {
   ) as CellProps[];
 
   const onChangeQueries = (queries: { [key: string]: any }) => {
-    const newQueries = { ...query, ...queries };
+    const newQueries = { ...queryParam, ...queries };
     const path = getPath(pathname, newQueries);
     push(path);
   };
