@@ -6,6 +6,7 @@ import {
   AN_ERROR_TRY_AGAIN,
   AN_ERROR_TRY_RELOAD_PAGE,
   BILLING_API_URL,
+  SALE_API_URL,
 } from "constant/index";
 import { BaseQueries } from "constant/types";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
@@ -28,6 +29,9 @@ export enum DependencyStatus {
 export type GetBillingListQueries = BaseQueries & {
   status?: BillingStatus;
 };
+export type GetBudgetListQueries = BaseQueries & {
+  // status?: BillingStatus;
+};
 
 export type BillingData = {};
 
@@ -46,6 +50,76 @@ export const getBillingList = createAsyncThunk(
       const response = await client.get(Endpoint.BILLING, newQueries, {
         baseURL: BILLING_API_URL,
       });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getBudgetList = createAsyncThunk(
+  "Billing/getBudgetList",
+  async (queries: GetBudgetListQueries) => {
+    let newQueries = { ...queries };
+
+    // if (newQueries?.sort !== "updated_time=-1") {
+    //   newQueries.sort = "created_time=-1";
+    // }
+
+    newQueries = serverQueries(newQueries, ["name"]) as GetBudgetListQueries;
+
+    try {
+      const response = await client.get(Endpoint.BUDGET, newQueries, {
+        baseURL: SALE_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getBudgetDetail = createAsyncThunk(
+  "Billing/getBudgetDetail",
+  async (id: string) => {
+    try {
+      const response = await client.get(
+        StringFormat(Endpoint.DETAIL_BUDGET, { id }),
+        {},
+        {
+          baseURL: SALE_API_URL,
+        },
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getServiceBudget = createAsyncThunk(
+  "Billing/getServiceBudget",
+  async (id: string) => {
+    try {
+      const response = await client.get(
+        StringFormat(Endpoint.SERVICE_BY_BUDGET, { id }),
+        {},
+        {
+          baseURL: SALE_API_URL,
+        },
+      );
 
       if (response?.status === HttpStatusCode.OK) {
         return response.data;
@@ -79,7 +153,9 @@ export const createBilling = createAsyncThunk(
   "Billing/createBilling",
   async (data: BillingData) => {
     try {
-      const response = await client.post(Endpoint.BILLING, data);
+      const response = await client.post(Endpoint.BILLING, data, {
+        baseURL: BILLING_API_URL,
+      });
 
       if (response?.status === HttpStatusCode.CREATED) {
         return response.data;

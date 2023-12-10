@@ -5,11 +5,11 @@ import { Text } from "components/shared";
 import { NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import { memo } from "react";
-import { Billing } from "store/billing/reducer";
+import { Billing, Service } from "store/billing/reducer";
 import { formatDate } from "utils/index";
 
 type MobileContentCellProps = {
-  item?: Billing;
+  item?: Service;
 };
 
 type InformationItemProps = {
@@ -23,8 +23,11 @@ const MobileContentCell = (props: MobileContentCellProps) => {
   const t = useTranslations(NS_COMMON);
   return (
     <>
-      {/* <BodyCell align="center">{order}</BodyCell> */}
       <BodyCell align="left">
+        {/* <Link
+          underline="none"
+          href={getPath(BILLING_DETAIL_PATH, undefined, {})}
+        > */}
         <Text
           variant="body2"
           color="text.primary"
@@ -32,31 +35,26 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           lineHeight={1.28}
           sx={{ "&:hover": { color: "primary.main" } }}
         >
-          {item?.subject}
+          {item?.billType}
         </Text>
+        {/* </Link> */}
       </BodyCell>
 
       <BodyCell align="left" sx={{ paddingLeft: 0 }}>
-        {item?.invoiceNumber}
+        {item?.desc}
       </BodyCell>
-      <BodyCell align="left">{formatDate(item?.date)}</BodyCell>
+      <BodyCell align="left">{item?.unit}</BodyCell>
 
       <BodyCell
         // href={getPath(PROJECT_TASKS_PATH, undefined, { id: item?.id })}
         align="left"
       >
         <Stack direction="row" alignItems="center" spacing={1}>
-          {item?.amount}
+          {item?.qty}
         </Stack>
       </BodyCell>
-      <BodyCell align="center">{item?.status}</BodyCell>
-      <BodyCell align="center">
-        {/* <Saved id={item.id} value={item.saved} /> */}
-      </BodyCell>
-      <BodyCell align="center">
-        {/* <Saved id={item.id} value={item.saved} /> */}
-      </BodyCell>
-      <BodyCell align="center">{formatDate(item?.dueDate)}</BodyCell>
+      <BodyCell align="center">{item?.price}</BodyCell>
+      <BodyCell align="center">{item?.markUp}</BodyCell>
     </>
   );
 };

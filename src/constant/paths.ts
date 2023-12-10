@@ -52,6 +52,9 @@ export const CAREER_DETAIL_PATH = "/careers/{id}";
 export const APPLICANTS_DETAIL_PATH = "/careers/{id}/applicants";
 //Billing
 export const BILLING_PATH = "/billing";
+export const BILLING_CREATE_PATH = "/billing/create";
+export const BILLING_INFO_PATH = "/billing/{id}";
+export const BILLING_DETAIL_PATH = "/billing/detail";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -89,6 +92,11 @@ export const AUTHORIZED_PATHS = {
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
     FEEDBACK_PATH,
+    // Billing
+    BILLING_PATH,
+    BILLING_CREATE_PATH,
+    BILLING_INFO_PATH,
+    BILLING_DETAIL_PATH,
     BILLING_PATH,
     // Budgeting
     BUDGETING_PATH,
@@ -133,6 +141,11 @@ export const AUTHORIZED_PATHS = {
     DOCS_CREATE_PATH,
     CHATTING_ROOM_PATH,
     FEEDBACK_PATH,
+    // Billing
+    BILLING_PATH,
+    BILLING_CREATE_PATH,
+    BILLING_INFO_PATH,
+    BILLING_DETAIL_PATH,
     BILLING_PATH,
     // Budgeting
     BUDGETING_PATH,
