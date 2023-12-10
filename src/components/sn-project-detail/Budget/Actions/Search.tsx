@@ -180,8 +180,8 @@ export const SearchWithOnlyInput = () => {
       }}
       value={queries.search_key ?? ""}
       sx={{
-        width: { xs: is1440Larger ? 250 : 160 },
-        minWidth: { xs: is1440Larger ? 250 : 160 },
+        width: { xs: is1440Larger ? 250 : 180 },
+        minWidth: { xs: is1440Larger ? 250 : 180 },
       }}
     />
   );
