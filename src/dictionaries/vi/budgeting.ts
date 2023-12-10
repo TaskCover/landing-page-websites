@@ -18,7 +18,8 @@ export const BudgetingLang: BudgetingDictionary = {
         close: 'Close',
     },
     actionStatus: {
-        create: 'Budget was created'
+        create: 'Budget was created',
+		create_service: "Budget service was created"
     },
     tabTime: {
         service: 'Service',
