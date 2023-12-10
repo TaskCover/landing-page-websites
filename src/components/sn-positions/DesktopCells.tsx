@@ -25,7 +25,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
         {item?.created_by?.id ? (
           <Stack direction="row" alignItems="center" spacing={1}>
             <Avatar size={32} src={item.created_by?.avatar?.link} />
-            <Text variant="h6">{item.created_by?.fullname}</Text>
+            <Text variant="body2">{item.created_by?.fullname}</Text>
           </Stack>
         ) : undefined}
       </BodyCell>
