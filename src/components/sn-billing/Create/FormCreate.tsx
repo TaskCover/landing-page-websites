@@ -32,6 +32,7 @@ import useBreakpoint from "hooks/useBreakpoint";
 import FixedLayout from "components/FixedLayout";
 import FormStepOne from "./StepOne/FormStepOne";
 import FormStepTwo from "./StepTwo/FormStepTwo";
+import { Budgets } from "store/billing/reducer";
 // import useExportDeal from "../hooks/useExportDeal";
 
 const billingFormTranslatePrefix = "list.form";
@@ -45,7 +46,7 @@ const FormCreate = () => {
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
-  const [selectedBudget, setSelectedBudget] = React.useState<string>("");
+  const [selectedBudget, setSelectedBudget] = React.useState<Budgets[]>([]);
 
   const steps = [
     billingT(`${billingFormTranslatePrefix}.step.title.budgets`),
@@ -142,7 +143,7 @@ const FormCreate = () => {
           {activeStep === 1 ? (
             <FormStepTwo
               isMdSmaller={isMdSmaller}
-              budgetId={selectedBudget}
+              budgets={selectedBudget}
               setActiveStep={setActiveStep}
             />
           ) : (

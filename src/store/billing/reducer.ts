@@ -10,6 +10,7 @@ import {
   // GetActivitiesQueries,
   GetBillingListQueries,
   createBilling,
+  getBillingDetail,
   getBillingList,
   getBudgetDetail,
   getBudgetList,
@@ -106,20 +107,22 @@ export interface Bill {
 }
 
 export interface Billing {
-  id: string;
-  subject: string;
-  invoiceNumber: number;
-  date: string;
-  company: string;
-  budgets: string;
-  att: string;
-  amount: number;
-  amountUnpaid: number;
-  dueDate: string;
-  avatar: { link: string };
-  poNumber: number;
-  invoiceDate: string;
-  status: number;
+  id?: string;
+  subject?: string;
+  invoiceNumber?: number;
+  date?: string;
+  company?: string;
+  budget?: Budgets[];
+  att?: string;
+  amount?: number;
+  amount_unpaid?: number;
+  dueDate?: string;
+  avatar?: { link: string };
+  poNumber?: number;
+  invoiceDate?: string;
+  status?: number;
+  budgetService?: Service[];
+  user?: User[];
 }
 
 export interface Payment {
@@ -198,6 +201,30 @@ export interface BillingState {
   createStatus?: boolean;
 }
 
+export interface BillingDataUpdate {
+  budget?: [];
+  budgetService?: [];
+  user?: [];
+  invoiceMethod?: string;
+  vat?: number;
+  amount?: number;
+  amount_unpaid?: number;
+  message?: string;
+  company?: string;
+  tax_id?: string;
+  email?: string;
+  street?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  zip?: string;
+  id?: string;
+  poNumber?: number;
+  dueDate?: string;
+  date?: string;
+  subject?: string;
+}
+
 // export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {
 //   start_date: formatDate(subDays(new Date(), 7).getTime()),
 //   end_date: formatDate(Date.now()),
@@ -240,6 +267,29 @@ const billingSlice = createSlice({
         // state.paging = Object.assign(state.paging, paging);
       })
       .addCase(getBillingList.rejected, (state, action) => {
+        state.status = DataStatus.FAILED;
+        state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(getBillingDetail.pending, (state, action) => {
+        state.status = DataStatus.LOADING;
+        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.paging.pageIndex = Number(
+        //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        // );
+        // state.paging.pageSize = Number(
+        //   action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        // );
+      })
+      .addCase(getBillingDetail.fulfilled, (state, { payload }) => {
+        // const { items, ...paging } = action.payload;
+        const data = payload;
+
+        state.item = data as Billing;
+        state.status = DataStatus.SUCCEEDED;
+        state.error = undefined;
+        // state.paging = Object.assign(state.paging, paging);
+      })
+      .addCase(getBillingDetail.rejected, (state, action) => {
         state.status = DataStatus.FAILED;
         state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
       })

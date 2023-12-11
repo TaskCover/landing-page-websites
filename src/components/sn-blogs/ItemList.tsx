@@ -1,12 +1,24 @@
 "use client";
-import {  Stack, TableRow } from "@mui/material";
+import { Stack, TableRow } from "@mui/material";
 import FixedLayout from "components/FixedLayout";
-import { ActionsCell, BodyCell, CellProps, TableLayout } from "components/Table";
+import {
+  ActionsCell,
+  BodyCell,
+  CellProps,
+  TableLayout,
+} from "components/Table";
 import { Checkbox, IconButton } from "components/shared";
 import { DEFAULT_PAGING, NS_BLOG, NS_MANAGER } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import { useTranslations } from "next-intl";
-import { ChangeEvent, memo, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { BlogData, BlogStatus } from "store/blog/actions";
 import DesktopCells from "./components/DesktopCells";
 import MobileContentCell from "./components/MobileContentCell";
@@ -23,9 +35,22 @@ import DeleteCofirmDialog from "./components/DeleteCofirmDialog";
 import { AltRoute } from "@mui/icons-material";
 
 const ItemList = () => {
-  
-  const { items,item,onGetBlogs,page,size,totalItems,total_page,error,status,isFetching,isIdle,onApproveOrReject : onApproveOrRejectAction,onDeleteBlog:onDeleteAction} = useBlogs(); 
-totalItems;
+  const {
+    items,
+    item,
+    onGetBlogs,
+    page,
+    size,
+    totalItems,
+    total_page,
+    error,
+    status,
+    isFetching,
+    isIdle,
+    onApproveOrReject: onApproveOrRejectAction,
+    onDeleteBlog: onDeleteAction,
+  } = useBlogs();
+  totalItems;
   const { initQuery, isReady, query } = useQueryParams();
   const { isMdSmaller } = useBreakpoint();
   const [selectedList, setSelectedList] = useState<BlogData[]>([]);
@@ -35,7 +60,6 @@ totalItems;
   const { push } = useRouter();
   const pathname = usePathname();
 
-  
   const isCheckedAll = useMemo(
     () => Boolean(selectedList.length && selectedList.length === items.length),
     [selectedList.length, items.length],
@@ -55,10 +79,10 @@ totalItems;
   const onChangeQueries = (queries: { [key: string]: any }) => {
     const newQueries = { ...query, ...queries };
     const path = getPath(pathname, newQueries);
-   
+
     push(path);
 
-   onGetBlogs(newQueries);
+    onGetBlogs(newQueries);
   };
 
   const onChangePage = (newPage: number) => {
@@ -88,7 +112,8 @@ totalItems;
       { value: blogT("blogList.tag"), width: "20%", align: "left" },
       { value: blogT("blogList.created_time"), width: "20%", align: "left" },
       { value: blogT("blogList.statusBlog"), width: "10%", align: "left" },
-    ], [blogT],
+    ],
+    [blogT],
   );
 
   const headerList = useMemo(() => {
@@ -105,10 +130,10 @@ totalItems;
       { value: "", width: isMdSmaller ? "20%" : "8%" },
     ] as CellProps[];
   }, [isMdSmaller, desktopHeaderList, isCheckedAll, onChangeAll]);
-  
+
   useEffect(() => {
     if (!isReady) return;
-    onGetBlogs({...initQuery });
+    onGetBlogs({ ...initQuery });
   }, [initQuery, isReady, onGetBlogs]);
 
   const onApproveOrReject = (type: BlogStatus, id?: string) => {
@@ -165,7 +190,7 @@ totalItems;
   return (
     <>
       <FixedLayout>
-      {!!selectedList.length && (
+        {!!selectedList.length && (
           <Stack
             direction="row"
             alignItems="center"
@@ -229,19 +254,18 @@ totalItems;
             >
               <TrashIcon fontSize="small" />
             </IconButton>
-
           </Stack>
         )}
 
         <TableLayout
-           headerList={headerList}
-           pending={isFetching}
-           headerProps={{
-             sx: { px: { xs: 0.5, md: 2 } },
-           }}
-           error={error as string}
-           noData={!isIdle && totalItems === 0}
-           px={{ md: 3 }}
+          headerList={headerList}
+          pending={isFetching}
+          headerProps={{
+            sx: { px: { xs: 0.5, md: 2 } },
+          }}
+          error={error as string}
+          noData={!isIdle && totalItems === 0}
+          px={{ md: 3 }}
         >
           {items.map((item) => {
             const indexSelected = selectedList.findIndex(
@@ -285,7 +309,6 @@ totalItems;
           onChangePage={onChangePage}
           onChangeSize={onChangeSize}
         />
-
       </FixedLayout>
       <ApproveOrRejectConfirm
         open={action !== undefined}
@@ -299,21 +322,21 @@ totalItems;
         onSubmit={onSubmitApproveOrReject}
         action={textAction}
       />
-     <DeleteCofirmDialog
-      open={action !== undefined}
-      onClose={onResetAction}
-      title={blogT("actions.delete.title", { label: textAction })}
-      content={blogT("actions.delete.confirm", {
-        label: textAction,
-        count: id ? 1 : selectedList.length,
-      })}
-      items={id ? undefined : selectedList}
-      onSubmit={onSubmitDelete}
-      action={textAction}
-/>
+      <DeleteCofirmDialog
+        open={action !== undefined}
+        onClose={onResetAction}
+        title={blogT("actions.delete.title", { label: textAction })}
+        content={blogT("actions.delete.confirm", {
+          label: textAction,
+          count: id ? 1 : selectedList.length,
+        })}
+        items={id ? undefined : selectedList}
+        onSubmit={onSubmitDelete}
+        action={textAction}
+      />
     </>
   );
-}
+};
 export default memo(ItemList);
 
 const MOBILE_HEADER_LIST = [{ value: "", width: "75%", align: "left" }];

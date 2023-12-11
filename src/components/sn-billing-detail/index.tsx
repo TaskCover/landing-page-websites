@@ -1,11 +1,35 @@
 "use client";
 import { Box, Stack } from "@mui/material";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { TabList, TopContent } from "./components";
 
 import FixedLayout from "components/FixedLayout";
+import { useBillings, useServiceBudgets } from "store/billing/selectors";
+import { useParams } from "next/navigation";
+import { useTagOptions, useTags } from "store/tags/selector";
+import { useAuth } from "store/app/selectors";
 
 const InformationBillingPage = () => {
+  const { item, onGetBilling } = useBillings();
+  const { onSearchTags, tagsOptions } = useTagOptions();
+  const { arrService, sumAmount, onGetServiceBudgets } = useServiceBudgets();
+  const { user } = useAuth();
+
+  const param = useParams();
+
+  useEffect(() => {
+    onGetBilling(param?.id ?? "");
+  }, [onGetBilling]);
+
+  // useEffect(() => {
+  //   // onGetBilling(param);
+  //   onSearchTags("");
+  // }, [onSearchTags]);
+
+  // useEffect(() => {
+  //   onGetServiceBudgets(item?.budget[0].id ?? "");
+  // }, [onGetServiceBudgets, item]);
+
   return (
     <FixedLayout
       maxHeight={920}
@@ -16,8 +40,8 @@ const InformationBillingPage = () => {
       overflow={"auto"}
     >
       <Stack gap={2} spacing={2}>
-        <TopContent />
-        <TabList />
+        <TopContent tagsOptions={tagsOptions} />
+        <TabList arrService={arrService} item={item} user={user} />
       </Stack>
     </FixedLayout>
   );

@@ -8,16 +8,30 @@ import { TabContext, TabPanel, TabList } from "@mui/lab";
 import TabInvoice from "../Invoice";
 import TabFeed from "../Feed";
 import TabPayment from "../Payment";
+import { Billing, Service } from "store/billing/reducer";
+import { User } from "constant/types";
 
 type TabItemProps = {
   label: string;
   value: string;
+  editForm?: boolean;
+  item?: Billing;
+  arrService?: Service[];
+  user?: User;
 };
 
-const TabInfo = () => {
+type TabListProps = {
+  item?: Billing;
+  arrService?: Service[];
+  user?: User;
+};
+
+const TabInfo = (props: TabListProps) => {
+  const { arrService, item, user } = props;
   // const { id } = useParams() as { id: string };
   // const pathname = usePathname();
   const [value, setValue] = useState("Invoice");
+  const [editForm, setEditForm] = useState<boolean>(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -56,12 +70,42 @@ const TabInfo = () => {
               ))}
             </TabList>
             <Stack gap={2} direction={"row"} mb={1}>
-              <Button variant="outlined">Cancel</Button>
-              <Button variant="contained">Save Change</Button>
+              {!editForm && (
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setEditForm(true);
+                  }}
+                >
+                  Edit
+                </Button>
+              )}
+
+              {editForm && (
+                <>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      setEditForm(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button variant="contained">Save Change</Button>
+                </>
+              )}
             </Stack>
           </Stack>
           {TABS.map((tab) => (
-            <TabItem key={tab.label} {...tab} label={tab.label} />
+            <TabItem
+              key={tab.label}
+              {...tab}
+              label={tab.label}
+              editForm={editForm}
+              arrService={arrService}
+              item={item}
+              user={user}
+            />
           ))}
           {/* <TabActions /> */}
         </TabContext>
@@ -73,7 +117,7 @@ const TabInfo = () => {
 export default memo(TabInfo);
 
 const TabItem = (props: TabItemProps) => {
-  const { label, value } = props;
+  const { label, value, editForm, arrService, item, user } = props;
 
   const billingT = useTranslations(NS_BILLING);
   const { isDarkMode } = useTheme();
@@ -93,7 +137,15 @@ const TabItem = (props: TabItemProps) => {
 
       // color={isActiveLink ? "text.primary" : "grey.300"}
     >
-      {value === "Invoice" && <TabInvoice title={label} />}
+      {value === "Invoice" && (
+        <TabInvoice
+          title={label}
+          editForm={editForm}
+          arrService={arrService}
+          item={item}
+          user={user}
+        />
+      )}
       {value === "Feed" && <TabFeed title={label} />}
       {value === "Payment" && <TabPayment title={label} />}
     </TabPanel>
