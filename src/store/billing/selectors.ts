@@ -6,6 +6,7 @@ import {
   GetBillingListQueries,
   GetBudgetListQueries,
   createBilling,
+  getBillingDetail,
   getBillingList,
   getBudgetDetail,
   getBudgetList,
@@ -15,7 +16,7 @@ import { Service } from "./reducer";
 
 export const useBillings = () => {
   const dispatch = useAppDispatch();
-  const { items, status, error, filters } = useAppSelector(
+  const { items, status, error, filters, item, createStatus } = useAppSelector(
     (state) => state.billing,
     shallowEqual,
   );
@@ -41,6 +42,13 @@ export const useBillings = () => {
     [dispatch],
   );
 
+  const onGetBilling = useCallback(
+    async (id: string) => {
+      return await dispatch(getBillingDetail(id));
+    },
+    [dispatch],
+  );
+
   //   const onUpdateProject = useCallback(
   //     async (id: string, data: Partial<ProjectData>) => {
   //       try {
@@ -54,6 +62,7 @@ export const useBillings = () => {
 
   return {
     items,
+    item,
     status,
     error,
     filters,
@@ -63,8 +72,10 @@ export const useBillings = () => {
     pageSize,
     totalItems,
     totalPages,
+    createStatus,
     onGetBillings,
     onCreateBilling,
+    onGetBilling,
   };
 };
 
@@ -130,9 +141,11 @@ export const useBudgets = () => {
     onGetBudgetDetail,
   };
 };
+let arrService: Service[] = [];
+let sumAmount: number = 0;
 export const useServiceBudgets = () => {
   const dispatch = useAppDispatch();
-  const arrService: Service[] = [];
+
   const { serviceBudgets, status, error, filters } = useAppSelector(
     (state) => state.billing,
     shallowEqual,
@@ -147,8 +160,17 @@ export const useServiceBudgets = () => {
 
   serviceBudgets?.map((item) => {
     if (item.services && item.services?.length > 0) {
-      arrService.push(...item.services);
+      if (arrService && arrService?.length === 0) {
+        arrService.push(...item.services);
+      }
+      // else {
+      //   arrService = [...arrService, ...item.services];
+      // }
     }
+  });
+
+  arrService.forEach((item) => {
+    sumAmount += item.price;
   });
 
   //   const onUpdateProject = useCallback(
@@ -164,6 +186,7 @@ export const useServiceBudgets = () => {
 
   return {
     arrService,
+    sumAmount,
     onGetServiceBudgets,
   };
 };

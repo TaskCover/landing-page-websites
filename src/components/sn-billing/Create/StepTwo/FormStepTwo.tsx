@@ -28,14 +28,27 @@ import MobileContentCell from "./MobileContentCell";
 import DesktopCells from "./DesktopCells";
 import { Dropdown } from "components/Filters";
 import { useFormik } from "formik";
+import { Budgets } from "store/billing/reducer";
+import SelectMultiple from "components/sn-billing/components/SelectMultiple";
+import { useAuth } from "store/app/selectors";
+import { BILLING_PATH } from "constant/paths";
+import { useRouter } from "next-intl/client";
 
 const billingFormTranslatePrefix = "list.form";
 
 type IProps = {
   isMdSmaller?: boolean;
   handleSubmit?: () => void;
-  budgetId?: string;
+  budgets?: Budgets[];
   setActiveStep?: (value) => void;
+};
+
+type FilterTable = {
+  itemAmount?: string;
+  itemTime?: string;
+  express?: string;
+  itemPercent?: number;
+  revenueBy?: string;
 };
 const options = [
   {
@@ -74,12 +87,21 @@ const optionsExpresses = [
   },
 ];
 const FormStepTwo = (props: IProps) => {
-  const { handleSubmit, isMdSmaller, budgetId, setActiveStep } = props;
-
-  const { arrService, onGetServiceBudgets } = useServiceBudgets();
+  const { handleSubmit, isMdSmaller, budgets, setActiveStep } = props;
+  const { push } = useRouter();
+  const { arrService, sumAmount, onGetServiceBudgets } = useServiceBudgets();
   const { budgetDetail, onGetBudgetDetail } = useBudgets();
-  const { onCreateBilling } = useBillings();
+  const { user } = useAuth();
+  const { onCreateBilling, createStatus } = useBillings();
   const [checkItem, setCheckItem] = useState<string>("1");
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
+  const [filterTable, setFilterTable] = useState<FilterTable>({
+    itemAmount: "SERVICE",
+    itemTime: "SERVICE",
+    itemPercent: 50,
+    express: "INVOICE",
+    revenueBy: "SERVICE",
+  });
 
   const billingT = useTranslations(NS_BILLING);
 
@@ -87,37 +109,47 @@ const FormStepTwo = (props: IProps) => {
     initialValues: {
       invoiceMethod: "",
       vat: 0,
-      budgetService: [] as string[],
-      subject: "",
+      budgetService: [],
       amount: 0,
-      itemByTime: "SERVICE",
-      itemByAmount: "SERVICE",
-      itemBy: "SERVICE",
-      itemPercent: 50,
-      express: "INVOICE",
+      amount_unpaid: 0,
+      user: [],
     },
     // validationSchema: {},
     onSubmit(values, formikHelpers) {
-      const arrServiceId = arrService?.map((item) => item?.id);
+      const arrServiceId = arrService?.map((item) => {
+        return { id: item.id };
+      });
+
+      const arrBudgetId = budgets?.map((item) => {
+        return { id: item.id };
+      });
 
       const data = {
         ...values,
         budgetService: arrServiceId ?? [],
-        invoiceNumber: "11",
-        budget: [],
-        user: [],
-        status: "unpaid",
+        invoiceNumber: "",
+        budget: arrBudgetId ?? [],
+        user: [{ id: user?.id }],
+        // status: "unpaid",
       };
-      delete data["express"];
-      delete data["itemBy"];
-      delete data["itemByAmount"];
-      delete data["itemByTime"];
-      delete data["itemPercent"];
+      // delete data["express"];
+      // delete data["itemBy"];
+      // delete data["itemByAmount"];
+      // delete data["itemByTime"];
+      // delete data["itemPercent"];
 
       onCreateBilling(data);
       setActiveStep?.(1);
+      setIsSubmit(true);
     },
   });
+
+  useEffect(() => {
+    if (createStatus && isSubmit) {
+      setIsSubmit(false);
+      push(BILLING_PATH);
+    }
+  }, [createStatus, isSubmit]);
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -203,8 +235,12 @@ const FormStepTwo = (props: IProps) => {
   }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
 
   useEffect(() => {
-    onGetServiceBudgets(budgetId ?? "");
-  }, [onGetServiceBudgets]);
+    if (budgets && budgets?.length > 0) {
+      budgets?.forEach((item) => {
+        onGetServiceBudgets(item?.id ?? "");
+      });
+    }
+  }, [onGetServiceBudgets, budgets]);
 
   // useEffect(() => {
   //   onGetBudgetDetail(budgetId ?? "");
@@ -265,10 +301,10 @@ const FormStepTwo = (props: IProps) => {
                   options={options}
                   name="itemByTime"
                   onChange={(e, value) => {
-                    formik.setFieldValue("itemByTime", value);
+                    setFilterTable({ itemTime: value });
                   }}
                   defaultValue={"SERVICE"}
-                  value={formik.values.itemByTime}
+                  value={filterTable.itemTime}
                   rootSx={{
                     color: "#1BC5BD",
                     px: "0px!important",
@@ -279,6 +315,9 @@ const FormStepTwo = (props: IProps) => {
                       "& .sub": {
                         display: "none",
                       },
+                    },
+                    "& .text-option": {
+                      color: "#1BC5BD !important",
                     },
                   }}
                 />
@@ -297,10 +336,10 @@ const FormStepTwo = (props: IProps) => {
                   options={options}
                   name="itemByAmount"
                   onChange={(e, value) => {
-                    formik.setFieldValue("itemByAmount", value);
+                    setFilterTable({ itemAmount: value });
                   }}
                   defaultValue={"SERVICE"}
-                  value={formik.values.itemByAmount}
+                  value={filterTable.itemAmount}
                   rootSx={{
                     color: "#1BC5BD",
                     px: "0px!important",
@@ -311,6 +350,9 @@ const FormStepTwo = (props: IProps) => {
                       "& .sub": {
                         display: "none",
                       },
+                    },
+                    "& .text-option": {
+                      color: "#1BC5BD !important",
                     },
                   }}
                 />
@@ -323,10 +365,10 @@ const FormStepTwo = (props: IProps) => {
                   options={optionsPercent}
                   name="itemBy"
                   onChange={(e, value) => {
-                    formik.setFieldValue("itemPercent", value);
+                    setFilterTable({ itemPercent: value });
                   }}
                   defaultValue={50}
-                  value={formik.values.itemPercent}
+                  value={filterTable.itemPercent}
                   rootSx={{
                     color: "#1BC5BD",
                     px: "0px!important",
@@ -337,6 +379,9 @@ const FormStepTwo = (props: IProps) => {
                       "& .sub": {
                         display: "none",
                       },
+                    },
+                    "& .text-option": {
+                      color: "#1BC5BD !important",
                     },
                   }}
                 />
@@ -351,10 +396,10 @@ const FormStepTwo = (props: IProps) => {
                   options={options}
                   name="itemBy"
                   onChange={(e, value) => {
-                    formik.setFieldValue("itemBy", value);
+                    setFilterTable({ revenueBy: value });
                   }}
                   defaultValue={"SERVICE"}
-                  value={formik.values.itemBy}
+                  value={filterTable.revenueBy}
                   rootSx={{
                     color: "#1BC5BD",
                     px: "0px!important",
@@ -366,6 +411,9 @@ const FormStepTwo = (props: IProps) => {
                         display: "none",
                       },
                     },
+                    "& .text-option": {
+                      color: "#1BC5BD !important",
+                    },
                   }}
                 />
               </Stack>
@@ -374,29 +422,31 @@ const FormStepTwo = (props: IProps) => {
           {checkItem == "1" && (
             <Stack gap={2} mr={10}>
               <Stack gap={2}>
-                <Text variant={"body1"} sx={{ color: "#666666" }}>
-                  {billingT(
+                <SelectMultiple
+                  limitTags={10}
+                  options={[]}
+                  onSelect={(e, data) => null}
+                  // onInputChange={(value) => onSearchTags(value)}
+                  // onEnter={onEnter}
+                  label={billingT(
                     `${billingFormTranslatePrefix}.title.display_service`,
                   )}
-                </Text>
-                <Select
-                  options={[]}
-                  sx={{ width: "100%" }}
-                  size="small"
-                ></Select>
+                  sx={sxConfig}
+                />
               </Stack>
 
               <Stack gap={2}>
-                <Text variant={"body1"} sx={{ color: "#666666" }}>
-                  {billingT(
+                <SelectMultiple
+                  limitTags={10}
+                  options={[]}
+                  onSelect={(e, data) => null}
+                  // onInputChange={(value) => onSearchTags(value)}
+                  // onEnter={onEnter}
+                  label={billingT(
                     `${billingFormTranslatePrefix}.title.display_expenses`,
                   )}
-                </Text>
-                <Select
-                  options={[]}
-                  sx={{ width: "100%", height: "32px" }}
-                  size="small"
-                ></Select>
+                  sx={sxConfig}
+                />
               </Stack>
             </Stack>
           )}
@@ -416,10 +466,10 @@ const FormStepTwo = (props: IProps) => {
             options={optionsExpresses}
             name="express"
             onChange={(e, value) => {
-              formik.setFieldValue("express", value);
+              setFilterTable({ express: value });
             }}
             defaultValue={"INVOICE"}
-            value={formik.values.express}
+            value={filterTable.express}
             rootSx={{
               color: "#1BC5BD",
               px: "0px!important",
@@ -431,6 +481,9 @@ const FormStepTwo = (props: IProps) => {
                   display: "none",
                 },
               },
+              "& .text-option": {
+                color: "#1BC5BD !important",
+              },
             }}
           />
         </Stack>
@@ -440,23 +493,23 @@ const FormStepTwo = (props: IProps) => {
               {billingT(`${billingFormTranslatePrefix}.title.subTotal`)}
             </Text>
             <Text variant={"body1"} ml={2}>
-              {"$" + formik.values.amount}
+              {"$" + sumAmount}
             </Text>
           </Stack>
           <Stack direction="row" gap={2}>
             <Text variant={"body1"}>
               {billingT(`${billingFormTranslatePrefix}.title.vat`) + " 0%"}
             </Text>
-            <Text variant={"body1"} ml={3}>
-              {"% " + formik.values.vat}
+            <Text variant={"body1"} ml={4}>
+              {"$" + 0}
             </Text>
           </Stack>
           <Stack direction="row" gap={2}>
             <Text variant={"body1"}>
               {billingT(`${billingFormTranslatePrefix}.title.total`)}
             </Text>
-            <Text variant={"body1"} ml={1.5}>
-              {"$" + formik.values.amount}
+            <Text variant={"body1"} ml={1.5} fontWeight={600}>
+              {"$" + sumAmount}
             </Text>
           </Stack>
         </Stack>
@@ -484,25 +537,34 @@ const FormStepTwo = (props: IProps) => {
             // noData={!isIdle && totalItems === 0}
             px={{ md: 3 }}
           >
-            {arrService?.map((item, index) => {
-              return (
-                <TableRow key={item.id}>
-                  {isMdSmaller ? (
-                    <MobileContentCell item={item} />
-                  ) : (
-                    <DesktopCells
-                      order={0}
-                      item={item}
-                      // order={(pageIndex - 1) * pageSize + (index + 1)}
-                    />
-                  )}
-                </TableRow>
-              );
-            })}
+            {formik.values.invoiceMethod === "2" &&
+              arrService?.map((item, index) => {
+                return (
+                  <TableRow key={item.id}>
+                    {isMdSmaller ? (
+                      <MobileContentCell item={item} />
+                    ) : (
+                      <DesktopCells
+                        order={0}
+                        item={item}
+                        // order={(pageIndex - 1) * pageSize + (index + 1)}
+                      />
+                    )}
+                  </TableRow>
+                );
+              })}
           </TableLayout>
         </Stack>
       </Box>
     </>
   );
 };
+const sxConfig = {
+  input: {
+    width: "400px !important",
+    height: 50,
+    background: "#FFF !important",
+  },
+};
+
 export default memo(FormStepTwo);

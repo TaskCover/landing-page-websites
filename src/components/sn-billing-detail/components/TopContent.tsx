@@ -21,6 +21,8 @@ import { NS_BILLING, NS_PROJECT } from "constant/index";
 import Avatar from "components/Avatar";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Dropdown } from "components/Filters";
+import { Member } from "store/billing/reducer";
+import { Option } from "constant/types";
 
 const options = [
   "Duplicate Invoice",
@@ -30,7 +32,11 @@ const options = [
 
 const ITEM_HEIGHT = 48;
 
-const TopContent = () => {
+type TopContentProps = {
+  tagsOptions?: Option[];
+};
+const TopContent = (props: TopContentProps) => {
+  const { tagsOptions } = props;
   const { title, prevPath } = useHeaderConfig();
   const { isMdSmaller } = useBreakpoint();
   const billingT = useTranslations(NS_BILLING);
@@ -159,7 +165,7 @@ const TopContent = () => {
           </Stack>
           <Dropdown
             placeholder={"Tag"}
-            options={[]}
+            options={tagsOptions ?? []}
             name="Tag"
             onChange={() => {}}
             // value={queries?.status}

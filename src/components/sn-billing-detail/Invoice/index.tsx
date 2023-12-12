@@ -12,7 +12,7 @@ import {
 import { Date, Dropdown } from "components/Filters";
 import Link from "components/Link";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
-import { IconButton, Input, Text } from "components/shared";
+import { DatePicker, IconButton, Input, Text } from "components/shared";
 import { NS_BILLING, NS_COMMON } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import EditIcon from "icons/EditIcon";
@@ -20,76 +20,42 @@ import PencilUnderlineIcon from "icons/PencilUnderlineIcon";
 import PlusIcon from "icons/PlusIcon";
 import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import BillModal from "../components/BillModal";
+import { Billing, BillingDataUpdate, Service } from "store/billing/reducer";
+import TableLInkBudget from "./TableLinkBudget";
+import TableService from "./TableService";
+import { User } from "constant/types";
+import { useFormik } from "formik";
 
 type TabProps = {
   title: string;
+  editForm?: boolean;
+  item?: Billing;
+  arrService?: Service[];
+  user?: User;
 };
 const billingFormTranslatePrefix = "list.form";
 
 const TabInvoice = (props: TabProps) => {
-  const { title } = props;
+  const { title, editForm, arrService, item, user } = props;
   const { isMdSmaller } = useBreakpoint();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
+  const [customServices, setCustomService] = useState<Service[]>([]);
+  const [arrLinkBudget, setArrLinkBudget] = useState<Service[]>([]);
 
-  const desktopHeaderList: CellProps[] = useMemo(
-    () => [
-      { value: "", width: "5%", align: "center" },
-      {
-        value: billingT("list.table.subject"),
-        align: "left",
-      },
-      {
-        value: billingT("list.table.invoiceNumber"),
-        align: "left",
-      },
-      {
-        value: billingT("list.table.date"),
-        align: "left",
-      },
-      { value: billingT("list.table.budgets") },
-      { value: billingT("list.table.att") },
-      { value: billingT("list.table.amount") },
-      { value: billingT("list.table.amountUnpaid") },
-      { value: billingT("list.table.dueDate") },
-    ],
-    [billingT],
-  );
-  const mobileHeaderList: CellProps[] = useMemo(
-    () => [
-      { value: "", width: "5%", align: "center" },
-      {
-        value: billingT("list.table.subject"),
-        align: "left",
-      },
-      {
-        value: billingT("list.table.invoiceNumber"),
-        align: "left",
-      },
-      {
-        value: billingT("list.table.date"),
-        align: "left",
-      },
-      { value: billingT("list.table.budgets") },
-      { value: billingT("list.table.att") },
-      { value: billingT("list.table.amount") },
-      { value: billingT("list.table.amountUnpaid") },
-      { value: billingT("list.table.dueDate") },
-    ],
-    [billingT],
-  );
+  const formik = useFormik<Billing>({
+    enableReinitialize: true,
+    initialValues: {},
+    onSubmit(values, formikHelpers) {},
+  });
 
-  const headerList = useMemo(() => {
-    const additionalHeaderList = isMdSmaller
-      ? mobileHeaderList
-      : desktopHeaderList;
-    return [
-      ...additionalHeaderList,
-      { value: "", width: "10%" },
-    ] as CellProps[];
-  }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
+  useEffect(() => {
+    formik.setValues(item ?? {});
+  }, [item]);
+
+  console.log(formik?.values);
 
   return (
     <Box>
@@ -142,7 +108,7 @@ const TabInvoice = (props: TabProps) => {
             <Box sx={{ border: "1px solid #ECECF3", p: 2, borderRadius: 4 }}>
               <Stack direction={"row"} gap={2} pb={1}>
                 <Input
-                  title={"Field"}
+                  title={"Invoice number"}
                   name="description"
                   // onChange={formik.handleChange}
                   // onBlur={formik.handleBlur}
@@ -151,12 +117,11 @@ const TabInvoice = (props: TabProps) => {
                   //   name: commonT("form.title.description"),
                   // })}
                   fullWidth
-                  multiline
                   rootSx={sxConfig.input}
                   sx={{ flex: 1, mt: { xs: 2, sm: 0 } }}
                 />
                 <Input
-                  title={"Field"}
+                  title={"PO Number"}
                   name="description"
                   // onChange={formik.handleChange}
                   // onBlur={formik.handleBlur}
@@ -165,44 +130,47 @@ const TabInvoice = (props: TabProps) => {
                   //   name: commonT("form.title.description"),
                   // })}
                   fullWidth
-                  multiline
                   rootSx={sxConfig.input}
                   sx={{ flex: 1, mt: { xs: 2, sm: 0 } }}
                 />
               </Stack>
               <Stack direction={"row"} gap={2} pb={1}>
-                <Input
-                  title={"Field"}
-                  name="description"
-                  // onChange={formik.handleChange}
+                <DatePicker
+                  title={"Invoice date"}
+                  name="end_date"
+                  onChange={() => null}
                   // onBlur={formik.handleBlur}
-                  // value={formik.values?.description}
-                  // error={commonT(touchedErrors?.description, {
-                  //   name: commonT("form.title.description"),
+                  // value={formik.values?.end_date}
+                  // error={commonT(touchedErrors?.end_date, {
+                  //   name: commonT("form.title.endDate"),
+                  //   name2: commonT("form.title.startDate"),
                   // })}
-                  fullWidth
-                  multiline
                   rootSx={sxConfig.input}
-                  sx={{ flex: 1, mt: { xs: 2, sm: 0 } }}
+                  fullWidth
+                  // sx={{
+                  //   mt: { xs: 2, sm: 0 },
+                  // }}
                 />
-                <Input
-                  title={"Field"}
-                  name="description"
-                  // onChange={formik.handleChange}
+                <DatePicker
+                  title={"Due date"}
+                  name="end_date"
+                  onChange={() => null}
                   // onBlur={formik.handleBlur}
-                  // value={formik.values?.description}
-                  // error={commonT(touchedErrors?.description, {
-                  //   name: commonT("form.title.description"),
+                  // value={formik.values?.end_date}
+                  // error={commonT(touchedErrors?.end_date, {
+                  //   name: commonT("form.title.endDate"),
+                  //   name2: commonT("form.title.startDate"),
                   // })}
-                  fullWidth
-                  multiline
                   rootSx={sxConfig.input}
-                  sx={{ flex: 1, mt: { xs: 2, sm: 0 } }}
+                  fullWidth
+                  // sx={{
+                  //   mt: { xs: 2, sm: 0 },
+                  // }}
                 />
               </Stack>
               <Stack direction={"row"} gap={2}>
                 <Input
-                  title={"Field"}
+                  title={"Subject"}
                   name="description"
                   // onChange={formik.handleChange}
                   // onBlur={formik.handleBlur}
@@ -211,7 +179,6 @@ const TabInvoice = (props: TabProps) => {
                   //   name: commonT("form.title.description"),
                   // })}
                   fullWidth
-                  multiline
                   rootSx={sxConfig.input}
                   sx={{ flex: 1, mt: { xs: 2, sm: 0 } }}
                 />
@@ -222,18 +189,20 @@ const TabInvoice = (props: TabProps) => {
             <Box sx={{ border: "1px solid #ECECF3", p: 2, borderRadius: 4 }}>
               <Stack direction={"row"} gap={2} justifyContent={"space-between"}>
                 <Text variant={"body1"}>Bill To</Text>
-                <Link
-                  href={""}
-                  sx={{
-                    textDecoration: "none",
-                    display: "flex",
-                  }}
-                >
-                  <PencilUnderlineIcon sx={{ color: "#1BC5BD", mr: 1 }} />
-                  <Text variant={"body1"} color={"#1BC5BD"}>
-                    Edit
-                  </Text>
-                </Link>
+                {editForm && (
+                  <Link
+                    href={""}
+                    sx={{
+                      textDecoration: "none",
+                      display: "flex",
+                    }}
+                  >
+                    <PencilUnderlineIcon sx={{ color: "#1BC5BD", mr: 1 }} />
+                    <Text variant={"body1"} color={"#1BC5BD"}>
+                      Edit
+                    </Text>
+                  </Link>
+                )}
               </Stack>
               <Stack gap={2} justifyContent={"start"} mt={3}>
                 <Text variant={"body1"}>Edit</Text>
@@ -247,16 +216,17 @@ const TabInvoice = (props: TabProps) => {
             <Box sx={{ border: "1px solid #ECECF3", p: 2, borderRadius: 4 }}>
               <Stack direction={"row"} gap={2} justifyContent={"space-between"}>
                 <Text variant={"body1"}>Bill From</Text>
-
-                <Link
-                  href={""}
-                  sx={{ textDecoration: "none", display: "flex" }}
-                >
-                  <PencilUnderlineIcon sx={{ color: "#1BC5BD", mr: 1 }} />
-                  <Text variant={"body1"} color={"#1BC5BD"}>
-                    Edit
-                  </Text>
-                </Link>
+                {editForm && (
+                  <Link
+                    href={""}
+                    sx={{ textDecoration: "none", display: "flex" }}
+                  >
+                    <PencilUnderlineIcon sx={{ color: "#1BC5BD", mr: 1 }} />
+                    <Text variant={"body1"} color={"#1BC5BD"}>
+                      Edit
+                    </Text>
+                  </Link>
+                )}
               </Stack>
               <Stack gap={2} justifyContent={"start"} mt={3}>
                 <Text variant={"body1"}>Edit</Text>
@@ -269,68 +239,17 @@ const TabInvoice = (props: TabProps) => {
         </Grid>
       </Stack>
       <Stack gap={2} borderBottom={"1px solid #ECECF3"} pb={2}>
-        <TableLayout
-          headerList={headerList}
-          // pending={isFetching}
-          headerProps={{
-            sx: { px: { xs: 0.5, md: 2 } },
-          }}
-          // error={error as string}
-          // noData={!isIdle && totalItems === 0}
-          // px={{ md: 3 }}
-        >
-          {/* {items?.map((item, index) => {
-            const indexSelected = selectedList.findIndex(
-              (selected) => selected?.id === item.id,
-            );
-            return ( */}
-          <TableRow
-          // key={item?.id}
-          >
-            {/* <BodyCell sx={{ pl: { xs: 0.5, md: 2 } }}>
-                  <Checkbox
-                    checked={indexSelected !== -1}
-                    onChange={onToggleSelect(item, indexSelected)}
-                  />
-                </BodyCell>
-                {isMdSmaller ? (
-                  <MobileContentCell />
-                ) : (
-                  <DesktopCells
-                    item={item}
-                    order={(pageIndex - 1) * pageSize + (index + 1)}
-                  />
-                )} */}
-            <BodyCell align="left" sx={{ px: { xs: 0.5, md: 2 } }}>
-              <IconButton
-                // onClick={onActionToItem(DataAction.UPDATE, item)}
-                tooltip={commonT("delete")}
-                variant="normal"
-                size="small"
-                sx={{
-                  // backgroundColor: isDarkMode ? "grey.50" : "primary.light",
-                  color: "text.primary",
-                  p: { xs: "4px!important", md: 1 },
-                  "&:hover svg": {
-                    color: "common.white",
-                  },
-                }}
-              >
-                <TrashIcon fontSize="small" />
-              </IconButton>
-            </BodyCell>
-          </TableRow>
-          {/* );
-          })} */}
-        </TableLayout>
-        <Stack direction={"row"} gap={2} alignItems={"center"}>
-          <Link href={""} sx={{ textDecoration: "none", display: "flex" }}>
-            <PlusIcon sx={{ color: "#1BC5BD", mr: 1 }} />
-            <Text variant={"body1"} color={"#1BC5BD"}>
-              Add new row
-            </Text>
-          </Link>
-        </Stack>
+        <TableService />
+        {editForm && (
+          <Stack direction={"row"} gap={2} alignItems={"center"}>
+            <Link href={""} sx={{ textDecoration: "none", display: "flex" }}>
+              <PlusIcon sx={{ color: "#1BC5BD", mr: 1 }} />
+              <Text variant={"body1"} color={"#1BC5BD"}>
+                Add new row
+              </Text>
+            </Link>
+          </Stack>
+        )}
       </Stack>
       <Stack alignItems="start" gap={1} my={2}>
         <Stack direction="row" gap={2}>
@@ -348,9 +267,11 @@ const TabInvoice = (props: TabProps) => {
           <Text variant={"body1"} ml={9.7}>
             $00
           </Text>
-          <Text variant={"body1"} color={"#1BC5BD"}>
-            Edit
-          </Text>
+          {editForm && (
+            <Text variant={"body1"} color={"#1BC5BD"}>
+              Edit
+            </Text>
+          )}
         </Stack>
         <Stack direction="row" gap={2}>
           <Text variant={"body1"}>
@@ -362,68 +283,17 @@ const TabInvoice = (props: TabProps) => {
         </Stack>
       </Stack>
       <Stack gap={2} pb={2}>
-        <TableLayout
-          headerList={headerList}
-          // pending={isFetching}
-          headerProps={{
-            sx: { px: { xs: 0.5, md: 2 } },
-          }}
-          // error={error as string}
-          // noData={!isIdle && totalItems === 0}
-          // px={{ md: 3 }}
-        >
-          {/* {items?.map((item, index) => {
-            const indexSelected = selectedList.findIndex(
-              (selected) => selected?.id === item.id,
-            );
-            return ( */}
-          <TableRow
-          // key={item?.id}
-          >
-            {/* <BodyCell sx={{ pl: { xs: 0.5, md: 2 } }}>
-                  <Checkbox
-                    checked={indexSelected !== -1}
-                    onChange={onToggleSelect(item, indexSelected)}
-                  />
-                </BodyCell>
-                {isMdSmaller ? (
-                  <MobileContentCell />
-                ) : (
-                  <DesktopCells
-                    item={item}
-                    order={(pageIndex - 1) * pageSize + (index + 1)}
-                  />
-                )} */}
-            {/* <BodyCell align="left" sx={{ px: { xs: 0.5, md: 2 } }}>
-                  <IconButton
-                    onClick={onActionToItem(DataAction.UPDATE, item)}
-                    tooltip={commonT("edit")}
-                    variant="contained"
-                    size="small"
-                    sx={{
-                      backgroundColor: isDarkMode ? "grey.50" : "primary.light",
-                      color: "text.primary",
-                      p: { xs: "4px!important", md: 1 },
-                      "&:hover svg": {
-                        color: "common.white",
-                      },
-                    }}
-                  >
-                    <PencilUnderlineIcon sx={{ fontSize: 24 }} />
-                  </IconButton>
-                </BodyCell> */}
-          </TableRow>
-          {/* );
-          })} */}
-        </TableLayout>
-        <Stack direction={"row"} gap={2} alignItems={"center"}>
-          <Link href={""} sx={{ textDecoration: "none", display: "flex" }}>
-            <PlusIcon sx={{ color: "#1BC5BD", mr: 1 }} />
-            <Text variant={"body1"} color={"#1BC5BD"}>
-              Link budget
-            </Text>
-          </Link>
-        </Stack>
+        <TableLInkBudget />
+        {editForm && (
+          <Stack direction={"row"} gap={2} alignItems={"center"}>
+            <Link href={""} sx={{ textDecoration: "none", display: "flex" }}>
+              <PlusIcon sx={{ color: "#1BC5BD", mr: 1 }} />
+              <Text variant={"body1"} color={"#1BC5BD"}>
+                Link budget
+              </Text>
+            </Link>
+          </Stack>
+        )}
       </Stack>
       <Stack gap={2} pb={2}>
         <Input
@@ -436,7 +306,6 @@ const TabInvoice = (props: TabProps) => {
           //   name: commonT("form.title.description"),
           // })}
           fullWidth
-          multiline
           rootSx={sxConfig.input}
           sx={{ flex: 1, mt: { xs: 2, sm: 0 } }}
         />
