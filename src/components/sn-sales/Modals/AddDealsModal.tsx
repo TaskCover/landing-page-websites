@@ -74,13 +74,13 @@ const AddDealModal = ({ open, onClose }: IProps) => {
     ),
     members: yup
       .array()
-      .of(yup.string())
-      .min(
-        1,
-        commonT("form.error.required", {
-          name: salesT(`${salesFormTranslatePrefix}.dealMember`),
-        }),
-      ),
+      .of(yup.string()),
+      // .min(
+      //   1,
+      //   commonT("form.error.required", {
+      //     name: salesT(`${salesFormTranslatePrefix}.dealMember`),
+      //   }),
+      // ),
     tags: yup.array().of(yup.string()),
   });
 
