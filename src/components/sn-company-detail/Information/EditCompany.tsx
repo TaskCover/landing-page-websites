@@ -8,6 +8,7 @@ import Form from "./Form";
 import { useMyCompany } from "store/company/selectors";
 import { useParams } from "next/navigation";
 import { useCompany } from "store/manager/selectors";
+import { Endpoint, client } from "api";
 
 const EditCompany = () => {
   const { item: detailItem } = useCompany();
@@ -43,15 +44,37 @@ const EditCompany = () => {
         return out;
       },
       {},
-    ) as CompanyData;
+    ) as any;
+
+    const payload = { ...dataOnlyUpdated } as any
+
+    if (typeof data["avatar"] === "object") {
+      const logoUrl = await client.upload(Endpoint.UPLOAD, data["avatar"]);
+      payload.created_by = { avatar: logoUrl };
+    } else {
+      delete dataOnlyUpdated["avatar"];
+    }
 
     if (paramId) {
-      return await onUpdateCompany(id, dataOnlyUpdated);
+      const data = await onUpdateCompany(id, payload);
+      return data
     }
-    return await onUpdateMyCompany(dataOnlyUpdated);
+    const result = await onUpdateMyCompany(payload);
+    return result
   };
 
   if (!item || paramId) return null;
+
+  const dataFromKeys = getDataFromKeys(item, [
+    "name",
+    "address",
+    "phone",
+    "tax_code",
+    "created_by"
+  ])
+
+  const initialValues = { ...dataFromKeys, avatar: (dataFromKeys as any).created_by.avatar.link } as CompanyData
+
   return (
     <>
       <IconButton
@@ -66,12 +89,7 @@ const EditCompany = () => {
           open
           onClose={onHide}
           initialValues={
-            getDataFromKeys(item, [
-              "name",
-              "address",
-              "phone",
-              "tax_code",
-            ]) as CompanyData
+            initialValues
           }
           onSubmit={onUpdate}
         />
