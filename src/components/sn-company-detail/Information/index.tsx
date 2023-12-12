@@ -10,13 +10,14 @@ import StatusServer from "components/StatusServer";
 import { useParams } from "next/navigation";
 import { useHeaderConfig } from "store/app/selectors";
 import { useCompany } from "store/manager/selectors";
-import { NS_COMMON, NS_COMPANY } from "constant/index";
+import { NS_COMMON, NS_COMPANY, DATE_LOCALE_FORMAT } from "constant/index";
 import { useTranslations } from "next-intl";
 import Link from "components/Link";
 import Avatar from "components/Avatar";
 import ProjectPlaceholderImage from "public/images/img-logo-placeholder.webp";
 import { EMPLOYEES_PATH, POSITIONS_PATH, PROJECTS_PATH } from "constant/paths";
 import FixedLayout from "components/FixedLayout";
+import dayjs from "dayjs";
 
 type InformationItemProps = StackProps & {
   label: string;
@@ -186,7 +187,8 @@ const InformationProjectPage = () => {
               </InformationItem>
 
               <InformationItem flex={1} label={commonT("creationDate")}>
-                {formatDate(item?.created_time, undefined, "--")}
+                {/* {formatDate(item?.created_time, undefined, "--")} */}
+                {dayjs(item?.created_time).format(DATE_LOCALE_FORMAT)}
               </InformationItem>
             </Stack>
           </Stack>
