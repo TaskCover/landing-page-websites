@@ -26,7 +26,7 @@ export type GetEmployeeListQueries = BaseQueries & {
   status?: boolean;
   company?: string;
   date?: string;
-  searchType?: 'and' | 'or' | 'eq'
+  searchType?: "and" | "or" | "eq";
 };
 
 export type EmployeeData = {
@@ -47,6 +47,7 @@ export type CompanyData = {
   address?: string;
   phone?: string;
   tax_code?: string;
+  avatar?: string | File;
 };
 
 export const getEmployees = createAsyncThunk(
@@ -82,7 +83,7 @@ export const getEmployeeOptions = createAsyncThunk(
   async (queries: BaseQueries & { email?: string }) => {
     queries = serverQueries({ ...queries, sort: "created_time=-1" }, [
       "email",
-      "fullname"
+      "fullname",
     ]) as GetEmployeeListQueries;
 
     try {
@@ -316,8 +317,14 @@ export const getMyCompany = createAsyncThunk(
 
 export const updateMyCompany = createAsyncThunk(
   "company/updateMyCompany",
-  async (data: CompanyData) => {
+  async (data: CompanyData, { getState }) => {
     try {
+      const state = getState();
+
+      const myCompany = (state as any).company.myItem;
+
+      console.log(myCompany);
+
       const response = await client.put(Endpoint.COMPANIES, data, {
         baseURL: COMPANY_API_URL,
         params: {
@@ -326,7 +333,16 @@ export const updateMyCompany = createAsyncThunk(
       });
 
       if (response?.status === HttpStatusCode.OK) {
-        return response.data;
+
+        const result = {
+          ...myCompany,
+          ...response.data,
+          avatar: myCompany.avatar,
+          owner: {...myCompany.owner},
+          created_by: {...myCompany.created_by},
+        }
+
+        return result
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

@@ -144,7 +144,7 @@ const Actions = () => {
             name={"email"}
             onChange={onChangeQueries}
             value={queries["email"]}
-            sx={{ width: 200, minWidth: 200 }}
+            sx={{ width: 300, minWidth: 200 }}
             onKeyDown={(e) => {
               if(e.key === 'Enter') {
                 onSearch()
