@@ -23,7 +23,8 @@ const DesktopCells = (props: DesktopCellsProps) => {
       <BodyCell align="left">
         <Link
           underline="none"
-          href={getPath(BILLING_DETAIL_PATH, undefined, {})}
+          href={getPath(BILLING_INFO_PATH, undefined, { id: item?.id ?? "" })}
+          // href={BILLING_DETAIL_PATH}
         >
           <Text
             variant="body2"
@@ -47,16 +48,12 @@ const DesktopCells = (props: DesktopCellsProps) => {
         align="left"
       >
         <Stack direction="row" alignItems="center" spacing={1}>
-          {item?.amount}
+          {item?.budget[0]?.name}
         </Stack>
       </BodyCell>
       <BodyCell align="center">{item?.status}</BodyCell>
-      <BodyCell align="center">
-        {/* <Saved id={item.id} value={item.saved} /> */}
-      </BodyCell>
-      <BodyCell align="center">
-        {/* <Saved id={item.id} value={item.saved} /> */}
-      </BodyCell>
+      <BodyCell align="center">{item?.amount}</BodyCell>
+      <BodyCell align="center">{item?.amount_unpaid}</BodyCell>
       <BodyCell align="center">{formatDate(item?.dueDate)}</BodyCell>
     </>
   );

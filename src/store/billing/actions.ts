@@ -61,6 +61,32 @@ export const getBillingList = createAsyncThunk(
   },
 );
 
+export const getBillingDetail = createAsyncThunk(
+  "Billing/getBillingDetail",
+  async (id: string) => {
+    // if (newQueries?.sort !== "updated_time=-1") {
+    //   newQueries.sort = "created_time=-1";
+    // }
+
+    try {
+      const response = await client.get(
+        StringFormat(Endpoint.EXPORT_BILLING, { id }),
+        {},
+        {
+          baseURL: BILLING_API_URL,
+        },
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
 export const getBudgetList = createAsyncThunk(
   "Billing/getBudgetList",
   async (queries: GetBudgetListQueries) => {

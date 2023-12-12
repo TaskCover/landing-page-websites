@@ -16,16 +16,24 @@ import { NS_BILLING } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import PlusIcon from "icons/PlusIcon";
 import { useTranslations } from "next-intl";
-import { memo, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useBudgets } from "store/billing/selectors";
 import DesktopCells from "./DesktopCells";
 import MobileContentCell from "./MobileContentCell";
 import TrashIcon from "icons/TrashIcon";
+import { Budgets } from "store/billing/reducer";
 
 const billingFormTranslatePrefix = "list.form";
 type IProps = {
   isMdSmaller: boolean;
-  handleNext: (value: string) => void;
+  handleNext: (value: Budgets[]) => void;
 };
 const FormStepOne = (props: IProps) => {
   const {
@@ -44,11 +52,10 @@ const FormStepOne = (props: IProps) => {
   const { handleNext, isMdSmaller } = props;
   const billingT = useTranslations(NS_BILLING);
   const { initQuery, isReady, query } = useQueryParams();
-  const [selected, setSelected] = useState<string>("");
+  const [selectedList, setSelectedList] = useState<Budgets[]>([]);
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
-      { value: "#", width: "5%", align: "center" },
       {
         value: billingT(`${billingFormTranslatePrefix}.table_step_1.name`),
         width: "20%",
@@ -79,7 +86,6 @@ const FormStepOne = (props: IProps) => {
   );
   const mobileHeaderList: CellProps[] = useMemo(
     () => [
-      { value: "#", width: "5%", align: "center" },
       {
         value: billingT(`${billingFormTranslatePrefix}.table_step_1.name`),
         width: "20%",
@@ -109,27 +115,60 @@ const FormStepOne = (props: IProps) => {
     [billingT],
   );
 
+  const onChangeAll = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const isChecked = event.target.checked;
+      if (isChecked) {
+        setSelectedList(budgets ?? []);
+      } else {
+        setSelectedList([]);
+      }
+    },
+    [budgets],
+  );
+
+  const isCheckedAll = useMemo(
+    () =>
+      Boolean(selectedList.length && selectedList.length === budgets?.length),
+    [selectedList.length, budgets?.length],
+  );
+
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
       ? mobileHeaderList
       : desktopHeaderList;
     return [
+      {
+        value: <Checkbox checked={isCheckedAll} onChange={onChangeAll} />,
+        width: isMdSmaller ? "10%" : "3%",
+        align: "center",
+      },
       ...additionalHeaderList,
       { value: "", width: "10%" },
     ] as CellProps[];
-  }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
+  }, [
+    desktopHeaderList,
+    isMdSmaller,
+    mobileHeaderList,
+    isCheckedAll,
+    onChangeAll,
+  ]);
 
   useEffect(() => {
     if (!isReady) return;
     onGetBudgets({ ...initQuery });
   }, [initQuery, isReady, onGetBudgets]);
 
-  const onToggleSelect = (item, index) => {
+  const onToggleSelect = (item: Budgets, indexSelected: number) => {
     return () => {
-      if (selected && selected === item?.id) {
-        setSelected("");
+      if (indexSelected === -1) {
+        setSelectedList((prevList) => [...prevList, item]);
       } else {
-        setSelected(item?.id);
+        setSelectedList((prevList) => {
+          const newList = [...prevList];
+          newList.splice(indexSelected, 1);
+          return newList;
+        });
       }
     };
   };
@@ -164,7 +203,15 @@ const FormStepOne = (props: IProps) => {
             xs: 3,
           }}
         >
-          <Stack direction="row" alignItems="center" mt={0.5} gap={2}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            mt={0.5}
+            gap={2}
+            border={"1px solid #ECECF3"}
+            borderRadius={4}
+            px={1.5}
+          >
             <Text variant={"body1"}>
               {billingT(`${billingFormTranslatePrefix}.title.for_invoice`)}
             </Text>
@@ -208,8 +255,8 @@ const FormStepOne = (props: IProps) => {
           <Stack direction="row" gap={2}>
             <Button
               variant="contained"
-              onClick={() => handleNext(selected)}
-              disabled={!selected}
+              onClick={() => handleNext(selectedList ?? [])}
+              disabled={selectedList && selectedList?.length === 0}
             >
               {billingT(`${billingFormTranslatePrefix}.button.nextStep`)}
             </Button>
@@ -238,12 +285,15 @@ const FormStepOne = (props: IProps) => {
             px={{ md: 3 }}
           >
             {budgets?.map((item, index) => {
+              const indexSelected = selectedList.findIndex(
+                (selected) => selected?.id === item.id,
+              );
               return (
                 <TableRow key={item.id}>
-                  <BodyCell sx={{ pl: { xs: 0.5, md: 2 } }}>
+                  <BodyCell sx={{ pl: { xs: 0.5, md: 1.5 } }}>
                     <Checkbox
-                      checked={selected === item?.id}
-                      onChange={onToggleSelect(item, index)}
+                      checked={indexSelected !== -1}
+                      onChange={onToggleSelect(item, indexSelected)}
                     />
                   </BodyCell>
                   {isMdSmaller ? (

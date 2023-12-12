@@ -3,10 +3,11 @@ import Link from "components/Link";
 import { BodyCell } from "components/Table";
 import { Text } from "components/shared";
 import { NS_COMMON } from "constant/index";
+import { BILLING_INFO_PATH } from "constant/paths";
 import { useTranslations } from "next-intl";
 import { memo } from "react";
 import { Billing } from "store/billing/reducer";
-import { formatDate } from "utils/index";
+import { formatDate, getPath } from "utils/index";
 
 type MobileContentCellProps = {
   item?: Billing;
@@ -25,15 +26,21 @@ const MobileContentCell = (props: MobileContentCellProps) => {
     <>
       {/* <BodyCell align="center">{order}</BodyCell> */}
       <BodyCell align="left">
-        <Text
-          variant="body2"
-          color="text.primary"
-          fontWeight={600}
-          lineHeight={1.28}
-          sx={{ "&:hover": { color: "primary.main" } }}
+        <Link
+          underline="none"
+          href={getPath(BILLING_INFO_PATH, undefined, { id: item?.id ?? "" })}
+          // href={BILLING_DETAIL_PATH}
         >
-          {item?.subject}
-        </Text>
+          <Text
+            variant="body2"
+            color="text.primary"
+            fontWeight={600}
+            lineHeight={1.28}
+            sx={{ "&:hover": { color: "primary.main" } }}
+          >
+            {item?.subject}
+          </Text>
+        </Link>
       </BodyCell>
 
       <BodyCell align="left" sx={{ paddingLeft: 0 }}>

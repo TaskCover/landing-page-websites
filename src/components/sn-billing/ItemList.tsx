@@ -267,16 +267,6 @@ const ItemList = () => {
           onChangeSize={onChangeSize}
         />
       </FixedLayout>
-
-      {/* {action === DataAction.UPDATE && (
-        <Form
-          open
-          onClose={onResetAction}
-          type={DataAction.UPDATE}
-          initialValues={initValues as unknown as ProjectDataForm}
-          onSubmit={onUpdateProject}
-        />
-      )} */}
     </>
   );
 };
