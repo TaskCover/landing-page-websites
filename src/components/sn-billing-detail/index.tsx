@@ -18,8 +18,9 @@ const InformationBillingPage = () => {
   const param = useParams();
 
   useEffect(() => {
-    onGetBilling(param?.id ?? "");
-  }, [onGetBilling]);
+    const idParam = Array.isArray(param?.id) ? param?.id.join(",") : param?.id;
+    onGetBilling(idParam ?? "");
+  }, [onGetBilling, param?.id]);
 
   // useEffect(() => {
   //   // onGetBilling(param);
