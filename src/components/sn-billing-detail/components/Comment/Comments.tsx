@@ -38,9 +38,9 @@ const Comments = () => {
   const filteredComments = useMemo(() => {
     if (!comments) return [];
     if (!comentType) return comments;
-    if (comentType === "comments")
-      return comments?.filter((comment) => !comment.attachments.length);
-    return comments?.filter((comment) => comment.attachments.length > 0);
+    // if (comentType === "comments")
+    //   return comments?.filter((comment) => !comment.attachments.length);
+    // return comments?.filter((comment) => comment.attachments.length > 0);
   }, [comments, comentType]);
 
   return isFetching ? (
@@ -68,14 +68,14 @@ const Comments = () => {
           name="type"
         />
       </Stack>
-      {filteredComments?.map((comment) => (
+      {/* {filteredComments?.map((comment) => (
         <CommentItem
           key={comment.id}
           type={comentType || "comments"}
           {...comment}
           listAttachmentsDown={listAttachmentsDown}
         />
-      ))}
+      ))} */}
     </Stack>
   );
 };

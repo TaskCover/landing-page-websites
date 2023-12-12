@@ -30,7 +30,9 @@ import {
   Upload,
 } from "components/shared";
 import { useEmployeeOptions } from "store/company/selectors";
-import { SelectMembers, SelectTypeProject } from "./components";
+// import { SelectMembers, SelectTypeProject } from "./components";
+import { SelectMembers, SelectTypeProject } from "components/sn-projects/components";
+
 import { Member } from "./components/helpers";
 import {
   useCurrencyOptions,
