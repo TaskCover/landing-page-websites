@@ -48,7 +48,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
         align="left"
       >
         <Stack direction="row" alignItems="center" spacing={1}>
-          {item?.budget[0]?.name}
+          {item?.budget ? item?.budget[0]?.name : ""}
         </Stack>
       </BodyCell>
       <BodyCell align="center">{item?.status}</BodyCell>

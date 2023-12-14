@@ -1,8 +1,9 @@
 import { DataStatus } from "constant/enums";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
+  BillingData,
   GetBillingListQueries,
   GetBudgetListQueries,
   createBilling,
@@ -11,15 +12,20 @@ import {
   getBudgetDetail,
   getBudgetList,
   getServiceBudget,
+  updateBilling,
 } from "./actions";
-import { Service } from "./reducer";
+import { BillingDataUpdate, Service } from "./reducer";
+import { IOptionStructure } from "components/shared/TextFieldSelect";
+import { usePositions } from "store/company/selectors";
+import { useTranslations } from "next-intl";
+import { NS_COMMON } from "constant/index";
+import _ from "lodash";
+import { da } from "date-fns/locale";
 
 export const useBillings = () => {
   const dispatch = useAppDispatch();
-  const { items, status, error, filters, item, createStatus } = useAppSelector(
-    (state) => state.billing,
-    shallowEqual,
-  );
+  const { items, status, error, filters, item, createStatus, updateStatus } =
+    useAppSelector((state) => state.billing, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.billing.paging,
     shallowEqual,
@@ -36,8 +42,14 @@ export const useBillings = () => {
   );
 
   const onCreateBilling = useCallback(
-    async (data: any) => {
+    async (data: BillingData) => {
       return await dispatch(createBilling(data)).unwrap();
+    },
+    [dispatch],
+  );
+  const onUpdateBilling = useCallback(
+    async (data: BillingDataUpdate) => {
+      return await dispatch(updateBilling(data)).unwrap();
     },
     [dispatch],
   );
@@ -73,8 +85,10 @@ export const useBillings = () => {
     totalItems,
     totalPages,
     createStatus,
+    updateStatus,
     onGetBillings,
     onCreateBilling,
+    onUpdateBilling,
     onGetBilling,
   };
 };
@@ -141,15 +155,14 @@ export const useBudgets = () => {
     onGetBudgetDetail,
   };
 };
-let arrService: Service[] = [];
-let sumAmount: number = 0;
+
+const dataSection = new Array<any>();
 export const useServiceBudgets = () => {
   const dispatch = useAppDispatch();
+  const arrService = new Array<Service>();
 
-  const { serviceBudgets, status, error, filters } = useAppSelector(
-    (state) => state.billing,
-    shallowEqual,
-  );
+  const { serviceBudgets, status, error, filters, dataServices } =
+    useAppSelector((state) => state.billing, shallowEqual);
 
   const onGetServiceBudgets = useCallback(
     async (id: string) => {
@@ -157,21 +170,29 @@ export const useServiceBudgets = () => {
     },
     [dispatch],
   );
+  if (serviceBudgets && serviceBudgets?.length > 0) {
+    dataSection.push(...serviceBudgets);
+  }
 
-  serviceBudgets?.map((item) => {
-    if (item.services && item.services?.length > 0) {
-      if (arrService && arrService?.length === 0) {
-        arrService.push(...item.services);
+  if (dataSection && dataSection?.length > 0) {
+    const dataService = new Array<Service>();
+    const filterService = new Set<string>();
+    dataSection?.map((item) => {
+      if (item.services && item.services?.length > 0) {
+        item.services?.map((sev: Service) => {
+          if (!filterService.has(sev?.id)) {
+            filterService.add(sev?.id);
+            dataService.push(sev);
+          }
+        });
       }
-      // else {
-      //   arrService = [...arrService, ...item.services];
-      // }
-    }
-  });
+    });
+    arrService?.push(...dataService);
+  }
 
-  arrService.forEach((item) => {
-    sumAmount += item.price;
-  });
+  const sumAmount = arrService?.reduce((prev, item) => {
+    return prev + item.price;
+  }, 0);
 
   //   const onUpdateProject = useCallback(
   //     async (id: string, data: Partial<ProjectData>) => {
@@ -190,6 +211,56 @@ export const useServiceBudgets = () => {
     onGetServiceBudgets,
   };
 };
+
+export const useFetchOptions = () => {
+  const { onGetPositions } = usePositions();
+
+  useEffect(() => {
+    // onGetProjects({ pageSize: -1, pageIndex: 0 });
+    onGetPositions({ pageSize: -1, pageIndex: 0 });
+  }, []);
+};
+
+const useGetOptions = () => {
+  // const [projectOptions, setProjectOptions] = useState<IOptionStructure[]>([]);
+  // const [positionOptions, setPositionOptions] = useState<IOptionStructure[]>(
+  //   [],
+  useFetchOptions();
+  const { items: positions, onGetPositions } = usePositions();
+  const commonT = useTranslations(NS_COMMON);
+  // const projectOptions: IOptionStructure[] = useMemo(() => {
+  //   if (!_.isEmpty(projects)) {
+  //     const resolveProjects = _.map(projects, (project) => {
+  //       return {
+  //         label: project?.name,
+  //         value: project?.id,
+  //       };
+  //     });
+  //     return resolveProjects;
+  //   }
+  //   return [];
+  // }, [JSON.stringify(projects)]);
+
+  const positionOptions: IOptionStructure[] = useMemo(() => {
+    if (!_.isEmpty(positions)) {
+      const resolvePositions = _.map(positions, (position) => {
+        return {
+          label: position?.name,
+          value: position?.id,
+        };
+      });
+      return resolvePositions;
+    }
+    return [];
+  }, [JSON.stringify(positions)]);
+
+  return {
+    positionOptions,
+    onGetPositions,
+  };
+};
+export default useGetOptions;
+
 // export const useProject = () => {
 //   const dispatch = useAppDispatch();
 //   const {

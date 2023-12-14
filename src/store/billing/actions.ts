@@ -13,6 +13,7 @@ import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
 
 import { Option } from "constant/types";
+import { BillingDataUpdate } from "./reducer";
 
 export enum BillingStatus {
   ACTIVE = "ACTIVE",
@@ -195,11 +196,12 @@ export const createBilling = createAsyncThunk(
 
 export const updateBilling = createAsyncThunk(
   "Billing/updateBilling",
-  async ({ id, ...data }: Partial<BillingData> & { id: string }) => {
+  async (data: BillingDataUpdate) => {
     try {
       const response = await client.put(
-        StringFormat(Endpoint.INTERACTION_BILLING, { id }),
+        `${Endpoint.BILLING}/${data?.id}`,
         data,
+        { baseURL: BILLING_API_URL },
       );
 
       if (response?.status === HttpStatusCode.CREATED) {

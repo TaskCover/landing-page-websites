@@ -22,11 +22,23 @@ import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
 import { memo, useEffect, useMemo, useState } from "react";
 import BillModal from "../components/BillModal";
-import { Billing, BillingDataUpdate, Service } from "store/billing/reducer";
-import TableLInkBudget from "./TableLinkBudget";
-import TableService from "./TableService";
+import {
+  Bill,
+  Billing,
+  BillingDataUpdate,
+  Budgets,
+  Service,
+} from "store/billing/reducer";
 import { User } from "constant/types";
-import { useFormik } from "formik";
+import { FormikProps, useFormik } from "formik";
+import VatPopup from "../components/VatPopup";
+import ServiceTable from "../components/ServiceTable";
+import { useGetMemberOptions } from "components/sn-sales/hooks/useGetEmployeeOptions";
+import { formatNumber } from "utils/index";
+import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
+import { CURRENCY_CODE } from "constant/enums";
+import LinkBudgetTable from "../components/LinkBudgetTable";
+import LinkBudgetPopup from "../components/LinkBudgetPopup";
 
 type TabProps = {
   title: string;
@@ -34,28 +46,93 @@ type TabProps = {
   item?: Billing;
   arrService?: Service[];
   user?: User;
+  arrBudgets?: Budgets[];
+  form: FormikProps<Billing>;
+  billToInfo: Bill;
+  setBillToInfo: (value: Bill) => void;
 };
 const billingFormTranslatePrefix = "list.form";
 
 const TabInvoice = (props: TabProps) => {
-  const { title, editForm, arrService, item, user } = props;
+  const {
+    title,
+    editForm,
+    arrService,
+    item,
+    user,
+    arrBudgets,
+    form,
+    billToInfo,
+    setBillToInfo,
+  } = props;
   const { isMdSmaller } = useBreakpoint();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
   const [customServices, setCustomService] = useState<Service[]>([]);
   const [arrLinkBudget, setArrLinkBudget] = useState<Service[]>([]);
-
-  const formik = useFormik<Billing>({
-    enableReinitialize: true,
-    initialValues: {},
-    onSubmit(values, formikHelpers) {},
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isBillTo, setIsBillTo] = useState<boolean>(false);
+  const [billFromInfo, setBillFromInfo] = useState<Bill>({
+    fullNameCompany: user?.company,
   });
+  const [listService, setListService] = useState<Service[]>([]);
+
+  // const formik = useFormik<Billing>({
+  //   enableReinitialize: true,
+  //   initialValues: {},
+  //   onSubmit(values, formikHelpers) {
+  //     // setDataUpdate
+
+  //     return;
+  //   },
+  // });
+
+  // useEffect(() => {
+  //   formik.setValues(item ?? {});
+  // }, [item]);
+
+  const handleClose = () => {
+    setOpenModal(false);
+  };
 
   useEffect(() => {
-    formik.setValues(item ?? {});
-  }, [item]);
+    if (arrService && arrService?.length > 0) {
+      setListService([...arrService]);
+    }
+  }, [arrService]);
 
-  console.log(formik?.values);
+  const totalAmount = useMemo(() => {
+    const result = listService?.reduce((prev, item) => {
+      const amount = (item as Service).price || 0;
+      return prev + amount;
+    }, 0);
+    return result;
+  }, [listService]);
+
+  const OptionBudget = useMemo(() => {
+    const options = arrBudgets?.map((item) => {
+      return { label: item.name, value: item.id };
+    });
+    return options;
+  }, [arrBudgets]);
+
+  // const onChangeVat = () => {};
+  // const onChangeBill = () => {};
+  useEffect(() => {
+    if (listService) {
+      form.setFieldValue("budgetService", listService);
+    }
+  }, [billToInfo, listService]);
+
+  useEffect(() => {
+    if (totalAmount && totalAmount != 0 && form?.values?.vat) {
+      form.setFieldValue(
+        "amount",
+        form?.values?.vat !== 0 ? totalAmount * form?.values?.vat : totalAmount,
+      );
+      form.setFieldValue("amount_unpaid", totalAmount);
+    }
+  }, [totalAmount, form?.values?.vat]);
 
   return (
     <Box>
@@ -71,7 +148,7 @@ const TabInvoice = (props: TabProps) => {
             placeholder={"Invoice PDF"}
             options={[]}
             name="Tag"
-            onChange={() => {}}
+            onChange={() => null}
             // value={queries?.status}
             rootSx={{
               px: "0px!important",
@@ -109,10 +186,11 @@ const TabInvoice = (props: TabProps) => {
               <Stack direction={"row"} gap={2} pb={1}>
                 <Input
                   title={"Invoice number"}
-                  name="description"
-                  // onChange={formik.handleChange}
-                  // onBlur={formik.handleBlur}
-                  // value={formik.values?.description}
+                  name="invoiceNumber"
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  value={form.values?.invoiceNumber}
+                  disabled={!editForm}
                   // error={commonT(touchedErrors?.description, {
                   //   name: commonT("form.title.description"),
                   // })}
@@ -122,10 +200,11 @@ const TabInvoice = (props: TabProps) => {
                 />
                 <Input
                   title={"PO Number"}
-                  name="description"
-                  // onChange={formik.handleChange}
-                  // onBlur={formik.handleBlur}
-                  // value={formik.values?.description}
+                  name="poNumber"
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  value={form.values?.poNumber}
+                  disabled={!editForm}
                   // error={commonT(touchedErrors?.description, {
                   //   name: commonT("form.title.description"),
                   // })}
@@ -137,10 +216,11 @@ const TabInvoice = (props: TabProps) => {
               <Stack direction={"row"} gap={2} pb={1}>
                 <DatePicker
                   title={"Invoice date"}
-                  name="end_date"
+                  name="date"
                   onChange={() => null}
-                  // onBlur={formik.handleBlur}
-                  // value={formik.values?.end_date}
+                  onBlur={form.handleBlur}
+                  value={form.values?.date}
+                  disabled={!editForm}
                   // error={commonT(touchedErrors?.end_date, {
                   //   name: commonT("form.title.endDate"),
                   //   name2: commonT("form.title.startDate"),
@@ -153,10 +233,11 @@ const TabInvoice = (props: TabProps) => {
                 />
                 <DatePicker
                   title={"Due date"}
-                  name="end_date"
+                  name="dueDate"
                   onChange={() => null}
-                  // onBlur={formik.handleBlur}
-                  // value={formik.values?.end_date}
+                  onBlur={form.handleBlur}
+                  value={form.values?.dueDate}
+                  disabled={!editForm}
                   // error={commonT(touchedErrors?.end_date, {
                   //   name: commonT("form.title.endDate"),
                   //   name2: commonT("form.title.startDate"),
@@ -171,10 +252,11 @@ const TabInvoice = (props: TabProps) => {
               <Stack direction={"row"} gap={2}>
                 <Input
                   title={"Subject"}
-                  name="description"
-                  // onChange={formik.handleChange}
-                  // onBlur={formik.handleBlur}
-                  // value={formik.values?.description}
+                  name="subject"
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  value={form.values?.subject}
+                  disabled={!editForm}
                   // error={commonT(touchedErrors?.description, {
                   //   name: commonT("form.title.description"),
                   // })}
@@ -196,6 +278,10 @@ const TabInvoice = (props: TabProps) => {
                       textDecoration: "none",
                       display: "flex",
                     }}
+                    onClick={() => {
+                      setOpenModal(true);
+                      setIsBillTo(true);
+                    }}
                   >
                     <PencilUnderlineIcon sx={{ color: "#1BC5BD", mr: 1 }} />
                     <Text variant={"body1"} color={"#1BC5BD"}>
@@ -205,10 +291,18 @@ const TabInvoice = (props: TabProps) => {
                 )}
               </Stack>
               <Stack gap={2} justifyContent={"start"} mt={3}>
-                <Text variant={"body1"}>Edit</Text>
-                <Text variant={"body1"}>Edit</Text>
-                <Text variant={"body1"}>Edit</Text>
-                <Text variant={"body1"}>Edit</Text>
+                <Text variant={"body1"}>{billToInfo.fullNameCompany}</Text>
+                <Text variant={"body1"}>{billToInfo.street}</Text>
+                <Text variant={"body1"}>
+                  {billToInfo.city || billToInfo.state || billToInfo.country
+                    ? billToInfo.city +
+                      ", " +
+                      billToInfo.state +
+                      ", " +
+                      billToInfo.country
+                    : ""}
+                </Text>
+                <Text variant={"body1"}>{billToInfo.taxId}</Text>
               </Stack>
             </Box>
           </Grid>
@@ -220,88 +314,109 @@ const TabInvoice = (props: TabProps) => {
                   <Link
                     href={""}
                     sx={{ textDecoration: "none", display: "flex" }}
+                    onClick={() => {
+                      setOpenModal(true);
+                      setIsBillTo(false);
+                    }}
                   >
                     <PencilUnderlineIcon sx={{ color: "#1BC5BD", mr: 1 }} />
-                    <Text variant={"body1"} color={"#1BC5BD"}>
+                    {/* <Text variant={"body1"} color={"#1BC5BD"}>
                       Edit
-                    </Text>
+                    </Text> */}
                   </Link>
                 )}
               </Stack>
               <Stack gap={2} justifyContent={"start"} mt={3}>
-                <Text variant={"body1"}>Edit</Text>
-                <Text variant={"body1"}>Edit</Text>
-                <Text variant={"body1"}>Edit</Text>
-                <Text variant={"body1"}>Edit</Text>
+                <Text variant={"body1"}>
+                  {billFromInfo.fullNameCompany ?? ""}
+                </Text>
+                <Text variant={"body1"}>{billFromInfo.street ?? ""}</Text>
+                <Text variant={"body1"}>
+                  {billFromInfo.city ||
+                  billFromInfo.state ||
+                  billFromInfo.country
+                    ? billFromInfo.city +
+                      ", " +
+                      billFromInfo.state +
+                      ", " +
+                      billFromInfo.country
+                    : ""}
+                </Text>
+                <Text variant={"body1"}>{billFromInfo.taxId ?? ""}</Text>
               </Stack>
             </Box>
           </Grid>
         </Grid>
       </Stack>
       <Stack gap={2} borderBottom={"1px solid #ECECF3"} pb={2}>
-        <TableService />
-        {editForm && (
-          <Stack direction={"row"} gap={2} alignItems={"center"}>
-            <Link href={""} sx={{ textDecoration: "none", display: "flex" }}>
-              <PlusIcon sx={{ color: "#1BC5BD", mr: 1 }} />
-              <Text variant={"body1"} color={"#1BC5BD"}>
-                Add new row
-              </Text>
-            </Link>
-          </Stack>
-        )}
+        {/* <TableService /> */}
+        <ServiceTable
+          isEdit={editForm}
+          listService={listService}
+          setListService={setListService}
+          OptionBudget={OptionBudget}
+        />
       </Stack>
       <Stack alignItems="start" gap={1} my={2}>
-        <Stack direction="row" gap={2}>
-          <Text variant={"body1"}>
-            {billingT(`${billingFormTranslatePrefix}.title.subTotal`)}
-          </Text>
-          <Text variant={"body1"} ml={2}>
-            $2.940,00
-          </Text>
-        </Stack>
-        <Stack direction="row" gap={2}>
-          <Text variant={"body1"}>
-            {billingT(`${billingFormTranslatePrefix}.title.vat`) + " 0%"}
-          </Text>
-          <Text variant={"body1"} ml={9.7}>
-            $00
-          </Text>
-          {editForm && (
-            <Text variant={"body1"} color={"#1BC5BD"}>
-              Edit
+        <Grid container spacing={2} paddingTop={2} paddingLeft={2}>
+          <Grid xs={1} md={1}>
+            <Text variant={"body1"}>{"SubTotal"}</Text>
+          </Grid>
+          <Grid xs={2} md={2}>
+            <Text variant={"body1"}>
+              {formatNumber(totalAmount, {
+                prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+                numberOfFixed: 2,
+              })}
             </Text>
-          )}
-        </Stack>
-        <Stack direction="row" gap={2}>
-          <Text variant={"body1"}>
-            {billingT(`${billingFormTranslatePrefix}.title.total`)}
-          </Text>
-          <Text variant={"body1"} ml={1.5}>
-            $2.940,00
-          </Text>
-        </Stack>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2} paddingTop={2} paddingLeft={2}>
+          <Grid xs={1} md={1}>
+            <Text variant={"body1"}>
+              {billingT(`${billingFormTranslatePrefix}.title.vat`) + " 0%"}
+            </Text>
+          </Grid>
+          <Grid xs={2} md={2}>
+            <Text variant={"body1"}>{form?.values?.vat}</Text>
+          </Grid>
+          {editForm && <VatPopup form={form} />}
+        </Grid>
+
+        <Grid container spacing={2} paddingTop={2} paddingLeft={2}>
+          <Grid xs={1} md={1}>
+            <Text variant={"body1"}>{"Total"}</Text>
+          </Grid>
+          <Grid xs={2} md={2}>
+            <Text variant={"body1"}>
+              {formatNumber(
+                form.values.vat && form.values.vat != 0
+                  ? Number(totalAmount) * form.values.vat
+                  : totalAmount,
+                {
+                  prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+                  numberOfFixed: 2,
+                },
+              )}
+            </Text>
+          </Grid>
+        </Grid>
       </Stack>
       <Stack gap={2} pb={2}>
-        <TableLInkBudget />
-        {editForm && (
-          <Stack direction={"row"} gap={2} alignItems={"center"}>
-            <Link href={""} sx={{ textDecoration: "none", display: "flex" }}>
-              <PlusIcon sx={{ color: "#1BC5BD", mr: 1 }} />
-              <Text variant={"body1"} color={"#1BC5BD"}>
-                Link budget
-              </Text>
-            </Link>
-          </Stack>
-        )}
+        <LinkBudgetTable
+          arrBudgets={arrBudgets ?? []}
+          isEdit={editForm}
+          item={item}
+        />
       </Stack>
       <Stack gap={2} pb={2}>
         <Input
-          title={"Field"}
-          name="description"
-          // onChange={formik.handleChange}
-          // onBlur={formik.handleBlur}
-          // value={formik.values?.description}
+          title={"The message displayed on the invoice"}
+          name="message"
+          onChange={form.handleChange}
+          onBlur={form.handleBlur}
+          value={form.values?.message}
           // error={commonT(touchedErrors?.description, {
           //   name: commonT("form.title.description"),
           // })}
@@ -310,7 +425,15 @@ const TabInvoice = (props: TabProps) => {
           sx={{ flex: 1, mt: { xs: 2, sm: 0 } }}
         />
       </Stack>
-      <BillModal />
+      <BillModal
+        open={openModal}
+        handleClose={handleClose}
+        isBillTo={isBillTo}
+        billTo={billToInfo}
+        billFrom={billFromInfo}
+        setBillToInfo={setBillToInfo}
+        setBillFromInfo={setBillFromInfo}
+      />
     </Box>
   );
 };

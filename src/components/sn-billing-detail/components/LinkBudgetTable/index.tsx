@@ -1,60 +1,62 @@
-import { TableRow } from "@mui/material";
+import { Stack, TableRow } from "@mui/material";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
-import { IconButton } from "components/shared";
+import { Button, IconButton } from "components/shared";
 import { NS_BILLING, NS_COMMON } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
 import { memo, useMemo } from "react";
+import { Bill, Billing, Budgets } from "store/billing/reducer";
+import MobileContentCell from "./MobileContentCell";
+import DesktopCells from "./DesktopCells";
+import LinkBudgetPopup from "../LinkBudgetPopup";
 
-const TableLinkBudget = () => {
+type IProps = {
+  arrBudgets?: Budgets[];
+  isEdit?: boolean;
+  item?: Billing;
+};
+
+const LinkBudgetTable = (props: IProps) => {
+  const { arrBudgets, isEdit, item } = props;
+
   const { isMdSmaller } = useBreakpoint();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
-      { value: "", width: "5%", align: "center" },
       {
-        value: billingT("list.table.subject"),
+        value: "Linked budget",
         align: "left",
       },
       {
-        value: billingT("list.table.invoiceNumber"),
+        value: "Time period",
         align: "left",
       },
       {
-        value: billingT("list.table.date"),
+        value: "Invoiced (without tax)",
         align: "left",
       },
-      { value: billingT("list.table.budgets") },
-      { value: billingT("list.table.att") },
-      { value: billingT("list.table.amount") },
-      { value: billingT("list.table.amountUnpaid") },
-      { value: billingT("list.table.dueDate") },
+      { value: "Left for invoicing" },
     ],
     [billingT],
   );
   const mobileHeaderList: CellProps[] = useMemo(
     () => [
-      { value: "", width: "5%", align: "center" },
       {
-        value: billingT("list.table.subject"),
+        value: "Linked budget",
         align: "left",
       },
       {
-        value: billingT("list.table.invoiceNumber"),
+        value: "Time period",
         align: "left",
       },
       {
-        value: billingT("list.table.date"),
+        value: "Invoiced (without tax)",
         align: "left",
       },
-      { value: billingT("list.table.budgets") },
-      { value: billingT("list.table.att") },
-      { value: billingT("list.table.amount") },
-      { value: billingT("list.table.amountUnpaid") },
-      { value: billingT("list.table.dueDate") },
+      { value: "Left for invoicing" },
     ],
     [billingT],
   );
@@ -68,6 +70,10 @@ const TableLinkBudget = () => {
       { value: "", width: "10%" },
     ] as CellProps[];
   }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
+
+  const findBudget = arrBudgets?.filter((budget) =>
+    item?.budget?.find((budget2) => budget2.id === budget.id),
+  );
   return (
     <>
       <TableLayout
@@ -76,33 +82,29 @@ const TableLinkBudget = () => {
         headerProps={{
           sx: { px: { xs: 0.5, md: 2 } },
         }}
+
         // error={error as string}
         // noData={!isIdle && totalItems === 0}
         // px={{ md: 3 }}
       >
-        {/* {items?.map((item, index) => {
-              const indexSelected = selectedList.findIndex(
-                (selected) => selected?.id === item.id,
-              );
-              return ( */}
-        <TableRow
-        // key={item?.id}
-        >
-          {/* <BodyCell sx={{ pl: { xs: 0.5, md: 2 } }}>
-                    <Checkbox
-                      checked={indexSelected !== -1}
-                      onChange={onToggleSelect(item, indexSelected)}
-                    />
-                  </BodyCell>
-                  {isMdSmaller ? (
-                    <MobileContentCell />
-                  ) : (
-                    <DesktopCells
-                      item={item}
-                      order={(pageIndex - 1) * pageSize + (index + 1)}
-                    />
-                  )} */}
-          <BodyCell align="left" sx={{ px: { xs: 0.5, md: 2 } }}>
+        {findBudget?.map((item, index) => {
+          //   const indexSelected = selectedList.findIndex(
+          //     (selected) => selected?.id === item.id,
+          //   );
+          return (
+            <TableRow key={item?.id}>
+              {/* <BodyCell sx={{ pl: { xs: 0.5, md: 2 } }}>
+            <Checkbox
+              checked={indexSelected !== -1}
+              onChange={onToggleSelect(item, indexSelected)}
+            />
+          </BodyCell> */}
+              {isMdSmaller ? (
+                <MobileContentCell />
+              ) : (
+                <DesktopCells item={item} order={0} />
+              )}
+              {/* <BodyCell align="left" sx={{ px: { xs: 0.5, md: 2 } }}>
             <IconButton
               // onClick={onActionToItem(DataAction.UPDATE, item)}
               tooltip={commonT("delete")}
@@ -119,12 +121,18 @@ const TableLinkBudget = () => {
             >
               <TrashIcon fontSize="small" />
             </IconButton>
-          </BodyCell>
-        </TableRow>
-        {/* );
-            })} */}
+          </BodyCell> */}
+            </TableRow>
+          );
+        })}
+
+        {isEdit && (
+          <Stack direction={"row"} gap={2} alignItems={"center"}>
+            <LinkBudgetPopup />
+          </Stack>
+        )}
       </TableLayout>
     </>
   );
 };
-export default memo(TableLinkBudget);
+export default memo(LinkBudgetTable);

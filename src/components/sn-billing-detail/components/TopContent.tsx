@@ -1,5 +1,7 @@
 import { memo, useMemo, useState } from "react";
 import {
+  AvatarGroup,
+  Box,
   Menu,
   MenuItem,
   Stack,
@@ -21,7 +23,7 @@ import { NS_BILLING, NS_PROJECT } from "constant/index";
 import Avatar from "components/Avatar";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Dropdown } from "components/Filters";
-import { Member } from "store/billing/reducer";
+import { Billing, Member } from "store/billing/reducer";
 import { Option } from "constant/types";
 
 const options = [
@@ -34,9 +36,11 @@ const ITEM_HEIGHT = 48;
 
 type TopContentProps = {
   tagsOptions?: Option[];
+  item?: Billing;
+  memberOptions?: Option[];
 };
 const TopContent = (props: TopContentProps) => {
-  const { tagsOptions } = props;
+  const { tagsOptions, item, memberOptions } = props;
   const { title, prevPath } = useHeaderConfig();
   const { isMdSmaller } = useBreakpoint();
   const billingT = useTranslations(NS_BILLING);
@@ -69,18 +73,22 @@ const TopContent = (props: TopContentProps) => {
           <Avatar size={40} />
 
           <Text fontWeight={600} variant={{ xs: "body2", md: "h4" }}>
-            abc
+            {"Invoice " + item?.invoiceNumber?.toString()}
           </Text>
         </Stack>
 
-        <Button
-          // startIcon={<PlusIcon />}
-          // onClick={onAddNew}
-          size="small"
-          variant="primary"
+        <Box
+          sx={{
+            textAlign: "center",
+            width: 100,
+            padding: 1,
+            borderRadius: 6,
+            background: "#C9F7F5",
+            color: "#1BC5BD",
+          }}
         >
           Paid
-        </Button>
+        </Box>
       </Stack>
       <Stack
         direction="row"
@@ -116,7 +124,7 @@ const TopContent = (props: TopContentProps) => {
             placeholder={"company name"}
             options={[]}
             name="status"
-            onChange={() => {}}
+            onChange={() => null}
             // value={queries?.status}
             rootSx={{
               px: "0px!important",
@@ -132,7 +140,12 @@ const TopContent = (props: TopContentProps) => {
           />
 
           <Stack direction={"row"} gap={2} alignItems={"center"}>
-            <Avatar size={40} />
+            <AvatarGroup total={4}>
+              {item?.user?.map((item) => {
+                // eslint-disable-next-line react/jsx-key
+                return <Avatar size={40} />;
+              })}
+            </AvatarGroup>
             <PlusIcon
               sx={{
                 display: { xs: "none", md: "block" },
@@ -146,10 +159,11 @@ const TopContent = (props: TopContentProps) => {
           <Stack direction={"row"} gap={2}>
             <Dropdown
               placeholder={"members"}
-              options={[]}
-              name="status"
-              onChange={() => {}}
-              // value={queries?.status}
+              options={memberOptions ?? []}
+              name="user"
+              onChange={() => null}
+              // value={item?.user}
+              multiline
               rootSx={{
                 px: "0px!important",
                 [`& .${selectClasses.outlined}`]: {
@@ -167,7 +181,7 @@ const TopContent = (props: TopContentProps) => {
             placeholder={"Tag"}
             options={tagsOptions ?? []}
             name="Tag"
-            onChange={() => {}}
+            onChange={() => null}
             // value={queries?.status}
             rootSx={{
               px: "0px!important",
