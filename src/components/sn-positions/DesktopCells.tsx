@@ -21,9 +21,9 @@ const DesktopCells = (props: DesktopCellsProps) => {
       <BodyCell align="left">
         <Text variant="h6">{item?.name}</Text>
         </BodyCell>
-      <BodyCell align="left" noWrap>
+      <BodyCell align="center" noWrap>
         {item?.created_by?.id ? (
-          <Stack direction="row" alignItems="left" spacing={1}>
+          <Stack direction="row" alignItems="center" spacing={1}>
             <Avatar size={32} src={item.created_by?.avatar?.link} />
             <Text variant="body2">{item.created_by?.fullname}</Text>
           </Stack>
