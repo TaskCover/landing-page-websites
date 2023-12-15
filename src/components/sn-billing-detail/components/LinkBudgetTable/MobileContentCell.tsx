@@ -44,13 +44,13 @@ const MobileContentCell = (props: MobileContentCellProps) => {
 
       <BodyCell align="center">
         {formatNumber(item?.revenue, {
-          prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+          suffix: CURRENCY_CODE.USD,
           numberOfFixed: 2,
         })}
       </BodyCell>
       <BodyCell align="center">
         {formatNumber(item?.revenuePJ, {
-          prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+          suffix: CURRENCY_CODE.USD,
           numberOfFixed: 2,
         })}
       </BodyCell>

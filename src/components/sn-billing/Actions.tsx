@@ -96,149 +96,155 @@ const Actions = (props: Iprops) => {
   };
 
   return (
-    <Stack
-      direction={{
-        md: "row",
-        xs: "column",
-      }}
-      justifyContent={{
-        xs: "flex-start",
-        md: "space-between",
-      }}
-      alignItems={{
-        xs: "stretch",
-        md: "center",
-      }}
-      spacing={3}
-      py={3}
-      px={2}
-      maxWidth="100%"
-      overflow="auto"
-    >
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        spacing={{
-          md: 0,
-          xs: 3,
-        }}
-      >
-        <Text variant="h2" display={{ md: "none" }}>
-          {billingT("list.title")}
-        </Text>
-        <Stack direction={"row"} gap={2}>
-          <Button
-            onClick={() => {
-              push(BILLING_CREATE_PATH);
-            }}
-            size="small"
-            variant="contained"
-            sx={{ height: 40, width: "fit-content" }}
-          >
-            <AddSquareIcon
-              sx={{
-                display: { xs: "block", md: "none" },
-                width: 24,
-                height: 24,
-              }}
-            />
-            <PlusIcon
-              sx={{
-                display: { xs: "none", md: "block" },
-                mr: 1,
-                width: 18,
-                height: 18,
-              }}
-            />
-            <Text sx={{ display: { xs: "none", md: "block" } }} color="inherit">
-              {billingT("list.button.invoice")}
-            </Text>
-          </Button>
-          <Button
-            onClick={() => onOpenModalExport()}
-            size="small"
-            variant="secondary"
-            sx={{ height: 40, width: "fit-content" }}
-          >
-            <ArrowExport
-              sx={{
-                width: { xs: 24, md: 18 },
-                height: { xs: 24, md: 18 },
-                mr: 1,
-              }}
-            />
-            <Text sx={{ display: { xs: "none", md: "block" } }} color="inherit">
-              {billingT("list.button.exportView")}
-            </Text>
-          </Button>
-        </Stack>
-      </Stack>
+    <>
       <Stack
         direction={{
           md: "row",
-          xs: "row-reverse",
+          xs: "column",
         }}
-        alignItems="flex-start"
-        justifyContent={{ xs: "flex-end", md: "flex-start" }}
+        justifyContent={{
+          xs: "flex-start",
+          md: "space-between",
+        }}
+        alignItems={{
+          xs: "stretch",
+          md: "center",
+        }}
         spacing={3}
+        py={3}
+        px={2}
+        maxWidth="100%"
         overflow="auto"
-        minWidth={{ md: "fit-content" }}
       >
-        <Stack direction="row" alignItems="center" gap={2}>
-          <Dropdown
-            placeholder={commonT("status")}
-            options={statusOptions}
-            name="status"
-            onChange={onChangeQueries}
-            value={queries?.status}
-            rootSx={{
-              px: "0px!important",
-              [`& .${selectClasses.outlined}`]: {
-                pr: "0!important",
-                mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
-                  `${spacing(4)}!important`,
-                "& .sub": {
-                  display: "none",
-                },
-              },
-            }}
-          />
-        </Stack>
-        <Stack direction="row" alignItems="center" gap={2}>
-          <Link underline="none" href="#">
-            <Stack direction="row" alignItems="center" mt={0.5} gap={2}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={{
+            md: 0,
+            xs: 3,
+          }}
+        >
+          <Text variant="h2" display={{ md: "none" }}>
+            {billingT("list.title")}
+          </Text>
+          <Stack direction={"row"} gap={2}>
+            <Button
+              onClick={() => {
+                push(BILLING_CREATE_PATH);
+              }}
+              size="small"
+              variant="contained"
+              sx={{ height: 40, width: "fit-content" }}
+            >
+              <AddSquareIcon
+                sx={{
+                  display: { xs: "block", md: "none" },
+                  width: 24,
+                  height: 24,
+                }}
+              />
               <PlusIcon
                 sx={{
                   display: { xs: "none", md: "block" },
-                  alignItems: "center",
+                  mr: 1,
                   width: 18,
                   height: 18,
-                  color: "#1BC5BD",
                 }}
               />
               <Text
                 sx={{ display: { xs: "none", md: "block" } }}
-                color="#1BC5BD"
+                color="inherit"
               >
-                {billingT("list.filter.add")}
+                {billingT("list.button.invoice")}
               </Text>
-            </Stack>
-          </Link>
+            </Button>
+            <Button
+              onClick={() => onOpenModalExport()}
+              size="small"
+              variant="secondary"
+              sx={{ height: 40, width: "fit-content" }}
+            >
+              <ArrowExport
+                sx={{
+                  width: { xs: 24, md: 18 },
+                  height: { xs: 24, md: 18 },
+                  mr: 1,
+                }}
+              />
+              <Text
+                sx={{ display: { xs: "none", md: "block" } }}
+                color="inherit"
+              >
+                {billingT("list.button.exportView")}
+              </Text>
+            </Button>
+          </Stack>
         </Stack>
-        <Stack direction="row" alignItems="center" gap={2} flexWrap={"wrap"}>
-          <Search
-            name="search_key"
-            placeholder={commonT("search")}
-            onEnter={(name, value) => {
-              onChangeQueries(name, value);
-              // onSearch();
-            }}
-            onChange={(name, value) => onChangeQueries(name, value)}
-            sx={{ width: 210 }}
-            value={queries?.search_key}
-          />
-          {/* <Button
+        <Stack
+          direction={{
+            md: "row",
+            xs: "row-reverse",
+          }}
+          alignItems="flex-start"
+          justifyContent={{ xs: "flex-end", md: "flex-start" }}
+          spacing={3}
+          overflow="auto"
+          minWidth={{ md: "fit-content" }}
+        >
+          <Stack direction="row" alignItems="center" gap={2}>
+            <Dropdown
+              placeholder={commonT("status")}
+              options={statusOptions}
+              name="status"
+              onChange={onChangeQueries}
+              value={queries?.status}
+              rootSx={{
+                px: "0px!important",
+                [`& .${selectClasses.outlined}`]: {
+                  pr: "0!important",
+                  mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
+                    `${spacing(4)}!important`,
+                  "& .sub": {
+                    display: "none",
+                  },
+                },
+              }}
+            />
+          </Stack>
+          <Stack direction="row" alignItems="center" gap={2}>
+            <Link underline="none" href="#">
+              <Stack direction="row" alignItems="center" mt={0.5} gap={2}>
+                <PlusIcon
+                  sx={{
+                    display: { xs: "none", md: "block" },
+                    alignItems: "center",
+                    width: 18,
+                    height: 18,
+                    color: "#1BC5BD",
+                  }}
+                />
+                <Text
+                  sx={{ display: { xs: "none", md: "block" } }}
+                  color="#1BC5BD"
+                >
+                  {billingT("list.filter.add")}
+                </Text>
+              </Stack>
+            </Link>
+          </Stack>
+          <Stack direction="row" alignItems="center" gap={2} flexWrap={"wrap"}>
+            <Search
+              name="search_key"
+              placeholder={commonT("search")}
+              onEnter={(name, value) => {
+                onChangeQueries(name, value);
+                // onSearch();
+              }}
+              onChange={(name, value) => onChangeQueries(name, value)}
+              sx={{ width: 210 }}
+              value={queries?.search_key}
+            />
+            {/* <Button
             size="extraSmall"
             sx={{
               // display: { xs: "flex", md: "none" },
@@ -249,22 +255,24 @@ const Actions = (props: Iprops) => {
           >
             {commonT("search")}
           </Button> */}
+          </Stack>
         </Stack>
-      </Stack>
-      {/* <AddDealModal
+        {/* <AddDealModal
         open={dealModel}
         onClose={() => onCloseModal(modalName.DEAL)}
       /> */}
+
+        {/* <InvoiceModal
+        open={isOpenModal}
+        onClose={() => onCloseModal()}
+      /> */}
+      </Stack>
       <ExportView
         open={exportModel}
         onClose={() => onCloseModalExport()}
         item={selected}
       />
-      {/* <InvoiceModal
-        open={isOpenModal}
-        onClose={() => onCloseModal()}
-      /> */}
-    </Stack>
+    </>
   );
 };
 

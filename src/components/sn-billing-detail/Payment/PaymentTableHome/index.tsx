@@ -1,4 +1,4 @@
-import { Stack, TableRow } from "@mui/material";
+import { Stack, TableHead, TableRow } from "@mui/material";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
 import { Button, IconButton, Text } from "components/shared";
 import { NS_BILLING, NS_COMMON } from "constant/index";
@@ -16,7 +16,7 @@ type IProps = {
   item?: Billing;
 };
 
-const LinkBudgetTable = (props: IProps) => {
+const PaymentTableTop = (props: IProps) => {
   const { arrBudgets, isEdit, item } = props;
 
   const { isMdSmaller } = useBreakpoint();
@@ -26,7 +26,11 @@ const LinkBudgetTable = (props: IProps) => {
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
       {
-        value: "  Due date",
+        value: (
+          <Text variant={"body2"} sx={{ color: "#fff" }}>
+            Due date
+          </Text>
+        ),
         align: "left",
       },
       {
@@ -67,7 +71,6 @@ const LinkBudgetTable = (props: IProps) => {
             Left to Pay
           </Text>
         ),
-        key: "pay",
       },
     ],
     [billingT],
@@ -75,7 +78,11 @@ const LinkBudgetTable = (props: IProps) => {
   const mobileHeaderList: CellProps[] = useMemo(
     () => [
       {
-        value: "  Due date",
+        value: (
+          <Text variant={"body2"} sx={{ color: "#fff" }}>
+            Due date
+          </Text>
+        ),
         align: "left",
       },
       {
@@ -108,7 +115,7 @@ const LinkBudgetTable = (props: IProps) => {
           </Text>
         ),
         align: "left",
-        key: "paid",
+        id: "paid",
       },
       {
         value: (
@@ -116,7 +123,6 @@ const LinkBudgetTable = (props: IProps) => {
             Left to Pay
           </Text>
         ),
-        key: "pay",
       },
     ],
     [billingT],
@@ -128,6 +134,7 @@ const LinkBudgetTable = (props: IProps) => {
       : desktopHeaderList;
     return [
       ...additionalHeaderList,
+
       { value: "", width: "10%" },
     ] as CellProps[];
   }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
@@ -152,24 +159,27 @@ const LinkBudgetTable = (props: IProps) => {
         // noData={!isIdle && totalItems === 0}
         // px={{ md: 3 }}
       >
-        {findBudget?.map((item, index) => {
-          //   const indexSelected = selectedList.findIndex(
+        {/* {findBudget?.map((item, index) => { */}
+        {/* //   const indexSelected = selectedList.findIndex(
           //     (selected) => selected?.id === item.id,
           //   );
-          return (
-            <TableRow key={item?.id}>
-              {/* <BodyCell sx={{ pl: { xs: 0.5, md: 2 } }}>
+          // return ( */}
+        <TableRow key={item?.id}>
+          {/* <BodyCell sx={{ pl: { xs: 0.5, md: 2 } }}>
             <Checkbox
               checked={indexSelected !== -1}
               onChange={onToggleSelect(item, indexSelected)}
             />
           </BodyCell> */}
-              {isMdSmaller ? (
-                <MobileContentCell />
-              ) : (
-                <DesktopCells item={item} order={0} />
-              )}
-              {/* <BodyCell align="left" sx={{ px: { xs: 0.5, md: 2 } }}>
+          {isMdSmaller ? (
+            <MobileContentCell />
+          ) : (
+            <DesktopCells
+              // item={item}
+              order={0}
+            />
+          )}
+          {/* <BodyCell align="left" sx={{ px: { xs: 0.5, md: 2 } }}>
             <IconButton
               // onClick={onActionToItem(DataAction.UPDATE, item)}
               tooltip={commonT("delete")}
@@ -187,12 +197,12 @@ const LinkBudgetTable = (props: IProps) => {
               <TrashIcon fontSize="small" />
             </IconButton>
           </BodyCell> */}
-            </TableRow>
-          );
-        })}
+        </TableRow>
+        {/* );
+        })} */}
       </TableLayout>
     </>
   );
 };
 
-export default memo(LinkBudgetTable);
+export default memo(PaymentTableTop);

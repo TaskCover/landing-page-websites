@@ -25,6 +25,13 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Dropdown } from "components/Filters";
 import { Billing, Member } from "store/billing/reducer";
 import { Option } from "constant/types";
+import TrashIcon from "icons/TrashIcon";
+import {
+  ContentCopyRounded,
+  Subtitles,
+  SubtitlesOutlined,
+} from "@mui/icons-material";
+import CopyIcon from "icons/CopyIcon";
 
 const options = [
   "Duplicate Invoice",
@@ -216,7 +223,7 @@ const TopContent = (props: TopContentProps) => {
             PaperProps={{
               style: {
                 maxHeight: ITEM_HEIGHT * 4.5,
-                width: "20ch",
+                width: "25ch",
               },
             }}
           >
@@ -226,7 +233,31 @@ const TopContent = (props: TopContentProps) => {
                 selected={option === "Pyxis"}
                 onClick={handleClose}
               >
-                {option}
+                {option === "Duplicate Invoice" ? (
+                  <Stack gap={2} direction={"row"} alignItems={"center"}>
+                    <ContentCopyRounded />
+                    <Text variant={"body2"}>Duplicate Invoice</Text>
+                  </Stack>
+                ) : option === "Create Credit Invoice" ? (
+                  <Stack gap={2} direction={"row"} alignItems={"center"}>
+                    <SubtitlesOutlined />
+                    <Text variant={"body2"}>Create Credit Invoice</Text>
+                  </Stack>
+                ) : option === "Delete Invoice" ? (
+                  <Stack
+                    gap={2}
+                    direction={"row"}
+                    alignItems={"center"}
+                    color={"red"}
+                  >
+                    <TrashIcon sx={{ fontSize: 25 }} />
+                    <Text variant={"body2"} color={"red"}>
+                      Delete Invoice
+                    </Text>
+                  </Stack>
+                ) : (
+                  ""
+                )}
               </MenuItem>
             ))}
           </Menu>

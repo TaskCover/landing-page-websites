@@ -56,15 +56,15 @@ const Comments = (props: CommentsProps) => {
           onChange={(name, value) => {
             setCommentType(value);
           }}
-          placeholder={commonT("all")}
+          placeholder={"All"}
           value={comentType}
           options={[
             {
-              label: billingT("detail.comment.show.comments"),
+              label: "Comments",
               value: "comments",
             },
             {
-              label: billingT("detail.comment.show.attachment"),
+              label: "Attachments",
               value: "attachments",
             },
           ]}

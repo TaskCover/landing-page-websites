@@ -33,7 +33,7 @@ const BillModal = (props: Iprops) => {
     >
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Stack direction={"row"} gap={2}>
+          <Stack direction={"row"} gap={2} pt={2}>
             <Input
               title={"Amount"}
               name="description"
@@ -63,7 +63,7 @@ const BillModal = (props: Iprops) => {
           </Stack>
         </Grid>
         <Grid item xs={12}>
-          <Stack direction={"row"} gap={2}>
+          <Stack direction={"row"} gap={2} pb={2}>
             <Input
               title={"Note"}
               name="description"

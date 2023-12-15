@@ -15,7 +15,7 @@ const TabFeed = (props: TabProps) => {
   return (
     <Stack gap={4}>
       {/* <TodoList /> */}
-      <Text variant={"body1"}>Write your comment</Text>
+      {/* <Text variant={"body1"}>Write your comment</Text> */}
       <CommentSection billing={bill} user={user} />
     </Stack>
   );

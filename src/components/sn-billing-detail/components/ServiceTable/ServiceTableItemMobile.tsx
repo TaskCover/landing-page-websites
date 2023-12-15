@@ -16,6 +16,8 @@ import { Service } from "store/billing/reducer";
 import { Draggable } from "react-beautiful-dnd";
 import LinkPopup from "../LinkPopup";
 import { Option } from "constant/types";
+import { formatNumber } from "utils/index";
+import { CURRENCY_CODE } from "constant/enums";
 
 interface IProps {
   index: number;
@@ -229,7 +231,12 @@ const ServiceTableItemMobile = ({
                       }}
                     />
                   ) : (
-                    <Text variant="body2">{service.estimate}</Text>
+                    <Text variant="body2">
+                      {formatNumber(service.estimate, {
+                        suffix: CURRENCY_CODE.USD,
+                        numberOfFixed: 2,
+                      })}
+                    </Text>
                   )}
                 </BodyCell>
 
@@ -254,7 +261,12 @@ const ServiceTableItemMobile = ({
                       }}
                     />
                   ) : (
-                    <Text variant="body2">{service.discount}</Text>
+                    <Text variant="body2">
+                      {formatNumber(service.discount, {
+                        suffix: "%",
+                        numberOfFixed: 2,
+                      })}
+                    </Text>
                   )}
                 </BodyCell>
 
@@ -279,7 +291,12 @@ const ServiceTableItemMobile = ({
                       }}
                     />
                   ) : (
-                    <Text variant="body2">{service.price}</Text>
+                    <Text variant="body2">
+                      {formatNumber(service.price, {
+                        suffix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+                        numberOfFixed: 2,
+                      })}
+                    </Text>
                   )}
                 </BodyCell>
 

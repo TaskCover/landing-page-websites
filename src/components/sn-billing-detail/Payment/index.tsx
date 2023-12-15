@@ -1,6 +1,6 @@
-import { Box, Menu, MenuItem, Stack, TableRow } from "@mui/material";
+import { Box, Grid, Menu, MenuItem, Stack, TableRow } from "@mui/material";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
-import { IconButton } from "components/shared";
+import { IconButton, Text } from "components/shared";
 import { NS_BILLING, NS_COMMON } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import { useTranslations } from "next-intl";
@@ -37,15 +37,48 @@ const TabPayment = (props: TabProps) => {
   };
 
   return (
-    <Box>
-      <Stack gap={2} borderBottom={"1px solid #ECECF3"} pb={2}>
-        <PaymentTableHome />
+    <Stack>
+      <Stack gap={2} pb={2} pl={2}>
+        <Grid container spacing={2}>
+          <Grid md={8} sx={{ borderRadius: "5px 0px 0px 5px" }}>
+            <PaymentTableHome />
+          </Grid>
+          <Grid
+            container
+            md={4}
+            sx={{
+              background: "#1BC5BD",
+              textAlign: "center",
+              alignItems: "center",
+              borderRadius: "0px 5px 5px 0px",
+              height: 40,
+              zIndex: 2,
+              position: "relative",
+              right: "2px",
+            }}
+          >
+            <Grid md={6}>
+              <Text variant={"body2"} color={"#fff"}>
+                Paid
+              </Text>
+            </Grid>
+            <Grid md={6}>
+              <Text variant={"body2"} color={"#fff"}>
+                Left to Pay
+              </Text>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2.1}>
+          <Grid md={8}></Grid>
+          <Grid md={4} borderBottom={"1px solid #ECECF3"}></Grid>
+        </Grid>
       </Stack>
-      <Stack gap={2} borderBottom={"1px solid #ECECF3"} pb={2}>
+      <Stack gap={2} pb={2}>
         <PaymentTable handleOpen={handleOpen} />
       </Stack>
       <PaymentModal open={isOpen} handleClose={handleClose} />
-    </Box>
+    </Stack>
   );
 };
 export default memo(TabPayment);

@@ -263,7 +263,12 @@ const ServiceTableItem = ({
                     }}
                   />
                 ) : (
-                  <Text variant="body2">{service.estimate}</Text>
+                  <Text variant="body2">
+                    {formatNumber(service.estimate, {
+                      suffix: CURRENCY_CODE.USD,
+                      numberOfFixed: 2,
+                    })}
+                  </Text>
                 )}
               </BodyCell>
 
@@ -288,7 +293,12 @@ const ServiceTableItem = ({
                     }}
                   />
                 ) : (
-                  <Text variant="body2">{service.discount}</Text>
+                  <Text variant="body2">
+                    {formatNumber(service.discount, {
+                      suffix: "%",
+                      numberOfFixed: 2,
+                    })}
+                  </Text>
                 )}
               </BodyCell>
 
@@ -313,7 +323,12 @@ const ServiceTableItem = ({
                     }}
                   />
                 ) : (
-                  <Text variant="body2">{service.price}</Text>
+                  <Text variant="body2">
+                    {formatNumber(service.price, {
+                      suffix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+                      numberOfFixed: 2,
+                    })}
+                  </Text>
                 )}
               </BodyCell>
 

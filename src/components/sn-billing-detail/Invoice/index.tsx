@@ -34,11 +34,19 @@ import { FormikProps, useFormik } from "formik";
 import VatPopup from "../components/VatPopup";
 import ServiceTable from "../components/ServiceTable";
 import { useGetMemberOptions } from "components/sn-sales/hooks/useGetEmployeeOptions";
-import { formatNumber } from "utils/index";
+import { formatNumber, getPath } from "utils/index";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { CURRENCY_CODE } from "constant/enums";
 import LinkBudgetTable from "../components/LinkBudgetTable";
 import LinkBudgetPopup from "../components/LinkBudgetPopup";
+import { BILLING_EXPORT_PATH } from "constant/paths";
+import { useRouter } from "next-intl/client";
+import EyeIcon from "icons/EyeIcon";
+import DownIcon from "components/sn-docs/news/asset/icons/DownIcon";
+import DownloadIcon from "icons/DownloadIcon";
+import FileGroupIcon from "icons/FileGroupIcon";
+import ChangeIcon from "icons/ChangeIcon";
+import { ChangeCircleOutlined } from "@mui/icons-material";
 
 type TabProps = {
   title: string;
@@ -52,6 +60,36 @@ type TabProps = {
   setBillToInfo: (value: Bill) => void;
 };
 const billingFormTranslatePrefix = "list.form";
+
+const options = [
+  {
+    label: (
+      <Stack gap={2} alignItems={"center"} direction={"row"}>
+        <EyeIcon sx={{ fontSize: 20 }} />
+        <Text>View PDF</Text>
+      </Stack>
+    ),
+    value: "VIEW",
+  },
+  {
+    label: (
+      <Stack gap={2} alignItems={"center"} direction={"row"}>
+        <DownloadIcon sx={{ fontSize: 20 }} />
+        <Text>Download</Text>
+      </Stack>
+    ),
+    value: "DOWNLOAD",
+  },
+  {
+    label: (
+      <Stack gap={2} alignItems={"center"} direction={"row"}>
+        <ChangeCircleOutlined sx={{ fontSize: 20 }} />
+        <Text>Replace</Text>
+      </Stack>
+    ),
+    value: "REPLACE",
+  },
+];
 
 const TabInvoice = (props: TabProps) => {
   const {
@@ -68,6 +106,7 @@ const TabInvoice = (props: TabProps) => {
   const { isMdSmaller } = useBreakpoint();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
+  const { push } = useRouter();
   const [customServices, setCustomService] = useState<Service[]>([]);
   const [arrLinkBudget, setArrLinkBudget] = useState<Service[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -76,6 +115,7 @@ const TabInvoice = (props: TabProps) => {
     fullNameCompany: user?.company,
   });
   const [listService, setListService] = useState<Service[]>([]);
+  const [selected, setSelected] = useState<string>("");
 
   // const formik = useFormik<Billing>({
   //   enableReinitialize: true,
@@ -134,6 +174,13 @@ const TabInvoice = (props: TabProps) => {
     }
   }, [totalAmount, form?.values?.vat]);
 
+  const onchangePdf = (value) => {
+    setSelected(value);
+    if (value === "VIEW") {
+      push(getPath(BILLING_EXPORT_PATH, undefined, { id: item?.id ?? "" }));
+    }
+  };
+
   return (
     <Box>
       <Stack
@@ -146,10 +193,10 @@ const TabInvoice = (props: TabProps) => {
         <Stack direction={"row"} gap={2}>
           <Dropdown
             placeholder={"Invoice PDF"}
-            options={[]}
+            options={options ?? []}
             name="Tag"
-            onChange={() => null}
-            // value={queries?.status}
+            onChange={(name, value) => onchangePdf(value)}
+            value={selected}
             rootSx={{
               px: "0px!important",
               [`& .${selectClasses.outlined}`]: {
@@ -268,7 +315,14 @@ const TabInvoice = (props: TabProps) => {
             </Box>
           </Grid>
           <Grid item xs={4} my={2}>
-            <Box sx={{ border: "1px solid #ECECF3", p: 2, borderRadius: 4 }}>
+            <Box
+              sx={{
+                border: "1px solid #ECECF3",
+                p: 2,
+                borderRadius: 4,
+                height: 230,
+              }}
+            >
               <Stack direction={"row"} gap={2} justifyContent={"space-between"}>
                 <Text variant={"body1"}>Bill To</Text>
                 {editForm && (
@@ -307,7 +361,14 @@ const TabInvoice = (props: TabProps) => {
             </Box>
           </Grid>
           <Grid item xs={4} my={2}>
-            <Box sx={{ border: "1px solid #ECECF3", p: 2, borderRadius: 4 }}>
+            <Box
+              sx={{
+                border: "1px solid #ECECF3",
+                p: 2,
+                borderRadius: 4,
+                height: 230,
+              }}
+            >
               <Stack direction={"row"} gap={2} justifyContent={"space-between"}>
                 <Text variant={"body1"}>Bill From</Text>
                 {editForm && (
@@ -379,7 +440,12 @@ const TabInvoice = (props: TabProps) => {
             </Text>
           </Grid>
           <Grid xs={2} md={2}>
-            <Text variant={"body1"}>{form?.values?.vat}</Text>
+            <Text variant={"body1"}>
+              {formatNumber(form?.values?.vat, {
+                prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+                numberOfFixed: 2,
+              })}
+            </Text>
           </Grid>
           {editForm && <VatPopup form={form} />}
         </Grid>
@@ -392,7 +458,7 @@ const TabInvoice = (props: TabProps) => {
             <Text variant={"body1"}>
               {formatNumber(
                 form.values.vat && form.values.vat != 0
-                  ? Number(totalAmount) + form.values.vat
+                  ? totalAmount + form.values.vat
                   : totalAmount,
                 {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],

@@ -24,7 +24,7 @@ const options = ["Edit", "Delete"];
 
 const ITEM_HEIGHT = 48;
 
-const LinkBudgetTable = (props: IProps) => {
+const PaymentTable = (props: IProps) => {
   const { arrBudgets, isEdit, item, handleOpen } = props;
 
   const { isMdSmaller } = useBreakpoint();
@@ -198,4 +198,4 @@ const LinkBudgetTable = (props: IProps) => {
     </>
   );
 };
-export default memo(LinkBudgetTable);
+export default memo(PaymentTable);

@@ -137,7 +137,7 @@ const CommentEditor = forwardRef(
       <>
         <Editor
           hasAttachment
-          placeholder={billingT("detail.comment.placeholder")}
+          placeholder={"Write your comment"}
           onChange={onChange}
           onChangeNewsfiles={(localFiles) => {
             if (localFiles) {
@@ -168,7 +168,7 @@ const CommentEditor = forwardRef(
               variant="primary"
               size="small"
             >
-              {billingT("detail.comment.submit")}
+              {"Send Comment"}
             </Button>
           </Stack>
         </Editor>

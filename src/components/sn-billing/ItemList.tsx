@@ -65,7 +65,9 @@ const ItemList = () => {
       },
       { value: billingT("list.table.budgets") },
       { value: billingT("list.table.att") },
-      { value: billingT("list.table.amount") },
+      {
+        value: billingT("list.table.amount"),
+      },
       { value: billingT("list.table.amountUnpaid") },
       { value: billingT("list.table.dueDate") },
     ],
