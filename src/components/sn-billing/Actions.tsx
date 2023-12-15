@@ -17,8 +17,13 @@ import { getPath } from "utils/index";
 import ExportView from "./Modals/ExportView";
 import { STATUS_OPTIONS } from "./components/helpers";
 import { BILLING_CREATE_PATH } from "constant/paths";
+import { Billing } from "store/billing/reducer";
 
-const Actions = () => {
+type Iprops = {
+  selected: Billing;
+};
+const Actions = (props: Iprops) => {
+  const { selected } = props;
   const { filters, onGetProjects, pageSize, onCreateProject } = useProjects();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
@@ -250,7 +255,11 @@ const Actions = () => {
         open={dealModel}
         onClose={() => onCloseModal(modalName.DEAL)}
       /> */}
-      <ExportView open={exportModel} onClose={() => onCloseModalExport()} />
+      <ExportView
+        open={exportModel}
+        onClose={() => onCloseModalExport()}
+        item={selected}
+      />
       {/* <InvoiceModal
         open={isOpenModal}
         onClose={() => onCloseModal()}

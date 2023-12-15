@@ -7,14 +7,16 @@ import {
   GetBillingListQueries,
   GetBudgetListQueries,
   createBilling,
+  createCommentBilling,
   getBillingDetail,
   getBillingList,
   getBudgetDetail,
   getBudgetList,
+  getCommentBilling,
   getServiceBudget,
   updateBilling,
 } from "./actions";
-import { BillingDataUpdate, Service } from "./reducer";
+import { BillingCommentData, BillingDataUpdate, Service } from "./reducer";
 import { IOptionStructure } from "components/shared/TextFieldSelect";
 import { usePositions } from "store/company/selectors";
 import { useTranslations } from "next-intl";
@@ -24,8 +26,16 @@ import { da } from "date-fns/locale";
 
 export const useBillings = () => {
   const dispatch = useAppDispatch();
-  const { items, status, error, filters, item, createStatus, updateStatus } =
-    useAppSelector((state) => state.billing, shallowEqual);
+  const {
+    items,
+    status,
+    error,
+    filters,
+    item,
+    createStatus,
+    updateStatus,
+    dataComment,
+  } = useAppSelector((state) => state.billing, shallowEqual);
   const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
     (state) => state.billing.paging,
     shallowEqual,
@@ -50,6 +60,20 @@ export const useBillings = () => {
   const onUpdateBilling = useCallback(
     async (data: BillingDataUpdate) => {
       return await dispatch(updateBilling(data)).unwrap();
+    },
+    [dispatch],
+  );
+
+  const onCreateCommentBilling = useCallback(
+    async (data: BillingCommentData) => {
+      return await dispatch(createCommentBilling(data));
+    },
+    [dispatch],
+  );
+
+  const onGetCommentBilling = useCallback(
+    async (id: string) => {
+      return await dispatch(getCommentBilling(id));
     },
     [dispatch],
   );
@@ -86,10 +110,13 @@ export const useBillings = () => {
     totalPages,
     createStatus,
     updateStatus,
+    dataComment,
     onGetBillings,
     onCreateBilling,
     onUpdateBilling,
     onGetBilling,
+    onCreateCommentBilling,
+    onGetCommentBilling,
   };
 };
 

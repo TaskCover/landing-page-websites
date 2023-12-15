@@ -13,7 +13,7 @@ import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
 
 import { Option } from "constant/types";
-import { BillingDataUpdate } from "./reducer";
+import { BillingCommentData, BillingDataUpdate } from "./reducer";
 
 export enum BillingStatus {
   ACTIVE = "ACTIVE",
@@ -202,6 +202,46 @@ export const updateBilling = createAsyncThunk(
         `${Endpoint.BILLING}/${data?.id}`,
         data,
         { baseURL: BILLING_API_URL },
+      );
+
+      if (response?.status === HttpStatusCode.CREATED) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const createCommentBilling = createAsyncThunk(
+  "Billing/createCommentBilling",
+  async (data: BillingCommentData) => {
+    try {
+      const response = await client.post(Endpoint.INTERACTION_BILLING, data, {
+        baseURL: BILLING_API_URL,
+      });
+
+      if (response?.status === HttpStatusCode.CREATED) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const getCommentBilling = createAsyncThunk(
+  "Billing/getCommentBilling",
+  async (id: string) => {
+    try {
+      const response = await client.get(
+        StringFormat(Endpoint.INTERACTION_BILLING_BY_BILL, { id }),
+        {},
+        {
+          baseURL: BILLING_API_URL,
+        },
       );
 
       if (response?.status === HttpStatusCode.CREATED) {

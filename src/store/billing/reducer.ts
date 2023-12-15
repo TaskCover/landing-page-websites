@@ -10,10 +10,12 @@ import {
   // GetActivitiesQueries,
   GetBillingListQueries,
   createBilling,
+  createCommentBilling,
   getBillingDetail,
   getBillingList,
   getBudgetDetail,
   getBudgetList,
+  getCommentBilling,
   getServiceBudget,
   updateBilling,
 } from "./actions";
@@ -203,6 +205,8 @@ export interface BillingState {
   itemError?: string;
   createStatus?: boolean;
   updateStatus?: boolean;
+  commentStatus?: boolean;
+  dataComment?: [];
 }
 
 export interface BillingDataUpdate {
@@ -227,6 +231,19 @@ export interface BillingDataUpdate {
   dueDate?: string;
   date?: string;
   subject?: string;
+}
+
+export interface BillingCommentData {
+  bill_id?: string;
+  user_id?: string;
+  file: [];
+  status?: string;
+}
+
+export interface BillingComment extends Omit<Comment, "creator"> {
+  creator: {
+    body: User;
+  };
 }
 
 // export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {
@@ -385,7 +402,41 @@ const billingSlice = createSlice({
       .addCase(updateBilling.rejected, (state, action) => {
         state.updateStatus = false;
         // state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(createCommentBilling.pending, (state, action) => {
+        state.commentStatus = false;
+      })
+      .addCase(createCommentBilling.fulfilled, (state, action) => {
+        state.commentStatus = true;
+      })
+      .addCase(createCommentBilling.rejected, (state, action) => {
+        state.commentStatus = false;
+        // state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(getCommentBilling.pending, (state, action) => {
+        state.status = DataStatus.LOADING;
+        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.paging.pageIndex = Number(
+        //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        // );
+        // state.paging.pageSize = Number(
+        //   action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        // );
+      })
+      .addCase(getCommentBilling.fulfilled, (state, { payload }) => {
+        // const { items, ...paging } = action.payload;
+
+        state.dataComment = payload;
+
+        state.status = DataStatus.SUCCEEDED;
+        state.error = undefined;
+        // state.paging = Object.assign(state.paging, paging);
+      })
+      .addCase(getCommentBilling.rejected, (state, action) => {
+        state.status = DataStatus.FAILED;
+        state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
       }),
+
   // .addCase(
   //   createProject.fulfilled,
   //   (state, action: PayloadAction<Billing>) => {

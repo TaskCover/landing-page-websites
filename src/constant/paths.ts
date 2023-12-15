@@ -53,6 +53,7 @@ export const BILLING_PATH = "/billing";
 export const BILLING_CREATE_PATH = "/billing/create";
 export const BILLING_INFO_PATH = "/billing/{id}";
 export const BILLING_DETAIL_PATH = "/billing/detail";
+export const BILLING_EXPORT_PATH = "/billing/export/{id}";
 
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
@@ -96,6 +97,7 @@ export const AUTHORIZED_PATHS = {
     BILLING_CREATE_PATH,
     BILLING_INFO_PATH,
     BILLING_DETAIL_PATH,
+    BILLING_EXPORT_PATH,
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -120,6 +122,7 @@ export const AUTHORIZED_PATHS = {
     BILLING_CREATE_PATH,
     BILLING_INFO_PATH,
     BILLING_DETAIL_PATH,
+    BILLING_EXPORT_PATH,
   ],
   [Permission.ST]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -147,6 +150,7 @@ export const AUTHORIZED_PATHS = {
     BILLING_CREATE_PATH,
     BILLING_INFO_PATH,
     BILLING_DETAIL_PATH,
+    BILLING_EXPORT_PATH,
   ],
   [Permission.EU]: [...AUTHORIZED_LOGGED_IN_PATHS, UPGRADE_ACCOUNT_PATH],
 };

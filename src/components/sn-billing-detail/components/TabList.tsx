@@ -26,7 +26,7 @@ type TabItemProps = {
   item?: Billing;
   arrService?: Service[];
   arrBudgets?: Budgets[];
-  user?: User;
+  user: User;
   form: FormikProps<Billing>;
   billToInfo: Bill;
   setBillToInfo: (value: Bill) => void;
@@ -115,37 +115,39 @@ const TabInfo = (props: TabListProps) => {
                 />
               ))}
             </TabList>
-            <Stack gap={2} direction={"row"} mb={1}>
-              {!editForm && (
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setEditForm(true);
-                  }}
-                >
-                  Edit
-                </Button>
-              )}
-
-              {editForm && (
-                <>
-                  <Button
-                    variant="outlined"
-                    onClick={() => {
-                      setEditForm(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
+            {value === "Invoice" && (
+              <Stack gap={2} direction={"row"} mb={1}>
+                {!editForm && (
                   <Button
                     variant="contained"
-                    onClick={() => formik.handleSubmit()}
+                    onClick={() => {
+                      setEditForm(true);
+                    }}
                   >
-                    Save Change
+                    Edit
                   </Button>
-                </>
-              )}
-            </Stack>
+                )}
+
+                {editForm && (
+                  <>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        setEditForm(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => formik.handleSubmit()}
+                    >
+                      Save Change
+                    </Button>
+                  </>
+                )}
+              </Stack>
+            )}
           </Stack>
           {TABS.map((tab) => (
             <TabItem
@@ -155,7 +157,7 @@ const TabInfo = (props: TabListProps) => {
               editForm={editForm}
               arrService={arrService}
               item={item}
-              user={user}
+              user={user ?? {}}
               arrBudgets={arrBudgets}
               form={formik}
               billToInfo={billToInfo}
@@ -216,7 +218,9 @@ const TabItem = (props: TabItemProps) => {
           setBillToInfo={setBillToInfo}
         />
       )}
-      {value === "Feed" && <TabFeed title={label} />}
+      {value === "Feed" && (
+        <TabFeed title={label} bill={item ?? {}} user={user} />
+      )}
       {value === "Payment" && <TabPayment title={label} />}
     </TabPanel>
   );

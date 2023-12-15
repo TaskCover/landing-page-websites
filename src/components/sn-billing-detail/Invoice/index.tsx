@@ -128,7 +128,7 @@ const TabInvoice = (props: TabProps) => {
     if (totalAmount && totalAmount != 0 && form?.values?.vat) {
       form.setFieldValue(
         "amount",
-        form?.values?.vat !== 0 ? totalAmount * form?.values?.vat : totalAmount,
+        form?.values?.vat !== 0 ? totalAmount + form?.values?.vat : totalAmount,
       );
       form.setFieldValue("amount_unpaid", totalAmount);
     }
@@ -392,7 +392,7 @@ const TabInvoice = (props: TabProps) => {
             <Text variant={"body1"}>
               {formatNumber(
                 form.values.vat && form.values.vat != 0
-                  ? Number(totalAmount) * form.values.vat
+                  ? Number(totalAmount) + form.values.vat
                   : totalAmount,
                 {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
