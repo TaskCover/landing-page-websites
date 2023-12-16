@@ -43,10 +43,10 @@ const FilterSearchDocs = ({ onChange, queries }: FilterSearchDocsProps) => {
         queries={queries}
         onChange={onChange}
       ></FilterMemberProject>
-      <FilterProjectStatus
+      {/* <FilterProjectStatus
         queries={queries}
         onChange={onChange}
-      ></FilterProjectStatus>
+      ></FilterProjectStatus> */}
     </>
   );
 };
@@ -57,6 +57,8 @@ export const sxConfig = {
   item: {
     width: "100%",
     py: 1,
-    px: 2,
+    px: 1, 
+    margin: "8px 0",
+    marginLeft: "auto", 
   },
 };
