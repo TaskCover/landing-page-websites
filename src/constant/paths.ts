@@ -98,14 +98,11 @@ export const AUTHORIZED_PATHS = {
     BILLING_CREATE_PATH,
     BILLING_INFO_PATH,
     BILLING_DETAIL_PATH,
-<<<<<<< HEAD
     BILLING_EXPORT_PATH,
-=======
     BILLING_PATH,
     // Budgeting
     BUDGETING_PATH,
     BUDGET_DETAIL_PATH,
->>>>>>> ae0852add5346ec1a2203ea8e26b9a9c9e56e072
   ],
   [Permission.SA]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
@@ -125,15 +122,6 @@ export const AUTHORIZED_PATHS = {
     CAREER_PATH,
     CAREER_DETAIL_PATH,
     BLOGS_RELATED_PATH,
-<<<<<<< HEAD
-    // Billing
-    BILLING_PATH,
-    BILLING_CREATE_PATH,
-    BILLING_INFO_PATH,
-    BILLING_DETAIL_PATH,
-    BILLING_EXPORT_PATH,
-=======
->>>>>>> ae0852add5346ec1a2203ea8e26b9a9c9e56e072
   ],
   [Permission.ST]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,
