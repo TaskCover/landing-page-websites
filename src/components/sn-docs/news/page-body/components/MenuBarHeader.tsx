@@ -15,10 +15,9 @@ import IconLink from "../../asset/iconsMenuTipTap/IconLink";
 import styles from "components/sn-docs/news/tiptap/menu/bubble-menu/nodeTypeDropDown.module.scss";
 import Tippy from "@tippyjs/react";
 import toggleButtonStyles from "components/sn-docs/news/tiptap/menu/bubble-menu/nodeTypeToggle.module.scss";
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { Editor } from "@tiptap/core";
 import { ThemeContext } from "../../context/ThemeContext";
-
 
 import React, {
   Fragment,
@@ -35,7 +34,8 @@ import useTheme from "hooks/useTheme";
 import { NewPageContext } from "../../context/NewPageContext";
 import { Comment } from "./CommentDialog";
 import { useAuth } from "store/app/selectors";
-
+import { DocAccessibility } from "constant/enums";
+import { useAppSelector } from "store/hooks";
 
 const MenuBarHeader = ({ editor }: { editor: Editor }) => {
   const { theme } = useContext(ThemeContext);
@@ -215,7 +215,6 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={editor.isActive("bold") ? "active" : ""}
       >
-
         <IconBold />
       </button>
       <button
@@ -276,7 +275,6 @@ const MenuBarHeader = ({ editor }: { editor: Editor }) => {
 export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
   const { theme } = useContext(ThemeContext);
   const {
-    activeCommentId,
     setActiveCommentId,
     comments,
     setComments,
@@ -284,6 +282,9 @@ export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
     setCommentDialogOpen,
   } = useContext(NewPageContext);
   const { user } = useAuth();
+  const perm = useAppSelector(
+    (state) => state.doc.perm,
+  ) as keyof typeof DocAccessibility;
   const { isDarkMode } = useTheme();
   const isOnlyParagraph =
     !editor.isActive("bulletList") &&
@@ -322,11 +323,26 @@ export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
   };
 
   const setComment = () => {
-    const newComment = new Comment(user, "");
+    const newComment = new Comment("");
     setComments([...comments, newComment]);
-    editor?.commands.setComment(newComment.id);
-    setActiveCommentId(newComment.id);
+    editor?.commands.setComment(newComment.position);
+    setActiveCommentId(newComment.position);
   };
+
+  const canComment = useMemo(
+    () =>
+      Object.keys(DocAccessibility)
+        .filter((key) => key !== "VIEW")
+        .includes(perm),
+    [perm],
+  );
+  const canEdit = useMemo(
+    () =>
+      Object.keys(DocAccessibility)
+        .filter((key) => key !== "COMMENT" && key !== "VIEW")
+        .includes(perm),
+    [perm],
+  );
 
   return (
     <Box
@@ -365,6 +381,7 @@ export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
       }}
     >
       <Tippy
+        disabled={!canEdit}
         appendTo={document.body}
         trigger="click"
         interactive
@@ -439,30 +456,35 @@ export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
         </div>
       </Tippy>
       <button
+        disabled={!canEdit}
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={editor.isActive("bold") ? "active" : ""}
       >
-        <IconBold></IconBold>
+        <IconBold />
       </button>
       <button
+        disabled={!canEdit}
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={editor.isActive("italic") ? "active" : ""}
       >
-        <IconItaic></IconItaic>
+        <IconItaic />
       </button>
       <button
+        disabled={!canEdit}
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         className={editor.isActive("underline") ? "active" : ""}
       >
-        <IconLineText></IconLineText>
+        <IconLineText />
       </button>
       <button
+        disabled={!canEdit}
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={editor.isActive("strike") ? "active" : ""}
       >
-        <IconLineTextCenter></IconLineTextCenter>
+        <IconLineTextCenter />
       </button>
       <button
+        disabled={!canEdit}
         value="link"
         aria-label="link"
         onClick={() =>
@@ -472,33 +494,39 @@ export const MenuBarHeaderEdit = ({ editor }: { editor: Editor }) => {
         }
         className={editor.isActive("link") ? "active" : ""}
       >
-        <IconLink></IconLink>
+        <IconLink />
       </button>
       <button
+        disabled={!canEdit}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={editor.isActive("bulletList") ? "active" : ""}
       >
-        <IconLi></IconLi>
+        <IconLi />
       </button>
       <button
+        disabled={!canEdit}
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={editor.isActive("orderedList") ? "active" : ""}
       >
-        <IconLi2></IconLi2>
+        <IconLi2 />
       </button>
+
       <button
+        disabled={!canComment}
         onClick={() => {
           setCommentDialogOpen(!openCommentDialog);
           setComment();
         }}
       >
-        <IconComment></IconComment>
+        <IconComment />
       </button>
+
       <button
+        disabled={!canEdit}
         onClick={() => editor.chain().focus().toggleCode().run()}
         className={editor.isActive("code") ? "active" : ""}
       >
-        <IconCode></IconCode>
+        <IconCode />
       </button>
     </Box>
   );

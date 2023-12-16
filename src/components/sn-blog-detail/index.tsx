@@ -23,7 +23,7 @@ const BlogDetailSection = () => {
     const [replyToCommentId, setReplyToCommentId] = useState<string | null>(null);
 
     const handleReply = (commentId: string) => {
-      setReplyToCommentId(commentId);
+        setReplyToCommentId(commentId);
     };
     const { id } = useParams();
     const {
@@ -110,15 +110,13 @@ const BlogDetailSection = () => {
                                             {renderContentWithAttachments(detailItem?.content as string, detailItem?.attachments_down as AttachmentsBlogs[])}
                                         </Stack>
                                         <Stack>
-                                        <CommentEditor
-                                            ref={scrollEndRef}
-                                            key={id as string}
-                                            postId={id as string}
-                                            replyToCommentId={null}
-                                            forwardedRef={scrollEndRef}
-                                            resetReplyToCommentId={() => setReplyToCommentId(null)}
-                                          
-                                            />
+                                            <CommentEditor
+                                                ref={scrollEndRef}
+                                                key={id as string}
+                                                postId={id as string}
+                                                replyToCommentId={null}
+                                                forwardedRef={scrollEndRef}
+                                                resetReplyToCommentId={() => setReplyToCommentId(null)} />
                                             <CommentsTreeView />
                                         </Stack>
                                     </Grid>
@@ -127,25 +125,99 @@ const BlogDetailSection = () => {
                             </Grid>
                             <Divider />
                             <Grid item xs={12} sm={4}>
-                                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                                    {relatedBlogs.map((blog, index) => (
-                                        <React.Fragment key={blog.id}>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={blog.title}
-                                                    secondary={
-                                                        <Text color="GrayText" fontSize={12}>
-                                                            - {formatDate(blog.created_time, DATE_TIME_FORMAT_SLASH)}
-                                                        </Text>
-                                                    }
-                                                />
-                                            </ListItem>
-                                            {index < relatedBlogs.length - 1 && (
-                                                <Divider component="li" />
+                                <Stack>
+                                    <Box
+                                        display="flex"
+                                        alignItems="center"
+                                        marginBottom="1em"
+                                        fontWeight="bold">{blogT("blogList.category")}
+                                    </Box>
+                                    <Card >
+                                        <List sx={{ width: '100%', maxWidth: 360 }}>
+                                            {detailItem?.categories && detailItem.categories.length > 0 && (
+                                                detailItem.categories.map((category, index) => (
+                                                    <React.Fragment key={index}>
+                                                        <ListItem
+                                                            alignItems="flex-start"
+                                                            sx={{
+                                                                '&:hover': {
+                                                                    backgroundColor: '#e0e0e0',
+                                                                },
+                                                            }}>
+                                                            <ListItemText
+                                                                primary={category.name}
+                                                            />
+                                                        </ListItem>
+                                                    </React.Fragment>
+                                                ))
                                             )}
-                                        </React.Fragment>
-                                    ))}
-                                </List>
+                                        </List>
+                                    </Card>
+                                </Stack>
+                                <Stack paddingTop={5}>
+                                    <Box
+                                        display="flex"
+                                        alignItems="center"
+                                        marginBottom="1em"
+                                        fontWeight="bold">{blogT("blogList.tag")}
+                                    </Box>
+                                    <Card >
+                                        <List sx={{ width: '100%', maxWidth: 360 }}>
+                                            {detailItem?.tag && detailItem.tag.length > 0 && (
+                                                detailItem.tag.map((tg, index) => (
+                                                    <React.Fragment key={index}>
+                                                        <ListItem
+                                                            alignItems="flex-start"
+                                                            sx={{
+                                                                '&:hover': {
+                                                                    backgroundColor: '#e0e0e0',
+                                                                },
+                                                            }}>
+                                                            <ListItemText
+                                                                primary={tg}
+                                                            />
+                                                        </ListItem>
+                                                    </React.Fragment>
+                                                ))
+                                            )}
+                                        </List>
+                                    </Card>
+                                </Stack>
+                                <Stack paddingTop={5}>
+                                    <Box
+                                        display="flex"
+                                        alignItems="center"
+                                        marginBottom="1em"
+                                        fontWeight="bold">{blogT("blogList.relatedBlogs")}
+                                    </Box>
+                                    <Card>
+                                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                                            {relatedBlogs.map((blog, index) => (
+                                                <React.Fragment key={blog.id} >
+                                                    <ListItem alignItems="flex-start" sx={{
+                                                        '&:hover': {
+                                                            backgroundColor: '#e0e0e0',
+                                                        },
+                                                    }}>
+                                                        <ListItemText
+                                                            primary={blog.title}
+                                                            secondary={
+                                                                <Text color="GrayText" fontSize={12}>
+                                                                    - {formatDate(blog.created_time, DATE_TIME_FORMAT_SLASH)}
+                                                                </Text>
+                                                            }
+                                                        />
+                                                    </ListItem>
+                                                    {index < relatedBlogs.length - 1 && (
+                                                        <Divider component="li" />
+                                                    )}
+                                                </React.Fragment>
+                                            ))}
+                                        </List>
+                                    </Card>
+
+                                </Stack>
+
                             </Grid>
                         </Grid>
                     </Stack>
@@ -158,14 +230,14 @@ const BlogDetailSection = () => {
 const AttachmentComponent: React.FC<{ attachment: AttachmentsBlogs }> = ({ attachment }) => {
     return (
         <div className="attachment">
-            <img alt={attachment.name as string}  src={(attachment.link ? attachment.link : UserPlaceholderImage) as string} style={
+            <img alt={attachment.name as string} src={(attachment.link ? attachment.link : UserPlaceholderImage) as string} style={
                 {
-                    width:'100%',
-                    height:400,
-                    objectFit:"contain"
+                    width: '100%',
+                    height: 400,
+                    objectFit: "contain"
                 }
             } />
-   
+
         </div>
     );
 };
@@ -177,21 +249,19 @@ const renderContentWithAttachments = (content: string, attachments: AttachmentsB
 
     const attachmentPlaceholders = content.split(/<\/p>|<br\s*\/?>|V&agrave;/).filter((item) => item.trim() !== '');
 
-    // If there's only one attachment placeholder, display all attachments
     if (attachmentPlaceholders.length === 1) {
         return (
             <div className="blog-post">
                 <div className="content" dangerouslySetInnerHTML={{ __html: attachmentPlaceholders[0] }} />
                 <div className="attachments">
-                {attachments && attachments.length > 0 && attachments.map((attachment, index) => (
-                    <AttachmentComponent key={index} attachment={attachment} />
-                ))}
+                    {attachments && attachments.length > 0 && attachments.map((attachment, index) => (
+                        <AttachmentComponent key={index} attachment={attachment} />
+                    ))}
                 </div>
             </div>
         );
     }
 
-    // If attachmentPlaceholders is larger than attachments, display attachments in between
     if (attachmentPlaceholders.length > attachments.length) {
         return (
             <div className="blog-post">
@@ -228,9 +298,9 @@ const renderContentWithAttachments = (content: string, attachments: AttachmentsB
 
 
 export default memo(BlogDetailSection);
-type CommentItemProps =  CommentBlogData;
+type CommentItemProps = CommentBlogData;
 const CommentItem = (props: CommentItemProps) => {
-   
+
 
     return (
         <Stack flex={1} spacing={1} bgcolor="grey.50" p={2} borderRadius={1}>

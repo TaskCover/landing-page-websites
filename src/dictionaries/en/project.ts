@@ -33,7 +33,7 @@ export const ProjectLang: ProjectDictionary = {
   tabList: {
     tasks: "Tasks",
     activities: "Activities",
-    costHistory: "Cost History",
+    budget: "Budget",
     members: "Members",
     information: "Information",
   },
@@ -185,6 +185,55 @@ export const ProjectLang: ProjectDictionary = {
     head: {
       title: "Activities of Project",
     },
+  },
+  budget: {
+    head: {
+      title: "Cost of Project | Taskcover",
+    },
+    action: {
+      addBudget: "Add budget",
+      addBudgetTitleModal: "New budget",
+    },
+    form: {
+      name: "Name",
+      start_date: "Budget start date",
+      end_date: "Budget end date",
+      owner: "Owner",
+      project_id: "Project ID",
+    },
+    createBudgetSuccess: "Create new budget success!",
+    table: {
+      budget: "Status / Budget",
+      owner: "Owner",
+      cost: "Cost",
+      budgetTimeUsed: "Budget Time Used",
+      budgetedTimeUse: "Budgeted Time Usage",
+      workTime: "Work Time",
+      estimateTime: "Estimate Time",
+      revenue: "Revenue",
+      margin: "Marin",
+      budgetUsed: "Budget Used",
+      budgetTotal: "Budget Total",
+      workedTime: "Worked Time",
+      billableTime: "Billabel Time",
+      invoiced: "Invoiced",
+      company: "Company",
+      project: "Project",
+    },
+    groupBy: {
+      dateCreated: "Date Created",
+      dateUpdated: "Date Udpated",
+      startDate: "Start Date",
+      endDate: "End Date",
+      owner: "Owner",
+      status: "Status",
+    },
+    filter: {
+      owner: "Owner",
+      time: "Time",
+    },
+    titleGroupBy: "Group By",
+    titleFilter: "Filter",
   },
   errors: {
     form: {

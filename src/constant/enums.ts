@@ -67,6 +67,9 @@ export enum SALE_STAGE {
   PROSPECT = "PROSPECT",
   NEGOTIATION = "NEGOTIATION",
   WAITING_APPROVE = "WATTING_APPROVE",
+  OPEN = "OPEN",
+  WON_DEAL = "WON_DEAL",
+  LOST_DEAL = "LOST_DEAL",
 }
 
 export enum SALE_BILL_TYPE {
@@ -128,3 +131,10 @@ export enum DocGroupByEnum {
   OWNER = "owner",
   PROJECT_ID = "project_id",
 }
+
+export const DocAccessibility = {
+  FULL_ACCESS: "Full access",
+  VIEW: "Can view",
+  EDIT: "Can edit",
+  COMMENT: "Can comment",
+} as const;

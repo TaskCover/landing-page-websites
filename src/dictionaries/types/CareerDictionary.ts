@@ -8,7 +8,11 @@ export type CareerDictionary={
     },
 
     actions: {
-        search: string
+        search: string,
+        update:{
+            title:string,
+            content:string,
+        }
     },
 
     title_form: string,
@@ -32,7 +36,8 @@ export type CareerDictionary={
     status: string,
     is_opening: string,
     is_closed: string,
-
+    Closed:string,
+    ReOpen:string,
     form_career : {
         title: string,
         slug: string,
@@ -65,4 +70,5 @@ export type CareerDictionary={
         title: string,
         content: string
     },
+    update:string,
 }

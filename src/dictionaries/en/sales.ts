@@ -39,6 +39,9 @@ export const SalesLang: SalesDictionary = {
       prospect: "Prospect",
       waitingApprove: "Waiting Approve",
       negotiation: "Negotiation",
+      open: "Open",
+      wonDeal: "Won Deal",
+      lostDeal: "Lost Deal",
     },
     exportView: {
       title: "Export View",

@@ -230,7 +230,7 @@ const Preview = (props: PreviewProps) => {
                     width="auto"
                     alt="Image"
                     sx={{
-                      maxWidth: "600px",
+                      maxWidth: "100%",
                       maxHeight: "100%",
                     }}
                   />

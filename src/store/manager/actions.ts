@@ -128,6 +128,7 @@ export const getCompany = createAsyncThunk(
 export const updateCompany = createAsyncThunk(
   "manager/updateCompany",
   async ({ id, ...data }: CompanyData & { id: string }) => {
+    console.log('update')
     try {
       const response = await client.put(
         StringFormat(Endpoint.COMPANY_ITEM, { id }),
@@ -135,8 +136,8 @@ export const updateCompany = createAsyncThunk(
         {
           baseURL: COMPANY_API_URL,
         },
-      );
-
+        );
+        
       if (response?.status === HttpStatusCode.OK) {
         return response.data;
       }

@@ -90,8 +90,7 @@ const SaleService = () => {
           unit: SERVICE_UNIT_OPTIONS.DAY,
           tolBudget: 0,
           rate: 0,
-          estimateUSD: 0,
-          tolBudgetUSD: 0,
+          estimate: 0,
         },
       ],
     });

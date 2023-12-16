@@ -2,8 +2,10 @@ import { DataStatus } from "constant/enums";
 import { useCallback, useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { CareerData, GetCareerListQueries, getAllCareer, getCareerBySlug, postCareer, upadteCareer } from "./action";
+import { CareerData, GetCareerListQueries, getAllCareer, getCareerBySlug, postCareer, upadteCareer, updateStatusCareer } from "./action";
 import { CareergDataForm } from "./type";
+import { clientStorage } from "utils/storage";
+import { ACCESS_TOKEN_STORAGE_KEY } from "constant/index";
 
 export const useCareer = () => {
   const dispatch = useAppDispatch();
@@ -55,6 +57,16 @@ export const useCareer = () => {
     return await dispatch(getCareerBySlug(slug)).unwrap();
   };
 
+  const onUpdateCareerStatus =  useCallback(
+    async(careerList: CareerData[],opened:boolean)=>{
+        try {
+            const Token = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+            return await dispatch(updateStatusCareer({ careerList: careerList,opened:opened, Token: Token })).unwrap();
+        } catch (error) {
+           throw error; 
+        }
+    },[dispatch]
+  )
   return {
     onGetCareer,
     onCreateNewCareer,
@@ -71,5 +83,6 @@ export const useCareer = () => {
     isIdle,
     isFetching,
     filters,
+    onUpdateCareerStatus
   };
 };

@@ -3,17 +3,24 @@ import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import {
   changeParentTask,
   commentTask,
+  convertSubTaskToTask,
+  convertToSubTask,
+  convertToTask,
   createProject,
   createTask,
   createTaskList,
+  deleteDependency,
   deleteSubTasks,
   deleteTaskLists,
   deleteTasks,
+  deleteTodo,
+  DependencyStatus,
   getActivitiesOfProject,
   GetActivitiesQueries,
   getMembersOfProject,
   GetMembersOfProjectQueries,
   getProject,
+  getProjectAttachment,
   getProjectList,
   GetProjectListQueries,
   getTaskList,
@@ -21,22 +28,13 @@ import {
   GetTasksOfProjectQueries,
   moveTask,
   ProjectStatus,
-  TaskData,
   updateProject,
   updateTask,
   updateTaskList,
-  convertToTask,
   updateTodoStatus,
-  convertToSubTask,
-  deleteTodo,
-  convertSubTaskToTask,
-  DependencyStatus,
-  deleteDependency,
-  getProjectAttachment,
 } from "./actions";
 import {
   Attachment,
-  BaseQueries,
   ItemListResponse,
   Option,
   Paging,
@@ -51,6 +49,8 @@ import {
 } from "utils/index";
 import { Position } from "store/company/reducer";
 import { subDays } from "date-fns";
+import { BudgetReducer } from "store/project/budget/reducer";
+import { TBudgetListFilter, TBudgets } from "store/project/budget/action";
 
 export interface Member {
   id: string;
@@ -239,6 +239,12 @@ export interface ProjectState {
   activitiesError?: string;
   activitiesFilters: GetActivitiesQueries;
   attachments?: AttachmentOfProject[];
+
+  budgets?: TBudgets;
+  budgetStatus: DataStatus;
+  budgetPaging: Paging;
+  budgetError?: string;
+  budgetFilters: TBudgetListFilter;
 }
 
 export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {
@@ -279,6 +285,12 @@ const initialState: ProjectState = {
   activitiesFilters: DEFAULT_RANGE_ACTIVITIES,
 
   attachments: [],
+
+  budgets: [],
+  budgetStatus: DataStatus.IDLE,
+  budgetPaging: DEFAULT_PAGING,
+  budgetError: undefined,
+  budgetFilters: {},
 };
 
 const projectSlice = createSlice({
@@ -317,7 +329,7 @@ const projectSlice = createSlice({
     },
     reset: () => initialState,
   },
-  extraReducers: (builder) =>
+  extraReducers: (builder) => {
     builder
       .addCase(getProjectList.pending, (state, action) => {
         state.status = DataStatus.LOADING;
@@ -861,7 +873,9 @@ const projectSlice = createSlice({
         state.activities = [];
         state.activitiesStatus = DataStatus.FAILED;
         state.activitiesError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
-      }),
+      });
+    BudgetReducer(builder);
+  },
 });
 
 export const {

@@ -1,4 +1,4 @@
-import { CardContent, Grid, Stack, TextField, Typography } from "@mui/material";
+import { CardContent, Grid, Input, Stack, TextField, Typography } from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
 import {
@@ -108,10 +108,21 @@ const Form = (props: FormProps) => {
               {feedbackT("feedbackTable.email")}: {initialValues.email}
             </Typography>
             <hr />
-            <Typography sx={{ mb: 1 }} color="#424242" variant="h5">
-              {feedbackT("feedbackTable.title")}: {initialValues.title}
+            <Stack>
+              <Typography sx={{ mb: 1 }} color="#424242" variant="h5">
+              {feedbackT("feedbackTable.subject")}: 
             </Typography>
-            <Typography variant="body2" color="#212121">
+            <Input
+                    title={feedbackT("feedbackTable.subject")}
+                    name="title"
+                    required
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values?.title}
+                    color="secondary"
+                />
+            </Stack>
+            <Typography variant="body2" color="#212121" style={{paddingTop:7}}>
               {feedbackT("feedbackTable.content")}: {initialValues.content}
             </Typography>
           </CardContent>

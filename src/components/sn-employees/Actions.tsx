@@ -57,7 +57,8 @@ const Actions = () => {
   };
 
   const onSearch = () => {
-    const path = getPath(pathname, queries);
+    const q = { ...queries, fullname: queries["email"] };
+    const path = getPath(pathname, q);
     push(path);
 
     // onGetEmployees({ ...queries, pageIndex: 1, pageSize });
@@ -67,7 +68,7 @@ const Actions = () => {
     const newQueries = { pageIndex: 1, pageSize };
     const path = getPath(pathname, newQueries);
     push(path);
-    onGetEmployees(newQueries);
+    onGetEmployees({ ...newQueries });
   };
 
   const onRefresh = () => {
@@ -139,23 +140,16 @@ const Actions = () => {
           minWidth={{ md: "fit-content" }}
         >
           <Search
-            placeholder={commonT("searchBy", { name: filterField })}
-            name={filterField}
+            placeholder={commonT("searchBy", { name: "email or name" })}
+            name={"email"}
             onChange={onChangeQueries}
-            value={queries[filterField]}
-            sx={{ width: 200, minWidth: 200 }}
-          />
-          <Dropdown
-            placeholder={commonT("searchByLabel")}
-            options={[
-              { label: "email", value: "email" },
-              { label: "name", value: "fullname" },
-            ]}
-            name="filter_field"
-            onChange={(name, value) => {
-              setFilterField(value);
+            value={queries["email"]}
+            sx={{ width: 300, minWidth: 200 }}
+            onKeyDown={(e) => {
+              if(e.key === 'Enter') {
+                onSearch()
+              }
             }}
-            value={filterField}
           />
           <Dropdown
             placeholder={commonT("position")}

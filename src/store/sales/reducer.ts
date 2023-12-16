@@ -154,7 +154,7 @@ const initState: SaleState = {
   salesPaging: DEFAULT_PAGING,
   salesError: undefined,
   salesFilters: {
-    sort: "-1",
+    sort: "DESC",
   },
 
   saleDetail: null,

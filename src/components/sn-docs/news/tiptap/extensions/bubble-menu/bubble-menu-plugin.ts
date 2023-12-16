@@ -126,8 +126,6 @@ export class BubbleMenuView {
     const { state, composing } = view;
     const { selection } = state;
 
-    console.log("updated");
-
     if (composing) return;
 
     this.createTooltip();
@@ -196,7 +194,7 @@ export class BubbleMenuView {
         "blur",
         (event) => {
           this.blurHandler({ event });
-        }
+        },
       );
     }
   }

@@ -11,7 +11,7 @@ import ChatForward from "./ChatForward";
 import Conversation from "./components/conversation/Conversation";
 import SearchChatText from "./chatGroup/SearchChatText";
 
-const SwitchChat = () => {
+const SwitchChat = ({ onCloseChatBox }) => {
   const { currStep, onSetStep } = useChat();
   useEffect(() => {
     onSetStep(STEP.CONVENTION);
@@ -24,7 +24,7 @@ const SwitchChat = () => {
   const renderContent = useCallback(() => {
     switch (currStep) {
       case STEP.CONVENTION:
-        return <ChatListUser />;
+        return <ChatListUser onCloseChatBox={onCloseChatBox}/>;
       case STEP.CHAT_ONE:
         return <ConversationLayoutUser />;
       case STEP.VIEW_DETAIL_USER:

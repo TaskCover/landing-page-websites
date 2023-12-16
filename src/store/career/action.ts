@@ -122,3 +122,41 @@ export const getCareerBySlug = createAsyncThunk(
       }
   }
 );
+
+// update sttaus 
+export const updateStatusCareer = createAsyncThunk(
+  'updateStatusCareer',
+  async ({ careerList, opened, Token }: { careerList: CareerData[]; opened: boolean; Token: string | undefined | null }) => {
+    console.log(opened);
+    try {
+      const promises = careerList.map(async (element) => {
+        const item = {
+          ...element,
+          is_opening: opened, 
+          start_time : element.start_time ? new Date(element.start_time).toISOString().split('T')[0] : null,
+          end_time : element.end_time ? new Date(element.end_time).toISOString().split('T')[0] : null,
+        };
+        const response = await client.put(
+          `${Endpoint.CAREER}/${element.id}`,
+          item,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `${Token}`,
+            },
+            baseURL: CAREER_API_URL,
+          }
+        );
+        if (response?.status !== HttpStatusCode.CREATED) {
+          throw AN_ERROR_TRY_AGAIN;
+        }
+        return response.data;
+      });
+      const results = await Promise.all(promises);
+      return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+);

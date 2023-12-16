@@ -5,7 +5,6 @@ import { Text } from "components/shared";
 import { usePathname } from "next-intl/client";
 import MenuDashboardIcon from "icons/MenuDashboardIcon";
 import {
-  AUTHORIZED_PATHS,
   COMPANIES_PATH,
   COST_HISTORY_PATH,
   EMPLOYEES_PATH,
@@ -24,10 +23,10 @@ import {
   BLOG_CATEGORY_PATH,
   BLOGS_PATH,
   CAREER_PATH,
+  BUDGETING_PATH,
   BILLING_PATH,
 } from "constant/paths";
 import MenuProjectIcon from "icons/MenuProjectIcon";
-import MenuTaskIcon from "icons/MenuTaskIcon";
 import MenuCompanyIcon from "icons/MenuCompanyIcon";
 import Collapse from "./Collapse";
 import { useAuth, useSidebar } from "store/app/selectors";
@@ -48,6 +47,8 @@ import MenuBlogIcon from "icons/MenuBlogIcon";
 import CareerIcon from "icons/CareerIcon";
 import DocsItem from "icons/DocsItem";
 import BillingIcon from "icons/BillingIcon";
+import WalletMoneyIcon from "icons/WalletMoneyIcon";
+import BudgetIcon from "icons/BudgetIcon";
 
 const Menu = () => {
   const { user } = useAuth();
@@ -264,11 +265,24 @@ const DATA: MenuItemProps[] = [
     icon: <MenuTimeTrackingIcon />,
     roles: [Permission.AM, Permission.ST],
   },
-
   {
     label: "menu.resourcePlaning",
     href: RESOURCE_PLANING_PATH,
     icon: <MenuResourcePlaningIcon />,
+    roles: [Permission.AM, Permission.ST],
+  },
+  {
+    label: "menu.budgeting",
+    // icon: <WalletMoneyIcon style={{ color: '#3699FF' }} />,
+    icon: <BudgetIcon />,
+    href: BUDGETING_PATH,
+    roles: [Permission.AM, Permission.ST],
+  },
+  //Billing
+  {
+    label: "menu.billing",
+    icon: <BillingIcon />,
+    href: BILLING_PATH,
     roles: [Permission.AM, Permission.ST],
   },
   {
@@ -293,13 +307,7 @@ const DATA: MenuItemProps[] = [
   {
     label: "menu.feedback",
     icon: <FeedbackIcon />,
-    subs: [
-      {
-        label: "menu.feedbackList",
-        href: FEEDBACK_PATH,
-        roles: [Permission.SA],
-      },
-    ],
+    href: FEEDBACK_PATH,
     roles: [Permission.SA],
   },
   {
@@ -323,27 +331,7 @@ const DATA: MenuItemProps[] = [
   {
     label: "menu.career",
     icon: <CareerIcon />,
-    subs: [
-      {
-        label: "menu.careerList",
-        href: CAREER_PATH,
-        roles: [Permission.SA],
-      },
-    ],
-    roles: [Permission.SA],
-  },
-  //Billing
-  {
-    label: "menu.billing",
-    icon: <BillingIcon />,
-    href: BILLING_PATH,
-    // subs: [
-    //   {
-    //     label: "menu.billing",
-    //     href: BILLING_PATH,
-    //     roles: [Permission.SA],
-    //   },
-    // ],
+    href: CAREER_PATH,
     roles: [Permission.SA],
   },
 ];

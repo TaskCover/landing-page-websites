@@ -4,7 +4,7 @@ import { Stack } from "@mui/material";
 import { Endpoint, client } from "api";
 import FormLayout from "components/FormLayout";
 import { Select } from "components/shared";
-import { HttpStatusCode } from "constant/enums";
+import { DocAccessibility, HttpStatusCode } from "constant/enums";
 import { DEFAULT_PAGING, NS_COMMON } from "constant/index";
 import { Option } from "constant/types";
 import { useFormik } from "formik";
@@ -58,17 +58,9 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
             isPublic: false,
           };
 
-    // if (values?.people === "ALL") {
-    //   value = {
-    //     perm: values?.access,
-    //     isPublic: values?.people === "ALL",
-    //   };
-    // }
-
     const res = await client.put(Endpoint.ADD_PERM_DOCS + id, payload, {
       baseURL: "http://103.196.145.232:6813/api/v1",
     });
-
     if (
       res.status === HttpStatusCode.OK ||
       res.status === HttpStatusCode.CREATED
@@ -105,24 +97,10 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
     },
     ...options,
   ];
-  const optionAccess = [
-    {
-      value: "FULL",
-      label: "Full access",
-    },
-    {
-      value: "VIEW",
-      label: "Can view",
-    },
-    {
-      value: "EDIT",
-      label: "Can edit",
-    },
-    {
-      value: "COMMENT",
-      label: "Can comment",
-    },
-  ];
+  const optionAccess = Object.keys(DocAccessibility).map((key) => ({
+    label: DocAccessibility[key],
+    value: key,
+  }));
 
   useEffect(() => {
     if (!isReady) return;

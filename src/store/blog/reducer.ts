@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { BlogData, BlogFormData, CommentBlogData, createBlogComment, createNewBlogs, deleteBlog, getAllBlogs, getBlogBySlug, getBlogComments, getRelatedBlog } from "./actions";
+import { BlogData, BlogFormData, CommentBlogData, createBlogComment, createNewBlogs, deleteBlog, getAllBlogs, getBlogBySlug, getBlogComments, getRelatedBlog, updatePublished } from "./actions";
 import { DataStatus } from "constant/enums";
 import { PagingItem } from "constant/types";
 import { GetBlogCategoryListQueries } from "store/blog-category/actions";
@@ -69,11 +69,13 @@ export const blogSlice = createSlice({
             .addCase(getAllBlogs.rejected, (state, action) => {
                 state.blogsStatus = DataStatus.FAILED;
                 state.blogsError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
-            }).addCase(createNewBlogs.fulfilled, (state, action: PayloadAction<BlogFormData>) => {
+            }).addCase(createNewBlogs.fulfilled, (state, action) => {
                 state.blogsStatus = DataStatus.SUCCEEDED;
+                state.blogs.unshift(action.payload);
             }).addCase(getBlogBySlug.fulfilled, (state, action: PayloadAction<BlogData>) => {
                     state.blog = action.payload;
             }).addCase(deleteBlog.fulfilled, (state, action: PayloadAction<string[]>) => {
+                state.blogsStatus = DataStatus.SUCCEEDED;
                 const deletedIds = action.payload;
                 deletedIds.forEach((deletedId) => {
                   const indexDeleted = state.blogs.findIndex((item) => item.slug === deletedId);
@@ -85,7 +87,34 @@ export const blogSlice = createSlice({
               .addCase(deleteBlog.rejected, (state, action) => {
                 state.blogsStatus = DataStatus.FAILED;
                 state.blogsError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
-              });
+              }).addCase(updatePublished.rejected, (state, action) => {
+                state.blogsStatus = DataStatus.FAILED;
+                state.blogsError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+              }).addCase(updatePublished.fulfilled, (state, action) => {
+                state.blogsStatus = DataStatus.SUCCEEDED;
+                const updatedBlogs = action.payload;
+                state.blogs = state.blogs.map((blog) => {
+                  const updatedBlog = updatedBlogs.find((updated) => updated.id === blog.id);
+              
+                  if (updatedBlog) {
+                    return {
+                      ...blog,
+                      ...updatedBlog,
+                    };
+                  }
+                  return blog; 
+                });
+              }).addCase(getBlogComments.fulfilled, (state, action) => {
+                state.listBlogComment = action.payload;
+                state.blogsStatus = DataStatus.SUCCEEDED;
+              })
+              .addCase(createBlogComment.fulfilled, (state, action) => {
+                state.blogsStatus = DataStatus.SUCCEEDED;
+                state.listBlogComment.unshift(action.payload);
+              }) .addCase(getRelatedBlog.fulfilled, (state, action) => {
+                state.blogsStatus = DataStatus.SUCCEEDED;
+                state.relatedBlogs = action.payload;
+              })
       },
     },
 );

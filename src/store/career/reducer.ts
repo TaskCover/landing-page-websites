@@ -1,7 +1,7 @@
 import { DataStatus } from "constant/enums";
-import { CareerData, GetCareerListQueries, getAllCareer, getCareerBySlug, postCareer, upadteCareer } from "./action";
+import { CareerData, GetCareerListQueries, getAllCareer, getCareerBySlug, postCareer, upadteCareer, updateStatusCareer } from "./action";
 import { Paging_Career } from "constant/types";
-import { DEFAULT_PAGING_CAREER } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING_CAREER } from "constant/index";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 
@@ -83,7 +83,23 @@ const careerSlice = createSlice({
                 if (state?.career?.id === action.payload.id) {
                     state.career = action.payload;
                 }
-            })
+            }).addCase(updateStatusCareer.rejected, (state, action) => {
+                state.careersStatus = DataStatus.FAILED;
+              }).addCase(updateStatusCareer.fulfilled, (state, action) => {
+                state.careersStatus = DataStatus.SUCCEEDED;
+                const updatedList = action.payload;
+                state.careers = state.careers.map((career) => {
+                  const updatedCareer = updatedList.find((updated) => updated.id === career.id);
+                  if (updatedCareer) {
+                    return {
+                      ...career,
+                      ...updatedCareer,
+                    };
+                  }
+                  return career;
+                });
+              })
+              
     },
 });
 

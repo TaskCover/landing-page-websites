@@ -29,7 +29,7 @@ export type ProjectDictionary = {
   tabList: {
     tasks: string;
     activities: string;
-    costHistory: string;
+    budget: string;
     members: string;
     information: string;
   };
@@ -180,6 +180,55 @@ export type ProjectDictionary = {
     head: {
       title: string;
     };
+  };
+  budget: {
+    head: {
+      title: string;
+    };
+    action: {
+      addBudget: string;
+      addBudgetTitleModal: string;
+    };
+    form: {
+      name: string;
+      start_date: string;
+      end_date: string;
+      owner: string;
+      project_id: string;
+    };
+    createBudgetSuccess: string;
+    table: {
+      budget: string;
+      owner: string;
+      cost: string;
+      budgetTimeUsed: string;
+      budgetedTimeUse: string;
+      workTime: string;
+      estimateTime: string;
+      revenue: string;
+      margin: string;
+      budgetUsed: string;
+      budgetTotal: string;
+      workedTime: string;
+      billableTime: string;
+      invoiced: string;
+      company: string;
+      project: string;
+    };
+    groupBy: {
+      dateCreated: string;
+      dateUpdated: string;
+      startDate: string;
+      endDate: string;
+      owner: string;
+      status: string;
+    };
+    filter: {
+      owner: string;
+      time: string;
+    };
+    titleGroupBy: string;
+    titleFilter: string;
   };
   errors: {
     form: {

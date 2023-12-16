@@ -42,8 +42,9 @@ export const BlogLang: BlogDictionary = {
         category: "Danh mục",
         tag: "Nhãn dán",
         statusBlog:"Trạng thái",
-        slug:"Slug",
+        slug:"Đường dẫn",
         created_time : "Ngày tạo",
+        relatedBlogs:"Bài viết liên quan"
     },
     published: "Xuất bản",
     draft: "Bản nháp",
@@ -53,7 +54,14 @@ export const BlogLang: BlogDictionary = {
         status: "Trạng thái",
         delete:{
             title:"Xác nhận xóa bài viết",
-            confirm:"Bạn muốn xóa bài viết ?"
+            confirm:"Bạn muốn xóa bài viết ?",
+            remove:"Xóa",
+        },
+        draft : "Nháp",
+        published:"Xuất bản",
+        update:{
+            title:"Bạn có muốn cập nhật trạng thái ?",
+            content:"Cập nhật trạng thái"
         }
     },
     blogForm: {

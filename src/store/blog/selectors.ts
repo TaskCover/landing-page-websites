@@ -14,6 +14,7 @@ import {
     getBlogComments,
     getRelatedBlog,
     updateBlog,
+    updatePublished,
     uploadFile,
 } from "./actions";
 import { DataStatus } from "constant/enums";
@@ -141,6 +142,16 @@ export const useBlogs = () => {
     [dispatch]
   );
 
+  const onUpdatePublished =  useCallback(
+    async(blogDataList: BlogData[],published:boolean)=>{
+        try {
+            const Token = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+            return await dispatch(updatePublished({ blogList: blogDataList,published:published, Token: Token })).unwrap();
+        } catch (error) {
+           throw error; 
+        }
+    },[dispatch]
+  )
     return {
         onGetBlogs,
         onUpdateBlog,
@@ -163,6 +174,7 @@ export const useBlogs = () => {
         onGetBlogComments,
         onCreateCommentBlog,
         onApproveOrReject,
-        onDeleteBlog
+        onDeleteBlog,
+        onUpdatePublished,
     };
 };

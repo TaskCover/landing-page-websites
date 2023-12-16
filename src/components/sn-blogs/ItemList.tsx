@@ -33,32 +33,23 @@ import ApproveOrRejectConfirm from "./components/ApproveOrRejectConfirm";
 import TrashIcon from "icons/TrashIcon";
 import DeleteCofirmDialog from "./components/DeleteCofirmDialog";
 import { AltRoute } from "@mui/icons-material";
+import { DataAction } from "constant/enums";
+import useTheme from "hooks/useTheme";
 
 const ItemList = () => {
-  const {
-    items,
-    item,
-    onGetBlogs,
-    page,
-    size,
-    totalItems,
-    total_page,
-    error,
-    status,
-    isFetching,
-    isIdle,
-    onApproveOrReject: onApproveOrRejectAction,
-    onDeleteBlog: onDeleteAction,
-  } = useBlogs();
-  totalItems;
+  
+  const { items,item,onGetBlogs,page,size,totalItems,total_page,error,status,isFetching,isIdle,onUpdatePublished : onApproveOrRejectAction,onDeleteBlog:onDeleteAction} = useBlogs(); 
+totalItems;
   const { initQuery, isReady, query } = useQueryParams();
   const { isMdSmaller } = useBreakpoint();
   const [selectedList, setSelectedList] = useState<BlogData[]>([]);
-  const [action, setAction] = useState<BlogStatus | undefined>();
+  const [action, setAction] = useState<DataAction | undefined>();
   const [id, setId] = useState<string | undefined>();
   const blogT = useTranslations(NS_BLOG);
   const { push } = useRouter();
   const pathname = usePathname();
+  const { isDarkMode } = useTheme();
+  const [published, setPublished] = useState<BlogStatus | undefined>();
 
   const isCheckedAll = useMemo(
     () => Boolean(selectedList.length && selectedList.length === items.length),
@@ -108,7 +99,7 @@ const ItemList = () => {
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
       { value: blogT("blogList.title"), width: "20%", align: "left" },
-      { value: blogT("blogList.category"), width: "20%", align: "left" },
+      { value: blogT("blogList.slug"), width: "20%", align: "left" },
       { value: blogT("blogList.tag"), width: "20%", align: "left" },
       { value: blogT("blogList.created_time"), width: "20%", align: "left" },
       { value: blogT("blogList.statusBlog"), width: "10%", align: "left" },
@@ -136,15 +127,21 @@ const ItemList = () => {
     onGetBlogs({ ...initQuery });
   }, [initQuery, isReady, onGetBlogs]);
 
-  const onApproveOrReject = (type: BlogStatus, id?: string) => {
+  const onApproveOrReject = (type: BlogStatus) => {
     return () => {
-      setAction(type);
+      setAction(DataAction.OTHER);
+      setPublished(type);
       setId(id);
     };
+  };
+
+  const onDeleteBlog = () => {
+    setAction(DataAction.DELETE);
   };
   const onResetAction = () => {
     setAction(undefined);
     setId(undefined);
+    setPublished(undefined);
   };
   const textAction = useMemo(
     () => (action !== undefined ? blogT(TEXT_ACTION[action]) : ""),
@@ -154,21 +151,17 @@ const ItemList = () => {
   const onSubmitApproveOrReject = async () => {
     if (action === undefined) return;
     const ids = id ? [id] : selectedList.map((item) => item.slug);
-    // try {
-    //   const idsResponse = await onApproveOrRejectAction(
-    //     ids,
-    //     action,
-    //     blogCode,
-    //   );
-    //   if (idsResponse.length) {
-    //     setAction(undefined);
-    //     setSelectedList([]);
-    //     setId(undefined);
-    //   }
-    //   return idsResponse;
-    // } catch (error) {
-    //   throw error;
-    // }
+    const listItem = selectedList;
+    try {
+     const listUpdate =  await onApproveOrRejectAction(listItem as BlogData[],published as unknown as boolean);
+        setAction(undefined);
+        setSelectedList([]);
+        setId(undefined);
+        setPublished(undefined);
+        return listUpdate;
+    } catch (error) {
+      throw error;
+    }
   };
 
   const onSubmitDelete = async () => {
@@ -180,6 +173,7 @@ const ItemList = () => {
         setAction(undefined);
         setSelectedList([]);
         setId(undefined);
+        setPublished(undefined);
       }
       return idsResponse;
     } catch (error) {
@@ -192,14 +186,17 @@ const ItemList = () => {
       <FixedLayout>
         {!!selectedList.length && (
           <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{ xs: 2, md: 3 }}
-            px={{ xs: 0.75, md: 3 }}
-            py={{ xs: 1.125, md: 3 }}
-            pb={{ md: 0.25 }}
-            justifyContent={{ xs: "flex-end", md: "flex-start" }}
-            bgcolor={{ xs: "grey.50", md: "transparent" }}
+           direction="row"
+           alignItems="center"
+           spacing={2}
+           pb={0.25}
+           border="1px solid"
+           borderColor="grey.100"
+           borderBottom="none"
+           sx={{ borderTopLeftRadius: 1, borderTopRightRadius: 1 }}
+           px={{ xs: 0.75, md: 1.125 }}
+           py={1.125}
+           mx={{ xs: 0, md: 3 }}
           >
             <Checkbox
               checked={isCheckedAll}
@@ -209,7 +206,7 @@ const ItemList = () => {
             <IconButton
               size="small"
               onClick={onApproveOrReject(BlogStatus.PUBLISHED)}
-              tooltip={blogT("approve")}
+              tooltip={blogT("actions.published")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -219,13 +216,14 @@ const ItemList = () => {
                 },
               }}
               variant="contained"
+              disabled={!selectedList.length}
             >
               <CircleTickIcon filled={false} fontSize="small" />
             </IconButton>
             <IconButton
               size="small"
               onClick={onApproveOrReject(BlogStatus.DRAFT)}
-              tooltip={blogT("reject")}
+              tooltip={blogT("actions.draft")}
               sx={{
                 backgroundColor: "primary.light",
                 color: "text.primary",
@@ -235,15 +233,16 @@ const ItemList = () => {
                 },
               }}
               variant="contained"
+              disabled={!selectedList.length}
             >
               <CloseSquareIcon fontSize="small" />
             </IconButton>
             <IconButton
               size="small"
-              onClick={onApproveOrReject(BlogStatus.DRAFT)}
-              tooltip={blogT("actions.delete")}
+              onClick={onDeleteBlog}
+              tooltip={blogT("actions.delete.remove")}
               sx={{
-                backgroundColor: "primary.light",
+                backgroundColor: isDarkMode ? "grey.50" : "primary.light",
                 color: "text.primary",
                 p: { xs: "4px!important", md: 1 },
                 "&:hover svg": {
@@ -251,6 +250,7 @@ const ItemList = () => {
                 },
               }}
               variant="contained"
+              disabled={!selectedList.length}
             >
               <TrashIcon fontSize="small" />
             </IconButton>
@@ -311,10 +311,10 @@ const ItemList = () => {
         />
       </FixedLayout>
       <ApproveOrRejectConfirm
-        open={action !== undefined}
+        open={action === DataAction.OTHER}
         onClose={onResetAction}
-        title={blogT("employeeList.confirm.title", { label: textAction })}
-        content={blogT("employeeList.confirm.content", {
+        title={blogT("actions.update.title", { label: textAction })}
+        content={blogT("actions.update.content", {
           label: textAction,
           count: id ? 1 : selectedList.length,
         })}

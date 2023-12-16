@@ -1,3 +1,5 @@
+"use client";
+
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -9,61 +11,44 @@ import { NS_DOCS } from "constant/index";
 import { useTranslations } from "next-intl";
 import * as React from "react";
 import { useAuth } from "store/app/selectors";
+import { usePostCommentMutation } from "store/docs/api";
 import { NewPageContext } from "../../context/NewPageContext";
-import { User } from "constant/types";
-import { useEditor } from "@tiptap/react";
-import { getExtensions } from "../../tiptap/extensions/starter-kit";
 import useDocEditor from "../../hook/useDocEditor";
-
+import { useParams } from "next/navigation";
 
 export class Comment {
-  user: Partial<User>;
   content: string;
-  id: string;
-  replies: Array<Comment>;
-  createdAt: Date;
-  constructor(user, content) {
-    this.user = user;
+  position: string;
+  constructor(content) {
     this.content = content;
-    this.id = `a${crypto.randomUUID()}a`;
-    this.replies = [];
-    this.createdAt = new Date();
+    this.position = `a${crypto.randomUUID()}a`;
   }
 }
 
 export default function CommentDialog() {
-  const {
-    openCommentDialog,
-    setCommentDialogOpen,
-    comments,
-    setComments,
-    setActiveCommentId,
-
-
-  } = React.useContext(NewPageContext);
+  const { openCommentDialog, setCommentDialogOpen, setActiveCommentId } =
+    React.useContext(NewPageContext);
   const { user } = useAuth();
   const t = useTranslations(NS_DOCS);
+  const [addComment] = usePostCommentMutation();
   const [comment, setComment] = React.useState<string>("");
+  const { id } = useParams();
 
   const editor = useDocEditor();
   const handleClose = () => {
     setCommentDialogOpen(false);
   };
 
-  const handleAddComment = () => {
-    const newComment = new Comment(user, comment);
-    setComments((prev) => {
-      const latestComment = prev.at(-1);
-      prev[prev.length - 1] = { ...latestComment, content: comment };
-      return prev;
-    });
-    setActiveCommentId(newComment.id);
-    editor?.commands.setComment(newComment.id);
-
+  const handleAddComment = async () => {
+    const newComment = new Comment(comment);
+    editor?.commands.setComment(newComment.position);
+    const response = await addComment({
+      ...newComment,
+      docId: id as string,
+    }).unwrap();
+    setActiveCommentId(newComment.position);
     handleClose();
   };
-
-
   return (
     <Dialog open={openCommentDialog} onClose={handleClose}>
       <DialogTitle sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -83,10 +68,18 @@ export default function CommentDialog() {
           InputLabelProps={{ sx: { color: "InactiveCaptionText" } }}
           sx={{ color: "inherit" }}
           variant="standard"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleAddComment();
+            if (e.key === "Esc") setCommentDialogOpen(!openCommentDialog);
+          }}
         />
       </DialogContent>
       <DialogActions>
-        <Button sx={{ textTransform: "none" }} onClick={handleClose}>
+        <Button
+          sx={{ textTransform: "none" }}
+          color="inherit"
+          onClick={handleClose}
+        >
           {t("button.cancel")}
         </Button>
         <Button

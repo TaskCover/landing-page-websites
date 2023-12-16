@@ -16,6 +16,7 @@ import { feedbackReducer } from "./feedback/reducer";
 import { BlogState, blogReducer } from "./blog/reducer";
 import { categoryBlogReducer } from "./blog-category/reducer";
 import { CareerReducer } from "./career/reducer";
+import documentApi from "./docs/api";
 import { BillingState, billingReducer } from "./billing/reducer";
 
 export interface State {
@@ -51,12 +52,13 @@ export const store = configureStore({
     categoryBlogs: categoryBlogReducer,
     //career
     career: CareerReducer,
+    [documentApi.reducerPath]: documentApi.reducer,
     billing: billingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }),
+    }).concat([documentApi.middleware]),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
