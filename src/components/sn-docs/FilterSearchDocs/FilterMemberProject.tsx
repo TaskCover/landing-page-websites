@@ -20,6 +20,7 @@ import TextFieldSelect, {
 } from "components/shared/TextFieldSelect";
 import _ from "lodash";
 import { useProjects } from "store/project/selectors";
+import ChevronIcon from "icons/ChevronIcon";
 
 const FilterMemberProject = ({ onChange, queries }: FilterSearchDocsProps) => {
   const docsT = useTranslations(NS_DOCS);
@@ -65,14 +66,15 @@ const FilterMemberProject = ({ onChange, queries }: FilterSearchDocsProps) => {
         <Text variant="body2" color="grey.400">
           {docsT("filter.filter.project")}
         </Text>
+        <ChevronIcon fontSize="small"></ChevronIcon>
       </MenuItem>
       <Popover
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
+          vertical: "bottom",
+          horizontal: "right",
         }}
         transformOrigin={{
           vertical: "top",

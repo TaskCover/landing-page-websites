@@ -20,6 +20,7 @@ import { useFormik } from "formik";
 import TextFieldSelect from "components/shared/TextFieldSelect";
 import { Dropdown } from "components/Filters";
 import { STATUS_OPTIONS } from "components/sn-projects/components/helpers";
+import ChevronIcon from "icons/ChevronIcon";
 
 const FilterProjectStatus = ({ onChange, queries }: FilterSearchDocsProps) => {
   const docsT = useTranslations(NS_DOCS);
@@ -53,14 +54,15 @@ const FilterProjectStatus = ({ onChange, queries }: FilterSearchDocsProps) => {
         <Text variant="body2" color="grey.400">
           {docsT("filter.filter.projectStatus")}
         </Text>
+        <ChevronIcon fontSize="small"></ChevronIcon>
       </MenuItem>
       <Popover
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
+          vertical: "bottom",
+          horizontal: "right",
         }}
         transformOrigin={{
           vertical: "top",

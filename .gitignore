@@ -37,9 +37,13 @@ yarn-error.log*
 next-env.d.ts
 
 .env
+.env*
+
 
 .history
 .husky
 .next
 .vscode
 .idea
+
+package-lock.json
