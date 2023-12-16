@@ -1,4 +1,4 @@
-import TabList from "./TabList";
+import TabInfo from "./TabList";
 import TopContent from "./TopContent";
 
-export { TabList, TopContent };
+export { TabInfo, TopContent };

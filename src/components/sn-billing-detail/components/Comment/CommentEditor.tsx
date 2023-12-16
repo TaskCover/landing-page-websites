@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 import {
   ACCEPT_MEDIA,
   FILE_ACCEPT,
+  NS_BILLING,
   NS_COMMON,
   NS_PROJECT,
   NS_SALES,
@@ -35,11 +36,24 @@ import { SaleState, Sales } from "store/sales/reducer";
 import useToggle from "hooks/useToggle";
 import Loading from "components/Loading";
 import Editor from "./Editor";
+import { useBillings } from "store/billing/selectors";
+import {
+  Billing,
+  BillingComment,
+  BillingCommentData,
+} from "store/billing/reducer";
+import { User } from "constant/types";
+
+type IProps = {
+  billing: Billing;
+  user: User;
+};
 
 const CommentEditor = forwardRef(
-  (_, ref: ForwardedRef<HTMLDivElement | null>) => {
+  (props: IProps, ref: ForwardedRef<HTMLDivElement | null>) => {
+    const { billing, user } = props;
     const commonT = useTranslations(NS_COMMON);
-    const salesT = useTranslations(NS_SALES);
+    const billingT = useTranslations(NS_BILLING);
     const { onAddSnackbar } = useSnackbar();
     const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
     const [isLoadingFile, setIsLoadingFile] = useState<boolean>(false);
@@ -61,8 +75,8 @@ const CommentEditor = forwardRef(
       setFileLoaded((files) => files.concat(data));
     };
 
-    const { saleDetail, onGetSaleDetail } = useSaleDetail();
-    const { onCreateComment } = useSalesComment();
+    // const { saleDetail, onGetSaleDetail } = useSaleDetail();
+    const { onCreateCommentBilling, onGetBilling } = useBillings();
 
     const disabled = useMemo(
       () =>
@@ -79,10 +93,12 @@ const CommentEditor = forwardRef(
       try {
         onProcessingTrue();
         const data = {
-          deal_id: saleDetail?.id || "",
-          content: editorRef.current?.getHTML() ?? content,
-          attachments: fileLoaded,
-        } as CommentData;
+          bill_id: billing.id,
+          status: "1",
+          user_id: user.id,
+          // content: editorRef.current?.getHTML() ?? content,
+          file: fileLoaded,
+        } as BillingCommentData;
         // if (files.length) {
         //   data.attachments = [];
         //   const promises = files.map((file) => {
@@ -95,14 +111,14 @@ const CommentEditor = forwardRef(
         //     }
         //   });
         // }
-        const newData = await onCreateComment(data);
+        const newData = await onCreateCommentBilling(data);
         if (newData) {
           //   onGetTaskList(taskListId);
-          const newComments: Sales["comments"] = newData.deal_update.comments;
-          newComments.sort((a, b) =>
-            moment(b.created_time).isAfter(a.created_time) ? 1 : -1,
-          );
-          onGetSaleDetail(saleDetail?.id || "");
+          // const newComments: Sales["comments"] = newData.deal_update.comments;
+          // newComments.sort((a, b) =>
+          //   moment(b.created_time).isAfter(a.created_time) ? 1 : -1,
+          // );
+          onGetBilling(billing?.id || "");
           // setValue("comments", newComments);
           setContent("");
           setFiles([]);
@@ -121,7 +137,7 @@ const CommentEditor = forwardRef(
       <>
         <Editor
           hasAttachment
-          placeholder={salesT("detail.comment.placeholder")}
+          placeholder={"Write your comment"}
           onChange={onChange}
           onChangeNewsfiles={(localFiles) => {
             if (localFiles) {
@@ -152,7 +168,7 @@ const CommentEditor = forwardRef(
               variant="primary"
               size="small"
             >
-              {salesT("detail.comment.submit")}
+              {"Send Comment"}
             </Button>
           </Stack>
         </Editor>

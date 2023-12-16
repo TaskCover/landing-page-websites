@@ -1,12 +1,14 @@
 import { Link, Stack } from "@mui/material";
 import { BodyCell } from "components/Table";
 import { Text } from "components/shared";
+import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
+import { CURRENCY_CODE } from "constant/enums";
 import { NS_COMMON } from "constant/index";
 import { BILLING_DETAIL_PATH, BILLING_INFO_PATH } from "constant/paths";
 import { useTranslations } from "next-intl";
 import { memo } from "react";
 import { Billing } from "store/billing/reducer";
-import { formatDate, getPath } from "utils/index";
+import { formatDate, formatNumber, getPath } from "utils/index";
 
 type DesktopCellsProps = {
   item?: Billing;
@@ -48,12 +50,22 @@ const DesktopCells = (props: DesktopCellsProps) => {
         align="left"
       >
         <Stack direction="row" alignItems="center" spacing={1}>
-        {item?.budget && item.budget[0]?.name}
+          {item?.budget ? item?.budget[0]?.name : ""}
         </Stack>
       </BodyCell>
       <BodyCell align="center">{item?.status}</BodyCell>
-      <BodyCell align="center">{item?.amount}</BodyCell>
-      <BodyCell align="center">{item?.amount_unpaid}</BodyCell>
+      <BodyCell align="center">
+        {formatNumber(item?.amount, {
+          prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+          numberOfFixed: 2,
+        })}
+      </BodyCell>
+      <BodyCell align="center">
+        {formatNumber(item?.amount_unpaid, {
+          prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+          numberOfFixed: 2,
+        })}
+      </BodyCell>
       <BodyCell align="center">{formatDate(item?.dueDate)}</BodyCell>
     </>
   );
