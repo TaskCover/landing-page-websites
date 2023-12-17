@@ -57,17 +57,17 @@ export interface BaseQueries_Feedback {
 }
 
 export interface User {
-  id: string;
-  fullname: string;
+  id?: string;
+  fullname?: string;
   name?: string;
-  email: string;
+  email?: string;
   phone?: string;
   company?: string;
   position?: {
     name: string;
     id: string;
   };
-  roles: Permission[];
+  roles?: Permission[];
   avatar?: {
     link: string;
   };

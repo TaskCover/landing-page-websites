@@ -64,13 +64,14 @@ const InformationBillingPage = () => {
         <TopContent
           tagsOptions={tagsOptions}
           item={item}
+          user={user ?? {}}
           memberOptions={options}
         />
 
         <TabInfo
           arrService={arrService}
           item={item}
-          user={user}
+          user={user ?? {}}
           arrBudgets={budgets}
         />
       </Stack>

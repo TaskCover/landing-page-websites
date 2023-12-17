@@ -63,31 +63,19 @@ const billingFormTranslatePrefix = "list.form";
 
 const options = [
   {
-    label: (
-      <Stack gap={2} alignItems={"center"} direction={"row"}>
-        <EyeIcon sx={{ fontSize: 20 }} />
-        <Text>View PDF</Text>
-      </Stack>
-    ),
+    label: " View PDF",
     value: "VIEW",
+    icon: "/images/eye.svg",
   },
   {
-    label: (
-      <Stack gap={2} alignItems={"center"} direction={"row"}>
-        <DownloadIcon sx={{ fontSize: 20 }} />
-        <Text>Download</Text>
-      </Stack>
-    ),
+    label: "Download",
     value: "DOWNLOAD",
+    icon: "/images/document-download.svg",
   },
   {
-    label: (
-      <Stack gap={2} alignItems={"center"} direction={"row"}>
-        <ChangeCircleOutlined sx={{ fontSize: 20 }} />
-        <Text>Replace</Text>
-      </Stack>
-    ),
+    label: "Replace",
     value: "REPLACE",
+    icon: "/images/replace.svg",
   },
 ];
 
@@ -197,8 +185,9 @@ const TabInvoice = (props: TabProps) => {
         <Stack direction={"row"} gap={2}>
           <Dropdown
             placeholder={"Invoice PDF"}
-            options={options ?? []}
+            options={options}
             name="Tag"
+            hasIcon
             onChange={(name, value) => onchangePdf(value)}
             value={selected}
             rootSx={{
