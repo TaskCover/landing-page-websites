@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import {
   Avatar,
   AvatarGroup,
@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import Link from "components/Link";
 import ChevronIcon from "icons/ChevronIcon";
-import { Button, IconButton, Text } from "components/shared";
+import { Button, IconButton, Select, Text } from "components/shared";
 import { useHeaderConfig } from "store/app/selectors";
 import useBreakpoint from "hooks/useBreakpoint";
 import { usePathname } from "next-intl/client";
@@ -24,7 +24,7 @@ import { NS_BILLING, NS_PROJECT } from "constant/index";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Dropdown } from "components/Filters";
 import { Billing, Member } from "store/billing/reducer";
-import { Option } from "constant/types";
+import { Option, User } from "constant/types";
 import TrashIcon from "icons/TrashIcon";
 import {
   ContentCopyRounded,
@@ -32,6 +32,7 @@ import {
   SubtitlesOutlined,
 } from "@mui/icons-material";
 import CopyIcon from "icons/CopyIcon";
+import SelectMembers from "./SelectMembers";
 
 const options = [
   "Duplicate Invoice",
@@ -44,16 +45,18 @@ const ITEM_HEIGHT = 48;
 type TopContentProps = {
   tagsOptions?: Option[];
   item?: Billing;
+  user: User;
   memberOptions?: Option[];
 };
 const TopContent = (props: TopContentProps) => {
-  const { tagsOptions, item, memberOptions } = props;
+  const { tagsOptions, item, memberOptions, user } = props;
   const { title, prevPath } = useHeaderConfig();
   const { isMdSmaller } = useBreakpoint();
   const billingT = useTranslations(NS_BILLING);
   const { id } = useParams() as { id: string };
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [listUser, setListUser] = useState<Member[]>([]);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -61,6 +64,35 @@ const TopContent = (props: TopContentProps) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const setMember = new Set<String>();
+
+  const onChangeMember = (name, data) => {
+    setListUser(data);
+  };
+
+  useEffect(() => {
+    if (item?.user && item.user.length > 0) {
+      const filterMember = item.user?.map((item) => {
+        const member = {
+          id: item.id,
+          fullname: item.fullname,
+          avatar: item?.avatar,
+        } as Member;
+        return member;
+      });
+      setListUser([...filterMember]);
+    }
+  }, [item]);
+  useEffect(() => {
+    if (user) {
+      const member = {
+        id: user.id,
+        fullname: user.fullname,
+        avatar: user?.avatar,
+      } as Member;
+      setListUser([member]);
+    }
+  }, [user]);
 
   return (
     <Stack gap={2} pl={5} pt={2} ml={5}>
@@ -80,7 +112,8 @@ const TopContent = (props: TopContentProps) => {
           <Avatar />
 
           <Text fontWeight={600} variant={{ xs: "body2", md: "h4" }}>
-            {"Invoice " + item?.invoiceNumber?.toString()}
+            {"Invoice " +
+              (item?.invoiceNumber ? item?.invoiceNumber?.toString() : "")}
           </Text>
         </Stack>
 
@@ -133,8 +166,8 @@ const TopContent = (props: TopContentProps) => {
             placeholder={"company name"}
             options={[]}
             name="status"
-            onChange={() => null}
-            // value={queries?.status}
+            onChange={(name, value) => null}
+            // value={listUser}
             rootSx={{
               px: "0px!important",
               [`& .${selectClasses.outlined}`]: {
@@ -149,43 +182,21 @@ const TopContent = (props: TopContentProps) => {
           />
 
           <Stack direction={"row"} gap={2} alignItems={"center"}>
-            <AvatarGroup total={4}>
-              {item?.user?.map((item) => {
+            <AvatarGroup total={listUser?.length}>
+              {listUser?.map((item) => {
                 // eslint-disable-next-line react/jsx-key
-                return <Avatar sizes="" />;
+                return <Avatar sizes={item.avatar?.link} />;
               })}
             </AvatarGroup>
-            <PlusIcon
-              sx={{
-                display: { xs: "none", md: "block" },
-                mr: 1,
-                width: 18,
-                height: 18,
-              }}
-            />
           </Stack>
 
-          {/* <Stack direction={"row"} gap={2}>
-            <Dropdown
-              placeholder={"members"}
-              options={memberOptions ?? []}
-              name="user"
-              onChange={() => null}
-              // value={item?.user}
-              multiline
-              rootSx={{
-                px: "0px!important",
-                [`& .${selectClasses.outlined}`]: {
-                  pr: "0!important",
-                  mr: ({ spacing }: { spacing: Theme["spacing"] }) =>
-                    `${spacing(4)}!important`,
-                  "& .sub": {
-                    display: "none",
-                  },
-                },
-              }}
+          <Stack direction={"row"} gap={2}>
+            <SelectMembers
+              onChange={(name, data) => onChangeMember(name, data)}
+              name=""
+              value={listUser}
             />
-          </Stack> */}
+          </Stack>
           <Dropdown
             placeholder={"Tag"}
             options={tagsOptions ?? []}

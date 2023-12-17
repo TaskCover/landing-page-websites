@@ -1,6 +1,6 @@
 "use client";
 import { Stack } from "@mui/material";
-import { memo, useEffect, useState } from "react";
+import { memo, use, useEffect, useMemo, useState } from "react";
 import { TabInfo, TopContent } from "./components";
 
 import FixedLayout from "components/FixedLayout";
@@ -15,6 +15,7 @@ import {
 } from "store/billing/selectors";
 import { useEmployeeOptions, useEmployees } from "store/company/selectors";
 import { useTagOptions } from "store/tags/selector";
+import { User } from "constant/types";
 
 const InformationBillingPage = () => {
   const { item, onGetBilling, updateStatus } = useBillings();
@@ -25,6 +26,17 @@ const InformationBillingPage = () => {
   const { options, onGetOptions } = useEmployeeOptions();
   // const { memberOptions } = useGetMemberOptions();
   const { user } = useAuth();
+
+  const userInfo = useMemo(() => {
+    const dataUser = {
+      email: user?.email,
+      id: user?.id,
+      fullname: user?.fullname,
+      avatar: user?.avatar,
+      roles: user?.roles,
+    } as User;
+    return dataUser;
+  }, [user]);
 
   const param = useParams();
 
@@ -64,13 +76,14 @@ const InformationBillingPage = () => {
         <TopContent
           tagsOptions={tagsOptions}
           item={item}
+          user={userInfo}
           memberOptions={options}
         />
 
         <TabInfo
           arrService={arrService}
           item={item}
-          user={user}
+          user={userInfo}
           arrBudgets={budgets}
         />
       </Stack>

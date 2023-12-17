@@ -56,8 +56,18 @@ export interface Project {
 
 export interface Member {
   id: string;
+  fullname: string;
   email: string;
+  phone: string;
+  company: string;
+  position_project: {
+    name: string;
+    id: string;
+  };
   date_in: string;
+  avatar?: {
+    link: string;
+  };
 }
 
 export interface Owner {

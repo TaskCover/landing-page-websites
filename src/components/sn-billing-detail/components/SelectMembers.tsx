@@ -10,6 +10,7 @@ import { NS_PROJECT, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
 import { Search } from "components/Filters";
+import PlusIcon from "icons/PlusIcon";
 
 type SelectMembersProps = {
   value?: Member[];
@@ -88,16 +89,16 @@ const SelectMembers = (props: SelectMembersProps) => {
     <>
       <Stack
         direction="row"
-        py={1}
+        py={2.5}
         px={2.5}
-        bgcolor="grey.50"
+        // bgcolor="grey.50"
         justifyContent="space-between"
         onClick={onOpen}
         minHeight={56}
         borderRadius={1}
         sx={{ cursor: "pointer" }}
       >
-        <Stack flex={1} spacing={0.5}>
+        {/* <Stack flex={1} spacing={0.5}>
           <Text variant="caption" color="grey.300">
             {projectT("list.form.title.members")}
           </Text>
@@ -116,11 +117,18 @@ const SelectMembers = (props: SelectMembersProps) => {
               />
             ))}
           </Stack>
-        </Stack>
-
-        <ChevronIcon
-          sx={{ color: "grey.400", fontSize: 16, alignSelf: "center" }}
+        </Stack> */}
+        <PlusIcon
+          sx={{
+            display: { xs: "none", md: "block" },
+            mr: 1,
+            width: 18,
+            height: 18,
+          }}
         />
+        {/* <ChevronIcon
+          sx={{ color: "grey.400", fontSize: 16, alignSelf: "center" }}
+        /> */}
       </Stack>
       <Popover
         id={popoverId}
@@ -138,7 +146,7 @@ const SelectMembers = (props: SelectMembersProps) => {
         sx={{
           [`& .${popoverClasses.paper}`]: {
             backgroundImage: "none",
-            width: anchorEl?.offsetWidth ?? 200,
+            // width: anchorEl?.offsetWidth ?? 200,
             maxHeight: 350,
             boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.1)",
             border: "1px solid",
@@ -157,13 +165,13 @@ const SelectMembers = (props: SelectMembersProps) => {
         }}
       >
         <Stack p={2}>
-          <Search
+          {/* <Search
             name="email"
             value={filters?.email}
             placeholder={commonT("searchBy", { name: "email" })}
             onChange={onChangeSearch}
             emitWhenEnter
-          />
+          /> */}
           <MenuList component={Stack} spacing={2}>
             {ignoreItems.map((item) => {
               const isChecked = members.some((member) => item.id === member.id);
