@@ -12,19 +12,24 @@ import StatusServer from 'components/StatusServer';
 import { formatDate } from 'utils/index';
 import React from 'react';
 import Avatar from "components/Avatar";
-import { AttachmentsBlogs, CommentBlogData } from 'store/blog/actions';
+import { AttachmentsBlogs, BlogFormData, CommentBlogData } from 'store/blog/actions';
 
 import UserPlaceholderImage from "public/images/img-user-placeholder.webp";
 import CommentsTreeView from './components/Comments';
+import EditIcon from 'icons/EditIcon';
+import useToggle from 'hooks/useToggle';
+import Form from './components/Form';
+import { DataAction } from 'constant/enums';
 
 const BlogDetailSection = () => {
     const blogT = useTranslations(NS_BLOG);
     const scrollEndRef = useRef<HTMLDivElement | null>(null);
     const [replyToCommentId, setReplyToCommentId] = useState<string | null>(null);
+    const [isShow, onShow, onHide] = useToggle();
+    const { onGetBlogs,onUpdateBlog } = useBlogs();
+    const [files, setFiles] = useState<File[]>([]);
+    const [background, setBackground] = useState<File>();
 
-    const handleReply = (commentId: string) => {
-        setReplyToCommentId(commentId);
-    };
     const { id } = useParams();
     const {
         item: detailItem,
@@ -33,15 +38,75 @@ const BlogDetailSection = () => {
         relatedBlogs,
         onGetRelatedBlogs,
         onGetBlogBySlug,
-        // listBlogComment,onGetBlogComments
     } = useBlogs();
-
-    useEffect(() => {
+    function getFileExtension(filename) {
+        return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
+      }
+      function getMimeTypeFromExtension(extension) {
+        switch (extension.toLowerCase()) {
+          case "jpg":
+          case "jpeg":
+          case "png":
+            return "image/" + extension;
+          case "mp4":
+          case "avi":
+          case "mov":
+            return "video/" + extension;
+          default:
+            return "application/octet-stream";
+        }
+      }
+      useEffect(() => {
         onGetBlogBySlug(id as string);
         onGetRelatedBlogs(id as string);
-        // onGetBlogComments(id as string);
     }, [id]);
 
+  useEffect(() => {
+    if (Array.isArray(detailItem?.attachments_down) && detailItem?.attachments_down) {
+        const filesArray: Promise<File>[] = detailItem?.attachments_down.map(async (attachment) => {
+          const { name, link } = attachment;
+          try {
+            const response = await fetch(link as string);
+            const blob = await response.blob();
+            const fileName = getFileExtension(name);
+            const type = getMimeTypeFromExtension(fileName);
+            return new File([blob], name as string, { type });
+          } catch (error) {
+            console.error('Error creating File object:', error);
+            throw error;
+          }
+        });
+    
+        if (filesArray.length > 0) {
+          Promise.all(filesArray)
+            .then((resolvedFiles) => {
+              setFiles(resolvedFiles);
+            })
+            .catch((error) => {
+              console.error('Error creating File objects:', error);
+            });
+        }
+      }
+  }, [detailItem]);
+  useEffect(() => {
+    const fetchBackgroundFile = async () => {
+      if (detailItem?.background_down) {
+        const { name, link } = detailItem.background_down;
+        try {
+          const response = await fetch(link as string);
+          const blob = await response.blob();
+          const fileName = getFileExtension(name);
+          const type = getMimeTypeFromExtension(fileName);
+          const backgroundFile = new File([blob], name as string, { type });
+          setBackground(backgroundFile);
+        } catch (error) {
+          console.error('Error creating Background File object:', error);
+        }
+      }
+    };
+  
+    fetchBackgroundFile();
+  }, [detailItem?.background_down]);
     return (
         <>
             <StatusServer isFetching={detailItemIsFetching} error={detailItemError} noData={!detailItem}>
@@ -125,6 +190,31 @@ const BlogDetailSection = () => {
                             </Grid>
                             <Divider />
                             <Grid item xs={12} sm={4}>
+                                <Stack
+                                    direction="row"
+                                    alignItems="center"
+                                    justifyContent="space-between"
+                                    mt={2}>
+                                   <Button
+                                    onClick={onShow}
+                                    startIcon={<EditIcon />}
+                                    size="extraSmall"
+                                    variant="primary"
+                                    sx={{
+                                        height: 36,
+                                        px: ({ spacing }) => `${spacing(2)}!important`,
+                                        background: '#3699FF',
+                                        color: '#FFFFFF',
+                                        fontSize: 12,
+                                        marginBottom: 2,
+                                        '&:hover': {
+                                        background: '#2676C3',
+                                        },
+                                    }}
+                                    >
+                                    {blogT("actions.updateBlog")}
+                                    </Button>
+                                </Stack>
                                 <Stack>
                                     <Box
                                         display="flex"
@@ -221,82 +311,81 @@ const BlogDetailSection = () => {
                             </Grid>
                         </Grid>
                     </Stack>
+                    {isShow && (
+                        <Form
+                            open={isShow}
+                            onClose={onHide}
+                            type={DataAction.UPDATE}
+                            initialValues={ {
+                                id: detailItem?.id,
+                                title: detailItem?.title,
+                                slug: detailItem?.slug,
+                                content:detailItem?.content,
+                                tag:detailItem?.tag,
+                                published:detailItem?.published,
+                                backgroundUpload:background,
+                                category:detailItem?.categories?.map(a=>a.id),
+                                attachmentsUpload : files,
+                            } as  BlogFormData}
+                            onSubmit={onUpdateBlog}
+                        />
+                    )}
                 </Stack>
             </StatusServer>
         </>
     )
 };
 
-const AttachmentComponent: React.FC<{ attachment: AttachmentsBlogs }> = ({ attachment }) => {
-    return (
-        <div className="attachment">
-            <img alt={attachment.name as string} src={(attachment.link ? attachment.link : UserPlaceholderImage) as string} style={
-                {
-                    width: '100%',
-                    height: 400,
-                    objectFit: "contain"
-                }
-            } />
-
-        </div>
-    );
-};
-
-const renderContentWithAttachments = (content: string, attachments: AttachmentsBlogs[]) => {
+const AttachmentComponent = ({ attachment }) => (
+    <div className="attachment">
+      <img
+        alt={attachment.name || ''}
+        src={(attachment.link ? attachment.link : UserPlaceholderImage) || ''}
+        style={{
+          width: '100%',
+          height: 400,
+          objectFit: 'contain',
+        }}
+      />
+    </div>
+  );
+  
+  const renderContentWithAttachments = (content: string, attachments: AttachmentsBlogs[]) => {
     if (typeof content !== 'string') {
-        return null;
+      return null;
     }
-
-    const attachmentPlaceholders = content.split(/<\/p>|<br\s*\/?>|V&agrave;/).filter((item) => item.trim() !== '');
-
-    if (attachmentPlaceholders.length === 1) {
-        return (
-            <div className="blog-post">
-                <div className="content" dangerouslySetInnerHTML={{ __html: attachmentPlaceholders[0] }} />
-                <div className="attachments">
-                    {attachments && attachments.length > 0 && attachments.map((attachment, index) => (
-                        <AttachmentComponent key={index} attachment={attachment} />
-                    ))}
-                </div>
-            </div>
-        );
-    }
-
-    if (attachmentPlaceholders.length > attachments.length) {
-        return (
-            <div className="blog-post">
-                {attachmentPlaceholders.map((placeholder, index) => (
-                    <React.Fragment key={index}>
-                        <div className="content" dangerouslySetInnerHTML={{ __html: placeholder }} />
-                        {index < attachmentPlaceholders.length - 1 && attachments[index] && (
-                            <AttachmentComponent attachment={attachments[index]} />
-                        )}
-                    </React.Fragment>
-                ))}
-            </div>
-        );
-    }
-
+  
+    const attachmentPlaceholders = content.split(/<\/p>|<br\s*\/?>/).filter((item) => item.trim() !== '');
+  
     return (
-        <div className="blog-post">
-            {attachmentPlaceholders.slice(0, attachments.length - 1).map((placeholder, index) => (
-                <React.Fragment key={index}>
-                    <div className="content" dangerouslySetInnerHTML={{ __html: placeholder }} />
-                    {attachments[index] && (
-                        <AttachmentComponent attachment={attachments[index]} />
-                    )}
-                </React.Fragment>
-            ))}
-            <div className="attachments">
-                {attachments.slice(attachmentPlaceholders.length - attachments.length + 1).map((attachment, index) => (
-                    <AttachmentComponent key={index} attachment={attachment} />
-                ))}
-            </div>
-        </div>
+      <div className="blog-post">
+        {attachmentPlaceholders.map((placeholder, index) => (
+          <React.Fragment key={index}>
+            <div className="content" dangerouslySetInnerHTML={{ __html: parseHTML(placeholder) }} />
+            {index < attachments.length && (
+              <AttachmentComponent attachment={attachments[index]} />
+            )}
+          </React.Fragment>
+        ))}
+      </div>
     );
-};
-
-
+  };
+  
+  const parseHTML = (htmlString: string) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+    const paragraphs = Array.from(doc.body.childNodes);
+    const result = [];
+  
+    for (const node of paragraphs) {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        result.push((node as Element).outerHTML as string as never);
+      } else if (node.nodeType === Node.TEXT_NODE) {
+        result.push(node.textContent as string as never);
+      }
+    }
+    return result.join('');
+  };
 export default memo(BlogDetailSection);
 type CommentItemProps = CommentBlogData;
 const CommentItem = (props: CommentItemProps) => {

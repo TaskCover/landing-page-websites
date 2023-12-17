@@ -13,16 +13,18 @@ import { getMessageErrorByAPI } from "utils/index";
 import * as Yup from "yup";
 import { UnprivilegedEditor } from "react-quill";
 import UploadFile from "components/shared/UploadFile";
-import SelectMultiple from "./SelectMultiple";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Editor from "components/Editor";
 import { useTagOptions, useTags } from "store/tags/selector";
 import { useCategoryBlog } from "store/blog-category/selectors";
-import CustomAutocomplete from "./SelectCategories";
 import { clientStorage } from "utils/storage";
 import { useDispatch } from "react-redux";
-import { Label } from "@mui/icons-material";
-import { Controller } from "react-hook-form";
+import { ContactlessOutlined, Label } from "@mui/icons-material";
+import CustomAutocomplete from "./SelectCategories";
+import SelectCategories from "./SelectCategories";
+import { Category } from "store/blog-category/reducer";
+import SelectMultiple from "./SelectMultiple";
+import EditorView from "./EditorView";
+import { Endpoint, client } from "api";
 
 type FormProps = {
   initialValues: BlogFormData;
@@ -54,50 +56,27 @@ const Form = (props: FormProps) => {
 
   const onSubmit = async (values: BlogFormData) => {
     try {
-      const newItem = await onSubmitProps(formik.values);
-      if (newItem) {
-        onAddSnackbar(
-          blogT("blogCategory.notification.success", { label }),
-          "success"
-        );
-        props.onClose();
-      } else {
-        throw AN_ERROR_TRY_AGAIN;
-      }
+        const newItem = await onSubmitProps(values);
+        if (newItem) {
+            onAddSnackbar(
+                blogT("blogCategory.notification.success", { label }),
+                "success",
+            );
+            props.onClose();
+        } else {
+            throw AN_ERROR_TRY_AGAIN;
+        }
     } catch (error) {
-      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-      console.log(error)
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
     }
-  };
+};
   const formik = useFormik({
     initialValues,
-    validationSchema,
-    onSubmit
-  });
+    enableReinitialize: true,
+    onSubmit,
+});
 
   // set value
-  const onChangeBackGround = (event) => {
-    const selectedFile = event.target.files[0];
-    alert(`Selected File: ${selectedFile.name}`);
-    formik.setFieldValue("background", selectedFile);
-    alert(JSON.stringify(formik.values));
-  };
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    // Your custom logic with the file
-    if (selectedFile) {
-      alert(`Selected File: ${selectedFile.name}, Size: ${selectedFile.size} bytes`);
-    } else {
-      alert('No file selected');
-    }
-
-    // If you want to update formik values
-    formik.setFieldValue("background", selectedFile);
-
-    // Or if you want to see the updated formik values
-    alert(JSON.stringify(formik.values));
-  };
-
   const label = useMemo(() => {
     switch (type) {
       case DataAction.CREATE:
@@ -121,13 +100,10 @@ const Form = (props: FormProps) => {
 
   const onSelect = (data) => {
     const mappingData = data.map((item) => item.label);
+    console.log(mappingData);
+    console.log("data : "+data)
     formik.setFieldValue("tag", mappingData);
   };
-  const onSelectCategory = (data) => {
-    const mappingData = data.map((item) => item.id);
-    formik.setFieldValue("category", mappingData);
-  };
-
   const onEnter = (value: string | undefined) => {
     if (!value) return;
     const tags = formik.values?.tag ?? [];
@@ -155,7 +131,6 @@ const Form = (props: FormProps) => {
 
   const onChangeField = (name: string, newValue?: any) => {
     formik.setFieldValue(name, newValue);
-    setData(newValue);
   };
 
   const onChangeContent = (value: string, delta, _, editor: UnprivilegedEditor) => {
@@ -185,7 +160,7 @@ const Form = (props: FormProps) => {
     () => !!Object.values(touchedErrors)?.length || formik.isSubmitting,
     [touchedErrors, formik.isSubmitting],
   );
-
+ 
   return (
     <FormLayout
       sx={{
@@ -239,41 +214,41 @@ const Form = (props: FormProps) => {
               })}
             />
             <Stack>
-              <CustomAutocomplete items={items} label={blogT("blogForm.category")}
-                sx={sxConfig}
-                onSelect={(e, data) => onSelectCategory(data)}
+               <SelectCategories
+                name="category"
+                value={formik.values?.category}
+                onChange={onChangeField}
               />
             </Stack>
 
             <SelectMultiple
-              limitTags={3}
-              options={tagsOptions}
-              onSelect={(e, data) => onSelect(data)}
-              onInputChange={(value) => onSearchTags(value)}
-              onEnter={onEnter}
-              label={blogT("blogForm.tag")}
-              sx={sxConfig}
-              
+                limitTags={3}
+                options={tagsOptions}
+                onSelect={(e, data) => onSelect(data)}
+                onInputChange={(value) => onSearchTags(value)}
+                onEnter={onEnter}
+                label={blogT("blogForm.tag")}
+                sx={sxConfig}
+                value={formik.values.tag?.map((tag) => ({ label: tag, value: tag }))}
             />
-                <UploadFile
-                  title={blogT("blogForm.background")}
-                  name="backgroundUpload"
-                  value={formik.values?.backgroundUpload}
-                  onChange={onChangeField} 
-                  required={true}
-                />
-            
+
+            <UploadFile
+              title={blogT("blogForm.background")}
+              name="backgroundUpload"
+              value={formik.values?.backgroundUpload}
+              onChange={onChangeField} 
+            />
           </Stack>
         </Grid>
         <Grid item xs={7}>
           <Stack height={300}>
-            <Editor
+            <EditorView
               hasAttachment
               placeholder={blogT("blogForm.content")}
               onChange={onChangeContent}
               onChangeFiles={onChangeAttactment}
-              value={content}
-              files={files}
+              value={formik.values.content}
+              files={formik.values.attachmentsUpload}
             >
               <Stack
                 direction="row"
@@ -281,7 +256,7 @@ const Form = (props: FormProps) => {
                 justifyContent="space-between"
                 mt={2}
               ></Stack>
-            </Editor>
+            </EditorView>
           </Stack>
         </Grid>
       </Grid>
@@ -296,7 +271,6 @@ const sxConfig = {
     height: 56,
   },
 };
-
 export const validationSchema = Yup.object().shape({
   title: Yup.string().required('form.error.required'),
   slug: Yup.string().required('form.error.required'),

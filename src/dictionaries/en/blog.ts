@@ -62,7 +62,8 @@ export const BlogLang: BlogDictionary = {
         update:{
             title:"Are you sure to update?",
             content:"Update"
-        }
+        },
+        updateBlog:"Update blog",
     },
     blogForm: {
         key: "blog",

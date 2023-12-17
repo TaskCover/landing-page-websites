@@ -62,7 +62,8 @@ export const BlogLang: BlogDictionary = {
         update:{
             title:"Bạn có muốn cập nhật trạng thái ?",
             content:"Cập nhật trạng thái"
-        }
+        },
+        updateBlog : "Cập nhật"
     },
     blogForm: {
         key: "bài viết",
