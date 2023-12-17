@@ -36,7 +36,7 @@ type TabListProps = {
   item?: Billing;
   arrService?: Service[];
   arrBudgets?: Budgets[];
-  user?: User;
+  user: User;
 };
 
 const TabInfo = (props: TabListProps) => {
@@ -172,7 +172,7 @@ const TabInfo = (props: TabListProps) => {
               editForm={editForm}
               arrService={arrService}
               item={item}
-              user={user ?? {}}
+              user={user}
               arrBudgets={arrBudgets}
               form={formik}
               billToInfo={billToInfo}
