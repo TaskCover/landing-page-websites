@@ -30,6 +30,7 @@ const useItemAction = (
   index: number,
   append: UseFieldArrayAppend<FieldValues, string>,
   remove: UseFieldArrayRemove,
+  onRemoveSection: () => void,
   fields: Record<"id", string>[],
 ) => {
   const { onSetColumns, sectionColumns } = useSalesService();
@@ -45,30 +46,30 @@ const useItemAction = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onAction = (action: Action, data?: any) => {
     switch (action) {
-      // case Action.DUPLICATE:
-      //   onDuplicate(data);
-      //   break;
+      case Action.DUPLICATE:
+        onDuplicate(data);
+        break;
       case Action.DELETE:
         onRemove("", data);
         break;
-      // case Action.SECTION_DELETE:
-      //   onRemoveSection();
-      //   break;
-      // case Action.SHOW_DESCRIPTION:
-      //   onSetColumns(index, ServiceColumn.DESCRIPTION);
-      //   break;
-      // case Action.SHOW_DISCOUNT:
-      //   onSetColumns(index, ServiceColumn.DISCOUNT);
-      //   break;
-      // case Action.SHOW_ESTIMATE:
-      //   onSetColumns(index, ServiceColumn.ESTIMATE);
-      //   break;
-      // case Action.SHOW_FIXED_PRICE:
-      //   onSetColumns(index, ServiceColumn.PRICE);
-      //   break;
-      // case Action.SHOW_MARKUP:
-      //   onSetColumns(index, ServiceColumn.MARK_UP);
-      //   break;
+      case Action.SECTION_DELETE:
+        onRemoveSection();
+        break;
+      case Action.SHOW_DESCRIPTION:
+        onSetColumns(index, ServiceColumn.DESCRIPTION);
+        break;
+      case Action.SHOW_DISCOUNT:
+        onSetColumns(index, ServiceColumn.DISCOUNT);
+        break;
+      case Action.SHOW_ESTIMATE:
+        onSetColumns(index, ServiceColumn.ESTIMATE);
+        break;
+      case Action.SHOW_FIXED_PRICE:
+        onSetColumns(index, ServiceColumn.PRICE);
+        break;
+      case Action.SHOW_MARKUP:
+        onSetColumns(index, ServiceColumn.MARK_UP);
+        break;
       default:
     }
   };

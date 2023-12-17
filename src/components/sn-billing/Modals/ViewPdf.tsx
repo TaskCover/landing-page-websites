@@ -36,7 +36,7 @@ const ViewPdf = () => {
   const { arrService, sumAmount, onGetServiceBudgets } = useServiceBudgets();
   const { budgets, onGetBudgets } = useBudgets();
   const { initQuery, isReady, query } = useQueryParams();
-  const printRef = React.useRef("");
+  const printRef = React.useRef<HTMLDivElement>(null);
   const param = useParams();
 
   const id = param?.id.toString();
@@ -187,9 +187,9 @@ const ViewPdf = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {arrService?.map((item) => {
+                      {arrService?.map((item, index) => {
                         return (
-                          <TableRow>
+                          <TableRow key={index}>
                             <TableCell>{item.desc}</TableCell>
                             <TableCell>{item.unit}</TableCell>
                             <TableCell>{item.qty}</TableCell>

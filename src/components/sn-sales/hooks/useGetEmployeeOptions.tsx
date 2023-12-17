@@ -41,7 +41,6 @@ export const useGetMemberOptions = () => {
   const members = useWatch({
     control,
     name: "members",
-    defaultValue: "default",
   });
 
   const filteredOptions = useMemo(() => {

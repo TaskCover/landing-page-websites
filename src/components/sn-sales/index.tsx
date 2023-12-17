@@ -92,7 +92,7 @@ const SalesPage = () => {
   useEffect(() => {
     if (!isReady) return;
     setShouldLoad(true);
-    onGetSales();
+    onGetSales(query);
   }, [isReady, initQuery, onGetSales]);
 
   const itemList = useMemo(() => {
