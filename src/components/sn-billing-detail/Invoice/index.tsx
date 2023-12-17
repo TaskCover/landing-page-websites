@@ -188,6 +188,10 @@ const TabInvoice = (props: TabProps) => {
         gap={2}
         justifyContent={"space-between"}
         alignItems={"center"}
+        position={"sticky"}
+        // display={"unset"}
+        top={0}
+        zIndex={1}
       >
         <Button variant="outlined">Sent to client</Button>
         <Stack direction={"row"} gap={2}>
@@ -324,7 +328,7 @@ const TabInvoice = (props: TabProps) => {
               }}
             >
               <Stack direction={"row"} gap={2} justifyContent={"space-between"}>
-                <Text variant={"body1"}>Bill To</Text>
+                <Text variant={"body2"}>Bill To</Text>
                 {editForm && (
                   <Link
                     href={""}
@@ -338,16 +342,16 @@ const TabInvoice = (props: TabProps) => {
                     }}
                   >
                     <PencilUnderlineIcon sx={{ color: "#1BC5BD", mr: 1 }} />
-                    <Text variant={"body1"} color={"#1BC5BD"}>
+                    <Text variant={"body2"} color={"#1BC5BD"}>
                       Edit
                     </Text>
                   </Link>
                 )}
               </Stack>
               <Stack gap={2} justifyContent={"start"} mt={3}>
-                <Text variant={"body1"}>{billToInfo.fullNameCompany}</Text>
-                <Text variant={"body1"}>{billToInfo.street}</Text>
-                <Text variant={"body1"}>
+                <Text variant={"body2"}>{billToInfo.fullNameCompany}</Text>
+                <Text variant={"body2"}>{billToInfo.street}</Text>
+                <Text variant={"body2"}>
                   {billToInfo.city || billToInfo.state || billToInfo.country
                     ? billToInfo.city +
                       ", " +
@@ -356,7 +360,7 @@ const TabInvoice = (props: TabProps) => {
                       billToInfo.country
                     : ""}
                 </Text>
-                <Text variant={"body1"}>{billToInfo.taxId}</Text>
+                <Text variant={"body2"}>{billToInfo.taxId}</Text>
               </Stack>
             </Box>
           </Grid>
@@ -370,7 +374,7 @@ const TabInvoice = (props: TabProps) => {
               }}
             >
               <Stack direction={"row"} gap={2} justifyContent={"space-between"}>
-                <Text variant={"body1"}>Bill From</Text>
+                <Text variant={"body2"}>Bill From</Text>
                 {editForm && (
                   <Link
                     href={""}
@@ -381,18 +385,18 @@ const TabInvoice = (props: TabProps) => {
                     }}
                   >
                     <PencilUnderlineIcon sx={{ color: "#1BC5BD", mr: 1 }} />
-                    {/* <Text variant={"body1"} color={"#1BC5BD"}>
+                    {/* <Text variant={"body2"} color={"#1BC5BD"}>
                       Edit
                     </Text> */}
                   </Link>
                 )}
               </Stack>
               <Stack gap={2} justifyContent={"start"} mt={3}>
-                <Text variant={"body1"}>
+                <Text variant={"body2"}>
                   {billFromInfo.fullNameCompany ?? ""}
                 </Text>
-                <Text variant={"body1"}>{billFromInfo.street ?? ""}</Text>
-                <Text variant={"body1"}>
+                <Text variant={"body2"}>{billFromInfo.street ?? ""}</Text>
+                <Text variant={"body2"}>
                   {billFromInfo.city ||
                   billFromInfo.state ||
                   billFromInfo.country
@@ -403,13 +407,13 @@ const TabInvoice = (props: TabProps) => {
                       billFromInfo.country
                     : ""}
                 </Text>
-                <Text variant={"body1"}>{billFromInfo.taxId ?? ""}</Text>
+                <Text variant={"body2"}>{billFromInfo.taxId ?? ""}</Text>
               </Stack>
             </Box>
           </Grid>
         </Grid>
       </Stack>
-      <Stack gap={2} borderBottom={"1px solid #ECECF3"} pb={2}>
+      <Stack gap={2}>
         {/* <TableService /> */}
         <ServiceTable
           isEdit={editForm}
@@ -418,13 +422,13 @@ const TabInvoice = (props: TabProps) => {
           OptionBudget={OptionBudget}
         />
       </Stack>
-      <Stack alignItems="start" gap={1} my={2}>
+      <Stack alignItems="start" gap={2} pb={2}>
         <Grid container spacing={2} paddingTop={2} paddingLeft={2}>
           <Grid xs={1} md={1}>
-            <Text variant={"body1"}>{"SubTotal"}</Text>
+            <Text variant={"body2"}>{"SubTotal"}</Text>
           </Grid>
           <Grid xs={2} md={2}>
-            <Text variant={"body1"}>
+            <Text variant={"body2"}>
               {formatNumber(totalAmount, {
                 prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
                 numberOfFixed: 2,
@@ -435,12 +439,12 @@ const TabInvoice = (props: TabProps) => {
 
         <Grid container spacing={2} paddingTop={2} paddingLeft={2}>
           <Grid xs={1} md={1}>
-            <Text variant={"body1"}>
+            <Text variant={"body2"}>
               {billingT(`${billingFormTranslatePrefix}.title.vat`) + " 0%"}
             </Text>
           </Grid>
           <Grid xs={2} md={2}>
-            <Text variant={"body1"}>
+            <Text variant={"body2"}>
               {formatNumber(form?.values?.vat, {
                 prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
                 numberOfFixed: 2,
@@ -452,10 +456,10 @@ const TabInvoice = (props: TabProps) => {
 
         <Grid container spacing={2} paddingTop={2} paddingLeft={2}>
           <Grid xs={1} md={1}>
-            <Text variant={"body1"}>{"Total"}</Text>
+            <Text variant={"body2"}>{"Total"}</Text>
           </Grid>
           <Grid xs={2} md={2}>
-            <Text variant={"body1"}>
+            <Text variant={"body2"}>
               {formatNumber(
                 form.values.vat && form.values.vat != 0
                   ? totalAmount + form.values.vat

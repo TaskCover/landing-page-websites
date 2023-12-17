@@ -235,15 +235,15 @@ export interface BillingDataUpdate {
 
 export interface BillingCommentData {
   bill_id?: string;
-  user_id?: string;
-  file: [];
+  user_id?: User;
+  file?: [];
   status?: string;
+  comment?: string;
+  created_at?: string;
 }
 
 export interface BillingComment extends Omit<Comment, "creator"> {
-  creator: {
-    body: User;
-  };
+  body: BillingCommentData;
 }
 
 // export const DEFAULT_RANGE_ACTIVITIES: GetActivitiesQueries = {

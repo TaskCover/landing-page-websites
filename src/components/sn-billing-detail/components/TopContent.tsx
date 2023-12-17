@@ -1,5 +1,6 @@
 import { memo, useMemo, useState } from "react";
 import {
+  Avatar,
   AvatarGroup,
   Box,
   Menu,
@@ -20,7 +21,6 @@ import { PROJECT_MEMBERS_PATH, PROJECT_TASKS_PATH } from "constant/paths";
 import PlusIcon from "icons/PlusIcon";
 import { useTranslations } from "next-intl";
 import { NS_BILLING, NS_PROJECT } from "constant/index";
-import Avatar from "components/Avatar";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Dropdown } from "components/Filters";
 import { Billing, Member } from "store/billing/reducer";
@@ -63,7 +63,7 @@ const TopContent = (props: TopContentProps) => {
   };
 
   return (
-    <Stack gap={2} p={2}>
+    <Stack gap={2} pl={5} pt={2} ml={5}>
       <Stack
         direction="row"
         alignItems="center"
@@ -77,7 +77,7 @@ const TopContent = (props: TopContentProps) => {
           flex={1}
           width="50%"
         >
-          <Avatar size={40} />
+          <Avatar />
 
           <Text fontWeight={600} variant={{ xs: "body2", md: "h4" }}>
             {"Invoice " + item?.invoiceNumber?.toString()}
@@ -89,12 +89,14 @@ const TopContent = (props: TopContentProps) => {
             textAlign: "center",
             width: 100,
             padding: 1,
-            borderRadius: 6,
+            borderRadius: 2,
             background: "#C9F7F5",
             color: "#1BC5BD",
           }}
         >
-          Paid
+          <Text variant={"body2"} sx={{ color: "#1BC5BD" }}>
+            Paid
+          </Text>
         </Box>
       </Stack>
       <Stack
@@ -150,7 +152,7 @@ const TopContent = (props: TopContentProps) => {
             <AvatarGroup total={4}>
               {item?.user?.map((item) => {
                 // eslint-disable-next-line react/jsx-key
-                return <Avatar size={40} />;
+                return <Avatar sizes="" />;
               })}
             </AvatarGroup>
             <PlusIcon
@@ -163,7 +165,7 @@ const TopContent = (props: TopContentProps) => {
             />
           </Stack>
 
-          <Stack direction={"row"} gap={2}>
+          {/* <Stack direction={"row"} gap={2}>
             <Dropdown
               placeholder={"members"}
               options={memberOptions ?? []}
@@ -183,7 +185,7 @@ const TopContent = (props: TopContentProps) => {
                 },
               }}
             />
-          </Stack>
+          </Stack> */}
           <Dropdown
             placeholder={"Tag"}
             options={tagsOptions ?? []}

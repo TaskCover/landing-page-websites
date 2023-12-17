@@ -20,7 +20,7 @@ const CommentSection = (props: IProps) => {
 
   useEffect(() => {
     onGetCommentBilling(billing?.id ?? "");
-  }, [billing]);
+  }, [onGetCommentBilling]);
 
   return (
     <Stack>

@@ -59,6 +59,7 @@ export interface BaseQueries_Feedback {
 export interface User {
   id: string;
   fullname: string;
+  name?: string;
   email: string;
   phone?: string;
   company?: string;

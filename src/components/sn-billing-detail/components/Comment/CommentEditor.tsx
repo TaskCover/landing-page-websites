@@ -76,7 +76,8 @@ const CommentEditor = forwardRef(
     };
 
     // const { saleDetail, onGetSaleDetail } = useSaleDetail();
-    const { onCreateCommentBilling, onGetBilling } = useBillings();
+    const { onCreateCommentBilling, onGetBilling, onGetCommentBilling } =
+      useBillings();
 
     const disabled = useMemo(
       () =>
@@ -96,9 +97,9 @@ const CommentEditor = forwardRef(
           bill_id: billing.id,
           status: "1",
           user_id: user.id,
-          // content: editorRef.current?.getHTML() ?? content,
+          comment: editorRef.current?.getHTML() ?? content,
           file: fileLoaded,
-        } as BillingCommentData;
+        } as unknown as BillingCommentData;
         // if (files.length) {
         //   data.attachments = [];
         //   const promises = files.map((file) => {
@@ -118,7 +119,7 @@ const CommentEditor = forwardRef(
           // newComments.sort((a, b) =>
           //   moment(b.created_time).isAfter(a.created_time) ? 1 : -1,
           // );
-          onGetBilling(billing?.id || "");
+          onGetCommentBilling(billing?.id || "");
           // setValue("comments", newComments);
           setContent("");
           setFiles([]);

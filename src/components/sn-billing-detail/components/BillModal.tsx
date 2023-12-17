@@ -180,7 +180,7 @@ const BillModal = (props: BillModalProps) => {
           <Grid item xs={12}>
             <Stack direction={"row"} gap={2} alignItems={"center"} pb={2}>
               <Checkbox checked={formik.values?.save} />
-              <Text variant={"body1"}>
+              <Text variant={"body2"}>
                 {"Save as default billing for client"}
               </Text>
             </Stack>

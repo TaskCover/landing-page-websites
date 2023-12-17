@@ -92,7 +92,6 @@ const TabInfo = (props: TabListProps) => {
         // justifyContent="space-between"
         borderColor={{ md: "grey.100" }}
         width="100%"
-        overflow="auto"
         // position="sticky"
         // top={isMembersOfProjectPath ? undefined : { xs: 8, sm: 16 }}
         bgcolor="background.paper"
@@ -105,13 +104,29 @@ const TabInfo = (props: TabListProps) => {
             gap={2}
             borderBottom={"1px solid #ECECF3"}
           >
-            <TabList key={value} onChange={handleChange}>
+            <TabList
+              key={value}
+              onChange={handleChange}
+              sx={{
+                ["& span"]: {
+                  display: "none !important",
+                },
+              }}
+            >
               {TABS.map((tab) => (
                 <Tab
                   key={tab.label}
                   {...tab}
                   label={tab.label}
-                  sx={{ color: "grey.300" }}
+                  sx={{
+                    color: value === tab.value ? "#212121" : "grey.300",
+                    textTransform: "none",
+                    background: value === tab.value ? "#E1F0FF" : "none",
+                    width: 150,
+                    ["&.MuiTab-root.Mui-selected"]: {
+                      color: "#212121",
+                    },
+                  }}
                 />
               ))}
             </TabList>
@@ -202,8 +217,9 @@ const TabItem = (props: TabItemProps) => {
   return (
     <TabPanel
       value={value}
-
-      // color={isActiveLink ? "text.primary" : "grey.300"}
+      // color={value ? "#212121" : "grey.300"}
+      // sx={{ overflow: "scroll" }}
+      sx={{ overflow: "scroll", height: 700 }}
     >
       {value === "Invoice" && (
         <TabInvoice
@@ -229,5 +245,5 @@ const TabItem = (props: TabItemProps) => {
 const TABS = [
   { label: "Invoice", value: "Invoice" },
   { label: "Feed", value: "Feed" },
-  { label: "Payment", value: "Payment" },
+  { label: "Payments", value: "Payment" },
 ];
