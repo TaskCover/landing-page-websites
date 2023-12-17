@@ -58,9 +58,9 @@ const InformationBillingPage = () => {
         xs: 1120,
         xl: 1450,
       }}
-      overflow={"auto"}
+      // overflow={"auto"}
     >
-      <Stack gap={2} spacing={2}>
+      <Stack spacing={2}>
         <TopContent
           tagsOptions={tagsOptions}
           item={item}

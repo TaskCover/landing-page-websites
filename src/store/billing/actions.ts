@@ -243,8 +243,7 @@ export const getCommentBilling = createAsyncThunk(
           baseURL: BILLING_API_URL,
         },
       );
-
-      if (response?.status === HttpStatusCode.CREATED) {
+      if (response?.status === HttpStatusCode.OK) {
         return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;

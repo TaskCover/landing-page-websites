@@ -112,7 +112,7 @@ const ServiceTableItem = ({
                 <MoveDotIcon />
               </IconButton>
             )}
-            <TableRow>
+            <TableRow sx={{ height: 56 }}>
               <BodyCell align="left" size="small">
                 <LinkPopup OptionBudget={OptionBudget} service={service} />
               </BodyCell>
@@ -218,7 +218,7 @@ const ServiceTableItem = ({
                 sx={{
                   ...defaultSx.item,
                 }}
-                align="left"
+                align="center"
               >
                 {isEdit ? (
                   <TextField
@@ -245,7 +245,7 @@ const ServiceTableItem = ({
                     width: "100%",
                   },
                 }}
-                align="left"
+                align="center"
               >
                 {isEdit ? (
                   <TextField
@@ -306,7 +306,7 @@ const ServiceTableItem = ({
                 sx={{
                   ...defaultSx.item,
                 }}
-                align="left"
+                align="right"
               >
                 {isEdit ? (
                   <TextField

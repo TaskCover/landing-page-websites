@@ -18,6 +18,7 @@ import LinkPopup from "../LinkPopup";
 import { Option } from "constant/types";
 import { formatNumber } from "utils/index";
 import { CURRENCY_CODE } from "constant/enums";
+import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 
 interface IProps {
   index: number;
@@ -186,7 +187,7 @@ const ServiceTableItemMobile = ({
                   sx={{
                     ...defaultSx.item,
                   }}
-                  align="left"
+                  align="center"
                 >
                   {isEdit ? (
                     <TextField
@@ -213,7 +214,7 @@ const ServiceTableItemMobile = ({
                       width: "100%",
                     },
                   }}
-                  align="left"
+                  align="center"
                 >
                   {isEdit ? (
                     <TextField
@@ -274,7 +275,7 @@ const ServiceTableItemMobile = ({
                   sx={{
                     ...defaultSx.item,
                   }}
-                  align="left"
+                  align="right"
                 >
                   {isEdit ? (
                     <TextField

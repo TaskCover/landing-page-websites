@@ -36,7 +36,7 @@ const LinkBudgetTable = (props: IProps) => {
       },
       {
         value: "Invoiced (without tax)",
-        align: "left",
+        align: "center",
       },
       { value: "Left for invoicing" },
     ],
@@ -54,7 +54,7 @@ const LinkBudgetTable = (props: IProps) => {
       },
       {
         value: "Invoiced (without tax)",
-        align: "left",
+        align: "center",
       },
       { value: "Left for invoicing" },
     ],

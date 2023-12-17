@@ -67,10 +67,12 @@ const ServiceTable = (props: IProps) => {
       {
         value: `discount`,
         width: "15%",
+        align: "left",
       },
       {
         value: "amount",
         width: "15%",
+        align: "right",
       },
       {
         value: "",
@@ -111,10 +113,12 @@ const ServiceTable = (props: IProps) => {
       {
         value: `discount`,
         width: "15%",
+        align: "left",
       },
       {
         value: "amount",
         width: "15%",
+        align: "right",
       },
       {
         value: "",
