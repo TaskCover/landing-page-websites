@@ -2,7 +2,7 @@
 
 import { TableRow, Stack } from "@mui/material";
 import { BodyCell, StatusCell } from "components/Table";
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import {
   COLOR_STAGE_STATUS,
   TEXT_STAGE_STATUS,
@@ -20,7 +20,7 @@ import {
 } from "utils/index";
 import { DATE_LOCALE_FORMAT, NS_SALES } from "constant/index";
 import Avatar from "components/Avatar";
-import { Text } from "components/shared";
+import { IconButton, Text } from "components/shared";
 import { Sales } from "store/sales/reducer";
 import useGetEmployeeOptions from "./hooks/useGetEmployeeOptions";
 import { useSaleDetail, useSales } from "store/sales/selectors";
@@ -31,6 +31,10 @@ import LabelStatusCell from "./components/LabelStatusCell";
 import { useSnackbar } from "store/app/selectors";
 import { useLocale, useTranslations } from "next-intl";
 import dayjs from "dayjs";
+import LockIcon from "icons/LockIcon";
+import UnlockIcon from "icons/UnlockIcon";
+import ServiceItemAction from "./components/ItemsAction";
+import { Action } from "components/sn-sales-detail/components/TodoList/SubItem";
 
 interface IProps {
   setShouldLoad: (value: boolean) => void;
@@ -40,11 +44,13 @@ const SaleItem = ({ item, setShouldLoad }: IProps) => {
   const commonT = useTranslations(NS_SALES);
   const { employeeOptions, onEndReachedEmployeeOptions, onSearchEmployee } =
     useGetEmployeeOptions();
-  const { onUpdateDeal } = useSales();
+  const { onUpdateDeal, onCreateDeal } = useSales();
   const { onAddSnackbar } = useSnackbar();
   const [owner, setOwner] = useState<string>(item.owner?.id);
   const [stage, setStage] = useState<string>(item.status);
   const [probability, setProbability] = useState<number>(item.probability + 1);
+  const rowRef = useRef(null);
+  const [isFocused, setIsFocused] = useState(false);
 
   const { onSetRevenue } = useSaleDetail();
   const time = item.estimate || 0;
@@ -110,7 +116,21 @@ const SaleItem = ({ item, setShouldLoad }: IProps) => {
   }, [JSON.stringify(item.owner), owner]);
 
   return (
-    <TableRow>
+    <TableRow
+      hover
+      onMouseLeave={() => {
+        setIsFocused(false);
+      }}
+      onMouseEnter={() => {
+        setIsFocused(true);
+      }}
+      sx={{
+        "&.MuiTableRow-hover:hover": {
+          backgroundColor: "grey.50",
+        },
+        w: "100%",
+      }}
+    >
       <BodyCell
         align="left"
         href={getPath(SALE_DETAIL_PATH, undefined, { id: item.id })}
@@ -161,6 +181,12 @@ const SaleItem = ({ item, setShouldLoad }: IProps) => {
             [`& .MuiSelect-icon`]: {
               right: "-5px!important",
             },
+            [`& .MuiTypography-root`]: {
+              WebkitLineClamp: 2,
+              width: "90px",
+              textOverflow: "ellipsis",
+            },
+            mr: "10px",
           }}
           sx={{
             width: "100%",
@@ -218,8 +244,45 @@ const SaleItem = ({ item, setShouldLoad }: IProps) => {
           options={mappingProbabilityOptions}
         />
       </BodyCell>
-      <BodyCell align="left">
-        {dayjs(item.updated_time).format(DATE_LOCALE_FORMAT)}
+      <BodyCell align="left" padding={isFocused ? "none" : "normal"}>
+        <Stack
+          direction={"row"}
+          spacing={0}
+          sx={{
+            position: "relative",
+            zIndex: 99,
+            pr: 2,
+          }}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+          gap="3px"
+        >
+          <Stack
+            sx={{
+              w: "100%",
+            }}
+          >
+            {dayjs(item.updated_time).format(DATE_LOCALE_FORMAT)}
+          </Stack>
+          {isFocused && (
+            <ServiceItemAction
+              onChangeAction={(action) => {
+                if (action === Action.DUPLICATE) {
+                  onCreateDeal({
+                    currency: item.currency,
+                    dealName: item.name,
+                    owner: item.owner?.id,
+                    members: item.members?.map((member) => ({ id: member.id })),
+                    description: item.description,
+                    tags: item.description?.split(","),
+                  });
+                }
+              }}
+              saleId={item.id}
+              index={1}
+            />
+          )}
+        </Stack>
       </BodyCell>
     </TableRow>
   );

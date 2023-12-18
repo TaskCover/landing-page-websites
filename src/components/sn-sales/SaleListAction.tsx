@@ -102,7 +102,7 @@ const SalesListAction = () => {
       py={3}
       px={2}
       maxWidth="100%"
-      overflow="auto"
+      overflow="hidden"
     >
       <Stack
         direction="row"

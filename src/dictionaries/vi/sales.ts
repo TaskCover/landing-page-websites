@@ -40,8 +40,8 @@ export const salesLang: SalesDictionary = {
       waitingApprove: "Chờ phê duyệt",
       negotiation: "Thương Lượng",
       open: "Mở",
-      wonDeal: "Giao dịch thành công",
-      lostDeal: "Giao dịch thất bại",
+      wonDeal: "Thành công",
+      lostDeal: "Thất bại",
     },
     exportView: {
       title: "Xuất chế độ xem",

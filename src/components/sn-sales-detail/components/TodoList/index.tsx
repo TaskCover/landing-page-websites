@@ -263,8 +263,8 @@ const TodoList = () => {
 
   const todoList = useMemo(() => {
     return (Object.values(todoListForm ?? {}) as Array<Todo>).sort((a, b) => {
-      if (a.priority > b.priority) return -1;
-      return 1;
+      if (a.priority > b.priority) return 1;
+      return -1;
     });
   }, [todoListForm]);
 

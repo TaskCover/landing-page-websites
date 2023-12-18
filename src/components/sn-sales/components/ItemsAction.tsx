@@ -11,22 +11,24 @@ import { NS_COMMON, NS_SALES } from "constant/index";
 import MoreSquareIcon from "icons/MoreSquareIcon";
 import { useTranslations } from "next-intl";
 import React, { useMemo, useRef } from "react";
-import { Action } from "../../TodoList/SubItem";
 import { Text } from "components/shared";
 import CopyIcon from "icons/CopyIcon";
 import TrashIcon from "icons/TrashIcon";
 import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
+import { Action } from "components/sn-sales-detail/components/TodoList/SubItem";
+import MoreDotIcon from "icons/MoreDotIcon";
+import DuplicateIcon from "icons/DuplicateIcon";
 
 type ActionsProps = {
-  serviceId: string;
+  saleId: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChangeAction: (action: Action, data?: any) => void;
   index: number;
 };
 
-const   ServiceItemAction = (props: ActionsProps) => {
-  const { serviceId, onChangeAction, index } = props;
+const ServiceItemAction = (props: ActionsProps) => {
+  const { saleId, onChangeAction, index } = props;
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
@@ -37,14 +39,15 @@ const   ServiceItemAction = (props: ActionsProps) => {
       {
         label: salesT("detail.service.duplicate"),
         value: Action.DUPLICATE,
-        icon: <CopyIcon />,
+        icon: <DuplicateIcon />,
+        color: "",
       },
-      {
-        label: commonT("delete"),
-        value: Action.DELETE,
-        icon: <TrashIcon color="error" />,
-        color: "error.main",
-      },
+      // {
+      //   label: commonT("delete"),
+      //   value: Action.DELETE,
+      //   icon: <TrashIcon color="error" />,
+      //   color: "error.main",
+      // },
     ];
   }, [commonT]);
 
@@ -53,7 +56,7 @@ const   ServiceItemAction = (props: ActionsProps) => {
       return openConfirm;
     }
     return () => {
-      onChangeAction(action, serviceId);
+      onChangeAction(action, saleId);
       buttonRef?.current?.click();
     };
   };
@@ -67,8 +70,12 @@ const   ServiceItemAction = (props: ActionsProps) => {
       <PopoverLayout
         ref={buttonRef}
         label={
-          <IconButton>
-            <MoreSquareIcon sx={{ fontSize: 24 }} />
+          <IconButton
+            sx={{
+              p: "4px",
+            }}
+          >
+            <MoreDotIcon sx={{ fontSize: 22 }} />
           </IconButton>
         }
       >

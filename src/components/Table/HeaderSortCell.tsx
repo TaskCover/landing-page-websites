@@ -92,7 +92,17 @@ const HeaderSortCell = forwardRef(
           onClick={createHandler(name)}
         >
           {typeof children === "string" ? (
-            <Text variant="h6" color="grey.400" {...textProps}>
+            <Text
+              variant="h6"
+              color="grey.400"
+              {...textProps}
+              noWrap
+              sx={{
+                textOverflow: "ellipsis",
+                WebkitLineClamp: 1,
+                overflow: "hidden",
+              }}
+            >
               {Component ? <Component /> : children}
             </Text>
           ) : Component ? (
