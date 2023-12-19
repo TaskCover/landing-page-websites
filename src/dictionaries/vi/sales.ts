@@ -48,6 +48,11 @@ export const salesLang: SalesDictionary = {
       documentFormat: "Định dạng tài liệu",
       orientation: "Hướng",
       pagesize: "Kích thước trang",
+      orientationOption: {
+        portrait: "Dọc",
+        landscape: "Ngang",
+      },
+      error: "Lỗi khi xuất file",
     },
     noOptionText: "Không có tùy chọn, tạo mới",
   },

@@ -47,7 +47,7 @@ export const CommonLang: CommonDictionary = {
     admin: "Admin",
   },
   notification: {
-    imageTypeInvalid: 
+    imageTypeInvalid:
       "File type is invalid. Currently the system only support PNG, JPEG, JPG",
     success: "{label} successfully!",
   },
@@ -85,7 +85,7 @@ export const CommonLang: CommonDictionary = {
     inprogress: "In progress",
     active: "Activated",
     close: "Completed",
-    pause: "Paused"
+    pause: "Paused",
   },
   searchBy: "Search by {name}",
   searchByLabel: "Search by",
@@ -95,6 +95,8 @@ export const CommonLang: CommonDictionary = {
     title: "Confirm delete",
     content: "Are you sure to delete?",
   },
+  yes: "Yes",
+  no: "No",
   show: "Show",
   hide: "Hide",
   upgradeAccount: "Upgrade account",

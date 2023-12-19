@@ -74,7 +74,7 @@ const ServiceItem = ({ service, index, sectionIndex, sectionKey }: IProps) => {
     <>
       <TableRow sx={{ "& > *": { borderBottom: "none" }, h: "100%" }}>
         <BodyCell
-          align={ALIGN_CELL}
+          align="left"
           sx={{
             cursor: "pointer",
             borderBottom: 0,
