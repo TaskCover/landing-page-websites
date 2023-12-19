@@ -112,7 +112,7 @@ const ItemList = () => {
             createQueryString("size", "50"),
           ].join("&"),
       );
-  }, []);
+  }, [searchParams.get("group_by")]);
 
   return (
     <>

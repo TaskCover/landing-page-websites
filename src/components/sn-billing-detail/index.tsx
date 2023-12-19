@@ -1,35 +1,67 @@
 "use client";
-import { Box, Stack } from "@mui/material";
-import { memo, useEffect } from "react";
-import { TabList, TopContent } from "./components";
+import { Stack } from "@mui/material";
+import { memo, use, useEffect, useMemo, useState } from "react";
+import { TabInfo, TopContent } from "./components";
 
 import FixedLayout from "components/FixedLayout";
-import { useBillings, useServiceBudgets } from "store/billing/selectors";
+import useQueryParams from "hooks/useQueryParams";
 import { useParams } from "next/navigation";
-import { useTagOptions, useTags } from "store/tags/selector";
 import { useAuth } from "store/app/selectors";
+import { Service } from "store/billing/reducer";
+import {
+  useBillings,
+  useBudgets,
+  useServiceBudgets,
+} from "store/billing/selectors";
+import { useEmployeeOptions, useEmployees } from "store/company/selectors";
+import { useTagOptions } from "store/tags/selector";
+import { User } from "constant/types";
 
 const InformationBillingPage = () => {
-  const { item, onGetBilling } = useBillings();
-  const { onSearchTags, tagsOptions } = useTagOptions();
+  const { item, onGetBilling, updateStatus } = useBillings();
+  const { tagsOptions } = useTagOptions();
   const { arrService, sumAmount, onGetServiceBudgets } = useServiceBudgets();
+  const { budgets, onGetBudgets } = useBudgets();
+  const { initQuery, isReady, query } = useQueryParams();
+  const { options, onGetOptions } = useEmployeeOptions();
+  // const { memberOptions } = useGetMemberOptions();
   const { user } = useAuth();
+
+  const userInfo = useMemo(() => {
+    const dataUser = {
+      email: user?.email,
+      id: user?.id,
+      fullname: user?.fullname,
+      avatar: user?.avatar,
+      roles: user?.roles,
+    } as User;
+    return dataUser;
+  }, [user]);
 
   const param = useParams();
 
+  const [newServices, setNewServices] = useState<Service[]>([]);
+  const id = param?.id.toString();
   useEffect(() => {
-    const idParam = Array.isArray(param?.id) ? param?.id.join(",") : param?.id;
-    onGetBilling(idParam ?? "");
-  }, [onGetBilling, param?.id]);
+    onGetBilling(id ?? "");
+  }, [onGetBilling, updateStatus]);
 
-  // useEffect(() => {
-  //   // onGetBilling(param);
-  //   onSearchTags("");
-  // }, [onSearchTags]);
+  useEffect(() => {
+    if (!isReady) return;
+    onGetBudgets({ ...initQuery });
+  }, [initQuery, isReady, onGetBudgets]);
 
-  // useEffect(() => {
-  //   onGetServiceBudgets(item?.budget[0].id ?? "");
-  // }, [onGetServiceBudgets, item]);
+  useEffect(() => {
+    if (budgets && budgets?.length > 0) {
+      budgets?.forEach((item) => {
+        onGetServiceBudgets(item.id ?? "");
+      });
+    }
+  }, [budgets]);
+
+  useEffect(() => {
+    onGetOptions({ pageIndex: 1, pageSize: 20 });
+  }, []);
 
   return (
     <FixedLayout
@@ -38,11 +70,22 @@ const InformationBillingPage = () => {
         xs: 1120,
         xl: 1450,
       }}
-      overflow={"auto"}
+      // overflow={"auto"}
     >
-      <Stack gap={2} spacing={2}>
-        <TopContent tagsOptions={tagsOptions} />
-        <TabList arrService={arrService} item={item} user={user} />
+      <Stack spacing={2}>
+        <TopContent
+          tagsOptions={tagsOptions}
+          item={item}
+          user={userInfo}
+          memberOptions={options}
+        />
+
+        <TabInfo
+          arrService={arrService}
+          item={item}
+          user={userInfo}
+          arrBudgets={budgets}
+        />
       </Stack>
     </FixedLayout>
   );

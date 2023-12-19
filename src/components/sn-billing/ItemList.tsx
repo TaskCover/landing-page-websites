@@ -1,33 +1,26 @@
 "use client";
 
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Checkbox, Stack, TableRow } from "@mui/material";
-import { TableLayout, BodyCell, CellProps } from "components/Table";
-import { useProjects } from "store/project/selectors";
-import { DEFAULT_PAGING, NS_BILLING, NS_COMMON } from "constant/index";
-import useQueryParams from "hooks/useQueryParams";
+import { Checkbox, TableRow } from "@mui/material";
+import FixedLayout from "components/FixedLayout";
 import Pagination from "components/Pagination";
-import { usePathname, useRouter } from "next-intl/client";
-import { cleanObject, stringifyURLSearchParams } from "utils/index";
-import { IconButton } from "components/shared";
-import PencilIcon from "icons/PencilIcon";
-import useBreakpoint from "hooks/useBreakpoint";
-import Form, { ProjectDataForm } from "./Form";
-import { Member, Project } from "store/project/reducer";
-import { ProjectData, getMembersOfProject } from "store/project/actions";
+import { BodyCell, CellProps, TableLayout } from "components/Table";
 import { DataAction } from "constant/enums";
-import { INITIAL_VALUES } from "./components/helpers";
-import { useAppDispatch } from "store/hooks";
+import { NS_BILLING, NS_COMMON } from "constant/index";
+import useBreakpoint from "hooks/useBreakpoint";
+import useQueryParams from "hooks/useQueryParams";
+import useTheme from "hooks/useTheme";
+import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "next-intl/client";
+import { memo, useEffect, useMemo, useState } from "react";
+import { Billing } from "store/billing/reducer";
+import { useBillings } from "store/billing/selectors";
+import { ProjectData } from "store/project/actions";
+import { cleanObject, stringifyURLSearchParams } from "utils/index";
+import Actions from "./Actions";
 import DesktopCells from "./DesktopCells";
 import MobileContentCell from "./MobileContentCell";
-import { useTranslations } from "next-intl";
-import useTheme from "hooks/useTheme";
-import PencilUnderlineIcon from "icons/PencilUnderlineIcon";
-import FixedLayout from "components/FixedLayout";
-import { Option } from "constant/types";
-import { Billing } from "store/billing/reducer";
-import Actions from "./Actions";
-import { useBillings } from "store/billing/selectors";
+import ViewPdf from "./Modals/ViewPdf";
+import { INITIAL_VALUES } from "./components/helpers";
 
 const ItemList = () => {
   const {
@@ -72,7 +65,9 @@ const ItemList = () => {
       },
       { value: billingT("list.table.budgets") },
       { value: billingT("list.table.att") },
-      { value: billingT("list.table.amount") },
+      {
+        value: billingT("list.table.amount"),
+      },
       { value: billingT("list.table.amountUnpaid") },
       { value: billingT("list.table.dueDate") },
     ],
@@ -204,7 +199,7 @@ const ItemList = () => {
           xl: 1450,
         }}
       >
-        <Actions />
+        <Actions selected={selectedList[0]} />
         <TableLayout
           headerList={headerList}
           pending={isFetching}

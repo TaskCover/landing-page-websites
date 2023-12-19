@@ -2,14 +2,22 @@ import { Box, Button, Stack, StackProps, Tab } from "@mui/material";
 import { NS_BILLING } from "constant/index";
 import useTheme from "hooks/useTheme";
 import { useTranslations } from "next-intl";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 import { TabContext, TabPanel, TabList } from "@mui/lab";
 import TabInvoice from "../Invoice";
 import TabFeed from "../Feed";
 import TabPayment from "../Payment";
-import { Billing, Service } from "store/billing/reducer";
+import {
+  Bill,
+  Billing,
+  BillingDataUpdate,
+  Budgets,
+  Service,
+} from "store/billing/reducer";
 import { User } from "constant/types";
+import { useBillings } from "store/billing/selectors";
+import { FormikProps, useFormik } from "formik";
 
 type TabItemProps = {
   label: string;
@@ -17,26 +25,64 @@ type TabItemProps = {
   editForm?: boolean;
   item?: Billing;
   arrService?: Service[];
-  user?: User;
+  arrBudgets?: Budgets[];
+  user: User;
+  form: FormikProps<Billing>;
+  billToInfo: Bill;
+  setBillToInfo: (value: Bill) => void;
 };
 
 type TabListProps = {
   item?: Billing;
   arrService?: Service[];
-  user?: User;
+  arrBudgets?: Budgets[];
+  user: User;
 };
 
 const TabInfo = (props: TabListProps) => {
-  const { arrService, item, user } = props;
+  const { arrService, item, user, arrBudgets } = props;
   // const { id } = useParams() as { id: string };
   // const pathname = usePathname();
+  const { onUpdateBilling, updateStatus } = useBillings();
   const [value, setValue] = useState("Invoice");
   const [editForm, setEditForm] = useState<boolean>(false);
+  const [billToInfo, setBillToInfo] = useState<Bill>({});
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
+
+  const formik = useFormik<Billing>({
+    enableReinitialize: true,
+    initialValues: {},
+    onSubmit(values, formikHelpers) {
+      // setDataUpdate
+      const data = {
+        ...values,
+        ...billToInfo,
+        id: item?.id,
+      } as BillingDataUpdate;
+      handleSaveValue(data ?? {});
+      setIsSubmit(true);
+    },
+  });
+
+  useEffect(() => {
+    formik.setValues(item ?? {});
+  }, [item]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
+  const handleSaveValue = (data: BillingDataUpdate) => {
+    onUpdateBilling(data);
+  };
+
+  useEffect(() => {
+    if (updateStatus && isSubmit) {
+      formik.resetForm();
+      setEditForm(false);
+      setIsSubmit(false);
+    }
+  }, [updateStatus, isSubmit]);
   return (
     <>
       <Stack
@@ -46,7 +92,6 @@ const TabInfo = (props: TabListProps) => {
         // justifyContent="space-between"
         borderColor={{ md: "grey.100" }}
         width="100%"
-        overflow="auto"
         // position="sticky"
         // top={isMembersOfProjectPath ? undefined : { xs: 8, sm: 16 }}
         bgcolor="background.paper"
@@ -59,42 +104,65 @@ const TabInfo = (props: TabListProps) => {
             gap={2}
             borderBottom={"1px solid #ECECF3"}
           >
-            <TabList key={value} onChange={handleChange}>
+            <TabList
+              key={value}
+              onChange={handleChange}
+              sx={{
+                ["& span"]: {
+                  display: "none !important",
+                },
+              }}
+            >
               {TABS.map((tab) => (
                 <Tab
                   key={tab.label}
                   {...tab}
                   label={tab.label}
-                  sx={{ color: "grey.300" }}
+                  sx={{
+                    color: value === tab.value ? "#212121" : "grey.300",
+                    textTransform: "none",
+                    background: value === tab.value ? "#E1F0FF" : "none",
+                    width: 150,
+                    ["&.MuiTab-root.Mui-selected"]: {
+                      color: "#212121",
+                    },
+                  }}
                 />
               ))}
             </TabList>
-            <Stack gap={2} direction={"row"} mb={1}>
-              {!editForm && (
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setEditForm(true);
-                  }}
-                >
-                  Edit
-                </Button>
-              )}
-
-              {editForm && (
-                <>
+            {value === "Invoice" && (
+              <Stack gap={2} direction={"row"} mb={1}>
+                {!editForm && (
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     onClick={() => {
-                      setEditForm(false);
+                      setEditForm(true);
                     }}
                   >
-                    Cancel
+                    Edit
                   </Button>
-                  <Button variant="contained">Save Change</Button>
-                </>
-              )}
-            </Stack>
+                )}
+
+                {editForm && (
+                  <>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        setEditForm(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => formik.handleSubmit()}
+                    >
+                      Save Change
+                    </Button>
+                  </>
+                )}
+              </Stack>
+            )}
           </Stack>
           {TABS.map((tab) => (
             <TabItem
@@ -105,6 +173,10 @@ const TabInfo = (props: TabListProps) => {
               arrService={arrService}
               item={item}
               user={user}
+              arrBudgets={arrBudgets}
+              form={formik}
+              billToInfo={billToInfo}
+              setBillToInfo={setBillToInfo}
             />
           ))}
           {/* <TabActions /> */}
@@ -117,7 +189,18 @@ const TabInfo = (props: TabListProps) => {
 export default memo(TabInfo);
 
 const TabItem = (props: TabItemProps) => {
-  const { label, value, editForm, arrService, item, user } = props;
+  const {
+    label,
+    value,
+    editForm,
+    arrService,
+    item,
+    user,
+    arrBudgets,
+    form,
+    billToInfo,
+    setBillToInfo,
+  } = props;
 
   const billingT = useTranslations(NS_BILLING);
   const { isDarkMode } = useTheme();
@@ -134,8 +217,9 @@ const TabItem = (props: TabItemProps) => {
   return (
     <TabPanel
       value={value}
-
-      // color={isActiveLink ? "text.primary" : "grey.300"}
+      // color={value ? "#212121" : "grey.300"}
+      // sx={{ overflow: "scroll" }}
+      sx={{ overflow: "scroll", height: 700 }}
     >
       {value === "Invoice" && (
         <TabInvoice
@@ -144,9 +228,15 @@ const TabItem = (props: TabItemProps) => {
           arrService={arrService}
           item={item}
           user={user}
+          arrBudgets={arrBudgets}
+          form={form}
+          billToInfo={billToInfo}
+          setBillToInfo={setBillToInfo}
         />
       )}
-      {value === "Feed" && <TabFeed title={label} />}
+      {value === "Feed" && (
+        <TabFeed title={label} bill={item ?? {}} user={user} />
+      )}
       {value === "Payment" && <TabPayment title={label} />}
     </TabPanel>
   );
@@ -155,5 +245,5 @@ const TabItem = (props: TabItemProps) => {
 const TABS = [
   { label: "Invoice", value: "Invoice" },
   { label: "Feed", value: "Feed" },
-  { label: "Payment", value: "Payment" },
+  { label: "Payments", value: "Payment" },
 ];

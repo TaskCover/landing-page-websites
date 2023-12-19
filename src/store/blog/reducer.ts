@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { BlogData, BlogFormData, CommentBlogData, createBlogComment, createNewBlogs, deleteBlog, getAllBlogs, getBlogBySlug, getBlogComments, getRelatedBlog, updatePublished } from "./actions";
+import { BlogData, BlogFormData, CommentBlogData, createBlogComment, createNewBlogs, deleteBlog, getAllBlogs, getBlogBySlug, getBlogComments, getRelatedBlog, updateBlog, updatePublished } from "./actions";
 import { DataStatus } from "constant/enums";
 import { PagingItem } from "constant/types";
 import { GetBlogCategoryListQueries } from "store/blog-category/actions";
@@ -114,7 +114,12 @@ export const blogSlice = createSlice({
               }) .addCase(getRelatedBlog.fulfilled, (state, action) => {
                 state.blogsStatus = DataStatus.SUCCEEDED;
                 state.relatedBlogs = action.payload;
-              })
+              }).addCase(updateBlog.fulfilled, (state, action) => {
+                state.blogsStatus = DataStatus.SUCCEEDED;
+                state.blog = action.payload;
+              }).addCase(updateBlog.rejected, (state, action) => {
+                state.blogsStatus = DataStatus.FAILED;
+              });
       },
     },
 );

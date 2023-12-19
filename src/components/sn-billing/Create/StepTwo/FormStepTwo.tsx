@@ -116,17 +116,13 @@ const FormStepTwo = (props: IProps) => {
     },
     // validationSchema: {},
     onSubmit(values, formikHelpers) {
-      const arrServiceId = arrService?.map((item) => {
-        return { id: item.id };
-      });
-
       const arrBudgetId = budgets?.map((item) => {
         return { id: item.id };
       });
 
       const data = {
         ...values,
-        budgetService: arrServiceId ?? [],
+        budgetService: [],
         invoiceNumber: "",
         budget: arrBudgetId ?? [],
         user: [{ id: user?.id }],

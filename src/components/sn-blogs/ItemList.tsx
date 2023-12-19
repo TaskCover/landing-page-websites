@@ -323,7 +323,7 @@ totalItems;
         action={textAction}
       />
       <DeleteCofirmDialog
-        open={action !== undefined}
+        open={action === DataAction.DELETE}
         onClose={onResetAction}
         title={blogT("actions.delete.title", { label: textAction })}
         content={blogT("actions.delete.confirm", {
