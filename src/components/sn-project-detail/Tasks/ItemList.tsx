@@ -1207,7 +1207,7 @@ const ItemList = () => {
                                 }
                                 onReset={onResetSelected}
                               />
-                            </Content>                      
+                            </Content>         
                           </Stack>
                           {/* {!isHide && ( */}
                           {
@@ -1262,15 +1262,7 @@ const ItemList = () => {
                                               alignItems="center"
                                               minHeight={38}
                                               overflow="hidden"
-                                              //----------ThanhHV-change to add MoveListIcon ---//
                                               spacing={{ xs: 0.5, sm: 1 }}
-                                              // borderBottom={{
-                                              //   md: "1px solid",
-                                              // }}
-                                              // borderColor={{
-                                              //   md: "var(--mui-palette-secondary-main)",
-                                              //   // md: "grey.100",
-                                              // }}
                                               maxHeight={{ md: 38 }}
                                               sx={{
                                                 "border-bottom":
@@ -1296,6 +1288,7 @@ const ItemList = () => {
                                                 }}
                                                 sx={sx.subTask}
                                                 overflow="hidden"
+                                                // maxWidth={30}
                                               >
                                                 <Content
                                                   sx={{
@@ -1313,6 +1306,7 @@ const ItemList = () => {
                                                     taskListItem.name,
                                                     task.name,
                                                   )}
+                                                  maxWidth={30}
                                                 >
                                                   {subTask.name}
                                                 </Content>
@@ -1455,7 +1449,6 @@ const ItemList = () => {
                                                     {subTask.description}
                                                   </Description>
                                                 </Content>
-                                                M
                                               </Stack>
                                               <MoreList
                                                 sx={{
