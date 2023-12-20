@@ -6,7 +6,11 @@ import { Dropdown } from "components/Filters";
 import Link from "components/Link";
 import { Button, Text } from "components/shared";
 import { useGetStageOptions } from "components/sn-sales-detail/hooks/useGetDealDetail";
-import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
+import LabelStatusCell from "components/sn-sales/components/LabelStatusCell";
+import {
+  CURRENCY_SYMBOL,
+  mappingStatusOptions,
+} from "components/sn-sales/helpers";
 import { CURRENCY_CODE } from "constant/enums";
 import { NS_COMMON, NS_SALES } from "constant/index";
 import { SALES_LIST_PATH } from "constant/paths";
@@ -142,26 +146,6 @@ const TabHeader = () => {
       >
         <Controller
           control={control}
-          name="stage"
-          defaultValue={saleDetail?.stage || 0}
-          render={({ field }) => {
-            const { onChange, ...rest } = field;
-            const onSelect = (name: string, value: string) => {
-              onChange(value);
-              onSubmit(name, value);
-            };
-            return (
-              <Dropdown
-                hasAll={false}
-                options={stageStatusOptions}
-                {...rest}
-                onChange={onSelect}
-              />
-            );
-          }}
-        />
-        <Controller
-          control={control}
           name="status"
           render={({ field }) => {
             const { onChange, ...rest } = field;
@@ -236,6 +220,45 @@ const TabHeader = () => {
           </Text>
         </Stack>
       </Stack>
+      <Controller
+        control={control}
+        name="stage"
+        defaultValue={saleDetail?.stage || 0}
+        render={({ field }) => {
+          const { onChange, ...rest } = field;
+          const onSelect = (name: string, value: string) => {
+            onChange(value);
+            onSubmit(name, value);
+          };
+          return (
+            <Stack
+              sx={{
+                width: "100px",
+                maxWidth: "100px",
+              }}
+            >
+              <LabelStatusCell
+                {...rest}
+                fullWidth
+                options={mappingStatusOptions}
+                onChange={(e) => {
+                  onSelect("stage", e.target.value);
+                }}
+                sx={{
+                  w: "100px",
+                }}
+                menuListSx={{
+                  maxWidth: "200px",
+                  "& .MuiTableCell-root": {
+                    height: "fit-content",
+                  },
+                }}
+                defaultValue={mappingStatusOptions[0].value as string}
+              ></LabelStatusCell>
+            </Stack>
+          );
+        }}
+      />
     </Stack>
   );
 };

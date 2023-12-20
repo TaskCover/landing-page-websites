@@ -69,7 +69,7 @@ export const useSales = () => {
   const onCreateDeal = useCallback(
     async (data) => {
       const members = data.members.map((value) => ({ id: value }));
-      const description = data.tags.join(",");
+      const description = data.tags?.join(",");
       const convertedBody: DealData = {
         currency: data.currency,
         owner: data.owner,
@@ -88,7 +88,9 @@ export const useSales = () => {
         }
         onAddSnackbar(
           commonT("notification.success", {
-            label: saleT("list.newDealForm.submit"),
+            label: !data.id
+              ? saleT("list.newDealForm.submit")
+              : saleT("detail.service.duplicate"),
           }),
           "success",
         );
