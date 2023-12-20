@@ -46,6 +46,11 @@ export type SalesDictionary = {
       documentFormat: string;
       orientation: string;
       pagesize: string;
+      orientationOption: {
+        portrait: string;
+        landscape: string;
+      };
+      error: string;
     };
     noOptionText: string;
   };
