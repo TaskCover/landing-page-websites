@@ -135,13 +135,13 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
               ref={provided.innerRef}
               {...provided.droppableProps}
               style={{
-                border: isDragging ? "1px dashed #EBEBEB" : undefined,
+                border: isDragging ? "1px dashed" : undefined,
               }}
             >
               <Stack
                 direction="row"
                 alignItems="center"
-                height={38}
+                height={56}
                 pl={{ xs: 0, md: 2 }}
                 width="100%"
                 // justifyContent="space-between"
@@ -149,6 +149,11 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                 borderTop={index !== 0 ? { md: "1px solid" } : undefined}
                 borderBottom={{ md: "1px solid" }}
                 borderColor={{ md: "grey.100" }}
+                style={{
+                  backgroundColor: checked
+                    ? "rgba(236, 236, 243, 1)"
+                    : "rgba(236, 236, 243, 0.6)", //ThanhHV-Add list becomes background
+                }}
               >
                 <Stack
                   direction="row"
@@ -221,6 +226,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
               {isShow && props.children}
               {provided.placeholder}
 
+              {/* Show form add new task */}
               {isShow && (
                 <Stack
                   width="100%"
@@ -313,9 +319,10 @@ export const MoreList = (props: MoreListProps) => {
 
   const projectId = useMemo(() => params?.id, [params?.id]) as string;
 
-  const taskListNameList = useMemo(() => items.map((task) => task.name), [
-    items,
-  ]);
+  const taskListNameList = useMemo(
+    () => items.map((task) => task.name),
+    [items],
+  );
   const taskIds = useMemo(() => {
     const indexTaskList = items.findIndex((item) => item.id === id);
     if (indexTaskList === -1) return [];
@@ -530,7 +537,8 @@ export const MoreList = (props: MoreListProps) => {
                     sx={sxConfig.item}
                   >
                     <MoveArrowIcon
-                      sx={{ color: "grey.400" }}
+                      // sx={{ color: "grey.400" }}
+                      sx={{ color: "red" }}
                       fontSize="medium"
                     />
                     <Text ml={2} variant="body2" color="grey.400">

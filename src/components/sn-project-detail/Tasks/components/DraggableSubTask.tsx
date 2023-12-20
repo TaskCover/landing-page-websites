@@ -3,17 +3,19 @@ import { Checkbox, IconButton } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 import useToggle from "hooks/useToggle";
 import CaretIcon from "icons/CaretIcon";
-import MoveDotIcon from "icons/MoveDotIcon";
+import MoveListIcon from "icons/MoveListIcon";
 // import MoveDotIcon from "icons/MoveDotIcon";
 import MoveTagIcon from "icons/MoveTagIcon";
 import { Dispatch, memo, SetStateAction, useMemo } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { checkIsMobile } from "utils/index";
 
-type DraggableTaskProps = {
+type DraggableSubTaskProps = {
   id: string;
   index: number;
+  orderTask: number;
   checked: boolean;
+  lastEl: boolean;
   onChange: () => void;
   children: React.ReactNode;
   isHide: boolean;
@@ -23,7 +25,7 @@ type DraggableTaskProps = {
   onMouseLeave: () => void;
 };
 
-const DraggableTask = (props: DraggableTaskProps) => {
+const DraggableSubTask = (props: DraggableSubTaskProps) => {
   const {
     id,
     index,
@@ -33,6 +35,8 @@ const DraggableTask = (props: DraggableTaskProps) => {
     isHide,
     isHovered,
     setHideIds,
+    orderTask,
+    lastEl,
     ...rest
   } = props;
 
@@ -65,17 +69,18 @@ const DraggableTask = (props: DraggableTaskProps) => {
               ...provided.draggableProps.style,
             }}
             className="draggable"
-            sx={{
-              "&::after": {
-                position: "absolute",
-                top: "38px",
-                "border-bottom": "1px solid #1BC5BD",
-                content: "''",
-                width: "100%",
-                height: "1px",
-                // zIndex: 999,
-              },
-            }}
+            sx={
+              {
+                //   "&::after": {
+                //     position: "absolute",
+                //     top: "38px",
+                //     "border-bottom": "1px solid #1BC5BD",
+                //     content: "''",
+                //     width: "100%",
+                //     height: "1px",
+                //   },
+              }
+            }
             {...rest}
           >
             <Stack
@@ -83,9 +88,12 @@ const DraggableTask = (props: DraggableTaskProps) => {
               alignItems="center"
               height={38}
               ml={5}
-              spacing={{ xs: 0.5, sm: 1 }}
               gap={2}
+              spacing={{ xs: 0.5, sm: 1 }}
+              // borderBottom={{ md: "1px solid" }}
+              // borderColor={{ md: "grey.100" }}
               sx={{
+                "border-bottom": "1px solid #1BC5BD",
                 "& >.checkbox": {
                   opacity: isMobile || checked || isHovered ? 1 : 0,
                   userSelect:
@@ -93,6 +101,32 @@ const DraggableTask = (props: DraggableTaskProps) => {
                 },
                 "&:hover >.checkbox": {
                   opacity: 1,
+                },
+                "&::before": {
+                  position: "absolute",
+                  left: "12px",
+                  // top: orderTask * 38,
+                  top: `${
+                    orderTask !== 0 ? `${orderTask * 38 - 19}px` : "0px"
+                  }`,
+                  "border-left": "1px solid #1BC5BD",
+                  "border-bottom": "1px solid #1BC5BD",
+                  content: "''",
+                  width: "21px",
+                  height: `${orderTask !== 0 ? "38px" : "19px"}`,
+                  zIndex: 5,
+                },
+                "&::after": {
+                  position: "absolute",
+                  left: "29px",
+                  top: orderTask * 38 + 16,
+                  "border-top": "1px solid #1BC5BD",
+                  "border-right": "1px solid #1BC5BD",
+                  content: "''",
+                  width: "5px",
+                  height: "5px",
+                  rotate: "45deg",
+                  zIndex: 5,
                 },
               }}
             >
@@ -105,10 +139,10 @@ const DraggableTask = (props: DraggableTaskProps) => {
               <IconButton
                 className="checkbox"
                 noPadding
-                sx={{ zIndex: 10 }}
+                sx={{ zIndex: 10, paddingTop: "8px" }}
                 {...provided.dragHandleProps}
               >
-                <MoveTagIcon
+                <MoveListIcon
                   fontSize={isXlSmaller ? "small" : "medium"}
                   sx={{ color: "grey.A200" }}
                 />
@@ -132,4 +166,4 @@ const DraggableTask = (props: DraggableTaskProps) => {
   );
 };
 
-export default memo(DraggableTask);
+export default memo(DraggableSubTask);

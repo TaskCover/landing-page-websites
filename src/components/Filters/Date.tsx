@@ -11,6 +11,7 @@ import {
   DATE_FORMAT_FORM,
   DATE_FORMAT_HYPHEN,
   DATE_LOCALE_FORMAT,
+  DATE_FORMAT_SLASH,
 } from "constant/index";
 import { vi, enUS } from "date-fns/locale";
 import { format as formatFns } from "date-fns";
@@ -70,7 +71,10 @@ const FDate = (props: DateProps) => {
         {/* {value
           ? formatDate(refactorDate(value, format)?.getTime() as number)
           : label} */}
-        {value ? dayjs(value).format(DATE_LOCALE_FORMAT) : label}
+        {/* {value ? dayjs(value).format(DATE_LOCALE_FORMAT) : label} */}
+        {value
+          ? formatDate(refactorDate(value, format)?.getTime() as number)
+          : label}
       </Text>
       <DatePicker
         ref={ref}
