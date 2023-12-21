@@ -223,14 +223,17 @@ const AddGroup: FC<AddGroupProps> = ({
           display: "flex",
           alignItems: "center",
           gap: 1,
-          padding: 2,
-          paddingLeft: "10px",
+          padding: "16px 21px 16px 4px",
+          // paddingLeft: "10px",
+          backgroundColor: "#3699FF",
+          color: "white",
         }}
       >
         {type !== "modal" && (
           <IconButton
             sx={{
               cursor: "pointer",
+              color: "white",
             }}
             onClick={() => {
               if (callbackBackIcon) {
@@ -252,10 +255,10 @@ const AddGroup: FC<AddGroupProps> = ({
           size="small"
           sx={{
             backgroundColor: "white",
-            borderRadius: "10px",
+            borderRadius: "8px",
             "& .MuiInputBase-root": {
               color: "black",
-              borderRadius: "10px",
+              borderRadius: "8px",
               border: "1px solid transparent",
             },
           }}
@@ -279,6 +282,12 @@ const AddGroup: FC<AddGroupProps> = ({
         overflow="auto"
         maxHeight="calc(550px - 85px - 15px)"
         minHeight="calc(550px - 85px - 15px)"
+        sx={{
+          borderRadius: "16px",
+          background: "#FFFFFF",
+          boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
+          padding: "16px",
+        }}
       >
         {isFetching || error ? (
           Array.from({ length: 5 }, (_, i) => (

@@ -7,6 +7,7 @@ import { NS_CHAT_BOX, NS_COMMON } from "constant/index";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 import ArrowRightIcon from "icons/ArrowRightIcon";
 import CloseIcon from "icons/CloseIcon";
+import InfoUserIcon from "icons/InfoUserIcon";
 import PointOnline from "icons/pointOnline";
 import ProfileAdd from "icons/ProfileAdd";
 import SearchIcon from "icons/SearchIcon";
@@ -72,7 +73,7 @@ const AccountInfoHeader = ({
             {avatar ? (
               <Avatar
                 alt="Avatar"
-                size={56}
+                size={40}
                 src={avatar || undefined}
                 onError={() => setAvatar(undefined)}
               />
@@ -140,6 +141,7 @@ const AccountInfoHeader = ({
               cursor: "pointer",
               display: "flex",
               flexDirection: "column",
+              color: "white",
             }}
           >
             <Typography
@@ -153,7 +155,7 @@ const AccountInfoHeader = ({
                 ? dataTransfer?.name?.replaceAll("_", " ")
                 : name}
             </Typography>
-            <Typography variant="caption" color="#999999">
+            <Typography variant="caption">
               {commonChatBox("chatBox.active")}
             </Typography>
           </Box>
@@ -173,6 +175,9 @@ const AccountInfoHeader = ({
               sx={{
                 fontSize: "16px",
                 fontWeight: 600,
+                color: "white",
+                textAlign: "center",
+                flex: 1,
               }}
             >
               {dataTransfer?.name?.replaceAll("_", " ")}
@@ -250,6 +255,7 @@ const AccountInfoHeader = ({
                   <SearchIcon
                     sx={{
                       color: "#999999",
+                      fontSize: "24px",
                     }}
                   />
                 </InputAdornment>
@@ -272,13 +278,16 @@ const AccountInfoHeader = ({
               display: "flex",
               alignItems: "center",
               gap: "10px",
-              padding: 1.5,
+              padding: 1,
               borderBottom: "1px solid #ECECF3",
+              backgroundColor: "#3699FF",
             }}
           >
             <IconButton
               sx={{
                 cursor: "pointer",
+                color: "#FFFFFF",
+                padding: "0px!important",
               }}
               onClick={onPrevious}
             >
@@ -291,7 +300,8 @@ const AccountInfoHeader = ({
                 <IconButton>
                   <SearchIcon
                     sx={{
-                      color: "#1BC5BD",
+                      color: "#FFFFFF",
+                      // fontSize: "24px!important",
                     }}
                     onClick={() => {
                       onSetStep(STEP.SEARCH_CHAT_TEXT);
@@ -312,14 +322,26 @@ const AccountInfoHeader = ({
               >
                 <ProfileAdd />
               </IconButton>
-              {/* <IconButton
+              <IconButton
                 sx={{
                   color: "white",
                 }}
               >
                 <VideoCallIcon />
-              </IconButton> */}
+              </IconButton>
             </Box>
+            {viewStep != STEP.CHAT_DETAIL_GROUP && (
+              <IconButton
+                onClick={() => {
+                  onSetStep(STEP.CHAT_DETAIL_GROUP);
+                }}
+                sx={{
+                  color: "white",
+                }}
+              >
+                <InfoUserIcon />
+              </IconButton>
+            )}
           </Box>
         );
     }
