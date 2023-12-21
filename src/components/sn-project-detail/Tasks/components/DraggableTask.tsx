@@ -3,6 +3,7 @@ import { Checkbox, IconButton } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 import useToggle from "hooks/useToggle";
 import CaretIcon from "icons/CaretIcon";
+import MoveDotIcon from "icons/MoveDotIcon";
 // import MoveDotIcon from "icons/MoveDotIcon";
 import MoveTagIcon from "icons/MoveTagIcon";
 import { Dispatch, memo, SetStateAction, useMemo } from "react";

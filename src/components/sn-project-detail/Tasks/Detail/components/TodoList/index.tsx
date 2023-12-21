@@ -400,7 +400,6 @@ const SubItem = (props: Todo & { todoId: string; index: number }) => {
                   checked={is_done}
                   onChange={onChangeStatus}
                 />
-
                 <IconButton noPadding {...provided.dragHandleProps}>
                   <MoveDotIcon fontSize="small" sx={{ color: "grey.A200" }} />
                 </IconButton>

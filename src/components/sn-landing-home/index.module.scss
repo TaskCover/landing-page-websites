@@ -1,0 +1,182 @@
+nav.nav {
+    background-image: url("~public/images/landing-bg-1.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: unset;
+    box-shadow: unset;
+    color: #212121;
+}
+.section_1 {
+    background-image: url("~public/images/landing-bg-1.png");
+    background-size: cover;
+}
+.section_2 {
+    background-image: url("~public/images/landing-bg-2.png");
+    background-size: cover;
+}
+.section_3 {
+    background: linear-gradient(180deg, rgba(87, 161, 202, 0.23) 0%, rgba(255, 255, 255, 0) 100%);
+}
+.section_4 {
+    background-image: url("~public/images/landing-bg-4.png");
+    background-size: cover;
+}
+.section_5 {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(87, 161, 202, 0.23) 100%);
+}
+.section_6 {
+    background-image: url("~public/images/landing-bg-6.png");
+    background-size: cover;
+}
+
+button.cs_button {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 28px;
+    color: #212121;
+    text-transform: none;
+}
+
+button.cs_button_outlined {
+    max-width: 169px;
+    border: 1px solid #0575e6;
+    border-radius: 24px;
+    padding: 12px 0px;
+    line-height: 24px;
+    font-weight: 500;
+    background: linear-gradient(89.64deg, #0575e6, #38e27b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: none;
+}
+
+button.cs_button_contained {
+    max-width: 169px;
+    // border: 1px solid #0575e6;
+    box-shadow: none;
+    border-radius: 24px;
+    padding: 13px 0px;
+    line-height: 24px;
+    font-weight: 500;
+    background: linear-gradient(89.64deg, #0575e6, #38e27b);
+    text-transform: none;
+}
+
+.divider {
+    background-image: url("~public/images/landing-divider.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 4px;
+    width: 176px;
+}
+
+header.tabs {
+    padding: 8px;
+    background-color: #e7f5fb;
+    border-radius: 16px;
+    box-shadow: none;
+}
+
+header.tabs_explore {
+    background: linear-gradient(89.64deg, #0575E6 5.8%, #38E27B 96.38%),
+        linear-gradient(0deg, #FFFFFF, #FFFFFF);
+    padding: 8px;
+    border-radius: 40px;
+    box-shadow: none;
+}
+
+// header.tabs > span.MuiTabs-indicator{
+//     display: none;
+// }
+button.tab_btn_explore {
+    text-transform: unset;
+    opacity: 1;
+    border-radius: 30px;
+    color: #fff;
+}
+
+button.tab_btn_explore[aria-selected="true"] {
+    background-color: #f4fafc;
+    // border: 1px solid #0575e6;
+}
+.tab_btn_explore_1 {
+    background-image: linear-gradient(89.64deg, #0575e6, #38e27b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: none;
+}
+
+button.tab_btn {
+    text-transform: unset;
+    opacity: 1;
+    border-radius: 12px;
+}
+
+button.tab_btn[aria-selected="true"] {
+    background-color: #f4fafc;
+    border: 1px solid #0575e6;
+}
+
+button.tab_btn.tab_btn_1,
+.tab_btn_1 {
+    background-image: linear-gradient(89.64deg, #0575e6, #38e27b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: none;
+}
+
+button.tab_btn.tab_btn_2,
+.tab_btn_2 {
+    color: #E96C3F;
+}
+
+button.tab_btn.tab_btn_3,
+.tab_btn_3 {
+    color: #42ADA7;
+}
+
+button.tab_btn.tab_btn_4,
+.tab_btn_4 {
+    color: #1B88EC;
+}
+
+button.tab_btn.tab_btn_5,
+.tab_btn_5 {
+    color: #EDB932;
+}
+
+button.tab_btn.tab_btn_6,
+.tab_btn_6 {
+    color: #48BF80;
+}
+
+div.card_optimize {
+    border-radius: 24px;
+    border: 1px solid #fff;
+    box-shadow: 0px 4px 40px 0px #2B59FF14;
+}
+
+div.card_manage {
+    border-radius: 24px;
+    border: 1px solid #0575E6;
+    box-shadow: 0px 2px 16px 0px #6161FF14;
+}
+
+
+
+@media (min-width: 0px) and (max-width: 599.9px) {
+    .divider {
+        width: 160px;
+        height: 3px;
+    }
+
+    button.tab_btn {
+        padding: 0px;
+        min-width: 48px;
+    }
+
+    button.tab_btn>img {
+        width: 32px;
+        height: 32px;
+    }
+}

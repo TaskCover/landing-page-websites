@@ -1202,7 +1202,7 @@ const ItemList = () => {
                                 }
                                 onReset={onResetSelected}
                               />
-                            </Content>
+                            </Content>         
                           </Stack>
                           {/* {!isHide && ( */}
                           {

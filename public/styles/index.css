@@ -74,10 +74,11 @@ a {
 }
 
 @media screen and (min-width: 768px) {
+
   /* width */
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 7px;
   }
 
   /* Track */
@@ -120,7 +121,7 @@ a {
   color: #3699ff !important;
 }
 
-.slider-comment-attachment .react-slideshow-wrapper .images-wrap > div {
+.slider-comment-attachment .react-slideshow-wrapper .images-wrap>div {
   display: flex !important;
   align-items: center;
   justify-content: center;
