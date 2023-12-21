@@ -17,6 +17,7 @@ import { vi, enUS } from "date-fns/locale";
 import { format as formatFns } from "date-fns";
 import { useLocale } from "next-intl";
 import dayjs from "dayjs";
+import { preventDefault } from "@fullcalendar/core/internal";
 
 registerLocale("vi", vi);
 registerLocale("en", enUS);

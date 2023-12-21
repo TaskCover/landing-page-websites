@@ -7,7 +7,12 @@ import { useAuth, useSnackbar } from "store/app/selectors";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import NewGroupIcon from "icons/NewGroupIcon";
 import SearchRoundIcon from "icons/SearchRoundIcon";
-import { AN_ERROR_TRY_AGAIN, NS_CHAT_BOX, NS_COMMON, NS_PROJECT } from "constant/index";
+import {
+  AN_ERROR_TRY_AGAIN,
+  NS_CHAT_BOX,
+  NS_COMMON,
+  NS_PROJECT,
+} from "constant/index";
 import { useTranslations } from "next-intl";
 import { useWSChat } from "store/chat/helpers";
 import useTheme from "hooks/useTheme";
@@ -48,7 +53,7 @@ const ChatList = ({ onCloseChatBox }) => {
 
         if (scrollHeightRef.current > clientHeight) {
           console.log(initText);
-          
+
           handleGetConversation(initText, "a", pageRef.current, pageSize);
         }
       }
@@ -127,8 +132,8 @@ const ChatList = ({ onCloseChatBox }) => {
   };
 
   useEffect(() => {
-    handleGetConversation('', 'a');
-  }, [ currStep ])
+    handleGetConversation("", "a");
+  }, [currStep]);
 
   useEffect(() => {
     pageRef.current = pageIndex;
@@ -165,7 +170,7 @@ const ChatList = ({ onCloseChatBox }) => {
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: 3,
+          gap: 2,
           padding: 2,
           backgroundColor: "#3699FF",
         }}
@@ -173,6 +178,7 @@ const ChatList = ({ onCloseChatBox }) => {
         <Typography color="white" variant="h4" onClick={handleCloseChatBox}>
           {commonChatBox("chatBox.chat")}
         </Typography>
+
         <TextField
           size="small"
           sx={{
@@ -185,6 +191,8 @@ const ChatList = ({ onCloseChatBox }) => {
             "& fieldset": {
               border: "unset",
             },
+
+            flex: 1,
           }}
           inputProps={{
             sx: {
@@ -216,15 +224,24 @@ const ChatList = ({ onCloseChatBox }) => {
           onChange={(e) => setTextSearch(e.target.value)}
           onKeyDown={handleKeyDown}
         />
+
         <Box
           onClick={() => {
             onSetStep(STEP.ADD_GROUP, { isNew: true });
           }}
           sx={{
+            display: "flex",
+            justifyContent: "center",
             alignItems: "center",
-            width: 24,
-            height: 24,
-            cursor: "pointer"
+            color: "#3699FF",
+            backgroundColor: "#FFFFFF",
+            cursor: "pointer",
+            // fontSize: "2.4rem",
+            fontSize: "24rem!important",
+            width: "38px",
+            height: "100%",
+            padding: "2px 0 0 4px",
+            borderRadius: "8px",
           }}
         >
           <NewGroupIcon />
@@ -260,25 +277,27 @@ const ChatList = ({ onCloseChatBox }) => {
           ))
         ) : (
           <>
-            {conversationList?.length > 0
-              ? conversationList.map((item, index) => {
-                  return (
-                    <ChatItemLayout
-                      chatInfo={item}
-                      sessionId={user?.["username"]}
-                      key={index}
-                      onClickConvention={handleClickConversation}
-                      chatItemProps={{
-                        ...(index === conversationList?.length - 1 && {
-                          ref: setLastElement,
-                        }),
-                      }}
-                    />
-                  );
-                })
-              : (
-                <Typography textAlign="center" marginTop={2}>{commonT("noData")}</Typography>
-              )}
+            {conversationList?.length > 0 ? (
+              conversationList.map((item, index) => {
+                return (
+                  <ChatItemLayout
+                    chatInfo={item}
+                    sessionId={user?.["username"]}
+                    key={index}
+                    onClickConvention={handleClickConversation}
+                    chatItemProps={{
+                      ...(index === conversationList?.length - 1 && {
+                        ref: setLastElement,
+                      }),
+                    }}
+                  />
+                );
+              })
+            ) : (
+              <Typography textAlign="center" marginTop={2}>
+                {commonT("noData")}
+              </Typography>
+            )}
           </>
         )}
       </Box>

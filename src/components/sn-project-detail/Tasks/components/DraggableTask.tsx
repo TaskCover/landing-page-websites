@@ -82,7 +82,7 @@ const DraggableTask = (props: DraggableTaskProps) => {
               direction="row"
               alignItems="center"
               height={38}
-              ml={5}
+              ml={2}
               spacing={{ xs: 0.5, sm: 1 }}
               gap={2}
               sx={{
