@@ -357,13 +357,6 @@ const ChatEditor = (props: EditorProps) => {
               inputFileRef?.current?.click();
             }}
           />
-          <SendMesIcon
-            sx={{
-              fill: "transparent",
-              cursor: "pointer",
-            }}
-            onClick={handleMessage}
-          />
         </Box>
       </Box>
       <Stack
