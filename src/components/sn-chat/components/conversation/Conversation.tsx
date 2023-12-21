@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import { SxProps, Theme } from "@mui/material";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { DrawerChatIgnore } from "components/sn-chatting-room/components/RoomDetails";
+import ChatEmoji from "../chat/ChatEmoji";
 
 const initPageIndex = 10;
 

@@ -60,7 +60,6 @@ const FDate = (props: DateProps) => {
       spacing={0.5}
       alignItems="center"
       width="fit-content"
-      overflow="visible!important"
     >
       <Text
         variant="body2"
@@ -83,7 +82,6 @@ const FDate = (props: DateProps) => {
         selected={value ? refactorDate(value, format) : null}
         onChange={onChangeDate}
         locale={locale}
-        z-index={9999}
         customInput={
           <CalendarIcon
             sx={{

@@ -1,4 +1,3 @@
-
 import { SxProps } from "@mui/material";
 import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -18,6 +17,7 @@ import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { STEP } from "store/chat/type";
+import InfoUserIcon from "icons/InfoUserIcon";
 interface ProfileHeaderProps {
   textSearch?: string;
   isSearch?: boolean;
@@ -76,7 +76,9 @@ const ProfileHeader = ({
   const handleCreateGroup = async () => {
     const result = await onCreateDirectMessageGroup({
       groupName: (() => {
-        return `${dataTransfer?.username?.slice(0, 8) }...-and-me...${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`;
+        return `${dataTransfer?.username?.slice(0, 8)}...-and-me...${Math.floor(
+          Math.random() * (9999 - 1 + 1) + 1,
+        )}`;
       })(),
       members: [dataTransfer?.username],
       type: "d",
@@ -116,7 +118,7 @@ const ProfileHeader = ({
   const groupButton = useCallback(() => {
     return (
       <>
-        {onSearch && (
+        {/* {onSearch && (
           <IconButton onClick={() => setOpenSearch(true)}>
             <SearchIcon
               sx={{
@@ -124,18 +126,58 @@ const ProfileHeader = ({
               }}
             />
           </IconButton>
-        )}
+        )} */}
 
-        <IconButton
-          onClick={() => {
-            onSetStep(STEP.ADD_GROUP, { isNew: true, currentSelects: dataTransfer });
-          }}
-          sx={{
-            color: "white",
-          }}
-        >
-          <ProfileAdd />
-        </IconButton>
+        <Box display="flex">
+          <IconButton
+            onClick={() => {
+              onSetStep(STEP.ADD_GROUP, {
+                isNew: true,
+                currentSelects: dataTransfer,
+              });
+            }}
+            sx={{
+              color: "white",
+              "&:hover": {
+                border: "1px solid #FFFFFF",
+              },
+            }}
+          >
+            <ProfileAdd />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              onSetStep(STEP.ADD_GROUP, {
+                isNew: true,
+                currentSelects: dataTransfer,
+              });
+            }}
+            sx={{
+              color: "white",
+              "&:hover": {
+                border: "1px solid #FFFFFF",
+              },
+            }}
+          >
+            <VideoCallIcon />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              onSetStep(STEP.ADD_GROUP, {
+                isNew: true,
+                currentSelects: dataTransfer,
+              });
+            }}
+            sx={{
+              color: "white",
+              "&:hover": {
+                border: "1px solid #FFFFFF",
+              },
+            }}
+          >
+            <InfoUserIcon />
+          </IconButton>
+        </Box>
       </>
     );
   }, [onSearch]);
@@ -167,9 +209,6 @@ const ProfileHeader = ({
                 alt="Avatar"
                 src={avatarClone}
                 size={40}
-                style={{
-                  borderRadius: "10px",
-                }}
                 onError={() => setAvatarClone(undefined)}
               />
             </Box>
@@ -208,7 +247,7 @@ const ProfileHeader = ({
             {statusOnline && (
               <Typography
                 variant="caption"
-                color="#999999"
+                color="#FFFFFF"
                 fontSize="14px"
                 lineHeight="22px"
               >
@@ -230,6 +269,7 @@ const ProfileHeader = ({
               "& .MuiInputBase-root": {
                 pl: "10px",
                 borderRadius: "8px",
+
                 backgroundColor: "#F7F7FD",
                 "& fieldset": {
                   border: "unset",
@@ -264,7 +304,7 @@ const ProfileHeader = ({
               onSearch?.("", false);
             }}
             sx={{
-              marginLeft: '0.3rem',
+              marginLeft: "0.3rem",
               color: "#1BC5BD",
             }}
           >
@@ -297,6 +337,8 @@ const ProfileHeader = ({
           alignItems: "center",
           padding: "11.5px",
           borderBottom: "1px solid #ECECF3",
+          backgroundColor: "#3699FF",
+          color: "#FFFFFF",
           ...containerSx,
         }}
         {...containerProp}
@@ -310,6 +352,7 @@ const ProfileHeader = ({
           <ArrowDownIcon
             sx={{
               fontSize: "32px",
+              color: "#FFFFFF",
             }}
           />
         </IconButton>

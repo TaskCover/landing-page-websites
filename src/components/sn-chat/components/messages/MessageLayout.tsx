@@ -125,7 +125,7 @@ const MessageLayout = ({
                 size={30}
                 src={avatarPartner}
                 style={{
-                  borderRadius: "10px",
+                  // borderRadius: "10px",
                   visibility: hasNextMessageFromSameUser ? "hidden" : "visible",
                 }}
               />

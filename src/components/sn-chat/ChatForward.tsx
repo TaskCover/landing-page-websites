@@ -2,7 +2,7 @@
 import { Box } from "@mui/system";
 import SelectItem from "./components/SelectItem";
 import { Skeleton, Typography } from "@mui/material";
-import { Button } from "components/shared";
+import { Button, Input } from "components/shared";
 import { useChat } from "store/chat/selectors";
 import { useTranslations } from "next-intl";
 import { NS_COMMON } from "constant/index";
@@ -107,7 +107,7 @@ const ChatForward: FC<Props> = (props) => {
       >
         <Box
           sx={{
-            marginBottom: '24px',
+            marginBottom: "24px",
             ...(isChatDesktop
               ? { height: "fix-content", maxHeight: "200px" }
               : { height: "295px" }),
@@ -129,7 +129,7 @@ const ChatForward: FC<Props> = (props) => {
               "&::-webkit-scrollbar-thumb:hover": {
                 background: "#ECECF3",
               },
-              marginBottom: '24px',
+              marginBottom: "24px",
             }}
             style={{
               ...(isChatDesktop
@@ -202,7 +202,7 @@ const ChatForward: FC<Props> = (props) => {
                 width: "92%",
                 paddingBottom: "5px",
                 paddingTop: "3px",
-                zIndex: '1',
+                zIndex: "1",
               }}
             >
               Message
@@ -227,7 +227,7 @@ const ChatForward: FC<Props> = (props) => {
                   width: "92%",
                   paddingBottom: "5px",
                   paddingTop: "5px",
-                  zIndex: '1',
+                  zIndex: "1",
                 }}
               >
                 Message
@@ -271,10 +271,10 @@ const ChatForward: FC<Props> = (props) => {
                   background: "#ECECF3",
                 },
                 "& p": {
-                  marginBottom: '0px',
-                  fontSize: '14px',
-                  lineBreak: 'anywhere',
-                }
+                  marginBottom: "0px",
+                  fontSize: "14px",
+                  lineBreak: "anywhere",
+                },
               }}
             >
               {dataTransfer?.message?.attachments?.length > 0 ? (
@@ -286,7 +286,7 @@ const ChatForward: FC<Props> = (props) => {
                   isRead={true}
                 />
               ) : (
-                  <div
+                <div
                   dangerouslySetInnerHTML={{
                     __html: dataTransfer?.message?.msg,
                   }}
@@ -308,6 +308,19 @@ const ChatForward: FC<Props> = (props) => {
             </Typography>
           ) : null}
         </Box>
+
+        {/* <Box
+          sx={{
+            display: "block",
+            width: "100%",
+            backgroundColor: isDarkMode
+              ? "var(--mui-palette-background-paper)"
+              : "white",
+          }}
+        >
+          <Input type="text" fullWidth={true} placeholder={"Message"} />
+        </Box> */}
+
         <Box
           sx={{
             display: "flex",

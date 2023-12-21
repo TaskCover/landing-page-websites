@@ -99,9 +99,9 @@ const UserLanding = ({ displayUserInfo, onPrevious }: UserLandingProps) => {
           <Avatar
             alt="Avatar"
             src={avatar || undefined}
-            size={80}
+            size={120}
             style={{
-              borderRadius: "10px",
+              borderRadius: "50%",
               objectFit: "cover",
             }}
           />

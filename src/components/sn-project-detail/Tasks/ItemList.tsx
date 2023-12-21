@@ -1202,7 +1202,7 @@ const ItemList = () => {
                                 }
                                 onReset={onResetSelected}
                               />
-                            </Content>         
+                            </Content>
                           </Stack>
                           {/* {!isHide && ( */}
                           {
@@ -1235,7 +1235,6 @@ const ItemList = () => {
                                             minHeight={38}
                                             overflow="hidden"
                                             maxHeight={{ md: 38 }}
-                                            // paddingLeft={3}
                                             sx={{
                                               borderBottom: "1px solid #1BC5BD",
 

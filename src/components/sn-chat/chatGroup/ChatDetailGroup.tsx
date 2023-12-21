@@ -187,7 +187,7 @@ const ChatDetailGroup = (props) => {
                       <Avatar
                         src={item?.avatar}
                         alt="Avatar"
-                        size={42}
+                        size={80}
                         style={{
                           borderRadius: "50%",
                         }}
@@ -433,9 +433,9 @@ const ChatDetailGroup = (props) => {
             <Avatar
               alt="Avatar"
               src={dataTransfer?.avatar}
-              size={80}
+              size={120}
               style={{
-                borderRadius: "10px",
+                borderRadius: "50%",
                 margin: "auto",
               }}
             />

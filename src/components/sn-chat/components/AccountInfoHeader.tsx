@@ -74,9 +74,6 @@ const AccountInfoHeader = ({
                 alt="Avatar"
                 size={56}
                 src={avatar || undefined}
-                style={{
-                  borderRadius: "10px",
-                }}
                 onError={() => setAvatar(undefined)}
               />
             ) : (
@@ -89,7 +86,7 @@ const AccountInfoHeader = ({
                   alt="Avatar"
                   size={25}
                   style={{
-                    borderRadius: "5px",
+                    borderRadius: "50%",
                   }}
                 />
                 <Avatar
@@ -150,7 +147,11 @@ const AccountInfoHeader = ({
               fontWeight="bold"
               style={{ cursor: "pointer" }}
             >
-              {dataTransfer?.fname ? dataTransfer?.fname?.replaceAll("_", " ") : dataTransfer?.name ? dataTransfer?.name?.replaceAll("_", " ") : name }
+              {dataTransfer?.fname
+                ? dataTransfer?.fname?.replaceAll("_", " ")
+                : dataTransfer?.name
+                ? dataTransfer?.name?.replaceAll("_", " ")
+                : name}
             </Typography>
             <Typography variant="caption" color="#999999">
               {commonChatBox("chatBox.active")}
@@ -160,6 +161,7 @@ const AccountInfoHeader = ({
       );
     }
   };
+
   const _renderItemHeader = (viewStep) => {
     switch (viewStep) {
       case STEP.CHAT_GROUP:
@@ -236,7 +238,7 @@ const AccountInfoHeader = ({
                 color: "black",
                 borderRadius: "10px",
               },
-              "& fieldset": { border: 'none' },
+              "& fieldset": { border: "none" },
             }}
             placeholder="Search"
             fullWidth
@@ -302,7 +304,10 @@ const AccountInfoHeader = ({
                   color: "white",
                 }}
                 onClick={() => {
-                  onSetStep(STEP.ADD_MEMBER, { ...dataTransfer, openFrom: currStep });
+                  onSetStep(STEP.ADD_MEMBER, {
+                    ...dataTransfer,
+                    openFrom: currStep,
+                  });
                 }}
               >
                 <ProfileAdd />
