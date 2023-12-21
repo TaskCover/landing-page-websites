@@ -27,24 +27,23 @@ const SearchChatText = () => {
     onSetStep,
     onSearchChatText,
     listSearchMessage,
-    statusListSearchMessage
+    statusListSearchMessage,
   } = useChat();
 
   const commonT = useTranslations(NS_COMMON);
   const commonChatBox = useTranslations(NS_CHAT_BOX);
   const { onAddSnackbar } = useSnackbar();
 
-  useEffect(()=>{
-    getSearchChatText()
-  }, [textSearch])
+  useEffect(() => {
+    getSearchChatText();
+  }, [textSearch]);
 
   const getSearchChatText = useCallback(async () => {
     await onSearchChatText({
       text: textSearch,
-      type: 'p',
+      type: "p",
     });
   }, [textSearch, onSearchChatText]);
-
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -65,11 +64,13 @@ const SearchChatText = () => {
           alignItems: "center",
           gap: 1,
           padding: 2,
+          backgroundColor: "#3699FF",
         }}
       >
         <IconButton
           sx={{
             cursor: "pointer",
+            color: "#FFFFFF",
           }}
           onClick={() => {
             onSetStep(STEP.CHAT_DETAIL_GROUP);
@@ -81,10 +82,10 @@ const SearchChatText = () => {
           size="small"
           sx={{
             backgroundColor: "white",
-            borderRadius: "10px",
+            borderRadius: "8px",
             "& .MuiInputBase-root": {
               color: "black",
-              borderRadius: "10px",
+              borderRadius: "8px",
               border: "1px solid transparent",
             },
           }}
@@ -103,9 +104,16 @@ const SearchChatText = () => {
             ),
           }}
         />
-        <Typography 
-          sx={{color: '#1BC5BD', fontWeight: 600, fontSize: 14, cursor: "pointer"}} 
-          onClick={()=>{onSetStep(STEP.CHAT_DETAIL_GROUP);}}
+        <Typography
+          sx={{
+            color: "#FFFFFF",
+            fontWeight: 600,
+            fontSize: 14,
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            onSetStep(STEP.CHAT_DETAIL_GROUP);
+          }}
         >
           {commonT("cancel")}
         </Typography>
@@ -116,7 +124,7 @@ const SearchChatText = () => {
         minHeight="calc(550px - 85px - 15px)"
       >
         {statusListSearchMessage === DataStatus.LOADING ||
-      statusListSearchMessage === DataStatus.FAILED  ? (
+        statusListSearchMessage === DataStatus.FAILED ? (
           Array.from({ length: 5 }, (_, i) => (
             <Box
               key={i}
@@ -140,25 +148,21 @@ const SearchChatText = () => {
           ))
         ) : (
           <>
-            {listSearchMessage?.length > 0
-              ? listSearchMessage
-                  .map((item, index) => {
-                    return (
-                      <ItemSearchChatText
-                        employee={item}
-                        key={index}
-                      />
-                    );
-                  })
-              : <Box 
-                  sx={{
-                    textAlign: "center",
-                    fontWeight: 600,
-                    fontSize: 14,
-                  }}  
-                >
-                  {commonT("noData")}
-                </Box>}
+            {listSearchMessage?.length > 0 ? (
+              listSearchMessage.map((item, index) => {
+                return <ItemSearchChatText employee={item} key={index} />;
+              })
+            ) : (
+              <Box
+                sx={{
+                  textAlign: "center",
+                  fontWeight: 600,
+                  fontSize: 14,
+                }}
+              >
+                {commonT("noData")}
+              </Box>
+            )}
           </>
         )}
       </Box>

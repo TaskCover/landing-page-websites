@@ -38,6 +38,7 @@ const ChatItemLayout = ({
     <Box
       onClick={() => onClickConvention(chatInfo)}
       sx={{
+        padding: "8px 0px",
         display: "flex",
         alignItems: "center",
         gap: "1rem",
@@ -48,9 +49,9 @@ const ChatItemLayout = ({
         ":hover": {
           backgroundColor: isDarkMode ? "#313130" : "#F7F7FD",
         },
+        borderBottom: "1px solid #E1F0FF",
         ...sx,
       }}
-      p={2}
       {...props}
     >
       <ChatItemRender chatInfo={chatInfo} sessionId={sessionId} />

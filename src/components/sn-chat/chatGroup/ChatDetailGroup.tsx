@@ -416,7 +416,7 @@ const ChatDetailGroup = (props) => {
     <>
       <Box
         sx={{
-          margin: "10px",
+          margin: "16px",
         }}
       >
         <Box
@@ -433,7 +433,7 @@ const ChatDetailGroup = (props) => {
             <Avatar
               alt="Avatar"
               src={dataTransfer?.avatar}
-              size={120}
+              size={80}
               style={{
                 borderRadius: "50%",
                 margin: "auto",

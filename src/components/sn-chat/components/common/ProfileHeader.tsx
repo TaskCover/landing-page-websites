@@ -129,6 +129,15 @@ const ProfileHeader = ({
         )} */}
 
         <Box display="flex">
+          {onSearch && (
+            <IconButton onClick={() => setOpenSearch(true)}>
+              <SearchIcon
+                sx={{
+                  color: "#FFFFFF",
+                }}
+              />
+            </IconButton>
+          )}
           <IconButton
             onClick={() => {
               onSetStep(STEP.ADD_GROUP, {
@@ -138,9 +147,6 @@ const ProfileHeader = ({
             }}
             sx={{
               color: "white",
-              "&:hover": {
-                border: "1px solid #FFFFFF",
-              },
             }}
           >
             <ProfileAdd />
@@ -154,29 +160,21 @@ const ProfileHeader = ({
             }}
             sx={{
               color: "white",
-              "&:hover": {
-                border: "1px solid #FFFFFF",
-              },
             }}
           >
             <VideoCallIcon />
           </IconButton>
-          <IconButton
-            onClick={() => {
-              onSetStep(STEP.ADD_GROUP, {
-                isNew: true,
-                currentSelects: dataTransfer,
-              });
-            }}
-            sx={{
-              color: "white",
-              "&:hover": {
-                border: "1px solid #FFFFFF",
-              },
-            }}
-          >
-            <InfoUserIcon />
-          </IconButton>
+
+          {onShowProfile && (
+            <IconButton
+              onClick={onShowProfile}
+              sx={{
+                color: "white",
+              }}
+            >
+              <InfoUserIcon />
+            </IconButton>
+          )}
         </Box>
       </>
     );
@@ -213,6 +211,7 @@ const ProfileHeader = ({
               />
             </Box>
           )}
+
           <Box
             sx={{
               display: "flex",
@@ -269,7 +268,7 @@ const ProfileHeader = ({
               "& .MuiInputBase-root": {
                 pl: "10px",
                 borderRadius: "8px",
-
+                fontSize: "14px",
                 backgroundColor: "#F7F7FD",
                 "& fieldset": {
                   border: "unset",
@@ -287,8 +286,8 @@ const ProfileHeader = ({
                   sx={{
                     fill: "none",
                     filter: "opacity(0.8)",
-                    height: "20px",
-                    width: "20px",
+                    height: "24px",
+                    width: "24px",
                   }}
                 />
               ),
@@ -305,7 +304,7 @@ const ProfileHeader = ({
             }}
             sx={{
               marginLeft: "0.3rem",
-              color: "#1BC5BD",
+              color: "white",
             }}
           >
             Cancel
@@ -335,7 +334,8 @@ const ProfileHeader = ({
         sx={{
           display: "flex",
           alignItems: "center",
-          padding: "11.5px",
+          // padding: "11.5px",
+          padding: "16px 21px 16px 4px",
           borderBottom: "1px solid #ECECF3",
           backgroundColor: "#3699FF",
           color: "#FFFFFF",

@@ -197,7 +197,7 @@ const ChatList = ({ onCloseChatBox }) => {
           inputProps={{
             sx: {
               paddingLeft: "5px",
-              fontSize: "14px",
+              fontSize: "14px!important",
               fontWeight: 400,
               lineHeight: "22px",
               "&::-webkit-input-placeholder": {
@@ -212,8 +212,8 @@ const ChatList = ({ onCloseChatBox }) => {
                 sx={{
                   fill: "none",
                   filter: "opacity(0.8)",
-                  height: "20px",
-                  width: "20px",
+                  height: "24px",
+                  width: "24px",
                 }}
               />
             ),
@@ -233,14 +233,11 @@ const ChatList = ({ onCloseChatBox }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            color: "#3699FF",
             backgroundColor: "#FFFFFF",
             cursor: "pointer",
-            // fontSize: "2.4rem",
             fontSize: "24rem!important",
             width: "38px",
             height: "100%",
-            padding: "2px 0 0 4px",
             borderRadius: "8px",
           }}
         >
@@ -252,6 +249,9 @@ const ChatList = ({ onCloseChatBox }) => {
         overflow="auto"
         maxHeight="calc(600px - 74px - 15px)"
         bgcolor={isDarkMode ? "#303031" : "white"}
+        sx={{
+          padding: "0px 24px 24px 24px",
+        }}
       >
         {(isFetching || isError) && pageIndex === 0 ? (
           Array.from({ length: 5 }, (_, i) => (
