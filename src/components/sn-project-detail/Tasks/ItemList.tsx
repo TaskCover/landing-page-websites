@@ -1214,7 +1214,7 @@ const ItemList = () => {
                                     {...taskDropProvided.droppableProps}
                                     style={{
                                       minHeight: 1,
-                                      position: "relative",
+                                      // position: "relative",
                                     }}
                                   >
                                     {task?.sub_tasks?.map((subTask, i) => {
@@ -1250,12 +1250,12 @@ const ItemList = () => {
                                               },
                                               "&::before": {
                                                 position: "absolute",
-                                                left: "12px",
-                                                // top: orderTask * 38,
+                                                left: "42px",
+                                                // top: "38px",
                                                 top: `${
                                                   i !== 0
-                                                    ? `${i * 38 - 19}px`
-                                                    : "0px"
+                                                    ? `${i * 38 + 19}px`
+                                                    : "38px"
                                                 }`,
                                                 "border-left":
                                                   "1px solid #1BC5BD",
@@ -1270,8 +1270,8 @@ const ItemList = () => {
                                               },
                                               "&::after": {
                                                 position: "absolute",
-                                                left: "29px",
-                                                top: `${i * 38 + 16}px`,
+                                                left: "58px",
+                                                top: `${(i + 1) * 38 + 16}px`,
                                                 "border-top":
                                                   "1px solid #1BC5BD",
                                                 "border-right":
