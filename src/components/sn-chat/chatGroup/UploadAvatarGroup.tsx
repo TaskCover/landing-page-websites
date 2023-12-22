@@ -13,8 +13,10 @@ export const UploadAvatarGroup = () => {
     <Box
       sx={{
         position: "absolute",
-        bottom: 0,
-        right: "-22px",
+        bottom: "14px",
+        right: "-10px",
+        width: "32px",
+        height: "32px",
         boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
         cursor: "pointer",
         borderRadius: "50%",
@@ -28,8 +30,14 @@ export const UploadAvatarGroup = () => {
           type="file"
           onChange={async (e) => {
             if (e.currentTarget.files?.length) {
-              await onChangeGroupAvatar(e.currentTarget.files[0], dataTransfer?._id);
-              onAddSnackbar(commonChatBox("chatBox.group.change_avatar_alert"), "success");
+              await onChangeGroupAvatar(
+                e.currentTarget.files[0],
+                dataTransfer?._id,
+              );
+              onAddSnackbar(
+                commonChatBox("chatBox.group.change_avatar_alert"),
+                "success",
+              );
             }
           }}
         />

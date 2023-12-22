@@ -18,6 +18,7 @@ import { NS_COMMON } from "constant/index";
 import { useAuth, useSnackbar } from "store/app/selectors";
 import { STEP } from "store/chat/type";
 import InfoUserIcon from "icons/InfoUserIcon";
+import { CenterFocusStrong } from "@mui/icons-material";
 interface ProfileHeaderProps {
   textSearch?: string;
   isSearch?: boolean;
@@ -192,8 +193,8 @@ const ProfileHeader = ({
                 "&::before": {
                   content: `''`,
                   position: "absolute",
-                  right: "-5px",
-                  top: "-4px",
+                  right: "-2px",
+                  bottom: "-2px",
                   width: "14px",
                   height: "14px",
                   border: "2px solid #ffffff",
@@ -217,7 +218,7 @@ const ProfileHeader = ({
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              marginLeft: "11px",
+              marginLeft: "4px",
             }}
           >
             {onShowProfile ? (
@@ -351,7 +352,7 @@ const ProfileHeader = ({
         >
           <ArrowDownIcon
             sx={{
-              fontSize: "32px",
+              fontSize: "24px",
               color: "#FFFFFF",
             }}
           />
