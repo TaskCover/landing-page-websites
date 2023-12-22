@@ -170,7 +170,7 @@ const CustomDateRangePicker: React.FC<TextFieldInputProps> = ({
           },
         }}
         sx={{
-          "& .MuiPaper-root .MuiGrid-root .MuiList-root": {
+          "& .MuiGrid-root > ul:nth-child(1)": {
             display: "none",
           },
           "& .MuiPaper-root .MuiGrid-root > .MuiGrid-root:nth-of-type(2)": {
@@ -181,7 +181,8 @@ const CustomDateRangePicker: React.FC<TextFieldInputProps> = ({
         <DateRangePicker
           open={isOpenCalendar}
           toggle={() => toggle()}
-          minDate={new Date()}
+          closeOnClickOutside
+          minDate={dayjs().toDate()}
           onChange={(range) => {
             setDateRange(range);
             toggle();
