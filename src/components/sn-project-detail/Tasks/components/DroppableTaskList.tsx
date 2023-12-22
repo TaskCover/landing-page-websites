@@ -108,6 +108,17 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
   ) => {
     if (event.key !== "Enter") return;
     const nameTrimmed = taskName?.trim();
+
+    if (!nameTrimmed) {
+      onAddSnackbar(
+        projectT("detailTasks.notification.taskNameIsRequired", {
+          label: commonT("createNew"),
+        }),
+        "error",
+      );
+      return;
+    }
+
     const newItem = await onCreateTask({
       task_list: taskListId,
       name: nameTrimmed,

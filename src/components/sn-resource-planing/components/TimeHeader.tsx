@@ -76,8 +76,8 @@ const TimeHeader = ({ filters, setFilters, calendarRef }) => {
           selectedDate: null,
         });
         if (calendarApi) {
-          calendarApi.prev();
-          calendarApi.refetchEvents();
+          calendarApi?.prev();
+          calendarApi?.refetchEvents();
         }
       }
       if (value === "next") {
