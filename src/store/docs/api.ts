@@ -23,11 +23,19 @@ const documentApi = createApi({
       }),
       providesTags: TagTypes,
     }),
+    createDoc: build.mutation({
+      query: (payload: any) => ({
+        url: "/docs", // Đường dẫn API POST mới
+        method: "POST",
+        data: payload,
+      }),
+      invalidatesTags: (_result, error) => (error ? [] : TagTypes),
+    }),
     updateDoc: build.mutation({
       query: ({
-        id,
-        payload,
-      }: {
+                id,
+                payload,
+              }: {
         id: string;
         payload: Partial<IDocument>;
       }) => ({
@@ -78,6 +86,7 @@ const {
   useUpdateDocMutation,
   useGetCommentsQuery,
   usePostCommentMutation,
+  useCreateDocMutation,
 } = documentApi;
 
 export {
@@ -86,5 +95,6 @@ export {
   useUpdateDocMutation,
   useGetCommentsQuery,
   usePostCommentMutation,
+  useCreateDocMutation,
   documentApi as default,
 };

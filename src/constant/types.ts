@@ -108,6 +108,7 @@ export type Attachment = {
 
 export declare interface IDocument {
   _id: string;
+  id: string;
   name: string;
   created_time: Date;
   updated_time: Date;
