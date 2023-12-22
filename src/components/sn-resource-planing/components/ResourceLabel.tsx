@@ -100,7 +100,7 @@ const ResourceLabel = ({
 
   const isAddbutton = useMemo(() => {
     return (isActive && parentBookings?.length === 0) || !isActive;
-  }, [isActive, JSON.stringify(parentBookings), isMybooking]);
+  }, [isActive, parentBookings, isMybooking]);
 
   if (type === "step") {
     return (
@@ -200,6 +200,10 @@ const ResourceLabel = ({
               gap={{
                 xs: 1,
               }}
+              sx={{
+                position: "relative",
+                zIndex: "10",
+              }}
             >
               <Avatar size={32} src={avatarUrl} />
               <Box>
@@ -211,6 +215,8 @@ const ResourceLabel = ({
                 </Typography>
               </Box>
               <ArrowDownIcon
+                color="inherit"
+                fontSize="inherit"
                 sx={{
                   width: "20px",
                   ml: {
