@@ -85,3 +85,20 @@ export const CURRENCY_SYMBOL: Record<CURRENCY_CODE, string> = {
   [CURRENCY_CODE.CNY]: "¥",
   [CURRENCY_CODE.VND]: "₫",
 };
+
+export const EXPORT_TYPE_OPTIONS = {
+  PDF: "PDF",
+  CSV: "CSV",
+  XLS: "XLS",
+};
+
+export const EXPORT_ORIENTATION_OPTIONS = {
+  PORTRAIT: "PORTRAIT",
+  LANDSCAPE: "LANDSCAPE",
+};
+
+export const EXPORT_PAGE_SIZE_OPTIONS = {
+  A4: "A4",
+  A3: "A3",
+  A5: "A5",
+};

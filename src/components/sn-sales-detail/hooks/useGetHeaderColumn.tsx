@@ -36,9 +36,10 @@ export type ServiceColumnProps = {
   sx?: Record<string, unknown>;
 };
 
+export const ALIGN_CELL = "right";
+
 export const defaultShowColumns: ServiceColumn[] = [
   ServiceColumn.NAME,
-  ServiceColumn.DESCRIPTION,
   ServiceColumn.SERVICE_TYPE,
   ServiceColumn.BILL_TYPE,
   ServiceColumn.UNIT,
@@ -58,6 +59,8 @@ export const useGetHeaderColumn = (index: number) => {
     control,
     name: `sectionsList.${index}.service`,
   });
+
+  const alignCell = isEdit ? "left" : ALIGN_CELL;
 
   const totalBuget = useMemo(() => {
     const result = fields?.reduce((prev, item) => {
@@ -81,10 +84,9 @@ export const useGetHeaderColumn = (index: number) => {
         id: ServiceColumn.NAME,
         value: salesT("detail.service.table.name"),
         // minWidth: 170,
-        width: "9%",
+        width: isEdit ? "9%" : "18%",
         align: "left",
       },
-
       {
         id: ServiceColumn.DESCRIPTION,
         value: salesT("detail.service.table.description"),
@@ -95,28 +97,28 @@ export const useGetHeaderColumn = (index: number) => {
       {
         id: ServiceColumn.SERVICE_TYPE,
         value: salesT("detail.service.table.position"),
-        align: "left",
+        align: isEdit ? alignCell : "right",
         // minWidth: 140,
         width: "8%",
       },
       {
         id: ServiceColumn.BILL_TYPE,
         value: salesT("detail.service.table.billType"),
-        align: "left",
+        align: isEdit ? alignCell : "center",
         // minWidth: 140,
         width: "9%",
       },
       {
         id: ServiceColumn.UNIT,
         value: salesT("detail.service.table.unit"),
-        align: "left",
+        align: alignCell,
         // minWidth: 140,
         width: "8%",
       },
       {
         id: ServiceColumn.ESTIMATE,
         value: salesT("detail.service.table.estimate"),
-        align: "left",
+        align: alignCell,
         width: "8%",
 
         // minWidth: 120,
@@ -124,7 +126,7 @@ export const useGetHeaderColumn = (index: number) => {
       {
         id: ServiceColumn.QUANTITY,
         value: salesT("detail.service.table.quantity"),
-        align: "left",
+        align: alignCell,
         width: "8%",
         // minWidth: 120,
       },
@@ -132,28 +134,28 @@ export const useGetHeaderColumn = (index: number) => {
       {
         id: ServiceColumn.PRICE,
         value: salesT("detail.service.table.price"),
-        align: "left",
+        align: alignCell,
         // minWidth: 120,
         width: "8%",
       },
       {
         id: ServiceColumn.DISCOUNT,
         value: salesT("detail.service.table.discount"),
-        align: "left",
+        align: alignCell,
         width: "8%",
         // minWidth: 120,
       },
       // {
       //   id: ServiceColumn.MARK_UP,
       //   value: salesT("detail.service.table.markup"),
-      //   align: "left",
+      //   align: alignCell,
       //   width: "8%",
       //   // minWidth: 120,
       // },
       {
         id: ServiceColumn.TOTAL_BUGET,
         value: salesT("detail.service.table.totalBuget"),
-        align: "left",
+        align: alignCell,
         width: "8%",
         // component: (props) => (
         //   <Stack

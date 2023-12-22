@@ -93,6 +93,8 @@ export type CommonDictionary = {
     title: string;
     content: string;
   };
+  yes: string;
+  no: string;
   upgradeAccount: string;
   clickGoDetail: string;
   waiting: string;

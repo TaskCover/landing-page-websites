@@ -41,6 +41,8 @@ import { useTranslations } from "next-intl";
 import { useGetServiceUnitOptions } from "components/sn-sales-detail/hooks/useGetServiceUnitOptions";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 import { scrollViewContext } from "components/sn-sales-detail/hooks/useScrollErrorField";
+import { ChevronRight } from "@mui/icons-material";
+import DescriptionRow from "./DescriptionRow";
 // import useScrollErrorField from "components/sn-sales-detail/hooks/useScrollErrorField";
 
 interface IProps {
@@ -188,7 +190,7 @@ const ServiceTableItem = ({
                   value={service.name}
                 />
               </BodyCell>
-              {isShowCols(ServiceColumn.DESCRIPTION) && (
+              {isShowCols(ServiceColumn.DESCRIPTION) && isEdit && (
                 <BodyCell
                   sx={{
                     ...defaultSx.item,
@@ -199,7 +201,6 @@ const ServiceTableItem = ({
                   <CustomDesktopInput
                     name={`${sectionKey}.${index}.desc`}
                     control={control}
-                    required
                     disabled={isLocked}
                     isEdit={isEdit}
                     value={service.desc}
@@ -210,7 +211,7 @@ const ServiceTableItem = ({
                 sx={{
                   ...defaultSx.item,
                 }}
-                align="left"
+                align="right"
               >
                 {isEdit ? (
                   <Controller

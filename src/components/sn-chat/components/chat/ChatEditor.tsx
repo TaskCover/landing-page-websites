@@ -28,6 +28,7 @@ import type ReactQuill from "react-quill";
 import { useChat } from "store/chat/selectors";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
+import SendMesIcon from "icons/SendMesIcon";
 
 const QuillNoSSRWrapper = dynamic(
   async () => {
@@ -274,7 +275,7 @@ const ChatEditor = (props: EditorProps) => {
       // direction={isChatDesktop ? "column-reverse" : "column"}
       className="editor"
       sx={{
-        height: '100px',
+        height: "100px",
         "& .ql-snow": {
           border: "unset !important",
           borderTop: "1px solid #ECECF3!important",

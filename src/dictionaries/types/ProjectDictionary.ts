@@ -131,6 +131,7 @@ export type ProjectDictionary = {
       deleteTaskListSuccess: string;
       deleteTasksSuccess: string;
       actionTaskSuccess: string;
+      taskNameIsRequired: string,
     };
   };
   taskDetail: {

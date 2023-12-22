@@ -6,6 +6,7 @@ import { NS_PROJECT } from "constant/index";
 import { StatusTask, AssignTask } from "./components";
 import { Task } from "store/project/reducer";
 import EditTask from "./components/EditTask";
+import MoveListIcon from "icons/MoveListIcon";
 
 export enum TabDetail {
   DETAIL = 1,

@@ -12,6 +12,7 @@ import {
   SIGNUP_PATH,
   FORGOT_PASSWORD_PATH,
   RESET_PASSWORD_PATH,
+  LANDING_HOME_PATH,
 } from "constant/paths";
 import { updateAuth, toggleAppReady, UserInfo } from "store/app/reducer";
 import Snackbar from "components/Snackbar";
@@ -28,6 +29,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const AUTH_PATHS = [SIGNUP_PATH, FORGOT_PASSWORD_PATH, RESET_PASSWORD_PATH];
+const LANDING_PATHS = [LANDING_HOME_PATH];
 
 const AppProvider = ({
   children,
@@ -57,6 +59,7 @@ const AppProvider = ({
       !accessToken &&
       replaceRef.current &&
       !AUTH_PATHS.includes(pathname) &&
+      !LANDING_PATHS.includes(pathname) &&
       !isResetPath
     ) {
       replaceRef.current(SIGNIN_PATH);

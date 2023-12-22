@@ -136,6 +136,7 @@ export const ProjectLang: ProjectDictionary = {
       deleteTaskListSuccess: "Delete task list successfully!",
       deleteTasksSuccess: "Delete tasks successfully!",
       actionTaskSuccess: "Update {label} task successfully!",
+      taskNameIsRequired: 'Task name is required',
     },
   },
   taskDetail: {

@@ -9,7 +9,8 @@ interface ConversationLayoutProp {
   viewStep?: STEP;
 }
 const ConversationLayout = ({ children, viewStep }: ConversationLayoutProp) => {
-  const { roomId, convention, prevStep, onSetStep, currStep, dataTransfer } = useChat();
+  const { roomId, convention, prevStep, onSetStep, currStep, dataTransfer } =
+    useChat();
 
   const accountInfo = useMemo(() => {
     const account = convention?.find(
@@ -23,7 +24,7 @@ const ConversationLayout = ({ children, viewStep }: ConversationLayoutProp) => {
     <>
       <AccountInfoHeader
         accountInfo={accountInfo}
-        onPrevious={() => {          
+        onPrevious={() => {
           switch (currStep) {
             case STEP.CHAT_GROUP:
               onSetStep(STEP.CONVENTION);
