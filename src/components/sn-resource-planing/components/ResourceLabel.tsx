@@ -1,5 +1,5 @@
 import { ResourceApi } from "@fullcalendar/resource";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import Avatar from "components/Avatar";
 import { RESOURCE_EVENT_TYPE } from "constant/enums";
 import ArrowDownIcon from "icons/ArrowDownIcon";
@@ -19,6 +19,7 @@ import { useProject, useProjects } from "store/project/selectors";
 import { useAuth } from "store/app/selectors";
 import { useEmployees } from "store/company/selectors";
 import { useFetchDetail } from "../hooks/useFetchDetail";
+import { Button } from "components/shared";
 
 interface IResourceLabelProps {
   resource: ResourceApi;
@@ -202,7 +203,9 @@ const ResourceLabel = ({
             >
               <Avatar size={32} src={avatarUrl} />
               <Box>
-                <Typography sx={{ fontSize: 14 }}>{fullname}</Typography>
+                <Typography sx={{ fontSize: 14 }} fontWeight={600}>
+                  {fullname}
+                </Typography>
                 <Typography sx={{ color: "#666666", fontSize: 14 }}>
                   {company}
                 </Typography>
@@ -214,7 +217,7 @@ const ResourceLabel = ({
                     xs: 1,
                     md: 0,
                   },
-                  transform: isActive ? "rotate(-90deg)" : "rotate(90deg)",
+                  transform: isActive ? "rotate(-90deg)" : "rotate(-180deg)",
                   transitionDelay: "all ease 0.25s",
                 }}
               />
@@ -262,6 +265,8 @@ const ResourceLabel = ({
               // display: isAddbutton ? "flex" : "none",
               mt: 2,
               color: "success.main",
+              px: 2,
+              py: 1,
             }}
             startIcon={<PlusIcon />}
             onClick={() => handleOpenCreate()}
