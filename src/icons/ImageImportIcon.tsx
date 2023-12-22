@@ -27,7 +27,7 @@ const ImageImportIcon = (props: SvgIconProps) => {
       />
       <path
         d="M8.5 10C9.32843 10 10 9.32843 10 8.5C10 7.67157 9.32843 7 8.5 7C7.67157 7 7 7.67157 7 8.5C7 9.32843 7.67157 10 8.5 10Z"
-        stroke="#1BC5BD"
+        stroke="#999999"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

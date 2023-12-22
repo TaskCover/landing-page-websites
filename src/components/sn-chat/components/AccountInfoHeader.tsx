@@ -126,7 +126,7 @@ const AccountInfoHeader = ({
                 height: 5,
                 position: "absolute",
                 right: -2,
-                top: -2,
+                bottom: -2,
                 cursor: "unset",
               }}
             >
@@ -191,6 +191,9 @@ const AccountInfoHeader = ({
               sx={{
                 fontSize: "16px",
                 fontWeight: 600,
+                color: "white",
+                textAlign: "center",
+                flex: 1,
               }}
             >
               {dataTransfer?.name}
@@ -330,7 +333,7 @@ const AccountInfoHeader = ({
                 <VideoCallIcon />
               </IconButton>
             </Box>
-            {viewStep != STEP.CHAT_DETAIL_GROUP && (
+            {viewStep != STEP.CHAT_DETAIL_GROUP && viewStep != STEP.LIST && (
               <IconButton
                 onClick={() => {
                   onSetStep(STEP.CHAT_DETAIL_GROUP);
