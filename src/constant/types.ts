@@ -107,29 +107,29 @@ export type Attachment = {
 };
 
 export declare interface IDocument {
-  _id: string;
-  id: string;
-  name: string;
-  created_time: Date;
-  updated_time: Date;
-  created_by: Partial<User>;
-  updated_by: Partial<User>;
-  owner: Partial<User>;
-  description: string;
-  is_active: boolean;
-  is_public: boolean;
-  member: Array<{
+  _id?: string;
+  id?: string;
+  name?: string;
+  created_time?: Date;
+  updated_time?: Date;
+  created_by?: Partial<User>;
+  updated_by?: Partial<User>;
+  owner?: Partial<User>;
+  description?: string;
+  is_active?: boolean;
+  is_public?: boolean;
+  member?: Array<{
     _id: string;
     create_time: Date;
     doc: string;
     user: Partial<User>;
     perm: keyof typeof DocAccessibility;
   }>;
-  positionComment: [];
-  company: string;
-  project_id: string;
-  content: string;
-  child: [];
+  positionComment?: [];
+  company?: string;
+  project_id?: string;
+  content?: string;
+  child?: [];
 }
 
 export declare type TPagination<T> = {
