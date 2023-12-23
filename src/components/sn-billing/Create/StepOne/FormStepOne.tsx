@@ -60,10 +60,7 @@ const OptionFilter = [
 const FormStepOne = (props: IProps) => {
   const {
     budgets,
-    pageSize,
-    pageIndex,
     status,
-    totalPages,
     totalItems,
     isFetching,
     isIdle,

@@ -18,7 +18,7 @@ import { BillingCommentData, BillingDataUpdate } from "./reducer";
 export enum BillingStatus {
   OPEN = "Open",
   PAID = "Paid",
-  UNPAID = "UnPaid",
+  UNPAID = "Unpaid",
 }
 
 export enum DependencyStatus {
@@ -39,8 +39,13 @@ export type BillingData = {};
 export const getBillingList = createAsyncThunk(
   "Billing/getBillingList",
   async (queries: GetBillingListQueries) => {
-    const newQueries = { ...queries, status: "Unpaid" };
+    let newQueries = {};
 
+    newQueries = { ...queries };
+
+    if (!Object.keys(newQueries).includes("status")) {
+      newQueries = { ...queries, status: "Unpaid" };
+    }
     // if (newQueries?.sort !== "updated_time=-1") {
     //   newQueries.sort = "created_time=-1";
     // }

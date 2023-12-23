@@ -17,6 +17,13 @@ export interface Paging_Feedback {
   totalItems?: number;
 }
 
+export interface Paging_Billing {
+  page: number;
+  size: number;
+  total_page?: number;
+  totalItems?: number;
+}
+
 export interface Paging_Career {
   page: number;
   size: number;

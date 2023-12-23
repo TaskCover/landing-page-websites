@@ -32,10 +32,10 @@ import { INITIAL_VALUES } from "./components/helpers";
 const ItemList = () => {
   const {
     items,
-    pageSize,
-    pageIndex,
+    size,
+    page,
     status,
-    totalPages,
+    total_page,
     totalItems,
     isFetching,
     isIdle,
@@ -201,7 +201,7 @@ const ItemList = () => {
   };
 
   const onChangePage = (newPage: number) => {
-    onChangeQueries({ page: newPage, pageSize });
+    onChangeQueries({ page: newPage, size });
   };
 
   const onChangeSize = (newPageSize: number) => {
@@ -215,6 +215,7 @@ const ItemList = () => {
 
   useEffect(() => {
     if (!isReady) return;
+
     onGetBillings({ ...DEFAULT_PAGING_BILLING, ...initQuery });
   }, [initQuery, isReady, onGetBillings]);
 
@@ -269,7 +270,7 @@ const ItemList = () => {
                 ) : (
                   <DesktopCells
                     item={item}
-                    order={(pageIndex - 1) * pageSize + (index + 1)}
+                    order={(page - 1) * size + (index + 1)}
                   />
                 )}
                 {/* <BodyCell align="left" sx={{ px: { xs: 0.5, md: 2 } }}>
@@ -296,9 +297,9 @@ const ItemList = () => {
         </TableLayout>
         <Pagination
           totalItems={totalItems}
-          totalPages={totalPages}
-          page={pageIndex}
-          pageSize={pageSize}
+          totalPages={total_page}
+          page={page}
+          pageSize={size}
           containerProps={{ px: { md: 3 }, py: 1 }}
           onChangePage={onChangePage}
           onChangeSize={onChangeSize}

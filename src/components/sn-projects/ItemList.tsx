@@ -164,11 +164,11 @@ const ItemList = () => {
   };
 
   const onChangePage = (newPage: number) => {
-    onChangeQueries({ page: newPage, pageSize });
+    onChangeQueries({ pageIndex: newPage, pageSize });
   };
 
   const onChangeSize = (newPageSize: number) => {
-    onChangeQueries({ page: 1, Size: newPageSize });
+    onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
   };
 
   const onUpdateProject = async (data: ProjectData) => {
@@ -178,7 +178,7 @@ const ItemList = () => {
 
   useEffect(() => {
     if (!isReady) return;
-    onGetProjects({ ...DEFAULT_PAGING_BILLING, ...initQuery });
+    onGetProjects({ ...DEFAULT_PAGING, ...initQuery });
   }, [initQuery, isReady, onGetProjects]);
 
   return (

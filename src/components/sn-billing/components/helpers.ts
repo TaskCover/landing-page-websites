@@ -33,7 +33,7 @@ export const INITIAL_VALUES = {
 export const STATUS_BILLING_OPTIONS = [
   { label: TEXT_STATUS.Open, value: BillingStatus.OPEN },
   { label: TEXT_STATUS.Paid, value: BillingStatus.PAID },
-  { label: TEXT_STATUS.UnPaid, value: BillingStatus.UNPAID },
+  { label: TEXT_STATUS.Unpaid, value: BillingStatus.UNPAID },
 ];
 
 export enum ATTACHMENT_TYPE {

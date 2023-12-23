@@ -187,9 +187,9 @@ const ViewPdf = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {arrService?.map((item) => {
+                      {arrService?.map((item, index) => {
                         return (
-                          <TableRow>
+                          <TableRow key={index}>
                             <TableCell>{item.desc}</TableCell>
                             <TableCell>{item.unit}</TableCell>
                             <TableCell>{item.qty}</TableCell>

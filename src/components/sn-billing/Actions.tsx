@@ -25,7 +25,7 @@ type Iprops = {
 };
 const Actions = (props: Iprops) => {
   const { selected } = props;
-  const { filters, pageSize, onGetBillings } = useBillings();
+  const { filters, size, onGetBillings } = useBillings();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
 
@@ -33,7 +33,7 @@ const Actions = (props: Iprops) => {
   const { push } = useRouter();
   const [isShow, onShow, onHide] = useToggle();
 
-  const [queries, setQueries] = useState<Params>({});
+  const [queries, setQueries] = useState<Params>({ status: "Unpaid" });
   const [exportModel, setExportModel] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
@@ -53,25 +53,33 @@ const Actions = (props: Iprops) => {
       [name]: value,
     };
 
-    onSearch(newQueries);
+    if (!value && typeof value === "undefined") {
+      const allQueries = {
+        ...queries,
+        status: ["Open", "Paid", "Unpaid"],
+      };
+      onSearch(allQueries);
+    } else {
+      onSearch(newQueries);
+    }
   };
 
   const onSearch = (newQueries: Params) => {
-    const path = getPath(pathname, newQueries);
-    push(path);
+    // const path = getPath(pathname, newQueries);
+    // push(path);
 
-    onGetBillings({ ...newQueries, page: 1, size: pageSize });
+    onGetBillings({ ...newQueries, page: 1, size: size });
   };
 
   const onClear = () => {
-    const newQueries = { page: 1, size: pageSize };
-    const path = getPath(pathname, newQueries);
-    push(path);
+    const newQueries = { page: 1, size: size };
+    // const path = getPath(pathname, newQueries);
+    // push(path);
     onGetBillings(newQueries);
   };
 
   const onRefresh = () => {
-    onGetBillings({ ...filters, page: 1, size: pageSize });
+    onGetBillings({ ...filters, page: 1, size: size });
   };
 
   useEffect(() => {
@@ -197,7 +205,7 @@ const Actions = (props: Iprops) => {
               options={statusOptions}
               name="status"
               onChange={onChangeQueries}
-              value={queries?.status}
+              value={queries?.status ?? "Unpaid"}
               rootSx={{
                 px: "0px!important",
                 [`& .${selectClasses.outlined}`]: {
@@ -237,7 +245,7 @@ const Actions = (props: Iprops) => {
               name="search_key"
               placeholder={commonT("search")}
               onEnter={(name, value) => {
-                // onChangeQueries(name, value);
+                onChangeQueries(name, value);
                 // onSearch();
               }}
               onChange={(name, value) => onChangeQueries(name, value)}
