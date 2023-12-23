@@ -3,6 +3,7 @@ import { Checkbox, IconButton } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 import useToggle from "hooks/useToggle";
 import CaretIcon from "icons/CaretIcon";
+import CheckBoxIcon from "icons/CheckBoxIcon";
 import MoveDotIcon from "icons/MoveDotIcon";
 // import MoveDotIcon from "icons/MoveDotIcon";
 import MoveTagIcon from "icons/MoveTagIcon";
@@ -14,6 +15,7 @@ type DraggableTaskProps = {
   id: string;
   index: number;
   checked: boolean;
+  isSubTask: boolean;
   onChange: () => void;
   children: React.ReactNode;
   isHide: boolean;
@@ -32,6 +34,7 @@ const DraggableTask = (props: DraggableTaskProps) => {
     children,
     isHide,
     isHovered,
+    isSubTask,
     setHideIds,
     ...rest
   } = props;
@@ -103,7 +106,7 @@ const DraggableTask = (props: DraggableTaskProps) => {
                 onChange={onChange}
               />
               <IconButton
-                className="checkbox"
+                // className="checkbox"
                 noPadding
                 sx={{ zIndex: 10 }}
                 {...provided.dragHandleProps}

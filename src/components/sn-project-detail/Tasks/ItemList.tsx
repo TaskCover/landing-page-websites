@@ -1014,9 +1014,9 @@ const ItemList = () => {
                         index={taskIndex}
                         checked={isChecked}
                         isHide={isHide}
-                        // isHovered={hoveredId === task.id}
+                        isHovered={hoveredId === task.id}
                         onChange={onToggleTask(!isChecked, taskListItem, task)}
-                        isHovered={true}
+                        isSubTask={false}
                         onMouseEnter={() => setHoveredId(task.id)}
                         onMouseLeave={() => setHoveredId(undefined)}
                         setHideIds={setHideIds}
@@ -1038,7 +1038,6 @@ const ItemList = () => {
                             maxHeight={{ md: 38 }}
                             width="100%"
                             sx={{ ...sx.task, ml: 4 }}
-                            // sx={sx.task}
                             overflow="hidden"
                             borderBottom={{ md: "1px solid" }}
                             borderColor={{ md: "grey.100" }}
@@ -1228,7 +1227,6 @@ const ItemList = () => {
                                       return (
                                         <>
                                           <Stack
-                                            // position={"relative"}
                                             key={subTask.id}
                                             direction="row"
                                             alignItems="center"
@@ -1236,21 +1234,18 @@ const ItemList = () => {
                                             overflow="hidden"
                                             maxHeight={{ md: 38 }}
                                             sx={{
-                                              borderBottom: "1px solid #1BC5BD",
-
                                               "& >.checkbox": {
                                                 opacity: isChecked ? 1 : 0,
                                                 userSelect: isChecked
                                                   ? undefined
                                                   : "none",
                                               },
-                                              "&:hover >.checkbox": {
+                                              "&:hover .checkbox": {
                                                 opacity: 1,
                                               },
                                               "&::before": {
                                                 position: "absolute",
                                                 left: "42px",
-                                                // top: "38px",
                                                 top: `${
                                                   i !== 0
                                                     ? `${i * 38 + 19}px`
@@ -1285,7 +1280,7 @@ const ItemList = () => {
                                           >
                                             {/* De can chinh */}
                                             <Checkbox
-                                              className="checkbox"
+                                              className="checkbox0"
                                               size="small"
                                               style={{
                                                 opacity: "0",
@@ -1302,6 +1297,17 @@ const ItemList = () => {
                                               }}
                                               sx={{
                                                 ...sx.subTask,
+                                                "&::before": {
+                                                  position: "absolute",
+                                                  left: "68px",
+                                                  top: `${`${i * 38 + 38}px`}`,
+                                                  "border-bottom":
+                                                    "1px solid #1BC5BD",
+                                                  content: "''",
+                                                  width: "95%",
+                                                  height: `38px`,
+                                                  zIndex: 1,
+                                                },
                                               }}
                                               overflow="hidden"
                                             >
@@ -1309,9 +1315,20 @@ const ItemList = () => {
                                                 color="text.primary"
                                                 textAlign="left"
                                                 noWrap
-                                                tooltip={subTask.name}
+                                                // tooltip={subTask.name}
                                                 display="flex"
                                                 alignItems={"center"}
+                                                sx={{
+                                                  "& >.checkbox": {
+                                                    opacity: isChecked ? 1 : 0,
+                                                    userSelect: isChecked
+                                                      ? undefined
+                                                      : "none",
+                                                  },
+                                                  "&:hover >.checkbox": {
+                                                    opacity: 1,
+                                                  },
+                                                }}
                                               >
                                                 <Checkbox
                                                   className="checkbox"
@@ -1323,35 +1340,17 @@ const ItemList = () => {
                                                     task,
                                                     subTask,
                                                   )}
-                                                  sx={
-                                                    {
-                                                      // marginLeft: "16px",
-                                                      // display: "hidden ",
-                                                    }
-                                                  }
+                                                  sx={{
+                                                    opacity: isChecked ? 1 : 0,
+                                                  }}
                                                 />
-
                                                 <IconButton
-                                                  className="checkbox"
                                                   noPadding
                                                   sx={{
                                                     zIndex: 10,
                                                     paddingTop: "8px",
                                                     marginLeft: "10px",
                                                   }}
-                                                  // {...provided.dragHandleProps}
-                                                  onMouseEnter={() =>
-                                                    setHoveredId(subTask.id)
-                                                  }
-                                                  onMouseLeave={() =>
-                                                    setHoveredId(undefined)
-                                                  }
-                                                  onChange={onToggleTask(
-                                                    !isChecked,
-                                                    taskListItem,
-                                                    task,
-                                                  )}
-                                                  // setHideIds={setHideIds}
                                                 >
                                                   <MoveListIcon
                                                     fontSize={
@@ -1365,6 +1364,10 @@ const ItemList = () => {
                                                 <Content
                                                   sx={{
                                                     pl: 1,
+                                                    zIndex: 2,
+                                                    "&:hover": {
+                                                      cursor: "pointer",
+                                                    },
                                                   }}
                                                   color="text.primary"
                                                   textAlign="left"
@@ -1373,15 +1376,16 @@ const ItemList = () => {
                                                   onClick={onSetTask(
                                                     subTask,
                                                     taskListItem.id,
-                                                    task.id,
                                                     subTask.id,
+                                                    undefined,
                                                     taskListItem.name,
-                                                    task.name,
+                                                    subTask.name,
                                                   )}
                                                 >
                                                   {subTask.name}
                                                 </Content>
                                               </Content>
+
                                               <Content
                                                 sx={{
                                                   display: "flex",

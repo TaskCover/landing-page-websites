@@ -10,8 +10,14 @@ const Checkbox = (props: CheckboxProps) => {
   const { sx, ...rest } = props;
   return (
     <MuiCheckbox
-      color="secondary"
-      sx={{ p: 0, color: "grey.300", ...sx }}
+      sx={{
+        p: 0,
+        color: "#1BC5BD!important",
+        borderBlock: "5px!important",
+        borderRadius: "5px!important",
+
+        ...sx,
+      }}
       {...rest}
     />
   );
