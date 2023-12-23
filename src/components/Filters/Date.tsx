@@ -72,10 +72,10 @@ const FDate = (props: DateProps) => {
         {/* {value
           ? formatDate(refactorDate(value, format)?.getTime() as number)
           : label} */}
-        {/* {value ? dayjs(value).format(DATE_LOCALE_FORMAT) : label} */}
-        {value
+        {value ? dayjs(value).format(DATE_LOCALE_FORMAT) : label}
+        {/* {value
           ? formatDate(refactorDate(value, format)?.getTime() as number)
-          : label}
+          : label} */}
       </Text>
       <DatePicker
         ref={ref}
@@ -85,6 +85,7 @@ const FDate = (props: DateProps) => {
         customInput={
           <CalendarIcon
             sx={{
+              zIndex: 9999,
               color: "grey.400",
               fontSize: 20,
               mt: 0.675,
