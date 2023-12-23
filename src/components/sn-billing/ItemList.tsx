@@ -195,8 +195,8 @@ const ItemList = () => {
   const onChangeQueries = (queries: { [key: string]: any }) => {
     let newQueries = { ...query, ...queries };
     newQueries = cleanObject(newQueries);
-    const queryString = stringifyURLSearchParams(newQueries);
-    push(`${pathname}${queryString}`);
+    // const queryString = stringifyURLSearchParams(newQueries);
+    // push(`${pathname}${queryString}`);
     onGetBillings(newQueries);
   };
 
