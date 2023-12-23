@@ -281,16 +281,17 @@ const billingSlice = createSlice({
       .addCase(getBillingList.pending, (state, action) => {
         state.status = DataStatus.LOADING;
         state.filters = getFiltersFromQueries(action.meta.arg);
-        // state.paging.pageIndex = Number(
-        //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
-        // );
-        // state.paging.pageSize = Number(
-        //   action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
-        // );
+        state.paging.pageIndex = Number(
+          action.meta.arg.page ?? DEFAULT_PAGING.pageIndex,
+        );
+        state.paging.pageSize = Number(
+          action.meta.arg.size ?? DEFAULT_PAGING.pageSize,
+        );
       })
       .addCase(getBillingList.fulfilled, (state, { payload }) => {
         // const { items, ...paging } = action.payload;
         const data = payload;
+        console.log(data);
 
         state.items = data as Billing[];
         state.status = DataStatus.SUCCEEDED;
@@ -303,7 +304,7 @@ const billingSlice = createSlice({
       })
       .addCase(getBillingDetail.pending, (state, action) => {
         state.status = DataStatus.LOADING;
-        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.filters = getFiltersFromQueries(action.meta.arg);
         // state.paging.pageIndex = Number(
         //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         // );
@@ -326,7 +327,7 @@ const billingSlice = createSlice({
       })
       .addCase(getBudgetList.pending, (state, action) => {
         state.status = DataStatus.LOADING;
-        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.filters = getFiltersFromQueries(action.meta.arg);
         // state.paging.pageIndex = Number(
         //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         // );
@@ -349,7 +350,7 @@ const billingSlice = createSlice({
       })
       .addCase(getServiceBudget.pending, (state, action) => {
         state.status = DataStatus.LOADING;
-        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.filters = getFiltersFromQueries(action.meta.arg);
         // state.paging.pageIndex = Number(
         //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         // );
@@ -372,7 +373,7 @@ const billingSlice = createSlice({
       })
       .addCase(getBudgetDetail.pending, (state, action) => {
         state.status = DataStatus.LOADING;
-        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.filters = getFiltersFromQueries(action.meta.arg);
         // state.paging.pageIndex = Number(
         //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         // );
@@ -425,7 +426,7 @@ const billingSlice = createSlice({
       })
       .addCase(getCommentBilling.pending, (state, action) => {
         state.status = DataStatus.LOADING;
-        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.filters = getFiltersFromQueries(action.meta.arg);
         // state.paging.pageIndex = Number(
         //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         // );

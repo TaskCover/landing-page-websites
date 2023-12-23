@@ -5,13 +5,20 @@ import FixedLayout from "components/FixedLayout";
 import Pagination from "components/Pagination";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
 import { DataAction } from "constant/enums";
-import { NS_BILLING, NS_COMMON } from "constant/index";
+import { DEFAULT_PAGING_BILLING, NS_BILLING, NS_COMMON } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
 import useQueryParams from "hooks/useQueryParams";
 import useTheme from "hooks/useTheme";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next-intl/client";
-import { memo, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Billing } from "store/billing/reducer";
 import { useBillings } from "store/billing/selectors";
 import { ProjectData } from "store/project/actions";
@@ -50,62 +57,97 @@ const ItemList = () => {
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
-      { value: "", width: "5%", align: "center" },
       {
         value: billingT("list.table.subject"),
-        align: "left",
+        align: "center",
       },
       {
         value: billingT("list.table.invoiceNumber"),
-        align: "left",
+        align: "center",
       },
       {
         value: billingT("list.table.date"),
-        align: "left",
+        align: "center",
       },
-      { value: billingT("list.table.budgets") },
-      { value: billingT("list.table.att") },
+      {
+        value: billingT("list.table.budgets"),
+        align: "center",
+      },
+      { value: billingT("list.table.att"), align: "center" },
       {
         value: billingT("list.table.amount"),
+        align: "center",
       },
-      { value: billingT("list.table.amountUnpaid") },
-      { value: billingT("list.table.dueDate") },
+      {
+        value: billingT("list.table.amountUnpaid"),
+        align: "center",
+      },
+      {
+        value: billingT("list.table.dueDate"),
+        align: "center",
+      },
     ],
     [billingT],
   );
   const mobileHeaderList: CellProps[] = useMemo(
     () => [
-      { value: "", width: "5%", align: "center" },
       {
         value: billingT("list.table.subject"),
-        align: "left",
+        align: "center",
       },
       {
         value: billingT("list.table.invoiceNumber"),
-        align: "left",
+        align: "center",
       },
       {
         value: billingT("list.table.date"),
-        align: "left",
+        align: "center",
       },
-      { value: billingT("list.table.budgets") },
-      { value: billingT("list.table.att") },
-      { value: billingT("list.table.amount") },
-      { value: billingT("list.table.amountUnpaid") },
-      { value: billingT("list.table.dueDate") },
+      { value: billingT("list.table.budgets"), align: "center" },
+      { value: billingT("list.table.att"), align: "center" },
+      { value: billingT("list.table.amount"), align: "center" },
+      { value: billingT("list.table.amountUnpaid"), align: "center" },
+      { value: billingT("list.table.dueDate"), align: "center" },
     ],
     [billingT],
   );
 
+  const onChangeAll = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const isChecked = event.target.checked;
+      if (isChecked) {
+        setSelectedList(items ?? []);
+      } else {
+        setSelectedList([]);
+      }
+    },
+    [items],
+  );
+
+  const isCheckedAll = useMemo(
+    () => Boolean(selectedList.length && selectedList.length === items?.length),
+    [selectedList.length, items?.length],
+  );
   const headerList = useMemo(() => {
     const additionalHeaderList = isMdSmaller
       ? mobileHeaderList
       : desktopHeaderList;
     return [
+      {
+        value: <Checkbox checked={isCheckedAll} onChange={onChangeAll} />,
+        width: isMdSmaller ? "10%" : "3%",
+        align: "center",
+      },
       ...additionalHeaderList,
       { value: "", width: "10%" },
     ] as CellProps[];
-  }, [desktopHeaderList, isMdSmaller, mobileHeaderList]);
+  }, [
+    desktopHeaderList,
+    isMdSmaller,
+    mobileHeaderList,
+    isCheckedAll,
+    onChangeAll,
+  ]);
 
   const initValues = useMemo(
     () =>
@@ -155,15 +197,15 @@ const ItemList = () => {
     newQueries = cleanObject(newQueries);
     const queryString = stringifyURLSearchParams(newQueries);
     push(`${pathname}${queryString}`);
-    // onGetProjects(newQueries);
+    onGetBillings(newQueries);
   };
 
   const onChangePage = (newPage: number) => {
-    onChangeQueries({ pageIndex: newPage, pageSize });
+    onChangeQueries({ page: newPage, pageSize });
   };
 
   const onChangeSize = (newPageSize: number) => {
-    onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
+    onChangeQueries({ page: 1, size: newPageSize });
   };
 
   const onUpdateProject = async (data: ProjectData) => {
@@ -173,7 +215,7 @@ const ItemList = () => {
 
   useEffect(() => {
     if (!isReady) return;
-    onGetBillings({ ...initQuery });
+    onGetBillings({ ...DEFAULT_PAGING_BILLING, ...initQuery });
   }, [initQuery, isReady, onGetBillings]);
 
   const onToggleSelect = (item: Billing, indexSelected: number) => {
@@ -208,7 +250,7 @@ const ItemList = () => {
           }}
           error={error as string}
           noData={!isIdle && totalItems === 0}
-          px={{ md: 3 }}
+          px={{ md: 2 }}
         >
           {items?.map((item, index) => {
             const indexSelected = selectedList.findIndex(

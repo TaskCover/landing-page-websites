@@ -24,7 +24,7 @@ import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
 import PencilUnderlineIcon from "icons/PencilUnderlineIcon";
 import FixedLayout from "components/FixedLayout";
-import { Option } from 'constant/types';
+import { Option } from "constant/types";
 
 const ItemList = () => {
   const {
@@ -121,7 +121,7 @@ const ItemList = () => {
             owner: item?.owner?.id,
             type_project: {
               value: item?.type_project?.id,
-              label: item?.type_project?.name
+              label: item?.type_project?.name,
             } as Option,
             start_date: item?.start_date
               ? new Date(item.start_date).getTime()
@@ -164,11 +164,11 @@ const ItemList = () => {
   };
 
   const onChangePage = (newPage: number) => {
-    onChangeQueries({ pageIndex: newPage, pageSize });
+    onChangeQueries({ page: newPage, pageSize });
   };
 
   const onChangeSize = (newPageSize: number) => {
-    onChangeQueries({ pageIndex: 1, pageSize: newPageSize });
+    onChangeQueries({ page: 1, Size: newPageSize });
   };
 
   const onUpdateProject = async (data: ProjectData) => {
@@ -178,7 +178,7 @@ const ItemList = () => {
 
   useEffect(() => {
     if (!isReady) return;
-    onGetProjects({ ...DEFAULT_PAGING, ...initQuery });
+    onGetProjects({ ...DEFAULT_PAGING_BILLING, ...initQuery });
   }, [initQuery, isReady, onGetProjects]);
 
   return (

@@ -37,7 +37,7 @@ const TabPayment = (props: TabProps) => {
   };
 
   return (
-    <Stack>
+    <Stack mt={6}>
       <Stack gap={2} pb={2} pl={2}>
         <Grid container spacing={2}>
           <Grid md={8} sx={{ borderRadius: "5px 0px 0px 5px" }}>

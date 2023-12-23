@@ -15,16 +15,17 @@ import { memo, useEffect, useMemo, useState } from "react";
 import { useProjects } from "store/project/selectors";
 import { getPath } from "utils/index";
 import ExportView from "./Modals/ExportView";
-import { STATUS_OPTIONS } from "./components/helpers";
+import { STATUS_BILLING_OPTIONS } from "./components/helpers";
 import { BILLING_CREATE_PATH } from "constant/paths";
 import { Billing } from "store/billing/reducer";
+import { useBillings } from "store/billing/selectors";
 
 type Iprops = {
   selected: Billing;
 };
 const Actions = (props: Iprops) => {
   const { selected } = props;
-  const { filters, onGetProjects, pageSize, onCreateProject } = useProjects();
+  const { filters, pageSize, onGetBillings } = useBillings();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
 
@@ -38,20 +39,18 @@ const Actions = (props: Iprops) => {
 
   const statusOptions = useMemo(
     () =>
-      STATUS_OPTIONS.map((item) => ({ ...item, label: commonT(item.label) })),
-    [commonT],
+      STATUS_BILLING_OPTIONS.map((item) => ({
+        ...item,
+        label: item.label,
+      })),
+    [],
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChangeQueries = (name: string, value: any) => {
     const newQueries = {
       ...queries,
-      [name]:
-        name === "sort" && value
-          ? LATEST_VALUE
-          : name === "sort"
-          ? undefined
-          : value,
+      [name]: value,
     };
 
     onSearch(newQueries);
@@ -61,18 +60,18 @@ const Actions = (props: Iprops) => {
     const path = getPath(pathname, newQueries);
     push(path);
 
-    // onGetProjects({ ...newQueries, pageIndex: 1, pageSize });
+    onGetBillings({ ...newQueries, page: 1, size: pageSize });
   };
 
   const onClear = () => {
-    const newQueries = { pageIndex: 1, pageSize };
+    const newQueries = { page: 1, size: pageSize };
     const path = getPath(pathname, newQueries);
     push(path);
-    onGetProjects(newQueries);
+    onGetBillings(newQueries);
   };
 
   const onRefresh = () => {
-    onGetProjects({ ...filters, pageIndex: 1, pageSize });
+    onGetBillings({ ...filters, page: 1, size: pageSize });
   };
 
   useEffect(() => {
@@ -163,6 +162,7 @@ const Actions = (props: Iprops) => {
               size="small"
               variant="secondary"
               sx={{ height: 40, width: "fit-content" }}
+              disabled={!selected}
             >
               <ArrowExport
                 sx={{
@@ -237,7 +237,7 @@ const Actions = (props: Iprops) => {
               name="search_key"
               placeholder={commonT("search")}
               onEnter={(name, value) => {
-                onChangeQueries(name, value);
+                // onChangeQueries(name, value);
                 // onSearch();
               }}
               onChange={(name, value) => onChangeQueries(name, value)}

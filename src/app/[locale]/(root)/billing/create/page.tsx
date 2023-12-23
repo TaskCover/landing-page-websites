@@ -13,9 +13,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 export default function Page() {
   return (
-    <Wrapper>
-      {/* <Actions /> */}
-      <CreatePage />
-    </Wrapper>
+    <CreatePage />
+    // <Wrapper>
+    // <Actions />
+
+    // </Wrapper>
   );
 }

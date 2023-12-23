@@ -30,17 +30,37 @@ const EXPORT_TYPE = [
     label: "PDF",
     value: "PDF",
   },
+  {
+    label: "Csv",
+    value: "CSV",
+  },
+  {
+    label: "Excel",
+    value: "EXCEL",
+  },
 ];
 const ORIENTATION = [
   {
     label: "Poitrait",
     value: "POITRAIT",
   },
+  {
+    label: "Landscape",
+    value: "LANDSCAPE",
+  },
 ];
 const PAGE_SIZE = [
   {
     label: "A4",
     value: "A4",
+  },
+  {
+    label: "A3",
+    value: "A3",
+  },
+  {
+    label: "Letter",
+    value: "LETTER",
   },
 ];
 
@@ -102,28 +122,34 @@ const ExportModal = ({ open, onClose, item }: IProps) => {
                     setSelected({ ...selected, document: e.target.value });
                   }}
                 />
-                <Select
-                  options={ORIENTATION}
-                  fullWidth
-                  error={error?.message}
-                  {...field}
-                  title={billingT(`${salesFormTranslatePrefix}.orientation`)}
-                  value={selected.orient}
-                  onChange={(e) => {
-                    setSelected({ ...selected, orient: e.target.value });
-                  }}
-                />
-                <Select
-                  options={PAGE_SIZE}
-                  fullWidth
-                  error={error?.message}
-                  {...field}
-                  title={billingT(`${salesFormTranslatePrefix}.pageSize`)}
-                  value={selected.page}
-                  onChange={(e) => {
-                    setSelected({ ...selected, page: e.target.value });
-                  }}
-                />
+                {selected.document === "PDF" && (
+                  <>
+                    <Select
+                      options={ORIENTATION}
+                      fullWidth
+                      error={error?.message}
+                      {...field}
+                      title={billingT(
+                        `${salesFormTranslatePrefix}.orientation`,
+                      )}
+                      value={selected.orient}
+                      onChange={(e) => {
+                        setSelected({ ...selected, orient: e.target.value });
+                      }}
+                    />
+                    <Select
+                      options={PAGE_SIZE}
+                      fullWidth
+                      error={error?.message}
+                      {...field}
+                      title={billingT(`${salesFormTranslatePrefix}.pageSize`)}
+                      value={selected.page}
+                      onChange={(e) => {
+                        setSelected({ ...selected, page: e.target.value });
+                      }}
+                    />
+                  </>
+                )}
               </Stack>
             )}
           />

@@ -64,30 +64,30 @@ const InformationBillingPage = () => {
   }, []);
 
   return (
-    <FixedLayout
-      maxHeight={920}
-      maxWidth={{
-        xs: 1120,
-        xl: 1450,
-      }}
-      // overflow={"auto"}
-    >
-      <Stack spacing={2}>
-        <TopContent
-          tagsOptions={tagsOptions}
-          item={item}
-          user={userInfo}
-          memberOptions={options}
-        />
+    // <FixedLayout
+    // maxHeight={920}
+    // maxWidth={{
+    //   xs: 1120,
+    //   xl: 1450,
+    // }}
+    // overflow={"auto"}
+    // >
+    <Stack spacing={2}>
+      <TopContent
+        tagsOptions={tagsOptions}
+        item={item}
+        user={userInfo}
+        memberOptions={options}
+      />
 
-        <TabInfo
-          arrService={arrService}
-          item={item}
-          user={userInfo}
-          arrBudgets={budgets}
-        />
-      </Stack>
-    </FixedLayout>
+      <TabInfo
+        arrService={arrService}
+        item={item}
+        user={userInfo}
+        arrBudgets={budgets}
+      />
+    </Stack>
+    // </FixedLayout>
   );
 };
 export default memo(InformationBillingPage);

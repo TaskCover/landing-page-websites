@@ -56,6 +56,11 @@ export interface BaseQueries_Feedback {
   size?: number;
 }
 
+export interface BaseQueries_Billing {
+  page?: number;
+  size?: number;
+}
+
 export interface User {
   id: string;
   fullname: string;

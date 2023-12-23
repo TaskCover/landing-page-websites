@@ -49,7 +49,7 @@ const Comments = (props: CommentsProps) => {
   }, [comments, comentType]);
 
   return isFetching ? (
-    <Loading open={isFetching} />
+    <Loading open={false} />
   ) : (
     <Stack sx={{ mt: 3 }} spacing={2}>
       <Stack direction="row" justifyContent="flex-end" alignItems="center">

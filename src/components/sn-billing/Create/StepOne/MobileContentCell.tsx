@@ -29,15 +29,9 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           underline="none"
           href={getPath(BILLING_DETAIL_PATH, undefined, {})}
         > */}
-        <Text
-          variant="body2"
-          color="text.primary"
-          fontWeight={600}
-          lineHeight={1.28}
-          sx={{ "&:hover": { color: "primary.main" } }}
-        >
-          {item?.name}
-        </Text>
+
+        {item?.name}
+
         {/* </Link> */}
       </BodyCell>
 
@@ -56,8 +50,10 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           {""}
         </Stack>
       </BodyCell>
-      <BodyCell align="center">{item?.revenue}</BodyCell>
-      <BodyCell align="center">
+      <BodyCell align="center" sx={{ paddingRight: 8 }}>
+        {item?.revenue}
+      </BodyCell>
+      <BodyCell align="center" sx={{ paddingRight: 10 }}>
         {item?.revenuePJ}
         {/* <Saved id={item.id} value={item.saved} /> */}
       </BodyCell>

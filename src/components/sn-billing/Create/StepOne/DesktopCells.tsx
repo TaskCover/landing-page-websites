@@ -20,24 +20,18 @@ const DesktopCells = (props: DesktopCellsProps) => {
 
   return (
     <>
-      <BodyCell align="left">
+      <BodyCell align="center">
         {/* <Link
           underline="none"
           href={getPath(BILLING_DETAIL_PATH, undefined, {})}
         > */}
-        <Text
-          variant="body2"
-          color="text.primary"
-          fontWeight={600}
-          lineHeight={1.28}
-          sx={{ "&:hover": { color: "primary.main" } }}
-        >
-          {item?.name}
-        </Text>
+
+        {item?.name}
+
         {/* </Link> */}
       </BodyCell>
 
-      <BodyCell align="left" sx={{ paddingLeft: 0 }}>
+      <BodyCell align="center" sx={{ paddingLeft: 0 }}>
         <Stack direction={"row"} gap={2} spacing={2} alignItems={"center"}>
           <Avatar size={40} src={item?.project?.avatar[0]?.link} />
           {item?.project.name}
@@ -46,14 +40,16 @@ const DesktopCells = (props: DesktopCellsProps) => {
 
       <BodyCell
         // href={getPath(PROJECT_TASKS_PATH, undefined, { id: item?.id })}
-        align="left"
+        align="center"
       >
         <Stack direction="row" alignItems="center" spacing={1}>
           {""}
         </Stack>
       </BodyCell>
-      <BodyCell align="center">{item?.revenue}</BodyCell>
-      <BodyCell align="center">
+      <BodyCell align="center" sx={{ paddingRight: 8 }}>
+        {item?.revenue}
+      </BodyCell>
+      <BodyCell align="center" sx={{ paddingRight: 10 }}>
         {item?.revenuePJ}
         {/* <Saved id={item.id} value={item.saved} /> */}
       </BodyCell>
