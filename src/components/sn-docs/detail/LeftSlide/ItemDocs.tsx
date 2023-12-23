@@ -12,10 +12,10 @@ import { IDocument } from "constant/types";
 
 export interface ItemDocsProps {
     onClick?: any;
-    title: string;
+    title: string| undefined;
     project_id?: string;
     id?: string;
-    children: ItemDocsProps[];
+    children: ItemDocsProps[] | undefined;
 }
 type TDocumentListProps = {
     isFirst?: boolean;

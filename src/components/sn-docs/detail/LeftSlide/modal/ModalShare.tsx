@@ -8,6 +8,7 @@ import { DocAccessibility, HttpStatusCode } from "constant/enums";
 import { DEFAULT_PAGING, NS_COMMON } from "constant/index";
 import { Option } from "constant/types";
 import { useFormik } from "formik";
+import { DOCS_API_URL } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import { useTranslations } from "next-intl";
 import React, { SetStateAction, useEffect } from "react";
@@ -48,24 +49,25 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
 
   const onSubmit = async (values) => {
     const payload =
-      values?.people === "ALL"
-        ? {
-            isPublic: true,
-          }
-        : {
-            owner: values?.people,
-            perm: values?.access,
-            isPublic: false,
-          };
+        values?.people === "ALL"
+            ? {
+              isPublic: true,
+            }
+            : {
+              owner: values?.people,
+              perm: values?.access,
+              isPublic: false,
+            };
 
     const res = await client.put(Endpoint.ADD_PERM_DOCS + id, payload, {
-      baseURL: "http://103.196.145.232:6813/api/v1",
+      baseURL: DOCS_API_URL,
     });
     if (
-      res.status === HttpStatusCode.OK ||
-      res.status === HttpStatusCode.CREATED
+        res.status === HttpStatusCode.OK ||
+        res.status === HttpStatusCode.CREATED
     ) {
       onAddSnackbar("Thành Công", "success");
+      setOpenShare(false);
     }
     try {
     } catch (error) {}
@@ -112,48 +114,48 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
   };
 
   return (
-    <FormLayout
-      open={openShare}
-      onClose={() => setOpenShare(false)}
-      sx={{
-        minWidth: { xs: "calc(100vw - 24px)", sm: 500 },
-        maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
-        minHeight: "auto",
-      }}
-      onSubmit={formik.handleSubmit}
-      label={"Sharing options"}
-    >
-      <Stack direction={{ sm: "row" }} spacing={2}>
-        <Select
-          options={option2 as unknown as Option[]}
-          title={"People"}
-          hasAvatar
-          searchProps={{
-            value: "",
-            placeholder: commonT("searchBy", { name: "email" }),
-            name: "email",
+      <FormLayout
+          open={openShare}
+          onClose={() => setOpenShare(false)}
+          sx={{
+            minWidth: { xs: "calc(100vw - 24px)", sm: 500 },
+            maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
+            minHeight: "auto",
           }}
-          name="people"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values?.people}
-          rootSx={sxConfig.input}
-          fullWidth
-          onChangeSearch={onChangeSearch}
-        />
-        <Select
-          options={optionAccess}
-          title={"Access"}
-          name="access"
-          sx={{ "& .MuiMenu-paper": { zIndex: 100 } }}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values?.access}
-          rootSx={sxConfig.input}
-          fullWidth
-        />
-      </Stack>
-    </FormLayout>
+          onSubmit={formik.handleSubmit}
+          label={"Sharing options"}
+      >
+        <Stack direction={{ sm: "row" }} spacing={2}>
+          <Select
+              options={option2 as unknown as Option[]}
+              title={"People"}
+              hasAvatar
+              searchProps={{
+                value: "",
+                placeholder: commonT("searchBy", { name: "email" }),
+                name: "email",
+              }}
+              name="people"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values?.people}
+              rootSx={sxConfig.input}
+              fullWidth
+              onChangeSearch={onChangeSearch}
+          />
+          <Select
+              options={optionAccess}
+              title={"Access"}
+              name="access"
+              sx={{ "& .MuiMenu-paper": { zIndex: 100 } }}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values?.access}
+              rootSx={sxConfig.input}
+              fullWidth
+          />
+        </Stack>
+      </FormLayout>
   );
 };
 
