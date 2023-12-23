@@ -152,7 +152,7 @@ const LeftSlideDoc = ({ open, setOpen }: LeftSlideDocProps) => {
                         >
                             Page
                         </Text>
-                        <DocumentList onClick={handleAddChild} data={data} />
+                        {/* <DocumentList onClick={handleAddChild} data={data} /> */}
                     </Box>
                 </Box>
             </Box>
