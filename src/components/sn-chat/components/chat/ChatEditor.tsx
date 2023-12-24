@@ -297,26 +297,29 @@ const ChatEditor = (props: EditorProps) => {
           position: "unset!important",
           display: "block",
           "& .ql-editor": {
-            padding: "2px 24px 2px 8px",
+            padding: "4px 24px 4px 8px",
 
             backgroundColor: "#E1F0FF",
-            width: "296px!important",
+            width: "260px!important",
             height: "40px!important",
             borderRadius: "100px !important",
+            overflow: "hidden",
 
             "&.ql-blank::before": {
               color: "#999",
-              padding: "2px 24px 2px 8px",
+              padding: "4px 24px 4px 8px",
               alignItems: "center",
               display: "flex",
-              width: "296px!important",
+              width: "250px!important",
               height: "40px!important",
             },
             "& p": {
               alignItems: "center",
               display: "flex",
-              height: "100%",
+              height: "40px",
               marginRight: "16px",
+              padding: "4px",
+              color: "red",
             },
           },
           "& .ql-tooltip": {
@@ -329,7 +332,7 @@ const ChatEditor = (props: EditorProps) => {
         "& .ql-formats": {
           marginRight: "15px",
           display: "flex",
-          gap: "16px",
+          gap: "8px",
           justifyContent: "center",
         },
       }}
@@ -369,7 +372,7 @@ const ChatEditor = (props: EditorProps) => {
             bottom: "32px",
             display: "flex",
             flexDirection: "row",
-            gap: "1rem",
+            gap: "8px",
           }}
         >
           <ChatEmoji onChange={handleChaneEmoji} />

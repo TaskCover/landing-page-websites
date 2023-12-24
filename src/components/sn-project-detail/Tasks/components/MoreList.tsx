@@ -534,7 +534,7 @@ const MoreList = (props: MoreListProps) => {
             minWidth: 150,
             maxWidth: 250,
           },
-          zIndex: 1000,
+          zIndex: 0,
         }}
         transition
         placement={"bottom-start"}
