@@ -15,7 +15,7 @@ export enum SORT_RESROUCE_OPTIONS {
   DESC = "desc",
 }
 
-export const today = dayjs().add(1, "day"); // Ngày hiện tại + 1 ngày (ngày mai)
+export const today = dayjs().add(0, "day"); // Ngày hiện tại + 1 ngày (ngày mai)
 export const startOfWeek = today.startOf("week").add(0, "day"); // Ngày bắt đầu tuần (chủ nhật)
 export const endOfWeek = today.startOf("week").add(6, "day"); // Ngày kết thúc tuần (thứ 2)
 

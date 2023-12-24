@@ -18,7 +18,7 @@ import {
   setMyBookingFilter,
 } from "./reducer";
 import { useSnackbar } from "store/app/selectors";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { DataStatus } from "constant/enums";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
@@ -78,18 +78,24 @@ export const useBookingAll = () => {
 
   const { getMyBooking, myBookingFilter } = useMyBooking();
 
-  const getBookingResource = async (params: IBookingAllFitler) => {
-    const newParams = {
-      ...params,
-      start_date: params.start_date ?? dayjs().format("YYYY-MM-DD"),
-      end_date: params.end_date ?? dayjs().format("YYYY-MM-DD"),
-    };
+  const getBookingResource = useCallback(
+    async (params: IBookingAllFitler) => {
+      const newParams = {
+        ...params,
+        start_date: params.start_date ?? dayjs().format("YYYY-MM-DD"),
+        end_date: params.end_date ?? dayjs().format("YYYY-MM-DD"),
+      };
 
-    await dispatch(getBookingAll(params));
-  };
-  const onSetBookingFilter = (filter: IBookingAllFitler) => {
-    dispatch(setBookingAllFilter(filter));
-  };
+      await dispatch(getBookingAll(params));
+    },
+    [dispatch],
+  );
+  const onSetBookingFilter = useCallback(
+    (filter: IBookingAllFitler) => {
+      dispatch(setBookingAllFilter(filter));
+    },
+    [dispatch],
+  );
   const isReady = useMemo(
     () => bookingAllStatus === DataStatus.SUCCEEDED,
     [bookingAllStatus],
