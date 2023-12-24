@@ -97,13 +97,15 @@ const MoveTaskList = (props: MoveTaskListProps) => {
 
   useEffect(() => {
     if (items && items.length > 0) {
-      const itemOptions = items.map((item) => {
+      const newItems = items.filter((item) => item.id !== oldTaskListIds[0]);
+      const itemOptions = newItems.map((item) => {
         const option: Option = {
           label: item.name,
           value: item.id,
         };
         return option;
       });
+
       setOptions([...itemOptions]);
       setSearchOptions([...itemOptions]);
     }

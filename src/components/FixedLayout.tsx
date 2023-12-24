@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { Stack, StackProps, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Stack, StackProps, useMediaQuery, useTheme } from "@mui/material";
 
 const FixedLayout = (props: StackProps) => {
   const { children, order, ...rest } = props;
@@ -11,10 +11,13 @@ const FixedLayout = (props: StackProps) => {
   return (
     <Stack
       width="100%"
-      flex={1}
-      overflow="hidden"
       bgcolor={{ md: "background.default" }}
       order={order}
+      sx={{
+        height: "600px",
+        overflowY: "scroll",
+        overflowX: "hidden",
+      }}
     >
       <Stack
         maxWidth={1349}
@@ -22,7 +25,6 @@ const FixedLayout = (props: StackProps) => {
         width="100%"
         flex={is1440Larger ? undefined : 1}
         bgcolor={{ md: "background.paper" }}
-        overflow="hidden"
         {...rest}
       >
         {children}

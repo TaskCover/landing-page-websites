@@ -49,6 +49,7 @@ import DialogLayout from "components/DialogLayout";
 import Loading from "components/Loading";
 import useBreakpoint from "hooks/useBreakpoint";
 import { useOnClickOutside } from "hooks/useOnClickOutside";
+import CheckBoxCustom from "components/shared/CheckBoxCustom";
 
 type DroppableTaskListProps = {
   id: string;
@@ -147,6 +148,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
               {...provided.droppableProps}
               style={{
                 border: isDragging ? "1px dashed" : undefined,
+                marginBottom: "16px",
               }}
             >
               <Stack
@@ -180,7 +182,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   alignItems="center"
                   overflow="hidden"
                 >
-                  <Checkbox
+                  <CheckBoxCustom
                     size="small"
                     className="checkbox"
                     checked={checked}
@@ -259,7 +261,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                       "& >div": {
                         bgcolor: "transparent!important",
                         "&:after": {
-                          borderBottomColor: "#666666 !important",
+                          borderBottomColor: "#1BC5BD !important",
                         },
                         "&:before": {
                           borderBottom: "unset !important",
@@ -491,7 +493,7 @@ export const MoreList = (props: MoreListProps) => {
             minWidth: 200,
             maxWidth: 250,
           },
-          zIndex: 1000,
+          zIndex: 1,
         }}
         transition
         placement={"bottom-start"}
@@ -548,8 +550,8 @@ export const MoreList = (props: MoreListProps) => {
                     sx={sxConfig.item}
                   >
                     <MoveArrowIcon
-                      // sx={{ color: "grey.400" }}
-                      sx={{ color: "red" }}
+                      sx={{ color: "grey.400" }}
+                      // sx={{ color: "red" }}
                       fontSize="medium"
                     />
                     <Text ml={2} variant="body2" color="grey.400">
