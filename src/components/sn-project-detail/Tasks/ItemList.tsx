@@ -1163,22 +1163,13 @@ const ItemList = () => {
                             </Content>
 
                             <Content
-                              // noWrap={false}
-                              // whiteSpace="nowrap"
-                              // sx={{
-                              //   display: "flex",
-                              //   justifyContent: "center",
-                              //   width: "100%",
-                              //   paddingX: "0",
-                              // }}
+                              noWrap={false}
+                              whiteSpace="nowrap"
                               sx={{
-                                display: {
-                                  xs: "none",
-                                  md: "flex",
-                                  alignItem: "center",
-                                  position: "relative",
-                                  right: "16px",
-                                },
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "100%",
+                                paddingX: "0",
                               }}
                             >
                               <SelectStatusTask
