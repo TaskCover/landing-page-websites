@@ -8,7 +8,7 @@ import {
   BILLING_API_URL,
   SALE_API_URL,
 } from "constant/index";
-import { BaseQueries } from "constant/types";
+import { BaseQueries, BaseQueries_Billing } from "constant/types";
 import { refactorRawItemListResponse, serverQueries } from "utils/index";
 import StringFormat from "string-format";
 
@@ -16,9 +16,9 @@ import { Option } from "constant/types";
 import { BillingCommentData, BillingDataUpdate } from "./reducer";
 
 export enum BillingStatus {
-  ACTIVE = "ACTIVE",
-  PAUSE = "PAUSE",
-  CLOSE = "CLOSE",
+  OPEN = "Open",
+  PAID = "Paid",
+  UNPAID = "Unpaid",
 }
 
 export enum DependencyStatus {
@@ -27,7 +27,7 @@ export enum DependencyStatus {
   LINKED_TO = "LINK",
 }
 
-export type GetBillingListQueries = BaseQueries & {
+export type GetBillingListQueries = BaseQueries_Billing & {
   status?: BillingStatus;
 };
 export type GetBudgetListQueries = BaseQueries & {
@@ -39,13 +39,20 @@ export type BillingData = {};
 export const getBillingList = createAsyncThunk(
   "Billing/getBillingList",
   async (queries: GetBillingListQueries) => {
-    let newQueries = { ...queries };
+    let newQueries = {};
 
+    newQueries = { ...queries };
+
+    if (!Object.keys(newQueries).includes("status")) {
+      newQueries = { ...queries, status: "Unpaid" };
+    }
     // if (newQueries?.sort !== "updated_time=-1") {
     //   newQueries.sort = "created_time=-1";
     // }
 
-    newQueries = serverQueries(newQueries, ["name"]) as GetBillingListQueries;
+    // newQueries = serverQueries(newQueries, ["name"]) as GetBillingListQueries;
+
+    // console.log(newQueries);
 
     try {
       const response = await client.get(Endpoint.BILLING, newQueries, {

@@ -22,7 +22,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
   return (
     <>
       {/* <BodyCell align="center">{order}</BodyCell> */}
-      <BodyCell align="left">
+      <BodyCell align="center">
         <Link
           underline="none"
           href={getPath(BILLING_INFO_PATH, undefined, { id: item?.id ?? "" })}
@@ -40,33 +40,38 @@ const DesktopCells = (props: DesktopCellsProps) => {
         </Link>
       </BodyCell>
 
-      <BodyCell align="left" sx={{ paddingLeft: 0 }}>
+      <BodyCell align="center" sx={{ paddingRight: 4 }}>
         {item?.invoiceNumber}
       </BodyCell>
-      <BodyCell align="left">{formatDate(item?.date)}</BodyCell>
+      <BodyCell align="center" sx={{ paddingRight: 3 }}>
+        {formatDate(item?.date)}
+      </BodyCell>
 
       <BodyCell
         // href={getPath(PROJECT_TASKS_PATH, undefined, { id: item?.id })}
-        align="left"
+        align="center"
+        sx={{ paddingRight: 3 }}
       >
-        <Stack direction="row" alignItems="center" spacing={1}>
-          {item?.budget ? item?.budget[0]?.name : ""}
-        </Stack>
+        {item?.budget ? item?.budget[0]?.name : ""}
       </BodyCell>
-      <BodyCell align="center">{item?.status}</BodyCell>
-      <BodyCell align="center">
+      <BodyCell align="center" sx={{ paddingRight: 4 }}>
+        {item?.status}
+      </BodyCell>
+      <BodyCell align="center" sx={{ paddingRight: 5 }}>
         {formatNumber(item?.amount, {
           prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
           numberOfFixed: 2,
         })}
       </BodyCell>
-      <BodyCell align="center">
+      <BodyCell align="center" sx={{ paddingRight: 5 }}>
         {formatNumber(item?.amount_unpaid, {
           prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
           numberOfFixed: 2,
         })}
       </BodyCell>
-      <BodyCell align="center">{formatDate(item?.dueDate)}</BodyCell>
+      <BodyCell align="center" sx={{ paddingRight: 16.5 }}>
+        {formatDate(item?.dueDate)}
+      </BodyCell>
     </>
   );
 };

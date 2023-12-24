@@ -24,10 +24,15 @@ const CommentSection = (props: IProps) => {
 
   return (
     <Stack>
-      <Text color="text.main" mb={3} variant="h5" textTransform="uppercase">
-        {"Write your comment"}
-      </Text>
-      <CommentEditor billing={billing} user={user} />
+      <Stack
+        sx={{ position: "sticky", zIndex: 1, top: 0, background: "#fff" }}
+        py={2}
+      >
+        <Text color="text.main" mb={3} variant="h5" textTransform="uppercase">
+          {"Write your comment"}
+        </Text>
+        <CommentEditor billing={billing} user={user} />
+      </Stack>
       <Comments comments={dataComment} />
     </Stack>
   );

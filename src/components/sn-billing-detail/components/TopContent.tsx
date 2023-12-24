@@ -101,6 +101,7 @@ const TopContent = (props: TopContentProps) => {
         alignItems="center"
         justifyContent="space-between"
         spacing={2}
+        pr={3}
       >
         <Stack
           direction="row"
@@ -124,7 +125,7 @@ const TopContent = (props: TopContentProps) => {
             padding: 1,
             borderRadius: 2,
             background: "#C9F7F5",
-            color: "#1BC5BD",
+            paddingRight: "3px",
           }}
         >
           <Text variant={"body2"} sx={{ color: "#1BC5BD" }}>

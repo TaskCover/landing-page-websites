@@ -1,16 +1,16 @@
 import { AlertColor } from "@mui/material";
-import { ProjectStatus } from "store/project/actions";
+import { BillingStatus } from "store/billing/actions";
 
-export const TEXT_STATUS: { [key in ProjectStatus]: string } = {
-  [ProjectStatus.ACTIVE]: "statusEnum.active",
-  [ProjectStatus.PAUSE]: "statusEnum.pause",
-  [ProjectStatus.CLOSE]: "statusEnum.close",
+export const TEXT_STATUS: { [key in BillingStatus]: string } = {
+  [BillingStatus.OPEN]: "OPEN",
+  [BillingStatus.PAID]: "PAID",
+  [BillingStatus.UNPAID]: "UNPAID",
 };
 
-export const COLOR_STATUS: { [key in ProjectStatus]: AlertColor } = {
-  [ProjectStatus.ACTIVE]: "warning",
-  [ProjectStatus.PAUSE]: "error",
-  [ProjectStatus.CLOSE]: "success",
+export const COLOR_STATUS: { [key in BillingStatus]: AlertColor } = {
+  [BillingStatus.OPEN]: "warning",
+  [BillingStatus.PAID]: "error",
+  [BillingStatus.UNPAID]: "success",
 };
 
 export type Member = {
@@ -30,10 +30,10 @@ export const INITIAL_VALUES = {
   type_project: "",
 };
 
-export const STATUS_OPTIONS = [
-  { label: TEXT_STATUS.ACTIVE, value: ProjectStatus.ACTIVE },
-  { label: TEXT_STATUS.PAUSE, value: ProjectStatus.PAUSE },
-  { label: TEXT_STATUS.CLOSE, value: ProjectStatus.CLOSE },
+export const STATUS_BILLING_OPTIONS = [
+  { label: TEXT_STATUS.Open, value: BillingStatus.OPEN },
+  { label: TEXT_STATUS.Paid, value: BillingStatus.PAID },
+  { label: TEXT_STATUS.Unpaid, value: BillingStatus.UNPAID },
 ];
 
 export enum ATTACHMENT_TYPE {

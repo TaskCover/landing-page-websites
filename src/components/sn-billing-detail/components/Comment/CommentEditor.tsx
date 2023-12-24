@@ -18,7 +18,7 @@ import {
   NS_PROJECT,
   NS_SALES,
 } from "constant/index";
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { Button } from "components/shared";
 import { useSnackbar } from "store/app/selectors";
 import { UnprivilegedEditor } from "react-quill";
@@ -135,7 +135,7 @@ const CommentEditor = forwardRef(
     };
 
     return (
-      <>
+      <Box sx={{}}>
         <Editor
           hasAttachment
           placeholder={"Write your comment"}
@@ -173,8 +173,8 @@ const CommentEditor = forwardRef(
             </Button>
           </Stack>
         </Editor>
-        <Loading open={isProcessing} />
-      </>
+        {/* <Loading open={isProcessing} /> */}
+      </Box>
     );
   },
 );

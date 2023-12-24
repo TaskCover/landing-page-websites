@@ -219,7 +219,7 @@ const TabItem = (props: TabItemProps) => {
       value={value}
       // color={value ? "#212121" : "grey.300"}
       // sx={{ overflow: "scroll" }}
-      sx={{ overflow: "scroll", height: 700 }}
+      sx={{ overflow: "scroll", height: 700, padding: "0px 12px" }}
     >
       {value === "Invoice" && (
         <TabInvoice

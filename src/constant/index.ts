@@ -66,6 +66,11 @@ export const DEFAULT_PAGING_ITEM: PagingItem = {
   totalItems: DEFAULT_PAGE_TOTAL,
 };
 
+export const DEFAULT_PAGING_BILLING: PagingItem = {
+  page: DEFAULT_PAGE_INDEX,
+  size: DEFAULT_PAGE_SIZE,
+};
+
 export const SCROLL_ID = "scroll-id";
 
 export const i18n = {
@@ -119,7 +124,7 @@ export const NS_APPLICANTS = "applicants";
 //Billing
 export const NS_BILLING = "billing";
 //Budgeting
-export const NS_BUDGETING = 'budgeting';
+export const NS_BUDGETING = "budgeting";
 
 export const IMAGES_ACCEPT = ["image/png", "image/jpeg", "image/jpg"];
 export const VIDEO_ACCEPT = ["video/mp4"];

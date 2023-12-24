@@ -176,10 +176,12 @@ const TabInvoice = (props: TabProps) => {
         gap={2}
         justifyContent={"space-between"}
         alignItems={"center"}
+        py={2}
         position={"sticky"}
         // display={"unset"}
         top={0}
-        zIndex={1}
+        zIndex={3}
+        sx={{ background: "#fff" }}
       >
         <Button variant="outlined">Sent to client</Button>
         <Stack direction={"row"} gap={2}>

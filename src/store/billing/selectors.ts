@@ -36,7 +36,7 @@ export const useBillings = () => {
     updateStatus,
     dataComment,
   } = useAppSelector((state) => state.billing, shallowEqual);
-  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+  const { page, size, totalItems, total_page } = useAppSelector(
     (state) => state.billing.paging,
     shallowEqual,
   );
@@ -104,10 +104,10 @@ export const useBillings = () => {
     filters,
     isIdle,
     isFetching,
-    pageIndex,
-    pageSize,
+    page,
+    size,
     totalItems,
-    totalPages,
+    total_page,
     createStatus,
     updateStatus,
     dataComment,
@@ -126,7 +126,7 @@ export const useBudgets = () => {
     (state) => state.billing,
     shallowEqual,
   );
-  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+  const { page, size, totalItems, total_page } = useAppSelector(
     (state) => state.billing.paging,
     shallowEqual,
   );
@@ -173,10 +173,10 @@ export const useBudgets = () => {
     filters,
     isIdle,
     isFetching,
-    pageIndex,
-    pageSize,
+    page,
+    size,
     totalItems,
-    totalPages,
+    total_page,
     budgetDetail,
     onGetBudgets,
     onGetBudgetDetail,

@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DataStatus } from "constant/enums";
-import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
-import { ItemListResponse, Paging, User } from "constant/types";
+import {
+  AN_ERROR_TRY_AGAIN,
+  DEFAULT_PAGING,
+  DEFAULT_PAGING_BILLING,
+} from "constant/index";
+import { ItemListResponse, Paging, Paging_Billing, User } from "constant/types";
 import { subDays } from "date-fns";
 import { formatDate, getFiltersFromQueries } from "utils/index";
 import {
@@ -203,7 +207,7 @@ export interface Dependency {
 export interface BillingState {
   items: Billing[];
   status: DataStatus;
-  paging: Paging;
+  paging: Paging_Billing;
   error?: string;
   filters: Omit<GetBillingListQueries, "pageIndex" | "pageSize">;
   budgets?: Budgets[];
@@ -264,7 +268,7 @@ export interface BillingComment extends Omit<Comment, "creator"> {
 const initialState: BillingState = {
   items: [],
   status: DataStatus.IDLE,
-  paging: DEFAULT_PAGING,
+  paging: DEFAULT_PAGING_BILLING,
   filters: {},
   dataServices: [],
   itemStatus: DataStatus.IDLE,
@@ -281,21 +285,28 @@ const billingSlice = createSlice({
       .addCase(getBillingList.pending, (state, action) => {
         state.status = DataStatus.LOADING;
         state.filters = getFiltersFromQueries(action.meta.arg);
-        // state.paging.pageIndex = Number(
-        //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
-        // );
-        // state.paging.pageSize = Number(
-        //   action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
-        // );
+        state.paging.page = Number(
+          action.meta.arg.page ?? DEFAULT_PAGING.pageIndex,
+        );
+        state.paging.size = Number(
+          action.meta.arg.size ?? DEFAULT_PAGING.pageSize,
+        );
       })
       .addCase(getBillingList.fulfilled, (state, { payload }) => {
         // const { items, ...paging } = action.payload;
         const data = payload;
 
-        state.items = data as Billing[];
+        const { ...paging } = {
+          page: data.page,
+          size: data.size,
+          total_page: data.totalPage,
+          totalItems: data?.size,
+        };
+
+        state.items = data?.listBill as Billing[];
         state.status = DataStatus.SUCCEEDED;
         state.error = undefined;
-        // state.paging = Object.assign(state.paging, paging);
+        state.paging = Object.assign(state.paging, paging);
       })
       .addCase(getBillingList.rejected, (state, action) => {
         state.status = DataStatus.FAILED;
@@ -303,7 +314,7 @@ const billingSlice = createSlice({
       })
       .addCase(getBillingDetail.pending, (state, action) => {
         state.status = DataStatus.LOADING;
-        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.filters = getFiltersFromQueries(action.meta.arg);
         // state.paging.pageIndex = Number(
         //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         // );
@@ -326,7 +337,7 @@ const billingSlice = createSlice({
       })
       .addCase(getBudgetList.pending, (state, action) => {
         state.status = DataStatus.LOADING;
-        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.filters = getFiltersFromQueries(action.meta.arg);
         // state.paging.pageIndex = Number(
         //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         // );
@@ -349,7 +360,7 @@ const billingSlice = createSlice({
       })
       .addCase(getServiceBudget.pending, (state, action) => {
         state.status = DataStatus.LOADING;
-        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.filters = getFiltersFromQueries(action.meta.arg);
         // state.paging.pageIndex = Number(
         //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         // );
@@ -372,7 +383,7 @@ const billingSlice = createSlice({
       })
       .addCase(getBudgetDetail.pending, (state, action) => {
         state.status = DataStatus.LOADING;
-        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.filters = getFiltersFromQueries(action.meta.arg);
         // state.paging.pageIndex = Number(
         //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         // );
@@ -425,7 +436,7 @@ const billingSlice = createSlice({
       })
       .addCase(getCommentBilling.pending, (state, action) => {
         state.status = DataStatus.LOADING;
-        state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.filters = getFiltersFromQueries(action.meta.arg);
         // state.paging.pageIndex = Number(
         //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
         // );

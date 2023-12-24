@@ -28,15 +28,9 @@ const MobileContentCell = (props: MobileContentCellProps) => {
           underline="none"
           href={getPath(BILLING_DETAIL_PATH, undefined, {})}
         > */}
-        <Text
-          variant="body2"
-          color="text.primary"
-          fontWeight={600}
-          lineHeight={1.28}
-          sx={{ "&:hover": { color: "primary.main" } }}
-        >
-          {item?.billType}
-        </Text>
+
+        {item?.billType}
+
         {/* </Link> */}
       </BodyCell>
 

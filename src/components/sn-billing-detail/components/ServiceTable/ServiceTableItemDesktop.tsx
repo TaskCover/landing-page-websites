@@ -105,7 +105,7 @@ const ServiceTableItem = ({
               <IconButton
                 sx={{
                   position: "relative",
-                  zIndex: 999,
+                  zIndex: 2,
                 }}
                 noPadding
               >

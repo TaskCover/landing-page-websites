@@ -27,7 +27,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
   return (
     <>
       {/* <BodyCell align="center">{order}</BodyCell> */}
-      <BodyCell align="left">
+      <BodyCell align="center">
         <Link
           underline="none"
           href={getPath(BILLING_INFO_PATH, undefined, { id: item?.id ?? "" })}
@@ -45,18 +45,14 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         </Link>
       </BodyCell>
 
-      <BodyCell align="left" sx={{ paddingLeft: 0 }}>
-        {item?.invoiceNumber}
-      </BodyCell>
-      <BodyCell align="left">{formatDate(item?.date)}</BodyCell>
+      <BodyCell align="center">{item?.invoiceNumber}</BodyCell>
+      <BodyCell align="center">{formatDate(item?.date)}</BodyCell>
 
       <BodyCell
         // href={getPath(PROJECT_TASKS_PATH, undefined, { id: item?.id })}
-        align="left"
+        align="center"
       >
-        <Stack direction="row" alignItems="center" spacing={1}>
-          {item?.amount}
-        </Stack>
+        {item?.budget ? item?.budget[0]?.name : ""}
       </BodyCell>
       <BodyCell align="center">{item?.status}</BodyCell>
       <BodyCell align="center">

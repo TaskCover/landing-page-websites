@@ -115,42 +115,42 @@ const FormCreate = () => {
 
   return (
     <>
-      <FixedLayout
-        maxHeight={920}
-        maxWidth={{
-          xs: 1120,
-          xl: 1450,
-        }}
-        p={3}
+      {/* <FixedLayout
+        // maxHeight={920}
+        // maxWidth={{
+        //   xs: 1120,
+        //   xl: 1450,
+        // }}
+        // p={3}
         sx={{ overflow: "scroll" }}
-      >
-        <Stack gap={2} direction="column" sx={{ mb: 4 }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{
-              md: 0,
-              xs: 3,
-            }}
-            borderBottom={"1px solid #ECECF3"}
-          >
-            <StepForm
-              activeStep={activeStep}
-              listSteps={steps}
-              skipped={skipped}
-            />
-          </Stack>
-          {activeStep === 1 ? (
-            <FormStepTwo
-              isMdSmaller={isMdSmaller}
-              budgets={selectedBudget}
-              setActiveStep={setActiveStep}
-            />
-          ) : (
-            <FormStepOne isMdSmaller={isMdSmaller} handleNext={handleNext} />
-          )}
+      > */}
+      <Stack gap={2} direction="column" sx={{ mb: 4, p: 2 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={{
+            md: 0,
+            xs: 3,
+          }}
+          borderBottom={"1px solid #ECECF3"}
+        >
+          <StepForm
+            activeStep={activeStep}
+            listSteps={steps}
+            skipped={skipped}
+          />
         </Stack>
-      </FixedLayout>
+        {activeStep === 1 ? (
+          <FormStepTwo
+            isMdSmaller={isMdSmaller}
+            budgets={selectedBudget}
+            setActiveStep={setActiveStep}
+          />
+        ) : (
+          <FormStepOne isMdSmaller={isMdSmaller} handleNext={handleNext} />
+        )}
+      </Stack>
+      {/* </FixedLayout> */}
     </>
   );
 };
