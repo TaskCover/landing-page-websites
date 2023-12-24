@@ -277,7 +277,9 @@ const SaleItem = ({ item, setShouldLoad }: IProps) => {
                     tags: item.description?.split(","),
                   });
                 }
+                setIsFocused(false);
               }}
+              onClose={() => setIsFocused(false)}
               saleId={item.id}
               index={1}
             />

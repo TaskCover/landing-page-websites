@@ -24,11 +24,12 @@ type ActionsProps = {
   saleId: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChangeAction: (action: Action, data?: any) => void;
+  onClose?: () => void;
   index: number;
 };
 
 const ServiceItemAction = (props: ActionsProps) => {
-  const { saleId, onChangeAction, index } = props;
+  const { saleId, onChangeAction, index, onClose } = props;
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
@@ -69,6 +70,7 @@ const ServiceItemAction = (props: ActionsProps) => {
     <>
       <PopoverLayout
         ref={buttonRef}
+        onClose={onClose}
         label={
           <IconButton
             sx={{

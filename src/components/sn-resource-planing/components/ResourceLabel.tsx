@@ -20,7 +20,6 @@ import { useAuth } from "store/app/selectors";
 import { useEmployees } from "store/company/selectors";
 import { useFetchDetail } from "../hooks/useFetchDetail";
 import { Button } from "components/shared";
-
 interface IResourceLabelProps {
   resource: ResourceApi;
   resources: IBookingListItem[] | IBookingItem[];
@@ -163,6 +162,7 @@ const ResourceLabel = ({
         "&:hover": {
           background: "#E1F0FFB2",
         },
+        minWidth: 450,
       }}
     >
       <Grid
