@@ -981,12 +981,13 @@ const ItemList = () => {
           maxWidth={1349}
           mx="auto"
           width="100%"
+          height="48px"
           bgcolor={noData ? "background.paper" : "background.default"}
         >
           <FormControlLabel
             control={<CheckBoxCustom {...checkboxProps} />}
             label={checkboxLabel}
-            style={{ marginLeft: "2px" }}
+            style={{ marginLeft: "0px" }}
           />
         </TableLayout>
       </Stack>
@@ -1042,8 +1043,8 @@ const ItemList = () => {
                               md: "center",
                             }}
                             flexShrink={2}
-                            minHeight={56}
-                            maxHeight={{ md: 56 }}
+                            minHeight={40}
+                            maxHeight={{ md: 40 }}
                             width="100%"
                             sx={{ ...sx.task, ml: 4 }}
                             overflow="hidden"
@@ -1256,9 +1257,9 @@ const ItemList = () => {
                                                 key={subTask.id}
                                                 direction="row"
                                                 alignItems="center"
-                                                minHeight={56}
+                                                minHeight={40}
                                                 overflow="hidden"
-                                                maxHeight={{ md: 56 }}
+                                                maxHeight={{ md: 40 }}
                                                 sx={{
                                                   ...provided.draggableProps
                                                     .style,
@@ -1273,11 +1274,11 @@ const ItemList = () => {
                                                   },
                                                   "&::before": {
                                                     position: "absolute",
-                                                    left: "42px",
+                                                    left: "58px",
                                                     top: `${
                                                       i !== 0
-                                                        ? `${i * 56 + 28}px`
-                                                        : "56px"
+                                                        ? `${i * 40 + 20}px`
+                                                        : "40px"
                                                     }`,
                                                     "border-left":
                                                       "1px solid #1BC5BD",
@@ -1286,14 +1287,14 @@ const ItemList = () => {
                                                     content: "''",
                                                     width: "21px",
                                                     height: `${
-                                                      i !== 0 ? "56px" : "28px"
+                                                      i !== 0 ? "40px" : "20px"
                                                     }`,
                                                   },
                                                   "&::after": {
                                                     position: "absolute",
-                                                    left: "58px",
+                                                    left: "72px",
                                                     top: `${
-                                                      (i + 1) * 56 + 25
+                                                      (i + 1) * 40 + 17
                                                     }px`,
                                                     "border-top":
                                                       "1px solid #1BC5BD",
@@ -1326,9 +1327,9 @@ const ItemList = () => {
                                                     ...sx.subTask,
                                                     "&::after": {
                                                       position: "absolute",
-                                                      left: "68px",
+                                                      left: "90px",
                                                       bottom: `${`${
-                                                        i * 56 + 0
+                                                        i * 40 + 0
                                                       }px`}`,
                                                       borderBottom:
                                                         "1px solid #1BC5BD",
