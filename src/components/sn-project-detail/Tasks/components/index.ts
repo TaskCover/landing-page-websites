@@ -7,7 +7,6 @@ import MoreActionList from "./MoreActionList";
 
 import DroppableTaskList from "./DroppableTaskList";
 import DraggableTask from "./DraggableTask";
-import DraggableSubTask from "./DraggableSubTask";
 
 export * from "./helpers";
 
@@ -20,5 +19,4 @@ export {
   MoreActionList,
   DroppableTaskList,
   DraggableTask,
-  DraggableSubTask,
 };
