@@ -9,8 +9,15 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Switch, Text } from "components/shared";
 import Link from "components/Link";
 import { BoxData, accordionSx } from "./Util";
+import { TBudget } from "store/project/budget/action";
 
-export const ClientTab = () => {
+interface ClientTabProps {
+  budget: TBudget;
+}
+
+export const ClientTab = ({budget}:ClientTabProps) => {
+  const {company, owner} = budget;
+  const {fullname,email,phone} = owner; 
   return (
     <Box mt={2} sx={accordionSx}>
       <Accordion defaultExpanded={true}>
@@ -20,7 +27,7 @@ export const ClientTab = () => {
           </Text>
         </AccordionSummary>
         <AccordionDetails>
-          <BoxData title="Organization">Company</BoxData>
+          <BoxData title="Organization">{company}</BoxData>
           <Link href="#" underline="none">
             <Text sx={{ color: "secondary.main" }}>Edit company</Text>
           </Link>
@@ -33,9 +40,9 @@ export const ClientTab = () => {
           </Text>
         </AccordionSummary>
         <AccordionDetails>
-          <BoxData title="Name">Garry Hunt [SAMPLE]</BoxData>
-          <BoxData title="Email">garry.hunt@productive.io</BoxData>
-          <BoxData title="Phone">35234543</BoxData>
+          <BoxData title="Name">{fullname}</BoxData>
+          <BoxData title="Email">{email}</BoxData>
+          <BoxData title="Phone">{phone}</BoxData>
           <Link href="#" underline="none">
             <Text sx={{ color: "secondary.main" }}>Edit contact</Text>
           </Link>

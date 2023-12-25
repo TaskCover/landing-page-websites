@@ -1,12 +1,12 @@
 import { Box, Stack, TableRow } from "@mui/material";
+import { Button, Checkbox } from "components/shared";
+import { BadgeCustom } from "components/sn-budgeting/BadgeCustom";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
 import { NS_BUDGETING } from "constant/index";
-import { useTranslations } from "next-intl";
-import { BadgeCustom } from "components/sn-budgeting/BadgeCustom";
-import { Button, Checkbox } from "components/shared";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import PlusIcon from "icons/PlusIcon";
 import UploadIcon from "icons/UploadIcon";
+import { useTranslations } from "next-intl";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 type TExpense = {
   id: string;
@@ -68,7 +68,7 @@ export const Expenses = () => {
     event: ChangeEvent<HTMLInputElement>,
     isChecked: boolean,
   ) => {
-    const id: string = String(event.target.value);
+    const id = String(event.target.value);
 
     const indexIdInExpenseSelected = expenseSelected.findIndex(
       (expenseId) => expenseId === id,

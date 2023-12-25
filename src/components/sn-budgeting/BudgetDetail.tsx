@@ -1,33 +1,34 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useBudgetByIdQuery } from "../../queries/budgeting/get-by-id";
-import React, { useEffect, useState } from "react";
-import { TBudget } from "store/project/budget/action";
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { Box, CircularProgress, Stack } from "@mui/material";
 import Avatar from "components/Avatar";
-import { Button, DatePicker, IconButton, Text } from "components/shared";
-import { NS_BUDGETING } from "constant/index";
-import { useTranslations } from "next-intl";
-import CloseIcon from "../../icons/CloseIcon";
 import Link from "components/Link";
-import { BUDGETING_PATH } from "constant/paths";
-import TextStatus from "components/TextStatus";
-import { Feed } from "components/sn-budgeting/TabDetail/Feed";
-import { Time } from "components/sn-budgeting/TabDetail/Time";
-import PlusIcon from "../../icons/PlusIcon";
-import { ModalAddTime } from "components/sn-budgeting/TabDetail/ModalAddTime";
-import useToggle from "hooks/useToggle";
+import { Button, DatePicker, IconButton, Text } from "components/shared";
 import { Expenses } from "components/sn-budgeting/TabDetail/Expenses";
+import { Feed } from "components/sn-budgeting/TabDetail/Feed";
 import { Invoice } from "components/sn-budgeting/TabDetail/Invoice";
+import { ModalAddTime } from "components/sn-budgeting/TabDetail/ModalAddTime";
+import { ModalExpense } from "components/sn-budgeting/TabDetail/ModalExpense";
+import { Time } from "components/sn-budgeting/TabDetail/Time";
+import TextStatus from "components/TextStatus";
+import { NS_BUDGETING } from "constant/index";
+import { BUDGETING_PATH } from "constant/paths";
+import dayjs from "dayjs";
+import useToggle from "hooks/useToggle";
+import EditIcon from "icons/EditIcon";
+import EyeIcon from "icons/EyeIcon";
+import OpenSidebarIcon from "icons/OpenSidebarIcon";
+import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { TBudget } from "store/project/budget/action";
+import CloseIcon from "../../icons/CloseIcon";
+import PlusIcon from "../../icons/PlusIcon";
+import { useBudgetByIdQuery } from "../../queries/budgeting/get-by-id";
+import { BudgetRightSidebar } from "./BudgetRightSidebar";
 import { Recurring } from "./TabDetail/Recurring";
 import { Service } from "./TabDetail/Service";
-import EditIcon from "icons/EditIcon";
-import OpenSidebarIcon from "icons/OpenSidebarIcon";
-import { BudgetRightSidebar } from "./BudgetRightSidebar";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import EyeIcon from "icons/EyeIcon";
-import dayjs from "dayjs";
 
 enum TABS {
   FEED = "Feed",
@@ -40,6 +41,7 @@ enum TABS {
 
 export const BudgetDetail = () => {
   const [isOpenModalTime, openModalTime, hideModalTime] = useToggle();
+  const [isOpenModalExpense, openModalExpense, hideModalExpense] = useToggle();
   const [isShowLoadingTab, openLoadingTab, hideLoadingTab] = useToggle();
   const [isEditService, onEditService, offEditService] = useToggle();
   const [isOpenRightSidebar, showRightSidebar, hideRightSidebar] = useToggle();
@@ -51,6 +53,7 @@ export const BudgetDetail = () => {
   const budgetDetailQuery = useBudgetByIdQuery(String(id));
   const budgetT = useTranslations(NS_BUDGETING);
 
+  console.log("budgetDetailQuery", budgetDetailQuery);
   useEffect(() => {
     if (budgetDetailQuery) {
       setBudget(budgetDetailQuery.data);
@@ -186,7 +189,7 @@ export const BudgetDetail = () => {
           )}
           {activeTab === TABS.EXPENSES && (
             <Button
-              onClick={() => {}}
+              onClick={openModalExpense}
               id="budget_add_new_expense"
               startIcon={<PlusIcon />}
               variant="primary"
@@ -224,6 +227,11 @@ export const BudgetDetail = () => {
       </Stack>
       <ModalAddTime
         open={isOpenModalTime}
+        onClose={hideModalTime}
+        projectId={budget.project.id}
+      />
+      <ModalExpense
+        open={true}
         onClose={hideModalTime}
         projectId={budget.project.id}
       />
@@ -273,7 +281,7 @@ export const BudgetDetail = () => {
             right: isOpenRightSidebar ? 0 : "-350px",
           }}
         >
-          <BudgetRightSidebar />
+          <BudgetRightSidebar budget={budget} />
         </Box>
       </Stack>
     </Box>
