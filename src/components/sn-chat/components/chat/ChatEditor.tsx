@@ -314,11 +314,13 @@ const ChatEditor = (props: EditorProps) => {
             whiteSpace: "pre-wrap",
             wordWrap: "break-word",
             outline: "none",
-            // backgroundColor: "#E1F0FF",
-            // borderRadius: "16px",
-            overflow: "hidden",
             maxHeight: "80px",
             padding: "4px 32px 0px 20px",
+            overflow: "scroll",
+            height: "100%",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
 
             "&.ql-blank::before": {
               paddingLeft: "30px",

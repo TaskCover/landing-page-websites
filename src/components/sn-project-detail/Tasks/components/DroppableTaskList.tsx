@@ -246,6 +246,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                     variant="filled"
                     size="small"
                     onChange={changeNameTask}
+                    required
                     sx={{
                       "& >div": {
                         bgcolor: "transparent!important",
