@@ -20,7 +20,8 @@ const FixedLayout = (props: StackProps) => {
       }}
     >
       <Stack
-        maxWidth={1349}
+        // maxWidth={1349}
+        // maxWidth={1349}
         mx="auto"
         width="100%"
         flex={is1440Larger ? undefined : 1}

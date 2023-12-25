@@ -978,7 +978,7 @@ const ItemList = () => {
           error={error as string}
           noData={!isIdle && totalItems === 0}
           hasSelectAll
-          maxWidth={1349}
+          // maxWidth={1349}
           mx="auto"
           width="100%"
           height="48px"

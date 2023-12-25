@@ -187,7 +187,7 @@ const ChatListTemp = () => {
                 position: "absolute",
                 width: "352px",
                 height: "calc(100% - 7rem)",
-                maxHeight: "624px",
+                maxHeight: "600px",
                 overflow: "hidden",
                 bottom: "7rem",
                 right: "5rem",
