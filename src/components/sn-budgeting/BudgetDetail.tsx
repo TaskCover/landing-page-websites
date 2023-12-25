@@ -230,11 +230,11 @@ export const BudgetDetail = () => {
         onClose={hideModalTime}
         projectId={budget.project.id}
       />
-      <ModalExpense
+      {/* <ModalExpense
         open={true}
         onClose={hideModalTime}
         projectId={budget.project.id}
-      />
+      /> */}
       <Stack direction="row">
         <Box
           position="relative"
