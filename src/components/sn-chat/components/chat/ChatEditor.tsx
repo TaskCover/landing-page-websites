@@ -292,7 +292,7 @@ const ChatEditor = (props: EditorProps) => {
             display: "block",
             marginRight: "60px",
             backgroundColor: "#E1F0FF",
-            borderRadius: "18px!important",
+            borderRadius: "20px!important",
             width: "260px!important",
           },
         },
@@ -307,7 +307,7 @@ const ChatEditor = (props: EditorProps) => {
         "& .ql-container": {
           "& .ql-editor": {
             boxSizing: "border-box",
-            minHeight: "1em",
+            // minHeight: "1em",
             cursor: "text",
             lineHeight: 1.4,
             textAlign: "left",
