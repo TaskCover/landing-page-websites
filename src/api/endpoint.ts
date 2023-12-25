@@ -72,6 +72,9 @@ export const Endpoint = {
   BUDGET_CREATE: "/budgets",
   BUDGET_GET_BY_ID: "/budgets/budget-by-id/{id}",
   BUDGET_GET_FEED: "/budgets/feed/{id}",
+  BUDGET_GET_TIME_RANGES: "/budgets/times/{id}",
+  BUDGET_TIME_RANGES: "/budgets/times",
+  BUDGET_DELETE_TIME_RANGES: "/budgets/times/{id}",
   BUDGET_SERVICE_LIST: "/budgets/service/{id}",
   BUDGET_SERVICE_ADD: "/budgets/service",
 

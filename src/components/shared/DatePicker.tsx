@@ -30,6 +30,8 @@ const DatePicker = (props: DatePickerProps) => {
     ...rest
   } = props;
 
+
+
   const locale = useLocale();
 
   const onChangeDate = (date: Date | null) => {
@@ -93,11 +95,17 @@ export const DateTimePicker = (props: DatePickerProps) => {
 export default memo(DatePicker);
 
 const DatePickerInput = forwardRef((props: InputProps, ref) => {
+  const { onClickEndNode, ...rest } = props;
   return (
     <Input
       ref={ref}
-      {...props}
-      endNode={<CalendarIcon sx={{ color: "grey.400", fontSize: 24 }} />}
+      {...rest}
+      endNode={
+        <CalendarIcon
+          onClick={onClickEndNode}
+          sx={{ color: "grey.400", fontSize: 24 }}
+        />
+      }
     />
   );
 });

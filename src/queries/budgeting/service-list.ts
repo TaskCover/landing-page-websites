@@ -3,10 +3,12 @@ import { saleClientInstance } from "../../api/client";
 import { getPath } from "utils/index";
 import { Endpoint } from "../../api";
 
-export const BUDGET_GET_SERVICE_QK: string = "budget_get_service_query_key";
+export const BUDGET_GET_SERVICE_QK = "budget_get_service_query_key";
 
 export const budgetGetServiceQuery = (id: string): Promise<any> => {
-  const url: string = getPath(Endpoint.BUDGET_SERVICE_LIST, undefined, { id: id });
+  const url: string = getPath(Endpoint.BUDGET_SERVICE_LIST, undefined, {
+    id: id,
+  });
   return saleClientInstance.get(url);
 };
 
