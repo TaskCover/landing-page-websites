@@ -4,9 +4,9 @@ import { memo } from "react";
 import Checkbox, { CheckboxProps } from "@mui/material/Checkbox";
 
 const BpIcon = styled("span")(({ theme }) => ({
-  borderRadius: 8,
-  width: 24,
-  height: 24,
+  borderRadius: 5,
+  width: 17,
+  height: 17,
   boxShadow:
     theme.palette.mode === "dark"
       ? "0 0 0 1px rgb(16 22 26 / 40%)"
@@ -34,12 +34,13 @@ const BpIcon = styled("span")(({ theme }) => ({
 
 const BpCheckedIcon = styled(BpIcon)({
   backgroundColor: "#1BC5BD",
+  border: "0px",
   backgroundImage:
     "linear-gradient(180deg,hsla(0,0%,100%,.1),hsla(0,0%,100%,0))",
   "&:before": {
     display: "block",
-    width: 24,
-    height: 24,
+    width: 17,
+    height: 17,
     backgroundImage:
       "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath" +
       " fill-rule='evenodd' clip-rule='evenodd' d='M12 5c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 " +

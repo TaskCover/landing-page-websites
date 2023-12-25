@@ -75,7 +75,7 @@ const DraggableTask = (props: DraggableTaskProps) => {
             sx={{
               "&::after": {
                 position: "absolute",
-                top: "56px",
+                top: "40px",
                 "border-bottom": "1px solid #1BC5BD",
                 content: "''",
                 width: "100%",
@@ -87,7 +87,7 @@ const DraggableTask = (props: DraggableTaskProps) => {
             <Stack
               direction="row"
               alignItems="center"
-              height={56}
+              height={40}
               ml={2}
               spacing={{ xs: 0.5, sm: 1 }}
               gap={2}

@@ -148,13 +148,13 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
               {...provided.droppableProps}
               style={{
                 border: isDragging ? "1px dashed" : undefined,
-                marginBottom: "16px",
+                marginBottom: "8px",
               }}
             >
               <Stack
                 direction="row"
                 alignItems="center"
-                height={56}
+                height={48}
                 pl={{ xs: 0, md: 2 }}
                 width="100%"
                 // justifyContent="space-between"

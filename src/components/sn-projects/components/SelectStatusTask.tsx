@@ -46,13 +46,14 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
   const open = Boolean(anchorEl);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <>
       <div
         onClick={handleStatusCellClick}
         style={{
           display: "flex",
           alignItems: "center",
           cursor: "pointer",
+          zIndex: 0,
         }}
       >
         <TextStatus
@@ -63,15 +64,14 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
       </div>
 
       <Popper
-        // open={open}
         ref={ref}
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
         sx={{
           [`& .${popoverClasses.paper}`]: {
             backgroundImage: "white",
-            minWidth: 150,
-            maxWidth: 250,
+            minWidth: 130,
+            maxWidth: 180,
           },
           zIndex: 0,
           backgroundColor: "white",
@@ -122,7 +122,7 @@ const SelectStatusTask = (props: SelectStatusTaskProps) => {
           </Grow>
         )}
       </Popper>
-    </div>
+    </>
   );
 };
 
