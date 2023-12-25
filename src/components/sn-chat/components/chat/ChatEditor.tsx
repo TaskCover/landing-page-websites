@@ -285,41 +285,45 @@ const ChatEditor = (props: EditorProps) => {
         "& .quill": {
           flexDirection: "column",
           padding: "16px",
-          maxHeight: "200px",
+          // maxHeight: "180px",
+          "& .ql-container": {
+            boxSizing: "border-box",
+            position: "unset!important",
+            display: "block",
+            marginRight: "60px",
+            backgroundColor: "#E1F0FF",
+            borderRadius: "18px!important",
+            width: "260px!important",
+          },
         },
+
         "& .ql-snow": {
           border: "unset !important",
           borderTop: "1px solid #ECECF3!important",
           borderRadius: "unset !important",
-          width: "100%!important",
+          padding: "8px 0",
         },
-        "& .ql-container": {
-          position: "unset!important",
-          display: "block",
-          "& .ql-editor": {
-            padding: "4px 24px 4px 8px",
 
-            backgroundColor: "#E1F0FF",
-            width: "260px!important",
-            height: "40px!important",
-            borderRadius: "100px !important",
+        "& .ql-container": {
+          "& .ql-editor": {
+            boxSizing: "border-box",
+            minHeight: "1em",
+            cursor: "text",
+            lineHeight: 1.4,
+            textAlign: "left",
+            whiteSpace: "pre-wrap",
+            wordWrap: "break-word",
+            outline: "none",
+            // backgroundColor: "#E1F0FF",
+            // borderRadius: "16px",
             overflow: "hidden",
+            maxHeight: "80px",
+            padding: "4px 32px 0px 20px",
 
             "&.ql-blank::before": {
-              color: "#999",
-              padding: "4px 24px 4px 8px",
-              alignItems: "center",
-              display: "flex",
-              width: "250px!important",
-              height: "40px!important",
-            },
-            "& p": {
-              alignItems: "center",
-              display: "flex",
-              height: "40px",
-              marginRight: "16px",
-              padding: "4px",
-              color: "red",
+              paddingLeft: "30px",
+              fontSize: "14px",
+              color: "#999999",
             },
           },
           "& .ql-tooltip": {
