@@ -1219,10 +1219,10 @@ const ItemList = () => {
                                 "& > p": { lineHeight: "30px" },
                               }}
                             >
-                              {/* <Description>{task?.description}</Description> */}
-                              <FormDescription description={task?.description}>
+                              <Description>{task?.description}</Description>
+                              {/* <FormDescription description={task?.description}>
                                 {task?.description}
-                              </FormDescription>
+                              </FormDescription> */}
                               {/* <FormDescription
                                 description={task?.description}
                               /> */}
