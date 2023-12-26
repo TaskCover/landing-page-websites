@@ -35,12 +35,6 @@ const SwitchChat = ({ onCloseChatBox }) => {
         );
       case STEP.ADD_GROUP:
         return <AddGroup />;
-      case STEP.CHAT_DETAIL_GROUP:
-        return (
-          <ConversationLayout viewStep={STEP.CHAT_DETAIL_GROUP}>
-            <ChatDetailGroup />
-          </ConversationLayout>
-        );
       case STEP.LIST:
         return (
           <ConversationLayout viewStep={STEP.LIST}>
@@ -51,6 +45,12 @@ const SwitchChat = ({ onCloseChatBox }) => {
         return (
           <ConversationLayout viewStep={STEP.CHAT_FORWARD}>
             <ChatForward />
+          </ConversationLayout>
+        );
+      case STEP.CHAT_DETAIL_GROUP:
+        return (
+          <ConversationLayout viewStep={STEP.CHAT_DETAIL_GROUP}>
+            <ChatDetailGroup />
           </ConversationLayout>
         );
       case STEP.CHAT_GROUP:

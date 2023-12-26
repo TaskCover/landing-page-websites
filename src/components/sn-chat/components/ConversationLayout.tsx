@@ -31,6 +31,7 @@ const ConversationLayout = ({ children, viewStep }: ConversationLayoutProp) => {
               break;
             case STEP.CHAT_DETAIL_GROUP:
               onSetStep(STEP.CHAT_GROUP);
+              // onSetStep(STEP.CHAT_GROUP);
               break;
             default:
               onSetStep(prevStep);

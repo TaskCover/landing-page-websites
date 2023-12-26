@@ -45,7 +45,7 @@ export type SelectProps = InputProps & {
 const ID_PLACEHOLDER = uuid();
 const ID_PENDING = uuid();
 
-const Select = (props: SelectProps) => {
+const SelectMoveTask = (props: SelectProps) => {
   const {
     options,
     hasAll,
@@ -142,6 +142,9 @@ const Select = (props: SelectProps) => {
         value={hasValue ? value : showPlaceholder ? ID_PLACEHOLDER : ""}
         onChange={onChange}
         {...rest}
+        sx={{
+          overflow: "hidden",
+        }}
       >
         {!!onChangeSearch && isShow && (
           <Search
@@ -160,50 +163,35 @@ const Select = (props: SelectProps) => {
           />
         )}
 
-        {optionList?.map((option) => (
-          // <Box key={option.value} sx={{width: "250px", overflowY: "auto"}}>
-
-          <MenuItem
-            sx={{
-              ...defaultSx.item,
-              display:
-                (!hasValue && option.value === ID_PLACEHOLDER) ||
-                value === ID_PLACEHOLDER
-                  ? "none"
-                  : undefined,
-            }}
-            key={option.value}
-            value={option.value}
-          >
-            <Stack direction="row" alignItems="center" spacing={1}>
-              {option.value !== ID_PLACEHOLDER && hasAvatar && (
-                <Avatar
-                  src={option?.avatar ?? UserPlaceholderImage}
-                  size={24}
-                />
-              )}
-              {hasIcon && !!option?.icon && (
-                <Image
-                  src={option.icon as string}
-                  width={18}
-                  height={18}
-                  alt="icon"
-                />
-              )}
-              <Stack>
-                <Text variant="body2" className="text-option">
-                  {option.label}
-                </Text>
-                {showSubText && (
-                  <Text variant="body2" className="sub">
-                    {option.subText}
+        <Box sx={{ height: "250px", overflowY: "auto" }}>
+          {optionList?.map((option) => (
+            <MenuItem
+              sx={{
+                ...defaultSx.item,
+                display:
+                  (!hasValue && option.value === ID_PLACEHOLDER) ||
+                  value === ID_PLACEHOLDER
+                    ? "none"
+                    : undefined,
+              }}
+              key={option.value}
+              value={option.value}
+            >
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Stack>
+                  <Text variant="body2" className="text-option">
+                    {option.label}
                   </Text>
-                )}
+                  {showSubText && (
+                    <Text variant="body2" className="sub">
+                      {option.subText}
+                    </Text>
+                  )}
+                </Stack>
               </Stack>
-            </Stack>
-          </MenuItem>
-          // </Box>
-        ))}
+            </MenuItem>
+          ))}
+        </Box>
 
         {pending && (
           <MenuItem sx={defaultSx.item} value={ID_PENDING}>
@@ -215,7 +203,7 @@ const Select = (props: SelectProps) => {
   );
 };
 
-export default memo(Select);
+export default memo(SelectMoveTask);
 
 const defaultSx = {
   input: {

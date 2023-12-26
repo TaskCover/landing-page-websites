@@ -173,10 +173,11 @@ const AccountInfoHeader = ({
           <>
             <Box
               sx={{
+                maxWidth: "180px",
                 fontSize: "16px",
                 fontWeight: 600,
                 color: "white",
-                textAlign: "center",
+                textAlign: "left",
                 flex: 1,
               }}
             >

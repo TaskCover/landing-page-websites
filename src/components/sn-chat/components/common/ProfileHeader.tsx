@@ -129,7 +129,7 @@ const ProfileHeader = ({
           </IconButton>
         )} */}
 
-        <Box display="flex">
+        <Box display="flex" width="100px" justifyContent="space-around">
           {onSearch && (
             <IconButton onClick={() => setOpenSearch(true)}>
               <SearchIcon
@@ -214,6 +214,7 @@ const ProfileHeader = ({
           )}
 
           <Box
+            width="180px"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -238,7 +239,7 @@ const ProfileHeader = ({
               <Typography
                 variant="inherit"
                 fontWeight="bold"
-                sx={nameSx}
+                // sx={nameSx}
                 {...nameProp}
               >
                 {name}
@@ -255,6 +256,7 @@ const ProfileHeader = ({
               </Typography>
             )}
           </Box>
+
           <Box ml="auto">{groupButton()}</Box>
         </>
       );
@@ -336,7 +338,7 @@ const ProfileHeader = ({
           display: "flex",
           alignItems: "center",
           // padding: "11.5px",
-          padding: "16px 21px 16px 4px",
+          padding: "16px 16px 16px 4px",
           borderBottom: "1px solid #ECECF3",
           backgroundColor: "#3699FF",
           color: "#FFFFFF",

@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  forwardRef,
 } from "react";
 import {
   reorder,
@@ -70,6 +71,7 @@ import { Date } from "components/Filters";
 import dayjs from "dayjs";
 import MoveListIcon from "icons/MoveListIcon";
 import CheckBoxCustom from "components/shared/CheckBoxCustom";
+import FormDescription from "./Detail/components/FormDescription";
 
 const ItemList = () => {
   const {
@@ -956,6 +958,22 @@ const ItemList = () => {
     });
   }, [initQuery, isReady, onGetTasksOfProject, projectId]);
 
+  const fixedLayoutRef = useRef();
+
+  fixedLayoutRef?.current?.addEventListener("scroll", () => {
+    const popupEls = document.querySelectorAll(".MuiPopper-root");
+    const datePopupEls = fixedLayoutRef?.current?.querySelectorAll(
+      ".react-datepicker-popper",
+    );
+
+    popupEls.forEach(function (popup) {
+      popup.style.display = "none";
+    });
+    datePopupEls.forEach(function (popup) {
+      popup.style.display = "none";
+    });
+  });
+
   return (
     <Stack flex={1} pb={3} order={3}>
       {!!selectedList.length && (
@@ -967,7 +985,7 @@ const ItemList = () => {
       <Stack
         position="relative"
         // top={baseTop + 18}
-        zIndex={12}
+        // zIndex={12}
         display={{ xs: "none", md: "flex" }}
         bgcolor="background.default"
       >
@@ -991,7 +1009,7 @@ const ItemList = () => {
           />
         </TableLayout>
       </Stack>
-      <FixedLayout flex={1}>
+      <FixedLayout ref={fixedLayoutRef} flex={1}>
         <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
           {dataList.map((taskListItem, indexTaskList) => {
             const isChecked = isTaskListChecked(selectedList, taskListItem.id);
@@ -1042,12 +1060,12 @@ const ItemList = () => {
                               xs: "flex-start",
                               md: "center",
                             }}
-                            flexShrink={2}
                             minHeight={40}
                             maxHeight={{ md: 40 }}
                             width="100%"
                             sx={{ ...sx.task, ml: 4 }}
                             overflow="hidden"
+                            display={"flex"}
                           >
                             <Draggable draggableId={task.id} index={taskIndex}>
                               {(provided, snapshot) => {
@@ -1074,7 +1092,9 @@ const ItemList = () => {
                                 );
                               }}
                             </Draggable>
+
                             <Content
+                              // width="15%!important"
                               sx={{
                                 display: "flex",
                                 justifyContent: "start",
@@ -1103,6 +1123,7 @@ const ItemList = () => {
                                 }
                               />
                             </Content>
+
                             <Content
                               sx={{
                                 display: "flex",
@@ -1113,6 +1134,7 @@ const ItemList = () => {
                                   fontWeight: "normal",
                                 },
                               }}
+                              // flexGrow={1}
                             >
                               <Date
                                 label={commonT("form.title.selectTime")}
@@ -1134,6 +1156,7 @@ const ItemList = () => {
                             </Content>
 
                             <Content
+                              // flexGrow={1}
                               sx={{
                                 display: "flex",
                                 justifyContent: "center",
@@ -1196,7 +1219,13 @@ const ItemList = () => {
                                 "& > p": { lineHeight: "30px" },
                               }}
                             >
-                              <Description>{task?.description}</Description>
+                              {/* <Description>{task?.description}</Description> */}
+                              <FormDescription description={task?.description}>
+                                {task?.description}
+                              </FormDescription>
+                              {/* <FormDescription
+                                description={task?.description}
+                              /> */}
                             </Content>
                             <Content
                               sx={{
