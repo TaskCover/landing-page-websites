@@ -8,6 +8,8 @@ import React, {
   useMemo,
   useRef,
   useState,
+  forwardRef,
+  useImperativeHandle,
 } from "react";
 import {
   reorder,
@@ -59,7 +61,6 @@ import { SCROLL_ID } from "constant/index";
 import ActionsSelected from "./ActionsSelected";
 import Loading from "components/Loading";
 import useToggle from "hooks/useToggle";
-import FixedLayout from "components/FixedLayout";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import useTheme from "hooks/useTheme";
 import SelectStatusTask from "components/sn-projects/components/SelectStatusTask";
@@ -70,6 +71,7 @@ import { Date } from "components/Filters";
 import dayjs from "dayjs";
 import MoveListIcon from "icons/MoveListIcon";
 import CheckBoxCustom from "components/shared/CheckBoxCustom";
+import FixedLayoutTask from "components/FixedLayoutTask";
 
 const ItemList = () => {
   const {
@@ -956,6 +958,52 @@ const ItemList = () => {
     });
   }, [initQuery, isReady, onGetTasksOfProject, projectId]);
 
+  const fixedLayoutRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const popupEls = document.querySelectorAll(".MuiPopper-root");
+      const datePopupEls = fixedLayoutRef.current?.querySelectorAll(
+        ".react-datepicker-popper",
+      );
+
+      popupEls.forEach((popup) => {
+        if (popup instanceof HTMLElement) {
+          popup.style.display = "none";
+        }
+      });
+
+      datePopupEls?.forEach((popup) => {
+        if (popup instanceof HTMLElement) {
+          popup.style.display = "none";
+        }
+      });
+    };
+
+    fixedLayoutRef.current?.addEventListener("scroll", handleScroll);
+
+    // Cleanup: remove event listener when component unmounts
+    return () => {
+      fixedLayoutRef.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // fixedLayoutRef?.current?.addEventListener("scroll", () => {
+  //   const popupEls = document.querySelectorAll(".MuiPopper-root");
+
+  //   const datePopupEls = fixedLayoutRef?.current?.querySelectorAll(
+  //     ".react-datepicker-popper",
+  //   );
+
+  //   popupEls.forEach(function (popup) {
+  //     popup.style.display = "none";
+  //   });
+
+  //   datePopupEls.forEach(function (popup) {
+  //     popup.style.display = "none";
+  //   });
+  // });
+
   return (
     <Stack flex={1} pb={3} order={3}>
       {!!selectedList.length && (
@@ -967,7 +1015,7 @@ const ItemList = () => {
       <Stack
         position="relative"
         // top={baseTop + 18}
-        zIndex={12}
+        // zIndex={12}
         display={{ xs: "none", md: "flex" }}
         bgcolor="background.default"
       >
@@ -991,7 +1039,7 @@ const ItemList = () => {
           />
         </TableLayout>
       </Stack>
-      <FixedLayout flex={1}>
+      <FixedLayoutTask ref={fixedLayoutRef} flex={1}>
         <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
           {dataList.map((taskListItem, indexTaskList) => {
             const isChecked = isTaskListChecked(selectedList, taskListItem.id);
@@ -1042,12 +1090,12 @@ const ItemList = () => {
                               xs: "flex-start",
                               md: "center",
                             }}
-                            flexShrink={2}
                             minHeight={40}
                             maxHeight={{ md: 40 }}
                             width="100%"
                             sx={{ ...sx.task, ml: 4 }}
                             overflow="hidden"
+                            display={"flex"}
                           >
                             <Draggable draggableId={task.id} index={taskIndex}>
                               {(provided, snapshot) => {
@@ -1074,7 +1122,9 @@ const ItemList = () => {
                                 );
                               }}
                             </Draggable>
+
                             <Content
+                              // width="15%!important"
                               sx={{
                                 display: "flex",
                                 justifyContent: "start",
@@ -1103,6 +1153,7 @@ const ItemList = () => {
                                 }
                               />
                             </Content>
+
                             <Content
                               sx={{
                                 display: "flex",
@@ -1113,6 +1164,7 @@ const ItemList = () => {
                                   fontWeight: "normal",
                                 },
                               }}
+                              // flexGrow={1}
                             >
                               <Date
                                 label={commonT("form.title.selectTime")}
@@ -1134,6 +1186,7 @@ const ItemList = () => {
                             </Content>
 
                             <Content
+                              // flexGrow={1}
                               sx={{
                                 display: "flex",
                                 justifyContent: "center",
@@ -1197,6 +1250,9 @@ const ItemList = () => {
                               }}
                             >
                               <Description>{task?.description}</Description>
+                              {/* <FormDescription description={task?.description}>
+                                {task?.description}
+                              </FormDescription> */}
                             </Content>
                             <Content
                               sx={{
@@ -1628,7 +1684,7 @@ const ItemList = () => {
             />
           )}
         </DragDropContext>
-      </FixedLayout>
+      </FixedLayoutTask>
 
       <Loading open={isProcessing} />
 

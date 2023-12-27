@@ -652,6 +652,9 @@ const MoreList = (props: MoreListProps) => {
           taskIds={taskIds}
           oldTaskListIds={taskListIds}
           setIsSubmitting={setIsSubmitting}
+          sx={{
+            overflow: "hidden",
+          }}
         />
       )}
       {type === Action.DELETE && (

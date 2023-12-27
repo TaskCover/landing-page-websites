@@ -19,6 +19,7 @@ import { useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
 import { useParams } from "next/navigation";
 import { Option } from "constant/types";
+import SelectMoveTask from "components/shared/SelectMoveTask";
 
 type MoveTaskListProps = {
   oldTaskListIds: string[];
@@ -140,7 +141,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
       {...rest}
     >
       <Stack spacing={2} py={3}>
-        <Select
+        <SelectMoveTask
           options={searchOptions}
           title={projectT("detailTasks.form.title.newTaskPlace")}
           name="task_move"

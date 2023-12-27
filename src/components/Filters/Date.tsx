@@ -60,6 +60,7 @@ const FDate = (props: DateProps) => {
       spacing={0.5}
       alignItems="center"
       width="fit-content"
+      // zIndex={2}
     >
       <Text
         variant="body2"

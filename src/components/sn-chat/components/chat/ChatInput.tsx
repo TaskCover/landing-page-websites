@@ -46,7 +46,7 @@ const ChatInput = ({
       sx={{
         width: "100%",
         bottom: "1rem",
-        ...wrapperInputSx ? { ...wrapperInputSx } : {},
+        ...(wrapperInputSx ? { ...wrapperInputSx } : {}),
       }}
     >
       <Box

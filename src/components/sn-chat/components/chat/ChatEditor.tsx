@@ -279,13 +279,11 @@ const ChatEditor = (props: EditorProps) => {
 
   return (
     <Stack
-      // direction={isChatDesktop ? "column-reverse" : "column"}
       className="editor"
       sx={{
         "& .quill": {
           flexDirection: "column",
           padding: "16px",
-          // maxHeight: "180px",
           "& .ql-container": {
             boxSizing: "border-box",
             position: "unset!important",
@@ -307,7 +305,6 @@ const ChatEditor = (props: EditorProps) => {
         "& .ql-container": {
           "& .ql-editor": {
             boxSizing: "border-box",
-            // minHeight: "1em",
             cursor: "text",
             lineHeight: 1.4,
             textAlign: "left",

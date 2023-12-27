@@ -144,7 +144,7 @@ const Messages: React.ForwardRefRenderFunction<MessageHandle, MessagesProps> = (
   };
 
   const scrollMessage = async () => {
-    console.log("scrollMessage");
+    // console.log("scrollMessage");
 
     clearScrollContentMessage();
     await sleep(500);
