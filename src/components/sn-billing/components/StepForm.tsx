@@ -17,10 +17,11 @@ type StepProps = {
   activeStep?: number;
   listSteps?: string[];
   skipped?: Set<number>;
+  setActiveStep: (value: number) => void;
 };
 
 const StepForm = (props: StepProps) => {
-  const { activeStep, skipped, listSteps } = props;
+  const { activeStep, skipped, listSteps, setActiveStep } = props;
 
   const isStepOptional = (step: number) => {
     return step === 1;
@@ -91,6 +92,7 @@ const StepForm = (props: StepProps) => {
           return (
             <Step key={label} {...stepProps}>
               <StepLabel
+                onClick={() => setActiveStep(index)}
                 {...labelProps}
                 sx={{
                   ["&.MuiStepLabel-root.Mui-disabled span"]: {

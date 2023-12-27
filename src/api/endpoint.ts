@@ -121,8 +121,9 @@ export const Endpoint = {
 
   //Billing
   BILLING: "/bill",
-  DETAIL_BILLING: "/bill/{id}",
-  EXPORT_BILLING: "bill/export/{id}",
+  DETAIL_BILLING: "/bill/export/{id}",
+  EXPORT_BILLING: "/billToExport",
+
   INTERACTION_BILLING: "/bill_interaction",
   INTERACTION_BILLING_BY_BILL: "/bill_interaction/{id}",
 

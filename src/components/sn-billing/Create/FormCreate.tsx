@@ -138,6 +138,7 @@ const FormCreate = () => {
             activeStep={activeStep}
             listSteps={steps}
             skipped={skipped}
+            setActiveStep={setActiveStep}
           />
         </Stack>
         {activeStep === 1 ? (

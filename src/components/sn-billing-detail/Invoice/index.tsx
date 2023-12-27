@@ -47,6 +47,9 @@ import DownloadIcon from "icons/DownloadIcon";
 import FileGroupIcon from "icons/FileGroupIcon";
 import ChangeIcon from "icons/ChangeIcon";
 import { ChangeCircleOutlined } from "@mui/icons-material";
+import { useBillings } from "store/billing/selectors";
+import { BillingDataExport } from "store/billing/actions";
+import ExportView from "components/sn-billing/Modals/ExportView";
 
 type TabProps = {
   title: string;
@@ -91,6 +94,7 @@ const TabInvoice = (props: TabProps) => {
     billToInfo,
     setBillToInfo,
   } = props;
+  const { onDownloadFileBilling } = useBillings();
   const { isMdSmaller } = useBreakpoint();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
@@ -104,20 +108,21 @@ const TabInvoice = (props: TabProps) => {
   });
   const [listService, setListService] = useState<Service[]>([]);
   const [selected, setSelected] = useState<string>("");
+  const [exportModel, setExportModel] = useState(false);
 
-  // const formik = useFormik<Billing>({
-  //   enableReinitialize: true,
-  //   initialValues: {},
-  //   onSubmit(values, formikHelpers) {
-  //     // setDataUpdate
+  const formik = useFormik<Billing>({
+    enableReinitialize: true,
+    initialValues: {},
+    onSubmit(values, formikHelpers) {
+      // setDataUpdate
 
-  //     return;
-  //   },
-  // });
+      return;
+    },
+  });
 
-  // useEffect(() => {
-  //   formik.setValues(item ?? {});
-  // }, [item]);
+  useEffect(() => {
+    formik.setValues(item ?? {});
+  }, [item]);
 
   const handleClose = () => {
     setOpenModal(false);
@@ -162,11 +167,23 @@ const TabInvoice = (props: TabProps) => {
     }
   }, [totalAmount, form?.values?.vat]);
 
+  const arrBill = [{ id: item?.id ?? "" }];
+
   const onchangePdf = (value) => {
     setSelected(value);
     if (value === "VIEW") {
-      push(getPath(BILLING_EXPORT_PATH, undefined, { id: item?.id ?? "" }));
+      setExportModel(true);
+      // push(getPath(BILLING_EXPORT_PATH, undefined));
     }
+    if (value === "DOWNLOAD") {
+      onDownloadFileBilling({ fileType: "pdf_landscape" }, {
+        bill: arrBill ?? [],
+      } as BillingDataExport);
+    }
+  };
+
+  const onCloseModalExport = () => {
+    setExportModel(false);
   };
 
   return (
@@ -190,6 +207,7 @@ const TabInvoice = (props: TabProps) => {
             options={options}
             name="Tag"
             hasIcon
+            hasAll={false}
             onChange={(name, value) => onchangePdf(value)}
             value={selected}
             rootSx={{
@@ -494,6 +512,11 @@ const TabInvoice = (props: TabProps) => {
         billFrom={billFromInfo}
         setBillToInfo={setBillToInfo}
         setBillFromInfo={setBillFromInfo}
+      />
+      <ExportView
+        open={exportModel}
+        onClose={() => onCloseModalExport()}
+        item={{ bill: arrBill ?? [] } as BillingDataExport}
       />
     </Box>
   );

@@ -21,6 +21,7 @@ type SelectMembersProps = {
 type Member = {
   id: string;
   fullname: string;
+  avatar?: { link: string };
 };
 
 const SelectMembers = (props: SelectMembersProps) => {
@@ -69,12 +70,16 @@ const SelectMembers = (props: SelectMembersProps) => {
     onChange(name, newData);
   };
 
-  const onChangeMembers = (id: string, fullname: string) => {
+  const onChangeMembers = (
+    id: string,
+    fullname: string,
+    avatar?: { link: string },
+  ) => {
     const indexSelected = members.findIndex((item) => item.id === id);
 
     const newData = [...members];
     if (indexSelected === -1) {
-      newData.push({ id, fullname });
+      newData.push({ id, fullname, avatar });
     } else {
       newData.splice(indexSelected, 1);
     }
@@ -90,7 +95,7 @@ const SelectMembers = (props: SelectMembersProps) => {
       <Stack
         direction="row"
         py={2.5}
-        px={2.5}
+        // px={2.5}
         // bgcolor="grey.50"
         justifyContent="space-between"
         onClick={onOpen}
