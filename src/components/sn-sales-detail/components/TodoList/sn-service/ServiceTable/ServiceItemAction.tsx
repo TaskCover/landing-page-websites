@@ -11,12 +11,13 @@ import { NS_COMMON, NS_SALES } from "constant/index";
 import MoreSquareIcon from "icons/MoreSquareIcon";
 import { useTranslations } from "next-intl";
 import React, { useMemo, useRef } from "react";
-import { Action } from "../../TodoList/SubItem";
+// import { Action } from "../../TodoList/SubItem";
 import { Text } from "components/shared";
 import CopyIcon from "icons/CopyIcon";
 import TrashIcon from "icons/TrashIcon";
 import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
+import { Action } from "../../SubItem";
 
 type ActionsProps = {
   serviceId: string;

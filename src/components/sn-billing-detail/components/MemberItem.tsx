@@ -5,7 +5,7 @@ import { Text, Checkbox } from "components/shared";
 import Avatar from "components/Avatar";
 
 type MemberItemProps = Employee & {
-  onChange: (id?: string, fullname: string, avatar?: { link: string }) => void;
+  onChange: (id?: string, fullname?: string, avatar?: { link: string }) => void;
   checked: boolean;
 };
 

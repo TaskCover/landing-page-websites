@@ -20,7 +20,7 @@ import { formatNumber } from "utils/index";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
-import { Action } from "../../TodoList/SubItem";
+// import { Action } from "../../TodoList/SubItem";
 import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
 import { useSaleDetail, useSalesService } from "store/sales/selectors";
 import LockIcon from "icons/LockIcon";
@@ -34,13 +34,16 @@ import {
 import { Option } from "constant/types";
 import { useGetBillTypeOptions } from "components/sn-sales-detail/hooks/useGetBillTypeOptions";
 import { NS_SALES } from "constant/index";
-import CustomLabelSelect from "../../CustomLabelSelect";
-import CustomInput from "../../CustomInput/CustomInput";
-import CustomDesktopInput from "../../CustomInput/CustomDesktopInput";
+// import CustomLabelSelect from "../../CustomLabelSelect";
+// import CustomInput from "../../CustomInput/CustomInput";
+// import CustomDesktopInput from "../../CustomInput/CustomDesktopInput";
 import { useTranslations } from "next-intl";
 import { useGetServiceUnitOptions } from "components/sn-sales-detail/hooks/useGetServiceUnitOptions";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 import { scrollViewContext } from "components/sn-sales-detail/hooks/useScrollErrorField";
+import { Action } from "../../SubItem";
+import CustomDesktopInput from "components/sn-sales-detail/components/CustomInput/CustomDesktopInput";
+import CustomLabelSelect from "components/sn-sales-detail/components/CustomLabelSelect";
 // import useScrollErrorField from "components/sn-sales-detail/hooks/useScrollErrorField";
 
 interface IProps {

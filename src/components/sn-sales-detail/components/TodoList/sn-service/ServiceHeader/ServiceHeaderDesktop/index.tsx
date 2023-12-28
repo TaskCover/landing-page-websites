@@ -5,9 +5,10 @@ import { useTranslations } from "next-intl";
 import React, { useContext, useEffect } from "react";
 import { EditContext } from "../../context/EditContext";
 import useBreakpoint from "hooks/useBreakpoint";
-import useServiceHeader from "../../../../hooks/useServiceHeader";
+// import useServiceHeader from "../../../../hooks/useServiceHeader";
 import { useFormContext } from "react-hook-form";
 import { useSalesService } from "store/sales/selectors";
+import useServiceHeader from "components/sn-sales-detail/hooks/useServiceHeader";
 
 const ServiceHeader = () => {
   const commonT = useTranslations(NS_COMMON);

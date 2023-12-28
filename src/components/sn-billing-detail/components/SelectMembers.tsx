@@ -71,15 +71,15 @@ const SelectMembers = (props: SelectMembersProps) => {
   };
 
   const onChangeMembers = (
-    id: string,
-    fullname: string,
+    id?: string,
+    fullname?: string,
     avatar?: { link: string },
   ) => {
     const indexSelected = members.findIndex((item) => item.id === id);
 
     const newData = [...members];
     if (indexSelected === -1) {
-      newData.push({ id, fullname, avatar });
+      newData.push({ id: id ?? "", fullname: fullname ?? "", avatar });
     } else {
       newData.splice(indexSelected, 1);
     }

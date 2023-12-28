@@ -80,7 +80,7 @@ const ServiceTable = ({
     index,
     append as UseFieldArrayAppend<FieldValues, string>,
     remove as UseFieldArrayRemove,
-    onRemoveSection,
+    // onRemoveSection,
     fields,
   );
 
