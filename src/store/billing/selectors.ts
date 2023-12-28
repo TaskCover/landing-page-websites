@@ -4,10 +4,14 @@ import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   BillingData,
+  BillingDataExport,
   GetBillingListQueries,
   GetBudgetListQueries,
   createBilling,
   createCommentBilling,
+  downloadPdfBilling,
+  exportBilling,
+  exportBillingQueries,
   getBillingDetail,
   getBillingList,
   getBudgetDetail,
@@ -35,6 +39,8 @@ export const useBillings = () => {
     createStatus,
     updateStatus,
     dataComment,
+    fileExport,
+    dataExport,
   } = useAppSelector((state) => state.billing, shallowEqual);
   const { page, size, totalItems, total_page } = useAppSelector(
     (state) => state.billing.paging,
@@ -84,7 +90,18 @@ export const useBillings = () => {
     },
     [dispatch],
   );
-
+  const onExportBilling = useCallback(
+    async (queries: exportBillingQueries, data: BillingDataExport) => {
+      return await dispatch(exportBilling({ queries, data }));
+    },
+    [dispatch],
+  );
+  const onDownloadFileBilling = useCallback(
+    async (queries: exportBillingQueries, data: BillingDataExport) => {
+      return await dispatch(downloadPdfBilling({ queries, data }));
+    },
+    [dispatch],
+  );
   //   const onUpdateProject = useCallback(
   //     async (id: string, data: Partial<ProjectData>) => {
   //       try {
@@ -111,12 +128,16 @@ export const useBillings = () => {
     createStatus,
     updateStatus,
     dataComment,
+    fileExport,
+    dataExport,
     onGetBillings,
     onCreateBilling,
     onUpdateBilling,
     onGetBilling,
     onCreateCommentBilling,
     onGetCommentBilling,
+    onExportBilling,
+    onDownloadFileBilling,
   };
 };
 

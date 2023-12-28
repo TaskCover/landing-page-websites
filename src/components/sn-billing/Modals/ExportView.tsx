@@ -1,5 +1,5 @@
 import { Box, Stack } from "@mui/material";
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import FormLayout from "components/FormLayout";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
@@ -15,12 +15,14 @@ import { BILLING_EXPORT_PATH } from "constant/paths";
 import { useRouter } from "next-intl/client";
 import { Billing } from "store/billing/reducer";
 import { getPath } from "utils/index";
+import { useBillings } from "store/billing/selectors";
+import { BillingDataExport } from "store/billing/actions";
 // import useExportDeal from "../hooks/useExportDeal";
 
 interface IProps {
   open: boolean;
   onClose(): void;
-  item: Billing;
+  item: BillingDataExport;
 }
 
 const salesFormTranslatePrefix = "list.modalExport";
@@ -32,21 +34,21 @@ const EXPORT_TYPE = [
   },
   {
     label: "Csv",
-    value: "CSV",
+    value: "csv",
   },
   {
     label: "Excel",
-    value: "EXCEL",
+    value: "xlsx",
   },
 ];
 const ORIENTATION = [
   {
     label: "Poitrait",
-    value: "POITRAIT",
+    value: "pdf_portrait",
   },
   {
     label: "Landscape",
-    value: "LANDSCAPE",
+    value: "pdf_landscape",
   },
 ];
 const PAGE_SIZE = [
@@ -60,7 +62,7 @@ const PAGE_SIZE = [
   },
   {
     label: "Letter",
-    value: "LETTER",
+    value: "Letter",
   },
 ];
 
@@ -69,7 +71,7 @@ const ExportModal = ({ open, onClose, item }: IProps) => {
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
   const { push } = useRouter();
-  //   const { exportDeal, isFetching } = useExportDeal();
+  const { fileExport, onExportBilling } = useBillings();
   const schema = yup.object().shape({
     type: yup.string(),
   });
@@ -86,8 +88,23 @@ const ExportModal = ({ open, onClose, item }: IProps) => {
     // return await exportDeal().then(() => {
     //   onClose();
     // });
-    push(getPath(BILLING_EXPORT_PATH, undefined, { id: item?.id ?? "" }));
+    // if (selected.document && selected.document !== "") {
+    //   push(BILLING_EXPORT_PATH);
+    // }
+    if (selected && selected.document === "PDF") {
+      const queries = { fileType: selected.orient, pageType: selected.page };
+      onExportBilling(queries, item);
+    } else {
+      const queries = { fileType: selected.document };
+      onExportBilling(queries, item);
+    }
   };
+
+  useEffect(() => {
+    if (fileExport) {
+      push(getPath(BILLING_EXPORT_PATH, undefined));
+    }
+  }, [fileExport]);
 
   return (
     <Box>

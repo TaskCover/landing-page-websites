@@ -34,16 +34,22 @@ const InformationBillingPage = () => {
       fullname: user?.fullname,
       avatar: user?.avatar,
       roles: user?.roles,
+      company: user?.company,
+      phone: user?.phone,
+      taxCode: user?.taxCode,
+      address: user?.address,
+      country: user?.country,
     } as User;
     return dataUser;
   }, [user]);
 
-  const param = useParams();
+  const { id } = useParams();
 
   const [newServices, setNewServices] = useState<Service[]>([]);
-  const id = param?.id.toString();
+  console.log(id);
+
   useEffect(() => {
-    onGetBilling(id ?? "");
+    onGetBilling(id.toString() ?? "");
   }, [onGetBilling, updateStatus]);
 
   useEffect(() => {

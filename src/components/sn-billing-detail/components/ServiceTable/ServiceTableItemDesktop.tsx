@@ -153,7 +153,13 @@ const ServiceTableItem = ({
                     }}
                   />
                 ) : (
-                  <Text variant="body2">{service?.serviceType}</Text>
+                  <Text variant="body2">
+                    {positionOptions?.find(
+                      (item) => item.value === service?.serviceType,
+                    )?.label ??
+                      service?.serviceType ??
+                      ""}
+                  </Text>
                 )}
               </BodyCell>
 

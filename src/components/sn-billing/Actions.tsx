@@ -19,12 +19,15 @@ import { STATUS_BILLING_OPTIONS } from "./components/helpers";
 import { BILLING_CREATE_PATH } from "constant/paths";
 import { Billing } from "store/billing/reducer";
 import { useBillings } from "store/billing/selectors";
+import useDebounce from "hooks/useDebounce";
+import { BillingDataExport } from "store/billing/actions";
 
 type Iprops = {
-  selected: Billing;
+  selectedBills: BillingDataExport;
+  setExportModel: (boolean) => void;
 };
 const Actions = (props: Iprops) => {
-  const { selected } = props;
+  const { selectedBills, setExportModel } = props;
   const { filters, size, onGetBillings } = useBillings();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
@@ -34,7 +37,7 @@ const Actions = (props: Iprops) => {
   const [isShow, onShow, onHide] = useToggle();
 
   const [queries, setQueries] = useState<Params>({ status: "Unpaid" });
-  const [exportModel, setExportModel] = useState(false);
+  // const [exportModel, setExportModel] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const statusOptions = useMemo(
@@ -67,8 +70,9 @@ const Actions = (props: Iprops) => {
   const onSearch = (newQueries: Params) => {
     // const path = getPath(pathname, newQueries);
     // push(path);
-
-    onGetBillings({ ...newQueries, page: 1, size: size });
+    setTimeout(() => {
+      onGetBillings({ ...newQueries, page: 1, size: size });
+    }, 1000);
   };
 
   const onClear = () => {
@@ -121,7 +125,7 @@ const Actions = (props: Iprops) => {
         py={3}
         px={2}
         maxWidth="100%"
-        overflow="auto"
+        // overflow="auto"
       >
         <Stack
           direction="row"
@@ -170,7 +174,7 @@ const Actions = (props: Iprops) => {
               size="small"
               variant="secondary"
               sx={{ height: 40, width: "fit-content" }}
-              disabled={!selected}
+              disabled={selectedBills && selectedBills?.bill?.length === 0}
             >
               <ArrowExport
                 sx={{
@@ -242,7 +246,7 @@ const Actions = (props: Iprops) => {
           </Stack>
           <Stack direction="row" alignItems="center" gap={2} flexWrap={"wrap"}>
             <Search
-              name="search_key"
+              name="subject"
               placeholder={commonT("search")}
               onEnter={(name, value) => {
                 onChangeQueries(name, value);
@@ -250,7 +254,7 @@ const Actions = (props: Iprops) => {
               }}
               onChange={(name, value) => onChangeQueries(name, value)}
               sx={{ width: 210 }}
-              value={queries?.search_key}
+              value={queries?.subject}
             />
             {/* <Button
             size="extraSmall"
@@ -275,11 +279,11 @@ const Actions = (props: Iprops) => {
         onClose={() => onCloseModal()}
       /> */}
       </Stack>
-      <ExportView
+      {/* <ExportView
         open={exportModel}
         onClose={() => onCloseModalExport()}
-        item={selected}
-      />
+        item={selectedBills}
+      /> */}
     </>
   );
 };

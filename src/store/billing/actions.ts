@@ -33,8 +33,14 @@ export type GetBillingListQueries = BaseQueries_Billing & {
 export type GetBudgetListQueries = BaseQueries & {
   // status?: BillingStatus;
 };
-
+export type exportBillingQueries = BaseQueries_Billing & {
+  fileType?: string;
+  pageType?: string;
+};
 export type BillingData = {};
+export type BillingDataExport = {
+  bill?: [];
+};
 
 export const getBillingList = createAsyncThunk(
   "Billing/getBillingList",
@@ -78,7 +84,7 @@ export const getBillingDetail = createAsyncThunk(
 
     try {
       const response = await client.get(
-        StringFormat(Endpoint.EXPORT_BILLING, { id }),
+        StringFormat(Endpoint.DETAIL_BILLING, { id }),
         {},
         {
           baseURL: BILLING_API_URL,
@@ -126,7 +132,8 @@ export const getBudgetDetail = createAsyncThunk(
   async (id: string) => {
     try {
       const response = await client.get(
-        StringFormat(Endpoint.DETAIL_BUDGET, { id }),
+        Endpoint.DETAIL_BUDGET + "/" + id,
+        // StringFormat(Endpoint.DETAIL_BUDGET, { id }),
         {},
         {
           baseURL: SALE_API_URL,
@@ -252,6 +259,71 @@ export const getCommentBilling = createAsyncThunk(
       );
       if (response?.status === HttpStatusCode.OK) {
         return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const exportBilling = createAsyncThunk(
+  "Billing/exportBilling",
+  async ({
+    queries,
+    data,
+  }: {
+    queries: exportBillingQueries;
+    data: BillingDataExport;
+  }) => {
+    try {
+      const response = await client.post(Endpoint.EXPORT_BILLING, data, {
+        params: queries,
+        baseURL: BILLING_API_URL,
+        responseType:
+          queries.fileType == "xlsx"
+            ? "blob"
+            : queries.fileType == "csv"
+            ? "text/csv"
+            : "arraybuffer",
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return {
+          response: response.data,
+          fileType: queries.fileType,
+          dataBill: data?.bill,
+        };
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const downloadPdfBilling = createAsyncThunk(
+  "Billing/downloadPdfBilling",
+  async ({
+    queries,
+    data,
+  }: {
+    queries: exportBillingQueries;
+    data: BillingDataExport;
+  }) => {
+    try {
+      const response = await client.post(Endpoint.EXPORT_BILLING, data, {
+        params: queries,
+        baseURL: BILLING_API_URL,
+        responseType: "arraybuffer",
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return {
+          response: response.data,
+          fileType: queries.fileType,
+          dataBill: data?.bill,
+        };
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {

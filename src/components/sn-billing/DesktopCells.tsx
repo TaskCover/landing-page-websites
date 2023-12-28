@@ -1,6 +1,6 @@
 import { Link, Stack } from "@mui/material";
 import { BodyCell } from "components/Table";
-import { Text } from "components/shared";
+import { Button, Text } from "components/shared";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { CURRENCY_CODE } from "constant/enums";
 import { NS_COMMON } from "constant/index";
@@ -9,14 +9,16 @@ import { useTranslations } from "next-intl";
 import { memo } from "react";
 import { Billing } from "store/billing/reducer";
 import { formatDate, formatNumber, getPath } from "utils/index";
+import FolderIcon from "../../icons/FolderIcon";
 
 type DesktopCellsProps = {
   item?: Billing;
   order: number;
+  onOpenModalExport: (value: Billing[]) => void;
 };
 
 const DesktopCells = (props: DesktopCellsProps) => {
-  const { item, order } = props;
+  const { item, order, onOpenModalExport } = props;
   const commonT = useTranslations(NS_COMMON);
 
   return (
@@ -55,7 +57,9 @@ const DesktopCells = (props: DesktopCellsProps) => {
         {item?.budget ? item?.budget[0]?.name : ""}
       </BodyCell>
       <BodyCell align="center" sx={{ paddingRight: 4 }}>
-        {item?.status}
+        <Button onClick={() => onOpenModalExport([item ?? {}])}>
+          <FolderIcon />
+        </Button>
       </BodyCell>
       <BodyCell align="center" sx={{ paddingRight: 5 }}>
         {formatNumber(item?.amount, {

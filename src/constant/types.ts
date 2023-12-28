@@ -75,6 +75,9 @@ export interface User {
   email: string;
   phone?: string;
   company?: string;
+  taxCode?: string;
+  address?: string;
+  country?: string;
   position?: {
     name: string;
     id: string;

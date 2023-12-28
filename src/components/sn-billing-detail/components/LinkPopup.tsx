@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import PopoverLayout from "./PopoverLayout";
 import { Button, IconButton, Input, Select, Text } from "components/shared";
 import { Stack } from "@mui/material";
@@ -14,7 +14,11 @@ type IProps = { OptionBudget?: Option[]; service: Service };
 const LinkPopup = (props: IProps) => {
   const { OptionBudget, service } = props;
 
-  const onChangeValue = (e) => {};
+  const [selectedBudget, setSelectedBudget] = useState<string>("");
+
+  const onChangeValue = (e) => {
+    setSelectedBudget(e.target.value);
+  };
 
   return (
     <>
@@ -30,7 +34,8 @@ const LinkPopup = (props: IProps) => {
                 }}
                 placeholder="Chọn"
                 inputMode="search"
-                // value={"VAT"}
+                value={selectedBudget}
+                onChange={(event) => onChangeValue(event)}
                 // disabled
                 rootSx={sxConfig.input}
                 fullWidth

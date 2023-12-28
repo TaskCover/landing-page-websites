@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import Link from "components/Link";
 import { BodyCell } from "components/Table";
-import { Text } from "components/shared";
+import { Button, Text } from "components/shared";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { CURRENCY_CODE } from "constant/enums";
 import { NS_COMMON } from "constant/index";
@@ -10,9 +10,11 @@ import { useTranslations } from "next-intl";
 import { memo } from "react";
 import { Billing } from "store/billing/reducer";
 import { formatDate, formatNumber, getPath } from "utils/index";
+import FolderIcon from "../../icons/FolderIcon";
 
 type MobileContentCellProps = {
   item?: Billing;
+  onOpenModalExport: (value: Billing[]) => void;
 };
 
 type InformationItemProps = {
@@ -22,7 +24,7 @@ type InformationItemProps = {
 };
 
 const MobileContentCell = (props: MobileContentCellProps) => {
-  const { item } = props;
+  const { item, onOpenModalExport } = props;
   const t = useTranslations(NS_COMMON);
   return (
     <>
@@ -54,7 +56,11 @@ const MobileContentCell = (props: MobileContentCellProps) => {
       >
         {item?.budget ? item?.budget[0]?.name : ""}
       </BodyCell>
-      <BodyCell align="center">{item?.status}</BodyCell>
+      <BodyCell align="center">
+        <Button onClick={() => onOpenModalExport([item ?? {}])}>
+          <FolderIcon />
+        </Button>
+      </BodyCell>
       <BodyCell align="center">
         {formatNumber(item?.amount, {
           prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
