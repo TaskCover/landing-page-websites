@@ -412,6 +412,8 @@ const AllPeopleTab = () => {
                   variant="text"
                   startIcon={<PlusIcon />}
                   sx={{
+                    px: 2,
+                    py: 1,
                     color: "success.main",
                   }}
                   // startIcon={<AddIcon />}

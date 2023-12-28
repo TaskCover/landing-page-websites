@@ -25,7 +25,7 @@ type ActionsProps = {
   index: number;
 };
 
-const ServiceItemAction = (props: ActionsProps) => {
+const   ServiceItemAction = (props: ActionsProps) => {
   const { serviceId, onChangeAction, index } = props;
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const commonT = useTranslations(NS_COMMON);

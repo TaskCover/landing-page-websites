@@ -30,7 +30,7 @@ const SalesListAction = () => {
   const salesT = useTranslations(NS_SALES);
 
   const [queries, setQueries] = useState<Params>({
-    sort: "DESC",
+    sort: SORT_OPTIONS.DESC,
   });
 
   const onOpenModal = (modal) => {
@@ -102,7 +102,7 @@ const SalesListAction = () => {
       py={3}
       px={2}
       maxWidth="100%"
-      overflow="auto"
+      overflow="hidden"
     >
       <Stack
         direction="row"
@@ -142,7 +142,7 @@ const SalesListAction = () => {
               {salesT("list.action.deal")}
             </Text>
           </Button>
-          {/* <Button
+          <Button
             onClick={() => onOpenModal(modalName.EXPORT)}
             size="small"
             variant="secondary"
@@ -158,7 +158,7 @@ const SalesListAction = () => {
             <Text sx={{ display: { xs: "none", md: "block" } }} color="inherit">
               {salesT("list.action.export")}
             </Text>
-          </Button> */}
+          </Button>
         </Stack>
       </Stack>
       <Stack

@@ -57,6 +57,9 @@ export const BILLING_INFO_PATH = "/billing/{id}";
 export const BILLING_DETAIL_PATH = "/billing/detail";
 export const BILLING_EXPORT_PATH = "/billing/export";
 
+// Landing
+export const LANDING_HOME_PATH = "/landing";
+
 const AUTHORIZED_LOGGED_IN_PATHS = [
   SIGNIN_PATH,
   SIGNUP_PATH,

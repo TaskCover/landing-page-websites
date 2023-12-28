@@ -41,6 +41,7 @@ export type SelectProps = InputProps & {
   hasIcon?: boolean;
   showSubText?: boolean;
   onOpen?: Function;
+  menuListSx?: object;
 };
 
 const ID_PLACEHOLDER = uuid();
@@ -62,6 +63,7 @@ const CustomLabelSelect = (props: SelectProps) => {
     showSubText = true,
     hasIcon,
     defaultValue,
+    menuListSx,
     ...rest
   } = props;
 
@@ -133,6 +135,7 @@ const CustomLabelSelect = (props: SelectProps) => {
           MenuListProps: {
             sx: {
               maxHeight: 300,
+              ...menuListSx,
             },
           },
         },

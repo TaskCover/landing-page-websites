@@ -132,7 +132,7 @@ const Actions = () => {
           />
 
           <Dropdown
-            // placeholder={docsT("filter.group.none")}
+            placeholder={docsT("filter.group.none")}
             options={grOptions}
             name="group_by"
             hasAll={false}

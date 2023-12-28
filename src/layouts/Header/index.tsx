@@ -51,6 +51,7 @@ const Header = () => {
       justifyContent="space-between"
       px={{ xs: 2, md: 3 }}
       width="100%"
+      zIndex={999}
     >
       <Link href={HOME_PATH} underline="none">
         <AppLogo height={48} className="only-mobile" />

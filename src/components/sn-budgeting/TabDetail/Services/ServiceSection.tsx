@@ -4,7 +4,7 @@ import PlusIcon from "icons/PlusIcon";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { getMessageErrorByAPI, uuid } from "utils/index";
 import { ServiceSectionRow } from "./ServiceSectionRow";
-import { TErrors, TSection, TSectionData } from "./ServiceUtil";
+import { TErrors, TSection, TSectionData, TSectionForm } from "./ServiceUtil";
 import { useEffect, useState } from "react";
 import {
   TBudgetServiceForm,
@@ -24,16 +24,13 @@ type Props = {
   onCloseEdit?: () => void;
 };
 
-type TForm = {
-  sections: (TSection & { data: TSectionData[] })[];
-};
-
 export const ServiceSection = ({ onCloseEdit }: Props) => {
-  const { control, setValue, handleSubmit, getValues } = useForm<TForm>();
+  const { control, setValue, handleSubmit, getValues } =
+    useForm<TSectionForm>();
   const [errors, setErrors] = useState<TErrors>({});
   const [isOpenConfirm, openConfirm, closeConfirm] = useToggle();
   const [indexWaitDelete, setIndexWaitDelete] = useState<number | null>(null);
-  const [sections, setSections] = useState<any>(null);
+  const [sections, setSections] = useState<any[]>([]);
   const { id: budgetId } = useParams();
   const budgetServiceAdd = useBudgetServiceAdd();
   const { onAddSnackbar } = useSnackbar();
@@ -120,7 +117,7 @@ export const ServiceSection = ({ onCloseEdit }: Props) => {
     return !hasError;
   };
 
-  const onSubmit: SubmitHandler<TForm> = ({ sections }) => {
+  const onSubmit: SubmitHandler<TSectionForm> = ({ sections }) => {
     if (!handleValidateServices()) {
       onAddSnackbar("Please insert required field", "error");
       return;

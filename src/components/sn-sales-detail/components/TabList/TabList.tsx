@@ -4,11 +4,11 @@ import Link from "components/Link";
 import {
   DATE_FORMAT_HYPHEN,
   DATE_FORMAT_SLASH,
-  DATE_PICKER_FORMAT,
+  DATE_LOCALE_FORMAT,
   NS_SALES,
 } from "constant/index";
 import { useTranslations } from "next-intl";
-import React, { memo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import { getPath } from "utils/index";
 import { Stack, Tab, Tabs } from "@mui/material";
 import { Date, Dropdown } from "components/Filters";
@@ -16,7 +16,6 @@ import moment from "moment";
 import { useSaleDetail, useSales } from "store/sales/selectors";
 import Assign from "../Assign";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
-import dayjs from "dayjs";
 
 export enum SALES_DETAIL_TAB {
   FEED = "feed",
@@ -158,15 +157,15 @@ const TabList = ({ value, onChange }: TabListProps) => {
             const { onChange, ...rest } = field;
             const onChangeDate = (e, value) => {
               onChange(value);
-              onUpdateDeal({
-                id: getValues("id"),
-                start_date: dayjs(value, DATE_PICKER_FORMAT).format(
-                  "DD/MM/YYYY",
-                ),
-              });
+              onUpdateDeal({ id: getValues("id"), start_date: value });
             };
             return (
-              <Date label="Start Date" onChange={onChangeDate} {...rest} />
+              <Date
+                label="Start Date"
+                format={DATE_FORMAT_SLASH}
+                onChange={onChangeDate}
+                {...rest}
+              />
             );
           }}
         />

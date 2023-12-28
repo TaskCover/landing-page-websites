@@ -76,7 +76,10 @@ const ProjectDetailLayout = ({ children, id }: ProjectDetailLayoutProps) => {
 
   return (
     <Wrapper
-      sx={{ overflowX: "hidden", overflowY: "auto" }}
+      sx={{
+        overflowX: "hidden",
+        overflowY: "auto",
+      }}
       id={SCROLL_ID}
       overflow="auto"
       inFrame={isMembersOfProjectPath}

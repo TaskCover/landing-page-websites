@@ -24,7 +24,7 @@ const SwitchChat = ({ onCloseChatBox }) => {
   const renderContent = useCallback(() => {
     switch (currStep) {
       case STEP.CONVENTION:
-        return <ChatListUser onCloseChatBox={onCloseChatBox}/>;
+        return <ChatListUser onCloseChatBox={onCloseChatBox} />;
       case STEP.CHAT_ONE:
         return <ConversationLayoutUser />;
       case STEP.VIEW_DETAIL_USER:
@@ -35,12 +35,6 @@ const SwitchChat = ({ onCloseChatBox }) => {
         );
       case STEP.ADD_GROUP:
         return <AddGroup />;
-      case STEP.CHAT_DETAIL_GROUP:
-        return (
-          <ConversationLayout viewStep={STEP.CHAT_DETAIL_GROUP}>
-            <ChatDetailGroup />
-          </ConversationLayout>
-        );
       case STEP.LIST:
         return (
           <ConversationLayout viewStep={STEP.LIST}>
@@ -53,6 +47,12 @@ const SwitchChat = ({ onCloseChatBox }) => {
             <ChatForward />
           </ConversationLayout>
         );
+      case STEP.CHAT_DETAIL_GROUP:
+        return (
+          <ConversationLayout viewStep={STEP.CHAT_DETAIL_GROUP}>
+            <ChatDetailGroup />
+          </ConversationLayout>
+        );
       case STEP.CHAT_GROUP:
         return (
           <ConversationLayout viewStep={STEP.CHAT_GROUP}>
@@ -60,9 +60,9 @@ const SwitchChat = ({ onCloseChatBox }) => {
           </ConversationLayout>
         );
       case STEP.ADD_MEMBER:
-          return <AddGroup />;
+        return <AddGroup />;
       case STEP.SEARCH_CHAT_TEXT:
-          return <SearchChatText />;
+        return <SearchChatText />;
       default:
         return null;
     }

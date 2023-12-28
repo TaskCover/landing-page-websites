@@ -44,15 +44,35 @@ export const useBlogs = () => {
     );
 
     const onUpdateBlog = useCallback(
-        async (id: string, blog: BlogData) => {
+        async (blog: BlogFormData) => {
             try {
-                return await dispatch(updateBlog({ id, blog })).unwrap();
+                if (blog.backgroundUpload) {
+                    const backgroundUploadResponse = await dispatch(
+                        uploadFile({
+                            file: blog.backgroundUpload,
+                        }),
+                    );
+                    blog.background = backgroundUploadResponse.payload.object;
+                }
+                if (blog.attachmentsUpload && blog.attachmentsUpload.length > 0) {
+                    const attachmentUploadPromises = blog.attachmentsUpload.map((file) =>
+                        dispatch(uploadFile({ file }))
+                    );
+                    const attachmentUploadResponses = await Promise.all(attachmentUploadPromises);
+                    blog.attachments = attachmentUploadResponses.map((response) => response.payload.object);
+                }
+                const Token = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+                var id = blog.id as string;
+                return await dispatch(updateBlog({ id ,blog, Token: Token ?? null })).unwrap();
             } catch (error) {
                 throw error;
             }
         },
         [dispatch],
     );
+
+    
+
     const onGetBlogBySlug = useCallback(
         async (slug: string) => {
             try {

@@ -19,7 +19,7 @@ export default function useDocEditor() {
 
   const [handleContentUpdate] = useDebounce((content: any) => {
     dispatch(changeContentDoc(content));
-  }, 200);
+  }, 1000);
 
   const anchorRef = useRef(0);
   return useEditor({

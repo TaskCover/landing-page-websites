@@ -20,6 +20,7 @@ const ConversationLayout = () => {
     onSetStateSearchMessage,
   } = useChat();
   const [displayUserInfo, setDisplayUserInfo] = useState(false);
+
   const accountInfo = useMemo(() => {
     const account = convention?.find(
       (item) => item._id === roomId,

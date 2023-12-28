@@ -48,16 +48,16 @@ const ImojiImportIcon = (props: SvgIconProps) => {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <circle cx="12" cy="12" r="10" stroke="#1BC5BD" strokeWidth="2" />
+      <circle cx="12" cy="12" r="10" stroke="#3699FF" strokeWidth="2" />
       <path
         d="M8 14s1.5 2 4 2 4-2 4-2"
-        stroke="#1BC5BD"
+        stroke="#3699FF"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx="9" cy="10" r="1" fill="#1BC5BD" />
-      <circle cx="15" cy="10" r="1" fill="#1BC5BD" />
+      <circle cx="9" cy="10" r="1" fill="#3699FF" />
+      <circle cx="15" cy="10" r="1" fill="#3699FF" />
     </SvgIcon>
   );
 };

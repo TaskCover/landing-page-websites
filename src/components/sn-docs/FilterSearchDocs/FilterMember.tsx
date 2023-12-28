@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 import { NS_DOCS } from "constant/index";
 import { SelectMembers } from "components/sn-projects/components";
 import { useFormik } from "formik";
+import ChevronIcon from "icons/ChevronIcon";
 
 const FilterMember = ({ onChange, queries }: FilterSearchDocsProps) => {
   const docsT = useTranslations(NS_DOCS);
@@ -37,14 +38,15 @@ const FilterMember = ({ onChange, queries }: FilterSearchDocsProps) => {
         <Text variant="body2" color="grey.400">
           {docsT("filter.filter.creator")}
         </Text>
+        <ChevronIcon fontSize="small"></ChevronIcon>
       </MenuItem>
       <Popover
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
+          vertical: "bottom",
+          horizontal: "right",
         }}
         transformOrigin={{
           vertical: "top",

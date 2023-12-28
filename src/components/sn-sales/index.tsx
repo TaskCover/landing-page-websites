@@ -92,7 +92,7 @@ const SalesPage = () => {
   useEffect(() => {
     if (!isReady) return;
     setShouldLoad(true);
-    onGetSales();
+    onGetSales(query);
   }, [isReady, initQuery, onGetSales]);
 
   const itemList = useMemo(() => {
@@ -105,7 +105,7 @@ const SalesPage = () => {
         name: "name",
         value: commonT("name"),
         align: "left",
-        width: "20%",
+        width: "18%",
         minWidth: 160,
         sort: true,
       },
@@ -121,7 +121,7 @@ const SalesPage = () => {
         name: "owner.fullname",
         value: salesT("list.table.owner"),
         align: "left",
-        width: "10%",
+        width: "12%",
         sort: true,
         minWidth: 130,
       },
@@ -132,7 +132,7 @@ const SalesPage = () => {
         sort: true,
         component: (props) => (
           <Stack {...props} alignItems="flex-end">
-            <Text variant="h6" color="grey.400">
+            <Text variant="h6" color="grey.400" noWrap>
               {salesT("list.table.revenue")}
             </Text>
             <Text variant="h6">
@@ -144,7 +144,7 @@ const SalesPage = () => {
           </Stack>
         ),
         minWidth: 100,
-        width: "11%",
+        width: "12%",
       },
       {
         name: "revenuePJ",
@@ -154,7 +154,17 @@ const SalesPage = () => {
         component: (props) => {
           return (
             <Stack {...props} alignItems="flex-end">
-              <Text variant="h6" color="grey.400">
+              <Text
+                variant="h6"
+                color="grey.400"
+                sx={{
+                  textOverflow: "ellipsis",
+                  WebkitLineClamp: 1,
+                  width: "100%",
+                  overflow: "hidden",
+                }}
+                noWrap
+              >
                 {salesT("list.table.pjRevenue")}
               </Text>
               <Text variant="h6">
@@ -167,7 +177,7 @@ const SalesPage = () => {
           );
         },
         minWidth: 100,
-        width: "15%",
+        width: "13%",
       },
       {
         name: "estimate",
@@ -175,7 +185,17 @@ const SalesPage = () => {
         align: "right",
         component: (props) => (
           <Stack {...props} alignItems="flex-end">
-            <Text variant="h6" color="grey.400">
+            <Text
+              variant="h6"
+              color="grey.400"
+              noWrap
+              sx={{
+                textOverflow: "ellipsis",
+                WebkitLineClamp: 1,
+                width: "100%",
+                overflow: "hidden",
+              }}
+            >
               {salesT("list.table.time")}
             </Text>
             <Text variant="h6">
@@ -190,7 +210,7 @@ const SalesPage = () => {
         name: "probability",
         value: salesT("list.table.probability"),
         align: "right",
-        width: "10%",
+        width: "8%",
         minWidth: 100,
         sort: true,
       },
@@ -198,7 +218,7 @@ const SalesPage = () => {
         name: "updated_time",
         value: salesT("list.table.lastActivity"),
         align: "left",
-        width: "10%",
+        width: "12%",
         minWidth: 100,
         sort: true,
       },
@@ -208,49 +228,52 @@ const SalesPage = () => {
 
   useFetchEmployeeOptions();
   return (
-    <>
-      <FixedLayout
-        maxHeight={920}
-        maxWidth={{
-          xs: 1120,
-          xl: 1450,
+    <FixedLayout
+      maxHeight={920}
+      maxWidth={{
+        xs: 1120,
+        xl: 1450,
+      }}
+    >
+      <SaleListAction />
+      <TableLayout
+        handleRequestSort={handleRequestSort}
+        orderDirection={orderDirection}
+        orderBy={orderBy}
+        maxHeight={860}
+        headerList={headerList}
+        noData={!isIdle && totalItems === 0}
+        minWidth={1050}
+        px={2}
+        pending={isFetching && shouldLoad}
+        headerProps={{
+          sx: { px: { xs: 2, md: 2 }, overflow: "auto" },
         }}
+        containerHeaderProps={{
+          sx: {
+            overflowX: "hidden",
+          },
+        }}
+        error={salesError as string}
       >
-        <SaleListAction />
-        <TableLayout
-          handleRequestSort={handleRequestSort}
-          orderDirection={orderDirection}
-          orderBy={orderBy}
-          maxHeight={860}
-          headerList={headerList}
-          noData={!isIdle && totalItems === 0}
-          minWidth={1020}
-          px={2}
-          pending={isFetching && shouldLoad}
-          headerProps={{
-            sx: { px: { xs: 2, md: 2 }, overflow: "auto" },
-          }}
-          error={salesError as string}
-        >
-          {itemList.map((item, index) => (
-            <SaleItem
-              key={`Sale-item-${index}`}
-              item={item}
-              setShouldLoad={setShouldLoad}
-            />
-          ))}
-        </TableLayout>
-        <Pagination
-          onChangePage={onChangePage}
-          onChangeSize={onChangeSize}
-          pageSize={pageSize}
-          containerProps={{ px: { md: 3 }, py: 1 }}
-          totalItems={totalItems}
-          totalPages={totalPages}
-          page={pageIndex}
-        />
-      </FixedLayout>
-    </>
+        {itemList.map((item, index) => (
+          <SaleItem
+            key={`Sale-item-${index}`}
+            item={item}
+            setShouldLoad={setShouldLoad}
+          />
+        ))}
+      </TableLayout>
+      <Pagination
+        onChangePage={onChangePage}
+        onChangeSize={onChangeSize}
+        pageSize={pageSize}
+        containerProps={{ px: { md: 3 }, py: 1 }}
+        totalItems={totalItems}
+        totalPages={totalPages}
+        page={pageIndex}
+      />
+    </FixedLayout>
   );
 };
 
