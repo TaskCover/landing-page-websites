@@ -107,7 +107,7 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
           size={56}
           src={avatarClone || undefined}
           style={{
-            borderRadius: "10px",
+            borderRadius: "50%",
           }}
           onError={() => setAvatarClone(undefined)}
         />
@@ -202,10 +202,10 @@ const ChatItemRender = ({ sessionId, chatInfo }: ChatItemRenderProps) => {
           "&::before": {
             content: `''`,
             position: "absolute",
-            right: "-5px",
-            top: "-2px",
-            width: "17px",
-            height: "17px",
+            right: "-1px",
+            bottom: "-1px",
+            width: "16px",
+            height: "16px",
             border: "2px solid #ffffff",
             backgroundColor: "#55C000",
             borderRadius: "50%",

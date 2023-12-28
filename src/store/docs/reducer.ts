@@ -111,39 +111,39 @@ const initialState: IDocs = {
     info: {},
     data: {
       title: "Page",
-      content: {
-        title: "",
-        content: "",
-      },
+      // content: {
+      //   title: "",
+      //   content: "",
+      // },
       children: [
         {
           id: "1",
           title: "page 1",
-          content: {
-            title: "",
-            content: "",
-          },
+          // content: {
+          //   title: "",
+          //   content: "",
+          // },
           children: [
             {
               id: "1.1",
               title: "page 1.1",
-              content: {
-                title: "",
-                content: "",
-              },
+              // content: {
+              //   title: "",
+              //   content: "",
+              // },
               children: [],
             },
           ],
         },
-        {
-          id: "2",
-          title: "page 2",
-          content: {
-            title: "",
-            content: "",
-          },
-          children: [],
-        },
+        // {
+        //   id: "2",
+        //   title: "page 2",
+        //   content: {
+        //     title: "",
+        //     content: "",
+        //   },
+        //   children: [],
+        // },
       ],
     },
   },

@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import { SxProps, Theme } from "@mui/material";
 import useGetScreenMode from "hooks/useGetScreenMode";
 import { DrawerChatIgnore } from "components/sn-chatting-room/components/RoomDetails";
+import ChatEmoji from "../chat/ChatEmoji";
 
 const initPageIndex = 10;
 
@@ -36,14 +37,15 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
     isOpenInfoChat,
     typeDrawerChat,
   } = useChat();
+
   const { user } = useAuth();
 
   const { sendMessage } = useWSChat();
   const { extraDesktopMode } = useGetScreenMode();
-
   const { onAddSnackbar } = useSnackbar();
   const t = useTranslations(NS_COMMON);
   const [files, setFiles] = useState<File[]>([]);
+
   const isGroup = useMemo(
     () => conversationInfo?.t !== "d",
     [conversationInfo?.t],
@@ -126,8 +128,12 @@ const Conversation: FC<Props> = ({ wrapperMessageSx, wrapperInputSx }) => {
   type MessageHandle = React.ElementRef<typeof Messages>;
   const inputRef = useRef<MessageHandle>(null);
 
+  console.log("Message: --", stateSendMessage);
+
   const handleSendMessage = useCallback(
     async (message: string) => {
+      // console.log("stateSendMessage: " + stateSendMessage);
+
       sendMessage({
         message,
       });

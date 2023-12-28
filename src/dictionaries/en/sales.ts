@@ -48,6 +48,11 @@ export const SalesLang: SalesDictionary = {
       documentFormat: "Document Format",
       orientation: "Orientation",
       pagesize: "Page size",
+      orientationOption: {
+        portrait: "Portrait",
+        landscape: "Landscape",
+      },
+      error: "Error while exporting",
     },
     noOptionText: "No option, create new one",
   },

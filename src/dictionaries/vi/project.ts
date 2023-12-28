@@ -135,6 +135,7 @@ export const ProjectLang: ProjectDictionary = {
       deleteTaskListSuccess: "Xóa danh mục công việc thành công!",
       deleteTasksSuccess: "Xóa công việc thành công!",
       actionTaskSuccess: "Cập nhật {label} công việc thành công!",
+      taskNameIsRequired: 'Tên công việc không được bỏ trống',
     },
   },
   taskDetail: {

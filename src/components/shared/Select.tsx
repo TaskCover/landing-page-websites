@@ -1,6 +1,7 @@
 import { KeyboardEventHandler, memo, useId, useMemo } from "react";
 import Input, { InputProps } from "./Input";
 import {
+  Box,
   ButtonBase,
   CircularProgress,
   ListSubheader,
@@ -72,7 +73,7 @@ const Select = (props: SelectProps) => {
     [options, value],
   );
 
-  const optionList = (useMemo(() => {
+  const optionList = useMemo(() => {
     if (hasAll || placeholder) {
       return [
         {
@@ -84,7 +85,7 @@ const Select = (props: SelectProps) => {
       ];
     }
     return options;
-  }, [hasAll, placeholder, options, hasValue, commonT]) as unknown) as Option[];
+  }, [hasAll, placeholder, options, hasValue, commonT]) as unknown as Option[];
 
   const onOpenSelect = () => {
     props?.onOpen && props.onOpen();
@@ -116,88 +117,101 @@ const Select = (props: SelectProps) => {
   }, 250);
 
   return (
-    <Input
-      select
-      SelectProps={{
-        IconComponent: () => (
-          <ChevronIcon onClick={!props.disabled ? onOpen : undefined} />
-        ),
-        open: isShow,
-        onOpen: onOpenSelect,
-        onClose,
-        MenuProps: {
-          PaperProps: {
-            onScroll,
-          },
-          MenuListProps: {
-            sx: {
-              maxHeight: 300,
+    <>
+      <Input
+        select
+        SelectProps={{
+          IconComponent: () => (
+            <ChevronIcon onClick={!props.disabled ? onOpen : undefined} />
+          ),
+          open: isShow,
+          onOpen: onOpenSelect,
+          onClose,
+          MenuProps: {
+            PaperProps: {
+              onScroll,
+            },
+            MenuListProps: {
+              sx: {
+                maxHeight: 300,
+              },
             },
           },
-        },
-      }}
-      rootSx={defaultSx.input}
-      value={hasValue ? value : showPlaceholder ? ID_PLACEHOLDER : ""}
-      onChange={onChange}
-      {...rest}
-    >
-      {!!onChangeSearch && isShow && (
-        <Search
-          fullWidth
-          sx={{ mt: 1, px: 2, my: 1 }}
-          name="email"
-          onChange={onChangeSearch}
-          emitWhenEnter={emitSearchWhenEnter}
-          search={searchProps?.value}
-          onKeyDown={onKeyDown}
-          {...searchProps}
-        />
-      )}
-      {optionList?.map((option) => (
-        <MenuItem
-          sx={{
-            ...defaultSx.item,
-            display:
-              (!hasValue && option.value === ID_PLACEHOLDER) ||
-              value === ID_PLACEHOLDER
-                ? "none"
-                : undefined,
-          }}
-          key={option.value}
-          value={option.value}
-        >
-          <Stack direction="row" alignItems="center" spacing={1}>
-            {option.value !== ID_PLACEHOLDER && hasAvatar && (
-              <Avatar src={option?.avatar ?? UserPlaceholderImage} size={24} />
-            )}
-            {hasIcon && !!option?.icon && (
-              <Image
-                src={option.icon as string}
-                width={18}
-                height={18}
-                alt="icon"
-              />
-            )}
-            <Stack>
-              <Text variant="body2" className="text-option">
-                {option.label}
-              </Text>
-              {showSubText && (
-                <Text variant="body2" className="sub">
-                  {option.subText}
-                </Text>
-              )}
-            </Stack>
-          </Stack>
-        </MenuItem>
-      ))}
+        }}
+        rootSx={defaultSx.input}
+        value={hasValue ? value : showPlaceholder ? ID_PLACEHOLDER : ""}
+        onChange={onChange}
+        {...rest}
+      >
+        {!!onChangeSearch && isShow && (
+          <Search
+            fullWidth
+            sx={{
+              mt: 1,
+              px: 2,
+              my: 1,
+            }}
+            name="email"
+            onChange={onChangeSearch}
+            emitWhenEnter={emitSearchWhenEnter}
+            search={searchProps?.value}
+            onKeyDown={onKeyDown}
+            {...searchProps}
+          />
+        )}
 
-      {pending && (
-        <MenuItem sx={defaultSx.item} value={ID_PENDING}>
-          <CircularProgress size={20} sx={{ mx: "auto" }} color="primary" />
-        </MenuItem>
-      )}
-    </Input>
+        {optionList?.map((option) => (
+          // <Box key={option.value} sx={{width: "250px", overflowY: "auto"}}>
+
+          <MenuItem
+            sx={{
+              ...defaultSx.item,
+              display:
+                (!hasValue && option.value === ID_PLACEHOLDER) ||
+                value === ID_PLACEHOLDER
+                  ? "none"
+                  : undefined,
+            }}
+            key={option.value}
+            value={option.value}
+          >
+            <Stack direction="row" alignItems="center" spacing={1}>
+              {option.value !== ID_PLACEHOLDER && hasAvatar && (
+                <Avatar
+                  src={option?.avatar ?? UserPlaceholderImage}
+                  size={24}
+                />
+              )}
+              {hasIcon && !!option?.icon && (
+                <Image
+                  src={option.icon as string}
+                  width={18}
+                  height={18}
+                  alt="icon"
+                />
+              )}
+              <Stack>
+                <Text variant="body2" className="text-option">
+                  {option.label}
+                </Text>
+                {showSubText && (
+                  <Text variant="body2" className="sub">
+                    {option.subText}
+                  </Text>
+                )}
+              </Stack>
+            </Stack>
+          </MenuItem>
+          // </Box>
+        ))}
+
+        {pending && (
+          <MenuItem sx={defaultSx.item} value={ID_PENDING}>
+            <CircularProgress size={20} sx={{ mx: "auto" }} color="primary" />
+          </MenuItem>
+        )}
+      </Input>
+    </>
   );
 };
 

@@ -1,9 +1,9 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { NS_PROJECT } from "constant/index";
 import { BodyCell, CellProps } from "components/Table";
 import { TBudgets } from "store/project/budget/action";
-import { Checkbox, Text } from "components/shared";
+import { Button, Checkbox, Text } from "components/shared";
 import { Stack, TableRow, formLabelClasses } from "@mui/material";
 import { HEADER_HEIGHT } from "layouts/Header";
 import { TableLayoutWithScroll } from "components/Table/TableLayoutWithScroll";
@@ -11,12 +11,15 @@ import Link from "components/Link";
 import { getPath } from "utils/index";
 import { BUDGET_DETAIL_PATH } from "constant/paths";
 import Avatar from "components/Avatar";
+import { BugReport } from "@mui/icons-material";
+import FilterWithIds from "./FilterWithIds";
 
 type Props = {
   idSelecteds: string[];
   setIdSelected: any;
   budgets: TBudgets;
 };
+
 
 export const ItemWithoutProject = ({
   idSelecteds,
@@ -124,6 +127,9 @@ export const ItemWithoutProject = ({
         },
       }}
     >
+      {!!idSelecteds.length && (
+        <FilterWithIds getXsCell={getXsCell} budgets={budgets} idSelecteds={idSelecteds}/>
+      )}
       {budgets?.map((budget) => {
         return (
           <TableRow key={budget.id}>
@@ -182,7 +188,7 @@ export const ItemWithoutProject = ({
                 )}
             </BodyCell>
             <BodyCell sx={getXsCell(4)}>
-              <Text>$109,000,567</Text>
+              <Text>${budget.revenue}</Text>
             </BodyCell>
             <BodyCell sx={getXsCell(5)}>
               <Text>69.04%</Text>

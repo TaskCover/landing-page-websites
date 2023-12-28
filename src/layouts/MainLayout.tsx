@@ -94,9 +94,10 @@ const MainLayout = (props: MainLayoutProps) => {
             flex={1}
             height="fit-content"
             spacing={{ xs: 1.5, sm: 3 }}
+
             // justifyContent={isAuthorized ? undefined : "center"}
             // alignItems={isAuthorized ? undefined : "center"}
-            overflow="hidden"
+            // overflow="hidden"
           >
             {
               // isAuthorized ? (

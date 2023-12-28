@@ -16,10 +16,11 @@ import { Text } from "components/shared";
 import MoreDotIcon from "icons/MoreDotIcon";
 import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
-import { EditContext } from "../context/EditContext";
+// import { EditContext } from "../context/EditContext";
 import { useSaleDetail, useSalesService } from "store/sales/selectors";
 import { ServiceColumn } from "components/sn-sales-detail/hooks/useGetHeaderColumn";
 import { Action } from "../../SubItem";
+import { EditContext } from "components/sn-sales-detail/components/sn-service/context/EditContext";
 
 type ActionsProps = {
   sectionId: string;

@@ -1,7 +1,7 @@
 import { Stack, Tooltip } from "@mui/material";
 import { Button, IconButton, Input, Text } from "components/shared";
 import React, { useCallback, useContext, useEffect, useMemo } from "react";
-import { EditContext } from "../context/EditContext";
+
 import { Draggable } from "react-beautiful-dnd";
 import MoveDotIcon from "icons/MoveDotIcon";
 import { NS_SALES } from "constant/index";
@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import { Service } from "store/sales/reducer";
 // import { Action } from "../../TodoList/SubItem";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import ServiceItemAction from "./ServiceItemAction";
+
 import LockIcon from "icons/LockIcon";
 import UnlockIcon from "icons/UnlockIcon";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -27,6 +27,8 @@ import { mappedUnit } from "components/sn-sales-detail/helpers";
 import CustomInput from "components/sn-sales-detail/components/CustomInput/CustomInput";
 import CustomSelect from "components/sn-sales-detail/components/CustomInput/CustomSelect";
 import { Action } from "../../SubItem";
+import { EditContext } from "components/sn-sales-detail/components/sn-service/context/EditContext";
+import ServiceItemAction from "components/sn-sales-detail/components/sn-service/ServiceTable/ServiceItemAction";
 
 interface IProps {
   index: number;

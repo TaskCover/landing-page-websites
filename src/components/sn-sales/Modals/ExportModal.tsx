@@ -7,11 +7,16 @@ import { NS_COMMON, NS_SALES, SALE_API_URL } from "constant/index";
 import { useTranslations } from "next-intl";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input, Select } from "components/shared";
-import { CURRENCY_SYMBOL } from "../helpers";
+import {
+  CURRENCY_SYMBOL,
+  EXPORT_ORIENTATION_OPTIONS,
+  EXPORT_PAGE_SIZE_OPTIONS,
+  EXPORT_TYPE_OPTIONS,
+} from "../helpers";
 import axios from "axios";
 import { Endpoint, client } from "api";
 import FileSaver from "file-saver";
-import useExportDeal from "../hooks/useExportDeal";
+import useExportDeal, { useGetExportOption } from "../hooks/useExportDeal";
 
 interface IProps {
   open: boolean;
@@ -20,31 +25,38 @@ interface IProps {
 
 const salesFormTranslatePrefix = "list.exportView";
 
-const EXPORT_TYPE = [
-  {
-    label: "Exel (xlsx)",
-    value: "xlsx",
-  },
-];
-
 const ExportModal = ({ open, onClose }: IProps) => {
   //create form
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
+
+  const {
+    EXPORT_TYPE,
+    ORIENTATION_TYPE,
+    INCLUDE_ATTACHMENT_TYPE,
+    PAGE_SIZE_TYPE,
+  } = useGetExportOption();
+
   const { exportDeal, isFetching } = useExportDeal();
   const schema = yup.object().shape({
     type: yup.string(),
+    orientation: yup.string(),
+    pageSize: yup.string(),
+    includeAttachment: yup.string(),
   });
 
-  const { handleSubmit, control, reset, getValues } = useForm({
+  const { handleSubmit, control, reset, getValues, watch } = useForm({
     defaultValues: {
-      type: "xlsx",
+      type: EXPORT_TYPE_OPTIONS.XLS,
+      orientation: EXPORT_ORIENTATION_OPTIONS.PORTRAIT,
+      pageSize: EXPORT_PAGE_SIZE_OPTIONS.A4,
+      includeAttachment: "yes",
     },
     resolver: yupResolver(schema),
   });
 
   const onSubmit = async () => {
-    return await exportDeal().then(() => {
+    await exportDeal().then(() => {
       onClose();
     });
   };
@@ -78,6 +90,51 @@ const ExportModal = ({ open, onClose }: IProps) => {
             />
           )}
         />
+        {watch("type") === EXPORT_TYPE_OPTIONS.PDF && (
+          <>
+            <Controller
+              control={control}
+              name="orientation"
+              render={({ field, fieldState: { error } }) => (
+                <Select
+                  options={ORIENTATION_TYPE}
+                  fullWidth
+                  error={error?.message}
+                  {...field}
+                  title={salesT(`${salesFormTranslatePrefix}.orientation`)}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="pageSize"
+              render={({ field, fieldState: { error } }) => (
+                <Select
+                  options={PAGE_SIZE_TYPE}
+                  fullWidth
+                  error={error?.message}
+                  {...field}
+                  title={salesT(`${salesFormTranslatePrefix}.pageSize`)}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="includeAttachment"
+              render={({ field, fieldState: { error } }) => (
+                <Select
+                  options={INCLUDE_ATTACHMENT_TYPE}
+                  fullWidth
+                  error={error?.message}
+                  {...field}
+                  title={salesT(
+                    `${salesFormTranslatePrefix}.includeAttachment`,
+                  )}
+                />
+              )}
+            />
+          </>
+        )}
       </Stack>
     </FormLayout>
   );

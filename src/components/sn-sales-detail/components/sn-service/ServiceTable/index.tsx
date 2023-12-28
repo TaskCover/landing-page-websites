@@ -49,6 +49,7 @@ import {
 import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 import MoveDotIcon from "icons/MoveDotIcon";
+import ServiceItem from "./ServiceItem";
 
 interface IProps {
   section: ServiceSection;
@@ -80,7 +81,7 @@ const ServiceTable = ({
     index,
     append as UseFieldArrayAppend<FieldValues, string>,
     remove as UseFieldArrayRemove,
-    // onRemoveSection,
+    onRemoveSection,
     fields,
   );
 
@@ -124,7 +125,15 @@ const ServiceTable = ({
       }
       return prev;
     }, [] as CellProps[]);
-
+    if (!isEdit) {
+      // find the description column
+      const descIndex = list.findIndex(
+        (item) => item.id === ServiceColumn.DESCRIPTION,
+      );
+      if (descIndex) {
+        list.splice(descIndex, 1);
+      }
+    }
     if (isEdit && !list.find((item) => item.id === ServiceColumn.ACTION)) {
       list.push({
         id: ServiceColumn.ACTION,
@@ -217,8 +226,8 @@ const ServiceTable = ({
                   maxHeight={920}
                   headerProps={{
                     sx: {
-                      px: 1,
-                      pl: isEdit ? 4 : 1,
+                      px: 2,
+                      pl: isEdit ? 4 : 2,
                     },
                   }}
                   sx={{
@@ -249,16 +258,26 @@ const ServiceTable = ({
                           minHeight: 40,
                         }}
                       >
-                        {fields?.map((item, serviceIndex) => (
-                          <ServiceTableItem
-                            onAction={onAction}
-                            service={item as Service}
-                            index={serviceIndex}
-                            key={item.id}
-                            sectionIndex={index}
-                            sectionKey={`sectionsList.${index}.service`}
-                          />
-                        ))}
+                        {fields?.map((item, serviceIndex) =>
+                          isEdit ? (
+                            <ServiceTableItem
+                              onAction={onAction}
+                              service={item as Service}
+                              index={serviceIndex}
+                              key={item.id}
+                              sectionIndex={index}
+                              sectionKey={`sectionsList.${index}.service`}
+                            />
+                          ) : (
+                            <ServiceItem
+                              service={item as Service}
+                              index={serviceIndex}
+                              key={item.id}
+                              sectionIndex={index}
+                              sectionKey={`sectionsList.${index}.service`}
+                            />
+                          ),
+                        )}
                         {provided.placeholder}
                       </div>
                     )}

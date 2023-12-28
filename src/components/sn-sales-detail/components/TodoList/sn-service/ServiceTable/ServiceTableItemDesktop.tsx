@@ -10,10 +10,10 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { EditContext } from "../context/EditContext";
+
 import { Draggable } from "react-beautiful-dnd";
 import MoveDotIcon from "icons/MoveDotIcon";
-import ServiceItemAction from "./ServiceItemAction";
+
 import { Service } from "store/sales/reducer";
 import { get } from "lodash";
 import { formatNumber } from "utils/index";
@@ -44,6 +44,8 @@ import { scrollViewContext } from "components/sn-sales-detail/hooks/useScrollErr
 import { Action } from "../../SubItem";
 import CustomDesktopInput from "components/sn-sales-detail/components/CustomInput/CustomDesktopInput";
 import CustomLabelSelect from "components/sn-sales-detail/components/CustomLabelSelect";
+import { EditContext } from "components/sn-sales-detail/components/sn-service/context/EditContext";
+import ServiceItemAction from "components/sn-sales-detail/components/sn-service/ServiceTable/ServiceItemAction";
 // import useScrollErrorField from "components/sn-sales-detail/hooks/useScrollErrorField";
 
 interface IProps {

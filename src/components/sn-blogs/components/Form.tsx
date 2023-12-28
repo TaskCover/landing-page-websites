@@ -22,6 +22,7 @@ import CustomAutocomplete from "./SelectCategories";
 import { clientStorage } from "utils/storage";
 import { useDispatch } from "react-redux";
 import { Label } from "@mui/icons-material";
+import { Controller } from "react-hook-form";
 
 type FormProps = {
   initialValues: BlogFormData;
@@ -50,46 +51,8 @@ const Form = (props: FormProps) => {
     onGetCategoryOptions({ pageIndex: 1, pageSize: 50 });
   }, [onGetCategoryOptions]);
 
-  const validationSchema = Yup.object().shape({
-    title: Yup.string().required(
-      commonT("form.error.required", {
-        name: blogT(`${blogFormTranslatePrefix}.title`),
-      })
-    ),
-    slug: Yup.string().required(
-      commonT("form.error.required", {
-        name: blogT(`${blogFormTranslatePrefix}.slug`),
-      })
-    ),
-    content: Yup.string().required(
-      commonT("form.error.required", {
-        name: blogT(`${blogFormTranslatePrefix}.content`),
-      })
-    ),
-    background: Yup.object().required(
-      commonT("form.error.required", {
-        name: blogT(`${blogFormTranslatePrefix}.background`),
-      })
-    ),
-    attachments: Yup.array()
-      .of(Yup.string())
-      .min(
-        1,
-        commonT("form.error.required", {
-          name: blogT(`${blogFormTranslatePrefix}.attachments`),
-        })
-      ),
-    category: Yup.array()
-      .of(Yup.string())
-      .min(
-        1,
-        commonT("form.error.required", {
-          name: blogT(`${blogFormTranslatePrefix}.category`),
-        })
-      ),
-    tag: Yup.array().of(Yup.string()),
-  });
-  const onSubmit = async () => {
+
+  const onSubmit = async (values: BlogFormData) => {
     try {
       const newItem = await onSubmitProps(formik.values);
       if (newItem) {
@@ -106,23 +69,6 @@ const Form = (props: FormProps) => {
       console.log(error)
     }
   };
-  // const onSubmit = async (values: BlogFormData) => {
-  //   try {
-  //     const newItem = await onSubmitProps(formik.values);
-  //     if (newItem) {
-  //       onAddSnackbar(
-  //         blogT("blogCategory.notification.success", { label }),
-  //         "success"
-  //       );
-  //       props.onClose();
-  //     } else {
-  //       throw AN_ERROR_TRY_AGAIN;
-  //     }
-  //   } catch (error) {
-  //     onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-  //     console.log(error)
-  //   }
-  // };
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -250,10 +196,7 @@ const Form = (props: FormProps) => {
       label={`${label} ${blogT("blogForm.key")}`}
       submitting={formik.isSubmitting}
       disabled={disabled}
-    
-      onSubmit={()=>{
-        onSubmit()
-      }}
+      onSubmit={formik.handleSubmit}
       {...rest}
     >
       <Grid container spacing={2}>
@@ -272,6 +215,9 @@ const Form = (props: FormProps) => {
               rootSx={sxConfig.input}
               error={commonT(touchedErrors?.title, {
                 name: blogT("blogForm.title"),
+              }) ? 'error' : undefined}
+              helperText={commonT(touchedErrors?.title, {
+                name: blogT("blogForm.title"),
               })}
               title={blogT(`${blogFormTranslatePrefix}.title`)}
             />
@@ -285,6 +231,12 @@ const Form = (props: FormProps) => {
               value={formik.values?.slug}
               rootSx={sxConfig.input}
               title={blogT(`${blogFormTranslatePrefix}.slug`)}
+              error={commonT(touchedErrors?.slug, {
+                name: blogT("blogForm.slug"),
+              }) ? 'error' : undefined}
+              helperText={commonT(touchedErrors?.slug, {
+                name: blogT("blogForm.slug"),
+              })}
             />
             <Stack>
               <CustomAutocomplete items={items} label={blogT("blogForm.category")}
@@ -301,14 +253,16 @@ const Form = (props: FormProps) => {
               onEnter={onEnter}
               label={blogT("blogForm.tag")}
               sx={sxConfig}
+              
             />
-
-            <UploadFile
-              title={blogT("blogForm.background")}
-              name="backgroundUpload"
-              value={formik.values?.backgroundUpload}
-              onChange={onChangeField} 
-            />
+                <UploadFile
+                  title={blogT("blogForm.background")}
+                  name="backgroundUpload"
+                  value={formik.values?.backgroundUpload}
+                  onChange={onChangeField} 
+                  required={true}
+                />
+            
           </Stack>
         </Grid>
         <Grid item xs={7}>
@@ -339,6 +293,22 @@ export default memo(Form);
 
 const sxConfig = {
   input: {
-    height: 50,
+    height: 56,
   },
 };
+
+export const validationSchema = Yup.object().shape({
+  title: Yup.string().required('form.error.required'),
+  slug: Yup.string().required('form.error.required'),
+  content: Yup.string().required('form.error.required'),
+  background: Yup.object().required('form.error.required'),
+  attachments: Yup.array()
+    .of(Yup.object({
+      name: Yup.string().required('form.error.required'),
+    }))
+    .min(1, 'form.error.required'),
+    category: Yup.array()
+    .of(Yup.string())
+    .min(1, 'form.error.required'),
+  tag: Yup.array().of(Yup.string()),
+});

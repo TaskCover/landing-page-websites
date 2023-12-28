@@ -68,6 +68,8 @@ export const CommonLang: CommonDictionary = {
       pause: "Tạm dừng",
     },
   },
+  yes: "Có",
+  no: "Không",
   createNew: "Thêm mới",
   update: "Cập nhật",
   edit: "Sửa",

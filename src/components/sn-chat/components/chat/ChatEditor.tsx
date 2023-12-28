@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Stack } from "@mui/material";
+import { Box, InputBase, Stack } from "@mui/material";
 import {
   ChangeEvent,
   useCallback,
@@ -28,6 +28,8 @@ import type ReactQuill from "react-quill";
 import { useChat } from "store/chat/selectors";
 import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
+import SendMesIcon from "icons/SendMesIcon";
+import { Input } from "components/shared";
 
 const QuillNoSSRWrapper = dynamic(
   async () => {
@@ -72,9 +74,14 @@ hljs.configure({
 
 const ACCEPT_ALL = [...FILE_ACCEPT, ...ACCEPT_MEDIA];
 const TOOLBAR = [
-  ["bold", "italic", "underline", "strike"],
-  ["link", "code-block"],
-  [{ list: "ordered" }, { list: "bullet" }],
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "link",
+  { list: "bullet" },
+  { list: "ordered" },
+  "clean",
 ];
 
 export type EditorProps = {
@@ -116,12 +123,13 @@ const ChatEditor = (props: EditorProps) => {
     () => ({
       container: [
         ["bold", "italic", "underline", "strike"], // toggled buttons
-        ["blockquote", "code-block"],
-        [{ list: "ordered" }, { list: "bullet" }],
+        ["link"],
+        [{ list: "bullet" }, { list: "ordered" }],
         [{ script: "sub" }, { script: "super" }], // superscript/subscript
         [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
         [{ color: [] }, { background: [] }], // dropdown with defaults from theme
         ["attachment"],
+        ["link", "image", "video"],
       ],
       handlers: {
         attachment: () => {
@@ -271,23 +279,50 @@ const ChatEditor = (props: EditorProps) => {
 
   return (
     <Stack
-      // direction={isChatDesktop ? "column-reverse" : "column"}
       className="editor"
       sx={{
-        height: '100px',
+        "& .quill": {
+          flexDirection: "column",
+          padding: "16px",
+          "& .ql-container": {
+            boxSizing: "border-box",
+            position: "unset!important",
+            display: "block",
+            marginRight: "60px",
+            backgroundColor: "#E1F0FF",
+            borderRadius: "20px!important",
+            width: "260px!important",
+          },
+        },
+
         "& .ql-snow": {
           border: "unset !important",
           borderTop: "1px solid #ECECF3!important",
           borderRadius: "unset !important",
+          padding: "8px 0",
         },
+
         "& .ql-container": {
-          position: "unset!important",
-          maxHeight: "150px",
-          display: "block",
           "& .ql-editor": {
-            paddingRight: "7rem",
+            boxSizing: "border-box",
+            cursor: "text",
+            lineHeight: 1.4,
+            textAlign: "left",
+            whiteSpace: "pre-wrap",
+            wordWrap: "break-word",
+            outline: "none",
+            maxHeight: "80px",
+            padding: "4px 32px 0px 20px",
+            overflow: "scroll",
+            height: "100%",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+
             "&.ql-blank::before": {
-              color: "#BABCC6",
+              paddingLeft: "30px",
+              fontSize: "14px",
+              color: "#999999",
             },
           },
           "& .ql-tooltip": {
@@ -297,44 +332,50 @@ const ChatEditor = (props: EditorProps) => {
             width: "fit-content",
           },
         },
+        "& .ql-formats": {
+          marginRight: "15px",
+          display: "flex",
+          gap: "8px",
+          justifyContent: "center",
+        },
       }}
     >
       {isLoading ? "loading..." : null}
       <Box position="relative">
-        <QuillNoSSRWrapper
-          forwardedRef={quillRef}
-          theme="snow"
-          placeholder={commonChatBox("chatBox.typeMessage")}
-          modules={modules}
-          formats={[
-            "bold",
-            "italic",
-            "underline",
-            "strike",
-            "link",
-            "code-block",
-            "list",
-            "ordered",
-            "bullet",
-          ]}
-          value={value}
-          onChange={(value) => {
-            setValue(value);
-          }}
-          onKeyDown={handleKeyDown}
-          style={{
-            color: "black !important",
-            flexDirection: "column",
-          }}
-        />
+        <Box className="text-editor">
+          <QuillNoSSRWrapper
+            forwardedRef={quillRef}
+            theme="snow"
+            modules={modules}
+            placeholder={commonChatBox("chatBox.typeMessage")}
+            formats={[
+              "bold",
+              "italic",
+              "underline",
+              "strike",
+              "link",
+              "bullet",
+              "ordered",
+              "list",
+              "link",
+              "image",
+              "video",
+            ]}
+            value={value}
+            onChange={(value) => {
+              setValue(value);
+            }}
+            onKeyDown={handleKeyDown}
+          />
+        </Box>
         <Box
           sx={{
             position: "absolute",
             right: "1rem",
-            bottom: "15px",
+            bottom: "32px",
             display: "flex",
             flexDirection: "row",
-            gap: "0.5rem",
+            gap: "8px",
           }}
         >
           <ChatEmoji onChange={handleChaneEmoji} />
@@ -356,6 +397,13 @@ const ChatEditor = (props: EditorProps) => {
               inputFileRef?.current?.click();
             }}
           />
+          {/* <SendMesIcon
+            sx={{
+              fill: "transparent",
+              cursor: "pointer",
+            }}
+            onClick={handleMessage}
+          /> */}
         </Box>
       </Box>
       <Stack

@@ -62,7 +62,8 @@ export type BlogDictionary = {
         update:{
             title:string,
             content:string,
-        }
+        },
+        updateBlog:string,
     },
     blogForm: {
         key: string,

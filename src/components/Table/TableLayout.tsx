@@ -159,8 +159,8 @@ const TableLayout = forwardRef((props: TableLayoutProps, ref) => {
         }}
         {...restContainerHeaderProps}
       >
-        <Table>
-          <TableHead>
+        <Table sx={{ width: "100%" }}>
+          <TableHead sx={{ width: "100%" }}>
             <TableRow>
               {headerList.map(({ sx: sxItem, component, ...item }, index) =>
                 item.sort ? (

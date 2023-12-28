@@ -113,8 +113,6 @@ export const getAllBlogs = createAsyncThunk(
 export const createNewBlogs = createAsyncThunk(
   "blogs/createNewBlogs",
   async ({ data, Token }: { data: BlogFormData; Token: string | null }) => {
-    console.log("Token:", Token);
-
     try {
       console.log("Request Payload:", JSON.stringify(data));
 
@@ -139,22 +137,28 @@ export const createNewBlogs = createAsyncThunk(
 );
 
 export const updateBlog = createAsyncThunk("blogs/updateBlog",
-  async ({ id, blog }: { id: string, blog: BlogData }) => {
+  async ({ id, blog,Token }: { id: string, blog: BlogFormData, Token: string | undefined | null}) => {
     try {
-      const response = await client.put(Endpoint.BLOGS + "/" + id,
-        blog,
-        {
-          baseURL: BLOG_API_URL,
-        });
+      console.log("Request Payload:", JSON.stringify(blog));
+      const response = await client.put(Endpoint.BLOGS + "/" + id, blog, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${Token}`,
+        },
+        baseURL: BLOG_API_URL,
+      });
       if (response?.status === HttpStatusCode.CREATED) {
-        return response.data?.id ? response.data : response.data?.body;
+        return response.data;
       }
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
+      console.error("Error:", error);
       throw error;
     }
   }
 );
+
 
 export const getBlogBySlug = createAsyncThunk(
   "blogs/getBlogBySlug", async (id: string) => {

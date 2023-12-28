@@ -18,7 +18,7 @@ import {
   Droppable,
   DroppableProvided,
 } from "react-beautiful-dnd";
-import { EditContext } from "../context/EditContext";
+
 import PlusIcon from "icons/PlusIcon";
 import useBreakpoint from "hooks/useBreakpoint";
 import ServiceTableItemMobile from "./ServiceTableItemMobile";
@@ -49,6 +49,7 @@ import {
 import { UNIT_OPTIONS } from "components/sn-sales/Modals/AddDealsModal";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 import MoveDotIcon from "icons/MoveDotIcon";
+import { EditContext } from "components/sn-sales-detail/components/sn-service/context/EditContext";
 
 interface IProps {
   section: ServiceSection;
@@ -80,7 +81,7 @@ const ServiceTable = ({
     index,
     append as UseFieldArrayAppend<FieldValues, string>,
     remove as UseFieldArrayRemove,
-    // onRemoveSection,
+    onRemoveSection,
     fields,
   );
 
