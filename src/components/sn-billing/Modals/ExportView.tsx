@@ -100,11 +100,11 @@ const ExportModal = ({ open, onClose, item }: IProps) => {
     }
   };
 
-  useEffect(() => {
-    if (fileExport) {
-      push(getPath(BILLING_EXPORT_PATH, undefined));
-    }
-  }, [fileExport]);
+  // useEffect(() => {
+  //   if (fileExport) {
+  //     push(getPath(BILLING_EXPORT_PATH, undefined));
+  //   }
+  // }, [fileExport]);
 
   return (
     <Box>

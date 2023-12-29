@@ -79,6 +79,7 @@ const LinkBudgetTable = (props: IProps) => {
       <TableLayout
         headerList={headerList}
         // pending={isFetching}
+        maxHeight={300}
         headerProps={{
           sx: { px: { xs: 0.5, md: 2 } },
         }}
@@ -92,7 +93,7 @@ const LinkBudgetTable = (props: IProps) => {
           //     (selected) => selected?.id === item.id,
           //   );
           return (
-            <TableRow key={item?.id}>
+            <TableRow key={item?.id} sx={{ height: 46 }}>
               {/* <BodyCell sx={{ pl: { xs: 0.5, md: 2 } }}>
             <Checkbox
               checked={indexSelected !== -1}

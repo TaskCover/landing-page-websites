@@ -14,6 +14,7 @@ import {
   DependencyStatus,
   // GetActivitiesQueries,
   GetBillingListQueries,
+  addUserToBilling,
   createBilling,
   createCommentBilling,
   downloadPdfBilling,
@@ -25,6 +26,7 @@ import {
   getCommentBilling,
   getServiceBudget,
   updateBilling,
+  viewPdfBilling,
 } from "./actions";
 import { cl } from "@fullcalendar/core/internal-common";
 
@@ -117,7 +119,7 @@ export interface Invoice {
 export interface Bill {
   id?: string;
   fullNameCompany?: string;
-  taxId?: string;
+  tax_id?: string;
   street?: string;
   city?: string;
   zipCode?: number;
@@ -145,6 +147,16 @@ export interface Billing {
   message?: string;
   user?: User[];
   vat?: number;
+  city?: string;
+  country?: string;
+  state?: string;
+  street?: string;
+  tax?: number;
+  tax_id?: string;
+  zip?: number;
+  save?: boolean;
+  billFrom?: any;
+  billTo?: any;
 }
 
 export interface Payment {
@@ -226,6 +238,9 @@ export interface BillingState {
   dataComment?: [];
   fileExport?: string;
   dataExport?: any;
+  totalAmount?: number;
+  totalAmountUnpaid?: number;
+  addUserStatus?: boolean;
 }
 
 export interface BillingDataUpdate {
@@ -312,6 +327,8 @@ const billingSlice = createSlice({
         state.status = DataStatus.SUCCEEDED;
         state.error = undefined;
         state.paging = Object.assign(state.paging, paging);
+        state.totalAmount = data.totalAmount;
+        state.totalAmountUnpaid = data.totalAmouint_Unpaid;
       })
       .addCase(getBillingList.rejected, (state, action) => {
         state.status = DataStatus.FAILED;
@@ -487,22 +504,18 @@ const billingSlice = createSlice({
           const url = window.URL.createObjectURL(
             new Blob([data?.response], { type: "application/pdf" }),
           );
-          // const link = document.createElement("a");
-          // link.href = url;
-          // link.setAttribute("download", `${Date.now()}.pdf`);
-          // document.body.appendChild(link);
-          // link.click();
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `${Date.now()}.pdf`);
+          document.body.appendChild(link);
+          link.click();
           // window.open(url ?? "", "_blank");
           // console.log();
 
-          state.fileExport = url;
-          state.dataExport = data?.dataBill;
-          localStorage.setItem("file", url);
+          // state.fileExport = url;
+          // state.dataExport = data?.dataBill;
+          // localStorage.setItem("file", url);
         }
-
-        // state.status = DataStatus.SUCCEEDED;
-        // state.error = undefined;
-        // state.paging = Object.assign(state.paging, paging);
       })
       .addCase(exportBilling.rejected, (state, action) => {
         state.status = DataStatus.FAILED;
@@ -531,21 +544,53 @@ const billingSlice = createSlice({
           link.setAttribute("download", `${Date.now()}.pdf`);
           document.body.appendChild(link);
           link.click();
-          // window.open(url ?? "", "_blank");
-          // console.log();
-
-          // state.fileExport = url;
-          // state.dataExport = data?.dataBill;
-          // localStorage.setItem("file", url);
         }
-
-        // state.status = DataStatus.SUCCEEDED;
-        // state.error = undefined;
-        // state.paging = Object.assign(state.paging, paging);
       })
       .addCase(downloadPdfBilling.rejected, (state, action) => {
         state.status = DataStatus.FAILED;
         state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(viewPdfBilling.pending, (state, action) => {
+        // state.status = DataStatus.LOADING;
+        // state.filters = getFiltersFromQueries(action.meta.arg);
+        // state.paging.pageIndex = Number(
+        //   action.meta.arg.pageIndex ?? DEFAULT_PAGING.pageIndex,
+        // );
+        // state.paging.pageSize = Number(
+        //   action.meta.arg.pageSize ?? DEFAULT_PAGING.pageSize,
+        // );
+      })
+      .addCase(viewPdfBilling.fulfilled, (state, { payload }) => {
+        // const { items, ...paging } = action.payload;
+        const data = payload;
+
+        if (data.fileType?.includes("pdf")) {
+          const url = window.URL.createObjectURL(
+            new Blob([data?.response], { type: "application/pdf" }),
+          );
+          // const link = document.createElement("a");
+          // link.href = url;
+          // link.setAttribute("download", `${Date.now()}.pdf`);
+          // document.body.appendChild(link);
+          // link.click();
+          state.fileExport = url;
+          state.dataExport = data?.dataBill;
+          localStorage.setItem("file", url);
+        }
+      })
+      .addCase(viewPdfBilling.rejected, (state, action) => {
+        state.status = DataStatus.FAILED;
+        state.error = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
+      .addCase(addUserToBilling.pending, (state, action) => {
+        state.addUserStatus = false;
+      })
+      .addCase(addUserToBilling.fulfilled, (state, action) => {
+        state.addUserStatus = true;
+      })
+      .addCase(addUserToBilling.rejected, (state, action) => {
+        state.addUserStatus = false;
+        // state.salesTodoError = action.error.message ?? AN_ERROR_TRY_AGAIN;
       }),
 
   // .addCase(

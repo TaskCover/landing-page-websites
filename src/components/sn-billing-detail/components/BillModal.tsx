@@ -85,10 +85,10 @@ const BillModal = (props: BillModalProps) => {
             />
             <Input
               title={"Tax ID"}
-              name="taxId"
+              name="tax_id"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values?.taxId}
+              value={formik.values?.tax_id}
               // error={commonT(touchedErrors?.description, {
               //   name: commonT("form.title.description"),
               // })}
