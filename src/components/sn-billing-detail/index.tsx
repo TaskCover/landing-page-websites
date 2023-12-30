@@ -46,7 +46,6 @@ const InformationBillingPage = () => {
   const { id } = useParams();
 
   const [newServices, setNewServices] = useState<Service[]>([]);
-  console.log(id);
 
   useEffect(() => {
     onGetBilling(id.toString() ?? "");
@@ -78,7 +77,7 @@ const InformationBillingPage = () => {
     // }}
     // overflow={"auto"}
     // >
-    <Stack spacing={2}>
+    <Stack>
       <TopContent
         tagsOptions={tagsOptions}
         item={item}

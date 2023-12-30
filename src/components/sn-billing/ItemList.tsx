@@ -25,6 +25,7 @@ import { ProjectData } from "store/project/actions";
 import {
   cleanObject,
   formatNumber,
+  getPath,
   stringifyURLSearchParams,
 } from "utils/index";
 import Actions from "./Actions";
@@ -36,6 +37,7 @@ import { Text } from "components/shared";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { BillingDataExport } from "store/billing/actions";
 import ExportView from "./Modals/ExportView";
+import { BILLING_EXPORT_PATH } from "constant/paths";
 
 const ItemList = () => {
   const {
@@ -48,7 +50,13 @@ const ItemList = () => {
     isFetching,
     isIdle,
     error,
+    fileExport,
+    dataExport,
+    totalAmount,
+    totalAmountUnpaid,
     onGetBillings,
+    onExportBilling,
+    onViewFileBilling,
   } = useBillings();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
@@ -89,7 +97,7 @@ const ItemList = () => {
             <Stack>
               {billingT("list.table.amount")}
               <Text variant={"body2"} align="right" mr={3} fontWeight={600}>
-                {formatNumber(0, {
+                {formatNumber(totalAmount, {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
                   numberOfFixed: 2,
                 })}
@@ -105,7 +113,7 @@ const ItemList = () => {
             <Stack>
               {billingT("list.table.amountUnpaid")}
               <Text variant={"body2"} align="right" mr={2} fontWeight={600}>
-                {formatNumber(0, {
+                {formatNumber(totalAmountUnpaid, {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
                   numberOfFixed: 2,
                 })}
@@ -276,13 +284,25 @@ const ItemList = () => {
   }, [selectedList]);
 
   const onOpenModalExport = (value: Billing[]) => {
-    setExportModel(true);
-    setSelectedList(value ?? []);
+    // setExportModel(true);
+    // setSelectedList(value ?? []);
+    const arrBill = value?.map((item) => {
+      return { id: item.id };
+    });
+    onViewFileBilling({ fileType: "pdf_landscape" }, {
+      bill: arrBill ?? [],
+    } as BillingDataExport);
   };
 
   const onCloseModalExport = () => {
     setExportModel(false);
   };
+
+  useEffect(() => {
+    if (fileExport) {
+      push(getPath(BILLING_EXPORT_PATH, undefined));
+    }
+  }, [fileExport]);
 
   return (
     <>

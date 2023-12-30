@@ -39,6 +39,7 @@ import CopyIcon from "icons/CopyIcon";
 import SelectMembers from "./SelectMembers";
 import { Dropdown } from "components/Filters";
 import DropdownTag from "./DropdownTag";
+import { useBillings } from "store/billing/selectors";
 
 const options = [
   "Duplicate Invoice",
@@ -57,6 +58,7 @@ type TopContentProps = {
 
 const TopContent = (props: TopContentProps) => {
   const { tagsOptions, item, memberOptions, user } = props;
+  const { onAddUserToBilling, addUserStatus, onGetBilling } = useBillings();
   const { title, prevPath } = useHeaderConfig();
   const { isMdSmaller } = useBreakpoint();
   const billingT = useTranslations(NS_BILLING);
@@ -77,6 +79,10 @@ const TopContent = (props: TopContentProps) => {
 
   const onChangeMember = (name, data) => {
     setListUser(data);
+
+    const lastItem = data[data.length - 1];
+
+    onAddUserToBilling(id, lastItem?.id);
   };
 
   useEffect(() => {
@@ -140,8 +146,14 @@ const TopContent = (props: TopContentProps) => {
   // console.log(user);
   // console.log(listUser);
 
+  useEffect(() => {
+    if (addUserStatus) {
+      onGetBilling(id);
+    }
+  }, [addUserStatus]);
+
   return (
-    <Stack gap={2} pl={5} pt={2} ml={5}>
+    <Stack gap={1} pt={2} ml={5}>
       <Stack
         direction="row"
         alignItems="center"
@@ -245,17 +257,24 @@ const TopContent = (props: TopContentProps) => {
                 position: "initial",
                 background: "#E1F0FF",
                 color: "#666",
+                width: 24,
+                height: 24,
               },
               ["& .MuiAvatarGroup-root .MuiAvatar-root"]: {
-                marginLeft: "-20px",
+                marginLeft: "-15px",
               },
             }}
           >
-            <AvatarGroup total={listUser?.length} max={4} spacing={"medium"}>
+            <AvatarGroup total={listUser?.length} max={5} spacing={"medium"}>
               {listUser?.map((item, index) => {
                 // eslint-disable-next-line react/jsx-key
                 return (
-                  <Avatar key={index} src={item?.avatar?.link ?? ""} alt="" />
+                  <Avatar
+                    key={index}
+                    src={item?.avatar?.link ?? ""}
+                    alt=""
+                    sx={{ width: 24, height: 24 }}
+                  />
                 );
               })}
             </AvatarGroup>

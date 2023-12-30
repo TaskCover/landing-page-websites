@@ -331,3 +331,55 @@ export const downloadPdfBilling = createAsyncThunk(
     }
   },
 );
+
+export const viewPdfBilling = createAsyncThunk(
+  "Billing/viewPdfBilling",
+  async ({
+    queries,
+    data,
+  }: {
+    queries: exportBillingQueries;
+    data: BillingDataExport;
+  }) => {
+    try {
+      const response = await client.post(Endpoint.EXPORT_BILLING, data, {
+        params: queries,
+        baseURL: BILLING_API_URL,
+        responseType: "arraybuffer",
+      });
+
+      if (response?.status === HttpStatusCode.OK) {
+        return {
+          response: response.data,
+          fileType: queries.fileType,
+          dataBill: data?.bill,
+        };
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+export const addUserToBilling = createAsyncThunk(
+  "Billing/addUserToBilling",
+  async ({ id, userId }: { id: string; userId: string }) => {
+    try {
+      const response = await client.put(
+        Endpoint.ADD_USER_BILL,
+        { id, userId },
+        {
+          baseURL: BILLING_API_URL,
+        },
+      );
+
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
+  },
+);

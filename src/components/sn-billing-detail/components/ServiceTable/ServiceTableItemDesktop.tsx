@@ -112,7 +112,7 @@ const ServiceTableItem = ({
                 <MoveDotIcon />
               </IconButton>
             )}
-            <TableRow sx={{ height: 56 }}>
+            <TableRow sx={{ height: 46 }}>
               <BodyCell align="left" size="small">
                 <LinkPopup OptionBudget={OptionBudget} service={service} />
               </BodyCell>

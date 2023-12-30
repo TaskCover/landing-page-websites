@@ -7,6 +7,7 @@ import {
   BillingDataExport,
   GetBillingListQueries,
   GetBudgetListQueries,
+  addUserToBilling,
   createBilling,
   createCommentBilling,
   downloadPdfBilling,
@@ -19,6 +20,7 @@ import {
   getCommentBilling,
   getServiceBudget,
   updateBilling,
+  viewPdfBilling,
 } from "./actions";
 import { BillingCommentData, BillingDataUpdate, Service } from "./reducer";
 import { IOptionStructure } from "components/shared/TextFieldSelect";
@@ -41,6 +43,9 @@ export const useBillings = () => {
     dataComment,
     fileExport,
     dataExport,
+    totalAmount,
+    totalAmountUnpaid,
+    addUserStatus,
   } = useAppSelector((state) => state.billing, shallowEqual);
   const { page, size, totalItems, total_page } = useAppSelector(
     (state) => state.billing.paging,
@@ -102,6 +107,19 @@ export const useBillings = () => {
     },
     [dispatch],
   );
+  const onViewFileBilling = useCallback(
+    async (queries: exportBillingQueries, data: BillingDataExport) => {
+      return await dispatch(viewPdfBilling({ queries, data }));
+    },
+    [dispatch],
+  );
+
+  const onAddUserToBilling = useCallback(
+    async (id: string, userId: string) => {
+      return await dispatch(addUserToBilling({ id, userId }));
+    },
+    [dispatch],
+  );
   //   const onUpdateProject = useCallback(
   //     async (id: string, data: Partial<ProjectData>) => {
   //       try {
@@ -130,6 +148,9 @@ export const useBillings = () => {
     dataComment,
     fileExport,
     dataExport,
+    totalAmount,
+    totalAmountUnpaid,
+    addUserStatus,
     onGetBillings,
     onCreateBilling,
     onUpdateBilling,
@@ -138,6 +159,8 @@ export const useBillings = () => {
     onGetCommentBilling,
     onExportBilling,
     onDownloadFileBilling,
+    onViewFileBilling,
+    onAddUserToBilling,
   };
 };
 
