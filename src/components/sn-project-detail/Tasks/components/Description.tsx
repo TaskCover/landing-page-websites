@@ -73,12 +73,19 @@ const Description = (props: Description) => {
           vertical: "bottom",
           horizontal: "right",
         }}
+        sx={{
+          ".MuiPaper-root": {
+            border: "1px solid  #ECECF3",
+            borderRadius: "8px",
+            boxShadow: "0px 4px 20px 0px rgba(33, 33, 33, 0.04)",
+          },
+        }}
       >
         <Box
           padding="44px 24px 24px"
           position="relative"
           width="100%"
-          maxWidth="500px"
+          maxWidth="343px"
         >
           <Box
             position="absolute"
