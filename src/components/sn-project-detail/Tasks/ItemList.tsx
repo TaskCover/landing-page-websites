@@ -1539,8 +1539,8 @@ const ItemList = () => {
                                                               onClick={onSetTask(
                                                                 subTask,
                                                                 taskListItem.id,
+                                                                task.id,
                                                                 subTask.id,
-                                                                undefined,
                                                                 taskListItem.name,
                                                                 subTask.name,
                                                               )}
