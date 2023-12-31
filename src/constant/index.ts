@@ -82,7 +82,7 @@ export const i18n = {
 } as const;
 
 export const TEXT_STATUS: { [key in Status]: string } = {
-  [Status.ACTIVE]: "statusEnum.active",
+  [Status.ACTIVE]: "statusEnum.inprogress",
   [Status.CLOSE]: "statusEnum.close",
   [Status.PAUSE]: "statusEnum.pause",
 };

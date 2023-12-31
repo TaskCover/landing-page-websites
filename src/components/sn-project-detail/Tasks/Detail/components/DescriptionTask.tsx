@@ -1,14 +1,11 @@
-import { memo, useEffect, useState } from "react";
 import { Stack } from "@mui/material";
-import { useTaskDetail } from "store/project/selectors";
-import { Editor, Button } from "components/shared";
+import { Button, Editor } from "components/shared";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
-import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
+import { memo, useEffect, useState } from "react";
 import { useSnackbar } from "store/app/selectors";
+import { useTaskDetail } from "store/project/selectors";
 import { getMessageErrorByAPI } from "utils/index";
-import { getEditorName } from "components/shared/Editor";
-import { UnprivilegedEditor } from "react-quill";
-import { SignalWifiStatusbarConnectedNoInternet4Outlined } from "@mui/icons-material";
 import { replaceDescriptionBr } from "../../helpers";
 
 type DescriptionTaskProps = {
@@ -16,6 +13,9 @@ type DescriptionTaskProps = {
   open: boolean;
   textEdit?: string;
   title?: string;
+  taskId?: string;
+  taskListId?: string;
+  subTaskId?: string;
 };
 
 const DescriptionTask = (props: DescriptionTaskProps) => {
@@ -36,28 +36,35 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
 
   const onSubmit = async () => {
     try {
-      if (!taskListId || !taskId) {
+      if ((!taskListId || !taskId) && (!props.taskId || !props.taskListId)) {
         throw AN_ERROR_TRY_AGAIN;
       }
+
       const data = { description: text };
       if (text) {
         data.description = replaceDescriptionBr(text);
       }
-      const newData = await onUpdateTask(data, taskListId, taskId, subTaskId);
+      const newData = await onUpdateTask(
+        data,
+        taskListId || props.taskListId + "",
+        taskId || props.taskId + "",
+        subTaskId || props.subTaskId + "",
+      );
       if (newData) {
         onAddSnackbar(
           commonT("notification.success", { label: commonT("form.save") }),
           "success",
         );
-        onClose();
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onClose();
     }
   };
 
   useEffect(() => {
-    setText(task?.description);
+    setText(task?.description || textEdit);
   }, [task?.description, textEdit, open]);
 
   if (!open) return null;
