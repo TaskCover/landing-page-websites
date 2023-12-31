@@ -1,6 +1,33 @@
 /* eslint-disable react/jsx-key */
 "use client";
 
+import { Box, CircularProgress, Stack } from "@mui/material";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { Date } from "components/Filters";
+import FixedLayoutTask from "components/FixedLayoutTask";
+import Loading from "components/Loading";
+import { CellProps, TableLayout } from "components/Table";
+import { Checkbox, IconButton, Text } from "components/shared";
+import CheckBoxCustom from "components/shared/CheckBoxCustom";
+import AssignerTask from "components/sn-projects/components/AssignerTask";
+import SelectStatusTask from "components/sn-projects/components/SelectStatusTask";
+import { DataAction } from "constant/enums";
+import {
+  AN_ERROR_TRY_AGAIN,
+  NS_COMMON,
+  NS_PROJECT,
+  SCROLL_ID,
+} from "constant/index";
+import useBreakpoint from "hooks/useBreakpoint";
+import useEventListener from "hooks/useEventListener";
+import useQueryParams from "hooks/useQueryParams";
+import useTheme from "hooks/useTheme";
+import useToggle from "hooks/useToggle";
+import MoveListIcon from "icons/MoveListIcon";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next-intl/client";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { useParams } from "next/navigation";
 import React, {
   memo,
   useCallback,
@@ -8,70 +35,31 @@ import React, {
   useMemo,
   useRef,
   useState,
-  forwardRef,
-  useImperativeHandle,
 } from "react";
 import {
-  reorder,
-  TaskFormData,
-  Selected,
-  DroppableTaskList,
-  DraggableTask,
-  MoreList,
-} from "./components";
-import { isTaskListChecked, isTaskChecked, isSubTaskChecked } from "./helpers";
-import {
-  Button,
-  Checkbox,
-  IconButton,
-  Text,
-  TextProps,
-} from "components/shared";
-import { Box, CircularProgress, Stack, TextField } from "@mui/material";
-import { getMessageErrorByAPI, debounce, formatDate } from "utils/index";
-import { CellProps, TableLayout } from "components/Table";
-import PlusIcon from "icons/PlusIcon";
-import {
   DragDropContext,
+  Draggable,
   DropResult,
   Droppable,
-  Draggable,
 } from "react-beautiful-dnd";
-import {
-  AN_ERROR_TRY_AGAIN,
-  NS_COMMON,
-  NS_PROJECT,
-  DATE_FORMAT_HYPHEN,
-  DATE_LOCALE_FORMAT,
-} from "constant/index";
-import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
-import useQueryParams from "hooks/useQueryParams";
-import { useRouter } from "next-intl/client";
-import useBreakpoint from "hooks/useBreakpoint";
-import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
-import Form from "./Form";
-import { DataAction } from "constant/enums";
-import { Task, TaskList } from "store/project/reducer";
 import { useSnackbar } from "store/app/selectors";
-import Detail from "./Detail";
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import useEventListener from "hooks/useEventListener";
-import { SCROLL_ID } from "constant/index";
+import { Task, TaskList } from "store/project/reducer";
+import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
+import { debounce, getMessageErrorByAPI } from "utils/index";
 import ActionsSelected from "./ActionsSelected";
-import Loading from "components/Loading";
-import useToggle from "hooks/useToggle";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import useTheme from "hooks/useTheme";
-import SelectStatusTask from "components/sn-projects/components/SelectStatusTask";
-import AssignerTask from "components/sn-projects/components/AssignerTask";
+import Detail from "./Detail";
+import Form from "./Form";
+import {
+  DraggableTask,
+  DroppableTaskList,
+  MoreList,
+  Selected,
+  TaskFormData,
+  reorder,
+} from "./components";
 import Content from "./components/Content";
 import Description from "./components/Description";
-import { Date } from "components/Filters";
-import dayjs from "dayjs";
-import MoveListIcon from "icons/MoveListIcon";
-import CheckBoxCustom from "components/shared/CheckBoxCustom";
-import FixedLayoutTask from "components/FixedLayoutTask";
+import { isSubTaskChecked, isTaskChecked, isTaskListChecked } from "./helpers";
 
 const ItemList = () => {
   const {
@@ -1249,7 +1237,12 @@ const ItemList = () => {
                                 "& > p": { lineHeight: "30px" },
                               }}
                             >
-                              <Description>{task?.description}</Description>
+                              <Description
+                                taskId={task.id}
+                                taskListId={taskListItem.id}
+                              >
+                                {task?.description}
+                              </Description>
                               {/* <FormDescription description={task?.description}>
                                 {task?.description}
                               </FormDescription> */}
@@ -1626,7 +1619,13 @@ const ItemList = () => {
                                                       },
                                                     }}
                                                   >
-                                                    <Description>
+                                                    <Description
+                                                      taskId={task.id}
+                                                      taskListId={
+                                                        taskListItem.id
+                                                      }
+                                                      subTaskId={subTask.id}
+                                                    >
                                                       {subTask.description}
                                                     </Description>
                                                   </Content>
