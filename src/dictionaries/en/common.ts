@@ -64,7 +64,7 @@ export const CommonLang: CommonDictionary = {
     refresh: "Refresh data",
     clear: "Clear filters",
     status: {
-      active: "Activated",
+      active: "In progress",
       close: "Closed",
       pause: "Paused",
     },

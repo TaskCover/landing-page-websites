@@ -15,6 +15,9 @@ type DescriptionTaskProps = {
   open: boolean;
   textEdit?: string;
   title?: string;
+  taskId?: string;
+  taskListId?: string;
+  subTaskId?: string;
 };
 
 const DescriptionTask = (props: DescriptionTaskProps) => {
@@ -55,14 +58,19 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
 
   const onSubmit = async () => {
     try {
-      if (!taskListId || !taskId) {
+      if ((!taskListId || !taskId) && (!props.taskId || !props.taskListId)) {
         throw AN_ERROR_TRY_AGAIN;
       }
       const data = { description: hasEdit.current };
       if (hasEdit.current) {
         data.description = replaceDescriptionBr(hasEdit.current);
 
-        const newData = await onUpdateTask(data, taskListId, taskId, subTaskId);
+        const newData = await onUpdateTask(
+          data,
+          taskListId || props.taskListId + "",
+          taskId || props.taskId + "",
+          subTaskId || props.subTaskId,
+        );
         if (newData) {
           hasEdit.current = "";
           onAddSnackbar(
@@ -74,6 +82,8 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    } finally {
+      onClose();
     }
   };
 
