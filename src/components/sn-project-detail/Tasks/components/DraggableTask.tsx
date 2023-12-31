@@ -1,18 +1,13 @@
 import { Box, Stack } from "@mui/material";
-import { Checkbox, IconButton } from "components/shared";
+import { IconButton } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
-import useToggle from "hooks/useToggle";
-import CaretIcon from "icons/CaretIcon";
-import CheckBoxIcon from "icons/CheckBoxIcon";
-import MoveDotIcon from "icons/MoveDotIcon";
 // import MoveDotIcon from "icons/MoveDotIcon";
+import CheckBoxCustom from "components/shared/CheckBoxCustom";
 import MoveTagIcon from "icons/MoveTagIcon";
 import { Dispatch, memo, SetStateAction, useMemo } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { checkIsMobile } from "utils/index";
 import { Task } from "store/project/reducer";
-import Content from "./Content";
-import CheckBoxCustom from "components/shared/CheckBoxCustom";
+import { checkIsMobile } from "utils/index";
 type DraggableTaskProps = {
   id: string;
   index: number;
