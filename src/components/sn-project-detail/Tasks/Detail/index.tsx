@@ -76,6 +76,10 @@ const Detail = () => {
           fontWeight: idx !== 2 ? "500" : "400",
           color: idx === 0 ? "grey.300" : "text.primary",
           cursor: idx === 1 ? "pointer" : "unset",
+          textOverflow: "ellipsis",
+          textWrap: "nowrap",
+          display: "block",
+          overflow: "hidden",
         }}
         onClick={idx === 1 ? onGotoTask : undefined}
       >
@@ -121,6 +125,18 @@ const Detail = () => {
           <Breadcrumbs
             separator={<NavigateNextIcon color="disabled" fontSize="small" />}
             aria-label="breadcrumb"
+            sx={{
+              ".MuiBreadcrumbs-li": {
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                flex: 1,
+
+                "&:first-child": {
+                  flex: "0 auto",
+                },
+              },
+            }}
           >
             {breadcrumbs}
           </Breadcrumbs>
