@@ -11,6 +11,9 @@ import {
   Button,
   CircularProgress,
   Grid,
+  ListItemIcon,
+  Menu,
+  MenuItem,
   Stack,
   Table,
   TableBody,
@@ -34,7 +37,7 @@ import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import ButtonCalendar from "components/shared/ButtonCalendar";
 import CustomizedInputBase from "components/shared/InputSeasrch";
-import { NS_TIME_TRACKING } from "constant/index";
+import { NS_COMMON, NS_TIME_TRACKING } from "constant/index";
 import useTheme from "hooks/useTheme";
 import CalendarIcon from "icons/CalendarIcon";
 import DayIcon from "icons/DayIcon";
@@ -48,6 +51,7 @@ import TimeSheet from "./TimeSheet";
 
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import useBreakpoint from "hooks/useBreakpoint";
+import DuplicateIcon from "icons/DuplicateIcon";
 import { getSameWorker } from "store/timeTracking/actions";
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -196,6 +200,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
     work: 0,
     break: 0,
   });
+  const commonT = useTranslations(NS_COMMON);
 
   useEffect(() => {
     _.forEach(myTime, (timesheet) => {
@@ -276,6 +281,32 @@ const TrackingCalendar: React.FC<IProps> = () => {
     }
 
     setDateRange(result);
+  };
+
+  const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(
+    null,
+  );
+  const [eventDulicate, setEventDulicate] = useState<any | null>(null);
+  const open = Boolean(menuAnchorEl);
+  const handleOpenEventMenu = (event, eventData) => {
+    setEventDulicate(eventData);
+    setMenuAnchorEl(event);
+  };
+  const handleCloseEventMenu = () => {
+    setMenuAnchorEl(null);
+    setEventDulicate(null);
+  };
+  const handleDuplicateEvent = () => {
+    const eventData = {
+      extendedProps: {
+        ...eventDulicate._def.extendedProps,
+        id: null,
+      },
+    };
+    setIsEdit(true);
+    setSelectedEvent(eventData);
+    setIsOpenCreatePopup(true);
+    handleCloseEventMenu();
   };
 
   const getWeekStartAndEndDates = (date: any) => {
@@ -1255,6 +1286,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
                     </HtmlTooltip>
                   );
                 }}
+                eventDidMount={(info) => {
+                  info.el.addEventListener("contextmenu", (e) => {
+                    e.preventDefault();
+
+                    handleOpenEventMenu(e.currentTarget, info.event);
+                  });
+                }}
                 slotLabelContent={(eventInfo: { date: Date }) => {
                   const currentTime = dayjs(eventInfo.date).format("h:mm A");
                   return (
@@ -1279,6 +1317,22 @@ const TrackingCalendar: React.FC<IProps> = () => {
                 }}
                 //allDayDidMount={(arg) => ""}
               />
+              <Menu
+                id="basic-menu"
+                anchorEl={menuAnchorEl}
+                open={open}
+                onClose={handleCloseEventMenu}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem onClick={handleDuplicateEvent}>
+                  <ListItemIcon>
+                    <DuplicateIcon />
+                  </ListItemIcon>
+                  {commonT("duplicate")}
+                </MenuItem>
+              </Menu>
             </Box>
           </Stack>
         )}
