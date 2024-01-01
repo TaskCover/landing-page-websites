@@ -1,56 +1,54 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import _ from "lodash";
-import { styled } from "@mui/system";
-import {
-  Avatar,
-  Button,
-  Grid,
-  Stack,
-  Typography,
-  TableContainer,
-  Table,
-  TableHead,
-  TableBody,
-  TableCell,
-  TableRow,
-  CircularProgress,
-  Box,
-} from "@mui/material";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import FullCalendar from "@fullcalendar/react"; // Import DateClickArg type
+import timeGridPlugin from "@fullcalendar/timegrid";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import { styled } from "@mui/system";
 import dayjs from "dayjs";
-import AddIcon from "@mui/icons-material/Add";
-import FullCalendar from "@fullcalendar/react"; // Import DateClickArg type
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
+import _ from "lodash";
+import React, { useEffect, useMemo, useState } from "react";
 
-import Filter from "../../../shared/Filter";
-import { calendarStyles } from "./TrackingCalendar.styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { calendarStyles } from "./TrackingCalendar.styles";
 
-import TimeSheet from "./TimeSheet";
-import { useTranslations } from "next-intl";
-import { NS_TIME_TRACKING } from "constant/index";
-import PlusIcon from "icons/PlusIcon";
-import ButtonCalendar from "components/shared/ButtonCalendar";
-import CalendarIcon from "icons/CalendarIcon";
-import ListIcon from "@mui/icons-material/List";
-import DayIcon from "icons/DayIcon";
-import CustomizedInputBase from "components/shared/InputSeasrch";
-import { useGetMyTimeSheet } from "store/timeTracking/selectors";
-import TimeCreate from "../../TimeTrackingModal/TimeCreate";
-import moment from "moment";
 import interactionPlugin from "@fullcalendar/interaction";
-import { useAuth, useSnackbar } from "store/app/selectors";
+import ListIcon from "@mui/icons-material/List";
 import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import ButtonCalendar from "components/shared/ButtonCalendar";
+import CustomizedInputBase from "components/shared/InputSeasrch";
+import { NS_TIME_TRACKING } from "constant/index";
 import useTheme from "hooks/useTheme";
+import CalendarIcon from "icons/CalendarIcon";
+import DayIcon from "icons/DayIcon";
+import PlusIcon from "icons/PlusIcon";
+import moment from "moment";
+import { useTranslations } from "next-intl";
+import { useAuth, useSnackbar } from "store/app/selectors";
+import { useGetMyTimeSheet } from "store/timeTracking/selectors";
+import TimeCreate from "../../TimeTrackingModal/TimeCreate";
+import TimeSheet from "./TimeSheet";
 
-import { getSameWorker } from "store/timeTracking/actions";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import useBreakpoint from "hooks/useBreakpoint";
+import { getSameWorker } from "store/timeTracking/actions";
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -679,11 +677,44 @@ const TrackingCalendar: React.FC<IProps> = () => {
                 ref={calendarRef}
                 scrollTime="00:00:00"
                 scrollTimeReset={true}
+                slotDuration="01:00:00"
                 height={`calc(100vh - 365px)`}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 dateClick={(info) => {
                   setDateClick(info.dateStr);
                   setIsOpenCreatePopup(true);
+                }}
+                eventResize={({ event, endDelta }) => {
+                  const date = dayjs(event.start).format("YYYY-MM-DD") || "";
+                  const time =
+                    dayjs(event.start).format("YYYY-MM-DD HH:mm") || "";
+                  const dataUpdate = {
+                    day: date,
+                    duration:
+                      event?._def?.extendedProps.hour +
+                      endDelta.milliseconds / 1000 / 60 / 60,
+                    id: event?._def?.extendedProps?.id,
+                    note: event?._def?.extendedProps?.note,
+                    position: event?._def?.extendedProps?.position?.id,
+                    project_id: event?._def?.extendedProps?.project?.id,
+                    start_time: time,
+                    type:
+                      event?._def?.extendedProps?.type === "working_time"
+                        ? "Work time"
+                        : "Break time",
+                  };
+                  onUpdateTimeSheet({
+                    ...dataUpdate,
+                  })
+                    .then((res) => {
+                      onAddSnackbar("Update timesheet success", "success");
+                    })
+                    .catch((err) => {
+                      onAddSnackbar("Update timesheet failure", "error");
+                    })
+                    .finally(() => {
+                      onGetMyTimeSheet(filters);
+                    });
                 }}
                 eventClick={(eventInfo) => {
                   setIsEdit(true);
