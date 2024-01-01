@@ -57,7 +57,15 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     backgroundColor: "white",
     color: "rgba(0, 0, 0, 0.87)",
     maxWidth: 220,
-    border: "1px solid #dadde9",
+    borderLeft: "3px solid transparent",
+    borderRadius: "2px",
+    minWidth: "176px",
+    boxShadow: "2px 2px 24px 0px rgba(0, 0, 0, 0.10)",
+    padding: "4px 10px",
+  },
+
+  "& .MuiTooltip-arrow": {
+    color: "#fff",
   },
 }));
 
@@ -672,12 +680,29 @@ const TrackingCalendar: React.FC<IProps> = () => {
             }}
             className={`view-timeGridWeek`}
           >
-            <Box sx={{ height: "100%" }}>
+            <Box
+              sx={{
+                height: "100%",
+                ".fc-timegrid-slot-label-cushion": {
+                  padding: "0 8px",
+                  height: "36px",
+                  display: "flex",
+                },
+                ".fc-day.fc-day-sun, .fc-day.fc-day-sat, .fc-timegrid-axis, colgroup":
+                  {
+                    backgroundColor: "#FAFAFA",
+                  },
+                "colgroup, colgroup col": {
+                  width: "112px !important",
+                },
+              }}
+            >
               <FullCalendar
                 ref={calendarRef}
-                scrollTime="00:00:00"
+                scrollTime="01:00:00"
                 scrollTimeReset={true}
                 slotDuration="01:00:00"
+                slotMinWidth={112}
                 height={`calc(100vh - 365px)`}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 dateClick={(info) => {
@@ -800,11 +825,6 @@ const TrackingCalendar: React.FC<IProps> = () => {
                     </Stack>
                   );
                 }}
-                slotLabelFormat={{
-                  hour: "numeric",
-                  minute: "2-digit",
-                  omitZeroMinute: false,
-                }}
                 eventContent={(eventInfo) => {
                   const type = eventInfo?.event?.extendedProps?.type;
                   const styles =
@@ -823,7 +843,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                             <Stack
                               direction="column"
                               sx={{ backgroundColor: "common.white" }}
-
+                              gap={2 / 8}
                               // {...bindToggle(popupState)}
                             >
                               <Stack direction="row" alignItems="center">
@@ -853,7 +873,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                                   ?.name || "--"}
                               </Typography>
                               <Typography sx={subEventDayStyles}>
-                                {eventInfo?.event?.extendedProps.hour}
+                                {eventInfo?.event?.extendedProps.hour}h
                               </Typography>
 
                               <Stack
@@ -917,6 +937,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
                             </Stack>
                           </>
                         }
+                        sx={{
+                          ".MuiTooltip-tooltip": {
+                            borderLeftColor: "#3699FF",
+                          },
+                        }}
                       >
                         <Stack
                           direction="column"
@@ -950,7 +975,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                               "--"}
                           </Typography>
                           <Typography sx={subEventDayStyles}>
-                            {eventInfo?.event?.extendedProps.hour}
+                            {eventInfo?.event?.extendedProps.hour}h
                           </Typography>
 
                           <Stack
@@ -1020,6 +1045,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                           <Stack
                             direction="column"
                             sx={{ backgroundColor: "common.white" }}
+                            gap={2 / 8}
                           >
                             <Stack direction="row" alignItems="center">
                               <Box
@@ -1054,6 +1080,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
                             </Stack>
                             <Typography sx={subEventDayStyles}>
                               {eventInfo?.event?.extendedProps.position?.name}
+                            </Typography>
+
+                            <Typography sx={subEventDayStyles}>
+                              {eventInfo?.event?.extendedProps.hour}h
                             </Typography>
 
                             <Stack
@@ -1117,6 +1147,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
                           </Stack>
                         </>
                       }
+                      sx={{
+                        ".MuiTooltip-tooltip": {
+                          borderLeftColor: "#F64E60",
+                        },
+                      }}
                     >
                       <Stack direction="column" sx={boxStyles}>
                         <Stack direction="row" alignItems="center">
@@ -1150,8 +1185,13 @@ const TrackingCalendar: React.FC<IProps> = () => {
                             </Typography>
                           </Box>
                         </Stack>
+
                         <Typography sx={subEventDayStyles}>
                           {eventInfo?.event?.extendedProps.position?.name}
+                        </Typography>
+
+                        <Typography sx={subEventDayStyles}>
+                          {eventInfo?.event?.extendedProps.hour}h
                         </Typography>
 
                         <Stack
@@ -1216,13 +1256,10 @@ const TrackingCalendar: React.FC<IProps> = () => {
                   );
                 }}
                 slotLabelContent={(eventInfo: { date: Date }) => {
-                  const currentTime = dayjs(eventInfo.date).format("hh:mm A");
+                  const currentTime = dayjs(eventInfo.date).format("h:mm A");
                   return (
                     <Typography
                       sx={{
-                        // width: '128px',
-                        textAlign: "left",
-                        padding: "0px 8px",
                         fontSize: "12px",
                         lineHeight: "18px",
                         fontWeight: 400,
