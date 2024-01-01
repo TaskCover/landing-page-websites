@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import "@sweetalert2/theme-material-ui/material-ui.css";
 import { Button, Editor } from "components/shared";
-import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
 import { useTranslations } from "next-intl";
 import { memo, useEffect, useRef, useState } from "react";
 import { useSnackbar } from "store/app/selectors";
@@ -25,6 +25,7 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
   const [text, setText] = useState<string | undefined>(textEdit ?? "");
   const hasEdit = useRef("");
   const commonT = useTranslations(NS_COMMON);
+  const projectT = useTranslations(NS_PROJECT);
   const { onAddSnackbar } = useSnackbar();
 
   const { task, taskListId, taskId, subTaskId, onUpdateTask } = useTaskDetail();
@@ -35,7 +36,7 @@ const DescriptionTask = (props: DescriptionTaskProps) => {
         // TODO: Update locale for this
         Swal.fire({
           icon: "warning",
-          text: "Task description has not been saved, do you want to save it?",
+          text: projectT("detailTasks.unsaveMessage"),
           showCancelButton: true,
           showConfirmButton: true,
         }).then((resullt) => {
