@@ -8,10 +8,13 @@ import {
   drawerClasses,
 } from "@mui/material";
 import { IconButton } from "components/shared";
+import MoveOtherTask from "components/sn-project-detail/Tasks/Detail/components/SubTasksOfTask/MoveOtherTask";
 import { NS_PROJECT } from "constant/index";
+import useTheme from "hooks/useTheme";
+import ChangeIcon from "icons/ChangeIcon";
 import CloseIcon from "icons/CloseIcon";
 import { useTranslations } from "next-intl";
-import { memo, useMemo, useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { useAppSelector } from "store/hooks";
 import { useTaskDetail } from "store/project/selectors";
 import Activities from "./Activities";
@@ -20,8 +23,7 @@ import Information from "./Information";
 import TabList, { TabDetail } from "./TabList";
 import { AssignTask, CommentEditor, StatusTask } from "./components";
 import EditTask from "./components/EditTask";
-import Actions, { Action } from "./components/SubTasksOfTask/Actions";
-import MoveOtherTask from "./components/SubTasksOfTask/MoveOtherTask";
+import { Action } from "./components/SubTasksOfTask/Actions";
 
 const Detail = () => {
   const { task, taskParent, onUpdateTaskDetail, onUpdateTask } =
@@ -30,17 +32,7 @@ const Detail = () => {
   const scrollEndRef = useRef<HTMLDivElement | null>(null);
   const [action, setAction] = useState<Action | undefined>();
   const projectT = useTranslations(NS_PROJECT);
-
-  const options = useMemo(
-    () => [
-      {
-        label: projectT("taskDetail.changeParentTask"),
-        value: Action.CHANGE_PARENT_TASK,
-      },
-    ],
-    [projectT],
-  );
-
+  const { isDarkMode } = useTheme();
   const [tab, setTab] = useState<TabDetail>(TabDetail.DETAIL);
   const onClose = () => {
     setTab(TabDetail.DETAIL);
@@ -148,31 +140,45 @@ const Detail = () => {
           >
             {breadcrumbs}
           </Breadcrumbs>
-          {task.subTaskId && (
-            <Stack ml={2}>
-              <Actions
-                subId={task.subTaskId}
-                onChangeAction={onChangeAction}
-                options={options}
-              />
-
-              {/* ACTIONS */}
-              {action === Action.CHANGE_PARENT_TASK && (
-                <MoveOtherTask
-                  subId={task.subTaskId}
-                  open
-                  onClose={onResetAction}
-                  onAfterSubmit={onAfterSubmit}
-                />
-              )}
-            </Stack>
-          )}
         </Stack>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </Stack>
-      <TabList value={tab} onChange={setTab} />
+      <TabList value={tab} onChange={setTab}>
+        {task.subTaskId && (
+          <>
+            <IconButton
+              variant="contained"
+              size="small"
+              sx={{
+                minHeight: "32px!important",
+                py: "7px!important",
+                lineHeight: 1.28,
+                backgroundColor: isDarkMode ? "grey.50" : "primary.light",
+                color: "text.primary",
+                p: 1,
+                "&:hover svg": {
+                  color: "common.white",
+                },
+              }}
+              onClick={() => onChangeAction(Action.CHANGE_PARENT_TASK)}
+            >
+              <ChangeIcon />
+            </IconButton>
+
+            {/* ACTIONS */}
+            {action === Action.CHANGE_PARENT_TASK && (
+              <MoveOtherTask
+                subId={task.subTaskId}
+                open
+                onClose={onResetAction}
+                onAfterSubmit={onAfterSubmit}
+              />
+            )}
+          </>
+        )}
+      </TabList>
       <Stack
         direction="row"
         alignItems="center"
