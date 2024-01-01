@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react";
 import {
   Box,
   FormHelperText,
@@ -7,7 +8,6 @@ import {
   TextFieldProps,
   Typography,
 } from "@mui/material";
-import React from "react";
 
 import { Stack } from "@mui/system";
 import useTheme from "hooks/useTheme";
@@ -19,7 +19,6 @@ interface ISectionProps {
   disabled?: boolean;
   placeholder?: string;
   endAdornment?: React.ReactNode;
-  resize?: boolean;
 }
 
 type TextFieldInputProps = ISectionProps & TextFieldProps;
@@ -38,7 +37,6 @@ const Textarea: React.FC<TextFieldInputProps> = React.forwardRef(
       helperText,
       sx,
       endAdornment,
-      resize = true,
       ...otherProps
     },
     ref,
@@ -118,7 +116,7 @@ const Textarea: React.FC<TextFieldInputProps> = React.forwardRef(
               sx={{
                 overflow: "auto",
                 padding: "0 20px 20px 20px",
-                resize: resize ? "vertical" : "none",
+                resize: "vertical",
                 backgroundColor: isDarkMode ? "#393939" : "grey.50",
                 minHeight: "52px",
                 maxHeight: "250px",
