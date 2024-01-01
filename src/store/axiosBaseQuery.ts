@@ -4,10 +4,6 @@ import { BaseQueryFn } from "@reduxjs/toolkit/dist/query";
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { clientStorage } from "utils/storage";
 
-const requestHeader: AxiosRequestConfig["headers"] = {
-  token: clientStorage.get("aT"),
-};
-
 const axiosBaseQuery =
   (
     { baseUrl }: { baseUrl: string } = { baseUrl: "" },
@@ -22,14 +18,17 @@ const axiosBaseQuery =
     unknown,
     unknown
   > =>
-  async ({ url, method, data, params, headers = requestHeader }) => {
+  async ({ url, method, data, params, headers }) => {
+    const requestHeader: AxiosRequestConfig["headers"] = {
+      token: clientStorage.get("aT"),
+    };
     try {
       const response = await axios({
         url: baseUrl + url,
         method,
         data,
         params,
-        headers,
+        headers: {...headers, ...requestHeader},
       });
       return { data: response.data };
     } catch (axiosError) {
