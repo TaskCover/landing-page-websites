@@ -23,7 +23,6 @@ import useEventListener from "hooks/useEventListener";
 import useQueryParams from "hooks/useQueryParams";
 import useTheme from "hooks/useTheme";
 import useToggle from "hooks/useToggle";
-import MoveListIcon from "icons/MoveListIcon";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next-intl/client";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
@@ -59,6 +58,9 @@ import {
 } from "./components";
 import Content from "./components/Content";
 import Description from "./components/Description";
+import dayjs from "dayjs";
+import MoveListIcon from "icons/MoveListIcon";
+import { DescriptionTask } from "./Detail/components";
 import { isSubTaskChecked, isTaskChecked, isTaskListChecked } from "./helpers";
 
 const ItemList = () => {
@@ -156,6 +158,13 @@ const ItemList = () => {
 
     return totalCount;
   }, [dataList]);
+
+  const [
+    isAddDescription,
+    onShowAddDescription,
+    onHideAddDescription,
+    onToggleShowDescription,
+  ] = useToggle(false);
 
   const allItemsChecked = useMemo(() => {
     return selectedList.length === totalItemCount && totalItemCount !== 0;
@@ -979,48 +988,41 @@ const ItemList = () => {
   const fixedLayoutRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const popupEls = document.querySelectorAll(".MuiPopper-root");
-      const datePopupEls = fixedLayoutRef.current?.querySelectorAll(
+    const handleScroll = (e) => {
+      // const popupEls = document.querySelectorAll(".MuiPopper-root");
+      // const datePopupEls = fixedLayoutRef.current?.querySelectorAll(
+      //   ".react-datepicker-popper",
+      // );
+      // popupEls.forEach((popup) => {
+      //   if (popup instanceof HTMLElement) {
+      //     popup.style.display = "none";
+      //   }
+      // });
+      // datePopupEls?.forEach((popup) => {
+      //   if (popup instanceof HTMLElement) {
+      //     popup.style.display = "none";
+      //   }
+      // });
+      const popupEl = document.querySelector(
+        ".MuiPopper-root",
+      ) as unknown as HTMLElement;
+      const datePopupEl = fixedLayoutRef.current?.querySelector(
         ".react-datepicker-popper",
-      );
-
-      popupEls.forEach((popup) => {
-        if (popup instanceof HTMLElement) {
-          popup.style.display = "none";
-        }
-      });
-
-      datePopupEls?.forEach((popup) => {
-        if (popup instanceof HTMLElement) {
-          popup.style.display = "none";
-        }
-      });
+      ) as unknown as HTMLElement;
+      if (popupEl) {
+        popupEl.style.display = "none";
+      }
+      if (datePopupEl) {
+        datePopupEl.style.display = "none";
+      }
     };
 
     fixedLayoutRef.current?.addEventListener("scroll", handleScroll);
-
     // Cleanup: remove event listener when component unmounts
     return () => {
       fixedLayoutRef.current?.removeEventListener("scroll", handleScroll);
     };
-  }, []);
-
-  // fixedLayoutRef?.current?.addEventListener("scroll", () => {
-  //   const popupEls = document.querySelectorAll(".MuiPopper-root");
-
-  //   const datePopupEls = fixedLayoutRef?.current?.querySelectorAll(
-  //     ".react-datepicker-popper",
-  //   );
-
-  //   popupEls.forEach(function (popup) {
-  //     popup.style.display = "none";
-  //   });
-
-  //   datePopupEls.forEach(function (popup) {
-  //     popup.style.display = "none";
-  //   });
-  // });
+  }, [fixedLayoutRef]);
 
   return (
     <Stack flex={1} pb={3} order={3}>
@@ -1057,7 +1059,12 @@ const ItemList = () => {
           />
         </TableLayout>
       </Stack>
-      <FixedLayoutTask ref={fixedLayoutRef} flex={1}>
+      <FixedLayoutTask
+        ref={fixedLayoutRef}
+        flex={1}
+        bgcolor="background.default"
+        gap="16px"
+      >
         <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
           {dataList.map((taskListItem, indexTaskList) => {
             const isChecked = isTaskListChecked(selectedList, taskListItem.id);

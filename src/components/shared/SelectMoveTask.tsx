@@ -134,6 +134,7 @@ const SelectMoveTask = (props: SelectProps) => {
             MenuListProps: {
               sx: {
                 maxHeight: 300,
+                overflow: "hidden",
               },
             },
           },
@@ -142,17 +143,14 @@ const SelectMoveTask = (props: SelectProps) => {
         value={hasValue ? value : showPlaceholder ? ID_PLACEHOLDER : ""}
         onChange={onChange}
         {...rest}
-        sx={{
-          overflow: "hidden",
-        }}
       >
         {!!onChangeSearch && isShow && (
           <Search
             fullWidth
             sx={{
-              mt: 1,
               px: 2,
               my: 1,
+              // height: "38px!important",
             }}
             name="email"
             onChange={onChangeSearch}
@@ -168,11 +166,18 @@ const SelectMoveTask = (props: SelectProps) => {
             <MenuItem
               sx={{
                 ...defaultSx.item,
+                py: 1,
+                px: 2,
+                bgcolor: "white",
+                borderBottom: "1px solid #ccc",
                 display:
                   (!hasValue && option.value === ID_PLACEHOLDER) ||
                   value === ID_PLACEHOLDER
                     ? "none"
                     : undefined,
+                "&:last-child": {
+                  mb: 1,
+                },
               }}
               key={option.value}
               value={option.value}

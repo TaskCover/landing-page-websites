@@ -1,10 +1,11 @@
 import {
   Box,
   ButtonBase,
-  Grow,
   MenuItem,
   MenuList,
   Popper,
+  Grow,
+  useTheme,
   Stack,
   TextField,
   popoverClasses,
@@ -58,6 +59,7 @@ type DroppableTaskListProps = {
   onChange: () => void;
   setSelectedList: Dispatch<SetStateAction<Selected[]>>;
   index: number;
+  showPopup?: boolean | true;
 } & HTMLAttributes<HTMLDivElement>;
 
 type MoreListProps = {
@@ -100,6 +102,8 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
   const changeNameTask = (event) => {
     setTaskName(event.target.value);
   };
+
+  const theme = useTheme();
 
   const onKeyDownTaskName = async (
     event: React.KeyboardEvent<HTMLDivElement>,
@@ -146,7 +150,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
               {...provided.droppableProps}
               style={{
                 border: isDragging ? "1px dashed" : undefined,
-                marginBottom: "8px",
+                backgroundColor: theme.palette.background.paper,
               }}
             >
               <Stack
@@ -155,7 +159,6 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                 height={48}
                 pl={{ xs: 0, md: 2 }}
                 width="100%"
-                // justifyContent="space-between"
                 spacing={3}
                 borderTop={index !== 0 ? { md: "1px solid" } : undefined}
                 borderBottom={{ md: "1px solid" }}
@@ -163,7 +166,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                 style={{
                   backgroundColor: checked
                     ? "rgba(236, 236, 243, 1)"
-                    : "rgba(236, 236, 243, 0.6)", //ThanhHV-Add list becomes background
+                    : "rgba(236, 236, 243, 0.6)",
                 }}
               >
                 <Stack
@@ -242,7 +245,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   direction="row"
                   spacing={0}
                   alignItems="center"
-                  sx={{ ml: { xs: 2, md: 6 } }}
+                  sx={{ ml: { xs: 2, md: 7 } }}
                 >
                   <PlusIcon sx={{ color: "#999999", mt: 0.5 }} />
                   <TextField
@@ -264,6 +267,8 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                           borderBottom: "unset !important",
                         },
                       },
+                      pb: "8px",
+
                       "& input": {
                         fontSize: 14,
                         paddingTop: "17px !important",
