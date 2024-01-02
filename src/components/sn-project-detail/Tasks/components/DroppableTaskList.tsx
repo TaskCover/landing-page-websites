@@ -9,6 +9,7 @@ import {
   TextField,
   Popper,
   Grow,
+  useTheme,
 } from "@mui/material";
 import { Button, Checkbox, IconButton, Text } from "components/shared";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
@@ -30,7 +31,6 @@ import {
   useId,
   useMemo,
   useState,
-  useEffect,
 } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import Form from "../Form";
@@ -49,6 +49,7 @@ import DialogLayout from "components/DialogLayout";
 import Loading from "components/Loading";
 import useBreakpoint from "hooks/useBreakpoint";
 import { useOnClickOutside } from "hooks/useOnClickOutside";
+import CheckBoxCustom from "components/shared/CheckBoxCustom";
 
 type DroppableTaskListProps = {
   id: string;
@@ -59,6 +60,7 @@ type DroppableTaskListProps = {
   onChange: () => void;
   setSelectedList: Dispatch<SetStateAction<Selected[]>>;
   index: number;
+  showPopup?: boolean | true;
 } & HTMLAttributes<HTMLDivElement>;
 
 type MoreListProps = {
@@ -101,6 +103,8 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
   const changeNameTask = (event) => {
     setTaskName(event.target.value);
   };
+
+  const theme = useTheme();
 
   const onKeyDownTaskName = async (
     event: React.KeyboardEvent<HTMLDivElement>,
@@ -147,15 +151,15 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
               {...provided.droppableProps}
               style={{
                 border: isDragging ? "1px dashed" : undefined,
+                backgroundColor: theme.palette.background.paper,
               }}
             >
               <Stack
                 direction="row"
                 alignItems="center"
-                height={56}
+                height={48}
                 pl={{ xs: 0, md: 2 }}
                 width="100%"
-                // justifyContent="space-between"
                 spacing={3}
                 borderTop={index !== 0 ? { md: "1px solid" } : undefined}
                 borderBottom={{ md: "1px solid" }}
@@ -163,7 +167,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                 style={{
                   backgroundColor: checked
                     ? "rgba(236, 236, 243, 1)"
-                    : "rgba(236, 236, 243, 0.6)", //ThanhHV-Add list becomes background
+                    : "rgba(236, 236, 243, 0.6)",
                 }}
               >
                 <Stack
@@ -180,7 +184,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   alignItems="center"
                   overflow="hidden"
                 >
-                  <Checkbox
+                  <CheckBoxCustom
                     size="small"
                     className="checkbox"
                     checked={checked}
@@ -244,7 +248,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   direction="row"
                   spacing={0}
                   alignItems="center"
-                  sx={{ ml: { xs: 2, md: 6 } }}
+                  sx={{ ml: { xs: 2, md: 7 } }}
                 >
                   <PlusIcon sx={{ color: "#999999", mt: 0.5 }} />
                   <TextField
@@ -255,16 +259,19 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                     variant="filled"
                     size="small"
                     onChange={changeNameTask}
+                    required
                     sx={{
                       "& >div": {
                         bgcolor: "transparent!important",
                         "&:after": {
-                          borderBottomColor: "#666666 !important",
+                          borderBottomColor: "#1BC5BD !important",
                         },
                         "&:before": {
                           borderBottom: "unset !important",
                         },
                       },
+                      pb: "8px",
+
                       "& input": {
                         fontSize: 14,
                         paddingTop: "17px !important",
@@ -491,7 +498,7 @@ export const MoreList = (props: MoreListProps) => {
             minWidth: 200,
             maxWidth: 250,
           },
-          zIndex: 1000,
+          zIndex: 1,
         }}
         transition
         placement={"bottom-start"}
@@ -548,8 +555,8 @@ export const MoreList = (props: MoreListProps) => {
                     sx={sxConfig.item}
                   >
                     <MoveArrowIcon
-                      // sx={{ color: "grey.400" }}
-                      sx={{ color: "red" }}
+                      sx={{ color: "grey.400" }}
+                      // sx={{ color: "red" }}
                       fontSize="medium"
                     />
                     <Text ml={2} variant="body2" color="grey.400">

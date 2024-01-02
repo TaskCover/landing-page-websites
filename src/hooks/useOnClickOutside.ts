@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-const DEFAULT_EVENTS = ["mousedown", "touchstart"];
+const DEFAULT_EVENTS = ["mousedown", "touchstart", "scroll"];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useOnClickOutside<T extends HTMLElement = any>(

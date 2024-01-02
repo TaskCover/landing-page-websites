@@ -279,44 +279,50 @@ const ChatEditor = (props: EditorProps) => {
 
   return (
     <Stack
-      // direction={isChatDesktop ? "column-reverse" : "column"}
       className="editor"
       sx={{
         "& .quill": {
           flexDirection: "column",
           padding: "16px",
-          maxHeight: "200px",
+          "& .ql-container": {
+            boxSizing: "border-box",
+            position: "unset!important",
+            display: "block",
+            marginRight: "60px",
+            backgroundColor: "#E1F0FF",
+            borderRadius: "20px!important",
+            width: "260px!important",
+          },
         },
+
         "& .ql-snow": {
           border: "unset !important",
           borderTop: "1px solid #ECECF3!important",
           borderRadius: "unset !important",
-          width: "100%!important",
+          padding: "8px 0",
         },
-        "& .ql-container": {
-          position: "unset!important",
-          display: "block",
-          "& .ql-editor": {
-            padding: "2px 24px 2px 8px",
 
-            backgroundColor: "#E1F0FF",
-            width: "296px!important",
-            height: "40px!important",
-            borderRadius: "100px !important",
+        "& .ql-container": {
+          "& .ql-editor": {
+            boxSizing: "border-box",
+            cursor: "text",
+            lineHeight: 1.4,
+            textAlign: "left",
+            whiteSpace: "pre-wrap",
+            wordWrap: "break-word",
+            outline: "none",
+            maxHeight: "80px",
+            padding: "4px 32px 0px 20px",
+            overflow: "scroll",
+            height: "100%",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
 
             "&.ql-blank::before": {
-              color: "#999",
-              padding: "2px 24px 2px 8px",
-              alignItems: "center",
-              display: "flex",
-              width: "296px!important",
-              height: "40px!important",
-            },
-            "& p": {
-              alignItems: "center",
-              display: "flex",
-              height: "100%",
-              marginRight: "16px",
+              paddingLeft: "30px",
+              fontSize: "14px",
+              color: "#999999",
             },
           },
           "& .ql-tooltip": {
@@ -329,7 +335,7 @@ const ChatEditor = (props: EditorProps) => {
         "& .ql-formats": {
           marginRight: "15px",
           display: "flex",
-          gap: "16px",
+          gap: "8px",
           justifyContent: "center",
         },
       }}
@@ -369,7 +375,7 @@ const ChatEditor = (props: EditorProps) => {
             bottom: "32px",
             display: "flex",
             flexDirection: "row",
-            gap: "1rem",
+            gap: "8px",
           }}
         >
           <ChatEmoji onChange={handleChaneEmoji} />

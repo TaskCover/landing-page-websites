@@ -3,17 +3,21 @@ import { Checkbox, IconButton } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 import useToggle from "hooks/useToggle";
 import CaretIcon from "icons/CaretIcon";
+import CheckBoxIcon from "icons/CheckBoxIcon";
 import MoveDotIcon from "icons/MoveDotIcon";
 // import MoveDotIcon from "icons/MoveDotIcon";
 import MoveTagIcon from "icons/MoveTagIcon";
 import { Dispatch, memo, SetStateAction, useMemo } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { checkIsMobile } from "utils/index";
-
+import { Task } from "store/project/reducer";
+import Content from "./Content";
+import CheckBoxCustom from "components/shared/CheckBoxCustom";
 type DraggableTaskProps = {
   id: string;
   index: number;
   checked: boolean;
+  isSubTask: boolean;
   onChange: () => void;
   children: React.ReactNode;
   isHide: boolean;
@@ -21,6 +25,7 @@ type DraggableTaskProps = {
   setHideIds: Dispatch<SetStateAction<string[]>>;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  task: Task;
 };
 
 const DraggableTask = (props: DraggableTaskProps) => {
@@ -32,7 +37,9 @@ const DraggableTask = (props: DraggableTaskProps) => {
     children,
     isHide,
     isHovered,
+    isSubTask,
     setHideIds,
+    task,
     ...rest
   } = props;
 
@@ -68,12 +75,11 @@ const DraggableTask = (props: DraggableTaskProps) => {
             sx={{
               "&::after": {
                 position: "absolute",
-                top: "38px",
+                top: "40px",
                 "border-bottom": "1px solid #1BC5BD",
                 content: "''",
                 width: "100%",
                 height: "1px",
-                // zIndex: 999,
               },
             }}
             {...rest}
@@ -81,13 +87,13 @@ const DraggableTask = (props: DraggableTaskProps) => {
             <Stack
               direction="row"
               alignItems="center"
-              height={38}
+              height={40}
               ml={2}
               spacing={{ xs: 0.5, sm: 1 }}
               gap={2}
               sx={{
                 "& >.checkbox": {
-                  opacity: isMobile || checked || isHovered ? 1 : 0,
+                  opacity: isMobile || checked ? 1 : 0,
                   userSelect:
                     isMobile || checked || isHovered ? undefined : "none",
                 },
@@ -96,14 +102,14 @@ const DraggableTask = (props: DraggableTaskProps) => {
                 },
               }}
             >
-              <Checkbox
+              <CheckBoxCustom
                 size="small"
                 className="checkbox"
                 checked={checked}
                 onChange={onChange}
               />
               <IconButton
-                className="checkbox"
+                // className="checkbox"
                 noPadding
                 sx={{ zIndex: 10 }}
                 {...provided.dragHandleProps}
@@ -113,15 +119,6 @@ const DraggableTask = (props: DraggableTaskProps) => {
                   sx={{ color: "grey.A200" }}
                 />
               </IconButton>
-              {/* <IconButton
-                noPadding
-                sx={{
-                  transform: isHide ? "rotate(180deg)" : undefined,
-                }}
-                onClick={onToggle}
-              >
-                <CaretIcon sx={{ color: "grey.300" }} />
-              </IconButton> */}
             </Stack>
 
             {children}

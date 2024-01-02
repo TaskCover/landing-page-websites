@@ -10,11 +10,7 @@ import {
 } from "@mui/material";
 import { Button, Text } from "components/shared";
 import PlusIcon from "icons/PlusIcon";
-import {
-  Date,
-  Dropdown,
-  Search,
-} from "components/Filters";
+import { Date, Dropdown, Search } from "components/Filters";
 import {
   useMemberOptions,
   useProjects,

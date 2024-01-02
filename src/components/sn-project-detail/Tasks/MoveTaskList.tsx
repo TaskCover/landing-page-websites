@@ -19,6 +19,8 @@ import { useSnackbar } from "store/app/selectors";
 import * as Yup from "yup";
 import { useParams } from "next/navigation";
 import { Option } from "constant/types";
+import SelectMoveTask from "components/shared/SelectMoveTask";
+import { overflow } from "html2canvas/dist/types/css/property-descriptors/overflow";
 
 type MoveTaskListProps = {
   oldTaskListIds: string[];
@@ -97,13 +99,15 @@ const MoveTaskList = (props: MoveTaskListProps) => {
 
   useEffect(() => {
     if (items && items.length > 0) {
-      const itemOptions = items.map((item) => {
+      const newItems = items.filter((item) => item.id !== oldTaskListIds[0]);
+      const itemOptions = newItems.map((item) => {
         const option: Option = {
           label: item.name,
           value: item.id,
         };
         return option;
       });
+
       setOptions([...itemOptions]);
       setSearchOptions([...itemOptions]);
     }
@@ -137,8 +141,8 @@ const MoveTaskList = (props: MoveTaskListProps) => {
       onSubmit={formik.handleSubmit}
       {...rest}
     >
-      <Stack spacing={2} py={3}>
-        <Select
+      <Stack spacing={2} py={3} sx={{}}>
+        <SelectMoveTask
           options={searchOptions}
           title={projectT("detailTasks.form.title.newTaskPlace")}
           name="task_move"

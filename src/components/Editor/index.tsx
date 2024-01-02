@@ -128,10 +128,10 @@ const Editor = (props: EditorProps) => {
     [],
   );
 
-  const toolbar = useMemo(() => (hasAttachment ? toolbarAttachment : TOOLBAR), [
-    hasAttachment,
-    toolbarAttachment,
-  ]);
+  const toolbar = useMemo(
+    () => (hasAttachment ? toolbarAttachment : TOOLBAR),
+    [hasAttachment, toolbarAttachment],
+  );
 
   const onInit = useCallback(async () => {
     const RQuill = (await import("react-quill")).default;
