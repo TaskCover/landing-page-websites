@@ -116,4 +116,5 @@ export type CommonDictionary = {
   hour: string;
   cancel: string;
   success: string;
+  crop: string;
 };
