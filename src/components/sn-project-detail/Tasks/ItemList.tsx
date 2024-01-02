@@ -73,7 +73,6 @@ import MoveListIcon from "icons/MoveListIcon";
 import CheckBoxCustom from "components/shared/CheckBoxCustom";
 import FixedLayoutTask from "components/FixedLayoutTask";
 import { DescriptionTask } from "./Detail/components";
-import FormDescription from "components/sn-projects/components/FormDescription";
 
 const ItemList = () => {
   const {
