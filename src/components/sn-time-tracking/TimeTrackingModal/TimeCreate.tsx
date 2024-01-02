@@ -1,32 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from "react";
-import _ from "lodash";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, Controller } from "react-hook-form";
-import { DialogContent, Stack, Box, Button } from "@mui/material";
-import DefaultPopupLayout from "../../../layouts/DefaultPopupLayout";
-import dayjs from "dayjs";
-import TimePicker from "../Component/TimePicker";
-import Textarea from "../Component/Textarea";
-import NumberInput from "../Component/NumberInput";
-import MobileDatePickerComponent from "../Component/MobileDatePicker";
-import { useGetMyTimeSheet } from "store/timeTracking/selectors";
-import { useProjects } from "store/project/selectors";
-import { usePositions } from "store/company/selectors";
-import { DataStatus } from "constant/enums";
-import { useAuth, useSnackbar } from "store/app/selectors";
-import { getMessageErrorByAPI } from "utils/index";
-import {
-  AN_ERROR_TRY_AGAIN,
-  NS_COMMON,
-  NS_TIME_TRACKING,
-} from "constant/index";
-import { useTranslations } from "next-intl";
-import { DEFAULT_RANGE_ACTIVITIES } from "store/timeTracking/reducer";
-import useTheme from "hooks/useTheme";
+import { Box, Button, DialogContent, Stack } from "@mui/material";
 import TextFieldSelect from "components/shared/TextFieldSelect";
+import { NS_COMMON, NS_TIME_TRACKING } from "constant/index";
+import dayjs from "dayjs";
+import useTheme from "hooks/useTheme";
+import _ from "lodash";
+import moment from "moment";
+import { useTranslations } from "next-intl";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useAuth, useSnackbar } from "store/app/selectors";
+import { usePositions } from "store/company/selectors";
+import { useProjects } from "store/project/selectors";
+import { useGetMyTimeSheet } from "store/timeTracking/selectors";
+import { getMessageErrorByAPI } from "utils/index";
+import * as yup from "yup";
+import DefaultPopupLayout from "../../../layouts/DefaultPopupLayout";
+import MobileDatePickerComponent from "../Component/MobileDatePicker";
+import NumberInput from "../Component/NumberInput";
+import Textarea from "../Component/Textarea";
+import TimePicker from "../Component/TimePicker";
 
 interface IProps {
   type?: string;
@@ -137,6 +132,16 @@ const TimeCreate: React.FC<IProps> = ({
         duration: selectedEvent?.extendedProps?.hour,
         note: selectedEvent?.extendedProps?.note,
       };
+      if (selectedEvent?.extendedProps?.id == null) {
+        validResetData.day = selectedEvent?.extendedProps?.day;
+        validResetData.start_time = moment(
+          [
+            selectedEvent.extendedProps.date,
+            selectedEvent.extendedProps.start_time,
+          ].join(" "),
+        ).add(selectedEvent.extendedProps?.hour, "hours");
+      }
+
       reset(validResetData);
     } else {
       if (dateClick) {
@@ -191,7 +196,7 @@ const TimeCreate: React.FC<IProps> = ({
         .set("date", dayjs(data?.day).date())
         .format("YYYY-MM-DD HH:mm"),
     };
-    if (isEdit) {
+    if (selectedEvent?.extendedProps?.id) {
       onUpdateTimeSheet({
         ...resolveData,
         id: selectedEvent?.extendedProps?.id,
@@ -389,7 +394,7 @@ const TimeCreate: React.FC<IProps> = ({
             {timeT("modal.Confirm")}
           </Button>
         </Stack>
-        {isEdit && (
+        {isEdit && selectedEvent?.extendedProps?.id && (
           <Stack direction="row" justifyContent="center" sx={{ mt: 1 }}>
             <Button
               variant="outlined"
@@ -425,7 +430,11 @@ const TimeCreate: React.FC<IProps> = ({
   };
   return (
     <DefaultPopupLayout
-      title={isEdit ? timeT("modal.edit_time") : timeT("modal.add_time")}
+      title={
+        selectedEvent?.extendedProps?.id
+          ? timeT("modal.edit_time")
+          : timeT("modal.add_time")
+      }
       content={_renderMain()}
       open={open}
       onClose={onClose}
