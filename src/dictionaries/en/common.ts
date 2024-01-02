@@ -121,4 +121,5 @@ export const CommonLang: CommonDictionary = {
   hour: "hour",
   cancel: "Cancel",
   success: "Successfully!",
+  crop: "Crop",
 };
