@@ -97,9 +97,8 @@ const ModalAddBudget = (props: Props) => {
     if (window["timeoutAnimation"]) {
       clearTimeout(window["timeoutAnimation"]);
     }
-
-    const timeAnimation: number = 300; // ms
-    const timeWaitReadyElement: number = 100; //ms
+    const timeAnimation = 300; // ms
+    const timeWaitReadyElement = 100; //ms
 
     window["timeoutAnimation"] = setTimeout(() => {
       if (!bodyModalRef.current) return;
@@ -225,6 +224,7 @@ const ModalAddBudget = (props: Props) => {
               error={commonT(touchedErrors?.start_date, {
                 name: projectT("budget.form.start_date"),
               })}
+              onClickEndNode={() => toggleFocusInputDate(true)}
               rootSx={sxInput}
               fullWidth
               pickerProps={{
@@ -251,6 +251,7 @@ const ModalAddBudget = (props: Props) => {
               })}
               rootSx={sxInput}
               fullWidth
+              onClickEndNode={() => toggleFocusInputDate(true)}
               sx={{
                 mt: { xs: 2, sm: 0 },
               }}

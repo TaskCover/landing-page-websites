@@ -1,6 +1,6 @@
 import { Link, Stack } from "@mui/material";
 import { BodyCell } from "components/Table";
-import { Text } from "components/shared";
+import { Button, Text } from "components/shared";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { CURRENCY_CODE } from "constant/enums";
 import { NS_COMMON } from "constant/index";
@@ -9,20 +9,22 @@ import { useTranslations } from "next-intl";
 import { memo } from "react";
 import { Billing } from "store/billing/reducer";
 import { formatDate, formatNumber, getPath } from "utils/index";
+import FolderIcon from "../../icons/FolderIcon";
 
 type DesktopCellsProps = {
   item?: Billing;
   order: number;
+  onOpenModalExport: (value: Billing[]) => void;
 };
 
 const DesktopCells = (props: DesktopCellsProps) => {
-  const { item, order } = props;
+  const { item, order, onOpenModalExport } = props;
   const commonT = useTranslations(NS_COMMON);
 
   return (
     <>
       {/* <BodyCell align="center">{order}</BodyCell> */}
-      <BodyCell align="left">
+      <BodyCell align="center">
         <Link
           underline="none"
           href={getPath(BILLING_INFO_PATH, undefined, { id: item?.id ?? "" })}
@@ -40,33 +42,40 @@ const DesktopCells = (props: DesktopCellsProps) => {
         </Link>
       </BodyCell>
 
-      <BodyCell align="left" sx={{ paddingLeft: 0 }}>
+      <BodyCell align="center" sx={{ paddingRight: 4 }}>
         {item?.invoiceNumber}
       </BodyCell>
-      <BodyCell align="left">{formatDate(item?.date)}</BodyCell>
+      <BodyCell align="center" sx={{ paddingRight: 3 }}>
+        {formatDate(item?.date)}
+      </BodyCell>
 
       <BodyCell
         // href={getPath(PROJECT_TASKS_PATH, undefined, { id: item?.id })}
-        align="left"
+        align="center"
+        sx={{ paddingRight: 3 }}
       >
-        <Stack direction="row" alignItems="center" spacing={1}>
-          {item?.budget ? item?.budget[0]?.name : ""}
-        </Stack>
+        {item?.budget ? item?.budget[0]?.name : ""}
       </BodyCell>
-      <BodyCell align="center">{item?.status}</BodyCell>
-      <BodyCell align="center">
+      <BodyCell align="center" sx={{ paddingRight: 4 }}>
+        <Button onClick={() => onOpenModalExport([item ?? {}])}>
+          <FolderIcon />
+        </Button>
+      </BodyCell>
+      <BodyCell align="center" sx={{ paddingRight: 5 }}>
         {formatNumber(item?.amount, {
           prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
           numberOfFixed: 2,
         })}
       </BodyCell>
-      <BodyCell align="center">
+      <BodyCell align="center" sx={{ paddingRight: 5 }}>
         {formatNumber(item?.amount_unpaid, {
           prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
           numberOfFixed: 2,
         })}
       </BodyCell>
-      <BodyCell align="center">{formatDate(item?.dueDate)}</BodyCell>
+      <BodyCell align="center" sx={{ paddingRight: 16.5 }}>
+        {formatDate(item?.dueDate)}
+      </BodyCell>
     </>
   );
 };

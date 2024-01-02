@@ -228,7 +228,7 @@ const ServiceTable = (props: IProps) => {
                 >
                   <TableLayout
                     headerList={headerList}
-                    maxHeight={920}
+                    maxHeight={300}
                     headerProps={{
                       sx: {
                         px: 1,

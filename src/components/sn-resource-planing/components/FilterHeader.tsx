@@ -118,6 +118,10 @@ const FilterHeader = ({ type }: { type: TAB_TYPE }) => {
           name="search_key"
           value={queries?.search_key || ""}
           onChange={(name, value) => onChangeQueries(name, value)}
+          onEnter={(name, value) => {
+            onChangeQueries(name, value);
+            onSearch();
+          }}
           placeholder={resourceT("schedule.filter.search")}
           sx={{
             maxWidth: "432px",

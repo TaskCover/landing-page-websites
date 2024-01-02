@@ -1,9 +1,9 @@
 import { CircularProgress, Stack } from "@mui/material";
+import { NS_COMMON } from "constant/index";
+import { useTranslations } from "next-intl";
 import { memo } from "react";
 import DialogLayout, { DialogLayoutProps } from "./DialogLayout";
 import { Button } from "./shared";
-import { useTranslations } from "next-intl";
-import { NS_COMMON } from "constant/index";
 
 type FormLayoutProps = {
   label?: string;
@@ -32,6 +32,7 @@ const FormLayout = (props: FormLayoutProps) => {
     onSubmit,
     renderHeader,
     bodyFlex = 1,
+    bottomProps,
     ...rest
   } = props;
   return (
@@ -41,7 +42,7 @@ const FormLayout = (props: FormLayoutProps) => {
         sx: defaultSx.header,
       }}
       bottomProps={{
-        sx: defaultSx.bottom,
+        sx: defaultSx.bottom
       }}
       renderHeader={label ?? renderHeader}
       contentProps={{ sx: { px: 3 } }}

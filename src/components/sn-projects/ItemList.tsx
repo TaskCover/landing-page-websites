@@ -24,7 +24,7 @@ import { useTranslations } from "next-intl";
 import useTheme from "hooks/useTheme";
 import PencilUnderlineIcon from "icons/PencilUnderlineIcon";
 import FixedLayout from "components/FixedLayout";
-import { Option } from 'constant/types';
+import { Option } from "constant/types";
 
 const ItemList = () => {
   const {
@@ -121,7 +121,7 @@ const ItemList = () => {
             owner: item?.owner?.id,
             type_project: {
               value: item?.type_project?.id,
-              label: item?.type_project?.name
+              label: item?.type_project?.name,
             } as Option,
             start_date: item?.start_date
               ? new Date(item.start_date).getTime()

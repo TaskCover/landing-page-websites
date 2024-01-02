@@ -8,12 +8,14 @@ import { DocAccessibility, HttpStatusCode } from "constant/enums";
 import { DEFAULT_PAGING, NS_COMMON } from "constant/index";
 import { Option } from "constant/types";
 import { useFormik } from "formik";
+import { DOCS_API_URL } from "constant/index";
 import useQueryParams from "hooks/useQueryParams";
 import { useTranslations } from "next-intl";
 import React, { SetStateAction, useEffect } from "react";
 import { useSnackbar } from "store/app/selectors";
 import { useEmployees } from "store/company/selectors";
 import { useAppSelector } from "store/hooks";
+import { useDocs } from "store/docs/selectors";
 
 interface ModalShareProps {
   setOpenShare: React.Dispatch<SetStateAction<boolean>>;
@@ -44,6 +46,12 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
   const { initQuery, isReady, query } = useQueryParams();
   const id = useAppSelector((data) => data.doc.id);
 
+  const { handleGetDocDetail } = useDocs();
+
+  const fetApi = () => {
+    onGetEmployees({ ...DEFAULT_PAGING, ...initQuery });
+  }
+
   const { onAddSnackbar } = useSnackbar();
 
   const onSubmit = async (values) => {
@@ -58,17 +66,18 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
             isPublic: false,
           };
 
-    const res = await client.put(Endpoint.ADD_PERM_DOCS + id, payload, {
-      baseURL: "http://103.196.145.232:6813/api/v1",
-    });
-    if (
-      res.status === HttpStatusCode.OK ||
-      res.status === HttpStatusCode.CREATED
-    ) {
-      onAddSnackbar("Thành Công", "success");
-    }
-    try {
-    } catch (error) {}
+    await client
+      .put(Endpoint.ADD_PERM_DOCS + id, payload, {
+        baseURL: DOCS_API_URL,
+      })
+      .then(() => {
+        onAddSnackbar("Thành Công", "success");
+        handleGetDocDetail(id);
+        setOpenShare(false);
+      })
+      .catch((err: any) => {
+        onAddSnackbar(err?.message, "error");
+      });
   };
 
   const init: initType = {
@@ -104,7 +113,7 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
 
   useEffect(() => {
     if (!isReady) return;
-    onGetEmployees({ ...DEFAULT_PAGING, ...initQuery });
+    fetApi();
   }, [initQuery, isReady, onGetEmployees]);
 
   const onChangeSearch = (name: string, value?: string | number) => {

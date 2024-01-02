@@ -49,6 +49,7 @@ const Actions = () => {
     let newQueries = {
       ...queries,
       page: 1,
+      group_by: DocGroupByEnum.PROJECT_ID
     };
 
     if (queries?.user_id?.length > 0) {
@@ -129,6 +130,12 @@ const Actions = () => {
             onChange={onChangeQueries}
             value={queries?.search_key}
             sx={{ width: 200, minWidth: 200 }}
+            onKeyDown={(e) => {
+              e.stopPropagation();
+              if (e.key === "Enter") {
+                onSearch();
+              }
+            }}
           />
 
           <Dropdown

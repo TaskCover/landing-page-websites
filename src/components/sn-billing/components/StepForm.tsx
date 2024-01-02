@@ -5,6 +5,7 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { Text } from "components/shared";
 
 const steps = [
   "Select campaign settings",
@@ -16,10 +17,11 @@ type StepProps = {
   activeStep?: number;
   listSteps?: string[];
   skipped?: Set<number>;
+  setActiveStep: (value: number) => void;
 };
 
 const StepForm = (props: StepProps) => {
-  const { activeStep, skipped, listSteps } = props;
+  const { activeStep, skipped, listSteps, setActiveStep } = props;
 
   const isStepOptional = (step: number) => {
     return step === 1;
@@ -70,7 +72,10 @@ const StepForm = (props: StepProps) => {
       textAlign={"center"}
       py={3}
     >
-      <Stepper activeStep={activeStep}>
+      <Stepper
+        activeStep={activeStep}
+        sx={{ width: "60%", margin: "0px auto" }}
+      >
         {listSteps?.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
@@ -86,7 +91,17 @@ const StepForm = (props: StepProps) => {
           //   }
           return (
             <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
+              <StepLabel
+                onClick={() => setActiveStep(index)}
+                {...labelProps}
+                sx={{
+                  ["&.MuiStepLabel-root.Mui-disabled span"]: {
+                    color: "#1111117A !important",
+                  },
+                }}
+              >
+                {label}
+              </StepLabel>
             </Step>
           );
         })}

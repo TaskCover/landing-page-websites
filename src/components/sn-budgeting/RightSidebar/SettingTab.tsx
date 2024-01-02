@@ -5,8 +5,13 @@ import DropDownIcon from "icons/DropDownIcon";
 import DuplicateIcon from "icons/DuplicateIcon";
 import TrashIcon from "icons/TrashIcon";
 import { useState } from "react";
+import { TBudget } from "store/project/budget/action";
 
-export const SettingTab = () => {
+interface SettingTabProps {
+  budget: TBudget;
+}
+export const SettingTab = ({ budget }: SettingTabProps) => {
+  const { owner } = budget;
   const [restrictionEl, setRestrictionEl] = useState<HTMLElement | null>(null);
 
   return (
@@ -16,7 +21,7 @@ export const SettingTab = () => {
           Time warning
         </Text>
         <Text>
-          Garry Hunt [SAMPLE] will get a warning when worked hours reach this
+          {owner?.fullname} will get a warning when worked hours reach this
           percentage of estimated hours
         </Text>
         <OutlinedInput

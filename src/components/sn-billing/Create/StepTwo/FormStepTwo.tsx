@@ -154,31 +154,34 @@ const FormStepTwo = (props: IProps) => {
           `${billingFormTranslatePrefix}.table_step_2.service_type`,
         ),
         width: "20%",
-        align: "left",
+        align: "center",
       },
       {
         value: billingT(
           `${billingFormTranslatePrefix}.table_step_2.description`,
         ),
         width: "20%",
-        align: "left",
+        align: "center",
       },
       {
         value: billingT(`${billingFormTranslatePrefix}.table_step_2.unit`),
         width: "15%",
-        align: "left",
+        align: "center",
       },
       {
         value: billingT(`${billingFormTranslatePrefix}.table_step_2.qty`),
         width: "15%",
+        align: "center",
       },
       {
         value: billingT(`${billingFormTranslatePrefix}.table_step_2.rate`),
         width: "15%",
+        align: "center",
       },
       {
         value: billingT(`${billingFormTranslatePrefix}.table_step_2.amount`),
         width: "15%",
+        align: "center",
       },
     ],
     [billingT],
@@ -190,31 +193,34 @@ const FormStepTwo = (props: IProps) => {
           `${billingFormTranslatePrefix}.table_step_2.service_type`,
         ),
         width: "20%",
-        align: "left",
+        align: "center",
       },
       {
         value: billingT(
           `${billingFormTranslatePrefix}.table_step_2.description`,
         ),
         width: "20%",
-        align: "left",
+        align: "center",
       },
       {
         value: billingT(`${billingFormTranslatePrefix}.table_step_2.unit`),
         width: "15%",
-        align: "left",
+        align: "center",
       },
       {
         value: billingT(`${billingFormTranslatePrefix}.table_step_2.qty`),
         width: "15%",
+        align: "center",
       },
       {
         value: billingT(`${billingFormTranslatePrefix}.table_step_2.rate`),
         width: "15%",
+        align: "center",
       },
       {
         value: billingT(`${billingFormTranslatePrefix}.table_step_2.amount`),
         width: "15%",
+        align: "center",
       },
     ],
     [billingT],
@@ -300,6 +306,7 @@ const FormStepTwo = (props: IProps) => {
                     setFilterTable({ itemTime: value });
                   }}
                   defaultValue={"SERVICE"}
+                  hasAll={false}
                   value={filterTable.itemTime}
                   rootSx={{
                     color: "#1BC5BD",
@@ -335,6 +342,7 @@ const FormStepTwo = (props: IProps) => {
                     setFilterTable({ itemAmount: value });
                   }}
                   defaultValue={"SERVICE"}
+                  hasAll={false}
                   value={filterTable.itemAmount}
                   rootSx={{
                     color: "#1BC5BD",
@@ -363,6 +371,7 @@ const FormStepTwo = (props: IProps) => {
                   onChange={(e, value) => {
                     setFilterTable({ itemPercent: value });
                   }}
+                  hasAll={false}
                   defaultValue={50}
                   value={filterTable.itemPercent}
                   rootSx={{
@@ -396,6 +405,7 @@ const FormStepTwo = (props: IProps) => {
                   }}
                   defaultValue={"SERVICE"}
                   value={filterTable.revenueBy}
+                  hasAll={false}
                   rootSx={{
                     color: "#1BC5BD",
                     px: "0px!important",
@@ -465,6 +475,7 @@ const FormStepTwo = (props: IProps) => {
               setFilterTable({ express: value });
             }}
             defaultValue={"INVOICE"}
+            hasAll={false}
             value={filterTable.express}
             rootSx={{
               color: "#1BC5BD",

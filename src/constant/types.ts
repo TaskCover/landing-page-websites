@@ -17,6 +17,13 @@ export interface Paging_Feedback {
   totalItems?: number;
 }
 
+export interface Paging_Billing {
+  page: number;
+  size: number;
+  total_page?: number;
+  totalItems?: number;
+}
+
 export interface Paging_Career {
   page: number;
   size: number;
@@ -56,6 +63,11 @@ export interface BaseQueries_Feedback {
   size?: number;
 }
 
+export interface BaseQueries_Billing {
+  page?: number;
+  size?: number;
+}
+
 export interface User {
   id: string;
   fullname: string;
@@ -63,6 +75,9 @@ export interface User {
   email: string;
   phone?: string;
   company?: string;
+  taxCode?: string;
+  address?: string;
+  country?: string;
   position?: {
     name: string;
     id: string;
@@ -107,28 +122,29 @@ export type Attachment = {
 };
 
 export declare interface IDocument {
-  _id: string;
-  name: string;
-  created_time: Date;
-  updated_time: Date;
-  created_by: Partial<User>;
-  updated_by: Partial<User>;
-  owner: Partial<User>;
-  description: string;
-  is_active: boolean;
-  is_public: boolean;
-  member: Array<{
+  _id?: string;
+  id?: string;
+  name?: string;
+  created_time?: Date;
+  updated_time?: Date;
+  created_by?: Partial<User>;
+  updated_by?: Partial<User>;
+  owner?: Partial<User>;
+  description?: string;
+  is_active?: boolean;
+  is_public?: boolean;
+  member?: Array<{
     _id: string;
     create_time: Date;
     doc: string;
     user: Partial<User>;
     perm: keyof typeof DocAccessibility;
   }>;
-  positionComment: [];
-  company: string;
-  project_id: string;
-  content: string;
-  child: [];
+  positionComment?: [];
+  company?: string;
+  project_id?: string;
+  content?: string;
+  child?: [];
 }
 
 export declare type TPagination<T> = {

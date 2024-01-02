@@ -8,8 +8,24 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Text } from "components/shared";
 import Link from "components/Link";
 import { BoxData, accordionSx } from "./Util";
+import { TBudget } from "store/project/budget/action";
+import moment from "moment";
 
-export const HomeTab = () => {
+interface HomeTabProps {
+  budget: TBudget;
+}
+
+export const HomeTab = ({ budget }: HomeTabProps) => {
+  const {
+    name,
+    owner,
+    company,
+    subsidiary,
+    currency,
+    budget_number,
+    start_date,
+  } = budget;
+  const { fullname } = owner;
   return (
     <Box mt={2} sx={accordionSx}>
       <Accordion defaultExpanded={true}>
@@ -19,10 +35,10 @@ export const HomeTab = () => {
           </Text>
         </AccordionSummary>
         <AccordionDetails>
-          <BoxData title="Budget name">Administration</BoxData>
-          <BoxData title="Owner">Garry Hunt [SAMPLE]</BoxData>
-          <BoxData title="Company">PQ</BoxData>
-          <BoxData title="Subsidiary">PQ</BoxData>
+          <BoxData title="Budget name">{name}</BoxData>
+          <BoxData title="Owner">{fullname}</BoxData>
+          <BoxData title="Company">{company}</BoxData>
+          <BoxData title="Subsidiary">{subsidiary}</BoxData>
           <Link href="#" underline="none">
             <Text sx={{ color: "secondary.main" }}>Edit</Text>
           </Link>
@@ -36,13 +52,13 @@ export const HomeTab = () => {
         </AccordionSummary>
         <AccordionDetails>
           <BoxData mb={0.5} title="Budget number">
-            #9
+            #{budget_number}
           </BoxData>
           <BoxData mb={0.5} title="Date">
-            5 Dec, 2022
+            {moment(start_date).format("D MMM, YYYY")}
           </BoxData>
           <BoxData mb={0.5} title="Currency">
-            USD
+            {currency}
           </BoxData>
           <Link href="#" underline="none">
             <Text sx={{ color: "secondary.main" }}>Edit</Text>

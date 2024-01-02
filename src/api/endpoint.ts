@@ -72,6 +72,9 @@ export const Endpoint = {
   BUDGET_CREATE: "/budgets",
   BUDGET_GET_BY_ID: "/budgets/budget-by-id/{id}",
   BUDGET_GET_FEED: "/budgets/feed/{id}",
+  BUDGET_GET_TIME_RANGES: "/budgets/times/{id}",
+  BUDGET_TIME_RANGES: "/budgets/times",
+  BUDGET_DELETE_TIME_RANGES: "/budgets/times/{id}",
   BUDGET_SERVICE_LIST: "/budgets/service/{id}",
   BUDGET_SERVICE_ADD: "/budgets/service",
 
@@ -121,10 +124,11 @@ export const Endpoint = {
 
   //Billing
   BILLING: "/bill",
-  DETAIL_BILLING: "/bill/{id}",
-  EXPORT_BILLING: "bill/export/{id}",
+  DETAIL_BILLING: "/bill/export/{id}",
+  EXPORT_BILLING: "/billToExport",
   INTERACTION_BILLING: "/bill_interaction",
   INTERACTION_BILLING_BY_BILL: "/bill_interaction/{id}",
+  ADD_USER_BILL: "/addUserToBill",
 
   //Budget
   BUDGET: "/budgets/all",

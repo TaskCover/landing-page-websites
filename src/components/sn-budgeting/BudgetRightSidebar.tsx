@@ -6,6 +6,7 @@ import { PropsWithChildren, useState } from "react";
 import { HomeTab } from "./RightSidebar/HomeTab";
 import { ClientTab } from "./RightSidebar/ClientTab";
 import { SettingTab } from "./RightSidebar/SettingTab";
+import { TBudget } from "store/project/budget/action";
 
 enum Tabs {
   Home,
@@ -13,7 +14,11 @@ enum Tabs {
   Setting,
 }
 
-export const BudgetRightSidebar = () => {
+interface BudgetRightSidebarProps{
+  budget: TBudget;
+}
+
+export const BudgetRightSidebar = ({budget}:BudgetRightSidebarProps) => {
   const [tabActive, setTabActive] = useState<Tabs>(Tabs.Home);
 
   return (
@@ -39,9 +44,9 @@ export const BudgetRightSidebar = () => {
         </ButtonHeader>
       </Stack>
       <Box>
-        {tabActive === Tabs.Home && <HomeTab />}
-        {tabActive === Tabs.Client && <ClientTab />}
-        {tabActive === Tabs.Setting && <SettingTab />}
+        {tabActive === Tabs.Home && <HomeTab budget={budget} />}
+        {tabActive === Tabs.Client && <ClientTab budget={budget}/>}
+        {tabActive === Tabs.Setting && <SettingTab budget={budget} />}
       </Box>
     </Box>
   );

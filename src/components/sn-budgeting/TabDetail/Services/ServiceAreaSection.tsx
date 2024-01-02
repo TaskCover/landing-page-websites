@@ -8,6 +8,10 @@ import {
   Stack,
   TableRow,
   popoverClasses,
+  Typography,
+  AccordionSummary,
+  Accordion,
+  AccordionDetails,
 } from "@mui/material";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
 import { NS_BUDGETING } from "constant/index";
@@ -20,13 +24,16 @@ import { IconButton, Text } from "components/shared";
 import MoreDotIcon from "icons/MoreDotIcon";
 import { useParams } from "next/navigation";
 import { useBudgetGetServiceQuery } from "queries/budgeting/service-list";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ServiceAreaSectionRow from "./ServiceAreaSectionRow";
 
-type TSection = {
+export type TSection = {
   id: string;
   name: string;
   workingTime: string;
   price: string;
   cost: string;
+  description: string;
 };
 
 const TemplateData: TSection[] = [
@@ -36,6 +43,8 @@ const TemplateData: TSection[] = [
     workingTime: "8,23 / 20 hrs",
     price: "$25,10",
     cost: "$250,10",
+    description:
+      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ratione reiciendis dolore eius eum temporibus magni vero voluptate. Quae eaque consectetur exercitationem necessitatibus ducimus atque eius! Dignissimos consequuntur rerum nemo quibusdam?",
   },
   {
     id: "aa22",
@@ -43,6 +52,8 @@ const TemplateData: TSection[] = [
     workingTime: "8,23 / 20 hrs",
     price: "$25,10",
     cost: "$250,10",
+    description:
+      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ratione reiciendis dolore eius eum temporibus magni vero voluptate. Quae eaque consectetur exercitationem necessitatibus ducimus atque eius! Dignissimos consequuntur rerum nemo quibusdam?",
   },
 ];
 export const ServiceAreaSection = ({
@@ -54,18 +65,21 @@ export const ServiceAreaSection = ({
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const { id: idBudget } = useParams();
   const serviceQuery = useBudgetGetServiceQuery(String(idBudget));
+
   const budgetT = useTranslations(NS_BUDGETING);
 
   useEffect(() => {
     if (!serviceQuery) return;
     const sectionData: TSection[] = [];
-    serviceQuery.data.sections.map((section) => {
+    serviceQuery.data.sections?.map((section) => {
       sectionData.push({
         id: section.id,
         name: section.name,
         workingTime: "0 / 0 hrs",
         price: "0",
         cost: "0",
+        description:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam, at nam! Id!",
       });
     });
     setSections(sectionData);
@@ -74,7 +88,7 @@ export const ServiceAreaSection = ({
   const refClickOutSide = useOnClickOutside(() => setAnchorEl(null));
 
   const headerList: CellProps[] = [
-    { value: "", align: "center" },
+    { value: budgetT("tabService.section.serviceName"), align: "left" },
     {
       value: budgetT("tabService.index.workingTime"),
       align: "center",
@@ -88,46 +102,14 @@ export const ServiceAreaSection = ({
   return (
     <Box>
       <TableLayout headerList={headerList} noData={false} titleColor="grey.300">
-        {sections.map((data, index) => {
+        {TemplateData.map((data, index) => {
           return (
-            <TableRow key={`budget-sevice-section-${index}`}>
-              <BodyCell>
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="center"
-                  onClick={onOpenEdit}
-                  sx={{
-                    cursor: "pointer",
-                    "&:hover": { color: "primary.main" },
-                    "&:hover svg": { color: "primary.main" },
-                  }}
-                >
-                  <ExpandCircleDownOutlinedIcon
-                    sx={{ color: "grey.300", mr: 1 }}
-                  />
-                  <PTag>{data.name}</PTag>
-                </Stack>
-              </BodyCell>
-              <BodyCell>{data.workingTime}</BodyCell>
-              <BodyCell>{data.price}</BodyCell>
-              <BodyCell>{data.cost}</BodyCell>
-              <BodyCell>
-                <IconButton
-                  noPadding
-                  sx={{ transform: "translateX(-50%)" }}
-                  onClick={(e) => {
-                    if (Boolean(anchorEl)) {
-                      setAnchorEl(null);
-                    } else {
-                      setAnchorEl(e.currentTarget);
-                    }
-                  }}
-                >
-                  <MoreDotIcon fontSize="medium" sx={{ color: "grey.300" }} />
-                </IconButton>
-              </BodyCell>
-            </TableRow>
+            <ServiceAreaSectionRow
+              key={`budget-sevice-section-${index}`}
+              section={data}
+              setAnchorEl={setAnchorEl}
+              anchorEl={anchorEl}
+            />
           );
         })}
       </TableLayout>

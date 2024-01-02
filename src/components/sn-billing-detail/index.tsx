@@ -34,16 +34,21 @@ const InformationBillingPage = () => {
       fullname: user?.fullname,
       avatar: user?.avatar,
       roles: user?.roles,
+      company: user?.company,
+      phone: user?.phone,
+      taxCode: user?.taxCode,
+      address: user?.address,
+      country: user?.country,
     } as User;
     return dataUser;
   }, [user]);
 
-  const param = useParams();
+  const { id } = useParams();
 
   const [newServices, setNewServices] = useState<Service[]>([]);
-  const id = param?.id.toString();
+
   useEffect(() => {
-    onGetBilling(id ?? "");
+    onGetBilling(id.toString() ?? "");
   }, [onGetBilling, updateStatus]);
 
   useEffect(() => {
@@ -64,30 +69,30 @@ const InformationBillingPage = () => {
   }, []);
 
   return (
-    <FixedLayout
-      maxHeight={920}
-      maxWidth={{
-        xs: 1120,
-        xl: 1450,
-      }}
-      // overflow={"auto"}
-    >
-      <Stack spacing={2}>
-        <TopContent
-          tagsOptions={tagsOptions}
-          item={item}
-          user={userInfo}
-          memberOptions={options}
-        />
+    // <FixedLayout
+    // maxHeight={920}
+    // maxWidth={{
+    //   xs: 1120,
+    //   xl: 1450,
+    // }}
+    // overflow={"auto"}
+    // >
+    <Stack>
+      <TopContent
+        tagsOptions={tagsOptions}
+        item={item}
+        user={userInfo}
+        memberOptions={options}
+      />
 
-        <TabInfo
-          arrService={arrService}
-          item={item}
-          user={userInfo}
-          arrBudgets={budgets}
-        />
-      </Stack>
-    </FixedLayout>
+      <TabInfo
+        arrService={arrService}
+        item={item}
+        user={userInfo}
+        arrBudgets={budgets}
+      />
+    </Stack>
+    // </FixedLayout>
   );
 };
 export default memo(InformationBillingPage);

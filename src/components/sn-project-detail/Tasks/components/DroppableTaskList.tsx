@@ -3,16 +3,22 @@ import {
   ButtonBase,
   MenuItem,
   MenuList,
-  Popover,
-  Stack,
-  popoverClasses,
-  TextField,
   Popper,
   Grow,
   useTheme,
+  Stack,
+  TextField,
+  popoverClasses,
 } from "@mui/material";
-import { Button, Checkbox, IconButton, Text } from "components/shared";
+import ConfirmDialog from "components/ConfirmDialog";
+import DialogLayout from "components/DialogLayout";
+import Loading from "components/Loading";
+import { IconButton, Text } from "components/shared";
+import CheckBoxCustom from "components/shared/CheckBoxCustom";
+import { DataAction } from "constant/enums";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_PROJECT } from "constant/index";
+import useBreakpoint from "hooks/useBreakpoint";
+import { useOnClickOutside } from "hooks/useOnClickOutside";
 import useToggle from "hooks/useToggle";
 import CaretIcon from "icons/CaretIcon";
 import DuplicateIcon from "icons/DuplicateIcon";
@@ -22,34 +28,27 @@ import PencilIcon from "icons/PencilIcon";
 import PlusIcon from "icons/PlusIcon";
 import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 import {
   Dispatch,
   HTMLAttributes,
-  memo,
   MouseEvent,
   SetStateAction,
+  memo,
   useId,
   useMemo,
   useState,
 } from "react";
 import { Droppable } from "react-beautiful-dnd";
-import Form from "../Form";
-import { DataAction } from "constant/enums";
-import { TaskListData } from "store/project/actions";
-import { useTasksOfProject } from "store/project/selectors";
-import TaskListForm from "../TaskListForm";
-import MoveTaskList from "../MoveTaskList";
-import { Selected, TaskFormData, genName } from "./helpers";
-import { useParams } from "next/navigation";
-import { Task } from "store/project/reducer";
 import { useSnackbar } from "store/app/selectors";
+import { TaskListData } from "store/project/actions";
+import { Task } from "store/project/reducer";
+import { useTasksOfProject } from "store/project/selectors";
 import { checkIsMobile, getMessageErrorByAPI } from "utils/index";
-import ConfirmDialog from "components/ConfirmDialog";
-import DialogLayout from "components/DialogLayout";
-import Loading from "components/Loading";
-import useBreakpoint from "hooks/useBreakpoint";
-import { useOnClickOutside } from "hooks/useOnClickOutside";
-import CheckBoxCustom from "components/shared/CheckBoxCustom";
+import Form from "../Form";
+import MoveTaskList from "../MoveTaskList";
+import TaskListForm from "../TaskListForm";
+import { Selected, TaskFormData, genName } from "./helpers";
 
 type DroppableTaskListProps = {
   id: string;
@@ -143,7 +142,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
 
   return (
     <>
-      <Droppable droppableId={id}>
+      <Droppable droppableId={id} type="TASK_LIST">
         {(provided, taskListDropSnapshot) => {
           return (
             <div
@@ -237,10 +236,8 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                   {projectT("detailTasks.addNewTask")}
                 </Button> */}
               </Stack>
-
               {isShow && props.children}
               {provided.placeholder}
-
               {/* Show form add new task */}
               {isShow && (
                 <Stack
@@ -293,6 +290,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
           );
         }}
       </Droppable>
+
       {isShowCreate && (
         <Form
           open={isShowCreate}
@@ -523,7 +521,7 @@ export const MoreList = (props: MoreListProps) => {
                   component={ButtonBase}
                   sx={sxConfig.item}
                 >
-                  {/* <PlusIcon sx={{ color: "grey.400" }} fontSize="medium" /> */}
+                  <PlusIcon sx={{ color: "grey.400" }} fontSize="medium" />
                   <Text ml={2} variant="body2" color="grey.400">
                     {projectT("detailTasks.addNewTask")}
                   </Text>

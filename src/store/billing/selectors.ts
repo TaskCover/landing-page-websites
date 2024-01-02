@@ -4,10 +4,15 @@ import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   BillingData,
+  BillingDataExport,
   GetBillingListQueries,
   GetBudgetListQueries,
+  addUserToBilling,
   createBilling,
   createCommentBilling,
+  downloadPdfBilling,
+  exportBilling,
+  exportBillingQueries,
   getBillingDetail,
   getBillingList,
   getBudgetDetail,
@@ -15,6 +20,7 @@ import {
   getCommentBilling,
   getServiceBudget,
   updateBilling,
+  viewPdfBilling,
 } from "./actions";
 import { BillingCommentData, BillingDataUpdate, Service } from "./reducer";
 import { IOptionStructure } from "components/shared/TextFieldSelect";
@@ -35,8 +41,13 @@ export const useBillings = () => {
     createStatus,
     updateStatus,
     dataComment,
+    fileExport,
+    dataExport,
+    totalAmount,
+    totalAmountUnpaid,
+    addUserStatus,
   } = useAppSelector((state) => state.billing, shallowEqual);
-  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+  const { page, size, totalItems, total_page } = useAppSelector(
     (state) => state.billing.paging,
     shallowEqual,
   );
@@ -84,7 +95,31 @@ export const useBillings = () => {
     },
     [dispatch],
   );
+  const onExportBilling = useCallback(
+    async (queries: exportBillingQueries, data: BillingDataExport) => {
+      return await dispatch(exportBilling({ queries, data }));
+    },
+    [dispatch],
+  );
+  const onDownloadFileBilling = useCallback(
+    async (queries: exportBillingQueries, data: BillingDataExport) => {
+      return await dispatch(downloadPdfBilling({ queries, data }));
+    },
+    [dispatch],
+  );
+  const onViewFileBilling = useCallback(
+    async (queries: exportBillingQueries, data: BillingDataExport) => {
+      return await dispatch(viewPdfBilling({ queries, data }));
+    },
+    [dispatch],
+  );
 
+  const onAddUserToBilling = useCallback(
+    async (id: string, userId: string) => {
+      return await dispatch(addUserToBilling({ id, userId }));
+    },
+    [dispatch],
+  );
   //   const onUpdateProject = useCallback(
   //     async (id: string, data: Partial<ProjectData>) => {
   //       try {
@@ -104,19 +139,28 @@ export const useBillings = () => {
     filters,
     isIdle,
     isFetching,
-    pageIndex,
-    pageSize,
+    page,
+    size,
     totalItems,
-    totalPages,
+    total_page,
     createStatus,
     updateStatus,
     dataComment,
+    fileExport,
+    dataExport,
+    totalAmount,
+    totalAmountUnpaid,
+    addUserStatus,
     onGetBillings,
     onCreateBilling,
     onUpdateBilling,
     onGetBilling,
     onCreateCommentBilling,
     onGetCommentBilling,
+    onExportBilling,
+    onDownloadFileBilling,
+    onViewFileBilling,
+    onAddUserToBilling,
   };
 };
 
@@ -126,7 +170,7 @@ export const useBudgets = () => {
     (state) => state.billing,
     shallowEqual,
   );
-  const { pageIndex, pageSize, totalItems, totalPages } = useAppSelector(
+  const { page, size, totalItems, total_page } = useAppSelector(
     (state) => state.billing.paging,
     shallowEqual,
   );
@@ -173,10 +217,10 @@ export const useBudgets = () => {
     filters,
     isIdle,
     isFetching,
-    pageIndex,
-    pageSize,
+    page,
+    size,
     totalItems,
-    totalPages,
+    total_page,
     budgetDetail,
     onGetBudgets,
     onGetBudgetDetail,

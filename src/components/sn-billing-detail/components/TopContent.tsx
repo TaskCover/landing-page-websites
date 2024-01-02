@@ -17,12 +17,15 @@ import { useHeaderConfig } from "store/app/selectors";
 import useBreakpoint from "hooks/useBreakpoint";
 import { usePathname } from "next-intl/client";
 import { useParams } from "next/navigation";
-import { PROJECT_MEMBERS_PATH, PROJECT_TASKS_PATH } from "constant/paths";
+import {
+  BILLING_PATH,
+  PROJECT_MEMBERS_PATH,
+  PROJECT_TASKS_PATH,
+} from "constant/paths";
 import PlusIcon from "icons/PlusIcon";
 import { useTranslations } from "next-intl";
 import { NS_BILLING, NS_PROJECT } from "constant/index";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Dropdown } from "components/Filters";
 import { Billing, Member } from "store/billing/reducer";
 import { Option, User } from "constant/types";
 import TrashIcon from "icons/TrashIcon";
@@ -30,9 +33,13 @@ import {
   ContentCopyRounded,
   Subtitles,
   SubtitlesOutlined,
+  TagOutlined,
 } from "@mui/icons-material";
 import CopyIcon from "icons/CopyIcon";
 import SelectMembers from "./SelectMembers";
+import { Dropdown } from "components/Filters";
+import DropdownTag from "./DropdownTag";
+import { useBillings } from "store/billing/selectors";
 
 const options = [
   "Duplicate Invoice",
@@ -48,8 +55,10 @@ type TopContentProps = {
   user: User;
   memberOptions?: Option[];
 };
+
 const TopContent = (props: TopContentProps) => {
   const { tagsOptions, item, memberOptions, user } = props;
+  const { onAddUserToBilling, addUserStatus, onGetBilling } = useBillings();
   const { title, prevPath } = useHeaderConfig();
   const { isMdSmaller } = useBreakpoint();
   const billingT = useTranslations(NS_BILLING);
@@ -57,50 +66,100 @@ const TopContent = (props: TopContentProps) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [listUser, setListUser] = useState<Member[]>([]);
+  const [tagSelected, setTagSelected] = useState<string>("");
   const open = Boolean(anchorEl);
+
+  const setMember = new Set<String>();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const setMember = new Set<String>();
 
   const onChangeMember = (name, data) => {
     setListUser(data);
+
+    const lastItem = data[data.length - 1];
+
+    onAddUserToBilling(id, lastItem?.id);
   };
 
   useEffect(() => {
-    if (item?.user && item.user.length > 0) {
-      const filterMember = item.user?.map((item) => {
+    if (user && listUser.length === 0 && item?.user && item.user.length === 0) {
+      if (!setMember.has(user.id)) {
+        setMember.add(user.id);
         const member = {
-          id: item.id,
-          fullname: item.fullname,
-          avatar: item?.avatar,
+          id: user.id,
+          fullname: user.fullname,
+          avatar: {
+            link: user?.avatar?.link,
+          },
         } as Member;
-        return member;
-      });
-      setListUser([...filterMember]);
+
+        setListUser([member]);
+      }
     }
-  }, [item]);
+  }, [user, item]);
+
   useEffect(() => {
-    if (user) {
-      const member = {
-        id: user.id,
-        fullname: user.fullname,
-        avatar: user?.avatar,
-      } as Member;
-      setListUser([member]);
+    if (item?.user && item.user.length > 0 && listUser?.length === 0) {
+      const filterMember = item.user
+        ?.map((item) => {
+          if (!setMember.has(item.id)) {
+            setMember.add(item.id);
+            const member = {
+              id: item.id,
+              fullname: item.fullname,
+              avatar: {
+                link: item?.avatar?.link,
+              },
+            } as Member;
+            return member;
+          }
+        })
+        .filter((item2) => item2 && typeof item2 !== "undefined");
+
+      setListUser([...filterMember] as Member[]);
     }
-  }, [user]);
+    // if (item?.user && item.user.length > 0 && listUser?.length > 0) {
+    //   const filterMember = item.user
+    //     ?.map((item) => {
+    //       if (!setMember.has(item.id)) {
+    //         setMember.add(item.id);
+    //         const member = {
+    //           id: item.id,
+    //           fullname: item.fullname,
+    //           avatar: item?.avatar,
+    //         } as Member;
+    //         return member;
+    //       }
+    //     })
+    //     .filter((item2) => item2 && typeof item2 !== "undefined");
+
+    //   console.log(filterMember);
+
+    //   // setListUser([...listUser, ...filterMember] as Member[]);
+    // }
+  }, [item]);
+
+  // console.log(user);
+  // console.log(listUser);
+
+  useEffect(() => {
+    if (addUserStatus) {
+      onGetBilling(id);
+    }
+  }, [addUserStatus]);
 
   return (
-    <Stack gap={2} pl={5} pt={2} ml={5}>
+    <Stack gap={1} pt={2} ml={5}>
       <Stack
         direction="row"
         alignItems="center"
         justifyContent="space-between"
         spacing={2}
+        pr={3}
       >
         <Stack
           direction="row"
@@ -109,12 +168,19 @@ const TopContent = (props: TopContentProps) => {
           flex={1}
           width="50%"
         >
-          <Avatar />
+          <Link
+            href={BILLING_PATH ?? ""}
+            underline="none"
+            display={"flex"}
+            alignItems={"center"}
+          >
+            <Avatar src={user?.avatar?.link ?? ""} />
 
-          <Text fontWeight={600} variant={{ xs: "body2", md: "h4" }}>
-            {"Invoice " +
-              (item?.invoiceNumber ? item?.invoiceNumber?.toString() : "")}
-          </Text>
+            <Text fontWeight={600} variant={{ xs: "body2", md: "h4" }} pl={1}>
+              {"Invoice " +
+                (item?.invoiceNumber ? item?.invoiceNumber?.toString() : "")}
+            </Text>
+          </Link>
         </Stack>
 
         <Box
@@ -124,7 +190,7 @@ const TopContent = (props: TopContentProps) => {
             padding: 1,
             borderRadius: 2,
             background: "#C9F7F5",
-            color: "#1BC5BD",
+            paddingRight: "3px",
           }}
         >
           <Text variant={"body2"} sx={{ color: "#1BC5BD" }}>
@@ -181,11 +247,35 @@ const TopContent = (props: TopContentProps) => {
             }}
           />
 
-          <Stack direction={"row"} gap={2} alignItems={"center"}>
-            <AvatarGroup total={listUser?.length}>
-              {listUser?.map((item) => {
+          <Stack
+            direction={"row"}
+            gap={2}
+            alignItems={"center"}
+            sx={{
+              ["& .MuiAvatar-root"]: {
+                // marginLeft: "-20px",
+                position: "initial",
+                background: "#E1F0FF",
+                color: "#666",
+                width: 24,
+                height: 24,
+              },
+              ["& .MuiAvatarGroup-root .MuiAvatar-root"]: {
+                marginLeft: "-15px",
+              },
+            }}
+          >
+            <AvatarGroup total={listUser?.length} max={5} spacing={"medium"}>
+              {listUser?.map((item, index) => {
                 // eslint-disable-next-line react/jsx-key
-                return <Avatar sizes={item.avatar?.link} />;
+                return (
+                  <Avatar
+                    key={index}
+                    src={item?.avatar?.link ?? ""}
+                    alt=""
+                    sx={{ width: 24, height: 24 }}
+                  />
+                );
               })}
             </AvatarGroup>
           </Stack>
@@ -197,12 +287,13 @@ const TopContent = (props: TopContentProps) => {
               value={listUser}
             />
           </Stack>
-          <Dropdown
-            placeholder={"Tag"}
+
+          <DropdownTag
+            placeholder={""}
             options={tagsOptions ?? []}
             name="Tag"
-            onChange={() => null}
-            // value={queries?.status}
+            onChange={(name, value) => setTagSelected(value)}
+            value={tagSelected}
             rootSx={{
               px: "0px!important",
               [`& .${selectClasses.outlined}`]: {

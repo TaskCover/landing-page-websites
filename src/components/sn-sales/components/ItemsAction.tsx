@@ -16,6 +16,7 @@ import CopyIcon from "icons/CopyIcon";
 import TrashIcon from "icons/TrashIcon";
 import ConfirmDialog from "components/ConfirmDialog";
 import useToggle from "hooks/useToggle";
+// import { Action } from "../../SubItem";
 import { Action } from "components/sn-sales-detail/components/TodoList/SubItem";
 import MoreDotIcon from "icons/MoreDotIcon";
 import DuplicateIcon from "icons/DuplicateIcon";
@@ -24,11 +25,12 @@ type ActionsProps = {
   saleId: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChangeAction: (action: Action, data?: any) => void;
+  onClose?: () => void;
   index: number;
 };
 
 const ServiceItemAction = (props: ActionsProps) => {
-  const { saleId, onChangeAction, index } = props;
+  const { saleId, onChangeAction, index, onClose } = props;
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const commonT = useTranslations(NS_COMMON);
   const salesT = useTranslations(NS_SALES);
@@ -69,6 +71,7 @@ const ServiceItemAction = (props: ActionsProps) => {
     <>
       <PopoverLayout
         ref={buttonRef}
+        onClose={onClose}
         label={
           <IconButton
             sx={{

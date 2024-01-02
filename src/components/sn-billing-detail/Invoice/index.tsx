@@ -47,6 +47,10 @@ import DownloadIcon from "icons/DownloadIcon";
 import FileGroupIcon from "icons/FileGroupIcon";
 import ChangeIcon from "icons/ChangeIcon";
 import { ChangeCircleOutlined } from "@mui/icons-material";
+import { useBillings } from "store/billing/selectors";
+import { BillingDataExport } from "store/billing/actions";
+import ExportView from "components/sn-billing/Modals/ExportView";
+import FixedLayout from "components/FixedLayout";
 
 type TabProps = {
   title: string;
@@ -58,6 +62,8 @@ type TabProps = {
   form: FormikProps<Billing>;
   billToInfo: Bill;
   setBillToInfo: (value: Bill) => void;
+  billFromInfo: Bill;
+  setBillFromInfo: (value: Bill) => void;
 };
 const billingFormTranslatePrefix = "list.form";
 
@@ -90,7 +96,10 @@ const TabInvoice = (props: TabProps) => {
     form,
     billToInfo,
     setBillToInfo,
+    billFromInfo,
+    setBillFromInfo,
   } = props;
+  const { onDownloadFileBilling } = useBillings();
   const { isMdSmaller } = useBreakpoint();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
@@ -99,35 +108,67 @@ const TabInvoice = (props: TabProps) => {
   const [arrLinkBudget, setArrLinkBudget] = useState<Service[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [isBillTo, setIsBillTo] = useState<boolean>(false);
-  const [billFromInfo, setBillFromInfo] = useState<Bill>({
-    fullNameCompany: user?.company,
-  });
+
   const [listService, setListService] = useState<Service[]>([]);
   const [selected, setSelected] = useState<string>("");
+  const [exportModel, setExportModel] = useState(false);
 
-  // const formik = useFormik<Billing>({
-  //   enableReinitialize: true,
-  //   initialValues: {},
-  //   onSubmit(values, formikHelpers) {
-  //     // setDataUpdate
+  const formik = useFormik<Billing>({
+    enableReinitialize: true,
+    initialValues: {},
+    onSubmit(values, formikHelpers) {
+      // setDataUpdate
 
-  //     return;
-  //   },
-  // });
+      return;
+    },
+  });
 
-  // useEffect(() => {
-  //   formik.setValues(item ?? {});
-  // }, [item]);
+  useEffect(() => {
+    formik.setValues(
+      {
+        ...item,
+        vat: item?.vat ? Number(item?.vat) : 0,
+      } ?? {},
+    );
+    if (item?.billFrom && item?.billFrom?.length > 0) {
+      setBillFromInfo({
+        city: item?.billFrom[0]?.city,
+        country: item?.billFrom[0]?.country,
+        fullNameCompany: item?.billFrom[0]?.company,
+        save: item?.billFrom[0]?.save,
+        state: item?.billFrom[0]?.state,
+        street: item?.billFrom[0]?.street,
+        tax_id: item?.billFrom[0]?.tax_id,
+        zipCode: item?.billFrom[0]?.zip ?? 0,
+      });
+    }
+    if (item?.billTo && item?.billTo?.length > 0) {
+      setBillToInfo({
+        city: item?.billTo[0]?.city,
+        country: item?.billTo[0]?.country,
+        fullNameCompany: item?.billTo[0]?.company,
+        save: item?.billTo[0]?.save,
+        state: item?.billTo[0]?.state,
+        street: item?.billTo[0]?.street,
+        tax_id: item?.billTo[0]?.tax_id,
+        zipCode: item?.billTo[0]?.zip ?? 0,
+      });
+    }
+
+    if (item?.budgetService && item?.budgetService?.length > 0) {
+      setListService([...item?.budgetService]);
+    }
+  }, [item]);
 
   const handleClose = () => {
     setOpenModal(false);
   };
 
-  useEffect(() => {
-    if (arrService && arrService?.length > 0) {
-      setListService([...arrService]);
-    }
-  }, [arrService]);
+  // useEffect(() => {
+  //   if (arrService && arrService?.length > 0) {
+  //     setListService([...arrService]);
+  //   }
+  // }, [arrService]);
 
   const totalAmount = useMemo(() => {
     const result = listService?.reduce((prev, item) => {
@@ -156,30 +197,46 @@ const TabInvoice = (props: TabProps) => {
     if (totalAmount && totalAmount != 0 && form?.values?.vat) {
       form.setFieldValue(
         "amount",
-        form?.values?.vat !== 0 ? totalAmount + form?.values?.vat : totalAmount,
+        form?.values?.vat !== 0
+          ? totalAmount + Number(form?.values?.vat)
+          : totalAmount,
       );
       form.setFieldValue("amount_unpaid", totalAmount);
     }
   }, [totalAmount, form?.values?.vat]);
 
+  const arrBill = [{ id: item?.id ?? "" }];
+
   const onchangePdf = (value) => {
     setSelected(value);
     if (value === "VIEW") {
-      push(getPath(BILLING_EXPORT_PATH, undefined, { id: item?.id ?? "" }));
+      setExportModel(true);
+      // push(getPath(BILLING_EXPORT_PATH, undefined));
+    }
+    if (value === "DOWNLOAD") {
+      onDownloadFileBilling({ fileType: "pdf_landscape" }, {
+        bill: arrBill ?? [],
+      } as BillingDataExport);
     }
   };
 
+  const onCloseModalExport = () => {
+    setExportModel(false);
+  };
+
   return (
-    <Box>
+    <FixedLayout px={2}>
       <Stack
         direction={"row"}
         gap={2}
         justifyContent={"space-between"}
         alignItems={"center"}
+        py={1}
         position={"sticky"}
         // display={"unset"}
         top={0}
-        zIndex={1}
+        zIndex={3}
+        sx={{ background: "#fff" }}
       >
         <Button variant="outlined">Sent to client</Button>
         <Stack direction={"row"} gap={2}>
@@ -188,6 +245,7 @@ const TabInvoice = (props: TabProps) => {
             options={options}
             name="Tag"
             hasIcon
+            hasAll={false}
             onChange={(name, value) => onchangePdf(value)}
             value={selected}
             rootSx={{
@@ -221,7 +279,7 @@ const TabInvoice = (props: TabProps) => {
         // alignItems={"center"}
       >
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item xs={4} my={2}>
+          <Grid item xs={4} my={1}>
             <Box sx={{ border: "1px solid #ECECF3", p: 2, borderRadius: 4 }}>
               <Stack direction={"row"} gap={2} pb={1}>
                 <Input
@@ -257,7 +315,9 @@ const TabInvoice = (props: TabProps) => {
                 <DatePicker
                   title={"Invoice date"}
                   name="date"
-                  onChange={() => null}
+                  onChange={(name, value) => {
+                    form.setFieldValue(name, value);
+                  }}
                   onBlur={form.handleBlur}
                   value={form.values?.date}
                   disabled={!editForm}
@@ -274,7 +334,9 @@ const TabInvoice = (props: TabProps) => {
                 <DatePicker
                   title={"Due date"}
                   name="dueDate"
-                  onChange={() => null}
+                  onChange={(name, value) => {
+                    form.setFieldValue(name, value);
+                  }}
                   onBlur={form.handleBlur}
                   value={form.values?.dueDate}
                   disabled={!editForm}
@@ -313,7 +375,7 @@ const TabInvoice = (props: TabProps) => {
                 border: "1px solid #ECECF3",
                 p: 2,
                 borderRadius: 4,
-                height: 230,
+                height: 200,
               }}
             >
               <Stack direction={"row"} gap={2} justifyContent={"space-between"}>
@@ -342,14 +404,14 @@ const TabInvoice = (props: TabProps) => {
                 <Text variant={"body2"}>{billToInfo.street}</Text>
                 <Text variant={"body2"}>
                   {billToInfo.city || billToInfo.state || billToInfo.country
-                    ? billToInfo.city +
+                    ? (billToInfo.city ?? "") +
                       ", " +
-                      billToInfo.state +
+                      (billToInfo.state ?? "") +
                       ", " +
-                      billToInfo.country
+                      (billToInfo.country ?? "")
                     : ""}
                 </Text>
-                <Text variant={"body2"}>{billToInfo.taxId}</Text>
+                <Text variant={"body2"}>{billToInfo.tax_id}</Text>
               </Stack>
             </Box>
           </Grid>
@@ -359,7 +421,7 @@ const TabInvoice = (props: TabProps) => {
                 border: "1px solid #ECECF3",
                 p: 2,
                 borderRadius: 4,
-                height: 230,
+                height: 200,
               }}
             >
               <Stack direction={"row"} gap={2} justifyContent={"space-between"}>
@@ -374,9 +436,9 @@ const TabInvoice = (props: TabProps) => {
                     }}
                   >
                     <PencilUnderlineIcon sx={{ color: "#1BC5BD", mr: 1 }} />
-                    {/* <Text variant={"body2"} color={"#1BC5BD"}>
+                    <Text variant={"body2"} color={"#1BC5BD"}>
                       Edit
-                    </Text> */}
+                    </Text>
                   </Link>
                 )}
               </Stack>
@@ -389,14 +451,14 @@ const TabInvoice = (props: TabProps) => {
                   {billFromInfo.city ||
                   billFromInfo.state ||
                   billFromInfo.country
-                    ? billFromInfo.city +
+                    ? (billFromInfo.city ?? "") +
                       ", " +
-                      billFromInfo.state +
+                      (billFromInfo.state ?? "") +
                       ", " +
-                      billFromInfo.country
+                      (billFromInfo.country ?? "")
                     : ""}
                 </Text>
-                <Text variant={"body2"}>{billFromInfo.taxId ?? ""}</Text>
+                <Text variant={"body2"}>{billFromInfo.tax_id ?? ""}</Text>
               </Stack>
             </Box>
           </Grid>
@@ -451,7 +513,7 @@ const TabInvoice = (props: TabProps) => {
             <Text variant={"body2"}>
               {formatNumber(
                 form.values.vat && form.values.vat != 0
-                  ? totalAmount + form.values.vat
+                  ? totalAmount + Number(form?.values?.vat)
                   : totalAmount,
                 {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
@@ -493,13 +555,18 @@ const TabInvoice = (props: TabProps) => {
         setBillToInfo={setBillToInfo}
         setBillFromInfo={setBillFromInfo}
       />
-    </Box>
+      <ExportView
+        open={exportModel}
+        onClose={() => onCloseModalExport()}
+        item={{ bill: arrBill ?? [] } as BillingDataExport}
+      />
+    </FixedLayout>
   );
 };
 
 const sxConfig = {
   input: {
-    height: 56,
+    height: 46,
   },
 };
 

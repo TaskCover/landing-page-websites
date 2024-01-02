@@ -120,4 +120,5 @@ export const CommonLang: CommonDictionary = {
   hour: "giờ",
   cancel: "Huỷ",
   success: "Thành công!",
+  crop: "Xén",
 };

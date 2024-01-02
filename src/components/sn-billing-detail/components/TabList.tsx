@@ -18,6 +18,7 @@ import {
 import { User } from "constant/types";
 import { useBillings } from "store/billing/selectors";
 import { FormikProps, useFormik } from "formik";
+import { Padding } from "@mui/icons-material";
 
 type TabItemProps = {
   label: string;
@@ -30,6 +31,8 @@ type TabItemProps = {
   form: FormikProps<Billing>;
   billToInfo: Bill;
   setBillToInfo: (value: Bill) => void;
+  billFromInfo: Bill;
+  setBillFromInfo: (value: Bill) => void;
 };
 
 type TabListProps = {
@@ -48,6 +51,9 @@ const TabInfo = (props: TabListProps) => {
   const [editForm, setEditForm] = useState<boolean>(false);
   const [billToInfo, setBillToInfo] = useState<Bill>({});
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
+  const [billFromInfo, setBillFromInfo] = useState<Bill>({
+    fullNameCompany: user?.company,
+  });
 
   const formik = useFormik<Billing>({
     enableReinitialize: true,
@@ -56,8 +62,10 @@ const TabInfo = (props: TabListProps) => {
       // setDataUpdate
       const data = {
         ...values,
-        ...billToInfo,
+        // ...billToInfo,
         id: item?.id,
+        billTo: billToInfo,
+        billFrom: billFromInfo,
       } as BillingDataUpdate;
       handleSaveValue(data ?? {});
       setIsSubmit(true);
@@ -86,14 +94,9 @@ const TabInfo = (props: TabListProps) => {
   return (
     <>
       <Stack
-        // direction="row"
-        // alignItems="center"
         borderBottom={{ md: "1px solid" }}
-        // justifyContent="space-between"
         borderColor={{ md: "grey.100" }}
         width="100%"
-        // position="sticky"
-        // top={isMembersOfProjectPath ? undefined : { xs: 8, sm: 16 }}
         bgcolor="background.paper"
         px={3}
       >
@@ -101,13 +104,15 @@ const TabInfo = (props: TabListProps) => {
           <Stack
             direction={"row"}
             justifyContent={"space-between"}
-            gap={2}
+            gap={1}
             borderBottom={"1px solid #ECECF3"}
+            height={40}
           >
             <TabList
               key={value}
               onChange={handleChange}
               sx={{
+                height: 40,
                 ["& span"]: {
                   display: "none !important",
                 },
@@ -122,6 +127,7 @@ const TabInfo = (props: TabListProps) => {
                     color: value === tab.value ? "#212121" : "grey.300",
                     textTransform: "none",
                     background: value === tab.value ? "#E1F0FF" : "none",
+                    paddingTop: "3px",
                     width: 150,
                     ["&.MuiTab-root.Mui-selected"]: {
                       color: "#212121",
@@ -177,6 +183,8 @@ const TabInfo = (props: TabListProps) => {
               form={formik}
               billToInfo={billToInfo}
               setBillToInfo={setBillToInfo}
+              billFromInfo={billFromInfo}
+              setBillFromInfo={setBillFromInfo}
             />
           ))}
           {/* <TabActions /> */}
@@ -200,6 +208,8 @@ const TabItem = (props: TabItemProps) => {
     form,
     billToInfo,
     setBillToInfo,
+    billFromInfo,
+    setBillFromInfo,
   } = props;
 
   const billingT = useTranslations(NS_BILLING);
@@ -217,9 +227,10 @@ const TabItem = (props: TabItemProps) => {
   return (
     <TabPanel
       value={value}
+      sx={{ padding: 0 }}
       // color={value ? "#212121" : "grey.300"}
       // sx={{ overflow: "scroll" }}
-      sx={{ overflow: "scroll", height: 700 }}
+      // sx={{ overflow: "scroll", padding: "0px 12px" }}
     >
       {value === "Invoice" && (
         <TabInvoice
@@ -232,6 +243,8 @@ const TabItem = (props: TabItemProps) => {
           form={form}
           billToInfo={billToInfo}
           setBillToInfo={setBillToInfo}
+          billFromInfo={billFromInfo}
+          setBillFromInfo={setBillFromInfo}
         />
       )}
       {value === "Feed" && (
