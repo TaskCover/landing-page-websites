@@ -1,11 +1,14 @@
-import { CardContent, Grid, Input, Stack, TextField, Typography } from "@mui/material";
+import {
+  CardContent,
+  Grid,
+  Input,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { DialogLayoutProps } from "components/DialogLayout";
 import FormLayout from "components/FormLayout";
-import {
-  AN_ERROR_TRY_AGAIN,
-  NS_COMMON,
-  NS_FEEDBACK,
-} from "constant/index";
+import { AN_ERROR_TRY_AGAIN, NS_COMMON, NS_FEEDBACK } from "constant/index";
 import { FormikErrors, useFormik } from "formik";
 import { memo, useMemo } from "react";
 import { useSnackbar } from "store/app/selectors";
@@ -85,7 +88,7 @@ const Form = (props: FormProps) => {
   return (
     <FormLayout
       sx={{
-        minWidth: { xs: "calc(100vw - 24px)", lg: 800},
+        minWidth: { xs: "calc(100vw - 24px)", lg: 800 },
         maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
         minHeight: "auto",
       }}
@@ -110,19 +113,23 @@ const Form = (props: FormProps) => {
             <hr />
             <Stack>
               <Typography sx={{ mb: 1 }} color="#424242" variant="h5">
-              {feedbackT("feedbackTable.subject")}: 
-            </Typography>
-            <Input
-                    title={feedbackT("feedbackTable.subject")}
-                    name="title"
-                    required
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    value={formik.values?.title}
-                    color="secondary"
-                />
+                {feedbackT("feedbackTable.subject")}:
+              </Typography>
+              <Input
+                title={feedbackT("feedbackTable.subject")}
+                name="title"
+                required
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values?.title}
+                color="secondary"
+              />
             </Stack>
-            <Typography variant="body2" color="#212121" style={{paddingTop:7}}>
+            <Typography
+              variant="body2"
+              color="#212121"
+              style={{ paddingTop: 7 }}
+            >
               {feedbackT("feedbackTable.content")}: {initialValues.content}
             </Typography>
           </CardContent>

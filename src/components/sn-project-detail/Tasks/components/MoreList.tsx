@@ -22,7 +22,15 @@ import MoreDotIcon from "icons/MoreDotIcon";
 import MoveArrowIcon from "icons/MoveArrowIcon";
 import TrashIcon from "icons/TrashIcon";
 import { useTranslations } from "next-intl";
-import { memo, MouseEvent, useId, useMemo, useRef, useState } from "react";
+import {
+  memo,
+  MouseEvent,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTaskDetail, useTasksOfProject } from "store/project/selectors";
 import { Selected, genName } from "./helpers";
 import { Task, TaskList } from "store/project/reducer";
@@ -49,6 +57,7 @@ import { useOnClickOutside } from "hooks/useOnClickOutside";
 type MoreListProps = {
   selectedList: Selected[];
   onReset: () => void;
+  isClosed?: boolean;
 } & IconButtonProps;
 
 enum Action {
@@ -62,7 +71,7 @@ enum Action {
 }
 
 const MoreList = (props: MoreListProps) => {
-  const { selectedList, onReset, ...rest } = props;
+  const { selectedList, onReset, isClosed, ...rest } = props;
 
   const {
     items,

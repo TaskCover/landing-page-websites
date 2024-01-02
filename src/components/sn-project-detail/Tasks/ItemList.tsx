@@ -72,6 +72,8 @@ import dayjs from "dayjs";
 import MoveListIcon from "icons/MoveListIcon";
 import CheckBoxCustom from "components/shared/CheckBoxCustom";
 import FixedLayoutTask from "components/FixedLayoutTask";
+import { DescriptionTask } from "./Detail/components";
+import FormDescription from "components/sn-projects/components/FormDescription";
 
 const ItemList = () => {
   const {
@@ -167,6 +169,13 @@ const ItemList = () => {
 
     return totalCount;
   }, [dataList]);
+
+  const [
+    isAddDescription,
+    onShowAddDescription,
+    onHideAddDescription,
+    onToggleShowDescription,
+  ] = useToggle(false);
 
   const allItemsChecked = useMemo(() => {
     return selectedList.length === totalItemCount && totalItemCount !== 0;
@@ -961,48 +970,41 @@ const ItemList = () => {
   const fixedLayoutRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const popupEls = document.querySelectorAll(".MuiPopper-root");
-      const datePopupEls = fixedLayoutRef.current?.querySelectorAll(
+    const handleScroll = (e) => {
+      // const popupEls = document.querySelectorAll(".MuiPopper-root");
+      // const datePopupEls = fixedLayoutRef.current?.querySelectorAll(
+      //   ".react-datepicker-popper",
+      // );
+      // popupEls.forEach((popup) => {
+      //   if (popup instanceof HTMLElement) {
+      //     popup.style.display = "none";
+      //   }
+      // });
+      // datePopupEls?.forEach((popup) => {
+      //   if (popup instanceof HTMLElement) {
+      //     popup.style.display = "none";
+      //   }
+      // });
+      const popupEl = document.querySelector(
+        ".MuiPopper-root",
+      ) as unknown as HTMLElement;
+      const datePopupEl = fixedLayoutRef.current?.querySelector(
         ".react-datepicker-popper",
-      );
-
-      popupEls.forEach((popup) => {
-        if (popup instanceof HTMLElement) {
-          popup.style.display = "none";
-        }
-      });
-
-      datePopupEls?.forEach((popup) => {
-        if (popup instanceof HTMLElement) {
-          popup.style.display = "none";
-        }
-      });
+      ) as unknown as HTMLElement;
+      if (popupEl) {
+        popupEl.style.display = "none";
+      }
+      if (datePopupEl) {
+        datePopupEl.style.display = "none";
+      }
     };
 
     fixedLayoutRef.current?.addEventListener("scroll", handleScroll);
-
     // Cleanup: remove event listener when component unmounts
     return () => {
       fixedLayoutRef.current?.removeEventListener("scroll", handleScroll);
     };
-  }, []);
-
-  // fixedLayoutRef?.current?.addEventListener("scroll", () => {
-  //   const popupEls = document.querySelectorAll(".MuiPopper-root");
-
-  //   const datePopupEls = fixedLayoutRef?.current?.querySelectorAll(
-  //     ".react-datepicker-popper",
-  //   );
-
-  //   popupEls.forEach(function (popup) {
-  //     popup.style.display = "none";
-  //   });
-
-  //   datePopupEls.forEach(function (popup) {
-  //     popup.style.display = "none";
-  //   });
-  // });
+  }, [fixedLayoutRef]);
 
   return (
     <Stack flex={1} pb={3} order={3}>
@@ -1039,7 +1041,12 @@ const ItemList = () => {
           />
         </TableLayout>
       </Stack>
-      <FixedLayoutTask ref={fixedLayoutRef} flex={1}>
+      <FixedLayoutTask
+        ref={fixedLayoutRef}
+        flex={1}
+        bgcolor="background.default"
+        gap="16px"
+      >
         <DragDropContext onDragStart={onDraggingTrue} onDragEnd={onDragEnd}>
           {dataList.map((taskListItem, indexTaskList) => {
             const isChecked = isTaskListChecked(selectedList, taskListItem.id);
@@ -1124,7 +1131,6 @@ const ItemList = () => {
                             </Draggable>
 
                             <Content
-                              // width="15%!important"
                               sx={{
                                 display: "flex",
                                 justifyContent: "start",
@@ -1164,7 +1170,6 @@ const ItemList = () => {
                                   fontWeight: "normal",
                                 },
                               }}
-                              // flexGrow={1}
                             >
                               <Date
                                 label={commonT("form.title.selectTime")}
@@ -1186,7 +1191,6 @@ const ItemList = () => {
                             </Content>
 
                             <Content
-                              // flexGrow={1}
                               sx={{
                                 display: "flex",
                                 justifyContent: "center",
@@ -1240,19 +1244,16 @@ const ItemList = () => {
                             </Content>
 
                             <Content
+                              noWrap={false}
+                              whiteSpace="nowrap"
                               sx={{
-                                display: "flex",
-                                justifyContent: "center",
-                                width: "100%",
                                 alignItem: "center",
                                 overflow: "hidden",
                                 "& > p": { lineHeight: "30px" },
+                                position: "relative",
                               }}
                             >
                               <Description>{task?.description}</Description>
-                              {/* <FormDescription description={task?.description}>
-                                {task?.description}
-                              </FormDescription> */}
                             </Content>
                             <Content
                               sx={{

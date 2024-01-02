@@ -127,7 +127,9 @@ const Form = (props: FormProps) => {
     const day = dateObject.getDate();
 
     // Tạo chuỗi mới với định dạng yyyy/mm/dd
-    const formattedDate = `${year}/${month.toString().padStart(2, "0")}/${day.toString().padStart(2, "0")}`;
+    const formattedDate = `${year}/${month.toString().padStart(2, "0")}/${day
+      .toString()
+      .padStart(2, "0")}`;
     return formattedDate;
   };
 
@@ -139,7 +141,10 @@ const Form = (props: FormProps) => {
         const selected = chuyen_dinh_dang_ngay(new Date());
         switch (type) {
           case DataAction.CREATE:
-            if (selectedStartDate >= selected && String(DataAction.CREATE) === "2") {
+            if (
+              selectedStartDate >= selected &&
+              String(DataAction.CREATE) === "2"
+            ) {
               formik.setFieldValue("start_time", selectedStartDate);
             } else {
               setValue_Start_Time(dayjs(new Date()));
@@ -148,7 +153,11 @@ const Form = (props: FormProps) => {
             }
             break;
           case DataAction.UPDATE:
-            if (selectedStartDate >= chuyen_dinh_dang_ngay(initialValues.start_time) && String(DataAction.UPDATE) === "3") {
+            if (
+              selectedStartDate >=
+                chuyen_dinh_dang_ngay(initialValues.start_time) &&
+              String(DataAction.UPDATE) === "3"
+            ) {
               formik.setFieldValue("start_time", selectedStartDate);
             } else {
               setValue_Start_Time(dayjs(initialValues.start_time));
@@ -164,7 +173,10 @@ const Form = (props: FormProps) => {
         const selectedStartDates = formik.values.start_time;
         switch (type) {
           case DataAction.CREATE:
-            if (selectedEndDate >= selectedStartDates && String(DataAction.CREATE) === "2") {
+            if (
+              selectedEndDate >= selectedStartDates &&
+              String(DataAction.CREATE) === "2"
+            ) {
               formik.setFieldValue("end_time", selectedEndDate);
             } else {
               setValue_End_Time(dayjs(new Date()));
@@ -173,7 +185,11 @@ const Form = (props: FormProps) => {
             }
             break;
           case DataAction.UPDATE:
-            if (selectedEndDate >= chuyen_dinh_dang_ngay(initialValues.end_time) && String(DataAction.DETAIL) === "3") {
+            if (
+              selectedEndDate >=
+                chuyen_dinh_dang_ngay(initialValues.end_time) &&
+              String(DataAction.DETAIL) === "3"
+            ) {
               formik.setFieldValue("start_time", selectedEndDate);
             } else {
               setValue_Start_Time(dayjs(initialValues.end_time));
@@ -195,6 +211,7 @@ const Form = (props: FormProps) => {
         maxWidth: { xs: "calc(100vw - 24px)", sm: 1200 },
         minHeight: "auto",
         color: "black",
+        // overflow: "hidden",
       }}
       label={`${label} ${careerT("title_form")}`}
       onSubmit={formik.handleSubmit}
