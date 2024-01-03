@@ -124,15 +124,18 @@ const TimeCreate: React.FC<IProps> = ({
   useEffect(() => {
     if (isEdit) {
       const validResetData = {
-        project_id: selectedEvent?.extendedProps?.project?.id,
-        type: selectedEvent?.extendedProps?.typeDefault,
-        position: selectedEvent?.extendedProps?.position?.id,
+        project_id: selectedEvent?.extendedProps?.project?.id || "",
+        type: selectedEvent?.extendedProps?.typeDefault || "",
+        position: userData?.position?.id,
         day: dayjs(selectedEvent?.start).format("YYYY-MM-DD"),
         start_time: selectedEvent?.start,
         duration: selectedEvent?.extendedProps?.hour,
         note: selectedEvent?.extendedProps?.note,
       };
-      if (selectedEvent?.extendedProps?.id == null) {
+      if (
+        selectedEvent?.extendedProps?.id == null &&
+        selectedEvent?.extendedProps?.project?.id
+      ) {
         validResetData.day = selectedEvent?.extendedProps?.day;
         validResetData.start_time = moment(
           [
