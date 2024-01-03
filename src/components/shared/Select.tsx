@@ -161,8 +161,6 @@ const Select = (props: SelectProps) => {
         )}
 
         {optionList?.map((option) => (
-          // <Box key={option.value} sx={{width: "250px", overflowY: "auto"}}>
-
           <MenuItem
             sx={{
               ...defaultSx.item,
@@ -202,7 +200,6 @@ const Select = (props: SelectProps) => {
               </Stack>
             </Stack>
           </MenuItem>
-          // </Box>
         ))}
 
         {pending && (
