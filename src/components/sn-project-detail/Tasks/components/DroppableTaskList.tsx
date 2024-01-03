@@ -282,6 +282,9 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
                         fontSize: "14px",
                         color: "#999999 !important",
                       },
+                      "& >label >span": {
+                        display: "none",
+                      },
                     }}
                   />
                 </Stack>

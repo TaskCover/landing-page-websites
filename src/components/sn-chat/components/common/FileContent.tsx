@@ -14,6 +14,7 @@ const FileContent = () => {
   const { mediaList, mediaListStatus, onGetChatAttachments } = useChat();
   const { onAddSnackbar } = useSnackbar();
   const commonT = useTranslations(NS_COMMON);
+  const { isDarkMode } = useTheme();
 
   useEffect(() => {
     const handleGetAttachment = async () => {
@@ -41,7 +42,6 @@ const FileContent = () => {
     return <Typography textAlign="center">Loading...</Typography>;
   }
 
-  const {isDarkMode} = useTheme();
   return (
     <Box
       sx={{
@@ -73,7 +73,7 @@ const FileContent = () => {
                 href={item.path}
                 target="_blank"
                 sx={{
-                  color: isDarkMode ? 'white' : "#212121",
+                  color: isDarkMode ? "white" : "#212121",
                   overflowWrap: "anywhere",
                   fontWeight: 600,
                   textDecoration: "auto",

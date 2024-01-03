@@ -215,11 +215,13 @@ const ProfileHeader = ({
 
           <Box
             width="180px"
+            height="40px"
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               marginLeft: "4px",
+              maxHeight: "40px",
             }}
           >
             {onShowProfile ? (
@@ -239,7 +241,13 @@ const ProfileHeader = ({
               <Typography
                 variant="inherit"
                 fontWeight="bold"
-                // sx={nameSx}
+                sx={{
+                  ...nameSx,
+                  left: 0,
+                  transform: "none",
+                  WebkitLineClamp: 1,
+                  position: "unset",
+                }}
                 {...nameProp}
               >
                 {name}
