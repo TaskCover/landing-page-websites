@@ -37,9 +37,10 @@ import React, {
 } from "react";
 import {
   DragDropContext,
-  Draggable,
   DropResult,
   Droppable,
+  Draggable,
+  DragStart,
 } from "react-beautiful-dnd";
 import { useSnackbar } from "store/app/selectors";
 import { Task, TaskList } from "store/project/reducer";
