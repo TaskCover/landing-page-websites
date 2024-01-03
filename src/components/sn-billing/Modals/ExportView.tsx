@@ -98,6 +98,7 @@ const ExportModal = ({ open, onClose, item }: IProps) => {
       const queries = { fileType: selected.document };
       onExportBilling(queries, item);
     }
+    onClose();
   };
 
   // useEffect(() => {

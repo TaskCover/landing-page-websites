@@ -6,6 +6,10 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Text } from "components/shared";
+import { CloseOutlined } from "@mui/icons-material";
+import { Stack } from "@mui/material";
+import { useRouter } from "next-intl/client";
+import { BILLING_PATH } from "constant/paths";
 
 const steps = [
   "Select campaign settings",
@@ -22,6 +26,8 @@ type StepProps = {
 
 const StepForm = (props: StepProps) => {
   const { activeStep, skipped, listSteps, setActiveStep } = props;
+
+  const { push } = useRouter();
 
   const isStepOptional = (step: number) => {
     return step === 1;
@@ -66,11 +72,12 @@ const StepForm = (props: StepProps) => {
   //   };
 
   return (
-    <Box
+    <Stack
       sx={{ width: "100%" }}
       alignItems={"center"}
       textAlign={"center"}
       py={3}
+      direction={"row"}
     >
       <Stepper
         activeStep={activeStep}
@@ -106,6 +113,7 @@ const StepForm = (props: StepProps) => {
           );
         })}
       </Stepper>
+      <CloseOutlined onClick={() => push(BILLING_PATH)} />
       {/* {activeStep === steps.length ? (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>
@@ -140,7 +148,7 @@ const StepForm = (props: StepProps) => {
           </Box>
         </React.Fragment>
       )} */}
-    </Box>
+    </Stack>
   );
 };
 export default React.memo(StepForm);

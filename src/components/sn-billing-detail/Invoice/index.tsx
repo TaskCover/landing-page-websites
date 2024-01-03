@@ -99,7 +99,8 @@ const TabInvoice = (props: TabProps) => {
     billFromInfo,
     setBillFromInfo,
   } = props;
-  const { onDownloadFileBilling } = useBillings();
+  const { fileExport, onDownloadFileBilling, onViewFileBilling } =
+    useBillings();
   const { isMdSmaller } = useBreakpoint();
   const commonT = useTranslations(NS_COMMON);
   const billingT = useTranslations(NS_BILLING);
@@ -112,6 +113,7 @@ const TabInvoice = (props: TabProps) => {
   const [listService, setListService] = useState<Service[]>([]);
   const [selected, setSelected] = useState<string>("");
   const [exportModel, setExportModel] = useState(false);
+  const [viewFileStatus, setViewFileStatus] = useState<boolean>(false);
 
   const formik = useFormik<Billing>({
     enableReinitialize: true,
@@ -210,11 +212,16 @@ const TabInvoice = (props: TabProps) => {
   const onchangePdf = (value) => {
     setSelected(value);
     if (value === "VIEW") {
-      setExportModel(true);
-      // push(getPath(BILLING_EXPORT_PATH, undefined));
+      // setExportModel(true);
+      setViewFileStatus(true);
+
+      onViewFileBilling({ fileType: "pdf_landscape", pageType: "Letter" }, {
+        bill: arrBill ?? [],
+      } as BillingDataExport);
     }
+
     if (value === "DOWNLOAD") {
-      onDownloadFileBilling({ fileType: "pdf_landscape" }, {
+      onDownloadFileBilling({ fileType: "pdf_landscape", pageType: "Letter" }, {
         bill: arrBill ?? [],
       } as BillingDataExport);
     }
@@ -223,6 +230,13 @@ const TabInvoice = (props: TabProps) => {
   const onCloseModalExport = () => {
     setExportModel(false);
   };
+
+  useEffect(() => {
+    if (fileExport && viewFileStatus) {
+      push(getPath(BILLING_EXPORT_PATH, undefined));
+      setViewFileStatus(false);
+    }
+  }, [fileExport, viewFileStatus]);
 
   return (
     <FixedLayout px={2}>
@@ -491,7 +505,7 @@ const TabInvoice = (props: TabProps) => {
         <Grid container spacing={2} paddingTop={2} paddingLeft={2}>
           <Grid xs={1} md={1}>
             <Text variant={"body2"}>
-              {billingT(`${billingFormTranslatePrefix}.title.vat`) + " 0%"}
+              {billingT(`${billingFormTranslatePrefix}.title.vat`)}
             </Text>
           </Grid>
           <Grid xs={2} md={2}>
@@ -510,7 +524,7 @@ const TabInvoice = (props: TabProps) => {
             <Text variant={"body2"}>{"Total"}</Text>
           </Grid>
           <Grid xs={2} md={2}>
-            <Text variant={"body2"}>
+            <Text variant={"body2"} fontWeight={800}>
               {formatNumber(
                 form.values.vat && form.values.vat != 0
                   ? totalAmount + Number(form?.values?.vat)
@@ -555,11 +569,11 @@ const TabInvoice = (props: TabProps) => {
         setBillToInfo={setBillToInfo}
         setBillFromInfo={setBillFromInfo}
       />
-      <ExportView
+      {/* <ExportView
         open={exportModel}
         onClose={() => onCloseModalExport()}
         item={{ bill: arrBill ?? [] } as BillingDataExport}
-      />
+      /> */}
     </FixedLayout>
   );
 };
