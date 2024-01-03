@@ -39,10 +39,6 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
   const { setOpenComment } = useContext(NewPageContext);
   const [debounceChange] = useDebounce((value: string) => {
     updateDoc({ id: id as string, payload: { name: value } })
-      .unwrap()
-      .then(() => {
-        setOpenShare(!openShare);
-      });
   }, 200);
 
   return (
