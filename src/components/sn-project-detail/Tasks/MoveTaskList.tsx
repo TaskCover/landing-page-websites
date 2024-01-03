@@ -20,6 +20,7 @@ import * as Yup from "yup";
 import { useParams } from "next/navigation";
 import { Option } from "constant/types";
 import SelectMoveTask from "components/shared/SelectMoveTask";
+import { overflow } from "html2canvas/dist/types/css/property-descriptors/overflow";
 
 type MoveTaskListProps = {
   oldTaskListIds: string[];
@@ -140,7 +141,7 @@ const MoveTaskList = (props: MoveTaskListProps) => {
       onSubmit={formik.handleSubmit}
       {...rest}
     >
-      <Stack spacing={2} py={3}>
+      <Stack spacing={2} py={3} sx={{}}>
         <SelectMoveTask
           options={searchOptions}
           title={projectT("detailTasks.form.title.newTaskPlace")}

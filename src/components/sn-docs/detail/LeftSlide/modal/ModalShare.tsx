@@ -15,6 +15,7 @@ import React, { SetStateAction, useEffect } from "react";
 import { useSnackbar } from "store/app/selectors";
 import { useEmployees } from "store/company/selectors";
 import { useAppSelector } from "store/hooks";
+import { useDocs } from "store/docs/selectors";
 
 interface ModalShareProps {
   setOpenShare: React.Dispatch<SetStateAction<boolean>>;
@@ -45,32 +46,38 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
   const { initQuery, isReady, query } = useQueryParams();
   const id = useAppSelector((data) => data.doc.id);
 
+  const { handleGetDocDetail } = useDocs();
+
+  const fetApi = () => {
+    onGetEmployees({ ...DEFAULT_PAGING, ...initQuery });
+  }
+
   const { onAddSnackbar } = useSnackbar();
 
   const onSubmit = async (values) => {
     const payload =
-        values?.people === "ALL"
-            ? {
-              isPublic: true,
-            }
-            : {
-              owner: values?.people,
-              perm: values?.access,
-              isPublic: false,
-            };
+      values?.people === "ALL"
+        ? {
+            isPublic: true,
+          }
+        : {
+            owner: values?.people,
+            perm: values?.access,
+            isPublic: false,
+          };
 
-    const res = await client.put(Endpoint.ADD_PERM_DOCS + id, payload, {
-      baseURL: DOCS_API_URL,
-    });
-    if (
-        res.status === HttpStatusCode.OK ||
-        res.status === HttpStatusCode.CREATED
-    ) {
-      onAddSnackbar("Thành Công", "success");
-      setOpenShare(false);
-    }
-    try {
-    } catch (error) {}
+    await client
+      .put(Endpoint.ADD_PERM_DOCS + id, payload, {
+        baseURL: DOCS_API_URL,
+      })
+      .then(() => {
+        onAddSnackbar("Thành Công", "success");
+        handleGetDocDetail(id);
+        setOpenShare(false);
+      })
+      .catch((err: any) => {
+        onAddSnackbar(err?.message, "error");
+      });
   };
 
   const init: initType = {
@@ -106,7 +113,7 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
 
   useEffect(() => {
     if (!isReady) return;
-    onGetEmployees({ ...DEFAULT_PAGING, ...initQuery });
+    fetApi();
   }, [initQuery, isReady, onGetEmployees]);
 
   const onChangeSearch = (name: string, value?: string | number) => {
@@ -114,48 +121,48 @@ const ModalShare = ({ openShare, setOpenShare }: ModalShareProps) => {
   };
 
   return (
-      <FormLayout
-          open={openShare}
-          onClose={() => setOpenShare(false)}
-          sx={{
-            minWidth: { xs: "calc(100vw - 24px)", sm: 500 },
-            maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
-            minHeight: "auto",
+    <FormLayout
+      open={openShare}
+      onClose={() => setOpenShare(false)}
+      sx={{
+        minWidth: { xs: "calc(100vw - 24px)", sm: 500 },
+        maxWidth: { xs: "calc(100vw - 24px)", sm: 500 },
+        minHeight: "auto",
+      }}
+      onSubmit={formik.handleSubmit}
+      label={"Sharing options"}
+    >
+      <Stack direction={{ sm: "row" }} spacing={2}>
+        <Select
+          options={option2 as unknown as Option[]}
+          title={"People"}
+          hasAvatar
+          searchProps={{
+            value: "",
+            placeholder: commonT("searchBy", { name: "email" }),
+            name: "email",
           }}
-          onSubmit={formik.handleSubmit}
-          label={"Sharing options"}
-      >
-        <Stack direction={{ sm: "row" }} spacing={2}>
-          <Select
-              options={option2 as unknown as Option[]}
-              title={"People"}
-              hasAvatar
-              searchProps={{
-                value: "",
-                placeholder: commonT("searchBy", { name: "email" }),
-                name: "email",
-              }}
-              name="people"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values?.people}
-              rootSx={sxConfig.input}
-              fullWidth
-              onChangeSearch={onChangeSearch}
-          />
-          <Select
-              options={optionAccess}
-              title={"Access"}
-              name="access"
-              sx={{ "& .MuiMenu-paper": { zIndex: 100 } }}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values?.access}
-              rootSx={sxConfig.input}
-              fullWidth
-          />
-        </Stack>
-      </FormLayout>
+          name="people"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values?.people}
+          rootSx={sxConfig.input}
+          fullWidth
+          onChangeSearch={onChangeSearch}
+        />
+        <Select
+          options={optionAccess}
+          title={"Access"}
+          name="access"
+          sx={{ "& .MuiMenu-paper": { zIndex: 100 } }}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values?.access}
+          rootSx={sxConfig.input}
+          fullWidth
+        />
+      </Stack>
+    </FormLayout>
   );
 };
 

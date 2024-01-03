@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, useMemo } from "react";
+import { ChangeEvent, memo, useMemo, useState } from "react";
 import { Select, SelectProps } from "components/shared";
 import ChevronIcon from "icons/ChevronIcon";
 import { TagOutlined } from "@mui/icons-material";
@@ -28,22 +28,25 @@ const Dropdown = (props: DropdownProps) => {
     [options, value],
   );
 
+  const [open, setOpen] = useState<boolean>(false);
+
   const onChangeSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     onChange(name, value);
   };
   return (
     <Stack direction={"row"} alignItems={"center"}>
-      {!value && value?.toString().length == 0 ? (
+      {/* {!value && value?.toString().length == 0 ? (
         <TagIcon sx={{ color: "grey.400" }} />
       ) : (
         ""
-      )}
+      )} */}
 
       <Select
         size="small"
         hasAll={hasAll}
         onlyContent
+        defaultValue={"all"}
         rootSx={{
           color: hasValue ? "primary.main" : "grey.400",
           fontWeight: 600,
@@ -73,6 +76,12 @@ const Dropdown = (props: DropdownProps) => {
         onChange={onChangeSelect}
         value={value}
         showPlaceholder
+        SelectProps={{
+          renderValue(value) {
+            const selected = options?.find((item) => item.value === value);
+            return selected?.label ?? <TagIcon sx={{ color: "grey.400" }} />;
+          },
+        }}
         sx={{
           minWidth: "fit-content",
           height: 32,

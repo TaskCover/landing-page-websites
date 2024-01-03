@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Dialog, DialogTitle, Divider, IconButton, Stack } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { Dialog, DialogTitle, Divider, IconButton, Stack } from "@mui/material";
 //import { Filter } from '../Common';
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
 interface IProps {
   open: boolean;
-  content: React.ReactNode | JSX.Element;
-  onClose(): void;
+  content?: React.ReactNode | JSX.Element;
+  onClose: () => void;
   title: string | React.ReactNode;
   isCenterTitle?: boolean;
   sx?: object;
@@ -16,7 +16,7 @@ interface IProps {
   onChangeSearch?(keyword: string): void;
 }
 
-const DefaultPopupLayout: React.FC<IProps> = ({
+const DefaultPopupLayout: React.FC<PropsWithChildren<IProps>> = ({
   open,
   onClose,
   content,
@@ -25,6 +25,7 @@ const DefaultPopupLayout: React.FC<IProps> = ({
   sx,
   isSearchable = false,
   onChangeSearch,
+  children,
 }) => {
   const [keyword, setKeyword] = React.useState<string>("");
 
@@ -102,7 +103,7 @@ const DefaultPopupLayout: React.FC<IProps> = ({
       ) : null} */}
 
       <Divider />
-      {content}
+      {content || children}
     </Dialog>
   );
 };

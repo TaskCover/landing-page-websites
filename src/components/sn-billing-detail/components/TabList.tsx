@@ -113,6 +113,7 @@ const TabInfo = (props: TabListProps) => {
               onChange={handleChange}
               sx={{
                 height: 40,
+                minHeight: "40px !important",
                 ["& span"]: {
                   display: "none !important",
                 },

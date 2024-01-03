@@ -34,7 +34,7 @@ const ItemList = () => {
   const { isMdSmaller } = useBreakpoint();
   const pathname = usePathname();
   const { query } = useQueryParams();
-  const { data, isLoading } = useGetDocsQuery(query);
+  const { data, isLoading } = useGetDocsQuery(query, {refetchOnMountOrArgChange: true,});
   const searchParams = useSearchParams()!;
 
   const desktopHeaderList: CellProps[] = useMemo(
