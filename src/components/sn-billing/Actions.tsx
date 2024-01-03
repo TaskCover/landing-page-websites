@@ -61,19 +61,18 @@ const Actions = (props: Iprops) => {
         ...queries,
         status: ["Open", "Paid", "Unpaid"],
       };
+
       onSearch(allQueries);
     } else {
       onSearch(newQueries);
     }
   };
 
-  const onSearch = (newQueries: Params) => {
-    // const path = getPath(pathname, newQueries);
-    // push(path);
-    setTimeout(() => {
-      onGetBillings({ ...newQueries, page: 1, size: size });
-    }, 1000);
-  };
+  const [onSearch] = useDebounce((newQueries: Params) => {
+    onGetBillings({ ...newQueries, page: 1, size: size });
+  }, 1000);
+  // const path = getPath(pathname, newQueries);
+  // push(path);
 
   const onClear = () => {
     const newQueries = { page: 1, size: size };

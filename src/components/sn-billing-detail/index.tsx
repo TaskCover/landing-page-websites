@@ -95,4 +95,4 @@ const InformationBillingPage = () => {
     // </FixedLayout>
   );
 };
-export default memo(InformationBillingPage);
+export default InformationBillingPage;

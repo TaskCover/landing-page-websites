@@ -228,7 +228,7 @@ const TopContent = (props: TopContentProps) => {
           flex={1}
           width="50%"
         >
-          <Dropdown
+          {/* <Dropdown
             placeholder={"company name"}
             options={[]}
             name="status"
@@ -245,7 +245,7 @@ const TopContent = (props: TopContentProps) => {
                 },
               },
             }}
-          />
+          /> */}
 
           <Stack
             direction={"row"}

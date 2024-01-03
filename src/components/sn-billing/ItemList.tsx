@@ -71,6 +71,7 @@ const ItemList = () => {
   const [action, setAction] = useState<DataAction | undefined>();
   const [selectedList, setSelectedList] = useState<Billing[]>([]);
   const [exportModel, setExportModel] = useState(false);
+  const [exportStatus, setExportStatus] = useState<boolean>(false);
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -128,7 +129,7 @@ const ItemList = () => {
         align: "center",
       },
     ],
-    [billingT],
+    [billingT, totalAmount, totalAmountUnpaid],
   );
   const mobileHeaderList: CellProps[] = useMemo(
     () => [
@@ -146,11 +147,41 @@ const ItemList = () => {
       },
       { value: billingT("list.table.budgets"), align: "center" },
       { value: billingT("list.table.att"), align: "center" },
-      { value: billingT("list.table.amount"), align: "center" },
-      { value: billingT("list.table.amountUnpaid"), align: "center" },
+      {
+        value: (
+          <>
+            <Stack>
+              {billingT("list.table.amount")}
+              <Text variant={"body2"} align="right" mr={3} fontWeight={600}>
+                {formatNumber(totalAmount, {
+                  prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+                  numberOfFixed: 2,
+                })}
+              </Text>
+            </Stack>
+          </>
+        ),
+        align: "center",
+      },
+      {
+        value: (
+          <>
+            <Stack>
+              {billingT("list.table.amountUnpaid")}
+              <Text variant={"body2"} align="right" mr={2} fontWeight={600}>
+                {formatNumber(totalAmountUnpaid, {
+                  prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+                  numberOfFixed: 2,
+                })}
+              </Text>
+            </Stack>
+          </>
+        ),
+        align: "center",
+      },
       { value: billingT("list.table.dueDate"), align: "center" },
     ],
-    [billingT],
+    [billingT, totalAmount, totalAmountUnpaid],
   );
 
   const onChangeAll = useCallback(
@@ -286,10 +317,11 @@ const ItemList = () => {
   const onOpenModalExport = (value: Billing[]) => {
     // setExportModel(true);
     // setSelectedList(value ?? []);
+    setExportStatus(true);
     const arrBill = value?.map((item) => {
       return { id: item.id };
     });
-    onViewFileBilling({ fileType: "pdf_landscape" }, {
+    onViewFileBilling({ fileType: "pdf_landscape", pageType: "Letter" }, {
       bill: arrBill ?? [],
     } as BillingDataExport);
   };
@@ -299,10 +331,11 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    if (fileExport) {
+    if (fileExport && exportStatus) {
       push(getPath(BILLING_EXPORT_PATH, undefined));
+      setExportStatus(false);
     }
-  }, [fileExport]);
+  }, [fileExport, exportStatus]);
 
   return (
     <>
