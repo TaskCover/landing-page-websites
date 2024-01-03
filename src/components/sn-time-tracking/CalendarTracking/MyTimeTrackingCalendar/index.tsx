@@ -309,6 +309,28 @@ const TrackingCalendar: React.FC<IProps> = () => {
     handleCloseEventMenu();
   };
 
+  const handleDateSelect = (selectInfo) => {
+    if (
+      selectInfo.view.type === "timeGridWeek" ||
+      selectInfo.view.type === "timeGridDay"
+    ) {
+      const duration = moment
+        .duration(moment(selectInfo.end).diff(moment(selectInfo.start)))
+        .hours();
+
+      const eventData = {
+        ...selectInfo,
+        extendedProps: {
+          day: moment(selectInfo.start).format("YYYY-MM-DD"),
+          hour: duration,
+        },
+      };
+      setIsEdit(true);
+      setSelectedEvent(eventData);
+      setIsOpenCreatePopup(true);
+    }
+  };
+
   const getWeekStartAndEndDates = (date: any) => {
     const startOfWeek = date?.startOf("week").add(0, "day"); // Ngày bắt đầu tuần (chủ nhật)
     const endOfWeek = date?.startOf("week").add(6, "day"); // Ngày kết thúc tuần (thứ 2)
@@ -722,6 +744,7 @@ const TrackingCalendar: React.FC<IProps> = () => {
                 ".fc-day.fc-day-sun, .fc-day.fc-day-sat, .fc-timegrid-axis, colgroup":
                   {
                     backgroundColor: "#FAFAFA",
+                    color: isDarkMode ? "#71717A" : "#fff",
                   },
                 "colgroup, colgroup col": {
                   width: "112px !important",
@@ -736,10 +759,8 @@ const TrackingCalendar: React.FC<IProps> = () => {
                 slotMinWidth={112}
                 height={`calc(100vh - 365px)`}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                dateClick={(info) => {
-                  setDateClick(info.dateStr);
-                  setIsOpenCreatePopup(true);
-                }}
+                selectable={true}
+                select={handleDateSelect}
                 eventResize={({ event, endDelta }) => {
                   const date = dayjs(event.start).format("YYYY-MM-DD") || "";
                   const time =

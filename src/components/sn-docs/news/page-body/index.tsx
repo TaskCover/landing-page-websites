@@ -43,6 +43,7 @@ const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
     description,
     project_id,
   } = useAppSelector((state) => state.doc);
+
   const [openChangeCover, setOpenChangeCover] = useState<boolean>(false);
   const { theme } = useContext(ThemeContext);
   const { openComment } = useContext(NewPageContext);
@@ -58,7 +59,7 @@ const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
   useEffect(() => {
     const data = {
       content: content,
-      name: name || "No Name",
+      name: name || undefined,
       description: description,
       project_id: project_id,
     };
@@ -70,15 +71,24 @@ const PageBody = ({ openSlider, setOpenSlider }: IDocDetail) => {
     } else {
       setMounted(true);
     }
-  }, [description, content, name, project_id]);
+  }, [description, name, content, project_id]);
 
-  useEffect(() => {
-    if (content) {
-      editor?.commands.setContent(content);
-    }
-  }, [content]);
+  // useEffect(() => {
 
+  //     console.log('vodđ', content)
+  //     const interval = setInterval(() => {
+  //       editor?.commands.setContent(content);
+  //       clearInterval(interval)
+  //     }, 500)
+  //    return clearInterval(interval)
+
+  // }, []);
+  //console.log('ngoai', content)
   const editor = useDocEditor() as Editor;
+
+  // useEffect(() => {
+  //   editor?.commands.setContent(content);
+  // }, [content]);
 
   useEffect(() => {
     const updateMinHeight = () => {
