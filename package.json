@@ -99,6 +99,7 @@
     "react-datepicker": "^4.13.0",
     "react-dom": "^18.2.0",
     "react-flatpickr": "^3.10.13",
+    "react-froala-wysiwyg": "^4.1.4",
     "react-highlight-words": "^0.20.0",
     "react-hook-form": "^7.45.1",
     "react-infinite-scroller": "^1.2.6",
