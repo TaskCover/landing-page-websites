@@ -36,6 +36,7 @@ import {
   DropResult,
   Droppable,
   Draggable,
+  DragStart,
 } from "react-beautiful-dnd";
 import {
   AN_ERROR_TRY_AGAIN,
@@ -1275,8 +1276,8 @@ const ItemList = () => {
                               />
                             </Content>
                           </Stack>
-                          {/* {!isHide && ( */}
-                          {
+                          {!isHide && (
+                            // {
                             <>
                               <Droppable droppableId={task.id}>
                                 {(taskDropProvided, snapshot) => (
@@ -1667,7 +1668,7 @@ const ItemList = () => {
                                 </Text>
                               )}
                             </>
-                          }
+                          )}
                         </Stack>
                       </DraggableTask>
                     </div>
