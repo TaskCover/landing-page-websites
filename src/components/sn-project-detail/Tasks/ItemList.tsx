@@ -23,6 +23,7 @@ import useEventListener from "hooks/useEventListener";
 import useQueryParams from "hooks/useQueryParams";
 import useTheme from "hooks/useTheme";
 import useToggle from "hooks/useToggle";
+import MoveListIcon from "icons/MoveListIcon";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next-intl/client";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
@@ -37,10 +38,9 @@ import React, {
 } from "react";
 import {
   DragDropContext,
+  Draggable,
   DropResult,
   Droppable,
-  Draggable,
-  DragStart,
 } from "react-beautiful-dnd";
 import { useSnackbar } from "store/app/selectors";
 import { Task, TaskList } from "store/project/reducer";
@@ -59,9 +59,6 @@ import {
 } from "./components";
 import Content from "./components/Content";
 import Description from "./components/Description";
-import dayjs from "dayjs";
-import MoveListIcon from "icons/MoveListIcon";
-import { DescriptionTask } from "./Detail/components";
 import { isSubTaskChecked, isTaskChecked, isTaskListChecked } from "./helpers";
 
 const ItemList = () => {
@@ -1522,7 +1519,7 @@ const ItemList = () => {
                                                             task.id,
                                                             subTask.id,
                                                             taskListItem.name,
-                                                            subTask.name,
+                                                            task.name,
                                                           )}
                                                           {...provided.dragHandleProps}
                                                         >
