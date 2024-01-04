@@ -744,9 +744,11 @@ const TrackingCalendar: React.FC<IProps> = () => {
                 ".fc-day.fc-day-sun, .fc-day.fc-day-sat, .fc-timegrid-axis, colgroup":
                   {
                     backgroundColor: isDarkMode ? "rgb(86, 86, 86)" : "#FAFAFA",
-                    color: "#fff",
+                    ...(isDarkMode && {
+                      color: "#fff",
+                    }),
                   },
-                ".fc-timegrid-axis-frame": {
+                ".fc-timegrid-axis .fc-timegrid-axis-frame": {
                   color: isDarkMode ? "#fff" : undefined,
                 },
                 "colgroup, colgroup col": {
