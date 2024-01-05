@@ -71,7 +71,11 @@ const DraggableTask = (props: DraggableTaskProps) => {
               "&::after": {
                 position: "absolute",
                 top: "40px",
-                "border-bottom": "1px solid #1BC5BD",
+                "border-bottom": "1px solid",
+                borderColor: {
+                  md: "#1BC5BD",
+                  xs: "background.paper",
+                },
                 content: "''",
                 width: "100%",
                 height: "1px",
