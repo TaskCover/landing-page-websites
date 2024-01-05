@@ -4,7 +4,7 @@ import { getExtensions } from "../tiptap/extensions/starter-kit";
 import useDebounce from "hooks/useDebounce";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { changeContentDoc } from "store/docs/reducer";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 
 export default function useDocEditor() {
   const {
@@ -16,16 +16,15 @@ export default function useDocEditor() {
   } = useContext(NewPageContext);
 
   const doc = useAppSelector((state) => state.doc);
-
   const dispatch = useAppDispatch();
-
   const [handleContentUpdate] = useDebounce((content: any) => {
     dispatch(changeContentDoc(content));
   }, 1000);
 
   const anchorRef = useRef(0);
   return useEditor({
-    content: doc?.content,
+    content: doc?.contentRow,
+   // emitUpdate: true,
     extensions: getExtensions({
       openLinkModal: () => setIsAddingNewLink(true),
       onCommentActivated: (commentId: string) => {
@@ -50,4 +49,5 @@ export default function useDocEditor() {
       await handleContentUpdate(editor.getHTML());
     },
   });
+
 }

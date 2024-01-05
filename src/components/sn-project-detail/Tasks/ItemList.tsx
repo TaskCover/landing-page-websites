@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 "use client";
 
-import { Box, CircularProgress, Stack } from "@mui/material";
+import { Box, CircularProgress, ClickAwayListener, Stack } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Date } from "components/Filters";
 import FixedLayoutTask from "components/FixedLayoutTask";
@@ -91,7 +91,7 @@ const ItemList = () => {
 
   const { initQuery, isReady } = useQueryParams();
   const { push } = useRouter();
-  const { isMdSmaller } = useBreakpoint();
+  const { isXlSmaller, isMdSmaller, isLgSmaller, isXlBigger } = useBreakpoint();
   const commonT = useTranslations(NS_COMMON);
   const projectT = useTranslations(NS_PROJECT);
   const [isProcessing, onProcessingTrue, onProcessingFalse] = useToggle();
@@ -226,24 +226,56 @@ const ItemList = () => {
     () => [
       {
         value: projectT("detailTasks.form.title.name"),
-        width: "30%",
+        width: "32.5%",
         align: "left",
       },
-      { value: commonT("form.title.assigner"), width: "22.5%", align: "left" },
+      { value: commonT("form.title.assigner"), width: "20%", align: "left" },
       {
         value: commonT("form.title.startDate"),
-        width: "10%",
+        width: "12.5%",
+        align: "center",
       },
-      { value: commonT("form.title.endDate"), width: "10%" },
+      { value: commonT("form.title.endDate"), width: "12.5%", align: "center" },
       { value: commonT("status"), width: "10.5%" },
-      { value: commonT("form.title.description"), width: "15%" },
+      {
+        value: commonT("form.title.description"),
+        width: "10%",
+        align: "center",
+      },
+      { value: "", width: "2%", align: "center" },
+    ],
+    [commonT, projectT],
+  );
+
+  const xlHeaderList: CellProps[] = useMemo(
+    () => [
+      {
+        value: projectT("detailTasks.form.title.name"),
+        width: "45%",
+        align: "left",
+      },
+      { value: commonT("form.title.assigner"), width: "15%", align: "left" },
+      {
+        value: commonT("form.title.startDate"),
+        width: "9",
+        align: "center",
+      },
+      { value: commonT("form.title.endDate"), width: "9", align: "center" },
+      { value: commonT("status"), width: "7", align: "center" },
+      {
+        value: commonT("form.title.description"),
+        width: "13%",
+        align: "center",
+      },
       { value: "", width: "2%", align: "center" },
     ],
     [commonT, projectT],
   );
 
   const headerList = useMemo(() => {
-    return isMdSmaller ? [] : desktopHeaderList;
+    if (isMdSmaller) return [];
+    if (isXlSmaller) return desktopHeaderList;
+    if (isXlBigger) return xlHeaderList;
   }, [desktopHeaderList, isMdSmaller]) as CellProps[];
 
   const onSetTask = (
@@ -985,22 +1017,9 @@ const ItemList = () => {
 
   const fixedLayoutRef = useRef<HTMLDivElement>(null);
 
+  //Handle close any popups when user scrolls
   useEffect(() => {
-    const handleScroll = (e) => {
-      // const popupEls = document.querySelectorAll(".MuiPopper-root");
-      // const datePopupEls = fixedLayoutRef.current?.querySelectorAll(
-      //   ".react-datepicker-popper",
-      // );
-      // popupEls.forEach((popup) => {
-      //   if (popup instanceof HTMLElement) {
-      //     popup.style.display = "none";
-      //   }
-      // });
-      // datePopupEls?.forEach((popup) => {
-      //   if (popup instanceof HTMLElement) {
-      //     popup.style.display = "none";
-      //   }
-      // });
+    const handleScroll = () => {
       const popupEl = document.querySelector(
         ".MuiPopper-root",
       ) as unknown as HTMLElement;
@@ -1374,9 +1393,13 @@ const ItemList = () => {
                                                             : "40px"
                                                         }`,
                                                         "border-left":
-                                                          "1px solid #1BC5BD",
+                                                          "1px solid",
                                                         "border-bottom":
-                                                          "1px solid #1BC5BD",
+                                                          "1px solid",
+                                                        borderColor: {
+                                                          md: "#1BC5BD",
+                                                          xs: "background.paper",
+                                                        },
                                                         content: "''",
                                                         width: "21px",
                                                         height: `${
@@ -1392,13 +1415,17 @@ const ItemList = () => {
                                                           (i + 1) * 40 + 17
                                                         }px`,
                                                         "border-top":
-                                                          "1px solid #1BC5BD",
+                                                          "1px solid",
                                                         "border-right":
-                                                          "1px solid #1BC5BD",
+                                                          "1px solid",
                                                         content: "''",
                                                         width: "5px",
                                                         height: "5px",
                                                         rotate: "45deg",
+                                                        borderColor: {
+                                                          md: "#1BC5BD",
+                                                          xs: "background.paper",
+                                                        },
                                                       },
                                                     }}
                                                   >
@@ -1427,7 +1454,11 @@ const ItemList = () => {
                                                             i * 40 + 0
                                                           }px`}`,
                                                           borderBottom:
-                                                            "1px solid #1BC5BD",
+                                                            "1px solid",
+                                                          borderColor: {
+                                                            md: "#1BC5BD",
+                                                            xs: "background.paper",
+                                                          },
                                                           content: "''",
                                                           width: "95%",
                                                           height: `1px`,

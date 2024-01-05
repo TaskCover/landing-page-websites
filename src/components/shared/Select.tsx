@@ -233,7 +233,7 @@ const defaultSx = {
     fontSize: 14,
     color: "text.primary",
     lineHeight: "22px",
-    backgroundColor: "grey.50",
+    backgroundColor: "primary.paper",
     "& > img": {
       mr: 1,
     },
