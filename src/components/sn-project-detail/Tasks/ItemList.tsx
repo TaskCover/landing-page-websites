@@ -1693,7 +1693,13 @@ const ItemList = () => {
                                                           },
                                                         }}
                                                       >
-                                                        <Description>
+                                                        <Description
+                                                          taskId={task.id}
+                                                          subTaskId={subTask.id}
+                                                          taskListId={
+                                                            taskListItem.id
+                                                          }
+                                                        >
                                                           {subTask.description}
                                                         </Description>
                                                       </Content>
