@@ -43,7 +43,7 @@ const ViewPdf = () => {
   const { budgets, onGetBudgets } = useBudgets();
   const { initQuery, isReady, query } = useQueryParams();
   const [isDownload, setIsDownload] = useState<boolean>(false);
-  const printRef = React.useRef("");
+  const printRef = React.useRef(null);
   const param = useParams();
 
   const id = param?.id.toString();
@@ -85,7 +85,7 @@ const ViewPdf = () => {
 
     // pdf.addImage(data, "PNG", 10, 10, pdfWidth, pdfHeight);
 
-    pdf.html(element, {
+    pdf.html(element ?? "", {
       callback: function (pdf) {
         pdf.save("print.pdf");
       },
