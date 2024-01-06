@@ -186,7 +186,8 @@ const ViewPdf = () => {
 
         <Stack gap={2} p={2} padding={8} alignItems={"center"}>
           <div
-            ref={printRef}
+           //TODO: Comment this code to deploy, waiting for QUANGNV to fix the bug 
+            // ref={printRef}
             style={{
               fontSize: 20,
               fontWeight: 600,
