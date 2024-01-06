@@ -174,9 +174,9 @@ export const ModalExpense = ({ open, onClose, projectId, data }: Props) => {
               </InputLabelWrapper>
             </Stack>
           </Stack>
-          <InputLabelWrapper label={budgetT("dialogExpense.description")}>
-            <Textarea {...register("note")} minRows={4} resize={false} />
-          </InputLabelWrapper>
+          {/* <InputLabelWrapper label={budgetT("dialogExpense.description")}>
+            <Textarea {...register("note")} minRows={4} size={false} />
+          </InputLabelWrapper> */}
         </MenuList>
       </Stack>
     </FormLayout>

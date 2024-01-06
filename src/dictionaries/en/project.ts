@@ -226,7 +226,7 @@ export const ProjectLang: ProjectDictionary = {
     },
     groupBy: {
       dateCreated: "Date Created",
-      dateUpdated: "Date Udpated",
+      dateUpdated: "Date Updated",
       startDate: "Start Date",
       endDate: "End Date",
       owner: "Owner",

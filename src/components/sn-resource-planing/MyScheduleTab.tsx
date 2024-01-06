@@ -1,48 +1,37 @@
-import FullCalendar from "@fullcalendar/react";
-import React, { useCallback, useEffect, useMemo } from "react";
-import { IBookingAllFitler } from "store/resourcePlanning/action";
-import {
-  DEFAULT_BOOKING_ALL_FILTER,
-  EXAMPLE_DATA,
-  TAB_TYPE,
-  weekdays,
-} from "./helper";
-import dayjs from "dayjs";
-import { isEmpty, includes } from "lodash";
-import { Box } from "@mui/system";
-import { Grid, Stack, Typography } from "@mui/material";
-import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
 import { ResourceInput } from "@fullcalendar/resource";
-import BlueArrowIcon from "icons/BlueArrowIcon";
-import RedArrowIcon from "icons/RedArrowIcon";
-import GrayArrowIcon from "icons/GrayArrowIcon";
+import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
+import { Stack } from "@mui/material";
+import { Box } from "@mui/system";
+import { Button } from "components/shared";
+import { TIME_OFF_TYPE } from "components/sn-sales/helpers";
+import { NS_RESOURCE_PLANNING } from "constant/index";
+import dayjs from "dayjs";
+import useTheme from "hooks/useTheme";
 import PlusIcon from "icons/PlusIcon";
-import TimeHeader from "./components/TimeHeader";
+import { isEmpty } from "lodash";
+import { useTranslations } from "next-intl";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { useAuth } from "store/app/selectors";
+import { IBookingAllFitler } from "store/resourcePlanning/action";
+import { IBookingItem } from "store/resourcePlanning/reducer";
 import {
   useBookingAll,
   useMyBooking,
   useResourceDate,
 } from "store/resourcePlanning/selector";
-import { NS_RESOURCE_PLANNING } from "constant/index";
-import { useTranslations } from "next-intl";
-import CreateBooking from "./modals/CreateBooking";
-import { IBookingItem, IBookingListItem } from "store/resourcePlanning/reducer";
-import { useFetchBookingAll, useFetchMyBooking } from "./hooks/useBookingAll";
-import useGetMappingTime from "./hooks/useGetMappingTime";
-import { formatEstimateTime, formatNumber } from "utils/index";
-import EditBooking from "./modals/EditBooking";
-import ResourceLabel from "./components/ResourceLabel";
 import EventContents from "./components/EventContents";
-import { useAuth } from "store/app/selectors";
-import { RESOURCE_EVENT_TYPE } from "constant/enums";
-import useGetOptions from "./hooks/useGetOptions";
 import FilterHeader from "./components/FilterHeader";
-import SlotLabelContent from "./components/SlotLabelContent";
 import ResourceHeaderContent from "./components/ResourceHeaderContent";
-import useTheme from "hooks/useTheme";
-import { TIME_OFF_TYPE } from "components/sn-sales/helpers";
-import { Button } from "components/shared";
+import ResourceLabel from "./components/ResourceLabel";
+import SlotLabelContent from "./components/SlotLabelContent";
+import TimeHeader from "./components/TimeHeader";
+import { DEFAULT_BOOKING_ALL_FILTER, TAB_TYPE } from "./helper";
+import { useFetchMyBooking } from "./hooks/useBookingAll";
+import useGetOptions from "./hooks/useGetOptions";
+import CreateBooking from "./modals/CreateBooking";
+import EditBooking from "./modals/EditBooking";
 
 const MyScheduleTab = () => {
   const resourceT = useTranslations<string>(NS_RESOURCE_PLANNING);

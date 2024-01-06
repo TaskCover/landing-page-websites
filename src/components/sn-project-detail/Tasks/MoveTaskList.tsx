@@ -20,6 +20,7 @@ import * as Yup from "yup";
 import { useParams } from "next/navigation";
 import { Option } from "constant/types";
 import SelectMoveTask from "components/shared/SelectMoveTask";
+import { overflow } from "html2canvas/dist/types/css/property-descriptors/overflow";
 
 type MoveTaskListProps = {
   oldTaskListIds: string[];

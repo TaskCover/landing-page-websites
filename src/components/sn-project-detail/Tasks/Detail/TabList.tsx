@@ -1,12 +1,10 @@
-import { memo } from "react";
 import { Stack, StackProps } from "@mui/material";
 import { Text } from "components/shared";
-import { useTranslations } from "next-intl";
 import { NS_PROJECT } from "constant/index";
-import { StatusTask, AssignTask } from "./components";
-import { Task } from "store/project/reducer";
+import { useTranslations } from "next-intl";
+import { PropsWithChildren, memo } from "react";
+import { AssignTask, StatusTask } from "./components";
 import EditTask from "./components/EditTask";
-import MoveListIcon from "icons/MoveListIcon";
 
 export enum TabDetail {
   DETAIL = 1,
@@ -24,7 +22,7 @@ type TabListProps = {
   onChange: (newTab: TabDetail) => void;
 };
 
-const TabList = (props: TabListProps) => {
+const TabList = (props: PropsWithChildren<TabListProps>) => {
   const { value, onChange } = props;
 
   const onChangeTab = (newTab: TabDetail) => {
@@ -64,6 +62,7 @@ const TabList = (props: TabListProps) => {
         >
           <AssignTask />
           <StatusTask />
+          {props.children} {/* More actions */}
           <EditTask />
         </Stack>
       </Stack>

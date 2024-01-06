@@ -42,36 +42,36 @@ const ServiceTable = (props: IProps) => {
         width: "5%",
       },
       {
-        value: `service_type`,
+        value: `${billingT("detail.form.invoice.table.service_type")}`,
         width: "20%",
         align: "left",
       },
       {
-        value: `description`,
+        value: `${billingT("detail.form.invoice.table.description")}`,
         width: "20%",
         align: "left",
       },
       {
-        value: `unit`,
+        value: `${billingT("detail.form.invoice.table.unit")}`,
         width: "15%",
         align: "left",
       },
       {
-        value: `qty`,
+        value: `${billingT("detail.form.invoice.table.qty")}`,
         width: "15%",
       },
       {
-        value: `rate`,
+        value: `${billingT("detail.form.invoice.table.rate")}`,
         width: "15%",
       },
       {
-        value: `discount`,
+        value: `${billingT("detail.form.invoice.table.discount")}`,
         width: "15%",
         align: "left",
       },
       {
-        value: "amount",
-        width: "15%",
+        value: `${billingT("detail.form.invoice.table.amount")}`,
+        width: "20%",
         align: "right",
       },
       {
@@ -88,35 +88,35 @@ const ServiceTable = (props: IProps) => {
         width: "5%",
       },
       {
-        value: `service_type`,
+        value: `${billingT("detail.form.invoice.table.service_type")}`,
         width: "20%",
         align: "left",
       },
       {
-        value: `description`,
+        value: `${billingT("detail.form.invoice.table.description")}`,
         width: "20%",
         align: "left",
       },
       {
-        value: `unit`,
+        value: `${billingT("detail.form.invoice.table.unit")}`,
         width: "15%",
         align: "left",
       },
       {
-        value: `qty`,
+        value: `${billingT("detail.form.invoice.table.qty")}`,
         width: "15%",
       },
       {
-        value: `rate`,
+        value: `${billingT("detail.form.invoice.table.rate")}`,
         width: "15%",
       },
       {
-        value: `discount`,
+        value: `${billingT("detail.form.invoice.table.discount")}`,
         width: "15%",
         align: "left",
       },
       {
-        value: "amount",
+        value: `${billingT("detail.form.invoice.table.amount")}`,
         width: "15%",
         align: "right",
       },
@@ -281,7 +281,7 @@ const ServiceTable = (props: IProps) => {
                     >
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Text variant="body2" fontSize={14} color={"grey.300"}>
-                          {salesT("detail.service.table.totalBuget")}:
+                          {/* {salesT("detail.service.table.totalBuget")}: */}
                         </Text>
                         <Text
                           variant="body2"
@@ -313,7 +313,7 @@ const ServiceTable = (props: IProps) => {
                   >
                     <PlusIcon sx={{ color: "#1BC5BD", mr: 1 }} />
                     <Text variant={"body1"} color={"#1BC5BD"}>
-                      Add new row
+                      {billingT("detail.form.invoice.button.addNewRow")}
                     </Text>
                   </Button>
                 </Stack>

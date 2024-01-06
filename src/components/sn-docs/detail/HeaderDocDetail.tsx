@@ -38,7 +38,7 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
   const { isSmSmaller } = useBreakpoint();
   const { setOpenComment } = useContext(NewPageContext);
   const [debounceChange] = useDebounce((value: string) => {
-    updateDoc({ id: id as string, payload: { name: value } });
+    updateDoc({ id: id as string, payload: { name: value } })
   }, 200);
 
   return (
@@ -164,7 +164,7 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
                 },
               }}
             >
-              <Text color={"success.main"}>
+              <Text color={"success.main"}> 
                 {DocAccessibility[doc.perm as keyof typeof DocAccessibility]}
               </Text>
               <Box
@@ -190,9 +190,9 @@ const HeaderDocDetail = ({ setOpenSlider }: IDocDetail) => {
                   <Box
                     onClick={() => {
                       copy(window.location.href);
-                      setTimeout(() => {
-                        copy(null);
-                      }, 5000);
+                      // setTimeout(() => {
+                      //   copy(null);
+                      // }, 5000);
                     }}
                     sx={styleButton}
                   >

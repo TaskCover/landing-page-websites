@@ -14,7 +14,7 @@ import FolderIcon from "../../icons/FolderIcon";
 type DesktopCellsProps = {
   item?: Billing;
   order: number;
-  onOpenModalExport: (value: Billing[]) => void;
+  onOpenModalExport: (value: Billing) => void;
 };
 
 const DesktopCells = (props: DesktopCellsProps) => {
@@ -24,22 +24,27 @@ const DesktopCells = (props: DesktopCellsProps) => {
   return (
     <>
       {/* <BodyCell align="center">{order}</BodyCell> */}
-      <BodyCell align="center">
-        <Link
-          underline="none"
-          href={getPath(BILLING_INFO_PATH, undefined, { id: item?.id ?? "" })}
-          // href={BILLING_DETAIL_PATH}
+      <BodyCell
+        align="center"
+        href={getPath(BILLING_INFO_PATH, undefined, { id: item?.id ?? "" })}
+      >
+        <Text
+          variant="body2"
+          color="text.primary"
+          fontWeight={600}
+          lineHeight={1.28}
+          sx={{
+            "&:hover": { color: "primary.main" },
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 1,
+            overflow: "hidden",
+            wordBreak: "break-word",
+            display: "-webkit-box",
+            textOverflow: "ellipsis",
+          }}
         >
-          <Text
-            variant="body2"
-            color="text.primary"
-            fontWeight={600}
-            lineHeight={1.28}
-            sx={{ "&:hover": { color: "primary.main" } }}
-          >
-            {item?.subject}
-          </Text>
-        </Link>
+          {item?.subject}
+        </Text>
       </BodyCell>
 
       <BodyCell align="center" sx={{ paddingRight: 4 }}>
@@ -57,7 +62,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
         {item?.budget ? item?.budget[0]?.name : ""}
       </BodyCell>
       <BodyCell align="center" sx={{ paddingRight: 4 }}>
-        <Button onClick={() => onOpenModalExport([item ?? {}])}>
+        <Button onClick={() => onOpenModalExport(item ?? {})}>
           <FolderIcon />
         </Button>
       </BodyCell>

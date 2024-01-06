@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, Stack, TableRow } from "@mui/material";
+import { Stack, TableRow } from "@mui/material";
 import FixedLayout from "components/FixedLayout";
 import Pagination from "components/Pagination";
 import { BodyCell, CellProps, TableLayout } from "components/Table";
@@ -33,7 +33,7 @@ import DesktopCells from "./DesktopCells";
 import MobileContentCell from "./MobileContentCell";
 import ViewPdf from "./Modals/ViewPdf";
 import { INITIAL_VALUES } from "./components/helpers";
-import { Text } from "components/shared";
+import { Checkbox, Text } from "components/shared";
 import { CURRENCY_SYMBOL } from "components/sn-sales/helpers";
 import { BillingDataExport } from "store/billing/actions";
 import ExportView from "./Modals/ExportView";
@@ -71,6 +71,7 @@ const ItemList = () => {
   const [action, setAction] = useState<DataAction | undefined>();
   const [selectedList, setSelectedList] = useState<Billing[]>([]);
   const [exportModel, setExportModel] = useState(false);
+  const [exportStatus, setExportStatus] = useState<boolean>(false);
 
   const desktopHeaderList: CellProps[] = useMemo(
     () => [
@@ -96,7 +97,7 @@ const ItemList = () => {
           <>
             <Stack>
               {billingT("list.table.amount")}
-              <Text variant={"body2"} align="right" mr={3} fontWeight={600}>
+              <Text variant={"body2"} align="center" fontWeight={600}>
                 {formatNumber(totalAmount, {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
                   numberOfFixed: 2,
@@ -112,7 +113,7 @@ const ItemList = () => {
           <>
             <Stack>
               {billingT("list.table.amountUnpaid")}
-              <Text variant={"body2"} align="right" mr={2} fontWeight={600}>
+              <Text variant={"body2"} align="center" fontWeight={600}>
                 {formatNumber(totalAmountUnpaid, {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
                   numberOfFixed: 2,
@@ -128,7 +129,7 @@ const ItemList = () => {
         align: "center",
       },
     ],
-    [billingT],
+    [billingT, totalAmount, totalAmountUnpaid],
   );
   const mobileHeaderList: CellProps[] = useMemo(
     () => [
@@ -146,11 +147,41 @@ const ItemList = () => {
       },
       { value: billingT("list.table.budgets"), align: "center" },
       { value: billingT("list.table.att"), align: "center" },
-      { value: billingT("list.table.amount"), align: "center" },
-      { value: billingT("list.table.amountUnpaid"), align: "center" },
+      {
+        value: (
+          <>
+            <Stack>
+              {billingT("list.table.amount")}
+              <Text variant={"body2"} align="center" fontWeight={600}>
+                {formatNumber(totalAmount, {
+                  prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+                  numberOfFixed: 2,
+                })}
+              </Text>
+            </Stack>
+          </>
+        ),
+        align: "center",
+      },
+      {
+        value: (
+          <>
+            <Stack>
+              {billingT("list.table.amountUnpaid")}
+              <Text variant={"body2"} align="center" fontWeight={600}>
+                {formatNumber(totalAmountUnpaid, {
+                  prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
+                  numberOfFixed: 2,
+                })}
+              </Text>
+            </Stack>
+          </>
+        ),
+        align: "center",
+      },
       { value: billingT("list.table.dueDate"), align: "center" },
     ],
-    [billingT],
+    [billingT, totalAmount, totalAmountUnpaid],
   );
 
   const onChangeAll = useCallback(
@@ -283,26 +314,29 @@ const ItemList = () => {
     }
   }, [selectedList]);
 
-  const onOpenModalExport = (value: Billing[]) => {
+  const onOpenModalExport = (value: Billing) => {
     // setExportModel(true);
     // setSelectedList(value ?? []);
-    const arrBill = value?.map((item) => {
-      return { id: item.id };
-    });
-    onViewFileBilling({ fileType: "pdf_landscape" }, {
-      bill: arrBill ?? [],
-    } as BillingDataExport);
+    setExportStatus(true);
+    push(getPath(BILLING_EXPORT_PATH, undefined, { id: value?.id ?? "" }));
+    // const arrBill = value?.map((item) => {
+    //   return { id: item.id };
+    // });
+    // onViewFileBilling({ fileType: "pdf_landscape", pageType: "Letter" }, {
+    //   bill: arrBill ?? [],
+    // } as BillingDataExport);
   };
 
   const onCloseModalExport = () => {
     setExportModel(false);
   };
 
-  useEffect(() => {
-    if (fileExport) {
-      push(getPath(BILLING_EXPORT_PATH, undefined));
-    }
-  }, [fileExport]);
+  // useEffect(() => {
+  //   if (fileExport && exportStatus) {
+  //     push(getPath(BILLING_EXPORT_PATH, undefined));
+  //     setExportStatus(false);
+  //   }
+  // }, [fileExport, exportStatus]);
 
   return (
     <>

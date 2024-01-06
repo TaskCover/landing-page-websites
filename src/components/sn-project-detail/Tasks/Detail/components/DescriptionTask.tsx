@@ -15,13 +15,14 @@ type DescriptionTaskProps = {
   open: boolean;
   textEdit?: string;
   title?: string;
+  sx?: object;
   taskId?: string;
   taskListId?: string;
   subTaskId?: string;
 };
 
 const DescriptionTask = (props: DescriptionTaskProps) => {
-  const { open, onClose: onCloseProps, textEdit, title } = props;
+  const { open, onClose: onCloseProps, textEdit, title, sx } = props;
   const [text, setText] = useState<string | undefined>(textEdit ?? "");
   const hasEdit = useRef("");
   const commonT = useTranslations(NS_COMMON);

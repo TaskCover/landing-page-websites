@@ -14,7 +14,7 @@ import FolderIcon from "../../icons/FolderIcon";
 
 type MobileContentCellProps = {
   item?: Billing;
-  onOpenModalExport: (value: Billing[]) => void;
+  onOpenModalExport: (value: Billing) => void;
 };
 
 type InformationItemProps = {
@@ -29,24 +29,28 @@ const MobileContentCell = (props: MobileContentCellProps) => {
   return (
     <>
       {/* <BodyCell align="center">{order}</BodyCell> */}
-      <BodyCell align="center">
-        <Link
-          underline="none"
-          href={getPath(BILLING_INFO_PATH, undefined, { id: item?.id ?? "" })}
-          // href={BILLING_DETAIL_PATH}
+      <BodyCell
+        align="center"
+        href={getPath(BILLING_INFO_PATH, undefined, { id: item?.id ?? "" })}
+      >
+        <Text
+          variant="body2"
+          color="text.primary"
+          fontWeight={600}
+          lineHeight={1.28}
+          sx={{
+            "&:hover": { color: "primary.main" },
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 1,
+            overflow: "hidden",
+            wordBreak: "break-word",
+            display: "-webkit-box",
+            textOverflow: "ellipsis",
+          }}
         >
-          <Text
-            variant="body2"
-            color="text.primary"
-            fontWeight={600}
-            lineHeight={1.28}
-            sx={{ "&:hover": { color: "primary.main" } }}
-          >
-            {item?.subject}
-          </Text>
-        </Link>
+          {item?.subject}
+        </Text>
       </BodyCell>
-
       <BodyCell align="center">{item?.invoiceNumber}</BodyCell>
       <BodyCell align="center">{formatDate(item?.date)}</BodyCell>
 
@@ -57,7 +61,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         {item?.budget ? item?.budget[0]?.name : ""}
       </BodyCell>
       <BodyCell align="center">
-        <Button onClick={() => onOpenModalExport([item ?? {}])}>
+        <Button onClick={() => onOpenModalExport(item ?? {})}>
           <FolderIcon />
         </Button>
       </BodyCell>
