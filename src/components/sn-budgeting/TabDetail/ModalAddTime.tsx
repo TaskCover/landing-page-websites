@@ -22,7 +22,7 @@ type Props = {
   sections: TSection[];
   open: boolean;
   onClose: () => void;
-  projectId: string;
+  // projectId: string;
   data?: TTimeRanges | null;
   serviceId: string | null;
 };
@@ -47,7 +47,7 @@ const defaultValues: TTimeRanges = {
 export const ModalAddTime = ({
   open,
   onClose,
-  projectId,
+  // projectId,
   data,
   sections = [],
   serviceId,
