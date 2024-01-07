@@ -1,34 +1,16 @@
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import {
-  Box,
-  ButtonBase,
-  Grow,
-  MenuItem,
-  MenuList,
-  Popper,
   Stack,
-  TableRow,
-  popoverClasses,
-  Typography,
-  AccordionSummary,
-  Accordion,
-  AccordionDetails,
-  TableCell,
-  Collapse,
+  TableRow, TableCell,
+  Collapse
 } from "@mui/material";
-import { BodyCell, CellProps, TableLayout } from "components/Table";
-import { NS_BUDGETING } from "constant/index";
-import { useOnClickOutside } from "hooks/useOnClickOutside";
-import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { BodyCell } from "components/Table";
+import { useState } from "react";
 import ExpandCircleDownOutlinedIcon from "@mui/icons-material/ExpandCircleDownOutlined";
 import { PTag } from "./ServiceUtil";
-import { IconButton, Text } from "components/shared";
+import { IconButton } from "components/shared";
 import MoreDotIcon from "icons/MoreDotIcon";
-import { useParams } from "next/navigation";
-import { useBudgetGetServiceQuery } from "queries/budgeting/service-list";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { TSection } from "./ServiceAreaSection";
+import { TSection, budgetDetailRef } from "components/sn-budgeting/BudgetDetail";
 
 interface ServiceAreaSectionRowProps {
   section: TSection;
@@ -84,8 +66,10 @@ function ServiceAreaSectionRow({
             sx={{ transform: "translateX(-50%)" }}
             onClick={(e) => {
               if (Boolean(anchorEl)) {
+                budgetDetailRef.current?.setSelectedServiceData(null);
                 setAnchorEl(null);
               } else {
+                budgetDetailRef.current?.setSelectedServiceData(section);
                 setAnchorEl(e.currentTarget);
               }
             }}

@@ -25,6 +25,8 @@ export type BudgetingDictionary = {
     notes: string;
     time: string;
     billable: string;
+    edit: string;
+    delete: string;
   };
   tabExpenses: {
     service: string;
@@ -62,6 +64,7 @@ export type BudgetingDictionary = {
   };
   dialog: {
     titleModalAdd: string;
+    titleModalUpdate: string;
     date: string;
     project: string;
     timeRanger: string;
@@ -70,7 +73,10 @@ export type BudgetingDictionary = {
     note: string;
     cancelBtnText: string;
     addBtnText: string;
+    updateBtnText: string;
     editBtnText: string;
+    service: string;
+    update: string;
   };
   dialogExpense: {
     titleModalAdd: string;

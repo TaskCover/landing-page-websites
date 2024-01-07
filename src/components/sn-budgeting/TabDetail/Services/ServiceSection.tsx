@@ -44,9 +44,9 @@ export const ServiceSection = ({ onCloseEdit }: Props) => {
   });
 
   useEffect(() => {
-    if (!serviceQuery || !serviceQuery.data?.sections) return;
+    if (!serviceQuery || !serviceQuery.data) return;
     const serviceData: any[] = [];
-    const sectionData = serviceQuery.data.sections;
+    const sectionData = serviceQuery.data || [];
     sectionData.map((section, index: number) => {
       append({
         id: uuid(),

@@ -15,7 +15,7 @@ export const BudgetingLang: BudgetingDictionary = {
   },
   status: {
     open: "Open",
-    close: "Close",
+    close: "Delivered",
   },
   actionStatus: {
     create: "Budget was created",
@@ -27,6 +27,8 @@ export const BudgetingLang: BudgetingDictionary = {
     notes: "Notes",
     time: "Time",
     billable: "Billable",
+    edit: 'Edit',
+    delete: 'Delete'
   },
   tabExpenses: {
     service: "Service",
@@ -64,15 +66,19 @@ export const BudgetingLang: BudgetingDictionary = {
   },
   dialog: {
     titleModalAdd: "Add time entry",
-    date: "Ngày",
-    project: "Dự án",
-    timeRanger: "Khoảng thời gian",
-    startTime: "Giờ bắt đầu",
-    endTime: "Giờ kết thúc",
-    note: "Ghi chú",
-    cancelBtnText: "Hủy",
-    addBtnText: "Thêm",
-    editBtnText: "Sửa",
+    titleModalUpdate: "Update time entry",
+    date: 'Date',
+    project: 'Project',
+    timeRanger: 'Time Ranger',
+    startTime: 'Start Time',
+    endTime: 'End Time',
+    note: 'Note',
+    cancelBtnText: 'Cancel',
+    addBtnText: 'Add',
+    updateBtnText: 'Update',
+    editBtnText: 'Edit',
+    service: 'Service',
+    update: 'Update',
   },
   dialogExpense: {
     titleModalAdd: "New Expense",
