@@ -58,8 +58,12 @@ const TemplateData: TSection[] = [
 ];
 export const ServiceAreaSection = ({
   onOpenEdit,
+  openModalTime = () => {},
+  openModalExpense = () => {},
 }: {
   onOpenEdit?: () => void;
+  openModalTime?: () => void;
+  openModalExpense?: () => void;
 }) => {
   const [sections, setSections] = useState<TSection[]>([]);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -71,7 +75,7 @@ export const ServiceAreaSection = ({
   useEffect(() => {
     if (!serviceQuery) return;
     const sectionData: TSection[] = [];
-    serviceQuery.data.sections?.map((section) => {
+    serviceQuery.data?.map((section) => {
       sectionData.push({
         id: section.id,
         name: section.name,
@@ -84,6 +88,7 @@ export const ServiceAreaSection = ({
     });
     setSections(sectionData);
   }, [serviceQuery]);
+  console.log('sections', sections);
 
   const refClickOutSide = useOnClickOutside(() => setAnchorEl(null));
 
@@ -143,7 +148,7 @@ export const ServiceAreaSection = ({
             >
               <MenuList component={Box} sx={{ py: 0 }}>
                 <MenuItem
-                  onClick={() => {}}
+                  onClick={() => openModalTime()}
                   component={ButtonBase}
                   sx={{ width: "100%", py: 1, px: 2 }}
                 >
@@ -152,7 +157,7 @@ export const ServiceAreaSection = ({
                   </Text>
                 </MenuItem>
                 <MenuItem
-                  onClick={() => {}}
+                  onClick={() => openModalExpense()}
                   component={ButtonBase}
                   sx={{ width: "100%", py: 1, px: 2 }}
                 >

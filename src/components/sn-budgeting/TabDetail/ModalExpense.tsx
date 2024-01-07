@@ -1,26 +1,39 @@
 import { Add } from "@mui/icons-material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { MenuList, Stack } from "@mui/material";
+import { Grid, InputLabel, MenuList, Stack } from "@mui/material";
 import FormLayout from "components/FormLayout";
-import { Input, Select } from "components/shared";
+import { DatePicker, Input, Select } from "components/shared";
 import useGetOptions from "components/sn-resource-planing/hooks/useGetOptions";
 import Textarea from "components/sn-time-tracking/Component/Textarea";
 import { NS_BUDGETING, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
-import { useBudgetTimeAdd } from "queries/budgeting/time-range";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "store/app/selectors";
 import { useProjects } from "store/project/selectors";
-import { getMessageErrorByAPI, uuid } from "utils/index";
+import { uuid } from "utils/index";
 import InputLabelWrapper from "./InputLabelWrapper";
-import { TTimeRanges } from "./Time";
+import { TBudgetExpense, useBudgetExpenseAdd } from "queries/budgeting/expense";
+import { TExpense } from "./Expenses";
+import moment from "moment";
 
 type Props = {
   open: boolean;
   onClose: () => void;
   projectId: string;
-  data?: TTimeRanges;
+  data?: TBudgetExpense;
+};
+
+const defaultValues: TExpense = {
+  id: "",
+  owner: "",
+  service: "",
+  description: "",
+  date: "",
+  att: "",
+  paymentStatus: "",
+  totalCost: "",
+  billable: "",
 };
 
 export const ModalExpense = ({ open, onClose, projectId, data }: Props) => {
@@ -29,41 +42,30 @@ export const ModalExpense = ({ open, onClose, projectId, data }: Props) => {
 
   const { items: projects, onGetProjects } = useProjects();
   const { projectOptions } = useGetOptions();
-  const budgetTimeAdd = useBudgetTimeAdd();
+  const budgetExpenseAdd = useBudgetExpenseAdd();
   const { onAddSnackbar } = useSnackbar();
 
-  const { register, control, handleSubmit, setValue, getValues } =
-    useForm<TTimeRanges>({
-      defaultValues: data || {
-        _id: uuid(),
-        createdAt: "",
-        name: "",
-        person: {
-          fullname: "",
-          avatar: "",
-        },
-        note: "",
-        timeRanges: 0,
-        billableTime: 0,
-      },
+  const { register, control, handleSubmit, setValue, getValues, watch } =
+    useForm<TExpense>({
+      defaultValues: data || defaultValues,
     });
 
-  const onSubmit = async (formValue: TTimeRanges) => {
-    const data = {
-      budget: "",
-      services: "",
-      note: formValue.note,
-      timeRanges: formValue.timeRanges,
-      billableTime: formValue.billableTime,
-    };
-    budgetTimeAdd.mutate(data, {
-      onSuccess() {
-        onAddSnackbar("Success", "success");
-      },
-      onError(error) {
-        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-      },
-    });
+  const onSubmit = async (formValue: TExpense) => {
+    // const data = {
+    //   budget: "",
+    //   services: "",
+    //   note: formValue.note,
+    //   timeRanges: formValue.timeRanges,
+    //   billableTime: formValue.billableTime,
+    // };
+    // budgetTimeAdd.mutate(data, {
+    //   onSuccess() {
+    //     onAddSnackbar("Success", "success");
+    //   },
+    //   onError(error) {
+    //     onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+    //   },
+    // });
   };
   useEffect(() => {
     if (!open) return;
@@ -99,20 +101,52 @@ export const ModalExpense = ({ open, onClose, projectId, data }: Props) => {
     >
       <Stack overflow="auto">
         <MenuList component={Stack} spacing={2}>
-          <Stack gap={2} direction="row">
-            <InputLabelWrapper
+          <Grid container spacing={0}>
+            <Grid item xs={12} md={6} sx={{ p: "0px !important" }}>
+              <InputLabel htmlFor="date" sx={{ color: '#999999', fontSize: '12px', fontWeight: 700 }}>
+                {budgetT("dialogExpense.date")}
+              </InputLabel>
+
+              <Controller
+                control={control}
+                name="date"
+                render={({ field: { onChange, value } }) => (
+                  <DatePicker
+                    rootSx={sxInput}
+                    name="date"
+                    value={value}
+                    fullWidth
+                    onChange={(_: string, newDate: Date | undefined) => {
+                      onChange(newDate ? moment(newDate).format() : "");
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} md={6} sx={{ p: "0px !important" }}>
+              <Select
+                options={[]}
+                title={budgetT("dialogExpense.person")}
+                name="owner"
+                rootSx={sxInput}
+                fullWidth
+                value={watch("owner")}
+              />
+            </Grid>
+
+            {/* <InputLabelWrapper
               label={budgetT("dialogExpense.date")}
               sx={{ width: "50%" }}
             >
-              <Input rootSx={sxInput} onlyContent name="name" />
-            </InputLabelWrapper>
-            <InputLabelWrapper
+              <Input rootSx={sxInput} onlyContent name="date" />
+            </InputLabelWrapper> */}
+            {/* <InputLabelWrapper
               label={budgetT("dialogExpense.person")}
               sx={{ width: "50%" }}
             >
               <Input rootSx={sxInput} onlyContent name="name" />
-            </InputLabelWrapper>
-          </Stack>
+            </InputLabelWrapper> */}
+          </Grid>
           <InputLabelWrapper label={budgetT("dialogExpense.service")}>
             <Select
               options={projectOptions}
@@ -174,9 +208,9 @@ export const ModalExpense = ({ open, onClose, projectId, data }: Props) => {
               </InputLabelWrapper>
             </Stack>
           </Stack>
-          {/* <InputLabelWrapper label={budgetT("dialogExpense.description")}>
-            <Textarea {...register("note")} minRows={4} size={false} />
-          </InputLabelWrapper> */}
+          <InputLabelWrapper label={budgetT("dialogExpense.description")}>
+            <Textarea {...register("description")} minRows={6} />
+          </InputLabelWrapper>
         </MenuList>
       </Stack>
     </FormLayout>

@@ -78,6 +78,7 @@ export const BudgetDetail = () => {
         p="15px"
         justifyContent="space-between"
         borderBottom="1px solid #ECECF3"
+        sx={{ overflow: 'auto !important' }}
       >
         <Stack direction="row" alignItems="center">
           <Avatar size={40} src={budget.created_by.avatar.link} />
@@ -230,11 +231,11 @@ export const BudgetDetail = () => {
         onClose={hideModalTime}
         projectId={budget.project.id}
       />
-      {/* <ModalExpense
-        open={true}
-        onClose={hideModalTime}
+      <ModalExpense
+        open={isOpenModalExpense}
+        onClose={hideModalExpense}
         projectId={budget.project.id}
-      /> */}
+      />
       <Stack direction="row">
         <Box
           position="relative"
@@ -265,6 +266,8 @@ export const BudgetDetail = () => {
                 isEdit={isEditService}
                 onCloseEdit={offEditService}
                 onOpenEdit={onEditService}
+                openModalTime={openModalTime}
+                openModalExpense={openModalExpense}
               />
             )}
           </Box>

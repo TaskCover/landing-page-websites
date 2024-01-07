@@ -69,6 +69,8 @@ export type TTimeRanges = {
   note: string;
   timeRanges: number;
   billableTime: number;
+  startTime: string;
+  endTime: string;
 };
 
 export type TForm = {

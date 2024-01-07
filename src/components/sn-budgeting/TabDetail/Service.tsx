@@ -7,15 +7,27 @@ type Props = {
   isEdit?: boolean;
   onCloseEdit?: () => void;
   onOpenEdit?: () => void;
+  openModalTime?: () => void;
+  openModalExpense?: () => void;
 };
 
-export const Service = ({ isEdit = false, onCloseEdit, onOpenEdit }: Props) => {
+export const Service = ({
+  isEdit = false,
+  onCloseEdit,
+  onOpenEdit,
+  openModalTime,
+  openModalExpense,
+}: Props) => {
   return isEdit ? (
     <ServiceSection onCloseEdit={onCloseEdit} />
   ) : (
     <Box>
       <ServiceAreaTotal />
-      <ServiceAreaSection onOpenEdit={onOpenEdit} />
+      <ServiceAreaSection
+        onOpenEdit={onOpenEdit}
+        openModalTime={openModalTime}
+        openModalExpense={openModalExpense}
+      />
     </Box>
   );
 };

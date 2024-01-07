@@ -13,6 +13,7 @@ import { useSnackbar } from "store/app/selectors";
 import { useProjects } from "store/project/selectors";
 import { getMessageErrorByAPI, uuid } from "utils/index";
 import { TTimeRanges } from "./Time";
+import { useParams } from "next/navigation";
 
 type Props = {
   open: boolean;
@@ -21,42 +22,50 @@ type Props = {
   data?: TTimeRanges;
 };
 
+const defaultValues: TTimeRanges = {
+  _id: uuid(),
+  createdAt: "",
+  name: "",
+  person: {
+    fullname: "",
+    avatar: "",
+  },
+  note: "",
+  timeRanges: 0,
+  billableTime: 0,
+  startTime: "",
+  endTime: ""
+};
+
 export const ModalAddTime = ({ open, onClose, projectId, data }: Props) => {
   const budgetT = useTranslations(NS_BUDGETING);
   const commonT = useTranslations(NS_COMMON);
+  const { id } = useParams();
 
   const { items: projects, onGetProjects } = useProjects();
   const { projectOptions } = useGetOptions();
   const budgetTimeAdd = useBudgetTimeAdd();
   const { onAddSnackbar } = useSnackbar();
 
-  const { register, control, handleSubmit, setValue, getValues } =
+  const { register, control, handleSubmit, setValue, getValues, reset } =
     useForm<TTimeRanges>({
-      defaultValues: data || {
-        _id: uuid(),
-        createdAt: "",
-        name: "",
-        person: {
-          fullname: "",
-          avatar: "",
-        },
-        note: "",
-        timeRanges: 0,
-        billableTime: 0,
-      },
+      defaultValues: data || defaultValues,
     });
 
   const onSubmit = async (formValue: TTimeRanges) => {
     const data = {
-      budget: "",
+      budget: id,
       services: "",
       note: formValue.note,
       timeRanges: formValue.timeRanges,
       billableTime: formValue.billableTime,
+      startTime: formValue.startTime,
+      endTime: formValue.endTime
     };
     budgetTimeAdd.mutate(data, {
       onSuccess() {
         onAddSnackbar("Success", "success");
+        reset(defaultValues);
       },
       onError(error) {
         onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
@@ -129,17 +138,31 @@ export const ModalAddTime = ({ open, onClose, projectId, data }: Props) => {
             )}
           />
           <Stack gap={2} direction="row">
-            <Input
-              rootSx={sxInput}
-              title={budgetT("dialog.startTime")}
-              sx={{ width: "50%" }}
-              name="name"
+            <Controller
+              control={control}
+              name="startTime"
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  rootSx={sxInput}
+                  title={budgetT("dialog.startTime")}
+                  sx={{ width: "50%" }}
+                  onChange={onChange}
+                  value={value}
+                />
+              )}
             />
-            <Input
-              rootSx={sxInput}
-              title={budgetT("dialog.endTime")}
-              sx={{ width: "50%" }}
-              name="name"
+            <Controller
+              control={control}
+              name="endTime"
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  rootSx={sxInput}
+                  title={budgetT("dialog.endTime")}
+                  sx={{ width: "50%" }}
+                  onChange={onChange}
+                  value={value}
+                />
+              )}
             />
           </Stack>
           <Textarea label={budgetT("dialog.note")} {...register("note")} />

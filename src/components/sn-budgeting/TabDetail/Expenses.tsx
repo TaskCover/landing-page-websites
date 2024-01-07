@@ -8,8 +8,9 @@ import UploadIcon from "icons/UploadIcon";
 import { useTranslations } from "next-intl";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
-type TExpense = {
+export type TExpense = {
   id: string;
+  owner: string;
   service: string;
   description: string;
   date: string;
@@ -22,6 +23,7 @@ type TExpense = {
 const TemplateData: TExpense[] = [
   {
     id: "11111",
+    owner: '',
     service: "Weebsite develop",
     description: "User testing",
     date: "8/07/2022",
@@ -32,6 +34,7 @@ const TemplateData: TExpense[] = [
   },
   {
     id: "222222",
+    owner: '',
     service: "Lorem",
     description: "User 12",
     date: "8/07/2022",
