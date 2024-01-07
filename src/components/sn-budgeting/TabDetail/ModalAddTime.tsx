@@ -167,14 +167,14 @@ export const ModalAddTime = ({
             )}
           />
 
-          <Select
+          {/* <Select
             options={projectOptions}
             title={budgetT("dialog.project")}
             name="project_id"
             rootSx={sxInput}
             fullWidth
             value={projectId}
-          />
+          /> */}
 
           <Select
             options={sections.map((section: TSection) => ({
