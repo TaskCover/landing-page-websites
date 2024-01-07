@@ -6,7 +6,7 @@ import Textarea from "components/sn-time-tracking/Component/Textarea";
 import { NS_BUDGETING, NS_COMMON } from "constant/index";
 import moment from "moment";
 import { useTranslations } from "next-intl";
-import { useBudgetTimeAdd } from "queries/budgeting/time-range";
+import { TBudgetTimeAdd, TBudgetTimeUpdate, useBudgetTimeAdd, useBudgetTimeUpdate } from "queries/budgeting/time-range";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from "store/app/selectors";
@@ -14,16 +14,23 @@ import { useProjects } from "store/project/selectors";
 import { getMessageErrorByAPI, uuid } from "utils/index";
 import { TTimeRanges } from "./Time";
 import { useParams } from "next/navigation";
+import { TSection } from "../BudgetDetail";
+import { ReactDatePickerProps } from "react-datepicker";
+import { DateTimePicker } from "components/shared/DatePicker";
 
 type Props = {
+  sections: TSection[];
   open: boolean;
   onClose: () => void;
   projectId: string;
-  data?: TTimeRanges;
+  data?: TTimeRanges | null;
+  serviceId: string | null;
 };
 
 const defaultValues: TTimeRanges = {
   _id: uuid(),
+  id: "",
+  service: "",
   createdAt: "",
   name: "",
   person: {
@@ -33,11 +40,18 @@ const defaultValues: TTimeRanges = {
   note: "",
   timeRanges: 0,
   billableTime: 0,
-  startTime: "",
-  endTime: ""
+  startTime: null,
+  endTime: null,
 };
 
-export const ModalAddTime = ({ open, onClose, projectId, data }: Props) => {
+export const ModalAddTime = ({
+  open,
+  onClose,
+  projectId,
+  data,
+  sections = [],
+  serviceId,
+}: Props) => {
   const budgetT = useTranslations(NS_BUDGETING);
   const commonT = useTranslations(NS_COMMON);
   const { id } = useParams();
@@ -45,39 +59,8 @@ export const ModalAddTime = ({ open, onClose, projectId, data }: Props) => {
   const { items: projects, onGetProjects } = useProjects();
   const { projectOptions } = useGetOptions();
   const budgetTimeAdd = useBudgetTimeAdd();
+  const budgetTimeUpdate = useBudgetTimeUpdate();
   const { onAddSnackbar } = useSnackbar();
-
-  const { register, control, handleSubmit, setValue, getValues, reset } =
-    useForm<TTimeRanges>({
-      defaultValues: data || defaultValues,
-    });
-
-  const onSubmit = async (formValue: TTimeRanges) => {
-    const data = {
-      budget: id,
-      services: "",
-      note: formValue.note,
-      timeRanges: formValue.timeRanges,
-      billableTime: formValue.billableTime,
-      startTime: formValue.startTime,
-      endTime: formValue.endTime
-    };
-    budgetTimeAdd.mutate(data, {
-      onSuccess() {
-        onAddSnackbar("Success", "success");
-        reset(defaultValues);
-      },
-      onError(error) {
-        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-      },
-    });
-  };
-  useEffect(() => {
-    if (!open) return;
-    if (!projects || projects.length === 0) {
-      onGetProjects({});
-    }
-  }, [open]);
 
   const sxInput = {
     height: 58,
@@ -86,15 +69,83 @@ export const ModalAddTime = ({ open, onClose, projectId, data }: Props) => {
     },
   };
 
+  const { register, control, handleSubmit, setValue, getValues, reset, watch } =
+    useForm<TTimeRanges>({
+      defaultValues: data || defaultValues,
+    });
+  
+  useEffect(() => {
+    if (!open) {
+      reset(defaultValues);
+      return;
+    };
+
+    if (!projects || projects.length === 0) {
+      onGetProjects({});
+    }
+
+    if (data) {
+      reset(data);
+    }
+  }, [open, JSON.stringify(data)]);
+
+  useEffect(() => {
+    setValue("service", serviceId || "");
+  }, [serviceId]);
+
+  useEffect(() => {
+    if (watch('startTime') && watch('endTime')) {
+      const gap = moment(watch('endTime')).diff(moment(watch('startTime')), 'hours');
+      if (gap > 0) {
+        setValue('timeRanges', gap);
+      }
+    }
+  }, [watch('startTime'), watch('endTime')]);
+
+  const onSubmit = async (formValue: TTimeRanges) => {
+    const data = {
+      budget: id || "",
+      services: formValue.service,
+      note: formValue.note,
+      timeRanges: formValue.timeRanges,
+      billableTime: formValue.billableTime,
+      startTime: formValue.startTime ? moment(formValue.startTime).format("HH:mm") : "",
+      endTime: formValue.endTime ? moment(formValue.endTime).format("HH:mm") : "",
+    };
+
+    if (!!data) {
+      data['id'] = formValue.id || "";
+      budgetTimeUpdate.mutate(data as TBudgetTimeUpdate, {
+        onSuccess() {
+          onAddSnackbar("Success", "success");
+          reset(defaultValues);
+        },
+        onError(error) {
+          onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+        },
+      });
+    } else {
+      budgetTimeAdd.mutate(data, {
+        onSuccess() {
+          onAddSnackbar("Success", "success");
+          reset(defaultValues);
+        },
+        onError(error) {
+          onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+        },
+      });
+    }
+  };
+
   return (
     <FormLayout
-      label={budgetT("dialog.titleModalAdd")}
+      label={!!data ? budgetT("dialog.titleModalUpdate") : budgetT("dialog.titleModalAdd")}
       pending={false}
       submitWhenEnter={false}
       open={open}
       onClose={onClose}
       cancelText={budgetT("dialog.cancelBtnText")}
-      submitText={budgetT("dialog.addBtnText")}
+      submitText={!!data ? budgetT("dialog.updateBtnText") : budgetT("dialog.addBtnText")}
       onSubmit={handleSubmit(onSubmit)}
     >
       <Stack overflow="auto">
@@ -124,6 +175,23 @@ export const ModalAddTime = ({ open, onClose, projectId, data }: Props) => {
             fullWidth
             value={projectId}
           />
+
+          <Select
+            options={sections.map((section: TSection) => ({
+              value: section.id,
+              label: section.name,
+            }))}
+            title={budgetT("dialog.service")}
+            name="section"
+            rootSx={sxInput}
+            fullWidth
+            onChange={(e) => {
+              setValue("service", e.target.value);
+            }}
+            disabled={!!serviceId}
+            value={watch("service")}
+          />
+
           <Controller
             control={control}
             name="timeRanges"
@@ -142,12 +210,22 @@ export const ModalAddTime = ({ open, onClose, projectId, data }: Props) => {
               control={control}
               name="startTime"
               render={({ field: { onChange, value } }) => (
-                <Input
-                  rootSx={sxInput}
+                <DateTimePicker
                   title={budgetT("dialog.startTime")}
-                  sx={{ width: "50%" }}
-                  onChange={onChange}
+                  name="startTime"
                   value={value}
+                  fullWidth
+                  onChange={(_: string, newDate: Date | undefined) => {
+                    onChange(newDate ? moment(newDate).format() : "");
+                  }}
+                  pickerProps={
+                    {
+                      dateFormat: "h:mm aa",
+                      timeIntervals: 1,
+                      showTimeSelect: true,
+                      showTimeSelectOnly: true,
+                    } as ReactDatePickerProps
+                  }
                 />
               )}
             />
@@ -155,12 +233,22 @@ export const ModalAddTime = ({ open, onClose, projectId, data }: Props) => {
               control={control}
               name="endTime"
               render={({ field: { onChange, value } }) => (
-                <Input
-                  rootSx={sxInput}
+                <DateTimePicker
                   title={budgetT("dialog.endTime")}
-                  sx={{ width: "50%" }}
-                  onChange={onChange}
+                  name="endTime"
                   value={value}
+                  fullWidth
+                  onChange={(_: string, newDate: Date | undefined) => {
+                    onChange(newDate ? moment(newDate).format() : "");
+                  }}
+                  pickerProps={
+                    {
+                      dateFormat: "h:mm aa",
+                      timeIntervals: 1,
+                      showTimeSelect: true,
+                      showTimeSelectOnly: true,
+                    } as ReactDatePickerProps
+                  }
                 />
               )}
             />

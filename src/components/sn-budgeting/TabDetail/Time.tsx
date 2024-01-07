@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import {
   Box,
   ButtonBase,
@@ -8,7 +9,7 @@ import {
   Popper,
   Stack,
   TableRow,
-  Typography
+  Typography,
 } from "@mui/material";
 import Avatar from "components/Avatar";
 import { IconButton, Text } from "components/shared";
@@ -21,7 +22,7 @@ import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import {
   useBudgetGetTimeRangeQuery,
-  useBudgetTimeRemove
+  useBudgetTimeRemove,
 } from "queries/budgeting/time-range";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -29,37 +30,12 @@ import { useSnackbar } from "store/app/selectors";
 import { getMessageErrorByAPI } from "utils/index";
 import MoreDotIcon from "../../../icons/MoreDotIcon";
 import TrashIcon from "../../../icons/TrashIcon";
-
-type TTemplate = {
-  date: string;
-  service: string;
-  person: string;
-  notes: string;
-  time: string;
-  billable: string;
-};
-
-const TemplateData: TTemplate[] = [
-  {
-    date: "2023-12-04T16:21:21.156Z",
-    service: "Service",
-    person: "Persion",
-    notes: "Notes",
-    time: "13:14 / 13:14",
-    billable: "",
-  },
-  {
-    date: "2023-12-04T16:21:21.156Z",
-    service: "Service",
-    person: "Persion",
-    notes: "Notes",
-    time: "13:14 / 13:14",
-    billable: "",
-  },
-];
+import { budgetDetailRef } from "../BudgetDetail";
 
 export type TTimeRanges = {
+  id: string;
   _id: string;
+  service: string;
   createdAt: string;
   name: string;
   person: {
@@ -69,8 +45,8 @@ export type TTimeRanges = {
   note: string;
   timeRanges: number;
   billableTime: number;
-  startTime: string;
-  endTime: string;
+  startTime: string | null;
+  endTime: string | null;
 };
 
 export type TForm = {
@@ -78,19 +54,22 @@ export type TForm = {
 };
 
 export const Time = () => {
-  const budgetT = useTranslations(NS_BUDGETING);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const { id: budgetId } = useParams();
   const { onAddSnackbar } = useSnackbar();
-  const commonT = useTranslations(NS_COMMON);
-  const serviceQuery = useBudgetGetTimeRangeQuery(String(budgetId));
   const removeTimeRange = useBudgetTimeRemove();
+  const timeQuery = useBudgetGetTimeRangeQuery(String(budgetId));
 
-  const { control, setValue, handleSubmit, getValues } = useForm<TForm>();
-  const { fields, append, remove } = useFieldArray({
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const budgetT = useTranslations(NS_BUDGETING);
+  const commonT = useTranslations(NS_COMMON);
+
+  const { control, setValue, watch } = useForm<TForm>();
+  const { fields, remove } = useFieldArray({
     name: "times",
     control,
   });
+
   const headerList: CellProps[] = [
     { value: "", align: "center" },
     { value: budgetT("tabTime.service"), align: "center" },
@@ -103,6 +82,26 @@ export const Time = () => {
 
   const refClickOutSide = useOnClickOutside(() => setAnchorEl(null));
 
+  useEffect(() => {
+    if (!timeQuery || !timeQuery.data?.data?.docs) return;
+
+    const times = (timeQuery.data?.data?.docs || []).map((doc) => ({
+      _id: doc.id,
+      createdAt: doc.createdAt,
+      note: doc.note,
+      timeRanges: doc.timeRanges,
+      billableTime: doc.billableTime,
+      name: doc.services?.name,
+      person: {
+        avatar: doc.created_by?.avatar?.link,
+        fullname: doc.created_by?.fullname,
+      },
+    }));
+
+    setValue('times', times);
+
+  }, [JSON.stringify(timeQuery)]);
+
   const handleRemoveTimeRange = async (id: string, index: number) => {
     removeTimeRange.mutate(id, {
       onSuccess() {
@@ -114,25 +113,6 @@ export const Time = () => {
       },
     });
   };
-  useEffect(() => {
-    if (!serviceQuery || !serviceQuery.data?.docs) return;
-    const sectionData = serviceQuery.data.docs;
-    setValue(
-      "times",
-      sectionData.map((doc) => ({
-        _id: doc.id,
-        createdAt: doc.createdAt,
-        note: doc.note,
-        timeRanges: doc.timeRanges,
-        billableTime: doc.billableTime,
-        name: doc.services?.name,
-        person: {
-          avatar: doc.created_by?.avatar?.link,
-          fullname: doc.created_by?.fullname,
-        },
-      })),
-    );
-  }, [serviceQuery, setValue]);
 
   return (
     <>
@@ -201,7 +181,9 @@ export const Time = () => {
                       >
                         <MenuList component={Box} sx={{ py: 0 }}>
                           <MenuItem
-                            onClick={() => {}}
+                            onClick={() => {
+                              budgetDetailRef.current?.openModalTime(data);
+                            }}
                             component={ButtonBase}
                             sx={{ width: "100%", py: 1, px: 2 }}
                           >
@@ -210,7 +192,7 @@ export const Time = () => {
                               fontSize="medium"
                             />
                             <Text ml={2} variant="body2" color="grey.400">
-                              Edit
+                              {budgetT('tabTime.edit')}
                             </Text>
                           </MenuItem>
                           <MenuItem
@@ -222,7 +204,7 @@ export const Time = () => {
                           >
                             <TrashIcon color="error" fontSize="medium" />
                             <Text ml={2} variant="body2" color="error.main">
-                              Delete
+                              {budgetT('tabTime.delete')}
                             </Text>
                           </MenuItem>
                         </MenuList>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import {
   Box,
   ButtonBase,
@@ -6,89 +7,27 @@ import {
   MenuList,
   Popper,
   Stack,
-  TableRow,
   popoverClasses,
-  Typography,
-  AccordionSummary,
-  Accordion,
-  AccordionDetails,
 } from "@mui/material";
-import { BodyCell, CellProps, TableLayout } from "components/Table";
+import { CellProps, TableLayout } from "components/Table";
 import { NS_BUDGETING } from "constant/index";
 import { useOnClickOutside } from "hooks/useOnClickOutside";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
-import ExpandCircleDownOutlinedIcon from "@mui/icons-material/ExpandCircleDownOutlined";
-import { PTag } from "./ServiceUtil";
-import { IconButton, Text } from "components/shared";
-import MoreDotIcon from "icons/MoreDotIcon";
-import { useParams } from "next/navigation";
-import { useBudgetGetServiceQuery } from "queries/budgeting/service-list";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useState } from "react";
+import { Text } from "components/shared";
 import ServiceAreaSectionRow from "./ServiceAreaSectionRow";
+import {
+  TSection,
+  budgetDetailRef,
+} from "components/sn-budgeting/BudgetDetail";
 
-export type TSection = {
-  id: string;
-  name: string;
-  workingTime: string;
-  price: string;
-  cost: string;
-  description: string;
-};
-
-const TemplateData: TSection[] = [
-  {
-    id: "aa11",
-    name: "Acquiring new clients",
-    workingTime: "8,23 / 20 hrs",
-    price: "$25,10",
-    cost: "$250,10",
-    description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ratione reiciendis dolore eius eum temporibus magni vero voluptate. Quae eaque consectetur exercitationem necessitatibus ducimus atque eius! Dignissimos consequuntur rerum nemo quibusdam?",
-  },
-  {
-    id: "aa22",
-    name: "Acquiring new clients",
-    workingTime: "8,23 / 20 hrs",
-    price: "$25,10",
-    cost: "$250,10",
-    description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ratione reiciendis dolore eius eum temporibus magni vero voluptate. Quae eaque consectetur exercitationem necessitatibus ducimus atque eius! Dignissimos consequuntur rerum nemo quibusdam?",
-  },
-];
 export const ServiceAreaSection = ({
-  onOpenEdit,
-  openModalTime = () => {},
-  openModalExpense = () => {},
+  sections = [],
 }: {
-  onOpenEdit?: () => void;
-  openModalTime?: () => void;
-  openModalExpense?: () => void;
+  sections: TSection[];
 }) => {
-  const [sections, setSections] = useState<TSection[]>([]);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { id: idBudget } = useParams();
-  const serviceQuery = useBudgetGetServiceQuery(String(idBudget));
-
   const budgetT = useTranslations(NS_BUDGETING);
-
-  useEffect(() => {
-    if (!serviceQuery) return;
-    const sectionData: TSection[] = [];
-    serviceQuery.data?.map((section) => {
-      sectionData.push({
-        id: section.id,
-        name: section.name,
-        workingTime: "0 / 0 hrs",
-        price: "0",
-        cost: "0",
-        description:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam, at nam! Id!",
-      });
-    });
-    setSections(sectionData);
-  }, [serviceQuery]);
-  console.log('sections', sections);
 
   const refClickOutSide = useOnClickOutside(() => setAnchorEl(null));
 
@@ -107,7 +46,7 @@ export const ServiceAreaSection = ({
   return (
     <Box>
       <TableLayout headerList={headerList} noData={false} titleColor="grey.300">
-        {TemplateData.map((data, index) => {
+        {sections.map((data: TSection, index) => {
           return (
             <ServiceAreaSectionRow
               key={`budget-sevice-section-${index}`}
@@ -148,7 +87,9 @@ export const ServiceAreaSection = ({
             >
               <MenuList component={Box} sx={{ py: 0 }}>
                 <MenuItem
-                  onClick={() => openModalTime()}
+                  onClick={() => {
+                    budgetDetailRef.current?.openModalTime();
+                  }}
                   component={ButtonBase}
                   sx={{ width: "100%", py: 1, px: 2 }}
                 >
@@ -157,7 +98,9 @@ export const ServiceAreaSection = ({
                   </Text>
                 </MenuItem>
                 <MenuItem
-                  onClick={() => openModalExpense()}
+                  onClick={() => {
+                    budgetDetailRef.current?.openModalExpense();
+                  }}
                   component={ButtonBase}
                   sx={{ width: "100%", py: 1, px: 2 }}
                 >

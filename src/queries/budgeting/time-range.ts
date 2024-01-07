@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation, useQuery } from "react-query";
 import { getPath } from "utils/index";
 import { Endpoint } from "../../api";
@@ -20,11 +21,14 @@ export interface TBudgetTimeAdd {
 }
 
 export interface TBudgetTimeUpdate {
+  id: string;
   budget: string;
   services: string;
   note: string;
   timeRanges: number;
   billableTime: number;
+  startTime: string;
+  endTime: string;
 }
 
 export const budgetGetTimeRangeQuery = (id: string): Promise<any> => {
@@ -68,7 +72,10 @@ export const useBudgetTimeAdd = () => {
 };
 
 export const budgetTimeUpdate = (form: TBudgetTimeUpdate) => {
-  return saleClientInstance.put(Endpoint.BUDGET_TIME_RANGES_UPDATE, form);
+  const url: string = getPath(Endpoint.BUDGET_TIME_RANGES_UPDATE, undefined, {
+    id: form.id,
+  });
+  return saleClientInstance.put(url, form);
 }
 
 export const useBudgetTimeUpdate = () => {
