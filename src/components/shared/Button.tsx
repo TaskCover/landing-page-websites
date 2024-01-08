@@ -94,7 +94,6 @@ const PREFIX_BUTTON_CLASS = "MuiButton-";
 const getDefaultSx = (isDarkMode: boolean, sx) => {
   return {
     fontWeight: 600,
-    borderRadius: 1,
     minWidth: "fit-content",
     color: "common.white",
     textTransform: "initial",
@@ -103,6 +102,7 @@ const getDefaultSx = (isDarkMode: boolean, sx) => {
     whiteSpace: "nowrap",
     display: "inline-flex",
     alignItems: "center",
+    borderRadius: 6,
 
     [`&.${buttonClasses.fullWidth}`]: {
       width: "100%",
@@ -134,7 +134,7 @@ const getDefaultSx = (isDarkMode: boolean, sx) => {
     },
 
     [`&.${matchClass(PREFIX_BUTTON_CLASS, PRIMARY)}`]: {
-      backgroundColor: "primary.main",
+      background: "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
       "&:hover": {
         background:
           "linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), #3699FF",
@@ -146,6 +146,9 @@ const getDefaultSx = (isDarkMode: boolean, sx) => {
     },
     [`&.${matchClass(PREFIX_BUTTON_CLASS, PRIMARY_OUTLINED)}`]: {
       border: "1px solid",
+      background: "-webkit-linear-gradient(360deg, #0575E6, #38E27B)",
+      backgroundClip: "text",
+      textFillColor: "transparent",
       backgroundColor: "transparent",
       borderColor: "primary.main",
       color: "primary.main",
@@ -191,11 +194,11 @@ const getDefaultSx = (isDarkMode: boolean, sx) => {
       minHeight: 56,
     },
     [`&.${buttonClasses.sizeMedium}`]: {
-      // py: 1.75,
-      px: 4,
+      py: 1.5,
+      px: 5,
       fontSize: 16,
-      lineHeight: 1.25,
-      minHeight: 48,
+      lineHeight: 1.5,
+      minHeight: 24,
     },
     [`&.${buttonClasses.sizeSmall}`]: {
       // py: 1.5,

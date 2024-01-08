@@ -4,7 +4,6 @@ import { Snackbar, Stack } from "@mui/material";
 import AppLoading from "components/AppLoading";
 import Header from "./Header";
 import { memo, useEffect, useMemo } from "react";
-import { Sidebar } from "./components";
 import { useAppSelector } from "store/hooks";
 import { shallowEqual } from "react-redux";
 import { usePathname, useRouter } from "next-intl/client";
@@ -64,19 +63,19 @@ const MainLayout = (props: MainLayoutProps) => {
   //   });
   // }, [user?.roles, pathname, id]);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-    } else if (!AUTH_PATHS.includes(pathname)) {
-      push(SIGNIN_PATH);
-    }
-  }, [isLoggedIn, push, pathname]);
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //   } else if (!AUTH_PATHS.includes(pathname)) {
+  //     push(SIGNIN_PATH);
+  //   }
+  // }, [isLoggedIn, push, pathname]);
 
-  useEffect(() => {
-    if (user?.id) return;
-    onGetProfile();
-  }, [user?.id, onGetProfile]);
+  // useEffect(() => {
+  //   if (user?.id) return;
+  //   onGetProfile();
+  // }, [user?.id, onGetProfile]);
 
-  if (!appReady || !token || !user) return <AppLoading />;
+  // if (!appReady) return <AppLoading />;
 
   return (
     <>
@@ -87,7 +86,7 @@ const MainLayout = (props: MainLayoutProps) => {
         flex={1}
         overflow="hidden"
       >
-        <Sidebar />
+        {/* <Sidebar /> */}
         <Stack flex={1} width="100%" height="100%" overflow="hidden">
           <Header />
           <Stack

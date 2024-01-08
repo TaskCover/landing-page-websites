@@ -1,4 +1,4 @@
 import Menu from "./Menu";
-import Sidebar from "./Sidebar";
+import SignInTrialHeader from './SignInTrialHeader'
 
-export { Menu, Sidebar };
+export { Menu, SignInTrialHeader };
