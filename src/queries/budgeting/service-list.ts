@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "react-query";
 import { saleClientInstance } from "../../api/client";
 import { getPath } from "utils/index";
