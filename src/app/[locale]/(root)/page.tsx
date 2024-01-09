@@ -13,8 +13,6 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <Wrapper overflow="auto" spacing={3} transparent>
-      <HomePage />
-    </Wrapper>
+    <HomePage />
   );
 }

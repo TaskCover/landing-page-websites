@@ -7,10 +7,16 @@ export const Header = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
     <Stack
+      width="100%"
       direction={{ md: "row", xs: "column" }}
       justifyContent="space-between"
       alignItems="center"
       spacing={5}
+      sx={{
+        width: "100%",
+        m: "0 auto",
+        maxWidth: "1200px",
+      }}
     >
       <Stack>
         {isMdSmaller ? (
@@ -21,7 +27,7 @@ export const Header = () => {
           <Text variant={{ xl: "h1", xs: "h3" }}>Your Privacy</Text>
         )}
 
-        <TextGradient variant={{ xl: "h1", xs: "h3" }} textAlign={{md: "left", xs: "center"}}>
+        <TextGradient variant={{ xl: "h1", xs: "h3" }} textAlign={{ md: "left", xs: "center" }}>
           Our Responsibility
         </TextGradient>
         <Text mt={3} textAlign={{ md: "justify", xs: "center" }}>
