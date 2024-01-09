@@ -14,6 +14,24 @@ import DocsIcon from "public/images/home-page/icon-doc.svg";
 import ChatIcon from "public/images/home-page/icon-chat.svg";
 import ResourcePlanningIcon from "public/images/home-page/icon-resource-panning.svg";
 
+import ProductiveIcon from "public/images/home-page/icon-productive.svg";
+import GoogleSheetIc from "public/images/home-page/icon-google-sheet.svg";
+import SpendeskIc from "public/images/home-page/icon-spendesk.svg";
+import ChatGptIc from "public/images/home-page/icon-chatgpt.svg";
+import SocialBeeIc from "public/images/home-page/icon-bee-social.svg";
+import CopilotIc from "public/images/home-page/icon-copilot.svg";
+import SmartSheetIc from "public/images/home-page/icon-smartsheet.svg";
+import ClickupIc from "public/images/home-page/icon-clickup.svg";
+import DocxIc from "public/images/home-page/icon-doc.svg";
+import TrelloIc from "public/images/home-page/icon-trello.svg";
+import VacationIc from "public/images/home-page/icon-vacation-tracker.svg";
+import LeaveBoardIc from "public/images/home-page/icon-leaveboard.svg";
+import BambooHrIc from "public/images/home-page/icon-bamboo-hr.svg";
+
+
+
+
+
 export const PowerFullAgentTabs = [
   {
     img: TaskCoverAiIcon,
@@ -136,20 +154,104 @@ export const ExploreLayoutTab = [
 
 export const TaskCoverItems = [
   {
-    desc: "",
-    bgImage: "",
+    desc: "Project Effectiveness",
+    bgImage: "/images/home-page/bg-project-effective.png",
   },
   {
-    desc: "",
-    bgImage: "",
+    desc: "time",
     active: true,
   },
   {
-    desc: "",
-    bgImage: "",
+    desc: "Customer Retention",
+    bgImage: "/images/home-page/bg-customer-retention.png",
   },
   {
-    desc: "",
-    bgImage: "",
+    desc: "Satisfaction in the workplace",
+    bgImage: "/images/home-page/bg-customer-retention.png",
   },
 ];
+
+export const SwapMultiToolItems = [
+  {
+    title: "Finance",
+    items: [
+      {
+        imgUrl: ProductiveIcon,
+        label: "Productive",
+      },
+      {
+        imgUrl: GoogleSheetIc,
+        label: "Google sheet",
+        isBigIcon: true,
+      },
+      {
+        imgUrl: SpendeskIc,
+        label: "Spendesk",
+      },
+    ]
+  },
+  {
+    title: "AI funtion",
+    items: [
+      {
+        imgUrl: ChatGptIc,
+        label: "Chat GPT",
+      },
+      {
+        imgUrl: SocialBeeIc,
+        label: "Social Bee",
+      },
+      {
+        imgUrl: CopilotIc,
+        label: "CoPilot Microsoft Team",
+        isBigIcon: true,
+      },
+    ]
+  },
+  {
+    title: "Project & Task Management",
+    items: [
+      {
+        imgUrl: SmartSheetIc,
+        label: "Smartsheet",
+      },
+      {
+        imgUrl: ClickupIc,
+        label: "ClickUp",
+      },
+      {
+        imgUrl: DocxIc,
+        label: "Docs",
+      },
+      {
+        imgUrl: ProductiveIcon,
+        label: "Productive",
+      },
+      {
+        imgUrl: TrelloIc,
+        label: "Trello",
+      },
+    ]
+  },
+  {
+    title: "Human resource",
+    items: [
+      {
+        imgUrl: VacationIc,
+        label: "Vacation tracker",
+        isBigIcon: true,
+      },
+      {
+        imgUrl: LeaveBoardIc,
+        label: "Leaveboard",
+      },
+      {
+        imgUrl: BambooHrIc,
+        label: "BambooHR",
+      },
+    ]
+  }
+];
+
+export const PricingToolList = ["Task management", "Time Tracking", "Docs", "Project", "Budgeting", "Billing", "Al chat", "Al Task & Project", "Al meeting", "Team Chat"];
+
