@@ -1,21 +1,17 @@
 "use client";
 import { Stack } from "@mui/material";
-import { Button, Text } from "components/shared";
-import Image from "next/image";
 import { memo } from "react";
-import ArrowRightIcon from "public/images/home-page/arrow-right.svg";
-import ImgLinePage from "public/images/home-page/img-line-page.svg";
+import EmpowerDifferentLayout from "./components/empower-different-layout";
 import ExploreLayout from "./components/explore-layout";
+import FullyObtimizeLayout from "./components/fully-optimize-layout";
 import HeadLayout from "./components/head-layout";
 import ManageProjectLayout from "./components/manage-project-layout";
 import PowerfulAgentLayout from "./components/powerful-agent-layout";
-import FullyObtimizeLayout from "./components/fully-optimize-layout";
-import EmpowerDifferentLayout from "./components/empower-different-layout";
 
 
-import { TaskCoverItems } from "./configs";
-import TaskCoverLayout from "./components/task-cover-layout";
+import { SendMailLayout } from "components/sn-send-email";
 import SwapToolsLayout from "./components/swap-tools-layout";
+import TaskCoverLayout from "./components/task-cover-layout";
 
 type HomePageProps = {};
 
@@ -30,6 +26,7 @@ const HomePage = (props: HomePageProps) => {
       <TaskCoverLayout />
       <SwapToolsLayout />
       <EmpowerDifferentLayout />
+      <SendMailLayout/>
     </Stack >
   );
 };

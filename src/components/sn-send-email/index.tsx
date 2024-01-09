@@ -1,8 +1,8 @@
-import { Stack, FormControl, Input } from "@mui/material";
-import { Button, Text, TextGradient, Form } from "components/shared";
+import { Stack } from "@mui/material";
+import { Form, Text } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 
-export const HelperSendMail = () => {
+export const SendMailLayout = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
     <Stack
