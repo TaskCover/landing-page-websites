@@ -93,7 +93,6 @@ const MainLayout = (props: MainLayoutProps) => {
           <Stack
             flex={1}
             spacing={{ xs: 1.5, sm: 3 }}
-            sx={{ overflow: 'auto' }}
           >
             {
               children
