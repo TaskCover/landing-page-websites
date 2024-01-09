@@ -14,7 +14,6 @@ const TrustCenter = () => {
         backgroundRepeat: "no-repeat",
       }}>
       <Stack
-       
       />
       <Header />
       <BuildingTrust />

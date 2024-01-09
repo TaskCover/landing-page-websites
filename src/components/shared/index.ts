@@ -13,6 +13,7 @@ import Upload from "./Upload";
 import Editor from "./Editor";
 import Collapse from "./Collapse";
 import SvgIcon from "./SvgIcon";
+import Form from "./Form";
 
 export {
   Button,
@@ -29,7 +30,8 @@ export {
   Editor,
   Collapse,
   SvgIcon,
-  TextGradient
+  TextGradient,
+  Form
 };
 
 export type {

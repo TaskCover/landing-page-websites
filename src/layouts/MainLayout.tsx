@@ -85,7 +85,10 @@ const MainLayout = (props: MainLayoutProps) => {
         width="100vw"
         height="calc(var(--vh, 1vh) * 100)"
         flex={1}
-        overflow="auto"
+        sx={{
+          overflowX: "hidden",
+          overflowY: "auto",
+        }}
       >
         {/* <Sidebar /> */}
         <Stack flex={1} width="100%" height="100%">
