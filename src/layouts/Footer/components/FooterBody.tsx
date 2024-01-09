@@ -11,7 +11,7 @@ type FooterBody = {
 const FooterBody = () => {
   return (
     <Grid container spacing={2}>
-      <Grid item xs={3}>
+      <Grid item md={3} xs={6}>
         <Text fontWeight={700} variant="body1" mb={3} textTransform="uppercase">
           {DATA.solutions.heading}
         </Text>
@@ -21,7 +21,7 @@ const FooterBody = () => {
           </Text>
         ))}
       </Grid>
-      <Grid item xs={3}>
+      <Grid item md={3} xs={6}>
         <Text fontWeight={700} variant="body1" mb={3} textTransform="uppercase">
           {DATA.documentation.heading}
         </Text>
@@ -31,7 +31,7 @@ const FooterBody = () => {
           </Text>
         ))}
       </Grid>
-      <Grid item xs={3}>
+      <Grid item md={3} xs={6}>
         <Text fontWeight={700} variant="body1" mb={3} textTransform="uppercase">
           {DATA.resources.heading}
         </Text>
@@ -41,7 +41,7 @@ const FooterBody = () => {
           </Text>
         ))}
       </Grid>
-      <Grid item xs={3}>
+      <Grid item md={3} xs={6}>
         <Text fontWeight={700} variant="body1" mb={3} textTransform="uppercase">
           {DATA.company.heading}
         </Text>

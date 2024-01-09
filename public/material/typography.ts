@@ -8,30 +8,29 @@ export const openSans = Open_Sans({
 });
 
 const typography = {
-  fontFamily: openSans.style.fontFamily,
   h1: {
     fontWeight: 700,
-    fontSize: 40,
+    fontSize: 64,
     lineHeight: 1.25,
   },
   h2: {
     fontWeight: 700,
-    fontSize: 32,
+    fontSize: 48,
     lineHeight: 1.1875,
   },
   h3: {
     fontWeight: 700,
-    fontSize: 24,
+    fontSize: 36,
     lineHeight: 1.25,
   },
   h4: {
     fontWeight: 600,
-    fontSize: 20,
+    fontSize: 32,
     lineHeight: 1.2,
   },
   h5: {
-    fontWeight: 600,
-    fontSize: 16,
+    fontWeight: 700,
+    fontSize: 24,
     lineHeight: 1.25,
   },
   h6: {

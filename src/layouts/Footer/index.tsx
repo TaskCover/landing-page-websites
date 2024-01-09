@@ -19,10 +19,10 @@ const Footer = () => {
     >
       <Container>
         <Grid container spacing={2} pt="10%">
-          <Grid item xs={4}>
+          <Grid item md={4} xs={12} mb={{md: 0, xs: 5}}>
             <FooterHeader />
           </Grid>
-          <Grid item xs={8}>
+          <Grid item md={8} xs={12}>
             <FooterBody />
           </Grid>
         </Grid>

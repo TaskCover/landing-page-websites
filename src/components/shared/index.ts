@@ -2,6 +2,7 @@ import Button from "./Button";
 import IconButton, { IconButtonProps } from "./IconButton";
 import Tooltip from "./Tooltip";
 import Text, { TextProps } from "./Text";
+import TextGradient from "./TextGradient";
 import Input, { InputProps } from "./Input";
 import Select, { SelectProps } from "./Select";
 import InputNumber from "./InputNumber";
@@ -28,6 +29,7 @@ export {
   Editor,
   Collapse,
   SvgIcon,
+  TextGradient
 };
 
 export type {

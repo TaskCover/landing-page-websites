@@ -72,6 +72,8 @@ const AUTHORIZED_LOGGED_IN_PATHS = [
   FEEDBACK_PATH,
 ];
 
+export const TRUST_CENTER = "/trust_center";
+
 export const AUTHORIZED_PATHS = {
   [Permission.AM]: [
     ...AUTHORIZED_LOGGED_IN_PATHS,

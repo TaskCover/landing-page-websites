@@ -8,16 +8,18 @@ import InstagramIcon from "icons/InstagramIcon";
 import LinkInIcon from "icons/LinkInIcon";
 import PremiumIcon from "icons/PremiumIcon";
 import TwitterIcon from "icons/TwitterIcon";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const FooterHeader = () => {
+  const { isMdSmaller } = useBreakpoint();
   return (
     <Stack>
       <Image
         src={LogoImage}
         alt="App Logo"
         style={{ margin: "auto" }}
-        width={98}
-        height={107}
+        width={isMdSmaller ? 51 : 98}
+        height={isMdSmaller ? 56 : 107}
       />
       <Text align="center">
         Slogan Our paper is sourced from <br /> FSC-certified mills.

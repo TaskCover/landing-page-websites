@@ -32,15 +32,6 @@ const Wrapper = (
       }
       {...rest}
     >
-      <Box
-        width="100%"
-        minHeight={{ xs: 16, xl: 24 }}
-        height={{ xs: 16, xl: 24 }}
-        bgcolor={{ md: "background.default" }}
-        position="sticky"
-        zIndex={12}
-        top={0}
-      />
       <Stack
         flex={1}
         bgcolor={transparent ? "transparent" : { md: "background.paper" }}
