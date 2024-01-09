@@ -47,27 +47,27 @@ const MainLayout = (props: MainLayoutProps) => {
 
   const isLoggedIn = useMemo(() => !!token, [token]);
 
-  const isAuthorized = useMemo(() => {
-    if (!user?.roles?.length) return false;
-    return user?.roles?.some((role) => {
-      const basePath = id ? pathname.replace(id, "{id}") : pathname;
-      return AUTHORIZED_PATHS[role].includes(basePath);
-    });
-  }, [user?.roles, pathname, id]);
+  // const isAuthorized = useMemo(() => {
+  //   if (!user?.roles?.length) return false;
+  //   return user?.roles?.some((role) => {
+  //     const basePath = id ? pathname.replace(id, "{id}") : pathname;
+  //     return AUTHORIZED_PATHS[role].includes(basePath);
+  //   });
+  // }, [user?.roles, pathname, id]);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-    } else if (!AUTH_PATHS.includes(pathname)) {
-      push(SIGNIN_PATH);
-    }
-  }, [isLoggedIn, push, pathname]);
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //   } else if (!AUTH_PATHS.includes(pathname)) {
+  //     push(SIGNIN_PATH);
+  //   }
+  // }, [isLoggedIn, push, pathname]);
 
-  useEffect(() => {
-    if (user?.id) return;
-    onGetProfile();
-  }, [user?.id, onGetProfile]);
+  // useEffect(() => {
+  //   if (user?.id) return;
+  //   onGetProfile();
+  // }, [user?.id, onGetProfile]);
 
-  if (!appReady || !token || !user) return <AppLoading />;
+  // if (!appReady || !token || !user) return <AppLoading />;
 
   return (
     <>
@@ -78,10 +78,10 @@ const MainLayout = (props: MainLayoutProps) => {
         flex={1}
         overflow="hidden"
       >
-        <Sidebar />
+        {/* <Sidebar /> */}
         <Stack flex={1} width="100%" height="100%" overflow="hidden">
-          <Header />
-          <Stack
+          {/* <Header /> */}
+          {/* <Stack
             flex={1}
             height="fit-content"
             spacing={{ xs: 1.5, sm: 3 }}
@@ -89,18 +89,19 @@ const MainLayout = (props: MainLayoutProps) => {
             alignItems={isAuthorized ? undefined : "center"}
             overflow="hidden"
           >
-            {isAuthorized ? (
+            {!isAuthorized ? (
               children
             ) : (
               <Text variant="body2" fontWeight={600}>
                 {commonT("unauthorized")}
               </Text>
             )}
-          </Stack>
+          </Stack> */}
+          {children}
         </Stack>
       </Stack>
       <Snackbar />
-      <ChatListTemp />
+      {/* <ChatListTemp /> */}
     </>
   );
 };

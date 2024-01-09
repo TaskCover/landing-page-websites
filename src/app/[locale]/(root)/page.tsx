@@ -5,6 +5,7 @@ import {
   Transactions,
   ChartStatistics,
 } from "components/sn-dashboard";
+import HomePage from "components/sn-home-page";
 
 export const metadata = {
   title: "Dashboard | Taskcover",
@@ -13,11 +14,7 @@ export const metadata = {
 export default function Page() {
   return (
     <Wrapper overflow="auto" spacing={3} transparent>
-      <FixedLayout flex={1} spacing={3} bgcolor="transparent">
-        <Statistics />
-        <ChartStatistics />
-        <Transactions />
-      </FixedLayout>
+      <HomePage />
     </Wrapper>
   );
 }

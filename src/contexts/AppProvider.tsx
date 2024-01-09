@@ -44,28 +44,28 @@ const AppProvider = ({
     replaceRef.current = replace;
   }, [replace]);
 
-  useEffect(() => {
-    const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+  // useEffect(() => {
+  //   const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
 
-    const isResetPath = pathname.startsWith(RESET_PASSWORD_PATH);
+  //   const isResetPath = pathname.startsWith(RESET_PASSWORD_PATH);
 
-    if (
-      !accessToken &&
-      replaceRef.current &&
-      !AUTH_PATHS.includes(pathname) &&
-      !isResetPath
-    ) {
-      replaceRef.current(SIGNIN_PATH);
-    }
+  //   if (
+  //     !accessToken &&
+  //     replaceRef.current &&
+  //     !AUTH_PATHS.includes(pathname) &&
+  //     !isResetPath
+  //   ) {
+  //     replaceRef.current(SIGNIN_PATH);
+  //   }
 
-    store.dispatch(updateAuth({ accessToken }));
-    if (accessToken) {
-      store.dispatch(getProfile());
-    } else {
-      store.dispatch(toggleAppReady(true));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //   store.dispatch(updateAuth({ accessToken }));
+  //   if (accessToken) {
+  //     store.dispatch(getProfile());
+  //   } else {
+  //     store.dispatch(toggleAppReady(true));
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const onSetViewHeight = useCallback(() => {
     const vh = window.innerHeight * 0.01;
@@ -98,15 +98,15 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   const appReady = useAppSelector((state) => state.app.appReady);
   const token = useAppSelector((state) => state.app.token);
 
-  useEffect(() => {
-    if (token) {
-      document.body.classList.remove("not-auth");
-    } else {
-      document.body.classList.add("not-auth");
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     document.body.classList.remove("not-auth");
+  //   } else {
+  //     document.body.classList.add("not-auth");
+  //   }
+  // }, [token]);
 
-  if (!appReady) return <AppLoading />;
+  // if (!appReady) return <AppLoading />;
 
   return (
     <>
