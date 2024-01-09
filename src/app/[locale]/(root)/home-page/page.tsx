@@ -12,7 +12,7 @@ import HomePage from "components/sn-home-page";
 export default function Page() {
 
   return (
-    <Wrapper overflow="auto">
+    <Wrapper overflow="hidden">
       <HomePage/>
     </Wrapper>
   );
