@@ -58,8 +58,8 @@ export const HelperForm = () => {
               flex: 1
             }}
           >
-            <Stack direction="row" justifyContent="space-between">
-              <Text>{data.title}</Text>
+            <Stack direction="row" justifyContent="space-between" mb={2}>
+              <Text variant="h5">{data.title}</Text>
               <ArrowDownIcon />
             </Stack>
             <Text>

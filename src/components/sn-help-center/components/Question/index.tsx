@@ -1,9 +1,8 @@
 import { Stack } from "@mui/material";
 import { Collapse, Text } from "components/shared";
-import PlusIcon from "icons/PlusIcon";
 export const HelperQuestion = () => {
   return (
-    <Stack mt={11}>
+    <Stack mt={11} position="relative">
       <Text textAlign="center" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
         Frequently asked questions.
       </Text>

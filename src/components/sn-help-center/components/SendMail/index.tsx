@@ -1,18 +1,21 @@
 import { Stack, FormControl, Input } from "@mui/material";
-import { Button, Text, TextGradient } from "components/shared";
+import { Button, Text, TextGradient, Form } from "components/shared";
+import useBreakpoint from "hooks/useBreakpoint";
 
 export const HelperSendMail = () => {
+  const {isMdSmaller} = useBreakpoint();
   return (
     <Stack
       sx={{
-        backgroundImage: "url(/images/bg-help-send-mail.png)",
+        backgroundImage: isMdSmaller ? "url(/images/bg-help-send-mail-mobile.png)" : "url(/images/bg-help-send-mail.png)" ,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         width: "100%",
-        minHeight: 426,
+        minHeight: {md: 426, xs: 472},
         mt: 25,
         position: "relative",
+        borderRadius: 4
       }}
     >
       <Stack
@@ -21,57 +24,34 @@ export const HelperSendMail = () => {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "85%",
-          height: "80%",
+          width: {md: "85%", xs: "90%"},
+          height: {md: "80%", xs: "95%"},
           border: "1px solid #00FF85",
           backgroundColor: "rgba(0, 0, 0, 0.40)",
           backgroundFilter: "blur(8px)",
           justifyContent: "center",
           alignItems: "center",
           borderRadius: 4,
-          px: 7,
+          px: {md: 7, xs: 3},
           py: 5,
           color: "#fff",
           textAlign: "center",
         }}
       >
         <Text color="#fff" fontSize={{ md: 40, xs: 24 }} width="100%">
-          Unlock the value of
+          Unlock the value of&nbsp;
           <Text component="span" fontSize="inherit" color="#00FFE0">
             management and optimization
           </Text>
-          for your agency right now.
+          &nbsp;for your agency right now.
         </Text>
-        <Text color="#fff" fontWeight={400}>
+        <Text color="#fff" fontWeight={400} fontSize={{md: 18, xs: 16}}>
           Share your email to recieve guides and news from us
         </Text>
-        <FormControl sx={{ mt: 5 }}>
-          <Stack
-            maxWidth={552}
-            height={54}
-            sx={{
-              border: "1px solid #fff",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              borderRadius: 13.5,
-              px: 0.452,
-              py: 0.452,
-            }}
-          >
-            <Input
-              disableUnderline
-              sx={{ px: 2, color: "#fff" }}
-              placeholder="Type your question"
-            />
-            <Button
-              className="MuiButton-primaryOutlined"
-              sx={{ px: 6, border: "0!important", background: "#fff!important" }}
-            >
-              <TextGradient>Send</TextGradient>
-            </Button>
-          </Stack>
-        </FormControl>
-        <Text color="#fff" fontWeight={400} mt={3.5}>
+        <Stack mt={5}>
+          <Form submitText="Send"/>
+        </Stack>
+        <Text color="#fff" fontWeight={400} mt={3.5} fontSize={12}>
             By clicking Sign Up you&rsquo;re confirming that you agree with our Terms and Conditions.
         </Text>
       </Stack>
