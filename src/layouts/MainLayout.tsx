@@ -23,6 +23,7 @@ import { NS_COMMON } from "constant/index";
 import { useAuth } from "store/app/selectors";
 import { Permission } from "constant/enums";
 import ChatListTemp from "components/sn-chat/ChatListTemp";
+import Footer from "./Footer";
 
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -84,30 +85,21 @@ const MainLayout = (props: MainLayoutProps) => {
         width="100vw"
         height="calc(var(--vh, 1vh) * 100)"
         flex={1}
-        overflow="hidden"
+        overflow="auto"
       >
         {/* <Sidebar /> */}
-        <Stack flex={1} width="100%" height="100%" overflow="hidden">
+        <Stack flex={1} width="100%" height="100%">
           <Header />
           <Stack
             flex={1}
-            // height="fit-content"
             spacing={{ xs: 1.5, sm: 3 }}
             sx={{ overflow: 'auto' }}
-            // justifyContent={isAuthorized ? undefined : "center"}
-            // alignItems={isAuthorized ? undefined : "center"}
-            // overflow="hidden"
           >
             {
-              // isAuthorized ? (
               children
-              // ) : (
-              //   <Text variant="body2" fontWeight={600}>
-              //     {commonT("unauthorized")}
-              //   </Text>
-              // )
             }
           </Stack>
+          <Footer />
         </Stack>
       </Stack>
       <Snackbar />

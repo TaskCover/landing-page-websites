@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useState } from "react";
-import { Stack } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import { AccountInfo, Drawer } from "./components";
 import AppLogo from "components/AppLogo";
 import { Search } from "components/Filters";
@@ -30,23 +30,22 @@ const Header = () => {
     [isExpandedSidebar, isLgSmaller],
   );
   return (
-    <Stack
-      height={HEADER_HEIGHT}
-      bgcolor="transparent"
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-      px={{ xs: 2, md: 3 }}
-      width="100%"
-    >
+    <Container>
+      <Stack
+        height={HEADER_HEIGHT}
+        bgcolor="transparent"
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        width="100%"
+      >
         <Link href={HOME_PATH} underline="none" display="block">
-          <AppLogo
-            width={156}
-          />
+          <AppLogo width={156} />
         </Link>
         <Menu />
         {isMdSmaller ? <></> : <SignInTrialHeader />}
-    </Stack>
+      </Stack>
+    </Container>
   );
 };
 
