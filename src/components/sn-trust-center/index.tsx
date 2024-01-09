@@ -7,7 +7,7 @@ import { BuildingTrust } from "./components/Building";
 
 const TrustCenter = () => {
   return (
-    <Stack>
+    <Stack position="relative">
       <Stack
         sx={{
           backgroundImage: "url(/images/trust-center-bg.png)",
