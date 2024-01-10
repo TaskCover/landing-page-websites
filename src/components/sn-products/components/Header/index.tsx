@@ -64,41 +64,41 @@ const DATA = [
   {
     icon: "/images/project-ic.png",
     label: "Project",
-    link: "/project",
+    link: "/",
   },
   {
     icon: "/images/folder-ic.png",
     label: "Resource Planning",
-    link: "/project",
+    link: "/",
   },
   {
     icon: "/images/document-ic.png",
     label: "Document",
-    link: "/project",
+    link: "/",
   },
   {
     icon: "/images/chat-ic.png",
     label: "Chat",
-    link: "/chat",
+    link: "/",
   },
   {
     icon: "/images/clock-ic.png",
     label: "Time Tracking",
-    link: "/time-tracking",
+    link: "/",
   },
   {
     icon: "/images/wallet-ic.png",
     label: "Budgeting",
-    link: "/budgeting",
+    link: "/",
   },
   {
     icon: "/images/tag-ic.png",
     label: "Sales",
-    link: "/sales",
+    link: "/",
   },
   {
     icon: "/images/bill-ic.png",
     label: "Billing",
-    link: "/billing",
+    link: "/",
   },
 ];
