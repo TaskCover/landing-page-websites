@@ -28,42 +28,67 @@ import VacationIc from "public/images/home-page/icon-vacation-tracker.svg";
 import LeaveBoardIc from "public/images/home-page/icon-leaveboard.svg";
 import BambooHrIc from "public/images/home-page/icon-bamboo-hr.svg";
 
-
-
-
-
 export const PowerFullAgentTabs = [
   {
+    id: 1,
     img: TaskCoverAiIcon,
     label: "TaskCover AI",
     textColor: "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
     isTextGradient: true,
+    desc: [
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+    ],
   },
   {
+    id: 2,
     img: TaskProjectIcon,
     label: "Task Project",
     textColor: "#E96C3F",
-    isActive: true,
+    desc: [
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+    ],
   },
   {
+    id: 3,
     img: NoteDocsIcon,
     label: "Note & Docs",
     textColor: "#42ADA7",
+    desc: [
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+    ],
   },
   {
+    id: 4,
     img: MindMapsIcon,
     label: "Mind Maps",
     textColor: "#1B88EC",
+    desc: [
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+    ],
   },
   {
+    id: 5,
     img: AiChatIcon,
     label: "AI Chat",
     textColor: "#EDB932",
+    desc: [
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+    ],
   },
   {
+    id: 6,
     img: AiMeetingIcon,
     label: "AI Meeting",
     textColor: "#48BF80",
+    desc: [
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+    ],
   },
 ];
 
@@ -132,23 +157,64 @@ export const ManageProjectItems = [
 
 export const ExploreLayoutTab = [
   {
+    id: 1,
     label: "MARKETING AGENCY",
-    active: true,
+    title: "Effectively achieve project’s goals",
+    desc: [
+      "Enhance team coordination and workflow.",
+      "Time and resource optimization through task automation.",
+      "Ensure your progress’s quality with clients",
+    ],
   },
   {
+    id: 2,
     label: "LAW AGENCY",
+    title: "Effectively achieve project’s goals",
+    desc: [
+      "Enhance team coordination and workflow.",
+      "Time and resource optimization through task automation.",
+      "Ensure your progress’s quality with clients",
+    ],
   },
   {
+    id: 3,
     label: "REMOTE TEAM",
+    title: "Effectively achieve project’s goals",
+    desc: [
+      "Enhance team coordination and workflow.",
+      "Time and resource optimization through task automation.",
+      "Ensure your progress’s quality with clients",
+    ],
   },
   {
+    id: 4,
     label: "PRODUCTION TEAM",
+    title: "Effectively achieve project’s goals",
+    desc: [
+      "Enhance team coordination and workflow.",
+      "Time and resource optimization through task automation.",
+      "Ensure your progress’s quality with clients",
+    ],
   },
   {
+    id: 5,
     label: "EVENT AGENCY",
+    title: "Effectively achieve project’s goals",
+    desc: [
+      "Enhance team coordination and workflow.",
+      "Time and resource optimization through task automation.",
+      "Ensure your progress’s quality with clients",
+    ],
   },
   {
+    id: 6,
     label: "SOFTWARE AGENCY",
+    title: "Effectively achieve project’s goals",
+    desc: [
+      "Enhance team coordination and workflow.",
+      "Time and resource optimization through task automation.",
+      "Ensure your progress’s quality with clients",
+    ],
   },
 ];
 
@@ -188,7 +254,7 @@ export const SwapMultiToolItems = [
         imgUrl: SpendeskIc,
         label: "Spendesk",
       },
-    ]
+    ],
   },
   {
     title: "AI funtion",
@@ -206,7 +272,7 @@ export const SwapMultiToolItems = [
         label: "CoPilot Microsoft Team",
         isBigIcon: true,
       },
-    ]
+    ],
   },
   {
     title: "Project & Task Management",
@@ -231,7 +297,7 @@ export const SwapMultiToolItems = [
         imgUrl: TrelloIc,
         label: "Trello",
       },
-    ]
+    ],
   },
   {
     title: "Human resource",
@@ -249,9 +315,19 @@ export const SwapMultiToolItems = [
         imgUrl: BambooHrIc,
         label: "BambooHR",
       },
-    ]
-  }
+    ],
+  },
 ];
 
-export const PricingToolList = ["Task management", "Time Tracking", "Docs", "Project", "Budgeting", "Billing", "Al chat", "Al Task & Project", "Al meeting", "Team Chat"];
-
+export const PricingToolList = [
+  "Task management",
+  "Time Tracking",
+  "Docs",
+  "Project",
+  "Budgeting",
+  "Billing",
+  "Al chat",
+  "Al Task & Project",
+  "Al meeting",
+  "Team Chat",
+];
