@@ -18,7 +18,7 @@ export const ProductFeature = () => {
           zIndex: -1,
         }}
       />
-      <Stack direction="row" justifyContent="space-between">
+      <Stack direction={{md: "row", xs: "column"}} justifyContent="space-between">
         <Stack flex={0.5}>
           <Text fontSize={{ md: 40, xs: 24 }} mb={5}>
             🧑‍💻{" "}
@@ -91,7 +91,7 @@ export const ProductFeature = () => {
         </Stack>
       </Stack>
 
-      <Stack direction="row" justifyContent="space-between" mt={10}>
+      <Stack direction={{md: "row", xs: "column"}} justifyContent="space-between" mt={10}>
         <Stack flex={0.5}>
           <Text fontSize={{ md: 40, xs: 24 }} mb={5}>
             💼{" "}
@@ -147,7 +147,7 @@ export const ProductFeature = () => {
       </Stack>
 
       <Stack
-        direction="row-reverse"
+        direction={{md: "row-reverse", xs: "column"}}
         justifyContent="space-between"
         mt={10}
         spacing={4}

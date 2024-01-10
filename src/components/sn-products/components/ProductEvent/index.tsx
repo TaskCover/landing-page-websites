@@ -1,7 +1,12 @@
 import { Stack } from "@mui/material";
 import { Text, Button } from "components/shared";
 
-export const BudgetEvent = () => {
+type ProductEventProps = {
+  heading: string
+}
+
+export const ProductEvent = (props: ProductEventProps) => {
+  const {heading} = props;
   return (
     <Stack
       mt={11}
@@ -15,16 +20,20 @@ export const BudgetEvent = () => {
           backgroundImage: "url(/images/budget-event-bg.png)",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
-          width: "100vw",
           minHeight: 290,
           justifyContent: "center",
           alignItems: "center",
-          position: "absolute",
-          left: -40,
+          width: "100%",
         }}
       >
-        <Text mb={5} color="#fff" variant={{ md: "h3", xs: "h5" }}>
-          READY TO BUDGETING YOUR AGENCY?
+        <Text
+          mb={5}
+          color="#fff"
+          fontSize={{ md: 36, xs: 24 }}
+          textAlign="center"
+          fontWeight={700}
+        >
+          {heading}
         </Text>
         <Button
           sx={{

@@ -185,3 +185,17 @@ export const timeLocale = {
   en: "en-US",
   vi: "vi-VN",
 };
+
+
+const ROOT_ROUTER  = "/products";
+
+export const ROUTER_PRODUCT = [
+  `${ROOT_ROUTER}/budgeting`,
+  `${ROOT_ROUTER}/project`,
+  `${ROOT_ROUTER}/task-manager`,
+  `${ROOT_ROUTER}/time-tracking`,
+  `${ROOT_ROUTER}/biling`,
+  `${ROOT_ROUTER}/chat`,
+  `${ROOT_ROUTER}/sale`,
+  `${ROOT_ROUTER}/resource`,
+]

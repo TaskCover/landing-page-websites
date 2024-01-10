@@ -3,7 +3,14 @@ import { Button, Text, TextGradient } from "components/shared";
 import Image from "next/image";
 import Link from "next/link";
 
-export const HeaderProducts = () => {
+type HeaderProductsProps = {
+  headingText: React.ReactNode;
+  subText: string;
+  imageUrl: string;
+}
+
+export const HeaderProducts = (props: HeaderProductsProps) => {
+  const {headingText, subText, imageUrl} = props;
   return (
     <Stack>
       <Stack
@@ -13,6 +20,7 @@ export const HeaderProducts = () => {
         borderRadius={4}
         sx={{
           backgroundColor: "rgba(255, 255, 255, 0.40)",
+          display: { md: "flex", xs: "none" },
         }}
         justifyContent="space-between"
         alignItems="center"
@@ -28,33 +36,16 @@ export const HeaderProducts = () => {
           </Link>
         ))}
       </Stack>
-      <Text
-        variant={{ md: "h1", xs: "h5" }}
-        textAlign="center"
-        fontWeight={500}
-        mt={4}
-      >
-        Your
-        <TextGradient component="span" fontSize="inherit">
-          &#160;Company&apos;s Info,
-        </TextGradient>
-        <br />
-        <Text component="span" fontSize="inherit">
-          Your
-        </Text>
-        <TextGradient component="span" fontSize="inherit">
-          &#160;Way.
-        </TextGradient>
-      </Text>
+      {headingText}
       <Stack alignItems="center" my={3}>
         <Button className="MuiButton-primary" sx={{ width: "fit-content" }}>
           Start free trial
         </Button>
       </Stack>
-      <Text textAlign="center">See your Agency within TaskCover</Text>
+      <Text textAlign="center">{subText}</Text>
       <Stack mt={9}>
         <Image
-          src="/images/company-app.png"
+          src={imageUrl}
           width={0}
           height={0}
           sizes="100vw"

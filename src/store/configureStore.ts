@@ -18,6 +18,7 @@ import { categoryBlogReducer } from "./blog-category/reducer";
 import { CareerReducer } from "./career/reducer";
 import documentApi from "./docs/api";
 import { BillingState, billingReducer } from "./billing/reducer";
+import { CounterPageState, counterPageReducer } from "./product-page/reducer";
 
 export interface State {
   app: AppState;
@@ -31,6 +32,7 @@ export interface State {
   docs: IDocs;
   blogs: BlogState;
   billing: BillingState;
+  counterPage: CounterPageState;
 }
 
 export const store = configureStore({
@@ -54,6 +56,7 @@ export const store = configureStore({
     career: CareerReducer,
     [documentApi.reducerPath]: documentApi.reducer,
     billing: billingReducer,
+    counterPage: counterPageReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

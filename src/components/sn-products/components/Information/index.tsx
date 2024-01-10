@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export const ProductInformation = () => {
   return (
-    <Stack direction="row" justifyContent="space-between">
+    <Stack direction={{md: "row", xs: "column"}} justifyContent="space-between" mt={6}>
       <Stack flex={1}>
         <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
           Missing out on information?!
