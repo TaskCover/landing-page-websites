@@ -185,3 +185,5 @@ export const timeLocale = {
   en: "en-US",
   vi: "vi-VN",
 };
+
+export const ADMIN_PAGE_URL = "http://103.182.16.241:2023/"
