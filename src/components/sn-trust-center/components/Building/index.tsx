@@ -8,9 +8,15 @@ import { FormMobile } from "../FormMobile";
 export const BuildingTrust = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
-    <Stack mt={12.5} mb={{md: 0, xs: 10}}>
+    <Stack mt={12.5} mb={{ md: 0, xs: 10 }}
+      sx={{
+        width: "100%",
+        m: "0 auto",
+        maxWidth: "1200px",
+      }}
+    >
       <Stack textAlign="center">
-        <TextGradient mb={3} variant={{md: "h3", xs: "h5"}}>
+        <TextGradient mb={3} variant={{ md: "h3", xs: "h5" }}>
           Building Trust
         </TextGradient>
         <Text
@@ -18,7 +24,7 @@ export const BuildingTrust = () => {
           textAlign={{ md: "left", xs: "center" }}
           textTransform="unset"
           lineHeight={1.5}
-          sx={{mb: 5}}
+          sx={{ mb: 5 }}
         >
           These four core principles serve as the cornerstone of our work.
         </Text>
@@ -40,7 +46,7 @@ export const BuildingTrust = () => {
                 }}
                 alt="building trust"
               />
-              <Text variant={{md: "h5", xs: "body1"}} fontWeight={700} textTransform="uppercase" mb={1.5}>
+              <Text variant={{ md: "h5", xs: "body1" }} fontWeight={700} textTransform="uppercase" mb={1.5}>
                 {data.title}
               </Text>
               <Text variant="body2">{data.content}</Text>
@@ -50,7 +56,7 @@ export const BuildingTrust = () => {
       </Grid>
       <Stack
         className="resources"
-        direction={{md: "row", xs: "column"}}
+        direction={{ md: "row", xs: "column" }}
         justifyContent="space-between"
         spacing={4.375}
         mt={20}
@@ -94,7 +100,7 @@ export const BuildingTrust = () => {
           />
         </Stack>
       </Stack>
-      {isMdSmaller ? <FormMobile/> : <FormDesktop />}
+      {isMdSmaller ? <FormMobile /> : <FormDesktop />}
     </Stack>
   );
 };

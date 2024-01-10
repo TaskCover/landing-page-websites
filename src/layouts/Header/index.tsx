@@ -44,6 +44,7 @@ const Header = () => {
         </Link>
         <Menu />
         {isMdSmaller ? <></> : <SignInTrialHeader />}
+        {/* <SwitchTheme /> */}
       </Stack>
     </Container>
   );

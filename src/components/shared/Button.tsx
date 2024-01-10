@@ -194,8 +194,8 @@ const getDefaultSx = (isDarkMode: boolean, sx) => {
       minHeight: 56,
     },
     [`&.${buttonClasses.sizeMedium}`]: {
-      py: 1.5,
-      px: 5,
+      // py: 1.5,
+      // px: 5,
       fontSize: 16,
       lineHeight: 1.5,
       minHeight: 24,

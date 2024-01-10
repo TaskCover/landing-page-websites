@@ -4,7 +4,11 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 
 export const HelperForm = () => {
   return (
-    <Stack mt={15.5} alignItems="center">
+    <Stack mt={15.5} alignItems="center" sx={{
+      width: "100%",
+      m: "0 auto",
+      maxWidth: "1200px",
+    }}>
       <TextGradient
         fontSize={{ md: 40, xs: 24 }}
         textAlign="center"
@@ -44,7 +48,7 @@ export const HelperForm = () => {
           </Button>
         </Stack>
       </FormControl>
-      <Stack mt={8} direction={{md: "row", xs: "column"}} justifyContent="space-between" spacing={3}>
+      <Stack mt={8} direction={{ md: "row", xs: "column" }} justifyContent="space-between" spacing={3}>
         {DATA.map((data, index) => (
           <Stack
             key={index}

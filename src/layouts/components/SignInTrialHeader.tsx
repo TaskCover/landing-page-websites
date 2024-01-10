@@ -5,8 +5,8 @@ import { memo } from "react";
 const SignInTrialHeader = () => {
     return(
         <Stack direction="row" spacing={2}>
-            <Button className="MuiButton-primaryOutlined">Log in</Button>
-            <Button className="MuiButton-primary">Free 14-day trial</Button>
+            <Button className="MuiButton-primaryOutlined" sx={{p:"8px 12px"}}>Log in</Button>
+            <Button className="MuiButton-primary" sx={{p:"8px 12px"}}>Free 14-day trial</Button>
         </Stack>
     );
 }

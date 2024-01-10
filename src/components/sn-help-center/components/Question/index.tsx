@@ -2,7 +2,11 @@ import { Stack } from "@mui/material";
 import { Collapse, Text } from "components/shared";
 export const HelperQuestion = () => {
   return (
-    <Stack mt={11} position="relative">
+    <Stack mt={11} position="relative" sx={{
+      width: "100%",
+      m: "0 auto",
+      maxWidth: "1200px",
+    }}>
       <Text textAlign="center" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
         Frequently asked questions.
       </Text>
