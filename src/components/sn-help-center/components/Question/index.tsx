@@ -6,6 +6,7 @@ export const HelperQuestion = () => {
       width: "100%",
       m: "0 auto",
       maxWidth: "1200px",
+      p: "16px"
     }}>
       <Text textAlign="center" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
         Frequently asked questions.
