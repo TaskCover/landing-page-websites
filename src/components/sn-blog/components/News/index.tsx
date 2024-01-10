@@ -6,7 +6,7 @@ import ArrowIcon from "icons/ArrowIcon";
 
 export const BlogNews = () => {
   return (
-    <Stack direction="row" mt={20} spacing={5} position="relative">
+    <Stack direction={{md: "row", xs: "column"}} mt={20} spacing={5} position="relative">
       <Stack
         sx={{
           backgroundImage: "url(/images/trust-center-bg.png)",
@@ -46,6 +46,7 @@ export const BlogNews = () => {
           color="#81838"
           fontSize={{ md: 16, xs: 12 }}
           mb={2}
+          mt={{md: 0, xs: 3}}
         >
           May 23, 2022
         </Text>
@@ -92,12 +93,12 @@ export const BlogNews = () => {
             key={index}
             direction="row"
             alignItems="center"
-            spacing={3}
+            spacing={{md: 3, xs: 1}}
             mb={1}
             sx={{
               background: "#fff",
-              py: 3,
-              px: 3,
+              py: {md: 3, xs: 1},
+              px: {md: 3, xs: 1},
               borderRadius: 4,
               boxShadow: "0px 4px 40px 0px rgba(43, 89, 255, 0.08)",
             }}
@@ -127,7 +128,7 @@ export const BlogNews = () => {
               <Text fontWeight={700} mb={1} fontSize={{ md: 16, xs: 14 }}>
                 {data.title}
               </Text>
-              <Text fontSize={14}>{data.shortDescription}</Text>
+              <Text fontSize={14} display={{md: "block", xs: "none"}}>{data.shortDescription}</Text>
             </Stack>
           </Stack>
         ))}
