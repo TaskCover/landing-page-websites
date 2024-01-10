@@ -100,7 +100,7 @@ const MainLayout = (props: MainLayoutProps) => {
         </Stack>
       </Stack>
       <Snackbar />
-      {!isChatting ? <ChatListTemp /> : null}
+      {/* {!isChatting ? <ChatListTemp /> : null} */}
     </>
   );
 };

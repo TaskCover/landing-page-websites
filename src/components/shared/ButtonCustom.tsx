@@ -34,7 +34,7 @@ type ButtonProps = CoreButtonProps & {
   tooltip?: string;
 };
 
-const Button = (props: ButtonProps) => {
+const ButtonCustom = (props: ButtonProps) => {
   const { tooltip, ...rest } = props;
 
   if (tooltip) {
@@ -87,7 +87,7 @@ const CoreButton = forwardRef(
 
 CoreButton.displayName = "CoreButton";
 
-export default memo(Button);
+export default memo(ButtonCustom);
 
 const PREFIX_BUTTON_CLASS = "MuiButton-";
 
