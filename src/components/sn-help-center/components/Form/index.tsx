@@ -1,5 +1,5 @@
 import { FormControl, Stack, Input } from "@mui/material";
-import { Button, Text, TextGradient } from "components/shared";
+import { ButtonCustom, Text, TextGradient } from "components/shared";
 import ArrowDownIcon from "icons/ArrowDownIcon";
 
 export const HelperForm = () => {
@@ -43,9 +43,9 @@ export const HelperForm = () => {
             sx={{ px: 2, color: "#4B5563" }}
             placeholder="Type your question"
           />
-          <Button className="MuiButton-primary" sx={{ px: 6 }}>
+          <ButtonCustom className="MuiButton-primary" sx={{ px: 6 }}>
             Search
-          </Button>
+          </ButtonCustom>
         </Stack>
       </FormControl>
       <Stack mt={8} direction={{ md: "row", xs: "column" }} justifyContent="space-between" spacing={3}>

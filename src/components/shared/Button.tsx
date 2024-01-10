@@ -103,6 +103,8 @@ const getDefaultSx = (isDarkMode: boolean, sx) => {
     display: "inline-flex",
     alignItems: "center",
     borderRadius: 6,
+    px: 5,
+    py: 1.5,
 
     [`&.${buttonClasses.fullWidth}`]: {
       width: "100%",

@@ -1,5 +1,5 @@
 import { Button, FormControl, Input, Stack } from "@mui/material";
-import { Text, TextGradient } from "components/shared";
+import { Text } from "components/shared";
 import Image from "next/image";
 
 export const FormMobile = () => {

@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import { Collapse, Text } from "components/shared";
+import { CollapseQuestion, Text } from "components/shared";
 export const HelperQuestion = () => {
   return (
     <Stack mt={11} position="relative" sx={{
@@ -25,7 +25,7 @@ export const HelperQuestion = () => {
       />
       <Stack maxWidth={800} mx="auto">
         {DATA.map((data, index) => (
-          <Collapse
+          <CollapseQuestion
             key={index}
             label={
               <Stack direction="row" justifyContent="space-between">
@@ -50,7 +50,7 @@ export const HelperQuestion = () => {
               </Text>
               {data.answer.content}
             </Stack>
-          </Collapse>
+          </CollapseQuestion>
         ))}
       </Stack>
     </Stack>

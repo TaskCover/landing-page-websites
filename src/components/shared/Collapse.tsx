@@ -5,7 +5,7 @@ import {
   SxProps,
   accordionClasses,
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
+import ChevronIcon from "icons/ChevronIcon";
 import useTheme from "hooks/useTheme";
 
 type CollapseProps = {
@@ -24,12 +24,11 @@ const Collapse = (props: CollapseProps) => {
     <Accordion
       defaultExpanded={initCollapse}
       sx={{
-        backgroundColor: "rgba(255, 255, 255, 0.70)",
+        backgroundColor: "grey.50",
         backgroundImage: "none",
         boxShadow: "none",
         p: 2,
         borderRadius: 1,
-        mb: 2,
         "&.Mui-expanded": {
           mx: 0,
           my: 1.5,
@@ -49,9 +48,9 @@ const Collapse = (props: CollapseProps) => {
       <AccordionSummary
         sx={{
           px: 0,
-          borderRadius: 4,
+          borderRadius: 1,
           minHeight: "auto",
-          justifyContent: "space-between",
+          justifyContent: "flex-start",
           "&.Mui-expanded": {
             minHeight: "auto",
             "& svg:last-child": {
@@ -67,7 +66,7 @@ const Collapse = (props: CollapseProps) => {
           },
         }}
         expandIcon={
-          <AddIcon
+          <ChevronIcon
             sx={{
               transform: "rotate(-90deg)",
               color: "grey.900",

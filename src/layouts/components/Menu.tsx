@@ -22,9 +22,10 @@ const Menu = () => {
       sx={{
         flexDirection: "row",
         justifyContent: isMdSmaller ? "space-between" : "flex-start",
+        display: {md: "flex", xs: "none"}
       }}
     >
-      {isMdSmaller ? <BarsIcon sx={{fontSize: 24}} /> : DATA.map((item) => {
+      { DATA.map((item) => {
         return <MenuItem key={item.label} {...item} />;
       })}
     </Stack>

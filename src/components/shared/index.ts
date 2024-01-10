@@ -12,8 +12,10 @@ import Checkbox from "./Checkbox";
 import Upload from "./Upload";
 import Editor from "./Editor";
 import Collapse from "./Collapse";
+import CollapseQuestion from "./CollapseQuestion";
 import SvgIcon from "./SvgIcon";
 import Form from "./Form";
+import ButtonCustom from "./ButtonCustom";
 
 export {
   Button,
@@ -31,7 +33,9 @@ export {
   Collapse,
   SvgIcon,
   TextGradient,
-  Form
+  Form,
+  CollapseQuestion,
+  ButtonCustom
 };
 
 export type {
