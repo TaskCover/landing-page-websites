@@ -2,11 +2,12 @@ import { Stack } from "@mui/material";
 import { Button, Text, TextGradient } from "components/shared";
 import Image from "next/image";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import React from "react";
 
 type CreateProductProps = {
   data: {
     imageUrl: string;
-    heading: string;
+    heading: string | React.ReactNode;
   }[];
 };
 
