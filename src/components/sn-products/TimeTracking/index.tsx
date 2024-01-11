@@ -54,14 +54,6 @@ const ProductProject = () => {
         <ProductIntroduce data={DATA} />
         <Partner />
         <CreateProduct
-          heading={
-            <Text fontSize={{ md: 40, xs: 24 }} textAlign="center">
-              See how to monitor your personal time{" "}
-              <TextGradient component="span" fontSize="inherit">
-                with TaskCover
-              </TextGradient>
-            </Text>
-          }
           data={DATA_CREATE}
         />
       </Container>
