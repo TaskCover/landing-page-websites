@@ -1,5 +1,5 @@
 import Wrapper from "components/Wrapper";
-import { Actions, ItemList } from "components/sn-blog-category";
+// import { Actions, ItemList } from "components/sn-blog-category";
 import { NS_BLOG } from "constant/index";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -14,8 +14,8 @@ export default function Page() {
     return (
         // eslint-disable-next-line react/jsx-no-undef
         <Wrapper overflow="auto">
-            <Actions />
-            <ItemList />
+            {/* <Actions />
+            <ItemList /> */}
         </Wrapper>
     );
 }
