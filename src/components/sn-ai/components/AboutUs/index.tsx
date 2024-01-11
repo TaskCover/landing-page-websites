@@ -32,27 +32,26 @@ export const AboutTaskCoverAI = () => {
         borderRadius={4}
         sx={{
           backgroundColor: "rgba(255, 255, 255, 0.40)",
-          display: { md: "flex", xs: "none" },
         }}
         justifyContent="space-between"
         alignItems="center"
-        px={6}
+        px={{md: 6, xs: 0}}
         mt={3}
       >
         {DATA.map((data, index) => (
           <Link href={data.link} key={index}>
             <Stack alignItems="center">
               <Image src={data.icon} alt="project" width={24} height={24} />
-              <Text fontWeight={400}>{data.label}</Text>
+              <Text fontWeight={400} display={{md: "block", xs: "none"}}>{data.label}</Text>
             </Stack>
           </Link>
         ))}
       </Stack>
 
-      <Stack mt={10}>
+      <Stack mt={{md: 10, xs: 3}}>
         {ABOUT_DATA.map((data, index) => (
           <Stack
-            direction={index % 2 === 0 ? "row" : "row-reverse"}
+            direction={{md: index % 2 === 0 ? "row" : "row-reverse", xs: "column"}}
             alignItems="center"
             spacing={3}
             key={index}
@@ -63,7 +62,7 @@ export const AboutTaskCoverAI = () => {
               {data.heading}
               <Text fontSize={20}>{data.description}</Text>
             </Stack>
-            <Stack flex={1}>
+            <Stack flex={1} width="100%">
               <Image
                 src={data.imageUrl}
                 width={0}
@@ -94,8 +93,8 @@ const ABOUT_DATA = [
         lineHeight={1}
         mb={4}
       >
-        <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
-          Automate Campaign
+        <TextGradient component="span" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
+          Automate Campaign{ " "}
         </TextGradient>
         Process
       </Text>
@@ -115,8 +114,8 @@ const ABOUT_DATA = [
         lineHeight={1}
         mb={4}
       >
-        <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
-          Notes & Docs
+        <TextGradient component="span" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
+          Notes & Docs{" "}
         </TextGradient>
         Master
       </Text>
@@ -134,8 +133,8 @@ const ABOUT_DATA = [
         lineHeight={1}
         mb={4}
       >
-        <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
-          Intelligent
+        <TextGradient component="span" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
+          Intelligent{" "}
         </TextGradient>
         Mind Maps
       </Text>

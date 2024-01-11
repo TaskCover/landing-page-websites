@@ -9,11 +9,11 @@ export const PromoteAI = () => {
         fontSize={{ md: 40, xs: 24 }}
         fontWeight={500}
         textAlign="center"
-        mt={7}
+        mt={{md: 7, xs: 4}}
       >
         Promote your operation by AI-Agent
       </TextGradient>
-      <Stack mt={5}>
+      <Stack mt={5} width="100%">
         <Image
           src="/images/promote-robot.png"
           width={0}

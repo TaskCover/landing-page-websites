@@ -18,7 +18,7 @@ export const HeaderAI = () => {
           alt="header-ai"
         />
       </Stack>
-      <Stack direction="row" alignItems="center" mt={8} spacing={15.125}>
+      <Stack direction={{md: "row", xs: "column"}} alignItems="center" mt={8} spacing={{md: 15.125, xs: 4}}>
         <Stack flex={1}>
           <Text component="div" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
             <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
@@ -33,7 +33,7 @@ export const HeaderAI = () => {
             collaborates.
           </Text>
         </Stack>
-        <Stack flex={1}>
+        <Stack flex={1} width="100%">
           <Image
             src="/images/ai-robot.png"
             width={0}
@@ -47,9 +47,9 @@ export const HeaderAI = () => {
           />
         </Stack>
       </Stack>
-      <Stack direction="row" alignItems="center" spacing={4.375} mt={12} justifyContent="center">
+      <Stack direction="row" alignItems="center" spacing={4.375} mt={12} gap={{md: 0, xs: 1}} justifyContent="center" flexWrap="wrap">
         {PARTNER.map((partner, index) => (
-          <Stack key={index}>
+          <Stack key={index} width={{md: "unset", xs: "20%"}}>
             <Image
               src={partner}
               width={0}

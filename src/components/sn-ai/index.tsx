@@ -4,6 +4,7 @@ import { HeaderAI } from "./components/Header";
 import { AboutTaskCoverAI } from "./components/AboutUs";
 import { PromoteAI } from "./components/Promote";
 import { FeatureAI } from "./components/Feature";
+import { ProductivityAI } from "./components/Productivity";
 
 const AiPage = () => {
   return (
@@ -30,6 +31,7 @@ const AiPage = () => {
         <AboutTaskCoverAI />
         <PromoteAI />
         <FeatureAI />
+        <ProductivityAI />
       </Container>
     </Stack>
   );
