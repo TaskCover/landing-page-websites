@@ -1,0 +1,17 @@
+<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="vuesax/bold/arrow-down">
+<g id="arrow-down">
+<path id="Vector" d="M3 12C3 6.75614 7.25614 2.5 12.5 2.5C17.7439 2.5 22 6.75614 22 12C22 17.2439 17.7439 21.5 12.5 21.5C7.25614 21.5 3 17.2439 3 12ZM13.3836 16.3836L16.3836 13.3836C16.8688 12.8983 16.8688 12.1017 16.3836 11.6164C15.8983 11.1312 15.1017 11.1312 14.6164 11.6164L13.75 12.4829V8.5C13.75 7.81386 13.1861 7.25 12.5 7.25C11.8139 7.25 11.25 7.81386 11.25 8.5V12.4829L10.3836 11.6164C9.89829 11.1312 9.10171 11.1312 8.61645 11.6164C8.13118 12.1017 8.13118 12.8983 8.61645 13.3836L11.6164 16.3836C11.8652 16.6323 12.1845 16.75 12.5 16.75C12.8155 16.75 13.1348 16.6323 13.3836 16.3836Z" fill="url(#paint0_linear_2432_9318)" stroke="url(#paint1_linear_2432_9318)"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_2432_9318" x1="3.63924" y1="17.5556" x2="21.8699" y2="17.4402" gradientUnits="userSpaceOnUse">
+<stop stop-color="#0575E6"/>
+<stop offset="1" stop-color="#38E27B"/>
+</linearGradient>
+<linearGradient id="paint1_linear_2432_9318" x1="3.63924" y1="17.5556" x2="21.8699" y2="17.4402" gradientUnits="userSpaceOnUse">
+<stop stop-color="#0575E6"/>
+<stop offset="1" stop-color="#38E27B"/>
+</linearGradient>
+</defs>
+</svg>
