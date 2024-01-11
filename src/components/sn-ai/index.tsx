@@ -3,6 +3,7 @@ import { memo } from "react";
 import { HeaderAI } from "./components/Header";
 import { AboutTaskCoverAI } from "./components/AboutUs";
 import { PromoteAI } from "./components/Promote";
+import { FeatureAI } from "./components/Feature";
 
 const AiPage = () => {
   return (
@@ -28,6 +29,7 @@ const AiPage = () => {
       <Container>
         <AboutTaskCoverAI />
         <PromoteAI />
+        <FeatureAI />
       </Container>
     </Stack>
   );

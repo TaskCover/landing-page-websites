@@ -19,7 +19,7 @@ export const AboutTaskCoverAI = () => {
           zIndex: -1,
         }}
       />
-      <Text fontSize={{ md: 40, xs: 24 }} fontWeight={500} textAlign="center">
+      <Text component="div" fontSize={{ md: 40, xs: 24 }} fontWeight={500} textAlign="center">
         <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
           TaskCover AI -
         </TextGradient>
@@ -88,6 +88,7 @@ const ABOUT_DATA = [
     title: "Tasks & Project",
     heading: (
       <Text
+        component="div"
         fontSize={{ md: 40, xs: 24 }}
         fontWeight={500}
         lineHeight={1}
@@ -108,6 +109,7 @@ const ABOUT_DATA = [
     title: "Notes & Docs",
     heading: (
       <Text
+      component="div"
         fontSize={{ md: 40, xs: 24 }}
         fontWeight={500}
         lineHeight={1}
@@ -126,6 +128,7 @@ const ABOUT_DATA = [
     title: "Mind Maps",
     heading: (
       <Text
+      component="div"
         fontSize={{ md: 40, xs: 24 }}
         fontWeight={500}
         lineHeight={1}

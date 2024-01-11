@@ -20,7 +20,7 @@ export const HeaderAI = () => {
       </Stack>
       <Stack direction="row" alignItems="center" mt={8} spacing={15.125}>
         <Stack flex={1}>
-          <Text fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
+          <Text component="div" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
             <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
               The revolutionary power
             </TextGradient>
