@@ -47,7 +47,7 @@ export const SendQuestion = () => {
   // })
 
   return (
-    <Stack>
+    <Stack position="relative">
       <Stack
         sx={{
           backgroundImage: `url(/images/bg-send-question-product${

@@ -14,49 +14,41 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductChat = () => {
   return (
     <Stack position="relative">
-      <Stack
-        sx={{
-          backgroundImage: "url(/images/trust-center-bg.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          aspectRatio: "2210/1503",
-          position: "absolute",
-          top: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
+      <HeaderProducts
+        headingText={
+          <Text
+            fontSize={{ md: 64, xs: 24 }}
+            textAlign="center"
+            fontWeight={{ md: 500, xs: 700 }}
+            mt={4}
+          >
+            <TextGradient
+              component="span"
+              fontSize="inherit"
+              fontWeight={{ md: 500, xs: 700 }}
+            >
+              Deliver real-time communication,
+            </TextGradient>
+            &#160;ensure timely notifications through the latest data security.
+            <br />
+          </Text>
+        }
+        subText="Try to connect your team within TaskCover"
+        imageUrl="/images/chat-product-header.png"
       />
       <Container>
-        <HeaderProducts
-          headingText={
-            <Text
-              fontSize={{ md: 64, xs: 24 }}
-              textAlign="center"
-              fontWeight={{ md: 500, xs: 700 }}
-              mt={4}
-            >
-              <TextGradient
-                component="span"
-                fontSize="inherit"
-                fontWeight={{ md: 500, xs: 700 }}
-              >
-                Deliver real-time communication,
-              </TextGradient>
-              &#160;ensure timely notifications through the latest data
-              security.
-              <br />
-            </Text>
-          }
-          subText="Try to connect your team within TaskCover"
-          imageUrl="/images/chat-product-header.png"
-        />
         <Banner />
         <ProductIntroduce data={DATA} />
-        <Partner />
+      </Container>
+      <Partner />
+
+      <Container>
         <CreateProduct data={DATA_CREATE} />
       </Container>
-      <ProductEvent heading="Take all communication within TaskCover" textButton="STAR TO FREE TRIAL" />
+      <ProductEvent
+        heading="Take all communication within TaskCover"
+        textButton="STAR TO FREE TRIAL"
+      />
       <Container>
         <SendQuestion />
       </Container>

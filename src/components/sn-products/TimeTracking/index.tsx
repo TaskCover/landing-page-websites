@@ -14,50 +14,41 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductProject = () => {
   return (
     <Stack position="relative">
-      <Stack
-        sx={{
-          backgroundImage: "url(/images/trust-center-bg.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
+      <HeaderProducts
+        headingText={
+          <Text
+            fontSize={{ md: 64, xs: 24 }}
+            textAlign="center"
+            fontWeight={{ md: 500, xs: 700 }}
+            mt={4}
+          >
+            Optimize your time management for
+            <br />
+            <TextGradient
+              component="span"
+              fontSize="inherit"
+              fontWeight={{ md: 500, xs: 700 }}
+            >
+              &#160;insightful and effective results.
+            </TextGradient>
+          </Text>
+        }
+        subText="Monitor team's time within TaskCover"
+        imageUrl="/images/time-tracking-header.png"
       />
       <Container>
-        <HeaderProducts
-          headingText={
-            <Text
-              fontSize={{ md: 64, xs: 24 }}
-              textAlign="center"
-              fontWeight={{ md: 500, xs: 700 }}
-              mt={4}
-            >
-              Optimize your time management for
-              <br />
-              <TextGradient
-                component="span"
-                fontSize="inherit"
-                fontWeight={{ md: 500, xs: 700 }}
-              >
-                &#160;insightful and effective results.
-              </TextGradient>
-            </Text>
-          }
-          subText="Monitor team's time within TaskCover"
-          imageUrl="/images/time-tracking-header.png"
-        />
         <Banner />
         <ProductIntroduce data={DATA} />
-        <Partner />
-        <CreateProduct
-          data={DATA_CREATE}
-        />
       </Container>
-      <ProductEvent heading="Too fast to grasp 'time tracking' in theory? Real experience of the TaskCover(" textButton="STAR TO FREE TRIAL" />
+      <Partner />
+
+      <Container>
+        <CreateProduct data={DATA_CREATE} />
+      </Container>
+      <ProductEvent
+        heading="Too fast to grasp 'time tracking' in theory? Real experience of the TaskCover("
+        textButton="STAR TO FREE TRIAL"
+      />
       <Container>
         <SendQuestion />
       </Container>

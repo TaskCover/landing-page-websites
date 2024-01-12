@@ -14,21 +14,7 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductDocument = () => {
   return (
     <Stack position="relative">
-      <Stack
-        sx={{
-          backgroundImage: "url(/images/trust-center-bg.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          aspectRatio: "2210/1503",
-          position: "absolute",
-          top: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
-      />
-      <Container>
-        <HeaderProducts
+      <HeaderProducts
           headingText={
             <Text
               fontSize={{ md: 64, xs: 24 }}
@@ -50,6 +36,7 @@ const ProductDocument = () => {
           subText="Monitor team's time within TaskCover"
           imageUrl="/images/document-product-header.png"
         />
+      <Container>
         <Banner />
         <ProductIntroduce data={DATA} />
         <Partner />

@@ -14,54 +14,46 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductTaskManager = () => {
   return (
     <Stack position="relative">
-      <Stack
-        sx={{
-          backgroundImage: "url(/images/trust-center-bg.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
+      <HeaderProducts
+        headingText={
+          <Text
+            fontSize={{ md: 64, xs: 24 }}
+            textAlign="center"
+            fontWeight={{ md: 500, xs: 700 }}
+            mt={4}
+          >
+            <TextGradient
+              component="span"
+              fontSize="inherit"
+              fontWeight={{ md: 500, xs: 700 }}
+            >
+              Elevate the organization, monitoring, and performance levels
+            </TextGradient>
+            &#160;throughout the course of work and project execution
+            <Text
+              component="span"
+              fontSize="inherit"
+              fontWeight={{ md: 500, xs: 700 }}
+            >
+              of project objectives
+            </Text>
+          </Text>
+        }
+        subText="Manage your task within TaskCover"
+        imageUrl="/images/product-task-manager-header.png"
       />
       <Container>
-        <HeaderProducts
-          headingText={
-            <Text
-              fontSize={{ md: 64, xs: 24 }}
-              textAlign="center"
-              fontWeight={{ md: 500, xs: 700 }}
-              mt={4}
-            >
-              <TextGradient
-                component="span"
-                fontSize="inherit"
-                fontWeight={{ md: 500, xs: 700 }}
-              >
-                Elevate the organization, monitoring, and performance levels
-              </TextGradient>
-              &#160;throughout the course of work and project execution
-              <Text
-                component="span"
-                fontSize="inherit"
-                fontWeight={{ md: 500, xs: 700 }}
-              >
-                of project objectives
-              </Text>
-            </Text>
-          }
-          subText="Manage your task within TaskCover"
-          imageUrl="/images/product-task-manager-header.png"
-        />
         <Banner />
         <ProductIntroduce data={DATA} />
-        <Partner />
+      </Container>
+      <Partner />
+      <Container>
         <CreateProduct data={DATA_CREATE} />
       </Container>
-      <ProductEvent heading="READY TO BUDGETING YOUR AGENCY?" textButton="STAR TO FREE TRIAL" />
+      <ProductEvent
+        heading="READY TO BUDGETING YOUR AGENCY?"
+        textButton="STAR TO FREE TRIAL"
+      />
       <Container>
         <SendQuestion />
       </Container>

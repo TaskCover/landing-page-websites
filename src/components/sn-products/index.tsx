@@ -9,62 +9,51 @@ import { Text, TextGradient } from "components/shared";
 
 const Products = () => {
   return (
-    <Stack position="relative">
-      <Stack
-        sx={{
-          backgroundImage: "url(/images/bg-header-product.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
-      />
-      <Container>
-        <HeaderProducts
-          headingText={
-            <Text
-              fontSize={{ md: 64, xs: 24 }}
-              textAlign="center"
+    <Stack>
+      <HeaderProducts
+        headingText={
+          <Text
+            fontSize={{ md: 64, xs: 24 }}
+            textAlign="center"
+            fontWeight={{ md: 500, xs: 700 }}
+            mt={4}
+          >
+            Your
+            <TextGradient
+              component="span"
+              fontSize="inherit"
               fontWeight={{ md: 500, xs: 700 }}
-              mt={4}
+            >
+              &#160;Company&apos;s Info,
+            </TextGradient>
+            <br />
+            <Text
+              component="span"
+              fontSize="inherit"
+              fontWeight={{ md: 500, xs: 700 }}
             >
               Your
-              <TextGradient
-                component="span"
-                fontSize="inherit"
-                fontWeight={{ md: 500, xs: 700 }}
-              >
-                &#160;Company&apos;s Info,
-              </TextGradient>
-              <br />
-              <Text
-                component="span"
-                fontSize="inherit"
-                fontWeight={{ md: 500, xs: 700 }}
-              >
-                Your
-              </Text>
-              <TextGradient
-                component="span"
-                fontSize="inherit"
-                fontWeight={{ md: 500, xs: 700 }}
-              >
-                &#160;Way.
-              </TextGradient>
             </Text>
-          }
-          subText="See your Agency within TaskCover"
-          imageUrl="/images/company-app.png"
-        />
+            <TextGradient
+              component="span"
+              fontSize="inherit"
+              fontWeight={{ md: 500, xs: 700 }}
+            >
+              &#160;Way.
+            </TextGradient>
+          </Text>
+        }
+        subText="See your Agency within TaskCover"
+        imageUrl="/images/company-app.png"
+      />
+      <Container>
         <ProductInformation />
-        <ProductFeature />
       </Container>
-      <ProductEvent heading="READY TO BUDGETING YOUR AGENCY?" textButton="STAR TO FREE TRIAL" />
+      <ProductFeature />
+      <ProductEvent
+        heading="READY TO BUDGETING YOUR AGENCY?"
+        textButton="STAR TO FREE TRIAL"
+      />
       <Container>
         <SendQuestion />
       </Container>

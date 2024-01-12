@@ -14,48 +14,40 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductChat = () => {
   return (
     <Stack position="relative">
-      <Stack
-        sx={{
-          backgroundImage: "url(/images/trust-center-bg.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          aspectRatio: "2210/1503",
-          position: "absolute",
-          top: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
+      <HeaderProducts
+        headingText={
+          <Text
+            fontSize={{ md: 64, xs: 24 }}
+            textAlign="center"
+            fontWeight={{ md: 500, xs: 700 }}
+            mt={4}
+          >
+            <TextGradient
+              component="span"
+              fontSize="inherit"
+              fontWeight={{ md: 500, xs: 700 }}
+            >
+              Easily generated invoices and tracked
+            </TextGradient>
+            &#160;billable time to save time.
+            <br />
+          </Text>
+        }
+        subText="Monitor team's time within TaskCover"
+        imageUrl="/images/biling-product-header.png"
       />
       <Container>
-        <HeaderProducts
-          headingText={
-            <Text
-              fontSize={{ md: 64, xs: 24 }}
-              textAlign="center"
-              fontWeight={{ md: 500, xs: 700 }}
-              mt={4}
-            >
-              <TextGradient
-                component="span"
-                fontSize="inherit"
-                fontWeight={{ md: 500, xs: 700 }}
-              >
-                Easily generated invoices and tracked 
-              </TextGradient>
-              &#160;billable time to save time.
-              <br />
-            </Text>
-          }
-          subText="Monitor team's time within TaskCover"
-          imageUrl="/images/biling-product-header.png"
-        />
         <Banner />
         <ProductIntroduce data={DATA} />
-        <Partner />
+      </Container>
+      <Partner />
+      <Container>
         <CreateProduct data={DATA_CREATE} />
       </Container>
-      <ProductEvent heading="Don’t wait to long to docs with TaskCover" textButton="STAR TO FREE TRIAL"  />
+      <ProductEvent
+        heading="Don’t wait to long to docs with TaskCover"
+        textButton="STAR TO FREE TRIAL"
+      />
       <Container>
         <SendQuestion />
       </Container>

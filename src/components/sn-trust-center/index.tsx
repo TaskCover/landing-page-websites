@@ -1,22 +1,35 @@
 "use client";
 
-import { Stack } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import { memo } from "react";
 import { Header } from "./components/Header";
 import { BuildingTrust } from "./components/Building";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const TrustCenter = () => {
+  const { isMdSmaller } = useBreakpoint();
   return (
-    <Stack width="100%"
-      sx={{
-        backgroundImage: "url(/images/trust-center-bg.webp)",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-      }}>
+    <Stack position="relative">
       <Stack
+        sx={{
+          backgroundImage: isMdSmaller
+            ? "url(/images/bg-header-help-center-mobile.png)"
+            : "url(/images/bg-header-help-center.webp)",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          right: 0,
+          zIndex: -1,
+        }}
       />
-      <Header />
-      <BuildingTrust />
+      <Stack />
+      <Container>
+        <Header />
+        <BuildingTrust />
+      </Container>
     </Stack>
   );
 };
