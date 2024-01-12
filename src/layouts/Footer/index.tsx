@@ -18,7 +18,7 @@ const Footer = () => {
       }}
     >
       <Container>
-        <Grid container spacing={2} pt="10%">
+        <Grid container spacing={2} pt={{md: "10%", xs: "35%"}}>
           <Grid item md={4} xs={12} mb={{md: 0, xs: 5}}>
             <FooterHeader />
           </Grid>
@@ -26,7 +26,7 @@ const Footer = () => {
             <FooterBody />
           </Grid>
         </Grid>
-        <Text fontWeight={400} align="center" mt={2.625}>© 2023 Task Cover Company, Inc.</Text>
+        <Text fontWeight={400} align="center" mt={2.625} mb={10}>© 2023 Task Cover Company, Inc.</Text>
       </Container>
     </Stack>
   );

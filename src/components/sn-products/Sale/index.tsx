@@ -55,7 +55,7 @@ const ProductSale = () => {
         <Partner />
         <CreateProduct data={DATA_CREATE} />
       </Container>
-      <ProductEvent heading="READY TO OPTIMIZE YOUR AGENCY?" />
+      <ProductEvent heading="READY TO OPTIMIZE YOUR AGENCY?" textButton="STAR TO FREE TRIAL" />
       <Container>
         <SendQuestion />
       </Container>

@@ -61,7 +61,7 @@ const ProductTaskManager = () => {
         <Partner />
         <CreateProduct data={DATA_CREATE} />
       </Container>
-      <ProductEvent heading="READY TO BUDGETING YOUR AGENCY?" />
+      <ProductEvent heading="READY TO BUDGETING YOUR AGENCY?" textButton="STAR TO FREE TRIAL" />
       <Container>
         <SendQuestion />
       </Container>

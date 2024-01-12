@@ -56,7 +56,7 @@ const ProductChat = () => {
         <Partner />
         <CreateProduct data={DATA_CREATE} />
       </Container>
-      <ProductEvent heading="Take all communication within TaskCover" />
+      <ProductEvent heading="Take all communication within TaskCover" textButton="STAR TO FREE TRIAL" />
       <Container>
         <SendQuestion />
       </Container>

@@ -57,7 +57,7 @@ const ProductProject = () => {
           data={DATA_CREATE}
         />
       </Container>
-      <ProductEvent heading="Too fast to grasp 'time tracking' in theory? Real experience of the TaskCover(" />
+      <ProductEvent heading="Too fast to grasp 'time tracking' in theory? Real experience of the TaskCover(" textButton="STAR TO FREE TRIAL" />
       <Container>
         <SendQuestion />
       </Container>

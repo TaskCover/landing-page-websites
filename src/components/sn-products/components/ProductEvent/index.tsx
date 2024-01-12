@@ -2,14 +2,15 @@ import { Stack } from "@mui/material";
 import { Text, Button } from "components/shared";
 
 type ProductEventProps = {
-  heading: string
+  heading: string,
+  textButton: string,
 }
 
 export const ProductEvent = (props: ProductEventProps) => {
-  const {heading} = props;
+  const {heading, textButton} = props;
   return (
     <Stack
-      mt={11}
+      mt={{md: 11, xs: 6}}
       sx={{
         width: "100%",
         minHeight: 290,
@@ -43,7 +44,7 @@ export const ProductEvent = (props: ProductEventProps) => {
             "&:hover": { background: "#fff" },
           }}
         >
-          STAR TO FREE TRIAL
+          {textButton}
         </Button>
       </Stack>
     </Stack>
