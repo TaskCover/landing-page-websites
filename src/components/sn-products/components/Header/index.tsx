@@ -7,12 +7,13 @@ type HeaderProductsProps = {
   headingText: React.ReactNode;
   subText: string;
   imageUrl: string;
+  marginTop?: number;
 };
 
 export const HeaderProducts = (props: HeaderProductsProps) => {
-  const { headingText, subText, imageUrl } = props;
+  const { headingText, subText, imageUrl, marginTop = 3 } = props;
   return (
-      <Stack position="relative" pb={{md: 15, xs: 5}}>
+      <Stack position="relative" pb={{md: 10, xs: 5}}>
         <Stack
           sx={{
             backgroundImage: "url(/images/bg-header-product.webp)",
@@ -24,6 +25,7 @@ export const HeaderProducts = (props: HeaderProductsProps) => {
             top: 0,
             left: 0,
             zIndex: -1,
+            display: {md: "flex", xs: "none"}
           }}
         />
         <Container>
@@ -57,7 +59,7 @@ export const HeaderProducts = (props: HeaderProductsProps) => {
           </Button>
         </Stack>
         <Text textAlign="center">{subText}</Text>
-        <Stack mt={9}>
+        <Stack mt={marginTop}>
           <Image
             src={imageUrl}
             width={0}

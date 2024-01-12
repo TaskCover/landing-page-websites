@@ -58,9 +58,10 @@ export const SendQuestion = () => {
           backgroundPosition: "center",
           width: "100%",
           aspectRatio: { md: "1169/390", xs: "343/482" },
-          mt: 21.875,
+          mt: {md: 21.875, xs: 10},
           alignItems: { md: "flex-end", xs: "center" },
-          justifyContent: "center",
+          justifyContent: {md: "center", xs: "flex-start"},
+          pt: {md: 0, xs: 5}
         }}
       >
         <Stack
@@ -81,7 +82,6 @@ export const SendQuestion = () => {
               fontWeight={700}
               color="#11C77F"
             >
-              {" "}
               We
             </Text>{" "}
             are here to{" "}
@@ -107,7 +107,7 @@ export const SendQuestion = () => {
               backdropFilter: "blur(6px)",
               borderRadius: 8,
               width: "90%",
-              py: 1.75,
+              py: {md: 1.75, xs: 1.2},
               px: 3,
               mt: 2,
             }}
@@ -116,8 +116,8 @@ export const SendQuestion = () => {
             sx={{
               width: "90%",
               background: "#fff",
-              mt: 3,
-              py: 1.75,
+              mt: {md: 3, xs: 1.75},
+              py: {md: 1.75, xs: 1.2},
               borderRadius: 8,
               "&:hover": {
                 background: "#fff",

@@ -9,7 +9,21 @@ import { Text, TextGradient } from "components/shared";
 
 const Products = () => {
   return (
-    <Stack>
+    <Stack position="relative">
+      <Stack
+        sx={{
+          backgroundImage: "url(/images/bg-header-product-mobile.webp)",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: -1,
+          display: {md: "none", xs: "flex"}
+        }}
+      />
       <HeaderProducts
         headingText={
           <Text

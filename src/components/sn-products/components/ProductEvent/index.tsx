@@ -2,15 +2,15 @@ import { Stack } from "@mui/material";
 import { Text, Button } from "components/shared";
 
 type ProductEventProps = {
-  heading: string,
-  textButton: string,
-}
+  heading: string;
+  textButton: string;
+};
 
 export const ProductEvent = (props: ProductEventProps) => {
-  const {heading, textButton} = props;
+  const { heading, textButton } = props;
   return (
     <Stack
-      mt={{md: 11, xs: 6}}
+      mt={{ md: 11, xs: 6 }}
       sx={{
         width: "100%",
         minHeight: 290,
@@ -18,7 +18,10 @@ export const ProductEvent = (props: ProductEventProps) => {
     >
       <Stack
         sx={{
-          backgroundImage: "url(/images/budget-event-bg.png)",
+          backgroundImage: {
+            md: "url(/images/budget-event-bg.png)",
+            xs: "url(/images/budget-event-mobile-bg.png)",
+          },
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "right",

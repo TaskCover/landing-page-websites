@@ -14,6 +14,20 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductBudgeting = () => {
   return (
     <Stack position="relative">
+      <Stack
+        sx={{
+          backgroundImage: "url(/images/bg-header-product-mobile.webp)",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: -1,
+          display: { md: "none", xs: "flex" },
+        }}
+      />
       <HeaderProducts
         headingText={
           <Text
@@ -51,12 +65,30 @@ const ProductBudgeting = () => {
       />
       <Container>
         <Banner />
-        <ProductIntroduce data={DATA} />
       </Container>
-      <Partner />
-      <Container>
-        <CreateProduct data={DATA_CREATE} />
-      </Container>
+      <Stack position="relative">
+        <Stack
+          sx={{
+            backgroundImage: "url(/images/bg-introduce.webp)",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: -1,
+            display: { md: "flex", xs: "none" },
+          }}
+        />
+        <Container>
+          <ProductIntroduce data={DATA} />
+        </Container>
+        <Partner />
+        <Container>
+          <CreateProduct data={DATA_CREATE} />
+        </Container>
+      </Stack>
       <ProductEvent
         heading="READY TO BUDGETING YOUR AGENCY?"
         textButton="STAR TO FREE TRIAL"
@@ -99,5 +131,6 @@ const DATA_CREATE = [
       </Text>
     ),
     imageUrl: "/images/create-budget.png",
+    imageMobile: "/images/create-budget-mobile.png"
   },
 ];
