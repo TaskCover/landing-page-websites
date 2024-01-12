@@ -11,11 +11,6 @@ export const TipsHelpCenter = () => {
     <Stack
       alignItems="center"
       mt={6}
-      sx={{
-        width: "100%",
-        m: "0 auto",
-        maxWidth: "1200px",
-      }}
     >
       <TextGradient
         fontSize={{ md: 40, xs: 24 }}

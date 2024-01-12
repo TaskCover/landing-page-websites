@@ -17,13 +17,13 @@ export const BuildingTrust = () => {
         maxWidth: "1200px",
       }}
     >
-      <Stack textAlign="center">
-        <TextGradient mb={3} variant={{ md: "h3", xs: "h5" }}>
+      <Stack textAlign="center" mt={{md: 15, xs: 10}}>
+        <TextGradient mb={3} fontSize={{md: 36, xs: 24}} percentBlueColor={46.8} percentGreenColor={55.38}>
           Building Trust
         </TextGradient>
         <Text
           variant="overline"
-          textAlign={{ md: "left", xs: "center" }}
+          textAlign="center"
           textTransform="unset"
           lineHeight={1.5}
           sx={{ mb: 5 }}
@@ -66,7 +66,7 @@ export const BuildingTrust = () => {
         direction={{ md: "row", xs: "column" }}
         justifyContent="space-between"
         spacing={4.375}
-        mt={20}
+        mt={{md: 20, xs: 10}}
       >
         <Image
           src={`/images/building-trust-app${

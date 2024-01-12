@@ -14,48 +14,40 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductResource = () => {
   return (
     <Stack position="relative">
-      <Stack
-        sx={{
-          backgroundImage: "url(/images/trust-center-bg.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          aspectRatio: "2210/1503",
-          position: "absolute",
-          top: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
+      <HeaderProducts
+        headingText={
+          <Text
+            fontSize={{ md: 64, xs: 24 }}
+            textAlign="center"
+            fontWeight={{ md: 500, xs: 700 }}
+            mt={4}
+          >
+            <TextGradient
+              component="span"
+              fontSize="inherit"
+              fontWeight={{ md: 500, xs: 700 }}
+            >
+              Ensure the success of the project or task
+            </TextGradient>
+            &#160;through organizing and executing.
+            <br />
+          </Text>
+        }
+        subText="Try Resource Planning within TaskCover"
+        imageUrl="/images/resource-product-header.png"
       />
       <Container>
-        <HeaderProducts
-          headingText={
-            <Text
-              fontSize={{ md: 64, xs: 24 }}
-              textAlign="center"
-              fontWeight={{ md: 500, xs: 700 }}
-              mt={4}
-            >
-              <TextGradient
-                component="span"
-                fontSize="inherit"
-                fontWeight={{ md: 500, xs: 700 }}
-              >
-                Ensure the success of the project or task
-              </TextGradient>
-              &#160;through organizing and executing.
-              <br />
-            </Text>
-          }
-          subText="Try Resource Planning within TaskCover"
-          imageUrl="/images/resource-product-header.png"
-        />
         <Banner />
         <ProductIntroduce data={DATA} />
-        <Partner />
+      </Container>
+      <Partner />
+      <Container>
         <CreateProduct data={DATA_CREATE} />
       </Container>
-      <ProductEvent heading="READY TO OPTIMIZE YOUR AGENCY?" />
+      <ProductEvent
+        heading="READY TO OPTIMIZE YOUR AGENCY?"
+        textButton="STAR TO FREE TRIAL"
+      />
       <Container>
         <SendQuestion />
       </Container>

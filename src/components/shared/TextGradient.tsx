@@ -8,6 +8,8 @@ type CoreTextProps = Omit<TypographyProps, "variant"> & {
   // variant?: Variant | { [key in Breakpoint]: Variant };
   variant?: Variant | { [key: string]: Variant } | "inherit";
   component?: string;
+  percentBlueColor?: number;
+  percentGreenColor?: number;
 };
 
 export type TextProps = CoreTextProps & {
@@ -30,7 +32,13 @@ const TextGradient = (props: TextProps) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CoreText = forwardRef((props: CoreTextProps, ref: ForwardedRef<any>) => {
-  const { variant: variantProps = "body1", children, ...rest } = props;
+  const {
+    variant: variantProps = "body1",
+    children,
+    percentBlueColor = 5.8,
+    percentGreenColor = 38.38,
+    ...rest
+  } = props;
   const { breakpoint } = useBreakpoint();
 
   const variant = useMemo(() => {
@@ -48,11 +56,11 @@ const CoreText = forwardRef((props: CoreTextProps, ref: ForwardedRef<any>) => {
       ref={ref}
       variant={variant}
       sx={{
-        background: "-webkit-linear-gradient(360deg,#0575E6 5.8%, #38E27B 38.38%)",
+        background: `-webkit-linear-gradient(360deg,#0575E6 ${percentBlueColor}%, #38E27B ${percentGreenColor}%)`,
         backgroundClip: "text",
         textFillColor: "transparent",
         backgroundColor: "transparent",
-        ...rest.sx
+        ...rest.sx,
       }}
       {...rest}
     >

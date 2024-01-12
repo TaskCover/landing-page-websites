@@ -47,7 +47,7 @@ export const Banner = () => {
             color: "#000",
             borderRadius: 6,
             textTransform: "none",
-            fontWeight: 500,
+            fontWeight: 600,
             mx: {md: 0, xs: "auto"},
             "&:hover": {
               backgroundColor: "#fff",

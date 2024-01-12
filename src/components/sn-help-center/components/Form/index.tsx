@@ -4,11 +4,7 @@ import ArrowDownIcon from "icons/ArrowDownIcon";
 
 export const HelperForm = () => {
   return (
-    <Stack mt={15.5} alignItems="center" sx={{
-      width: "100%",
-      m: "0 auto",
-      maxWidth: "1200px",
-    }}>
+    <Stack mt={{md: 15.5, xs: 6}} alignItems="center" pb={{md: 15, xs: 8}}>
       <TextGradient
         fontSize={{ md: 40, xs: 24 }}
         textAlign="center"
