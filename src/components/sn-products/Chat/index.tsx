@@ -14,6 +14,20 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductChat = () => {
   return (
     <Stack position="relative">
+      <Stack
+        sx={{
+          backgroundImage: "url(/images/bg-header-product-mobile.webp)",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: -1,
+          display: { md: "none", xs: "flex" },
+        }}
+      />
       <HeaderProducts
         headingText={
           <Text
@@ -35,16 +49,36 @@ const ProductChat = () => {
         }
         subText="Try to connect your team within TaskCover"
         imageUrl="/images/chat-product-header.png"
+        marginTop={10}
       />
-      <Container>
+    <Container>
         <Banner />
-        <ProductIntroduce data={DATA} />
       </Container>
-      <Partner />
-
-      <Container>
-        <CreateProduct data={DATA_CREATE} />
-      </Container>
+      <Stack position="relative">
+        <Stack
+          sx={{
+            backgroundImage: "url(/images/bg-introduce.webp)",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: -1,
+            display: { md: "flex", xs: "none" },
+          }}
+        />
+        <Container>
+          <Stack mb={{md: 14, xs: 5}}>
+          <ProductIntroduce data={DATA} />
+          </Stack>
+        </Container>
+        <Partner />
+        <Container>
+          <CreateProduct data={DATA_CREATE} />
+        </Container>
+      </Stack>
       <ProductEvent
         heading="Take all communication within TaskCover"
         textButton="STAR TO FREE TRIAL"
@@ -68,24 +102,28 @@ const DATA_CREATE = [
   {
     heading: "",
     imageUrl: "/images/create-chat-1.png",
+    imageMobile: "/images/create-chat-mobile-1.png"
   },
   {
     heading: "",
     imageUrl: "/images/create-chat-2.png",
+    imageMobile: "/images/create-chat-mobile-2.png"
   },
   {
     heading: "",
     imageUrl: "/images/create-chat-3.png",
+    imageMobile: "/images/create-chat-mobile-3.png"
   },
   {
     heading: (
-      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center">
-        <TextGradient component="span" fontSize="inherit">
+      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
+        <TextGradient component="span" fontSize="inherit" fontWeight={600}>
           Multitasking{" "}
         </TextGradient>
         while meeting
       </Text>
     ),
     imageUrl: "/images/create-chat-4.png",
+    imageMobile: "/images/create-chat-mobile-4.png"
   },
 ];

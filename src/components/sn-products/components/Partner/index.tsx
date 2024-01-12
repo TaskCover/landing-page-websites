@@ -16,21 +16,8 @@ export const Partner = () => {
         spacing={{md: 5, xs: 1}}
         flexWrap="wrap"
       >
-        <Stack
-          sx={{
-            backgroundImage: "url(/images/trust-center-bg.webp)",
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            width: "100%",
-            aspectRatio: "2210/1503",
-            position: "absolute",
-            top: 0,
-            right: { md: "-100px", xs: 0 },
-            zIndex: -1,
-          }}
-        />
         {DATA.map((data, index) => (
-          <Stack key={index} mb={2}>
+          <Stack key={index} mb={2} width={{lg: "auto", md: "20%", sm: "30%", xs: "40%"}}>
             <Image
               src={data}
               width={isMdSmaller ? 136 : 0}

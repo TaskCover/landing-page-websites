@@ -1,10 +1,12 @@
 import { Container, Stack } from "@mui/material";
 import { TextGradient, Text } from "components/shared";
+import useBreakpoint from "hooks/useBreakpoint";
 import Image from "next/image";
 
 export const ProductFeature = () => {
+  const { isMdSmaller } = useBreakpoint();
   return (
-    <Stack mt={{ md: 25, xs: 10 }} position="relative">
+    <Stack mt={{ md: 35, xs: 10 }} position="relative">
       <Stack
         sx={{
           backgroundImage: "url(/images/bg-feature-product.webp)",
@@ -71,7 +73,7 @@ export const ProductFeature = () => {
           </Stack>
         </Stack>
 
-        <Stack mt={10}>
+        <Stack mt={{ md: 30, xs: 5 }}>
           <Text fontSize={{ md: 40, xs: 24 }}>
             ⌛{" "}
             <TextGradient component="span" fontSize="inherit">
@@ -99,7 +101,7 @@ export const ProductFeature = () => {
         <Stack
           direction={{ md: "row", xs: "column" }}
           justifyContent="space-between"
-          mt={10}
+          mt={{ md: 30, xs: 5 }}
         >
           <Stack flex={0.5}>
             <Text fontSize={{ md: 40, xs: 24 }} mb={5}>
@@ -111,6 +113,7 @@ export const ProductFeature = () => {
             <Text variant="body2" mb={2}>
               Track current information of positions within the company
             </Text>
+
             <Stack direction="row" spacing={1} mb={2}>
               <Image
                 src="/images/arrow-gradient-ic.png"
@@ -127,38 +130,54 @@ export const ProductFeature = () => {
               Delete position
             </Text>
           </Stack>
-          <Stack flex={1} position="relative">
-            <Image
-              src="/images/product-position-1.png"
-              width={0}
-              height={0}
-              sizes="100vw"
-              style={{
-                width: "100%",
-                height: "auto",
-              }}
-              alt="product-position"
-            />
-            <Stack sx={{ position: "absolute", top: 120, left: -130 }}>
+          {isMdSmaller ? (
+            <Stack>
               <Image
-                src="/images/product-position-2.png"
+                src={`/images/product-position-mobile-1.png`}
                 width={0}
                 height={0}
                 sizes="100vw"
                 style={{
-                  width: "150%",
+                  width: "100%",
                   height: "auto",
                 }}
-                alt="product-infomation"
+                alt="product-position"
               />
             </Stack>
-          </Stack>
+          ) : (
+            <Stack flex={1} position="relative">
+              <Image
+                src={`/images/product-position-1.png`}
+                width={0}
+                height={0}
+                sizes="100vw"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                }}
+                alt="product-position"
+              />
+              <Stack sx={{ position: "absolute", top: 120, left: -130 }}>
+                <Image
+                  src="/images/product-position-2.png"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{
+                    width: "150%",
+                    height: "auto",
+                  }}
+                  alt="product-infomation"
+                />
+              </Stack>
+            </Stack>
+          )}
         </Stack>
 
         <Stack
           direction={{ md: "row-reverse", xs: "column" }}
           justifyContent="space-between"
-          mt={10}
+          mt={{ md: 30, xs: 5 }}
           spacing={4}
         >
           <Stack flex={0.5}>
@@ -187,35 +206,51 @@ export const ProductFeature = () => {
               Delete project type
             </Text>
           </Stack>
-          <Stack flex={1} position="relative">
-            <Image
-              src="/images/project-type-list-1.png"
-              width={0}
-              height={0}
-              sizes="100vw"
-              style={{
-                width: "100%",
-                height: "auto",
-              }}
-              alt="product-position"
-            />
-            <Stack sx={{ position: "absolute", bottom: 120, right: -130 }}>
+          {isMdSmaller ? (
+            <Stack>
               <Image
-                src="/images/project-type-list-2.png"
+                src="/images/product-position-mobile-2.png"
                 width={0}
                 height={0}
                 sizes="100vw"
                 style={{
-                  width: "150%",
+                  width: "100%",
                   height: "auto",
                 }}
-                alt="product-infomation"
+                alt="product-position"
               />
             </Stack>
-          </Stack>
+          ) : (
+            <Stack flex={1} position="relative">
+              <Image
+                src="/images/project-type-list-1.png"
+                width={0}
+                height={0}
+                sizes="100vw"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                }}
+                alt="product-position"
+              />
+              <Stack sx={{ position: "absolute", bottom: 120, right: -130 }}>
+                <Image
+                  src="/images/project-type-list-2.png"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{
+                    width: "150%",
+                    height: "auto",
+                  }}
+                  alt="product-infomation"
+                />
+              </Stack>
+            </Stack>
+          )}
         </Stack>
 
-        <Stack mt={10}>
+        <Stack mt={{ md: 30, xs: 5 }}>
           <Text fontSize={{ md: 40, xs: 24 }}>
             🏢{" "}
             <TextGradient component="span" fontSize="inherit">

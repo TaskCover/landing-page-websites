@@ -13,7 +13,7 @@ export const Banner = () => {
         backgroundRepeat: "no-repeat",
         width: "100%",
         aspectRatio: { md: "1200/323", xs: "343/520" },
-        mt: {md: 10, xs: 8},
+        mt: {md: 8, xs: 6},
         pl: {md: 5, xs: 0},
         pt: {md: 0, xs: 3},
         justifyContent: {md: "center", xs: "flex-start"},

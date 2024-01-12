@@ -14,6 +14,20 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductProject = () => {
   return (
     <Stack position="relative">
+      <Stack
+        sx={{
+          backgroundImage: "url(/images/bg-header-product-mobile.webp)",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: -1,
+          display: { md: "none", xs: "flex" },
+        }}
+      />
       <HeaderProducts
         headingText={
           <Text
@@ -35,16 +49,34 @@ const ProductProject = () => {
         }
         subText="Monitor team's time within TaskCover"
         imageUrl="/images/time-tracking-header.png"
+        marginTop={13}
       />
       <Container>
         <Banner />
-        <ProductIntroduce data={DATA} />
       </Container>
-      <Partner />
-
-      <Container>
-        <CreateProduct data={DATA_CREATE} />
-      </Container>
+      <Stack position="relative">
+        <Stack
+          sx={{
+            backgroundImage: "url(/images/bg-introduce.webp)",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: -1,
+            display: { md: "flex", xs: "none" },
+          }}
+        />
+        <Container>
+          <ProductIntroduce data={DATA} />
+        </Container>
+        <Partner />
+        <Container>
+          <CreateProduct data={DATA_CREATE} />
+        </Container>
+      </Stack>
       <ProductEvent
         heading="Too fast to grasp 'time tracking' in theory? Real experience of the TaskCover("
         textButton="STAR TO FREE TRIAL"
@@ -83,10 +115,16 @@ const DATA_CREATE = [
       </Text>
     ),
     imageUrl: "/images/create-time-tracking-1.png",
+    imageMobile: "/images/create-time-tracking-mobile-1.png"
   },
   {
     heading: (
-      <TextGradient fontSize={{ md: 40, xs: 24 }} textAlign="center">
+      <TextGradient
+        fontSize={{ md: 40, xs: 24 }}
+        textAlign="center"
+        percentBlueColor={36.8}
+        percentGreenColor={57.38}
+      >
         Check the agency time
       </TextGradient>
     ),

@@ -14,6 +14,20 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductProject = () => {
   return (
     <Stack position="relative">
+      <Stack
+        sx={{
+          backgroundImage: "url(/images/bg-header-product-mobile.webp)",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: -1,
+          display: { md: "none", xs: "flex" },
+        }}
+      />
       <HeaderProducts
         headingText={
           <Text
@@ -38,12 +52,30 @@ const ProductProject = () => {
       />
       <Container>
         <Banner />
-        <ProductIntroduce data={DATA} />
       </Container>
-      <Partner />
-      <Container>
-        <CreateProduct data={DATA_CREATE} />
-      </Container>
+      <Stack position="relative">
+        <Stack
+          sx={{
+            backgroundImage: "url(/images/bg-introduce.webp)",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: -1,
+            display: { md: "flex", xs: "none" },
+          }}
+        />
+        <Container>
+          <ProductIntroduce data={DATA} />
+        </Container>
+        <Partner />
+        <Container>
+          <CreateProduct data={DATA_CREATE} />
+        </Container>
+      </Stack>
       <ProductEvent
         heading="READY TO BUDGETING YOUR AGENCY?"
         textButton="STAR TO FREE TRIAL"
@@ -73,7 +105,7 @@ const DATA = [
 const DATA_CREATE = [
   {
     heading: (
-      <Text fontSize={{ md: 40, xs: 24 }}>
+      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center">
         See how to create a Project{" "}
         <TextGradient component="span" fontSize="inherit">
           with TaskCover

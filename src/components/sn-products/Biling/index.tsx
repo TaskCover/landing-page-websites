@@ -14,6 +14,20 @@ import { CreateProduct } from "../components/CreateProduct";
 const ProductChat = () => {
   return (
     <Stack position="relative">
+      <Stack
+        sx={{
+          backgroundImage: "url(/images/bg-header-product-mobile.webp)",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: -1,
+          display: { md: "none", xs: "flex" },
+        }}
+      />
       <HeaderProducts
         headingText={
           <Text
@@ -38,12 +52,30 @@ const ProductChat = () => {
       />
       <Container>
         <Banner />
-        <ProductIntroduce data={DATA} />
       </Container>
-      <Partner />
-      <Container>
-        <CreateProduct data={DATA_CREATE} />
-      </Container>
+      <Stack position="relative">
+        <Stack
+          sx={{
+            backgroundImage: "url(/images/bg-introduce.webp)",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: -1,
+            display: { md: "flex", xs: "none" },
+          }}
+        />
+        <Container>
+          <ProductIntroduce data={DATA} isHeading />
+        </Container>
+        <Partner />
+        <Container>
+          <CreateProduct data={DATA_CREATE} />
+        </Container>
+      </Stack>
       <ProductEvent
         heading="Don’t wait to long to docs with TaskCover"
         textButton="STAR TO FREE TRIAL"
@@ -60,6 +92,7 @@ export default memo(ProductChat);
 const DATA = [
   {
     imageUrl: "/images/biling-product-1.png",
+    imageMobile: "/images/biling-product-mobile-1.png",
   },
 ];
 
@@ -67,13 +100,16 @@ const DATA_CREATE = [
   {
     heading: "",
     imageUrl: "/images/create-biling-1.png",
+    imageMobile: "/images/create-biling-mobile-1.png",
   },
   {
     heading: "",
     imageUrl: "/images/create-biling-2.png",
+    imageMobile: "/images/create-biling-mobile-2.png",
   },
   {
     heading: "",
     imageUrl: "/images/create-biling-3.png",
+    imageMobile: "/images/create-biling-mobile-3.png",
   },
 ];
