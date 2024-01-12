@@ -331,3 +331,14 @@ export const PricingToolList = [
   "Al meeting",
   "Team Chat",
 ];
+
+export const ListPackageEmpower = [
+  {
+    name:"Monthly",
+    pricePackage : "19.00",
+  },
+  {
+    name:"Yearly",
+    pricePackage : "199.00",
+  }
+]

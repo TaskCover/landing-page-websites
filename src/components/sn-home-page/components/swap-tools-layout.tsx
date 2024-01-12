@@ -1,14 +1,12 @@
 import { Stack } from '@mui/material';
 import { Button, Text } from "components/shared";
-import Image from "next/image";
-import ArrowRightIcon from "public/images/home-page/arrow-right.svg";
-import ImgLinePage from "public/images/home-page/img-line-page.svg";
-import ActiveIcon from "public/images/home-page/icon-active.svg";
-import Logo from "public/images/home-page/logo.png";
-import OrIcon from "public/images/home-page/icon-different-tool.svg";
-import { memo } from 'react';
-import { PricingToolList, SwapMultiToolItems, TaskCoverItems } from '../configs';
 import useBreakpoint from 'hooks/useBreakpoint';
+import Image from "next/image";
+import ActiveIcon from "public/images/home-page/icon-active.svg";
+import OrIcon from "public/images/home-page/icon-different-tool.svg";
+import Logo from "public/images/home-page/logo.png";
+import { memo } from 'react';
+import { PricingToolList, SwapMultiToolItems } from '../configs';
 type SwapToolsLayoutProps = {}
 
 const SwapToolsLayout = (props: SwapToolsLayoutProps) => {
@@ -17,7 +15,7 @@ const SwapToolsLayout = (props: SwapToolsLayoutProps) => {
     return (
         <Stack width="100%" sx={{
             background: "url(/images/home-page/bg-swap-tools.png)",
-            backgroundColor: "#DBF3F",
+            backgroundColor: "#DBF3FD",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
@@ -101,14 +99,13 @@ const SwapToolsLayout = (props: SwapToolsLayoutProps) => {
                             backgroundSize: "cover",
                             backgroundRepeat: "no-repeat",
                             backgroundPosition: "center",
-                            width: "100%"
+                            width: "93%",
                         }}>
                         <Stack
                             p={{ xs: "24px", md: "40px" }}
                             borderRadius="24px"
                             boxShadow="0px 8px 8px 0px rgba(28, 67, 113, 0.12)"
                             gap={{ xs: "24px", md: "32px" }}
-                            height="100%"
                             sx={{ background: "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)" }}>
                             <Stack>
                                 <Image src={Logo} width={160} alt="image" style={{ marginBottom: "8px" }} />
@@ -131,7 +128,12 @@ const SwapToolsLayout = (props: SwapToolsLayoutProps) => {
                                         PricingToolList.map((e, i) => (
                                             <Stack key={i} flexDirection="row" gap="8px" alignItems="center">
                                                 <Image src={ActiveIcon} width={20} height={20} alt="image" />
-                                                <Text variant="overline" fontSize={{ xs: "14px", md: "18px" }} fontWeight={400} color="#fff" style={{ textTransform: "none" }}>
+                                                <Text
+                                                    variant="overline"
+                                                    fontSize={{ xs: "14px", md: "18px" }}
+                                                    lineHeight={{ xs: "20px", md: "28px" }}
+                                                    fontWeight={400} color="#fff"
+                                                    style={{ textTransform: "none" }}>
                                                     {e}
                                                 </Text>
                                             </Stack>
@@ -149,7 +151,6 @@ const SwapToolsLayout = (props: SwapToolsLayoutProps) => {
                             </Stack>
                         </Stack>
                     </Stack>
-
                 </Stack>
 
             </Stack>
