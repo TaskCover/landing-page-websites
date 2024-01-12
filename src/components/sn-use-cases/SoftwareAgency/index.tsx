@@ -18,7 +18,7 @@ const UseCaseSoftwareAgency = () => {
     <Stack position="relative">
       <Stack
         sx={{
-          backgroundImage: "url(/images/trust-center-bg.png)",
+          backgroundImage: "url(/images/trust-center-bg.webp)",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           width: "100%",

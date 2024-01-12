@@ -2,12 +2,29 @@ import { Stack } from "@mui/material";
 import { CollapseQuestion, Text } from "components/shared";
 export const HelperQuestion = () => {
   return (
-    <Stack mt={11} position="relative" sx={{
-      width: "100%",
-      m: "0 auto",
-      maxWidth: "1200px",
-      p: "16px"
-    }}>
+    <Stack
+      mt={11}
+      position="relative"
+      sx={{
+        width: "100%",
+        m: "0 auto",
+        maxWidth: "1200px",
+        p: "16px",
+      }}
+    >
+      <Stack
+        sx={{
+          backgroundImage: "url(/images/bg-header-help-center.webp)",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          aspectRatio: "2210/1503",
+          position: "absolute",
+          top: 0,
+          right: { md: "-50px", xs: 0 },
+          zIndex: -1,
+        }}
+      />
       <Text textAlign="center" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
         Frequently asked questions.
       </Text>

@@ -7,18 +7,23 @@ export const ProductFeature = () => {
     <Stack mt={25} position="relative">
       <Stack
         sx={{
-          backgroundImage: "url(/images/trust-center-bg.png)",
+          backgroundImage: "url(/images/trust-center-bg.webp)",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
-          width: "100%",
-          aspectRatio: "2210/1503",
+          width: "150%",
+          height: "100%",
           position: "absolute",
           top: 0,
-          right: { md: "-50px", xs: 0 },
+          left: "-100px",
+          right: "100px",
           zIndex: -1,
         }}
       />
-      <Stack direction={{md: "row", xs: "column"}} justifyContent="space-between">
+      <Stack
+        direction={{ md: "row", xs: "column" }}
+        justifyContent="space-between"
+        position="relative"
+      >
         <Stack flex={0.5}>
           <Text fontSize={{ md: 40, xs: 24 }} mb={5}>
             🧑‍💻{" "}
@@ -91,7 +96,11 @@ export const ProductFeature = () => {
         </Stack>
       </Stack>
 
-      <Stack direction={{md: "row", xs: "column"}} justifyContent="space-between" mt={10}>
+      <Stack
+        direction={{ md: "row", xs: "column" }}
+        justifyContent="space-between"
+        mt={10}
+      >
         <Stack flex={0.5}>
           <Text fontSize={{ md: 40, xs: 24 }} mb={5}>
             💼{" "}
@@ -147,7 +156,7 @@ export const ProductFeature = () => {
       </Stack>
 
       <Stack
-        direction={{md: "row-reverse", xs: "column"}}
+        direction={{ md: "row-reverse", xs: "column" }}
         justifyContent="space-between"
         mt={10}
         spacing={4}

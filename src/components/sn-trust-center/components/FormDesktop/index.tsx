@@ -12,7 +12,7 @@ export const FormDesktop = () => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         width: "100%",
-        aspectRatio: "1199/323",
+        aspectRatio: "1199/370",
         flexDirection: "row",
         alignItems: "center",
         paddingLeft: "10%",
@@ -57,25 +57,6 @@ export const FormDesktop = () => {
             </Button>
           </Stack>
         </FormControl>
-        <Stack
-          sx={{
-            position: "absolute",
-            right: { xl: -100, lg: -50 },
-            top: { xl: -80, lg: -30 },
-          }}
-        >
-          <Image
-            src="/images/legend-animal-helper.png"
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{
-              width: "110%",
-              height: "auto",
-            }}
-            alt="legend animal"
-          />
-        </Stack>
       </Stack>
     </Stack>
   );

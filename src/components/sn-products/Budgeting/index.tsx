@@ -16,13 +16,14 @@ const ProductBudgeting = () => {
     <Stack position="relative">
       <Stack
         sx={{
-          backgroundImage: "url(/images/trust-center-bg.png)",
+          backgroundImage: "url(/images/trust-center-bg.webp)",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           width: "100%",
           aspectRatio: "2210/1503",
           position: "absolute",
           top: 0,
+          left: 0,
           right: { md: "-50px", xs: 0 },
           zIndex: -1,
         }}
@@ -44,7 +45,6 @@ const ProductBudgeting = () => {
               >
                 &#160;efficient and effective attainment,
               </TextGradient>
-              <br />
               <Text
                 component="span"
                 fontSize="inherit"

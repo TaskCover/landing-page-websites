@@ -191,12 +191,36 @@ export const ADMIN_PAGE_URL = "http://103.182.16.241:2023/"
 const ROOT_ROUTER  = "/products";
 
 export const ROUTER_PRODUCT = [
-  `${ROOT_ROUTER}/budgeting`,
-  `${ROOT_ROUTER}/project`,
-  `${ROOT_ROUTER}/task-manager`,
-  `${ROOT_ROUTER}/time-tracking`,
-  `${ROOT_ROUTER}/biling`,
-  `${ROOT_ROUTER}/chat`,
-  `${ROOT_ROUTER}/sale`,
-  `${ROOT_ROUTER}/resource`,
+  {
+    url: `${ROOT_ROUTER}/budgeting`,
+    label: "Budgeting",
+  },
+  {
+    url: `${ROOT_ROUTER}/project`,
+    label: "Project",
+  },
+  {
+    url: `${ROOT_ROUTER}/task-manager`,
+    label: "Task Manager",
+  },
+  {
+    url: `${ROOT_ROUTER}/time-tracking`,
+    label: "Time Tracking",
+  },
+  {
+    url: `${ROOT_ROUTER}/biling`,
+    label: "Billing",
+  },
+  {
+    url: `${ROOT_ROUTER}/chat`,
+    label: "Chat",
+  },
+  {
+    url:`${ROOT_ROUTER}/sale`,
+    label: "Sale",
+  },
+  {
+    url: `${ROOT_ROUTER}/resource`,
+    label: "Resource",
+  }
 ]

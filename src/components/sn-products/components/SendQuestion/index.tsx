@@ -4,27 +4,48 @@ import useBreakpoint from "hooks/useBreakpoint";
 import ArrowIcon from "icons/ArrowIcon";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { nextPage, prePage } from "store/product-page/reducer";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { ROUTER_PRODUCT } from "constant/index";
+import { useState, useEffect } from "react";
+
 
 export const SendQuestion = () => {
   const { isMdSmaller } = useBreakpoint();
   const { value, currentLink } = useAppSelector((state) => state.counterPage);
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const pathName = usePathname();
   const count = value;
 
   const handlerNextPage = () => {
     dispatch(nextPage());
     if (count + 1 >= ROUTER_PRODUCT.length) return;
-    ROUTER_PRODUCT[count + 1] && router.push(ROUTER_PRODUCT[count + 1]);
+    ROUTER_PRODUCT[count + 1] && router.push(ROUTER_PRODUCT[count + 1].url);
   };
 
   const handlerPrevPage = () => {
     dispatch(prePage());
     if (count - 1 === 0) return;
-    ROUTER_PRODUCT[count - 1] && router.push(ROUTER_PRODUCT[count - 1]);
+    ROUTER_PRODUCT[count - 1] && router.push(ROUTER_PRODUCT[count - 1].url);
   };
+
+
+  // useEffect(() => {
+  //     const handleStart = (url) => (url !== pathName) && setLoading(true);
+  //     const handleComplete = (url) => (url === pathName) && setLoading(false);
+
+  //     router.events.on('routeChangeStart', handleStart)
+  //     router.events.on('routeChangeComplete', handleComplete)
+  //     router.events.on('routeChangeError', handleComplete)
+
+  //     return () => {
+  //         router.events.off('routeChangeStart', handleStart)
+  //         router.events.off('routeChangeComplete', handleComplete)
+  //         router.events.off('routeChangeError', handleComplete)
+  //     }
+  // })
+
   return (
     <Stack>
       <Stack
@@ -36,7 +57,7 @@ export const SendQuestion = () => {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           width: "100%",
-          aspectRatio: { md: "1169/358", xs: "343/482" },
+          aspectRatio: { md: "1169/390", xs: "343/482" },
           mt: 21.875,
           alignItems: { md: "flex-end", xs: "center" },
           justifyContent: "center",
@@ -128,7 +149,9 @@ export const SendQuestion = () => {
             <ArrowIcon /> Previous
           </Text>
           <Text fontSize={{ md: 32, xs: 14 }} mt={3} fontWeight={500}>
-            Reporting
+            {ROUTER_PRODUCT[count - 1]?.label
+              ? ROUTER_PRODUCT[count - 1].label
+              : ROUTER_PRODUCT[0].label}
           </Text>
         </Stack>
         <Stack
@@ -158,7 +181,9 @@ export const SendQuestion = () => {
             color="#fff"
             fontWeight={500}
           >
-            Time Tracking
+            {ROUTER_PRODUCT[count + 1]?.label
+              ? ROUTER_PRODUCT[count + 1].label
+              : ROUTER_PRODUCT[ROUTER_PRODUCT.length - 1].label}
           </Text>
         </Stack>
       </Stack>

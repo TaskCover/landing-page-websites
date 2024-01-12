@@ -9,7 +9,7 @@ const TrustCenter = () => {
   return (
     <Stack width="100%"
       sx={{
-        backgroundImage: "url(/images/trust-center-bg.png)",
+        backgroundImage: "url(/images/trust-center-bg.webp)",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}>

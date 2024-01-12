@@ -20,6 +20,7 @@ export const ProductEvent = (props: ProductEventProps) => {
           backgroundImage: "url(/images/budget-event-bg.png)",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
+          backgroundPosition: "right",
           minHeight: 290,
           justifyContent: "center",
           alignItems: "center",
