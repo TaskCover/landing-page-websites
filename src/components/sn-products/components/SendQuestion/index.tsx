@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 
 export const SendQuestion = () => {
   const { isMdSmaller } = useBreakpoint();
-  const { value, currentLink } = useAppSelector((state) => state.counterPage);
+  const { value } = useAppSelector((state) => state.counterPage);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
