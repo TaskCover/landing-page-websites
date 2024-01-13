@@ -12,9 +12,9 @@ import Image from "next/image";
 export const HeaderBlog = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
-    <Stack>
+    <Stack mt={{md: 12, xs: 2}}>
       <Stack direction={{md: "row", xs: "column"}} gap={3.75} alignItems="center">
-        <Stack flex={{md: 0.7, xs: 1}}>
+        <Stack flex={{md: 0.8, xs: 1}}>
           <Text fontSize={{ md: 60, xs: 24 }} fontWeight={700}>
             Tackle all your problems collaboratively and pave the way for
             success.

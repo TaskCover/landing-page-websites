@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export const HeaderAI = () => {
   return (
-    <Stack position="relative" mt={10}>
+    <Stack position="relative" mt={{ md: 14, xs: 5 }} pb={{ md: 30, xs: 10 }}>
       <Stack>
         <Image
           src="/images/header-ai.png"
@@ -18,10 +18,15 @@ export const HeaderAI = () => {
           alt="header-ai"
         />
       </Stack>
-      <Stack direction={{md: "row", xs: "column"}} alignItems="center" mt={8} spacing={{md: 15.125, xs: 4}}>
+      <Stack
+        direction={{ md: "row", xs: "column" }}
+        alignItems="center"
+        mt={{ md: 16, xs: 6 }}
+        spacing={{ md: 15.125, xs: 4 }}
+      >
         <Stack flex={1}>
-          <Text component="div" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
-            <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
+          <Text component="div" fontSize={{ md: 40, xs: 24 }} fontWeight={600}>
+            <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={600}>
               The revolutionary power
             </TextGradient>
             of artificial intelligence
@@ -47,9 +52,20 @@ export const HeaderAI = () => {
           />
         </Stack>
       </Stack>
-      <Stack direction="row" alignItems="center" spacing={4.375} mt={12} gap={{md: 0, xs: 1}} justifyContent="center" flexWrap="wrap">
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={4.375}
+        mt={12}
+        gap={{ md: 0, xs: 1 }}
+        justifyContent="center"
+        flexWrap="wrap"
+        sx={{
+          background: "background: rgba(255, 255, 255, 0.50)",
+        }}
+      >
         {PARTNER.map((partner, index) => (
-          <Stack key={index} width={{md: "unset", xs: "20%"}}>
+          <Stack key={index} width={{ md: "unset", xs: "20%" }}>
             <Image
               src={partner}
               width={0}

@@ -14,68 +14,94 @@ import { ResultUseCase } from "../components/Result";
 
 const UseCaseEventAgency = () => {
   return (
-    <Stack position="relative">
+    <Stack>
+      <Stack position="relative">
       <Stack
-        sx={{
-          backgroundImage: "url(/images/trust-center-bg.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          aspectRatio: "2210/1503",
-          position: "absolute",
-          top: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
-      />
-      <Container>
-        <HeaderUseCase
-          title="TaskCover | Event Agency"
-          headings={
-            <Text
-              component="div"
-              fontSize={{ md: 36, xs: 20 }}
-              fontWeight={500}
-              my={4}
-            >
-              All events will be organized with a{" "}
-              <TextGradient
-                component="span"
+          sx={{
+            backgroundImage: {md: "url(/images/trust-center-bg.webp)", xs: "url(/images/bg-use-case-mobile.png)"},
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: -1,
+          }}
+        />
+
+        <Container>
+          <HeaderUseCase
+            title="TaskCover | Event Agency"
+            headings={
+              <Text
+                component="div"
                 fontSize={{ md: 36, xs: 20 }}
-                fontWeight={500}
+                fontWeight={600}
+                my={4}
               >
-                high degree of professional
-              </TextGradient>
-            </Text>
-          }
-          content={`TaskCover facilitates the optimization of each stage in the management process from encompassing ideation to plan implementation `}
-        />
-      </Container>
-      <PartnerUseCase />
-      <Container>
-        <BenefitUseCase
-          data={DATA_BENEFIT}
-          bannerUrl="/images/benefit-event-agency.png"
-          heading={
-            <Text
-              component="div"
-              fontSize={{ md: 40, xs: 24 }}
-              fontWeight={500}
-            >
-              <TextGradient
-                component="span"
+                All events will be organized with a{" "}
+                <TextGradient
+                  component="span"
+                  fontSize={{ md: 36, xs: 20 }}
+                  fontWeight={600}
+                >
+                  high degree of professional
+                </TextGradient>
+              </Text>
+            }
+            content={`TaskCover facilitates the optimization of each stage in the management process from encompassing ideation to plan implementation `}
+          />
+        </Container>
+        <PartnerUseCase />
+        <Container>
+          <BenefitUseCase
+            data={DATA_BENEFIT}
+            bannerUrl="/images/benefit-event-agency.png"
+            heading={
+              <Text
+                component="div"
                 fontSize={{ md: 40, xs: 24 }}
-                fontWeight={500}
+                fontWeight={600}
               >
-                Emphasize the benefit{" "}
-              </TextGradient>
-              for Production House
-            </Text>
-          }
+                <TextGradient
+                  component="span"
+                  fontSize={{ md: 40, xs: 24 }}
+                  fontWeight={600}
+                >
+                  Emphasize the benefit{" "}
+                </TextGradient>
+                for Production House
+              </Text>
+            }
+          />
+        </Container>
+      </Stack>
+
+      <Stack position="relative">
+        <Stack
+          sx={{
+            backgroundImage: "url(/images/bg-use-case.webp)",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: "250px",
+            left: 0,
+            right: 0,
+            zIndex: -1,
+          }}
         />
-        <AccelerateUseCase data={DATA_ACCELERATE} />
-        <FunctionUseCase />
-        <PlanUseCase />
+        <Container>
+          <AccelerateUseCase data={DATA_ACCELERATE} />
+          <FunctionUseCase />
+          <PlanUseCase />
+        </Container>
+      </Stack>
+
+      <Container>
         <ResourceUseCase />
         <Stack mt={10}>
           <HelperSendMail />
@@ -98,7 +124,7 @@ const DATA_BENEFIT = [
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
         >
-         smoothly and successfully
+          smoothly and successfully
         </TextGradient>
       </Text>
     ),
@@ -108,18 +134,17 @@ const DATA_BENEFIT = [
     icon: "/images/benefit-ic-8.png",
     title: (
       <Text component="div" fontSize={{ md: 20, xs: 16 }} fontWeight={700}>
-       The activities of all teams are{" "}
+        The activities of all teams are{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
         >
-           meticulously supervised 
+          meticulously supervised 
         </TextGradient>
       </Text>
     ),
-    content:
-      "Ensuring precision and excellence in event execution",
+    content: "Ensuring precision and excellence in event execution",
   },
   {
     icon: "/images/benefit-ic-9.png",
@@ -130,7 +155,7 @@ const DATA_BENEFIT = [
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
         >
-         Present{" "}
+          Present{" "}
         </TextGradient>
         well-defined strategies and crafted plans 
       </Text>
@@ -147,14 +172,14 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={500}
+        fontWeight={600}
         my={4}
       >
         Minimize risks with automated{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={500}
+          fontWeight={600}
         >
           clear allocation resources.
         </TextGradient>
@@ -169,13 +194,13 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={500}
+        fontWeight={600}
         my={4}
       >
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={500}
+          fontWeight={600}
         >
           Having great administration{" "}
         </TextGradient>
@@ -191,13 +216,13 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={500}
+        fontWeight={600}
         my={4}
       >
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={500}
+          fontWeight={600}
         >
           Communicate and provide rapid updates on the issue{" "}
         </TextGradient>

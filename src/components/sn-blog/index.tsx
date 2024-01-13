@@ -8,27 +8,87 @@ import { HelperSendMail } from "components/sn-help-center/components/SendMail";
 const BlogPage = () => {
   return (
     <Stack>
-      <Container>
+      <Stack position="relative">
+        <Stack
+          sx={{
+            backgroundImage: {
+              md: "url(/images/trust-center-bg.webp)",
+              xs: "url(/images/bg-use-case-mobile.png)",
+            },
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: -1,
+          }}
+        />
+        <Container>
+          <HeaderBlog />
+          <BlogNews />
+        </Container>
+      </Stack>
+
+      <Stack position="relative">
+        <Stack
+          sx={{
+            backgroundImage: "url(/images/bg-blog-mobile.webp)",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: "-200px",
+            left: 0,
+            right: 0,
+            zIndex: -1,
+            display: { md: "none", xs: "flex" },
+          }}
+        />
         <Stack position="relative">
           <Stack
             sx={{
-              backgroundImage: "url(/images/trust-center-bg.webp)",
+              backgroundImage: "url(/images/bg-blog-1.webp)",
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
               width: "100%",
-              aspectRatio: "2210/1503",
+              height: "100%",
               position: "absolute",
-              top: 0,
-              right: { md: "-50px", xs: 0 },
+              top: "100px",
+              left: 0,
+              right: 0,
               zIndex: -1,
+              display: { md: "flex", xs: "none" },
             }}
           />
-          <HeaderBlog />
-          <BlogNews />
-          <BlogArticle />
-          <HelperSendMail />
+          <Container>
+            <BlogArticle />
+          </Container>
         </Stack>
-      </Container>
+        <Stack position="relative">
+          <Stack
+            sx={{
+              backgroundImage: "url(/images/bg-blog-2.webp)",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: -1,
+              display: { md: "flex", xs: "none" },
+            }}
+          />
+          <Container>
+            <HelperSendMail />
+          </Container>
+        </Stack>
+      </Stack>
     </Stack>
   );
 };

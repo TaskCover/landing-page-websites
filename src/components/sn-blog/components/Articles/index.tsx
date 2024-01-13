@@ -101,9 +101,9 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 export const BlogArticle = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
-    <Stack mb={8}>
+    <Stack mb={{md: 8, xs: 2}}>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Text fontSize={{ md: 36, xs: 24 }} my={8} fontWeight={700}>
+        <Text fontSize={{ md: 36, xs: 24 }} my={{md: 8, xs: 4}} fontWeight={700}>
           Articles
         </Text>
         <Stack direction="row" alignItems="center" spacing={1}>
@@ -167,7 +167,7 @@ export const BlogArticle = () => {
         sx={{
           width: "fit-content",
           mx: "auto",
-          mt: 6,
+          mt: {md: 6, xs: 4},
         }}
       >
         Load More

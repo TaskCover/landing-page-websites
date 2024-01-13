@@ -8,7 +8,7 @@ export const FunctionUseCase = () => {
   return (
     <Stack
       sx={{ background: "#EEF2FF", borderRadius: 5, py: {md: 5, xs: 1}, px: {md: 5, xs: 1} }}
-      mt={10}
+      mt={{md: 10, xs: 4}}
     >
       <TextGradient mb={5} fontSize={{ md: 40, xs: 24 }} textAlign="center">
         Other functions

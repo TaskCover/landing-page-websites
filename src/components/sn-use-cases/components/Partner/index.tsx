@@ -4,8 +4,12 @@ import Image from "next/image";
 
 export const PartnerUseCase = () => {
   return (
-    <Stack mt={{md: 20, xs: 10}} sx={{ backgroundColor: "#fff" }} py={4}>
-      <Text fontSize={{ md: 20, xs: 16 }} fontWeight={500} textAlign="center">
+    <Stack
+      mt={{ md: 20, xs: 10 }}
+      sx={{ backgroundColor: { md: "#fff", xs: "rgba(255, 255, 255, 0.50)" } }}
+      py={4}
+    >
+      <Text fontSize={{ md: 20, xs: 16 }} fontWeight={600} textAlign="center">
         See how TaskCover empower Marketing Agencies globally
       </Text>
       <Stack
@@ -18,7 +22,7 @@ export const PartnerUseCase = () => {
         flexWrap="wrap"
       >
         {PARTNER.map((partner, index) => (
-          <Stack key={index} width={{ md: "unset", xs: "20%" }}>
+          <Stack key={index} width={{ md: "unset", xs: "30%" }}>
             <Image
               src={partner}
               width={0}

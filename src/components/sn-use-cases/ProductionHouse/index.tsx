@@ -14,68 +14,92 @@ import { ResultUseCase } from "../components/Result";
 
 const UseCaseProductionHouse = () => {
   return (
-    <Stack position="relative">
-      <Stack
-        sx={{
-          backgroundImage: "url(/images/trust-center-bg.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          aspectRatio: "2210/1503",
-          position: "absolute",
-          top: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
-      />
-      <Container>
-        <HeaderUseCase
-          title="TaskCover | Production House"
-          headings={
-            <Text
-              component="div"
-              fontSize={{ md: 36, xs: 20 }}
-              fontWeight={500}
-              my={4}
-            >
-              A supportive companion for{" "}
-              <TextGradient
-                component="span"
+    <Stack>
+      <Stack position="relative">
+        <Stack
+          sx={{
+            backgroundImage: {md: "url(/images/trust-center-bg.webp)", xs: "url(/images/bg-use-case-mobile.png)"},
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: -1,
+          }}
+        />
+        <Container>
+          <HeaderUseCase
+            title="TaskCover | Production House"
+            headings={
+              <Text
+                component="div"
                 fontSize={{ md: 36, xs: 20 }}
-                fontWeight={500}
+                fontWeight={600}
+                my={4}
               >
-                Viral Production
-              </TextGradient>
-            </Text>
-          }
-          content={`TaskCover efficiently structures each project and production process, providing a user-friendly interface for tracking and monitoring progress. `}
-        />
-      </Container>
-      <PartnerUseCase />
-      <Container>
-        <BenefitUseCase
-          data={DATA_BENEFIT}
-          bannerUrl="/images/benefit-production-home.png"
-          heading={
-            <Text
-              component="div"
-              fontSize={{ md: 40, xs: 24 }}
-              fontWeight={500}
-            >
-              <TextGradient
-                component="span"
+                A supportive companion for{" "}
+                <TextGradient
+                  component="span"
+                  fontSize={{ md: 36, xs: 20 }}
+                  fontWeight={600}
+                >
+                  Viral Production
+                </TextGradient>
+              </Text>
+            }
+            content={`TaskCover efficiently structures each project and production process, providing a user-friendly interface for tracking and monitoring progress. `}
+          />
+        </Container>
+        <PartnerUseCase />
+        <Container>
+          <BenefitUseCase
+            data={DATA_BENEFIT}
+            bannerUrl="/images/benefit-production-home.png"
+            heading={
+              <Text
+                component="div"
                 fontSize={{ md: 40, xs: 24 }}
-                fontWeight={500}
+                fontWeight={600}
               >
-                Emphasize the benefit{" "}
-              </TextGradient>
-              for Production House
-            </Text>
-          }
+                <TextGradient
+                  component="span"
+                  fontSize={{ md: 40, xs: 24 }}
+                  fontWeight={600}
+                >
+                  Emphasize the benefit{" "}
+                </TextGradient>
+                for Production House
+              </Text>
+            }
+          />
+        </Container>
+      </Stack>
+      <Stack position="relative">
+        <Stack
+          sx={{
+            backgroundImage: "url(/images/bg-use-case.webp)",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: "250px",
+            left: 0,
+            right: 0,
+            zIndex: -1,
+          }}
         />
-        <AccelerateUseCase data={DATA_ACCELERATE} />
-        <FunctionUseCase />
-        <ResultUseCase />
+        <Container>
+          <AccelerateUseCase data={DATA_ACCELERATE} />
+          <FunctionUseCase />
+          <ResultUseCase />
+        </Container>
+      </Stack>
+
+      <Container>
         <ResourceUseCase />
         <Stack mt={10}>
           <HelperSendMail />
@@ -147,14 +171,14 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={500}
+        fontWeight={600}
         my={4}
       >
         All stages of production{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={500}
+          fontWeight={600}
         >
           are managed effectively
         </TextGradient>
@@ -169,14 +193,14 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={500}
+        fontWeight={600}
         my={4}
       >
         From ideation and script writing will be{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={500}
+          fontWeight={600}
         >
           discussed and managed on only one platform
         </TextGradient>

@@ -83,7 +83,8 @@ export const ResourceUseCase = () => {
                 px: 3,
               }}
             >
-              <Image
+             <Stack height={{lg: 260, md: 240, sm: 235}}>
+             <Image
                 src={data.imageUrl}
                 width={0}
                 height={0}
@@ -95,6 +96,7 @@ export const ResourceUseCase = () => {
                 }}
                 alt="resource-use-case"
               />
+             </Stack>
 
               <Text fontSize={{ md: 20, xs: 16 }} fontWeight={700} mb={5}>
                 {data.title}

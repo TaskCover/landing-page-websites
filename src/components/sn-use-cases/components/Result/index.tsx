@@ -5,18 +5,18 @@ import React from "react";
 
 export const ResultUseCase = () => {
   return (
-    <Stack mt={20}>
+    <Stack mt={{md: 20, xs: 4}}>
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={500}
+        fontWeight={600}
         my={4}
         textAlign="center"
       >
         A commitment about the result
         <TextGradient
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={500}
+          fontWeight={600}
         >
           Taskcover assists you gain the achievements
         </TextGradient>

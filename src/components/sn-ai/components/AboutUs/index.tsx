@@ -5,22 +5,9 @@ import Image from "next/image";
 
 export const AboutTaskCoverAI = () => {
   return (
-    <Stack mt={20} position="relative">
-      <Stack
-        sx={{
-          backgroundImage: "url(/images/trust-center-bg.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
-      />
-      <Text component="div" fontSize={{ md: 40, xs: 24 }} fontWeight={500} textAlign="center">
-        <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
+    <Stack>
+      <Text component="div" fontSize={{ md: 40, xs: 24 }} fontWeight={600} textAlign="center" mb={{md: 10, xs: 0}}>
+        <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={600}>
           TaskCover AI -
         </TextGradient>
         Revolutionizing Productivity
@@ -36,7 +23,7 @@ export const AboutTaskCoverAI = () => {
         justifyContent="space-between"
         alignItems="center"
         px={{md: 6, xs: 0}}
-        mt={3}
+        mt={{md: 6, xs: 3}}
       >
         {DATA.map((data, index) => (
           <Link href={data.link} key={index}>
@@ -55,7 +42,7 @@ export const AboutTaskCoverAI = () => {
             alignItems="center"
             spacing={3}
             key={index}
-            mb={16}
+            mb={{md: 16, xs: 7}}
           >
             <Stack flex={1}>
               <Text fontWeight={500}>{data.title}</Text>

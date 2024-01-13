@@ -16,7 +16,7 @@ type BenefitUseCaseProps = {
 export const BenefitUseCase = (props: BenefitUseCaseProps) => {
     const { data, bannerUrl, heading } = props;
   return (
-    <Stack mt={20} direction={{md: "row", xs: "column"}} spacing={7.5}>
+    <Stack mt={{md: 20, xs: 15}} direction={{md: "row", xs: "column"}} spacing={7.5}>
       <Stack flex={1}>
         {heading}
         {data.map((data, index) => (

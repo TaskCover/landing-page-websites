@@ -8,13 +8,13 @@ export const UseCaseCommitResult = () => {
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={500}
+        fontWeight={600}
         mb={5}
         my={4}
         textAlign="center"
       >
         From ideation and script writing will be{" "}
-        <TextGradient fontSize={{ md: 36, xs: 20 }} fontWeight={500}>
+        <TextGradient fontSize={{ md: 36, xs: 20 }} fontWeight={600}>
           Taskcover assists you gain the achievements
         </TextGradient>
       </Text>
@@ -53,7 +53,7 @@ const DATA = [
       <Text
         component="div"
         fontSize={{ md: 16, xs: 14 }}
-        fontWeight={500}
+        fontWeight={600}
         mb={5}
         my={4}
         textAlign="center"
@@ -62,7 +62,7 @@ const DATA = [
         <TextGradient
           component="span"
           fontSize={{ md: 16, xs: 14 }}
-          fontWeight={500}
+          fontWeight={600}
         >
           of conceptualizing and defining project
         </TextGradient>
@@ -75,7 +75,7 @@ const DATA = [
       <Text
         component="div"
         fontSize={{ md: 16, xs: 14 }}
-        fontWeight={500}
+        fontWeight={600}
         mb={5}
         my={4}
         textAlign="center"
@@ -84,7 +84,7 @@ const DATA = [
         <TextGradient
           component="span"
           fontSize={{ md: 16, xs: 14 }}
-          fontWeight={500}
+          fontWeight={600}
         >
           the applications and frameworks of all steps
         </TextGradient>
@@ -97,7 +97,7 @@ const DATA = [
       <Text
         component="div"
         fontSize={{ md: 16, xs: 14 }}
-        fontWeight={500}
+        fontWeight={600}
         mb={5}
         my={4}
         textAlign="center"
@@ -106,7 +106,7 @@ const DATA = [
         <TextGradient
           component="span"
           fontSize={{ md: 16, xs: 14 }}
-          fontWeight={500}
+          fontWeight={600}
         >
           customized workflow of software development
         </TextGradient>
@@ -119,7 +119,7 @@ const DATA = [
       <Text
         component="div"
         fontSize={{ md: 16, xs: 14 }}
-        fontWeight={500}
+        fontWeight={600}
         mb={5}
         my={4}
         textAlign="center"
@@ -127,7 +127,7 @@ const DATA = [
         <TextGradient
           component="span"
           fontSize={{ md: 16, xs: 14 }}
-          fontWeight={500}
+          fontWeight={600}
         >
           Maximizes process efficiency{" "}
         </TextGradient>

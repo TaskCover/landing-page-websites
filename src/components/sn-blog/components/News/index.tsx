@@ -6,20 +6,7 @@ import ArrowIcon from "icons/ArrowIcon";
 
 export const BlogNews = () => {
   return (
-    <Stack direction={{md: "row", xs: "column"}} mt={20} spacing={5} position="relative">
-      <Stack
-        sx={{
-          backgroundImage: "url(/images/trust-center-bg.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          aspectRatio: "2210/1503",
-          position: "absolute",
-          top: 0,
-          right: { md: "-50px", xs: 0 },
-          zIndex: -1,
-        }}
-      />
+    <Stack direction={{md: "row", xs: "column"}} mt={20} spacing={5}>
       <Stack
         sx={{
           background: "#fff",
