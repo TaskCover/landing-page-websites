@@ -10,7 +10,7 @@ import ArrowIconDown from "public/images/about-us/arrow-down.svg";
 import ArrowIconUp from "public/images/about-us/arrow-up.svg";
 import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Navigation } from "swiper";
+import Navigation from "swiper"
 import "swiper/css";
 import { SwiperNavButtons } from "./swipper-navitaion";
 type TeamsStarLayoutProps = {};
