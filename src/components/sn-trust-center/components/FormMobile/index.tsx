@@ -1,5 +1,5 @@
 import { Button, FormControl, Input, Stack } from "@mui/material";
-import { Text, TextGradient } from "components/shared";
+import { Text } from "components/shared";
 import Image from "next/image";
 
 export const FormMobile = () => {
@@ -12,7 +12,7 @@ export const FormMobile = () => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         width: "100%",
-        aspectRatio: "359/558",
+        aspectRatio: "359/580",
         flexDirection: "row",
         position: "relative",
         paddingTop: 5,
@@ -20,7 +20,7 @@ export const FormMobile = () => {
         px: "10%"
       }}
     >
-      <Stack justifyContent="center" width="100%">
+      <Stack justifyContent="flex-start" width="100%" mt={3}>
         <Text fontWeight={500} variant="h5" color="#fff" mb={3} align="center">
           A unified app for all your needs.
         </Text>
@@ -67,26 +67,6 @@ export const FormMobile = () => {
           By clicking Sign Up you&rsquo;re confirming that you agree with our
           Terms and Conditions.
         </Text>
-        <Stack
-          sx={{
-            position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)",
-            bottom: -40,
-          }}
-        >
-          <Image
-            src="/images/legend-animal-helper.png"
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{
-              width: "130%",
-              height: "auto",
-            }}
-            alt="legend animal"
-          />
-        </Stack>
       </Stack>
     </Stack>
   );

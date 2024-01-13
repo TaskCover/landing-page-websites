@@ -6,16 +6,19 @@ import RecomendedPlagIc from "public/images/home-page/img-flag-recomended.png";
 import EmpowerDifferent from "public/images/home-page/img-time-tracking.png";
 import BallSaleImg from "public/images/home-page/img-ball-sale.png";
 import PlayVideoImg from "public/images/home-page/img-play-video.png";
-import { memo } from 'react';
+import PlayVideoIcon from "public/images/home-page/icon-play-video.svg";
+import { memo, useState } from 'react';
 import Link from "components/Link";
 import ArrowRightLineIc from "public/images/home-page/arrow-right-line.svg";
 import useBreakpoint from 'hooks/useBreakpoint';
+import { ListPackageEmpower } from '../configs';
 
 type EmpowerDifferentLayoutProps = {}
 
 const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
     const { isMdSmaller } = useBreakpoint();
 
+    const [tabActive, setTabActive] = useState(ListPackageEmpower[0])
     return (
         <Stack width="100%" sx={{
 
@@ -61,38 +64,43 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                                 width="fit-content"
                                 sx={{
                                     background: "rgba(255, 255, 255, 0.10)",
+                                }}>
 
-                                }}>
-                                <Stack sx={{
-                                    background: "#fff",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    p: "6px 24px",
-                                    borderRadius: "48px"
-                                }}>
-                                    <Text variant={{ xs: "caption", md: "body1" }} color="#000" lineHeight="24px">
-                                        Monthly
-                                    </Text>
-                                </Stack>
-                                <Stack sx={{
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    p: "6px 24px",
-                                }}>
-                                    <Text variant={{ xs: "caption", md: "body1" }} color="#fff" lineHeight="24px">
-                                        Yearly
-                                    </Text>
-                                </Stack>
+                                {ListPackageEmpower.map((item, index) => {
+                                    const isActive = tabActive.name == item.name;
+                                    return (
+                                        <Stack sx={{
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            p: "6px 24px",
+                                            borderRadius: "48px",
+                                            backgroundColor: isActive ? "#fff" : "transparent",
+                                            transition: ".3s",
+                                            "&:hover": {
+                                                cursor: 'pointer',
+                                                transition: ".3s"
+                                            }
+                                        }}
+                                            onClick={() => setTabActive(item)}
+                                        >
+                                            <Text variant={{ xs: "caption", md: "body1" }} color={isActive ? "#000" : "#fff"} lineHeight="24px">
+                                                {item.name}
+                                            </Text>
+                                        </Stack>
+                                    )
+                                })
+                                }
                             </Stack>
+
                             <Stack flexDirection="row" alignItems="center" mt="16px">
                                 <Text variant="h2" fontSize={{ xs: "24px", md: "36px" }} color="#fff" sx={{ mr: "16px" }}>
                                     $ {" "}
                                 </Text>
                                 <Text variant={{ xs: "h3", md: "h1" }} fontSize={{ xs: "48px", md: "60px" }} lineHeight={{ xs: "48px", md: "64px" }} color="#fff">
-                                    19.00/
+                                    {tabActive.pricePackage}/
                                 </Text>
                                 <Text variant="h3" color="#fff" sx={{ ml: "8px" }}>
-                                    month
+                                    {tabActive.name == "Monthly" ? "month" : "year"}
                                 </Text>
                             </Stack>
                             <Text variant="overline" color="rgba(255,255,255,.7)" lineHeight="28px" fontWeight={400} sx={{ textTransform: "none" }} >
@@ -152,7 +160,7 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                                 <Text variant="h2" fontSize={{ xs: "24px", md: "36px" }} lineHeight="44px" color="#fff" >
                                     14 days trial
                                 </Text>
-                                <Text variant="overline" fontSize={{ xs: "16px", md: "18px" }}  color="rgba(255,255,255,.7)" lineHeight="28px" fontWeight={400} sx={{ textTransform: "none", mt: "8px" }}>
+                                <Text variant="overline" fontSize={{ xs: "16px", md: "18px" }} color="rgba(255,255,255,.7)" lineHeight="28px" fontWeight={400} sx={{ textTransform: "none", mt: "8px" }}>
                                     Fit small team of 2 to 3 members who are looking <br /> to optimize planning and executing projects
                                 </Text>
                                 <Stack width="100%" height="1px" bgcolor="rgba(255,255,255,.2)" my={{ xs: "16px", md: "24px" }} />
@@ -190,13 +198,38 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                         </Stack>
                         <Stack sx={{
                             borderRadius: "12px",
-                            overflow: "hidden"
+                            overflow: "hidden",
+                            background: "url(/images/home-page/img-play-video.png)",
+                            backgroundSize: "cover",
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "center",
+                            width: "100%",
+                            justifyContent: "center",
+                            alignItems: "center",
                         }}>
-                            <Image src={PlayVideoImg} width={0} height={0} alt="image" style={{
-                                width: "100%",
-                                height: "100%"
-                            }} />
+                            <Stack gap="8px">
+                                <Stack sx={{
+                                    transition: ".3s",
+                                    width:"72px",
+                                    height:"72px",
+                                    "&:hover": {
+                                        cursor: "pointer",
+                                        transition: ".3s",
+                                        transform: "scale(1.1)",
+                                    }
+                                }}>
+                                    <Image src={PlayVideoIcon} alt="image" style={{
+                                        width:"100%",
+                                        height:"100%",
+                                    }} />
+                                </Stack>
 
+                                <Text variant="h5" sx={{
+                                    color: "#fff"
+                                }}>
+                                    Play video
+                                </Text>
+                            </Stack>
                         </Stack>
                     </Stack>
                 </Stack>

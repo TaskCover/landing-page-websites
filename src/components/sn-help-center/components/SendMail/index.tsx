@@ -1,23 +1,25 @@
-import { Stack, FormControl, Input } from "@mui/material";
-import { Button, Text, TextGradient, Form } from "components/shared";
+import { Stack } from "@mui/material";
+import { Form, Text } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 
 export const HelperSendMail = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
     <Stack
+      mt={{md: 20, xs: 5}}
+      mb={{md: 20, xs: 0}}
       sx={{
-        backgroundImage: isMdSmaller ? "url(/images/bg-help-send-mail-mobile.png)" : "url(/images/bg-help-send-mail.png)",
+        backgroundImage: isMdSmaller
+          ? "url(/images/bg-help-send-mail-mobile.png)"
+          : "url(/images/bg-help-send-mail.png)",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         width: "100%",
         minHeight: { md: 426, xs: 472 },
-        mt: 25,
+        mt: {md: 25, xs: 13},
         position: "relative",
         borderRadius: 4,
-        m: "0 auto",
-        maxWidth: "1200px",
       }}
     >
       <Stack
@@ -54,7 +56,8 @@ export const HelperSendMail = () => {
           <Form submitText="Send" />
         </Stack>
         <Text color="#fff" fontWeight={400} mt={3.5} fontSize={12}>
-          By clicking Sign Up you&rsquo;re confirming that you agree with our Terms and Conditions.
+          By clicking Sign Up you&rsquo;re confirming that you agree with our
+          Terms and Conditions.
         </Text>
       </Stack>
     </Stack>

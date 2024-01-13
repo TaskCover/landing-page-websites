@@ -18,13 +18,13 @@ type HomePageProps = {};
 const HomePage = (props: HomePageProps) => {
   return (
     <Stack overflow="hidden" bgcolor="#fff">
-      <HeadLayout />
+      {/* <HeadLayout />
       <PowerfulAgentLayout />
       <FullyObtimizeLayout />
       <ManageProjectLayout />
       <ExploreLayout />
-      <TaskCoverLayout />
-      <SwapToolsLayout />
+      <TaskCoverLayout /> */}
+      {/* <SwapToolsLayout /> */}
       <EmpowerDifferentLayout />
       <SendMailLayout/>
     </Stack >

@@ -1,27 +1,29 @@
 import { Grid, Stack } from "@mui/material";
 import { Text, TextGradient } from "components/shared";
 import Image from "next/image";
-import { FormDesktop } from '../FormDesktop';
+import { FormDesktop } from "../FormDesktop";
 import useBreakpoint from "hooks/useBreakpoint";
 import { FormMobile } from "../FormMobile";
 
 export const BuildingTrust = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
-    <Stack mt={12.5} mb={{ md: 0, xs: 10 }}
+    <Stack
+      mt={12.5}
+      mb={{ md: 0, xs: 10 }}
       sx={{
         width: "100%",
         m: "0 auto",
         maxWidth: "1200px",
       }}
     >
-      <Stack textAlign="center">
-        <TextGradient mb={3} variant={{ md: "h3", xs: "h5" }}>
+      <Stack textAlign="center" mt={{md: 15, xs: 10}}>
+        <TextGradient mb={3} fontSize={{md: 36, xs: 24}} percentBlueColor={46.8} percentGreenColor={55.38}>
           Building Trust
         </TextGradient>
         <Text
           variant="overline"
-          textAlign={{ md: "left", xs: "center" }}
+          textAlign="center"
           textTransform="unset"
           lineHeight={1.5}
           sx={{ mb: 5 }}
@@ -46,7 +48,12 @@ export const BuildingTrust = () => {
                 }}
                 alt="building trust"
               />
-              <Text variant={{ md: "h5", xs: "body1" }} fontWeight={700} textTransform="uppercase" mb={1.5}>
+              <Text
+                variant={{ md: "h5", xs: "body1" }}
+                fontWeight={700}
+                textTransform="uppercase"
+                mb={1.5}
+              >
                 {data.title}
               </Text>
               <Text variant="body2">{data.content}</Text>
@@ -59,10 +66,12 @@ export const BuildingTrust = () => {
         direction={{ md: "row", xs: "column" }}
         justifyContent="space-between"
         spacing={4.375}
-        mt={20}
+        mt={{md: 20, xs: 10}}
       >
         <Image
-          src="/images/building-trust-app-1.png"
+          src={`/images/building-trust-app${
+            isMdSmaller ? "-mobile" : ""
+          }-1.png`}
           width={0}
           height={0}
           sizes="100vw"
@@ -77,18 +86,23 @@ export const BuildingTrust = () => {
         />
         <Stack flex={1} justifyContent="space-between">
           <Image
-            src="/images/building-trust-app-2.png"
+            src={`/images/building-trust-app${
+              isMdSmaller ? "-mobile" : ""
+            }-2.png`}
             width={0}
             height={0}
             sizes="100vw"
             style={{
               width: "100%",
               height: "auto",
+              marginBottom: isMdSmaller ? "35px" : 0,
             }}
             alt="building-trust-app"
           />
           <Image
-            src="/images/building-trust-app-3.png"
+            src={`/images/building-trust-app${
+              isMdSmaller ? "-mobile" : ""
+            }-3.png`}
             width={0}
             height={0}
             sizes="100vw"

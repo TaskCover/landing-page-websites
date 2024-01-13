@@ -18,7 +18,7 @@ import { DataStatus } from "constant/enums";
 import useToggle from "hooks/useToggle";
 import SwitchTheme from "components/SwitchTheme";
 import Menu from "layouts/components/Menu";
-import { SignInTrialHeader } from "layouts/components";
+import { MenuMobile, SignInTrialHeader } from "layouts/components";
 
 const Header = () => {
   const { push } = useRouter();
@@ -43,6 +43,7 @@ const Header = () => {
           <AppLogo width={156} />
         </Link>
         <Menu />
+        <MenuMobile />
         {isMdSmaller ? <></> : <SignInTrialHeader />}
         {/* <SwitchTheme /> */}
       </Stack>

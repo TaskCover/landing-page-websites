@@ -1,59 +1,60 @@
-import { Stack } from "@mui/material";
-import { Collapse, Text } from "components/shared";
+import { Container, Stack } from "@mui/material";
+import { CollapseQuestion, Text } from "components/shared";
+import useBreakpoint from "hooks/useBreakpoint";
 export const HelperQuestion = () => {
+  const { isMdSmaller } = useBreakpoint();
   return (
-    <Stack mt={11} position="relative" sx={{
-      width: "100%",
-      m: "0 auto",
-      maxWidth: "1200px",
-      p: "16px"
-    }}>
+    <Stack pt={{ md: 22, xs: 15 }} pb={{ md: 13, xs: 8 }} position="relative">
       <Text textAlign="center" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
         Frequently asked questions.
       </Text>
       <Stack
         sx={{
-          backgroundImage: "url(/images/bg-helper-center.png)",
+          backgroundImage: isMdSmaller
+            ? "url(/images/bg-header-help-center-mobile.png)"
+            : "url(/images/bg-header-help-center.webp)",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           width: "100%",
-          aspectRatio: "2210/1503",
+          height: "400%",
           position: "absolute",
           top: 0,
           left: 0,
           zIndex: -1,
         }}
       />
-      <Stack maxWidth={800} mx="auto">
-        {DATA.map((data, index) => (
-          <Collapse
-            key={index}
-            label={
-              <Stack direction="row" justifyContent="space-between">
-                <Text color="text.primary" variant="h6">
-                  {data.question}
-                </Text>
-              </Stack>
-            }
-          >
-            <Stack
-              mt={1}
-              color="#fff"
-              sx={{
-                backgroundColor: "#5C98F6",
-                py: 3.5,
-                px: 2,
-                borderRadius: 4,
-              }}
+      <Container>
+        <Stack maxWidth={800} mx="auto">
+          {DATA.map((data, index) => (
+            <CollapseQuestion
+              key={index}
+              label={
+                <Stack direction="row" justifyContent="space-between">
+                  <Text color="text.primary" variant="h6">
+                    {data.question}
+                  </Text>
+                </Stack>
+              }
             >
-              <Text mb={2} color="#fff">
-                {data.answer.title}
-              </Text>
-              {data.answer.content}
-            </Stack>
-          </Collapse>
-        ))}
-      </Stack>
+              <Stack
+                mt={1}
+                color="#fff"
+                sx={{
+                  backgroundColor: "#5C98F6",
+                  py: 3.5,
+                  px: 2,
+                  borderRadius: 4,
+                }}
+              >
+                <Text mb={2} color="#fff">
+                  {data.answer.title}
+                </Text>
+                {data.answer.content}
+              </Stack>
+            </CollapseQuestion>
+          ))}
+        </Stack>
+      </Container>
     </Stack>
   );
 };
