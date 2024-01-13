@@ -1,5 +1,5 @@
-import React, { memo, useMemo, useState } from "react";
-import { Stack } from "@mui/material";
+import React, { MutableRefObject, memo, useCallback, useMemo, useRef, useState } from "react";
+import { Stack, Box } from "@mui/material";
 import { Button, Text } from "components/shared";
 import Image from "next/image";
 import useBreakpoint from "hooks/useBreakpoint";
@@ -8,11 +8,11 @@ import Avatar1 from "public/images/about-us/img-person-1.png";
 import GmailIcon from "public/images/about-us/icon-gmail.svg";
 import ArrowIconDown from "public/images/about-us/arrow-down.svg";
 import ArrowIconUp from "public/images/about-us/arrow-up.svg";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { Navigation } from "swiper";
 import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import { SwiperNavButtons } from "./swipper-navitaion";
 type TeamsStarLayoutProps = {};
 
 const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
@@ -21,6 +21,19 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
     ListTeamsStar[ListTeamsStar.length - 1],
   );
   const [showMoreState, setShowMoreState] = useState(false);
+  const matches = useMediaQuery("(max-width:400px)");
+
+  const sliderRef = useRef<SwiperRef | MutableRefObject<null>>(null);
+
+  const handlePrev = useCallback(() => {
+    if (!sliderRef.current) return;
+    (sliderRef.current as SwiperRef).swiper.slidePrev();
+  }, []);
+
+  const handleNext = useCallback(() => {
+    if (!sliderRef.current) return;
+    (sliderRef.current as SwiperRef).swiper.slideNext();
+  }, []);
 
   const findTextFocus = (text: string) => {
     const result = text.match(/\(([^)]+)\)/);
@@ -38,7 +51,6 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
     return modifiedString;
   };
 
-  const handleSlideChange = (e) => {};
   return (
     <Stack width="100%" sx={{}}>
       <Stack
@@ -46,7 +58,7 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
       >
         <Stack direction="row" alignItems="center" gap="8px">
           <Text variant="h1" sx={[textHeadSx, {}]}>
-            TaskCover's
+            TaskCover&apos;s
           </Text>
           <Text variant="h1" sx={[textHeadSx, textGradientSx]}>
             All-Star Team
@@ -74,6 +86,7 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
                   sx={textInfoSx}
                   fontSize={{ xs: "16px", md: "18px" }}
                   fontWeight={400}
+                  component="div"
                 >
                   {modifiedTextForcus(personActive.graduatedInfo)}{" "}
                   <Text
@@ -92,6 +105,7 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
                   sx={textInfoSx}
                   fontSize={{ xs: "16px", md: "18px" }}
                   fontWeight={400}
+                  component="div"
                 >
                   <Text
                     sx={[textInfoSx, textGradientSx]}
@@ -106,12 +120,13 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
               </Stack>
 
               <Stack direction="row" alignItems="center" gap="4px">
-                <Text sx={textInfoSx} fontWeight={400}>
+                <Text sx={textInfoSx} fontWeight={400} component="div">
                   <Text
                     sx={[textInfoSx, textGradientSx]}
                     fontSize={{ xs: "16px", md: "24px" }}
                     lineHeight={{ xs: "24px", md: "32px" }}
                     fontWeight={700}
+                    component="div"
                   >
                     {findTextFocus(personActive.rankedInfo)}
                   </Text>{" "}
@@ -119,33 +134,51 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
                 </Text>
               </Stack>
             </Stack>
-            {false ? (
-              <Stack className="swiper-swapper">
-                <Swiper
-                  navigation={true}
+
+            {isMdSmaller ? (
+              <Stack display="grid" position="relative">
+                <Box
+                  ref={sliderRef}
+                  component={Swiper}
+                  className="mySwiper"
+                  spaceBetween={10}
                   modules={[Navigation]}
-                  spaceBetween={500}
+                  pagination={{
+                    el: ".swiper-pagination",
+                    clickable: true,
+                  }}
                   slidesPerView={1}
-                  pagination={{ clickable: true }}
-                  scrollbar={{ draggable: true }}
-                  onSlideChange={handleSlideChange}
-                  style={{}}
+                  loop={false}
+                  navigation={{
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                  }}
+                  sx={{
+                    display: "inline-block",
+                    mt: 3,
+                    position: "relative",
+                    ".swiper-wrapper": {
+                      maxHeight: matches ? 370 : "100%",
+                    },
+                  }}
                 >
                   {ListTeamsStar.map((item, index) => (
-                    <SwiperSlide style={{}} className="swiper-slide-wrapper">
+                    <SwiperSlide key={index} className="swiper-slide-wrapper">
                       <Image
                         src={item.avatarImage}
                         width={0}
                         height={0}
+                        sizes="100vw"
                         style={{
-                          width: "322px",
-                          height: "393px",
+                          width: "100%",
+                          height: "auto",
                         }}
                         alt="image"
                       />
                     </SwiperSlide>
                   ))}
-                </Swiper>
+                </Box>
+                <SwiperNavButtons handlerNext={handleNext} handlerPrevious={handlePrev} />
               </Stack>
             ) : (
               <Stack alignItems="center" my={{ xs: "24px", md: "0" }}>
@@ -153,9 +186,10 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
                   src={personActive.avatarImage}
                   width={0}
                   height={0}
+                  sizes="100vw"
                   style={{
-                    width: "322px",
-                    height: "393px",
+                    width: "100%",
+                    height: "auto",
                   }}
                   alt="image"
                 />
@@ -195,6 +229,7 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
             {(showMoreState ? ListTeamsStar : ListTeamsStar.slice(0, 4)).map(
               (item, index) => (
                 <Stack
+                  key={index}
                   gap="16px"
                   alignItems="center"
                   onClick={() => setPersonActive(item)}
@@ -306,5 +341,4 @@ const swipperWrapperSx = {
     marginRight: "0",
     marginLeft: "0",
   },
-  
 };
