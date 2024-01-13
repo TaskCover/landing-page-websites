@@ -4,7 +4,7 @@ import { CircularProgress, Stack } from "@mui/material";
 import dayjs from "dayjs";
 import useTheme from "hooks/useTheme";
 import React, { useEffect, useRef, useState } from "react";
-import { Grid } from "swiper";
+import Grid from "swiper";
 import { Button, Text } from "components/shared";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { DEFAULT_BOOKING_ALL_FILTER } from "../helper";
