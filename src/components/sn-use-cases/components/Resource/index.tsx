@@ -1,12 +1,26 @@
 import { Stack, Box } from "@mui/material";
 import { TextGradient, Text, ButtonCustom } from "components/shared";
 import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
 import "swiper/css";
 import useBreakpoint from "hooks/useBreakpoint";
+import { MutableRefObject, useCallback, useRef } from "react";
+import { SwiperNavButtons } from "components/sn-about-us/components/swipper-navitaion";
 
 export const ResourceUseCase = () => {
   const { isMdSmaller } = useBreakpoint();
+
+  const sliderRef = useRef<SwiperRef | MutableRefObject<null>>(null);
+
+  const handlePrev = useCallback(() => {
+    if (!sliderRef.current) return;
+    (sliderRef.current as SwiperRef).swiper.slidePrev();
+  }, []);
+
+  const handleNext = useCallback(() => {
+    if (!sliderRef.current) return;
+    (sliderRef.current as SwiperRef).swiper.slideNext();
+  }, []);
   return (
     <Stack mt={12}>
       <TextGradient textAlign="center">Resources</TextGradient>
@@ -19,10 +33,11 @@ export const ResourceUseCase = () => {
         Resources & tips for marketing agency
       </Text>
       {isMdSmaller ? (
-        <Stack display="block">
+        <Stack display="block" position="relative">
           <Box
+            ref={sliderRef}
             component={Swiper}
-            spaceBetween={30}
+            spaceBetween={0}
             className="mySwiper"
             slidesPerView={1}
             loop
@@ -39,9 +54,9 @@ export const ResourceUseCase = () => {
               <SwiperSlide key={index}>
                 <Stack
                   sx={{
-                    borderRadius: 4,
-                    boxShadow: "0px 0px 12px 0px rgba(170, 198, 245, 0.40)",
-                    backgroundColor: "#fff",
+                    borderRadius: 6,
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
                     py: 3,
                     px: 3,
                   }}
@@ -69,6 +84,10 @@ export const ResourceUseCase = () => {
               </SwiperSlide>
             ))}
           </Box>
+          <SwiperNavButtons
+            handlerNext={handleNext}
+            handlerPrevious={handlePrev}
+          />
         </Stack>
       ) : (
         <Stack direction="row" spacing={5}>
@@ -83,20 +102,20 @@ export const ResourceUseCase = () => {
                 px: 3,
               }}
             >
-             <Stack height={{lg: 260, md: 240, sm: 235}}>
-             <Image
-                src={data.imageUrl}
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  marginBottom: "40px",
-                }}
-                alt="resource-use-case"
-              />
-             </Stack>
+              <Stack height={{ lg: 260, md: 240, sm: 235 }}>
+                <Image
+                  src={data.imageUrl}
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    marginBottom: "40px",
+                  }}
+                  alt="resource-use-case"
+                />
+              </Stack>
 
               <Text fontSize={{ md: 20, xs: 16 }} fontWeight={700} mb={5}>
                 {data.title}
