@@ -14,12 +14,12 @@ type PricingPageProps = {}
 const PricingPage = (props: PricingPageProps) => {
     return (
         <Stack>
-            {/* <HeadLayout /> */}
+            <HeadLayout />
             <AvailablePackage />
-            {/* <Partner />
+            <Partner />
             <TaskAi />
             <ListProduct />
-            <MoreInfo /> */}
+            <MoreInfo />
         </Stack>
     )
 }
