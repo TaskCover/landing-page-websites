@@ -1,12 +1,26 @@
 import { Container, Stack } from "@mui/material";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { HeaderBlog } from "./components/Header";
 import { BlogNews } from "./components/News";
 import { BlogArticle } from "./components/Articles";
 import { HelperSendMail } from "components/sn-help-center/components/SendMail";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useBlogs } from "store/blog/selectors";
+import { DataStatus } from "constant/enums";
+import AppLoading from "components/AppLoading";
 
 const BlogPage = () => {
+  const { blogs, blogsStatus } = useAppSelector(state => state.blogs);
+  const dispatch = useAppDispatch();
+  const {onGetBlogs} = useBlogs();
+
+  useEffect(() => {
+    dispatch(() => onGetBlogs());
+  }, [dispatch, onGetBlogs]);
+
+  if(blogsStatus === DataStatus.LOADING) return <AppLoading/>
   return (
+
     <Stack>
       <Stack position="relative">
         <Stack

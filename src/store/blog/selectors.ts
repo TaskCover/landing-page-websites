@@ -37,7 +37,7 @@ export const useBlogs = () => {
     const isFetching = useMemo(() => status === DataStatus.LOADING, [status]);
 
     const onGetBlogs = useCallback(
-        async (queries: GetBlogListQueries) => {
+        async (queries?: GetBlogListQueries) => {
             await dispatch(getAllBlogs({ ...queries }));
         },
         [dispatch],
@@ -62,7 +62,7 @@ export const useBlogs = () => {
                     blog.attachments = attachmentUploadResponses.map((response) => response.payload.object);
                 }
                 const Token = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
-                var id = blog.id as string;
+                const id = blog.id as string;
                 return await dispatch(updateBlog({ id ,blog, Token: Token ?? null })).unwrap();
             } catch (error) {
                 throw error;

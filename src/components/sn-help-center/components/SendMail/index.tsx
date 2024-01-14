@@ -6,8 +6,8 @@ export const HelperSendMail = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
     <Stack
-      mt={{md: 20, xs: 5}}
-      mb={{md: 20, xs: 0}}
+      mt={{md: 13, xs: 5}}
+      mb={{md: 17, xs: 0}}
       sx={{
         backgroundImage: isMdSmaller
           ? "url(/images/bg-help-send-mail-mobile.png)"

@@ -16,6 +16,7 @@ import CollapseQuestion from "./CollapseQuestion";
 import SvgIcon from "./SvgIcon";
 import Form from "./Form";
 import ButtonCustom from "./ButtonCustom";
+import Breadcrumb from './Breadcrumb';
 
 export {
   Button,
@@ -35,7 +36,8 @@ export {
   TextGradient,
   Form,
   CollapseQuestion,
-  ButtonCustom
+  ButtonCustom,
+  Breadcrumb
 };
 
 export type {
