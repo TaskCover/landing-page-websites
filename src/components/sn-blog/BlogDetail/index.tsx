@@ -8,8 +8,21 @@ import {
 import Image from "next/image";
 import { memo } from "react";
 import Link from "next/link";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const BlogDetail = () => {
+    const {isMdSmaller} = useBreakpoint();
+    const breadcrumbs = [
+        <Link key="1" href="/" color="inherit">
+          Home
+        </Link>,
+        <Link key="2" color="inherit" href="/blog">
+          Blog
+        </Link>,
+        <Text key="3">
+         {isMdSmaller ? "How to Create an Executive Dashbo..." : "How to Create an Executive Dashboard: A Step- by-Step Guide"}
+        </Text>,
+      ];
   return (
     <Stack sx={{ marginTop: "60px!important" }} position="relative">
       <Stack
@@ -246,7 +259,7 @@ const breadcrumbs = [
     Blog
   </Link>,
   <Text key="3">
-    How to Create an Executive Dashboard: A Step- by-Step Guide
+   How to Create an Executive Dashbo...
   </Text>,
 ];
 

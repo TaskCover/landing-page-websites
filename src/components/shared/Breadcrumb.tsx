@@ -20,10 +20,10 @@ export default function Breadcrumb(props: BreadcrumbsProps) {
         aria-label="breadcrumb"
         sx={{
           color: "#000",
-          "a, p, div, span": { color: "#000", fontWeight: 600 },
+          "a, p, div, span": { color: "#000", fontWeight: 600, fontSize: {md: 16, xs: 12}, lineHeight: 2.5 },
           ".MuiBreadcrumbs-separator": {
-            fontSize: 25,
-            mx: 2,
+            fontSize: {md: 25, xs: 20},
+            mx: {md: 2, xs: 1},
           },
         }}
       >
