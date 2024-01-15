@@ -85,21 +85,21 @@ const careerSlice = createSlice({
                 }
             }).addCase(updateStatusCareer.rejected, (state, action) => {
                 state.careersStatus = DataStatus.FAILED;
-              }).addCase(updateStatusCareer.fulfilled, (state, action) => {
+            }).addCase(updateStatusCareer.fulfilled, (state, action) => {
                 state.careersStatus = DataStatus.SUCCEEDED;
                 const updatedList = action.payload;
                 state.careers = state.careers.map((career) => {
-                  const updatedCareer = updatedList.find((updated) => updated.id === career.id);
-                  if (updatedCareer) {
-                    return {
-                      ...career,
-                      ...updatedCareer,
-                    };
-                  }
-                  return career;
+                    const updatedCareer = updatedList.find((updated) => updated.id === career.id);
+                    if (updatedCareer) {
+                        return {
+                            ...career,
+                            ...updatedCareer,
+                        };
+                    }
+                    return career;
                 });
-              })
-              
+            })
+
     },
 });
 

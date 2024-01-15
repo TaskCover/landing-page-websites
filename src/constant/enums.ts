@@ -138,3 +138,11 @@ export const DocAccessibility = {
   EDIT: "Can edit",
   COMMENT: "Can comment",
 } as const;
+
+export enum FormType {
+  Input,
+  DatePicker,
+  Dropdown,
+  NumberPicker,
+  Upload,
+}
