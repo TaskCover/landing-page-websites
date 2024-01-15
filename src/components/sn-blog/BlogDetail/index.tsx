@@ -6,23 +6,47 @@ import {
   TextGradient,
 } from "components/shared";
 import Image from "next/image";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import Link from "next/link";
 import useBreakpoint from "hooks/useBreakpoint";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useCategoryBlog } from "store/blog-category/selectors";
+import { DataStatus } from "constant/enums";
+import AppLoading from "components/AppLoading";
+import { useParams } from "next/navigation";
+import { useBlogs } from "store/blog/selectors";
 
 const BlogDetail = () => {
-    const {isMdSmaller} = useBreakpoint();
-    const breadcrumbs = [
-        <Link key="1" href="/" color="inherit">
-          Home
-        </Link>,
-        <Link key="2" color="inherit" href="/blog">
-          Blog
-        </Link>,
-        <Text key="3">
-         {isMdSmaller ? "How to Create an Executive Dashbo..." : "How to Create an Executive Dashboard: A Step- by-Step Guide"}
-        </Text>,
-      ];
+  const { categories, categoryStatus } = useAppSelector(
+    (state) => state.categoryBlogs,
+  );
+  const dispatch = useAppDispatch();
+  const { onGetCategoryBlogs } = useCategoryBlog();
+  const { onGetBlogBySlug, item } = useBlogs();
+  const { slug } = useParams();
+
+  useEffect(() => {
+    dispatch(() => onGetCategoryBlogs());
+  }, [dispatch, onGetCategoryBlogs]);
+
+  useEffect(() => {
+    dispatch(() => onGetBlogBySlug(slug as string));
+  }, [dispatch, onGetBlogBySlug, slug]);
+
+  const { isMdSmaller } = useBreakpoint();
+  const breadcrumbs = [
+    <Link key="1" href="/" color="inherit">
+      Home
+    </Link>,
+    <Link key="2" color="inherit" href="/blog">
+      Blog
+    </Link>,
+    <Text key="3">
+      {item?.title}
+    </Text>,
+  ];
+
+  if (categoryStatus === DataStatus.LOADING) return <AppLoading />;
   return (
     <Stack sx={{ marginTop: "60px!important" }} position="relative">
       <Stack
@@ -46,7 +70,7 @@ const BlogDetail = () => {
         <Container>
           <Stack alignItems="center" width="100%">
             <Image
-              src="/images/blog-detail-1.png"
+              src={item?.background_down?.link ?? ""}
               width={0}
               height={0}
               sizes="100vw"
@@ -69,27 +93,21 @@ const BlogDetail = () => {
           mt={3}
         >
           <Stack sx={sxConfig.content} flex={0.7}>
-            <Stack className="content-blog">
-              <Image
-                src="/images/content-detail-blog.png"
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{
-                  width: "100%",
-                  height: "auto",
-                }}
-                alt="next-blog"
-              />
-            </Stack>
+            <Stack
+              className="content-blog"
+              dangerouslySetInnerHTML={{ __html: item?.content ?? "" }}
+            />
             <Stack
               direction="row"
-              spacing={{ md: 5, xs: 0.652 }}
+              spacing={{ md: 3, xs: 0.652 }}
               mt={5}
               alignItems="center"
-              sx={{ background: {md: "#fff", xs: "transparent"}, borderRadius: 6 }}
+              sx={{
+                background: { md: "#fff", xs: "transparent" },
+                borderRadius: 6,
+              }}
             >
-              <Stack width="100%">
+              <Stack width="100%" flex={0.2}>
                 <Image
                   src="/images/next-blog.png"
                   width={0}
@@ -102,9 +120,7 @@ const BlogDetail = () => {
                   alt="next-blog"
                 />
               </Stack>
-              <Stack
-                justifyContent="space-between"
-              >
+              <Stack justifyContent="space-between" flex={0.8}>
                 <Text fontSize={{ md: 16, xs: 14 }}>
                   Operations Dashboard 101: Keep a Watchful Eye on Your
                   Processes
@@ -134,7 +150,7 @@ const BlogDetail = () => {
           <Stack flex={0.3}>
             <Stack
               sx={{
-                background: {md: "#fff", xs: "transparent"},
+                background: { md: "#fff", xs: "transparent" },
                 borderRadius: 6,
                 py: 3,
                 px: { md: 2, xs: 2 },
@@ -175,7 +191,7 @@ const BlogDetail = () => {
 
             <Stack
               sx={{
-                background: {md: "#fff", xs: "rgba(255, 255, 255, 0.60)"},
+                background: { md: "#fff", xs: "rgba(255, 255, 255, 0.60)" },
                 borderRadius: 6,
                 py: 3,
                 px: { md: 2, xs: 3 },
@@ -190,26 +206,22 @@ const BlogDetail = () => {
               >
                 CATEGORIES
               </Text>
-              <Stack py={2} borderBottom="1px solid #DEDEDE">
-                <Text fontSize={14} textTransform="uppercase" color="#212121">
-                  Project Management (10)
-                </Text>
-              </Stack>
-              <Stack py={2} borderBottom="1px solid #DEDEDE">
-                <Text fontSize={14} textTransform="uppercase" color="#212121">
-                  Project Management (10)
-                </Text>
-              </Stack>
-              <Stack py={2} borderBottom="1px solid #DEDEDE">
-                <Text fontSize={14} textTransform="uppercase" color="#212121">
-                  Project Management (10)
-                </Text>
-              </Stack>
+              {categories.map((category) => (
+                <Stack
+                  py={2}
+                  borderBottom="1px solid #DEDEDE"
+                  key={category.id}
+                >
+                  <Text fontSize={14} textTransform="uppercase" color="#212121">
+                    {category.name} (10)
+                  </Text>
+                </Stack>
+              ))}
             </Stack>
 
             <Stack
               sx={{
-                background: {md: "#fff", xs: "rgba(255, 255, 255, 0.60)"},
+                background: { md: "#fff", xs: "rgba(255, 255, 255, 0.60)" },
                 borderRadius: 6,
                 py: 3,
                 px: { md: 2, xs: 3 },
@@ -258,9 +270,7 @@ const breadcrumbs = [
   <Link key="2" color="inherit" href="/blog">
     Blog
   </Link>,
-  <Text key="3">
-   How to Create an Executive Dashbo...
-  </Text>,
+  <Text key="3">How to Create an Executive Dashbo...</Text>,
 ];
 
 const sxConfig = {

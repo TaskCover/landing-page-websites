@@ -79,7 +79,7 @@ const BlogPage = () => {
             }}
           />
           <Container>
-            <BlogArticle />
+            <BlogArticle data={blogs} />
           </Container>
         </Stack>
         <Stack position="relative">

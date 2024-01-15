@@ -5,7 +5,7 @@ export const HelperQuestion = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
     <Stack pt={{ md: 22, xs: 15 }} pb={{ md: 13, xs: 8 }} position="relative">
-      <Text textAlign="center" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
+      <Text textAlign="center" fontSize={{ md: 40, xs: 24 }} fontWeight={500} mb={2}>
         Frequently asked questions.
       </Text>
       <Stack
