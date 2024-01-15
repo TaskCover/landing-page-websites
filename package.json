@@ -143,8 +143,5 @@
     "postcss": "^8.4.29",
     "prettier": "^2.8.8",
     "typescript": "^5.0.4"
-  },
-  "engines": {
-    "yarn": "1.22.21"
   }
 }
