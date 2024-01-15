@@ -1,4 +1,5 @@
 "use client";
+import DetailCareersPage from "components/sn-careers/detail-career";
 import CareerDetaiLayout from "layouts/CareerDetaiLayout";
 type RootLayoutProps = {
   children: React.ReactNode;
@@ -8,7 +9,7 @@ type RootLayoutProps = {
 };
 
 const RootLayout = ({ children, params: { id } }: RootLayoutProps) => {
-  return <CareerDetaiLayout id={id}>{children}</CareerDetaiLayout>;
+  return <DetailCareersPage />;
 };
 
 export default RootLayout;

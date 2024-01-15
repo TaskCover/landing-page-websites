@@ -145,4 +145,5 @@ export enum FormType {
   Dropdown,
   NumberPicker,
   Upload,
+  Link,
 }

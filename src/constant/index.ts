@@ -22,7 +22,7 @@ export const FEEDBACK_API_URL = process.env.FEEDBACK_API_URL as string;
 // BLOG
 export const BLOG_API_URL = process.env.BLOG_API_URL as string;
 // CAREER
-export const CAREER_API_URL = ":6817/api/v1" as string;
+export const CAREER_API_URL = process.env.CAREER_API_URL as string;
 //Billing
 export const BILLING_API_URL = process.env.BILLING_API_URL as string;
 
