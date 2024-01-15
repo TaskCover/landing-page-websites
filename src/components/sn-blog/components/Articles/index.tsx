@@ -12,6 +12,7 @@ import { ButtonCustom, Text } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 import Image from "next/image";
 import Link from "next/link";
+import { BlogData } from "store/blog/actions";
 
 type CardMobileProps = {
   imageUrl: string;
@@ -20,8 +21,12 @@ type CardMobileProps = {
   slug: string;
 };
 
+type BlogArticleProps = {
+ data: BlogData[]
+};
+
 const CardMobile = (props: CardMobileProps) => {
-  const { imageUrl, title, shortDescription, slug } = props;
+  const { imageUrl, title, shortDescription, slug} = props;
   return (
     <Link href={slug}>
       <Stack
@@ -102,7 +107,8 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-export const BlogArticle = () => {
+export const BlogArticle = (props: BlogArticleProps) => {
+  const {data: dataBlogs} = props;
   const { isMdSmaller } = useBreakpoint();
   return (
     <Stack mb={{ md: 8, xs: 2 }}>
@@ -125,14 +131,14 @@ export const BlogArticle = () => {
         </Stack>
       </Stack>
       <Grid container spacing={{ md: 4, xs: 1 }}>
-        {DATA.map((data, index) => (
+        {dataBlogs.map((data, index) => (
           <Grid item md={4} xs={12} key={index}>
             {isMdSmaller ? (
               <CardMobile
-                imageUrl={data.imageUrl}
-                title={data.title}
-                shortDescription={data.shortDescription}
-                slug="/blog/slug"
+                imageUrl={data?.background_down?.link ?? ""}
+                title={data.title ?? ""}
+                shortDescription={data?.title ?? ""}
+                slug={`/blog/${data.slug}`}
               />
             ) : (
               <Card
@@ -145,16 +151,16 @@ export const BlogArticle = () => {
               >
                 <CardMedia
                   sx={{ height: 235, width: "100%" }}
-                  image={data.imageUrl}
+                  image={data?.background_down?.link ?? ""}
                   title="blog-article"
                 />
                 <CardContent>
-                  <Link href={`/blog/slug`}>
+                  <Link href={`/blog/${data.slug}`}>
                     <Text color="#5C98F6" fontWeight={700}>
                       {data.title}
                     </Text>
                     <Text fontSize={20} mb={2} fontWeight={700} height={100}>
-                      {data.shortDescription}
+                      {data.title}
                     </Text>
                   </Link>
                 </CardContent>
@@ -167,7 +173,7 @@ export const BlogArticle = () => {
                       alt="blog-author"
                     />
                     <Text>
-                      By <strong>Robert Fox</strong>
+                      By <strong>{data.created_by?.fullname}</strong>
                     </Text>
                   </Stack>
                 </CardActions>
@@ -191,59 +197,59 @@ export const BlogArticle = () => {
   );
 };
 
-const DATA = [
-  {
-    imageUrl: "/images/blog-article-1.png",
-    title: "Project Management",
-    shortDescription:
-      "How to Create an Executive Dashboard: A Step- by-Step Guide",
-  },
-  {
-    imageUrl: "/images/blog-article-2.png",
-    title: "Project Management",
-    shortDescription:
-      "How to Create an Executive Dashboard: A Step- by-Step Guide",
-  },
-  {
-    imageUrl: "/images/blog-article-3.png",
-    title: "Project Management",
-    shortDescription:
-      "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
-  },
-  {
-    imageUrl: "/images/blog-article-4.png",
-    title: "Project Management",
-    shortDescription:
-      "The Top CIOs of 2023: Strategic Insights From the Industry’s Best",
-  },
-  {
-    imageUrl: "/images/blog-article-5.png",
-    title: "Project Management",
-    shortDescription:
-      "How to Create an Executive Dashboard: A Step- by-Step Guide",
-  },
-  {
-    imageUrl: "/images/blog-article-6.png",
-    title: "Project Management",
-    shortDescription:
-      "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
-  },
-  {
-    imageUrl: "/images/blog-article-7.png",
-    title: "Project Management",
-    shortDescription:
-      "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
-  },
-  {
-    imageUrl: "/images/blog-article-8.png",
-    title: "Project Management",
-    shortDescription:
-      "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
-  },
-  {
-    imageUrl: "/images/blog-article-9.png",
-    title: "Project Management",
-    shortDescription:
-      "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
-  },
-];
+// const DATA = [
+//   {
+//     imageUrl: "/images/blog-article-1.png",
+//     title: "Project Management",
+//     shortDescription:
+//       "How to Create an Executive Dashboard: A Step- by-Step Guide",
+//   },
+//   {
+//     imageUrl: "/images/blog-article-2.png",
+//     title: "Project Management",
+//     shortDescription:
+//       "How to Create an Executive Dashboard: A Step- by-Step Guide",
+//   },
+//   {
+//     imageUrl: "/images/blog-article-3.png",
+//     title: "Project Management",
+//     shortDescription:
+//       "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
+//   },
+//   {
+//     imageUrl: "/images/blog-article-4.png",
+//     title: "Project Management",
+//     shortDescription:
+//       "The Top CIOs of 2023: Strategic Insights From the Industry’s Best",
+//   },
+//   {
+//     imageUrl: "/images/blog-article-5.png",
+//     title: "Project Management",
+//     shortDescription:
+//       "How to Create an Executive Dashboard: A Step- by-Step Guide",
+//   },
+//   {
+//     imageUrl: "/images/blog-article-6.png",
+//     title: "Project Management",
+//     shortDescription:
+//       "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
+//   },
+//   {
+//     imageUrl: "/images/blog-article-7.png",
+//     title: "Project Management",
+//     shortDescription:
+//       "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
+//   },
+//   {
+//     imageUrl: "/images/blog-article-8.png",
+//     title: "Project Management",
+//     shortDescription:
+//       "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
+//   },
+//   {
+//     imageUrl: "/images/blog-article-9.png",
+//     title: "Project Management",
+//     shortDescription:
+//       "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
+//   },
+// ];

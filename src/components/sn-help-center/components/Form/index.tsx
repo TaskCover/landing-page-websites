@@ -1,8 +1,21 @@
 import { FormControl, Stack, Input } from "@mui/material";
 import { ButtonCustom, Text, TextGradient } from "components/shared";
+import useBreakpoint from "hooks/useBreakpoint";
 import ArrowDownIcon from "icons/ArrowDownIcon";
+import SearchIcon from "icons/SearchIcon";
+import { useState } from "react";
 
 export const HelperForm = () => {
+  const {isMdSmaller} = useBreakpoint();
+  const [value, setValue] = useState("");
+  const handlerChangeValue = (e) => {
+    setValue(e.target.value);
+  }
+
+  const handlerSubmitForm = () => {
+    console.log("feedback", value);
+  }
+
   return (
     <Stack mt={{md: 15.5, xs: 6}} alignItems="center" pb={{md: 15, xs: 8}}>
       <TextGradient
@@ -21,9 +34,9 @@ export const HelperForm = () => {
           &#160;if you need help finding something.
         </Text>
       </TextGradient>
-      <FormControl sx={{ mt: 5 }}>
+      <FormControl sx={{ mt: 5 }} onSubmit={handlerSubmitForm}>
         <Stack
-          maxWidth={552}
+          width={{md: 552, xs: 342}}
           height={54}
           sx={{
             border: "1px solid #0575E6",
@@ -38,9 +51,11 @@ export const HelperForm = () => {
             disableUnderline
             sx={{ px: 2, color: "#4B5563" }}
             placeholder="Type your question"
+            onChange={handlerChangeValue}
+            value={value}
           />
-          <ButtonCustom className="MuiButton-primary" sx={{ px: 6 }}>
-            Search
+          <ButtonCustom onClick={handlerSubmitForm} className="MuiButton-primary" sx={{ px: {md: 6, xs: 2} }}>
+            {isMdSmaller ? <SearchIcon />  : "Search"}
           </ButtonCustom>
         </Stack>
       </FormControl>

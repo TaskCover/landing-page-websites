@@ -23,8 +23,8 @@ export const useCategoryBlog = () => {
         //   await dispatch(getAllBlogCategory());
         // },
         // [dispatch],
-        async (queries: GetBlogCategoryListQueries) => {
-          await dispatch(getAllBlogCategory(queries));
+        async (queries?: GetBlogCategoryListQueries) => {
+          await dispatch(getAllBlogCategory(queries ?? {}));
         },
         [dispatch],
       );
