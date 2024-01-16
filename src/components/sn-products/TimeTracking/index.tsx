@@ -10,8 +10,10 @@ import { Banner } from "../components/Banner";
 import { Partner } from "../components/Partner";
 import { ProductIntroduce } from "../components/ProductIntro";
 import { CreateProduct } from "../components/CreateProduct";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const ProductProject = () => {
+  const {isMdSmaller} = useBreakpoint();
   return (
     <Stack position="relative">
       <Stack
@@ -31,17 +33,17 @@ const ProductProject = () => {
       <HeaderProducts
         headingText={
           <Text
-            fontSize={{ md: 64, xs: 24 }}
+            fontSize={{ md: 47, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 500, xs: 700 }}
+            fontWeight={{ md: 600, xs: 700 }}
             mt={4}
           >
             Optimize your time management for
-            <br />
+            {!isMdSmaller && <br />}
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 500, xs: 700 }}
+              fontWeight={{ md: 600, xs: 700 }}
             >
               &#160;insightful and effective results.
             </TextGradient>
@@ -71,8 +73,8 @@ const ProductProject = () => {
         />
         <Container>
           <ProductIntroduce data={DATA} />
+          <Partner />
         </Container>
-        <Partner />
         <Container>
           <CreateProduct data={DATA_CREATE} />
         </Container>

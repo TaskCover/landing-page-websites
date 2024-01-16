@@ -5,12 +5,24 @@ import Image from "next/image";
 
 export const AboutTaskCoverAI = () => {
   return (
-    <Stack>
-      <Text component="div" fontSize={{ md: 40, xs: 24 }} fontWeight={600} textAlign="center" mb={{md: 10, xs: 0}}>
-        <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={600}>
-          TaskCover AI -
+    <Stack pt={{ md: 14, xs: 5 }}>
+      <Text
+        component="div"
+        fontSize={{ md: 40, xs: 24 }}
+        fontWeight={600}
+        textAlign="center"
+        mb={{ md: 10, xs: 0 }}
+      >
+        <TextGradient
+          component="span"
+          fontSize={{ md: 40, xs: 24 }}
+          fontWeight={600}
+          percentBlueColor={68.5}
+          percentGreenColor={128}
+        >
+          TaskCover AI -{" "}
         </TextGradient>
-        Revolutionizing Productivity
+        {" "}Revolutionizing Productivity
       </Text>
       <Stack
         direction="row"
@@ -19,30 +31,36 @@ export const AboutTaskCoverAI = () => {
         borderRadius={4}
         sx={{
           backgroundColor: "rgba(255, 255, 255, 0.40)",
+          border: "0.5px solid rgba(5, 117, 230, .3)"
         }}
         justifyContent="space-between"
         alignItems="center"
-        px={{md: 6, xs: 0}}
-        mt={{md: 6, xs: 3}}
+        px={{ md: 6, xs: 0 }}
+        mt={{ md: 6, xs: 3 }}
       >
         {DATA.map((data, index) => (
           <Link href={data.link} key={index}>
             <Stack alignItems="center">
               <Image src={data.icon} alt="project" width={24} height={24} />
-              <Text fontWeight={400} display={{md: "block", xs: "none"}}>{data.label}</Text>
+              <Text fontWeight={400} display={{ md: "block", xs: "none" }}>
+                {data.label}
+              </Text>
             </Stack>
           </Link>
         ))}
       </Stack>
 
-      <Stack mt={{md: 10, xs: 3}}>
+      <Stack mt={{ md: 10, xs: 3 }}>
         {ABOUT_DATA.map((data, index) => (
           <Stack
-            direction={{md: index % 2 === 0 ? "row" : "row-reverse", xs: "column"}}
+            direction={{
+              md: index % 2 === 0 ? "row" : "row-reverse",
+              xs: "column",
+            }}
             alignItems="center"
             spacing={3}
             key={index}
-            mb={{md: 16, xs: 7}}
+            mb={{ md: 16, xs: 7 }}
           >
             <Stack flex={1}>
               <Text fontWeight={500}>{data.title}</Text>
@@ -80,8 +98,12 @@ const ABOUT_DATA = [
         lineHeight={1}
         mb={4}
       >
-        <TextGradient component="span" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
-          Automate Campaign{ " "}
+        <TextGradient
+          component="span"
+          fontSize={{ md: 40, xs: 24 }}
+          fontWeight={500}
+        >
+          Automate Campaign{" "}
         </TextGradient>
         Process
       </Text>
@@ -95,13 +117,17 @@ const ABOUT_DATA = [
     title: "Notes & Docs",
     heading: (
       <Text
-      component="div"
+        component="div"
         fontSize={{ md: 40, xs: 24 }}
         fontWeight={500}
         lineHeight={1}
         mb={4}
       >
-        <TextGradient component="span" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
+        <TextGradient
+          component="span"
+          fontSize={{ md: 40, xs: 24 }}
+          fontWeight={500}
+        >
           Notes & Docs{" "}
         </TextGradient>
         Master
@@ -114,13 +140,17 @@ const ABOUT_DATA = [
     title: "Mind Maps",
     heading: (
       <Text
-      component="div"
+        component="div"
         fontSize={{ md: 40, xs: 24 }}
         fontWeight={500}
         lineHeight={1}
         mb={4}
       >
-        <TextGradient component="span" fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
+        <TextGradient
+          component="span"
+          fontSize={{ md: 40, xs: 24 }}
+          fontWeight={500}
+        >
           Intelligent{" "}
         </TextGradient>
         Mind Maps

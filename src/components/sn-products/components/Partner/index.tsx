@@ -13,7 +13,6 @@ export const Partner = () => {
       <Stack
         direction="row"
         justifyContent="center"
-        spacing={{md: 5, xs: 1}}
         flexWrap="wrap"
       >
         {DATA.map((data, index) => (

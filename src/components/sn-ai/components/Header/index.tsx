@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export const HeaderAI = () => {
   return (
-    <Stack position="relative" mt={{ md: 14, xs: 5 }} pb={{ md: 30, xs: 10 }}>
+    <Stack position="relative" pb={{ md: 30, xs: 10 }}>
       <Stack>
         <Image
           src="/images/header-ai.png"

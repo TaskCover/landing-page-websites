@@ -15,9 +15,12 @@ const UseCaseMarketingAgency = () => {
   return (
     <Stack>
       <Stack position="relative">
-      <Stack
+        <Stack
           sx={{
-            backgroundImage: {md: "url(/images/trust-center-bg.webp)", xs: "url(/images/bg-use-case-mobile.png)"},
+            backgroundImage: {
+              md: "url(/images/bg-use-case-header.png)",
+              xs: "url(/images/bg-use-case-header-mobile.png)",
+            },
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             width: "100%",
@@ -44,6 +47,8 @@ const UseCaseMarketingAgency = () => {
                   component="span"
                   fontSize={{ md: 36, xs: 20 }}
                   fontWeight={600}
+                  percentBlueColor={13.8}
+                  percentGreenColor={135.38}
                 >
                   Marketing Excellence
                 </TextGradient>
@@ -80,7 +85,7 @@ const UseCaseMarketingAgency = () => {
       </Stack>
 
       <Stack position="relative">
-      <Stack
+        <Stack
           sx={{
             backgroundImage: "url(/images/bg-use-case.webp)",
             backgroundSize: "cover",

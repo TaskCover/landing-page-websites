@@ -31,17 +31,18 @@ const ProductProject = () => {
       <HeaderProducts
         headingText={
           <Text
-            fontSize={{ md: 64, xs: 24 }}
+            fontSize={{ md: 42, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 500, xs: 700 }}
+            fontWeight={{ md: 600, xs: 700 }}
             mt={4}
           >
-            Discover specific tactics and expertise to empower
-            <br />
+            Discover specific tactics and expertise to empower <br/>
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 500, xs: 700 }}
+              fontWeight={{ md: 600, xs: 700 }}
+              percentBlueColor={43.8}
+              percentGreenColor={74.38}
             >
               &#160;your financial decisions with confidence and accuracy.
             </TextGradient>
@@ -70,8 +71,9 @@ const ProductProject = () => {
         />
         <Container>
           <ProductIntroduce data={DATA} />
+          <Partner />
         </Container>
-        <Partner />
+
         <Container>
           <CreateProduct data={DATA_CREATE} />
         </Container>

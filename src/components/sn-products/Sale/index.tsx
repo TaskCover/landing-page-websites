@@ -10,8 +10,10 @@ import { Banner } from "../components/Banner";
 import { Partner } from "../components/Partner";
 import { ProductIntroduce } from "../components/ProductIntro";
 import { CreateProduct } from "../components/CreateProduct";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const ProductSale = () => {
+  const { isMdSmaller } = useBreakpoint();
   return (
     <Stack position="relative">
       <Stack
@@ -31,19 +33,20 @@ const ProductSale = () => {
       <HeaderProducts
         headingText={
           <Text
-            fontSize={{ md: 64, xs: 24 }}
+            fontSize={{ md: 47, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 500, xs: 700 }}
+            fontWeight={{ md: 600, xs: 700 }}
             mt={4}
           >
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 500, xs: 700 }}
+              fontWeight={{ md: 600, xs: 700 }}
             >
               Effectively tracked customer journey
             </TextGradient>
-            &#160;for the best retention practices security.
+            &#160;for{!isMdSmaller && <br />} the best retention practices
+            security.
             <br />
           </Text>
         }
@@ -70,10 +73,11 @@ const ProductSale = () => {
         />
         <Container>
           <ProductIntroduce data={DATA} />
+          <Stack mt={{ md: 15, xs: 5 }}>
+            <Partner />
+          </Stack>
         </Container>
-        <Stack mt={{ md: 15, xs: 5 }}>
-          <Partner />
-        </Stack>
+
         <Container>
           <CreateProduct data={DATA_CREATE} />
         </Container>
@@ -108,21 +112,21 @@ const DATA_CREATE = [
       </Text>
     ),
     imageUrl: "/images/create-sale-1.png",
-    imageMobile: "/images/create-sale-mobile-1.png"
+    imageMobile: "/images/create-sale-mobile-1.png",
   },
   {
     heading: "",
     imageUrl: "/images/create-sale-2.png",
-    imageMobile: "/images/create-sale-mobile-2.png"
+    imageMobile: "/images/create-sale-mobile-2.png",
   },
   {
     heading: "",
     imageUrl: "/images/create-sale-3.png",
-    imageMobile: "/images/create-sale-mobile-3.png"
+    imageMobile: "/images/create-sale-mobile-3.png",
   },
   {
     heading: "",
     imageUrl: "/images/create-sale-4.png",
-    imageMobile: "/images/create-sale-mobile-4.png"
+    imageMobile: "/images/create-sale-mobile-4.png",
   },
 ];

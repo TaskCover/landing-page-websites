@@ -31,15 +31,15 @@ const ProductResource = () => {
       <HeaderProducts
         headingText={
           <Text
-            fontSize={{ md: 64, xs: 24 }}
+            fontSize={{ md: 47, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 500, xs: 700 }}
+            fontWeight={{ md: 600, xs: 700 }}
             mt={4}
           >
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 500, xs: 700 }}
+              fontWeight={{ md: 600, xs: 700 }}
             >
               Ensure the success of the project or task
             </TextGradient>
@@ -50,7 +50,7 @@ const ProductResource = () => {
         subText="Try Resource Planning within TaskCover"
         imageUrl="/images/resource-product-header.png"
       />
-    <Container>
+      <Container>
         <Banner />
       </Container>
       <Stack position="relative">
@@ -70,10 +70,11 @@ const ProductResource = () => {
         />
         <Container>
           <ProductIntroduce data={DATA} />
+          <Stack mt={{ md: 15, xs: 5 }}>
+            <Partner />
+          </Stack>
         </Container>
-        <Stack mt={{ md: 15, xs: 5 }}>
-          <Partner />
-        </Stack>
+
         <Container>
           <CreateProduct data={DATA_CREATE} />
         </Container>
@@ -94,7 +95,7 @@ export default memo(ProductResource);
 const DATA = [
   {
     imageUrl: "/images/resource-product-1.png",
-    imageMobile: "/images/resource-product-mobile-1.png"
+    imageMobile: "/images/resource-product-mobile-1.png",
   },
 ];
 
@@ -102,6 +103,6 @@ const DATA_CREATE = [
   {
     heading: "",
     imageUrl: "/images/create-resource-1.png",
-    imageMobile: "/images/create-resource-mobile-1.png"
+    imageMobile: "/images/create-resource-mobile-1.png",
   },
 ];

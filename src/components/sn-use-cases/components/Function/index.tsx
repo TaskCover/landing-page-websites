@@ -4,16 +4,28 @@ import useBreakpoint from "hooks/useBreakpoint";
 import Image from "next/image";
 
 export const FunctionUseCase = () => {
-    const {isMdSmaller} = useBreakpoint();
+  const { isMdSmaller } = useBreakpoint();
   return (
     <Stack
-      sx={{ background: "#EEF2FF", borderRadius: 5, py: {md: 5, xs: 1}, px: {md: 5, xs: 1} }}
-      mt={{md: 10, xs: 4}}
+      sx={{
+        background: "#EEF2FF",
+        borderRadius: 5,
+        py: { md: 5, xs: 1 },
+        px: { md: 5, xs: 1 },
+      }}
+      mt={{ md: 10, xs: 4 }}
     >
-      <TextGradient mb={5} fontSize={{ md: 40, xs: 24 }} textAlign="center">
+      <TextGradient
+        mb={5}
+        fontWeight={600}
+        fontSize={{ md: 40, xs: 24 }}
+        textAlign="center"
+        percentBlueColor={43.8}
+        percentGreenColor={61.38}
+      >
         Other functions
       </TextGradient>
-      <Grid container spacing={{md: 5.375, xs: 1}}>
+      <Grid container spacing={{ md: 5.375, xs: 1 }}>
         {DATA.map((data, index) => (
           <Grid item md={3} xs={6} key={index}>
             <Stack
@@ -23,8 +35,8 @@ export const FunctionUseCase = () => {
                   ? "linear-gradient(90deg, #0575E6, #38E27B)"
                   : "#fff",
                 borderRadius: 4,
-                px: {md: 5, xs: 1},
-                py: {md: 5, xs: 1},
+                px: { md: 5, xs: 1 },
+                py: { md: 5, xs: 1 },
                 alignItems: "center",
               }}
             >

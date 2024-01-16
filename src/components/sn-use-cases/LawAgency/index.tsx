@@ -12,11 +12,14 @@ import { ResourceUseCase } from "../components/Resource";
 
 const UseCaseLawAgency = () => {
   return (
-    <Stack position="relative">
-      <Stack>
-      <Stack
+    <Stack>
+      <Stack position="relative">
+        <Stack
           sx={{
-            backgroundImage: {md: "url(/images/trust-center-bg.webp)", xs: "url(/images/bg-use-case-mobile.png)"},
+            backgroundImage: {
+              md: "url(/images/bg-use-case-header.png)",
+              xs: "url(/images/bg-use-case-header-mobile.png)",
+            },
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             width: "100%",
@@ -38,12 +41,8 @@ const UseCaseLawAgency = () => {
                 fontWeight={600}
                 my={4}
               >
-                Optimize process on a {" "}
-                <TextGradient
-                  component="span"
-                  fontSize={{ md: 36, xs: 20 }}
-                  fontWeight={600}
-                >
+                Optimize process on a{" "}
+                <TextGradient fontSize={{ md: 36, xs: 20 }} fontWeight={600}>
                   project by project basis
                 </TextGradient>
               </Text>
@@ -51,7 +50,6 @@ const UseCaseLawAgency = () => {
             content={`Taskcover boosts your efficacy significantly for every software project along with conceptualizing the software operation in simple steps`}
           />
         </Container>
-        <PartnerUseCase />
         <Container>
           <BenefitUseCase
             data={DATA_BENEFIT}
@@ -179,7 +177,16 @@ const DATA_ACCELERATE = [
         >
           Optimize legal process{" "}
         </TextGradient>
-        and tasks with clients using AI
+        and tasks with clients
+        <TextGradient
+          component="span"
+          fontSize={{ md: 36, xs: 20 }}
+          fontWeight={600}
+          percentGreenColor={140.38}
+        >
+          {" "}
+          using AI
+        </TextGradient>
       </Text>
     ),
     content: `TaskCover AI agent automates analyzing legal documents, extract crucial information, and predict case outcomes. Drive distinct case success with AI record meetings .`,

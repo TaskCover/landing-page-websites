@@ -31,15 +31,15 @@ const ProductChat = () => {
       <HeaderProducts
         headingText={
           <Text
-            fontSize={{ md: 64, xs: 24 }}
+            fontSize={{ md: 47, xs: 24 }}
             textAlign="center"
-            fontWeight={{ md: 500, xs: 700 }}
+             fontWeight={{ md: 600, xs: 700 }}
             mt={4}
           >
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 500, xs: 700 }}
+               fontWeight={{ md: 600, xs: 700 }}
             >
               Deliver real-time communication,
             </TextGradient>
@@ -73,8 +73,9 @@ const ProductChat = () => {
           <Stack mb={{md: 14, xs: 5}}>
           <ProductIntroduce data={DATA} />
           </Stack>
+          <Partner />
         </Container>
-        <Partner />
+  
         <Container>
           <CreateProduct data={DATA_CREATE} />
         </Container>

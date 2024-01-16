@@ -23,7 +23,16 @@ export const ResourceUseCase = () => {
   }, []);
   return (
     <Stack mt={12}>
-      <TextGradient textAlign="center">Resources</TextGradient>
+      <TextGradient
+        textAlign="center"
+        fontWeight={600}
+        fontSize={{ md: 20, xs: 16 }}
+        mb={{md: 3, xs: 1}}
+        percentBlueColor={48.8}
+        percentGreenColor={51.38}
+      >
+        Resources
+      </TextGradient>
       <Text
         fontSize={{ md: 36, xs: 20 }}
         fontWeight={700}

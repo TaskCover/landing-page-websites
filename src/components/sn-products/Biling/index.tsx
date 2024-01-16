@@ -10,8 +10,10 @@ import { Banner } from "../components/Banner";
 import { Partner } from "../components/Partner";
 import { ProductIntroduce } from "../components/ProductIntro";
 import { CreateProduct } from "../components/CreateProduct";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const ProductChat = () => {
+  const {isMdSmaller} = useBreakpoint();
   return (
     <Stack position="relative">
       <Stack
@@ -31,17 +33,18 @@ const ProductChat = () => {
       <HeaderProducts
         headingText={
           <Text
-            fontSize={{ md: 64, xs: 24 }}
+            fontSize={{ md: 47, xs: 24 }}
             textAlign="center"
-            fontWeight={{ md: 500, xs: 700 }}
+            fontWeight={{ md: 600, xs: 700 }}
             mt={4}
           >
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 500, xs: 700 }}
+              fontWeight={{ md: 600, xs: 700 }}
             >
               Easily generated invoices and tracked
+              {!isMdSmaller && <br/>}
             </TextGradient>
             &#160;billable time to save time.
             <br />
@@ -70,8 +73,8 @@ const ProductChat = () => {
         />
         <Container>
           <ProductIntroduce data={DATA} isHeading />
+          <Partner />
         </Container>
-        <Partner />
         <Container>
           <CreateProduct data={DATA_CREATE} />
         </Container>

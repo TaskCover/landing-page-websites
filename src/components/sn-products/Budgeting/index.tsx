@@ -31,7 +31,7 @@ const ProductBudgeting = () => {
       <HeaderProducts
         headingText={
           <Text
-            fontSize={{ md: 64, xs: 24 }}
+            fontSize={{ md: 45, xs: 24 }}
             textAlign="center"
             fontWeight={{ md: 500, xs: 700 }}
             mt={4}
@@ -41,8 +41,10 @@ const ProductBudgeting = () => {
               component="span"
               fontSize="inherit"
               fontWeight={{ md: 500, xs: 700 }}
+              percentBlueColor={27.8}
+              percentGreenColor={56.30}
             >
-              &#160;efficient and effective attainment,
+              &#160;efficient and effective attainment{" "}
             </TextGradient>
             <Text
               component="span"
@@ -51,13 +53,6 @@ const ProductBudgeting = () => {
             >
               of project objectives
             </Text>
-            <TextGradient
-              component="span"
-              fontSize="inherit"
-              fontWeight={{ md: 500, xs: 700 }}
-            >
-              &#160;Way.
-            </TextGradient>
           </Text>
         }
         subText="Try out Budgeting within TaskCover"
@@ -83,8 +78,8 @@ const ProductBudgeting = () => {
         />
         <Container>
           <ProductIntroduce data={DATA} />
+          <Partner />
         </Container>
-        <Partner />
         <Container>
           <CreateProduct data={DATA_CREATE} />
         </Container>

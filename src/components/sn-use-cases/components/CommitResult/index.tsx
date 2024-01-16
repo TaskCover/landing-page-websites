@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export const UseCaseCommitResult = () => {
   return (
-    <Stack>
+    <Stack mt={{ md: 12, xs: 3 }}>
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
@@ -13,12 +13,21 @@ export const UseCaseCommitResult = () => {
         my={4}
         textAlign="center"
       >
-        From ideation and script writing will be{" "}
-        <TextGradient fontSize={{ md: 36, xs: 20 }} fontWeight={600}>
+        A commitment about the result{" "}
+        <TextGradient
+          fontSize={{ md: 36, xs: 20 }}
+          fontWeight={600}
+          percentBlueColor={28.8}
+          percentGreenColor={59.38}
+        >
           Taskcover assists you gain the achievements
         </TextGradient>
       </Text>
-      <Stack direction={{ md: "row", xs: "column" }} spacing={5} flexWrap="wrap">
+      <Stack
+        direction={{ md: "row", xs: "column" }}
+        spacing={5}
+        flexWrap="wrap"
+      >
         {DATA.map((data, index) => (
           <Stack
             flex={0.6}

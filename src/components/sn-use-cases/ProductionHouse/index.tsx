@@ -18,7 +18,10 @@ const UseCaseProductionHouse = () => {
       <Stack position="relative">
         <Stack
           sx={{
-            backgroundImage: {md: "url(/images/trust-center-bg.webp)", xs: "url(/images/bg-use-case-mobile.png)"},
+            backgroundImage: {
+              md: "url(/images/bg-use-case-header.png)",
+              xs: "url(/images/bg-use-case-header-mobile.png)",
+            },
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             width: "100%",
@@ -42,7 +45,6 @@ const UseCaseProductionHouse = () => {
               >
                 A supportive companion for{" "}
                 <TextGradient
-                  component="span"
                   fontSize={{ md: 36, xs: 20 }}
                   fontWeight={600}
                 >

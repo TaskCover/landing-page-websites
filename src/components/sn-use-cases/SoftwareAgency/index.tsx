@@ -12,16 +12,18 @@ import { HelperSendMail } from "components/sn-help-center/components/SendMail";
 import { Text, TextGradient } from "components/shared";
 import { ResultUseCase } from "../components/Result";
 import { UseCaseCommitResult } from "../components/CommitResult";
+import useBreakpoint from "hooks/useBreakpoint";
 
 const UseCaseSoftwareAgency = () => {
+  const {isMdSmaller} = useBreakpoint();
   return (
     <Stack>
       <Stack position="relative">
         <Stack
           sx={{
             backgroundImage: {
-              md: "url(/images/trust-center-bg.webp)",
-              xs: "url(/images/bg-use-case-mobile.png)",
+              md: "url(/images/bg-use-case-header.png)",
+              xs: "url(/images/bg-use-case-header-mobile.png)",
             },
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
@@ -45,6 +47,7 @@ const UseCaseSoftwareAgency = () => {
                 my={4}
               >
                 Optimize process on a{" "}
+                {!isMdSmaller && <br/>}
                 <TextGradient
                   component="span"
                   fontSize={{ md: 36, xs: 20 }}

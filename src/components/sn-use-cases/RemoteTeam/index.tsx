@@ -18,7 +18,10 @@ const UseCaseRemoteTeam = () => {
       <Stack position="relative">
       <Stack
           sx={{
-            backgroundImage: {md: "url(/images/trust-center-bg.webp)", xs: "url(/images/bg-use-case-mobile.png)"},
+            backgroundImage: {
+              md: "url(/images/bg-use-case-header.png)",
+              xs: "url(/images/bg-use-case-header-mobile.png)",
+            },
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             width: "100%",
@@ -53,7 +56,6 @@ const UseCaseRemoteTeam = () => {
             content={`Taskcover boosts your efficacy significantly for every software project along with conceptualizing the software operation in simple steps`}
           />
         </Container>
-        <PartnerUseCase />
         <Container>
           <BenefitUseCase
             data={DATA_BENEFIT}
@@ -65,7 +67,6 @@ const UseCaseRemoteTeam = () => {
                 fontWeight={600}
               >
                 <TextGradient
-                  component="span"
                   fontSize={{ md: 40, xs: 24 }}
                   fontWeight={600}
                 >

@@ -31,17 +31,17 @@ const ProductDocument = () => {
       <HeaderProducts
         headingText={
           <Text
-            fontSize={{ md: 64, xs: 24 }}
+            component="div"
+            fontSize={{ md: 47, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 500, xs: 700 }}
+            fontWeight={{ md: 600, xs: 700 }}
             mt={4}
           >
-            Generate and store documents in various formats
-            <br /> based on
+            Generate and store documents in various formats based on
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 500, xs: 700 }}
+              fontWeight={{ md: 600, xs: 700 }}
             >
               &#160;all your needs and preferences
             </TextGradient>
@@ -71,10 +71,11 @@ const ProductDocument = () => {
         />
         <Container>
           <ProductIntroduce data={DATA} />
+          <Stack mt={{ md: 15, xs: 5 }}>
+            <Partner />
+          </Stack>
         </Container>
-        <Stack mt={{ md: 15, xs: 5 }}>
-          <Partner />
-        </Stack>
+
         <Container>
           <CreateProduct data={DATA_CREATE} />
         </Container>
@@ -102,16 +103,16 @@ const DATA_CREATE = [
   {
     heading: "",
     imageUrl: "/images/create-doc-1.png",
-    imageMobile: "/images/create-doc-mobile-1.png"
+    imageMobile: "/images/create-doc-mobile-1.png",
   },
   {
     heading: "",
     imageUrl: "/images/create-doc-2.png",
-    imageMobile: "/images/create-doc-mobile-2.png"
+    imageMobile: "/images/create-doc-mobile-2.png",
   },
   {
     heading: "",
     imageUrl: "/images/create-doc-3.png",
-    imageMobile: "/images/create-doc-mobile-1.png"
+    imageMobile: "/images/create-doc-mobile-1.png",
   },
 ];

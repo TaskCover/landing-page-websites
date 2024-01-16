@@ -12,7 +12,7 @@ type HeaderUseCaseProps = {
 export const HeaderUseCase = (props: HeaderUseCaseProps) => {
   const {title, headings, content} = props;
   return (
-    <Stack direction={{md: "row", xs: "column"}} spacing={6.5}>
+    <Stack direction={{md: "row", xs: "column"}} spacing={6.5} pt={{md: 10, xs: 2}}>
       <Stack flex={1}>
         <TextGradient>TaskCover | Marketing Agency</TextGradient>
         {headings}

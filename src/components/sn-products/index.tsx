@@ -27,7 +27,7 @@ const Products = () => {
       <HeaderProducts
         headingText={
           <Text
-            fontSize={{ md: 64, xs: 24 }}
+          fontSize={{ md: 55, xs: 24 }}
             textAlign="center"
             fontWeight={{ md: 500, xs: 700 }}
             mt={4}

@@ -15,19 +15,21 @@ type AccelerateUseCaseProps = {
 export const AccelerateUseCase = (props: AccelerateUseCaseProps) => {
   const { data } = props;
   return (
-    <Stack mt={15}>
+    <Stack mt={7}>
       {data.map((data, index) => (
         <Stack
           direction={{
             md: index % 2 === 0 ? "row" : "row-reverse",
             xs: "column",
           }}
-          spacing={{md: 6.5, xs: 3}}
+          spacing={{ md: 6.5, xs: 3 }}
           key={index}
-          mb={{md: 20, xs: 10}}
+          mb={{ md: 20, xs: 10 }}
         >
           <Stack flex={1}>
-            <TextGradient>{data.title}</TextGradient>
+            <TextGradient fontWeight={600} fontSize={{ md: 20, xs: 16 }} mb={3}>
+              {data.title}
+            </TextGradient>
             {data.heading && data.heading}
             <Text mb={4}>{data.content}</Text>
             <ButtonCustom
@@ -52,7 +54,7 @@ export const AccelerateUseCase = (props: AccelerateUseCaseProps) => {
             <Stack
               sx={{
                 position: "absolute",
-                top: "36%",
+                top: "29%",
                 left: "52%",
                 transform: "translate(-52%, -36%)",
                 width: 50,
@@ -78,7 +80,9 @@ export const AccelerateUseCase = (props: AccelerateUseCaseProps) => {
                 }}
                 alt="play-image"
               />
-              <Text width={80} color="#fff">Play video</Text>
+              <Text width={80} color="#fff">
+                Play video
+              </Text>
             </Stack>
           </Stack>
         </Stack>
