@@ -16,18 +16,24 @@ const MoreInfo = (props: MoreInfoProps) => {
             sx={{
                 position: "relative"
             }}>
-            <Image src={SendMailBg} alt="" 
-            style={{
-                height: "201px",
-                width: "auto",
-                position: "absolute",
-                bottom: "5%",
-                right: "10%",
-            }} />
+            <Image src={SendMailBg} alt=""
+                style={{
+                    height: "201px",
+                    width: "auto",
+                    position: "absolute",
+                    bottom: "5%",
+                    right: "10%",
+                }} />
             <Stack
                 sx={sectionContainerSx}
             >
-
+                <Stack display={{ xs: "none", md: "flex" }} width="100%" mb="40px">
+                    <Text variant="h3" sx={{
+                        textAlign: "center"
+                    }}>
+                        For More Information
+                    </Text>
+                </Stack>
                 <Stack
                     sx={{
                         backgroundImage: `url(/images/bg-send-question-product${isMdSmaller ? "-mobile" : ""
@@ -46,7 +52,16 @@ const MoreInfo = (props: MoreInfoProps) => {
                         mr={{ md: 3, xs: 0 }}
                         alignItems={{ md: "flex-start", xs: "center" }}
                     >
-
+                        <Stack display={{ xs: "flex", md: "none" }} width="100%" mb="24px">
+                            <Text variant="h4" sx={{
+                                fontSize: "24px",
+                                textAlign: "center",
+                                color: "#fff",
+                                fontWeight: 600
+                            }}>
+                                For More Information
+                            </Text>
+                        </Stack>
                         <Input
                             placeholder="Full name"
                             disableUnderline
@@ -114,7 +129,7 @@ const sectionContainerSx = {
     width: "100%",
     m: "0 auto",
     maxWidth: "1200px",
-    p: { xs: "40px 16px 60px", md: "60px 0px 120px" },
+    p: { xs: "40px 16px 60px", md: "100px 0px 120px" },
     position: 'relative',
 };
 
