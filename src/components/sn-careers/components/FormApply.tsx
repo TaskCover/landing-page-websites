@@ -60,6 +60,8 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 const FormApply = (props: FormApplyProps) => {
   const [value, setValue] = useState();
 
+  const onSubmit = () => {};
+
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema,
@@ -93,10 +95,12 @@ const FormApply = (props: FormApplyProps) => {
   const handleFileUpload = (key, e) => {
     const selectedImage = e.target.files[0];
     const imageUrl = URL.createObjectURL(selectedImage);
-    console.log(imageUrl, "--imageUrl--");
+    console.log(key, "--key---");
 
     formik.setFieldValue(key, imageUrl);
   };
+
+  console.log(formik.values, "--formik.values---");
 
   return (
     <Stack
@@ -203,7 +207,9 @@ const FormApply = (props: FormApplyProps) => {
                         onChange={(newValue) =>
                           onChangeField(form.key, newValue)
                         }
-                        inputComponent={CustomPhoneInput}
+                        containerStyle={{}}
+                        inputStyle={{}}
+                        // inputComponent={CustomPhoneInput}
                         style={
                           {
                             // height: "1.5em",
@@ -245,7 +251,8 @@ const FormApply = (props: FormApplyProps) => {
                             alt="Selected"
                             style={{
                               height: "100px",
-                              width: "auto",
+                              width: "100px",
+                              objectFit: "cover",
                             }}
                           />
                           {/* <Image
@@ -277,6 +284,20 @@ const FormApply = (props: FormApplyProps) => {
           </>
         );
       })}
+      <Stack width="100%" alignItems="end">
+        <Button
+          sx={{
+            p: "12px 24px",
+            background: "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+            width: { xs: "105px", md: "130px" },
+            mb: "24px",
+          }}
+        >
+          <Text variant="h5" color="#fff" onClick={onSubmit}>
+            Submit
+          </Text>
+        </Button>
+      </Stack>
     </Stack>
   );
 };
@@ -326,7 +347,7 @@ const INITIAL_VALUES = {
   gentle: Gentle_list[0].value,
   email: "",
   phone_number: "",
-  your_resume: "true",
-  attachment: "",
+  your_resume: null,
+  attachment: null,
   portfolio: "",
 };

@@ -170,6 +170,11 @@ a {
   transition: background-color 0.3s ease;
 }
 
+.PhoneInputInput {
+  height: 40px !important;
+  border: 1px solid #03b2cb;
+}
+
 @media screen and (max-width: 767px) {
   .swiper-button-prev,
   .swiper-rtl .swiper-button-next,

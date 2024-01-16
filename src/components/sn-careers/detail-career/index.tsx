@@ -182,6 +182,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                   width: { xs: "105px", md: "130px" },
                   mb: "24px",
                 }}
+                onClick={() => setShowForm(!showForm)}
               >
                 <Text variant="h5" color="#fff">
                   Apply now
