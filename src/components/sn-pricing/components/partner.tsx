@@ -37,6 +37,13 @@ const Partner = (props: PartnerProps) => {
                     gridTemplateColumns={{ xs: "repeat(2,1fr)", md: "repeat(4,1fr)" }}
                     width="100%"
                     gap={{ xs: "24px", md: "40px" }}
+                    // sx={{
+                    //     gridTemplateColumns: "repeat(4, 1fr)",
+                    //     ":nth-child(2)": {
+                    //         gridTemplateColumns: "repeat(3, 1fr)",
+                    //         justifyContent: "center"
+                    //     }
+                    // }}
                 >
                     {
                         ListArticles.map((e, i) => (
@@ -47,7 +54,8 @@ const Partner = (props: PartnerProps) => {
                                     boxShadow: " 0px 0px 12px 0px rgba(170, 198, 245, 0.40)",
                                     justifyContent: "center",
                                     alignItems: "center",
-                                    p: { xs: "12px 25px", md: "32px 54px" }
+                                    p: { xs: "12px 25px", md: "32px 54px" },
+
                                 }}>
                                 <Image src={e} alt="image"
                                     width={isMdSmaller ? 62 : 120} />
