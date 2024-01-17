@@ -20,22 +20,21 @@ const FullyObtimizeLayout = (props: FullyObtimizeLayoutProps) => {
                 <Stack flexDirection={{ xs: "column", md: "row" }} gap="8px">
                     <Text
                         variant={{ xs: "h3", md: "h1" }}
-                        fontWeight={500}
-                        sx={{
+                        sx={[textHeadSx, {
                             background:
                                 "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
                             backgroundClip: "text",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent",
                             textAlign: "center",
-                        }}
+                        }]}
                     >
                         Fully optimize
                     </Text>
-                    <Text variant={{ xs: "h3", md: "h1" }} fontWeight={500} sx={{
-                        textAlign: "center",
-
-                    }}>
+                    <Text variant={{ xs: "h3", md: "h1" }}
+                        sx={[textHeadSx, {
+                            textAlign: "center",
+                        }]}>
                         your financial process
                     </Text>
                 </Stack>
@@ -128,9 +127,9 @@ const sectionContainerSx = {
 };
 
 const textHeadSx = {
-    lineHeight: { xs: "60px", md: "72px" },
-    fontSize: { xs: "48px", md: "72px" },
-    fontWeight: 700,
+    lineHeight: { xs: "32px", md: "48px" },
+    fontSize: { xs: "24px", md: "40px" },
+    fontWeight: 500,
 };
 
 const btnGetStartedSx = {

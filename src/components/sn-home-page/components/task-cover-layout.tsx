@@ -18,24 +18,23 @@ const TaskCoverLayout = (props: TaskCoverLayoutProps) => {
             <Stack
                 sx={sectionContainerSx}
             >
-                <Text variant={{ xs: "h3", md: "h1" }} fontWeight={500} style={{ textAlign: "center" }}>
+                <Text variant={{ xs: "h3", md: "h1" }} sx={textHeadSx}>
                     TaskCover - A platform to
                 </Text>
                 <Stack flexDirection={{ xs: "column", md: "row" }} gap={{ xs: "4px", md: "8px" }}>
-                    <Text variant={{ xs: "h3", md: "h1" }} fontWeight={500} style={{ textAlign: "center" }}>
+                    <Text variant={{ xs: "h3", md: "h1" }} sx={textHeadSx}>
                         empower
                     </Text>
                     <Text
                         variant={{ xs: "h3", md: "h1" }}
-                        fontWeight={500}
-                        sx={{
+                        sx={[textHeadSx, {
                             background:
                                 "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
                             backgroundClip: "text",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent",
                             textAlign: "center",
-                        }}
+                        }]}
                     >
                         your agency success
                     </Text>
@@ -84,7 +83,7 @@ const TaskCoverLayout = (props: TaskCoverLayoutProps) => {
                                     <Text variant={{ xs: "h3", md: "h1" }} fontSize={{ xs: "36px", md: "64px" }} lineHeight={{ xs: "36px", md: "72px" }} color="#fff" >
                                         2/3
                                     </Text>
-                                    <Text variant="overline" fontWeight={600} fontSize={{ xs: "11px", md: "12px" }} color="rgba(255,255,255,.6)" sx={{ textTransform: "none" }}>
+                                    <Text variant="overline" fontWeight={600} fontSize={{ xs: "11px", md: "18px" }} color="rgba(255,255,255,.6)" sx={{ textTransform: "none" }}>
                                         {item.desc}
                                     </Text>
                                 </Stack>
@@ -112,7 +111,7 @@ const TaskCoverLayout = (props: TaskCoverLayoutProps) => {
                                             %
                                         </Text>
                                     </Stack>
-                                    <Text variant="overline" fontSize={{ xs: "11px", md: "12px" }} fontWeight={600} color="rgba(0,0,0,.6)" sx={{ textTransform: "none", textAlign: "center" }}>
+                                    <Text variant="overline" fontSize={{ xs: "11px", md: "18px" }} fontWeight={600} color="rgba(0,0,0,.6)" sx={{ textTransform: "none", textAlign: "center" }}>
                                         {item.desc}
                                     </Text>
                                 </Stack>
@@ -138,4 +137,11 @@ const sectionContainerSx = {
     maxWidth: "1200px",
     p: { xs: "40px 16px 60px", md: "60px 0px 120px" },
     zIndex: 10,
+};
+
+const textHeadSx = {
+    lineHeight: { xs: "32px", md: "48px" },
+    fontSize: { xs: "24px", md: "40px" },
+    fontWeight: 500,
+    textAlign: "center",
 };

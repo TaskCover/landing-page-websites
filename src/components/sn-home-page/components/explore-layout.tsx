@@ -25,23 +25,23 @@ const ExploreLayout = (props: ExploreLayoutProps) => {
           <Text
             variant={{ xs: "h3", md: "h1" }}
             fontWeight={500}
-            style={{
+            sx={[textHeadSx, {
               textAlign: "center",
-            }}
+            }]}
           >
             Explore how we
           </Text>
           <Text
             variant={{ xs: "h3", md: "h1" }}
             fontWeight={500}
-            sx={{
+            sx={[textHeadSx, {
               background:
                 "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
               backgroundClip: "text",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               textAlign: "center",
-            }}
+            }]}
           >
             Cover your Tasks
           </Text>
@@ -67,7 +67,7 @@ const ExploreLayout = (props: ExploreLayoutProps) => {
             {ExploreLayoutTab.map((item, index) => (
               <Stack
                 key={index}
-                p={{ xs: "8px 16px", md: "12px 20px" }}
+                p={{ xs: "8px 12px", md: "12px 16px" }}
                 borderRadius="30px"
                 justifyContent="center"
                 alignItems="center"
@@ -88,6 +88,7 @@ const ExploreLayout = (props: ExploreLayoutProps) => {
                 <Text
                   variant="h6"
                   fontSize={{ xs: "12px", md: "14px" }}
+                  fontWeight={500}
                   sx={[
                     activeTab.id == index + 1
                       ? { color: "#5C98F6" }
@@ -120,23 +121,30 @@ const ExploreLayout = (props: ExploreLayoutProps) => {
               alignItems="start"
               mt="16px"
             >
-              <Text
-                variant={{ xs: "caption", md: "body2" }}
-                fontWeight={400}
-                sx={{
-                  background:
-                    "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
+              <Stack
+                gap={{ xs: "6px", md: "8px" }}
+
               >
-                {activeTab.label}
-              </Text>
-              <Text variant={{ xs: "h3", md: "h2" }} fontWeight={500}>
-                Effectively achieve <br />
-                project’s goals
-              </Text>
+                <Text
+                  variant={{ xs: "caption", md: "body2" }}
+                  fontWeight={400}
+                  sx={{
+                    background:
+                      "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  {activeTab.label}
+                </Text>
+                <Text variant={{ xs: "h3", md: "h2" }}
+                  fontSize={{ xs: "24px", md: "32px" }}
+                  lineHeight={{ xs: "32px", md: "40px" }}
+                  fontWeight={700}>
+                  {activeTab.title}
+                </Text>
+              </Stack>
               <Stack gap="8px">
                 {activeTab.desc.map((e) => (
                   <Text
@@ -152,7 +160,7 @@ const ExploreLayout = (props: ExploreLayoutProps) => {
 
               <Button
                 className="MuiButton-primary"
-                sx={{ flexDirection: "row", gap: "8px", width: "120px" }}
+                sx={{ flexDirection: "row", gap: "8px", width: "120px", p: "12px 24px" }}
               >
                 Explore more
                 <Image
@@ -198,4 +206,10 @@ const sectionContainerSx = {
 const activeTabExploreSx = {
   background: "#fff",
   boxShadow: "0px 0px 2px 2px rgba(255, 255, 255, 0.60)",
+};
+
+const textHeadSx = {
+  lineHeight: { xs: "32px", md: "48px" },
+  fontSize: { xs: "24px", md: "40px" },
+  fontWeight: 500,
 };

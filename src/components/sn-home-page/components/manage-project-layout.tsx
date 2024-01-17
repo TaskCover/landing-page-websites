@@ -25,24 +25,23 @@ const ManageProjectLayout = (props: ManageProjectLayoutProps) => {
             <Stack
                 sx={sectionContainerSx}
             >
-                <Text variant={{ xs: "h3", md: "h1" }} fontWeight={500} sx={{ textAlign: "center" }} >
+                <Text variant={{ xs: "h3", md: "h1" }} sx={[textHeadSx, { textAlign: "center" }]} >
                     Manage the project effectively to
                 </Text>
                 <Stack flexDirection="row" gap="8px">
-                    <Text variant={{ xs: "h3", md: "h1" }} fontWeight={500} sx={{ textAlign: "center" }}>
+                    <Text variant={{ xs: "h3", md: "h1" }} fontWeight={500} sx={[textHeadSx, { textAlign: "center" }]}>
                         achieve
                     </Text>
                     <Text
                         variant={{ xs: "h3", md: "h1" }}
-                        fontWeight={500}
-                        sx={{
+                        sx={[textHeadSx, {
                             background:
                                 "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
                             backgroundClip: "text",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent",
                             textAlign: "center"
-                        }}
+                        }]}
                     >
                         the bottom line
                     </Text>
@@ -146,3 +145,8 @@ const sectionContainerSx = {
     zIndex: 10,
 };
 
+const textHeadSx = {
+    lineHeight: { xs: "32px", md: "48px" },
+    fontSize: { xs: "24px", md: "40px" },
+    fontWeight: 500,
+};

@@ -12,13 +12,17 @@ import Link from "components/Link";
 import ArrowRightLineIc from "public/images/home-page/arrow-right-line.svg";
 import useBreakpoint from 'hooks/useBreakpoint';
 import { ListPackageEmpower } from '../configs';
+import Preview from 'components/Preview';
+import { MediaType, TypeMedia } from "store/chat/media/typeMedia";
 
 type EmpowerDifferentLayoutProps = {}
 
 const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
     const { isMdSmaller } = useBreakpoint();
 
-    const [tabActive, setTabActive] = useState(ListPackageEmpower[0])
+    const [tabActive, setTabActive] = useState(ListPackageEmpower[0]);
+
+    const [mediaPreview, setMediaPreview] = useState(false);
     return (
         <Stack width="100%" sx={{
 
@@ -28,13 +32,11 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
             >
                 <Text
                     variant={{ xs: "h3", md: "h1" }}
-                    sx={textGradientSx}
+                    sx={[textGradientSx, textHeadSx]}
                 >
                     See how we empower different teams
                 </Text>
-                <Text variant={{ xs: "h3", md: "h1" }} sx={{
-                    textAlign: "center"
-                }} >
+                <Text variant={{ xs: "h3", md: "h1" }} sx={textHeadSx} >
                     to gain competitive edge
                 </Text>
                 <Stack mt={{ xs: "48px", md: "64px" }} width="100%">
@@ -210,29 +212,55 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                             <Stack gap="8px">
                                 <Stack sx={{
                                     transition: ".3s",
-                                    width:"72px",
-                                    height:"72px",
+                                    width: "72px",
+                                    height: "72px",
                                     "&:hover": {
                                         cursor: "pointer",
                                         transition: ".3s",
                                         transform: "scale(1.1)",
                                     }
-                                }}>
+                                }}
+                                    onClick={() => setMediaPreview(true)}
+
+                                >
                                     <Image src={PlayVideoIcon} alt="image" style={{
-                                        width:"100%",
-                                        height:"100%",
+                                        width: "100%",
+                                        height: "100%",
                                     }} />
                                 </Stack>
 
-                                <Text variant="h5" sx={{
-                                    color: "#fff"
-                                }}>
-                                    Play video
-                                </Text>
+                                <Stack
+                                    onClick={() => setMediaPreview(true)}
+                                    sx={{
+                                        transition: ".3s",
+                                        "&:hover": {
+                                            cursor: "pointer",
+                                            transition: ".3s",
+                                            transform: "scale(1.1)",
+                                        }
+                                    }}
+                                >
+                                    <Text variant="h5" sx={{
+                                        color: "#fff"
+                                    }}>
+                                        Play video
+                                    </Text>
+                                </Stack>
+
                             </Stack>
                         </Stack>
                     </Stack>
                 </Stack>
+
+                <Preview
+                    open={mediaPreview}
+                    type={"video_url"}
+                    // listAttachmentsDown={listMediaClone}
+                    onClose={() =>
+                        setMediaPreview(false)
+                    }
+                    src={"https://www.youtube.com/watch?v=ZHhqwBwmRkI&pp=ygUOdmlkZW8gbG9sIDIwMjQ%3D"}
+                />
 
             </Stack>
         </Stack >
@@ -258,4 +286,11 @@ const textGradientSx = {
     WebkitTextFillColor: "transparent",
     textAlign: "center"
 }
+
+const textHeadSx = {
+    lineHeight: { xs: "32px", md: "48px" },
+    fontSize: { xs: "24px", md: "40px" },
+    fontWeight: 500,
+    textAlign: { xs: "center", md: "start" },
+};
 

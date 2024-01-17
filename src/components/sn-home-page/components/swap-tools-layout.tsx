@@ -24,17 +24,17 @@ const SwapToolsLayout = (props: SwapToolsLayoutProps) => {
                 sx={sectionContainerSx}
             >
                 <Stack flexDirection={{ xs: "column", md: "row" }} gap="8px">
-                    <Text variant={{ xs: "h3", md: "h1" }} fontWeight={500} style={{ textAlign: "center" }}>
+                    <Text variant={{ xs: "h3", md: "h1" }} sx={textHeadSx}>
                         Swap Multiple Tools
                     </Text>
                     <Text
                         variant={{ xs: "h3", md: "h1" }}
-                        sx={textGradientSx}
+                        sx={[textGradientSx, textHeadSx]}
                     >
                         for Taskcover
                     </Text>
                 </Stack>
-                <Text variant={{ xs: "h3", md: "h1" }} sx={textGradientSx}>
+                <Text variant={{ xs: "h3", md: "h1" }} sx={[textGradientSx, textHeadSx]}>
                     and Save Money
                 </Text>
                 <Stack
@@ -50,7 +50,15 @@ const SwapToolsLayout = (props: SwapToolsLayoutProps) => {
                         {SwapMultiToolItems.map((item, index) => {
                             return (
                                 <Stack key={index} gap="4px" >
-                                    <Text variant={{ xs: "h4", md: "h3" }} fontWeight={700} sx={{ color: "#0C4A6E", textAlign: { xs: "center", md: "left" } }}>
+                                    <Text
+                                        variant={{ xs: "h5", md: "h4" }}
+                                        fontWeight={700}
+                                        fontSize={{ xs: "16px", md: "24px" }}
+                                        lineHeight={{ xs: "24px", md: "32px" }}
+                                        sx={{
+                                            color: "#0C4A6E",
+                                            textAlign: { xs: "center", md: "left" }
+                                        }}>
                                         {item.title}
                                     </Text>
                                     <Stack flexDirection="row" justifyContent={{ xs: "center", md: "none" }} gap="8px">
@@ -181,3 +189,10 @@ const textGradientSx = {
     textAlign: "center",
 }
 
+
+const textHeadSx = {
+    lineHeight: { xs: "32px", md: "48px" },
+    fontSize: { xs: "24px", md: "40px" },
+    fontWeight: 500,
+    textAlign: "center",
+};

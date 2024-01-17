@@ -7,12 +7,10 @@ import VirtualAssistantImg from "public/images/home-page/img-virtual-assistant.p
 import TaskProjectIcon from "public/images/home-page/icon-task-project.svg";
 import ImgLinePage from "public/images/home-page/img-line-page.svg";
 import useBreakpoint from "hooks/useBreakpoint";
-
 type PowerfulAgentLayoutProps = {};
 
 const PowerfulAgentLayout = (props: PowerfulAgentLayoutProps) => {
   const { isMdSmaller } = useBreakpoint();
-
   const [activeTab, setActiveTab] = useState(PowerFullAgentTabs[0]);
 
   return (
@@ -28,7 +26,10 @@ const PowerfulAgentLayout = (props: PowerfulAgentLayoutProps) => {
       }}
     >
       <Stack sx={sectionContainerSx}>
-        <Text variant={{ xs: "h3", md: "h1" }} fontWeight={500} color="#fff">
+        <Text variant={{ xs: "h4", md: "h2" }}
+          fontSize={{ xs: "24px", md: "40px" }}
+          lineHeight={{ xs: "32px", md: "48px" }}
+          fontWeight={500} color="#fff">
           AI - Powerful Agent
         </Text>
         <Stack mt={{ xs: "16px", md: "24px" }} mb="40px">
@@ -132,6 +133,7 @@ const PowerfulAgentLayout = (props: PowerfulAgentLayoutProps) => {
                   background:
                     "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
                 }}
+                href={activeTab.href}
               >
                 Explore more
               </Button>
@@ -187,7 +189,7 @@ const sectionContainerSx = {
   width: "100%",
   m: "0 auto",
   maxWidth: "1200px",
-  p: { xs: "40px 16px 60px", md: "60px 0px 120px" },
+  p: { xs: "40px 16px 60px", md: "80px 0px 120px" },
   zIndex: 10,
 };
 

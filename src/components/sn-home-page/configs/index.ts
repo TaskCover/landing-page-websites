@@ -36,9 +36,9 @@ export const PowerFullAgentTabs = [
     textColor: "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
     isTextGradient: true,
     desc: [
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "AI agent is a powerful tool that offers the outstanding performance and assists you completely.",
     ],
+    href: "/",
   },
   {
     id: 2,
@@ -46,9 +46,9 @@ export const PowerFullAgentTabs = [
     label: "Task Project",
     textColor: "#E96C3F",
     desc: [
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "Listing and organizing the sub-tasks and deadlines from a simple provided outline."
     ],
+    href: "/",
   },
   {
     id: 3,
@@ -56,9 +56,9 @@ export const PowerFullAgentTabs = [
     label: "Note & Docs",
     textColor: "#42ADA7",
     desc: [
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "AI-powered personalized insights for optimizing your notes and documents."
     ],
+    href: "/",
   },
   {
     id: 4,
@@ -66,9 +66,9 @@ export const PowerFullAgentTabs = [
     label: "Mind Maps",
     textColor: "#1B88EC",
     desc: [
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "Provide optimal mind maps and strategies to organize your project."
     ],
+    href: "/",
   },
   {
     id: 5,
@@ -76,9 +76,9 @@ export const PowerFullAgentTabs = [
     label: "AI Chat",
     textColor: "#EDB932",
     desc: [
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "Deliver the most suitable answers to your questions through direct chatting. "
     ],
+    href: "/",
   },
   {
     id: 6,
@@ -86,9 +86,9 @@ export const PowerFullAgentTabs = [
     label: "AI Meeting",
     textColor: "#48BF80",
     desc: [
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
-      "Listing and organizing the sub-tasks and deadlines from a simple provided outline.",
+      "Automatically record video meetings and transfer speech into document."
     ],
+    href: "/",
   },
 ];
 
@@ -169,51 +169,52 @@ export const ExploreLayoutTab = [
   {
     id: 2,
     label: "LAW AGENCY",
-    title: "Effectively achieve project’s goals",
+    title: "Optimal tool for operation",
     desc: [
-      "Enhance team coordination and workflow.",
-      "Time and resource optimization through task automation.",
-      "Ensure your progress’s quality with clients",
+      "Safely store and manage related documents.",
+      "Guarantee the security of data and authority.",
+      "Update transactions and be on track with ease",
     ],
   },
   {
     id: 3,
     label: "REMOTE TEAM",
-    title: "Effectively achieve project’s goals",
+    title: "Maximize process and collaboration",
     desc: [
-      "Enhance team coordination and workflow.",
-      "Time and resource optimization through task automation.",
-      "Ensure your progress’s quality with clients",
+      "Reach and manage work from any device with the internet.",
+      "Automatically track your work time and provide transparency.",
+      "Fostering seamless collaboration and plannin",
     ],
   },
   {
     id: 4,
     label: "PRODUCTION TEAM",
-    title: "Effectively achieve project’s goals",
+    title: "Where production flows seamlessly with optimal finesse!",
     desc: [
-      "Enhance team coordination and workflow.",
-      "Time and resource optimization through task automation.",
-      "Ensure your progress’s quality with clients",
+      "Automate processes by enhancing operational efficiency",
+      "Enhance collaboration to strengthen collective achievement.",
+      "Provide detailed information to inform decisions.",
+
     ],
   },
   {
     id: 5,
     label: "EVENT AGENCY",
-    title: "Effectively achieve project’s goals",
+    title: "Revolutionizing Events with Smooth Precision",
     desc: [
-      "Enhance team coordination and workflow.",
-      "Time and resource optimization through task automation.",
-      "Ensure your progress’s quality with clients",
+      "Track work and see progress in real-time",
+      "Standardize and automate processes",
+      "Unblock teamwork's barriers to hit revenue goals",
     ],
   },
   {
     id: 6,
     label: "SOFTWARE AGENCY",
-    title: "Effectively achieve project’s goals",
+    title: "Elevate your projects with unparalleled efficiency and effectiveness",
     desc: [
-      "Enhance team coordination and workflow.",
-      "Time and resource optimization through task automation.",
-      "Ensure your progress’s quality with clients",
+      "Remove silos for better collaboration",
+      "Identify project gaps for immediate adjustments and to stay on course.",
+      "Track resources, goals, and progress in one place",
     ],
   },
 ];
@@ -224,7 +225,7 @@ export const TaskCoverItems = [
     bgImage: "/images/home-page/bg-project-effective.png",
   },
   {
-    desc: "time",
+    desc: "Staff time",
     active: true,
   },
   {
@@ -334,11 +335,11 @@ export const PricingToolList = [
 
 export const ListPackageEmpower = [
   {
-    name:"Monthly",
-    pricePackage : "19.00",
+    name: "Monthly",
+    pricePackage: "19.00",
   },
   {
-    name:"Yearly",
-    pricePackage : "199.00",
+    name: "Yearly",
+    pricePackage: "199.00",
   }
 ]
