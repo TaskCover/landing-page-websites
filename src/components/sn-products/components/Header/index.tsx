@@ -81,41 +81,41 @@ const DATA = [
   {
     icon: "/images/project-ic.png",
     label: "Project",
-    link: "/",
+    link: "/products/project",
   },
   {
     icon: "/images/folder-ic.png",
     label: "Resource Planning",
-    link: "/",
+    link: "/products/resource",
   },
   {
     icon: "/images/document-ic.png",
     label: "Document",
-    link: "/",
+    link: "/products/document",
   },
   {
     icon: "/images/chat-ic.png",
     label: "Chat",
-    link: "/",
+    link: "/products/chat",
   },
   {
     icon: "/images/clock-ic.png",
     label: "Time Tracking",
-    link: "/",
+    link: "/products/time-tracking",
   },
   {
     icon: "/images/wallet-ic.png",
     label: "Budgeting",
-    link: "/",
+    link: "/products/budgeting",
   },
   {
     icon: "/images/tag-ic.png",
     label: "Sales",
-    link: "/",
+    link: "/products/sale",
   },
   {
     icon: "/images/bill-ic.png",
     label: "Billing",
-    link: "/",
+    link: "/products/biling",
   },
 ];
