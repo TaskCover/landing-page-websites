@@ -22,11 +22,11 @@ type CardMobileProps = {
 };
 
 type BlogArticleProps = {
- data: BlogData[]
+  data: BlogData[];
 };
 
 const CardMobile = (props: CardMobileProps) => {
-  const { imageUrl, title, shortDescription, slug} = props;
+  const { imageUrl, title, shortDescription, slug } = props;
   return (
     <Link href={slug}>
       <Stack
@@ -108,7 +108,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export const BlogArticle = (props: BlogArticleProps) => {
-  const {data: dataBlogs} = props;
+  const { data: dataBlogs } = props;
   const { isMdSmaller } = useBreakpoint();
   return (
     <Stack mb={{ md: 8, xs: 2 }}>
@@ -159,9 +159,29 @@ export const BlogArticle = (props: BlogArticleProps) => {
                     <Text color="#5C98F6" fontWeight={700}>
                       {data.title}
                     </Text>
-                    <Text fontSize={20} mb={2} fontWeight={700} height={100}>
-                      {data.title}
-                    </Text>
+                    <Stack
+                      className="short-description"
+                      dangerouslySetInnerHTML={{
+                        __html: data?.short_description ?? "",
+                      }}
+                      sx={{
+                        fontSize: {md: 16, xs: 14},
+                        fontWeight: {md: 700, xs: 600},
+                        my: 2,
+                        display: "-webkit-box",
+                        overflow: "hidden",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                        height: {md: "88px", xs: "auto"},
+                        "img": {
+                          width: "100%",
+                        }
+                      }}
+                      color="#000"
+                    />
+                    {/* <Text fontSize={20} mb={2} fontWeight={700} height={100}>
+                      {data.short_description}
+                    </Text> */}
                   </Link>
                 </CardContent>
                 <CardActions sx={{ display: { md: "block", xs: "none" } }}>

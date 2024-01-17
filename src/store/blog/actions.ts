@@ -45,6 +45,7 @@ export type BlogData = {
   created_by?: CreateByUser,
   ignoredId?: string,
   categories?: Category[],
+  short_description?: string;
 };
 
 

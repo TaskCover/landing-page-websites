@@ -96,6 +96,7 @@ const BlogDetail = () => {
             <Stack
               className="content-blog"
               dangerouslySetInnerHTML={{ __html: item?.content ?? "" }}
+              sx={{"img": {width: "100%"}}}
             />
             <Stack
               direction="row"
