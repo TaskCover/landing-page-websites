@@ -186,7 +186,8 @@ const DATA_ACCELERATE = [
         </TextGradient>
       </Text>
     ),
-    content: `From pre-production to post-production, all work will be distributed and unified in a streamlined manner. `,
+    content: `From pre-production to post-production, all work will be distributed and unified in a streamlined manner.`,
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
   },
   {
     imageUrl: "/images/accelerate-image.png",
@@ -209,5 +210,6 @@ const DATA_ACCELERATE = [
       </Text>
     ),
     content: `Conceptualizing scenarios for clients and storing related documents orderly without using multiple platforms.`,
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
   },
 ];

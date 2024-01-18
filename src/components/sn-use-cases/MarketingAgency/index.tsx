@@ -193,5 +193,6 @@ const DATA_ACCELERATE = [
     ),
     content: `TaskCover AI agent generates content creation, campaign ideas, blogs,
       case studies, emails, and summarizes record meetings.`,
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
 ];

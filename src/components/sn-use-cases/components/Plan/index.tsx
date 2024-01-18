@@ -7,7 +7,7 @@ export const PlanUseCase = () => {
     const {isMdSmaller} = useBreakpoint();
   return (
     <Stack mt={20} width={{md: "70%", xs: "100%"}} mx="auto">
-      <Text fontSize={{ md: 30, xs: 16 }} fontWeight={700} textAlign="center">
+      <Text fontSize={{ md: 24, xs: 16 }} fontWeight={700} textAlign="center" mb={3}>
         Having problems in planning, executing, andmonitoring campaigns?
       </Text>
       <Text textAlign="center">

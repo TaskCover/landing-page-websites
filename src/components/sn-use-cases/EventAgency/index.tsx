@@ -210,6 +210,7 @@ const DATA_ACCELERATE = [
       </Text>
     ),
     content: `Integrate all management keys to open a successful event`,
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
   },
   {
     imageUrl: "/images/accelerate-image.png",
@@ -232,5 +233,6 @@ const DATA_ACCELERATE = [
       </Text>
     ),
     content: `Enhance coordination and responsiveness for optimal efficiency and successful outcomes of the events.`,
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
   },
 ];

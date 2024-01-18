@@ -182,11 +182,13 @@ const DATA_ACCELERATE = [
     title: "Project management",
     heading: undefined,
     content: `Leverage cutting-edge solutions in management to reach technological evolution and process automation.`,
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
   },
   {
     imageUrl: "/images/accelerate-image.png",
     title: "Budget",
     heading: undefined,
     content: `Ensures the optimal distribution of budget within the framework of software strategic objectives.`,
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
   },
 ];

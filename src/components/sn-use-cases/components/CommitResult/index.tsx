@@ -67,13 +67,13 @@ const DATA = [
         my={4}
         textAlign="center"
       >
-        Arrange the process{" "}
+        Arrange the process of{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 16, xs: 14 }}
           fontWeight={600}
         >
-          of conceptualizing and defining project
+          conceptualizing and defining project
         </TextGradient>
       </Text>
     ),
@@ -89,14 +89,14 @@ const DATA = [
         my={4}
         textAlign="center"
       >
-        Maintain smoothly{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 16, xs: 14 }}
           fontWeight={600}
         >
-          the applications and frameworks of all steps
+          Maintain smoothly{" "}
         </TextGradient>
+        the applications and frameworks of all steps
       </Text>
     ),
   },

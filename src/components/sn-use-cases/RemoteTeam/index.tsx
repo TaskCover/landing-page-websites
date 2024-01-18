@@ -190,6 +190,7 @@ const DATA_ACCELERATE = [
       </Text>
     ),
     content: `TaskCover AI agent automates tasks, generating workflow templates to streamline processes efficiently.`,
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
   },
   {
     imageUrl: "/images/accelerate-image.png",
@@ -211,6 +212,7 @@ const DATA_ACCELERATE = [
         </TextGradient>
       </Text>
     ),
-    content: `Enhance communication transparency, file sharing to streamline processes, to keep members stay on-track.  `,
+    content: `Enhance communication transparency, file sharing to streamline processes, to keep members stay on-track.`,
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
   },
 ];
