@@ -102,7 +102,7 @@ const UseCaseSoftwareAgency = () => {
         <Container>
           <AccelerateUseCase data={DATA_ACCELERATE} />
           <FunctionUseCase />
-          <UseCaseCommitResult />
+          <UseCaseCommitResult data={DATA_COMMIT_RESULT} />
         </Container>
       </Stack>
       <Container>
@@ -190,5 +190,96 @@ const DATA_ACCELERATE = [
     heading: undefined,
     content: `Ensures the optimal distribution of budget within the framework of software strategic objectives.`,
     videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+  },
+];
+
+const DATA_COMMIT_RESULT = [
+  {
+    imageUrl: "/images/result-commit-1.png",
+    content: (
+      <Text
+        component="div"
+        fontSize={14}
+        fontWeight={600}
+        mb={5}
+        my={4}
+        textAlign="center"
+      >
+        <TextGradient
+          component="span"
+          fontSize={14}
+          fontWeight={600}
+        >
+           Arrange the process{" "}
+        </TextGradient>
+        of conceptualizing and defining project
+      </Text>
+    ),
+  },
+  {
+    imageUrl: "/images/result-commit-2.png",
+    content: (
+      <Text
+        component="div"
+        fontSize={14}
+        fontWeight={600}
+        mb={5}
+        my={4}
+        textAlign="center"
+      >
+        <TextGradient
+          component="span"
+          fontSize={14}
+          fontWeight={600}
+        >
+          Maintain smoothly{" "}
+        </TextGradient>
+        the applications and frameworks of all steps
+      </Text>
+    ),
+  },
+  {
+    imageUrl: "/images/result-commit-3.png",
+    content: (
+      <Text
+        component="div"
+        fontSize={14}
+        fontWeight={600}
+        mb={5}
+        my={4}
+        textAlign="center"
+      >
+        Present the{" "}
+        <TextGradient
+          component="span"
+          fontSize={14}
+          fontWeight={600}
+        >
+           customized workflow of software development
+        </TextGradient>
+      </Text>
+    ),
+  },
+  {
+    imageUrl: "/images/result-commit-4.png",
+    content: (
+      <Text
+        component="div"
+        fontSize={14}
+        fontWeight={600}
+        mb={5}
+        my={4}
+        textAlign="center"
+      >
+        <TextGradient
+          component="span"
+          fontSize={14}
+          fontWeight={600}
+        >
+          Maximizes process efficiency{" "}
+        </TextGradient>
+        and results in a quality strategies
+      </Text>
+    ),
   },
 ];

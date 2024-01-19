@@ -10,15 +10,17 @@ import { DataStatus } from "constant/enums";
 import AppLoading from "components/AppLoading";
 
 const BlogPage = () => {
-  const { blogs, blogsStatus } = useAppSelector(state => state.blogs);
+  const { blogs, blogsStatus, blogsPopular } = useAppSelector(state => state.blogs);
   const dispatch = useAppDispatch();
-  const {onGetBlogs} = useBlogs();
+  const {onGetBlogs, onGetBlogsPopular} = useBlogs();
 
   useEffect(() => {
-    dispatch(() => onGetBlogs());
-  }, [dispatch, onGetBlogs]);
+    onGetBlogs();
+    onGetBlogsPopular();
+  }, [onGetBlogs, onGetBlogsPopular]);
 
-  if(blogsStatus === DataStatus.LOADING) return <AppLoading/>
+  if(blogsStatus === DataStatus.LOADING) return <AppLoading/>;
+
   return (
 
     <Stack>
@@ -42,7 +44,7 @@ const BlogPage = () => {
         />
         <Container>
           <HeaderBlog />
-          <BlogNews />
+          <BlogNews data={blogsPopular} />
         </Container>
       </Stack>
 

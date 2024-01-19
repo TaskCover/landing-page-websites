@@ -187,7 +187,7 @@ export const BlogArticle = (props: BlogArticleProps) => {
                 <CardActions sx={{ display: { md: "block", xs: "none" } }}>
                   <Stack direction="row" spacing={1} alignItems="center">
                     <Image
-                      src="/images/blog-author-1.png"
+                      src={data?.created_by?.avatar?.link ?? "/images/default-avatar.png"}
                       width={36}
                       height={36}
                       alt="blog-author"

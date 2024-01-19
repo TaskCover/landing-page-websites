@@ -1,8 +1,19 @@
 import { Stack } from "@mui/material";
 import { Text, TextGradient } from "components/shared";
+import useBreakpoint from "hooks/useBreakpoint";
 import Image from "next/image";
+import React from "react";
 
-export const UseCaseCommitResult = () => {
+type UseCaseCommitResultProps = {
+  data: {
+    imageUrl: string;
+    content: string | React.ReactNode
+  }[]
+}
+
+export const UseCaseCommitResult = (props: UseCaseCommitResultProps) => {
+  const {data} = props;
+  const {isMdSmaller} = useBreakpoint();
   return (
     <Stack mt={{ md: 12, xs: 3 }}>
       <Text
@@ -24,28 +35,34 @@ export const UseCaseCommitResult = () => {
         </TextGradient>
       </Text>
       <Stack
-        direction={{ md: "row", xs: "column" }}
-        spacing={5}
+        direction="row"
+        spacing={{md: 5, xs: 0}}
         flexWrap="wrap"
       >
-        {DATA.map((data, index) => (
+        {data.map((data, index) => (
           <Stack
-            flex={0.6}
+            flex={{md: 0.6, xs: "unset"}}
+            width={{md: "unset", xs: "47%"}}
             key={index}
             sx={{
               borderRadius: 4,
               boxShadow: "0px 0px 12px 0px rgba(170, 198, 245, 0.40)",
               backgroundColor: "#fff",
-              px: 3,
-              py: 3,
+              px: {md: 3, xs: 1},
+              py: {md: 3, xs: 1},
+              mx: {md: 0, xs: "4px!important"},
+              my: {md: 0, xs: "8px!important"},
               alignItems: "center",
             }}
           >
             <Image
               src={data.imageUrl}
               alt="result-commit"
-              width={40}
-              height={40}
+              width={isMdSmaller ? 24 : 40}
+              height={isMdSmaller ? 24 : 40}
+              style={{
+                marginTop: isMdSmaller ? "24px" : 0
+              }}
             />
             {data.content}
           </Stack>
@@ -55,93 +72,3 @@ export const UseCaseCommitResult = () => {
   );
 };
 
-const DATA = [
-  {
-    imageUrl: "/images/result-commit-1.png",
-    content: (
-      <Text
-        component="div"
-        fontSize={{ md: 16, xs: 14 }}
-        fontWeight={600}
-        mb={5}
-        my={4}
-        textAlign="center"
-      >
-        Arrange the process of{" "}
-        <TextGradient
-          component="span"
-          fontSize={{ md: 16, xs: 14 }}
-          fontWeight={600}
-        >
-          conceptualizing and defining project
-        </TextGradient>
-      </Text>
-    ),
-  },
-  {
-    imageUrl: "/images/result-commit-2.png",
-    content: (
-      <Text
-        component="div"
-        fontSize={{ md: 16, xs: 14 }}
-        fontWeight={600}
-        mb={5}
-        my={4}
-        textAlign="center"
-      >
-        <TextGradient
-          component="span"
-          fontSize={{ md: 16, xs: 14 }}
-          fontWeight={600}
-        >
-          Maintain smoothly{" "}
-        </TextGradient>
-        the applications and frameworks of all steps
-      </Text>
-    ),
-  },
-  {
-    imageUrl: "/images/result-commit-3.png",
-    content: (
-      <Text
-        component="div"
-        fontSize={{ md: 16, xs: 14 }}
-        fontWeight={600}
-        mb={5}
-        my={4}
-        textAlign="center"
-      >
-        Present the{" "}
-        <TextGradient
-          component="span"
-          fontSize={{ md: 16, xs: 14 }}
-          fontWeight={600}
-        >
-          customized workflow of software development
-        </TextGradient>
-      </Text>
-    ),
-  },
-  {
-    imageUrl: "/images/result-commit-4.png",
-    content: (
-      <Text
-        component="div"
-        fontSize={{ md: 16, xs: 14 }}
-        fontWeight={600}
-        mb={5}
-        my={4}
-        textAlign="center"
-      >
-        <TextGradient
-          component="span"
-          fontSize={{ md: 16, xs: 14 }}
-          fontWeight={600}
-        >
-          Maximizes process efficiency{" "}
-        </TextGradient>
-        and results in a quality strategies
-      </Text>
-    ),
-  },
-];

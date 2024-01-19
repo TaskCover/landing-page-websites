@@ -12,6 +12,7 @@ import {
     getAllBlogs,
     getBlogBySlug,
     getBlogComments,
+    getBlogsPopular,
     getRelatedBlog,
     updateBlog,
     updatePublished,
@@ -25,7 +26,7 @@ import { object } from "yup";
 
 export const useBlogs = () => {
     const dispatch = useAppDispatch();
-    const { blogs: items, blogsStatus: status, blogsError: error, blogsFilters: filters, blog: item, relatedBlogs, listBlogComment } = useAppSelector(
+    const { blogs: items, blogsStatus: status, blogsError: error, blogsFilters: filters, blog: item, relatedBlogs, blogsPopular ,listBlogComment } = useAppSelector(
         (state) => state.blogs,
         shallowEqual,
     );
@@ -39,6 +40,14 @@ export const useBlogs = () => {
     const onGetBlogs = useCallback(
         async (queries?: GetBlogListQueries) => {
             await dispatch(getAllBlogs({ ...queries }));
+        },
+        [dispatch],
+    );
+
+    
+    const onGetBlogsPopular = useCallback(
+        async () => {
+            await dispatch(getBlogsPopular());
         },
         [dispatch],
     );
@@ -188,6 +197,7 @@ export const useBlogs = () => {
         filters,
         onGetBlogBySlug,
         item,
+        blogsPopular,
         onGetRelatedBlogs,
         relatedBlogs,
         listBlogComment,
@@ -196,5 +206,6 @@ export const useBlogs = () => {
         onApproveOrReject,
         onDeleteBlog,
         onUpdatePublished,
+        onGetBlogsPopular
     };
 };

@@ -27,7 +27,7 @@ export const ProductFeature = () => {
           position="relative"
         >
           <Stack flex={0.5}>
-            <Text fontSize={{ md: 40, xs: 24 }} mb={5}>
+            <Text fontSize={{ xl: 40, xs: 24 }} mb={5}>
               🧑‍💻{" "}
               <TextGradient component="span" fontSize="inherit">
                 List of employee
@@ -73,14 +73,14 @@ export const ProductFeature = () => {
           </Stack>
         </Stack>
 
-        <Stack mt={{ md: 30, xs: 5 }}>
-          <Text fontSize={{ md: 40, xs: 24 }}>
+        <Stack mt={{ xl: 30, xs: 5 }}>
+          <Text fontSize={{ xl: 40, xs: 24 }}>
             ⌛{" "}
             <TextGradient component="span" fontSize="inherit">
               Cost history
             </TextGradient>
           </Text>
-          <Text fontSize={{ md: 40, xs: 20 }} mb={2} pl={4}>
+          <Text fontSize={{ xl: 40, xs: 20 }} mb={2} pl={4}>
             Track payment history of company accounts
           </Text>
           <Stack>
@@ -104,7 +104,7 @@ export const ProductFeature = () => {
           mt={{ md: 30, xs: 5 }}
         >
           <Stack flex={0.5}>
-            <Text fontSize={{ md: 40, xs: 24 }} mb={5}>
+            <Text fontSize={{ xl: 40, xs: 24 }} mb={{xl: 5, xs: 3}}>
               💼{" "}
               <TextGradient component="span" fontSize="inherit">
                 List of position
@@ -157,7 +157,7 @@ export const ProductFeature = () => {
                 }}
                 alt="product-position"
               />
-              <Stack sx={{ position: "absolute", top: 120, left: -130 }}>
+              <Stack sx={{ position: "absolute", top: "50%", left: -130, transform: "translateY(-50%)" }} width="35%">
                 <Image
                   src="/images/product-position-2.png"
                   width={0}
@@ -181,7 +181,7 @@ export const ProductFeature = () => {
           spacing={4}
         >
           <Stack flex={0.5}>
-            <Text fontSize={{ md: 40, xs: 24 }} mb={5}>
+            <Text fontSize={{ xl: 40, xs: 24 }} mb={{xl: 5, xs: 3}} >
               💼{" "}
               <TextGradient component="span" fontSize="inherit">
                 Project type list
@@ -233,7 +233,7 @@ export const ProductFeature = () => {
                 }}
                 alt="product-position"
               />
-              <Stack sx={{ position: "absolute", bottom: 120, right: -130 }}>
+              <Stack sx={{ position: "absolute", bottom: {xl: 40, xs: 20}, right: -130 }} width="35%">
                 <Image
                   src="/images/project-type-list-2.png"
                   width={0}

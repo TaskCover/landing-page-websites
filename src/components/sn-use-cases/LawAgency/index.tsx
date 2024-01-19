@@ -91,7 +91,7 @@ const UseCaseLawAgency = () => {
         <Container>
           <AccelerateUseCase data={DATA_ACCELERATE} />
           <FunctionUseCase />
-          <UseCaseCommitResult />
+          <UseCaseCommitResult data={DATA_COMMIT_RESULT} />
         </Container>
       </Stack>
       <Container>
@@ -214,5 +214,96 @@ const DATA_ACCELERATE = [
     ),
     content: `Capture, monitor, and analyze time spent on projects, ensuring precision in resource allocation and project timelines`,
     videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+  },
+];
+
+const DATA_COMMIT_RESULT = [
+  {
+    imageUrl: "/images/result-commit-5.png",
+    content: (
+      <Text
+        component="div"
+        fontSize={14}
+        fontWeight={600}
+        mb={5}
+        my={4}
+        textAlign="center"
+      >
+        <TextGradient
+          component="span"
+          fontSize={14}
+          fontWeight={600}
+        >
+           Control and make the best{" "}
+        </TextGradient>
+        of available resources
+      </Text>
+    ),
+  },
+  {
+    imageUrl: "/images/result-commit-6.png",
+    content: (
+      <Text
+        component="div"
+        fontSize={14}
+        fontWeight={600}
+        mb={5}
+        my={4}
+        textAlign="center"
+      >
+        Enhance{" "}
+        <TextGradient
+          component="span"
+          fontSize={14}
+          fontWeight={600}
+        >
+           team collaboration
+        </TextGradient>
+      </Text>
+    ),
+  },
+  {
+    imageUrl: "/images/result-commit-7.png",
+    content: (
+      <Text
+        component="div"
+        fontSize={14}
+        fontWeight={600}
+        mb={5}
+        my={4}
+        textAlign="center"
+      >
+        <TextGradient
+          component="span"
+          fontSize={14}
+          fontWeight={600}
+        >
+          Elevate customer satisfaction{" "}
+        </TextGradient>
+        with clear communication
+      </Text>
+    ),
+  },
+  {
+    imageUrl: "/images/result-commit-8.png",
+    content: (
+      <Text
+        component="div"
+        fontSize={14}
+        fontWeight={600}
+        mb={5}
+        my={4}
+        textAlign="center"
+      >
+        Ensure{" "}
+        <TextGradient
+          component="span"
+          fontSize={14}
+          fontWeight={600}
+        >
+          punctuality in legal processes
+        </TextGradient>
+      </Text>
+    ),
   },
 ];

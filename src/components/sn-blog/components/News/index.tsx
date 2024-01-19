@@ -1,124 +1,180 @@
 import { Stack } from "@mui/material";
 import Image from "next/image";
 import { Text, TextGradient } from "components/shared";
-import { IndeterminateCheckBoxRounded } from "@mui/icons-material";
-import ArrowIcon from "icons/ArrowIcon";
+import { BlogData } from "store/blog/actions";
+import { formatDate } from "utils/index";
+import { nameMonthList } from "constant/index";
+import Link from "next/link";
 
-export const BlogNews = () => {
+type BlogNewProps = {
+  data: BlogData[];
+};
+
+export const BlogNews = (props: BlogNewProps) => {
+  const { data } = props;
+
+  if (!data) return;
+
+  const listPopular: BlogData[] = data;
+
+  const createTime = (date?: number | string | Date) => {
+    if (date)
+      return `${nameMonthList[Number(new Date(date).getMonth())]}, ${formatDate(
+        Date.now(),
+        "dd, yyyy",
+      )}`;
+    return `${nameMonthList[Number(new Date().getMonth())]}, ${formatDate(
+      Date.now(),
+      "dd, yyyy",
+    )}`;
+  };
+
   return (
-    <Stack direction={{md: "row", xs: "column"}} mt={20} spacing={5}>
-      <Stack
-        sx={{
-          background: "#fff",
-          py: 3,
-          px: 3,
-          borderRadius: 4,
-          boxShadow: "0px 4px 40px 0px rgba(43, 89, 255, 0.08)",
-          position: "relative"
-        }}
-      >
-        <Image
-          src="/images/blog-new-1.png"
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{
-            width: "100%",
-            height: "auto",
+    <Stack direction={{ md: "row", xs: "column" }} mt={20} spacing={5}>
+      <Link href={`blog/${data[0]?.slug}` ?? "/blog"} style={{ flex: 0.5 }}>
+        <Stack
+          sx={{
+            background: "#fff",
+            py: 3,
+            px: 3,
+            borderRadius: 4,
+            boxShadow: "0px 4px 40px 0px rgba(43, 89, 255, 0.08)",
+            position: "relative",
           }}
-          alt="blog-new"
-        />
-        <Text
-          fontWeight={400}
-          color="#81838"
-          fontSize={{ md: 16, xs: 12 }}
-          mb={2}
-          mt={{md: 0, xs: 3}}
         >
-          May 23, 2022
-        </Text>
-        <Text
-          fontWeight={700}
-          color="#151515"
-          fontSize={{ md: 36, xs: 16 }}
-          mb={2}
-        >
-          5 Best Fruit And Vegetable Supplements 2022
-        </Text>
-        <Text mb={2}>
-          London hedge fund Bluebell Capital said the commodities giant should
-          spin off its hermal coal...
-        </Text>
-        <Stack direction="row" spacing={1} alignItems="center">
           <Image
-            src="/images/blog-author-1.png"
-            width={36}
-            height={36}
-            alt="blog-author"
+            src={data[0]?.background_down?.link ?? ""}
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{
+              width: "100%",
+              height: "auto",
+            }}
+            alt="blog-new"
           />
-          <Text>
-            By <strong>Robert Fox</strong>
+          <Text
+            fontWeight={400}
+            color="#81838C"
+            fontSize={{ md: 16, xs: 12 }}
+            mb={2}
+            mt={{ md: 5, xs: 3 }}
+          >
+            {createTime(data[0]?.created_time)}
           </Text>
-        </Stack>
-        <Stack direction="row" alignItems="center" sx={{
-            position: "absolute",
-            bottom: 20,
-            right: 10
-        }}>
-          <TextGradient fontWeight={700}>Read this</TextGradient>
-          <Image
-            src="/images/arrow-right-gradient.png"
-            width={24}
-            height={24}
-            alt="arrow"
-          />
-        </Stack>
-      </Stack>
-      <Stack>
-        {DATA.map((data, index) => (
-          <Stack
-            key={index}
-            direction="row"
-            alignItems="center"
-            spacing={{md: 3, xs: 1}}
-            mb={1}
+          <Text
+            fontWeight={700}
+            color="#151515"
+            fontSize={{ md: 36, xs: 16 }}
+            mb={2}
+          >
+            {data[0]?.title}
+          </Text>
+          <Text
+            mb={2}
             sx={{
-              background: "#fff",
-              py: {md: 3, xs: 1},
-              px: {md: 3, xs: 1},
-              borderRadius: 4,
-              boxShadow: "0px 4px 40px 0px rgba(43, 89, 255, 0.08)",
+              display: "-webkit-box",
+              overflow: "hidden",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
             }}
           >
-            <Stack flex={0.4}>
-              <Image
-                src={data.imageUrl}
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{
-                  width: "100%",
-                  height: "auto",
-                }}
-                alt="blog-new"
-              />
-            </Stack>
-            <Stack flex={0.7}>
-              <Text
-                fontWeight={400}
-                color="#81838C"
-                fontSize={{ md: 14, xs: 12 }}
-                mb={1}
-              >
-                May 23, 2022
-              </Text>
-              <Text fontWeight={700} mb={1} fontSize={{ md: 16, xs: 14 }}>
-                {data.title}
-              </Text>
-              <Text fontSize={14} display={{md: "block", xs: "none"}}>{data.shortDescription}</Text>
-            </Stack>
+            {data[0]?.short_description}
+          </Text>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Image
+              src={
+                data[0]?.created_by?.avatar?.link ??
+                "/images/default-avatar.png"
+              }
+              width={36}
+              height={36}
+              alt="blog-author"
+            />
+            <Text>
+              By <strong>{data[0]?.created_by?.fullname}</strong>
+            </Text>
           </Stack>
-        ))}
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{
+              position: "absolute",
+              bottom: 20,
+              right: 10,
+            }}
+          >
+            <TextGradient fontWeight={700}>Read this</TextGradient>
+            <Image
+              src="/images/arrow-right-gradient.png"
+              width={24}
+              height={24}
+              alt="arrow"
+            />
+          </Stack>
+        </Stack>
+      </Link>
+      <Stack flex={0.5}>
+        {listPopular
+          .filter((data, index) => index !== 0)
+          .map((data, index) => {
+            return (
+              <Link key={index} href={`blog/${data?.slug}` ?? "/blog"}>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  spacing={{ md: 3, xs: 1 }}
+                  mb={1}
+                  sx={{
+                    background: "#fff",
+                    py: { md: 3, xs: 1 },
+                    px: { md: 3, xs: 1 },
+                    borderRadius: 4,
+                    boxShadow: "0px 4px 40px 0px rgba(43, 89, 255, 0.08)",
+                  }}
+                >
+                  <Stack flex={0.4}>
+                    <Image
+                      src={data.background_down?.link ?? ""}
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                      alt="blog-new"
+                    />
+                  </Stack>
+                  <Stack flex={0.7}>
+                    <Text
+                      fontWeight={400}
+                      color="#81838C"
+                      fontSize={{ md: 14, xs: 12 }}
+                      mb={1}
+                    >
+                      {createTime(data.created_time)}
+                    </Text>
+                    <Text fontWeight={700} mb={1} fontSize={{ md: 16, xs: 14 }}>
+                      {data.title}
+                    </Text>
+                    <Text
+                      fontSize={14}
+                      display={{ md: "block", xs: "none" }}
+                      sx={{
+                        display: "-webkit-box",
+                        overflow: "hidden",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                      }}
+                    >
+                      {data.short_description}
+                    </Text>
+                  </Stack>
+                </Stack>
+              </Link>
+            );
+          })}
       </Stack>
     </Stack>
   );

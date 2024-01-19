@@ -130,7 +130,7 @@ const DATA_BENEFIT = [
         </TextGradient>
       </Text>
     ),
-    content: " Experience seamless and quality event management ",
+    content: "Experience seamless and quality event management",
   },
   {
     icon: "/images/benefit-ic-8.png",
@@ -142,7 +142,7 @@ const DATA_BENEFIT = [
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
         >
-          meticulously supervised 
+          meticulously supervised
         </TextGradient>
       </Text>
     ),

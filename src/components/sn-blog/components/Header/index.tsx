@@ -15,7 +15,7 @@ export const HeaderBlog = () => {
     <Stack mt={{md: 12, xs: 2}}>
       <Stack direction={{md: "row", xs: "column"}} gap={3.75} alignItems="center">
         <Stack flex={{md: 0.8, xs: 1}}>
-          <Text fontSize={{ md: 60, xs: 24 }} fontWeight={700}>
+          <Text fontSize={{ md: 55, xs: 24 }} fontWeight={700}>
             Tackle all your problems collaboratively and pave the way for
             success.
           </Text>

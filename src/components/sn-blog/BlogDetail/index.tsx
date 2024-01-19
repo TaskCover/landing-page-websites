@@ -15,25 +15,26 @@ import { DataStatus } from "constant/enums";
 import AppLoading from "components/AppLoading";
 import { useParams } from "next/navigation";
 import { useBlogs } from "store/blog/selectors";
+import NoData from "components/NoData";
+import Error from "next/error";
 
 const BlogDetail = () => {
   const { categories, categoryStatus } = useAppSelector(
     (state) => state.categoryBlogs,
   );
-  const dispatch = useAppDispatch();
   const { onGetCategoryBlogs } = useCategoryBlog();
-  const { onGetBlogBySlug, item } = useBlogs();
+  const { onGetBlogBySlug, item, onGetRelatedBlogs, relatedBlogs } = useBlogs();
   const { slug } = useParams();
 
   useEffect(() => {
-    dispatch(() => onGetCategoryBlogs());
-  }, [dispatch, onGetCategoryBlogs]);
+    onGetCategoryBlogs();
+  }, [onGetCategoryBlogs]);
 
   useEffect(() => {
-    dispatch(() => onGetBlogBySlug(slug as string));
-  }, [dispatch, onGetBlogBySlug, slug]);
+    onGetBlogBySlug(slug as string);
+    onGetRelatedBlogs(slug as string);
+  }, [onGetBlogBySlug, onGetRelatedBlogs, slug]);
 
-  const { isMdSmaller } = useBreakpoint();
   const breadcrumbs = [
     <Link key="1" href="/" color="inherit">
       Home
@@ -41,10 +42,10 @@ const BlogDetail = () => {
     <Link key="2" color="inherit" href="/blog">
       Blog
     </Link>,
-    <Text key="3">
-      {item?.title}
-    </Text>,
+    <Text key="3">{item?.title}</Text>,
   ];
+
+  if(!slug || !item) return <Error statusCode={404} />
 
   if (categoryStatus === DataStatus.LOADING) return <AppLoading />;
   return (
@@ -96,57 +97,60 @@ const BlogDetail = () => {
             <Stack
               className="content-blog"
               dangerouslySetInnerHTML={{ __html: item?.content ?? "" }}
-              sx={{"img": {width: "100%"}}}
+              sx={{ img: { width: "100%" } }}
             />
-            <Stack
-              direction="row"
-              spacing={{ md: 3, xs: 0.652 }}
-              mt={5}
-              alignItems="center"
-              sx={{
-                background: { md: "#fff", xs: "transparent" },
-                borderRadius: 6,
-              }}
-            >
-              <Stack width="100%" flex={0.2}>
-                <Image
-                  src="/images/next-blog.png"
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                  }}
-                  alt="next-blog"
-                />
-              </Stack>
-              <Stack justifyContent="space-between" flex={0.8}>
-                <Text fontSize={{ md: 16, xs: 14 }}>
-                  Operations Dashboard 101: Keep a Watchful Eye on Your
-                  Processes
-                </Text>
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  mt={{ md: 2, xs: 0.652 }}
-                >
-                  <TextGradient
-                    fontWeight={700}
-                    textTransform="uppercase"
-                    fontSize={{ md: 16, xs: 12 }}
-                  >
-                    Read more
-                  </TextGradient>
+            {(relatedBlogs && relatedBlogs.length) > 0 && (
+              <Link href={`/blog/${relatedBlogs[0]?.slug}`}>
+              <Stack
+                direction="row"
+                spacing={{ md: 3, xs: 0.652 }}
+                mt={5}
+                alignItems="center"
+                sx={{
+                  background: { md: "#fff", xs: "transparent" },
+                  borderRadius: 6,
+                }}
+              >
+                <Stack width="100%" flex={0.2}>
                   <Image
-                    src="/images/arrow-right-gradient.png"
-                    width={24}
-                    height={24}
-                    alt="arrow"
+                    src={relatedBlogs[0]?.background_down?.link ?? ""}
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                    alt="next-blog"
                   />
                 </Stack>
+                <Stack justifyContent="space-between" flex={0.8}>
+                  <Text fontSize={{ md: 16, xs: 14 }}>
+                    {relatedBlogs[0]?.title}
+                  </Text>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    mt={{ md: 2, xs: 0.652 }}
+                  >
+                    <TextGradient
+                      fontWeight={700}
+                      textTransform="uppercase"
+                      fontSize={{ md: 16, xs: 12 }}
+                    >
+                      Read more
+                    </TextGradient>
+                    <Image
+                      src="/images/arrow-right-gradient.png"
+                      width={24}
+                      height={24}
+                      alt="arrow"
+                    />
+                  </Stack>
+                </Stack>
               </Stack>
-            </Stack>
+              </Link>
+            )}
           </Stack>
           <Stack flex={0.3}>
             <Stack
@@ -168,25 +172,35 @@ const BlogDetail = () => {
                 LATEST POSTS
               </Text>
               <Stack>
-                <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
-                  <Stack>
-                    <Image
-                      src="/images/last-post-1.png"
-                      alt="last-post"
-                      width={68}
-                      height={68}
-                    />
-                  </Stack>
-                  <Stack>
-                    <Text
-                      fontWeight={600}
-                      fontSize={14}
-                      textTransform="uppercase"
-                    >
-                      PG SOFT™ LAUNCHES A NEW PROMOTIONAL FEATURE - MONEY RAIN!
-                    </Text>
-                  </Stack>
-                </Stack>
+                {relatedBlogs &&
+                  relatedBlogs.map((data) => (
+                    <Link key={data.id} href={`/blog/${data.slug}`}>
+                      <Stack
+                        direction="row"
+                        spacing={1.5}
+                        alignItems="center"
+                        mb={2}
+                      >
+                        <Stack>
+                          <Image
+                            src={data.background_down?.link ?? ""}
+                            alt="last-post"
+                            width={68}
+                            height={68}
+                          />
+                        </Stack>
+                        <Stack>
+                          <Text
+                            fontWeight={600}
+                            fontSize={14}
+                            textTransform="uppercase"
+                          >
+                            {data.title}
+                          </Text>
+                        </Stack>
+                      </Stack>
+                    </Link>
+                  ))}
               </Stack>
             </Stack>
 
@@ -263,16 +277,6 @@ const BlogDetail = () => {
 };
 
 export default memo(BlogDetail);
-
-const breadcrumbs = [
-  <Link key="1" href="/" color="inherit">
-    Home
-  </Link>,
-  <Link key="2" color="inherit" href="/blog">
-    Blog
-  </Link>,
-  <Text key="3">How to Create an Executive Dashbo...</Text>,
-];
 
 const sxConfig = {
   content: {
