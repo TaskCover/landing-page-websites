@@ -129,7 +129,15 @@ const ListCareersLayout = (props: ListCareersLayoutProps) => {
                     alignItems="center"
                     justifyContent="end"
                     gap="12px"
-                    // onClick={() => onDetailCareer(item.slug)}
+                    sx={{
+                      transition: ".3s",
+                      "&:hover": {
+                        cursor: "pointer",
+                        transform: "scale(1.02)",
+                        transition: ".3s",
+                      }
+                    }}
+                  // onClick={() => onDetailCareer(item.slug)}
                   >
                     <Text variant="h5" sx={textGradientSx}>
                       APPLY NOW

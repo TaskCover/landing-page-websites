@@ -60,13 +60,15 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 const FormApply = (props: FormApplyProps) => {
   const [value, setValue] = useState();
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+
+  };
 
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema,
     enableReinitialize: true,
-    onSubmit: () => {},
+    onSubmit,
   });
 
   const touchedErrors = useMemo(() => {
@@ -90,8 +92,8 @@ const FormApply = (props: FormApplyProps) => {
     formik.setFieldValue(key, newValue);
   };
 
-  const handleChangeDate = (val) => {};
-  const handleChangeDropdown = (val) => {};
+  const handleChangeDate = (val) => { };
+  const handleChangeDropdown = (val) => { };
   const handleFileUpload = (key, e) => {
     const selectedImage = e.target.files[0];
     const imageUrl = URL.createObjectURL(selectedImage);
@@ -115,6 +117,7 @@ const FormApply = (props: FormApplyProps) => {
       }}
     >
       {ListFormSubmit.map((form, index) => {
+
         return (
           <>
             <FieldContainer
@@ -284,7 +287,7 @@ const FormApply = (props: FormApplyProps) => {
           </>
         );
       })}
-      <Stack width="100%" alignItems="end">
+      <Stack component="form" width="100%" alignItems="end" onSubmit={formik.handleSubmit}>
         <Button
           sx={{
             p: "12px 24px",
@@ -293,7 +296,7 @@ const FormApply = (props: FormApplyProps) => {
             mb: "24px",
           }}
         >
-          <Text variant="h5" color="#fff" onClick={onSubmit}>
+          <Text variant="h5" color="#fff">
             Submit
           </Text>
         </Button>

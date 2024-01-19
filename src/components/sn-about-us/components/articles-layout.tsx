@@ -40,7 +40,7 @@ const ArticlesLayout = (props: ArticlesLayoutProps) => {
             articles
           </Text>
         </Stack>
-        <Stack
+        {/* <Stack
           mt={{ xs: "24px", md: "40px" }}
           display="grid"
           gridTemplateColumns={{ xs: "repeat(2,1fr)", md: "repeat(4,1fr)" }}
@@ -63,6 +63,60 @@ const ArticlesLayout = (props: ArticlesLayoutProps) => {
               </Stack>
             ))
           }
+        </Stack> */}
+        <Stack
+          direction="row"
+          justifyContent="center"
+          flexWrap="wrap"
+          gap={{ xs: "24px", md: "40px" }}
+          mt={{ xs: "24px", md: "40px" }}>
+          {ListArticles.map((data, index) =>
+            isMdSmaller ? (
+              (index + 3) % 3 === 0 ? (
+                <Stack key={index} width="100%" height="55px" alignItems="center"  >
+                  <Stack   width="40%" height="100%" sx={itemWrapperSx}>
+                    <Image
+                      src={data}
+                      height={50}
+                      sizes="100vw"
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                      alt="logo-partner"
+                    />
+                  </Stack>
+                </Stack>
+              ) : (
+                <Stack key={index}  width="40%" height="55px" sx={itemWrapperSx}>
+                  <Image
+                    src={data}
+                    height={50}
+                    sizes="100vw"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                    alt="logo-partner"
+                  />
+                </Stack>
+              )
+            ) : (
+              <Stack key={index} mb={2} width="20%" sx={itemWrapperSx}>
+                <Image
+                  src={data}
+                  width={isMdSmaller ? 62 : 120}
+                  height={0}
+                  sizes="100vw"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                  }}
+                  alt="logo-partner"
+                />
+              </Stack>
+            )
+          )}
         </Stack>
       </Stack>
     </Stack>
@@ -94,4 +148,13 @@ const textGradientSx = {
   backgroundClip: "text",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
+}
+
+const itemWrapperSx = {
+  borderRadius: { xs: "12px", md: "24px" },
+  backgroundColor: "#fff",
+  boxShadow: " 0px 0px 12px 0px rgba(170, 198, 245, 0.40)",
+  justifyContent: "center",
+  alignItems: "center",
+  p: { xs: "12px 25px", md: "32px 54px" }
 }
