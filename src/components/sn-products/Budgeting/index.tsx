@@ -42,7 +42,7 @@ const ProductBudgeting = () => {
               fontSize="inherit"
               fontWeight={{ md: 500, xs: 700 }}
               percentBlueColor={27.8}
-              percentGreenColor={56.30}
+              percentGreenColor={56.3}
             >
               &#160;efficient and effective attainment{" "}
             </TextGradient>
@@ -118,14 +118,48 @@ const DATA = [
 const DATA_CREATE = [
   {
     heading: (
-      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center">
-        See how to create a budget with TaskCover{" "}
-        <TextGradient component="span" fontSize="inherit">
+      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
+        See how to create a budget{" "}
+        <TextGradient component="span" fontSize="inherit" fontWeight={600}>
           with TaskCover
         </TextGradient>
       </Text>
     ),
-    imageUrl: "/images/create-budget.png",
-    imageMobile: "/images/create-budget-mobile.png"
-  },
+    dataFeatures: [
+      {
+        features: [
+          {
+            id: 1,
+            text: "Track the information",
+            imageUrl: "/images/create-budget.png",
+          },
+          {
+            id: 2,
+            text: "Create Budget",
+            imageUrl: "/images/create-budget.png",
+          },
+          {
+            id: 3,
+            text: "Track execution time",
+            imageUrl: "/images/create-budget.png",
+          },
+          {
+            id: 4,
+            text: "Track expense information",
+            imageUrl: "/images/create-budget.png",
+          },
+          {
+            id: 5,
+            text: "Invoice information",
+            imageUrl: "/images/create-budget.png",
+          },
+          {
+            id: 6,
+            text: "Create recurring invoices",
+            imageUrl: "/images/create-budget.png",
+          },
+        ],
+      },
+    ],
+  }
 ];

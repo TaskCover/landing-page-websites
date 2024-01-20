@@ -104,29 +104,155 @@ const DATA = [
 const DATA_CREATE = [
   {
     heading: (
-      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center">
+      <Text
+        fontSize={{ md: 40, xs: 24 }}
+        textAlign="center"
+        fontWeight={500}
+        width="100%"
+      >
         Keep track of deal information{" "}
-        <TextGradient component="span" fontSize="inherit">
-          with TaskCover
+        <TextGradient component="span" fontSize="inherit" fontWeight={500}>
+        with TaskCover
         </TextGradient>
       </Text>
     ),
-    imageUrl: "/images/create-sale-1.png",
-    imageMobile: "/images/create-sale-mobile-1.png",
-  },
-  {
-    heading: "",
-    imageUrl: "/images/create-sale-2.png",
-    imageMobile: "/images/create-sale-mobile-2.png",
-  },
-  {
-    heading: "",
-    imageUrl: "/images/create-sale-3.png",
-    imageMobile: "/images/create-sale-mobile-3.png",
-  },
-  {
-    heading: "",
-    imageUrl: "/images/create-sale-4.png",
-    imageMobile: "/images/create-sale-mobile-4.png",
+    dataFeatures: [
+      {
+        features: [
+          {
+            id: 1,
+            text: "Name of deal",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 2,
+            text: "Stages of deal",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 3,
+            text: "Stages of deal",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 4,
+            text: "Check who is in charge of deal",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 5,
+            text: "Revenu",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 6,
+            text: "ReveTime of dealnu",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 7,
+            text: "Rating of deal",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 8,
+            text: "Lately time",
+            imageUrl: "/images/create-project.png",
+          },
+        ],
+      },
+      {
+        heading: (
+          <Text
+            fontSize={{ md: 29, xs: 24 }}
+            textAlign={{ md: "left", xs: "center" }}
+            fontWeight={500}
+            width="100%"
+          >
+            CREATE A DEAL
+          </Text>
+        ),
+        features: [
+          {
+            id: 9,
+            text: "Create a name",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 10,
+            text: "Customer’s company",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 11,
+            text: "Currency unit",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 12,
+            text: "In charge",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 13,
+            text: "Employee",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 14,
+            text: "Tag",
+            imageUrl: "/images/create-project.png",
+          },
+        ],
+      },
+      {
+        heading: (
+          <Text
+            fontSize={{ md: 29, xs: 24 }}
+            textAlign={{ md: "left", xs: "center" }}
+            fontWeight={500}
+            width="100%"
+          >
+            EXPORT FILE OF DEAL
+          </Text>
+        ),
+        features: [
+          {
+            id: 15,
+            text: "Choose kind of file",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 16,
+            text: "Choose size",
+            imageUrl: "/images/create-project.png",
+          }
+        ],
+      },
+      {
+        heading: (
+          <Text
+            fontSize={{ md: 29, xs: 24 }}
+            textAlign={{ md: "left", xs: "center" }}
+            fontWeight={500}
+            width="100%"
+          >
+            TRACKING YOUR “SALE&quot;
+          </Text>
+        ),
+        features: [
+          {
+            id: 17,
+            text: "DETAIL OF THE DEAL",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 18,
+            text: "INFORMATION OF CUSTOMER",
+            imageUrl: "/images/create-project.png",
+          }
+        ],
+      },
+    ],
   },
 ];

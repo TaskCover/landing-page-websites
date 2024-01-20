@@ -12,8 +12,92 @@ import { ProductIntroduce } from "../components/ProductIntro";
 import { CreateProduct } from "../components/CreateProduct";
 import useBreakpoint from "hooks/useBreakpoint";
 
-const ProductChat = () => {
-  const {isMdSmaller} = useBreakpoint();
+const ProductBilling = () => {
+  const { isMdSmaller } = useBreakpoint();
+
+  const DATA_CREATE = [
+    {
+      dataFeatures: [
+        {
+          features: [
+            {
+              id: 0,
+              imageUrl: isMdSmaller
+                ? "/images/create-biling-mobile-1.png"
+                : "/images/create-biling-1.png",
+            },
+          ],
+        },
+        {
+          heading: (
+            <Text
+              fontSize={{ md: 29, xs: 24 }}
+              textAlign={{ md: "left", xs: "center" }}
+              fontWeight={500}
+              width="100%"
+            >
+              The way to{" "}
+              <TextGradient
+                component="span"
+                fontSize="inherit"
+                fontWeight={500}
+              >
+                ISSUE and MAKE INVOICE
+              </TextGradient>
+            </Text>
+          ),
+          features: [
+            {
+              id: 1,
+              text: "1 issue invoice",
+              imageUrl: "/images/create-project.png",
+            },
+            {
+              id: 2,
+              text: "2 make invoice",
+              imageUrl: "/images/create-project.png",
+            },
+          ],
+        },
+        {
+          heading: (
+            <Text
+              fontSize={{ md: 29, xs: 24 }}
+              textAlign={{ md: "left", xs: "center" }}
+              fontWeight={500}
+              width="100%"
+            >
+              Check{" "}
+              <TextGradient
+                component="span"
+                fontSize="inherit"
+                fontWeight={500}
+              >
+                your BILL!
+              </TextGradient>
+            </Text>
+          ),
+          features: [
+            {
+              id: 3,
+              text: "INFORMATION",
+              imageUrl: "/images/create-project.png",
+            },
+            {
+              id: 4,
+              text: "HOW TO COMMENT",
+              imageUrl: "/images/create-project.png",
+            },
+            {
+              id: 5,
+              text: "CHECK BILLING INFORMATION",
+              imageUrl: "/images/create-project.png",
+            },
+          ],
+        },
+      ],
+    },
+  ];
   return (
     <Stack position="relative">
       <Stack
@@ -44,7 +128,7 @@ const ProductChat = () => {
               fontWeight={{ md: 600, xs: 700 }}
             >
               Easily generated invoices and tracked
-              {!isMdSmaller && <br/>}
+              {!isMdSmaller && <br />}
             </TextGradient>
             &#160;billable time to save time.
             <br />
@@ -90,29 +174,11 @@ const ProductChat = () => {
   );
 };
 
-export default memo(ProductChat);
+export default memo(ProductBilling);
 
 const DATA = [
   {
     imageUrl: "/images/biling-product-1.png",
     imageMobile: "/images/biling-product-mobile-1.png",
-  },
-];
-
-const DATA_CREATE = [
-  {
-    heading: "",
-    imageUrl: "/images/create-biling-1.png",
-    imageMobile: "/images/create-biling-mobile-1.png",
-  },
-  {
-    heading: "",
-    imageUrl: "/images/create-biling-2.png",
-    imageMobile: "/images/create-biling-mobile-2.png",
-  },
-  {
-    heading: "",
-    imageUrl: "/images/create-biling-3.png",
-    imageMobile: "/images/create-biling-mobile-3.png",
   },
 ];

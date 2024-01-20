@@ -13,7 +13,7 @@ import { CreateProduct } from "../components/CreateProduct";
 import useBreakpoint from "hooks/useBreakpoint";
 
 const ProductProject = () => {
-  const {isMdSmaller} = useBreakpoint();
+  const { isMdSmaller } = useBreakpoint();
   return (
     <Stack position="relative">
       <Stack
@@ -109,27 +109,77 @@ const DATA = [
 const DATA_CREATE = [
   {
     heading: (
-      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center">
+      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
         See how to monitor your personal time{" "}
-        <TextGradient component="span" fontSize="inherit">
+        <TextGradient component="span" fontSize="inherit" fontWeight={600}>
           with TaskCover
         </TextGradient>
       </Text>
     ),
-    imageUrl: "/images/create-time-tracking-1.png",
-    imageMobile: "/images/create-time-tracking-mobile-1.png"
+    dataFeatures: [
+      {
+        features: [
+          {
+            id: 1,
+            text: "Time of Project",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 2,
+            text: "Kind of time word/ day off",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 3,
+            text: "Started time",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 4,
+            text: "Note",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 5,
+            text: "Timesheet check",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 6,
+            text: "Daily check",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 7,
+            text: "Calendar",
+            imageUrl: "/images/create-project.png",
+          },
+        ],
+      },
+    ],
   },
   {
     heading: (
       <TextGradient
+        component="span"
         fontSize={{ md: 40, xs: 24 }}
         textAlign="center"
-        percentBlueColor={36.8}
-        percentGreenColor={57.38}
+        fontWeight={600}
+        percentBlueColor={29.8}
+        percentGreenColor={64.38}
       >
         Check the agency time
       </TextGradient>
     ),
-    imageUrl: "/images/create-time-tracking-2.png",
+    dataFeatures: [
+      {
+        features: [
+          {
+            id: 1,
+            imageUrl: "/images/create-time-tracking.png",
+          }
+        ],
+      },
+    ],
   },
 ];

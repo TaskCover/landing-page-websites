@@ -101,18 +101,128 @@ const DATA = [
 
 const DATA_CREATE = [
   {
-    heading: "",
-    imageUrl: "/images/create-doc-1.png",
-    imageMobile: "/images/create-doc-mobile-1.png",
-  },
-  {
-    heading: "",
-    imageUrl: "/images/create-doc-2.png",
-    imageMobile: "/images/create-doc-mobile-2.png",
-  },
-  {
-    heading: "",
-    imageUrl: "/images/create-doc-3.png",
-    imageMobile: "/images/create-doc-mobile-1.png",
+    dataFeatures: [
+      {
+        heading: (
+          <Text
+            fontSize={{ md: 29, xs: 24 }}
+            textAlign={{ md: "left", xs: "center" }}
+            fontWeight={500}
+            width="100%"
+          >
+            See how to
+            <TextGradient fontSize="inherit" fontWeight={500}>
+              CREATE A DOCS
+            </TextGradient>
+          </Text>
+        ),
+        features: [
+          {
+            id: 1,
+            text: "CREATE A SMALL DOCUMENT",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 2,
+            text: "CREATE A COPY OF DOCUMENT",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 3,
+            text: "DELETE A DOCUMENT",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 4,
+            text: "MOVE",
+            imageUrl: "/images/create-project.png",
+          },
+        ],
+      },
+      {
+        heading: (
+          <Text
+            fontSize={{ md: 29, xs: 24 }}
+            textAlign={{ md: "left", xs: "center" }}
+            fontWeight={500}
+            width="100%"
+          >
+            Make
+            <TextGradient fontSize="inherit" fontWeight={500}>
+              your document different
+            </TextGradient>
+          </Text>
+        ),
+        features: [
+          {
+            id: 5,
+            text: "EDIT CONTENT",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 6,
+            text: "EDIT FORMAT",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 7,
+            text: "BLOCKING",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 8,
+            text: "COLOR OF BACKGROUND",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 9,
+            text: "COLOR OF TEXT",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 10,
+            text: "LINK TO THE BLOCK",
+            imageUrl: "/images/create-project.png",
+          },
+        ],
+      },
+      {
+        heading: (
+          <Text
+            fontSize={{ md: 29, xs: 24 }}
+            textAlign={{ md: "left", xs: "center" }}
+            fontWeight={500}
+            width="100%"
+          >
+            More activities
+            <TextGradient fontSize="inherit" fontWeight={500}>
+              with your doc
+            </TextGradient>
+          </Text>
+        ),
+        features: [
+          {
+            id: 11,
+            text: "CHECK THE HISTORY OF EDITING",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 12,
+            text: "SHARE YOUR FILE",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 13,
+            text: "SHARE LINK TO YOUR FILE",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 14,
+            text: "LOCK THE FILE",
+            imageUrl: "/images/create-project.png",
+          },
+        ],
+      },
+    ],
   },
 ];

@@ -101,8 +101,51 @@ const DATA = [
 
 const DATA_CREATE = [
   {
-    heading: "",
-    imageUrl: "/images/create-resource-1.png",
-    imageMobile: "/images/create-resource-mobile-1.png",
+    dataFeatures: [
+      {
+        heading: (
+          <TextGradient
+            fontSize={{ md: 29, xs: 24 }}
+            textAlign={{ md: "left", xs: "center" }}
+            fontWeight={500}
+            width="100%"
+          >
+            List of employee
+          </TextGradient>
+        ),
+        features: [
+          {
+            id: 1,
+            text: "Displays information",
+            imageUrl: "/images/create-resource-1.png",
+          },
+          {
+            id: 2,
+            text: "Add working time",
+            imageUrl: "/images/create-resource-1.png",
+          },
+          {
+            id: 3,
+            text: "Add off time",
+            imageUrl: "/images/create-resource-1.png",
+          },
+          {
+            id: 4,
+            text: "Displays individual time information",
+            imageUrl: "/images/create-resource-1.png",
+          },
+          {
+            id: 5,
+            text: "Payment to employee accounts",
+            imageUrl: "/images/create-resource-1.png",
+          },
+          {
+            id: 6,
+            text: "Edit employee positions",
+            imageUrl: "/images/create-resource-1.png",
+          },
+        ],
+      },
+    ],
   },
 ];

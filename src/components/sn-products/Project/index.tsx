@@ -36,7 +36,7 @@ const ProductProject = () => {
             fontWeight={{ md: 600, xs: 700 }}
             mt={4}
           >
-            Discover specific tactics and expertise to empower <br/>
+            Discover specific tactics and expertise to empower <br />
             <TextGradient
               component="span"
               fontSize="inherit"
@@ -107,13 +107,68 @@ const DATA = [
 const DATA_CREATE = [
   {
     heading: (
-      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center">
+      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
         See how to create a Project{" "}
-        <TextGradient component="span" fontSize="inherit">
+        <TextGradient component="span" fontSize="inherit" fontWeight={600}>
           with TaskCover
         </TextGradient>
       </Text>
     ),
-    imageUrl: "/images/create-project.png",
+    dataFeatures: [
+      {
+        features: [
+          {
+            id: 1,
+            text: "Set a name",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 2,
+            text: "Who in charge",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 3,
+            text: "View detail",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 4,
+            text: "Adjust project",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 5,
+            text: "Set status",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 6,
+            text: "Check the status operation",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 7,
+            text: "Check the cost",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 8,
+            text: "Check the member",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 9,
+            text: "Check the general information",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 10,
+            text: "Search, filter project",
+            imageUrl: "/images/create-project.png",
+          },
+        ],
+      },
+    ],
   },
 ];

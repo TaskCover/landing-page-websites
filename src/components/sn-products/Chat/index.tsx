@@ -33,13 +33,13 @@ const ProductChat = () => {
           <Text
             fontSize={{ md: 47, xs: 24 }}
             textAlign="center"
-             fontWeight={{ md: 600, xs: 700 }}
+            fontWeight={{ md: 600, xs: 700 }}
             mt={4}
           >
             <TextGradient
               component="span"
               fontSize="inherit"
-               fontWeight={{ md: 600, xs: 700 }}
+              fontWeight={{ md: 600, xs: 700 }}
             >
               Deliver real-time communication,
             </TextGradient>
@@ -51,7 +51,7 @@ const ProductChat = () => {
         imageUrl="/images/chat-product-header.png"
         marginTop={10}
       />
-    <Container>
+      <Container>
         <Banner />
       </Container>
       <Stack position="relative">
@@ -70,12 +70,12 @@ const ProductChat = () => {
           }}
         />
         <Container>
-          <Stack mb={{md: 14, xs: 5}}>
-          <ProductIntroduce data={DATA} />
+          <Stack mb={{ md: 14, xs: 5 }}>
+            <ProductIntroduce data={DATA} />
           </Stack>
           <Partner />
         </Container>
-  
+
         <Container>
           <CreateProduct data={DATA_CREATE} />
         </Container>
@@ -101,30 +101,158 @@ const DATA = [
 
 const DATA_CREATE = [
   {
-    heading: "",
-    imageUrl: "/images/create-chat-1.png",
-    imageMobile: "/images/create-chat-mobile-1.png"
-  },
-  {
-    heading: "",
-    imageUrl: "/images/create-chat-2.png",
-    imageMobile: "/images/create-chat-mobile-2.png"
-  },
-  {
-    heading: "",
-    imageUrl: "/images/create-chat-3.png",
-    imageMobile: "/images/create-chat-mobile-3.png"
+    dataFeatures: [
+      {
+        heading: (
+          <Text
+            fontSize={{ md: 29, xs: 24 }}
+            textAlign={{ md: "left", xs: "center" }}
+            fontWeight={500}
+            width="100%"
+          >
+            Innovative communication{" "}
+            <TextGradient component="span" fontSize="inherit" fontWeight={500}>
+              with different users
+            </TextGradient>
+          </Text>
+        ),
+        features: [
+          {
+            id: 1,
+            text: "Create text formats",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 2,
+            text: "Unlimited emotional expression",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 3,
+            text: "Forward",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 4,
+            text: "Searching the text",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 5,
+            text: "Information",
+            imageUrl: "/images/create-project.png",
+          },
+        ],
+      },
+      {
+        heading: (
+          <Text
+            fontSize={{ md: 29, xs: 24 }}
+            textAlign={{ md: "left", xs: "center" }}
+            fontWeight={500}
+            width="100%"
+          >
+            The more crowded, the merrier{" "}
+            <TextGradient component="span" fontSize="inherit" fontWeight={500}>
+              create a group for your team!
+            </TextGradient>
+          </Text>
+        ),
+        features: [
+          {
+            id: 6,
+            text: "Create the group",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 7,
+            text: "Add new member",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 8,
+            text: "Change the avatar",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 9,
+            text: "Choose the leader",
+            imageUrl: "/images/create-project.png",
+          },
+        ],
+      },
+      {
+        heading: (
+          <Text
+            fontSize={{ md: 29, xs: 24 }}
+            textAlign={{ md: "left", xs: "center" }}
+            fontWeight={500}
+            width="100%"
+          >
+            Too difficult to express by text?{" "}
+            <TextGradient component="span" fontSize="inherit" fontWeight={500}>
+              Call now
+            </TextGradient>
+          </Text>
+        ),
+        features: [
+          {
+            id: 10,
+            text: "Make a video call",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 11,
+            text: "Record",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 12,
+            text: "Change the background",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 13,
+            text: "Reduce noise",
+            imageUrl: "/images/create-project.png",
+          },
+          {
+            id: 14,
+            text: "Screen sharing",
+            imageUrl: "/images/create-project.png",
+          },
+        ],
+      },
+    ],
   },
   {
     heading: (
-      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
-        <TextGradient component="span" fontSize="inherit" fontWeight={600}>
+      <Text
+        component="div"
+        fontSize={{ md: 40, xs: 24 }}
+        textAlign="center"
+        fontWeight={500}
+      >
+        <TextGradient
+          component="span"
+          fontSize={{ md: 40, xs: 24 }}
+          textAlign="center"
+          fontWeight={500}
+        >
           Multitasking{" "}
         </TextGradient>
         while meeting
       </Text>
     ),
-    imageUrl: "/images/create-chat-4.png",
-    imageMobile: "/images/create-chat-mobile-4.png"
+    dataFeatures: [
+      {
+        features: [
+          {
+            id: 1,
+            imageUrl: "/images/create-chat-4.png",
+          },
+        ],
+      },
+    ],
   },
 ];
