@@ -51,7 +51,7 @@ const ProductResource = () => {
         imageUrl="/images/resource-product-header.png"
       />
       <Container>
-        <Banner />
+        <Banner content="Try out Budgeting within TaskCover" />
       </Container>
       <Stack position="relative">
         <Stack
@@ -107,7 +107,7 @@ const DATA_CREATE = [
           <TextGradient
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={500}
+            fontWeight={600}
             width="100%"
           >
             List of employee

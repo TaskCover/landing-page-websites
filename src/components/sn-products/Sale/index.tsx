@@ -54,7 +54,7 @@ const ProductSale = () => {
         imageUrl="/images/sale-product-header.png"
       />
       <Container>
-        <Banner />
+        <Banner content="Try out Budgeting within TaskCover" />
       </Container>
       <Stack position="relative">
         <Stack
@@ -105,6 +105,7 @@ const DATA_CREATE = [
   {
     heading: (
       <Text
+        component="div"
         fontSize={{ md: 40, xs: 24 }}
         textAlign="center"
         fontWeight={500}

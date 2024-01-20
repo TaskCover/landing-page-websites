@@ -20,7 +20,7 @@ export const Partner = () => {
           isMdSmaller ? (
             (index + 3) % 3 === 0 ? (
               <Stack width="100%" key={index} alignItems="center">
-                <Stack mb={2} width={{ md: "20%", xs: "40%" }}>
+                <Stack mb={2} width={{ md: "23%", xs: "40%" }}>
                   <Image
                     src={data}
                     width={isMdSmaller ? 136 : 0}
@@ -35,7 +35,7 @@ export const Partner = () => {
                 </Stack>
               </Stack>
             ) : (
-              <Stack key={index} mb={2} width={{ md: "20%", xs: "40%" }}>
+              <Stack key={index} mb={2} width={{ md: "23%", xs: "40%" }}>
                 <Image
                   src={data}
                   width={isMdSmaller ? 136 : 0}
@@ -50,7 +50,7 @@ export const Partner = () => {
               </Stack>
             )
           ) : (
-            <Stack key={index} mb={2} width="20%">
+            <Stack key={index} mb={2} width="23%" mx={1}>
               <Image
                 src={data}
                 width={isMdSmaller ? 136 : 0}

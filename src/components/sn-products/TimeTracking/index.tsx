@@ -54,7 +54,7 @@ const ProductProject = () => {
         marginTop={13}
       />
       <Container>
-        <Banner />
+        <Banner content="Monitor team's time within TaskCover" />
       </Container>
       <Stack position="relative">
         <Stack
@@ -109,7 +109,7 @@ const DATA = [
 const DATA_CREATE = [
   {
     heading: (
-      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
+      <Text  component="div" fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
         See how to monitor your personal time{" "}
         <TextGradient component="span" fontSize="inherit" fontWeight={600}>
           with TaskCover

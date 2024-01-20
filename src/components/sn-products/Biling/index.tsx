@@ -31,16 +31,17 @@ const ProductBilling = () => {
         {
           heading: (
             <Text
+              component="div"
               fontSize={{ md: 29, xs: 24 }}
               textAlign={{ md: "left", xs: "center" }}
-              fontWeight={500}
+              fontWeight={600}
               width="100%"
             >
               The way to{" "}
               <TextGradient
                 component="span"
                 fontSize="inherit"
-                fontWeight={500}
+                fontWeight={600}
               >
                 ISSUE and MAKE INVOICE
               </TextGradient>
@@ -62,16 +63,17 @@ const ProductBilling = () => {
         {
           heading: (
             <Text
+              component="div"
               fontSize={{ md: 29, xs: 24 }}
               textAlign={{ md: "left", xs: "center" }}
-              fontWeight={500}
+              fontWeight={600}
               width="100%"
             >
               Check{" "}
               <TextGradient
                 component="span"
                 fontSize="inherit"
-                fontWeight={500}
+                fontWeight={600}
               >
                 your BILL!
               </TextGradient>
@@ -117,6 +119,7 @@ const ProductBilling = () => {
       <HeaderProducts
         headingText={
           <Text
+            component="div"
             fontSize={{ md: 47, xs: 24 }}
             textAlign="center"
             fontWeight={{ md: 600, xs: 700 }}
@@ -138,7 +141,7 @@ const ProductBilling = () => {
         imageUrl="/images/biling-product-header.png"
       />
       <Container>
-        <Banner />
+        <Banner content="Monitor team's time within TaskCover" />
       </Container>
       <Stack position="relative">
         <Stack

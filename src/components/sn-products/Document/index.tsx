@@ -52,7 +52,7 @@ const ProductDocument = () => {
         marginTop={5}
       />
       <Container>
-        <Banner />
+        <Banner content="Monitor team's time within TaskCover" />
       </Container>
       <Stack position="relative">
         <Stack
@@ -105,13 +105,14 @@ const DATA_CREATE = [
       {
         heading: (
           <Text
+            component="div"
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={500}
+            fontWeight={600}
             width="100%"
           >
             See how to
-            <TextGradient fontSize="inherit" fontWeight={500}>
+            <TextGradient fontSize="inherit" fontWeight={600}>
               CREATE A DOCS
             </TextGradient>
           </Text>
@@ -142,13 +143,14 @@ const DATA_CREATE = [
       {
         heading: (
           <Text
+            component="div"
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={500}
+            fontWeight={600}
             width="100%"
           >
             Make
-            <TextGradient fontSize="inherit" fontWeight={500}>
+            <TextGradient fontSize="inherit" fontWeight={600}>
               your document different
             </TextGradient>
           </Text>
@@ -189,13 +191,14 @@ const DATA_CREATE = [
       {
         heading: (
           <Text
+            component="div"
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={500}
+            fontWeight={600}
             width="100%"
           >
             More activities
-            <TextGradient fontSize="inherit" fontWeight={500}>
+            <TextGradient fontSize="inherit" fontWeight={600}>
               with your doc
             </TextGradient>
           </Text>

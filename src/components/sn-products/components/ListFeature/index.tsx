@@ -15,17 +15,29 @@ export type ListFeaturesProps = {
   initData?: Feature;
   features: Feature[];
   isReversed?: boolean;
+  order?: number;
 };
 
 export const ListFeatures = (props: ListFeaturesProps) => {
-  const { heading, features, initData = features[0], isReversed } = props;
+  const {
+    heading,
+    features,
+    initData = features[0],
+    isReversed,
+    order,
+  } = props;
   const [currentData, setCurrentData] = useState<Feature>(initData);
   const { isMdSmaller } = useBreakpoint();
   const handlerChangeImage = (data: Feature) => {
     setCurrentData(data);
   };
   return (
-    <Stack direction={isReversed ? "row-reverse" : "row"} width="100%" spacing={{ md: 7.75, xs: 0 }}>
+    <Stack
+      direction={isReversed ? "row-reverse" : "row"}
+      width="100%"
+      spacing={{ md: 7.75, xs: 0 }}
+      mt={{ md: heading ? (order === 0 ? 7 : 20) : 0, xs: 2 }}
+    >
       {initData.text && (
         <List sx={{ flex: { md: 0.5, xs: 1 } }}>
           {heading && <ListItem>{heading}</ListItem>}
@@ -80,7 +92,10 @@ export const ListFeatures = (props: ListFeaturesProps) => {
         </List>
       )}
 
-      <Stack flex={1} display={{ md: "flex", xs: initData.text ? "none" : "flex" }}>
+      <Stack
+        flex={1}
+        display={{ md: "flex", xs: initData.text ? "none" : "flex" }}
+      >
         <Image
           src={currentData.imageUrl}
           width={0}

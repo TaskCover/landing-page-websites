@@ -52,7 +52,7 @@ const ProductTaskManager = () => {
         imageUrl="/images/product-task-manager-header.png"
       />
       <Container>
-        <Banner />
+        <Banner content="Manage your task within TaskCover" />
       </Container>
       <Stack position="relative">
         <Stack
@@ -111,7 +111,7 @@ const DATA = [
 const DATA_CREATE = [
   {
     heading: (
-      <Text fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
+      <Text  component="div" fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
         See how to create a Project{" "}
         <TextGradient component="span" fontSize="inherit" fontWeight={600}>
           with TaskCover

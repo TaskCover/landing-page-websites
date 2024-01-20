@@ -1,7 +1,12 @@
 import { Button, Stack } from "@mui/material";
 import { Text } from "components/shared";
 
-export const Banner = () => {
+type BannerProps = {
+  content: string;
+}
+
+export const Banner = (props: BannerProps) => {
+  const { content } = props;
   return (
     <Stack
       sx={{
@@ -27,7 +32,7 @@ export const Banner = () => {
           mb={2}
           textAlign={{ md: "left", xs: "center" }}
         >
-          Optimize Workflows with Precision and Ease
+          ptOimize Workflows with Precision and Ease
         </Text>
         <Text
           fontSize={{ md: 20, xs: 16 }}
@@ -36,7 +41,7 @@ export const Banner = () => {
           mb={2}
           textAlign={{ md: "left", xs: "center" }}
         >
-          Create a new project within TaskCover
+          {content}
         </Text>
         <Button
           sx={{
@@ -50,7 +55,8 @@ export const Banner = () => {
             fontWeight: 600,
             mx: {md: 0, xs: "auto"},
             "&:hover": {
-              backgroundColor: "#fff",
+              background: "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+              color: "#fff"
             },
           }}
         >
