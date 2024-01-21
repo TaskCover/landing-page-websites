@@ -43,7 +43,7 @@ export const HeaderProducts = (props: HeaderProductsProps) => {
           px={6}
           mt={3}
         >
-          {DATA.map((data, index) => (
+          {DATA_PROJECT.map((data, index) => (
             <Link href={data.link} key={index}>
               <Stack alignItems="center">
                 <Image src={data.icon} alt="project" width={24} height={24} />
@@ -77,7 +77,7 @@ export const HeaderProducts = (props: HeaderProductsProps) => {
   );
 };
 
-const DATA = [
+export const DATA_PROJECT = [
   {
     icon: "/images/project-ic.png",
     label: "Project",
