@@ -53,30 +53,8 @@ const Menu = () => {
     >
       {DATA.map((item, index) => {
         const pathActive = item.href == pathname || (item.child && item.child.map(e => e.link).includes(pathname))
-        return (
-          <Link
-            key={index}
-            href={item.href ?? "#"}
-            // className={isActiveLink ? "active" : ""}
-            underline="none"
-            sx={{
-              color: "grey.900",
-              display: "inline-flex",
-              position: "relative",
-              transition: ".3s",
-            }}
-            onClick={(event) => {
-              // setActiveTab({
-              //   popoverLeft: event.currentTarget.clientLeft,
-              //   isActive: activeTab.tabKey === index ? !activeTab.isActive : true,
-              //   tabKey: index
-              // })
-              // setHovering(index);
-              setPopoverLeft(event.currentTarget.clientLeft);
-            }}
-          >
-
-
+        if (item.child) {
+          return (
             <PopupState variant="popover" popupId="demo-popup-popover">
               {(popupState) => (
                 <div>
@@ -103,8 +81,8 @@ const Menu = () => {
                     >
                       {item.label}
                     </Text>
-                    {item.child ? <ExpandMoreIcon width={16} height={16} />
-                      : <></>}
+                    <ExpandMoreIcon width={16} height={16} />
+
                   </Stack>
                   {item.child && (
                     <Popover
@@ -167,8 +145,42 @@ const Menu = () => {
                 </div>
               )}
             </PopupState>
-          </Link>
-        );
+          );
+        } else {
+          return (
+            <Link
+              key={index}
+              href={item.href ?? "#"}
+              // className={isActiveLink ? "active" : ""}
+              underline="none"
+              sx={{
+                color: "grey.900",
+                display: "inline-flex",
+                position: "relative",
+                transition: ".3s",
+              }}
+            >
+              <Stack
+                direction="row"
+                alignItems="center"
+                sx={{
+                  fontSize: 14,
+                  borderBottom: pathActive ? "3px solid #0a7fdc" : "none",
+                }}
+              >
+                <Text
+                  color={pathActive ? "#000" : "grey.900"}
+                  variant={{ xs: "body2", xl: "body1" }}
+                  fontWeight={500}
+                  noWrap
+                  textTransform="capitalize"
+                >
+                  {item.label}
+                </Text>
+              </Stack>
+            </Link>
+          )
+        }
       })}
     </Stack>
   );
