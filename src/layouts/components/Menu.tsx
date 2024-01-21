@@ -26,8 +26,10 @@ import Image from "next/image";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Popover from '@mui/material/Popover';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+
 const Menu = () => {
   const { isMdSmaller } = useBreakpoint();
+  const pathname = usePathname();
 
   const [hovering, setHovering] = useState<number | null>(null);
   const [popoverLeft, setPopoverLeft] = useState<number | null>(null);
@@ -50,6 +52,7 @@ const Menu = () => {
     // onMouseLeave={() => setHovering(null)}
     >
       {DATA.map((item, index) => {
+        const pathActive = item.href == pathname || (item.child && item.child.map(e => e.link).includes(pathname))
         return (
           <Link
             key={index}
@@ -83,6 +86,7 @@ const Menu = () => {
                     sx={{
                       fontSize: 14,
                       gap: "2px",
+                      borderBottom: pathActive ? "3px solid #0a7fdc" : "none",
                       "&:hover": {
                         borderBottom: "3px solid #0a7fdc"
                       }
@@ -90,36 +94,37 @@ const Menu = () => {
                     {...bindTrigger(popupState)}
                   >
                     <Text
-                      color="grey.900"
+                      color={pathActive ? "#000" : "grey.900"}
                       variant={{ xs: "body2", xl: "body1" }}
                       fontWeight={500}
                       noWrap
                       textTransform="capitalize"
+
                     >
                       {item.label}
                     </Text>
                     {item.child ? <ExpandMoreIcon width={16} height={16} />
                       : <></>}
                   </Stack>
-                  <Popover
-                    {...bindPopover(popupState)}
-                    anchorPosition={{ top: 50, left: popoverLeft as number }}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left',
-                    }}
-                    sx={{
-                      p: "16px",
-                      boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.2)",
-                      border: "1px solid white",
-                      borderRadius: "16px",
-                    }}
-                  >
-                    {item.child && (
+                  {item.child && (
+                    <Popover
+                      {...bindPopover(popupState)}
+                      anchorPosition={{ top: 50, left: popoverLeft as number }}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                      }}
+                      sx={{
+                        p: "16px",
+                        boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.2)",
+                        border: "1px solid white",
+                        borderRadius: "16px",
+                      }}
+                    >
                       <Stack
                         display={{ xs: "flex", md: "grid" }}
                         direction="column"
@@ -157,8 +162,8 @@ const Menu = () => {
                           ))
                         }
                       </Stack>
-                    )}
-                  </Popover>
+                    </Popover>
+                  )}
                 </div>
               )}
             </PopupState>
@@ -232,7 +237,7 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
 const DATA: MenuItemProps[] = [
   {
     label: "Product",
-    href: "",
+    href: "/products",
     child: [
       {
         icon: "/images/project-ic.png",
@@ -278,51 +283,51 @@ const DATA: MenuItemProps[] = [
   },
   {
     label: "AI",
-    href: "",
+    href: "/AI",
   },
   {
     label: "Pricing",
-    href: "",
+    href: "/pricing",
   },
   {
     label: "Use cases",
-    href: "",
+    href: "/use-case/marketing-agency",
     child: [
       {
         icon: MarketingIcon,
         label: "Marketing Agency",
-        link: "/",
+        link: "/use-case/marketing-agency",
       },
       {
         icon: SoftwareIcon,
         label: "Software Agency",
-        link: "/",
+        link: "/use-case/software-agency",
       },
       {
         icon: ProductionIcon,
         label: "Production House",
-        link: "/",
+        link: "/use-case/production-house",
       },
       {
         icon: AgencyIcon,
         label: "Law Agency",
-        link: "/",
+        link: "/use-case/law-agency",
       },
       {
         icon: EventAgencyIcon,
         label: "Event Agency",
-        link: "/",
+        link: "/use-case/event-agency",
       },
       {
         icon: RemoteIcon,
         label: "Remote Team",
-        link: "/",
+        link: "/use-case/remote-team",
       },
     ]
   },
   {
     label: "Resources",
-    href: "",
+    href: "/about-us",
     child: [
       {
         icon: AboutUsIcon,
