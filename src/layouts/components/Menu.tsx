@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import Link from "components/Link";
 import { Text } from "components/shared";
 import { NS_LAYOUT } from "constant/index";
@@ -24,7 +24,8 @@ import TrustCenterIcon from "public/images/header/ic-trust-center.svg";
 import ArrowDownIc from "public/images/home-page/arrow-right.svg";
 import Image from "next/image";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+import Popover from '@mui/material/Popover';
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 const Menu = () => {
   const { isMdSmaller } = useBreakpoint();
 
@@ -43,7 +44,7 @@ const Menu = () => {
         flexDirection: "row",
         justifyContent: isMdSmaller ? "space-between" : "flex-start",
         display: { md: "flex", xs: "none" },
-        transition: "1s",
+        transition: "all .3s",
       }}
       onMouseEnter={() => setHovering(null)}
     // onMouseLeave={() => setHovering(null)}
@@ -59,84 +60,108 @@ const Menu = () => {
               color: "grey.900",
               display: "inline-flex",
               position: "relative",
-              transition: "1s",
+              transition: ".3s",
             }}
             onClick={(event) => {
-              setActiveTab({
-                popoverLeft: event.currentTarget.clientLeft,
-                isActive: activeTab.tabKey === index ? !activeTab.isActive : true,
-                tabKey: index
-              })
+              // setActiveTab({
+              //   popoverLeft: event.currentTarget.clientLeft,
+              //   isActive: activeTab.tabKey === index ? !activeTab.isActive : true,
+              //   tabKey: index
+              // })
               // setHovering(index);
-              // setPopoverLeft(event.currentTarget.clientLeft);
+              setPopoverLeft(event.currentTarget.clientLeft);
             }}
           >
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{
-                fontSize: 14,
-                gap: "2px",
-                "&:hover": {
-                  borderBottom: "3px solid #0a7fdc"
-                }
-              }}
-            >
-              <Text
-                color="grey.900"
-                variant={{ xs: "body2", xl: "body1" }}
-                fontWeight={500}
-                noWrap
-                textTransform="capitalize"
-              >
-                {item.label}
-              </Text>
-              {item.child ? <ExpandMoreIcon width={16} height={16} />
-                : <></>}
-            </Stack>
-            {item.child && activeTab.tabKey === index && activeTab.isActive && (
-              <Stack
-                display={{ xs: "flex", md: "grid" }}
-                direction="column"
-                gridTemplateColumns={item.label == "Product" ? "1fr 1fr 1fr" : "1fr 1fr"}
-                sx={{
-                  position: 'absolute',
-                  top: 50,
-                  left: activeTab.popoverLeft,
-                  backgroundColor: "white",
-                  width: "fit-content",
-                  minHeight: "100px",
-                  p: "24px",
-                  boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.2)",
-                  border: "1px solid white",
-                  borderRadius: "16px",
-                  transition: "1s",
-                  zIndex: 9999,
-                }} >
-                {
-                  item.child.map((e, i) => (
-                    <Link href={e.link ?? "#"} key={i}>
-                      <Stack direction="row" alignItems="center" gap="8px"
-                        sx={{
-                          p: "16px 12px",
-                          minWidth: { xs: "auto", md: "200px" },
-                          width: "100%",
-                        }}
-                      >
-                        <Image src={e.icon} alt="icon" width={24} height={24} />
-                        <Text sx={{
-                          fontSize: "16px",
-                          fontWeight: 400,
-                          lineHeight: "24px",
-                          textDecoration: "none"
-                        }}>{e.label}</Text>
-                      </Stack>
-                    </Link>
 
-                  ))
-                }
-              </Stack>
-            )}
+
+            <PopupState variant="popover" popupId="demo-popup-popover">
+              {(popupState) => (
+                <div>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    sx={{
+                      fontSize: 14,
+                      gap: "2px",
+                      "&:hover": {
+                        borderBottom: "3px solid #0a7fdc"
+                      }
+                    }}
+                    {...bindTrigger(popupState)}
+                  >
+                    <Text
+                      color="grey.900"
+                      variant={{ xs: "body2", xl: "body1" }}
+                      fontWeight={500}
+                      noWrap
+                      textTransform="capitalize"
+                    >
+                      {item.label}
+                    </Text>
+                    {item.child ? <ExpandMoreIcon width={16} height={16} />
+                      : <></>}
+                  </Stack>
+                  <Popover
+                    {...bindPopover(popupState)}
+                    anchorPosition={{ top: 50, left: popoverLeft as number }}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left',
+                    }}
+                    sx={{
+                      p: "16px",
+                      boxShadow: "2px 2px 24px rgba(0, 0, 0, 0.2)",
+                      border: "1px solid white",
+                      borderRadius: "16px",
+                    }}
+                  >
+                    {item.child && (
+                      <Stack
+                        display={{ xs: "flex", md: "grid" }}
+                        direction="column"
+                        gridTemplateColumns={item.label == "Product" ? "1fr 1fr 1fr" : "1fr 1fr"}
+                        sx={{
+                          // position: 'absolute',
+                          // top: 50,
+                          // left: activeTab.popoverLeft,
+                          p: "16px",
+                          width: "fit-content",
+                          borderRadius: "16px",
+                          transition: ".3s",
+                          zIndex: 9999,
+                        }} >
+                        {
+                          item.child.map((e, i) => (
+                            <Link href={e.link ?? "#"} key={i}>
+                              <Stack direction="row" alignItems="center" gap="8px"
+                                sx={{
+                                  p: "16px 12px",
+                                  minWidth: { xs: "auto", md: "200px" },
+                                  width: "100%",
+                                }}
+                              >
+                                <Image src={e.icon} alt="icon" width={24} height={24} />
+                                <Text sx={{
+                                  fontSize: "16px",
+                                  fontWeight: 400,
+                                  lineHeight: "24px",
+                                  textDecoration: "none"
+                                }}>{e.label}</Text>
+                              </Stack>
+                            </Link>
+
+                          ))
+                        }
+                      </Stack>
+                    )}
+                  </Popover>
+                </div>
+              )}
+            </PopupState>
           </Link>
         );
       })}
