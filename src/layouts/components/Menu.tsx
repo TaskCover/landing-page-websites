@@ -51,7 +51,7 @@ const Menu = () => {
       onMouseEnter={() => setHovering(null)}
     // onMouseLeave={() => setHovering(null)}
     >
-      {DATA.map((item, index) => {
+      {DATA_MEMU.map((item, index) => {
         const pathActive = item.href == pathname || (item.child && item.child.map(e => e.link).includes(pathname))
         if (item.child) {
           return (
@@ -82,7 +82,6 @@ const Menu = () => {
                       {item.label}
                     </Text>
                     <ExpandMoreIcon width={16} height={16} />
-
                   </Stack>
                   {item.child && (
                     <Popover
@@ -246,7 +245,7 @@ const LinkItem = (props: Omit<MenuItemProps, "children">) => {
   );
 };
 
-const DATA: MenuItemProps[] = [
+export const DATA_MEMU: MenuItemProps[] = [
   {
     label: "Product",
     href: "/products",

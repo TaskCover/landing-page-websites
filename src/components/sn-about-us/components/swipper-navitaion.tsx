@@ -9,7 +9,6 @@ type SwiperNavButtonsProps = {
 }
 
 export const SwiperNavButtons = (props: SwiperNavButtonsProps) => {
-  const swiper = useSwiper();
   const {handlerNext, handlerPrevious} = props;
 
   return (
