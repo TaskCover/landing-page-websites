@@ -1,11 +1,11 @@
 import React, { memo, useMemo, useState } from "react";
 import { InputBase, Stack, TextField, styled } from "@mui/material";
-import { Button, Text } from "components/shared";
+import { Button, Input, Text } from "components/shared";
 import { ListFormSubmit } from "../helpers/helpers";
 import { FormType } from "constant/enums";
 import { FormikErrors, useFormik } from "formik";
 import * as Yup from "yup";
-import { CareerData } from "store/career/action";
+import { ApplyParams, CareerData } from "store/career/action";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -18,8 +18,21 @@ import PhoneInput from "react-phone-number-input";
 import Upload from "components/sn-docs/news/change-cover-panel/Upload";
 import dayjs from "dayjs";
 import Image from "next/image";
+import { clientStorage } from "utils/storage";
+import { useAuth, useSnackbar, useUserInfo } from "store/app/selectors";
+import { useCareer } from "store/career/selectors";
+import { formErrorCode } from "api/formErrorCode";
+import { ErrorResponse } from "constant/types";
+import { getMessageErrorByAPI } from "utils/index";
+import { NS_COMMON, NS_CAREER, ACCESS_TOKEN_STORAGE_KEY } from "constant/index";
+import { useTranslations } from "next-intl";
+import CloseIcon from "icons/CloseIcon";
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import ErrorIcon from "icons/ErrorIcon";
 
-type FormApplyProps = {};
+type FormApplyProps = {
+  slug: string | Array<string>;
+};
 
 const CustomPhoneInput = ({ value, onChange }) => (
   <TextField
@@ -58,22 +71,49 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 }));
 
 const FormApply = (props: FormApplyProps) => {
+  const { slug } = props;
   const [value, setValue] = useState();
+  const commonT = useTranslations(NS_COMMON);
+  const { onAddSnackbar } = useSnackbar();
+  const {
+    onCreateFormApply
+  } = useCareer();
 
-  const onSubmit = () => {
+  const onSubmit = async (values: ApplyParams) => {
 
+    try {
+      const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
+      // return 200;
+      const resp = await onCreateFormApply(slug as string, values, accessToken);
+
+      if (resp) {
+        onAddSnackbar(
+          "Apply for job success",
+          "success",
+        );
+        formik.resetForm();
+      }
+    } catch (error) {
+      if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
+        formik.setFieldError("old_password", "form.error.incorrect");
+      } else {
+        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      }
+    }
   };
-
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
-    validationSchema,
+    validationSchema: validationSchema,
     enableReinitialize: true,
-    onSubmit,
+    onSubmit(values) {
+
+      onSubmit(values)
+    }
   });
 
   const touchedErrors = useMemo(() => {
     return Object.entries(formik.errors).reduce(
-      (out: FormikErrors<CareerData>, [key, error]) => {
+      (out: FormikErrors<typeof INITIAL_VALUES>, [key, error]) => {
         if (formik.touched[key]) {
           out[key] = error;
         }
@@ -94,15 +134,19 @@ const FormApply = (props: FormApplyProps) => {
 
   const handleChangeDate = (val) => { };
   const handleChangeDropdown = (val) => { };
-  const handleFileUpload = (key, e) => {
+  const handleFileUpload = (key, e, isArrayValue) => {
     const selectedImage = e.target.files[0];
-    const imageUrl = URL.createObjectURL(selectedImage);
-    console.log(key, "--key---");
+    let values;
+    if (isArrayValue) {
+      values = [...formik.values[key], URL.createObjectURL(selectedImage)];
 
-    formik.setFieldValue(key, imageUrl);
+    } else {
+      values = URL.createObjectURL(selectedImage);
+    }
+
+    formik.setFieldValue(key, values);
   };
 
-  console.log(formik.values, "--formik.values---");
 
   return (
     <Stack
@@ -126,10 +170,10 @@ const FormApply = (props: FormApplyProps) => {
                 <>
                   {form.type === FormType.Input && (
                     <Stack>
-                      <TextField
+                      <Input
                         required
                         id="outlined-required"
-                        placeholder={form.label}
+                        placeholder={form.placeholder}
                         fullWidth
                         size="small"
                         focused
@@ -140,7 +184,9 @@ const FormApply = (props: FormApplyProps) => {
                         }
                         onBlur={formik.handleBlur}
                         value={formik.values[form.key]}
-                        error={touchedErrors[form.key]}
+                        error={commonT(touchedErrors[form.key], {
+                          name: form.label,
+                        })}
                         sx={{}}
                       />
                     </Stack>
@@ -202,7 +248,7 @@ const FormApply = (props: FormApplyProps) => {
                   )}
                   {form.type === FormType.Link && <Stack width="100%"></Stack>}
                   {form.type === FormType.NumberPicker && (
-                    <Stack>
+                    <Stack gap="4px">
                       <PhoneInput
                         international
                         defaultCountry="VN"
@@ -219,12 +265,27 @@ const FormApply = (props: FormApplyProps) => {
                           }
                         }
                       />
+                      {Boolean(touchedErrors[form.key]) ?
+                        <Stack direction="row" alignItems="center" gap="4px">
+                          <ErrorIcon color="error" width={16} height={16} />
+                          <Text sx={{
+                            fontSize: "12px",
+                            lineHeight: "16px",
+                            color: "#999999"
+                          }}>
+                            {commonT(touchedErrors[form.key], {
+                              name: form.label,
+                            })}
+                            {touchedErrors[form.key]}
+                          </Text>
+                        </Stack> : <></>
+                      }
                     </Stack>
                   )}
                   {form.type === FormType.Upload && (
                     <Stack>
                       <label
-                        htmlFor="file-upload"
+                        htmlFor={form.key}
                         style={{
                           padding: "10px 16px",
                           background:
@@ -241,44 +302,106 @@ const FormApply = (props: FormApplyProps) => {
                         Choose file
                       </label>
                       <input
-                        id="file-upload"
+                        id={form.key}
                         type="file"
-                        onChange={(e) => handleFileUpload(form.key, e)}
+                        onChange={(e) => handleFileUpload(form.key, e, form.isArrayValue)}
                         style={{ display: "none" }}
                       />
-
-                      {formik.values[form.key] ? (
-                        <Stack>
-                          <img
-                            src={formik.values[form.key]}
-                            alt="Selected"
-                            style={{
-                              height: "100px",
-                              width: "100px",
-                              objectFit: "cover",
-                            }}
-                          />
-                          {/* <Image
-                            src={formik.values[form.key]}
-                            alt="image"
-                            width={100}
-                            height={100}
-                            style={{
-                              maxHeight: "100px",
-                              width: "auto",
-                            }}
-                          /> */}
-                        </Stack>
-                      ) : (
-                        <Stack>
-                          <Text variant="h6">
-                            Images wider that 1500 pixels work best.
+                      {Boolean(touchedErrors[form.key]) ?
+                        <Stack direction="row" alignItems="center" gap="4px">
+                          <ErrorIcon color="error" width={16} height={16} />
+                          <Text sx={{
+                            fontSize: "12px",
+                            lineHeight: "16px",
+                            color: "#999999"
+                          }}>
+                            {commonT(touchedErrors[form.key], {
+                              name: form.label,
+                            })}
                           </Text>
-                          <Text variant="h6">
-                            The maximum size per file is 5MB.
-                          </Text>
-                        </Stack>
-                      )}
+                        </Stack> : <></>
+                      }
+                      {Boolean(formik.values[form.key].length) ?
+                        (
+                          form.isArrayValue ?
+                            <Stack gap="8px" direction="row" >
+                              {
+                                formik.values[form.key].map((e, i) =>
+                                (
+                                  <Stack
+                                    sx={{
+                                      position: "relative",
+                                    }}
+                                  >
+                                    <Stack
+                                      onClick={() => formik.setFieldValue(form.key, formik.values[form.key].filter(val => val !== e))}
+                                      sx={{
+                                        position: "absolute",
+                                        top: 1,
+                                        right: 1,
+                                        transition: ".3s",
+                                        "&:hover": {
+                                          cursor: "pointer",
+                                          transform: "scale(1.1)",
+                                          transition: ".3s",
+                                        }
+                                      }}>
+                                      <CancelOutlinedIcon width={20} height={20} fill="white" />
+                                    </Stack>
+                                    <img
+                                      src={e}
+                                      alt="Selected"
+                                      style={{
+                                        height: "100px",
+                                        width: "100px",
+                                        objectFit: "cover",
+                                      }}
+                                    />
+                                  </Stack>
+                                ))
+                              }
+                            </Stack> :
+                            <Stack
+                              sx={{
+                                position: "relative",
+                              }}
+                            >
+                              <Stack
+                                onClick={() => formik.setFieldValue(form.key, "")}
+                                sx={{
+                                  position: "absolute",
+                                  top: 1,
+                                  right: 1,
+                                  transition: ".3s",
+                                  "&:hover": {
+                                    cursor: "pointer",
+                                    transform: "scale(1.1)",
+                                    transition: ".3s",
+                                  }
+                                }}>
+                                <CancelOutlinedIcon width={20} height={20} />
+                              </Stack>
+                              <img
+                                src={formik.values[form.key]}
+                                alt="Selected"
+                                style={{
+                                  height: "100px",
+                                  width: "100px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            </Stack>
+                        )
+                        : (
+                          <Stack>
+                            <Text variant="h6">
+                              Images wider that 1500 pixels work best.
+                            </Text>
+                            <Text variant="h6">
+                              The maximum size per file is 5MB.
+                            </Text>
+                          </Stack>
+                        )}
                     </Stack>
                   )}
                 </>
@@ -287,14 +410,19 @@ const FormApply = (props: FormApplyProps) => {
           </>
         );
       })}
-      <Stack component="form" width="100%" alignItems="end" onSubmit={formik.handleSubmit}>
+      <Stack component="form" width="100%" alignItems="end" >
         <Button
+          disabled={disabled}
           sx={{
             p: "12px 24px",
             background: "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
             width: { xs: "105px", md: "130px" },
             mb: "24px",
+            "&:hover": {
+              cursor: disabled ? "not-allowed" : "pointer"
+            }
           }}
+          onClick={() => formik.handleSubmit()}
         >
           <Text variant="h5" color="#fff">
             Submit
@@ -325,7 +453,15 @@ export const validationSchema = Yup.object().shape({
   first_name: Yup.string().trim().required("form.error.required"),
   last_name: Yup.string().trim().required("form.error.required"),
   email: Yup.string().trim().required("form.error.required"),
-  phone_number: Yup.string().trim().required("form.error.required"),
+  phone: Yup.string().trim().required("form.error.required"),
+  // birth: Yup.string().trim().required("form.error.required"),
+  gender: Yup.string().trim().required("form.error.required"),
+  resume: Yup.string().trim().required("form.error.required"),
+  socialLink: Yup.string().trim()
+    .required("form.error.required")
+    // .url('URL phải có định dạng hợp lệ.')
+    // .matches(/^https:\/\//, 'URL phải bắt đầu bằng "https://"'),
+  // attachments: Yup.string().trim().required("form.error.required"),
 });
 
 const Gentle_list = [
@@ -346,11 +482,11 @@ const Gentle_list = [
 const INITIAL_VALUES = {
   first_name: "",
   last_name: "",
-  birthday: dayjs(new Date()),
-  gentle: Gentle_list[0].value,
+  birth: dayjs(new Date()) as any,
+  gender: Gentle_list[0].value,
   email: "",
-  phone_number: "",
-  your_resume: null,
-  attachment: null,
-  portfolio: "",
+  phone: "",
+  resume: "",
+  attachments: [],
+  socialLink: "",
 };

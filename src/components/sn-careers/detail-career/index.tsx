@@ -13,22 +13,30 @@ import { useForm } from "react-hook-form";
 import { useCareer } from "store/career/selectors";
 import { formatDate } from "utils/index";
 import { DetailCareerData, ListFormSubmit } from "../helpers/helpers";
-
 import { FormType } from "constant/enums";
 import FormApply from "../components/FormApply";
 import { useParams } from "next/navigation";
 import { useAppDispatch } from "store/hooks";
+import Link from "next/link";
 
 type DetailCareerPageProps = {};
-
+const Init_Query = {
+  status: "CAN_APPLY",
+  page: 1,
+  size: 8,
+}
 const DetailCareerPage = (props: DetailCareerPageProps) => {
   const { isMdSmaller } = useBreakpoint();
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
+  const { id } = useParams();
+  const dispatch = useAppDispatch();
+  const { initQuery, isReady, query } = useQueryParams();
 
   const {
     onGetCareer,
     onGetCareerBySlug,
     items,
+    item,
     totalItems,
     total_page,
     page,
@@ -36,25 +44,18 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
     isIdle,
     onUpdateCareerStatus: onApproveOrRejectAction,
   } = useCareer();
-  const { initQuery, isReady, query } = useQueryParams();
-  const { control, handleSubmit, setValue, getValues, reset, watch } =
-    useForm();
+  console.log(item, '---item--');
+
 
   useEffect(() => {
-    if (!isReady) return;
-    onGetCareer({ ...initQuery });
-  }, [initQuery, isReady, onGetCareer]);
-
-  const dispatch = useAppDispatch();
-  const { slug } = useParams();
-
-  useEffect(() => {
-    dispatch(() => onGetCareer(initQuery));
+    dispatch(() => onGetCareer(Init_Query));
   }, [dispatch, onGetCareer]);
 
   useEffect(() => {
-    dispatch(() => onGetCareerBySlug(slug as string));
-  }, [dispatch, onGetCareerBySlug, slug]);
+    if (id) {
+      dispatch(() => onGetCareerBySlug(id.toString() as string));
+    }
+  }, [id]);
 
   return (
     <Stack width="100%">
@@ -74,6 +75,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
             },
           ]}
         >
+
           <Text
             variant="h5"
             sx={{
@@ -125,9 +127,10 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
             fontWeight: { xs: 500, md: 700 },
             lineHeight: { xs: "32px", md: "44px" },
             textAlign: "center",
+            textTransform: "uppercase",
           }}
         >
-          {`SENIOR EXECUTIVE – SERVICE COUNTER`}
+          {item?.title}
         </Text>
         <Stack
           gap={{ xs: "24px", md: "40px" }}
@@ -161,9 +164,12 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                     sx={[
                       textGradientSx,
                       {
+                        transition: ".3s",
                         "&:hover": {
                           cursor: "pointer",
-                        },
+                          transform: "scale(1.02)",
+                          transition: ".3s",
+                        }
                       },
                     ]}
                     onClick={() => setShowForm(!showForm)}
@@ -188,7 +194,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                   Apply now
                 </Text>
               </Button>
-              {showForm ? <FormApply /> : <></>}
+              {showForm ? <FormApply slug={id as string} /> : <></>}
             </Stack>
           </Stack>
           <Stack gap="24px" width="100%">
@@ -245,23 +251,33 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                         </Text>
                       </Stack>
                     </Stack>
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="end"
-                      gap="12px"
-                      onClick={() => {}}
-                    >
-                      <Text variant="h5" sx={textGradientSx}>
-                        APPLY NOW
-                      </Text>
-                      <Image
-                        src={ArrowRightIc}
-                        width={26}
-                        height={20}
-                        alt="icon"
-                      />
-                    </Stack>
+                    <Link href={`/careers/${item.slug}`}>
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="end"
+                        gap="12px"
+                        sx={{
+                          transition: ".3s",
+                          "&:hover": {
+                            cursor: "pointer",
+                            transform: "scale(1.02)",
+                            transition: ".3s",
+                          }
+                        }}
+                      // onClick={() => onDetailCareer(item.slug)}
+                      >
+                        <Text variant="h5" sx={textGradientSx}>
+                          APPLY NOW
+                        </Text>
+                        <Image
+                          src={ArrowRightIc}
+                          width={26}
+                          height={20}
+                          alt="icon"
+                        />
+                      </Stack>
+                    </Link>
                   </Stack>
                 );
               })}

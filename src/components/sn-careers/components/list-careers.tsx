@@ -17,6 +17,12 @@ import Link from "next/link";
 
 type ListCareersLayoutProps = {};
 
+const Init_Query = {
+  status: "CAN_APPLY",
+  page: 1,
+  size: 8,
+}
+
 const ListCareersLayout = (props: ListCareersLayoutProps) => {
   const { isMdSmaller } = useBreakpoint();
 
@@ -32,14 +38,14 @@ const ListCareersLayout = (props: ListCareersLayoutProps) => {
     isIdle,
     onUpdateCareerStatus: onApproveOrRejectAction,
   } = useCareer();
-  const { initQuery, isReady, query } = useQueryParams();
+  const { isReady, query } = useQueryParams();
   const { push } = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     if (!isReady) return;
-    onGetCareer({ ...initQuery });
-  }, [initQuery, isReady, onGetCareer]);
+    onGetCareer(Init_Query);
+  }, [isReady, onGetCareer]);
 
   const onChangeQueries = (queries: { [key: string]: any }) => {
     const newQueries = { ...query, ...queries };

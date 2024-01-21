@@ -17,6 +17,18 @@ export enum SearchStatus {
   IS_CLOSED = "false" // NHA
 }
 
+export type ApplyParams = {
+  first_name: string,
+  last_name: string,
+  gender: string,
+  birth: string | any,
+  phone: string,
+  email: string,
+  socialLink: string,
+  attachments: Array<string> | null,
+  resume: string | null,
+}
+
 export type CareerData = {
   id?: string
   title?: string;
@@ -109,17 +121,18 @@ export const upadteCareer = createAsyncThunk(
 
 export const getCareerBySlug = createAsyncThunk(
   "getCareerBySlug", async (id: string) => {
-      try {
-          const response = await client.get(Endpoint.DETAIL_CAREER, id, {
-              baseURL: CAREER_API_URL,
-          });
-          if (response?.status === HttpStatusCode.OK) {
-              return response.data;
-          }
-          throw AN_ERROR_TRY_AGAIN;
-      } catch (error) {
-          throw error;
+
+    try {
+      const response = await client.get(StringFormat(Endpoint.DETAIL_CAREER, { id }), {
+        baseURL: CAREER_API_URL,
+      });
+      if (response?.status === HttpStatusCode.OK) {
+        return response.data;
       }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
+    }
   }
 );
 
@@ -132,9 +145,9 @@ export const updateStatusCareer = createAsyncThunk(
       const promises = careerList.map(async (element) => {
         const item = {
           ...element,
-          is_opening: opened, 
-          start_time : element.start_time ? new Date(element.start_time).toISOString().split('T')[0] : null,
-          end_time : element.end_time ? new Date(element.end_time).toISOString().split('T')[0] : null,
+          is_opening: opened,
+          start_time: element.start_time ? new Date(element.start_time).toISOString().split('T')[0] : null,
+          end_time: element.end_time ? new Date(element.end_time).toISOString().split('T')[0] : null,
         };
         const response = await client.put(
           `${Endpoint.CAREER}/${element.id}`,
@@ -155,6 +168,30 @@ export const updateStatusCareer = createAsyncThunk(
       });
       const results = await Promise.all(promises);
       return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const postApplycation = createAsyncThunk("postApplycation",
+  async ({ slug, params, token }: { slug: string, params: ApplyParams, token: string | undefined | null }) => {
+    // console.log(params);
+    try {
+      const response = await client.post(`${Endpoint.CAREER}/${slug}/applicants`, params,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          Authorization: `${token}`,
+          baseURL: CAREER_API_URL,
+        },
+      );
+      if (response?.status === HttpStatusCode.CREATED) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
       throw error;
     }
