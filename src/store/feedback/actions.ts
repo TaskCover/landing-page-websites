@@ -11,6 +11,14 @@ export enum FeedbackStatus {
   WATTING_RESPONSE = "WATTING_RESPONSE"
 }
 
+export type FormFeedbackBody = {
+  topic: String,
+  first_name: String,
+  last_name: String,
+  email: String,
+  content: String,
+  attachments: Array<string> | null,
+}
 export type FeedbackData = {
   id?: string;
   name?: string;
@@ -61,7 +69,7 @@ export const respondToFeedback = createAsyncThunk(
     try {
       const respondToFeedback = {
         content: data.responsed_content,
-        title : data.title
+        title: data.title
       } as Responsed_Feedback
       const response = await client.post(StringFormat(Endpoint.RESPONDFEEDBACK, { id }),
         respondToFeedback,
@@ -83,6 +91,30 @@ export const respondToFeedback = createAsyncThunk(
       throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
       throw AN_ERROR_TRY_AGAIN;
+    }
+  }
+);
+
+export const postFeedback = createAsyncThunk("postFeedback",
+  async ({ body, token }: { body: FormFeedbackBody, token: string | undefined | null }) => {
+    // console.log(params);
+    try {
+      const response = await client.post(`${Endpoint.FEEDBACK}/create`, body,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          Authorization: `${token}`,
+          baseURL: FEEDBACK_API_URL,
+        },
+      );
+      if (response?.status === HttpStatusCode.CREATED) {
+        return response.data;
+      }
+      throw AN_ERROR_TRY_AGAIN;
+    } catch (error) {
+      throw error;
     }
   }
 );

@@ -95,7 +95,6 @@ const FormApply = (props: FormApplyProps) => {
       }
     } catch (error) {
       if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
-        formik.setFieldError("old_password", "form.error.incorrect");
       } else {
         onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
       }

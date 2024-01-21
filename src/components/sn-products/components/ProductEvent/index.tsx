@@ -1,5 +1,6 @@
 import { Stack } from "@mui/material";
 import { Text, Button } from "components/shared";
+import FormFeedback from "../FormFeedback";
 
 type ProductEventProps = {
   heading: string;
@@ -49,6 +50,7 @@ export const ProductEvent = (props: ProductEventProps) => {
         >
           {textButton}
         </Button>
+        <FormFeedback/>
       </Stack>
     </Stack>
   );
