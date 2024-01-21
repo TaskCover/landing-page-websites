@@ -59,7 +59,14 @@ const ManageProjectLayout = (props: ManageProjectLayoutProps) => {
                     Free 14-day trial
                     <Image src={ArrowRightIcon} width={20} height={20} alt="image" />
                 </Button>
-                <Stack gap={{ xs: "16px", md: "24px" }} mt={{ xs: "24px", md: "50px" }} position="relative">
+                <Stack gap={{ xs: "16px", md: "24px" }} mt={{ xs: "24px", md: "50px" }}
+                    position="relative"
+                    sx={{
+                        minHeight: {
+                            xs: "auto", md: "500px"
+                        }
+                    }}
+                >
                     <Image src={ManagementProjectImg}
                         width={0}
                         height={0}
@@ -143,6 +150,7 @@ const sectionContainerSx = {
     maxWidth: "1200px",
     p: { xs: "40px 16px 60px", md: "60px 0px 250px" },
     zIndex: 10,
+    position: "relative",
 };
 
 const textHeadSx = {
