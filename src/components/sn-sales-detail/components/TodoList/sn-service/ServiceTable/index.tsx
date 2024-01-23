@@ -298,7 +298,7 @@ const ServiceTable = ({
                       variant="body2"
                       color="primary.main"
                       fontSize={16}
-                      fontWeight={600}
+                      fontWeight={500}
                     >
                       {totalBuget}
                     </Text>

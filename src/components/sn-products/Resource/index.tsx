@@ -33,13 +33,13 @@ const ProductResource = () => {
           <Text
             fontSize={{ md: 47, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 600, xs: 700 }}
+            fontWeight={{ md: 500, xs: 700 }}
             mt={4}
           >
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 600, xs: 700 }}
+              fontWeight={{ md: 500, xs: 700 }}
             >
               Ensure the success of the project or task
             </TextGradient>
@@ -107,7 +107,7 @@ const DATA_CREATE = [
           <TextGradient
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={600}
+            fontWeight={500}
             width="100%"
           >
             List of employee

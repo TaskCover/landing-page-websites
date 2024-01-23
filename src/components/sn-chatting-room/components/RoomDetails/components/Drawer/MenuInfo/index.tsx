@@ -145,7 +145,7 @@ const MenuInfo = () => {
                   variant="caption"
                   color="#F64E60"
                   fontSize={14}
-                  fontWeight={600}
+                  fontWeight={500}
                   sx={{ cursor: "pointer" }}
                   onClick={() => {
                     propsActionGroupDetail?.setShowPopup((pre) => ({
@@ -168,7 +168,7 @@ const MenuInfo = () => {
                   variant="caption"
                   color="#F64E60"
                   fontSize={14}
-                  fontWeight={600}
+                  fontWeight={500}
                   sx={{ cursor: "pointer" }}
                   onClick={() => {
                     if (owner) {

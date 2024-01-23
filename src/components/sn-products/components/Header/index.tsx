@@ -58,7 +58,7 @@ export const HeaderProducts = (props: HeaderProductsProps) => {
             Start free trial
           </Button>
         </Stack>
-        <Text textAlign="center">{subText}</Text>
+        <Text textAlign="center" fontSize={{md: 20, xs: 16}} fontWeight={400}>{subText}</Text>
         <Stack mt={marginTop}>
           <Image
             src={imageUrl}

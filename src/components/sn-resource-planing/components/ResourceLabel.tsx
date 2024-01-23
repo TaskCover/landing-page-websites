@@ -207,7 +207,7 @@ const ResourceLabel = ({
             >
               <Avatar size={32} src={avatarUrl} />
               <Box>
-                <Typography sx={{ fontSize: 14 }} fontWeight={600}>
+                <Typography sx={{ fontSize: 14 }} fontWeight={500}>
                   {fullname}
                 </Typography>
                 <Typography sx={{ color: "#666666", fontSize: 14 }}>

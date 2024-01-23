@@ -16,7 +16,7 @@ const UseCaseEventAgency = () => {
   return (
     <Stack>
       <Stack position="relative">
-      <Stack
+        <Stack
           sx={{
             backgroundImage: {
               md: "url(/images/bg-use-case-header.png)",
@@ -41,13 +41,14 @@ const UseCaseEventAgency = () => {
               <Text
                 component="div"
                 fontSize={{ md: 36, xs: 20 }}
-                fontWeight={600}
+                fontWeight={700}
                 my={4}
               >
                 All events will be organized with a{" "}
                 <TextGradient
                   fontSize={{ md: 36, xs: 20 }}
-                  fontWeight={600}
+                  fontWeight={700}
+                  percentGreenColor={98.38}
                 >
                   high degree of professional
                 </TextGradient>
@@ -56,7 +57,16 @@ const UseCaseEventAgency = () => {
             content={`TaskCover facilitates the optimization of each stage in the management process from encompassing ideation to plan implementation `}
           />
         </Container>
-        <PartnerUseCase />
+        <Stack
+          mt={{ md: 20, xs: 10 }}
+          sx={{
+            backgroundColor: { md: "#fff", xs: "rgba(255, 255, 255, 0.50)" },
+          }}
+        >
+          <Container>
+            <PartnerUseCase />
+          </Container>
+        </Stack>
         <Container>
           <BenefitUseCase
             data={DATA_BENEFIT}
@@ -65,14 +75,16 @@ const UseCaseEventAgency = () => {
               <Text
                 component="div"
                 fontSize={{ md: 40, xs: 24 }}
-                fontWeight={600}
+                fontWeight={500}
               >
                 <TextGradient
                   component="span"
                   fontSize={{ md: 40, xs: 24 }}
-                  fontWeight={600}
+                  fontWeight={500}
+                  percentBlueColor={16.8}
+                  percentGreenColor={150.38}
                 >
-                  Emphasize the benefit{" "}
+                  Emphasize the benefits <br />
                 </TextGradient>
                 for Production House
               </Text>
@@ -105,9 +117,7 @@ const UseCaseEventAgency = () => {
 
       <Container>
         <ResourceUseCase />
-        <Stack mt={10}>
-          <HelperSendMail />
-        </Stack>
+        <HelperSendMail />
       </Container>
     </Stack>
   );
@@ -125,6 +135,8 @@ const DATA_BENEFIT = [
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={-55.2}
+          percentGreenColor={159.38}
         >
           smoothly and successfully
         </TextGradient>
@@ -141,8 +153,19 @@ const DATA_BENEFIT = [
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={-55.2}
+          percentGreenColor={159.38}
         >
-          meticulously supervised
+          meticulously
+          <TextGradient
+            component="span"
+            fontSize={{ md: 20, xs: 16 }}
+            fontWeight={700}
+            percentBlueColor={100}
+          >
+            {" "}
+            supervised
+          </TextGradient>
         </TextGradient>
       </Text>
     ),
@@ -152,14 +175,26 @@ const DATA_BENEFIT = [
     icon: "/images/benefit-ic-9.png",
     title: (
       <Text component="div" fontSize={{ md: 20, xs: 16 }} fontWeight={700}>
+          Present{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={-55.2}
+          percentGreenColor={159.38}
         >
-          Present{" "}
+          well-defined strategies
+        </TextGradient>{" "}
+        and{" "}
+        <TextGradient
+          component="span"
+          fontSize={{ md: 20, xs: 16 }}
+          fontWeight={700}
+          percentBlueColor={-55.2}
+          percentGreenColor={88.38}
+        >
+          crafted plans
         </TextGradient>
-        well-defined strategies and crafted plans 
       </Text>
     ),
     content: "Enhancing the overall efficiency in every aspect",
@@ -174,14 +209,15 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={700}
         my={4}
       >
         Minimize risks with automated{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
+          percentGreenColor={138.38}
         >
           clear allocation resources.
         </TextGradient>
@@ -196,13 +232,14 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={700}
         my={4}
       >
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
+          percentGreenColor={138.38}
         >
           Having great administration{" "}
         </TextGradient>
@@ -210,7 +247,7 @@ const DATA_ACCELERATE = [
       </Text>
     ),
     content: `Integrate all management keys to open a successful event`,
-    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
   {
     imageUrl: "/images/accelerate-image.png",
@@ -219,13 +256,14 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={700}
         my={4}
       >
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
+          percentGreenColor={138.38}
         >
           Communicate and provide rapid updates on the issue{" "}
         </TextGradient>
@@ -233,6 +271,6 @@ const DATA_ACCELERATE = [
       </Text>
     ),
     content: `Enhance coordination and responsiveness for optimal efficiency and successful outcomes of the events.`,
-    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
 ];

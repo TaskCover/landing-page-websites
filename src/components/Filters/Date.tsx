@@ -64,7 +64,7 @@ const FDate = (props: DateProps) => {
     >
       <Text
         variant="body2"
-        fontWeight={600}
+        fontWeight={500}
         color={value ? "primary.main" : "grey.400"}
         whiteSpace="nowrap"
         onClick={onClick}

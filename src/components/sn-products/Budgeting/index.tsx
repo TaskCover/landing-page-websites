@@ -41,13 +41,12 @@ const ProductBudgeting = () => {
               component="span"
               fontSize="inherit"
               fontWeight={{ md: 500, xs: 700 }}
-              percentBlueColor={27.8}
-              percentGreenColor={56.3}
+              percentBlueColor={-15.2}
+              percentGreenColor={100.30}
             >
               &#160;efficient and effective attainment{" "}
             </TextGradient>
             <Text
-              component="span"
               fontSize="inherit"
               fontWeight={{ md: 500, xs: 700 }}
             >
@@ -124,10 +123,10 @@ const DATA_CREATE = [
         component="div"
         fontSize={{ md: 40, xs: 24 }}
         textAlign="center"
-        fontWeight={600}
+        fontWeight={500}
       >
         See how to create a budget{" "}
-        <TextGradient component="span" fontSize="inherit" fontWeight={600}>
+        <TextGradient component="span" fontSize="inherit" fontWeight={500}>
           with TaskCover
         </TextGradient>
       </Text>

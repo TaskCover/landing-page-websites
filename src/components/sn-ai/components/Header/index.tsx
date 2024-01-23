@@ -1,10 +1,12 @@
 import { Stack } from "@mui/material";
 import { TextGradient, Text } from "components/shared";
+import useBreakpoint from "hooks/useBreakpoint";
 import Image from "next/image";
 
 export const HeaderAI = () => {
+  const {isMdSmaller} = useBreakpoint();
   return (
-    <Stack position="relative" pb={{ md: 30, xs: 10 }}>
+    <Stack position="relative" pb={{ md: 30, xs: 10 }} pt={12}>
       <Stack>
         <Image
           src="/images/header-ai.png"
@@ -25,13 +27,13 @@ export const HeaderAI = () => {
         spacing={{ md: 15.125, xs: 4 }}
       >
         <Stack flex={1}>
-          <Text component="div" fontSize={{ md: 40, xs: 24 }} fontWeight={600}>
-            <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={600}>
+          <Text component="div" fontSize={{ md: 40, xs: 24 }} fontWeight={500} mb={2.4}>
+            <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500} percentBlueColor={13.8} percentGreenColor={100.38}>
               The revolutionary power
             </TextGradient>
             of artificial intelligence
           </Text>
-          <Text fontSize={20}>
+          <Text fontSize={{md: 20, xs: 16}}>
             TaskCover AI turns every task into optimization and excellence. With
             cutting-edge AI algorithms stressing accuracy and automation, a new
             standard in work organization with intelligence and creativity
@@ -45,8 +47,9 @@ export const HeaderAI = () => {
             height={0}
             sizes="100vw"
             style={{
-              width: "100%",
+              width: isMdSmaller ? "85%" : "100%",
               height: "auto",
+              margin: "0 auto",
             }}
             alt="ai-robot"
           />
@@ -55,9 +58,9 @@ export const HeaderAI = () => {
       <Stack
         direction="row"
         alignItems="center"
-        spacing={4.375}
+        spacing={{md: 4.375, xs: 1}}
         mt={12}
-        gap={{ md: 0, xs: 1 }}
+        gap={{ md: 0, xs: 2 }}
         justifyContent="center"
         flexWrap="wrap"
         sx={{
@@ -65,14 +68,14 @@ export const HeaderAI = () => {
         }}
       >
         {PARTNER.map((partner, index) => (
-          <Stack key={index} width={{ md: "unset", xs: "20%" }}>
+          <Stack key={index}>
             <Image
-              src={partner}
+              src={partner.imageUrl}
               width={0}
               height={0}
               sizes="100vw"
               style={{
-                width: "100%",
+                width: isMdSmaller ? partner.mobileWidth : partner.width,
                 height: "auto",
               }}
               alt="partner"
@@ -85,9 +88,30 @@ export const HeaderAI = () => {
 };
 
 const PARTNER = [
-  "/images/ai-partner-1.png",
-  "/images/ai-partner-2.png",
-  "/images/ai-partner-3.png",
-  "/images/ai-partner-4.png",
-  "/images/ai-partner-5.png",
+  {
+    imageUrl: "/images/ai-partner-1.png",
+    width: 68,
+    mobileWidth: 48
+  },
+  {
+    imageUrl: "/images/ai-partner-2.png",
+    width: 294,
+    mobileWidth: 164
+  },
+  {
+    imageUrl: "/images/ai-partner-3.png",
+    width: 146,
+    mobileWidth: 81
+  },
+  {
+    imageUrl: "/images/ai-partner-4.png",
+    width: 207,
+    mobileWidth: 128
+  },
+  {
+    imageUrl: "/images/ai-partner-5.png",
+    width: 227,
+    mobileWidth: 140
+  },
+
 ];

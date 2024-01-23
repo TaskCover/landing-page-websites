@@ -34,14 +34,14 @@ const ProductDocument = () => {
             component="div"
             fontSize={{ md: 47, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 600, xs: 700 }}
+            fontWeight={{ md: 500, xs: 700 }}
             mt={4}
           >
             Generate and store documents in various formats based on
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 600, xs: 700 }}
+              fontWeight={{ md: 500, xs: 700 }}
             >
               &#160;all your needs and preferences
             </TextGradient>
@@ -108,11 +108,11 @@ const DATA_CREATE = [
             component="div"
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={600}
+            fontWeight={500}
             width="100%"
           >
             See how to
-            <TextGradient fontSize="inherit" fontWeight={600}>
+            <TextGradient fontSize="inherit" fontWeight={500}>
               CREATE A DOCS
             </TextGradient>
           </Text>
@@ -146,11 +146,11 @@ const DATA_CREATE = [
             component="div"
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={600}
+            fontWeight={500}
             width="100%"
           >
             Make
-            <TextGradient fontSize="inherit" fontWeight={600}>
+            <TextGradient fontSize="inherit" fontWeight={500}>
               your document different
             </TextGradient>
           </Text>
@@ -194,11 +194,11 @@ const DATA_CREATE = [
             component="div"
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={600}
+            fontWeight={500}
             width="100%"
           >
             More activities
-            <TextGradient fontSize="inherit" fontWeight={600}>
+            <TextGradient fontSize="inherit" fontWeight={500}>
               with your doc
             </TextGradient>
           </Text>

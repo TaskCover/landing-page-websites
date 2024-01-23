@@ -16,13 +16,13 @@ type BenefitUseCaseProps = {
 export const BenefitUseCase = (props: BenefitUseCaseProps) => {
     const { data, bannerUrl, heading } = props;
   return (
-    <Stack mt={{md: 20, xs: 15}} direction={{md: "row", xs: "column"}} spacing={7.5} pb={8}>
+    <Stack mt={{md: 20, xs: 15}} direction={{md: "row", xs: "column"}} spacing={7.5} pb={{md: 8, xs: 2}}>
       <Stack flex={1}>
         {heading}
         {data.map((data, index) => (
           <Stack key={index}>
-            <Stack direction="row" alignItems="center" spacing={3} mt={5}>
-              <Stack flex={0.2}>
+            <Stack direction="row" alignItems={{md: "center", xs: "flex-start"}} spacing={3} mt={5}>
+              <Stack flex={0.16}>
                 <Image
                   src={data.icon}
                   width={0}

@@ -16,7 +16,7 @@ const UseCaseRemoteTeam = () => {
   return (
     <Stack>
       <Stack position="relative">
-      <Stack
+        <Stack
           sx={{
             backgroundImage: {
               md: "url(/images/bg-use-case-header.png)",
@@ -40,13 +40,14 @@ const UseCaseRemoteTeam = () => {
               <Text
                 component="div"
                 fontSize={{ md: 36, xs: 20 }}
-                fontWeight={600}
+                fontWeight={700}
                 my={4}
               >
                 <TextGradient
                   component="span"
                   fontSize={{ md: 36, xs: 20 }}
-                  fontWeight={600}
+                  fontWeight={700}
+                  percentGreenColor={128.38}
                 >
                   Bridge the gaps in collaboration{" "}
                 </TextGradient>
@@ -64,11 +65,13 @@ const UseCaseRemoteTeam = () => {
               <Text
                 component="div"
                 fontSize={{ md: 40, xs: 24 }}
-                fontWeight={600}
+                fontWeight={700}
               >
                 <TextGradient
                   fontSize={{ md: 40, xs: 24 }}
-                  fontWeight={600}
+                  fontWeight={700}
+                  percentBlueColor={160.8}
+                  component="span"
                 >
                   Benefits{" "}
                 </TextGradient>
@@ -103,9 +106,7 @@ const UseCaseRemoteTeam = () => {
 
       <Container>
         <ResourceUseCase />
-        <Stack mt={10}>
-          <HelperSendMail />
-        </Stack>
+        <HelperSendMail />
       </Container>
     </Stack>
   );
@@ -123,6 +124,8 @@ const DATA_BENEFIT = [
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={-55.2}
+          percentGreenColor={159.38}
         >
           AI agent expert{" "}
         </TextGradient>
@@ -139,6 +142,8 @@ const DATA_BENEFIT = [
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={-55.2}
+          percentGreenColor={159.38}
         >
           Control and optimize project budget{" "}
         </TextGradient>
@@ -156,6 +161,8 @@ const DATA_BENEFIT = [
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={-55.2}
+          percentGreenColor={159.38}
         >
           Streamline{" "}
         </TextGradient>
@@ -175,14 +182,16 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={700}
         my={4}
       >
         Enhanced{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
+          percentBlueColor={-55.2}
+          percentGreenColor={142.38}
         >
           projects and tasks productivity{" "}
         </TextGradient>
@@ -190,7 +199,7 @@ const DATA_ACCELERATE = [
       </Text>
     ),
     content: `TaskCover AI agent automates tasks, generating workflow templates to streamline processes efficiently.`,
-    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
   {
     imageUrl: "/images/accelerate-image.png",
@@ -199,20 +208,22 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={700}
         my={4}
       >
         Empower project delivery by{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
+          percentBlueColor={-55.2}
+          percentGreenColor={142.38}
         >
           staying connected and minimizing miscommunication gaps
         </TextGradient>
       </Text>
     ),
     content: `Enhance communication transparency, file sharing to streamline processes, to keep members stay on-track.`,
-    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
 ];

@@ -29,7 +29,7 @@ const TaskCoverLayout = (props: TaskCoverLayoutProps) => {
                         variant={{ xs: "h3", md: "h1" }}
                         sx={[textHeadSx, {
                             background:
-                                "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+                            "linear-gradient(90deg, #0575E6 -62.2%, #38E27B 130.38%)",
                             backgroundClip: "text",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent",
@@ -83,7 +83,7 @@ const TaskCoverLayout = (props: TaskCoverLayoutProps) => {
                                     <Text variant={{ xs: "h3", md: "h1" }} fontSize={{ xs: "36px", md: "64px" }} lineHeight={{ xs: "36px", md: "72px" }} color="#fff" >
                                         2/3
                                     </Text>
-                                    <Text variant="overline" fontWeight={600} fontSize={{ xs: "11px", md: "18px" }} color="rgba(255,255,255,.6)" sx={{ textTransform: "none" }}>
+                                    <Text variant="overline" fontWeight={500} fontSize={{ xs: "11px", md: "18px" }} color="rgba(255,255,255,.6)" sx={{ textTransform: "none" }}>
                                         {item.desc}
                                     </Text>
                                 </Stack>
@@ -92,6 +92,7 @@ const TaskCoverLayout = (props: TaskCoverLayoutProps) => {
                         else {
                             return (
                                 <Stack
+                                    key={index}
                                     gap="8px"
                                     width="100%"
                                     height={{ xs: "164px", md: "287px" }}
@@ -111,7 +112,7 @@ const TaskCoverLayout = (props: TaskCoverLayoutProps) => {
                                             %
                                         </Text>
                                     </Stack>
-                                    <Text variant="overline" fontSize={{ xs: "11px", md: "18px" }} fontWeight={600} color="rgba(0,0,0,.6)" sx={{ textTransform: "none", textAlign: "center" }}>
+                                    <Text variant="overline" fontSize={{ xs: "11px", md: "18px" }} fontWeight={500} color="rgba(0,0,0,.6)" sx={{ textTransform: "none", textAlign: "center" }}>
                                         {item.desc}
                                     </Text>
                                 </Stack>

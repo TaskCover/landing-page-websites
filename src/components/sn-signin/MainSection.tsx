@@ -64,7 +64,7 @@ const MainSection = () => {
           <Text variant="body2">{t("signin.notSignup")}</Text>
           <Link
             href={SIGNUP_PATH}
-            fontWeight={600}
+            fontWeight={500}
             sx={{
               fontSize: 14,
               "&:hover": {

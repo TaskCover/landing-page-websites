@@ -34,20 +34,20 @@ export const SendMailLayout = () => {
           justifyContent: "center",
           alignItems: "center",
           borderRadius: 4,
-          px: { md: 7, xs: 3 },
+          px: 3,
           py: 5,
           color: "#fff",
           textAlign: "center",
         }}
       >
-        <Text color="#fff" fontSize={{ md: 40, xs: 24 }} width="100%">
+        <Text color="#fff" fontSize={{ md: 40, xs: 24, fontWeight: 700 }} width="100%">
           Unlock the value of&nbsp;
-          <Text component="span" fontSize="inherit" color="#00FFE0">
+          <Text component="span" fontSize="inherit" color="#00FFE0" fontWeight={700}>
             management and optimization
           </Text>
           &nbsp;for your agency right now.
         </Text>
-        <Text color="#fff" fontWeight={400} fontSize={{ md: 18, xs: 16 }}>
+        <Text color="#fff" fontWeight={400} fontSize={{ md: 18, xs: 16}} mt={1}>
           Share your email to recieve guides and news from us
         </Text>
         <Stack mt={5}>

@@ -235,7 +235,7 @@ const DrawSlider = ({
                 bgcolor: "background.paper",
               }}
             >
-              <Text fontSize={14} fontWeight={600}>
+              <Text fontSize={14} fontWeight={500}>
                 {docsT("createDoc.Ltext")}
               </Text>
               <Switch
@@ -253,7 +253,7 @@ const DrawSlider = ({
                 alignItems: "center",
               }}
             >
-              <Text fontSize={14} fontWeight={600}>
+              <Text fontSize={14} fontWeight={500}>
                 {docsT("createDoc.full")}
               </Text>
               <Switch

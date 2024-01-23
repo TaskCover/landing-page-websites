@@ -40,13 +40,14 @@ const UseCaseProductionHouse = () => {
               <Text
                 component="div"
                 fontSize={{ md: 36, xs: 20 }}
-                fontWeight={600}
+                fontWeight={700}
                 my={4}
               >
                 A supportive companion for{" "}
                 <TextGradient
                   fontSize={{ md: 36, xs: 20 }}
-                  fontWeight={600}
+                  fontWeight={700}
+                  percentGreenColor={80.38}
                 >
                   Viral Production
                 </TextGradient>
@@ -55,7 +56,16 @@ const UseCaseProductionHouse = () => {
             content={`TaskCover efficiently structures each project and production process, providing a user-friendly interface for tracking and monitoring progress. `}
           />
         </Container>
-        <PartnerUseCase />
+        <Stack
+          mt={{ md: 20, xs: 10 }}
+          sx={{
+            backgroundColor: { md: "#fff", xs: "rgba(255, 255, 255, 0.50)" },
+          }}
+        >
+          <Container>
+            <PartnerUseCase />
+          </Container>
+        </Stack>
         <Container>
           <BenefitUseCase
             data={DATA_BENEFIT}
@@ -63,17 +73,19 @@ const UseCaseProductionHouse = () => {
             heading={
               <Text
                 component="div"
-                fontSize={{ md: 40, xs: 24 }}
-                fontWeight={600}
+                fontSize={{ md: 36, xs: 24 }}
+                fontWeight={500}
               >
                 <TextGradient
                   component="span"
-                  fontSize={{ md: 40, xs: 24 }}
-                  fontWeight={600}
+                  fontSize={{ md: 36, xs: 24 }}
+                  fontWeight={500}
+                  percentBlueColor={16.8}
+                  percentGreenColor={150.38}
                 >
-                  Emphasize the benefit{" "}
+                  Emphasize the benefits{" "}
                 </TextGradient>
-                for Production House
+                <br /> for Production House
               </Text>
             }
           />
@@ -103,9 +115,7 @@ const UseCaseProductionHouse = () => {
 
       <Container>
         <ResourceUseCase />
-        <Stack mt={10}>
-          <HelperSendMail />
-        </Stack>
+        <HelperSendMail />
       </Container>
     </Stack>
   );
@@ -118,11 +128,21 @@ const DATA_BENEFIT = [
     icon: "/images/benefit-ic-4.png",
     title: (
       <Text component="div" fontSize={{ md: 20, xs: 16 }} fontWeight={700}>
-        Arrange properly entire{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={87.8}
+        >
+          Arrange{" "}
+        </TextGradient>
+        properly entire{" "}
+        <TextGradient
+          component="span"
+          fontSize={{ md: 20, xs: 16 }}
+          fontWeight={700}
+          percentBlueColor={-56.2}
+          percentGreenColor={100.38}
         >
           production process
         </TextGradient>
@@ -139,6 +159,8 @@ const DATA_BENEFIT = [
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={-3.2}
+          percentGreenColor={190.38}
         >
           manageable task distribution
         </TextGradient>
@@ -173,21 +195,22 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={700}
         my={4}
       >
         All stages of production{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
+          degGradient={180}
         >
           are managed effectively
         </TextGradient>
       </Text>
     ),
     content: `From pre-production to post-production, all work will be distributed and unified in a streamlined manner.`,
-    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
   {
     imageUrl: "/images/accelerate-image.png",
@@ -196,20 +219,22 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={700}
         my={4}
       >
         From ideation and script writing will be{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
+          percentBlueColor={-32.2}
+          percentGreenColor={126.38}
         >
           discussed and managed on only one platform
         </TextGradient>
       </Text>
     ),
     content: `Conceptualizing scenarios for clients and storing related documents orderly without using multiple platforms.`,
-    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
 ];

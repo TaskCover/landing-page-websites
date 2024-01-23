@@ -177,7 +177,7 @@ const TopContent = (props: TopContentProps) => {
           >
             <Avatar src={user?.avatar?.link ?? ""} />
 
-            <Text fontWeight={600} variant={{ xs: "body2", md: "h4" }} pl={1}>
+            <Text fontWeight={500} variant={{ xs: "body2", md: "h4" }} pl={1}>
               {"Invoice " +
                 (item?.invoiceNumber ? item?.invoiceNumber?.toString() : "")}
             </Text>

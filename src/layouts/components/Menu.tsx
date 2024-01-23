@@ -55,7 +55,7 @@ const Menu = () => {
         const pathActive = item.href == pathname || (item.child && item.child.map(e => e.link).includes(pathname))
         if (item.child) {
           return (
-            <PopupState variant="popover" popupId="demo-popup-popover">
+            <PopupState variant="popover" popupId="demo-popup-popover" key={index}>
               {(popupState) => (
                 <div>
                   <Stack

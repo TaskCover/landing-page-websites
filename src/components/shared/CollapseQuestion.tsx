@@ -28,7 +28,8 @@ const CollapseQuestion = (props: CollapseProps) => {
         backgroundImage: "none",
         boxShadow: "none",
         p: 2,
-        borderRadius: 1,
+        py: 3.5,
+        borderRadius: "16px!important",
         mb: 2,
         "&.Mui-expanded": {
           mx: 0,
@@ -52,6 +53,7 @@ const CollapseQuestion = (props: CollapseProps) => {
           borderRadius: 4,
           minHeight: "auto",
           justifyContent: "space-between",
+          fontSize: 16,
           "&.Mui-expanded": {
             minHeight: "auto",
             "& svg:last-child": {

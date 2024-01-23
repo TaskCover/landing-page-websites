@@ -97,7 +97,7 @@ const ItemList = () => {
           <>
             <Stack>
               {billingT("list.table.amount")}
-              <Text variant={"body2"} align="center" fontWeight={600}>
+              <Text variant={"body2"} align="center" fontWeight={500}>
                 {formatNumber(totalAmount, {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
                   numberOfFixed: 2,
@@ -113,7 +113,7 @@ const ItemList = () => {
           <>
             <Stack>
               {billingT("list.table.amountUnpaid")}
-              <Text variant={"body2"} align="center" fontWeight={600}>
+              <Text variant={"body2"} align="center" fontWeight={500}>
                 {formatNumber(totalAmountUnpaid, {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
                   numberOfFixed: 2,
@@ -152,7 +152,7 @@ const ItemList = () => {
           <>
             <Stack>
               {billingT("list.table.amount")}
-              <Text variant={"body2"} align="center" fontWeight={600}>
+              <Text variant={"body2"} align="center" fontWeight={500}>
                 {formatNumber(totalAmount, {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
                   numberOfFixed: 2,
@@ -168,7 +168,7 @@ const ItemList = () => {
           <>
             <Stack>
               {billingT("list.table.amountUnpaid")}
-              <Text variant={"body2"} align="center" fontWeight={600}>
+              <Text variant={"body2"} align="center" fontWeight={500}>
                 {formatNumber(totalAmountUnpaid, {
                   prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],
                   numberOfFixed: 2,

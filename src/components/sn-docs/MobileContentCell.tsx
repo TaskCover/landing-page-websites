@@ -42,7 +42,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
             }
           }}
         >
-          <Text fontWeight={600} fontSize={12}>
+          <Text fontWeight={500} fontSize={12}>
             {item?.name}
           </Text>
         </div>
@@ -53,7 +53,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         </Text>
       </BodyCell>
       <BodyCell>
-        <Text fontWeight={600} fontSize={12}>
+        <Text fontWeight={500} fontSize={12}>
           {formatDate(item.updated_time)}
         </Text>
       </BodyCell>
@@ -71,7 +71,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
               alignItems={"start"}
               direction={"column"}
             >
-              <Text fontWeight={600} fontSize={12}>
+              <Text fontWeight={500} fontSize={12}>
                 {item.created_by?.fullname}
               </Text>
               <Text fontWeight={400} fontSize={12}>

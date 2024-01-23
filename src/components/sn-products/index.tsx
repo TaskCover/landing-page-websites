@@ -37,6 +37,8 @@ const Products = () => {
               component="span"
               fontSize="inherit"
               fontWeight={{ md: 500, xs: 700 }}
+              percentBlueColor={-15.2}
+              percentGreenColor={100.30}
             >
               &#160;Company&apos;s Info,
             </TextGradient>
@@ -52,6 +54,8 @@ const Products = () => {
               component="span"
               fontSize="inherit"
               fontWeight={{ md: 500, xs: 700 }}
+              percentBlueColor={-55.2}
+              percentGreenColor={110.30}
             >
               &#160;Way.
             </TextGradient>

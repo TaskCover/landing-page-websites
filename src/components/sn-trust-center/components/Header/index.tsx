@@ -11,7 +11,7 @@ export const Header = () => {
       direction={{ md: "row", xs: "column" }}
       justifyContent="space-between"
       alignItems="center"
-      spacing={5}
+      spacing={3.75}
       sx={{
         width: "100%",
         m: "0 auto",
@@ -20,17 +20,34 @@ export const Header = () => {
     >
       <Stack>
         {isMdSmaller ? (
-          <TextGradient variant={{ xl: "h1", xs: "h3" }} align="center">
+          <TextGradient
+            fontSize={{ md: 58, xs: 36 }}
+            fontWeight={700}
+            align="center"
+            percentBlueColor={15.8}
+            percentGreenColor={107.38}
+          >
             Your Privacy
           </TextGradient>
         ) : (
-          <Text variant={{ xl: "h1", xs: "h3" }}>Your Privacy</Text>
+          <Text fontSize={{ md: 58, xs: 36 }} fontWeight={700}>
+            Your Privacy
+          </Text>
         )}
 
-        <TextGradient variant={{ xl: "h1", xs: "h3" }} textAlign={{ md: "left", xs: "center" }}>
+        <TextGradient
+          fontSize={{ md: 58, xs: 36 }}
+          fontWeight={700}
+          textAlign={{ md: "left", xs: "center" }}
+          percentGreenColor={86.38}
+        >
           Our Responsibility
         </TextGradient>
-        <Text mt={3} textAlign={{ md: "justify", xs: "center" }}>
+        <Text
+          mt={3}
+          textAlign={{ md: "left", xs: "center" }}
+          fontSize={{ md: 20, xs: 16 }}
+        >
           The Help Center is your one-stop shop for all your questions and
           support needs. Here you can find answers to frequently asked
           questions, browse through our knowledge base, and connect with our

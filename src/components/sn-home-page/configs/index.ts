@@ -43,7 +43,7 @@ export const PowerFullAgentTabs = [
   {
     id: 2,
     img: TaskProjectIcon,
-    label: "Task Project",
+    label: "Task & Project",
     textColor: "#E96C3F",
     desc: [
       "Listing and organizing the sub-tasks and deadlines from a simple provided outline."

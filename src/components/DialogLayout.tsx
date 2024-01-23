@@ -102,7 +102,7 @@ const DialogLayout = forwardRef(
           {...restHeaderProps}
         >
           {!renderHeader || typeof renderHeader === "string" ? (
-            <Text textTransform="capitalize" fontWeight={600}>
+            <Text textTransform="capitalize" fontWeight={500}>
               {renderHeader ?? ""}
             </Text>
           ) : (

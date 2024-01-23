@@ -1,35 +1,35 @@
 import { Stack } from "@mui/material";
 import { Text } from "components/shared";
+import useBreakpoint from "hooks/useBreakpoint";
 import Image from "next/image";
 
 export const PartnerUseCase = () => {
+  const { isMdSmaller } = useBreakpoint();
   return (
     <Stack
-      mt={{ md: 20, xs: 10 }}
-      sx={{ backgroundColor: { md: "#fff", xs: "rgba(255, 255, 255, 0.50)" } }}
       py={4}
     >
-      <Text fontSize={{ md: 20, xs: 16 }} fontWeight={600} textAlign="center">
+      <Text fontSize={{ md: 24, xs: 16 }} fontWeight={500} textAlign="center" px={{md: 0, xs: 3}}>
         See how TaskCover empower Marketing Agencies globally
       </Text>
       <Stack
         direction="row"
         alignItems="center"
-        spacing={4.375}
+        spacing={{md: 4.375, xs: 0}}
         mt={5}
-        gap={{ md: 0, xs: 1 }}
+        gap={{ md: 0, xs: 5 }}
         justifyContent="center"
         flexWrap="wrap"
       >
         {PARTNER.map((partner, index) => (
-          <Stack key={index} width={{ md: "unset", xs: "30%" }}>
+          <Stack key={index}>
             <Image
-              src={partner}
+              src={partner.imageUrl}
               width={0}
               height={0}
               sizes="100vw"
               style={{
-                width: "100%",
+                width: isMdSmaller ? partner.mobileWidth : partner.width,
                 height: "auto",
               }}
               alt="partner"
@@ -42,9 +42,29 @@ export const PartnerUseCase = () => {
 };
 
 const PARTNER = [
-  "/images/ai-partner-1.png",
-  "/images/ai-partner-2.png",
-  "/images/ai-partner-3.png",
-  "/images/ai-partner-4.png",
-  "/images/ai-partner-5.png",
+  {
+    imageUrl: "/images/ai-partner-1.png",
+    width: 68,
+    mobileWidth: 51,
+  },
+  {
+    imageUrl: "/images/ai-partner-4.png",
+    width: 207,
+    mobileWidth: 172,
+  },
+  {
+    imageUrl: "/images/ai-partner-2.png",
+    width: 294,
+    mobileWidth: 294,
+  },
+  {
+    imageUrl: "/images/ai-partner-3.png",
+    width: 146,
+    mobileWidth: 110,
+  },
+  {
+    imageUrl: "/images/ai-partner-5.png",
+    width: 227,
+    mobileWidth: 146,
+  },
 ];

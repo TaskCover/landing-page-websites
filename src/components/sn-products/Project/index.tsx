@@ -33,14 +33,14 @@ const ProductProject = () => {
           <Text
             fontSize={{ md: 42, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 600, xs: 700 }}
+            fontWeight={{ md: 500, xs: 700 }}
             mt={4}
           >
             Discover specific tactics and expertise to empower <br />
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 600, xs: 700 }}
+              fontWeight={{ md: 500, xs: 700 }}
               percentBlueColor={43.8}
               percentGreenColor={74.38}
             >
@@ -107,9 +107,9 @@ const DATA = [
 const DATA_CREATE = [
   {
     heading: (
-      <Text component="div" fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
+      <Text component="div" fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={500}>
         See how to create a Project{" "}
-        <TextGradient component="span" fontSize="inherit" fontWeight={600}>
+        <TextGradient component="span" fontSize="inherit" fontWeight={500}>
           with TaskCover
         </TextGradient>
       </Text>

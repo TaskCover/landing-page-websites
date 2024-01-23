@@ -6,18 +6,40 @@ import SearchIcon from "icons/SearchIcon";
 import { useState } from "react";
 
 export const HelperForm = () => {
-  const {isMdSmaller} = useBreakpoint();
+  const { isMdSmaller } = useBreakpoint();
   const [value, setValue] = useState("");
   const handlerChangeValue = (e) => {
     setValue(e.target.value);
-  }
+  };
 
   const handlerSubmitForm = () => {
     console.log("feedback", value);
-  }
+  };
 
   return (
-    <Stack mt={{md: 15.5, xs: 6}} alignItems="center" pb={{md: 15, xs: 8}}>
+    <Stack
+      alignItems="center"
+      pb={{ md: 15, xs: 8 }}
+      mt={{ md: 0, xs: 12 }}
+      position="relative"
+    >
+      {isMdSmaller && (
+        <Stack
+          sx={{
+            backgroundImage: "bg-target-help-center.png",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: { md: "-50px", xs: 0 },
+            zIndex: -1,
+          }}
+        />
+      )}
       <TextGradient
         fontSize={{ md: 40, xs: 24 }}
         textAlign="center"
@@ -27,6 +49,7 @@ export const HelperForm = () => {
         <Text
           component="span"
           fontSize="inherit"
+          fontWeight={500}
           sx={{
             WebkitTextFillColor: "black",
           }}
@@ -36,7 +59,7 @@ export const HelperForm = () => {
       </TextGradient>
       <FormControl sx={{ mt: 5 }} onSubmit={handlerSubmitForm}>
         <Stack
-          width={{md: 552, xs: 342}}
+          width={{ md: 552, xs: 342 }}
           height={54}
           sx={{
             border: "1px solid #0575E6",
@@ -54,12 +77,21 @@ export const HelperForm = () => {
             onChange={handlerChangeValue}
             value={value}
           />
-          <ButtonCustom onClick={handlerSubmitForm} className="MuiButton-primary" sx={{ px: {md: 6, xs: 2} }}>
-            {isMdSmaller ? <SearchIcon />  : "Search"}
+          <ButtonCustom
+            onClick={handlerSubmitForm}
+            className="MuiButton-primary"
+            sx={{ px: { md: 6, xs: 2 } }}
+          >
+            {isMdSmaller ? <SearchIcon /> : "Search"}
           </ButtonCustom>
         </Stack>
       </FormControl>
-      <Stack mt={8} direction={{ md: "row", xs: "column" }} justifyContent="space-between" spacing={3}>
+      <Stack
+        mt={8}
+        direction={{ md: "row", xs: "column" }}
+        justifyContent="space-between"
+        spacing={3}
+      >
         {DATA.map((data, index) => (
           <Stack
             key={index}
@@ -67,19 +99,19 @@ export const HelperForm = () => {
               backgroundColor: "#fff",
               borderRadius: 4,
               paddingLeft: 3,
-              paddingRight: 6,
+              paddingRight: 3,
               paddingTop: 3,
               paddingBottom: 6,
-              flex: 1
+              flex: 1,
             }}
           >
-            <Stack direction="row" justifyContent="space-between" mb={2}>
-              <Text variant="h5">{data.title}</Text>
-              <ArrowDownIcon />
+            <Stack direction="row" justifyContent="space-between" mb={1.5}>
+              <Text fontSize={24} fontWeight={700}>
+                {data.title}
+              </Text>
+              <ArrowDownIcon sx={{ fontSize: 31 }} />
             </Stack>
-            <Text>
-              {data.content}
-            </Text>
+            <Text>{data.content}</Text>
           </Stack>
         ))}
       </Stack>

@@ -81,7 +81,7 @@ const AiPage = () => {
             left: 0,
             right: 0,
             zIndex: -1,
-            display: {md: "flex", xs: "none"}
+            display: { md: "flex", xs: "none" },
           }}
         />
         <Container>

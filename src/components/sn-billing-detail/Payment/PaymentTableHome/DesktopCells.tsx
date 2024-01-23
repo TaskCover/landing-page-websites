@@ -26,7 +26,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
         <Text
           variant="body2"
           color="#1BC5BD"
-          fontWeight={600}
+          fontWeight={500}
           lineHeight={1.28}
           // sx={{ "&:hover": { color: "primary.main" } }}
         >

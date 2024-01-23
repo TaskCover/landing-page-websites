@@ -15,7 +15,7 @@ import { UseCaseCommitResult } from "../components/CommitResult";
 import useBreakpoint from "hooks/useBreakpoint";
 
 const UseCaseSoftwareAgency = () => {
-  const {isMdSmaller} = useBreakpoint();
+  const { isMdSmaller } = useBreakpoint();
   return (
     <Stack>
       <Stack position="relative">
@@ -43,15 +43,15 @@ const UseCaseSoftwareAgency = () => {
               <Text
                 component="div"
                 fontSize={{ md: 36, xs: 20 }}
-                fontWeight={600}
+                fontWeight={700}
                 my={4}
               >
-                Optimize process on a{" "}
-                {!isMdSmaller && <br/>}
+                Optimize process on a {!isMdSmaller && <br />}
                 <TextGradient
                   component="span"
                   fontSize={{ md: 36, xs: 20 }}
-                  fontWeight={600}
+                  fontWeight={700}
+                  percentGreenColor={128.38}
                 >
                   project by project basis
                 </TextGradient>
@@ -60,7 +60,17 @@ const UseCaseSoftwareAgency = () => {
             content={`Taskcover boosts your efficacy significantly for every software project along with conceptualizing the software operation in simple steps `}
           />
         </Container>
-        <PartnerUseCase />
+        <Stack
+          mt={{ md: 20, xs: 10 }}
+          sx={{
+            backgroundColor: { md: "#fff", xs: "rgba(255, 255, 255, 0.50)" },
+          }}
+        >
+          <Container>
+            <PartnerUseCase />
+          </Container>
+        </Stack>
+
         <Container>
           <BenefitUseCase
             data={DATA_BENEFIT}
@@ -69,12 +79,14 @@ const UseCaseSoftwareAgency = () => {
               <Text
                 component="div"
                 fontSize={{ md: 40, xs: 24 }}
-                fontWeight={600}
+                fontWeight={500}
               >
                 <TextGradient
                   component="span"
                   fontSize={{ md: 40, xs: 24 }}
-                  fontWeight={600}
+                  fontWeight={500}
+                  percentBlueColor={16.8}
+                  percentGreenColor={150.38}
                 >
                   Emphasize the benefits{" "}
                 </TextGradient>
@@ -107,9 +119,7 @@ const UseCaseSoftwareAgency = () => {
       </Stack>
       <Container>
         <ResourceUseCase />
-        <Stack mt={10}>
-          <HelperSendMail />
-        </Stack>
+        <HelperSendMail />
       </Container>
     </Stack>
   );
@@ -182,14 +192,14 @@ const DATA_ACCELERATE = [
     title: "Project management",
     heading: undefined,
     content: `Leverage cutting-edge solutions in management to reach technological evolution and process automation.`,
-    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
   {
     imageUrl: "/images/accelerate-image.png",
     title: "Budget",
     heading: undefined,
     content: `Ensures the optimal distribution of budget within the framework of software strategic objectives.`,
-    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
 ];
 
@@ -200,17 +210,13 @@ const DATA_COMMIT_RESULT = [
       <Text
         component="div"
         fontSize={14}
-        fontWeight={600}
+        fontWeight={500}
         mb={5}
         my={4}
         textAlign="center"
       >
-        <TextGradient
-          component="span"
-          fontSize={14}
-          fontWeight={600}
-        >
-           Arrange the process{" "}
+        <TextGradient component="span" fontSize={14} fontWeight={500}>
+          Arrange the process{" "}
         </TextGradient>
         of conceptualizing and defining project
       </Text>
@@ -222,16 +228,12 @@ const DATA_COMMIT_RESULT = [
       <Text
         component="div"
         fontSize={14}
-        fontWeight={600}
+        fontWeight={500}
         mb={5}
         my={4}
         textAlign="center"
       >
-        <TextGradient
-          component="span"
-          fontSize={14}
-          fontWeight={600}
-        >
+        <TextGradient component="span" fontSize={14} fontWeight={500}>
           Maintain smoothly{" "}
         </TextGradient>
         the applications and frameworks of all steps
@@ -244,18 +246,14 @@ const DATA_COMMIT_RESULT = [
       <Text
         component="div"
         fontSize={14}
-        fontWeight={600}
+        fontWeight={500}
         mb={5}
         my={4}
         textAlign="center"
       >
         Present the{" "}
-        <TextGradient
-          component="span"
-          fontSize={14}
-          fontWeight={600}
-        >
-           customized workflow of software development
+        <TextGradient component="span" fontSize={14} fontWeight={500}>
+          customized workflow of software development
         </TextGradient>
       </Text>
     ),
@@ -266,16 +264,12 @@ const DATA_COMMIT_RESULT = [
       <Text
         component="div"
         fontSize={14}
-        fontWeight={600}
+        fontWeight={500}
         mb={5}
         my={4}
         textAlign="center"
       >
-        <TextGradient
-          component="span"
-          fontSize={14}
-          fontWeight={600}
-        >
+        <TextGradient component="span" fontSize={14} fontWeight={500}>
           Maximizes process efficiency{" "}
         </TextGradient>
         and results in a quality strategies

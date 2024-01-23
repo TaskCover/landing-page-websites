@@ -33,7 +33,7 @@ const Form = (props: FormProps) => {
         <Button
           sx={{
             background: {md: "#fff", xs: "transparent"},
-            px: {md: 5, xs: 0},
+            px: {md: 8, xs: 0},
             py: 1.5,
             textTransform: "capitalize",
             borderRadius: 6,

@@ -100,7 +100,7 @@ const TabItem = (props: TabItemProps) => {
       <Text
         variant="body2"
         color={isActiveLink ? "text.primary" : "grey.300"}
-        fontWeight={600}
+        fontWeight={500}
         whiteSpace="nowrap"
       >
         {label}

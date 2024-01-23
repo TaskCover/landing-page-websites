@@ -287,7 +287,7 @@ const ServiceTable = (props: IProps) => {
                           variant="body2"
                           color="primary.main"
                           fontSize={16}
-                          fontWeight={600}
+                          fontWeight={500}
                         ></Text>
                       </Stack>
                     </Stack>

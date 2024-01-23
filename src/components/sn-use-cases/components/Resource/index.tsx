@@ -24,12 +24,12 @@ export const ResourceUseCase = () => {
   return (
     <Stack mt={12}>
       <TextGradient
-        textAlign="center"
-        fontWeight={600}
+        textAlign={{md: "center", xs: "left"}}
+        fontWeight={700}
         fontSize={{ md: 20, xs: 16 }}
-        mb={{md: 3, xs: 1}}
-        percentBlueColor={48.8}
-        percentGreenColor={51.38}
+        mb={{ md: 3, xs: 1 }}
+        percentBlueColor={isMdSmaller ? 4.8 : 48.8}
+        percentGreenColor={isMdSmaller ? 23.8 : 51.38}
       >
         Resources
       </TextGradient>
@@ -37,7 +37,7 @@ export const ResourceUseCase = () => {
         fontSize={{ md: 36, xs: 20 }}
         fontWeight={700}
         mb={5}
-        textAlign="center"
+        textAlign={{md: "center", xs: "left"}}
       >
         Resources & tips for marketing agency
       </Text>
@@ -83,10 +83,13 @@ export const ResourceUseCase = () => {
                     alt="resource-use-case"
                   />
 
-                  <Text fontSize={{ md: 20, xs: 16 }} fontWeight={700} mb={5}>
+                  <Text fontSize={{ md: 20, xs: 16 }} fontWeight={500} mb={5}>
                     {data.title}
                   </Text>
-                  <ButtonCustom className="MuiButton-primary">
+                  <ButtonCustom
+                    className="MuiButton-primary"
+                    sx={{ "MuiButton-root": { fontWeight: "400!important" } }}
+                  >
                     Read This
                   </ButtonCustom>
                 </Stack>
@@ -126,7 +129,7 @@ export const ResourceUseCase = () => {
                 />
               </Stack>
 
-              <Text fontSize={{ md: 20, xs: 16 }} fontWeight={700} mb={5}>
+              <Text fontSize={{ md: 20, xs: 16 }} fontWeight={500} mb={5}>
                 {data.title}
               </Text>
               <ButtonCustom className="MuiButton-primary">

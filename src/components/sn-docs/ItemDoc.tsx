@@ -34,7 +34,7 @@ export const RowGroup = (props) => {
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Text fontWeight={600} fontSize={14}>
+            <Text fontWeight={500} fontSize={14}>
               {title}
             </Text>
           </AccordionSummary>

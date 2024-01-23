@@ -118,7 +118,6 @@ const EditorStyled = styled.div`
     pre {
       background: #0d0d0d;
       color: #fff;
-      font-family: "Helvetica", monospace;
       padding: 0.75rem 1rem;
       border-radius: 0.5rem;
 

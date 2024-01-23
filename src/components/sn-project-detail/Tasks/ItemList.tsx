@@ -1160,7 +1160,7 @@ const ItemList = () => {
                                     return (
                                       <Content
                                         color="text.primary"
-                                        fontWeight={600}
+                                        fontWeight={500}
                                         textAlign="left"
                                         paddingLeft={3}
                                         noWrap

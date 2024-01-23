@@ -10,6 +10,7 @@ type CoreTextProps = Omit<TypographyProps, "variant"> & {
   component?: string;
   percentBlueColor?: number;
   percentGreenColor?: number;
+  degGradient?: number;
 };
 
 export type TextProps = CoreTextProps & {
@@ -37,6 +38,7 @@ const CoreText = forwardRef((props: CoreTextProps, ref: ForwardedRef<any>) => {
     children,
     percentBlueColor = 5.8,
     percentGreenColor = 38.38,
+    degGradient = 360,
     ...rest
   } = props;
   const { breakpoint } = useBreakpoint();
@@ -56,7 +58,7 @@ const CoreText = forwardRef((props: CoreTextProps, ref: ForwardedRef<any>) => {
       ref={ref}
       variant={variant}
       sx={{
-        background: `-webkit-linear-gradient(360deg,#0575E6 ${percentBlueColor}%, #38E27B ${percentGreenColor}%)`,
+        background: `-webkit-linear-gradient(${degGradient}deg,#0575E6 ${percentBlueColor}%, #38E27B ${percentGreenColor}%)`,
         backgroundClip: "text",
         textFillColor: "transparent",
         backgroundColor: "transparent",

@@ -182,7 +182,7 @@ const sectionContainerSx = {
 const textGradientSx = {
     fontWeight: 500,
     background:
-        "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+        "linear-gradient(90deg, #0575E6 -72.2%, #38E27B 67.38%)",
     backgroundClip: "text",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",

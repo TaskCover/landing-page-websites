@@ -24,7 +24,7 @@ const StatusServer = (props: StatusServerProps) => {
 
   if (error) {
     return (
-      <Text variant="body2" textAlign="center" p={3} fontWeight={600}>
+      <Text variant="body2" textAlign="center" p={3} fontWeight={500}>
         {error}
       </Text>
     );
@@ -34,7 +34,7 @@ const StatusServer = (props: StatusServerProps) => {
 
   if (noData && !isIdle)
     return (
-      <Text variant="body2" textAlign="center" p={3} fontWeight={600}>
+      <Text variant="body2" textAlign="center" p={3} fontWeight={500}>
         No data
       </Text>
     );

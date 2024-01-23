@@ -23,7 +23,7 @@ const Banner = () => {
       <Text
         mt={6}
         textAlign="center"
-        fontWeight={600}
+        fontWeight={500}
         variant={{ sm: "subtitle1", lg: "h3" }}
         color="common.white"
       >

@@ -4,13 +4,18 @@ import useBreakpoint from "hooks/useBreakpoint";
 import Image from "next/image";
 
 export const PlanUseCase = () => {
-    const {isMdSmaller} = useBreakpoint();
+  const { isMdSmaller } = useBreakpoint();
   return (
-    <Stack mt={20} width={{md: "70%", xs: "100%"}} mx="auto">
-      <Text fontSize={{ md: 24, xs: 16 }} fontWeight={700} textAlign="center" mb={3}>
+    <Stack mt={20} width="100%" mx="auto">
+      <Text
+        fontSize={{ md: 30, xs: 16 }}
+        fontWeight={700}
+        textAlign="center"
+        mb={3}
+      >
         Having problems in planning, executing, andmonitoring campaigns?
       </Text>
-      <Text textAlign="center">
+      <Text textAlign="center" fontSize={{ md: 20, xs: 14 }}>
         Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry&lsquo;s standard dummy text
         ever since the 1500s, when an unknown printer took a galley of type and

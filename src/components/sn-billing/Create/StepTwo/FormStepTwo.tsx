@@ -525,7 +525,7 @@ const FormStepTwo = (props: IProps) => {
             <Text variant={"body1"}>
               {billingT(`${billingFormTranslatePrefix}.title.total`)}
             </Text>
-            <Text variant={"body1"} ml={1.5} fontWeight={600}>
+            <Text variant={"body1"} ml={1.5} fontWeight={500}>
               {"$" + sumAmount}
             </Text>
           </Stack>

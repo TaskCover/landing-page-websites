@@ -36,7 +36,7 @@ const FamilysLayout = (props: FamilysLayoutProps) => {
         </Stack>
         {!isMdSmaller ? <Stack display="grid" gridTemplateColumns="1fr 1fr 1fr" mt={{ xs: "40px", md: "56px" }}>
           {TaskCoverFamilys.map((e, i) => (
-            <Stack position="relative">
+            <Stack position="relative" key={i}>
               <Image
                 src={e.imgUrl}
                 style={{
@@ -131,7 +131,7 @@ const textHeadSx = {
 
 const textGradientSx = {
   background:
-    "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+    "linear-gradient(90deg, #0575E6 5.8%, #38E27B 151.38%)",
   backgroundClip: "text",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",

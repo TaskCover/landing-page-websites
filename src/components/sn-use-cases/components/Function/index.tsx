@@ -17,7 +17,7 @@ export const FunctionUseCase = () => {
     >
       <TextGradient
         mb={5}
-        fontWeight={600}
+        fontWeight={500}
         fontSize={{ md: 40, xs: 24 }}
         textAlign="center"
         percentBlueColor={43.8}
@@ -50,7 +50,7 @@ export const FunctionUseCase = () => {
                 fontSize={{ md: 20, xs: 16 }}
                 my={3}
                 sx={{ opacity: data.isGradient ? 0 : 1 }}
-                fontWeight={600}
+                fontWeight={500}
               >
                 {data.title ? data.title : "opacity"}
               </Text>
@@ -61,7 +61,7 @@ export const FunctionUseCase = () => {
                     color: "#000",
                     fontWeight: 500,
                     "&:hover": { background: "#fff" },
-                    px: { md: 5, xs: 2 },
+                    px: 2,
                   }}
                 >
                   Start free trial
@@ -70,7 +70,7 @@ export const FunctionUseCase = () => {
                 <ButtonCustom
                   className="MuiButton-primary"
                   sx={{
-                    px: { md: 5, xs: 2 },
+                    px: 2,
                   }}
                 >
                   Learn More

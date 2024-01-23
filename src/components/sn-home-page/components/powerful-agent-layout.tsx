@@ -24,12 +24,16 @@ const PowerfulAgentLayout = (props: PowerfulAgentLayoutProps) => {
         backgroundPosition: "center",
         width: "100%",
       }}
+      pt={{md: 4, xs: 1}}
     >
       <Stack sx={sectionContainerSx}>
-        <Text variant={{ xs: "h4", md: "h2" }}
+        <Text
+          variant={{ xs: "h4", md: "h2" }}
           fontSize={{ xs: "24px", md: "40px" }}
           lineHeight={{ xs: "32px", md: "48px" }}
-          fontWeight={500} color="#fff">
+          fontWeight={500}
+          color="#fff"
+        >
           AI - Powerful Agent
         </Text>
         <Stack mt={{ xs: "16px", md: "24px" }} mb="40px">
@@ -53,6 +57,7 @@ const PowerfulAgentLayout = (props: PowerfulAgentLayoutProps) => {
         >
           {PowerFullAgentTabs.map((item, index) => (
             <Stack
+              key={index}
               justifyContent="center"
               alignItems="center"
               gap="8px"
@@ -120,7 +125,7 @@ const PowerfulAgentLayout = (props: PowerfulAgentLayoutProps) => {
               </Text>
               <Stack gap="8px">
                 {activeTab.desc.map((i) => (
-                  <Text variant="h5" fontWeight={400}>
+                  <Text variant="h5" fontWeight={400} key={i}>
                     {i}
                   </Text>
                 ))}

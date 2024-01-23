@@ -93,7 +93,7 @@ const TabItem = (props: TabItemProps) => {
     >
       <Text
         variant="body2"
-        fontWeight={600}
+        fontWeight={500}
         color="inherit"
         whiteSpace="nowrap"
         lineHeight={1.14}

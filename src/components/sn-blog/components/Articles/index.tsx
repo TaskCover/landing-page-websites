@@ -50,15 +50,41 @@ const CardMobile = (props: CardMobileProps) => {
             style={{
               width: "100%",
               height: "auto",
+              maxHeight: 87,
+              objectFit: "cover",
             }}
             alt="blog-new"
           />
         </Stack>
         <Stack flex={0.7}>
-          <Text color="#EB3DAE" fontWeight={700} fontSize={12}>
+          <Text
+            color="#EB3DAE"
+            fontWeight={700}
+            fontSize={12}
+            sx={{
+              display: "-webkit-box",
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: "vertical",
+              height: 20,
+              overflow: "hidden",
+            }}
+            title={title}
+          >
             {title}
           </Text>
-          <Text fontSize={14} mb={2} fontWeight={700}>
+          <Text
+            fontSize={14}
+            mb={2}
+            fontWeight={700}
+            sx={{
+              display: "-webkit-box",
+              WebkitLineClamp: { md: 4, xs: 3 },
+              WebkitBoxOrient: "vertical",
+              height: 62,
+              overflow: "hidden",
+            }}
+            title={shortDescription}
+          >
             {shortDescription}
           </Text>
         </Stack>
@@ -156,7 +182,18 @@ export const BlogArticle = (props: BlogArticleProps) => {
                 />
                 <CardContent>
                   <Link href={`/blog/${data.slug}`}>
-                    <Text color="#5C98F6" fontWeight={700}>
+                    <Text
+                      color="#5C98F6"
+                      fontWeight={700}
+                      sx={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        height: { md: "50px", xs: "auto" },
+                        overflow: "hidden",
+                      }}
+                      title={data.title}
+                    >
                       {data.title}
                     </Text>
                     <Stack
@@ -165,18 +202,19 @@ export const BlogArticle = (props: BlogArticleProps) => {
                         __html: data?.short_description ?? "",
                       }}
                       sx={{
-                        fontSize: {md: 16, xs: 14},
-                        fontWeight: {md: 700, xs: 600},
+                        fontSize: { md: 20, xs: 14 },
+                        fontWeight: { md: 700, xs: 600 },
                         my: 2,
                         display: "-webkit-box",
                         overflow: "hidden",
                         WebkitLineClamp: 3,
                         WebkitBoxOrient: "vertical",
-                        height: {md: "88px", xs: "auto"},
-                        "img": {
+                        height: { md: "88px", xs: "auto" },
+                        img: {
                           width: "100%",
-                        }
+                        },
                       }}
+                      title={data?.short_description ?? ""}
                       color="#000"
                     />
                     {/* <Text fontSize={20} mb={2} fontWeight={700} height={100}>
@@ -187,7 +225,10 @@ export const BlogArticle = (props: BlogArticleProps) => {
                 <CardActions sx={{ display: { md: "block", xs: "none" } }}>
                   <Stack direction="row" spacing={1} alignItems="center">
                     <Image
-                      src={data?.created_by?.avatar?.link ?? "/images/default-avatar.png"}
+                      src={
+                        data?.created_by?.avatar?.link ??
+                        "/images/default-avatar.png"
+                      }
                       width={36}
                       height={36}
                       alt="blog-author"
@@ -216,60 +257,3 @@ export const BlogArticle = (props: BlogArticleProps) => {
     </Stack>
   );
 };
-
-// const DATA = [
-//   {
-//     imageUrl: "/images/blog-article-1.png",
-//     title: "Project Management",
-//     shortDescription:
-//       "How to Create an Executive Dashboard: A Step- by-Step Guide",
-//   },
-//   {
-//     imageUrl: "/images/blog-article-2.png",
-//     title: "Project Management",
-//     shortDescription:
-//       "How to Create an Executive Dashboard: A Step- by-Step Guide",
-//   },
-//   {
-//     imageUrl: "/images/blog-article-3.png",
-//     title: "Project Management",
-//     shortDescription:
-//       "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
-//   },
-//   {
-//     imageUrl: "/images/blog-article-4.png",
-//     title: "Project Management",
-//     shortDescription:
-//       "The Top CIOs of 2023: Strategic Insights From the Industry’s Best",
-//   },
-//   {
-//     imageUrl: "/images/blog-article-5.png",
-//     title: "Project Management",
-//     shortDescription:
-//       "How to Create an Executive Dashboard: A Step- by-Step Guide",
-//   },
-//   {
-//     imageUrl: "/images/blog-article-6.png",
-//     title: "Project Management",
-//     shortDescription:
-//       "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
-//   },
-//   {
-//     imageUrl: "/images/blog-article-7.png",
-//     title: "Project Management",
-//     shortDescription:
-//       "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
-//   },
-//   {
-//     imageUrl: "/images/blog-article-8.png",
-//     title: "Project Management",
-//     shortDescription:
-//       "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
-//   },
-//   {
-//     imageUrl: "/images/blog-article-9.png",
-//     title: "Project Management",
-//     shortDescription:
-//       "Operations Dashboard 101: Keep a Watchful Eye on Your Processes",
-//   },
-// ];

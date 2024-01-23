@@ -5,6 +5,7 @@ import { BlogData } from "store/blog/actions";
 import { formatDate } from "utils/index";
 import { nameMonthList } from "constant/index";
 import Link from "next/link";
+import useBreakpoint from "hooks/useBreakpoint";
 
 type BlogNewProps = {
   data: BlogData[];
@@ -12,6 +13,7 @@ type BlogNewProps = {
 
 export const BlogNews = (props: BlogNewProps) => {
   const { data } = props;
+  const { isMdSmaller } = useBreakpoint();
 
   if (!data) return;
 
@@ -30,7 +32,11 @@ export const BlogNews = (props: BlogNewProps) => {
   };
 
   return (
-    <Stack direction={{ md: "row", xs: "column" }} mt={20} spacing={5}>
+    <Stack
+      direction={{ md: "row", xs: "column" }}
+      mt={{ md: 20, xs: 5 }}
+      spacing={{ md: 5, xs: 2 }}
+    >
       <Link href={`blog/${data[0]?.slug}` ?? "/blog"} style={{ flex: 0.5 }}>
         <Stack
           sx={{
@@ -50,6 +56,8 @@ export const BlogNews = (props: BlogNewProps) => {
             style={{
               width: "100%",
               height: "auto",
+              maxHeight: "326px",
+              objectFit: "cover",
             }}
             alt="blog-new"
           />
@@ -77,34 +85,42 @@ export const BlogNews = (props: BlogNewProps) => {
               overflow: "hidden",
               WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
+              fontSize: { md: 18, xs: 12 },
             }}
           >
             {data[0]?.short_description}
           </Text>
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1} alignItems="center" mb={5}>
             <Image
               src={
                 data[0]?.created_by?.avatar?.link ??
                 "/images/default-avatar.png"
               }
-              width={36}
-              height={36}
+              width={isMdSmaller ? 17 : 36}
+              height={isMdSmaller ? 17 : 36}
               alt="blog-author"
             />
-            <Text>
+            <Text fontSize={{ md: 16, xs: 12 }}>
               By <strong>{data[0]?.created_by?.fullname}</strong>
             </Text>
           </Stack>
           <Stack
             direction="row"
             alignItems="center"
+            spacing={1}
             sx={{
               position: "absolute",
               bottom: 20,
               right: 10,
             }}
           >
-            <TextGradient fontWeight={700}>Read this</TextGradient>
+            <TextGradient
+              fontWeight={700}
+              fontSize={{ md: 16, xs: 12 }}
+              pb="3px"
+            >
+              Read this
+            </TextGradient>
             <Image
               src="/images/arrow-right-gradient.png"
               width={24}
@@ -155,21 +171,34 @@ export const BlogNews = (props: BlogNewProps) => {
                     >
                       {createTime(data.created_time)}
                     </Text>
-                    <Text fontWeight={700} mb={1} fontSize={{ md: 16, xs: 14 }}>
-                      {data.title}
-                    </Text>
                     <Text
-                      fontSize={14}
-                      display={{ md: "block", xs: "none" }}
+                      fontWeight={700}
+                      mb={1}
+                      fontSize={{ md: 16, xs: 14 }}
                       sx={{
                         display: "-webkit-box",
-                        overflow: "hidden",
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: {md: 3, xs: 2},
                         WebkitBoxOrient: "vertical",
+                        height: { md: "50px", xs: "43px" },
+                        overflow: "hidden",
                       }}
                     >
-                      {data.short_description}
+                      {data.title}
                     </Text>
+                    {!isMdSmaller && (
+                      <Text
+                        fontSize={14}
+                        display={{ md: "block", xs: "none" }}
+                        sx={{
+                          display: "-webkit-box",
+                          overflow: "hidden",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                        }}
+                      >
+                        {data.short_description}
+                      </Text>
+                    )}
                   </Stack>
                 </Stack>
               </Link>

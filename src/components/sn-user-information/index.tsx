@@ -144,7 +144,7 @@ const UserInformation = () => {
 
   if (!user) {
     return (
-      <Text variant="body2" textAlign="center" fontWeight={600}>
+      <Text variant="body2" textAlign="center" fontWeight={500}>
         {commonT(AN_ERROR_TRY_RELOAD_PAGE)}
       </Text>
     );

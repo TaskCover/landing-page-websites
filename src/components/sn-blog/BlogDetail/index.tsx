@@ -166,7 +166,7 @@ const BlogDetail = () => {
               <Text
                 textTransform="uppercase"
                 fontSize={16}
-                fontWeight={600}
+                fontWeight={500}
                 mb={3}
               >
                 LATEST POSTS
@@ -181,7 +181,7 @@ const BlogDetail = () => {
                         alignItems="center"
                         mb={2}
                       >
-                        <Stack>
+                        <Stack flex={{md: "unset", xs: 0.4}}>
                           <Image
                             src={data.background_down?.link ?? ""}
                             alt="last-post"
@@ -191,7 +191,7 @@ const BlogDetail = () => {
                         </Stack>
                         <Stack>
                           <Text
-                            fontWeight={600}
+                            fontWeight={500}
                             fontSize={14}
                             textTransform="uppercase"
                           >
@@ -216,7 +216,7 @@ const BlogDetail = () => {
               <Text
                 textTransform="uppercase"
                 fontSize={16}
-                fontWeight={600}
+                fontWeight={500}
                 mb={1}
               >
                 CATEGORIES
@@ -246,7 +246,7 @@ const BlogDetail = () => {
               <Text
                 textTransform="uppercase"
                 fontSize={16}
-                fontWeight={600}
+                fontWeight={500}
                 mb={3}
               >
                 NEWSLETTER

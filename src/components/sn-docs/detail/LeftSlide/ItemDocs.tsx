@@ -49,7 +49,7 @@ const Document = ({ title, id, project_id, onClick }: ItemDocsProps) => {
                     }}
                 >
                     <DocsItem></DocsItem>
-                    <Text sx={{ flex: 1 }} fontWeight={600} fontSize={14}>
+                    <Text sx={{ flex: 1 }} fontWeight={500} fontSize={14}>
                         {title}
                     </Text>
                 </Box>

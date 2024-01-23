@@ -89,7 +89,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
             }
           }}
         >
-          <Text fontWeight={600} fontSize={14}>
+          <Text fontWeight={500} fontSize={14}>
             {item?.name}
           </Text>
         </div>
@@ -110,7 +110,7 @@ const DesktopCells = (props: DesktopCellsProps) => {
               alignItems={"start"}
               direction={"column"}
             >
-              <Text fontWeight={600} fontSize={14}>
+              <Text fontWeight={500} fontSize={14}>
                 {item.created_by?.fullname}
               </Text>
               <Text fontWeight={400} fontSize={14}>

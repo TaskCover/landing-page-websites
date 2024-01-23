@@ -9,14 +9,14 @@ export const ResultUseCase = () => {
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={500}
         my={4}
         textAlign="center"
       >
         A commitment about the result
         <TextGradient
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={500}
         >
           Taskcover assists you gain the achievements
         </TextGradient>

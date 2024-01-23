@@ -66,7 +66,7 @@ const PDate = (props: DateProps) => {
     >
       <Text
         variant="body2"
-        fontWeight={600}
+        fontWeight={500}
         color="grey.400"
         whiteSpace="nowrap"
         onClick={onChoose}

@@ -1,4 +1,11 @@
-import React, { MutableRefObject, memo, useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  MutableRefObject,
+  memo,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Stack, Box } from "@mui/material";
 import { Button, Text } from "components/shared";
 import Image from "next/image";
@@ -8,9 +15,13 @@ import Avatar1 from "public/images/about-us/img-person-1.png";
 import GmailIcon from "public/images/about-us/icon-gmail.svg";
 import ArrowIconDown from "public/images/about-us/arrow-down.svg";
 import ArrowIconUp from "public/images/about-us/arrow-up.svg";
-import { Swiper as SwiperComponent, SwiperSlide, SwiperRef } from "swiper/react";
+import {
+  Swiper as SwiperComponent,
+  SwiperSlide,
+  SwiperRef,
+} from "swiper/react";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Navigation from "swiper"
+import Navigation from "swiper";
 import "swiper/css";
 import { SwiperNavButtons } from "./swipper-navitaion";
 type TeamsStarLayoutProps = {};
@@ -178,7 +189,10 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
                     </SwiperSlide>
                   ))}
                 </Box>
-                <SwiperNavButtons handlerNext={handleNext} handlerPrevious={handlePrev} />
+                <SwiperNavButtons
+                  handlerNext={handleNext}
+                  handlerPrevious={handlePrev}
+                />
               </Stack>
             ) : (
               <Stack alignItems="center" my={{ xs: "24px", md: "0" }}>
@@ -288,7 +302,16 @@ const TeamsStarLayout = (props: TeamsStarLayoutProps) => {
             }}
             onClick={() => setShowMoreState(!showMoreState)}
           >
-            <Text variant="h4" fontSize="20px" sx={textGradientSx}>
+            <Text
+              variant="h4"
+              fontSize="20px"
+              sx={{
+                ...textGradientSx,
+                background:
+                  "linear-gradient(90deg, #0575E6 5.8%, #38E27B 92.38%)",
+                fontWeight: 700,
+              }}
+            >
               {showMoreState ? "Show less" : "Show more"}
             </Text>
             <Image
@@ -324,7 +347,7 @@ const textHeadSx = {
 };
 
 const textGradientSx = {
-  background: "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+  background: "linear-gradient(90deg, #0575E6 -93.2%, #38E27B 106.38%)",
   backgroundClip: "text",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",

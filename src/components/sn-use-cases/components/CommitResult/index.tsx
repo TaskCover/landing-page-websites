@@ -19,7 +19,7 @@ export const UseCaseCommitResult = (props: UseCaseCommitResultProps) => {
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={500}
         mb={5}
         my={4}
         textAlign="center"
@@ -27,7 +27,7 @@ export const UseCaseCommitResult = (props: UseCaseCommitResultProps) => {
         A commitment about the result{" "}
         <TextGradient
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={500}
           percentBlueColor={28.8}
           percentGreenColor={59.38}
         >

@@ -36,7 +36,7 @@ const ExploreLayout = (props: ExploreLayoutProps) => {
             fontWeight={500}
             sx={[textHeadSx, {
               background:
-                "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+                "linear-gradient(90deg, #0575E6 -66.2%, #38E27B 64.38%)",
               backgroundClip: "text",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -146,8 +146,9 @@ const ExploreLayout = (props: ExploreLayoutProps) => {
                 </Text>
               </Stack>
               <Stack gap="8px">
-                {activeTab.desc.map((e) => (
+                {activeTab.desc.map((e, index) => (
                   <Text
+                  key={index}
                     variant={{ xs: "caption", md: "body2" }}
                     fontWeight={400}
                     lineHeight="22px"

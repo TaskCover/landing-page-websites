@@ -33,17 +33,35 @@ const ProductTaskManager = () => {
           <Text
             fontSize={{ md: 47, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 600, xs: 700 }}
+            fontWeight={{ md: 500, xs: 700 }}
             mt={4}
           >
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 600, xs: 700 }}
+              fontWeight={{ md: 500, xs: 700 }}
               percentBlueColor={-14.2}
-              percentGreenColor={119.38}
+              percentGreenColor={90.38}
             >
-              Elevate the organization, monitoring, and performance levels
+              Elevate the organization, monitoring,{" "}
+              <TextGradient
+                component="span"
+                fontSize="inherit"
+                fontWeight={{ md: 500, xs: 700 }}
+                percentBlueColor={-38.2}
+                percentGreenColor={9.38}
+              >
+                and
+              </TextGradient>{" "}
+              <TextGradient
+                component="span"
+                fontSize="inherit"
+                fontWeight={{ md: 500, xs: 700 }}
+                percentBlueColor={-14.2}
+                percentGreenColor={159.38}
+              >
+                performance levels
+              </TextGradient>
             </TextGradient>
             &#160;throughout the course of work and project execution
           </Text>
@@ -78,8 +96,8 @@ const ProductTaskManager = () => {
         </Container>
       </Stack>
       <ProductEvent
-        heading="READY TO BUDGETING YOUR AGENCY?"
-        textButton="STAR TO FREE TRIAL"
+        heading="Ready to take charge of your tasks and optimize your productivity?"
+        textButton="GET STARTED"
       />
       <Container>
         <SendQuestion />
@@ -111,9 +129,14 @@ const DATA = [
 const DATA_CREATE = [
   {
     heading: (
-      <Text  component="div" fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
+      <Text
+        component="div"
+        fontSize={{ md: 40, xs: 24 }}
+        textAlign="center"
+        fontWeight={500}
+      >
         See how to create a Project{" "}
-        <TextGradient component="span" fontSize="inherit" fontWeight={600}>
+        <TextGradient component="span" fontSize="inherit" fontWeight={500}>
           with TaskCover
         </TextGradient>
       </Text>

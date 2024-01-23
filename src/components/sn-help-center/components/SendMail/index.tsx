@@ -42,10 +42,10 @@ export const HelperSendMail = () => {
           textAlign: "center",
         }}
       >
-        <Text color="#fff" fontSize={{ md: 40, xs: 24 }} width="100%">
+        <Text color="#fff" fontSize={{ md: 36, xs: 24 }} width="100%" fontWeight={500}>
           Unlock the value of&nbsp;
-          <Text component="span" fontSize="inherit" color="#00FFE0">
-            management and optimization
+          <Text component="span" fontSize="inherit" color="#00FFE0" fontWeight={500}>
+            management and optimization <br/>
           </Text>
           &nbsp;for your agency right now.
         </Text>

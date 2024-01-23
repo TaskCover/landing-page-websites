@@ -1,13 +1,28 @@
-import { Open_Sans } from "next/font/google";
+import localFont from 'next/font/local'
 
-export const openSans = Open_Sans({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
-  display: "swap",
-  fallback: ["Arial", "sans-serif"],
-});
+export const helveticaNeue = localFont({
+  src: [
+    {
+      path: '../font/HelveticaNeue-Roman.otf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../font/HelveticaNeueMedium.otf',
+      weight: '500',
+      style: 'normal',
+    }, 
+    {
+      path: '../font/HelveticaNeueBold.ttf',
+      weight: '700',
+      style: 'normal',
+    },
+
+  ],
+})
 
 const typography = {
+  fontFamily: helveticaNeue.style.fontFamily,
   h1: {
     fontWeight: 700,
     fontSize: 64,

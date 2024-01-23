@@ -303,7 +303,7 @@ const DroppableTaskList = (props: DroppableTaskListProps) => {
         />
       )}
       <DialogLayout open={isPreviewName} onClose={onHidePreviewName}>
-        <Text variant="body2" fontWeight={600} px={3}>
+        <Text variant="body2" fontWeight={500} px={3}>
           {name}
         </Text>
       </DialogLayout>

@@ -36,7 +36,7 @@ const MobileContentCell = (props: MobileContentCellProps) => {
         <Text
           variant="body2"
           color="text.primary"
-          fontWeight={600}
+          fontWeight={500}
           lineHeight={1.28}
           sx={{
             "&:hover": { color: "primary.main" },

@@ -21,7 +21,7 @@ export const FormMobile = () => {
       }}
     >
       <Stack justifyContent="flex-start" width="100%" mt={3}>
-        <Text fontWeight={500} variant="h5" color="#fff" mb={3} align="center">
+        <Text fontWeight={500} fontSize={24} color="#fff" mb={3} align="center">
           A unified app for all your needs.
         </Text>
         <Text color="#fff" mb={3} align="center" fontWeight={400}>

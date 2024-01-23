@@ -38,11 +38,15 @@ const UseCaseLawAgency = () => {
               <Text
                 component="div"
                 fontSize={{ md: 36, xs: 20 }}
-                fontWeight={600}
+                fontWeight={700}
                 my={4}
               >
                 Optimize process on a{" "}
-                <TextGradient fontSize={{ md: 36, xs: 20 }} fontWeight={600}>
+                <TextGradient
+                  fontSize={{ md: 36, xs: 20 }}
+                  fontWeight={700}
+                  percentGreenColor={128.38}
+                >
                   project by project basis
                 </TextGradient>
               </Text>
@@ -58,12 +62,14 @@ const UseCaseLawAgency = () => {
               <Text
                 component="div"
                 fontSize={{ md: 40, xs: 24 }}
-                fontWeight={600}
+                fontWeight={500}
               >
                 <TextGradient
                   component="span"
                   fontSize={{ md: 40, xs: 24 }}
-                  fontWeight={600}
+                  fontWeight={500}
+                  percentBlueColor={160.8}
+                  percentGreenColor={56.38}
                 >
                   Benefits{" "}
                 </TextGradient>
@@ -96,9 +102,7 @@ const UseCaseLawAgency = () => {
       </Stack>
       <Container>
         <ResourceUseCase />
-        <Stack mt={10}>
-          <HelperSendMail />
-        </Stack>
+        <HelperSendMail />
       </Container>
     </Stack>
   );
@@ -116,12 +120,14 @@ const DATA_BENEFIT = [
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={-55.2}
+          percentGreenColor={159.38}
         >
           to accelerate in legal processes
         </TextGradient>
       </Text>
     ),
-    content: " Create transparent schedules for development phases",
+    content: "Create transparent schedules for development phases",
   },
   {
     icon: "/images/benefit-ic-9.png",
@@ -131,6 +137,7 @@ const DATA_BENEFIT = [
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={160.8}
         >
           Control and facilitate{" "}
         </TextGradient>
@@ -148,6 +155,7 @@ const DATA_BENEFIT = [
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={160.8}
         >
           Streamline{" "}
         </TextGradient>
@@ -167,13 +175,14 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={500}
         my={4}
       >
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
+          percentGreenColor={142.38}
         >
           Optimize legal process{" "}
         </TextGradient>
@@ -181,7 +190,7 @@ const DATA_ACCELERATE = [
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
           percentGreenColor={140.38}
         >
           {" "}
@@ -190,7 +199,7 @@ const DATA_ACCELERATE = [
       </Text>
     ),
     content: `TaskCover AI agent automates analyzing legal documents, extract crucial information, and predict case outcomes. Drive distinct case success with AI record meetings .`,
-    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
   {
     imageUrl: "/images/accelerate-image.png",
@@ -199,21 +208,22 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={700}
         my={4}
       >
         Take advantage of accurate time keeping for productive utilization on{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
+          percentGreenColor={135.38}
         >
           tasks, projects, and client engagements
         </TextGradient>
       </Text>
     ),
     content: `Capture, monitor, and analyze time spent on projects, ensuring precision in resource allocation and project timelines`,
-    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+    videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
   },
 ];
 
@@ -224,17 +234,13 @@ const DATA_COMMIT_RESULT = [
       <Text
         component="div"
         fontSize={14}
-        fontWeight={600}
+        fontWeight={500}
         mb={5}
         my={4}
         textAlign="center"
       >
-        <TextGradient
-          component="span"
-          fontSize={14}
-          fontWeight={600}
-        >
-           Control and make the best{" "}
+        <TextGradient component="span" fontSize={14} fontWeight={500}>
+          Control and make the best{" "}
         </TextGradient>
         of available resources
       </Text>
@@ -246,18 +252,14 @@ const DATA_COMMIT_RESULT = [
       <Text
         component="div"
         fontSize={14}
-        fontWeight={600}
+        fontWeight={500}
         mb={5}
         my={4}
         textAlign="center"
       >
         Enhance{" "}
-        <TextGradient
-          component="span"
-          fontSize={14}
-          fontWeight={600}
-        >
-           team collaboration
+        <TextGradient component="span" fontSize={14} fontWeight={500}>
+          team collaboration
         </TextGradient>
       </Text>
     ),
@@ -268,16 +270,12 @@ const DATA_COMMIT_RESULT = [
       <Text
         component="div"
         fontSize={14}
-        fontWeight={600}
+        fontWeight={500}
         mb={5}
         my={4}
         textAlign="center"
       >
-        <TextGradient
-          component="span"
-          fontSize={14}
-          fontWeight={600}
-        >
+        <TextGradient component="span" fontSize={14} fontWeight={500}>
           Elevate customer satisfaction{" "}
         </TextGradient>
         with clear communication
@@ -290,17 +288,13 @@ const DATA_COMMIT_RESULT = [
       <Text
         component="div"
         fontSize={14}
-        fontWeight={600}
+        fontWeight={700}
         mb={5}
         my={4}
         textAlign="center"
       >
         Ensure{" "}
-        <TextGradient
-          component="span"
-          fontSize={14}
-          fontWeight={600}
-        >
+        <TextGradient component="span" fontSize={14} fontWeight={700}>
           punctuality in legal processes
         </TextGradient>
       </Text>

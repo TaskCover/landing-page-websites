@@ -67,7 +67,7 @@ const TopContent = () => {
           </Link>
         )}
         <Text
-          fontWeight={600}
+          fontWeight={500}
           variant={{ xs: "body2", md: "h4" }}
           display={{ sm: "none" }}
         >

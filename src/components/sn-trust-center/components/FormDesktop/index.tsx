@@ -1,6 +1,5 @@
 import { Button, FormControl, Input, Stack } from "@mui/material";
 import { Text, TextGradient } from "components/shared";
-import Image from "next/image";
 
 export const FormDesktop = () => {
   return (
@@ -20,7 +19,7 @@ export const FormDesktop = () => {
         }}
       >
         <Stack>
-          <Text fontWeight={500} variant="h4" color="#fff" mb={3}>
+          <Text fontWeight={500} fontSize={32} color="#fff" mb={3}>
             A unified app for all your needs.
           </Text>
           <FormControl>

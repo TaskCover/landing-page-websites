@@ -25,7 +25,16 @@ const HeadLayout = (props: HeadLayoutProps) => {
         ]}
       >
         <Stack flexDirection="row" gap="16px">
-          <Text variant="h1" sx={[textHeadSx, {}]}>
+          <Text
+            variant="h1"
+            sx={[
+              textHeadSx,
+              {
+                position: "relative",
+                "&:before": styleStrokeText("Your"),
+              },
+            ]}
+          >
             Your
           </Text>
           <Text
@@ -34,10 +43,12 @@ const HeadLayout = (props: HeadLayoutProps) => {
               textHeadSx,
               {
                 background:
-                  "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+                  "linear-gradient(90deg, #0575E6 -50.2%, #38E27B 80.38%)",
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
+                position: "relative",
+                "&:before": styleStrokeText("Problem"),
               },
             ]}
           >
@@ -45,7 +56,16 @@ const HeadLayout = (props: HeadLayoutProps) => {
           </Text>
         </Stack>
         <Stack flexDirection="row" gap="16px">
-          <Text variant="h1" sx={textHeadSx}>
+          <Text
+            variant="h1"
+            sx={[
+              textHeadSx,
+              {
+                position: "relative",
+                "&:before": styleStrokeText("Our"),
+              },
+            ]}
+          >
             Our{" "}
           </Text>
           <Text
@@ -54,10 +74,12 @@ const HeadLayout = (props: HeadLayoutProps) => {
               textHeadSx,
               {
                 background:
-                  "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+                  "linear-gradient(90deg, #0575E6 -50.2%, #38E27B 80.38%)",
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
+                position: "relative",
+                "&:before": styleStrokeText("Pros"),
               },
             ]}
           >
@@ -68,7 +90,7 @@ const HeadLayout = (props: HeadLayoutProps) => {
           variant="h4"
           fontWeight={400}
           color="#111827"
-          my="24px"
+          my={6}
           fontSize={{ xs: "16px", md: "20px" }}
           sx={{ textAlign: "center" }}
         >
@@ -118,7 +140,8 @@ const textHeadSx = {
 
 const btnGetStartedSx = {
   width: { xs: "140px", md: "163px" },
-  px: 1,
+  px: 2,
+  py: 3,
   height: "40px",
   fontSize: "16px",
   fontWeight: 500,
@@ -132,12 +155,25 @@ const btnWatchVideoSx = {
   height: "40px",
   flexDirection: "row",
   gap: "8px",
-  px: "6px",
-  py: "8px",
+  px: 2,
+  py: 3,
   fontSize: "16px",
   fontWeight: 500,
   lineHeight: "24px",
   borderRadius: "40px",
   border: "1px solid #5C98F6",
   color: "#5C98F6",
+};
+
+const styleStrokeText = (content: string) => {
+  return {
+    content: `"${content}"`,
+    position: "absolute",
+    top: -2,
+    left: 4,
+    zIndex: -1,
+    WebkitTextFillColor: "transparent",
+    WebkitTextStrokeWidth: "1px",
+    WebkitTextStrokeColor: "#fff",
+  };
 };

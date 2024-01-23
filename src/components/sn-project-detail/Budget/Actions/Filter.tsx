@@ -41,7 +41,7 @@ const Filter = ({ onChange, queries }: TFilterSearchProps) => {
           cursor: "pointer",
         }}
       >
-        <Text color={"gray.400"} fontWeight={600} fontSize={"14px"}>
+        <Text color={"gray.400"} fontWeight={500} fontSize={"14px"}>
           {projectT("budget.titleFilter")}
         </Text>
         <Box

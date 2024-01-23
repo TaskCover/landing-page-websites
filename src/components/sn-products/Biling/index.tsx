@@ -34,14 +34,14 @@ const ProductBilling = () => {
               component="div"
               fontSize={{ md: 29, xs: 24 }}
               textAlign={{ md: "left", xs: "center" }}
-              fontWeight={600}
+              fontWeight={500}
               width="100%"
             >
               The way to{" "}
               <TextGradient
                 component="span"
                 fontSize="inherit"
-                fontWeight={600}
+                fontWeight={500}
               >
                 ISSUE and MAKE INVOICE
               </TextGradient>
@@ -66,14 +66,14 @@ const ProductBilling = () => {
               component="div"
               fontSize={{ md: 29, xs: 24 }}
               textAlign={{ md: "left", xs: "center" }}
-              fontWeight={600}
+              fontWeight={500}
               width="100%"
             >
               Check{" "}
               <TextGradient
                 component="span"
                 fontSize="inherit"
-                fontWeight={600}
+                fontWeight={500}
               >
                 your BILL!
               </TextGradient>
@@ -122,13 +122,13 @@ const ProductBilling = () => {
             component="div"
             fontSize={{ md: 47, xs: 24 }}
             textAlign="center"
-            fontWeight={{ md: 600, xs: 700 }}
+            fontWeight={{ md: 500, xs: 700 }}
             mt={4}
           >
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 600, xs: 700 }}
+              fontWeight={{ md: 500, xs: 700 }}
             >
               Easily generated invoices and tracked
               {!isMdSmaller && <br />}

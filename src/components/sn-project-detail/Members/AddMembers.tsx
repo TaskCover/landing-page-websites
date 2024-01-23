@@ -151,7 +151,7 @@ const HeaderForm = () => {
 
   return (
     <Stack spacing={2}>
-      <Text textTransform="capitalize" fontWeight={600}>
+      <Text textTransform="capitalize" fontWeight={500}>
         {projectT("detailMembers.addMembersToProject")}
       </Text>
       <Search

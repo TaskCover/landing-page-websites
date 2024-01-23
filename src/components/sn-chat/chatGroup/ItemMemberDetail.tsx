@@ -137,7 +137,7 @@ const ItemMemberDetail = ({
           <Typography
             variant="inherit"
             color={isDarkMode ? "white" : "#212121"}
-            fontWeight={600}
+            fontWeight={500}
             fontSize={14}
           >
             {data?.fullname}

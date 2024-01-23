@@ -13,12 +13,6 @@ const ArticlesLayout = (props: ArticlesLayoutProps) => {
   return (
     <Stack
       width="100%"
-      sx={{
-        background: "url(/images/about-us/bg-head.png)",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-      }}
     >
       <Stack
         sx={[
@@ -40,30 +34,6 @@ const ArticlesLayout = (props: ArticlesLayoutProps) => {
             articles
           </Text>
         </Stack>
-        {/* <Stack
-          mt={{ xs: "24px", md: "40px" }}
-          display="grid"
-          gridTemplateColumns={{ xs: "repeat(2,1fr)", md: "repeat(4,1fr)" }}
-          width="100%"
-          gap={{ xs: "24px", md: "40px" }}
-        >
-          {
-            ListArticles.map((e, i) => (
-              <Stack key={i}
-                sx={{
-                  borderRadius: { xs: "12px", md: "24px" },
-                  backgroundColor: "#fff",
-                  boxShadow: " 0px 0px 12px 0px rgba(170, 198, 245, 0.40)",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  p: { xs: "12px 25px", md: "32px 54px" }
-                }}>
-                <Image src={e} alt="image"
-                  width={isMdSmaller ? 62 : 120} />
-              </Stack>
-            ))
-          }
-        </Stack> */}
         <Stack
           direction="row"
           justifyContent="center"

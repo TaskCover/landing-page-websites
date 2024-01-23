@@ -44,7 +44,7 @@ export const CreateProduct = (props: CreateProductProps) => {
 
       <Button
         className="MuiButton-primary"
-        sx={{ width: "fit-content", mx: "auto", mt: 4, fontWeight: 500, px: 2.5  }}
+        sx={{ width: "fit-content", mx: "auto", mt: 4, fontWeight: 400, px: 3.5  }}
       >
         SEE PRICING <KeyboardArrowRightIcon />
       </Button>

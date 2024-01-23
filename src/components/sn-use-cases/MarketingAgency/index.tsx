@@ -39,14 +39,14 @@ const UseCaseMarketingAgency = () => {
               <Text
                 component="div"
                 fontSize={{ md: 36, xs: 20 }}
-                fontWeight={600}
+                fontWeight={700}
                 my={4}
               >
                 A game-Changing Platform for{" "}
                 <TextGradient
                   component="span"
                   fontSize={{ md: 36, xs: 20 }}
-                  fontWeight={600}
+                  fontWeight={700}
                   percentBlueColor={13.8}
                   percentGreenColor={135.38}
                 >
@@ -59,7 +59,16 @@ const UseCaseMarketingAgency = () => {
           idea to delivery. Maximize customer retention with billing and sales. `}
           />
         </Container>
-        <PartnerUseCase />
+        <Stack
+          mt={{ md: 20, xs: 10 }}
+          sx={{
+            backgroundColor: { md: "#fff", xs: "rgba(255, 255, 255, 0.50)" },
+          }}
+        >
+          <Container>
+            <PartnerUseCase />
+          </Container>
+        </Stack>
         <Container>
           <BenefitUseCase
             data={DATA_BENEFIT}
@@ -68,12 +77,14 @@ const UseCaseMarketingAgency = () => {
               <Text
                 component="div"
                 fontSize={{ md: 40, xs: 24 }}
-                fontWeight={600}
+                fontWeight={500}
               >
                 <TextGradient
                   component="span"
                   fontSize={{ md: 40, xs: 24 }}
-                  fontWeight={600}
+                  fontWeight={500}
+                  percentBlueColor={15.8}
+                  percentGreenColor={200.38}
                 >
                   Benefits to{" "}
                 </TextGradient>
@@ -109,9 +120,7 @@ const UseCaseMarketingAgency = () => {
 
       <Container>
         <ResourceUseCase />
-        <Stack mt={10}>
-          <HelperSendMail />
-        </Stack>
+        <HelperSendMail />
       </Container>
     </Stack>
   );
@@ -123,12 +132,19 @@ const DATA_BENEFIT = [
   {
     icon: "/images/benefit-ic-1.png",
     title: (
-      <Text component="div" fontSize={{ md: 20, xs: 16 }} fontWeight={700}>
+      <Text
+        component="div"
+        fontSize={{ md: 20, xs: 16 }}
+        fontWeight={700}
+        mb={1}
+      >
         Equipped with the latest{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={-50.2}
+          percentGreenColor={28.38}
         >
           AI technology
         </TextGradient>
@@ -139,12 +155,19 @@ const DATA_BENEFIT = [
   {
     icon: "/images/benefit-ic-2.png",
     title: (
-      <Text component="div" fontSize={{ md: 20, xs: 16 }} fontWeight={700}>
+      <Text
+        component="div"
+        fontSize={{ md: 20, xs: 16 }}
+        fontWeight={700}
+        mb={1}
+      >
         Enhance{" "}
         <TextGradient
           component="span"
           fontSize={{ md: 20, xs: 16 }}
           fontWeight={700}
+          percentBlueColor={-24.2}
+          percentGreenColor={114.38}
         >
           project finance and customer relation
         </TextGradient>
@@ -155,7 +178,12 @@ const DATA_BENEFIT = [
   {
     icon: "/images/benefit-ic-3.png",
     title: (
-      <Text component="div" fontSize={{ md: 20, xs: 16 }} fontWeight={700}>
+      <Text
+        component="div"
+        fontSize={{ md: 20, xs: 16 }}
+        fontWeight={700}
+        mb={1}
+      >
         Smooth{" "}
         <TextGradient
           component="span"
@@ -178,13 +206,14 @@ const DATA_ACCELERATE = [
       <Text
         component="div"
         fontSize={{ md: 36, xs: 20 }}
-        fontWeight={600}
+        fontWeight={700}
         my={4}
       >
         <TextGradient
           component="span"
           fontSize={{ md: 36, xs: 20 }}
-          fontWeight={600}
+          fontWeight={700}
+          percentGreenColor={94.38}
         >
           Create and accelerate campaigns{" "}
         </TextGradient>

@@ -12,7 +12,7 @@ export const ProductInformation = () => {
       mt={{md: 15, xs: 1}}
     >
       <Stack flex={1}>
-        <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500}>
+        <TextGradient fontSize={{ md: 40, xs: 24 }} fontWeight={500} percentGreenColor={103.38}>
           Missing out on information?!
         </TextGradient>
         <Text fontSize={{ md: 40, xs: 24 }} fontWeight={500} mb={2}>

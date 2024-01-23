@@ -18,10 +18,10 @@ export const ChartUseCase = () => {
             }}
             alt="chart-use-case"
           />
-          <TextGradient mb={4} mt={3}>
+          <TextGradient mb={4} mt={3} fontWeight={700} percentGreenColor={24.38}>
             {data.title}
           </TextGradient>
-          <Text fontSize={{ md: 24, xs: 16 }} fontWeight={700}>
+          <Text fontSize={{ md: 24, xs: 16 }} fontWeight={500} mb={0.652}>
             {data.heading}
           </Text>
           <Text mb={5} height={50}>{data.content}</Text>

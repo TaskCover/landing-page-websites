@@ -165,7 +165,7 @@ export const useGetHeaderColumn = (index: number) => {
         //     justifyContent="flex-end"
         //   >
         //     <Text>{salesT("detail.service.table.totalBuget")}</Text>
-        //     <Text fontSize={14} fontWeight={600}>
+        //     <Text fontSize={14} fontWeight={500}>
         //       {formatNumber(totalBuget, {
         //         numberOfFixed: 2,
         //         prefix: CURRENCY_SYMBOL[CURRENCY_CODE.USD],

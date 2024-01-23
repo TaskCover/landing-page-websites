@@ -506,7 +506,7 @@ const ChatDetailGroup = (props) => {
               variant="caption"
               color={isDarkMode ? "white" : "#212121"}
               fontSize={16}
-              fontWeight={600}
+              fontWeight={500}
             >
               {`${commonChatBox("chatBox.members")} (${
                 dataTransfer?.usersCount
@@ -514,7 +514,7 @@ const ChatDetailGroup = (props) => {
             </Typography>
           </Box>
           <Box>
-            {/* <Typography variant="caption" color="#3699FF" fontSize={14} fontWeight={600} sx={{ cursor: "pointer" }}>
+            {/* <Typography variant="caption" color="#3699FF" fontSize={14} fontWeight={500} sx={{ cursor: "pointer" }}>
               See more
             </Typography> */}
           </Box>
@@ -552,7 +552,7 @@ const ChatDetailGroup = (props) => {
                   variant="caption"
                   color="#F64E60"
                   fontSize={14}
-                  fontWeight={600}
+                  fontWeight={500}
                   sx={{ cursor: "pointer" }}
                   onClick={() => {
                     setShowPopup((pre) => ({
@@ -575,7 +575,7 @@ const ChatDetailGroup = (props) => {
                   variant="caption"
                   color="#F64E60"
                   fontSize={14}
-                  fontWeight={600}
+                  fontWeight={500}
                   sx={{ cursor: "pointer" }}
                   onClick={() => {
                     if (owner) {

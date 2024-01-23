@@ -129,7 +129,7 @@ const UserInfo = () => {
       >
         <Avatar size={64} alt={user.fullname} src={user?.avatar?.link} />
         <Stack>
-          <Text fontWeight={600} sx={{ wordBreak: "break-all" }}>
+          <Text fontWeight={500} sx={{ wordBreak: "break-all" }}>
             {user.fullname}
           </Text>
           <Text

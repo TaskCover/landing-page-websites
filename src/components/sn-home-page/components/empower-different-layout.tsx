@@ -47,7 +47,7 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                         mb="8px"
                         sx={{
                             borderRadius: "12px",
-                            background: " linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)"
+                            background: " linear-gradient(90deg, #0575E6 5.8%, #38E27B 55.38%)"
                         }}>
                         <Stack position="absolute" sx={{ top: "20px", right: { xs: "-8px", md: "-15px" } }}>
                             <Image src={RecomendedPlagIc} width={isMdSmaller ? 123 : 256} alt={'image flag'}

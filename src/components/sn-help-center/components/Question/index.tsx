@@ -5,24 +5,32 @@ export const HelperQuestion = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
     <Stack pt={{ md: 22, xs: 15 }} pb={{ md: 13, xs: 8 }} position="relative">
-      <Text textAlign="center" fontSize={{ md: 40, xs: 24 }} fontWeight={500} mb={2}>
+      {isMdSmaller && (
+        <Stack
+          sx={{
+            backgroundImage: isMdSmaller
+              ? "url(/images/bg-header-help-center-mobile.png)"
+              : "url(/images/bg-header-help-center.webp)",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: -1,
+          }}
+        />
+      )}
+
+      <Text
+        textAlign="center"
+        fontSize={{ md: 40, xs: 24 }}
+        fontWeight={500}
+        mb={2}
+      >
         Frequently asked questions.
       </Text>
-      <Stack
-        sx={{
-          backgroundImage: isMdSmaller
-            ? "url(/images/bg-header-help-center-mobile.png)"
-            : "url(/images/bg-header-help-center.webp)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          height: "400%",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: -1,
-        }}
-      />
       <Container>
         <Stack maxWidth={800} mx="auto">
           {DATA.map((data, index) => (

@@ -26,7 +26,7 @@ const Loading = (props: DialogProps & { message?: string }) => {
     >
       <Stack alignItems="center" spacing={1}>
         <CircularProgress size={24} color="primary" />
-        <Text variant="body2" fontWeight={600} color="text.primary">
+        <Text variant="body2" fontWeight={500} color="text.primary">
           {message}
         </Text>
         {children}

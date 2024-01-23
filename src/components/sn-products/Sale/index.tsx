@@ -35,13 +35,13 @@ const ProductSale = () => {
           <Text
             fontSize={{ md: 47, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 600, xs: 700 }}
+            fontWeight={{ md: 500, xs: 700 }}
             mt={4}
           >
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 600, xs: 700 }}
+              fontWeight={{ md: 500, xs: 700 }}
             >
               Effectively tracked customer journey
             </TextGradient>

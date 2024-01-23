@@ -12,16 +12,33 @@ import Image from "next/image";
 export const HeaderBlog = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
-    <Stack mt={{md: 12, xs: 2}}>
-      <Stack direction={{md: "row", xs: "column"}} gap={3.75} alignItems="center">
-        <Stack flex={{md: 0.8, xs: 1}}>
-          <Text fontSize={{ md: 55, xs: 24 }} fontWeight={700}>
+    <Stack mt={{ md: 12, xs: 2 }}>
+      <Stack
+        direction={{ md: "row", xs: "column" }}
+        gap={3.75}
+        alignItems="center"
+      >
+        <Stack flex={{ md: 0.8, xs: 1 }}>
+          <Text
+            fontSize={{ md: 55, xs: 24 }}
+            fontWeight={700}
+            sx={{
+              textAlign: {md: "left", xs: "center"}
+            }}
+          >
             Tackle all your problems collaboratively and pave the way for
             success.
           </Text>
-          <Text color="#7C828D" fontWeight={400} mt={1}>
-            Unlock the value of management and optimization for your agency
-            right now.
+          <Text
+            color="#7C828D"
+            fontWeight={400}
+            mt={1}
+            sx={{
+              textAlign: {md: "left", xs: "center"}
+            }}
+          >
+            Unlock the value of management and optimization {!isMdSmaller && <br />} for your
+            agency right now.
           </Text>
           <FormControl sx={{ mt: 3 }}>
             <Stack
@@ -39,9 +56,12 @@ export const HeaderBlog = () => {
               <Input
                 disableUnderline
                 sx={{ px: 2, color: "#4B5563" }}
-                placeholder="Type your question"
+                placeholder="Enter Email"
               />
-              <ButtonCustom className="MuiButton-primary" sx={{ px: {md: 6, xs: 1.8} }}>
+              <ButtonCustom
+                className="MuiButton-primary"
+                sx={{ px: { md: 6, xs: 1.8 } }}
+              >
                 {isMdSmaller ? (
                   <Image
                     src="/images/send-2.png"

@@ -5,7 +5,7 @@ import "public/styles/date-picker.css";
 import "highlight.js/styles/atom-one-dark.css";
 
 import AppProvider from "contexts/AppProvider";
-import { openSans } from "public/material/typography";
+import { helveticaNeue } from "public/material/typography";
 import { notFound } from "next/navigation";
 import { useLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
@@ -29,6 +29,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: Locale };
 }) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const locale = useLocale();
 
   // Show a 404 error if the user requests an unknown locale
@@ -41,7 +42,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      <body suppressHydrationWarning={true} className={openSans.className}>
+      <body suppressHydrationWarning={true} className={helveticaNeue.className}>
         <AppProvider locale={locale} messages={messages}>
           {children}
         </AppProvider>

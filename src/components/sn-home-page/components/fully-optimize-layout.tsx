@@ -22,7 +22,7 @@ const FullyObtimizeLayout = (props: FullyObtimizeLayoutProps) => {
                         variant={{ xs: "h3", md: "h1" }}
                         sx={[textHeadSx, {
                             background:
-                                "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+                                "linear-gradient(90deg, #0575E6 37.8%, #38E27B 206.38%)",
                             backgroundClip: "text",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent",

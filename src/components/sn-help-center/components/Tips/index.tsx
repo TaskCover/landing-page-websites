@@ -10,17 +10,19 @@ export const TipsHelpCenter = () => {
   return (
     <Stack
       alignItems="center"
-      mt={6}
+      mt={{md: 12, xs: 8}}
     >
       <TextGradient
         fontSize={{ md: 40, xs: 24 }}
         textAlign="center"
         fontWeight={500}
+        percentGreenColor={75.38}
       >
-        Usage tips to begin
+        Usage tips to begin{" "}
         <Text
           component="span"
           fontSize="inherit"
+          fontWeight={500}
           sx={{
             WebkitTextFillColor: "black",
             display: { md: "inline-block", xs: "block" },

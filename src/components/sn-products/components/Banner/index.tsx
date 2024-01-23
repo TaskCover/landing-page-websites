@@ -24,7 +24,7 @@ export const Banner = (props: BannerProps) => {
         justifyContent: {md: "center", xs: "flex-start"},
       }}
     >
-      <Stack width={{ md: "50%", xs: "100%" }}>
+      <Stack width={{ md: "46%", xs: "100%" }}>
         <Text
           fontSize={{ md: 32, xs: 24 }}
           color="#fff"
@@ -32,7 +32,7 @@ export const Banner = (props: BannerProps) => {
           mb={2}
           textAlign={{ md: "left", xs: "center" }}
         >
-          ptOimize Workflows with Precision and Ease
+          Opimize Workflows with Precision and Ease
         </Text>
         <Text
           fontSize={{ md: 20, xs: 16 }}

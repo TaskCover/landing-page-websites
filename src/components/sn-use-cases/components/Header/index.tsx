@@ -14,9 +14,9 @@ export const HeaderUseCase = (props: HeaderUseCaseProps) => {
   return (
     <Stack direction={{md: "row", xs: "column"}} spacing={6.5} pt={{md: 10, xs: 2}}>
       <Stack flex={1}>
-        <TextGradient>TaskCover | Marketing Agency</TextGradient>
+        <TextGradient fontWeight={700}>{title}</TextGradient>
         {headings}
-        <Text mb={4}>
+        <Text mb={4} lineHeight="25px" letterSpacing="0.5px" fontSize={{md: 17, xs: 16}}>
           {content}
         </Text>
         <ButtonCustom className="MuiButton-primary" sx={{width: "fit-content"}}>

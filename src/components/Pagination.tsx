@@ -80,7 +80,7 @@ const Pagination = (props: PaginationProps) => {
         spacing={1}
         display={{ xs: "none", md: "flex" }}
       >
-        <Text variant="body2" fontWeight={600}>
+        <Text variant="body2" fontWeight={500}>
           {t("paging.show")}
         </Text>
         <Select
@@ -90,7 +90,7 @@ const Pagination = (props: PaginationProps) => {
           value={pageSize}
           size="small"
         />
-        <Text variant="body2" fontWeight={600}>
+        <Text variant="body2" fontWeight={500}>
           {t("paging.outOf", { count: formatNumber(totalItems) })}
         </Text>
       </Stack>

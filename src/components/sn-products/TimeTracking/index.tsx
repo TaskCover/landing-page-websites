@@ -35,7 +35,7 @@ const ProductProject = () => {
           <Text
             fontSize={{ md: 47, xs: 23 }}
             textAlign="center"
-            fontWeight={{ md: 600, xs: 700 }}
+            fontWeight={{ md: 500, xs: 700 }}
             mt={4}
           >
             Optimize your time management for
@@ -43,7 +43,7 @@ const ProductProject = () => {
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 600, xs: 700 }}
+              fontWeight={{ md: 500, xs: 700 }}
             >
               &#160;insightful and effective results.
             </TextGradient>
@@ -109,9 +109,9 @@ const DATA = [
 const DATA_CREATE = [
   {
     heading: (
-      <Text  component="div" fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={600}>
+      <Text  component="div" fontSize={{ md: 40, xs: 24 }} textAlign="center" fontWeight={500}>
         See how to monitor your personal time{" "}
-        <TextGradient component="span" fontSize="inherit" fontWeight={600}>
+        <TextGradient component="span" fontSize="inherit" fontWeight={500}>
           with TaskCover
         </TextGradient>
       </Text>
@@ -164,7 +164,7 @@ const DATA_CREATE = [
         component="span"
         fontSize={{ md: 40, xs: 24 }}
         textAlign="center"
-        fontWeight={600}
+        fontWeight={500}
         percentBlueColor={29.8}
         percentGreenColor={64.38}
       >

@@ -9,29 +9,29 @@ export const AboutTaskCoverAI = () => {
       <Text
         component="div"
         fontSize={{ md: 40, xs: 24 }}
-        fontWeight={600}
+        fontWeight={500}
         textAlign="center"
         mb={{ md: 10, xs: 0 }}
       >
         <TextGradient
           component="span"
           fontSize={{ md: 40, xs: 24 }}
-          fontWeight={600}
+          fontWeight={500}
           percentBlueColor={68.5}
           percentGreenColor={128}
         >
           TaskCover AI -{" "}
-        </TextGradient>
-        {" "}Revolutionizing Productivity
+        </TextGradient>{" "}
+        Revolutionizing Productivity
       </Text>
       <Stack
         direction="row"
-        spacing={1.5}
+        spacing={{ md: 1.5, xs: 0 }}
         height={80}
         borderRadius={4}
         sx={{
           backgroundColor: "rgba(255, 255, 255, 0.40)",
-          border: "0.5px solid rgba(5, 117, 230, .3)"
+          border: "0.5px solid rgba(5, 117, 230, .3)",
         }}
         justifyContent="space-between"
         alignItems="center"
@@ -39,9 +39,9 @@ export const AboutTaskCoverAI = () => {
         mt={{ md: 6, xs: 3 }}
       >
         {DATA.map((data, index) => (
-          <Link href={data.link} key={index}>
+          <Link href={data.link} key={index} style={{ flex: 1 }}>
             <Stack alignItems="center">
-              <Image src={data.icon} alt="project" width={24} height={24} />
+              <Image src={data.icon} alt="project" width={32} height={32} />
               <Text fontWeight={400} display={{ md: "block", xs: "none" }}>
                 {data.label}
               </Text>
@@ -50,7 +50,7 @@ export const AboutTaskCoverAI = () => {
         ))}
       </Stack>
 
-      <Stack mt={{ md: 10, xs: 3 }}>
+      <Stack mt={{ md: 10, xs: 6 }}>
         {ABOUT_DATA.map((data, index) => (
           <Stack
             direction={{
@@ -62,10 +62,20 @@ export const AboutTaskCoverAI = () => {
             key={index}
             mb={{ md: 16, xs: 7 }}
           >
-            <Stack flex={1}>
-              <Text fontWeight={500}>{data.title}</Text>
+            <Stack flex={0.6}>
+              <Text
+                fontWeight={{ md: 500, xs: 400 }}
+                fontSize={{ md: 16, xs: 12 }}
+                textTransform="uppercase"
+                letterSpacing={{ md: "3px", xs: "0.5px" }}
+                mb={{ md: 2, xs: 1 }}
+              >
+                {data.title}
+              </Text>
               {data.heading}
-              <Text fontSize={20}>{data.description}</Text>
+              <Text fontSize={{ md: 20, xs: 16 }} fontWeight={400}>
+                {data.description}
+              </Text>
             </Stack>
             <Stack flex={1} width="100%">
               <Image
@@ -102,6 +112,7 @@ const ABOUT_DATA = [
           component="span"
           fontSize={{ md: 40, xs: 24 }}
           fontWeight={500}
+          percentGreenColor={121.38}
         >
           Automate Campaign{" "}
         </TextGradient>
@@ -150,6 +161,8 @@ const ABOUT_DATA = [
           component="span"
           fontSize={{ md: 40, xs: 24 }}
           fontWeight={500}
+          percentBlueColor={12.8}
+          percentGreenColor={152.38}
         >
           Intelligent{" "}
         </TextGradient>
@@ -167,6 +180,7 @@ const ABOUT_DATA = [
         fontWeight={500}
         lineHeight={1}
         mb={4}
+        percentGreenColor={107.38}
       >
         Equipped AI Chat
       </TextGradient>

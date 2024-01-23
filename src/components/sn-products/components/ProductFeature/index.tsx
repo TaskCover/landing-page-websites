@@ -27,9 +27,14 @@ export const ProductFeature = () => {
           position="relative"
         >
           <Stack flex={0.5}>
-            <Text fontSize={{ xl: 40, xs: 24 }} mb={5}>
+            <Text fontSize={{ xl: 40, xs: 24 }} mb={5} fontWeight={500}>
               🧑‍💻{" "}
-              <TextGradient component="span" fontSize="inherit">
+              <TextGradient
+                component="span"
+                fontSize="inherit"
+                fontWeight={500}
+                percentGreenColor={113.38}
+              >
                 List of employee
               </TextGradient>
             </Text>
@@ -46,7 +51,13 @@ export const ProductFeature = () => {
                 height={20}
                 alt="arrow-ic"
               />
-              <TextGradient>Add a new employee account</TextGradient>
+              <TextGradient
+                fontSize={{ md: 20, xs: 16 }}
+                fontWeight={700}
+                percentGreenColor={113.38}
+              >
+                Add a new employee account
+              </TextGradient>
             </Stack>
             <Text variant="body2" mb={2}>
               Delete employee accounts
@@ -76,11 +87,16 @@ export const ProductFeature = () => {
         <Stack mt={{ xl: 30, xs: 5 }}>
           <Text fontSize={{ xl: 40, xs: 24 }}>
             ⌛{" "}
-            <TextGradient component="span" fontSize="inherit">
+            <TextGradient
+              component="span"
+              fontSize="inherit"
+              fontWeight={500}
+              percentGreenColor={113.38}
+            >
               Cost history
             </TextGradient>
           </Text>
-          <Text fontSize={{ xl: 40, xs: 20 }} mb={2} pl={4}>
+          <Text fontSize={{ xl: 40, xs: 20 }} mb={2} pl={4} fontWeight={500}>
             Track payment history of company accounts
           </Text>
           <Stack>
@@ -104,9 +120,18 @@ export const ProductFeature = () => {
           mt={{ md: 30, xs: 5 }}
         >
           <Stack flex={0.5}>
-            <Text fontSize={{ xl: 40, xs: 24 }} mb={{xl: 5, xs: 3}}>
+            <Text
+              fontSize={{ xl: 40, xs: 24 }}
+              mb={{ xl: 5, xs: 3 }}
+              fontWeight={500}
+            >
               💼{" "}
-              <TextGradient component="span" fontSize="inherit">
+              <TextGradient
+                component="span"
+                fontSize="inherit"
+                fontWeight={500}
+                percentGreenColor={113.38}
+              >
                 List of position
               </TextGradient>
             </Text>
@@ -121,7 +146,13 @@ export const ProductFeature = () => {
                 height={20}
                 alt="arrow-ic"
               />
-              <TextGradient>Add a new position</TextGradient>
+              <TextGradient
+                fontSize={{ md: 20, xs: 16 }}
+                fontWeight={700}
+                percentGreenColor={113.38}
+              >
+                Add a new position
+              </TextGradient>
             </Stack>
             <Text variant="body2" mb={2}>
               Edit position
@@ -157,7 +188,15 @@ export const ProductFeature = () => {
                 }}
                 alt="product-position"
               />
-              <Stack sx={{ position: "absolute", top: "50%", left: -130, transform: "translateY(-50%)" }} width="35%">
+              <Stack
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: -130,
+                  transform: "translateY(-50%)",
+                }}
+                width="35%"
+              >
                 <Image
                   src="/images/product-position-2.png"
                   width={0}
@@ -181,9 +220,18 @@ export const ProductFeature = () => {
           spacing={4}
         >
           <Stack flex={0.5}>
-            <Text fontSize={{ xl: 40, xs: 24 }} mb={{xl: 5, xs: 3}} >
+            <Text
+              fontSize={{ xl: 40, xs: 24 }}
+              mb={{ xl: 5, xs: 3 }}
+              fontWeight={500}
+            >
               💼{" "}
-              <TextGradient component="span" fontSize="inherit">
+              <TextGradient
+                component="span"
+                fontSize="inherit"
+                fontWeight={500}
+                percentGreenColor={113.38}
+              >
                 Project type list
               </TextGradient>
             </Text>
@@ -197,7 +245,13 @@ export const ProductFeature = () => {
                 height={20}
                 alt="arrow-ic"
               />
-              <TextGradient>Add a new project type</TextGradient>
+              <TextGradient
+                fontSize={{ md: 20, xs: 16 }}
+                fontWeight={700}
+                percentGreenColor={113.38}
+              >
+                Add a new project type
+              </TextGradient>
             </Stack>
             <Text variant="body2" mb={2}>
               Edit project type
@@ -233,7 +287,14 @@ export const ProductFeature = () => {
                 }}
                 alt="product-position"
               />
-              <Stack sx={{ position: "absolute", bottom: {xl: 40, xs: 20}, right: -130 }} width="35%">
+              <Stack
+                sx={{
+                  position: "absolute",
+                  bottom: { xl: 40, xs: 20 },
+                  right: -130,
+                }}
+                width="35%"
+              >
                 <Image
                   src="/images/project-type-list-2.png"
                   width={0}
@@ -251,9 +312,9 @@ export const ProductFeature = () => {
         </Stack>
 
         <Stack mt={{ md: 30, xs: 5 }}>
-          <Text fontSize={{ md: 40, xs: 24 }}>
+          <Text fontSize={{ md: 40, xs: 24 }} fontWeight={500} >
             🏢{" "}
-            <TextGradient component="span" fontSize="inherit">
+            <TextGradient component="span" fontSize="inherit" fontWeight={500} percentGreenColor={113.38}>
               Company information
             </TextGradient>
           </Text>

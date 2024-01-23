@@ -33,13 +33,13 @@ const ProductChat = () => {
           <Text
             fontSize={{ md: 47, xs: 24 }}
             textAlign="center"
-            fontWeight={{ md: 600, xs: 700 }}
+            fontWeight={{ md: 500, xs: 700 }}
             mt={4}
           >
             <TextGradient
               component="span"
               fontSize="inherit"
-              fontWeight={{ md: 600, xs: 700 }}
+              fontWeight={{ md: 500, xs: 700 }}
             >
               Deliver real-time communication,
             </TextGradient>
@@ -108,11 +108,11 @@ const DATA_CREATE = [
             component="div"
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={600}
+            fontWeight={500}
             width="100%"
           >
             Innovative communication{" "}
-            <TextGradient component="span" fontSize="inherit" fontWeight={600}>
+            <TextGradient component="span" fontSize="inherit" fontWeight={500}>
               with different users
             </TextGradient>
           </Text>
@@ -151,11 +151,11 @@ const DATA_CREATE = [
             component="div"
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={600}
+            fontWeight={500}
             width="100%"
           >
             The more crowded, the merrier{" "}
-            <TextGradient component="span" fontSize="inherit" fontWeight={600}>
+            <TextGradient component="span" fontSize="inherit" fontWeight={500}>
               create a group for your team!
             </TextGradient>
           </Text>
@@ -189,11 +189,11 @@ const DATA_CREATE = [
             component="div"
             fontSize={{ md: 29, xs: 24 }}
             textAlign={{ md: "left", xs: "center" }}
-            fontWeight={600}
+            fontWeight={500}
             width="100%"
           >
             Too difficult to express by text?{" "}
-            <TextGradient component="span" fontSize="inherit" fontWeight={600}>
+            <TextGradient component="span" fontSize="inherit" fontWeight={500}>
               Call now
             </TextGradient>
           </Text>
@@ -234,13 +234,13 @@ const DATA_CREATE = [
         component="div"
         fontSize={{ md: 40, xs: 24 }}
         textAlign="center"
-        fontWeight={600}
+        fontWeight={500}
       >
         <TextGradient
           component="span"
           fontSize={{ md: 40, xs: 24 }}
           textAlign="center"
-          fontWeight={600}
+          fontWeight={500}
         >
           Multitasking{" "}
         </TextGradient>

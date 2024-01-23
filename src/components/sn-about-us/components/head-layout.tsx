@@ -48,14 +48,13 @@ const HeadLayout = (props: HeadLayoutProps) => {
           Business Innovation
         </Text>
         <Text
-          variant="h4"
           fontWeight={400}
           color="#111827"
           mt="24px"
-          fontSize={{ xs: "16px", md: "24px" }}
+          fontSize={{ xs: 16, md: 20 }}
           sx={{ textAlign: "center" }}
         >
-          Navigate through TaskCover's journey,{isMdSmaller && <br />} witnessing firsthand the evolution of{!isMdSmaller && <br />} cutting-{isMdSmaller && <br />}edge business solutions.
+          Navigate through TaskCover&apos;s journey,{isMdSmaller && <br />} witnessing firsthand the evolution of{!isMdSmaller && <br />} cutting-{isMdSmaller && <br />}edge business solutions.
         </Text>
         {!isMdSmaller ?
           <Stack gap="8px" mt="100px" display="grid" gridTemplateColumns="1fr 1fr 1fr" >

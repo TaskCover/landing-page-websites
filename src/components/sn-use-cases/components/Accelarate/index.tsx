@@ -30,7 +30,13 @@ export const AccelerateUseCase = (props: AccelerateUseCaseProps) => {
           mb={{ md: 20, xs: 10 }}
         >
           <Stack flex={1}>
-            <TextGradient fontWeight={600} fontSize={{ md: 20, xs: 16 }} mb={3}>
+            <TextGradient
+              fontWeight={700}
+              fontSize={{ md: 20, xs: 16 }}
+              mb={3}
+              percentBlueColor={2}
+              percentGreenColor={30.38}
+            >
               {data.title}
             </TextGradient>
             {data.heading && data.heading}
