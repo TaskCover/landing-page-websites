@@ -43,7 +43,7 @@ const MainLayout = (props: MainLayoutProps) => {
 
   const pathNameWithoutId = id ? pathname.replace(`/${id}`, "") : pathname;
 
-  const { appReady, token, user } = useAppSelector(
+  const { token } = useAppSelector(
     (state) => state.app,
     shallowEqual,
   );
@@ -92,7 +92,15 @@ const MainLayout = (props: MainLayoutProps) => {
       >
         {/* <Sidebar /> */}
         <Stack width="100%" height="100%" position="relative">
-          <Stack sx={{ position: "absolute", top: 0, left: 0, width: "100%" }}>
+          <Stack
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              zIndex: 9999,
+            }}
+          >
             <Header />
           </Stack>
           <Stack spacing={{ xs: 1.5, sm: 3 }}>{children}</Stack>

@@ -1,10 +1,11 @@
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import { InputBase, Stack, TextField, styled } from "@mui/material";
+import { CircularProgress, InputBase, Stack, TextField, styled } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { formErrorCode } from "api/formErrorCode";
 import { Button, Input, Text } from "components/shared";
+import { DataStatus } from "constant/enums";
 import { ACCESS_TOKEN_STORAGE_KEY, NS_COMMON } from "constant/index";
 import { ErrorResponse } from "constant/types";
 import { FormikErrors, useFormik } from "formik";
@@ -49,7 +50,7 @@ const FormFeedback = (props: FormFeedbackProps) => {
   const [value, setValue] = useState();
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
-  const { onCreateFormFeedback } = useFeedback();
+  const { onCreateFormFeedback, isFetching } = useFeedback();
   const { isMdSmaller } = useBreakpoint();
 
   const onSubmit = async (values: FormFeedbackBody) => {
@@ -57,13 +58,13 @@ const FormFeedback = (props: FormFeedbackProps) => {
       const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
       // return 200;
       const resp = await onCreateFormFeedback(values, accessToken);
-
-      if (resp["id"]) {
+      if (resp.payload["id"]) {
         onAddSnackbar("Feedback success", "success");
         formik.resetForm();
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      formik.resetForm();
     }
   };
   const formik = useFormik({
@@ -240,6 +241,9 @@ const FormFeedback = (props: FormFeedbackProps) => {
                 onBlur={formik.handleBlur}
                 value={formik.values["content"]}
                 multiline
+                error={commonT(touchedErrors["content"], {
+                  name: "Content",
+                })}
                 minRows={6}
               />
             </Stack>
@@ -521,7 +525,7 @@ const FormFeedback = (props: FormFeedbackProps) => {
             onClick={() => formik.handleSubmit()}
           >
             <Text variant="h5" color="#fff">
-              Submit
+              {isFetching ? <CircularProgress /> : "Submit"}
             </Text>
           </Button>
         </Stack>
@@ -544,6 +548,7 @@ const FieldContainer = ({ label, childField }) => {
 export const validationSchema = Yup.object().shape({
   first_name: Yup.string().trim().required("form.error.required"),
   last_name: Yup.string().trim().required("form.error.required"),
+  content: Yup.string().trim().required("form.error.required"),
   email: Yup.string().trim().required("form.error.required"),
   topic: Yup.string().trim().required("form.error.required"),
   // attachments: Yup.string().trim().required("form.error.required"),
