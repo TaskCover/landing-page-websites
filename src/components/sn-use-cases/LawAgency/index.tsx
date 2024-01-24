@@ -96,7 +96,9 @@ const UseCaseLawAgency = () => {
           }}
         />
         <Container>
-          <AccelerateUseCase data={DATA_ACCELERATE} />
+        <AccelerateUseCase data={DATA_ACCELERATE} />
+        </Container>
+        <Container>
           <FunctionUseCase />
           <UseCaseCommitResult data={DATA_COMMIT_RESULT} />
         </Container>

@@ -198,7 +198,7 @@ const BlogDetail = () => {
                         alignItems="center"
                         mb={2}
                       >
-                        <Stack flex={{ md: "unset", xs: 0.4 }}>
+                        <Stack flex={{ lg: "unset", xs: 0.2 }}>
                           <Image
                             src={data.background_down?.link ?? ""}
                             alt="last-post"

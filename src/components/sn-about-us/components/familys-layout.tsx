@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Stack } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import Image from "next/image";
 import useBreakpoint from "hooks/useBreakpoint";
@@ -12,62 +12,56 @@ const FamilysLayout = (props: FamilysLayoutProps) => {
   const { isMdSmaller } = useBreakpoint();
 
   return (
-    <Stack
-      width="100%"
-    >
-      <Stack
-        sx={[
-          sectionContainerSx,
-        ]}
-      >
-        <Stack direction="row" gap="8px" alignItems='center'>
-          <Text
-            variant="h1"
-            sx={[
-              textHeadSx,
-              textGradientSx,
-            ]}
-          >
-            TaskCover
-          </Text>
-          <Text variant="h1" sx={[textHeadSx, {}]}>
-            family
-          </Text>
-        </Stack>
-        {!isMdSmaller ? <Stack display="grid" gridTemplateColumns="1fr 1fr 1fr" mt={{ xs: "40px", md: "56px" }}>
-          {TaskCoverFamilys.map((e, i) => (
-            <Stack position="relative" key={i}>
-              <Image
-                src={e.imgUrl}
-                style={{
-                  width: "100%",
-                  height: "auto",
-                }} alt="image"
-              />
-              <Stack
-                position="absolute"
-                pb="24px"
-                sx={{
-                  bottom: 10,
-                  left: 0,
-                  width: "100%",
-                  "&:hover": {
-
-                  }
-                }}>
-                <Text
-                  variant="h3"
-                  sx={{
-                    fontSize: "24px",
-                    color: "#fff",
-                    textAlign: "center"
-                  }}
-                >
-                  {e.title}
-                </Text>
-
-              </Stack>
-              {/* <Stack
+    <Container>
+      <Stack width="100%">
+        <Stack sx={[sectionContainerSx]}>
+          <Stack direction="row" gap="8px" alignItems="center" mb={3}>
+            <Text variant="h1" sx={[textHeadSx, textGradientSx]}>
+              TaskCover
+            </Text>
+            <Text variant="h1" sx={[textHeadSx, {}]}>
+              family
+            </Text>
+          </Stack>
+          {!isMdSmaller ? (
+            <Stack
+              display="grid"
+              gridTemplateColumns="1fr 1fr 1fr"
+              mt={{ xs: "40px", md: "56px" }}
+              width="100%"
+            >
+              {TaskCoverFamilys.map((e, i) => (
+                <Stack position="relative" key={i}>
+                  <Image
+                    src={e.imgUrl}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                    alt="image"
+                  />
+                  <Stack
+                    position="absolute"
+                    pb="24px"
+                    sx={{
+                      bottom: 10,
+                      left: 0,
+                      width: "100%",
+                      "&:hover": {},
+                    }}
+                  >
+                    <Text
+                      variant="h3"
+                      sx={{
+                        fontSize: "24px",
+                        color: "#fff",
+                        textAlign: "center",
+                      }}
+                    >
+                      {e.title}
+                    </Text>
+                  </Stack>
+                  {/* <Stack
                 position="absolute"
                 width="100%"
                 height="100%"
@@ -92,20 +86,22 @@ const FamilysLayout = (props: FamilysLayoutProps) => {
                   {e.desc}
                 </Text>
               </Stack> */}
+                </Stack>
+              ))}
             </Stack>
-          ))}
+          ) : (
+            <Image
+              src={FamilyTeam1}
+              style={{
+                width: "100%",
+                height: "auto",
+              }}
+              alt="image"
+            />
+          )}
         </Stack>
-          :
-          <Image
-            src={FamilyTeam1}
-            style={{
-              width: "100%",
-              height: "auto",
-            }} alt="image"
-          />
-        }
       </Stack>
-    </Stack >
+    </Container>
   );
 };
 
@@ -119,7 +115,7 @@ const sectionContainerSx = {
   width: "100%",
   m: "0 auto",
   maxWidth: "1200px",
-  p: { xs: "60px 16px", md: "100px 0px " }
+  p: { xs: "60px 16px", md: "100px 0px " },
 };
 
 const textHeadSx = {
@@ -130,9 +126,8 @@ const textHeadSx = {
 };
 
 const textGradientSx = {
-  background:
-    "linear-gradient(90deg, #0575E6 5.8%, #38E27B 151.38%)",
+  background: "linear-gradient(90deg, #0575E6 5.8%, #38E27B 151.38%)",
   backgroundClip: "text",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
-}
+};

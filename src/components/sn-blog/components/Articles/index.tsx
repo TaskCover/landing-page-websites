@@ -41,7 +41,7 @@ const CardMobile = (props: CardMobileProps) => {
           boxShadow: "0px 4px 40px 0px rgba(43, 89, 255, 0.08)",
         }}
       >
-        <Stack flex={0.5}>
+        <Stack flex={{lg: 0.5, xs: 0.2}}>
           <Image
             src={imageUrl}
             width={0}
@@ -80,7 +80,7 @@ const CardMobile = (props: CardMobileProps) => {
               display: "-webkit-box",
               WebkitLineClamp: { md: 4, xs: 3 },
               WebkitBoxOrient: "vertical",
-              height: 62,
+              height: {lg: 62, xs: 39},
               overflow: "hidden",
             }}
             title={shortDescription}

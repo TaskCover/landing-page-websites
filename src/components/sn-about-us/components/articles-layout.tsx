@@ -11,23 +11,12 @@ const ArticlesLayout = (props: ArticlesLayoutProps) => {
   const { isMdSmaller } = useBreakpoint();
 
   return (
-    <Stack
-      width="100%"
-    >
+    <Stack width="100%">
       <Stack
-        sx={[
-          sectionContainerSx,
-          { p: { xs: "60px 16px", md: "100px 0px " } },
-        ]}
+        sx={[sectionContainerSx, { p: { xs: "60px 16px", md: "100px 0px " } }]}
       >
-        <Stack direction="row" gap="8px" alignItems='center'>
-          <Text
-            variant="h1"
-            sx={[
-              textHeadSx,
-              textGradientSx,
-            ]}
-          >
+        <Stack direction="row" gap="8px" alignItems="center">
+          <Text variant="h1" sx={[textHeadSx, textGradientSx]}>
             Most viewed
           </Text>
           <Text variant="h1" sx={[textHeadSx, {}]}>
@@ -39,12 +28,18 @@ const ArticlesLayout = (props: ArticlesLayoutProps) => {
           justifyContent="center"
           flexWrap="wrap"
           gap={{ xs: "24px", md: "40px" }}
-          mt={{ xs: "24px", md: "40px" }}>
+          mt={{ xs: "24px", md: "40px" }}
+        >
           {ListArticles.map((data, index) =>
             isMdSmaller ? (
               (index + 3) % 3 === 0 ? (
-                <Stack key={index} width="100%" height="55px" alignItems="center"  >
-                  <Stack   width="40%" height="100%" sx={itemWrapperSx}>
+                <Stack
+                  key={index}
+                  width="100%"
+                  height="55px"
+                  alignItems="center"
+                >
+                  <Stack width="40%" height="100%" sx={itemWrapperSx}>
                     <Image
                       src={data}
                       height={50}
@@ -58,7 +53,7 @@ const ArticlesLayout = (props: ArticlesLayoutProps) => {
                   </Stack>
                 </Stack>
               ) : (
-                <Stack key={index}  width="40%" height="55px" sx={itemWrapperSx}>
+                <Stack key={index} width="40%" height="55px" sx={itemWrapperSx}>
                   <Image
                     src={data}
                     height={50}
@@ -85,7 +80,7 @@ const ArticlesLayout = (props: ArticlesLayoutProps) => {
                   alt="logo-partner"
                 />
               </Stack>
-            )
+            ),
           )}
         </Stack>
       </Stack>
@@ -113,12 +108,11 @@ const textHeadSx = {
 };
 
 const textGradientSx = {
-  background:
-    "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+  background: "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
   backgroundClip: "text",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
-}
+};
 
 const itemWrapperSx = {
   borderRadius: { xs: "12px", md: "24px" },
@@ -126,5 +120,5 @@ const itemWrapperSx = {
   boxShadow: " 0px 0px 12px 0px rgba(170, 198, 245, 0.40)",
   justifyContent: "center",
   alignItems: "center",
-  p: { xs: "12px 25px", md: "32px 54px" }
-}
+  p: { xs: "12px 25px", md: "32px 54px" },
+};

@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Stack } from "@mui/material";
+import { Stack, Container } from "@mui/material";
 import { Button, Text } from "components/shared";
 import Image from "next/image";
 import useBreakpoint from "hooks/useBreakpoint";
@@ -22,6 +22,7 @@ const AgenciesLayout = (props: AgenciesLayoutProps) => {
         backgroundPosition: "center",
       }}
     >
+      <Container>
       <Stack
         sx={[
           sectionContainerSx,
@@ -92,6 +93,7 @@ const AgenciesLayout = (props: AgenciesLayoutProps) => {
           </Stack>
         </Stack>
       </Stack>
+      </Container>
     </Stack>
   );
 };

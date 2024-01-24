@@ -47,9 +47,7 @@ const HelpCenter = () => {
           heading="Can't find what you're looking for?"
           textButton="Contact support"
         />
-        <Container>
           <HelperSendMail />
-        </Container>
       </Stack>
     </Stack>
   );

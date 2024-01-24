@@ -39,7 +39,7 @@ const Menu = () => {
   return (
     <Stack
       width={isMdSmaller ? "unset" : "100%"}
-      gap={5}
+      gap={{lg: 5, xs: 3}}
       mb={0.652}
       ml={5}
       sx={{

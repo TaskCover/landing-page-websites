@@ -40,10 +40,12 @@ export const HeaderBlog = () => {
             Unlock the value of management and optimization {!isMdSmaller && <br />} for your
             agency right now.
           </Text>
-          <FormControl sx={{ mt: 3 }}>
+          <FormControl sx={{ mt: 3}}>
             <Stack
               maxWidth={552}
               height={54}
+              mx="auto"
+              minWidth={{lg: "100%", sm: 400, xs: "100%"}}
               sx={{
                 border: "1px solid #0575E6",
                 flexDirection: "row",

@@ -30,13 +30,13 @@ export const Header = () => {
             Your Privacy
           </TextGradient>
         ) : (
-          <Text fontSize={{ md: 58, xs: 36 }} fontWeight={700}>
+          <Text fontSize={{ lg: 58, xs: 36 }} fontWeight={700}>
             Your Privacy
           </Text>
         )}
 
         <TextGradient
-          fontSize={{ md: 58, xs: 36 }}
+          fontSize={{ lg: 58, xs: 36 }}
           fontWeight={700}
           textAlign={{ md: "left", xs: "center" }}
           percentGreenColor={86.38}
