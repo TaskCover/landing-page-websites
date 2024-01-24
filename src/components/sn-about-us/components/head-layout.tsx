@@ -7,6 +7,7 @@ import ImgHead1 from "public/images/about-us/img-head-1.png";
 import ImgHead2 from "public/images/about-us/img-head-2.png";
 import ImgHead3 from "public/images/about-us/img-head-3.png";
 import ImgHead4 from "public/images/about-us/img-head-4.png";
+import { HEADER_HEIGHT } from "layouts/Header";
 
 type HeadLayoutProps = {};
 
@@ -22,6 +23,7 @@ const HeadLayout = (props: HeadLayoutProps) => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
       }}
+      pt={HEADER_HEIGHT / 8 - 3}
     >
       <Stack
         sx={[

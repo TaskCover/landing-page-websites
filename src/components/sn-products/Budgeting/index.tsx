@@ -31,6 +31,7 @@ const ProductBudgeting = () => {
       <HeaderProducts
         headingText={
           <Text
+            component="div"
             fontSize={{ md: 45, xs: 24 }}
             textAlign="center"
             fontWeight={{ md: 500, xs: 700 }}

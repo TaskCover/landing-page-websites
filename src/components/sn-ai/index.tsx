@@ -5,11 +5,15 @@ import { AboutTaskCoverAI } from "./components/AboutUs";
 import { PromoteAI } from "./components/Promote";
 import { FeatureAI } from "./components/Feature";
 import { ProductivityAI } from "./components/Productivity";
+import { HEADER_HEIGHT } from "layouts/Header";
 
 const AiPage = () => {
   return (
     <Stack>
-      <Stack position="relative">
+      <Stack
+        position="relative"
+        pt={{ md: HEADER_HEIGHT / 8 - 2, xs: HEADER_HEIGHT / 8 - 6 }}
+      >
         <Stack
           sx={{
             backgroundImage: "url(/images/bg-header-ai.webp)",

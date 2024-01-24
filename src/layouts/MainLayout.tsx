@@ -91,11 +91,11 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
       >
         {/* <Sidebar /> */}
-        <Stack width="100%" height="100%">
+        <Stack width="100%" height="100%" position="relative">
+          <Stack sx={{ position: "absolute", top: 0, left: 0, width: "100%" }}>
             <Header />
-          <Stack spacing={{ xs: 1.5, sm: 3 }}>
-            {children}
           </Stack>
+          <Stack spacing={{ xs: 1.5, sm: 3 }}>{children}</Stack>
           <Footer />
         </Stack>
       </Stack>

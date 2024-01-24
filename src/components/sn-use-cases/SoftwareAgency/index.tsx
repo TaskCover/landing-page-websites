@@ -13,12 +13,13 @@ import { Text, TextGradient } from "components/shared";
 import { ResultUseCase } from "../components/Result";
 import { UseCaseCommitResult } from "../components/CommitResult";
 import useBreakpoint from "hooks/useBreakpoint";
+import {HEADER_HEIGHT} from "layouts/Header";
 
 const UseCaseSoftwareAgency = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
     <Stack>
-      <Stack position="relative">
+      <Stack position="relative" pt={HEADER_HEIGHT / 8 - 3}>
         <Stack
           sx={{
             backgroundImage: {

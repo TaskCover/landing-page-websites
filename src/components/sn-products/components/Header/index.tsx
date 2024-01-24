@@ -2,6 +2,7 @@ import { Stack, Container } from "@mui/material";
 import { Button, Text, TextGradient } from "components/shared";
 import Image from "next/image";
 import Link from "next/link";
+import {HEADER_HEIGHT} from 'layouts/Header';
 
 type HeaderProductsProps = {
   headingText: React.ReactNode;
@@ -13,7 +14,7 @@ type HeaderProductsProps = {
 export const HeaderProducts = (props: HeaderProductsProps) => {
   const { headingText, subText, imageUrl, marginTop = 3 } = props;
   return (
-      <Stack position="relative" pb={{md: 10, xs: 5}}>
+      <Stack position="relative" pb={{md: 10, xs: 5}} pt={HEADER_HEIGHT / 8 - 1}>
         <Stack
           sx={{
             backgroundImage: "url(/images/bg-header-product.webp)",

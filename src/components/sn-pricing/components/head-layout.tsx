@@ -5,6 +5,7 @@ import { Button, Text } from "components/shared";
 import Image from "next/image";
 import HeadImg from "public/images/pricing/img-head-page.png";
 import { CardHeadData } from "../configs";
+import {HEADER_HEIGHT} from 'layouts/Header';
 
 type HeadLayoutProps = {};
 
@@ -20,6 +21,7 @@ const HeadLayout = (props: HeadLayoutProps) => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
       }}
+      pt={{md: HEADER_HEIGHT / 8 - 8, xs: HEADER_HEIGHT / 8 - 1}}
     >
       <Stack gap={{ xs: "40px", md: "60px" }} sx={sectionContainerSx}>
         <Stack

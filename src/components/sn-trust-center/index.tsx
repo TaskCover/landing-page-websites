@@ -5,11 +5,12 @@ import { memo } from "react";
 import { Header } from "./components/Header";
 import { BuildingTrust } from "./components/Building";
 import useBreakpoint from "hooks/useBreakpoint";
+import { HEADER_HEIGHT } from "layouts/Header";
 
 const TrustCenter = () => {
   const { isMdSmaller } = useBreakpoint();
   return (
-    <Stack position="relative">
+    <Stack position="relative" pt={HEADER_HEIGHT / 8 + 5}>
       <Stack
         sx={{
           backgroundImage: isMdSmaller

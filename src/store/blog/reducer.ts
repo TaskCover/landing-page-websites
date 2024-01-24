@@ -40,6 +40,8 @@ export interface BlogState {
   blogs: BlogData[];
   blogsPopular: BlogData[];
   blogsStatus: DataStatus;
+  blogStatus: DataStatus;
+  blogError?: string;
   blogsPaging: PagingItem;
   blogsError?: string;
   blogsFilters: Omit<GetBlogCategoryListQueries, "page" | "size">;
@@ -55,6 +57,7 @@ const initialState: BlogState = {
   blogs: [],
   blogsPopular: [],
   blogsStatus: DataStatus.IDLE,
+  blogStatus: DataStatus.IDLE,
   blogsPaging: DEFAULT_PAGING_ITEM,
   blogsFilters: {},
   relatedBlogs: [],
@@ -115,12 +118,21 @@ export const blogSlice = createSlice({
         state.blogsStatus = DataStatus.SUCCEEDED;
         state.blogs.unshift(action.payload);
       })
+      .addCase(getBlogBySlug.pending, (state, action) => {
+        state.blogStatus = DataStatus.LOADING;
+      })
       .addCase(
         getBlogBySlug.fulfilled,
         (state, action: PayloadAction<BlogData>) => {
           state.blog = action.payload;
+          state.blogStatus = DataStatus.SUCCEEDED;
+          state.blogError = undefined;
         },
       )
+      .addCase(getBlogBySlug.rejected, (state, action) => {
+        state.blogStatus = DataStatus.FAILED;
+        state.blogError = action.error?.message ?? AN_ERROR_TRY_AGAIN;
+      })
       .addCase(
         deleteBlog.fulfilled,
         (state, action: PayloadAction<string[]>) => {

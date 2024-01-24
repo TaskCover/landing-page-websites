@@ -6,6 +6,7 @@ import useBreakpoint from "hooks/useBreakpoint";
 import { memo } from 'react';
 import ListCareersLayout from "./components/list-careers";
 import OurPiorityLayout from "./components/our-piority";
+import {HEADER_HEIGHT} from 'layouts/Header';
 
 type CareersPageProps = {}
 
@@ -16,8 +17,7 @@ const CareersPage = (props: CareersPageProps) => {
   return (
     <Stack
       width="100%"
-      sx={{
-      }}
+      pt={HEADER_HEIGHT / 8 + 1}
     >
       <Stack>
         <Stack

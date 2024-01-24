@@ -8,6 +8,7 @@ import { ListPolicies } from './configs';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import {HEADER_HEIGHT} from "layouts/Header";
 
 type PrivacyPolicyPageProps = {}
 
@@ -48,6 +49,7 @@ const PrivacyPolicyPage = (props: PrivacyPolicyPageProps) => {
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
             }}
+            pt={HEADER_HEIGHT / 8}
         >
             <Stack
                 gap="24px"

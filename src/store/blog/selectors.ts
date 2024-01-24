@@ -26,7 +26,7 @@ import { object } from "yup";
 
 export const useBlogs = () => {
     const dispatch = useAppDispatch();
-    const { blogs: items, blogsStatus: status, blogsError: error, blogsFilters: filters, blog: item, relatedBlogs, blogsPopular ,listBlogComment } = useAppSelector(
+    const { blogs: items, blogsStatus: status, blogsError: error, blogsFilters: filters, blog: item, blogStatus, blogError, relatedBlogs, blogsPopular ,listBlogComment } = useAppSelector(
         (state) => state.blogs,
         shallowEqual,
     );
@@ -197,6 +197,8 @@ export const useBlogs = () => {
         filters,
         onGetBlogBySlug,
         item,
+        blogStatus,
+        blogError,
         blogsPopular,
         onGetRelatedBlogs,
         relatedBlogs,

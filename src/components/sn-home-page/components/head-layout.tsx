@@ -4,6 +4,7 @@ import { Button, Text } from "components/shared";
 import Image from "next/image";
 import WatchVideoIc from "public/images/home-page/icon-watch-video.svg";
 import HeadBannerImg from "public/images/home-page/banner.svg";
+import { HEADER_HEIGHT } from "layouts/Header";
 
 type HeadLayoutProps = {};
 
@@ -17,6 +18,7 @@ const HeadLayout = (props: HeadLayoutProps) => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
       }}
+      pt={HEADER_HEIGHT / 8 - 3}
     >
       <Stack
         sx={[

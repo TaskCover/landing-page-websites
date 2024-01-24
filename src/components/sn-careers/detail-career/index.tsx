@@ -18,6 +18,7 @@ import FormApply from "../components/FormApply";
 import { useParams } from "next/navigation";
 import { useAppDispatch } from "store/hooks";
 import Link from "next/link";
+import {HEADER_HEIGHT} from "layouts/Header";
 
 type DetailCareerPageProps = {};
 const Init_Query = {
@@ -58,7 +59,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
   }, [id]);
 
   return (
-    <Stack width="100%">
+    <Stack width="100%" pt={HEADER_HEIGHT / 8 + 1}>
       <Stack
         width="100%"
         sx={{
@@ -138,13 +139,13 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
           gridTemplateColumns={{ xs: "1fr", md: "2fr 1fr" }}
         >
           <Stack gap="24px" width="100%">
-            {DetailCareerData.map((item) => (
-              <Stack gap="16px">
+            {DetailCareerData.map((item, index) => (
+              <Stack gap="16px" key={index}>
                 <Text variant="h5" fontWeight={700}>
                   {item.title}
                 </Text>
-                {item.desc?.map((e) => (
-                  <Text variant="h6" fontWeight={400}>
+                {item.desc?.map((e, i) => (
+                  <Text key={i} variant="h6" fontWeight={400}>
                     • {e}
                   </Text>
                 ))}
@@ -210,6 +211,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
               {items.map((item, index) => {
                 return (
                   <Stack
+                  key={index}
                     width="100%"
                     sx={{
                       p: "24px",

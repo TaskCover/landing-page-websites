@@ -9,11 +9,12 @@ import { FunctionUseCase } from "../components/Function";
 import { HeaderUseCase } from "../components/Header";
 import { PartnerUseCase } from "../components/Partner";
 import { ResourceUseCase } from "../components/Resource";
+import {HEADER_HEIGHT} from "layouts/Header";
 
 const UseCaseLawAgency = () => {
   return (
     <Stack>
-      <Stack position="relative">
+      <Stack position="relative" pt={HEADER_HEIGHT / 8 - 3}>
         <Stack
           sx={{
             backgroundImage: {

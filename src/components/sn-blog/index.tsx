@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useBlogs } from "store/blog/selectors";
 import { DataStatus } from "constant/enums";
 import AppLoading from "components/AppLoading";
+import {HEADER_HEIGHT} from "layouts/Header";
 
 const BlogPage = () => {
   const { blogs, blogsStatus, blogsPopular } = useAppSelector(state => state.blogs);
@@ -24,7 +25,7 @@ const BlogPage = () => {
   return (
 
     <Stack>
-      <Stack position="relative">
+      <Stack position="relative" pt={HEADER_HEIGHT / 8 - 3}>
         <Stack
           sx={{
             backgroundImage: {

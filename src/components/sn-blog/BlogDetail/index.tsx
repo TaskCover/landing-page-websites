@@ -17,13 +17,15 @@ import { useParams } from "next/navigation";
 import { useBlogs } from "store/blog/selectors";
 import NoData from "components/NoData";
 import Error from "next/error";
+import { HEADER_HEIGHT } from "layouts/Header";
 
 const BlogDetail = () => {
   const { categories, categoryStatus } = useAppSelector(
     (state) => state.categoryBlogs,
   );
   const { onGetCategoryBlogs } = useCategoryBlog();
-  const { onGetBlogBySlug, item, onGetRelatedBlogs, relatedBlogs } = useBlogs();
+  const { onGetBlogBySlug, item, onGetRelatedBlogs, relatedBlogs, blogStatus } =
+    useBlogs();
   const { slug } = useParams();
 
   useEffect(() => {
@@ -42,14 +44,28 @@ const BlogDetail = () => {
     <Link key="2" color="inherit" href="/blog">
       Blog
     </Link>,
-    <Text key="3">{item?.title}</Text>,
+    <Text key="3" title={item?.title ?? ""}>
+      {`${item?.title?.slice(0, 22)}${
+        (item?.title ?? "").length > 22 && "..."
+      }`}
+    </Text>,
   ];
 
-  if(!slug || !item) return <Error statusCode={404} />
+  if (
+    categoryStatus === DataStatus.LOADING &&
+    blogStatus === DataStatus.LOADING
+  ) {
+    return <AppLoading />;
+  } else {
+    if (!item) return <Error statusCode={404} />;
+  }
 
-  if (categoryStatus === DataStatus.LOADING) return <AppLoading />;
-  return (
-    <Stack sx={{ marginTop: "60px!important" }} position="relative">
+  return item ? (
+    <Stack
+      sx={{ marginTop: "60px!important" }}
+      position="relative"
+      pt={HEADER_HEIGHT / 8 - 3}
+    >
       <Stack
         sx={{
           backgroundImage: {
@@ -78,6 +94,7 @@ const BlogDetail = () => {
               style={{
                 width: "100%",
                 height: "auto",
+                borderRadius: "16px"
               }}
               alt="blog-detail-art"
             />
@@ -101,54 +118,54 @@ const BlogDetail = () => {
             />
             {(relatedBlogs && relatedBlogs.length) > 0 && (
               <Link href={`/blog/${relatedBlogs[0]?.slug}`}>
-              <Stack
-                direction="row"
-                spacing={{ md: 3, xs: 0.652 }}
-                mt={5}
-                alignItems="center"
-                sx={{
-                  background: { md: "#fff", xs: "transparent" },
-                  borderRadius: 6,
-                }}
-              >
-                <Stack width="100%" flex={0.2}>
-                  <Image
-                    src={relatedBlogs[0]?.background_down?.link ?? ""}
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                    }}
-                    alt="next-blog"
-                  />
-                </Stack>
-                <Stack justifyContent="space-between" flex={0.8}>
-                  <Text fontSize={{ md: 16, xs: 14 }}>
-                    {relatedBlogs[0]?.title}
-                  </Text>
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    mt={{ md: 2, xs: 0.652 }}
-                  >
-                    <TextGradient
-                      fontWeight={700}
-                      textTransform="uppercase"
-                      fontSize={{ md: 16, xs: 12 }}
-                    >
-                      Read more
-                    </TextGradient>
+                <Stack
+                  direction="row"
+                  spacing={{ md: 3, xs: 0.652 }}
+                  mt={5}
+                  alignItems="center"
+                  sx={{
+                    background: { md: "#fff", xs: "transparent" },
+                    borderRadius: 6,
+                  }}
+                >
+                  <Stack width="100%" flex={0.2}>
                     <Image
-                      src="/images/arrow-right-gradient.png"
-                      width={24}
-                      height={24}
-                      alt="arrow"
+                      src={relatedBlogs[0]?.background_down?.link ?? ""}
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                      alt="next-blog"
                     />
                   </Stack>
+                  <Stack justifyContent="space-between" flex={0.8}>
+                    <Text fontSize={{ md: 16, xs: 14 }}>
+                      {relatedBlogs[0]?.title}
+                    </Text>
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      mt={{ md: 2, xs: 0.652 }}
+                    >
+                      <TextGradient
+                        fontWeight={700}
+                        textTransform="uppercase"
+                        fontSize={{ md: 16, xs: 12 }}
+                      >
+                        Read more
+                      </TextGradient>
+                      <Image
+                        src="/images/arrow-right-gradient.png"
+                        width={24}
+                        height={24}
+                        alt="arrow"
+                      />
+                    </Stack>
+                  </Stack>
                 </Stack>
-              </Stack>
               </Link>
             )}
           </Stack>
@@ -181,7 +198,7 @@ const BlogDetail = () => {
                         alignItems="center"
                         mb={2}
                       >
-                        <Stack flex={{md: "unset", xs: 0.4}}>
+                        <Stack flex={{ md: "unset", xs: 0.4 }}>
                           <Image
                             src={data.background_down?.link ?? ""}
                             alt="last-post"
@@ -273,6 +290,8 @@ const BlogDetail = () => {
         </Stack>
       </Container>
     </Stack>
+  ) : (
+    <></>
   );
 };
 

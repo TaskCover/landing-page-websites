@@ -11,11 +11,12 @@ import { ResourceUseCase } from "../components/Resource";
 import { HelperSendMail } from "components/sn-help-center/components/SendMail";
 import { Text, TextGradient } from "components/shared";
 import { ResultUseCase } from "../components/Result";
+import {HEADER_HEIGHT} from "layouts/Header"
 
 const UseCaseEventAgency = () => {
   return (
     <Stack>
-      <Stack position="relative">
+      <Stack position="relative" pt={HEADER_HEIGHT / 8 - 3}>
         <Stack
           sx={{
             backgroundImage: {
