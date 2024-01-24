@@ -98,7 +98,7 @@ const MainLayout = (props: MainLayoutProps) => {
               top: 0,
               left: 0,
               width: "100%",
-              zIndex: 9999,
+              zIndex: 99,
             }}
           >
             <Header />
