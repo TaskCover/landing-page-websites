@@ -30,6 +30,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
   const { isMdSmaller } = useBreakpoint();
   const [showForm, setShowForm] = useState(true);
   const { id } = useParams();
+
   const dispatch = useAppDispatch();
   const { initQuery, isReady, query } = useQueryParams();
 
@@ -53,6 +54,13 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
   useEffect(() => {
     if (id) {
       dispatch(() => onGetCareerBySlug(id.toString() as string));
+      console.log(items.filter(e => {
+        console.log(e.slug == id, "--slug---");
+        console.log(e.slug, id, '----id');
+
+      }
+      ));
+
     }
   }, [id]);
 
@@ -62,9 +70,9 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
 
     // Render mỗi đoạn văn bản trong một thẻ <p>
     const renderedText = paragraphs.map((paragraph, index) => (
-      <p key={index}>{paragraph}</p>
+      <Text key={index} variant="h6" fontWeight={400}>{paragraph}</Text>
     ));
-    return <Stack>{renderedText}</Stack>;
+    return <Stack gap="8px">{renderedText}</Stack>;
   }
 
   return (
@@ -220,7 +228,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                 }}
                 gap={{ xs: "24px", md: "40px" }}
               >
-                {items.map((item, index) => {
+                {items && item && items.filter(e => e.slug != item?.slug).map((item, index) => {
                   return (
                     <Stack
                       key={index}
@@ -266,7 +274,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                           </Text>
                         </Stack>
                       </Stack>
-                      <Link href={`/careers/${item.slug}`}>
+                      <Link href={`/careers/${item.slug?.toString()}`}>
                         <Stack
                           direction="row"
                           alignItems="center"
