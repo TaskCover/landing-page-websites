@@ -52,6 +52,7 @@ const PowerfulAgentLayout = (props: PowerfulAgentLayoutProps) => {
             p="8px"
             width="100%"
             sx={{
+              overflow: { xs: "auto", md: "hidden" },
               background: "rgba(255, 255, 255, 0.90)",
               borderRadius: "16px",
             }}
@@ -119,6 +120,9 @@ const PowerfulAgentLayout = (props: PowerfulAgentLayoutProps) => {
                 <Image src={activeTab.img} width={56} height={56} alt="image" />
                 <Text
                   variant="h3"
+                  fontSize={{ xs: "20px", md: "24px" }}
+                  fontWeight={700}
+                  lineHeight="32px"
                   color={activeTab.textColor}
                   sx={activeTab.isTextGradient ? textGradientSx : {}}
                 >
@@ -195,7 +199,7 @@ const sectionContainerSx = {
   width: "100%",
   m: "0 auto",
   maxWidth: "1200px",
-  p: { xs: "40px 16px 60px", md: "80px 0px 120px" },
+  p: { xs: "40px 0px 60px", md: "80px 0px 120px" },
   zIndex: 10,
 };
 

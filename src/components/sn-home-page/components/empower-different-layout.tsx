@@ -129,7 +129,7 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                   >
                     {tabActive.pricePackage}/
                   </Text>
-                  <Text variant="h3" color="#fff" sx={{ ml: "8px" }}>
+                  <Text variant="h3" fontSize={{ xs: "16px", md: "36px" }} color="#fff" sx={{ ml: "8px" }}>
                     {tabActive.name == "Monthly" ? "month" : "year"}
                   </Text>
                 </Stack>
@@ -231,19 +231,20 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                   backgroundColor: "#161B22",
                   borderRadius: "12px",
                   p: { xs: "24px 20px 60px", md: "40px 40px 127px" },
+                  overflow: "hidden"
                 }}
               >
                 <Stack
                   sx={{
                     position: "absolute",
-                    bottom: 0,
-                    right: "20px",
+                    bottom: { xs: 0, md: "-10px" },
+                    right: { xs: 0 },
                   }}
                 >
                   <Image
                     src={BallSaleImg}
-                    width={isMdSmaller ? 150 : 188}
-                    height={isMdSmaller ? 120 : 155}
+                    width={isMdSmaller ? 141 : 188}
+                    height={isMdSmaller ? 141 : 188}
                     alt="image"
                   />
                 </Stack>
@@ -313,6 +314,7 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                     >
                       <Text
                         variant={{ xs: "caption", md: "body1" }}
+                        fontSize={16}
                         fontWeight={400}
                         sx={textGradientSx}
                       >
@@ -337,6 +339,7 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "center",
                   width: "100%",
+                  minHeight: "200px",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -412,7 +415,7 @@ const sectionContainerSx = {
   width: "100%",
   m: "0 auto",
   maxWidth: "1200px",
-  p: { xs: "40px 16px 60px", md: "60px 0px 120px" },
+  p: { xs: "40px 0px 60px", md: "60px 0px 120px" },
   position: "relative",
 };
 

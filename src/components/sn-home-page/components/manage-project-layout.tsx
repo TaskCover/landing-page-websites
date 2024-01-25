@@ -173,7 +173,7 @@ const sectionContainerSx = {
   width: "100%",
   m: "0 auto",
   maxWidth: "1200px",
-  p: { xs: "40px 16px 60px", md: "60px 0px 250px" },
+  p: { xs: "40px 0px 60px", md: "60px 0px 250px" },
   zIndex: 10,
   position: "relative",
 };

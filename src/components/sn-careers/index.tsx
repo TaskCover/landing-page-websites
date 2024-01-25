@@ -14,98 +14,94 @@ const CareersPage = (props: CareersPageProps) => {
   const { isMdSmaller } = useBreakpoint();
 
   return (
-    <Stack width="100%" pt={HEADER_HEIGHT / 8 + 1}>
-      <Container>
-        <Stack>
-          <Stack
-            width="100%"
+    <Stack pt={HEADER_HEIGHT / 8 + 1}>
+      <Stack
+        width="100%"
+        sx={{
+          background:
+            "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+        }}
+      >
+        <Stack
+          sx={[
+            sectionContainerSx,
+            {
+              gap: "24px",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+          ]}
+        >
+          <Text
+            variant="h5"
             sx={{
-              background:
-                "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+              letterSpacing: "3.2px",
+              color: "#fff",
             }}
           >
-            <Stack
-              sx={[
-                sectionContainerSx,
-                {
-                  gap: "24px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                },
-              ]}
-            >
-              <Text
-                variant="h5"
-                sx={{
-                  letterSpacing: "3.2px",
-                  color: "#fff",
-                }}
-              >
-                Career
-              </Text>
-              <Text
-                sx={{
-                  fontSize: { xs: "24px", md: "36px" },
-                  fontWeight: { xs: 500, md: 700 },
-                  lineHeight: { xs: "32px", md: "44px" },
-                  textAlign: "center",
-                  color: "#fff",
-                }}
-              >
-                JOIN US TO STRIVE FOR {isMdSmaller && <br />} EXCELLENCE
-              </Text>
-              <Button
-                sx={{
-                  p: "12px 24px",
-                  background: "#fff",
-                  width: { xs: "105px", md: "130px" },
-                }}
-              >
-                <Text variant="h5" sx={textGradientSx}>
-                  Contact Us
-                </Text>
-              </Button>
-            </Stack>
-          </Stack>
-
-          <ListCareersLayout />
-          <OurPiorityLayout />
-          <Stack
-            sx={[
-              sectionContainerSx,
-              {
-                gap: { xs: "24px", md: "56px" },
-                justifyContent: "center",
-                alignItems: "center",
-              },
-            ]}
+            Career
+          </Text>
+          <Text
+            sx={{
+              fontSize: { xs: "24px", md: "36px" },
+              fontWeight: { xs: 500, md: 700 },
+              lineHeight: { xs: "32px", md: "44px" },
+              textAlign: "center",
+              color: "#fff",
+            }}
           >
-            <Text
-              variant="h3"
-              sx={{
-                fontSize: { xs: "24px", md: "36px" },
-                fontWeight: { xs: 500, md: 700 },
-                lineHeight: { xs: "32px", md: "44px" },
-                textAlign: "center",
-              }}
-            >
-              Can't find what you're looking for?
+            JOIN US TO STRIVE FOR {isMdSmaller && <br />} EXCELLENCE
+          </Text>
+          <Button
+            sx={{
+              p: "12px 24px",
+              background: "#fff",
+              width: { xs: "105px", md: "130px" },
+            }}
+          >
+            <Text variant="h5" sx={textGradientSx}>
+              Contact Us
             </Text>
-            <Button
-              sx={{
-                p: "12px 24px",
-                background:
-                  "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
-                width: { xs: "105px", md: "130px" },
-              }}
-            >
-              <Text variant="h5" color="#fff">
-                Contact Us
-              </Text>
-            </Button>
-          </Stack>
+          </Button>
         </Stack>
-      </Container>
+      </Stack>
+
+      <ListCareersLayout />
+      <OurPiorityLayout />
+      <Stack
+        sx={[
+          sectionContainerSx,
+          {
+            gap: { xs: "24px", md: "56px" },
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        ]}
+      >
+        <Text
+          variant="h3"
+          sx={{
+            fontSize: { xs: "24px", md: "36px" },
+            fontWeight: { xs: 500, md: 700 },
+            lineHeight: { xs: "32px", md: "44px" },
+            textAlign: "center",
+          }}
+        >
+          Can't find what you're looking for?
+        </Text>
+        <Button
+          sx={{
+            p: "12px 24px",
+            background:
+              "linear-gradient(90deg, #0575E6 5.8%, #38E27B 96.38%)",
+            width: { xs: "105px", md: "130px" },
+          }}
+        >
+          <Text variant="h5" color="#fff">
+            Contact Us
+          </Text>
+        </Button>
+      </Stack>
     </Stack>
   );
 };
