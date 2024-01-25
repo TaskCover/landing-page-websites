@@ -129,7 +129,7 @@ const ListCareersLayout = (props: ListCareersLayoutProps) => {
                     </Text>
                   </Stack>
                 </Stack>
-                <Link href={`/careers/${item.slug}`}>
+                <Link href={`/careers/${item.slug?.toString()}`}>
                   <Stack
                     direction="row"
                     alignItems="center"

@@ -30,6 +30,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
   const { isMdSmaller } = useBreakpoint();
   const [showForm, setShowForm] = useState(true);
   const { id } = useParams();
+
   const dispatch = useAppDispatch();
   const { initQuery, isReady, query } = useQueryParams();
 
@@ -53,8 +54,26 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
   useEffect(() => {
     if (id) {
       dispatch(() => onGetCareerBySlug(id.toString() as string));
+      console.log(items.filter(e => {
+        console.log(e.slug == id, "--slug---");
+        console.log(e.slug, id, '----id');
+
+      }
+      ));
+
     }
   }, [id]);
+
+  const convertDescText = (text) => {
+    const textVal = text || "";
+    const paragraphs = textVal.split("\n");
+
+    // Render mỗi đoạn văn bản trong một thẻ <p>
+    const renderedText = paragraphs.map((paragraph, index) => (
+      <Text key={index} variant="h6" fontWeight={400}>{paragraph}</Text>
+    ));
+    return <Stack gap="8px">{renderedText}</Stack>;
+  }
 
   return (
     <Stack width="100%" pt={HEADER_HEIGHT / 8 + 1}>
@@ -136,7 +155,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
             gridTemplateColumns={{ xs: "1fr", md: "2fr 1fr" }}
           >
             <Stack gap="24px" width="100%">
-              {DetailCareerData.map((item, index) => (
+              {/* {DetailCareerData.map((item, index) => (
                 <Stack gap="16px" key={index}>
                   <Text variant="h5" fontWeight={700}>
                     {item.title}
@@ -147,7 +166,8 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                     </Text>
                   ))}
                 </Stack>
-              ))}
+              ))} */}
+              {convertDescText(item?.description)}
               <Stack gap="16px">
                 <Text variant="h5" fontWeight={700}>
                   Applications:
@@ -208,7 +228,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                 }}
                 gap={{ xs: "24px", md: "40px" }}
               >
-                {items.map((item, index) => {
+                {items && item && items.filter(e => e.slug != item?.slug).map((item, index) => {
                   return (
                     <Stack
                       key={index}
@@ -254,7 +274,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                           </Text>
                         </Stack>
                       </Stack>
-                      <Link href={`/careers/${item.slug}`}>
+                      <Link href={`/careers/${item.slug?.toString()}`}>
                         <Stack
                           direction="row"
                           alignItems="center"
@@ -268,7 +288,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                               transition: ".3s",
                             },
                           }}
-                          // onClick={() => onDetailCareer(item.slug)}
+                        // onClick={() => onDetailCareer(item.slug)}
                         >
                           <Text variant="h5" sx={textGradientSx}>
                             APPLY NOW
