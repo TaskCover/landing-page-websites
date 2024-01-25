@@ -56,6 +56,17 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
     }
   }, [id]);
 
+  const convertDescText = (text) => {
+    const textVal = text || "";
+    const paragraphs = textVal.split("\n");
+
+    // Render mỗi đoạn văn bản trong một thẻ <p>
+    const renderedText = paragraphs.map((paragraph, index) => (
+      <p key={index}>{paragraph}</p>
+    ));
+    return <Stack>{renderedText}</Stack>;
+  }
+
   return (
     <Stack width="100%" pt={HEADER_HEIGHT / 8 + 1}>
       <Stack
@@ -136,7 +147,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
             gridTemplateColumns={{ xs: "1fr", md: "2fr 1fr" }}
           >
             <Stack gap="24px" width="100%">
-              {DetailCareerData.map((item, index) => (
+              {/* {DetailCareerData.map((item, index) => (
                 <Stack gap="16px" key={index}>
                   <Text variant="h5" fontWeight={700}>
                     {item.title}
@@ -147,7 +158,8 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                     </Text>
                   ))}
                 </Stack>
-              ))}
+              ))} */}
+              {convertDescText(item?.description)}
               <Stack gap="16px">
                 <Text variant="h5" fontWeight={700}>
                   Applications:
@@ -268,7 +280,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                               transition: ".3s",
                             },
                           }}
-                          // onClick={() => onDetailCareer(item.slug)}
+                        // onClick={() => onDetailCareer(item.slug)}
                         >
                           <Text variant="h5" sx={textGradientSx}>
                             APPLY NOW
