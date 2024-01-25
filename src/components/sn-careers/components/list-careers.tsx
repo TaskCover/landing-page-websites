@@ -14,6 +14,7 @@ import TimerIc from "public/images/careers/icon-timer.svg";
 import Image from "next/image";
 import ArrowRightIc from "public/images/careers/icon-arrow-right.svg";
 import Link from "next/link";
+import Pagination from "components/Pagination";
 
 type ListCareersLayoutProps = {};
 
@@ -38,13 +39,13 @@ const ListCareersLayout = (props: ListCareersLayoutProps) => {
     isIdle,
     onUpdateCareerStatus: onApproveOrRejectAction,
   } = useCareer();
-  const { isReady, query } = useQueryParams();
+  const { isReady, query ,initQuery} = useQueryParams();
   const { push } = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     if (!isReady) return;
-    onGetCareer(Init_Query);
+    onGetCareer(initQuery);
   }, [isReady, onGetCareer]);
 
   const onChangeQueries = (queries: { [key: string]: any }) => {
@@ -160,6 +161,15 @@ const ListCareersLayout = (props: ListCareersLayoutProps) => {
             );
           })}
         </Stack>
+        <Pagination
+          totalItems={total_page}
+          totalPages={total_page}
+          page={page}
+          pageSize={size}
+          containerProps={{ px: { md: 3 }, py: 1 }}
+          onChangePage={onChangePage}
+          onChangeSize={onChangeSize}
+        />
       </Stack>
     </Stack>
   );

@@ -4,21 +4,18 @@ import { Container, Stack } from "@mui/material";
 import { Button, Text } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 import useQueryParams from "hooks/useQueryParams";
+import { HEADER_HEIGHT } from "layouts/Header";
 import Image from "next/image";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import ArrowRightIc from "public/images/careers/icon-arrow-right.svg";
 import LocationIc from "public/images/careers/icon-location.svg";
 import TimerIc from "public/images/careers/icon-timer.svg";
 import { memo, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useCareer } from "store/career/selectors";
-import { formatDate } from "utils/index";
-import { DetailCareerData, ListFormSubmit } from "../helpers/helpers";
-import { FormType } from "constant/enums";
-import FormApply from "../components/FormApply";
-import { useParams } from "next/navigation";
 import { useAppDispatch } from "store/hooks";
-import Link from "next/link";
-import { HEADER_HEIGHT } from "layouts/Header";
+import { formatDate } from "utils/index";
+import FormApply from "../components/FormApply";
 
 type DetailCareerPageProps = {};
 const Init_Query = {
@@ -54,13 +51,6 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
   useEffect(() => {
     if (id) {
       dispatch(() => onGetCareerBySlug(id.toString() as string));
-      console.log(items.filter(e => {
-        console.log(e.slug == id, "--slug---");
-        console.log(e.slug, id, '----id');
-
-      }
-      ));
-
     }
   }, [id]);
 
@@ -167,7 +157,11 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                   ))}
                 </Stack>
               ))} */}
-              {convertDescText(item?.description)}
+              {/* {convertDescText(item?.description)} */}
+              <div dangerouslySetInnerHTML={{ __html: item?.description as string }} />
+              {/* <Stack>
+                {item?.description}
+              </Stack> */}
               <Stack gap="16px">
                 <Text variant="h5" fontWeight={700}>
                   Applications:
@@ -227,6 +221,9 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                   md: "repeat(1,1fr)",
                 }}
                 gap={{ xs: "24px", md: "40px" }}
+                sx={{
+                  overflowY: "auto"
+                }}
               >
                 {items && item && items.filter(e => e.slug != item?.slug).map((item, index) => {
                   return (
