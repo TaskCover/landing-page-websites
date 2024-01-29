@@ -4,9 +4,8 @@ import globalReducer, { GlobalState } from "store/global/reducer";
 import { categoryBlogReducer } from "./blog-category/reducer";
 import { BlogState, blogReducer } from "./blog/reducer";
 import { CareerReducer } from "./career/reducer";
-import documentApi from "./docs/api";
 import { CounterPageState, counterPageReducer } from "./product-page/reducer";
-import { IDocs } from "./docs/reducer";
+// import { IDocs } from "./docs/reducer";
 import { feedbackReducer } from "./feedback/reducer";
 
 export interface State {
@@ -14,7 +13,7 @@ export interface State {
   global: GlobalState;
   blogs: BlogState;
   counterPage: CounterPageState;
-  docs: IDocs;
+  // docs: IDocs;
 }
 
 export const store = configureStore({
