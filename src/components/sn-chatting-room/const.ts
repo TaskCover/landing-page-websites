@@ -1,7 +1,0 @@
-export enum MobileScreen {
-  CHAT = "CHAT",
-  CREATE_CHAT = "CREATE_CHAT",
-  CHATTING_ROOM = "CHATTING_ROOM",
-  CHAT_INFO = "CHAT_INFO",
-  CHAT_SEARCH = "CHAT_SEARCH",
-}
