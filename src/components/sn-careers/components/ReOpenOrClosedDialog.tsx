@@ -1,14 +1,11 @@
-import { memo, useState } from "react";
 import { Stack } from "@mui/material";
 import ConfirmDialog, { ConfirmDialogProps } from "components/ConfirmDialog";
-import { Employee } from "store/company/reducer";
-import Avatar from "components/Avatar";
-import { Text } from "components/shared";
-import { useSnackbar } from "store/app/selectors";
-import { getMessageErrorByAPI } from "utils/index";
 import { AN_ERROR_TRY_AGAIN, NS_COMMON } from "constant/index";
 import { useTranslations } from "next-intl";
+import { memo, useState } from "react";
+import { useSnackbar } from "store/app/selectors";
 import { BlogData } from "store/blog/actions";
+import { getMessageErrorByAPI } from "utils/index";
 
 type ReOpenOrClosedDialogProps = ConfirmDialogProps & {
   items?: BlogData[];

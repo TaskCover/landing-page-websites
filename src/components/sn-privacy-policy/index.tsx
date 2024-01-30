@@ -111,8 +111,8 @@ const PrivacyPolicyPage = (props: PrivacyPolicyPageProps) => {
                   inputProps={{ "aria-label": "Without label" }}
                   input={<BootstrapInput />}
                 >
-                  {ListPolicies.map((e) => (
-                    <MenuItem value={e}>{e}</MenuItem>
+                  {ListPolicies.map((e, i) => (
+                    <MenuItem key={i} value={e}>{e}</MenuItem>
                   ))}
                 </Select>
               </FormControl>

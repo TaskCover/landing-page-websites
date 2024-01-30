@@ -1,27 +1,23 @@
 "use client";
 
-import { memo, useMemo, useEffect, useRef, useState } from "react";
 import { Stack } from "@mui/material";
+import { Dropdown, Search } from "components/Filters";
 import { Button, Text } from "components/shared";
-import PlusIcon from "icons/PlusIcon";
-import { Clear, Dropdown, Refresh, Search } from "components/Filters";
-import { getPath } from "utils/index";
-import { usePathname, useRouter } from "next-intl/client";
-import useToggle from "hooks/useToggle";
 import { DataAction } from "constant/enums";
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import { GetEmployeeListQueries } from "store/company/actions";
-import { usePositionOptions } from "store/global/selectors";
-import { NS_COMMON, NS_CAREER, ACCESS_TOKEN_STORAGE_KEY } from "constant/index";
+import { ACCESS_TOKEN_STORAGE_KEY, NS_CAREER, NS_COMMON } from "constant/index";
+import useToggle from "hooks/useToggle";
+import PlusIcon from "icons/PlusIcon";
 import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "next-intl/client";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { memo, useEffect, useMemo, useState } from "react";
+import { SearchStatus } from "store/career/action";
+import { useCareer } from "store/career/selectors";
+import { CareergDataForm } from "store/career/type";
+import { getPath } from "utils/index";
+import { clientStorage } from "utils/storage";
 import Form from "./components/Form";
 import { TEXT_PAY_STATUS_CAREER } from "./helpers/helpers";
-import { FeedbackStatus } from "store/feedback/actions";
-import { useFeedback } from "store/feedback/selectors";
-import { SearchStatus } from "store/career/action";
-import { CareergDataForm } from "store/career/type";
-import { useCareer } from "store/career/selectors";
-import { clientStorage } from "utils/storage";
 
 const Actions = () => {
   const careerT = useTranslations(NS_CAREER);

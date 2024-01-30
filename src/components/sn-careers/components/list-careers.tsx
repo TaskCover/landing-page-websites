@@ -100,6 +100,7 @@ const ListCareersLayout = (props: ListCareersLayoutProps) => {
           {items.map((item, index) => {
             return (
               <Stack
+                key={index}
                 sx={{
                   p: "24px",
                   gap: "16px",

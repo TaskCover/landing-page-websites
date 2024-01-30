@@ -10,7 +10,6 @@ import DatePicker, { DatePickerProps } from "./DatePicker";
 import Switch, { SwitchProps } from "./Switch";
 import Checkbox from "./Checkbox";
 import Upload from "./Upload";
-import Editor from "./Editor";
 import Collapse from "./Collapse";
 import CollapseQuestion from "./CollapseQuestion";
 import SvgIcon from "./SvgIcon";
@@ -30,7 +29,6 @@ export {
   Switch,
   Checkbox,
   Upload,
-  Editor,
   Collapse,
   SvgIcon,
   TextGradient,
