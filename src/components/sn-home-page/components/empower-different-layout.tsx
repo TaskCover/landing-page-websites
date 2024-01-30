@@ -1,19 +1,17 @@
 import { Container, Stack } from "@mui/material";
+import Link from "components/Link";
+import Preview from "components/Preview";
 import { Button, Text } from "components/shared";
+import useBreakpoint from "hooks/useBreakpoint";
 import Image from "next/image";
+import ArrowRightLineIc from "public/images/home-page/arrow-right-line.svg";
 import ActiveIcon from "public/images/home-page/icon-active.svg";
+import PlayVideoIcon from "public/images/home-page/icon-play-video.svg";
+import BallSaleImg from "public/images/home-page/img-ball-sale.png";
 import RecomendedPlagIc from "public/images/home-page/img-flag-recomended.png";
 import EmpowerDifferent from "public/images/home-page/img-time-tracking.png";
-import BallSaleImg from "public/images/home-page/img-ball-sale.png";
-import PlayVideoImg from "public/images/home-page/img-play-video.png";
-import PlayVideoIcon from "public/images/home-page/icon-play-video.svg";
 import { memo, useState } from "react";
-import Link from "components/Link";
-import ArrowRightLineIc from "public/images/home-page/arrow-right-line.svg";
-import useBreakpoint from "hooks/useBreakpoint";
 import { ListPackageEmpower } from "../configs";
-import Preview from "components/Preview";
-import { MediaType, TypeMedia } from "store/chat/media/typeMedia";
 
 type EmpowerDifferentLayoutProps = {};
 
@@ -86,6 +84,7 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                     const isActive = tabActive.name == item.name;
                     return (
                       <Stack
+                        key={index}
                         sx={{
                           justifyContent: "center",
                           alignItems: "center",
@@ -129,7 +128,12 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                   >
                     {tabActive.pricePackage}/
                   </Text>
-                  <Text variant="h3" fontSize={{ xs: "16px", md: "36px" }} color="#fff" sx={{ ml: "8px" }}>
+                  <Text
+                    variant="h3"
+                    fontSize={{ xs: "16px", md: "36px" }}
+                    color="#fff"
+                    sx={{ ml: "8px" }}
+                  >
                     {tabActive.name == "Monthly" ? "month" : "year"}
                   </Text>
                 </Stack>
@@ -231,7 +235,7 @@ const EmpowerDifferentLayout = (props: EmpowerDifferentLayoutProps) => {
                   backgroundColor: "#161B22",
                   borderRadius: "12px",
                   p: { xs: "24px 20px 60px", md: "40px 40px 127px" },
-                  overflow: "hidden"
+                  overflow: "hidden",
                 }}
               >
                 <Stack

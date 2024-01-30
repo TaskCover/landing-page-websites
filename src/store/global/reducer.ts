@@ -3,9 +3,7 @@ import { DataStatus } from "constant/enums";
 import { getPositionOptions, getProjectTypeOptions, getCurrencyOptions } from "./actions";
 import { AN_ERROR_TRY_AGAIN, DEFAULT_PAGING } from "constant/index";
 import { ItemListResponse, Option, Paging } from "constant/types";
-import { Position, ProjectType } from "store/company/reducer";
 import { removeDuplicateItem } from "utils/index";
-import { Currency } from "store/project/reducer";
 
 export interface GlobalState {
   positionOptions: Option[];
@@ -60,7 +58,7 @@ const globalSlice = createSlice({
         (state, action: PayloadAction<ItemListResponse>) => {
           const { items, ...paging } = action.payload;
 
-          const newOptions = (items as Position[]).map(
+          const newOptions = (items as any[]).map(
             ({ id: value, name: label }) => ({ value, label }),
           );
 
@@ -98,7 +96,7 @@ const globalSlice = createSlice({
         (state, action: PayloadAction<ItemListResponse>) => {
           const { items, ...paging } = action.payload;
 
-          const newOptions = (items as ProjectType[]).map(
+          const newOptions = (items as any[]).map(
             ({ id: value, name: label }) => ({ value, label }),
           );
 

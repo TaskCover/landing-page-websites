@@ -1,28 +1,16 @@
-import { memo, useEffect, useMemo, useState } from "react";
 import { Container, Stack } from "@mui/material";
-import { AccountInfo, Drawer } from "./components";
 import AppLogo from "components/AppLogo";
-import { Search } from "components/Filters";
-import { Text } from "components/shared";
-import { useHeaderConfig, useSidebar } from "store/app/selectors";
-import useBreakpoint from "hooks/useBreakpoint";
-import useWindowSize from "hooks/useWindowSize";
 import Link from "components/Link";
-import ChevronIcon from "icons/ChevronIcon";
-import SwitchLanguage from "components/SwitchLanguage";
-import { useProjects } from "store/project/selectors";
-import { useRouter } from "next-intl/client";
-import { getPath } from "utils/index";
-import { HOME_PATH, PROJECTS_PATH } from "constant/paths";
-import { DataStatus } from "constant/enums";
-import useToggle from "hooks/useToggle";
-import SwitchTheme from "components/SwitchTheme";
-import Menu from "layouts/components/Menu";
+import { HOME_PATH } from "constant/paths";
+import useBreakpoint from "hooks/useBreakpoint";
 import { MenuMobile, SignInTrialHeader } from "layouts/components";
+import Menu from "layouts/components/Menu";
+import { useRouter } from "next-intl/client";
+import { memo, useMemo } from "react";
+import { useSidebar } from "store/app/selectors";
 
 const Header = () => {
   const { push } = useRouter();
-  const { pageSize, filters, status, onGetProjects } = useProjects();
   const { isExpandedSidebar, onToggleExpandSidebar } = useSidebar();
   const { isLgSmaller, isMdSmaller } = useBreakpoint();
   const isShowLarge = useMemo(

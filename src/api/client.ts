@@ -5,9 +5,7 @@ import {
   AN_ERROR_TRY_AGAIN,
   API_TIMEOUT,
   API_URL,
-  AUTH_API_URL,
   REFRESH_TOKEN_STORAGE_KEY,
-  SALE_API_URL,
   UPLOAD_API_URL,
 } from "constant";
 import { HttpStatusCode } from "constant/enums";
@@ -70,7 +68,7 @@ const createAxiosInstance = (baseUrl: string) => {
               Endpoint.REFRESH_TOKEN,
               {},
               {
-                baseURL: AUTH_API_URL,
+                baseURL: API_URL,
                 headers: { "refresh-token": refreshToken },
               },
             );
@@ -240,11 +238,5 @@ const RequestClient = class {
 
 export const client = new RequestClient();
 
-export const saleClient = new RequestClient({
-  baseURL: SALE_API_URL,
-});
-
-export const saleClientInstance: AxiosInstance =
-  createAxiosInstance(SALE_API_URL);
 
 export { axios };

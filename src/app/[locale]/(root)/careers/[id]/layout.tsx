@@ -1,6 +1,5 @@
 "use client";
 import DetailCareersPage from "components/sn-careers/detail-career";
-import CareerDetaiLayout from "layouts/CareerDetaiLayout";
 type RootLayoutProps = {
   children: React.ReactNode;
   params: {
