@@ -10,21 +10,14 @@ import {
 
 export const AUTH_API_URL = process.env.AUTH_API_URL as string;
 export const API_URL = process.env.API_URL as string;
-export const COMPANY_API_URL = process.env.COMPANY_API_URL as string;
 export const UPLOAD_API_URL = process.env.UPLOAD_API_URL as string;
-export const TIME_SHEET_API_URL = process.env.TIME_SHEET_API_URL as string;
-export const CHAT_API_URL = process.env.CHAT_API_URL as string;
-export const SALE_API_URL = process.env.SALE_API_URL as string;
 export const DEFAULT_MODE: Mode = ThemeMode.LIGHT;
-export const RESOURCE_API_URL = process.env.RESOURCE_API_URL as string;
 //feedback
 export const FEEDBACK_API_URL = process.env.FEEDBACK_API_URL as string;
 // BLOG
 export const BLOG_API_URL = process.env.BLOG_API_URL as string;
 // CAREER
 export const CAREER_API_URL = process.env.CAREER_API_URL as string;
-//Billing
-export const BILLING_API_URL = process.env.BILLING_API_URL as string;
 
 export const DARK_THEME_MEDIA_SYSTEM = "(prefers-color-scheme: dark)";
 export const DOCS_API_URL = process.env.DOCS_API_URL as string;

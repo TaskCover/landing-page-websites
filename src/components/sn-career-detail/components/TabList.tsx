@@ -1,22 +1,20 @@
-import { memo, useMemo } from "react";
-import { Stack, StackProps } from "@mui/material";
+import { Stack } from "@mui/material";
 import Link from "components/Link";
 import { Text } from "components/shared";
+import { NS_APPLICANTS } from "constant/index";
 import {
   APPLICANTS_DETAIL_PATH,
-  CAREER_DETAIL_PATH,
-  COMPANY_DETAIL_PATH,
-  COMPANY_EMPLOYEES_PATH,
+  CAREER_DETAIL_PATH
 } from "constant/paths";
-import { usePathname } from "next-intl/client";
-import { getPath } from "utils/index";
-import { useHeaderConfig } from "store/app/selectors";
-import ChevronIcon from "icons/ChevronIcon";
 import useBreakpoint from "hooks/useBreakpoint";
-import { useParams } from "next/navigation";
 import useTheme from "hooks/useTheme";
-import { NS_APPLICANTS } from "constant/index";
+import ChevronIcon from "icons/ChevronIcon";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next-intl/client";
+import { useParams } from "next/navigation";
+import { memo, useMemo } from "react";
+import { useHeaderConfig } from "store/app/selectors";
+import { getPath } from "utils/index";
 
 type TabItemProps = {
   href: string;

@@ -5,18 +5,10 @@ import { HOME_PATH } from "constant/paths";
 import useBreakpoint from "hooks/useBreakpoint";
 import { MenuMobile, SignInTrialHeader } from "layouts/components";
 import Menu from "layouts/components/Menu";
-import { useRouter } from "next-intl/client";
-import { memo, useMemo } from "react";
-import { useSidebar } from "store/app/selectors";
+import { memo } from "react";
 
 const Header = () => {
-  const { push } = useRouter();
-  const { isExpandedSidebar, onToggleExpandSidebar } = useSidebar();
-  const { isLgSmaller, isMdSmaller } = useBreakpoint();
-  const isShowLarge = useMemo(
-    () => isExpandedSidebar && !isLgSmaller,
-    [isExpandedSidebar, isLgSmaller],
-  );
+  const { isMdSmaller } = useBreakpoint();
   return (
     <Container>
       <Stack
@@ -33,7 +25,6 @@ const Header = () => {
         <Menu />
         <MenuMobile />
         {isMdSmaller ? <></> : <SignInTrialHeader />}
-        {/* <SwitchTheme /> */}
       </Stack>
     </Container>
   );

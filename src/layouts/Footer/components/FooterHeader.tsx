@@ -1,14 +1,14 @@
 import { Stack } from "@mui/material";
-import { memo } from "react";
-import Image, { ImageProps } from "next/image";
-import LogoImage from "public/images/img-logo.webp";
 import { Text } from "components/shared";
+import useBreakpoint from "hooks/useBreakpoint";
 import FacebookIcon from "icons/FacebookIcon";
 import InstagramIcon from "icons/InstagramIcon";
 import LinkInIcon from "icons/LinkInIcon";
 import PremiumIcon from "icons/PremiumIcon";
 import TwitterIcon from "icons/TwitterIcon";
-import useBreakpoint from "hooks/useBreakpoint";
+import Image from "next/image";
+import LogoImage from "public/images/img-logo.webp";
+import { memo } from "react";
 
 const FooterHeader = () => {
   const { isMdSmaller } = useBreakpoint();

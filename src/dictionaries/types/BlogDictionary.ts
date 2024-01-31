@@ -1,5 +1,3 @@
-import { StringMap } from "quill";
-import { string } from "yup"
 
 export type BlogDictionary = {
     blogs: {

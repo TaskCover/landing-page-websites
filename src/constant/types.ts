@@ -177,29 +177,3 @@ export declare interface IComment {
   createdAt: Date;
 }
 
-//  _id: '657215173bd3d5a7f5cbe7f8',
-//       created_time: '2023-12-07T18:55:19.160Z',
-//       updated_time: '2023-12-07T18:55:19.160Z',
-//       created_by: {
-//         id: '090ad1a0-82cb-11ee-a65f-e197750c3495',
-//         email: 'am@fpt.com',
-//         roles: [ 'AM' ],
-//         company: 'FPT',
-//         fullname: 'Vũ Viết Kiều',
-//         position: null,
-//         avatar: {
-//           object: '6d8d41d0-82cb-11ee-a796-53445187e289-7fe979fe734c7a22',
-//           name: 'chup-anh-dep-bang-dien-thoai-25 (1).jpg',
-//           link:
-//             'http://103.196.145.232:9000/sass/6d8d41d0-82cb-11ee-a796-53445187e289-7fe979fe734c7a22?response-content-disposition=attachment%3B%20filename%3D%22chup-anh-dep-bang-dien-thoai-25%20%281%29.jpg%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=admin%2F20231207%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231207T185553Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=2486052c1aa51e58c87b6db2ee8ecd784a3e4fa444a83a2c55f4be858c1bf0e9'
-//         }
-//       },
-//       doc: '2e7b7620-8ed7-11ee-9ee3-a196b3178b3c',
-//       position: {
-//         created_time: '2023-12-07T18:55:19.152Z',
-//         updated_time: '2023-12-07T18:55:19.152Z',
-//         doc: '2e7b7620-8ed7-11ee-9ee3-a196b3178b3c',
-//         position: 'aef8c53a2-78de-4ad9-b265-62d6cbd74e4fa'
-//       },
-//       content: 'test'
-//     }

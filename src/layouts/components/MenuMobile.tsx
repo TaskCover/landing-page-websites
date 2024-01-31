@@ -1,13 +1,13 @@
-import { Stack, MenuList, MenuItem, Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { memo, useState } from "react";
-import { Button, Text } from "components/shared";
-import CloseIcon from "icons/CloseIcon";
-import { MenuItemProps } from "./helpers";
-import Link from "next/link";
-import BarsIcon from "icons/BarsIcon";
-import { DATA_MEMU } from "./Menu"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Accordion, AccordionDetails, AccordionSummary, MenuItem, MenuList, Stack } from "@mui/material";
+import { Text } from "components/shared";
+import BarsIcon from "icons/BarsIcon";
+import CloseIcon from "icons/CloseIcon";
 import Image from "next/image";
+import Link from "next/link";
+import { memo, useState } from "react";
+import { DATA_MEMU } from "./Menu";
+import { MenuItemProps } from "./helpers";
 
 const MenuMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,9 +82,6 @@ const MenuMobile = () => {
                     }} >
                       <Stack
                         sx={{
-                          // position: 'absolute',
-                          // top: 50,
-                          // left: activeTab.popoverLeft,
                           width: "100%",
                           transition: ".3s",
                         }} >
@@ -122,26 +119,3 @@ const MenuMobile = () => {
 };
 
 export default memo(MenuMobile);
-
-const DATA: MenuItemProps[] = [
-  {
-    label: "Product",
-    href: "",
-  },
-  {
-    label: "AI",
-    href: "",
-  },
-  {
-    label: "Pricing",
-    href: "",
-  },
-  {
-    label: "Use cases",
-    href: "",
-  },
-  {
-    label: "Resources",
-    href: "",
-  },
-];

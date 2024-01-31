@@ -1,31 +1,15 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
+import { shallowEqual } from "react-redux";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
-  addSnackbar,
-  clearAuth,
   HeaderConfig,
-  removeSnackbar,
   Snackbar,
+  addSnackbar,
+  removeSnackbar,
   toggleAppReady,
   toggleExpandSidebar,
   updateHeaderConfig,
 } from "./reducer";
-import {
-  ChangePasswordData,
-  ResetPasswordData,
-  SigninData,
-  SignupData,
-  UpdateUserInfoData,
-  changePassword,
-  forgot,
-  getProfile,
-  resetPassword,
-  signin,
-  signup,
-  signupVerify,
-  updateUserInfo,
-} from "./actions";
-import { shallowEqual } from "react-redux";
 
 export const useSnackbar = () => {
   const dispatch = useAppDispatch();
@@ -87,125 +71,6 @@ export const useSidebar = () => {
   );
 
   return { isExpandedSidebar, onToggleExpandSidebar };
-};
-
-export const useAuth = () => {
-  const dispatch = useAppDispatch();
-
-  const { token, user, signupStep } = useAppSelector(
-    (state) => state.app,
-    shallowEqual,
-  );
-
-  const isLoggedIn = useMemo(() => !!token, [token]);
-
-  const onSignin = useCallback(
-    async (data: SigninData) => {
-      try {
-        return await dispatch(signin(data)).unwrap();
-      } catch (error) {
-        throw error;
-      }
-    },
-    [dispatch],
-  );
-
-  const onSignup = useCallback(
-    async (data: SignupData) => {
-      try {
-        return await dispatch(signup(data)).unwrap();
-      } catch (error) {
-        throw error;
-      }
-    },
-    [dispatch],
-  );
-
-  const onVerify = useCallback(
-    async (code: string) => {
-      try {
-        return await dispatch(signupVerify(code)).unwrap();
-      } catch (error) {
-        throw error;
-      }
-    },
-    [dispatch],
-  );
-
-  const onForgot = useCallback(
-    async (email: string) => {
-      try {
-        return await dispatch(forgot(email)).unwrap();
-      } catch (error) {
-        throw error;
-      }
-    },
-    [dispatch],
-  );
-
-  const onResetPassword = useCallback(
-    async (data: ResetPasswordData) => {
-      try {
-        return await dispatch(resetPassword(data)).unwrap();
-      } catch (error) {
-        throw error;
-      }
-    },
-    [dispatch],
-  );
-
-  const onSignOut = useCallback(() => {
-    dispatch(clearAuth());
-  }, [dispatch]);
-
-  const onGetProfile = useCallback(() => {
-    dispatch(getProfile());
-  }, [dispatch]);
-
-  return {
-    token,
-    user,
-    isLoggedIn,
-    onSignin,
-    onSignup,
-    onSignOut,
-    signupStep,
-    onVerify,
-    onForgot,
-    onResetPassword,
-    onGetProfile,
-  };
-};
-
-export const useUserInfo = () => {
-  const dispatch = useAppDispatch();
-
-  const onUpdateUserInfo = useCallback(
-    async (data: UpdateUserInfoData) => {
-      try {
-        return await dispatch(updateUserInfo(data)).unwrap();
-      } catch (error) {
-        throw error;
-      }
-    },
-    [dispatch],
-  );
-
-  const onChangePassword = useCallback(
-    async (data: ChangePasswordData) => {
-      try {
-        return await dispatch(changePassword(data)).unwrap();
-      } catch (error) {
-        throw error;
-      }
-    },
-    [dispatch],
-  );
-
-  return {
-    onUpdateUserInfo,
-    onChangePassword,
-  };
 };
 
 export const useHeaderConfig = () => {

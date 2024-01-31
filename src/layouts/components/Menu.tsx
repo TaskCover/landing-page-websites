@@ -1,15 +1,14 @@
-import { Button, Stack } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Stack } from "@mui/material";
+import Popover from '@mui/material/Popover';
 import Link from "components/Link";
 import { Text } from "components/shared";
 import { NS_LAYOUT } from "constant/index";
 import useBreakpoint from "hooks/useBreakpoint";
-import useTheme from "hooks/useTheme";
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import { useTranslations } from "next-intl";
 import { usePathname } from "next-intl/client";
-import { memo, useMemo, useState } from "react";
-import { useAuth, useSidebar } from "store/app/selectors";
-import { MenuItemProps } from "./helpers";
-import BarsIcon from "icons/BarsIcon";
+import Image from "next/image";
 import AboutUsIcon from "public/images/header/ic-about-us.svg";
 import AgencyIcon from "public/images/header/ic-agency.svg";
 import BlogIcon from "public/images/header/ic-blog.svg";
@@ -21,11 +20,9 @@ import ProductionIcon from "public/images/header/ic-production.svg";
 import RemoteIcon from "public/images/header/ic-remote-team.svg";
 import SoftwareIcon from "public/images/header/ic-software.svg";
 import TrustCenterIcon from "public/images/header/ic-trust-center.svg";
-import ArrowDownIc from "public/images/home-page/arrow-right.svg";
-import Image from "next/image";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Popover from '@mui/material/Popover';
-import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import { memo, useState } from "react";
+import { useSidebar } from "store/app/selectors";
+import { MenuItemProps } from "./helpers";
 
 const Menu = () => {
   const { isMdSmaller } = useBreakpoint();
@@ -33,8 +30,6 @@ const Menu = () => {
 
   const [hovering, setHovering] = useState<number | null>(null);
   const [popoverLeft, setPopoverLeft] = useState<number | null>(null);
-  const [popoverHeight, setPopoverHeight] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState({ popoverLeft: 0, isActive: false, tabKey: 0 })
 
   return (
     <Stack
@@ -49,7 +44,6 @@ const Menu = () => {
         transition: "all .3s",
       }}
       onMouseEnter={() => setHovering(null)}
-    // onMouseLeave={() => setHovering(null)}
     >
       {DATA_MEMU.map((item, index) => {
         const pathActive = item.href == pathname || (item.child && item.child.map(e => e.link).includes(pathname))
@@ -107,9 +101,6 @@ const Menu = () => {
                         direction="column"
                         gridTemplateColumns={item.label == "Product" ? "1fr 1fr 1fr" : "1fr 1fr"}
                         sx={{
-                          // position: 'absolute',
-                          // top: 50,
-                          // left: activeTab.popoverLeft,
                           p: "16px",
                           width: "fit-content",
                           borderRadius: "16px",
@@ -150,7 +141,6 @@ const Menu = () => {
             <Link
               key={index}
               href={item.href ?? "#"}
-              // className={isActiveLink ? "active" : ""}
               underline="none"
               sx={{
                 color: "grey.900",
@@ -187,32 +177,8 @@ const Menu = () => {
 
 export default memo(Menu);
 
-const MenuItem = (props: MenuItemProps) => {
-  const { isExpandedSidebar } = useSidebar();
-  const { isLgSmaller, isSmSmaller } = useBreakpoint();
-
-  const isShowLarge = useMemo(
-    () => isExpandedSidebar && !isLgSmaller,
-    [isExpandedSidebar, isLgSmaller],
-  );
-
-  return <LinkItem {...props} />;
-};
-
 const LinkItem = (props: Omit<MenuItemProps, "children">) => {
   const { href, label } = props;
-
-  const t = useTranslations(NS_LAYOUT);
-
-  const { isExpandedSidebar } = useSidebar();
-  const { isLgSmaller, isSmSmaller } = useBreakpoint();
-
-  const isShowLarge = useMemo(
-    () => isExpandedSidebar && !isLgSmaller,
-    [isExpandedSidebar, isLgSmaller],
-  );
-
-  const pathname = usePathname();
 
   return (
     <Link
