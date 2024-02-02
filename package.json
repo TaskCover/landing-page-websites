@@ -10,8 +10,8 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@emotion/styled": "11.11.0",
     "@emotion/react": "11.11.1",
+    "@emotion/styled": "11.11.0",
     "@fullcalendar/core": "^6.1.8",
     "@mui/base": "^5.0.0-beta.25",
     "@mui/icons-material": "5.13.7",
@@ -45,7 +45,6 @@
     "styled-components": "^6.1.1",
     "swiper": "^11.0.5",
     "uuid": "^9.0.1",
-    "ws": "^8.13.0",
     "yup": "^1.2.0"
   },
   "devDependencies": {
