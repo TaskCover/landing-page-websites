@@ -54,7 +54,7 @@ export const getAllCareer = createAsyncThunk(
     try {
       console.log(queries);
       // Sử dụng fetch để gọi API và truyền tham số searchKey vào URL
-      const response = await client.get(Endpoint.CAREER, queries, {
+      const response = await client.get(`${Endpoint.CAREER}?status=CAN_APPLY`, queries, {
         baseURL: CAREER_API_URL,
       });
 

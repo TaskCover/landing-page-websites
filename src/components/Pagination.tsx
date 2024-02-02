@@ -50,7 +50,7 @@ const Pagination = (props: PaginationProps) => {
       alignItems="center"
       justifyContent={{ xs: "center", md: "flex-start" }}
       width="100%"
-      padding={2}
+      mt={2}
       spacing={{ md: 2 }}
       {...containerProps}
     >
@@ -80,9 +80,6 @@ const Pagination = (props: PaginationProps) => {
         spacing={1}
         display={{ xs: "none", md: "flex" }}
       >
-        <Text variant="body2" fontWeight={500}>
-          {t("paging.show")}
-        </Text>
         <Select
           rootSx={{ borderColor: "grey.100", borderRadius: 2, height: 40 }}
           options={OPTIONS}
@@ -90,9 +87,6 @@ const Pagination = (props: PaginationProps) => {
           value={pageSize}
           size="small"
         />
-        <Text variant="body2" fontWeight={500}>
-          {t("paging.outOf", { count: formatNumber(totalItems) })}
-        </Text>
       </Stack>
 
 

@@ -43,9 +43,11 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
     isIdle,
     onUpdateCareerStatus: onApproveOrRejectAction,
   } = useCareer();
+console.log(item,'--item--');
+console.log(items,'--items--');
 
   useEffect(() => {
-    dispatch(() => onGetCareer(Init_Query));
+    dispatch(() => onGetCareer(initQuery));
   }, [dispatch, onGetCareer]);
 
   useEffect(() => {
@@ -230,7 +232,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
                   overflowY: "auto"
                 }}
               >
-                {items && item && items.filter(e => e.slug != item?.slug).map((item, index) => {
+                {items && items.filter(e => e.id != item?.id).map((item, index) => {
                   return (
                     <Stack
                       key={index}

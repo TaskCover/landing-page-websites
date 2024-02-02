@@ -115,16 +115,16 @@ const ListCareersLayout = (props: ListCareersLayoutProps) => {
                 </Text>
                 <Stack
                   direction="row"
-                  alignItems="center"
+                  alignItems="start"
                   justifyContent="space-between"
                 >
-                  <Stack direction="row" alignItems="center" gap="8px">
+                  <Stack direction="row" alignItems="center" gap="8px" flex={.6}>
                     <Image src={LocationIc} width={12} height={12} alt="icon" />
                     <Text variant="h5" fontWeight={700}>
                       {item.location}
                     </Text>
                   </Stack>
-                  <Stack direction="row" alignItems="center" gap="8px">
+                  <Stack direction="row" alignItems="center" gap="8px" flex={.4}>
                     <Image src={TimerIc} width={12} height={12} alt="icon" />
                     <Text variant="h5" fontWeight={700}>
                       {formatDate(item.start_time, "dd-MM-yyyy")}
@@ -167,7 +167,7 @@ const ListCareersLayout = (props: ListCareersLayoutProps) => {
           totalPages={total_page}
           page={page}
           pageSize={size}
-          containerProps={{ px: { md: 3 }, py: 1 }}
+          // containerProps={{ px: { md: 3 }, py: 1 }}
           onChangePage={onChangePage}
           onChangeSize={onChangeSize}
         />
