@@ -9,28 +9,28 @@ import { CareergDataForm } from "./type";
 
 export enum CareerStatus {
   PUBLISHED,
-  DRAFT // NHA
+  DRAFT, // NHA
 }
 
 export enum SearchStatus {
   IS_OPENING = "true",
-  IS_CLOSED = "false" // NHA
+  IS_CLOSED = "false", // NHA
 }
 
 export type ApplyParams = {
-  first_name: string,
-  last_name: string,
-  gender: string,
-  birth: string | any,
-  phone: string,
-  email: string,
-  socialLink: string,
-  attachments: Array<string> | null,
-  resume: string | null,
-}
+  first_name: string;
+  last_name: string;
+  gender: string;
+  birth: string | any;
+  phone: string;
+  email: string;
+  socialLink: string;
+  attachments: Array<string> | null;
+  resume: string | null;
+};
 
 export type CareerData = {
-  id?: string
+  id?: string;
   title?: string;
   description?: string;
   location?: string;
@@ -38,9 +38,9 @@ export type CareerData = {
   end_time?: string;
   numberOfHires?: number;
   is_opening?: boolean;
-  slug?: string
+  slug?: string;
   detail?: string;
-}
+};
 
 export type GetCareerListQueries = BaseQueries_Feedback & {
   searchKey?: string;
@@ -54,7 +54,9 @@ export const getAllCareer = createAsyncThunk(
     try {
       console.log(queries);
       // Sử dụng fetch để gọi API và truyền tham số searchKey vào URL
-      const response = await client.get(Endpoint.CAREER, queries, { baseURL: CAREER_API_URL });
+      const response = await client.get(Endpoint.CAREER, queries, {
+        baseURL: CAREER_API_URL,
+      });
 
       if (response?.status === HttpStatusCode.OK) {
         // console.log(response);
@@ -63,23 +65,28 @@ export const getAllCareer = createAsyncThunk(
     } catch (error) {
       throw error;
     }
-  }
+  },
 );
 
-export const postCareer = createAsyncThunk("postCareer",
-  async ({ data, Token }: { data: CareergDataForm, Token: string | undefined | null }) => {
+export const postCareer = createAsyncThunk(
+  "postCareer",
+  async ({
+    data,
+    Token,
+  }: {
+    data: CareergDataForm;
+    Token: string | undefined | null;
+  }) => {
     // console.log(data);
     try {
-      const response = await client.post(Endpoint.CAREER, data,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          Authorization: `${Token}`,
-          baseURL: CAREER_API_URL,
+      const response = await client.post(Endpoint.CAREER, data, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        Authorization: `${Token}`,
+        baseURL: CAREER_API_URL,
+      });
       if (response?.status === HttpStatusCode.CREATED) {
         return response.data;
       }
@@ -87,15 +94,24 @@ export const postCareer = createAsyncThunk("postCareer",
     } catch (error) {
       throw error;
     }
-  }
+  },
 );
 
 export const upadteCareer = createAsyncThunk(
   "upadteCareer",
-  async ({ id, data, Token }: { id: string, data: CareergDataForm, Token: string | undefined | null }) => {
+  async ({
+    id,
+    data,
+    Token,
+  }: {
+    id: string;
+    data: CareergDataForm;
+    Token: string | undefined | null;
+  }) => {
     try {
       // console.log(Token);
-      const response = await client.put(StringFormat(Endpoint.UPADATECAREER, { id }),
+      const response = await client.put(
+        StringFormat(Endpoint.UPADATECAREER, { id }),
         data,
         {
           method: "POST",
@@ -116,16 +132,20 @@ export const upadteCareer = createAsyncThunk(
     } catch (error) {
       throw AN_ERROR_TRY_AGAIN;
     }
-  }
+  },
 );
 
 export const getCareerBySlug = createAsyncThunk(
-  "getCareerBySlug", async (id: string) => {
-
+  "getCareerBySlug",
+  async (id: string) => {
     try {
-      const response = await client.get(StringFormat(Endpoint.DETAIL_CAREER, { id }), {
-        baseURL: CAREER_API_URL,
-      });
+      const response = await client.get(
+        `${Endpoint.CAREER}/${id}`,
+        {},
+        {
+          baseURL: CAREER_API_URL,
+        },
+      );
       if (response?.status === HttpStatusCode.OK) {
         return response.data;
       }
@@ -133,33 +153,45 @@ export const getCareerBySlug = createAsyncThunk(
     } catch (error) {
       throw error;
     }
-  }
+  },
 );
 
-// update sttaus 
+// update sttaus
 export const updateStatusCareer = createAsyncThunk(
-  'updateStatusCareer',
-  async ({ careerList, opened, Token }: { careerList: CareerData[]; opened: boolean; Token: string | undefined | null }) => {
+  "updateStatusCareer",
+  async ({
+    careerList,
+    opened,
+    Token,
+  }: {
+    careerList: CareerData[];
+    opened: boolean;
+    Token: string | undefined | null;
+  }) => {
     console.log(opened);
     try {
       const promises = careerList.map(async (element) => {
         const item = {
           ...element,
           is_opening: opened,
-          start_time: element.start_time ? new Date(element.start_time).toISOString().split('T')[0] : null,
-          end_time: element.end_time ? new Date(element.end_time).toISOString().split('T')[0] : null,
+          start_time: element.start_time
+            ? new Date(element.start_time).toISOString().split("T")[0]
+            : null,
+          end_time: element.end_time
+            ? new Date(element.end_time).toISOString().split("T")[0]
+            : null,
         };
         const response = await client.put(
           `${Endpoint.CAREER}/${element.id}`,
           item,
           {
-            method: 'PUT',
+            method: "PUT",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
               Authorization: `${Token}`,
             },
             baseURL: CAREER_API_URL,
-          }
+          },
         );
         if (response?.status !== HttpStatusCode.CREATED) {
           throw AN_ERROR_TRY_AGAIN;
@@ -171,14 +203,25 @@ export const updateStatusCareer = createAsyncThunk(
     } catch (error) {
       throw error;
     }
-  }
+  },
 );
 
-export const postApplycation = createAsyncThunk("postApplycation",
-  async ({ slug, params, token }: { slug: string, params: ApplyParams, token: string | undefined | null }) => {
+export const postApplycation = createAsyncThunk(
+  "postApplycation",
+  async ({
+    slug,
+    params,
+    token,
+  }: {
+    slug: string;
+    params: ApplyParams;
+    token: string | undefined | null;
+  }) => {
     // console.log(params);
     try {
-      const response = await client.post(`${Endpoint.CAREER}/${slug}/applicants`, params,
+      const response = await client.post(
+        `${Endpoint.CAREER}/${slug}/applicants`,
+        params,
         {
           method: "POST",
           headers: {
@@ -195,5 +238,5 @@ export const postApplycation = createAsyncThunk("postApplycation",
     } catch (error) {
       throw error;
     }
-  }
+  },
 );

@@ -50,7 +50,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
 
   useEffect(() => {
     if (id) {
-      dispatch(() => onGetCareerBySlug(id.toString() as string));
+      dispatch(() => onGetCareerBySlug(id as string));
     }
   }, [id]);
 
@@ -66,7 +66,12 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
   }
 
   return (
-    <Stack width="100%" pt={HEADER_HEIGHT / 8 + 1}>
+    <Stack width="100%" pt={HEADER_HEIGHT / 8 + 1} sx={{
+      background: "url(/images/about-us/bg-head.png)",
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "center",
+    }}>
       <Stack
         width="100%"
         sx={{
