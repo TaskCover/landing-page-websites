@@ -39,7 +39,7 @@ const ListCareersLayout = (props: ListCareersLayoutProps) => {
     isIdle,
     onUpdateCareerStatus: onApproveOrRejectAction,
   } = useCareer();
-  const { isReady, query ,initQuery} = useQueryParams();
+  const { isReady, query, initQuery } = useQueryParams();
   const { push } = useRouter();
   const pathname = usePathname();
 
@@ -167,7 +167,7 @@ const ListCareersLayout = (props: ListCareersLayoutProps) => {
           totalPages={total_page}
           page={page}
           pageSize={size}
-          // containerProps={{ px: { md: 3 }, py: 1 }}
+          containerProps={{ justifyContent: "center", alignContent: "center" }}
           onChangePage={onChangePage}
           onChangeSize={onChangeSize}
         />
