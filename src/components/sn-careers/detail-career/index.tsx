@@ -25,7 +25,7 @@ const Init_Query = {
 };
 const DetailCareerPage = (props: DetailCareerPageProps) => {
   const { isMdSmaller } = useBreakpoint();
-  const [showForm, setShowForm] = useState(true);
+  const [showForm, setShowForm] = useState(false);
   const { id } = useParams();
 
   const dispatch = useAppDispatch();
@@ -43,8 +43,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
     isIdle,
     onUpdateCareerStatus: onApproveOrRejectAction,
   } = useCareer();
-console.log(item,'--item--');
-console.log(items,'--items--');
+
 
   useEffect(() => {
     dispatch(() => onGetCareer(initQuery));
@@ -213,7 +212,7 @@ console.log(items,'--items--');
                     Apply now
                   </Text>
                 </Button>
-                {showForm ? <FormApply slug={id as string} /> : <></>}
+                {showForm ? <FormApply slug={id as string} setShowForm={(val) => setShowForm(val)} /> : <></>}
               </Stack>
             </Stack>
             <Stack gap="24px" width="100%">

@@ -28,6 +28,7 @@ import { ListFormSubmit } from "../helpers/helpers";
 
 type FormApplyProps = {
   slug: string | Array<string>;
+  setShowForm?: (val: boolean) => void;
 };
 
 const CustomPhoneInput = ({ value, onChange }) => (
@@ -67,7 +68,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 }));
 
 const FormApply = (props: FormApplyProps) => {
-  const { slug } = props;
+  const { slug, setShowForm } = props;
   const [value, setValue] = useState();
   const commonT = useTranslations(NS_COMMON);
   const { onAddSnackbar } = useSnackbar();
@@ -78,11 +79,11 @@ const FormApply = (props: FormApplyProps) => {
       const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
       // return 200;
       const resp = await onCreateFormApply(slug as string, values, accessToken);
-console.log(resp,'--resp--');
 
       if (resp && resp?.payload.id as any) {
         onAddSnackbar("Apply for job success", "success");
         formik.resetForm();
+        setShowForm && setShowForm(false)
       }
     } catch (error) {
       onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
@@ -114,11 +115,10 @@ console.log(resp,'--resp--');
       {},
     );
   }, [formik.touched, formik.errors]);
-console.log(formik.isSubmitting,'--isSubmitting');
-console.log(touchedErrors,'--touchedErrors');
+
 
   const disabled = useMemo(
-    () => !!Object.values(touchedErrors)?.length ,
+    () => !!Object.values(touchedErrors)?.length,
     [touchedErrors, formik.isSubmitting],
   );
 
@@ -373,7 +373,7 @@ console.log(touchedErrors,'--touchedErrors');
                           <Stack
                             sx={{
                               position: "relative",
-                              width:"fit-content",
+                              width: "fit-content",
                             }}
                           >
                             <Stack
