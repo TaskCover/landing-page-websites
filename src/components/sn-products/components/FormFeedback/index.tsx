@@ -58,7 +58,7 @@ const FormFeedback = (props: FormFeedbackProps) => {
       const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
       // return 200;
       const resp = await onCreateFormFeedback(values, accessToken);
-      if (resp.payload["id"]) {
+      if (resp && resp.payload["id"]) {
         onAddSnackbar("Feedback success", "success");
         formik.resetForm();
       }
@@ -89,7 +89,7 @@ const FormFeedback = (props: FormFeedbackProps) => {
   }, [formik.touched, formik.errors]);
 
   const disabled = useMemo(
-    () => !!Object.values(touchedErrors)?.length || formik.isSubmitting,
+    () => !!Object.values(touchedErrors)?.length,
     [touchedErrors, formik.isSubmitting],
   );
 
@@ -384,8 +384,8 @@ const FormFeedback = (props: FormFeedbackProps) => {
             <Stack
               direction="row"
               alignItems="center"
-              justifyContent="space-between"
               width="100%"
+              gap="24px"
             >
               <Text variant="h5">Upload file</Text>
               <Stack>

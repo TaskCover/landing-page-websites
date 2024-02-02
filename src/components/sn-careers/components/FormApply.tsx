@@ -78,16 +78,20 @@ const FormApply = (props: FormApplyProps) => {
       const accessToken = clientStorage.get(ACCESS_TOKEN_STORAGE_KEY);
       // return 200;
       const resp = await onCreateFormApply(slug as string, values, accessToken);
+console.log(resp,'--resp--');
 
-      if (resp) {
+      if (resp && resp?.payload.id as any) {
         onAddSnackbar("Apply for job success", "success");
         formik.resetForm();
       }
     } catch (error) {
-      if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
-      } else {
-        onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
-      }
+      onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+
+      // if ((error as ErrorResponse)["code"] === formErrorCode.INVALID_DATA) {
+      //   onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      // } else {
+      //   onAddSnackbar(getMessageErrorByAPI(error, commonT), "error");
+      // }
     }
   };
   const formik = useFormik({
@@ -110,9 +114,11 @@ const FormApply = (props: FormApplyProps) => {
       {},
     );
   }, [formik.touched, formik.errors]);
+console.log(formik.isSubmitting,'--isSubmitting');
+console.log(touchedErrors,'--touchedErrors');
 
   const disabled = useMemo(
-    () => !!Object.values(touchedErrors)?.length || formik.isSubmitting,
+    () => !!Object.values(touchedErrors)?.length ,
     [touchedErrors, formik.isSubmitting],
   );
 
@@ -367,6 +373,7 @@ const FormApply = (props: FormApplyProps) => {
                           <Stack
                             sx={{
                               position: "relative",
+                              width:"fit-content",
                             }}
                           >
                             <Stack
