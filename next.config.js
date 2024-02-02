@@ -12,7 +12,6 @@ const nextConfig = {
   env: {
     API_URL: process.env.API_URL,
     UPLOAD_API_URL: process.env.UPLOAD_API_URL,
-    NEXT_APP_WS_URL: process.env.NEXT_APP_WS_URL,
     FEEDBACK_API_URL: process.env.FEEDBACK_API_URL,
     BLOG_API_URL: process.env.BLOG_API_URL,
     CAREER_API_URL: process.env.CAREER_API_URL,
