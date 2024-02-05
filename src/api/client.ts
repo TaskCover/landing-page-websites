@@ -95,6 +95,8 @@ const RequestClient = class {
   }
 
   async upload(endpoint: string, file: File) {
+    console.log(file,'--file--');
+    
     try {
       let response = await this.get(
         `${endpoint}/${file.name}`,
@@ -106,9 +108,10 @@ const RequestClient = class {
 
       if (response?.status === HttpStatusCode.OK) {
         const urlUpload = response.data.object;
+        const objUpload = response.data;
         response = await this.put(response.data.upload, file);
         if (response?.status === HttpStatusCode.OK) {
-          return urlUpload;
+          return objUpload;
         }
         throw AN_ERROR_TRY_AGAIN;
       } else {

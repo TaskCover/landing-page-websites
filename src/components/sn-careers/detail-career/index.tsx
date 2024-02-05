@@ -1,7 +1,7 @@
 "use client";
 
 import { Container, Stack } from "@mui/material";
-import { Button, Text } from "components/shared";
+import { Button, Text, Upload } from "components/shared";
 import useBreakpoint from "hooks/useBreakpoint";
 import useQueryParams from "hooks/useQueryParams";
 import { HEADER_HEIGHT } from "layouts/Header";
@@ -65,6 +65,7 @@ const DetailCareerPage = (props: DetailCareerPageProps) => {
     ));
     return <Stack gap="8px">{renderedText}</Stack>;
   }
+
 
   return (
     <Stack width="100%" pt={HEADER_HEIGHT / 8 + 1} sx={{

@@ -54,9 +54,13 @@ export const getAllCareer = createAsyncThunk(
     try {
       console.log(queries);
       // Sử dụng fetch để gọi API và truyền tham số searchKey vào URL
-      const response = await client.get(`${Endpoint.CAREER}?status=CAN_APPLY`, queries, {
-        baseURL: CAREER_API_URL,
-      });
+      const response = await client.get(
+        `${Endpoint.CAREER}?status=CAN_APPLY`,
+        queries,
+        {
+          baseURL: CAREER_API_URL,
+        },
+      );
 
       if (response?.status === HttpStatusCode.OK) {
         // console.log(response);
@@ -231,10 +235,13 @@ export const postApplycation = createAsyncThunk(
           baseURL: CAREER_API_URL,
         },
       );
+
       if (response?.status === HttpStatusCode.CREATED) {
         return response.data;
+      } else {
+        return response.data.error[0];
       }
-      throw AN_ERROR_TRY_AGAIN;
+      // throw AN_ERROR_TRY_AGAIN;
     } catch (error) {
       throw error;
     }

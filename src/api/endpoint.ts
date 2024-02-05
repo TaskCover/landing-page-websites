@@ -99,6 +99,7 @@ export const Endpoint = {
   UPLOAD: "/files/upload-avatar",
   SIGNUP_UPLOAD: "/avatar/upload",
   UPLOAD_LINK: "/files/upload-link",
+  UPLOAD_ANY: "/files-no-auth/upload",
 
   RESOURCE_PLANNING: "/resources",
   RESOURCE_PLANNING_LIST: "/resources/all",
