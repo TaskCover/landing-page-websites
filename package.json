@@ -37,6 +37,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.1",
     "react-phone-number-input": "^3.3.9",
+    "react-player": "^2.14.1",
     "react-query": "^3.39.3",
     "react-redux": "^8.0.7",
     "react-slideshow-image": "^4.2.1",

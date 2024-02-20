@@ -34,7 +34,7 @@ const Menu = () => {
   return (
     <Stack
       width={isMdSmaller ? "unset" : "100%"}
-      gap={{lg: 5, xs: 3}}
+      gap={{ lg: 5, xs: 3 }}
       mb={0.652}
       ml={5}
       sx={{
@@ -109,7 +109,7 @@ const Menu = () => {
                         }} >
                         {
                           item.child.map((e, i) => (
-                            <Link href={e.link ?? "#"} key={i}>
+                            <Link href={e.link ?? "#"} key={i} className="">
                               <Stack direction="row" alignItems="center" gap="8px"
                                 sx={{
                                   p: "16px 12px",
@@ -163,6 +163,7 @@ const Menu = () => {
                   fontWeight={500}
                   noWrap
                   textTransform="capitalize"
+                  sx={{ textDecoration: "none" }}
                 >
                   {item.label}
                 </Text>
@@ -222,19 +223,20 @@ export const DATA_MEMU: MenuItemProps[] = [
         link: "/products/project",
       },
       {
+        icon: "/images/chat-ic.png",
+        label: "Collaboration",
+        link: "/products/chat",
+      },
+      {
+        icon: "/images/bill-ic.png",
+        label: "Billing",
+        link: "/products/biling",
+      },
+
+      {
         icon: "/images/folder-ic.png",
         label: "Resource Planning",
         link: "/products/resource",
-      },
-      {
-        icon: "/images/document-ic.png",
-        label: "Document",
-        link: "/products/document",
-      },
-      {
-        icon: "/images/chat-ic.png",
-        label: "Chat",
-        link: "/products/chat",
       },
       {
         icon: "/images/clock-ic.png",
@@ -242,20 +244,33 @@ export const DATA_MEMU: MenuItemProps[] = [
         link: "/products/time-tracking",
       },
       {
+        icon: "/images/task-management-ic.png",
+        label: "Task Management",
+        link: "/",
+      },
+
+      {
+        icon: "/images/company-ic.png",
+        label: "Company",
+        link: "/",
+      },
+      {
         icon: "/images/wallet-ic.png",
         label: "Budgeting",
         link: "/products/budgeting",
+      },
+
+      {
+        icon: "/images/document-ic.png",
+        label: "Document",
+        link: "/products/document",
       },
       {
         icon: "/images/tag-ic.png",
         label: "Sales",
         link: "/products/sale",
       },
-      {
-        icon: "/images/bill-ic.png",
-        label: "Billing",
-        link: "/products/biling",
-      },
+
     ],
   },
   {

@@ -5,6 +5,7 @@ import Image from "next/image";
 import WatchVideoIc from "public/images/home-page/icon-watch-video.svg";
 import HeadBannerImg from "public/images/home-page/banner.svg";
 import { HEADER_HEIGHT } from "layouts/Header";
+import ReactPlayer from 'react-player';
 
 type HeadLayoutProps = {};
 
@@ -117,6 +118,7 @@ const HeadLayout = (props: HeadLayoutProps) => {
           alt="banner"
         />
       </Stack>
+      {/* <ReactPlayer url='https://www.youtube.com/watch?v=LXb3EKWsInQ' /> */}
     </Stack>
   );
 };
