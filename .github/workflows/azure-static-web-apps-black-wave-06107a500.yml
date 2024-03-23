@@ -34,6 +34,12 @@ jobs:
           app_build_command: "npm run build" # Build command for app
           api_build_command: "rm -rf ./node_modules/@next/swc-* && rm -rf ./.next/cache" # Build command for api - optional
           ###### End of Repository/Build Configurations ######
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          UPLOAD_API_URL: ${{ secrets.UPLOAD_API_URL }}
+          FEEDBACK_API_URL: ${{ secrets.FEEDBACK_API_URL }}
+          BLOG_API_URL: ${{ secrets.BLOG_API_URL }}
+          CAREER_API_URL: ${{ secrets.CAREER_API_URL }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
