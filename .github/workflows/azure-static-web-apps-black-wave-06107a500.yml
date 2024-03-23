@@ -46,7 +46,7 @@ jobs:
           api_location: "" # Api source code path - optional
           output_location: "" # Built app content directory - optional
           app_build_command: "yarn build" # Build command for app
-          api_build_command: "rm -rf ./node_modules/@next/swc-* && rm -rf ./.next/cache" # Build command for api - optional
+          # api_build_command: "rm -rf ./node_modules/@next/swc-* && rm -rf ./.next/cache" # Build command for api - optional
           ###### End of Repository/Build Configurations ######
         env:
           API_URL: ${{ secrets.API_URL }}
