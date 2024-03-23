@@ -23,7 +23,7 @@ jobs:
           check-latest: true
 
       - name: Install apt-utils
-        run: RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
+        run: apt-get update && apt-get install -y --no-install-recommends apt-utils
 
       - name: Install Yarn
         run: npm install -g yarn
