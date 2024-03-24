@@ -30,7 +30,8 @@ jobs:
         run: |
           if [ ! -f "/bin/staticsites/2d5a4a95-eea5-4f47-b300-94098188bb06-swa-oryx/app/.oryx_prod_node_modules/.yarn/releases/yarn-1.22.21.cjs" ]; then
               echo "Yarn module path not found."
-              exit 1
+              echo "Reinstalling dependencies..."
+              yarn install --frozen-lockfile
           fi
       - name: Handle Yarn Module Path Not Found
         run: |
