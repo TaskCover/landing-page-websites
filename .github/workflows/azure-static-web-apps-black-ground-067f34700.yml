@@ -25,7 +25,14 @@ jobs:
         run: |
             sudo apt-get update
             sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apt-utils
-            
+      
+      - name: Check yarn moduln path
+        run: |
+          if [ ! -f "/bin/staticsites/2d5a4a95-eea5-4f47-b300-94098188bb06-swa-oryx/app/.oryx_prod_node_modules/.yarn/releases/yarn-1.22.21.cjs" ]; then
+              echo "Yarn module path not found."
+              exit 1
+          fi
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
