@@ -32,6 +32,13 @@ jobs:
               echo "Yarn module path not found."
               exit 1
           fi
+      - name: Handle Yarn Module Path Not Found
+        run: |
+            echo "Handling Yarn module path not found..."
+            # Reinstall dependencies using yarn install
+            yarn install
+            # Or, update yarn to the latest version
+            yarn set version latest
 
       - name: Build And Deploy
         id: builddeploy
