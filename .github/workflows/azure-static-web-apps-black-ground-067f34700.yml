@@ -26,20 +26,13 @@ jobs:
             sudo apt-get update
             sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apt-utils
       
-      - name: Check yarn moduln path
+      - name: Check yarn moduln path and Handle Yarn Module Path Not Found
         run: |
           if [ ! -f "/bin/staticsites/2d5a4a95-eea5-4f47-b300-94098188bb06-swa-oryx/app/.oryx_prod_node_modules/.yarn/releases/yarn-1.22.21.cjs" ]; then
               echo "Yarn module path not found."
               echo "Reinstalling dependencies..."
-              yarn install --frozen-lockfile
+              yarn install --production=false --frozen-lockfile
           fi
-      - name: Handle Yarn Module Path Not Found
-        run: |
-            echo "Handling Yarn module path not found..."
-            # Reinstall dependencies using yarn install
-            yarn install
-            # Or, update yarn to the latest version
-            yarn set version latest
 
       - name: Build And Deploy
         id: builddeploy
